@@ -1,0 +1,43 @@
+@import './scrollbar-color.css';
+
+:root {
+  --text: #212121;
+  --bg: #e5e5e5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  /*color: var(--text);*/
+  box-sizing: border-box;
+}
+/* Fix horizontal scrollbar jumping */
+html {
+  overflow: hidden;
+
+  /*margin-left: calc(100vw - 100%) */
+}
+
+body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling:touch;
+  font-family: "Velour", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  /*color: var(--text);*/
+}
+
+
+.fade-enter-active {
+  transition: opacity .5s;
+}
+.fade-leave-active {
+/* transition: opacity .1s; */
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
