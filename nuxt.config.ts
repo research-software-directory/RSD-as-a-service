@@ -55,7 +55,7 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],
     htmlAttrs: {
-      'data-theme': 'light' // https://daisyui.com/docs/default-themes
+      'data-theme': 'rsd' // https://daisyui.com/docs/default-themes
     }
 
   },

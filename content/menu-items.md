@@ -1,13 +1,13 @@
 ---
 items:
   - title: Software
-    path: /page-1
+    path: /software
     
-  - title: Proejects
-    path: /page-2
+  - title: Projects
+    path: /projects
     
   - title: Metrics
-    path: /page-3
+    path: /metrics
     
   - title: About
     path: /about

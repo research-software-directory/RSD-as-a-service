@@ -11,14 +11,14 @@
     <!-- Not logged in-->
     <div v-else>
       <div>
-        <label for="login-modal" class="btn modal-button w-full">
+        <label for="login-modal" class="btn btn-primary btn-sm modal-button">
           <IconUser />
           Login access
         </label>
         <input id="login-modal" type="checkbox" class="modal-toggle">
         <div class="modal">
           <div class="modal-box">
-            <login-form />
+            <user-login-form />
 
             <div class="modal-action">
               <label for="login-modal" class="btn">Close</label>

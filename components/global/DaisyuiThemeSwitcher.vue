@@ -48,6 +48,7 @@ export default {
       DAISYUI_VERSION: process.env.DAISYUI_VERSION,
       scrolled: false,
       themes: [
+        { id: 'rsd', name: '📁  RSD' },
         { id: 'light', name: '🌝  light' },
         { id: 'dark', name: '🌚  dark' },
         { id: 'cupcake', name: '🧁  cupcake' },

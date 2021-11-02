@@ -11,3 +11,8 @@
 }
 .rsd-button.primary{
 }
+
+
+.btn {
+  @apply rounded-none;
+}

@@ -1,5 +1,5 @@
 @import './scrollbar-color.css';
-@import './components/buttons.css';
+@import './overides.css';
 
 :root {
   --text: #212121;

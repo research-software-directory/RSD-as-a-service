@@ -1,6 +1,6 @@
 <template>
-  <header class="flex relative">
-    <NuxtLink class="hidden sm:block" to="/">
+  <header class="flex items-center relative">
+    <NuxtLink class="hidden sm:block flex " to="/">
       <Logo class="mx-3 mt-1" />
     </NuxtLink>
 
