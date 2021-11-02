@@ -1,10 +1,6 @@
 <template>
-  <div class="">
-    <LoginModal />
+  <div class="p-20">
     {{ hello() }}
-    <nuxt-link to="/hello" class="btn">
-      Go to Nuxt content
-    </nuxt-link>
   </div>
 </template>
 

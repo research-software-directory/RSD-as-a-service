@@ -12,8 +12,23 @@ const isLoggedIn = computed(
 // Actions
 function loginWithGoogle (isDev:boolean) {
   supabase.auth.signIn({ provider: 'google' }, {
-    redirectTo: isDev ? 'http://localhost:3000' : null
+    redirectTo: isDev ? 'http://localhost:3000' : undefined
   })
+}
+
+async function loginWithEmail (email:string) {
+  console.log('✉️ requesting email...')
+  const { user, session, error } = await supabase.auth.signIn({
+    email
+  })
+  if (error) {
+    console.log('🎹', error)
+  }
+  console.log('🎹', user, session)
+
+  // supabase.auth.signIn({ provider: 'google' }, {
+  //   redirectTo: isDev ? 'http://localhost:3000' : null
+  // })
 }
 
 async function logout () {
@@ -30,4 +45,4 @@ supabase.auth.onAuthStateChange((event, session) => {
   console.log('User ', session)
   userSession.value = session
 })
-export { userSession, isLoggedIn, setUserSession, loginWithGoogle, logout }
+export { userSession, isLoggedIn, setUserSession, loginWithGoogle, logout, loginWithEmail }

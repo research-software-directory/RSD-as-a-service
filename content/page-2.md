@@ -1,4 +1,4 @@
-# Page 2
+# Project Page
 
 
 ## What to expect from here on out

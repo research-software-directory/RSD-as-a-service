@@ -7,19 +7,19 @@
 
       <div class="form-control">
         <label class="label">
-          <span class="label-text">Email</span>
+          <span class="label-text">Access with email (no password)</span>
         </label>
-        <input type="email" placeholder="Type your email" class="input input-bordered">
+        <input v-model="email" type="email" placeholder="Type your email" class="input input-bordered">
       </div>
-      <button type="submit" class="btn btn-outline w-full mt-3">
+      <label for="login-modal" class="btn btn-outline w-full mt-3" @click="accessWithEmail">
         <IconEmail class="mr-2" />
         Access with email
-      </button>
-
-      <!--      <label class="font-semibold text-sm text-gray-600 pb-1 block">E-mail</label>-->
-      <!--      <input type="email" required class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full" >-->
+      </label>
     </form>
     <div class="p-5">
+      <label class="label">
+        <span class="label-text">Or access with a provider</span>
+      </label>
       <div class="grid grid-cols-2 gap-3">
         <button type="button" class="rsd-button primary">
           <IconSurfConext class="mr-2" />
@@ -57,6 +57,7 @@
 
 <script setup lang="ts">
 import { ref } from '@vue/composition-api'
+import { loginWithEmail } from '~/api/auth'
 
 import IconSurfConext from '~icons/mdi/message-outline'
 import IconGoogle from '~icons/mdi/google'
@@ -64,16 +65,11 @@ import IconGithub from '~icons/mdi/github'
 import IconMicrosoft from '~icons/mdi/microsoft'
 import IconEmail from '~icons/mdi/email'
 
-const firstName = ref('John')
-const cosa = ref(true)
+const email = ref('')
 
-function changeName (name:string = 'Default Name') {
-  firstName.value = name
-}
-
-function hello (text) {
-  console.log('🎹', text)
-  cosa.value = !cosa.value
+function accessWithEmail () {
+  loginWithEmail(email.value)
+  console.log('🎹', email.value)
 }
 </script>
 

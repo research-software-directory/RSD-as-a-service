@@ -28,7 +28,7 @@ export default {
   async fetch () {
     const { page } = this.$route.params
     try {
-      this.content = await this.$content('pages/' + page).fetch()
+      this.content = await this.$content(page).fetch()
     } catch {
       this.error = true
     }
