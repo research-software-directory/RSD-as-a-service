@@ -1,4 +1,12 @@
-# nuxt-clean
+# RSD as a Service
+
+Tech Stack:
+- Nuxt 2 with next generation composition API
+- Nuxt modules: Nuxt Content,
+- Typescript
+- WindiCss Utility classes
+- Supabase ecosystem
+
 
 ## Build Setup
 

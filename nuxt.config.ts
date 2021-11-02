@@ -2,7 +2,7 @@
 // Site config
 // Domain where the website will be deployed
 const productionUrl = 'MY-APP-DOMAIN.netlify.app'
-// const useLocalSupabase = false
+const useLocalSupabase = false
 const siteName = 'Ctw Nuxt Basis - Template'
 // const siteShortName = 'Nuxt Template'
 const siteDescription = 'Ctw Nuxt base template with TailwindCss, content RSS, Supabase Auth, Composition API and many other goodies'
@@ -10,8 +10,18 @@ const twitterUser = '@ctwhome'
 // const isGithubPages = false // true if deployed to github pages
 // const githubRepositoryName = 'nuxt'
 /// //////////////////////////////////////////////
+const isDev = process.env.NODE_ENV === 'development'
 
 export default {
+  // Environment variables
+  env: {
+    supabaseUrl: isDev && useLocalSupabase ? 'http://localhost:8000' : process.env.VITE_SUPABASE_URL,
+    supabaseKey: isDev && useLocalSupabase
+      // super-secret-jwt-token-with-at-least-32-characters-long
+      ? 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTYwMzk2ODgzNCwiZXhwIjoyNTUwNjUzNjM0LCJhdWQiOiIiLCJzdWIiOiIiLCJSb2xlIjoicG9zdGdyZXMifQ.magCcozTMKNrl76Tj2dsM7XTl_YH0v0ilajzAvIlw3U'
+      : process.env.VITE_SUPABASE_KEY
+  },
+
   // Debug local server from outside
   server: {
     host: '0' // default: localhost
@@ -19,7 +29,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'nuxt',
+    title: 'RSD',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -57,18 +67,21 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    { src: '~/plugins/supabase', ssr: false }
   ],
-
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/typescript
-    '@nuxt/typescript-build',
+    // we disable the type check and left it to `vue-tsc`
+    ['@nuxt/typescript-build', { typeCheck: false }],
+    'unplugin-icons/nuxt',
+    // @vue/composition-api support,
+    // which ships the `<script setup>` transformer out-of-box
+    '@nuxtjs/composition-api/module',
     '@nuxtjs/tailwindcss'
-    // 'nuxt-vite'
-    // 'nuxt-windicss'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

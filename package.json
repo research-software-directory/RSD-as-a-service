@@ -12,29 +12,34 @@
     "test": "jest"
   },
   "dependencies": {
-    "@nuxt/content": "^1.14.0",
+    "@nuxt/content": "^1.15.0",
+    "@nuxtjs/composition-api": "^0.29.3",
     "@nuxtjs/pwa": "^3.3.5",
-    "core-js": "^3.15.1",
+    "@supabase/supabase-js": "^1.25.2",
+    "core-js": "^3.19.0",
     "daisyui": "^1.16.0",
-    "nuxt": "^2.15.7",
-    "nuxt-vite": "^0.3.5"
+    "nuxt": "^2.15.8",
+    "nuxt-mq": "^2.0.2",
+    "theme-change": "^2.0.2"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.14.7",
-    "@nuxt/types": "^2.15.7",
+    "@babel/eslint-parser": "^7.16.0",
+    "@iconify/json": "^1.1.421",
+    "@nuxt/types": "^2.15.8",
     "@nuxt/typescript-build": "^2.1.0",
-    "@nuxtjs/eslint-config-typescript": "^6.0.1",
+    "@nuxtjs/eslint-config-typescript": "^7.0.2",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/tailwindcss": "^4.2.1",
-    "@vue/test-utils": "^1.2.1",
+    "@tailwindcss/typography": "^0.4.1",
+    "@vue/test-utils": "^1.2.2",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^27.0.5",
-    "eslint": "^7.29.0",
-    "eslint-plugin-nuxt": "^2.0.0",
-    "eslint-plugin-vue": "^7.12.1",
-    "jest": "^27.0.5",
-    "nuxt-windicss": "^1.1.1",
-    "ts-jest": "^27.0.3",
-    "vue-jest": "^3.0.4"
+    "babel-jest": "^27.3.1",
+    "eslint": "^8.1.0",
+    "eslint-plugin-nuxt": "^3.0.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "jest": "^27.3.1",
+    "ts-jest": "^27.0.7",
+    "unplugin-icons": "^0.12.17",
+    "vue-jest": "^3.0.7"
   }
 }

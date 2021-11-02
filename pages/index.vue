@@ -1,22 +1,14 @@
 <template>
-  <div class="bg-red-700">
-    {{ hello }}
-
+  <div class="">
+    <LoginModal />
+    {{ hello() }}
     <nuxt-link to="/hello" class="btn">
-      hello RSD
+      Go to Nuxt content
     </nuxt-link>
-    <Tutorial />
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+// Using Vue 3 script setup with composition api
 import hello from '~/api/example'
-
-export default {
-  data () {
-    return {
-      hello: hello()
-    }
-  }
-}
 </script>
