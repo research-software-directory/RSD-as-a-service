@@ -11,7 +11,7 @@
         </label>
         <input v-model="email" type="email" placeholder="Type your email" class="input input-bordered">
       </div>
-      <label for="login-modal" class="btn btn-outline w-full mt-3" @click="accessWithEmail">
+      <label for="login-modal" class="btn btn-primary w-full mt-3" @click="accessWithEmail">
         <IconEmail class="mr-2" />
         Access with email
       </label>

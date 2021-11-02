@@ -1,5 +1,5 @@
 <template>
-  <div class="p-20">
+  <div class="p-20 container mx-auto">
     <nuxt-link to="/software" class="btn btn-primary">
       Go to Software
     </nuxt-link>
@@ -10,12 +10,12 @@
       {{ hello() }}
     </div>
 
-    <section class="py-20">
+    <section class="">
       <div class="container px-4 mx-auto">
         <div class="max-w-3xl mx-auto mb-16 text-center">
-          <span class="text-xs font-bold text-gray-200 uppercase">Lorem Ipsum</span>
+          <span class="text-xs font-bold text-gray-200 uppercase">RESEARCH SOFTWARE DIRECTORY</span>
           <h2 class="mt-2 mb-4 text-5xl font-bold font-heading">
-            Lorem ipsum dolor sit amet consectutar domor at elis
+            Encouraging the re-use of research software
           </h2>
           <p class="mb-16 text-lg text-gray-500 leading-loose">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque massa nibh, pulvinar vitae aliquet nec, accumsan aliquet orci.
