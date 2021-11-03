@@ -11,6 +11,8 @@ Tech Stack:
 ## Build Setup
 
 ```bash
+# Prerequisite: NodeJs v16^ LTS 
+
 # install dependencies
 $ yarn install
 
