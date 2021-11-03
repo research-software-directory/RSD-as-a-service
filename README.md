@@ -10,6 +10,9 @@ Tech Stack:
 
 ## Build Setup
 
+- Before starting locally the application, you need to add a .env (git ignored) following the tempalte from the `example.env` file and set the supabase url and key. 
+- To run supabase with Docker follow the instructions inside the `docker/README.md` file.
+
 ```bash
 # Prerequisite: NodeJs v16^ LTS 
 
