@@ -11,7 +11,7 @@
     <!-- Not logged in-->
     <div v-else>
       <div>
-        <label for="login-modal" class="btn btn-primary btn-sm modal-button">
+        <label for="login-modal" class="btn btn-primary btn-md modal-button">
           <IconUser />
           Login access
         </label>

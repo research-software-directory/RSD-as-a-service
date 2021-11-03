@@ -20,7 +20,7 @@
           <p class="mb-16 text-lg text-gray-500 leading-loose">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque massa nibh, pulvinar vitae aliquet nec, accumsan aliquet orci.
           </p>
-          <img class="w-full" src="~/assets/img/laptop.svg" alt="Laptop landing page illustration">
+          <img class="w-full max-w-xl mx-auto" src="~/assets/img/laptop.svg" alt="Laptop landing page illustration">
         </div>
         <div class="max-w-6xl mx-auto">
           <div class="flex flex-wrap -mx-4 -mb-8">
