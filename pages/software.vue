@@ -4,7 +4,7 @@
       Filters
     </div>
     <div class="w-full md:w-3/4 px-4 mb-4 md:mb-0 bg-blue-200">
-      <div>Search bar</div>
+      <div>Full text search bar with autocomplete</div>
 
       <div class="font-bold mt-4">
         # Software: {{ softwareCount }}
@@ -12,7 +12,7 @@
 
       <div class="flex flex-wrap ">
         <div v-for="({id, title, short_desc, description, version, mentions, contributors, tags},index) in softwareData" :key="index" class="w-1/2 p-4">
-          <div class="py-12 px-10 rounded-lg bg-white">
+          <div class="py-12 px-10 rounded-lg bg-white h-full">
             <span class="mb-3 flex items-center justify-center w-8 h-8 rounded-full bg-gray-500 text-gray-50 font-bold font-heading">
               {{ id }}
             </span>

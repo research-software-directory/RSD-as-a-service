@@ -57,7 +57,6 @@ export default {
     htmlAttrs: {
       'data-theme': 'rsd' // https://daisyui.com/docs/default-themes
     }
-
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
