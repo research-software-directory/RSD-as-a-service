@@ -63,6 +63,7 @@ const fetchSoftware = async () => {
     const { data, count, error } = await supabase
       .from('software')
       .select('*', { count: 'exact' })
+      .order('id')
       .limit(30)
     if (error) {
       console.log('error', error)
