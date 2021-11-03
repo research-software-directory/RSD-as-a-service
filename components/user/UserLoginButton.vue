@@ -12,7 +12,6 @@
     <div v-else>
       <div>
         <label for="login-modal" class="btn btn-primary btn-md modal-button">
-          <IconUser />
           Login access
         </label>
         <input id="login-modal" type="checkbox" class="modal-toggle">

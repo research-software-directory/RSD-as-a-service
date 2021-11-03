@@ -1,14 +1,14 @@
 <template>
   <div class="p-20 container mx-auto">
+    <div class="mb-3">
+      {{ hello() }}
+    </div>
     <nuxt-link to="/software" class="btn btn-primary">
       Go to Software
     </nuxt-link>
     <nuxt-link to="/projects" class="btn btn-primary">
       Go to Projects
     </nuxt-link>
-    <div class="mt-3">
-      {{ hello() }}
-    </div>
 
     <section class="">
       <div class="container px-4 mx-auto">

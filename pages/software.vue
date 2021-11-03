@@ -4,19 +4,23 @@
       Filters
     </div>
     <div class="w-full md:w-3/4 px-4 mb-4 md:mb-0 bg-blue-200">
-      Search bar
+      <div>Search bar</div>
+
+      <div class="font-bold mt-4">
+        # Software: {{ softwareCount }}
+      </div>
 
       <div class="flex flex-wrap ">
-        <div v-for="(item,index) in items" :key="index" class="w-1/2 p-4">
+        <div v-for="({id, title, short_desc, description, version, mentions, contributors, tags},index) in softwareData" :key="index" class="w-1/2 p-4">
           <div class="py-12 px-10 rounded-lg bg-white">
-            <span class="mb-6 flex items-center justify-center w-12 h-12 rounded-full bg-gray-500 text-gray-50 font-bold font-heading">
-              {{ index + 1 }}
+            <span class="mb-3 flex items-center justify-center w-8 h-8 rounded-full bg-gray-500 text-gray-50 font-bold font-heading">
+              {{ id }}
             </span>
-            <h3 class="mb-4 text-4xl lg:text-5xl font-bold font-heading">
-              Suspendisse interdum ullamcorper elit, at consequat libero.
+            <h3 class="mb-4 text-xl lg:text-2xl font-bold font-heading">
+              {{ title }}
             </h3>
             <p class="text-lg text-gray-500 leading-loose">
-              Etiam pellentesque non nibh non pulvinar. Mauris posuere, tellus sit amet tempus vestibulum, erat augue imperdiet.
+              {{ description }}
             </p>
           </div>
         </div>
@@ -27,26 +31,12 @@
 
 <script setup lang="ts">
 
-const items = [
-  {
-    name: 'hello'
-  },
-  {
-    name: 'hello'
-  },
-  {
-    name: 'hello'
-  },
-  {
-    name: 'hello'
-  },
-  {
-    name: 'hello'
-  }, {
-    name: 'hello'
-  }
+import { onMounted } from '@nuxtjs/composition-api'
+import { softwareData, softwareCount, fetchSoftware } from '~/api/software'
 
-]
+onMounted(async () => {
+  await fetchSoftware()
+})
 </script>
 
 <style scoped>
