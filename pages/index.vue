@@ -1,6 +1,6 @@
 <template>
   <div class="p-20 container mx-auto">
-    <div class="mb-3">
+    <!-- <div class="mb-3">
       {{ hello() }}
     </div>
     <nuxt-link to="/software" class="btn btn-primary">
@@ -8,7 +8,7 @@
     </nuxt-link>
     <nuxt-link to="/projects" class="btn btn-primary">
       Go to Projects
-    </nuxt-link>
+    </nuxt-link> -->
 
     <section class="">
       <div class="container px-4 mx-auto">

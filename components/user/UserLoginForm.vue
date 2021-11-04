@@ -21,25 +21,25 @@
         <span class="label-text">Or access with a provider</span>
       </label>
       <div class="grid grid-cols-2 gap-3">
-        <button type="button" class="rsd-button primary">
+        <!-- <button type="button" class="rsd-button primary">
           <IconSurfConext class="mr-2" />
           Surf Conext
-        </button>
+        </button> -->
 
-        <button type="button" class="rsd-button">
+        <button type="button" class="rsd-button" @click="loginWithAzure">
           <icon-microsoft class="mr-2" />
           Microsoft
         </button>
 
-        <button type="button" class="rsd-button">
+        <button type="button" class="rsd-button" @click="loginWithGithub">
           <icon-github class="mr-2" />
           Github
         </button>
 
-        <button type="button" class="rsd-button">
+        <!-- <button type="button" class="rsd-button">
           <icon-google class="mr-2" />
           Google
-        </button>
+        </button> -->
       </div>
     </div>
     <div class="py-5">
@@ -57,10 +57,10 @@
 
 <script setup lang="ts">
 import { ref } from '@vue/composition-api'
-import { loginWithEmail } from '~/api/auth'
+import { loginWithEmail, loginWithGithub, loginWithAzure } from '~/api/auth'
 
-import IconSurfConext from '~icons/mdi/message-outline'
-import IconGoogle from '~icons/mdi/google'
+// import IconSurfConext from '~icons/mdi/message-outline'
+// import IconGoogle from '~icons/mdi/google'
 import IconGithub from '~icons/mdi/github'
 import IconMicrosoft from '~icons/mdi/microsoft'
 import IconEmail from '~icons/mdi/email'
@@ -69,7 +69,7 @@ const email = ref('')
 
 function accessWithEmail () {
   loginWithEmail(email.value)
-  console.log('🎹', email.value)
+  // console.log('🎹', email.value)
 }
 </script>
 
