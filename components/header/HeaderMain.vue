@@ -1,8 +1,8 @@
 <template>
-  <header class="flex items-center relative">
-    <NuxtLink class="hidden sm:block flex " to="/">
-      <Logo class="mx-3 mt-1" />
-    </NuxtLink>
+  <header class="flex items-center relative fixed-header">
+    <!-- <NuxtLink class="hidden sm:block flex" to="/"> -->
+    <Logo class="mx-5 mt-1 cursor-pointer" />
+    <!-- </NuxtLink> -->
 
     <!-- menu-->
     <div
@@ -19,18 +19,19 @@
         <NuxtLink to="/" @click.native="$refs.menu.close">
           <Logo class="mx-3 mt-1" />
         </NuxtLink>
-        <div class="mt-10">
+        <nav class="mt-10">
           <div v-for="item in menu.items" :key="item.path" class="mt-3">
             <nuxt-link class="menu-link text-sm" :to="item.path" @click.native="$refs.menu.close" @click="$refs.menu.close()">
               {{ item.title }}
             </nuxt-link>
           </div>
-        </div>
+        </nav>
       </div>
     </header-responsive-menu>
-
-    <daisyui-theme-switcher class="ml-auto" />
-
+    <!--
+      Not sure we need this, maybe 2 options: dark/light
+      <daisyui-theme-switcher class="ml-auto" />
+    -->
     <user-login-button class="mt-2 pr-4" />
   </header>
 </template>

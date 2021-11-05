@@ -4,7 +4,7 @@
     <div v-if="isLoggedIn" class="hover:bg-gray-100 rounded-full h-12 w-12 flex items-center justify-center">
       <img
         class="cursor-pointer h-8 w-8 rounded-full"
-        :src="userSession.user.user_metadata.avatar_url || require('~/assets/img/avatar.svg')"
+        :src="avatar"
         @click="toProfile"
       >
     </div>
@@ -18,7 +18,6 @@
         <div class="modal">
           <div class="modal-box">
             <user-login-form />
-
             <div class="modal-action">
               <label for="login-modal" class="btn">Close</label>
             </div>
@@ -32,6 +31,11 @@
 <script setup lang="ts">
 import { useRouter } from '@nuxtjs/composition-api'
 import { userSession, isLoggedIn } from '~/api/auth'
+
+let avatar = require('~/assets/img/avatar.svg')
+if (userSession?.user?.user_metadata?.avatar_url) {
+  avatar = userSession?.user.user_metadata.avatar_url
+}
 
 const router = useRouter()
 function toProfile () {

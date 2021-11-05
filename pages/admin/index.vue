@@ -1,5 +1,5 @@
 <template>
-  <section class="container mx-auto py-4">
+  <section class="container mx-auto py-4 overflow-hidden">
     <h1 class="text-3xl">
       Admin pages
     </h1>

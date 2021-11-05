@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-gray-900">
+  <footer class="bg-gray-900">
     <div class="flex w-full">
       <div class="w-1/3 flex">
         <div class="w-1/3 py-1 bg-blue-400" />
@@ -50,5 +50,5 @@
         </div>
       </div>
     </div>
-  </section>
+  </footer>
 </template>

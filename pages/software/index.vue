@@ -11,8 +11,15 @@
       </div>
 
       <div class="flex flex-wrap ">
-        <div v-for="({id, title, short_desc, description, version, mentions, contributors, tags},index) in softwareData" :key="index" class="w-1/2 p-4">
-          <div class="py-12 px-10 rounded-lg bg-white h-full">
+        <div
+          v-for="({id, title, short_desc, description, version, mentions, contributors, tags},index) in softwareData"
+          :key="index"
+          class="w-1/2 p-4"
+        >
+          <div
+            class="cursor-pointer py-12 px-10 rounded-lg bg-white h-full"
+            @click="$router.push(`software/${id}`)"
+          >
             <span class="mb-3 flex items-center justify-center w-8 h-8 rounded-full bg-gray-500 text-gray-50 font-bold font-heading">
               {{ id }}
             </span>
