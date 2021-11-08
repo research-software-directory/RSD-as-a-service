@@ -1,3 +1,5 @@
+// SITEMAP defintions
+import sitemap from './sitemap'
 /// //////////////////////////////////////////////
 // Site config
 // Domain where the website will be deployed
@@ -36,16 +38,16 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
       // OG Social Media Cards
       { hid: 'description', name: 'description', content: siteDescription },
-      { property: 'og:site_name', content: siteName },
+      { hid: 'og:site_name', property: 'og:site_name', content: siteName },
       { hid: 'og:type', property: 'og:type', content: 'website' },
       { hid: 'og:url', property: 'og:url', content: `https://${productionUrl}` },
       { hid: 'og:title', property: 'og:title', content: siteName },
       { hid: 'og:description', property: 'og:description', content: siteDescription },
       { hid: 'og:image', property: 'og:image', content: `https://${productionUrl}/OG-card.png` },
-      { property: 'og:image:width', content: '740' },
-      { property: 'og:image:height', content: '300' },
-      { name: 'twitter:site', content: twitterUser },
-      { name: 'twitter:card', content: 'summary_large_image' },
+      { hid: 'og:image:width', property: 'og:image:width', content: '740' },
+      { hid: 'og:image:height', property: 'og:image:height', content: '300' },
+      { hid: 'og:image', name: 'twitter:site', content: twitterUser },
+      { hid: 'og:image', name: 'twitter:card', content: 'summary_large_image' },
       { hid: 'twitter:url', name: 'twitter:url', content: `https://${productionUrl}` },
       { hid: 'twitter:title', name: 'twitter:title', content: siteName },
       { hid: 'twitter:description', name: 'twitter:description', content: siteDescription },
@@ -88,9 +90,13 @@ export default {
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     // https://go.nuxtjs.dev/content
-    '@nuxt/content'
+    '@nuxt/content',
+    // build sitemap
+    '@nuxtjs/sitemap'
   ],
-
+  // sitemap definitions
+  // see ./sitemap.ts
+  sitemap,
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {

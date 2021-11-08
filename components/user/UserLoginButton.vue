@@ -5,6 +5,9 @@
       <img
         class="cursor-pointer h-8 w-8 rounded-full"
         :src="avatar"
+        alt="avatar"
+        width="100%"
+        height="100%"
         @click="toProfile"
       >
     </div>
