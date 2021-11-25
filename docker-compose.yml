@@ -1,0 +1,27 @@
+version: "3.0"
+
+services:
+  database:
+    build: ./database
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "rsd-db"
+      POSTGRES_USER: "rsd"
+      POSTGRES_PASSWORD: "securepassword"
+
+  backend:
+    build: ./backend-postgrest
+    ports:
+      - "3000:3000"
+    environment:
+      PGRST_DB_URI: "postgres://rsd:securepassword@database:5432/rsd-db"
+      PGRST_DB_ANON_ROLE: "rsd"
+      PGRST_DB_SCHEMA: "public"
+
+  data-migration:
+    build: ./data-migration
+    depends_on:
+      - "database"
+      - "backend"
+    network_mode: "host"
