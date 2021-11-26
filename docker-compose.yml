@@ -15,8 +15,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      PGRST_DB_URI: "postgres://rsd:securepassword@database:5432/rsd-db"
-      PGRST_DB_ANON_ROLE: "rsd"
+      PGRST_DB_URI: "postgres://authenticator:simplepassword@database:5432/rsd-db"
+      PGRST_DB_ANON_ROLE: "web_anon"
       PGRST_DB_SCHEMA: "public"
 
   data-migration:
