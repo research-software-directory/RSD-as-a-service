@@ -1,4 +1,4 @@
-package nl.research_software.migration;
+package nl.esciencecenter.rsd.migration;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

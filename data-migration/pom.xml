@@ -23,7 +23,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>
-					<mainClass>nl.research_software.migration.Main</mainClass>
+					<mainClass>nl.esciencecenter.rsd.migration.Main</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
