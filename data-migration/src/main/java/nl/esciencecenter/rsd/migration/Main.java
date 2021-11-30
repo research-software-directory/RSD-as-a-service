@@ -17,14 +17,26 @@ public class Main {
 
 	public static void main(String[] args) {
 		String allSoftwareString = get(URI.create(LEGACY_RSD_SOFTWARE_URI));
-		JsonArray allSoftware = JsonParser.parseString(allSoftwareString).getAsJsonArray();
+		JsonArray allSoftwareFromLegacyRSD = JsonParser.parseString(allSoftwareString).getAsJsonArray();
 
 		JsonArray allSoftwareToSave = new JsonArray();
-		allSoftware.forEach(jsonElement -> {
+		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject softwareToSave = new JsonObject();
-			softwareToSave.add("brand_name", jsonElement.getAsJsonObject().get("brandName"));
-			softwareToSave.add("read_more", jsonElement.getAsJsonObject().get("readMore"));
-			softwareToSave.add("slug", jsonElement.getAsJsonObject().get("slug"));
+			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
+
+//			this entry is problematic, it contains many null's, we skip it for now, whe should later either allow more
+//			null fields or set default empty strings as values
+			if (softwareFromLegacyRSD.get("slug").getAsString().equals("palmetto-position-lucene-wikipedia")) return;
+
+			softwareToSave.add("slug", softwareFromLegacyRSD.get("slug"));
+			softwareToSave.add("brand_name", softwareFromLegacyRSD.get("brandName"));
+			softwareToSave.add("bullets", softwareFromLegacyRSD.get("bullets"));
+			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
+			softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
+			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
+			softwareToSave.add("read_more", softwareFromLegacyRSD.get("readMore"));
+			softwareToSave.add("short_statement", softwareFromLegacyRSD.get("shortStatement"));
+
 			allSoftwareToSave.add(softwareToSave);
 		});
 		post(URI.create(POSTGREST_SOFTWARE_URI), allSoftwareToSave.toString());
