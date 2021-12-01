@@ -29,6 +29,7 @@ CREATE FUNCTION sanitise_update_software() RETURNS TRIGGER LANGUAGE plpgsql as
 $$
 BEGIN
 	NEW.id = OLD.id;
+	NEW.slug = OLD.slug;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
 	return NEW;

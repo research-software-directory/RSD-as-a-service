@@ -15,6 +15,7 @@ import java.util.Map;
 public class Main {
 
 	public static final String LEGACY_RSD_SOFTWARE_URI = "https://research-software.nl/api/software";
+	public static final String LEGACY_RSD_PROJECT_URI = "https://research-software.nl/api/project";
 	public static final String PORSGREST_URI = "http://localhost:3000";
 
 	public static void main(String[] args) {
@@ -25,6 +26,11 @@ public class Main {
 
 		saveSoftware(allSoftwareFromLegacyRSD);
 		saveRepoUrls(allSoftwareFromLegacyRSD);
+
+		String allProjectsString = get(URI.create(LEGACY_RSD_PROJECT_URI));
+		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
+		saveProjects(allProjectsFromLegacyRSD);
+		saveProjectImages(allProjectsFromLegacyRSD);
 	}
 
 	public static void tryBackendConnection() {
@@ -55,7 +61,7 @@ public class Main {
 			JsonObject softwareToSave = new JsonObject();
 			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
 
-//			this entry is problematic, it contains many null's, we skip it for now, whe should later either allow more
+//			this entry is problematic, it contains many nulls, we skip it for now, whe should later either allow more
 //			null fields or set default empty strings as values
 			if (softwareFromLegacyRSD.get("slug").getAsString().equals("palmetto-position-lucene-wikipedia")) return;
 
@@ -88,7 +94,7 @@ public class Main {
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
 
-//			this entry is problematic, it contains many null's, we skip it for now, whe should later either allow more
+//			this entry is problematic, it contains many nulls, we skip it for now, whe should later either allow more
 //			null fields or set default empty strings as values
 			if (softwareFromLegacyRSD.get("slug").getAsString().equals("palmetto-position-lucene-wikipedia")) return;
 
@@ -103,6 +109,53 @@ public class Main {
 			});
 		});
 		post(URI.create(PORSGREST_URI + "/repository_url"), allRepoUrlsToSave.toString());
+	}
+
+	public static void saveProjects(JsonArray allProjectsFromLegacyRSD) {
+		JsonArray allProjectsToSave = new JsonArray();
+		allProjectsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject projectToSave = new JsonObject();
+			JsonObject projectFromLegacyRSD = jsonElement.getAsJsonObject();
+
+			projectToSave.add("slug", projectFromLegacyRSD.get("slug"));
+			projectToSave.add("call_url", projectFromLegacyRSD.get("callUrl"));
+			projectToSave.add("code_url", projectFromLegacyRSD.get("codeUrl"));
+			projectToSave.add("data_management_plan_url", projectFromLegacyRSD.get("dataManagementPlanUrl"));
+			projectToSave.add("date_end", projectFromLegacyRSD.get("dateEnd"));
+			projectToSave.add("date_start", projectFromLegacyRSD.get("dateStart"));
+			projectToSave.add("description", projectFromLegacyRSD.get("description"));
+			projectToSave.add("grant_id", projectFromLegacyRSD.get("grantId"));
+			projectToSave.add("home_url", projectFromLegacyRSD.get("homeUrl"));
+			projectToSave.add("image_caption", projectFromLegacyRSD.get("imageCaption"));
+			projectToSave.add("is_published", projectFromLegacyRSD.get("isPublished"));
+			projectToSave.add("software_sustainability_plan_url", projectFromLegacyRSD.get("softwareSustainabilityPlanUrl"));
+			projectToSave.add("subtitle", projectFromLegacyRSD.get("subtitle"));
+			projectToSave.add("title", projectFromLegacyRSD.get("title"));
+			allProjectsToSave.add(projectToSave);
+		});
+		post(URI.create(PORSGREST_URI + "/project"), allProjectsToSave.toString());
+	}
+
+	public static void saveProjectImages(JsonArray allProjectsFromLegacyRSD) {
+		JsonArray savedProjects = JsonParser.parseString(get(URI.create(PORSGREST_URI + "/project?select=id,slug"))).getAsJsonArray();
+		Map<String, String> slugToId = new HashMap<>();
+		savedProjects.forEach(jsonElement -> {
+			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
+			String id = jsonElement.getAsJsonObject().get("id").getAsString();
+			slugToId.put(slug, id);
+		});
+
+		JsonArray allImagesToSave = new JsonArray();
+		allProjectsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject projectsFromLegacyRSD = jsonElement.getAsJsonObject();
+
+			String slug = projectsFromLegacyRSD.get("slug").getAsString();
+			JsonObject imageToSave = new JsonObject();
+			imageToSave.addProperty("project", slugToId.get(slug));
+			imageToSave.add("image", jsonElement.getAsJsonObject().get("image"));
+			allImagesToSave.add(imageToSave);
+		});
+		post(URI.create(PORSGREST_URI + "/image_for_project"), allImagesToSave.toString());
 	}
 
 	public static String get(URI uri) {
