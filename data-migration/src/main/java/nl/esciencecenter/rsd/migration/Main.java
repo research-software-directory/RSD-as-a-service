@@ -13,11 +13,13 @@ import java.net.http.HttpResponse;
 public class Main {
 
 	public static final String LEGACY_RSD_SOFTWARE_URI = "https://research-software.nl/api/software";
-	public static final String POSTGREST_SOFTWARE_URI = "http://localhost:3000/software";
+	public static final String PORSGREST_URI = "http://localhost:3000";
 
 	public static void main(String[] args) {
 		String allSoftwareString = get(URI.create(LEGACY_RSD_SOFTWARE_URI));
 		JsonArray allSoftwareFromLegacyRSD = JsonParser.parseString(allSoftwareString).getAsJsonArray();
+
+		tryBackendConnection();
 
 		JsonArray allSoftwareToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
@@ -39,7 +41,29 @@ public class Main {
 
 			allSoftwareToSave.add(softwareToSave);
 		});
-		post(URI.create(POSTGREST_SOFTWARE_URI), allSoftwareToSave.toString());
+		post(URI.create(PORSGREST_URI + "/software"), allSoftwareToSave.toString());
+	}
+
+	public static void tryBackendConnection() {
+		int maxTries = 20;
+		for (int tryConnectionCount = 0; tryConnectionCount < maxTries; tryConnectionCount++) {
+			pauseExecution(500);
+			try {
+				get(URI.create(PORSGREST_URI));
+			} catch (RuntimeException e) {
+				continue;
+			}
+			return;
+		}
+		throw new RuntimeException("Connection to the backend could not be established");
+	}
+
+	public static void pauseExecution(long milis) {
+		try {
+			Thread.sleep(milis);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static String get(URI uri) {
