@@ -33,12 +33,12 @@ public class Main {
 	}
 
 	public static void tryBackendConnection() {
-		int maxTries = 6;
+		int maxTries = 20;
 		for (int tryConnectionCount = 0; tryConnectionCount < maxTries; tryConnectionCount++) {
+			pauseExecution(500);
 			try {
 				get(URI.create(PORSGREST_URI));
 			} catch (RuntimeException e) {
-				pauseExecution(2000);
 				continue;
 			}
 			return;
