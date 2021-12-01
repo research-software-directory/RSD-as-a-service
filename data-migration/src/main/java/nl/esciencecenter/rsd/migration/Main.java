@@ -9,6 +9,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -21,6 +23,33 @@ public class Main {
 
 		tryBackendConnection();
 
+		saveSoftware(allSoftwareFromLegacyRSD);
+		saveRepoUrls(allSoftwareFromLegacyRSD);
+	}
+
+	public static void tryBackendConnection() {
+		int maxTries = 20;
+		for (int tryConnectionCount = 0; tryConnectionCount < maxTries; tryConnectionCount++) {
+			pauseExecution(500);
+			try {
+				get(URI.create(PORSGREST_URI));
+			} catch (RuntimeException e) {
+				continue;
+			}
+			return;
+		}
+		throw new RuntimeException("Connection to the backend could not be established");
+	}
+
+	public static void pauseExecution(long milis) {
+		try {
+			Thread.sleep(milis);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static void saveSoftware(JsonArray allSoftwareFromLegacyRSD) {
 		JsonArray allSoftwareToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject softwareToSave = new JsonObject();
@@ -44,26 +73,36 @@ public class Main {
 		post(URI.create(PORSGREST_URI + "/software"), allSoftwareToSave.toString());
 	}
 
-	public static void tryBackendConnection() {
-		int maxTries = 20;
-		for (int tryConnectionCount = 0; tryConnectionCount < maxTries; tryConnectionCount++) {
-			pauseExecution(500);
-			try {
-				get(URI.create(PORSGREST_URI));
-			} catch (RuntimeException e) {
-				continue;
-			}
-			return;
-		}
-		throw new RuntimeException("Connection to the backend could not be established");
-	}
+	public static void saveRepoUrls(JsonArray allSoftwareFromLegacyRSD) {
+//		unfortunately, PostgREST doesn't allow for patching or posting when using resource embedding,
+//		therefore, we need to get the just saved software id's in order to populate the repository_url table
+		JsonArray savedSoftware = JsonParser.parseString(get(URI.create(PORSGREST_URI + "/software?select=id,slug"))).getAsJsonArray();
+		Map<String, String> slugToId = new HashMap<>();
+		savedSoftware.forEach(jsonElement -> {
+			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
+			String id = jsonElement.getAsJsonObject().get("id").getAsString();
+			slugToId.put(slug, id);
+		});
 
-	public static void pauseExecution(long milis) {
-		try {
-			Thread.sleep(milis);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
+		JsonArray allRepoUrlsToSave = new JsonArray();
+		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
+
+//			this entry is problematic, it contains many null's, we skip it for now, whe should later either allow more
+//			null fields or set default empty strings as values
+			if (softwareFromLegacyRSD.get("slug").getAsString().equals("palmetto-position-lucene-wikipedia")) return;
+
+//			an example of an entry with multiple urls is with slug vantage6
+			JsonArray urls = softwareFromLegacyRSD.get("repositoryURLs").getAsJsonObject().get("github").getAsJsonArray();
+			String slug = softwareFromLegacyRSD.get("slug").getAsString();
+			urls.forEach(jsonUrl -> {
+				JsonObject repoUrlToSave = new JsonObject();
+				repoUrlToSave.addProperty("software", slugToId.get(slug));
+				repoUrlToSave.add("url", jsonUrl);
+				allRepoUrlsToSave.add(repoUrlToSave);
+			});
+		});
+		post(URI.create(PORSGREST_URI + "/repository_url"), allRepoUrlsToSave.toString());
 	}
 
 	public static String get(URI uri) {

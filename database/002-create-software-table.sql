@@ -12,7 +12,7 @@ CREATE TABLE software (
 	updated_at TIMESTAMP NOT NULL
 );
 
-CREATE FUNCTION sanitise_insert() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_insert_software() RETURNS TRIGGER LANGUAGE plpgsql as
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -22,10 +22,10 @@ BEGIN
 END
 $$;
 
-CREATE TRIGGER sanitise_insert BEFORE INSERT ON software FOR EACH ROW EXECUTE PROCEDURE sanitise_insert();
+CREATE TRIGGER sanitise_insert_software BEFORE INSERT ON software FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_software();
 
 
-CREATE FUNCTION sanitise_update() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_software() RETURNS TRIGGER LANGUAGE plpgsql as
 $$
 BEGIN
 	NEW.id = OLD.id;
@@ -35,4 +35,4 @@ BEGIN
 END
 $$;
 
-CREATE TRIGGER sanitise_update BEFORE UPDATE ON software FOR EACH ROW EXECUTE PROCEDURE sanitise_update();
+CREATE TRIGGER sanitise_update_software BEFORE UPDATE ON software FOR EACH ROW EXECUTE PROCEDURE sanitise_update_software();
