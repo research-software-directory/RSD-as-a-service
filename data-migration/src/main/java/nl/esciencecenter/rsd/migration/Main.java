@@ -1,6 +1,7 @@
 package nl.esciencecenter.rsd.migration;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -10,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Main {
@@ -22,6 +24,8 @@ public class Main {
 		String allSoftwareString = get(URI.create(LEGACY_RSD_SOFTWARE_URI));
 		JsonArray allSoftwareFromLegacyRSD = JsonParser.parseString(allSoftwareString).getAsJsonArray();
 
+		removeProblematicEntry(allSoftwareFromLegacyRSD);
+
 		tryBackendConnection();
 
 		saveSoftware(allSoftwareFromLegacyRSD);
@@ -31,6 +35,19 @@ public class Main {
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
 		saveProjects(allProjectsFromLegacyRSD);
 		saveProjectImages(allProjectsFromLegacyRSD);
+	}
+
+	public static void removeProblematicEntry(JsonArray softwareArray) {
+		Iterator<JsonElement> iterator = softwareArray.iterator();
+		while (iterator.hasNext()) {
+			String slugToCheck = iterator.next().getAsJsonObject().get("slug").getAsString();
+//			this entry is problematic, it contains many nulls, we skip it for now, whe should later either allow more
+//			null fields or set default empty strings as values
+			if (slugToCheck.equals("palmetto-position-lucene-wikipedia")) {
+				iterator.remove();
+				break;
+			}
+		}
 	}
 
 	public static void tryBackendConnection() {
@@ -61,10 +78,6 @@ public class Main {
 			JsonObject softwareToSave = new JsonObject();
 			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
 
-//			this entry is problematic, it contains many nulls, we skip it for now, whe should later either allow more
-//			null fields or set default empty strings as values
-			if (softwareFromLegacyRSD.get("slug").getAsString().equals("palmetto-position-lucene-wikipedia")) return;
-
 			softwareToSave.add("slug", softwareFromLegacyRSD.get("slug"));
 			softwareToSave.add("brand_name", softwareFromLegacyRSD.get("brandName"));
 			softwareToSave.add("bullets", softwareFromLegacyRSD.get("bullets"));
@@ -93,10 +106,6 @@ public class Main {
 		JsonArray allRepoUrlsToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
-
-//			this entry is problematic, it contains many nulls, we skip it for now, whe should later either allow more
-//			null fields or set default empty strings as values
-			if (softwareFromLegacyRSD.get("slug").getAsString().equals("palmetto-position-lucene-wikipedia")) return;
 
 //			an example of an entry with multiple urls is with slug vantage6
 			JsonArray urls = softwareFromLegacyRSD.get("repositoryURLs").getAsJsonObject().get("github").getAsJsonArray();
