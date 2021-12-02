@@ -30,6 +30,7 @@ public class Main {
 
 		saveSoftware(allSoftwareFromLegacyRSD);
 		saveRepoUrls(allSoftwareFromLegacyRSD);
+		saveLicenses(allSoftwareFromLegacyRSD);
 
 		String allProjectsString = get(URI.create(LEGACY_RSD_PROJECT_URI));
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
@@ -118,6 +119,32 @@ public class Main {
 			});
 		});
 		post(URI.create(PORSGREST_URI + "/repository_url"), allRepoUrlsToSave.toString());
+	}
+
+	public static void saveLicenses(JsonArray allSoftwareFromLegacyRSD) {
+		JsonArray savedSoftware = JsonParser.parseString(get(URI.create(PORSGREST_URI + "/software?select=id,slug"))).getAsJsonArray();
+		Map<String, String> slugToId = new HashMap<>();
+		savedSoftware.forEach(jsonElement -> {
+			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
+			String id = jsonElement.getAsJsonObject().get("id").getAsString();
+			slugToId.put(slug, id);
+		});
+
+		JsonArray allLicensesToSave = new JsonArray();
+		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
+
+//			an example of an entry with multiple licenses is with slug eucp-atlas
+			JsonArray licenses = softwareFromLegacyRSD.get("license").getAsJsonArray();
+			String slug = softwareFromLegacyRSD.get("slug").getAsString();
+			licenses.forEach(jsonLicense -> {
+				JsonObject repoUrlToSave = new JsonObject();
+				repoUrlToSave.addProperty("software", slugToId.get(slug));
+				repoUrlToSave.add("license", jsonLicense);
+				allLicensesToSave.add(repoUrlToSave);
+			});
+		});
+		post(URI.create(PORSGREST_URI + "/license_for_software"), allLicensesToSave.toString());
 	}
 
 	public static void saveProjects(JsonArray allProjectsFromLegacyRSD) {
