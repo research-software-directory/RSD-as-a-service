@@ -18,6 +18,7 @@ public class Main {
 
 	public static final String LEGACY_RSD_SOFTWARE_URI = "https://research-software.nl/api/software";
 	public static final String LEGACY_RSD_PROJECT_URI = "https://research-software.nl/api/project";
+	public static final String LEGACY_RSD_PERSON_URI = "https://research-software.nl/api/person";
 	public static final String PORSGREST_URI = "http://localhost:3000";
 
 	public static void main(String[] args) {
@@ -33,6 +34,7 @@ public class Main {
 		saveRepoUrls(allSoftwareFromLegacyRSD, slugToId);
 		saveLicenses(allSoftwareFromLegacyRSD, slugToId);
 		saveTags(allSoftwareFromLegacyRSD, slugToId);
+		saveContributors(allSoftwareFromLegacyRSD, slugToId);
 
 		String allProjectsString = get(URI.create(LEGACY_RSD_PROJECT_URI));
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
@@ -160,6 +162,47 @@ public class Main {
 			});
 		});
 		post(URI.create(PORSGREST_URI + "/tag_for_software"), allTagsToSave.toString());
+	}
+
+	public static void saveContributors(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
+//		TODO: affiliations from contributors?
+		String allPersonsString = get(URI.create(LEGACY_RSD_PERSON_URI));
+		JsonArray allPersonsFromLegacyRSD = JsonParser.parseString(allPersonsString).getAsJsonArray();
+
+//		each person has an id, we need to find the person given this id since the software api only lists the id's
+		Map<String, JsonObject> personIdToObject = new HashMap<>();
+		allPersonsFromLegacyRSD.forEach(jsonPerson -> {
+			String id = jsonPerson.getAsJsonObject().getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
+			if (personIdToObject.containsKey(id)) throw new RuntimeException("Duplicate id for person exists: " + id);
+			personIdToObject.put(id, jsonPerson.getAsJsonObject());
+		});
+
+		JsonArray allContributorsToSave = new JsonArray();
+		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
+			JsonObject softwareFromLegacyRSD = jsonSoftware.getAsJsonObject();
+			String slug = softwareFromLegacyRSD.getAsJsonPrimitive("slug").getAsString();
+			String softwareId = slugToId.get(slug);
+
+			JsonArray contributorsForSoftware = softwareFromLegacyRSD.getAsJsonArray("contributors");
+			contributorsForSoftware.forEach(jsonContributor -> {
+				JsonObject contributorFromLegacyRSD = jsonContributor.getAsJsonObject();
+				JsonObject contributorToSave = new JsonObject();
+
+				contributorToSave.addProperty("software", softwareId);
+				contributorToSave.add("is_contact_person", contributorFromLegacyRSD.get("isContactPerson"));
+				String personId = contributorFromLegacyRSD.getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				JsonObject personData = personIdToObject.get(personId);
+//				TODO: change empty strings into null?
+				contributorToSave.add("email_address", personData.get("emailAddress"));
+				contributorToSave.add("family_names", personData.get("familyNames"));
+				contributorToSave.add("given_names", personData.get("givenNames"));
+				contributorToSave.add("name_particle", personData.get("nameParticle"));
+				contributorToSave.add("name_suffix", personData.get("nameSuffix"));
+
+				allContributorsToSave.add(contributorToSave);
+			});
+		});
+		post(URI.create(PORSGREST_URI + "/contributor"), allContributorsToSave.toString());
 	}
 
 	public static void saveProjects(JsonArray allProjectsFromLegacyRSD) {
