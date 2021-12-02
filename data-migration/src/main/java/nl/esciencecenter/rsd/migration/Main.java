@@ -29,8 +29,10 @@ public class Main {
 		tryBackendConnection();
 
 		saveSoftware(allSoftwareFromLegacyRSD);
-		saveRepoUrls(allSoftwareFromLegacyRSD);
-		saveLicenses(allSoftwareFromLegacyRSD);
+		Map<String, String> slugToId = slugToId();
+		saveRepoUrls(allSoftwareFromLegacyRSD, slugToId);
+		saveLicenses(allSoftwareFromLegacyRSD, slugToId);
+		saveTags(allSoftwareFromLegacyRSD, slugToId);
 
 		String allProjectsString = get(URI.create(LEGACY_RSD_PROJECT_URI));
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
@@ -93,9 +95,7 @@ public class Main {
 		post(URI.create(PORSGREST_URI + "/software"), allSoftwareToSave.toString());
 	}
 
-	public static void saveRepoUrls(JsonArray allSoftwareFromLegacyRSD) {
-//		unfortunately, PostgREST doesn't allow for patching or posting when using resource embedding,
-//		therefore, we need to get the just saved software id's in order to populate the repository_url table
+	public static Map<String, String> slugToId() {
 		JsonArray savedSoftware = JsonParser.parseString(get(URI.create(PORSGREST_URI + "/software?select=id,slug"))).getAsJsonArray();
 		Map<String, String> slugToId = new HashMap<>();
 		savedSoftware.forEach(jsonElement -> {
@@ -103,7 +103,12 @@ public class Main {
 			String id = jsonElement.getAsJsonObject().get("id").getAsString();
 			slugToId.put(slug, id);
 		});
+		return slugToId;
+	}
 
+	public static void saveRepoUrls(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
+//		unfortunately, PostgREST doesn't allow for patching or posting when using resource embedding,
+//		therefore, we need to get the just saved software id's in order to populate the repository_url table
 		JsonArray allRepoUrlsToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
@@ -121,15 +126,7 @@ public class Main {
 		post(URI.create(PORSGREST_URI + "/repository_url"), allRepoUrlsToSave.toString());
 	}
 
-	public static void saveLicenses(JsonArray allSoftwareFromLegacyRSD) {
-		JsonArray savedSoftware = JsonParser.parseString(get(URI.create(PORSGREST_URI + "/software?select=id,slug"))).getAsJsonArray();
-		Map<String, String> slugToId = new HashMap<>();
-		savedSoftware.forEach(jsonElement -> {
-			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
-			String id = jsonElement.getAsJsonObject().get("id").getAsString();
-			slugToId.put(slug, id);
-		});
-
+	public static void saveLicenses(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
 		JsonArray allLicensesToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
@@ -138,13 +135,31 @@ public class Main {
 			JsonArray licenses = softwareFromLegacyRSD.get("license").getAsJsonArray();
 			String slug = softwareFromLegacyRSD.get("slug").getAsString();
 			licenses.forEach(jsonLicense -> {
-				JsonObject repoUrlToSave = new JsonObject();
-				repoUrlToSave.addProperty("software", slugToId.get(slug));
-				repoUrlToSave.add("license", jsonLicense);
-				allLicensesToSave.add(repoUrlToSave);
+				JsonObject licenseToSave = new JsonObject();
+				licenseToSave.addProperty("software", slugToId.get(slug));
+				licenseToSave.add("license", jsonLicense);
+				allLicensesToSave.add(licenseToSave);
 			});
 		});
 		post(URI.create(PORSGREST_URI + "/license_for_software"), allLicensesToSave.toString());
+	}
+
+	public static void saveTags(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
+		JsonArray allTagsToSave = new JsonArray();
+		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
+
+//			an example of an entry with multiple tags is with slug ahn2webviewer
+			JsonArray tags = softwareFromLegacyRSD.get("tags").getAsJsonArray();
+			String slug = softwareFromLegacyRSD.get("slug").getAsString();
+			tags.forEach(jsonTag -> {
+				JsonObject tagToSave = new JsonObject();
+				tagToSave.addProperty("software", slugToId.get(slug));
+				tagToSave.add("tag", jsonTag);
+				allTagsToSave.add(tagToSave);
+			});
+		});
+		post(URI.create(PORSGREST_URI + "/tag_for_software"), allTagsToSave.toString());
 	}
 
 	public static void saveProjects(JsonArray allProjectsFromLegacyRSD) {
