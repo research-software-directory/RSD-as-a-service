@@ -1,0 +1,64 @@
+/* Nuxt root element */
+#__next{
+  display:flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/**
+  Resize screen on smartphone using rem and font size
+**/
+
+@media screen and (max-width: 640px) {
+  html{
+    font-size: 75%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  html{
+    font-size: 65%;
+  }
+}
+
+
+/* Format JSON.stringify - FOR TESTING ONLY */
+pre {
+  border: 1px solid lightgrey;
+  padding: 1rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+
+/* -------------------------------------
+  custom scrollbar
+---------------------------------------*/
+
+body{
+  box-sizing: border-box;
+  /* fix jumping scrollbar */
+  overflow: overlay;
+  --scrollbar-thumb: #e4e4e7;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+/* track */
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+}
+
+/* handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  background: rgba(0,0,0,0.25);
+}
+
+/* handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.5);
+}
