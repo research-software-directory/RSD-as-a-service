@@ -2,6 +2,7 @@ package nl.esciencecenter.rsd.migration;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -165,7 +166,7 @@ public class Main {
 	}
 
 	public static void saveContributors(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
-//		TODO: affiliations from contributors?
+//		TODO: affiliations from contributors? YES, mapping to ROR possible?
 		String allPersonsString = get(URI.create(LEGACY_RSD_PERSON_URI));
 		JsonArray allPersonsFromLegacyRSD = JsonParser.parseString(allPersonsString).getAsJsonArray();
 
@@ -192,17 +193,23 @@ public class Main {
 				contributorToSave.add("is_contact_person", contributorFromLegacyRSD.get("isContactPerson"));
 				String personId = contributorFromLegacyRSD.getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
 				JsonObject personData = personIdToObject.get(personId);
-//				TODO: change empty strings into null?
-				contributorToSave.add("email_address", personData.get("emailAddress"));
+				contributorToSave.add("email_address", nullIfBlank(personData.get("emailAddress")));
 				contributorToSave.add("family_names", personData.get("familyNames"));
 				contributorToSave.add("given_names", personData.get("givenNames"));
-				contributorToSave.add("name_particle", personData.get("nameParticle"));
-				contributorToSave.add("name_suffix", personData.get("nameSuffix"));
+				contributorToSave.add("name_particle", nullIfBlank(personData.get("nameParticle")));
+				contributorToSave.add("name_suffix", nullIfBlank(personData.get("nameSuffix")));
 
 				allContributorsToSave.add(contributorToSave);
 			});
 		});
 		post(URI.create(PORSGREST_URI + "/contributor"), allContributorsToSave.toString());
+	}
+
+	public static JsonElement nullIfBlank(JsonElement jsonString) {
+		if (jsonString == null || jsonString.isJsonNull()) return JsonNull.INSTANCE;
+		String stringToCheck = jsonString.getAsString();
+		if (stringToCheck.isBlank()) return JsonNull.INSTANCE;
+		else return jsonString;
 	}
 
 	public static void saveProjects(JsonArray allProjectsFromLegacyRSD) {
