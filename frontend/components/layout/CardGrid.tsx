@@ -1,4 +1,4 @@
-
+import {ReactNode} from 'react'
 import styled from '@mui/system/styled'
 
 const SectionStyled = styled('section')(({theme})=>({
@@ -14,7 +14,7 @@ const SectionStyled = styled('section')(({theme})=>({
   }
 }))
 
-export default function CardGrid({children}:{children:any}) {
+export default function CardGrid({children}:{children:ReactNode}) {
   return (
     <SectionStyled>
       {children}

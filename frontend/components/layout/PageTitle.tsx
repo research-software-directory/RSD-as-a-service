@@ -1,3 +1,4 @@
+import {ReactNode} from 'react'
 import Typography from '@mui/material/Typography'
 import styled from '@mui/system/styled'
 
@@ -15,7 +16,7 @@ const PageTitleStyled = styled("section")(({theme})=>({
   },
 }))
 
-export default function PageTitle({title,children}:{title:string,children?:any}) {
+export default function PageTitle({title,children}:{title:string,children?:ReactNode}) {
   return (
     <PageTitleStyled>
       <Typography variant="h1" sx={{flex:1}} color="secondary">
