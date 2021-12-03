@@ -1,10 +1,17 @@
 import {styled} from "@mui/system"
 import {nextRouterWithLink} from './nextRouterWithLink'
 
-const LogoSvg = styled('svg')({
-  maxWidth: '4rem',
-  maxHeight: '4rem',
-})
+type LogoProps={
+  width?:string,
+  height?:string,
+  margin?:string
+}
+
+const LogoSvg = styled('svg')<LogoProps>`
+  width:${({width})=> width ?? '4rem'};
+  height:${({height})=> height ?? '4rem'};
+  margin:${({margin})=> margin ?? ''}
+`
 
 const LogoContainer = styled('a')({
   display:'flex',
@@ -13,7 +20,7 @@ const LogoContainer = styled('a')({
   cursor: 'pointer'
 })
 
-export default function RSDLogo({width,height, ...props}:{width?:string,height?:string}) {
+export default function RSDLogo({width,height,margin, ...props}:{width?:string,height?:string,margin?:string}) {
   return (
     <LogoContainer
       title="Research Software Directory"
@@ -27,6 +34,7 @@ export default function RSDLogo({width,height, ...props}:{width?:string,height?:
         xmlns="http://www.w3.org/2000/svg"
         width={width}
         height={height}
+        margin={margin}
       >
         <g clipPath="url(#clip0_679_64)">
         <path d="M243.88 190.39C268.845 207.321 308.612 221.621 363.181 233.292C406.704 242.661 436.75 252.195 453.32 261.893C469.89 271.426 478.175 284.987 478.175 302.575C478.175 320.163 469.227 334.052 451.332 344.243C433.437 354.435 407.698 359.53 374.117 359.53C338.106 359.53 309.275 353.284 287.624 340.792C266.194 328.135 255.479 310.958 255.479 289.261L234.5 305.5L191.52 289.261C191.52 310.136 199.253 328.792 214.717 345.23C230.403 361.667 252.607 374.653 281.327 384.186C310.048 393.555 340.978 398.24 374.117 398.24C425.152 398.24 465.913 389.528 496.401 372.105C526.889 354.517 542.133 331.176 542.133 302.082C542.133 283.836 536.61 267.974 525.564 254.496C514.738 241.017 497.948 229.264 475.192 219.238C452.657 209.047 421.286 199.759 381.077 191.376C341.089 182.993 312.699 173.789 295.909 163.762C279.339 153.571 271.054 141.16 271.054 126.531C271.054 108.286 279.781 94.0676 297.234 83.8764C314.908 73.5209 339.432 68.3432 370.803 68.3432C404.605 68.3432 430.785 74.5893 449.343 87.0817C467.901 99.4097 477.18 116.422 477.18 138.12L496.401 117.5L541.139 138.12C541.139 118.23 533.959 99.9028 519.599 83.1367C505.459 66.3707 485.355 53.2208 459.285 43.6872C433.437 34.1535 403.943 29.3867 370.803 29.3867C322.199 29.3867 282.653 38.6738 252.165 57.248C221.898 75.6578 206.764 98.9988 206.764 127.271C206.764 152.256 219.136 173.295 243.88 190.39Z" fill="#380339" fillOpacity="0.88"/>

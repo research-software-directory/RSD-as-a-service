@@ -5,7 +5,6 @@ import TextField from '@mui/material/TextField'
 import Link from '@mui/material/Link'
 import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 
 import RSDLogo from '../components/layout/RSDLogo'
@@ -36,9 +35,6 @@ export default function SignIn() {
         }}
       >
         <RSDLogo width="9rem" height="9rem" />
-        {/* <Typography component="h1" variant="h5">
-          Sign in
-        </Typography> */}
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             variant="standard"
@@ -62,10 +58,6 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
           />
-          {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
           <Button
             type="submit"
             fullWidth
