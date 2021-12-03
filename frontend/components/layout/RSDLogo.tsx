@@ -2,9 +2,8 @@ import {styled} from "@mui/system"
 import {nextRouterWithLink} from './nextRouterWithLink'
 
 const LogoSvg = styled('svg')({
-  minWidth: '4rem',
-  minHeight: '4rem',
-  margin: '0rem 1rem 0rem 0rem'
+  maxWidth: '4rem',
+  maxHeight: '4rem',
 })
 
 const LogoContainer = styled('a')({
@@ -14,18 +13,13 @@ const LogoContainer = styled('a')({
   cursor: 'pointer'
 })
 
-// const LogoText = styled('div')({
-//   fontSize: '2rem',
-//   padding: 0,
-//   margin: 0
-// })
-
-export default function RSDLogo({width,height}:{width?:string,height?:string}) {
+export default function RSDLogo({width,height, ...props}:{width?:string,height?:string}) {
   return (
     <LogoContainer
       title="Research Software Directory"
       href="/"
       onClick={(e)=>nextRouterWithLink(e,"/")}
+      {...props}
     >
       <LogoSvg
         viewBox="0 0 608 608"
@@ -45,7 +39,6 @@ export default function RSDLogo({width,height}:{width?:string,height?:string}) {
         </clipPath>
         </defs>
       </LogoSvg>
-      {/* <LogoText>Reasearch Software Directory</LogoText> */}
     </LogoContainer>
   )
 }

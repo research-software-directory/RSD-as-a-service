@@ -70,7 +70,7 @@ export default function AppHeader(){
         zIndex: 8
       }}
     >
-      <RSDLogo />
+      <RSDLogo width='4rem' height='4rem' />
       <Box component="nav"
         sx={{
           display: 'flex',
