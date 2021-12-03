@@ -20,6 +20,7 @@ public class Main {
 	public static final String LEGACY_RSD_SOFTWARE_URI = "https://research-software.nl/api/software";
 	public static final String LEGACY_RSD_PROJECT_URI = "https://research-software.nl/api/project";
 	public static final String LEGACY_RSD_PERSON_URI = "https://research-software.nl/api/person";
+	public static final String LEGACY_RSD_MENTION_URI = "https://research-software.nl/api/mention";
 	public static final String PORSGREST_URI = "http://localhost:3000";
 
 	public static void main(String[] args) {
@@ -41,6 +42,10 @@ public class Main {
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
 		saveProjects(allProjectsFromLegacyRSD);
 		saveProjectImages(allProjectsFromLegacyRSD);
+
+		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
+		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
+		saveMentions(allMentionsFromLegacyRSD);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -257,6 +262,27 @@ public class Main {
 			allImagesToSave.add(imageToSave);
 		});
 		post(URI.create(PORSGREST_URI + "/image_for_project"), allImagesToSave.toString());
+	}
+
+	public static void saveMentions(JsonArray allMentionsFromLegacyRSD) {
+		JsonArray allMentionsToSave = new JsonArray();
+		allMentionsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject mentionToSave = new JsonObject();
+			JsonObject mentionFromLegacyRSD = jsonElement.getAsJsonObject();
+
+			mentionToSave.add("author", mentionFromLegacyRSD.get("author"));
+			mentionToSave.add("date", mentionFromLegacyRSD.get("date"));
+			mentionToSave.add("image", mentionFromLegacyRSD.get("image"));
+			mentionToSave.add("is_corporate_blog", mentionFromLegacyRSD.get("isCorporateBlog"));
+			mentionToSave.add("title", mentionFromLegacyRSD.get("title"));
+			mentionToSave.add("type", mentionFromLegacyRSD.get("type"));
+			mentionToSave.add("url", mentionFromLegacyRSD.get("url"));
+			mentionToSave.add("version", mentionFromLegacyRSD.get("version"));
+			mentionToSave.add("zotero_key", mentionFromLegacyRSD.get("zoteroKey"));
+
+			allMentionsToSave.add(mentionToSave);
+		});
+		post(URI.create(PORSGREST_URI + "/mention"), allMentionsToSave.toString());
 	}
 
 	public static String get(URI uri) {
