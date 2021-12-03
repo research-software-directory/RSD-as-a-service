@@ -14,7 +14,7 @@ import {ProjectItem} from '../../../types/ProjectItem'
 export default function ProjectItemPage({project, slug}:{project:ProjectItem, slug:string}) {
   const router = useRouter()
   const {status} = useSession()
-  console.log("useSession.status...", status)
+  // console.log("useSession.status...", status)
   return (
     <DefaultLayout>
       <Head>
@@ -48,7 +48,7 @@ export default function ProjectItemPage({project, slug}:{project:ProjectItem, sl
 export async function getServerSideProps(context:any) {
 try{
   const {params} = context
-  console.log("getServerSideProps...params...", params)
+  // console.log("getServerSideProps...params...", params)
   const project = await getProject(params?.slug)
   if (!project){
     // returning this value

@@ -9,7 +9,7 @@ const LogoutPage: NextPage = () => {
 
   useEffect(()=>{
     if (data && data.user){
-      console.log("signing you out!!!")
+      // console.log("signing you out!!!")
       signOut()
     }
   })

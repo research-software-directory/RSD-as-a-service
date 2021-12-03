@@ -14,7 +14,7 @@ import { SoftwareItem } from '../../../types/SoftwareItem'
 export default function SoftwareIndexPage({software, slug}:{software:SoftwareItem, slug:string}) {
   const router = useRouter()
   const {status} = useSession()
-  console.log("useSession.status...", status)
+  // console.log("useSession.status...", status)
   return (
     <DefaultLayout>
       <Head>
@@ -48,7 +48,7 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
 export async function getServerSideProps(context:any) {
 try{
   const {params} = context
-  console.log("getServerSideProps...params...", params)
+  // console.log("getServerSideProps...params...", params)
   const software = await getSoftwareItem(params?.slug)
   if (!software){
     // returning this value
