@@ -46,6 +46,7 @@ public class Main {
 		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
 		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
 		saveMentions(allMentionsFromLegacyRSD);
+		saveMentionsForSoftware(allMentionsFromLegacyRSD, allSoftwareFromLegacyRSD, slugToId);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -283,6 +284,48 @@ public class Main {
 			allMentionsToSave.add(mentionToSave);
 		});
 		post(URI.create(PORSGREST_URI + "/mention"), allMentionsToSave.toString());
+	}
+
+	public static void saveMentionsForSoftware(JsonArray allMentionsFromLegacyRSD, JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
+//		So we have a problem here: how to uniquely identify a mention?
+//		This is needed to retrieve the primary key for a mention after it is saved in Postgres.
+//		Unfortunately, title is not unique, zotero_key can be null.
+//		Luckily, the combination of title and zotero_key is unique at the time of writing.
+//		We throw an exception if this is not the case in the future.
+		JsonArray savedMentions = JsonParser.parseString(get(URI.create(PORSGREST_URI + "/mention?select=id,title,zotero_key"))).getAsJsonArray();
+		Map<MentionRecord, String> mentionToId = new HashMap<>();
+		savedMentions.forEach(jsonMention -> {
+			String id = jsonMention.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+			String title = jsonMention.getAsJsonObject().getAsJsonPrimitive("title").getAsString();
+			String zoteroKey = jsonMention.getAsJsonObject().getAsJsonPrimitive("zotero_key").getAsString();
+			mentionToId.put(new MentionRecord(title, zoteroKey), id);
+		});
+		if (mentionToId.size() != allMentionsFromLegacyRSD.size())
+			throw new RuntimeException("Mention sizes not equal, is " + mentionToId.size() + " but should be " + allMentionsFromLegacyRSD.size());
+
+		Map<String, MentionRecord> legacyIdToRecord = new HashMap<>();
+		allMentionsFromLegacyRSD.forEach(legacyMention -> {
+			JsonObject legacyMentionObject = legacyMention.getAsJsonObject();
+			String legacyId = legacyMentionObject.getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
+			String legacyTitle = legacyMentionObject.getAsJsonPrimitive("title").getAsString();
+			String legacyZoteroKey = legacyMentionObject.getAsJsonPrimitive("zoteroKey").getAsString();
+			legacyIdToRecord.put(legacyId, new MentionRecord(legacyTitle, legacyZoteroKey));
+		});
+
+		JsonArray allMentionsForSoftwareToSave = new JsonArray();
+		allSoftwareFromLegacyRSD.forEach(legacySoftware -> {
+			String slug = legacySoftware.getAsJsonObject().getAsJsonPrimitive("slug").getAsString();
+			legacySoftware.getAsJsonObject().getAsJsonObject("related").getAsJsonArray("mentions").forEach(legacyMention -> {
+				String legacyId = legacyMention.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				MentionRecord mentionRecord = legacyIdToRecord.get(legacyId);
+				String newId = mentionToId.get(mentionRecord);
+				JsonObject mentionForSoftwareToSave = new JsonObject();
+				mentionForSoftwareToSave.addProperty("mention", newId);
+				mentionForSoftwareToSave.addProperty("software", slugToId.get(slug));
+				allMentionsForSoftwareToSave.add(mentionForSoftwareToSave);
+			});
+		});
+		post(URI.create(PORSGREST_URI + "/mention_for_software"), allMentionsForSoftwareToSave.toString());
 	}
 
 	public static String get(URI uri) {

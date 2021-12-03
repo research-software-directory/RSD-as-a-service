@@ -59,3 +59,11 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_mention BEFORE UPDATE ON mention FOR EACH ROW EXECUTE PROCEDURE sanitise_update_mention();
+
+
+
+CREATE TABLE mention_for_software(
+	mention UUID REFERENCES mention (id),
+	software UUID REFERENCES software (id),
+	PRIMARY KEY (mention, software)
+);

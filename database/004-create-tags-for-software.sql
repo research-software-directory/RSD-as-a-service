@@ -14,7 +14,7 @@ CREATE TYPE tag as ENUM (
 );
 
 CREATE TABLE tag_for_software (
-	software UUID references software (id) NOT NULL,
-	tag tag NOT NULL,
-	PRIMARY KEY(software, tag)
+	software UUID references software (id),
+	tag tag,
+	PRIMARY KEY (software, tag)
 );
