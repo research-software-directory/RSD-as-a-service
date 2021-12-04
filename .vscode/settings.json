@@ -1,0 +1,7 @@
+{
+  // need to add this to resolve error Cannot find module 'next/babel'
+  // in javascript files (jest.config.js, jest.setup.js) in VSCode
+  "eslint.workingDirectories": [
+    "./frontend",
+  ]
+}
