@@ -1,13 +1,13 @@
 import {useEffect} from 'react'
 import router from 'next/router'
-import { SessionProvider } from "next-auth/react"
-import Head from 'next/head';
+import {SessionProvider} from "next-auth/react"
+import Head from 'next/head'
 import {AppProps} from 'next/app'
-import {ThemeProvider} from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import {CacheProvider, EmotionCache} from '@emotion/react';
-import {rsdTheme} from '../styles/rsdTheme';
-import createEmotionCache from '../styles/createEmotionCache';
+import {ThemeProvider} from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import {CacheProvider, EmotionCache} from '@emotion/react'
+import {rsdTheme} from '../styles/rsdTheme'
+import createEmotionCache from '../styles/createEmotionCache'
 
 // show loading bar at the top of the screen
 import nprogress from 'nprogress'
@@ -17,7 +17,7 @@ import 'nprogress/nprogress.css'
 import '../styles/global.css'
 
 // Client-side cache, shared for the whole session of the user in the browser.
-const clientSideEmotionCache = createEmotionCache();
+const clientSideEmotionCache = createEmotionCache()
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps{
@@ -31,7 +31,7 @@ nprogress.configure({showSpinner:false})
 export default function RsdApp(props:MuiAppProps) {
   const {Component, emotionCache = clientSideEmotionCache, pageProps} = props;
   const {pageProps:{session}} = props
-
+  // console .log("session...", JSON.stringify(session))
   useEffect(()=>{
     router.events.on("routeChangeStart", ()=>{
       // console.log("routeChangeStart...")

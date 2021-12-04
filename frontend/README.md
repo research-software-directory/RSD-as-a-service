@@ -52,6 +52,44 @@ In short, add theme provider to \_app.tsx file
 
 For authentication we use `next-auth`. For more information see [official documentation](https://next-auth.js.org/getting-started/example).
 
+## Unit testing
+
+For unit testing we use [react testing library](https://testing-library.com/docs/react-testing-library/intro/).
+There are several practices that the React Testing Library promotes:
+
+- Avoid testing internal component state
+- Testing how a component renders
+
+The setup is performed according to [official Next documentation](https://nextjs.org/docs/testing#jest-and-react-testing-library)
+
+### Setup steps performed
+
+```bash
+# install dependencies
+npm install --save-dev jest @testing-library/react @testing-library/jest-dom react-test-renderer
+# install jest-fetch-mock support fetch in Jest (node environment not browser)
+# and whatwg-fetch to address next-auth fetch requests on node js (node-fetch)
+npm i -D jest-fetch-mock whatwg-fetch
+
+```
+
+- create jest.config.js file and paste content from next instructions
+- crate jest.setup.ts file and paste this content.
+
+```javascript
+// isomorphic fetch suport for Node
+// required to support fetch with Jest
+import "whatwg-fetch";
+// specific
+import "@testing-library/jest-dom/extend-expect";
+```
+
+### Fetch mock
+
+I tried to use fetch mock. More [info about setup here](https://frontend-digest.com/testing-getserversideprops-in-nextjs-b339ebcf3401).
+
+**The fetch mock library does not integrate well with next-auth. When enabled it causes error in session provider of next-auth. Further investigation is required.**
+
 ## NextJS
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

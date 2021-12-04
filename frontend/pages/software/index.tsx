@@ -10,7 +10,7 @@ import SoftwareCard from '../../components/software/SoftwareCard'
 import {SoftwareItem} from '../../types/SoftwareItem'
 import {getSoftwareList} from '../../utils/getSoftware'
 
-export default function SoftwareIndexPage({software}:{software:SoftwareItem[]}) {
+export default function SoftwareIndexPage({software=[]}:{software:SoftwareItem[]}) {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(12)
   const [softwareList, setSoftwareList] = useState(software)
@@ -26,21 +26,22 @@ export default function SoftwareIndexPage({software}:{software:SoftwareItem[]}) 
     })
   },[page,rowsPerPage])
 
-  const handleChangePage = (
+  function handleChangePage(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
-  ) => {
+  ){
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
+  function handleChangeRowsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  ){
     setRowsPerPage(parseInt(event.target.value));
     setPage(0);
   };
-  // just take first item as example
-  const item = softwareList[0]
+
+  // console.log("software...", software)
+
   return (
     <DefaultLayout>
       <Head>
@@ -73,6 +74,7 @@ export default function SoftwareIndexPage({software}:{software:SoftwareItem[]}) 
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:any) {
   const software:SoftwareItem[] = await getSoftwareList({limit:12,offset:0})
+  // console.log("getServerSideProps...software...", software)
   return {
     // will be passed to the page component as props
     // see params in SoftwareIndexPage
