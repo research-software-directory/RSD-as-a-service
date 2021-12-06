@@ -32,21 +32,24 @@ public class Main {
 		tryBackendConnection();
 
 		saveSoftware(allSoftwareFromLegacyRSD);
-		Map<String, String> slugToId = slugToId();
-		saveRepoUrls(allSoftwareFromLegacyRSD, slugToId);
-		saveLicenses(allSoftwareFromLegacyRSD, slugToId);
-		saveTags(allSoftwareFromLegacyRSD, slugToId);
-		saveContributors(allSoftwareFromLegacyRSD, slugToId);
+		Map<String, String> slugToIdSoftware = slugToId("/software?select=id,slug");
+		saveRepoUrls(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		saveLicenses(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		saveTags(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		saveContributors(allSoftwareFromLegacyRSD, slugToIdSoftware);
 
 		String allProjectsString = get(URI.create(LEGACY_RSD_PROJECT_URI));
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
 		saveProjects(allProjectsFromLegacyRSD);
+		Map<String, String> slugToIdProject = slugToId("/project?select=id,slug");
 		saveProjectImages(allProjectsFromLegacyRSD);
 
 		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
 		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
 		saveMentions(allMentionsFromLegacyRSD);
-		saveMentionsForSoftware(allMentionsFromLegacyRSD, allSoftwareFromLegacyRSD, slugToId);
+		Map<String, String> legacyMentionIdToId = legacyMentionIdToId(allMentionsFromLegacyRSD);
+		saveMentionsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyMentionIdToId);
+		saveImpactAndOutputForProjects(allProjectsFromLegacyRSD, slugToIdProject, legacyMentionIdToId);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -104,8 +107,8 @@ public class Main {
 		post(URI.create(PORSGREST_URI + "/software"), allSoftwareToSave.toString());
 	}
 
-	public static Map<String, String> slugToId() {
-		JsonArray savedSoftware = JsonParser.parseString(get(URI.create(PORSGREST_URI + "/software?select=id,slug"))).getAsJsonArray();
+	public static Map<String, String> slugToId(String endpoint) {
+		JsonArray savedSoftware = JsonParser.parseString(get(URI.create(PORSGREST_URI + endpoint))).getAsJsonArray();
 		Map<String, String> slugToId = new HashMap<>();
 		savedSoftware.forEach(jsonElement -> {
 			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
@@ -288,7 +291,7 @@ public class Main {
 		post(URI.create(PORSGREST_URI + "/mention"), allMentionsToSave.toString());
 	}
 
-	public static void saveMentionsForSoftware(JsonArray allMentionsFromLegacyRSD, JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
+	public static Map<String, String> legacyMentionIdToId(JsonArray allMentionsFromLegacyRSD) {
 //		So we have a problem here: how to uniquely identify a mention?
 //		This is needed to retrieve the primary key for a mention after it is saved in Postgres.
 //		Unfortunately, title is not unique, zotero_key can be null.
@@ -314,13 +317,18 @@ public class Main {
 			legacyIdToRecord.put(legacyId, new MentionRecord(legacyTitle, legacyZoteroKey));
 		});
 
+		Map<String, String> result = new HashMap<>();
+		legacyIdToRecord.forEach((legacyId, mentionRecord) -> result.put(legacyId, mentionToId.get(mentionRecord)));
+		return result;
+	}
+
+	public static void saveMentionsForSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId, Map<String, String> legacyMentionIdToId) {
 		JsonArray allMentionsForSoftwareToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(legacySoftware -> {
 			String slug = legacySoftware.getAsJsonObject().getAsJsonPrimitive("slug").getAsString();
 			legacySoftware.getAsJsonObject().getAsJsonObject("related").getAsJsonArray("mentions").forEach(legacyMention -> {
 				String legacyId = legacyMention.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
-				MentionRecord mentionRecord = legacyIdToRecord.get(legacyId);
-				String newId = mentionToId.get(mentionRecord);
+				String newId = legacyMentionIdToId.get(legacyId);
 				JsonObject mentionForSoftwareToSave = new JsonObject();
 				mentionForSoftwareToSave.addProperty("mention", newId);
 				mentionForSoftwareToSave.addProperty("software", slugToId.get(slug));
@@ -328,6 +336,37 @@ public class Main {
 			});
 		});
 		post(URI.create(PORSGREST_URI + "/mention_for_software"), allMentionsForSoftwareToSave.toString());
+	}
+
+	public static void saveImpactAndOutputForProjects(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToId, Map<String, String> legacyMentionIdToId) {
+		JsonArray outputForProjectsToSave = new JsonArray();
+		JsonArray impactForProjectsToSave = new JsonArray();
+		allProjectsFromLegacyRSD.forEach(jsonProject -> {
+			JsonObject projectObject = jsonProject.getAsJsonObject();
+			String id = slugToId.get(projectObject.getAsJsonPrimitive("slug").getAsString());
+
+			JsonArray outputLegacy = projectObject.getAsJsonArray("output");
+			outputLegacy.forEach(mention -> {
+				String legacyId = mention.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				String newId = legacyMentionIdToId.get(legacyId);
+				JsonObject outputToSave = new JsonObject();
+				outputToSave.addProperty("mention", newId);
+				outputToSave.addProperty("project", id);
+				outputForProjectsToSave.add(outputToSave);
+			});
+
+			JsonArray impactLegacy = projectObject.getAsJsonArray("impact");
+			impactLegacy.forEach(mention -> {
+				String legacyId = mention.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				String newId = legacyMentionIdToId.get(legacyId);
+				JsonObject impactToSave = new JsonObject();
+				impactToSave.addProperty("mention", newId);
+				impactToSave.addProperty("project", id);
+				impactForProjectsToSave.add(impactToSave);
+			});
+		});
+		post(URI.create(PORSGREST_URI + "/output_for_project"), outputForProjectsToSave.toString());
+		post(URI.create(PORSGREST_URI + "/impact_for_project"), impactForProjectsToSave.toString());
 	}
 
 	public static String get(URI uri) {

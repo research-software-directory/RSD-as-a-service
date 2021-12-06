@@ -67,3 +67,19 @@ CREATE TABLE mention_for_software(
 	software UUID REFERENCES software (id),
 	PRIMARY KEY (mention, software)
 );
+
+
+
+CREATE TABLE output_for_project(
+	mention UUID REFERENCES mention (id),
+	project UUID REFERENCES project (id),
+	PRIMARY KEY (mention, project)
+);
+
+
+
+CREATE TABLE impact_for_project(
+	mention UUID REFERENCES mention (id),
+	project UUID REFERENCES project (id),
+	PRIMARY KEY (mention, project)
+);
