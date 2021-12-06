@@ -33,17 +33,20 @@ public class Main {
 
 		saveSoftware(allSoftwareFromLegacyRSD);
 		Map<String, String> slugToIdSoftware = slugToId("/software?select=id,slug");
+		Map<String, String> legacyIdToNewIdSoftware = idToId(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveRepoUrls(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveLicenses(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveTags(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveContributors(allSoftwareFromLegacyRSD, slugToIdSoftware);
-		saveSoftwareRelatedToSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		saveSoftwareRelatedToSoftware(allSoftwareFromLegacyRSD, legacyIdToNewIdSoftware);
 
 		String allProjectsString = get(URI.create(LEGACY_RSD_PROJECT_URI));
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
 		saveProjects(allProjectsFromLegacyRSD);
 		Map<String, String> slugToIdProject = slugToId("/project?select=id,slug");
+		Map<String, String> legacyIdToNewIdProject = idToId(allProjectsFromLegacyRSD, slugToIdProject);
 		saveProjectImages(allProjectsFromLegacyRSD);
+		saveSoftwareRelatedToProjects(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyIdToNewIdProject);
 
 		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
 		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
@@ -109,14 +112,25 @@ public class Main {
 	}
 
 	public static Map<String, String> slugToId(String endpoint) {
-		JsonArray savedSoftware = JsonParser.parseString(get(URI.create(PORSGREST_URI + endpoint))).getAsJsonArray();
+		JsonArray savedEntities = JsonParser.parseString(get(URI.create(PORSGREST_URI + endpoint))).getAsJsonArray();
 		Map<String, String> slugToId = new HashMap<>();
-		savedSoftware.forEach(jsonElement -> {
+		savedEntities.forEach(jsonElement -> {
 			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
 			String id = jsonElement.getAsJsonObject().get("id").getAsString();
 			slugToId.put(slug, id);
 		});
 		return slugToId;
+	}
+
+	public static Map<String, String> idToId(JsonArray entities, Map<String, String> slugToId) {
+		Map<String, String> idToId = new HashMap<>();
+		entities.forEach(jsonElement -> {
+			String idLegacy = jsonElement.getAsJsonObject().getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
+			String slug = jsonElement.getAsJsonObject().getAsJsonPrimitive("slug").getAsString();
+			String idNew = slugToId.get(slug);
+			idToId.put(idLegacy, idNew);
+		});
+		return idToId;
 	}
 
 	public static void saveRepoUrls(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
@@ -222,24 +236,17 @@ public class Main {
 		else return jsonString;
 	}
 
-	public static void saveSoftwareRelatedToSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware) {
-		Map<String, String> legacyIdToNewId = new HashMap<>();
-		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
-			String legacyId = jsonSoftware.getAsJsonObject().getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
-			String legacySlug = jsonSoftware.getAsJsonObject().getAsJsonPrimitive("slug").getAsString();
-			legacyIdToNewId.put(legacyId, slugToIdSoftware.get(legacySlug));
-		});
-
+	public static void saveSoftwareRelatedToSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> legacyIdToNewIdSoftware) {
 		JsonArray allRelationsToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
 			JsonObject legacySoftware = jsonSoftware.getAsJsonObject();
-			String slugOrigin = legacySoftware.getAsJsonPrimitive("slug").getAsString();
-			String idOrigin = slugToIdSoftware.get(slugOrigin);
+			String idOriginLegacy = legacySoftware.getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
+			String idOriginNew = legacyIdToNewIdSoftware.get(idOriginLegacy);
 			legacySoftware.getAsJsonObject("related").getAsJsonArray("software").forEach(jsonRelated -> {
 				String idRelationLegacy = jsonRelated.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
-				String idRelationNew = legacyIdToNewId.get(idRelationLegacy);
+				String idRelationNew = legacyIdToNewIdSoftware.get(idRelationLegacy);
 				JsonObject relationToSave = new JsonObject();
-				relationToSave.addProperty("origin", idOrigin);
+				relationToSave.addProperty("origin", idOriginNew);
 				relationToSave.addProperty("relation", idRelationNew);
 				allRelationsToSave.add(relationToSave);
 			});
@@ -294,6 +301,24 @@ public class Main {
 			allImagesToSave.add(imageToSave);
 		});
 		post(URI.create(PORSGREST_URI + "/image_for_project"), allImagesToSave.toString());
+	}
+
+	public static void saveSoftwareRelatedToProjects(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware, Map<String, String> legacyIdToNewIdProject) {
+		JsonArray allRelationsToSave = new JsonArray();
+		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
+			JsonObject legacySoftware = jsonSoftware.getAsJsonObject();
+			String slugSoftware = legacySoftware.getAsJsonPrimitive("slug").getAsString();
+			String idSoftwareNew = slugToIdSoftware.get(slugSoftware);
+			legacySoftware.getAsJsonObject("related").getAsJsonArray("projects").forEach(jsonRelated -> {
+				String idProjectLegacy = jsonRelated.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				String idProjectNew = legacyIdToNewIdProject.get(idProjectLegacy);
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("software", idSoftwareNew);
+				relationToSave.addProperty("project", idProjectNew);
+				allRelationsToSave.add(relationToSave);
+			});
+		});
+		post(URI.create(PORSGREST_URI + "/software_for_project"), allRelationsToSave.toString());
 	}
 
 	public static void saveMentions(JsonArray allMentionsFromLegacyRSD) {
