@@ -21,7 +21,7 @@ public class Main {
 	public static final String LEGACY_RSD_PROJECT_URI = "https://research-software.nl/api/project";
 	public static final String LEGACY_RSD_PERSON_URI = "https://research-software.nl/api/person";
 	public static final String LEGACY_RSD_MENTION_URI = "https://research-software.nl/api/mention";
-	public static final String PORSGREST_URI = "http://localhost:3000";
+	public static final String PORSGREST_URI = "http://localhost:3500";
 
 	public static void main(String[] args) {
 		String allSoftwareString = get(URI.create(LEGACY_RSD_SOFTWARE_URI));

@@ -13,7 +13,7 @@ services:
   backend:
     build: ./backend-postgrest
     ports:
-      - "3000:3000"
+      - "3500:3000"
     environment:
       PGRST_DB_URI: "postgres://authenticator:simplepassword@database:5432/rsd-db"
       PGRST_DB_ANON_ROLE: "web_anon"
