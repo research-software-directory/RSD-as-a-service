@@ -223,6 +223,13 @@ public class Main {
 				contributorToSave.add("given_names", personData.get("givenNames"));
 				contributorToSave.add("name_particle", nullIfBlank(personData.get("nameParticle")));
 				contributorToSave.add("name_suffix", nullIfBlank(personData.get("nameSuffix")));
+				if (personData.has("avatar")) {
+					contributorToSave.add("avatar_data", personData.getAsJsonObject("avatar").get("data"));
+					contributorToSave.add("avatar_mime_type", personData.getAsJsonObject("avatar").get("mimeType"));
+				} else {
+					contributorToSave.add("avatar_data", JsonNull.INSTANCE);
+					contributorToSave.add("avatar_mime_type", JsonNull.INSTANCE);
+				}
 
 				allContributorsToSave.add(contributorToSave);
 			});
