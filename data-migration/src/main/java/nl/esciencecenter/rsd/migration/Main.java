@@ -37,6 +37,7 @@ public class Main {
 		saveLicenses(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveTags(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveContributors(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		saveSoftwareRelatedToSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware);
 
 		String allProjectsString = get(URI.create(LEGACY_RSD_PROJECT_URI));
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
@@ -219,6 +220,31 @@ public class Main {
 		String stringToCheck = jsonString.getAsString();
 		if (stringToCheck.isBlank()) return JsonNull.INSTANCE;
 		else return jsonString;
+	}
+
+	public static void saveSoftwareRelatedToSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware) {
+		Map<String, String> legacyIdToNewId = new HashMap<>();
+		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
+			String legacyId = jsonSoftware.getAsJsonObject().getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
+			String legacySlug = jsonSoftware.getAsJsonObject().getAsJsonPrimitive("slug").getAsString();
+			legacyIdToNewId.put(legacyId, slugToIdSoftware.get(legacySlug));
+		});
+
+		JsonArray allRelationsToSave = new JsonArray();
+		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
+			JsonObject legacySoftware = jsonSoftware.getAsJsonObject();
+			String slugOrigin = legacySoftware.getAsJsonPrimitive("slug").getAsString();
+			String idOrigin = slugToIdSoftware.get(slugOrigin);
+			legacySoftware.getAsJsonObject("related").getAsJsonArray("software").forEach(jsonRelated -> {
+				String idRelationLegacy = jsonRelated.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				String idRelationNew = legacyIdToNewId.get(idRelationLegacy);
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("origin", idOrigin);
+				relationToSave.addProperty("relation", idRelationNew);
+				allRelationsToSave.add(relationToSave);
+			});
+		});
+		post(URI.create(PORSGREST_URI + "/software_for_software"), allRelationsToSave.toString());
 	}
 
 	public static void saveProjects(JsonArray allProjectsFromLegacyRSD) {

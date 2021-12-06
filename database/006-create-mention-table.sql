@@ -62,7 +62,7 @@ CREATE TRIGGER sanitise_update_mention BEFORE UPDATE ON mention FOR EACH ROW EXE
 
 
 
-CREATE TABLE mention_for_software(
+CREATE TABLE mention_for_software (
 	mention UUID REFERENCES mention (id),
 	software UUID REFERENCES software (id),
 	PRIMARY KEY (mention, software)
@@ -70,7 +70,7 @@ CREATE TABLE mention_for_software(
 
 
 
-CREATE TABLE output_for_project(
+CREATE TABLE output_for_project (
 	mention UUID REFERENCES mention (id),
 	project UUID REFERENCES project (id),
 	PRIMARY KEY (mention, project)
@@ -78,7 +78,7 @@ CREATE TABLE output_for_project(
 
 
 
-CREATE TABLE impact_for_project(
+CREATE TABLE impact_for_project (
 	mention UUID REFERENCES mention (id),
 	project UUID REFERENCES project (id),
 	PRIMARY KEY (mention, project)

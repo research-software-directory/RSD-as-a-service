@@ -18,7 +18,7 @@ CREATE TABLE project (
     updated_at TIMESTAMP NOT NULL
 );
 
-CREATE TABLE image_for_project(
+CREATE TABLE image_for_project (
 	project UUID references project (id) PRIMARY KEY,
 	data BYTEA,
 	mime_type VARCHAR(100)
