@@ -37,7 +37,9 @@ public class Main {
 		saveRepoUrls(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveLicenses(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveTags(allSoftwareFromLegacyRSD, slugToIdSoftware);
-		saveContributors(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		String allPersonsString = get(URI.create(LEGACY_RSD_PERSON_URI));
+		JsonArray allPersonsFromLegacyRSD = JsonParser.parseString(allPersonsString).getAsJsonArray();
+		saveContributors(allPersonsFromLegacyRSD, allSoftwareFromLegacyRSD, slugToIdSoftware, "contributors", "/contributor", "software");
 		saveSoftwareRelatedToSoftware(allSoftwareFromLegacyRSD, legacyIdToNewIdSoftware);
 
 		String allProjectsString = get(URI.create(LEGACY_RSD_PROJECT_URI));
@@ -48,6 +50,7 @@ public class Main {
 		saveProjectImages(allProjectsFromLegacyRSD);
 		saveSoftwareRelatedToProjects(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyIdToNewIdProject);
 		saveProjectsRelatedToProjects(allProjectsFromLegacyRSD, legacyIdToNewIdProject);
+		saveContributors(allPersonsFromLegacyRSD, allProjectsFromLegacyRSD, slugToIdProject, "team", "/team_member", "project");
 
 		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
 		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
@@ -190,11 +193,8 @@ public class Main {
 		post(URI.create(PORSGREST_URI + "/tag_for_software"), allTagsToSave.toString());
 	}
 
-	public static void saveContributors(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
+	public static void saveContributors(JsonArray allPersonsFromLegacyRSD, JsonArray allEntitiesFromLegacyRSD, Map<String, String> slugToId, String personKey, String endpoint, String relationKey) {
 //		TODO: affiliations from contributors? YES, mapping to ROR possible?
-		String allPersonsString = get(URI.create(LEGACY_RSD_PERSON_URI));
-		JsonArray allPersonsFromLegacyRSD = JsonParser.parseString(allPersonsString).getAsJsonArray();
-
 //		each person has an id, we need to find the person given this id since the software api only lists the id's
 		Map<String, JsonObject> personIdToObject = new HashMap<>();
 		allPersonsFromLegacyRSD.forEach(jsonPerson -> {
@@ -204,17 +204,17 @@ public class Main {
 		});
 
 		JsonArray allContributorsToSave = new JsonArray();
-		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
-			JsonObject softwareFromLegacyRSD = jsonSoftware.getAsJsonObject();
-			String slug = softwareFromLegacyRSD.getAsJsonPrimitive("slug").getAsString();
-			String softwareId = slugToId.get(slug);
+		allEntitiesFromLegacyRSD.forEach(jsonEntity -> {
+			JsonObject entityFromLegacyRSD = jsonEntity.getAsJsonObject();
+			String slug = entityFromLegacyRSD.getAsJsonPrimitive("slug").getAsString();
+			String entityId = slugToId.get(slug);
 
-			JsonArray contributorsForSoftware = softwareFromLegacyRSD.getAsJsonArray("contributors");
-			contributorsForSoftware.forEach(jsonContributor -> {
+			JsonArray contributorsForEntity = entityFromLegacyRSD.getAsJsonArray(personKey);
+			contributorsForEntity.forEach(jsonContributor -> {
 				JsonObject contributorFromLegacyRSD = jsonContributor.getAsJsonObject();
 				JsonObject contributorToSave = new JsonObject();
 
-				contributorToSave.addProperty("software", softwareId);
+				contributorToSave.addProperty(relationKey, entityId);
 				contributorToSave.add("is_contact_person", contributorFromLegacyRSD.get("isContactPerson"));
 				String personId = contributorFromLegacyRSD.getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
 				JsonObject personData = personIdToObject.get(personId);
@@ -234,7 +234,7 @@ public class Main {
 				allContributorsToSave.add(contributorToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + "/contributor"), allContributorsToSave.toString());
+		post(URI.create(PORSGREST_URI + endpoint), allContributorsToSave.toString());
 	}
 
 	public static JsonElement nullIfBlank(JsonElement jsonString) {
