@@ -20,7 +20,8 @@ CREATE TABLE project (
 
 CREATE TABLE image_for_project(
 	project UUID references project (id) PRIMARY KEY,
-	image BYTEA
+	data BYTEA,
+	mime_type VARCHAR(100)
 );
 
 CREATE FUNCTION sanitise_insert_project() RETURNS TRIGGER LANGUAGE plpgsql as
