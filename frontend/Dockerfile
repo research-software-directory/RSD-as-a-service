@@ -8,10 +8,13 @@ WORKDIR /app
 COPY . .
 
 # install
-RUN npm install --frozen-lockfile
+RUN yarn install --frozen-lockfile
+
+# test solution
+RUN yarn test
 
 # build the solution
-RUN npm run build
+RUN yarn run build
 
 # Production image, copy all the files and run next
 FROM node:16.13-buster-slim AS runner
@@ -38,4 +41,5 @@ EXPOSE 3000
 # Uncomment the following line in case you want to disable telemetry.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["npm", "start"]
+# start next see https://nextjs.org/docs/deployment#docker-image
+CMD ["node_modules/.bin/next", "start"]

@@ -4,7 +4,7 @@
  */
 
 import {SessionProvider} from 'next-auth/react'
-import {rsdTheme} from '../../styles/rsdTheme'
+import {rsdTheme} from '../../styles/rsdMuiTheme'
 import {ThemeProvider} from '@mui/material/styles'
 
 export function WrappedComponentWithProps(Component:any, props?:any){

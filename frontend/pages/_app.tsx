@@ -6,7 +6,7 @@ import {AppProps} from 'next/app'
 import {ThemeProvider} from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import {CacheProvider, EmotionCache} from '@emotion/react'
-import {rsdTheme} from '../styles/rsdTheme'
+import {rsdTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
 
 // show loading bar at the top of the screen
@@ -15,6 +15,8 @@ import 'nprogress/nprogress.css'
 
 // global CSS
 import '../styles/global.css'
+// tailwind CSS
+import '../styles/tailwind.css'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()

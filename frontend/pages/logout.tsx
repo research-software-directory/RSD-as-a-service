@@ -8,36 +8,24 @@ const LogoutPage: NextPage = () => {
   const {data} = useSession()
 
   useEffect(()=>{
-    if (data && data.user){
+    if (data?.user){
       signOut()
     }
   })
 
-  if (data && data.user){
-    return (
-      <DefaultLayout>
-        <section className="card-centered">
-          Signing you out...
-        </section>
-      </DefaultLayout>
-    )
-  }
-
-  function getContent(){
-    if (data && data.user){
-      return (
-        <button className="btn btn-indigo p-4 rounded" onClick={()=>signOut()} >SignOut</button>
-      )
-    }
-    return (<h3>You are logged out!</h3>)
-  }
-
   return (
    <DefaultLayout>
-      <section className="card-centered">
-        <h1>Logout</h1>
-        {getContent()}
-      </section>
+     <section className="card-centered">
+     {
+       data?.user ?
+        <button className="btn btn-indigo p-4 rounded" onClick={()=>signOut()} >SignOut</button>
+        :
+        <>
+          <h1>Logout</h1>
+          <h3>You are logged out!</h3>
+        </>
+     }
+     </section>
    </DefaultLayout>
   )
 }

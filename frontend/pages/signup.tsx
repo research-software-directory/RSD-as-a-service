@@ -5,10 +5,7 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import RSDLogo from '../components/layout/RSDLogo';
 import ContentInTheMiddle from '../components/layout/ContentInTheMiddle';
-import Copyright from '../components/layout/Copyright';
-
 
 export default function SignUp() {
   const router = useRouter()
@@ -34,7 +31,6 @@ export default function SignUp() {
             alignItems: 'center',
           }}
         >
-          <RSDLogo width="9rem" height="9rem" />
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -101,7 +97,6 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ContentInTheMiddle>
   );

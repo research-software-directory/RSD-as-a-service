@@ -10,7 +10,10 @@ export default function Home(){
       <title>Home page | Research Software Directory</title>
     </Head>
     <DefaultLayout>
-      <Typography variant="h1">Home page</Typography>
+      <h1>Home page</h1>
+      <div>
+        <button className="btn btn-primary">Tailwind button</button>
+      </div>
     </DefaultLayout>
     </>
   )

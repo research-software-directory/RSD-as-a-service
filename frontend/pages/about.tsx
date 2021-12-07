@@ -1,7 +1,7 @@
 import Head from 'next/head'
 
 import DefaultLayout from '../components/layout/DefaultLayout'
-import Typography from '@mui/material/Typography'
+import PageTitle from '../components/layout/PageTitle'
 
 export default function SoftwareIndexPage() {
   return (
@@ -10,7 +10,7 @@ export default function SoftwareIndexPage() {
       <title>About page | Research Software Directory</title>
     </Head>
     <DefaultLayout>
-      <Typography variant="h1">About page</Typography>
+      <h1>About page</h1>
     </DefaultLayout>
     </>
   )

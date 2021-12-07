@@ -1,13 +1,8 @@
 import {signIn} from 'next-auth/react'
 import router from 'next/router'
 
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import GitHubIcon from '@mui/icons-material/GitHub';
-import GitLabIcon from './GitlabIcon';
-
-import RSDLogo from '../layout/RSDLogo'
 
 function signInWith(provider:string){
   signIn(provider,{
@@ -17,19 +12,8 @@ function signInWith(provider:string){
 
 export default function LoginOptions() {
   return (
-    <Box
-      component="section"
-      sx={{
-        display: 'grid',
-        gridGap: '1rem',
-        margin: 'auto',
-        width: '25rem'
-      }}
-    >
-      <RSDLogo width="9rem" height="9rem" />
-      <Typography component="h1" variant="h5" textAlign="center">
-        Login in with
-      </Typography>
+    <section className="grid gap-4 mx-auto mt-20 w-1/4">
+      <h2>Login with</h2>
       <Button
         variant="outlined"
         autoFocus
@@ -50,6 +34,6 @@ export default function LoginOptions() {
         onClick={()=>router.push("/signin")}>
         Email and Password
       </Button>
-    </Box>
+    </section>
   )
 }

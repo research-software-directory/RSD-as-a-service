@@ -1,13 +1,12 @@
 import {useState, useEffect} from 'react'
+import Link from 'next/link'
 import router from 'next/router'
 import {useSession, signOut} from 'next-auth/react'
 
-import Container from "@mui/material/Container"
-import Box from "@mui/material/Box"
 import IconButton from '@mui/material/IconButton'
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
-import RSDLogo from "./RSDLogo"
+import LogoEscience from './LogoEscience';
 import MenuItem from './MenuItem'
 import {menuItems} from '../../config/menuItems'
 
@@ -55,29 +54,18 @@ export default function AppHeader(){
   }
 
   return (
-    <Container
-      component="header"
-      maxWidth="hd"
-      sx={{
-        position: 'sticky',
-        display: 'flex',
-        top: '0rem',
-        height: '7rem',
-        padding: '0rem 1.25rem',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: 'background.paper',
-        zIndex: 8
-      }}
-    >
-      <RSDLogo width='4rem' height='4rem' />
-      <Box component="nav"
-        sx={{
-          display: 'flex',
-        }}>
-        {getMenuItems()}
-      </Box>
-      {getLoginButton()}
-    </Container>
+    <header className="container mx-auto">
+      <div className="flex p-4">
+        <Link href="/" passHref>
+          <a><LogoEscience className="cursor-pointer"/></a>
+        </Link>
+        <div className="flex ml-auto">
+          {getMenuItems()}
+        </div>
+        <div className="ml-auto">
+          {getLoginButton()}
+        </div>
+      </div>
+    </header>
   )
 }

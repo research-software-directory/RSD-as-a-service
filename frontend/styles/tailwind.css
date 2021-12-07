@@ -1,0 +1,32 @@
+/* ---------------------------------
+  Tailwind custom classes applied
+-----------------------------------*/
+
+/* NOTE!
+SourceMaps are not working when using @apply
+see bug: https://stackoverflow.com/questions/67333479/webpack-shows-incorrect-sourcemaps-when-using-tailwibd-directives
+*/
+
+/*
+ Can we do this here not in global?
+
+h1 { @apply text-3xl}
+h2 { @apply text-2xl }
+h3 { @apply text-xl }
+a { @apply cursor-pointer underline mx-1 transition duration-100 hover:text-primary }
+
+*/
+
+
+.btn {
+  @apply font-bold py-2 px-4 rounded;
+}
+.btn-primary {
+  @apply bg-blue-500 hover:bg-blue-700 text-white;
+}
+
+.btn:active{
+  /* resize */
+  transform: scale(0.98);
+  /* transform: translateY(0.0625rem); */
+}

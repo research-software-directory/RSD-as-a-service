@@ -7,8 +7,6 @@ import Grid from '@mui/material/Grid'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 
-import RSDLogo from '../components/layout/RSDLogo'
-import Copyright from '../components/layout/Copyright'
 import ContentInTheMiddle from '../components/layout/ContentInTheMiddle'
 
 export default function SignIn() {
@@ -34,7 +32,6 @@ export default function SignIn() {
           alignItems: 'center',
         }}
       >
-        <RSDLogo width="9rem" height="9rem" />
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             variant="standard"
@@ -80,7 +77,6 @@ export default function SignIn() {
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
     </ContentInTheMiddle>
   );

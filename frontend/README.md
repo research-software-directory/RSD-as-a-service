@@ -8,9 +8,9 @@ Based on the features in the legacy application and the current requirements we 
 
 ## Development
 
-- intall dependencies `npm install`
+- intall dependencies `yarn install`
 - create env.local file. Use env.local.example as template.
-- run `npm run dev` or `yarn dev` to start application in development mode
+- run `yarn dev` to start application in development mode
 
 ### Environment variables
 
@@ -47,6 +47,27 @@ Most important point concerning Next is integration in template files: \_app.tsx
 Customization in MUI5 is done using [theme object](https://mui.com/customization/theming/).
 The theme is provided at the root React component using Theme context provider.
 In short, add theme provider to \_app.tsx file
+
+## Tailwind CSS
+
+In addition to MUI-5 team preffers to use Tailwind CSS for global application layout.
+
+```bash
+# install dev dependencies
+npm i -D tailwindcss@latest postcss@latest autoprefixer@latest
+```
+
+Steps performed:
+
+- extracted MUI-5 theme into separate object
+- created tailwind.config.js and defined to use shared theme definitions
+- created postcss.config.js and added tailwind to it
+- added @tailwind mixins to styles/global.css
+- created styles/tailwind.css for tailwind specific utilities (eg. @apply)
+
+### Intergration between Tailwind and MUI-5 themes
+
+The integration is based on [this article](https://medium.com/@akarX23/a-full-setup-of-next-js-with-redux-tailwind-material-ui-pwa-and-docker-c33bdceadce5).
 
 ## Authentication
 

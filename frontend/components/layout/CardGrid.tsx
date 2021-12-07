@@ -4,7 +4,7 @@ import styled from '@mui/system/styled'
 const SectionStyled = styled('section')(({theme})=>({
   display:'grid',
   gridTemplateColumns: '1fr',
-  gridGap:'1rem',
+  gridGap:'0.5rem',
   padding:'1rem 0rem',
   '@media (min-width: 1024px)':{
     gridTemplateColumns: '1fr 1fr',

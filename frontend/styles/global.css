@@ -1,14 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Nuxt root element */
-#__next{
-  display:flex;
-  flex-direction: column;
-  min-height: 100vh;
+#__next {
+  @apply flex flex-col h-screen
 }
 
 /**
   Resize screen on smartphone using rem and font size
 **/
-
 @media screen and (max-width: 640px) {
   html{
     font-size: 75%;
@@ -21,20 +22,45 @@
   }
 }
 
-
-/* Format JSON.stringify - FOR TESTING ONLY */
-pre {
-  border: 1px solid lightgrey;
-  padding: 1rem;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+:root {
+  --primary: #00A3E3;
+  --secondary: #222425;
+  --accent: #718096;
+  --background: #FFF;
+  --main: #0D0106;
+  --header: #2D3748;
+  --base-100: white
 }
 
+/* Use custom classes withing the utilities of TailwindCSS*/
+@layer utilities {
+  .text-primary { color: var(--primary)}
+
+  .bg-primary { background-color: var(--primary)}
+
+  .bg-secondary {
+    background-color: var(--secondary);
+    color: white
+  }
+  .text-base-100 {
+    color: var(--base-100)
+  }
+  .primary-link { @apply no-underline text-primary hover:text-base-100}
+}
+
+@layer base {
+  h1 { @apply text-3xl}
+
+  h2 { @apply text-2xl }
+
+  h3 { @apply text-xl }
+
+  a { @apply cursor-pointer underline transition duration-100 hover:text-primary }
+}
 
 /* -------------------------------------
   custom scrollbar
 ---------------------------------------*/
-
 body{
   box-sizing: border-box;
   /* fix jumping scrollbar */
@@ -61,4 +87,13 @@ body{
 /* handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0,0,0,0.5);
+}
+
+
+/* Format JSON.stringify - FOR TESTING ONLY */
+pre {
+  border: 1px solid lightgrey;
+  padding: 1rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
