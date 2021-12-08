@@ -39,7 +39,9 @@ export default NextAuth({
           scope: "openid profile"
         }
       },
-      idToken: false,
+      // when set to false causes the error openid-client
+      // oauth_callback_error id_token detected in the response, you must use client.callback() instead of client.oauthCallback()
+      idToken: true,
       checks: ["pkce", "state"],
       clientId: process.env.AUTH_ORCID_CLIENT_ID,
       clientSecret: process.env.AUTH_ORCID_CLIENT_SECRET,
@@ -77,12 +79,10 @@ export default NextAuth({
       /**
        * If set to `true`, the user information will be extracted
        * from the `id_token` claims, instead of making a request to the `userinfo` endpoint.
-       *
        * `id_token` is usually present in OpenID Connect (OIDC) compliant providers.
-       *
        * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
        */
-      idToken: false,
+      idToken: true,
       checks: ["pkce", "state"],
       clientId: process.env.AUTH_SURFCONEXT_CLIENT_ID,
       clientSecret: process.env.AUTH_SURFCONEXT_CLIENT_SECRET,
