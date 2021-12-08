@@ -3,6 +3,7 @@ import router from 'next/router'
 
 import Button from '@mui/material/Button'
 import GitHubIcon from '@mui/icons-material/GitHub';
+import OrcidIcon from './OrcidIcon';
 
 function signInWith(provider:string){
   signIn(provider,{
@@ -24,11 +25,16 @@ export default function LoginOptions() {
       </Button>
       <Button variant="outlined" sx={{textTransform:'inherit'}}
         onClick={()=>signInWith('orcid')}>
+        <OrcidIcon className="h-6 mr-4" />
         ORCID
       </Button>
       <Button variant="outlined" sx={{textTransform:'inherit'}}
         onClick={()=>signInWith('surfconext')}>
         SURFconext
+      </Button>
+      <Button variant="outlined" sx={{textTransform:'inherit'}}
+        onClick={()=>signInWith('azure-ad')}>
+        Azure AD
       </Button>
       <Button variant="outlined" sx={{textTransform:'inherit'}}
         onClick={()=>router.push("/signin")}>
