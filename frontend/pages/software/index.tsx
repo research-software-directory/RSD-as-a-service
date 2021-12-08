@@ -1,6 +1,7 @@
 import {useState, useEffect, MouseEvent, ChangeEvent} from 'react'
 import Head from 'next/head'
 
+import Alert from '@mui/material/Alert'
 import TablePagination from '@mui/material/TablePagination';
 
 import DefaultLayout from "../../components/layout/DefaultLayout"
@@ -48,6 +49,11 @@ export default function SoftwareIndexPage({software=[]}:{software:SoftwareItem[]
         <title>Software | RSD</title>
       </Head>
       <PageTitle title="Software">
+        <noscript>
+          <Alert severity="warning">
+            Limited functionality: Your browser does not support JavaScript.
+          </Alert>
+        </noscript>
         <TablePagination
           component="nav"
           count={100}
