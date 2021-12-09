@@ -25,3 +25,8 @@ services:
       - "database"
       - "backend"
     network_mode: "host"
+
+  authentication:
+    build: ./authentication
+    ports:
+      - "7000:7000"
