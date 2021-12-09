@@ -25,3 +25,17 @@ services:
       - "database"
       - "backend"
     network_mode: "host"
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      # dockerfile to use for build
+      dockerfile: Dockerfile
+    # update version number to corespond with frontend/package.json
+    image: rsd/frontend:0.0.3
+    env_file:
+      # configuration
+      - ./frontend/.env.production.local
+    ports:
+      - "3000:3000"

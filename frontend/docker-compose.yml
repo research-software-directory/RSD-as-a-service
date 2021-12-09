@@ -3,7 +3,6 @@ version: '3'
 services:
   fe-next:
     container_name: fe-next
-    # use latest official postgres version
     build:
       context: .
       # dockerfile: Dockerfile_scratch
