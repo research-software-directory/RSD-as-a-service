@@ -2,6 +2,7 @@ version: "3.0"
 
 services:
   database:
+    container_name: database
     build: ./database
     ports:
       - "5432:5432"
@@ -19,6 +20,7 @@ services:
       - net
 
   backend:
+    container_name: postgREST
     build: ./backend-postgrest
     ports:
       - "3500:3000"
@@ -30,6 +32,7 @@ services:
       - net
 
   data-migration:
+    container_name: migration
     build: ./data-migration
     depends_on:
       - "database"
