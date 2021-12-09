@@ -23,11 +23,12 @@ services:
     container_name: postgREST
     build: ./backend-postgrest
     ports:
-      - "3500:3000"
+      - "3500:3500"
     environment:
       PGRST_DB_URI: "postgres://authenticator:simplepassword@database:5432/rsd-db"
       PGRST_DB_ANON_ROLE: "web_anon"
       PGRST_DB_SCHEMA: "public"
+      PGRST_SERVER_PORT: "3500"
     networks:
       - net
 
