@@ -44,8 +44,8 @@ services:
       context: ./frontend
       # dockerfile to use for build
       dockerfile: Dockerfile
-    # update version number to corespond with frontend/package.json
-    image: rsd/frontend:0.0.3
+    # update version number to corespond to frontend/package.json
+    image: rsd/frontend:0.0.4
     env_file:
       # configuration
       - ./frontend/.env.production.local
@@ -58,7 +58,7 @@ services:
       - net
 
 # define name for docker network
-# should have name: rsd-as-a-service_net
+# it should have name: rsd-as-a-service_net
 networks:
   net:
 
