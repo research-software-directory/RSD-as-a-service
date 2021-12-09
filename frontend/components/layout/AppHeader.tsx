@@ -37,6 +37,10 @@ export default function AppHeader(){
   }
 
   function getLoginButton(){
+    if (status==="loading"){
+      return null
+    }
+
     if (status==="authenticated"){
       // when user authenticated
       // we show user menu with the avatar and user specific options
@@ -47,6 +51,7 @@ export default function AppHeader(){
         />
       )
     }
+
     return (
       <Link href="/login" passHref>
         <Button
