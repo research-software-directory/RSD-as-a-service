@@ -1,0 +1,43 @@
+{
+  "name": "rsd-frontend",
+  "version": "0.0.3",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.7.0",
+    "@emotion/server": "^11.4.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.0",
+    "@mui/material": "^5.2.1",
+    "next": "12.0.4",
+    "next-auth": "^4.0.2",
+    "nprogress": "^0.2.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.0",
+    "@testing-library/react": "^12.1.2",
+    "@types/node": "16.11.10",
+    "@types/nprogress": "^0.2.0",
+    "@types/react": "17.0.37",
+    "autoprefixer": "^10.4.0",
+    "eslint": "7.32.0",
+    "eslint-config-next": "12.0.4",
+    "jest": "^27.4.3",
+    "jest-fetch-mock": "^3.0.3",
+    "postcss": "^8.4.4",
+    "react-test-renderer": "^17.0.2",
+    "tailwindcss": "^2.2.19",
+    "typescript": "4.5.2",
+    "whatwg-fetch": "^3.6.2"
+  }
+}
