@@ -33,7 +33,7 @@ services:
       - net
 
   data-migration:
-    container_name: migration
+    container_name: data-migration
     build: ./data-migration
     depends_on:
       - "database"
@@ -52,7 +52,7 @@ services:
     image: rsd/frontend:0.0.4
     env_file:
       # configuration
-      - ./frontend/.env.production.local
+      - ./frontend/.env.local
     ports:
       - "3000:3000"
     depends_on:
