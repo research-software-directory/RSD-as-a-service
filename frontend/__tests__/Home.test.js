@@ -1,5 +1,4 @@
 import {render, screen} from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
 import Home from '../pages/index'
 
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
