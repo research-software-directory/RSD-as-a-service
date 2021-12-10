@@ -110,6 +110,7 @@ public class Main {
 			softwareToSave.add("slug", softwareFromLegacyRSD.get("slug"));
 			softwareToSave.add("brand_name", softwareFromLegacyRSD.get("brandName"));
 			softwareToSave.add("bullets", softwareFromLegacyRSD.get("bullets"));
+			softwareToSave.add("concept_doi", softwareFromLegacyRSD.get("conceptDOI"));
 			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
 			softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
