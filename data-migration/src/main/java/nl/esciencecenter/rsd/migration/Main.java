@@ -459,7 +459,7 @@ public class Main {
 			JsonElement conceptDoiElement = entity.getAsJsonObject().get("conceptDOI");
 			if (conceptDoiElement == null || conceptDoiElement.isJsonNull()) return;
 			String conceptDoi = conceptDoiElement.getAsString();
-			if (conceptDoi.equals("10.0000/FIXME")) return; // problematic entry as it is not unique, luckily no release uses it
+			if (conceptDoi.equals("10.0000/FIXME")) return; // problematic entry as it is not unique, luckily no release uses it TODO: replace with null?
 //			problematic entry as it has two software-entries, corrected manually
 			if (conceptDoi.equals("10.5281/zenodo.3964180")) {
 				String handPickedSlug = "gh-action-set-up-singularity";
@@ -490,7 +490,7 @@ public class Main {
 			if (legacyConceptDoi.equals("10.5281/zenodo.3859772")) return; // TODO, also see entry below
 			if (legacyConceptDoi.equals("10.5281/zenodo.3716378")) legacyConceptDoi = "10.5281/zenodo.3859772"; // see also https://zenodo.org/record/3834230 and https://zenodo.org/record/5717374
 			if (legacyConceptDoi.equals("10.5281/zenodo.3889758")) return; // matching conceptDOI 10.5281/zenodo.3859772 is already present
-			if (legacyConceptDoi.equals("10.5281/zenodo.3889772")) return; // matching conceptDOI 10.5281/zenodo.3889771 not present in legacy RSD
+			if (legacyConceptDoi.equals("10.5281/zenodo.3889772")) return; // TODO matching conceptDOI 10.5281/zenodo.3889771 not present in legacy RSD
 			if (legacyConceptDoi.equals("10.5281/zenodo.4336539")) return; // matching conceptDOI 10.5281/zenodo.4336538 is already present
 			if (legacyConceptDoi.equals("10.5281/zenodo.4590883")) return; // matching conceptDOI 10.5281/zenodo.4590882 is already present
 			releaseToSave.addProperty("software", conceptDoiToSoftwareId.get(legacyConceptDoi));
