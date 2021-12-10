@@ -1,6 +1,7 @@
 CREATE TABLE release (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	concept_doi VARCHAR,
+	software UUID references software (id) UNIQUE NOT NULL,
+	concept_doi VARCHAR UNIQUE NOT NULL, -- we want to get rid of this column, as it is already present in the software entry the software column references to, but we need it to get the saved id
 	is_citable BOOLEAN,
 	latest_schema_dot_org VARCHAR,
 	created_at TIMESTAMP NOT NULL,

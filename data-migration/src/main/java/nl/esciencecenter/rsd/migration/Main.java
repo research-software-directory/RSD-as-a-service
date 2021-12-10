@@ -62,7 +62,8 @@ public class Main {
 
 		String allReleasesString = get(URI.create(LEGACY_RSD_RELEASE_URI));
 		JsonArray allReleasesFromLegacyRSD = JsonParser.parseString(allReleasesString).getAsJsonArray();
-		saveReleases(allReleasesFromLegacyRSD);
+		Map<String, String> conceptDoiToSoftwareId = conceptDoiToSoftwareId(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		saveReleases(allReleasesFromLegacyRSD, conceptDoiToSoftwareId);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -451,13 +452,48 @@ public class Main {
 		post(URI.create(POSTGREST_URI + "/impact_for_project"), impactForProjectsToSave.toString());
 	}
 
-	public static void saveReleases(JsonArray allReleasesFromLegacyRSD) {
+	public static Map<String, String> conceptDoiToSoftwareId(JsonArray entityArray, Map<String, String> slugToId) {
+		Map<String, String> conceptDoiToSoftwareId = new HashMap<>();
+		entityArray.forEach(entity -> {
+			JsonElement conceptDoiElement = entity.getAsJsonObject().get("conceptDOI");
+			if (conceptDoiElement == null || conceptDoiElement.isJsonNull()) return;
+			String conceptDoi = conceptDoiElement.getAsString();
+			if (conceptDoi.equals("10.0000/FIXME")) return; // problematic entry as it is not unique, luckily no release uses it
+//			problematic entry as it has two software-entries, corrected manually
+			if (conceptDoi.equals("10.5281/zenodo.3964180")) {
+				String handPickedSlug = "gh-action-set-up-singularity";
+				String handPickedId = slugToId.get(handPickedSlug);
+				conceptDoiToSoftwareId.put(conceptDoi, handPickedId);
+				return;
+			}
+
+			String slug = entity.getAsJsonObject().getAsJsonPrimitive("slug").getAsString();
+			String id = slugToId.get(slug);
+			if (conceptDoiToSoftwareId.containsKey(conceptDoi)) throw new RuntimeException("Concept DOI " + conceptDoi + " is not unique");
+			conceptDoiToSoftwareId.put(conceptDoi, id);
+		});
+		return conceptDoiToSoftwareId;
+	}
+
+	public static void saveReleases(JsonArray allReleasesFromLegacyRSD, Map<String, String> conceptDoiToSoftwareId) {
 		JsonArray allReleasesToSave = new JsonArray();
 		allReleasesFromLegacyRSD.forEach(jsonRelease -> {
 			JsonObject legacyRelease = jsonRelease.getAsJsonObject();
 			JsonObject releaseToSave = new JsonObject();
 
-			releaseToSave.add("concept_doi", legacyRelease.get("conceptDOI"));
+			String legacyConceptDoi = legacyRelease.get("conceptDOI").getAsString();
+//			some problematic entries, corrected manually:
+			if (legacyConceptDoi.equals("10.5281/zenodo.3563088")) return; // matching conceptDOI 10.5281/zenodo.883726 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3630355")) legacyConceptDoi = "10.5281/zenodo.3630354";
+			if (legacyConceptDoi.equals("10.5281/zenodo.3686602")) return; // matching conceptDOI 10.5281/zenodo.3686601 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3859772")) return; // TODO, also see entry below
+			if (legacyConceptDoi.equals("10.5281/zenodo.3716378")) legacyConceptDoi = "10.5281/zenodo.3859772"; // see also https://zenodo.org/record/3834230 and https://zenodo.org/record/5717374
+			if (legacyConceptDoi.equals("10.5281/zenodo.3889758")) return; // matching conceptDOI 10.5281/zenodo.3859772 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3889772")) return; // matching conceptDOI 10.5281/zenodo.3889771 not present in legacy RSD
+			if (legacyConceptDoi.equals("10.5281/zenodo.4336539")) return; // matching conceptDOI 10.5281/zenodo.4336538 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.4590883")) return; // matching conceptDOI 10.5281/zenodo.4590882 is already present
+			releaseToSave.addProperty("software", conceptDoiToSoftwareId.get(legacyConceptDoi));
+			releaseToSave.addProperty("concept_doi", legacyConceptDoi);
 			releaseToSave.add("is_citable", legacyRelease.get("isCitable"));
 			releaseToSave.add("latest_schema_dot_org", legacyRelease.get("latestSchema_dot_org"));
 			allReleasesToSave.add(releaseToSave);
