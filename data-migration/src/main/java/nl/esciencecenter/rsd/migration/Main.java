@@ -110,7 +110,11 @@ public class Main {
 			softwareToSave.add("slug", softwareFromLegacyRSD.get("slug"));
 			softwareToSave.add("brand_name", softwareFromLegacyRSD.get("brandName"));
 			softwareToSave.add("bullets", softwareFromLegacyRSD.get("bullets"));
-			softwareToSave.add("concept_doi", softwareFromLegacyRSD.get("conceptDOI"));
+
+			JsonElement conceptDoiElement = softwareFromLegacyRSD.get("conceptDOI");
+			if (conceptDoiElement.isJsonNull() || "10.0000/FIXME".equals(conceptDoiElement.getAsString())) softwareToSave.add("concept_doi", JsonNull.INSTANCE);
+			else softwareToSave.add("concept_doi", conceptDoiElement);
+
 			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
 			softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
@@ -459,7 +463,7 @@ public class Main {
 			JsonElement conceptDoiElement = entity.getAsJsonObject().get("conceptDOI");
 			if (conceptDoiElement == null || conceptDoiElement.isJsonNull()) return;
 			String conceptDoi = conceptDoiElement.getAsString();
-			if (conceptDoi.equals("10.0000/FIXME")) return; // problematic entry as it is not unique, luckily no release uses it TODO: replace with null? Yes
+			if (conceptDoi.equals("10.0000/FIXME")) return; // problematic entry as it is not unique, luckily no release uses it
 //			problematic entry as it has two software-entries, corrected manually
 			if (conceptDoi.equals("10.5281/zenodo.3964180")) {
 				String handPickedSlug = "gh-action-set-up-singularity";
