@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-import {getProject} from '../../../utils/getProjects'
+import {getProjectItem} from '../../../utils/getProjects'
 import {ProjectItem} from '../../../types/ProjectItem'
 
 export default function ProjectItemPage({project, slug}:{project:ProjectItem, slug:string}) {
@@ -48,19 +48,20 @@ export async function getServerSideProps(context:any) {
 try{
   const {params} = context
   // console.log("getServerSideProps...params...", params)
-  const project = await getProject(params?.slug)
-  if (!project){
+  const project = await getProjectItem(params?.slug)
+  if (!project || project?.length===0){
     // returning this value
     // triggers 404 page on frontend
     return {
       notFound: true,
     }
   }
+  // console.log("getServerSideProps...project...", project)
   return {
     // will be passed to the page component as props
     // see params in SoftwareIndexPage
     props: {
-      project,
+      project: project[0],
       slug: params?.slug
     },
   }

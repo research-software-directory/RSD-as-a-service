@@ -53,8 +53,8 @@ const muiTypography={
   // Currently we import the fonst from Google Fonts
   // legacy RSD uses these fonts
   fontFamily: 'Roboto,Helvetica,arial,sans-serif',
-  // set default fontsize to 1rem (16px) for MUI-5
-  fontSize:16,
+  // set default fontsize to 1rem for MUI-5
+  // fontSize:14,
   fontWeightLight: 100,
   fontWeightRegular: 300,
   fontWeightMedium: 300,

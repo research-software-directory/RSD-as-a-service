@@ -10,7 +10,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 import { getSoftwareItem } from '../../../utils/getSoftware'
 import { SoftwareItem } from '../../../types/SoftwareItem'
-import { listenerCount } from 'process'
 
 export default function SoftwareIndexPage({software, slug}:{software:SoftwareItem, slug:string}) {
   const router = useRouter()
@@ -19,9 +18,9 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
   return (
     <DefaultLayout>
       <Head>
-        <title>{software?.brandName} | RSD</title>
+        <title>{software?.brand_name} | RSD</title>
       </Head>
-      <PageTitle title={software?.brandName}>
+      <PageTitle title={software?.brand_name}>
         <div>
           <IconButton
             title="Go back"
@@ -39,7 +38,7 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
       </PageTitle>
       <section>
         {/* TODO! replace this with real components */}
-        <h2 className="my-4">{software.shortStatement}</h2>
+        <h2 className="my-4">{software.short_statement}</h2>
         <ul>
           { software.bullets.split("*").map((item, pos)=>{
             if (pos===0) return null
@@ -49,7 +48,6 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
           })}
         </ul>
       </section>
-
       {/* <pre>
         {JSON.stringify(software,null,2)}
       </pre> */}
@@ -64,7 +62,8 @@ try{
   const {params} = context
   // console.log("getServerSideProps...params...", params)
   const software = await getSoftwareItem(params?.slug)
-  if (!software){
+  if (typeof software == "undefined" ||
+    software?.length === 0){
     // returning this value
     // triggers 404 page on frontend
     return {
@@ -75,7 +74,7 @@ try{
     // will be passed to the page component as props
     // see params in SoftwareIndexPage
     props: {
-      software,
+      software: software[0],
       slug: params?.slug
     },
   }
