@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -101,6 +102,12 @@ public class Main {
 		}
 	}
 
+	public static JsonElement jsonNullIfEquals(JsonElement element, String... content) {
+		if (element == null || element.isJsonNull()) return JsonNull.INSTANCE;
+		if (Arrays.stream(content).anyMatch(s -> element.getAsString().equals(s))) return JsonNull.INSTANCE;
+		return element;
+	}
+
 	public static void saveSoftware(JsonArray allSoftwareFromLegacyRSD) {
 		JsonArray allSoftwareToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
@@ -110,11 +117,7 @@ public class Main {
 			softwareToSave.add("slug", softwareFromLegacyRSD.get("slug"));
 			softwareToSave.add("brand_name", softwareFromLegacyRSD.get("brandName"));
 			softwareToSave.add("bullets", softwareFromLegacyRSD.get("bullets"));
-
-			JsonElement conceptDoiElement = softwareFromLegacyRSD.get("conceptDOI");
-			if (conceptDoiElement.isJsonNull() || "10.0000/FIXME".equals(conceptDoiElement.getAsString())) softwareToSave.add("concept_doi", JsonNull.INSTANCE);
-			else softwareToSave.add("concept_doi", conceptDoiElement);
-
+			softwareToSave.add("concept_doi", jsonNullIfEquals(softwareFromLegacyRSD.get("conceptDOI"), "10.0000/FIXME"));
 			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
 			softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
@@ -280,15 +283,15 @@ public class Main {
 			JsonObject projectFromLegacyRSD = jsonElement.getAsJsonObject();
 
 			projectToSave.add("slug", projectFromLegacyRSD.get("slug"));
-			projectToSave.add("call_url", projectFromLegacyRSD.get("callUrl"));
-			projectToSave.add("code_url", projectFromLegacyRSD.get("codeUrl"));
-			projectToSave.add("data_management_plan_url", projectFromLegacyRSD.get("dataManagementPlanUrl"));
+			projectToSave.add("call_url", jsonNullIfEquals(projectFromLegacyRSD.get("callUrl"), "https://doi.org/FIXME"));
+			projectToSave.add("code_url", jsonNullIfEquals(projectFromLegacyRSD.get("codeUrl"), "https://github.com/FIXME"));
+			projectToSave.add("data_management_plan_url", jsonNullIfEquals(projectFromLegacyRSD.get("dataManagementPlanUrl"), "https://doi.org/FIXME"));
 			projectToSave.add("date_end", projectFromLegacyRSD.get("dateEnd"));
 			projectToSave.add("date_start", projectFromLegacyRSD.get("dateStart"));
 			projectToSave.add("description", projectFromLegacyRSD.get("description"));
-			projectToSave.add("grant_id", projectFromLegacyRSD.get("grantId"));
-			projectToSave.add("home_url", projectFromLegacyRSD.get("homeUrl"));
-			projectToSave.add("image_caption", projectFromLegacyRSD.get("imageCaption"));
+			projectToSave.add("grant_id", jsonNullIfEquals(projectFromLegacyRSD.get("grantId"), "FIXME", "https://doi.org/FIXME"));
+			projectToSave.add("home_url", jsonNullIfEquals(projectFromLegacyRSD.get("homeUrl"), "https://doi.org/FIXME"));
+			projectToSave.add("image_caption", jsonNullIfEquals(projectFromLegacyRSD.get("imageCaption"), "captionFIXME"));
 			projectToSave.add("is_published", projectFromLegacyRSD.get("isPublished"));
 			projectToSave.add("software_sustainability_plan_url", projectFromLegacyRSD.get("softwareSustainabilityPlanUrl"));
 			projectToSave.add("subtitle", projectFromLegacyRSD.get("subtitle"));
