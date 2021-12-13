@@ -493,35 +493,35 @@ public class Main {
 			if (legacyConceptDoi.equals("10.5281/zenodo.4336539")) return; // matching conceptDOI 10.5281/zenodo.4336538 is already present
 			if (legacyConceptDoi.equals("10.5281/zenodo.4590883")) return; // matching conceptDOI 10.5281/zenodo.4590882 is already present
 			releaseToSave.addProperty("software", conceptDoiToSoftwareId.get(legacyConceptDoi));
-			releaseToSave.addProperty("concept_doi", legacyConceptDoi);
 			releaseToSave.add("is_citable", legacyRelease.get("isCitable"));
 			releaseToSave.add("latest_schema_dot_org", legacyRelease.get("latestSchema_dot_org"));
 			allReleasesToSave.add(releaseToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/release"), allReleasesToSave.toString());
 
-//		we can use concept_doi to uniquely identify a release
+//		we can use the saved foreign key to software to uniquely identify a release
 		JsonArray savedReleases = JsonParser.parseString(get(URI.create(POSTGREST_URI + "/release"))).getAsJsonArray();
-		Map<String, String> conceptDoiToId = new HashMap<>();
+		Map<String, String> softwareIdToReleaseId = new HashMap<>();
 		savedReleases.forEach(savedRelease -> {
-			String conceptDoi = savedRelease.getAsJsonObject().getAsJsonPrimitive("concept_doi").getAsString();
-			String id = savedRelease.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
-			conceptDoiToId.put(conceptDoi, id);
+			String releaseId = savedRelease.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+			String softwareId = savedRelease.getAsJsonObject().getAsJsonPrimitive("software").getAsString();
+			softwareIdToReleaseId.put(softwareId, releaseId);
 		});
-		if (savedReleases.size() != conceptDoiToId.size()) throw new RuntimeException("Concept doi does not uniquely identify a release, expected size: " + savedReleases.size() + ", actual size: " + conceptDoiToId.size());
 
 		JsonArray allReleaseContentsToSave = new JsonArray();
 		allReleasesFromLegacyRSD.forEach(jsonRelease -> {
 			JsonObject legacyRelease = jsonRelease.getAsJsonObject();
 			JsonArray allReleaseContentsFromLegacyRSD = legacyRelease.getAsJsonArray("releases");
 			String conceptDoi = legacyRelease.getAsJsonPrimitive("conceptDOI").getAsString();
-			String id = conceptDoiToId.get(conceptDoi);
+			String softwareId = conceptDoiToSoftwareId.get(conceptDoi);
+			String releaseId = softwareIdToReleaseId.get(softwareId);
+			if (releaseId == null) return;
 
 			allReleaseContentsFromLegacyRSD.forEach(releaseContentJson -> {
 				JsonObject legacyReleaseContent = releaseContentJson.getAsJsonObject();
 				JsonObject releaseContentToSave = new JsonObject();
 
-				releaseContentToSave.addProperty("release_id", id);
+				releaseContentToSave.addProperty("release_id", releaseId);
 				releaseContentToSave.add("citability", legacyReleaseContent.get("citability"));
 				releaseContentToSave.add("date_published", legacyReleaseContent.get("datePublished"));
 				releaseContentToSave.add("doi", legacyReleaseContent.get("doi"));
