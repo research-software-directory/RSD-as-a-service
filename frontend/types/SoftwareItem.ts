@@ -95,7 +95,7 @@ const softwareItem={
   },
   "createdBy": "Unknown",
   "updatedBy": "sverhoeven"
-} 
+}
 
 const rsdSoftwareItem = {
     "id": "b2d2b41d-a387-4a2f-ae4b-8bda13f323e7",

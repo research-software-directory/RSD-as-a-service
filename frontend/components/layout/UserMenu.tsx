@@ -57,19 +57,20 @@ export default function UserMenu(props:UserMenuType) {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <Avatar 
-          alt={name ?? "Unknown"} 
-          src={image} 
+        <Avatar
+          alt={name ?? "Unknown"}
+          src={image}
         />
       </Button>
       <Menu
-        id="user-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         MenuListProps={{
           'aria-labelledby': 'menu-button',
         }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         {renderMenuOptions()}
       </Menu>

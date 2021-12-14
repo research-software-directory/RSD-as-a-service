@@ -10,50 +10,35 @@ import ContentInTheMiddle from "../../components/layout/ContentInTheMiddle"
 import PageTitle from '../../components/layout/PageTitle'
 import CardGrid from '../../components/layout/CardGrid'
 import {SoftwareItem} from '../../types/SoftwareItem'
-import {getSoftwareList} from '../../utils/getSoftware'
+import {getSoftwareList, getTagsWithCount, TagCountItem} from '../../utils/getSoftware'
 import {extractQueryParam} from '../../utils/extractQueryParam'
 import {rowsPerPageOptions} from '../../config/pagination'
+import Searchbox from '../../components/software/Searchbox'
+import FilterTechnologies from '../../components/software/FilterTechnologies'
+import SortSelection from '../../components/software/SortSelection'
+import SoftwareCard from '../../components/software/SoftwareCard'
 
-function renderItems(software:SoftwareItem[]){
-  if (software.length===0){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
-  }
-  return software.map(item=>{
-    return(
-      <div key={item.slug}>
-        <Link href={`/software/${item.slug}/`}>
-          <a>{item.brand_name}</a>
-        </Link>
-      </div>
-    )
-  })
-}
-
-
-export default function SoftwareIndexPage({count,page,rows,software=[]}:
-  {count:number,page:number,rows:number,software:SoftwareItem[]
+export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
+  {count:number,page:number,rows:number,tags:TagCountItem[],software:SoftwareItem[]
 }){
-
-  // const rowsPerPageOptions = rowsPerPageOptions
+  //use next router (hook is only for browser)
   const router = useRouter()
 
-  function handleChangePage(
+  // next/previous page button
+  function handlePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ){
     // debugger
     router.push(`/software?page=${newPage}&rows=${rows}`)
-  };
+  }
 
-  function handleChangeRowsPerPage(
+  // change number of cards per page
+  function handleItemsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ){
     router.push(`/software?page=0&rows=${parseInt(event.target.value)}`)
-  };
+  }
 
   return (
     <DefaultLayout>
@@ -66,22 +51,59 @@ export default function SoftwareIndexPage({count,page,rows,software=[]}:
             Limited functionality: Your browser does not support JavaScript.
           </Alert>
         </noscript>
-        <TablePagination
-          component="nav"
-          count={count}
-          page={page}
-          labelRowsPerPage="Per page"
-          onPageChange={handleChangePage}
-          rowsPerPage={rows}
-          rowsPerPageOptions={rowsPerPageOptions}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <div className="flex flex-wrap sm:justify-end sm:px-4">
+          <div className="flex items-center">
+            <Searchbox onSearch={(searchFor:string)=>console.log("Search for...", searchFor)}></Searchbox>
+            <FilterTechnologies
+              items={tags.map(tag=>tag.tag)}
+              onSelect={(resp)=>console.log("FilterTechnologies",resp)}
+            />
+            <SortSelection
+              items={["Last updated", "Most updates", "Most mentions"]}
+              defaultValue='Last updated'
+              onSort={(resp)=>console.log("Sort on", resp)}
+            />
+          </div>
+          <TablePagination
+            component="nav"
+            count={count}
+            page={page}
+            labelRowsPerPage="Per page"
+            onPageChange={handlePageChange}
+            rowsPerPage={rows}
+            rowsPerPageOptions={rowsPerPageOptions}
+            onRowsPerPageChange={handleItemsPerPage}
+          />
+        </div>
       </PageTitle>
       <CardGrid>
         {renderItems(software)}
       </CardGrid>
     </DefaultLayout>
   )
+}
+
+// render software cards
+function renderItems(software:SoftwareItem[]){
+  if (software.length===0){
+    return (
+      <ContentInTheMiddle>
+        <h2>No content</h2>
+      </ContentInTheMiddle>
+    )
+  }
+  return software.map(item=>{
+    return(
+      <SoftwareCard
+        key={`/software/${item.slug}/`}
+        href={`/software/${item.slug}/`}
+        brand_name={item.brand_name}
+        short_statement={item.short_statement}
+        is_featured={item.is_featured}
+        updated_at={item.updated_at}
+      />
+    )
+  })
 }
 
 // fetching data server side
@@ -108,8 +130,10 @@ export async function getServerSideProps(context:any) {
     limit: rows,
     offset: rows * page,
     //baseUrl within docker network
-    baseUrl: process.env.POSTGREST_URL
+    baseUrl: process.env.POSTGREST_URL || "http://localhost:3500"
   })
+
+  const tags = await getTagsWithCount()
 
   return {
     // will be passed to the page component as props
@@ -118,7 +142,8 @@ export async function getServerSideProps(context:any) {
       count: software.count,
       page,
       rows,
-      software: software.data
+      software: software.data,
+      tags
     },
   }
 }

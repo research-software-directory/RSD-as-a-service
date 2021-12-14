@@ -22,6 +22,8 @@
   height: 100vh;
   flex-direction: column;
   font-weight: 300;
+  /* min-width to scale on devices < 368px */
+  min-width: 23rem;
 }
 
 /* a {
@@ -55,7 +57,7 @@ RangeError: Maximum call stack size exceeded
   }
 
   a {
-    @apply cursor-pointer underline mx-1 transition duration-100 hover:text-primary
+    @apply cursor-pointer no-underline transition duration-100 hover:text-primary
   }
 }
 

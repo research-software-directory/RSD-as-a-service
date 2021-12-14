@@ -2,12 +2,12 @@ import {SoftwareItem} from '../types/SoftwareItem'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from "./logger"
 
-// TODO! update url to new db and setup variable endpoint based on environment
-export async function getSoftwareList({limit=12,offset=0,baseUrl="/api/v1",}:
-  {limit:number,offset:number,baseUrl?:string,}
+//
+export async function getSoftwareList({limit=12,offset=0,baseUrl}:
+  {limit:number,offset:number,baseUrl:string,}
 ){
   try{
-    const url = `${baseUrl}/software?order=updated_at.desc&limit=${limit}&offset=${offset}`
+    const url = `${baseUrl}/software?is_published=eq.true&order=updated_at.desc&limit=${limit}&offset=${offset}`
     const headers = new Headers()
     // console.log(`getSoftwareList...url...`,url)
     // request estimated count - faster method
@@ -49,5 +49,24 @@ export async function getSoftwareItem(slug:string){
     }
   }catch(e:any){
     logger(`getSoftwareItem: ${e?.message}`,"error")
+  }
+}
+
+// Get
+export type TagCountItem={
+  count: number,
+  tag:string
+}
+export async function getTagsWithCount(){
+  try{
+    // this request is always perfomed from backend
+    const url = `${process.env.POSTGREST_URL}/count_software_per_tag?order=tag.asc`
+    const resp = await fetch(url,{method:"GET"})
+    if (resp.status===200){
+      const data:TagCountItem[] = await resp.json()
+      return data
+    }
+  }catch(e:any){
+    logger(`getTagsWithCount: ${e?.message}`,"error")
   }
 }
