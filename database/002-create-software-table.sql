@@ -3,6 +3,7 @@ CREATE TABLE software (
 	slug VARCHAR(100) UNIQUE NOT NULL,
 	brand_name VARCHAR(100) NOT NULL,
 	bullets VARCHAR(2000) NOT NULL,
+	concept_doi VARCHAR,
 	get_started_url VARCHAR NOT NULL,
 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	is_published  BOOLEAN DEFAULT FALSE NOT NULL,

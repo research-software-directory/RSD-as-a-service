@@ -1,6 +1,6 @@
 /**
- * Tailwind intergration with MUI in next.js
- * based on the article but extended with more MUI properties
+ * Tailwind integration with MUI in next.js
+ * based on the article but extended with MUI properties
  * https://medium.com/@akarX23/a-full-setup-of-next-js-with-redux-tailwind-material-ui-pwa-and-docker-c33bdceadce5
  */
 const defaultTheme = require("tailwindcss/defaultTheme");
@@ -8,12 +8,14 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 const {colors,muiTypography} = require('./styles/themeConfig')
 
 module.exports = {
- mode: "jit",
- purge: [
-   "./components/**/*.{js,ts,jsx,tsx}",
-   "./pages/**/*.{js,ts,jsx,tsx}",
+  // corePlugins: {
+  //   // disable preflight = normalize by tailwind
+  //   preflight: false,
+  // },
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       colors: {

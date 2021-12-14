@@ -7,7 +7,7 @@ export default function UserProfilePage() {
   return (
     <DefaultLayout>
       <ProtectedContent>
-        <h1>Page title - Profile page</h1>
+        <h1>Profile page</h1>
         <h2>User status: {status}</h2>
         <h2>Profile info</h2>
         <pre>

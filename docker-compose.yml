@@ -53,10 +53,10 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.0.4
+    image: rsd/frontend:0.1.0
     env_file:
       # configuration
-      - ./frontend/.env.local
+      - ./frontend/.env.production.local
     ports:
       - "3000:3000"
     depends_on:

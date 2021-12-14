@@ -66,7 +66,7 @@ export default function AppHeader(){
 
   return (
     <header className="container mx-auto">
-      <div className="flex py-4">
+      <div className="flex items-center py-4">
         <Link href="/" passHref>
           <a><LogoEscience className="cursor-pointer"/></a>
         </Link>

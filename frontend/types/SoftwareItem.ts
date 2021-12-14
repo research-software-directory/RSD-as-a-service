@@ -97,4 +97,19 @@ const softwareItem={
   "updatedBy": "sverhoeven"
 } 
 
-export type SoftwareItem = typeof softwareItem
+const rsdSoftwareItem = {
+    "id": "b2d2b41d-a387-4a2f-ae4b-8bda13f323e7",
+    "slug": "3d-e-chem-knime-pharmacophore",
+    "brand_name": "KNIME Pharmacophore",
+    "bullets": "* For cheminformations who are working with pharmacphores in KNIME workflows.\n* Adds pharmacophore data type to KNIME\n* Adds nodes to read, write and align pharmacophores\n",
+    "get_started_url": "https://github.com/3D-e-Chem/knime-pharmacophore",
+    "is_featured": false,
+    "is_published": true,
+    "read_more": "A pharmacophore is an abstract description of molecular features that are necessary for molecular recognition of a ligand by a biological macromolecule. This plugin for the KNIME workflow system adds the Pharmacophore (Phar) data type to KNIME, and adds nodes to read, write, and manipulate pharmacophores inside KNIME. It includes the [KNIME Silicos-it](https://www.research-software.nl/software/3d-e-chem-knime-silicos-it), [Kripo pharmacophore retrieval](https://www.research-software.nl/software/3d-e-chem-knime-kripodb) and [molviewer pharmacophore viewer](https://www.research-software.nl/software/knime-molviewer) nodes. \n\n\n",
+    "short_statement": "A plugin for the KNIME workflow system that adds a Pharmacophore data type and nodes to read, write, and align them.",
+    "created_at": "2021-12-09T15:25:13.254331",
+    "updated_at": "2021-12-09T15:25:13.254331"
+}
+
+
+export type SoftwareItem = typeof rsdSoftwareItem

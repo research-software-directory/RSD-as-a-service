@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -21,7 +22,8 @@ public class Main {
 	public static final String LEGACY_RSD_PROJECT_URI = "https://research-software.nl/api/project";
 	public static final String LEGACY_RSD_PERSON_URI = "https://research-software.nl/api/person";
 	public static final String LEGACY_RSD_MENTION_URI = "https://research-software.nl/api/mention";
-	public static final String PORSGREST_URI = "http://localhost:3500";
+	public static final String LEGACY_RSD_RELEASE_URI = "https://research-software.nl/api/release";
+	public static final String POSTGREST_URI = "http://localhost:3500";
 
 	public static void main(String[] args) {
 		String allSoftwareString = get(URI.create(LEGACY_RSD_SOFTWARE_URI));
@@ -58,6 +60,11 @@ public class Main {
 		Map<String, String> legacyMentionIdToId = legacyMentionIdToId(allMentionsFromLegacyRSD);
 		saveMentionsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyMentionIdToId);
 		saveImpactAndOutputForProjects(allProjectsFromLegacyRSD, slugToIdProject, legacyMentionIdToId);
+
+		String allReleasesString = get(URI.create(LEGACY_RSD_RELEASE_URI));
+		JsonArray allReleasesFromLegacyRSD = JsonParser.parseString(allReleasesString).getAsJsonArray();
+		Map<String, String> conceptDoiToSoftwareId = conceptDoiToSoftwareId(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		saveReleases(allReleasesFromLegacyRSD, conceptDoiToSoftwareId);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -78,7 +85,7 @@ public class Main {
 		for (int tryConnectionCount = 0; tryConnectionCount < maxTries; tryConnectionCount++) {
 			pauseExecution(500);
 			try {
-				get(URI.create(PORSGREST_URI));
+				get(URI.create(POSTGREST_URI));
 			} catch (RuntimeException e) {
 				continue;
 			}
@@ -95,6 +102,12 @@ public class Main {
 		}
 	}
 
+	public static JsonElement jsonNullIfEquals(JsonElement element, String... content) {
+		if (element == null || element.isJsonNull()) return JsonNull.INSTANCE;
+		if (Arrays.stream(content).anyMatch(s -> element.getAsString().equals(s))) return JsonNull.INSTANCE;
+		return element;
+	}
+
 	public static void saveSoftware(JsonArray allSoftwareFromLegacyRSD) {
 		JsonArray allSoftwareToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
@@ -104,6 +117,7 @@ public class Main {
 			softwareToSave.add("slug", softwareFromLegacyRSD.get("slug"));
 			softwareToSave.add("brand_name", softwareFromLegacyRSD.get("brandName"));
 			softwareToSave.add("bullets", softwareFromLegacyRSD.get("bullets"));
+			softwareToSave.add("concept_doi", jsonNullIfEquals(softwareFromLegacyRSD.get("conceptDOI"), "10.0000/FIXME"));
 			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
 			softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
@@ -112,11 +126,11 @@ public class Main {
 
 			allSoftwareToSave.add(softwareToSave);
 		});
-		post(URI.create(PORSGREST_URI + "/software"), allSoftwareToSave.toString());
+		post(URI.create(POSTGREST_URI + "/software"), allSoftwareToSave.toString());
 	}
 
 	public static Map<String, String> slugToId(String endpoint) {
-		JsonArray savedEntities = JsonParser.parseString(get(URI.create(PORSGREST_URI + endpoint))).getAsJsonArray();
+		JsonArray savedEntities = JsonParser.parseString(get(URI.create(POSTGREST_URI + endpoint))).getAsJsonArray();
 		Map<String, String> slugToId = new HashMap<>();
 		savedEntities.forEach(jsonElement -> {
 			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
@@ -154,7 +168,7 @@ public class Main {
 				allRepoUrlsToSave.add(repoUrlToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + "/repository_url"), allRepoUrlsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/repository_url"), allRepoUrlsToSave.toString());
 	}
 
 	public static void saveLicenses(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
@@ -172,7 +186,7 @@ public class Main {
 				allLicensesToSave.add(licenseToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + "/license_for_software"), allLicensesToSave.toString());
+		post(URI.create(POSTGREST_URI + "/license_for_software"), allLicensesToSave.toString());
 	}
 
 	public static void saveTags(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
@@ -190,7 +204,7 @@ public class Main {
 				allTagsToSave.add(tagToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + "/tag_for_software"), allTagsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/tag_for_software"), allTagsToSave.toString());
 	}
 
 	public static void saveContributors(JsonArray allPersonsFromLegacyRSD, JsonArray allEntitiesFromLegacyRSD, Map<String, String> slugToId, String personKey, String endpoint, String relationKey) {
@@ -234,7 +248,7 @@ public class Main {
 				allContributorsToSave.add(contributorToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + endpoint), allContributorsToSave.toString());
+		post(URI.create(POSTGREST_URI + endpoint), allContributorsToSave.toString());
 	}
 
 	public static JsonElement nullIfBlank(JsonElement jsonString) {
@@ -259,7 +273,7 @@ public class Main {
 				allRelationsToSave.add(relationToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + "/software_for_software"), allRelationsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/software_for_software"), allRelationsToSave.toString());
 	}
 
 	public static void saveProjects(JsonArray allProjectsFromLegacyRSD) {
@@ -269,26 +283,26 @@ public class Main {
 			JsonObject projectFromLegacyRSD = jsonElement.getAsJsonObject();
 
 			projectToSave.add("slug", projectFromLegacyRSD.get("slug"));
-			projectToSave.add("call_url", projectFromLegacyRSD.get("callUrl"));
-			projectToSave.add("code_url", projectFromLegacyRSD.get("codeUrl"));
-			projectToSave.add("data_management_plan_url", projectFromLegacyRSD.get("dataManagementPlanUrl"));
+			projectToSave.add("call_url", jsonNullIfEquals(projectFromLegacyRSD.get("callUrl"), "https://doi.org/FIXME"));
+			projectToSave.add("code_url", jsonNullIfEquals(projectFromLegacyRSD.get("codeUrl"), "https://github.com/FIXME"));
+			projectToSave.add("data_management_plan_url", jsonNullIfEquals(projectFromLegacyRSD.get("dataManagementPlanUrl"), "https://doi.org/FIXME"));
 			projectToSave.add("date_end", projectFromLegacyRSD.get("dateEnd"));
 			projectToSave.add("date_start", projectFromLegacyRSD.get("dateStart"));
 			projectToSave.add("description", projectFromLegacyRSD.get("description"));
-			projectToSave.add("grant_id", projectFromLegacyRSD.get("grantId"));
-			projectToSave.add("home_url", projectFromLegacyRSD.get("homeUrl"));
-			projectToSave.add("image_caption", projectFromLegacyRSD.get("imageCaption"));
+			projectToSave.add("grant_id", jsonNullIfEquals(projectFromLegacyRSD.get("grantId"), "FIXME", "https://doi.org/FIXME"));
+			projectToSave.add("home_url", jsonNullIfEquals(projectFromLegacyRSD.get("homeUrl"), "https://doi.org/FIXME"));
+			projectToSave.add("image_caption", jsonNullIfEquals(projectFromLegacyRSD.get("imageCaption"), "captionFIXME"));
 			projectToSave.add("is_published", projectFromLegacyRSD.get("isPublished"));
 			projectToSave.add("software_sustainability_plan_url", projectFromLegacyRSD.get("softwareSustainabilityPlanUrl"));
 			projectToSave.add("subtitle", projectFromLegacyRSD.get("subtitle"));
 			projectToSave.add("title", projectFromLegacyRSD.get("title"));
 			allProjectsToSave.add(projectToSave);
 		});
-		post(URI.create(PORSGREST_URI + "/project"), allProjectsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/project"), allProjectsToSave.toString());
 	}
 
 	public static void saveProjectImages(JsonArray allProjectsFromLegacyRSD) {
-		JsonArray savedProjects = JsonParser.parseString(get(URI.create(PORSGREST_URI + "/project?select=id,slug"))).getAsJsonArray();
+		JsonArray savedProjects = JsonParser.parseString(get(URI.create(POSTGREST_URI + "/project?select=id,slug"))).getAsJsonArray();
 		Map<String, String> slugToId = new HashMap<>();
 		savedProjects.forEach(jsonElement -> {
 			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
@@ -308,7 +322,7 @@ public class Main {
 			imageToSave.add("mime_type", imageFromLegacyRSD.get("mimeType"));
 			allImagesToSave.add(imageToSave);
 		});
-		post(URI.create(PORSGREST_URI + "/image_for_project"), allImagesToSave.toString());
+		post(URI.create(POSTGREST_URI + "/image_for_project"), allImagesToSave.toString());
 	}
 
 	public static void saveSoftwareRelatedToProjects(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware, Map<String, String> legacyIdToNewIdProject) {
@@ -326,7 +340,7 @@ public class Main {
 				allRelationsToSave.add(relationToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + "/software_for_project"), allRelationsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/software_for_project"), allRelationsToSave.toString());
 	}
 
 	public static void saveProjectsRelatedToProjects(JsonArray allProjectsFromLegacyRSD, Map<String, String> legacyIdToNewIdProject) {
@@ -344,7 +358,7 @@ public class Main {
 				allRelationsToSave.add(relationToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + "/project_for_project"), allRelationsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/project_for_project"), allRelationsToSave.toString());
 	}
 
 	public static void saveMentions(JsonArray allMentionsFromLegacyRSD) {
@@ -365,7 +379,7 @@ public class Main {
 
 			allMentionsToSave.add(mentionToSave);
 		});
-		post(URI.create(PORSGREST_URI + "/mention"), allMentionsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/mention"), allMentionsToSave.toString());
 	}
 
 	public static Map<String, String> legacyMentionIdToId(JsonArray allMentionsFromLegacyRSD) {
@@ -374,7 +388,7 @@ public class Main {
 //		Unfortunately, title is not unique, zotero_key can be null.
 //		Luckily, the combination of title and zotero_key is unique at the time of writing.
 //		We throw an exception if this is not the case in the future.
-		JsonArray savedMentions = JsonParser.parseString(get(URI.create(PORSGREST_URI + "/mention?select=id,title,zotero_key"))).getAsJsonArray();
+		JsonArray savedMentions = JsonParser.parseString(get(URI.create(POSTGREST_URI + "/mention?select=id,title,zotero_key"))).getAsJsonArray();
 		Map<MentionRecord, String> mentionToId = new HashMap<>();
 		savedMentions.forEach(jsonMention -> {
 			String id = jsonMention.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
@@ -412,7 +426,7 @@ public class Main {
 				allMentionsForSoftwareToSave.add(mentionForSoftwareToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + "/mention_for_software"), allMentionsForSoftwareToSave.toString());
+		post(URI.create(POSTGREST_URI + "/mention_for_software"), allMentionsForSoftwareToSave.toString());
 	}
 
 	public static void saveImpactAndOutputForProjects(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToId, Map<String, String> legacyMentionIdToId) {
@@ -442,8 +456,95 @@ public class Main {
 				impactForProjectsToSave.add(impactToSave);
 			});
 		});
-		post(URI.create(PORSGREST_URI + "/output_for_project"), outputForProjectsToSave.toString());
-		post(URI.create(PORSGREST_URI + "/impact_for_project"), impactForProjectsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/output_for_project"), outputForProjectsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/impact_for_project"), impactForProjectsToSave.toString());
+	}
+
+	public static Map<String, String> conceptDoiToSoftwareId(JsonArray entityArray, Map<String, String> slugToId) {
+		Map<String, String> conceptDoiToSoftwareId = new HashMap<>();
+		entityArray.forEach(entity -> {
+			JsonElement conceptDoiElement = entity.getAsJsonObject().get("conceptDOI");
+			if (conceptDoiElement == null || conceptDoiElement.isJsonNull()) return;
+			String conceptDoi = conceptDoiElement.getAsString();
+			if (conceptDoi.equals("10.0000/FIXME")) return; // problematic entry as it is not unique, luckily no release uses it
+//			problematic entry as it has two software-entries, corrected manually
+			if (conceptDoi.equals("10.5281/zenodo.3964180")) {
+				String handPickedSlug = "gh-action-set-up-singularity";
+				String handPickedId = slugToId.get(handPickedSlug);
+				conceptDoiToSoftwareId.put(conceptDoi, handPickedId);
+				return;
+			}
+
+			String slug = entity.getAsJsonObject().getAsJsonPrimitive("slug").getAsString();
+			String id = slugToId.get(slug);
+			if (conceptDoiToSoftwareId.containsKey(conceptDoi)) throw new RuntimeException("Concept DOI " + conceptDoi + " is not unique");
+			conceptDoiToSoftwareId.put(conceptDoi, id);
+		});
+		return conceptDoiToSoftwareId;
+	}
+
+	public static void saveReleases(JsonArray allReleasesFromLegacyRSD, Map<String, String> conceptDoiToSoftwareId) {
+		JsonArray allReleasesToSave = new JsonArray();
+		allReleasesFromLegacyRSD.forEach(jsonRelease -> {
+			JsonObject legacyRelease = jsonRelease.getAsJsonObject();
+			JsonObject releaseToSave = new JsonObject();
+
+			String legacyConceptDoi = legacyRelease.get("conceptDOI").getAsString();
+//			some problematic entries, corrected manually:
+			if (legacyConceptDoi.equals("10.5281/zenodo.3563088")) return; // matching conceptDOI 10.5281/zenodo.883726 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3630355")) return; // matching conceptDOI 10.5281/zenodo.3630354 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3686602")) return; // matching conceptDOI 10.5281/zenodo.3686601 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3716378")) return; // this is a valid conceptDOI, but conceptDOI 10.5281/zenodo.3859772 seems to be the same content but is newer and is present in the legacy RSD, see also https://zenodo.org/record/3834230 and https://zenodo.org/record/5717374
+			if (legacyConceptDoi.equals("10.5281/zenodo.3889758")) return; // matching conceptDOI 10.5281/zenodo.3859772 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3889772")) return; // matching conceptDOI 10.5281/zenodo.3889771 not present in legacy RSD, proposed solution was to ignore it
+			if (legacyConceptDoi.equals("10.5281/zenodo.4336539")) return; // matching conceptDOI 10.5281/zenodo.4336538 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.4590883")) return; // matching conceptDOI 10.5281/zenodo.4590882 is already present
+			releaseToSave.addProperty("software", conceptDoiToSoftwareId.get(legacyConceptDoi));
+			releaseToSave.add("is_citable", legacyRelease.get("isCitable"));
+			releaseToSave.add("latest_schema_dot_org", legacyRelease.get("latestSchema_dot_org"));
+			allReleasesToSave.add(releaseToSave);
+		});
+		post(URI.create(POSTGREST_URI + "/release"), allReleasesToSave.toString());
+
+//		we can use the saved foreign key to software to uniquely identify a release
+		JsonArray savedReleases = JsonParser.parseString(get(URI.create(POSTGREST_URI + "/release"))).getAsJsonArray();
+		Map<String, String> softwareIdToReleaseId = new HashMap<>();
+		savedReleases.forEach(savedRelease -> {
+			String releaseId = savedRelease.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+			String softwareId = savedRelease.getAsJsonObject().getAsJsonPrimitive("software").getAsString();
+			softwareIdToReleaseId.put(softwareId, releaseId);
+		});
+
+		JsonArray allReleaseContentsToSave = new JsonArray();
+		allReleasesFromLegacyRSD.forEach(jsonRelease -> {
+			JsonObject legacyRelease = jsonRelease.getAsJsonObject();
+			JsonArray allReleaseContentsFromLegacyRSD = legacyRelease.getAsJsonArray("releases");
+			String conceptDoi = legacyRelease.getAsJsonPrimitive("conceptDOI").getAsString();
+			String softwareId = conceptDoiToSoftwareId.get(conceptDoi);
+			String releaseId = softwareIdToReleaseId.get(softwareId);
+			if (releaseId == null) return;
+
+			allReleaseContentsFromLegacyRSD.forEach(releaseContentJson -> {
+				JsonObject legacyReleaseContent = releaseContentJson.getAsJsonObject();
+				JsonObject releaseContentToSave = new JsonObject();
+
+				releaseContentToSave.addProperty("release_id", releaseId);
+				releaseContentToSave.add("citability", legacyReleaseContent.get("citability"));
+				releaseContentToSave.add("date_published", legacyReleaseContent.get("datePublished"));
+				releaseContentToSave.add("doi", legacyReleaseContent.get("doi"));
+				releaseContentToSave.add("tag", legacyReleaseContent.get("tag"));
+				releaseContentToSave.add("url", legacyReleaseContent.get("url"));
+
+				releaseContentToSave.add("bibtex", legacyReleaseContent.getAsJsonObject("files").get("bibtex"));
+				releaseContentToSave.add("cff", legacyReleaseContent.getAsJsonObject("files").get("cff"));
+				releaseContentToSave.add("codemeta", legacyReleaseContent.getAsJsonObject("files").get("codemeta"));
+				releaseContentToSave.add("endnote", legacyReleaseContent.getAsJsonObject("files").get("endnote"));
+				releaseContentToSave.add("ris", legacyReleaseContent.getAsJsonObject("files").get("ris"));
+				releaseContentToSave.add("schema_dot_org", legacyReleaseContent.getAsJsonObject("files").get("schema_dot_org"));
+				allReleaseContentsToSave.add(releaseContentToSave);
+			});
+		});
+		post(URI.create(POSTGREST_URI + "/release_content"), allReleaseContentsToSave.toString());
 	}
 
 	public static String get(URI uri) {
