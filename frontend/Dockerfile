@@ -18,6 +18,9 @@ RUN yarn run build
 
 # Production image, copy all the files and run next
 FROM node:16.13-buster-slim AS runner
+
+RUN apt-get update && apt-get install curl -y
+
 WORKDIR /app
 
 ENV NODE_ENV production

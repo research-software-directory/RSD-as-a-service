@@ -2,15 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Nuxt root element */
-#__next {
-  @apply flex flex-col h-screen
-}
-
 /**
   Resize screen on smartphone using rem and font size
 **/
-@media screen and (max-width: 640px) {
+/* @media screen and (max-width: 640px) {
   html{
     font-size: 75%;
   }
@@ -20,31 +15,51 @@
   html{
     font-size: 65%;
   }
+} */
+
+#__next {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  font-weight: 300;
 }
+
+/* a {
+  color: inherit;
+  text-decoration: inherit;
+} */
+
 
 /* ---------------------------------
   Tailwind custom classes applied
 -----------------------------------*/
 /* NOTE!
-SourceMaps are not working when using @apply
+1. SourceMaps are not working when using @apply
 see bug: https://stackoverflow.com/questions/67333479/webpack-shows-incorrect-sourcemaps-when-using-tailwibd-directives
+
+2. you cannot define class with the same name as tailwind utility classes you will get following error::after
+error - ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[2].oneOf[8].use[1]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[2].oneOf[8].use[2]!./styles/global.css
+RangeError: Maximum call stack size exceeded
+
 */
 
-h1 {
-  @apply text-3xl;
-}
-h2 {
-  @apply text-2xl;
-}
-h3 {
-  @apply text-xl;
+@layer base {
+  h1 {
+    @apply text-3xl;
+  }
+  h2 {
+    @apply text-2xl;
+  }
+  h3 {
+    @apply text-xl;
+  }
+
+  a {
+    @apply cursor-pointer underline mx-1 transition duration-100 hover:text-primary
+  }
 }
 
-a {
-  @apply cursor-pointer underline mx-1 transition duration-100 hover:text-primary
-}
-
-.bg-secondary{
+.secondary-bg{
   @apply bg-secondary text-white;
 }
 
@@ -66,12 +81,6 @@ a {
 
 .btn-primary {
   @apply bg-blue-500 hover:bg-blue-700 text-white;
-}
-
-.btn:active{
-  /* resize */
-  transform: scale(0.98);
-  /* transform: translateY(0.0625rem); */
 }
 
 
