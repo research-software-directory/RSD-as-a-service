@@ -102,6 +102,22 @@ const rsdMuiTheme = createTheme({
           textTransform:'inherit'
         }
       }
+    },
+    MuiListItemText:{
+      styleOverrides:{
+        primary:{
+          // cut off large menu items with ...
+          overflow:'hidden',
+          textOverflow: 'ellipsis'
+        }
+      }
+    },
+    MuiPaper:{
+      styleOverrides:{
+        root:{
+          overflow:'auto'
+        }
+      }
     }
   },
 })
