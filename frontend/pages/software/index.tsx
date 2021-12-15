@@ -92,6 +92,7 @@ function renderItems(software:SoftwareItem[]){
       </ContentInTheMiddle>
     )
   }
+  console.log("renderItems...software...", software)
   return software.map(item=>{
     return(
       <SoftwareCard

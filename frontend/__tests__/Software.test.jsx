@@ -26,11 +26,11 @@ describe('pages/software/index.tsx', () => {
         page:0,
         rows:12,
         // mocked data
-        software: mockedResponse
+        software: mockedResponse,
+        tags:undefined
       }
     })
   })
-
   it('renders heading with the title Software', async() => {
     render(WrappedComponentWithProps(
       SoftwareIndexPage,{
@@ -38,6 +38,7 @@ describe('pages/software/index.tsx', () => {
         page:0,
         rows:12,
         software:mockedResponse,
+        tags:[],
         // user session
         session:{
           expires: "test",
@@ -50,5 +51,24 @@ describe('pages/software/index.tsx', () => {
     })
     expect(heading).toBeInTheDocument()
     expect(heading.innerHTML).toEqual("Software")
+  })
+  it('renders software card title',async()=>{
+    render(WrappedComponentWithProps(
+      SoftwareIndexPage,{
+        count:200,
+        page:0,
+        rows:12,
+        software:mockedResponse,
+        tags:[],
+        // user session
+        session:{
+          expires: "test",
+          user: {name:"Test user"}
+        }
+      }
+    ))
+    const cardTitle = mockedResponse[0].brand_name
+    const card = await screen.findByText(cardTitle)
+    expect(card).toBeInTheDocument()
   })
 })
