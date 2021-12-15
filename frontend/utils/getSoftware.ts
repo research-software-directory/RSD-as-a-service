@@ -1,17 +1,26 @@
 import {SoftwareItem} from '../types/SoftwareItem'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from "./logger"
+import {softwareUrl} from './postgrestUrl'
 
-//
-export async function getSoftwareList({limit=12,offset=0,baseUrl}:
-  {limit:number,offset:number,baseUrl:string,}
+// queries for software index page including search and pagination
+export async function getSoftwareList({limit=12,offset=0,baseUrl,search}:
+  {limit:number,offset:number,baseUrl:string,search?:string}
 ){
   try{
-    const url = `${baseUrl}/software?is_published=eq.true&order=updated_at.desc&limit=${limit}&offset=${offset}`
+    // const url = `${baseUrl}/software?is_published=eq.true&order=updated_at.desc&limit=${limit}&offset=${offset}`
+    const url = softwareUrl({
+      baseUrl,
+      search,
+      columns:['id','slug','brand_name','short_statement','is_featured','updated_at'],
+      filters:"is_published=eq.true",
+      order:"is_featured.desc,updated_at.desc",
+      limit,
+      offset
+    })
+    // console.log("getSoftwareList.url",url)
     const headers = new Headers()
-    // console.log(`getSoftwareList...url...`,url)
-    // request estimated count - faster method
-    // headers.append('Prefer','count=estimated')
+    // request count for pagination
     headers.append('Prefer','count=exact')
     const resp = await fetch(url,{method:"GET", headers})
 
@@ -37,7 +46,7 @@ export async function getSoftwareList({limit=12,offset=0,baseUrl}:
   }
 }
 
-// TODO! update url to new db and setup variable endpoint based on environment
+// query for software item page based on slug
 export async function getSoftwareItem(slug:string){
   try{
     // this request is always perfomed from backend
