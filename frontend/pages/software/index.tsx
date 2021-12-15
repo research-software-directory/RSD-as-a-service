@@ -2,7 +2,6 @@ import {MouseEvent, ChangeEvent} from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
-import Alert from '@mui/material/Alert'
 import TablePagination from '@mui/material/TablePagination';
 
 import DefaultLayout from "../../components/layout/DefaultLayout"
@@ -46,11 +45,6 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
         <title>Software | RSD</title>
       </Head>
       <PageTitle title="Software">
-        <noscript>
-          <Alert severity="warning">
-            Limited functionality: Your browser does not support JavaScript.
-          </Alert>
-        </noscript>
         <div className="flex flex-wrap sm:justify-end sm:px-4">
           <div className="flex items-center">
             <Searchbox onSearch={(searchFor:string)=>console.log("Search for...", searchFor)}></Searchbox>
@@ -92,7 +86,7 @@ function renderItems(software:SoftwareItem[]){
       </ContentInTheMiddle>
     )
   }
-  console.log("renderItems...software...", software)
+  // console.log("renderItems...software...", software)
   return software.map(item=>{
     return(
       <SoftwareCard
