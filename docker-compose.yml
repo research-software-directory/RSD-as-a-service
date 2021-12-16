@@ -40,9 +40,13 @@ services:
     network_mode: "host"
 
   authentication:
-    build: ./authentication
+    build:
+      context: .
+      dockerfile: ./authentication/dockerfile
     ports:
       - "7000:7000"
+    environment:
+      PROPERTIES: "/usr/mymaven/.env.production.local"
     # networks:
     #   - net
 
