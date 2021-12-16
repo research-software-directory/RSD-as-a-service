@@ -5,6 +5,9 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.javalin.Javalin;
 
 import java.io.FileReader;
@@ -38,7 +41,6 @@ public class Main {
 					.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 					.sign(signingAlgorithm);
 			ctx.result(token);
-			System.out.println(System.currentTimeMillis());
 		});
 
 		app.post("/login", ctx -> {
@@ -59,9 +61,22 @@ public class Main {
 			form.put("scope", "openid");
 			form.put("client_id", CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_ID"));
 			form.put("client_secret", CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_SECRET"));
-			String codeToTokenResponse = post(URI.create("https://connect.test.surfconext.nl/oidc/token"), joinFormEntries(form));
+
+			String codeToTokenResponse = postForm(URI.create("https://connect.test.surfconext.nl/oidc/token"), joinFormEntries(form));
 			System.out.println(codeToTokenResponse);
-			ctx.result("Succes!");
+
+			String idToken = JsonParser.parseString(codeToTokenResponse).getAsJsonObject().getAsJsonPrimitive("id_token").getAsString();
+			DecodedJWT idJwt = JWT.decode(idToken);
+			String subject = idJwt.getSubject();
+			createAccountIfNotExists(subject);
+			String account = accountFromSubject(subject);
+			Algorithm signingAlgorithm = Algorithm.HMAC256(JWT_SECRET);
+			String token = JWT.create()
+					.withClaim("role", "authenticated")
+					.withClaim("account", account)
+					.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
+					.sign(signingAlgorithm);
+			ctx.result(token);
 		});
 
 		app.get("/login/surfconext", ctx -> {
@@ -74,15 +89,78 @@ public class Main {
 		});
 	}
 
+	static void createAccountIfNotExists(String sub) {
+		String backendUri = CONFIG.getProperty("POSTGREST_URL");
+		URI queryUri = URI.create(backendUri + "/login_for_account?select=sub&sub=eq." + sub);
+		String responseLogin = get(queryUri);
+		JsonArray accountsWIthSub = JsonParser.parseString(responseLogin).getAsJsonArray();
+		if (accountsWIthSub.size() > 1) throw new RuntimeException("More than one login for sub " + sub + " exists");
+		else if (accountsWIthSub.size() == 0) {
+			URI createAccountUri = URI.create(backendUri + "/account");
+			String newAccountId = JsonParser.parseString(postJson(createAccountUri, "{}")).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+
+			JsonObject loginForAccountData = new JsonObject();
+			loginForAccountData.addProperty("account", newAccountId);
+			loginForAccountData.addProperty("sub", sub);
+			URI createLoginUri = URI.create(backendUri + "/login_for_account");
+			postJson(createLoginUri, loginForAccountData.toString());
+		}
+	}
+
+	static String accountFromSubject(String sub) {
+		String backendUri = CONFIG.getProperty("POSTGREST_URL");
+		URI queryUri = URI.create(backendUri + "/login_for_account?select=account&sub=eq." + sub);
+		String responseAccount = get(queryUri);
+		return JsonParser.parseString(responseAccount).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("account").getAsString();
+	}
+
 	static String decode(String base64UrlEncoded) {
 		return new String(Base64.getUrlDecoder().decode(base64UrlEncoded));
 	}
 
-	public static String post(URI uri, String json) {
+	public static String get(URI uri) {
+		HttpRequest request = HttpRequest.newBuilder()
+				.GET()
+				.uri(uri)
+				.build();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<String> response;
+		try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from the endpoint: " + response.body());
+		}
+		return response.body();
+	}
+
+	public static String postForm(URI uri, String json) {
 		HttpRequest request = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(uri)
 				.header("Content-Type", "application/x-www-form-urlencoded")
+				.build();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<String> response;
+		try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from the endpoint: " + response.body());
+		}
+		return response.body();
+	}
+
+	public static String postJson(URI uri, String json) {
+		HttpRequest request = HttpRequest.newBuilder()
+				.POST(HttpRequest.BodyPublishers.ofString(json))
+				.uri(uri)
+				.header("Content-Type", "application/json")
+				.header("Prefer", "return=representation")
 				.build();
 		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
