@@ -47,8 +47,8 @@ services:
       - "7000:7000"
     environment:
       PROPERTIES: "/usr/mymaven/.env.production.local"
-    # networks:
-    #   - net
+    networks:
+      - net
 
   frontend:
     container_name: frontend
