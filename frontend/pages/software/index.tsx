@@ -1,6 +1,5 @@
-import {MouseEvent, ChangeEvent} from 'react'
+import {useState,useEffect,MouseEvent, ChangeEvent} from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination';
 
@@ -9,34 +8,83 @@ import ContentInTheMiddle from "../../components/layout/ContentInTheMiddle"
 import PageTitle from '../../components/layout/PageTitle'
 import CardGrid from '../../components/layout/CardGrid'
 import {SoftwareItem} from '../../types/SoftwareItem'
-import {getSoftwareList, getTagsWithCount, TagCountItem} from '../../utils/getSoftware'
-import {extractQueryParam} from '../../utils/extractQueryParam'
+import {getSoftwareList, getTagsWithCount, TagItem} from '../../utils/getSoftware'
+import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {rowsPerPageOptions} from '../../config/pagination'
 import Searchbox from '../../components/software/Searchbox'
 import FilterTechnologies from '../../components/software/FilterTechnologies'
 import SortSelection from '../../components/software/SortSelection'
 import SoftwareCard from '../../components/software/SoftwareCard'
+import {softwareUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 
-export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
-  {count:number,page:number,rows:number,tags:TagCountItem[],software:SoftwareItem[]
+export default function SoftwareIndexPage({count,page,rows,tags,software=[],ssr}:
+  {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareItem[],ssr:boolean
 }){
-  //use next router (hook is only for browser)
+  // keep track between ssr/browser
+  const [client,setClient]=useState(!ssr)
+  // use next router (hook is only for browser)
   const router = useRouter()
+
+  useEffect(()=>{
+    // set client side
+    setClient(true)
+  },[])
 
   // next/previous page button
   function handlePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ){
-    // debugger
-    router.push(`/software?page=${newPage}&rows=${rows}`)
+    const url = ssrSoftwareUrl({
+      query: router.query,
+      page: newPage
+    })
+    router.push(url)
   }
 
   // change number of cards per page
   function handleItemsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ){
-    router.push(`/software?page=0&rows=${parseInt(event.target.value)}`)
+    const url = ssrSoftwareUrl({
+      query: router.query,
+      // reset to first page
+      page: 0,
+      rows: parseInt(event.target.value),
+    })
+    router.push(url)
+  }
+
+  function handleSearch(searchFor:string){
+    const url = ssrSoftwareUrl({
+      query: router.query,
+      search: searchFor,
+      // start from first page
+      page: 0
+    })
+    router.push(url)
+  }
+
+  function handleFilters(filters:string[]){
+    let filterStr
+    if (filters.length > 0){
+      filterStr = JSON.stringify(filters)
+    }else{
+      filterStr = null
+    }
+    const url = ssrSoftwareUrl({
+      query: router.query,
+      // stringified filters
+      filter: filterStr,
+      // start from first page
+      page: 0
+    })
+    router.push(url)
+  }
+
+  // TODO! handle sort options
+  function handleSort(sortOn:string){
+    console.warn("TODO! Sort on...", sortOn)
   }
 
   return (
@@ -47,15 +95,15 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
       <PageTitle title="Software">
         <div className="flex flex-wrap sm:justify-end sm:px-4">
           <div className="flex items-center">
-            <Searchbox onSearch={(searchFor:string)=>console.log("Search for...", searchFor)}></Searchbox>
+            <Searchbox onSearch={handleSearch}></Searchbox>
             <FilterTechnologies
-              items={tags.map(tag=>tag.tag)}
-              onSelect={(resp)=>console.log("FilterTechnologies",resp)}
+              items={tags}
+              onSelect={handleFilters}
             />
             <SortSelection
               items={["Last updated", "Most updates", "Most mentions"]}
               defaultValue='Last updated'
-              onSort={(resp)=>console.log("Sort on", resp)}
+              onSort={handleSort}
             />
           </div>
           <TablePagination
@@ -101,44 +149,54 @@ function renderItems(software:SoftwareItem[]){
   })
 }
 
+
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:any) {
-  // extract from page-query
-  const rows = extractQueryParam({
-    req: context,
-    param: "rows",
-    defaultValue: 12,
-    castToType:"number"
-  })
-  const page = extractQueryParam({
-    req: context,
-    param: "page",
-    defaultValue: 0,
-    castToType:"number"
-  })
-  // console.log("getServerSideProps.page...", page)
-  // console.log("getServerSideProps.rows...", rows)
-  // console.log("getServerSideProps.offset...", rows * page)
-  // console.log("getServerSideProps.query...",context.query);
-  const software = await getSoftwareList({
+  // extract params from page-query
+  const {search,filterStr,rows,page} = ssrSoftwareParams(context)
+
+  // construct postgREST api url with query params
+  const url = softwareUrl({
+    baseUrl: process.env.POSTGREST_URL || "http://localhost:3500",
+    search,
+    columns:['id','slug','brand_name','short_statement','is_featured','updated_at'],
+    filters: JSON.parse(filterStr),
+    order:"is_featured.desc,updated_at.desc",
     limit: rows,
     offset: rows * page,
-    //baseUrl within docker network
-    baseUrl: process.env.POSTGREST_URL || "http://localhost:3500"
   })
 
-  const tags = await getTagsWithCount()
+  // get software list
+  const software = await getSoftwareList(url)
 
+  // get tags
+  const tags = await getTagsWithCount()
+  // enrich tags with status
+  if (filterStr){
+    const filters = JSON.parse(filterStr)
+    tags?.forEach(item=>{
+      if (filterStr.includes(item.tag)){
+        item.active = true
+      }else{
+        item.active = false
+      }
+    })
+  }else{
+    // all items are inactive (not pre-selected)
+    tags?.forEach(item=>item.active=false)
+  }
+
+  // will be passed as props to page
+  // see params of SoftwareIndexPage function
   return {
-    // will be passed to the page component as props
-    // see params in SoftwareIndexPage
     props: {
       count: software.count,
       page,
       rows,
       software: software.data,
-      tags
+      tags,
+      ssr:true
     },
   }
 }

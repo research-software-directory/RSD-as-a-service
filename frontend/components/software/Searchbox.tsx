@@ -9,7 +9,7 @@ export default function Searchbox({onSearch}:{onSearch:Function}) {
     <Input
       id="search-input"
       autoComplete='off'
-      placeholder='Search'
+      placeholder='Press enter to start'
       value={state}
       sx={{
         minWidth:[null,null,'16rem','17.5rem','19.5rem']
@@ -23,7 +23,7 @@ export default function Searchbox({onSearch}:{onSearch:Function}) {
       }}
       startAdornment={
         <InputAdornment position="start">
-          <SearchIcon />
+          <SearchIcon sx={{cursor:"pointer"}} onClick={()=>onSearch(state)} />
         </InputAdornment>
       }
     />

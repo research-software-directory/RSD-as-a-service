@@ -1,8 +1,8 @@
 import type { NextApiRequest} from 'next'
 import logger from './logger'
 
-export function extractQueryParam({req,param,castToType,defaultValue}:{
-  req:NextApiRequest, param:string, castToType:("string"|"number"|"date"),
+export function extractQueryParam({req,param,castToType="string",defaultValue}:{
+  req:NextApiRequest, param:string, castToType?:("string"|"number"|"date"),
   defaultValue:any
 }){
 try{
@@ -26,3 +26,34 @@ try{
   logger(`extractQueryParam: ${e.description}`,"error")
   throw e
 }}
+
+export function ssrSoftwareParams(context:NextApiRequest){
+  const rows = extractQueryParam({
+    req: context,
+    param: "rows",
+    defaultValue: 12,
+    castToType:"number"
+  })
+  const page = extractQueryParam({
+    req: context,
+    param: "page",
+    defaultValue: 0,
+    castToType:"number"
+  })
+  const search = extractQueryParam({
+    req: context,
+    param: "search",
+    defaultValue: null
+  })
+  const filterStr = extractQueryParam({
+    req: context,
+    param: "filter",
+    defaultValue: null
+  })
+  return {
+    search,
+    filterStr,
+    rows,
+    page,
+  }
+}

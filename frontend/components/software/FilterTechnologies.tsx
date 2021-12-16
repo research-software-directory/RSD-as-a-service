@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
@@ -9,18 +9,35 @@ import Checkbox from '@mui/material/Checkbox'
 import Badge from '@mui/material/Badge';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button'
+import {TagItem} from '../../utils/getSoftware'
 
-export default function FilterTechnologies({items=[], onSelect}:{items:string[], onSelect:(items:string[])=>void}) {
+/**
+ * Tags filter component. It receives array of TagItems and returns
+ * array of selected tags to use in filter using onSelect callback function
+ */
+export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[], onSelect:(items:string[])=>void}) {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  useEffect(()=>{
+    const preselect = items.filter(i=>i.active===true).map(i=>i.tag)
+    // set pre-selected items
+    setSelectedItems(preselect)
+  },[items])
 
   function handleClick(event: React.MouseEvent<HTMLElement>){
     setAnchorEl(event.currentTarget);
   }
   function handleClose(){
     setAnchorEl(null);
+    // pass selected items back
     onSelect(selectedItems)
+  }
+
+  function handleClear(){
+    // clear items
+    setSelectedItems([])
   }
 
   function toggleSelection(item:string){
@@ -53,33 +70,43 @@ export default function FilterTechnologies({items=[], onSelect}:{items:string[],
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        // right align menu from the menu button
+        // align menu to the right from the menu button
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <ListItemText sx={{textAlign:'center'}}>Technology</ListItemText>
         <Divider />
         {items.map((item) => (
-          <MenuItem key={item} value={item}
-            onClick={()=>toggleSelection(item)}>
+          <MenuItem key={item.tag} value={item.tag}
+            onClick={()=>toggleSelection(item.tag)}>
             <Checkbox
-              checked={selectedItems.indexOf(item) > -1}
+              checked={selectedItems.indexOf(item.tag) > -1}
             />
-            <ListItemText primary={item} />
+            <ListItemText primary={`${item.tag} (${item.count})`}/>
           </MenuItem>
         ))}
         <Divider />
         <ListItemText sx={{textAlign:'center', textTransform:'uppercase'}}>
-          <Button
-            sx={{width:'100%'}}
-            onClick={handleClose}>
-            Apply
-          </Button>
+          { selectedItems.length > 0 ?
+            <>
+            <Button
+              color="secondary"
+              sx={{marginRight:'2rem'}}
+              onClick={handleClear}>
+              Clear
+            </Button>
+            <Button
+              onClick={handleClose}>
+              Apply
+            </Button>
+            </>
+            :
+            <Button
+              onClick={handleClose}>
+              Close
+            </Button>
+          }
         </ListItemText>
-        {/* <MenuItem
-          onClick={handleClose}>
-          <ListItemText sx={{textAlign:'center'}}>Apply filters</ListItemText>
-        </MenuItem> */}
       </Menu>
     </>
   );

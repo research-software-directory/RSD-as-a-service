@@ -42,7 +42,6 @@ export default function SortSelection({items=[], defaultValue, onSort}:
   }
   function handleClose(){
     setAnchorEl(null);
-    onSort(sortItem)
   }
 
   // if no filter items do not show filter options
@@ -68,7 +67,12 @@ export default function SortSelection({items=[], defaultValue, onSort}:
       >
         {items.map((item) => (
           <MenuItem key={item} value={item}
-            onClick={()=>setSortItem(item)}>
+            onClick={()=>{
+              // save localy
+              setSortItem(item)
+              // pass to parent
+              onSort(item)
+            }}>
             {
               sortItem === item ?
               <CheckIcon sx={{height:'1rem', marginRight:'0.5rem'}} />
