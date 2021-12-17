@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {useSession} from 'next-auth/react'
 
@@ -22,11 +23,15 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
       </Head>
       <PageTitle title={software?.brand_name}>
         <div>
-          <IconButton
-            title="Go back"
-            onClick={()=>router.back()}>
-            <ArrowBackIcon />
-          </IconButton>
+          <Link href={`/software`} passHref>
+            {/* allow back button without javascript */}
+            <a>
+              <IconButton
+                title="Go back">
+                <ArrowBackIcon />
+              </IconButton>
+            </a>
+          </Link>
           <IconButton
             title="Edit"
             onClick={()=>router.push(`/software/${slug}/edit`)}

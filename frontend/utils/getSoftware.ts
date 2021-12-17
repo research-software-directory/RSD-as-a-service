@@ -1,17 +1,21 @@
 import {SoftwareItem} from '../types/SoftwareItem'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from "./logger"
+// import {softwareUrl} from './postgrestUrl'
 
-// TODO! update url to new db and setup variable endpoint based on environment
-export async function getSoftwareList({limit=12,offset=0,baseUrl="/api/v1",}:
-  {limit:number,offset:number,baseUrl?:string,}
-){
+/**
+ * postgREST api uri to retreive software index data.
+ * Note! url should contain all query params. Use softwareUrl helper fn to construct url.
+ * @param url with all query params for search,filtering, order and pagination
+ * @returns {
+  * count:number,
+  * data:[]
+ * }
+ */
+export async function getSoftwareList(url:string){
   try{
-    const url = `${baseUrl}/software?order=updated_at.desc&limit=${limit}&offset=${offset}`
     const headers = new Headers()
-    // console.log(`getSoftwareList...url...`,url)
-    // request estimated count - faster method
-    // headers.append('Prefer','count=estimated')
+    // request count for pagination
     headers.append('Prefer','count=exact')
     const resp = await fetch(url,{method:"GET", headers})
 
@@ -37,7 +41,7 @@ export async function getSoftwareList({limit=12,offset=0,baseUrl="/api/v1",}:
   }
 }
 
-// TODO! update url to new db and setup variable endpoint based on environment
+// query for software item page based on slug
 export async function getSoftwareItem(slug:string){
   try{
     // this request is always perfomed from backend
@@ -49,5 +53,29 @@ export async function getSoftwareItem(slug:string){
     }
   }catch(e:any){
     logger(`getSoftwareItem: ${e?.message}`,"error")
+  }
+}
+
+// Get
+export type TagItem={
+  count: number,
+  tag:string,
+  active:boolean
+}
+export async function getTagsWithCount(){
+  try{
+    // this request is always perfomed from backend
+    const url = `${process.env.POSTGREST_URL}/count_software_per_tag?order=tag.asc`
+    const resp = await fetch(url,{method:"GET"})
+    if (resp.status===200){
+      const data:TagItem[] = await resp.json()
+      return data
+    } else if (resp.status===404){
+      logger(`getTagsWithCount: 404 [${url}]`,"error")
+      // query not found
+      return []
+    }
+  }catch(e:any){
+    logger(`getTagsWithCount: ${e?.message}`,"error")
   }
 }

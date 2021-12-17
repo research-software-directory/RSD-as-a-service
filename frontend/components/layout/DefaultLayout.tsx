@@ -6,7 +6,7 @@ export default function DefaultLayout({children}:{children:ReactNode}) {
   return (
     <>
       <AppHeader/>
-      <main className="container mx-auto flex flex-col flex-1">
+      <main className="flex flex-col flex-1 px-4 lg:container lg:mx-auto">
         {children}
       </main>
       <AppFooter/>

@@ -55,7 +55,7 @@ export default function AppHeader(){
     return (
       <Link href="/login" passHref>
         <Button
-          variant="outlined"
+          variant="text"
           >
           <LoginIcon />
           <span className="ml-4">Sign In</span>
@@ -65,17 +65,19 @@ export default function AppHeader(){
   }
 
   return (
-    <header className="container mx-auto">
-      <div className="flex items-center py-4">
+    <header className="px-4 lg:container lg:mx-auto">
+      <div className="flex flex-col items-center pt-4 md:flex-row">
         <Link href="/" passHref>
           <a><LogoEscience className="cursor-pointer"/></a>
         </Link>
-        <div className="flex ml-auto">
-          {getMenuItems()}
-        </div>
-        <div className="ml-auto">
-          {getLoginButton()}
-        </div>
+        <section className='flex flex-1 py-4'>
+          <div className="flex justify-center items-center flex-1">
+            {getMenuItems()}
+          </div>
+          <div className="min-w-[9rem] text-right">
+            {getLoginButton()}
+          </div>
+        </section>
       </div>
     </header>
   )
