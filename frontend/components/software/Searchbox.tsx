@@ -9,7 +9,7 @@ export default function Searchbox({onSearch}:{onSearch:Function}) {
     <Input
       id="search-input"
       autoComplete='off'
-      placeholder='Press enter to start'
+      placeholder='Use enter when done typing'
       value={state}
       sx={{
         minWidth:[null,null,'16rem','17.5rem','19.5rem']

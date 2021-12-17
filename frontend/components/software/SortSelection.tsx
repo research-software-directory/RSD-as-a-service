@@ -50,7 +50,8 @@ export default function SortSelection({items=[], defaultValue, onSort}:
   return (
     <>
       <Tooltip title={`Sort on: ${sortItem}`}>
-        <IconButton onClick={handleClick}>
+        <IconButton
+          onClick={handleClick}>
           <Badge badgeContent={1} color="secondary">
             <SortIcon />
           </Badge>
@@ -67,6 +68,7 @@ export default function SortSelection({items=[], defaultValue, onSort}:
       >
         {items.map((item) => (
           <MenuItem key={item} value={item}
+            disabled={item !== defaultValue}
             onClick={()=>{
               // save localy
               setSortItem(item)
