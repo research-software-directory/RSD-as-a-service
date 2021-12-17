@@ -15,7 +15,6 @@ services:
       # to remove use: docker-compose down --volumes
       # to inspect use: docker volume ls
       - pgdb:/var/lib/postgresql/data/
-
     networks:
       - net
 
@@ -39,8 +38,17 @@ services:
       - "database"
       - "backend"
     network_mode: "host"
-    # networks:
-    #   - net
+
+  authentication:
+    build:
+      context: .
+      dockerfile: ./authentication/dockerfile
+    ports:
+      - "7000:7000"
+    environment:
+      PROPERTIES: "/usr/mymaven/.env.production.local"
+    networks:
+      - net
 
   frontend:
     container_name: frontend
