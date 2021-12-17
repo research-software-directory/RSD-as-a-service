@@ -38,7 +38,7 @@ public class Main {
 		Map<String, String> legacyIdToNewIdSoftware = idToId(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveRepoUrls(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveLicenses(allSoftwareFromLegacyRSD, slugToIdSoftware);
-		saveTags(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		saveTagsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		String allPersonsString = get(URI.create(LEGACY_RSD_PERSON_URI));
 		JsonArray allPersonsFromLegacyRSD = JsonParser.parseString(allPersonsString).getAsJsonArray();
 		saveContributors(allPersonsFromLegacyRSD, allSoftwareFromLegacyRSD, slugToIdSoftware, "contributors", "/contributor", "software");
@@ -48,6 +48,8 @@ public class Main {
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
 		saveProjects(allProjectsFromLegacyRSD);
 		Map<String, String> slugToIdProject = slugToId("/project?select=id,slug");
+		saveTagsForProjects(allProjectsFromLegacyRSD, slugToIdProject);
+		saveTopicsForProjects(allProjectsFromLegacyRSD, slugToIdProject);
 		Map<String, String> legacyIdToNewIdProject = idToId(allProjectsFromLegacyRSD, slugToIdProject);
 		saveProjectImages(allProjectsFromLegacyRSD);
 		saveSoftwareRelatedToProjects(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyIdToNewIdProject);
@@ -189,7 +191,7 @@ public class Main {
 		post(URI.create(POSTGREST_URI + "/license_for_software"), allLicensesToSave.toString());
 	}
 
-	public static void saveTags(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
+	public static void saveTagsForSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
 		JsonArray allTagsToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
@@ -299,6 +301,40 @@ public class Main {
 			allProjectsToSave.add(projectToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/project"), allProjectsToSave.toString());
+	}
+
+	public static void saveTagsForProjects(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToId) {
+		JsonArray allTagsToSave = new JsonArray();
+		allProjectsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject projectFromLegacyRSD = jsonElement.getAsJsonObject();
+
+			JsonArray tags = projectFromLegacyRSD.get("technologies").getAsJsonArray();
+			String slug = projectFromLegacyRSD.get("slug").getAsString();
+			tags.forEach(jsonTag -> {
+				JsonObject tagToSave = new JsonObject();
+				tagToSave.addProperty("project", slugToId.get(slug));
+				tagToSave.add("tag", jsonTag);
+				allTagsToSave.add(tagToSave);
+			});
+		});
+		post(URI.create(POSTGREST_URI + "/tag_for_project"), allTagsToSave.toString());
+	}
+
+	public static void saveTopicsForProjects(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToId) {
+		JsonArray allTopicsToSave = new JsonArray();
+		allProjectsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject projectFromLegacyRSD = jsonElement.getAsJsonObject();
+
+			JsonArray tags = projectFromLegacyRSD.get("topics").getAsJsonArray();
+			String slug = projectFromLegacyRSD.get("slug").getAsString();
+			tags.forEach(jsonTopic -> {
+				JsonObject topicToSave = new JsonObject();
+				topicToSave.addProperty("project", slugToId.get(slug));
+				topicToSave.add("topic", jsonTopic);
+				allTopicsToSave.add(topicToSave);
+			});
+		});
+		post(URI.create(POSTGREST_URI + "/topic_for_project"), allTopicsToSave.toString());
 	}
 
 	public static void saveProjectImages(JsonArray allProjectsFromLegacyRSD) {
