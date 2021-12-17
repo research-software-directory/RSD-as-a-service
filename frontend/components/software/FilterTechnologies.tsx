@@ -3,12 +3,14 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import ListItemText from '@mui/material/ListItemText'
 import Checkbox from '@mui/material/Checkbox'
 import Badge from '@mui/material/Badge';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
+import ClearAllIcon from '@mui/icons-material/ClearAll'
+import CloseIcon from '@mui/icons-material/Close'
 import {TagItem} from '../../utils/getSoftware'
 
 /**
@@ -31,13 +33,12 @@ export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[]
   }
   function handleClose(){
     setAnchorEl(null);
-    // pass selected items back
-    onSelect(selectedItems)
   }
 
   function handleClear(){
-    // clear items
     setSelectedItems([])
+    onSelect([])
+    handleClose()
   }
 
   function toggleSelection(item:string){
@@ -52,6 +53,8 @@ export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[]
       ]
     }
     setSelectedItems(newSelection)
+    // pass selected items back
+    onSelect(newSelection)
   }
 
   // if no filter items don't show filter component
@@ -86,23 +89,24 @@ export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[]
           </MenuItem>
         ))}
         <Divider />
-        <ListItemText sx={{textAlign:'center', textTransform:'uppercase'}}>
-          { selectedItems.length > 0 ?
-            <>
-            <Button
-              color="secondary"
-              sx={{marginRight:'2rem'}}
-              onClick={handleClear}>
-              Clear
-            </Button>
-            </>
-            :null
-          }
+        <div className="flex items-center justify-between mx-4">
           <Button
-            onClick={handleClose}>
-            Apply
+            disabled={selectedItems?.length===0}
+            color="secondary"
+            sx={{mx:1}}
+            onClick={handleClear}>
+            <ClearAllIcon sx={{mr:1}}/>
+            Clear
           </Button>
-        </ListItemText>
+          <Button
+            sx={{mx:1}}
+            onClick={handleClose}>
+            <CloseIcon sx={{mr:1}}/>
+            Close
+          </Button>
+        </div>
+        {/* <ListItemText sx={{textAlign:'center', textTransform:'uppercase'}}>
+        </ListItemText> */}
       </Menu>
     </>
   );
