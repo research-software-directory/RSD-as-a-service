@@ -4,4 +4,5 @@ RUN mkdir --parents ./src/main
 COPY ./pom.xml .
 RUN mvn clean package -Dmaven.main.skip -Dmaven.test.skip && rm -r ./target && mvn exec:java --fail-never
 COPY src/main ./src/main
-CMD mvn compile && mvn exec:java
+RUN mvn compile
+CMD mvn exec:java
