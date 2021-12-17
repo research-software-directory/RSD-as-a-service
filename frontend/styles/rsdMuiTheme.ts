@@ -118,6 +118,14 @@ const rsdMuiTheme = createTheme({
           overflow:'auto'
         }
       }
+    },
+    MuiTablePagination:{
+      styleOverrides:{
+        displayedRows:{
+          minWidth:'6.5rem',
+          textAlign:'right'
+        }
+      }
     }
   },
 })
