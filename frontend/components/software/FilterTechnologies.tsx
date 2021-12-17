@@ -95,17 +95,13 @@ export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[]
               onClick={handleClear}>
               Clear
             </Button>
-            <Button
-              onClick={handleClose}>
-              Apply
-            </Button>
             </>
-            :
-            <Button
-              onClick={handleClose}>
-              Close
-            </Button>
+            :null
           }
+          <Button
+            onClick={handleClose}>
+            Apply
+          </Button>
         </ListItemText>
       </Menu>
     </>
