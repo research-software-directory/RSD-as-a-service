@@ -137,14 +137,14 @@ CREATE POLICY admin_all_rights ON tag_for_project TO rsd_admin
 -- mentions
 -- TODO: not sure what to do here,
 -- should a mention only be visible if you can see at least one software or project for which it relates?
---ALTER TABLE mention ENABLE ROW LEVEL SECURITY;
---
---CREATE POLICY anyone_can_read ON mention FOR SELECT TO web_anon
---	USING (TRUE);
---
---CREATE POLICY admin_all_rights ON mention TO rsd_admin
---	USING (TRUE)
---	WITH CHECK (TRUE);
+ALTER TABLE mention ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON mention FOR SELECT TO web_anon
+	USING (id IN (SELECT mention FROM mention_for_software) OR id IN (SELECT mention FROM output_for_project) OR id IN (SELECT mention FROM impact_for_project));
+
+CREATE POLICY admin_all_rights ON mention TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
 
 
 ALTER TABLE mention_for_software ENABLE ROW LEVEL SECURITY;
