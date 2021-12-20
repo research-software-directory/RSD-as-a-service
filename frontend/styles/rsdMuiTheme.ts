@@ -9,7 +9,7 @@
 import {createTheme} from "@mui/material/styles";
 // import colors and breakpoints from shared themeConfig file
 // these values are applied to both MUI-5 and Tailwind themes
-import {colors, muiTypography} from './themeConfig'
+import {colors, muiTypography} from "./themeConfig"
 
 /**
  * EXAMPLE of extendings MUI-5 theme interface
@@ -71,7 +71,7 @@ const rsdMuiTheme = createTheme({
   typography:{
     button:{
       fontWeight: 400,
-      letterSpacing: '0.125rem',
+      letterSpacing: "0.125rem",
     },
     // change headers fontSize and weight
     h1: {
@@ -99,7 +99,7 @@ const rsdMuiTheme = createTheme({
       styleOverrides:{
         root:{
           // remove upper text transform from buttons
-          textTransform:'inherit'
+          textTransform:"inherit"
         }
       }
     },
@@ -107,23 +107,23 @@ const rsdMuiTheme = createTheme({
       styleOverrides:{
         primary:{
           // cut off large menu items with ...
-          overflow:'hidden',
-          textOverflow: 'ellipsis'
+          overflow:"hidden",
+          textOverflow: "ellipsis"
         }
       }
     },
     MuiPaper:{
       styleOverrides:{
         root:{
-          overflow:'auto'
+          overflow:"auto"
         }
       }
     },
     MuiTablePagination:{
       styleOverrides:{
         displayedRows:{
-          minWidth:'6.5rem',
-          textAlign:'right'
+          minWidth:"6.5rem",
+          textAlign:"right"
         }
       }
     }

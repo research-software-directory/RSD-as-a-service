@@ -4,19 +4,19 @@
  */
 
 const colors = {
-  primary:'#00A3E3',
-  secondary:'#222425',
-  textPrimary:'rgba(34,36,37,1)',
-  textSecondary:'rgba(34,36,37,0.87)',
-  textDisabled:'rgba(34,36,37,0.45)',
-  divider:'#ddd',
-  contrastText:'#fff',
-  error:'#e53935',
-  warning:'#ed6c02',
-  info:'#0288d1',
-  success:'#2e7d32',
-  black:'#000',
-  white:'#fff',
+  primary:"#00A3E3",
+  secondary:"#222425",
+  textPrimary:"rgba(34,36,37,1)",
+  textSecondary:"rgba(34,36,37,0.87)",
+  textDisabled:"rgba(34,36,37,0.45)",
+  divider:"#ddd",
+  contrastText:"#fff",
+  error:"#e53935",
+  warning:"#ed6c02",
+  info:"#0288d1",
+  success:"#2e7d32",
+  black:"#000",
+  white:"#fff",
   grey: {
     50: "#fafafa",
     100: "#f5f5f5",
@@ -52,7 +52,7 @@ const muiTypography={
   // pages/_document.tsx file to import proper fontFamily
   // Currently we import the fonst from Google Fonts
   // legacy RSD uses these fonts
-  fontFamily: 'Roboto,Helvetica,arial,sans-serif',
+  fontFamily: "Roboto,Helvetica,arial,sans-serif",
   // set default fontsize to 1rem for MUI-5
   // fontSize:14,
   fontWeightLight: 100,

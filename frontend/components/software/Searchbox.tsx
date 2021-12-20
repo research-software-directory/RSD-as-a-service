@@ -1,9 +1,9 @@
-import {useState, useEffect} from 'react'
-import Input from '@mui/material/Input'
-import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
-import {useDebounce} from '../../utils/useDebouce'
-import ClearIcon from '@mui/icons-material/Clear'
+import {useState, useEffect} from "react"
+import Input from "@mui/material/Input"
+import InputAdornment from "@mui/material/InputAdornment"
+import SearchIcon from "@mui/icons-material/Search"
+import {useDebounce} from "../../utils/useDebouce"
+import ClearIcon from "@mui/icons-material/Clear"
 
 export default function Searchbox({onSearch,delay=400}:{onSearch:Function,delay?:number}) {
   const [state,setState]=useState({
@@ -30,7 +30,7 @@ export default function Searchbox({onSearch,delay=400}:{onSearch:Function,delay?
       placeholder='Search for software'
       value={state.value}
       sx={{
-        minWidth:[null,null,'16rem','17.5rem','19.5rem']
+        minWidth:[null,null,"16rem","17.5rem","19.5rem"]
       }}
       onChange={({target})=>{
         setState({
@@ -40,7 +40,7 @@ export default function Searchbox({onSearch,delay=400}:{onSearch:Function,delay?
       }}
       onKeyPress={(event)=>{
         // pass search value on enter
-        if (event.key.toLowerCase()==='enter'){
+        if (event.key.toLowerCase()==="enter"){
           onSearch(state)
         }
       }}

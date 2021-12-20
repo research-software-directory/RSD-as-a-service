@@ -1,12 +1,12 @@
-import styled from '@mui/system/styled'
-import { ReactNode } from 'react'
+import styled from "@mui/system/styled"
+import { ReactNode } from "react"
 
-const StyledArticle = styled('article')(({theme})=>({
+const StyledArticle = styled("article")(({theme})=>({
   flex:1,
-  display:'flex',
-  justifyContent:'center',
-  alignItems:'center',
-  minWidth:'100vw',
+  display:"flex",
+  justifyContent:"center",
+  alignItems:"center",
+  minWidth:"100vw",
 }))
 
 export default function ContentInTheMiddle({children,...props}:{children:ReactNode,props?:any}) {

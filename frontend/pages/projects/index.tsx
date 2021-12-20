@@ -1,19 +1,19 @@
-import {MouseEvent, ChangeEvent} from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
-import {useRouter} from 'next/router'
+import {MouseEvent, ChangeEvent} from "react"
+import Head from "next/head"
+import Link from "next/link"
+import {useRouter} from "next/router"
 
-import Alert from '@mui/material/Alert'
-import TablePagination from '@mui/material/TablePagination';
+import Alert from "@mui/material/Alert"
+import TablePagination from "@mui/material/TablePagination";
 
 import DefaultLayout from "../../components/layout/DefaultLayout"
 import ContentInTheMiddle from "../../components/layout/ContentInTheMiddle"
-import PageTitle from '../../components/layout/PageTitle'
-import CardGrid from '../../components/layout/CardGrid'
-import {ProjectItem} from '../../types/ProjectItem'
-import {getProjectList} from '../../utils/getProjects'
-import {extractQueryParam} from '../../utils/extractQueryParam'
-import {rowsPerPageOptions} from '../../config/pagination'
+import PageTitle from "../../components/layout/PageTitle"
+import CardGrid from "../../components/layout/CardGrid"
+import {ProjectItem} from "../../types/ProjectItem"
+import {getProjectList} from "../../utils/getProjects"
+import {extractQueryParam} from "../../utils/extractQueryParam"
+import {rowsPerPageOptions} from "../../config/pagination"
 
 function renderItems(projects:ProjectItem[]){
   if (projects.length===0){

@@ -24,7 +24,7 @@ export function softwareUrl(props:PostgrestParams){
   if(typeof filters !=="undefined"
     && filters?.length > 0){
     // add tag inner join
-    url+=`,tag_for_software!inner(tag)`
+    url+=",tag_for_software!inner(tag)"
     // convert tags array to comma separated string
     const tagsIn = filters?.map((item:string)=>`"${encodeURIComponent(item)}"`).join(",")
     // add tag values to in statement
@@ -32,7 +32,7 @@ export function softwareUrl(props:PostgrestParams){
   }
 
   // always filter for only published software!
-  url+=`&is_published=eq.true`
+  url+="&is_published=eq.true"
 
   if (search){
     // search for term in brand_name and short_statement
@@ -80,14 +80,14 @@ export function ssrSoftwareUrl(params:QueryParams){
   } else if (query?.page){
     url+=`&page=${query.page}`
   } else {
-    url+=`&page=0`
+    url+="&page=0"
   }
   if (rows){
     url+=`&rows=${rows}`
   } else if (query?.rows){
     url+=`&rows=${query?.rows}`
   } else {
-    url+=`&rows=12`
+    url+="&rows=12"
   }
   return url
 }

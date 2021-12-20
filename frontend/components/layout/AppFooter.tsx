@@ -1,6 +1,6 @@
-import Link from 'next/link'
-import LogoEscience from './LogoEscience'
-import Mail from '@mui/icons-material/Mail'
+import Link from "next/link"
+import LogoEscience from "./LogoEscience"
+import Mail from "@mui/icons-material/Mail"
 
 export default function AppFooter () {
   return (

@@ -1,5 +1,5 @@
-import {SoftwareItem} from '../types/SoftwareItem'
-import {extractCountFromHeader} from './extractCountFromHeader'
+import {SoftwareItem} from "../types/SoftwareItem"
+import {extractCountFromHeader} from "./extractCountFromHeader"
 import logger from "./logger"
 
 /**
@@ -15,7 +15,7 @@ export async function getSoftwareList(url:string){
   try{
     const headers = new Headers()
     // request count for pagination
-    headers.append('Prefer','count=exact')
+    headers.append("Prefer","count=exact")
     const resp = await fetch(url,{method:"GET", headers})
 
     if ([200,206].includes(resp.status)){

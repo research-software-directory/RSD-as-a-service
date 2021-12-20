@@ -1,30 +1,30 @@
-import {useState} from 'react';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import SortIcon from '@mui/icons-material/Sort'
-import ListItemText from '@mui/material/ListItemText'
-import Badge from '@mui/material/Badge';
-import CheckIcon from '@mui/icons-material/Check'
+import {useState} from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import SortIcon from "@mui/icons-material/Sort"
+import ListItemText from "@mui/material/ListItemText"
+import Badge from "@mui/material/Badge";
+import CheckIcon from "@mui/icons-material/Check"
 
 
 const paperStyles={
   elevation: 0,
   sx: {
-    overflow: 'visible',
-    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+    overflow: "visible",
+    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
     mt: 1.5,
-    '&:before': {
-      content: '""',
-      display: 'block',
-      position: 'absolute',
+    "&:before": {
+      content: "\"\"",
+      display: "block",
+      position: "absolute",
       top: 0,
       right: 14,
       width: 10,
       height: 10,
-      bgcolor: 'background.paper',
-      transform: 'translateY(-50%) rotate(45deg)',
+      bgcolor: "background.paper",
+      transform: "translateY(-50%) rotate(45deg)",
       zIndex: 0,
     },
   },
@@ -63,8 +63,8 @@ export default function SortSelection({items=[], defaultValue, onSort}:
         onClose={handleClose}
         onClick={handleClose}
         PaperProps={paperStyles}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         {items.map((item) => (
           <MenuItem key={item} value={item}
@@ -77,9 +77,9 @@ export default function SortSelection({items=[], defaultValue, onSort}:
             }}>
             {
               sortItem === item ?
-              <CheckIcon sx={{height:'1rem', marginRight:'0.5rem'}} />
+              <CheckIcon sx={{height:"1rem", marginRight:"0.5rem"}} />
               :
-              <div style={{width:'2rem', textAlign:'center'}} />
+              <div style={{width:"2rem", textAlign:"center"}} />
             }
             <ListItemText primary={item} />
           </MenuItem>

@@ -1,20 +1,20 @@
-import {useEffect} from 'react'
-import router from 'next/router'
+import {useEffect} from "react"
+import router from "next/router"
 import {SessionProvider} from "next-auth/react"
-import Head from 'next/head'
-import {AppProps} from 'next/app'
-import {ThemeProvider} from '@mui/material/styles'
+import Head from "next/head"
+import {AppProps} from "next/app"
+import {ThemeProvider} from "@mui/material/styles"
 // import CssBaseline from '@mui/material/CssBaseline'
-import {CacheProvider, EmotionCache} from '@emotion/react'
-import {rsdMuiTheme} from '../styles/rsdMuiTheme'
-import createEmotionCache from '../styles/createEmotionCache'
+import {CacheProvider, EmotionCache} from "@emotion/react"
+import {rsdMuiTheme} from "../styles/rsdMuiTheme"
+import createEmotionCache from "../styles/createEmotionCache"
 // show loading bar at the top of the screen
-import nprogress from 'nprogress'
+import nprogress from "nprogress"
 
 // global CSS and tailwind
-import '../styles/global.css'
+import "../styles/global.css"
 // nprogress styles
-import 'nprogress/nprogress.css'
+import "nprogress/nprogress.css"
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()

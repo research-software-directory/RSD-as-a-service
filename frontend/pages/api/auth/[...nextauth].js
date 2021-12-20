@@ -3,7 +3,7 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import GitlabProvider from "next-auth/providers/gitlab"
-import AzureADProvider from 'next-auth/providers/azure-ad';
+import AzureADProvider from "next-auth/providers/azure-ad";
 
 export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
@@ -101,8 +101,8 @@ export default NextAuth({
     }
   ],
   pages:{
-    signIn:'/login',
-    signOut:'/logout'
+    signIn:"/login",
+    signOut:"/logout"
   },
   callbacks:{
     /*

@@ -1,5 +1,5 @@
-import type { NextApiRequest} from 'next'
-import logger from './logger'
+import type { NextApiRequest} from "next"
+import logger from "./logger"
 
 export function extractQueryParam({req,param,castToType="string",defaultValue}:{
   req:NextApiRequest, param:string, castToType?:("string"|"number"|"date"),

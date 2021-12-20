@@ -2,6 +2,7 @@
   "extends": "next/core-web-vitals",
   "rules":{
     "no-console": "warn",
-    "eol-last": "warn"
+    "eol-last": "warn",
+    "quotes": ["warn", "double"]
   }
 }
