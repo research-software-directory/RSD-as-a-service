@@ -1,6 +1,5 @@
 import Head from 'next/head'
 
-import Typography from '@mui/material/Typography'
 import DefaultLayout from '../components/layout/DefaultLayout'
 
 export default function Home(){

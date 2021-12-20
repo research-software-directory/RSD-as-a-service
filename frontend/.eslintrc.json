@@ -1,6 +1,7 @@
 {
   "extends": "next/core-web-vitals",
   "rules":{
-    "no-console": "warn"
+    "no-console": "warn",
+    "eol-last": "warn"
   }
 }

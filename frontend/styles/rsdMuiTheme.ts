@@ -133,6 +133,5 @@ const rsdMuiTheme = createTheme({
 export {
   rsdMuiTheme
 }
-
 // show all theme values
 // console.log("rsdTheme:", JSON.stringify(rsdTheme))
