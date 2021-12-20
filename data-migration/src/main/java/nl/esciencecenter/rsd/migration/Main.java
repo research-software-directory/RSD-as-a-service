@@ -1,22 +1,31 @@
 package nl.esciencecenter.rsd.migration;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 public class Main {
+
+	static final long TEN_MINUTES_IN_MILLISECONDS = 600_000L; // 10 * 60 * 1000
+	static final Properties CONFIG = new Properties();
+	static String jwtString;
 
 	public static final String LEGACY_RSD_SOFTWARE_URI = "https://research-software.nl/api/software";
 	public static final String LEGACY_RSD_PROJECT_URI = "https://research-software.nl/api/project";
@@ -25,7 +34,15 @@ public class Main {
 	public static final String LEGACY_RSD_RELEASE_URI = "https://research-software.nl/api/release";
 	public static final String POSTGREST_URI = "http://localhost:3500";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		CONFIG.load(new FileReader(args[0]));
+		String signingSecret = CONFIG.getProperty("PGRST_JWT_SECRET");
+		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
+		jwtString = JWT.create()
+				.withClaim("role", "rsd_admin")
+				.withExpiresAt(new Date(System.currentTimeMillis() + TEN_MINUTES_IN_MILLISECONDS))
+				.sign(signingAlgorithm);
+
 		String allSoftwareString = get(URI.create(LEGACY_RSD_SOFTWARE_URI));
 		JsonArray allSoftwareFromLegacyRSD = JsonParser.parseString(allSoftwareString).getAsJsonArray();
 
@@ -87,7 +104,7 @@ public class Main {
 		for (int tryConnectionCount = 0; tryConnectionCount < maxTries; tryConnectionCount++) {
 			pauseExecution(500);
 			try {
-				get(URI.create(POSTGREST_URI));
+				getPostgREST(URI.create(POSTGREST_URI));
 			} catch (RuntimeException e) {
 				continue;
 			}
@@ -132,7 +149,7 @@ public class Main {
 	}
 
 	public static Map<String, String> slugToId(String endpoint) {
-		JsonArray savedEntities = JsonParser.parseString(get(URI.create(POSTGREST_URI + endpoint))).getAsJsonArray();
+		JsonArray savedEntities = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + endpoint))).getAsJsonArray();
 		Map<String, String> slugToId = new HashMap<>();
 		savedEntities.forEach(jsonElement -> {
 			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
@@ -338,7 +355,7 @@ public class Main {
 	}
 
 	public static void saveProjectImages(JsonArray allProjectsFromLegacyRSD) {
-		JsonArray savedProjects = JsonParser.parseString(get(URI.create(POSTGREST_URI + "/project?select=id,slug"))).getAsJsonArray();
+		JsonArray savedProjects = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/project?select=id,slug"))).getAsJsonArray();
 		Map<String, String> slugToId = new HashMap<>();
 		savedProjects.forEach(jsonElement -> {
 			String slug = jsonElement.getAsJsonObject().get("slug").getAsString();
@@ -424,7 +441,7 @@ public class Main {
 //		Unfortunately, title is not unique, zotero_key can be null.
 //		Luckily, the combination of title and zotero_key is unique at the time of writing.
 //		We throw an exception if this is not the case in the future.
-		JsonArray savedMentions = JsonParser.parseString(get(URI.create(POSTGREST_URI + "/mention?select=id,title,zotero_key"))).getAsJsonArray();
+		JsonArray savedMentions = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/mention?select=id,title,zotero_key"))).getAsJsonArray();
 		Map<MentionRecord, String> mentionToId = new HashMap<>();
 		savedMentions.forEach(jsonMention -> {
 			String id = jsonMention.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
@@ -543,7 +560,7 @@ public class Main {
 		post(URI.create(POSTGREST_URI + "/release"), allReleasesToSave.toString());
 
 //		we can use the saved foreign key to software to uniquely identify a release
-		JsonArray savedReleases = JsonParser.parseString(get(URI.create(POSTGREST_URI + "/release"))).getAsJsonArray();
+		JsonArray savedReleases = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/release"))).getAsJsonArray();
 		Map<String, String> softwareIdToReleaseId = new HashMap<>();
 		savedReleases.forEach(savedRelease -> {
 			String releaseId = savedRelease.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
@@ -601,11 +618,31 @@ public class Main {
 		return response.body();
 	}
 
+	public static String getPostgREST(URI uri) {
+		HttpRequest request = HttpRequest.newBuilder()
+				.GET()
+				.uri(uri)
+				.header("Authorization", "Bearer " + jwtString)
+				.build();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<String> response;
+		try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from the endpoint: " + response.body());
+		}
+		return response.body();
+	}
+
 	public static String post(URI uri, String json) {
 		HttpRequest request = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(uri)
 				.header("Content-Type", "application/json")
+				.header("Authorization", "Bearer " + jwtString)
 				.build();
 		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;

@@ -1,8 +1,9 @@
 FROM maven:3.8.3-openjdk-17
 WORKDIR /usr/mymaven
 RUN mkdir --parents ./src/main
-COPY ./pom.xml .
+COPY data-migration/pom.xml .
 RUN mvn clean package -Dmaven.main.skip -Dmaven.test.skip && rm -r ./target && mvn exec:java --fail-never
-COPY src/main ./src/main
+COPY data-migration/src/main ./src/main
+COPY frontend/.env.production.local .
 RUN mvn compile
-CMD mvn exec:java
+CMD mvn exec:java -Dexec.args=$PROPERTIES

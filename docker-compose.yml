@@ -28,15 +28,21 @@ services:
       PGRST_DB_ANON_ROLE: "web_anon"
       PGRST_DB_SCHEMA: "public"
       PGRST_SERVER_PORT: "3500"
+    env_file:
+      - ./frontend/.env.production.local
     networks:
       - net
 
   data-migration:
     container_name: data-migration
-    build: ./data-migration
+    build:
+      context: .
+      dockerfile: ./data-migration/dockerfile
     depends_on:
       - "database"
       - "backend"
+    environment:
+      PROPERTIES: "/usr/mymaven/.env.production.local"
     network_mode: "host"
 
   authentication:
