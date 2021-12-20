@@ -12,6 +12,13 @@ The program can easily be built with `docker-compose`:
 
 ## Running locally
 
+Navigate to frontend folder and copy env.local.example file to `env.production.local` and provide missing values.
+
+- `env.local` file is used when running frontend locally with `yarn dev`
+- `env.production.local` file is used when running frontend with docker compose `docker-compose up`
+
+More information about the [frontend setup is avaliable here](frontend/README.md).
+
 The program can easily be build with `docker-compose`. To run with the data migration script:
 
 1. Run the command `docker-compose up`. As a lot of data is downloaded and processed, this can take a while (think 15 to 30 seconds).
