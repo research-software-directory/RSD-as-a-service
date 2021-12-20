@@ -111,3 +111,109 @@ CREATE POLICY anyone_can_read ON team_member FOR SELECT TO web_anon
 CREATE POLICY admin_all_rights ON team_member TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
+
+
+-- topics and tags for projects
+ALTER TABLE topic_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON topic_for_project FOR SELECT TO web_anon
+	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY admin_all_rights ON topic_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE tag_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON tag_for_project FOR SELECT TO web_anon
+	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY admin_all_rights ON tag_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+-- mentions
+-- TODO: not sure what to do here,
+-- should a mention only be visible if you can see at least one software or project for which it relates?
+--ALTER TABLE mention ENABLE ROW LEVEL SECURITY;
+--
+--CREATE POLICY anyone_can_read ON mention FOR SELECT TO web_anon
+--	USING (TRUE);
+--
+--CREATE POLICY admin_all_rights ON mention TO rsd_admin
+--	USING (TRUE)
+--	WITH CHECK (TRUE);
+
+
+ALTER TABLE mention_for_software ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON mention_for_software FOR SELECT TO web_anon
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY admin_all_rights ON mention_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE output_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON output_for_project FOR SELECT TO web_anon
+	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY admin_all_rights ON output_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE impact_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON impact_for_project FOR SELECT TO web_anon
+	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY admin_all_rights ON impact_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+-- releases
+ALTER TABLE release ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON release FOR SELECT TO web_anon
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY admin_all_rights ON release TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE release_content ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON release_content FOR SELECT TO web_anon
+	USING (release_id IN (SELECT id FROM release));
+
+CREATE POLICY admin_all_rights ON release_content TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+-- accounts
+ALTER TABLE account ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anonymous_cannot_read ON account FOR SELECT TO web_anon
+	USING (FALSE);
+
+CREATE POLICY admin_all_rights ON account TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE login_for_account ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anonymous_cannot_read ON login_for_account FOR SELECT TO web_anon
+	USING (FALSE);
+
+CREATE POLICY admin_all_rights ON login_for_account TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
