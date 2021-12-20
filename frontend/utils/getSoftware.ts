@@ -1,7 +1,6 @@
 import {SoftwareItem} from '../types/SoftwareItem'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from "./logger"
-// import {softwareUrl} from './postgrestUrl'
 
 /**
  * postgREST api uri to retreive software index data.
@@ -77,5 +76,6 @@ export async function getTagsWithCount(){
     }
   }catch(e:any){
     logger(`getTagsWithCount: ${e?.message}`,"error")
+    return []
   }
 }

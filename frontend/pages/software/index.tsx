@@ -118,9 +118,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[],ssr}
           />
         </div>
       </PageTitle>
-      <CardGrid>
-        {renderItems(software)}
-      </CardGrid>
+      {renderItems(software)}
     </DefaultLayout>
   )
 }
@@ -135,18 +133,22 @@ function renderItems(software:SoftwareItem[]){
     )
   }
   // console.log("renderItems...software...", software)
-  return software.map(item=>{
-    return(
-      <SoftwareCard
-        key={`/software/${item.slug}/`}
-        href={`/software/${item.slug}/`}
-        brand_name={item.brand_name}
-        short_statement={item.short_statement}
-        is_featured={item.is_featured}
-        updated_at={item.updated_at}
-      />
-    )
-  })
+  return (
+    <CardGrid>
+    {software.map(item=>{
+      return(
+        <SoftwareCard
+          key={`/software/${item.slug}/`}
+          href={`/software/${item.slug}/`}
+          brand_name={item.brand_name}
+          short_statement={item.short_statement}
+          is_featured={item.is_featured}
+          updated_at={item.updated_at}
+        />
+      )
+    })}
+    </CardGrid>
+  )
 }
 
 
