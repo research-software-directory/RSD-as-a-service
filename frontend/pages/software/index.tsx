@@ -1,34 +1,25 @@
-import {useState,useEffect,MouseEvent, ChangeEvent} from 'react'
+import {MouseEvent, ChangeEvent} from 'react'
 import Head from 'next/head'
 import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination';
 
 import DefaultLayout from "../../components/layout/DefaultLayout"
-import ContentInTheMiddle from "../../components/layout/ContentInTheMiddle"
 import PageTitle from '../../components/layout/PageTitle'
-import CardGrid from '../../components/layout/CardGrid'
-import {SoftwareItem} from '../../types/SoftwareItem'
-import {getSoftwareList, getTagsWithCount, TagItem} from '../../utils/getSoftware'
-import {ssrSoftwareParams} from '../../utils/extractQueryParam'
-import {rowsPerPageOptions} from '../../config/pagination'
 import Searchbox from '../../components/software/Searchbox'
 import FilterTechnologies from '../../components/software/FilterTechnologies'
 import SortSelection from '../../components/software/SortSelection'
-import SoftwareCard from '../../components/software/SoftwareCard'
+import SoftwareGrid from '../../components/software/SoftwareGrid'
+import {SoftwareItem} from '../../types/SoftwareItem'
+import {rowsPerPageOptions} from '../../config/pagination'
+import {getSoftwareList, getTagsWithCount, TagItem} from '../../utils/getSoftware'
+import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 
-export default function SoftwareIndexPage({count,page,rows,tags,software=[],ssr}:
-  {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareItem[],ssr:boolean
+export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
+  {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareItem[]
 }){
-  // keep track between ssr/browser
-  const [client,setClient]=useState(!ssr)
   // use next router (hook is only for browser)
   const router = useRouter()
-
-  useEffect(()=>{
-    // set client side
-    setClient(true)
-  },[])
 
   // next/previous page button
   function handlePageChange(
@@ -118,36 +109,8 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[],ssr}
           />
         </div>
       </PageTitle>
-      {renderItems(software)}
+      <SoftwareGrid software={software} />
     </DefaultLayout>
-  )
-}
-
-// render software cards
-function renderItems(software:SoftwareItem[]){
-  if (software.length===0){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
-  }
-  // console.log("renderItems...software...", software)
-  return (
-    <CardGrid>
-    {software.map(item=>{
-      return(
-        <SoftwareCard
-          key={`/software/${item.slug}/`}
-          href={`/software/${item.slug}/`}
-          brand_name={item.brand_name}
-          short_statement={item.short_statement}
-          is_featured={item.is_featured}
-          updated_at={item.updated_at}
-        />
-      )
-    })}
-    </CardGrid>
   )
 }
 
@@ -197,8 +160,7 @@ export async function getServerSideProps(context:any) {
       page,
       rows,
       software: software.data,
-      tags,
-      ssr:true
+      tags
     },
   }
 }
