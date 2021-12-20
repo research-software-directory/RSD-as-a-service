@@ -121,9 +121,25 @@ const rsdMuiTheme = createTheme({
     },
     MuiTablePagination:{
       styleOverrides:{
+        selectRoot:{
+          marginRight:"0.5rem"
+        },
         displayedRows:{
           minWidth:"6.5rem",
-          textAlign:"right"
+          textAlign:"right",
+          "@media(max-width: 640px)":{
+            minWidth:"inherit",
+          }
+        },
+        toolbar:{
+          "@media(max-width: 640px)":{
+            paddingLeft:"0rem"
+          }
+        },
+        actions:{
+          "@media(max-width: 640px)":{
+            marginLeft:"0.5rem"
+          }
         }
       }
     }

@@ -50,7 +50,7 @@ export default function UserMenu(props:UserMenuType) {
   }
 
   return (
-    <div>
+    <>
       <Button
         aria-controls="user-menu"
         aria-haspopup="true"
@@ -74,6 +74,6 @@ export default function UserMenu(props:UserMenuType) {
       >
         {renderMenuOptions()}
       </Menu>
-    </div>
+    </>
   );
 }

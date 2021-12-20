@@ -5,8 +5,7 @@ const StyledArticle = styled("article")(({theme})=>({
   flex:1,
   display:"flex",
   justifyContent:"center",
-  alignItems:"center",
-  minWidth:"100vw",
+  alignItems:"center"
 }))
 
 export default function ContentInTheMiddle({children,...props}:{children:ReactNode,props?:any}) {

@@ -66,15 +66,15 @@ export default function AppHeader(){
 
   return (
     <header className="px-4 lg:container lg:mx-auto">
-      <div className="flex flex-col items-center pt-4 md:flex-row">
+      <div className="flex flex-col pt-4 md:flex-row md:items-center">
         <Link href="/" passHref>
-          <a><LogoEscience className="cursor-pointer"/></a>
+          <a><LogoEscience className="cursor-pointer scale-90 sm:scale-100"/></a>
         </Link>
         <section className='flex flex-1 py-4'>
-          <div className="flex justify-center items-center flex-1">
+          <div className="flex flex-1 md:justify-center md:items-center">
             {getMenuItems()}
           </div>
-          <div className="min-w-[9rem] text-right">
+          <div className="flex-1 text-right">
             {getLoginButton()}
           </div>
         </section>

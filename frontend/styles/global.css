@@ -5,32 +5,18 @@
 /**
   Resize screen on smartphone using rem and font size
 **/
-/* @media screen and (max-width: 640px) {
+/* @media screen and (max-width: 480px) {
   html{
-    font-size: 75%;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  html{
-    font-size: 65%;
+    font-size: 95%;
   }
 } */
 
 #__next {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   flex-direction: column;
   font-weight: 300;
-  /* min-width to scale on devices < 368px */
-  min-width: 23rem;
 }
-
-/* a {
-  color: inherit;
-  text-decoration: inherit;
-} */
-
 
 /* ---------------------------------
   Tailwind custom classes applied

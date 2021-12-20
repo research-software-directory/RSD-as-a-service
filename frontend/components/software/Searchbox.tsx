@@ -30,7 +30,7 @@ export default function Searchbox({onSearch,delay=400}:{onSearch:Function,delay?
       placeholder='Search for software'
       value={state.value}
       sx={{
-        minWidth:[null,null,"16rem","17.5rem","19.5rem"]
+        minWidth:["inherit","17.5rem","19.5rem"]
       }}
       onChange={({target})=>{
         setState({

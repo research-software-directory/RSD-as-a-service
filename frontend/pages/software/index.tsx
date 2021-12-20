@@ -84,7 +84,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
         <title>Software | RSD</title>
       </Head>
       <PageTitle title="Software">
-        <div className="flex flex-wrap sm:justify-end sm:px-4">
+        <div className="flex flex-wrap justify-end">
           <div className="flex items-center">
             <Searchbox onSearch={handleSearch}></Searchbox>
             <FilterTechnologies
