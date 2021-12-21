@@ -1,19 +1,19 @@
-import {MouseEvent, ChangeEvent} from "react"
-import Head from "next/head"
-import {useRouter} from "next/router"
-import TablePagination from "@mui/material/TablePagination"
+import {MouseEvent, ChangeEvent} from 'react'
+import Head from 'next/head'
+import {useRouter} from 'next/router'
+import TablePagination from '@mui/material/TablePagination'
 
-import DefaultLayout from "../../components/layout/DefaultLayout"
-import PageTitle from "../../components/layout/PageTitle"
-import Searchbox from "../../components/software/Searchbox"
-import FilterTechnologies from "../../components/software/FilterTechnologies"
-import SortSelection from "../../components/software/SortSelection"
-import SoftwareGrid from "../../components/software/SoftwareGrid"
-import {SoftwareItem} from "../../types/SoftwareItem"
-import {rowsPerPageOptions} from "../../config/pagination"
-import {getSoftwareList, getTagsWithCount, TagItem} from "../../utils/getSoftware"
-import {ssrSoftwareParams} from "../../utils/extractQueryParam"
-import {softwareUrl,ssrSoftwareUrl} from "../../utils/postgrestUrl"
+import DefaultLayout from '../../components/layout/DefaultLayout'
+import PageTitle from '../../components/layout/PageTitle'
+import Searchbox from '../../components/software/Searchbox'
+import FilterTechnologies from '../../components/software/FilterTechnologies'
+import SortSelection from '../../components/software/SortSelection'
+import SoftwareGrid from '../../components/software/SoftwareGrid'
+import {SoftwareItem} from '../../types/SoftwareItem'
+import {rowsPerPageOptions} from '../../config/pagination'
+import {getSoftwareList, getTagsWithCount, TagItem} from '../../utils/getSoftware'
+import {ssrSoftwareParams} from '../../utils/extractQueryParam'
+import {softwareUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 
 export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareItem[]
@@ -75,7 +75,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
 
   // TODO! handle sort options
   function handleSort(sortOn:string){
-    console.warn("TODO! Sort on...", sortOn)
+    console.warn('TODO! Sort on...', sortOn)
   }
 
   return (
@@ -92,7 +92,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
               onSelect={handleFilters}
             />
             <SortSelection
-              items={["Last updated", "Most updates", "Most mentions"]}
+              items={['Last updated', 'Most updates', 'Most mentions']}
               defaultValue='Last updated'
               onSort={handleSort}
             />
@@ -123,11 +123,11 @@ export async function getServerSideProps(context:any) {
 
   // construct postgREST api url with query params
   const url = softwareUrl({
-    baseUrl: process.env.POSTGREST_URL || "http://localhost:3500",
+    baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
     search,
-    columns:["id","slug","brand_name","short_statement","is_featured","updated_at"],
+    columns:['id','slug','brand_name','short_statement','is_featured','updated_at'],
     filters: JSON.parse(filterStr),
-    order:"is_featured.desc,updated_at.desc",
+    order:'is_featured.desc,updated_at.desc',
     limit: rows,
     offset: rows * page,
   })

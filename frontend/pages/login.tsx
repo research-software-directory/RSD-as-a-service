@@ -1,20 +1,20 @@
-import {AppProviders} from "next-auth/providers"
-import {getProviders, getSession} from "next-auth/react"
+import {AppProviders} from 'next-auth/providers'
+import {getProviders, getSession} from 'next-auth/react'
 
-import Head from "next/head"
-import ContentInTheMiddle from "../components/layout/ContentInTheMiddle"
+import Head from 'next/head'
+import ContentInTheMiddle from '../components/layout/ContentInTheMiddle'
 
-import LoginOptions from "../components/login/LoginOptions"
+import LoginOptions from '../components/login/LoginOptions'
 
 export default function LoginPage({providers}:{providers:AppProviders}){
   return (
     <>
-    <Head>
-      <title>Login | Research Software Directory</title>
-    </Head>
-    <ContentInTheMiddle>
-      <LoginOptions />
-    </ContentInTheMiddle>
+      <Head>
+        <title>Login | Research Software Directory</title>
+      </Head>
+      <ContentInTheMiddle>
+        <LoginOptions />
+      </ContentInTheMiddle>
     </>
   )
 }
@@ -26,7 +26,7 @@ export async function getInitialProps(context:any){
   const session = await getSession({req})
 
   if(res && session && session.user){
-    res.writeHead(302,{Location:"/user/profile"})
+    res.writeHead(302,{Location:'/user/profile'})
     res.end()
   }
   return {

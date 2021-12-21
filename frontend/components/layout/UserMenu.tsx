@@ -1,11 +1,11 @@
-import {useState} from "react"
-import Button from "@mui/material/Button"
-import Menu from "@mui/material/Menu"
-import MenuItem from "@mui/material/MenuItem"
-import Avatar from "@mui/material/Avatar"
+import {useState} from 'react'
+import Button from '@mui/material/Button'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Avatar from '@mui/material/Avatar'
 
-import {MenuItemType} from "../../config/menuItems"
-import router from "next/router"
+import {MenuItemType} from '../../config/menuItems'
+import router from 'next/router'
 
 type UserMenuType={
   name:string,
@@ -41,7 +41,7 @@ export default function UserMenu(props:UserMenuType) {
             <MenuItem
               key={item.label}
               onClick={()=>handleClose(item)}>
-                {item.label}
+              {item.label}
             </MenuItem>
           )
         })
@@ -54,11 +54,11 @@ export default function UserMenu(props:UserMenuType) {
       <Button
         aria-controls="user-menu"
         aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
+        aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
         <Avatar
-          alt={name ?? "Unknown"}
+          alt={name ?? 'Unknown'}
           src={image}
         />
       </Button>
@@ -67,10 +67,10 @@ export default function UserMenu(props:UserMenuType) {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "menu-button",
+          'aria-labelledby': 'menu-button',
         }}
-        transformOrigin={{horizontal: "right", vertical: "top"}}
-        anchorOrigin={{horizontal: "right", vertical: "bottom"}}
+        transformOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
       >
         {renderMenuOptions()}
       </Menu>

@@ -11,8 +11,8 @@ export type MenuItemType = {
 // used in components/AppHeader
 export const menuItems:MenuItemType[] = [
   // {path:"/", label:"Home"},
-  {path:"/software", label:"Software"},
-  {path:"/projects", label:"Projects"},
+  {path:'/software', label:'Software'},
+  {path:'/projects', label:'Projects'},
   // will be done later
   // {path:"/about", label:"About"},
 ]

@@ -3,9 +3,9 @@
  * @returns
  */
 
-import {SessionProvider} from "next-auth/react"
-import {rsdMuiTheme} from "../../styles/rsdMuiTheme"
-import {ThemeProvider} from "@mui/material/styles"
+import {SessionProvider} from 'next-auth/react'
+import {rsdMuiTheme} from '../../styles/rsdMuiTheme'
+import {ThemeProvider} from '@mui/material/styles'
 
 export function WrappedComponentWithProps(Component:any, props?:any){
   return (

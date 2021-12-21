@@ -1,4 +1,4 @@
-import styled from "@mui/system/styled"
+import styled from '@mui/system/styled'
 
 type IconStyles={
   width:string,
@@ -6,10 +6,10 @@ type IconStyles={
   margin:string
 }
 
-const StyledIcon = styled("svg")<IconStyles>`
-  width: ${(props)=>props?.width ?? "3rem"};
-  height: ${(props)=>props?.height ?? "3rem"};
-  margin: ${(props)=>props?.margin ?? "1rem"};
+const StyledIcon = styled('svg')<IconStyles>`
+  width: ${(props)=>props?.width ?? '3rem'};
+  height: ${(props)=>props?.height ?? '3rem'};
+  margin: ${(props)=>props?.margin ?? '1rem'};
 `
 
 export default function GitlabIcon(props:IconStyles) {
