@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react"
+import {useSession} from "next-auth/react"
 import ContentInTheMiddle from "./ContentInTheMiddle"
 
 export default function ProtectedContent({children}:{children:any}) {

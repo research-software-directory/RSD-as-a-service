@@ -29,18 +29,18 @@ export interface MuiAppProps extends AppProps{
 nprogress.configure({showSpinner:false})
 
 export default function RsdApp(props:MuiAppProps) {
-  const {Component, emotionCache = clientSideEmotionCache, pageProps} = props;
+  const {Component, emotionCache = clientSideEmotionCache, pageProps} = props
   const {pageProps:{session}} = props
   // console .log("session...", JSON.stringify(session))
   useEffect(()=>{
     router.events.on("routeChangeStart", ()=>{
       // console.log("routeChangeStart...")
       nprogress.start()
-    });
+    })
     router.events.on("routeChangeComplete", ()=>{
       // console.log("routeChangeComplete...")
       nprogress.done()
-    });
+    })
     router.events.on("routeChangeError", ()=>{
       // console.log("routeChangeError...")
       nprogress.done()
@@ -61,5 +61,5 @@ export default function RsdApp(props:MuiAppProps) {
         </SessionProvider>
       </ThemeProvider>
     </CacheProvider>
-  );
+  )
 }

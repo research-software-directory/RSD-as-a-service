@@ -1,12 +1,12 @@
-import {useState, useEffect} from "react";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
+import {useState, useEffect} from "react"
+import Menu from "@mui/material/Menu"
+import MenuItem from "@mui/material/MenuItem"
+import IconButton from "@mui/material/IconButton"
+import Tooltip from "@mui/material/Tooltip"
 import ListItemText from "@mui/material/ListItemText"
 import Checkbox from "@mui/material/Checkbox"
-import Badge from "@mui/material/Badge";
-import Divider from "@mui/material/Divider";
+import Badge from "@mui/material/Badge"
+import Divider from "@mui/material/Divider"
 import Button from "@mui/material/Button"
 import FilterAltIcon from "@mui/icons-material/FilterAlt"
 import ClearAllIcon from "@mui/icons-material/ClearAll"
@@ -18,9 +18,9 @@ import {TagItem} from "../../utils/getSoftware"
  * array of selected tags to use in filter using onSelect callback function
  */
 export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[], onSelect:(items:string[])=>void}) {
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
 
   useEffect(()=>{
     const preselect = items.filter(i=>i.active===true).map(i=>i.tag)
@@ -29,10 +29,10 @@ export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[]
   },[items])
 
   function handleClick(event: React.MouseEvent<HTMLElement>){
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(event.currentTarget)
   }
   function handleClose(){
-    setAnchorEl(null);
+    setAnchorEl(null)
   }
 
   function handleClear(){
@@ -74,8 +74,8 @@ export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[]
         open={open}
         onClose={handleClose}
         // align menu to the right from the menu button
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        transformOrigin={{horizontal: "right", vertical: "top"}}
+        anchorOrigin={{horizontal: "right", vertical: "bottom"}}
       >
         <ListItemText sx={{textAlign:"center"}}>Technology</ListItemText>
         <Divider />
@@ -109,5 +109,5 @@ export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[]
         </ListItemText> */}
       </Menu>
     </>
-  );
+  )
 }

@@ -3,16 +3,16 @@ import {useState, useEffect} from "react"
 import Link from "next/link"
 import {useSession} from "next-auth/react"
 import Button from "@mui/material/Button"
-import LoginIcon from "@mui/icons-material/Login";
+import LoginIcon from "@mui/icons-material/Login"
 // local dependencies (project components)
-import LogoEscience from "./LogoEscience";
+import LogoEscience from "./LogoEscience"
 import AppMenuItem from "./AppMenuItem"
 import {menuItems} from "../../config/menuItems"
-import {userMenuItems} from "../../config/userMenuItems";
+import {userMenuItems} from "../../config/userMenuItems"
 import UserMenu from "./UserMenu"
 
 export default function AppHeader(){
-  const [activePath, setActivePath] = useState("/")
+  const [activePath, setActivePath ] = useState("/")
   const {data, status} = useSession()
 
   useEffect(()=>{

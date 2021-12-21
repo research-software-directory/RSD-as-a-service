@@ -9,8 +9,8 @@ import IconButton from "@mui/material/IconButton"
 import EditIcon from "@mui/icons-material/Edit"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 
-import { getSoftwareItem } from "../../../utils/getSoftware"
-import { SoftwareItem } from "../../../types/SoftwareItem"
+import {getSoftwareItem} from "../../../utils/getSoftware"
+import {SoftwareItem} from "../../../types/SoftwareItem"
 
 export default function SoftwareIndexPage({software, slug}:{software:SoftwareItem, slug:string}) {
   const router = useRouter()

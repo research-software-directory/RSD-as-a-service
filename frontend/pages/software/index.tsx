@@ -1,7 +1,7 @@
 import {MouseEvent, ChangeEvent} from "react"
 import Head from "next/head"
 import {useRouter} from "next/router"
-import TablePagination from "@mui/material/TablePagination";
+import TablePagination from "@mui/material/TablePagination"
 
 import DefaultLayout from "../../components/layout/DefaultLayout"
 import PageTitle from "../../components/layout/PageTitle"

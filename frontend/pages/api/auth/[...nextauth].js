@@ -3,7 +3,7 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import GitlabProvider from "next-auth/providers/gitlab"
-import AzureADProvider from "next-auth/providers/azure-ad";
+import AzureADProvider from "next-auth/providers/azure-ad"
 
 export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
@@ -112,7 +112,7 @@ export default NextAuth({
     */
     async jwt(props) {
       // Note! user seem to be constructed in the profile function of the provider
-      const { token, account, user, profile } = props
+      const {token, account, user, profile} = props
 
       // console.log("nextAuth.callbacks.jwt...props...", props)
       // console.log("nextAuth.callbacks.jwt...token...", token)

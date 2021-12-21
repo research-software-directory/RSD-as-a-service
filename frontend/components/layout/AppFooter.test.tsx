@@ -1,6 +1,6 @@
 import {render,screen} from "@testing-library/react"
 import {WrappedComponentWithProps} from "../../utils/jest/WrappedComponents"
-import AppFooter from "./AppFooter";
+import AppFooter from "./AppFooter"
 
 it("should render footer with role contentinfo",()=>{
   render(WrappedComponentWithProps(AppFooter))

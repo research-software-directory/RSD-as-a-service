@@ -6,7 +6,7 @@
  * https://mui.com/customization/default-theme/ *
  */
 
-import {createTheme} from "@mui/material/styles";
+import {createTheme} from "@mui/material/styles"
 // import colors and breakpoints from shared themeConfig file
 // these values are applied to both MUI-5 and Tailwind themes
 import {colors, muiTypography} from "./themeConfig"

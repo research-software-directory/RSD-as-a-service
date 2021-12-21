@@ -1,5 +1,5 @@
 import styled from "@mui/system/styled"
-import { ReactNode } from "react"
+import {ReactNode} from "react"
 
 const StyledArticle = styled("article")(({theme})=>({
   flex:1,

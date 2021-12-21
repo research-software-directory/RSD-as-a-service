@@ -1,5 +1,5 @@
-import { AppProviders } from "next-auth/providers"
-import { getProviders, getSession } from "next-auth/react"
+import {AppProviders} from "next-auth/providers"
+import {getProviders, getSession} from "next-auth/react"
 
 import Head from "next/head"
 import ContentInTheMiddle from "../components/layout/ContentInTheMiddle"

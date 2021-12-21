@@ -1,4 +1,4 @@
-import type { NextApiRequest} from "next"
+import type {NextApiRequest} from "next"
 import logger from "./logger"
 
 export function extractQueryParam({req,param,castToType="string",defaultValue}:{
