@@ -12,7 +12,7 @@ import {userMenuItems} from "../../config/userMenuItems"
 import UserMenu from "./UserMenu"
 
 export default function AppHeader(){
-  const [activePath, setActivePath ] = useState("/")
+  const [activePath, setActivePath] = useState("/")
   const {data, status} = useSession()
 
   useEffect(()=>{

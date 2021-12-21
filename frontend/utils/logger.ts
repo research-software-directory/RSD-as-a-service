@@ -1,8 +1,6 @@
 
 export type LogType = ("info"|"warn"|"error")
 
-const test = ["1",2,3 ]
-
 export default function logger(
   message:string,
   logType:LogType="info"

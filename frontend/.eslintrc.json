@@ -5,6 +5,8 @@
     "eol-last": "warn",
     "quotes": ["warn", "double"],
     "semi":["warn", "never"],
-    "object-curly-spacing": ["error", "never"]
+    "object-curly-spacing": ["warn", "never"],
+    "array-bracket-spacing": ["warn", "never"],
+    "no-trailing-spaces": "warn"
   }
 }
