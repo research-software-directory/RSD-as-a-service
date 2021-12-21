@@ -17,5 +17,13 @@
   // Note! you might also need to disable Prettier or VSCode defaults
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
-  }
+  },
+  // Tailwind plugin integration
+  "css.validate": false,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "tailwindCSS.includeLanguages":{
+    "plaintext": "html"
+  },
 }
