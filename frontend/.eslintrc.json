@@ -1,12 +1,17 @@
 {
   "extends": "next/core-web-vitals",
-  "rules":{
+  "rules": {
     "no-console": "warn",
-    "eol-last": "warn",
-    "quotes": ["warn", "double"],
-    "semi":["warn", "never"],
-    "object-curly-spacing": ["warn", "never"],
-    "array-bracket-spacing": ["warn", "never"],
-    "no-trailing-spaces": "warn"
+    "eol-last": ["warn","always"],
+    "quotes": ["warn","single"],
+    "no-multiple-empty-lines": "warn",
+    "semi": ["warn","never"],
+    "object-curly-spacing": ["warn","never"],
+    "array-bracket-spacing": ["warn","never"],
+    "no-trailing-spaces": "warn",
+    // we use 2 spaces to indent our code
+    "indent": ["warn", 2],
+    // we want to avoid extraneous spaces
+    "no-multi-spaces": ["warn"]
   }
 }
