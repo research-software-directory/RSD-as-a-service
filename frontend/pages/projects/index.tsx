@@ -19,19 +19,23 @@ function renderItems(projects:ProjectItem[]){
   if (projects.length===0){
     return (
       <ContentInTheMiddle>
-        <h1>No content</h1>
+        <h2>No content</h2>
       </ContentInTheMiddle>
     )
   }
-  return projects.map(item=>{
-    return(
-      <div key={item.slug}>
-        <Link href={`/projects/${item.slug}/`}>
-          <a>{item.title}</a>
-        </Link>
-      </div>
-    )
-  })
+  return(
+    <CardGrid>
+      {projects.map(item=>{
+      return (
+        <div key={item.slug}>
+          <Link href={`/projects/${item.slug}/`}>
+            <a>{item.title}</a>
+          </Link>
+        </div>
+      )
+      })}
+    </CardGrid>
+  )
 }
 
 export default function ProjectsIndexPage({count,page,rows,projects=[]}:
@@ -74,9 +78,7 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </PageTitle>
-      <CardGrid>
-        { renderItems(projects) }
-      </CardGrid>
+      { renderItems(projects) }
     </DefaultLayout>
   )
 }

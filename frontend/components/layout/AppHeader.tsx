@@ -74,7 +74,7 @@ export default function AppHeader(){
           <div className="flex flex-1 md:justify-center md:items-center">
             {getMenuItems()}
           </div>
-          <div className="flex-1 text-right">
+          <div className="flex-1 min-w-[8rem] text-right sm:flex-none">
             {getLoginButton()}
           </div>
         </section>
