@@ -1,15 +1,15 @@
 // external dependencies
-import {useState, useEffect} from 'react'
-import Link from 'next/link'
-import {useSession} from 'next-auth/react'
-import Button from '@mui/material/Button'
-import LoginIcon from '@mui/icons-material/Login';
+import {useState, useEffect} from "react"
+import Link from "next/link"
+import {useSession} from "next-auth/react"
+import Button from "@mui/material/Button"
+import LoginIcon from "@mui/icons-material/Login"
 // local dependencies (project components)
-import LogoEscience from './LogoEscience';
-import AppMenuItem from './AppMenuItem'
-import {menuItems} from '../../config/menuItems'
-import {userMenuItems} from '../../config/userMenuItems';
-import UserMenu from './UserMenu'
+import LogoEscience from "./LogoEscience"
+import AppMenuItem from "./AppMenuItem"
+import {menuItems} from "../../config/menuItems"
+import {userMenuItems} from "../../config/userMenuItems"
+import UserMenu from "./UserMenu"
 
 export default function AppHeader(){
   const [activePath, setActivePath] = useState("/")
@@ -17,7 +17,7 @@ export default function AppHeader(){
 
   useEffect(()=>{
     // set activePath to currently loaded route/page
-    if (typeof window !='undefined'){
+    if (typeof window !="undefined"){
       const paths = window.location.pathname.split("/")
       if (paths.length > 0) setActivePath(`/${paths[1]}`)
     }
@@ -66,15 +66,15 @@ export default function AppHeader(){
 
   return (
     <header className="px-4 lg:container lg:mx-auto">
-      <div className="flex flex-col items-center pt-4 md:flex-row">
+      <div className="flex flex-col pt-4 md:flex-row md:items-center">
         <Link href="/" passHref>
-          <a><LogoEscience className="cursor-pointer"/></a>
+          <a><LogoEscience className="cursor-pointer scale-90 sm:scale-100"/></a>
         </Link>
         <section className='flex flex-1 py-4'>
-          <div className="flex justify-center items-center flex-1">
+          <div className="flex flex-1 md:justify-center md:items-center">
             {getMenuItems()}
           </div>
-          <div className="min-w-[9rem] text-right">
+          <div className="flex-1 min-w-[8rem] text-right sm:flex-none">
             {getLoginButton()}
           </div>
         </section>

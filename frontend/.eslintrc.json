@@ -1,6 +1,12 @@
 {
   "extends": "next/core-web-vitals",
   "rules":{
-    "no-console": "warn"
+    "no-console": "warn",
+    "eol-last": "warn",
+    "quotes": ["warn", "double"],
+    "semi":["warn", "never"],
+    "object-curly-spacing": ["warn", "never"],
+    "array-bracket-spacing": ["warn", "never"],
+    "no-trailing-spaces": "warn"
   }
 }

@@ -1,10 +1,10 @@
-import { AppProviders } from 'next-auth/providers'
-import { getProviders, getSession } from 'next-auth/react'
+import {AppProviders} from "next-auth/providers"
+import {getProviders, getSession} from "next-auth/react"
 
-import Head from 'next/head'
-import ContentInTheMiddle from '../components/layout/ContentInTheMiddle'
+import Head from "next/head"
+import ContentInTheMiddle from "../components/layout/ContentInTheMiddle"
 
-import LoginOptions from '../components/login/LoginOptions'
+import LoginOptions from "../components/login/LoginOptions"
 
 export default function LoginPage({providers}:{providers:AppProviders}){
   return (

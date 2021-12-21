@@ -1,15 +1,15 @@
-import Head from 'next/head'
-import {useRouter} from 'next/router'
-import {useSession} from 'next-auth/react'
+import Head from "next/head"
+import {useRouter} from "next/router"
+import {useSession} from "next-auth/react"
 
 import DefaultLayout from "../../../components/layout/DefaultLayout"
-import PageTitle from '../../../components/layout/PageTitle'
-import IconButton from '@mui/material/IconButton'
-import EditIcon from '@mui/icons-material/Edit'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import PageTitle from "../../../components/layout/PageTitle"
+import IconButton from "@mui/material/IconButton"
+import EditIcon from "@mui/icons-material/Edit"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 
-import {getProjectItem} from '../../../utils/getProjects'
-import {ProjectItem} from '../../../types/ProjectItem'
+import {getProjectItem} from "../../../utils/getProjects"
+import {ProjectItem} from "../../../types/ProjectItem"
 
 export default function ProjectItemPage({project, slug}:{project:ProjectItem, slug:string}) {
   const router = useRouter()
@@ -30,7 +30,7 @@ export default function ProjectItemPage({project, slug}:{project:ProjectItem, sl
           <IconButton
             title="Edit"
             onClick={()=>router.push(`/projects/${slug}/edit`)}
-            disabled={status!=='authenticated'}
+            disabled={status!=="authenticated"}
           >
             <EditIcon />
           </IconButton>

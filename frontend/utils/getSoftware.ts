@@ -1,7 +1,6 @@
-import {SoftwareItem} from '../types/SoftwareItem'
-import {extractCountFromHeader} from './extractCountFromHeader'
+import {SoftwareItem} from "../types/SoftwareItem"
+import {extractCountFromHeader} from "./extractCountFromHeader"
 import logger from "./logger"
-// import {softwareUrl} from './postgrestUrl'
 
 /**
  * postgREST api uri to retreive software index data.
@@ -16,7 +15,7 @@ export async function getSoftwareList(url:string){
   try{
     const headers = new Headers()
     // request count for pagination
-    headers.append('Prefer','count=exact')
+    headers.append("Prefer","count=exact")
     const resp = await fetch(url,{method:"GET", headers})
 
     if ([200,206].includes(resp.status)){
@@ -77,5 +76,6 @@ export async function getTagsWithCount(){
     }
   }catch(e:any){
     logger(`getTagsWithCount: ${e?.message}`,"error")
+    return []
   }
 }

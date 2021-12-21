@@ -1,6 +1,6 @@
-import { ReactNode } from 'react'
-import AppHeader from './AppHeader'
-import AppFooter from './AppFooter'
+import {ReactNode} from "react"
+import AppHeader from "./AppHeader"
+import AppFooter from "./AppFooter"
 
 export default function DefaultLayout({children}:{children:ReactNode}) {
   return (

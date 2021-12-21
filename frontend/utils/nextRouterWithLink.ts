@@ -1,4 +1,4 @@
-import router from 'next/router'
+import router from "next/router"
 
 export function nextRouterWithLink(e:any, path:string){
   // prevent default link behaviour (reloading page)

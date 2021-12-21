@@ -1,9 +1,9 @@
-import {signIn} from 'next-auth/react'
+import {signIn} from "next-auth/react"
 
-import Image from 'next/image'
-import Button from '@mui/material/Button'
+import Image from "next/image"
+import Button from "@mui/material/Button"
 
-import LogoSURF from '../../assets/LogoSURFconext.png'
+import LogoSURF from "../../assets/LogoSURFconext.png"
 // import GitHubIcon from '@mui/icons-material/GitHub';
 // import OrcidIcon from './OrcidIcon';
 
@@ -18,7 +18,7 @@ export default function LoginOptions() {
     <section className="grid gap-4 mx-auto mt-20 w-1/4">
       <h2>Login with</h2>
       <Button
-        onClick={()=>signInWith('surfconext')}>
+        onClick={()=>signInWith("surfconext")}>
         <Image src={LogoSURF} alt="Login with SURFconext" />
         {/* SURFConext */}
       </Button>

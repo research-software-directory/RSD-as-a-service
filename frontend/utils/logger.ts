@@ -9,11 +9,11 @@ export default function logger(
     case "error":
       // eslint-disable-next-line
       console.error(`[ERROR] ${message}`)
-      break;
+      break
     case "warn":
       // eslint-disable-next-line
       console.warn(`[WARNING] ${message}`)
-      break;
+      break
     default:
       // create info logs only in dev
       if (process.env.NEXT_PUBLIC_ENV==="dev"){

@@ -1,24 +1,24 @@
-import styled from '@mui/system/styled'
+import styled from "@mui/system/styled"
 
-import {MenuItemType} from '../../config/menuItems'
-import {nextRouterWithLink} from '../../utils/nextRouterWithLink'
+import {MenuItemType} from "../../config/menuItems"
+import {nextRouterWithLink} from "../../utils/nextRouterWithLink"
 
-const StyledLink = styled('a')(({theme})=>({
-  textDecoration:'none',
+const StyledLink = styled("a")(({theme})=>({
+  textDecoration:"none",
   color: theme.palette.secondary.main,
-  padding: '0.5rem 0rem',
-  borderBottom: '1px transparant',
-  ':hover':{
+  padding: "0.5rem 0rem",
+  borderBottom: "1px transparant",
+  ":hover":{
     color: theme.palette.primary.main
   },
-  '&.active':{
+  "&.active":{
     borderBottom: `1px solid ${theme.palette.primary.main}`,
   }
 }))
 
-const StyledLabel = styled('div')(({})=>({
-  minWidth: '5rem',
-  textAlign: 'center'
+const StyledLabel = styled("div")(({})=>({
+  minWidth: "5rem",
+  textAlign: "center"
 }))
 
 export default function MenuItemLink({item}:{item:MenuItemType}) {

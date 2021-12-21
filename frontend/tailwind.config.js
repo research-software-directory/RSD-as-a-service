@@ -18,6 +18,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens:{
+        hd:"1920px"
+      },
       colors: {
         paper: colors.white,
         primary: colors.primary,

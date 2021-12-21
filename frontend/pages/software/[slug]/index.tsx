@@ -1,16 +1,16 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import {useRouter} from 'next/router'
-import {useSession} from 'next-auth/react'
+import Head from "next/head"
+import Link from "next/link"
+import {useRouter} from "next/router"
+import {useSession} from "next-auth/react"
 
 import DefaultLayout from "../../../components/layout/DefaultLayout"
-import PageTitle from '../../../components/layout/PageTitle'
-import IconButton from '@mui/material/IconButton'
-import EditIcon from '@mui/icons-material/Edit'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import PageTitle from "../../../components/layout/PageTitle"
+import IconButton from "@mui/material/IconButton"
+import EditIcon from "@mui/icons-material/Edit"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 
-import { getSoftwareItem } from '../../../utils/getSoftware'
-import { SoftwareItem } from '../../../types/SoftwareItem'
+import {getSoftwareItem} from "../../../utils/getSoftware"
+import {SoftwareItem} from "../../../types/SoftwareItem"
 
 export default function SoftwareIndexPage({software, slug}:{software:SoftwareItem, slug:string}) {
   const router = useRouter()
@@ -23,7 +23,7 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
       </Head>
       <PageTitle title={software?.brand_name}>
         <div>
-          <Link href={`/software`} passHref>
+          <Link href={"/software"} passHref>
             {/* allow back button without javascript */}
             <a>
               <IconButton
@@ -35,7 +35,7 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
           <IconButton
             title="Edit"
             onClick={()=>router.push(`/software/${slug}/edit`)}
-            disabled={status!=='authenticated'}
+            disabled={status!=="authenticated"}
           >
             <EditIcon />
           </IconButton>

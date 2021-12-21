@@ -1,11 +1,11 @@
-import {useState} from 'react';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Avatar from '@mui/material/Avatar'
+import {useState} from "react"
+import Button from "@mui/material/Button"
+import Menu from "@mui/material/Menu"
+import MenuItem from "@mui/material/MenuItem"
+import Avatar from "@mui/material/Avatar"
 
-import {MenuItemType} from '../../config/menuItems'
-import router from 'next/router';
+import {MenuItemType} from "../../config/menuItems"
+import router from "next/router"
 
 type UserMenuType={
   name:string,
@@ -14,12 +14,12 @@ type UserMenuType={
 }
 
 export default function UserMenu(props:UserMenuType) {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
   const {name, image, menuOptions} = props
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>){
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(event.currentTarget)
   }
 
   function handleClose(item:MenuItemType){
@@ -30,7 +30,7 @@ export default function UserMenu(props:UserMenuType) {
       // push to route if provided
       router.push(item.path)
     }
-    setAnchorEl(null);
+    setAnchorEl(null)
   }
 
   function renderMenuOptions(){
@@ -50,11 +50,11 @@ export default function UserMenu(props:UserMenuType) {
   }
 
   return (
-    <div>
+    <>
       <Button
         aria-controls="user-menu"
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
+        aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
         <Avatar
@@ -67,13 +67,13 @@ export default function UserMenu(props:UserMenuType) {
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'menu-button',
+          "aria-labelledby": "menu-button",
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{horizontal: "right", vertical: "top"}}
+        anchorOrigin={{horizontal: "right", vertical: "bottom"}}
       >
         {renderMenuOptions()}
       </Menu>
-    </div>
-  );
+    </>
+  )
 }

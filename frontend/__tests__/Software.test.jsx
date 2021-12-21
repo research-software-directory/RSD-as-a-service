@@ -28,7 +28,6 @@ describe('pages/software/index.tsx', () => {
         // mocked data
         software: mockedResponse,
         tags: undefined,
-        ssr: true
       }
     })
   })

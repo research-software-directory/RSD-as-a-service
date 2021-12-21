@@ -9,14 +9,15 @@ Based on the features in the legacy application and the current requirements we 
 ## Development
 
 - intall dependencies `yarn install`
-- create env.local file. Use env.local.example as template.
+- create env.local and env.production.local file. Use env.local.example as template.
 - run `yarn dev` to start application in development mode
 
 ### Environment variables
 
 For oAuth implementation we need number of env variables. Copy env.local.example file to `env.local` and provide values required for next-auth module.
 
-**Note! docker-compose uses this env file to load variables in the docker image.**
+- `env.local` file is used when running frontend locally with `yarn dev`
+- `env.production.local` file is used when running frontend with docker compose `docker-compose up`
 
 ## Docker compose frontend only
 
@@ -27,10 +28,12 @@ The image version is defined in docker-compose.yml file. When you inrease versio
 
 ## Folders
 
+- `__tests__`: unit test for **pages only**. Unit tests for the components are in the same directory as components.
+- `assets`: images and icons. These are imported into the components. In case of svg's the content is used to create an icon coponent.
 - `components`: all custom components created in this project are stored in this folder.
-- `config`: place for configuration objects used in the application. For example, menu items are stored here.
-- `pages`: next specific pages and api endpoints folders. For more information [see official documentation](https://nextjs.org/docs/routing/introduction)
-- `public`: folder for public assets of the website. For example favicon.ico file and robots.txt are stored here. The root of the public folder is equivalent to root on the webserver. Note that react file at `page/index.tsx` represents the template for the root webpage.
+- `config`: place for configuration objects. For example, menu items are stored here.
+- `pages`: next specific, pages and api endpoints. For more information [see official documentation](https://nextjs.org/docs/routing/introduction)
+- `public`: folder for public assets of the website. For example favicon.ico file and robots.txt are stored here. The root of the public folder is equivalent to the root on the webserver. Note that react file at `page/index.tsx` represents the template for the root webpage.
 - `styles`: folder for css files and MUI theme objects. Read specific [readme file about theming](./styles/README.md).
 - `types`: folder for typescript type objects. Note! specific, not-shared types are sometimes stored within component file
 - `utils`: folder for utility functions, hooks, composables etc.
