@@ -1,13 +1,9 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {useSession} from 'next-auth/react'
 
 import DefaultLayout from '../../../components/layout/DefaultLayout'
-import PageTitle from '../../../components/layout/PageTitle'
-import IconButton from '@mui/material/IconButton'
-import EditIcon from '@mui/icons-material/Edit'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import SoftwareIntroSection from '../../../components/software/SoftwareIntroSection'
 
 import {getSoftwareItem} from '../../../utils/getSoftware'
 import {SoftwareItem} from '../../../types/SoftwareItem'
@@ -21,41 +17,13 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
       <Head>
         <title>{software?.brand_name} | RSD</title>
       </Head>
-      <PageTitle title={software?.brand_name}>
-        <div>
-          <Link href={'/software'} passHref>
-            {/* allow back button without javascript */}
-            <a>
-              <IconButton
-                title="Go back">
-                <ArrowBackIcon />
-              </IconButton>
-            </a>
-          </Link>
-          <IconButton
-            title="Edit"
-            onClick={()=>router.push(`/software/${slug}/edit`)}
-            disabled={status!=='authenticated'}
-          >
-            <EditIcon />
-          </IconButton>
-        </div>
-      </PageTitle>
-      <section>
-        {/* TODO! replace this with real components */}
-        <h2 className="my-4">{software.short_statement}</h2>
-        <ul>
-          { software.bullets.split('*').map((item, pos)=>{
-            if (pos===0) return null
-            return (
-              <li key={item}>{item}</li>
-            )
-          })}
-        </ul>
-      </section>
-      {/* <pre>
-        {JSON.stringify(software,null,2)}
-      </pre> */}
+
+      <SoftwareIntroSection
+        brand_name={software.brand_name}
+        short_statement={software.short_statement}
+      />
+
+
     </DefaultLayout>
   )
 }
