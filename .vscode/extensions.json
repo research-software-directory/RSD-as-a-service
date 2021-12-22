@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
-    "bradlc.vscode-tailwindcss",
-    "tombonnike.vscode-status-bar-format-toggle"
+    "bradlc.vscode-tailwindcss"
   ]
 }
