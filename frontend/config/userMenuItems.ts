@@ -1,16 +1,16 @@
-import {signOut} from "next-auth/react"
-import {MenuItemType} from "./menuItems"
+import {signOut} from 'next-auth/react'
+import {MenuItemType} from './menuItems'
 
 export const userMenuItems:MenuItemType[]=[{
-  label:"Logout",
+  label:'Logout',
   fn: ()=>{
     // next-auth method to signout user
     signOut()
   }
 },{
-  label:"My software",
-  path:"/user/software"
+  label:'My software',
+  path:'/user/software'
 },{
-  label:"My profile",
-  path:"/user/profile"
+  label:'My profile',
+  path:'/user/profile'
 }]

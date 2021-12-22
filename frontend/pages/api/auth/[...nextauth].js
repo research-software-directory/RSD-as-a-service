@@ -1,9 +1,9 @@
 // next-auth API
 // documentation at https://next-auth.js.org/getting-started/example
-import NextAuth from "next-auth"
-import GithubProvider from "next-auth/providers/github"
-import GitlabProvider from "next-auth/providers/gitlab"
-import AzureADProvider from "next-auth/providers/azure-ad"
+import NextAuth from 'next-auth'
+import GithubProvider from 'next-auth/providers/github'
+import GitlabProvider from 'next-auth/providers/gitlab'
+import AzureADProvider from 'next-auth/providers/azure-ad'
 
 export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
@@ -30,19 +30,19 @@ export default NextAuth({
     // ORCID oAuth2 + OICD provider
     // ---------------------------------
     {
-      id: "orcid",
-      name: "ORCID",
-      type: "oauth",
-      wellKnown: "https://orcid.org/.well-known/openid-configuration",
+      id: 'orcid',
+      name: 'ORCID',
+      type: 'oauth',
+      wellKnown: 'https://orcid.org/.well-known/openid-configuration',
       authorization: {
         params: {
-          scope: "openid profile"
+          scope: 'openid profile'
         }
       },
       // when set to false causes the error openid-client
       // oauth_callback_error id_token detected in the response, you must use client.callback() instead of client.oauthCallback()
       idToken: true,
-      checks: ["pkce", "state"],
+      checks: ['pkce', 'state'],
       clientId: process.env.AUTH_ORCID_CLIENT_ID,
       clientSecret: process.env.AUTH_ORCID_CLIENT_SECRET,
       profile(profile) {
@@ -63,17 +63,17 @@ export default NextAuth({
     // SURFconext oAuth2 + OICD provider
     // ---------------------------------
     {
-      id: "surfconext",
-      name: "SURFconext",
-      type: "oauth",
-      wellKnown: "https://connect.test.surfconext.nl/.well-known/openid-configuration",
+      id: 'surfconext',
+      name: 'SURFconext',
+      type: 'oauth',
+      wellKnown: 'https://connect.test.surfconext.nl/.well-known/openid-configuration',
       authorization: {
         params: {
-          scope: "openid profile",
+          scope: 'openid profile',
           // claims property is used to request adding claims to id_token
           // this is not prefered approach.
           // claims: "{\"id_token\":{\"name\":null,\"eduperson_affiliation\":null,\"eduperson_entitlement\":null,\"email\":null,\"eduperson_orcid\":null}}",
-          prompt: "login"
+          prompt: 'login'
         }
       },
       /**
@@ -83,7 +83,7 @@ export default NextAuth({
        * [`id_token` explanation](https://www.oauth.com/oauth2-servers/openid-connect/id-tokens)
        */
       idToken: true,
-      checks: ["pkce", "state"],
+      checks: ['pkce', 'state'],
       clientId: process.env.AUTH_SURFCONEXT_CLIENT_ID,
       clientSecret: process.env.AUTH_SURFCONEXT_CLIENT_SECRET,
       profile(profile, tokens) {
@@ -101,8 +101,8 @@ export default NextAuth({
     }
   ],
   pages:{
-    signIn:"/login",
-    signOut:"/logout"
+    signIn:'/login',
+    signOut:'/logout'
   },
   callbacks:{
     /*

@@ -1,6 +1,6 @@
-import ContentInTheMiddle from "../layout/ContentInTheMiddle"
-import SoftwareCard from "./SoftwareCard"
-import {SoftwareItem} from "../../types/SoftwareItem"
+import ContentInTheMiddle from '../layout/ContentInTheMiddle'
+import SoftwareCard from './SoftwareCard'
+import {SoftwareItem} from '../../types/SoftwareItem'
 
 // render software cards
 export default function SoftwareGrid({software}:{software:SoftwareItem[]}){

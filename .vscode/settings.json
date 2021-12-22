@@ -1,0 +1,29 @@
+{
+  // required to indicate that eslint project is not in the root
+  "eslint.workingDirectories": [
+    "./frontend",
+  ],
+  // FORMAT ON SAVE for VSC
+  // based on this acticle https://www.aleksandrhovhannisyan.com/blog/format-code-on-save-vs-code-eslint/
+  // define files to validate, can have more options
+  // but in this project we use typescript and react
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+  ],
+  // it tells VScode to use eslint plugin
+  // Note! you might also need to disable Prettier or VSCode defaults
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+  },
+  // Tailwind plugin integration
+  "css.validate": false,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "tailwindCSS.includeLanguages":{
+    "plaintext": "html"
+  },
+}

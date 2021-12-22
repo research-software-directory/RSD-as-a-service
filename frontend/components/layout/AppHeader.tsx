@@ -1,24 +1,24 @@
 // external dependencies
-import {useState, useEffect} from "react"
-import Link from "next/link"
-import {useSession} from "next-auth/react"
-import Button from "@mui/material/Button"
-import LoginIcon from "@mui/icons-material/Login"
+import {useState, useEffect} from 'react'
+import Link from 'next/link'
+import {useSession} from 'next-auth/react'
+import Button from '@mui/material/Button'
+import LoginIcon from '@mui/icons-material/Login'
 // local dependencies (project components)
-import LogoEscience from "./LogoEscience"
-import AppMenuItem from "./AppMenuItem"
-import {menuItems} from "../../config/menuItems"
-import {userMenuItems} from "../../config/userMenuItems"
-import UserMenu from "./UserMenu"
+import LogoEscience from './LogoEscience'
+import AppMenuItem from './AppMenuItem'
+import {menuItems} from '../../config/menuItems'
+import {userMenuItems} from '../../config/userMenuItems'
+import UserMenu from './UserMenu'
 
 export default function AppHeader(){
-  const [activePath, setActivePath] = useState("/")
+  const [activePath, setActivePath] = useState('/')
   const {data, status} = useSession()
 
   useEffect(()=>{
     // set activePath to currently loaded route/page
-    if (typeof window !="undefined"){
-      const paths = window.location.pathname.split("/")
+    if (typeof window !='undefined'){
+      const paths = window.location.pathname.split('/')
       if (paths.length > 0) setActivePath(`/${paths[1]}`)
     }
   },[])
@@ -37,16 +37,16 @@ export default function AppHeader(){
   }
 
   function getLoginButton(){
-    if (status==="loading"){
+    if (status==='loading'){
       return null
     }
 
-    if (status==="authenticated"){
+    if (status==='authenticated'){
       // when user authenticated
       // we show user menu with the avatar and user specific options
       return (
         <UserMenu
-          name={`${data?.name ?? "No Name"}`}
+          name={`${data?.name ?? 'No Name'}`}
           menuOptions={userMenuItems}
         />
       )
@@ -56,7 +56,7 @@ export default function AppHeader(){
       <Link href="/login" passHref>
         <Button
           variant="text"
-          >
+        >
           <LoginIcon />
           <span className="ml-4">Sign In</span>
         </Button>

@@ -1,6 +1,6 @@
-import Link from "next/link"
-import LogoEscience from "./LogoEscience"
-import Mail from "@mui/icons-material/Mail"
+import Link from 'next/link'
+import LogoEscience from './LogoEscience'
+import Mail from '@mui/icons-material/Mail'
 
 export default function AppFooter () {
   return (
@@ -16,7 +16,7 @@ export default function AppFooter () {
             </Link>
           </div>
           <a target="_blank" href="https://esciencecenter.nl" rel="noreferrer"
-             className="hover:text-primary"
+            className="hover:text-primary"
           >
             <LogoEscience />
           </a>
@@ -26,7 +26,7 @@ export default function AppFooter () {
         <div className="pb-10 sm:pt-10">
           <div className="text-xl">Questions or comments?</div>
           <a href="mailto:rsd@esciencecenter.nl"
-             className="mt-2 text-primary hover:text-white flex"
+            className="mt-2 text-primary hover:text-white flex"
           >
             <Mail className="mr-2"/> rsd@esciencecenter.nl
           </a>

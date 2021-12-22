@@ -1,17 +1,17 @@
-import {useState, useEffect} from "react"
-import Menu from "@mui/material/Menu"
-import MenuItem from "@mui/material/MenuItem"
-import IconButton from "@mui/material/IconButton"
-import Tooltip from "@mui/material/Tooltip"
-import ListItemText from "@mui/material/ListItemText"
-import Checkbox from "@mui/material/Checkbox"
-import Badge from "@mui/material/Badge"
-import Divider from "@mui/material/Divider"
-import Button from "@mui/material/Button"
-import FilterAltIcon from "@mui/icons-material/FilterAlt"
-import ClearAllIcon from "@mui/icons-material/ClearAll"
-import CloseIcon from "@mui/icons-material/Close"
-import {TagItem} from "../../utils/getSoftware"
+import {useState, useEffect} from 'react'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import ListItemText from '@mui/material/ListItemText'
+import Checkbox from '@mui/material/Checkbox'
+import Badge from '@mui/material/Badge'
+import Divider from '@mui/material/Divider'
+import Button from '@mui/material/Button'
+import FilterAltIcon from '@mui/icons-material/FilterAlt'
+import ClearAllIcon from '@mui/icons-material/ClearAll'
+import CloseIcon from '@mui/icons-material/Close'
+import {TagItem} from '../../utils/getSoftware'
 
 /**
  * Tags filter component. It receives array of TagItems and returns
@@ -62,7 +62,7 @@ export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[]
 
   return (
     <>
-      <Tooltip title={`Filter: ${selectedItems.join(", ")}`}>
+      <Tooltip title={`Filter: ${selectedItems.join(', ')}`}>
         <IconButton onClick={handleClick}>
           <Badge badgeContent={selectedItems.length} color="primary">
             <FilterAltIcon />
@@ -74,10 +74,10 @@ export default function FilterTechnologies({items=[], onSelect}:{items:TagItem[]
         open={open}
         onClose={handleClose}
         // align menu to the right from the menu button
-        transformOrigin={{horizontal: "right", vertical: "top"}}
-        anchorOrigin={{horizontal: "right", vertical: "bottom"}}
+        transformOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
       >
-        <ListItemText sx={{textAlign:"center"}}>Technology</ListItemText>
+        <ListItemText sx={{textAlign:'center'}}>Technology</ListItemText>
         <Divider />
         {items.map((item) => (
           <MenuItem key={item.tag} value={item.tag}

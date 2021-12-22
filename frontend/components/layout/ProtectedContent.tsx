@@ -1,14 +1,14 @@
-import {useSession} from "next-auth/react"
-import ContentInTheMiddle from "./ContentInTheMiddle"
+import {useSession} from 'next-auth/react'
+import ContentInTheMiddle from './ContentInTheMiddle'
 
 export default function ProtectedContent({children}:{children:any}) {
   const {status} = useSession()
 
   // return nothing
-  if (status==="loading") return null
+  if (status==='loading') return null
 
   // authenticated
-  if (status==="authenticated"){
+  if (status==='authenticated'){
     return children
   }
 

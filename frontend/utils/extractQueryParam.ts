@@ -1,53 +1,53 @@
-import type {NextApiRequest} from "next"
-import logger from "./logger"
+import type {NextApiRequest} from 'next'
+import logger from './logger'
 
-export function extractQueryParam({req,param,castToType="string",defaultValue}:{
-  req:NextApiRequest, param:string, castToType?:("string"|"number"|"date"),
+export function extractQueryParam({req,param,castToType='string',defaultValue}:{
+  req:NextApiRequest, param:string, castToType?:('string'|'number'|'date'),
   defaultValue:any
 }){
-try{
-  if (req?.query && req.query.hasOwnProperty(param)){
-    const rawVal = req.query[param]
-    switch (castToType){
-      case "number":
+  try{
+    if (req?.query && req.query.hasOwnProperty(param)){
+      const rawVal = req.query[param]
+      switch (castToType){
+      case 'number':
         return parseInt(rawVal?.toString())
-      case "date":
+      case 'date':
         return new Date(rawVal?.toString())
-      case "string":
+      case 'string':
       default:
         return rawVal?.toString()
-    }
-  }else{
+      }
+    }else{
     // return default value
     // when parameter not available
-    return defaultValue
-  }
-}catch(e:any){
-  logger(`extractQueryParam: ${e.description}`,"error")
-  throw e
-}}
+      return defaultValue
+    }
+  }catch(e:any){
+    logger(`extractQueryParam: ${e.description}`,'error')
+    throw e
+  }}
 
 export function ssrSoftwareParams(context:NextApiRequest){
   const rows = extractQueryParam({
     req: context,
-    param: "rows",
+    param: 'rows',
     defaultValue: 12,
-    castToType:"number"
+    castToType:'number'
   })
   const page = extractQueryParam({
     req: context,
-    param: "page",
+    param: 'page',
     defaultValue: 0,
-    castToType:"number"
+    castToType:'number'
   })
   const search = extractQueryParam({
     req: context,
-    param: "search",
+    param: 'search',
     defaultValue: null
   })
   const filterStr = extractQueryParam({
     req: context,
-    param: "filter",
+    param: 'filter',
     defaultValue: null
   })
   return {
