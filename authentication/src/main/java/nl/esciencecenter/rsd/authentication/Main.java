@@ -15,8 +15,7 @@ import java.util.Properties;
 
 public class Main {
 
-	static final String JWT_SECRET = "someSecret";
-	static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60* 60* 1000
+	static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
 	static final Properties CONFIG = new Properties();
 
 	public static void main(String[] args) throws IOException {
@@ -25,16 +24,16 @@ public class Main {
 		app.get("/", ctx -> ctx.result("Hello World!"));
 
 		app.get("/login", ctx -> {
-			Algorithm signingAlgorithm = Algorithm.HMAC256(JWT_SECRET);
+			Algorithm signingAlgorithm = Algorithm.HMAC256(CONFIG.getProperty("PGRST_JWT_SECRET"));
 			String token = JWT.create()
-					.withClaim("role", "authenticated")
+					.withClaim("role", "rsd_user")
 					.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 					.sign(signingAlgorithm);
 			ctx.result(token);
 		});
 
 		app.post("/login", ctx -> {
-			Algorithm signingAlgorithm = Algorithm.HMAC256(JWT_SECRET);
+			Algorithm signingAlgorithm = Algorithm.HMAC256(CONFIG.getProperty("PGRST_JWT_SECRET"));
 			String token = ctx.body();
 			JWTVerifier verifier = JWT.require(signingAlgorithm).build();
 			DecodedJWT decodedJWT = verifier.verify(token);
@@ -44,9 +43,9 @@ public class Main {
 		app.post("/login/surfconext", ctx -> {
 			String code = ctx.formParam("code");
 			String account = new SurfconextLogin(code).account();
-			Algorithm signingAlgorithm = Algorithm.HMAC256(JWT_SECRET);
+			Algorithm signingAlgorithm = Algorithm.HMAC256(CONFIG.getProperty("PGRST_JWT_SECRET"));
 			String token = JWT.create()
-					.withClaim("role", "authenticated")
+					.withClaim("role", "rsd_user")
 					.withClaim("account", account)
 					.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 					.sign(signingAlgorithm);
