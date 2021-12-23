@@ -4,6 +4,22 @@ ALTER TABLE software ENABLE ROW LEVEL SECURITY;
 CREATE POLICY anyone_can_read ON software FOR SELECT TO web_anon
 	USING (is_published);
 
+CREATE POLICY maintainer_all_rights ON software TO rsd_user
+	USING (id IN (SELECT software FROM maintainer_for_software WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')))
+	WITH CHECK (TRUE);
+
+CREATE FUNCTION insert_maintainer_new_software() RETURNS TRIGGER LANGUAGE plpgsql as
+$$
+BEGIN
+	IF (SELECT  current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
+	END IF;
+	INSERT INTO maintainer_for_software VALUES (uuid( uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')), NEW.id);
+	RETURN NULL;
+END
+$$;
+
+CREATE TRIGGER insert_maintainer_new_software AFTER INSERT ON software FOR EACH ROW EXECUTE PROCEDURE insert_maintainer_new_software();
+
 CREATE POLICY admin_all_rights ON software TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
