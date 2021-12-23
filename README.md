@@ -1,3 +1,4 @@
+![](https://user-images.githubusercontent.com/4195550/136156498-736f915f-7623-43d2-8678-f30b06563a38.png)
 # RSD-as-a-service
 
 ## Our mission: To promote the visibility, impact and reuse of research software
@@ -36,3 +37,8 @@ To run without frontend and data migration in docker-compose:
 To clear the database (if the database structure has changed for example) before repeating the process:
 
 1. Run the command `docker-compose down --volumes`.
+
+## Tech Stack
+![image](https://user-images.githubusercontent.com/4195550/147217992-0ae7fd21-e775-4b9d-ba5a-b4f50576936f.png)
+
+
