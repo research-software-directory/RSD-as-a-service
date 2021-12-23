@@ -2,8 +2,12 @@ import Head from 'next/head'
 import {useRouter} from 'next/router'
 import {useSession} from 'next-auth/react'
 
-import DefaultLayout from '../../../components/layout/DefaultLayout'
+// import DefaultLayout from '../../../components/layout/DefaultLayout'
+import AppHeader from '../../../components/layout/AppHeader'
+import AppFooter from '../../../components/layout/AppFooter'
+
 import SoftwareIntroSection from '../../../components/software/SoftwareIntroSection'
+import GetStartedSection from '../../../components/software/GetStartedSection'
 
 import {getSoftwareItem} from '../../../utils/getSoftware'
 import {SoftwareItem} from '../../../types/SoftwareItem'
@@ -13,18 +17,27 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
   const {status} = useSession()
   // console.log("useSession.status...", status)
   return (
-    <DefaultLayout>
+    <>
       <Head>
         <title>{software?.brand_name} | RSD</title>
       </Head>
 
-      <SoftwareIntroSection
-        brand_name={software.brand_name}
-        short_statement={software.short_statement}
+      <AppHeader />
+
+      <section className="px-4 lg:container lg:mx-auto">
+        <SoftwareIntroSection
+          brand_name={software.brand_name}
+          short_statement={software.short_statement}
+        />
+      </section>
+
+      <GetStartedSection
+        get_started_url={software.get_started_url}
+        repository_url={software.repository_url}
       />
 
-
-    </DefaultLayout>
+      <AppFooter />
+    </>
   )
 }
 

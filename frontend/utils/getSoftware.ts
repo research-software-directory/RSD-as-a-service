@@ -44,7 +44,7 @@ export async function getSoftwareList(url:string){
 export async function getSoftwareItem(slug:string){
   try{
     // this request is always perfomed from backend
-    const url = `${process.env.POSTGREST_URL}/software?slug=eq.${slug}`
+    const url = `${process.env.POSTGREST_URL}/software?select=*,repository_url!left(url)&slug=eq.${slug}`
     const resp = await fetch(url,{method:'GET'})
     if (resp.status===200){
       const data:SoftwareItem[] = await resp.json()
