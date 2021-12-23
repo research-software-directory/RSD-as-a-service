@@ -5,9 +5,11 @@ import {useSession} from 'next-auth/react'
 // import DefaultLayout from '../../../components/layout/DefaultLayout'
 import AppHeader from '../../../components/layout/AppHeader'
 import AppFooter from '../../../components/layout/AppFooter'
+import PageContainer from '../../../components/layout/PageContainer'
 
 import SoftwareIntroSection from '../../../components/software/SoftwareIntroSection'
 import GetStartedSection from '../../../components/software/GetStartedSection'
+import CitationSection from '../../../components/software/CitationSection'
 
 import {getSoftwareItem} from '../../../utils/getSoftware'
 import {SoftwareItem} from '../../../types/SoftwareItem'
@@ -24,17 +26,19 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
 
       <AppHeader />
 
-      <section className="px-4 lg:container lg:mx-auto">
+      <PageContainer className="px-4">
         <SoftwareIntroSection
           brand_name={software.brand_name}
           short_statement={software.short_statement}
         />
-      </section>
+      </PageContainer>
 
       <GetStartedSection
         get_started_url={software.get_started_url}
         repository_url={software.repository_url}
       />
+
+      <CitationSection concept_doi={software.concept_doi}/>
 
       <AppFooter />
     </>
