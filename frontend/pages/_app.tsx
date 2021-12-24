@@ -8,6 +8,9 @@ import {ThemeProvider} from '@mui/material/styles'
 import {CacheProvider, EmotionCache} from '@emotion/react'
 import {rsdMuiTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
+// Snackbar context
+import SnackbarContext,{snackbarDefaults} from '../components/snackbar/SnackbarContext'
+import SnackbarSimple from '../components/snackbar/SnackbarSimple'
 // show loading bar at the top of the screen
 import nprogress from 'nprogress'
 
@@ -57,7 +60,10 @@ export default function RsdApp(props:MuiAppProps) {
         {/* CssBaseline from MUI-5*/}
         {/* <CssBaseline /> */}
         <SessionProvider session={session}>
-          <Component {...pageProps} />
+          <SnackbarContext.Provider value={snackbarDefaults}>
+            <Component {...pageProps} />
+            <SnackbarSimple />
+          </SnackbarContext.Provider>
         </SessionProvider>
       </ThemeProvider>
     </CacheProvider>
