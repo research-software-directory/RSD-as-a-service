@@ -19,7 +19,7 @@ services:
       - net
 
   backend:
-    container_name: postgREST
+    container_name: backend
     build: ./backend-postgrest
     ports:
       - "3500:3500"
@@ -46,6 +46,7 @@ services:
     network_mode: "host"
 
   authentication:
+    container_name: authentication
     build:
       context: .
       dockerfile: ./authentication/dockerfile
@@ -63,7 +64,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.2.1
+    image: rsd/frontend:0.2.2
     env_file:
       # configuration
       - ./frontend/.env.production.local
