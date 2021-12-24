@@ -3,17 +3,25 @@ import {SelectChangeEvent} from '@mui/material/Select'
 import Button from '@mui/material/Button'
 import DownloadIcon from '@mui/icons-material/Download'
 
-import CiteDropdown, {SelectOption} from './CiteDropdown'
+import CiteDropdown from './CiteDropdown'
+import {SoftwareCitationContent} from '../../types/SoftwareCitation'
+import {citationFormats} from './citationFormats'
 
-const formats = [
-  {label:'BibTex',value:'0'},
-  {label:'EndNote',value:'1'},
-  {label:'RIS',value:'2'},
-  {label:'CodeMeta',value:'3'},
-  {label:'Citation File Format',value:'4'}
-]
+function getAvailableFormats(citation:SoftwareCitationContent){
+  const valid = citationFormats.map(item=>{
+    let disabled=false
+    if (citation.hasOwnProperty(item.value)===false){
+      disabled=true
+    }
+    return {
+      ...item,
+      disabled
+    }
+  })
+  return valid
+}
 
-export default function CitationFormat() {
+export default function CitationFormat({citation}:{citation:SoftwareCitationContent}) {
   const [format,setFormat]=useState('')
 
   function onFormatChange({target}:{target:SelectChangeEvent['target']}){
@@ -29,11 +37,12 @@ export default function CitationFormat() {
     <div className='flex flex-col md:flex-row'>
       <CiteDropdown
         label="Choose a reference manager format:"
-        options={formats}
+        options={getAvailableFormats(citation)}
         value={format}
         onChange={onFormatChange}
       />
       <Button
+        disabled={format===''}
         sx={{
           display:'flex',
           justifyContent:'flex-start',

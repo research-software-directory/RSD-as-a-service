@@ -1,13 +1,17 @@
-import {useContext} from 'react'
+import {useState, useContext} from 'react'
 import Button from '@mui/material/Button'
 import CopyIcon from '@mui/icons-material/ContentCopy'
+import {copyToClipboard,canCopyToClipboard} from '../../utils/copyToClipboard'
 import snackbarContext from '../snackbar/SnackbarContext'
 
-export default function DoiLabel({concept_doi}:{concept_doi:string}) {
+export default function DoiLabel({doi}:{doi:string}) {
   const snackbar = useContext(snackbarContext)
+  const canCopy = useState(canCopyToClipboard() && doi)
 
-  function copyToClipboard(){
-    console.log('Copy DOI...', concept_doi)
+  async function toClipboard(){
+    console.log('Copy DOI...', doi)
+
+    const copied = await copyToClipboard(doi)
 
     // TODO! connect snackbar
     // snackbar.message='Copied to clipboard!'
@@ -16,7 +20,10 @@ export default function DoiLabel({concept_doi}:{concept_doi:string}) {
     //   console.log('snack closed...', params)
     // }
     // snackbar.open = true
-    alert('Copied to clipboard')
+
+    if (copied){
+      alert('Copied to clipboard')
+    }
   }
 
   return (
@@ -24,9 +31,10 @@ export default function DoiLabel({concept_doi}:{concept_doi:string}) {
       <h3 className="text-sm pb-1">DOI:</h3>
       <div className="flex flex-col md:flex-row items-center">
         <div className="w-full bg-[#2e3132] p-4">
-          {concept_doi}
+          {doi}
         </div>
         <Button
+          disabled={!canCopy}
           sx={{
             display:'flex',
             justifyContent:'flex-start',
@@ -34,7 +42,7 @@ export default function DoiLabel({concept_doi}:{concept_doi:string}) {
             ml:[null,2],
             p:2
           }}
-          onClick={copyToClipboard}
+          onClick={toClipboard}
         >
           <CopyIcon sx={{mr:1}}/>
           Copy to clipboard

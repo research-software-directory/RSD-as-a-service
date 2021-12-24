@@ -7,15 +7,17 @@ import MenuItem from '@mui/material/MenuItem'
 export type SelectOption={
   label:string,
   value:string,
+  disabled?:boolean
 }
 
-export default function CiteDropdown({label,options,value,onChange}:
+export default function CiteDropdown({label,options=[],value,onChange}:
   {label:string,options:SelectOption[],value:string,onChange:any}) {
 
   return (
     <FormControl fullWidth>
       <InputLabel id={`cite-dropdown-${label}`}>{label}</InputLabel>
       <Select
+        data-testid="cite-dropdown"
         labelId={`cite-dropdown-${label}`}
         // id="cite-dropdown-select"
         value={value}
@@ -30,6 +32,7 @@ export default function CiteDropdown({label,options,value,onChange}:
           options.map(item=>{
             return (
               <MenuItem
+                disabled={item?.disabled ?? false}
                 key={item.label}
                 value={item.value}
               >

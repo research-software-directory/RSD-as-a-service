@@ -1,4 +1,5 @@
 import {SoftwareItem} from '../types/SoftwareItem'
+import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 
@@ -48,7 +49,7 @@ export async function getSoftwareItem(slug:string){
     const resp = await fetch(url,{method:'GET'})
     if (resp.status===200){
       const data:SoftwareItem[] = await resp.json()
-      return data
+      return data[0]
     }
   }catch(e:any){
     logger(`getSoftwareItem: ${e?.message}`,'error')
@@ -77,5 +78,26 @@ export async function getTagsWithCount(){
   }catch(e:any){
     logger(`getTagsWithCount: ${e?.message}`,'error')
     return []
+  }
+}
+
+
+export async function getCitationsForSoftware(uuid:string){
+  try{
+    // this request is always perfomed from backend
+    // the release content is order by date_published
+    const url = `${process.env.POSTGREST_URL}/release?select=*,release_content(*)&software=eq.${uuid}&release_content.order=date_published.desc`
+    const resp = await fetch(url,{method:'GET'})
+    if (resp.status===200){
+      const data:SoftwareCitationInfo[] = await resp.json()
+      return data[0]
+    } else if (resp.status===404){
+      logger(`getReleasesForSoftware: 404 [${url}]`,'error')
+      // query not found
+      return undefined
+    }
+  }catch(e:any){
+    logger(`getReleasesForSoftware: ${e?.message}`,'error')
+    return undefined
   }
 }

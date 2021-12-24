@@ -11,13 +11,13 @@ import SoftwareIntroSection from '../../../components/software/SoftwareIntroSect
 import GetStartedSection from '../../../components/software/GetStartedSection'
 import CitationSection from '../../../components/software/CitationSection'
 
-import {getSoftwareItem} from '../../../utils/getSoftware'
+import {getSoftwareItem, getCitationsForSoftware} from '../../../utils/getSoftware'
 import {SoftwareItem} from '../../../types/SoftwareItem'
+import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 
-export default function SoftwareIndexPage({software, slug}:{software:SoftwareItem, slug:string}) {
-  const router = useRouter()
-  const {status} = useSession()
-  // console.log("useSession.status...", status)
+export default function SoftwareIndexPage({slug, software, citationInfo}:
+  {slug:string,software:SoftwareItem,citationInfo:SoftwareCitationInfo}) {
+
   return (
     <>
       <Head>
@@ -37,9 +37,13 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
         get_started_url={software.get_started_url}
         repository_url={software.repository_url}
       />
-
-      <CitationSection concept_doi={software.concept_doi}/>
-
+      {
+        citationInfo ?
+          <CitationSection
+            citationInfo={citationInfo}
+          />
+          :null
+      }
       <AppFooter />
     </>
   )
@@ -52,21 +56,25 @@ export async function getServerSideProps(context:any) {
     const {params} = context
     // console.log("getServerSideProps...params...", params)
     const software = await getSoftwareItem(params?.slug)
-    if (typeof software == 'undefined' ||
-    software?.length === 0){
-    // returning this value
-    // triggers 404 page on frontend
+    if (typeof software == 'undefined'){
+      // returning this value
+      // triggers 404 page on frontend
       return {
         notFound: true,
       }
     }
+
+    // get citation/releases info
+    const citationInfo = await getCitationsForSoftware(software.id)
+
     return {
     // will be passed to the page component as props
     // see params in SoftwareIndexPage
       props: {
-        software: software[0],
-        slug: params?.slug
-      },
+        slug: params?.slug,
+        software,
+        citationInfo
+      }
     }
   }catch(e){
     return {
