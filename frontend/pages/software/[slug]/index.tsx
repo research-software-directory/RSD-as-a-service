@@ -1,6 +1,4 @@
 import Head from 'next/head'
-import {useRouter} from 'next/router'
-import {useSession} from 'next-auth/react'
 
 // import DefaultLayout from '../../../components/layout/DefaultLayout'
 import AppHeader from '../../../components/layout/AppHeader'
@@ -54,8 +52,9 @@ export default function SoftwareIndexPage({slug, software, citationInfo}:
 export async function getServerSideProps(context:any) {
   try{
     const {params} = context
-    // console.log("getServerSideProps...params...", params)
+    console.log('getServerSideProps...params...', params)
     const software = await getSoftwareItem(params?.slug)
+    console.log('getServerSideProps...software...', software)
     if (typeof software == 'undefined'){
       // returning this value
       // triggers 404 page on frontend
@@ -77,6 +76,7 @@ export async function getServerSideProps(context:any) {
       }
     }
   }catch(e){
+    console.log('failed', e)
     return {
       notFound: true,
     }
