@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import router from 'next/router'
 import {SessionProvider} from 'next-auth/react'
 import Head from 'next/head'
@@ -8,9 +8,6 @@ import {ThemeProvider} from '@mui/material/styles'
 import {CacheProvider, EmotionCache} from '@emotion/react'
 import {rsdMuiTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
-// Snackbar context
-import SnackbarContext,{snackbarDefaults} from '../components/snackbar/SnackbarContext'
-import SnackbarSimple from '../components/snackbar/SnackbarSimple'
 // show loading bar at the top of the screen
 import nprogress from 'nprogress'
 
@@ -37,15 +34,12 @@ export default function RsdApp(props:MuiAppProps) {
   // console .log("session...", JSON.stringify(session))
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
-      // console.log("routeChangeStart...")
       nprogress.start()
     })
     router.events.on('routeChangeComplete', ()=>{
-      // console.log("routeChangeComplete...")
       nprogress.done()
     })
     router.events.on('routeChangeError', ()=>{
-      // console.log("routeChangeError...")
       nprogress.done()
     })
   },[])
@@ -60,10 +54,7 @@ export default function RsdApp(props:MuiAppProps) {
         {/* CssBaseline from MUI-5*/}
         {/* <CssBaseline /> */}
         <SessionProvider session={session}>
-          <SnackbarContext.Provider value={snackbarDefaults}>
-            <Component {...pageProps} />
-            <SnackbarSimple />
-          </SnackbarContext.Provider>
+          <Component {...pageProps} />
         </SessionProvider>
       </ThemeProvider>
     </CacheProvider>

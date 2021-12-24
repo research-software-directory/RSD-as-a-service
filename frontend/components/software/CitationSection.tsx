@@ -4,7 +4,7 @@ import {SelectChangeEvent} from '@mui/material/Select'
 
 import PageContainer from '../layout/PageContainer'
 import CiteDropdown from './CiteDropdown'
-import DoiLabel from './DoiLabel'
+import CitationDoi from './CitationDoi'
 import CitationDownload from './CitationDownload'
 import {SoftwareCitationInfo,SoftwareCitationContent} from '../../types/SoftwareCitation'
 
@@ -62,7 +62,7 @@ export default function CitationSection({citationInfo}:
             />
           </div>
           <div className="flex-[3] md:px-4">
-            <DoiLabel doi={citation?.doi ?? ''} />
+            <CitationDoi doi={citation?.doi ?? ''} />
             {
               // only when citability full
               citation?.citability==='full' ?

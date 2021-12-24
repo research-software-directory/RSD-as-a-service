@@ -2,27 +2,30 @@ import {useState, useContext} from 'react'
 import Button from '@mui/material/Button'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import {copyToClipboard,canCopyToClipboard} from '../../utils/copyToClipboard'
-import snackbarContext from '../snackbar/SnackbarContext'
+import snackbarContext from '../snackbar/PageSnackbarContext'
 
-export default function DoiLabel({doi}:{doi:string}) {
-  const snackbar = useContext(snackbarContext)
+export default function CitationDoi({doi}:{doi:string}) {
+  const {setSnackbar} = useContext(snackbarContext)
   const canCopy = useState(canCopyToClipboard() && doi)
 
   async function toClipboard(){
-    console.log('Copy DOI...', doi)
-
+    // copy doi to clipboard
     const copied = await copyToClipboard(doi)
-
-    // TODO! connect snackbar
-    // snackbar.message='Copied to clipboard!'
-    // snackbar.onClose=function onClose(...params:any){
-    //   debugger
-    //   console.log('snack closed...', params)
-    // }
-    // snackbar.open = true
-
+    // notify user about copy action
     if (copied){
-      alert('Copied to clipboard')
+      setSnackbar({
+        open:true,
+        severity:'info',
+        message:'Copied to clipboard',
+        duration: 3000
+      })
+    } else {
+      setSnackbar({
+        open:true,
+        severity:'error',
+        message:`Failed to copy doi ${doi} `,
+        duration: 7000
+      })
     }
   }
 
