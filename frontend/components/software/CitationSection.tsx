@@ -14,9 +14,8 @@ const darkTheme = createTheme({
   },
 })
 
-export default function CitationSection({citationInfo}:
-  {citationInfo:SoftwareCitationInfo}) {
-
+export default function CitationSection({citationInfo,concept_doi}:
+  {citationInfo:SoftwareCitationInfo, concept_doi:string}) {
   const [version, setVersion]=useState('')
   const [citation, setCitation]=useState<SoftwareCitationContent>()
 
@@ -41,10 +40,12 @@ export default function CitationSection({citationInfo}:
     setCitation(cite)
   }
 
-  // do not render anything if no data
+  // do not render section if no data
   if (!citationInfo) return null
+  // do not render section if not citable
+  if (citationInfo.is_citable===false) return null
 
-  // render when citationInfo present
+  // render section
   return (
     <ThemeProvider theme={darkTheme}>
       <PageContainer>
@@ -54,15 +55,19 @@ export default function CitationSection({citationInfo}:
               data-testid="citation-section-title">
                 Cite this software
             </h2>
-            <CiteDropdown
-              label="Choose a version:"
-              options={versions}
-              value={version}
-              onChange={onVersionChange}
-            />
+            {
+              versions?.length > 0 ?
+                <CiteDropdown
+                  label="Choose a version:"
+                  options={versions}
+                  value={version}
+                  onChange={onVersionChange}
+                />
+                :null
+            }
           </div>
-          <div className="flex-[3] md:px-4">
-            <CitationDoi doi={citation?.doi ?? ''} />
+          <div className="flex-[3] flex flex-col justify-between md:px-4">
+            <CitationDoi doi={citation?.doi ?? concept_doi} />
             {
               // only when citability full
               citation?.citability==='full' ?

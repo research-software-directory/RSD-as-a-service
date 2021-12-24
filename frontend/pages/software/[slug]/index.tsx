@@ -42,6 +42,7 @@ export default function SoftwareIndexPage({software, citationInfo}:
           citationInfo ?
             <CitationSection
               citationInfo={citationInfo}
+              concept_doi={software.concept_doi}
             />
             :null
         }

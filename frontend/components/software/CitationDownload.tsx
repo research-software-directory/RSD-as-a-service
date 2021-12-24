@@ -8,41 +8,46 @@ import {SoftwareCitationContent} from '../../types/SoftwareCitation'
 import {citationFormats} from './citationFormats'
 
 function getAvailableFormats(citation:SoftwareCitationContent){
-  const valid = citationFormats.map(item=>{
+  const valid = citationFormats.map((item,pos)=>{
     let disabled=false
-    if (citation.hasOwnProperty(item.value)===false){
+    if (citation.hasOwnProperty(item.format)===false){
       disabled=true
     }
     return {
       ...item,
-      disabled
+      disabled,
+      value: pos.toString()
     }
   })
   return valid
 }
 
 export default function CitationFormat({citation}:{citation:SoftwareCitationContent}) {
-  const [format,setFormat]=useState('')
+  const [format,setFormat]=useState({v:'',f:'',e:'',t:''})
+
+  const options = getAvailableFormats(citation)
 
   function onFormatChange({target}:{target:SelectChangeEvent['target']}){
-    setFormat(target?.value)
-  }
-
-  function downloadFile(){
-    console.log('Download...format...', format)
-    alert('Implement file download')
+    if (target?.value){
+      setFormat({
+        v: target?.value,
+        f: options[parseInt(target.value)].format,
+        t: options[parseInt(target.value)].contentType,
+        e: options[parseInt(target.value)].ext
+      })
+    }
   }
 
   return (
     <div className='flex flex-col md:flex-row'>
       <CiteDropdown
         label="Choose a reference manager format:"
-        options={getAvailableFormats(citation)}
-        value={format}
+        options={options}
+        value={format.v}
         onChange={onFormatChange}
       />
       <Button
-        disabled={format===''}
+        disabled={format.v===''}
         sx={{
           display:'flex',
           justifyContent:'flex-start',
@@ -50,10 +55,13 @@ export default function CitationFormat({citation}:{citation:SoftwareCitationCont
           ml:[null,2],
           p:2,
         }}
-        onClick={downloadFile}
       >
         <DownloadIcon sx={{mr:1}}/>
+        <a href={`/api/v1/cite/${citation.id}?f=${format.f}&e=${format.e}&t=${format.t}`}
+          download={`citation.${format.e}`}
+        >
           Download file
+        </a>
       </Button>
     </div>
   )

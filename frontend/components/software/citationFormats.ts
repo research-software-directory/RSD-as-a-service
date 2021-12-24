@@ -3,9 +3,9 @@
  * These items are used by
  */
 export const citationFormats = [
-  {label:'BibTex',value:'bibtex'},
-  {label:'EndNote',value:'endnote'},
-  {label:'RIS',value:'ris'},
-  {label:'CodeMeta',value:'codemeta'},
-  {label:'Citation File Format',value:'cff'}
+  {label:'BibTex',format:'bibtex',contentType:'application/x-bibtex',ext:'bib'},
+  {label:'EndNote',format:'endnote',contentType:'text/plain',ext:'enw'},
+  {label:'RIS',format:'ris',contentType:'application/x-research-info-systems',ext:'ris'},
+  {label:'CodeMeta',format:'codemeta',contentType:'application/json',ext:'json'},
+  {label:'Citation File Format',format:'cff',contentType:'text/yaml',ext:'cff'}
 ]
