@@ -499,7 +499,7 @@
 							"\tpm.response.to.have.status(201);",
 							"});",
 							"",
-							"pm.test(\"Error message permission denied\", function () {",
+							"pm.test(\"Check size response\", function () {",
 							"\tconst jsonData = pm.response.json();",
 							"\tpm.expect(jsonData.length).to.eql(2);",
 							"});"
