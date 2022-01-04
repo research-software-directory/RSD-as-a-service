@@ -20,10 +20,13 @@ import static nl.esciencecenter.rsd.authentication.Main.CONFIG;
 public class SurfconextLogin implements Login {
 
 	private final String CODE;
+	private final String REDIRECT_URL;
 
-	public SurfconextLogin(String code) {
+	public SurfconextLogin(String code, String redirectUrl) {
 		if (code == null) throw new IllegalArgumentException("The code should not be null");
+		if (redirectUrl == null) throw new IllegalArgumentException("The redirect url should not be null");
 		this.CODE = code;
+		this.REDIRECT_URL = redirectUrl;
 	}
 
 
@@ -40,7 +43,7 @@ public class SurfconextLogin implements Login {
 		Map<String, String> form = new HashMap<>();
 		form.put("code", CODE);
 		form.put("grant_type", "authorization_code");
-		form.put("redirect_uri", "http://localhost:7000/login/surfconext");
+		form.put("redirect_uri", REDIRECT_URL);
 		form.put("scope", "openid");
 		form.put("client_id", CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_ID"));
 		form.put("client_secret", CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_SECRET"));
@@ -71,7 +74,9 @@ public class SurfconextLogin implements Login {
 	private String accountFromSubject(String subject) {
 		String backendUri = CONFIG.getProperty("POSTGREST_URL");
 		URI queryUri = URI.create(backendUri + "/login_for_account?select=account,sub&sub=eq." + subject);
-		String responseLogin = get(queryUri);
+		JwtCreator jwtCreator = new JwtCreator(CONFIG.getProperty("PGRST_JWT_SECRET"));
+		String token = jwtCreator.createAdminJwt();
+		String responseLogin = getAsAdmin(queryUri, token);
 		JsonArray accountsWithSub = JsonParser.parseString(responseLogin).getAsJsonArray();
 		if (accountsWithSub.size() > 1)
 			throw new RuntimeException("More than one login for subject " + subject + " exists");
@@ -79,14 +84,14 @@ public class SurfconextLogin implements Login {
 			return accountsWithSub.get(0).getAsJsonObject().getAsJsonPrimitive("account").getAsString();
 		else { // create account
 			URI createAccountEndpoint = URI.create(backendUri + "/account");
-			String newAccountId = JsonParser.parseString(postJson(createAccountEndpoint, "{}")).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+			String newAccountId = JsonParser.parseString(postJsonAsAdmin(createAccountEndpoint, "{}", token)).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 
 //			create login for account
 			JsonObject loginForAccountData = new JsonObject();
 			loginForAccountData.addProperty("account", newAccountId);
 			loginForAccountData.addProperty("sub", subject);
 			URI createLoginUri = URI.create(backendUri + "/login_for_account");
-			postJson(createLoginUri, loginForAccountData.toString());
+			postJsonAsAdmin(createLoginUri, loginForAccountData.toString(), token);
 
 			return newAccountId;
 		}
@@ -111,12 +116,13 @@ public class SurfconextLogin implements Login {
 		return response.body();
 	}
 
-	private String postJson(URI uri, String json) {
+	private String postJsonAsAdmin(URI uri, String json, String token) {
 		HttpRequest request = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(uri)
 				.header("Content-Type", "application/json")
 				.header("Prefer", "return=representation")
+				.header("Authorization", "bearer " + token)
 				.build();
 		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
@@ -132,10 +138,11 @@ public class SurfconextLogin implements Login {
 	}
 
 
-	private String get(URI uri) {
+	private String getAsAdmin(URI uri, String token) {
 		HttpRequest request = HttpRequest.newBuilder()
 				.GET()
 				.uri(uri)
+				.header("Authorization", "bearer " + token)
 				.build();
 		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
