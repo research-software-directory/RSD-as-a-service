@@ -60,19 +60,17 @@ public class Main {
 			String tokenToVerify = ctx.cookie("rsd_token");
 			String signingSecret = CONFIG.getProperty("PGRST_JWT_SECRET");
 			JwtVerifier verifier = new JwtVerifier(signingSecret);
-			boolean isTokenValid = verifier.verify(tokenToVerify);
-			if (!isTokenValid) {
-				ctx.status(400);
-			} else {
-				JwtCreator jwtCreator = new JwtCreator(signingSecret);
-				String token = jwtCreator.refreshToken(tokenToVerify);
-				setJwtCookie(ctx, token);
-			}
+			verifier.verify(tokenToVerify);
+
+			JwtCreator jwtCreator = new JwtCreator(signingSecret);
+			String token = jwtCreator.refreshToken(tokenToVerify);
+			setJwtCookie(ctx, token);
 		});
 
 		app.exception(JWTVerificationException.class, (ex, ctx) -> {
 			ex.printStackTrace();
-			ctx.result("Invalid JWT!");
+			ctx.status(400);
+			ctx.json("{\"Message\": \"invalid JWT\"}");
 		});
 	}
 

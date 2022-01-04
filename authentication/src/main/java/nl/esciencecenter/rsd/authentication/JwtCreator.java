@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.Gson;
 
-import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
@@ -39,7 +38,7 @@ public class JwtCreator {
 	String refreshToken(String token) {
 		DecodedJWT oldJwt = JWT.decode(token);
 		String payloadEncoded = oldJwt.getPayload();
-		String payloadDecoded = new String(Base64.getUrlDecoder().decode(payloadEncoded));
+		String payloadDecoded = Main.decode(payloadEncoded);
 		Gson gson = new Gson();
 		Map claimsMap = gson.fromJson(payloadDecoded, Map.class);
 		return JWT.create()

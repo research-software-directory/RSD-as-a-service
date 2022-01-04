@@ -14,15 +14,10 @@ public class JwtVerifier {
 		this.SIGNING_SECRET = signingSecret;
 	}
 
-	boolean verify(String token) {
-		if (token == null) return false;
+	void verify(String token) {
+		if (token == null) throw new JWTVerificationException("Token was null");
 		Algorithm signingAlgorithm = Algorithm.HMAC256(SIGNING_SECRET);
 		JWTVerifier verifier = JWT.require(signingAlgorithm).build();
-		try {
-			verifier.verify(token);
-			return true;
-		} catch (JWTVerificationException e) {
-			return false;
-		}
+		verifier.verify(token);
 	}
 }
