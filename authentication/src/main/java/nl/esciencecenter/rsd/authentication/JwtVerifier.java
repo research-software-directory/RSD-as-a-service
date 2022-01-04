@@ -15,6 +15,7 @@ public class JwtVerifier {
 	}
 
 	boolean verify(String token) {
+		if (token == null) return false;
 		Algorithm signingAlgorithm = Algorithm.HMAC256(SIGNING_SECRET);
 		JWTVerifier verifier = JWT.require(signingAlgorithm).build();
 		try {

@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class Main {
 			String account = new SurfconextLogin(code, redirectUrl).account();
 			JwtCreator jwtCreator = new JwtCreator(CONFIG.getProperty("PGRST_JWT_SECRET"));
 			String token = jwtCreator.createUserJwt(account);
-			ctx.cookie("rsd_token", token);
+			setJwtCookie(ctx, token);
 			ctx.result(token);
 		});
 
@@ -65,7 +66,7 @@ public class Main {
 			} else {
 				JwtCreator jwtCreator = new JwtCreator(signingSecret);
 				String token = jwtCreator.refreshToken(tokenToVerify);
-				ctx.cookie("rsd_token", token);
+				setJwtCookie(ctx, token);
 			}
 		});
 
@@ -73,6 +74,10 @@ public class Main {
 			ex.printStackTrace();
 			ctx.result("Invalid JWT!");
 		});
+	}
+
+	static void setJwtCookie(Context ctx, String token) {
+		ctx.header("Set-Cookie", "rsd_token=" + token + "; Secure; HttpOnly; Path=/; SameSite=Lax");
 	}
 
 	static String decode(String base64UrlEncoded) {
