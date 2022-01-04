@@ -82,6 +82,12 @@ export async function getTagsWithCount(){
 }
 
 
+/**
+ * CITATIONS
+ * @param uuid
+ * @returns SoftwareCitationInfo
+ */
+
 export async function getCitationsForSoftware(uuid:string){
   try{
     // this request is always perfomed from backend
@@ -98,6 +104,66 @@ export async function getCitationsForSoftware(uuid:string){
     }
   }catch(e:any){
     logger(`getReleasesForSoftware: ${e?.message}`,'error')
+    return undefined
+  }
+}
+
+
+/**
+ * TAGS
+ */
+
+export type Tag = {
+  software:string
+  tag: string
+}
+
+export async function getTagsForSoftware(uuid:string){
+  try{
+    // this request is always perfomed from backend
+    // the content is order by tag ascending
+    const url = `${process.env.POSTGREST_URL}/tag_for_software?&software=eq.${uuid}&order=tag.asc`
+    const resp = await fetch(url,{method:'GET'})
+    if (resp.status===200){
+      const data:Tag[] = await resp.json()
+      return data
+    } else if (resp.status===404){
+      logger(`getTagsForSoftware: 404 [${url}]`,'error')
+      // query not found
+      return undefined
+    }
+  }catch(e:any){
+    logger(`getTagsForSoftware: ${e?.message}`,'error')
+    return undefined
+  }
+}
+
+/**
+ * LICENSE
+ */
+
+export type License = {
+  id:string,
+  software:string
+  license: string
+}
+
+export async function getLicenseForSoftware(uuid:string){
+  try{
+    // this request is always perfomed from backend
+    // the content is order by license ascending
+    const url = `${process.env.POSTGREST_URL}/license_for_software?&software=eq.${uuid}&order=license.asc`
+    const resp = await fetch(url,{method:'GET'})
+    if (resp.status===200){
+      const data:License[] = await resp.json()
+      return data
+    } else if (resp.status===404){
+      logger(`getLicenseForSoftware: 404 [${url}]`,'error')
+      // query not found
+      return undefined
+    }
+  }catch(e:any){
+    logger(`getLicenseForSoftware: ${e?.message}`,'error')
     return undefined
   }
 }
