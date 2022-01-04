@@ -13,7 +13,7 @@ $$
 BEGIN
 	IF (SELECT  current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
 	END IF;
-	INSERT INTO maintainer_for_software VALUES (uuid( uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')), NEW.id);
+	INSERT INTO maintainer_for_software VALUES (uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'), NEW.id);
 	RETURN NULL;
 END
 $$;
@@ -112,7 +112,7 @@ $$
 BEGIN
 	IF (SELECT  current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
 	END IF;
-	INSERT INTO maintainer_for_project VALUES (uuid( uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')), NEW.id);
+	INSERT INTO maintainer_for_project VALUES (uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'), NEW.id);
 	RETURN NULL;
 END
 $$;
