@@ -64,7 +64,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.2.2
+    image: rsd/frontend:0.3.0
     env_file:
       # configuration
       - ./frontend/.env.production.local
