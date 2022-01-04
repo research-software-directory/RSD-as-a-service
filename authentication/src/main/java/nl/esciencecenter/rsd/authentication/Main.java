@@ -21,7 +21,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		CONFIG.load(new FileReader(args[0]));
 		Javalin app = Javalin.create().start(7000);
-		app.get("/", ctx -> ctx.result("Hello World!"));
+		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
 		app.get("/login", ctx -> {
 			Algorithm signingAlgorithm = Algorithm.HMAC256(CONFIG.getProperty("PGRST_JWT_SECRET"));
