@@ -55,6 +55,20 @@ public class Main {
 			ctx.html("<a href=\"https://connect.test.surfconext.nl/oidc/authorize?scope=openid&&response_type=code&redirect_uri=" + redirectUrl + "&state=example&nonce=example&response_mode=form_post&client_id=" + CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_ID") + "\">Login with surfconext</a>");
 		});
 
+		app.get("/refresh", ctx -> {
+			String tokenToVerify = ctx.cookie("rsd_token");
+			String signingSecret = CONFIG.getProperty("PGRST_JWT_SECRET");
+			JwtVerifier verifier = new JwtVerifier(signingSecret);
+			boolean isTokenValid = verifier.verify(tokenToVerify);
+			if (!isTokenValid) {
+				ctx.status(400);
+			} else {
+				JwtCreator jwtCreator = new JwtCreator(signingSecret);
+				String token = jwtCreator.refreshToken(tokenToVerify);
+				ctx.cookie("rsd_token", token);
+			}
+		});
+
 		app.exception(JWTVerificationException.class, (ex, ctx) -> {
 			ex.printStackTrace();
 			ctx.result("Invalid JWT!");
