@@ -4,6 +4,7 @@ import Head from 'next/head'
 import AppHeader from '../../../components/layout/AppHeader'
 import AppFooter from '../../../components/layout/AppFooter'
 import PageContainer from '../../../components/layout/PageContainer'
+import ContentInTheMiddle from '../../../components/layout/ContentInTheMiddle'
 import SoftwareIntroSection from '../../../components/software/SoftwareIntroSection'
 import GetStartedSection from '../../../components/software/GetStartedSection'
 import CitationSection from '../../../components/software/CitationSection'
@@ -16,17 +17,27 @@ import {
   getCitationsForSoftware,
   getTagsForSoftware,
   getLicenseForSoftware,
-  Tag, License
+  getContributorMentionCount,
+  Tag, License, ContributorMentionCount
 } from '../../../utils/getSoftware'
 import logger from '../../../utils/logger'
 import {SoftwareItem} from '../../../types/SoftwareItem'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 
-export default function SoftwareIndexPage({software, citationInfo, tagsInfo, licenseInfo}:
-  {slug:string,software:SoftwareItem,citationInfo:SoftwareCitationInfo, tagsInfo:Tag[], licenseInfo:License[]}) {
+export default function SoftwareIndexPage({software, citationInfo, tagsInfo, licenseInfo, softwareIntroCounts}:
+  {
+    slug: string, software: SoftwareItem, citationInfo: SoftwareCitationInfo, tagsInfo: Tag[], licenseInfo: License[],
+    softwareIntroCounts: ContributorMentionCount
+  }) {
   const [options, setSnackbar] = useState(snackbarDefaults)
 
-  console.log('licenseInfo...', licenseInfo)
+  if (!software?.brand_name){
+    return (
+      <ContentInTheMiddle>
+        <h2>No content</h2>
+      </ContentInTheMiddle>
+    )
+  }
 
   return (
     <>
@@ -40,6 +51,7 @@ export default function SoftwareIndexPage({software, citationInfo, tagsInfo, lic
           <SoftwareIntroSection
             brand_name={software.brand_name}
             short_statement={software.short_statement}
+            counts={softwareIntroCounts}
           />
         </PageContainer>
 
@@ -61,6 +73,7 @@ export default function SoftwareIndexPage({software, citationInfo, tagsInfo, lic
           read_more={software.read_more}
           tags={tagsInfo}
           licenses={licenseInfo}
+          repositories={software.repository_url}
         />
         <AppFooter />
       </PageSnackbarContext.Provider>
@@ -84,10 +97,12 @@ export async function getServerSideProps(context:any) {
       }
     }
 
-    // get citation/releases info
+    // get info about software
     const citationInfo = await getCitationsForSoftware(software.id)
     const tagsInfo = await getTagsForSoftware(software.id)
     const licenseInfo = await getLicenseForSoftware(software.id)
+    const softwareIntroCounts = await getContributorMentionCount(software.id)
+
 
     return {
     // will be passed to the page component as props
@@ -96,7 +111,8 @@ export async function getServerSideProps(context:any) {
         software,
         citationInfo,
         tagsInfo,
-        licenseInfo
+        licenseInfo,
+        softwareIntroCounts
       }
     }
   }catch(e:any){

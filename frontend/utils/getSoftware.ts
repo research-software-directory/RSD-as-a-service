@@ -58,8 +58,8 @@ export async function getSoftwareItem(slug:string){
 
 // Get
 export type TagItem={
-  count: number,
-  tag:string,
+  count: number
+  tag:string
   active:boolean
 }
 export async function getTagsWithCount(){
@@ -143,7 +143,7 @@ export async function getTagsForSoftware(uuid:string){
  */
 
 export type License = {
-  id:string,
+  id:string
   software:string
   license: string
 }
@@ -164,6 +164,36 @@ export async function getLicenseForSoftware(uuid:string){
     }
   }catch(e:any){
     logger(`getLicenseForSoftware: ${e?.message}`,'error')
+    return undefined
+  }
+}
+
+/**
+ * Contributors and mentions counts
+ */
+
+export type ContributorMentionCount = {
+  id: string
+  contributor_cnt: number | null
+  mention_cnt: number | null
+}
+
+export async function getContributorMentionCount(uuid:string){
+  try{
+    // this request is always perfomed from backend
+    // the content is order by license ascending
+    const url = `${process.env.POSTGREST_URL}/count_software_contributors_mentions?id=eq.${uuid}`
+    const resp = await fetch(url,{method:'GET'})
+    if (resp.status===200){
+      const data:ContributorMentionCount[] = await resp.json()
+      return data[0]
+    } else if (resp.status===404){
+      logger(`getContributorMentionCount: 404 [${url}]`,'error')
+      // query not found
+      return undefined
+    }
+  }catch(e:any){
+    logger(`getContributorMentionCount: ${e?.message}`,'error')
     return undefined
   }
 }

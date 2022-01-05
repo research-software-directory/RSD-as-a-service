@@ -2,10 +2,13 @@
 import GitHubIcon from '@mui/icons-material/GitHub'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 
-export default function AboutSourceCode({repository}:{repository: string[]}) {
+export default function AboutSourceCode({repository=[]}:{repository: string[]}) {
   const code = '</>'
 
   function getIcons() {
+    // abort if no info
+    if (repository?.length === 0) return null
+    // return github icon or folder icon for other urls
     return repository.map((item, pos) => {
       if (item.toLowerCase().indexOf('github') > -1) {
         return (
