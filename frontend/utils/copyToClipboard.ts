@@ -15,7 +15,7 @@ export async function copyToClipboard(value:string):Promise<boolean> {
       await navigator.clipboard.writeText(value)
       return true
     }catch(e:any){
-      logger(`useCopyToClipboard: ${e?.message}`)
+      logger(`copyToClipboard: ${e?.message}`)
       return false
     }
   }

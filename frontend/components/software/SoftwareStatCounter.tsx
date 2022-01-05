@@ -1,5 +1,5 @@
 
-export default function SoftwareStatCounter({label,value}:{label:string,value:number}) {
+export default function SoftwareStatCounter({label,value}:{label:string,value:number|null}) {
 
   if (value && label){
     return (
