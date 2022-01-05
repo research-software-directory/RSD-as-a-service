@@ -26,7 +26,7 @@ GROUP BY
 -- COUNT mentions per software
 CREATE VIEW count_software_mentions AS
 SELECT
-	software, count(mention) as mentions_cnt
+	software, count(mention) as mention_cnt
 FROM
 	mention_for_software
 GROUP BY
@@ -36,7 +36,7 @@ GROUP BY
 -- JOIN contributors and mentions counts per software
 CREATE VIEW count_software_contributors_mentions AS
 SELECT
-	software.id, contributor_cnt, mentions_cnt from software
+	software.id, contributor_cnt, mention_cnt from software
 LEFT JOIN
 	count_software_countributors ON software.id=count_software_countributors.software
 LEFT JOIN
