@@ -29,7 +29,9 @@ export default function AboutReadMore({readMoreItems=[]}:{ readMoreItems: string
         <Typography>Read more</Typography>
       </AccordionSummary>
       <AccordionDetails sx={{
-        maxHeight: '25rem',
+        // set max height to avoid large shifts
+        maxHeight: '30rem',
+        //avoid resizing when scrollbar appears
         overflow: 'overlay'
       }}>
         {readMoreItems.map((item, pos) => {
