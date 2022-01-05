@@ -1,7 +1,7 @@
 -- software
 ALTER TABLE software ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON software FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON software FOR SELECT TO web_anon, rsd_user
 	USING (is_published);
 
 CREATE POLICY maintainer_all_rights ON software TO rsd_user
@@ -100,7 +100,7 @@ CREATE POLICY admin_all_rights ON tag_for_software TO rsd_admin
 -- projects
 ALTER TABLE project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON project FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON project FOR SELECT TO web_anon, rsd_user
 	USING (is_published);
 
 CREATE POLICY maintainer_all_rights ON project TO rsd_user
