@@ -1,3 +1,51 @@
+-- maintainer tables
+ALTER TABLE maintainer_for_software ENABLE ROW LEVEL SECURITY;
+
+CREATE FUNCTION software_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
+$$
+BEGIN
+	RETURN QUERY SELECT software FROM maintainer_for_software WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN;
+END
+$$;
+
+CREATE POLICY maintainer_select ON maintainer_for_software FOR SELECT TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON maintainer_for_software FOR DELETE TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON maintainer_for_software FOR INSERT TO rsd_user
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON maintainer_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE maintainer_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE FUNCTION projects_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
+$$
+BEGIN
+	RETURN QUERY SELECT project FROM maintainer_for_project WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN;
+END
+$$;
+
+CREATE POLICY maintainer_select ON maintainer_for_project FOR SELECT TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON maintainer_for_project FOR DELETE TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON maintainer_for_project FOR INSERT TO rsd_user
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON maintainer_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
 -- software
 ALTER TABLE software ENABLE ROW LEVEL SECURITY;
 
@@ -323,54 +371,5 @@ CREATE POLICY maintainer_all_rights ON login_for_account TO rsd_user
 	WITH CHECK (account IN (SELECT id FROM account));
 
 CREATE POLICY admin_all_rights ON login_for_account TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
-
--- maintainer tables
-ALTER TABLE maintainer_for_software ENABLE ROW LEVEL SECURITY;
-
-CREATE FUNCTION software_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
-$$
-BEGIN
-	RETURN QUERY SELECT software FROM maintainer_for_software WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
-	RETURN;
-END
-$$;
-
-CREATE POLICY maintainer_select ON maintainer_for_software FOR SELECT TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()));
-
-CREATE POLICY maintainer_delete ON maintainer_for_software FOR DELETE TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()));
-
-CREATE POLICY maintainer_insert ON maintainer_for_software FOR INSERT TO rsd_user
-	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
-
-CREATE POLICY admin_all_rights ON maintainer_for_software TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
-
-ALTER TABLE maintainer_for_project ENABLE ROW LEVEL SECURITY;
-
-CREATE FUNCTION projects_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
-$$
-BEGIN
-	RETURN QUERY SELECT project FROM maintainer_for_project WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
-	RETURN;
-END
-$$;
-
-CREATE POLICY maintainer_select ON maintainer_for_project FOR SELECT TO rsd_user
-	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
-
-CREATE POLICY maintainer_delete ON maintainer_for_project FOR DELETE TO rsd_user
-	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
-
-CREATE POLICY maintainer_insert ON maintainer_for_project FOR INSERT TO rsd_user
-	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
-
-CREATE POLICY admin_all_rights ON maintainer_for_project TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
