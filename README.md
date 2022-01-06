@@ -34,6 +34,8 @@ To run without frontend and data migration in docker-compose:
 
 1. Run the command `docker-compose up --scale frontend=0 --scale data-migration=0`.
 
+A service for automated testing is also included. It is called `test` and can as such be included with its name or excluded with `--scale test=0`. The tests assume that the database is empty at the start and will delete all content from the database as final tests so they cannot be run in conjunction with the `data-migration` service.
+
 To clear the database (if the database structure has changed for example) before repeating the process:
 
 1. Run the command `docker-compose down --volumes`.
