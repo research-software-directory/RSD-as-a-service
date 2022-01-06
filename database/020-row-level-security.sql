@@ -8,7 +8,7 @@ CREATE POLICY maintainer_all_rights ON software TO rsd_user
 	USING (id IN (SELECT software FROM maintainer_for_software WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')))
 	WITH CHECK (TRUE);
 
-CREATE FUNCTION insert_maintainer_new_software() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION insert_maintainer_new_software() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER as
 $$
 BEGIN
 	IF (SELECT current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
@@ -107,7 +107,7 @@ CREATE POLICY maintainer_all_rights ON project TO rsd_user
 	USING (id IN (SELECT project FROM maintainer_for_project WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')))
 	WITH CHECK (TRUE);
 
-CREATE FUNCTION insert_maintainer_new_project() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION insert_maintainer_new_project() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER as
 $$
 BEGIN
 	IF (SELECT  current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
@@ -354,10 +354,22 @@ CREATE POLICY admin_all_rights ON maintainer_for_software TO rsd_admin
 
 ALTER TABLE maintainer_for_project ENABLE ROW LEVEL SECURITY;
 
---TODO:
-CREATE POLICY maintainer_all_rights ON maintainer_for_project TO rsd_user
-	USING (TRUE)
-	WITH CHECK (TRUE);
+CREATE FUNCTION projects_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
+$$
+BEGIN
+	RETURN QUERY SELECT project FROM maintainer_for_project WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN;
+END
+$$;
+
+CREATE POLICY maintainer_select ON maintainer_for_project FOR SELECT TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON maintainer_for_project FOR DELETE TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON maintainer_for_project FOR INSERT TO rsd_user
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON maintainer_for_project TO rsd_admin
 	USING (TRUE)
