@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		CONFIG.load(new FileReader(args[0]));
 		Javalin app = Javalin.create().start(7000);
-		app.get("/", ctx -> ctx.result("Hello World!"));
+		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
 		app.get("/login", ctx -> {
 			Algorithm signingAlgorithm = Algorithm.HMAC256(CONFIG.getProperty("PGRST_JWT_SECRET"));
@@ -42,24 +43,39 @@ public class Main {
 
 		app.post("/login/surfconext", ctx -> {
 			String code = ctx.formParam("code");
-			String account = new SurfconextLogin(code).account();
-			Algorithm signingAlgorithm = Algorithm.HMAC256(CONFIG.getProperty("PGRST_JWT_SECRET"));
-			String token = JWT.create()
-					.withClaim("role", "rsd_user")
-					.withClaim("account", account)
-					.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
-					.sign(signingAlgorithm);
+			String redirectUrl = CONFIG.getProperty("AUTH_SURFCONEXT_REDIRECT_URL");
+			String account = new SurfconextLogin(code, redirectUrl).account();
+			JwtCreator jwtCreator = new JwtCreator(CONFIG.getProperty("PGRST_JWT_SECRET"));
+			String token = jwtCreator.createUserJwt(account);
+			setJwtCookie(ctx, token);
 			ctx.result(token);
 		});
 
 		app.get("/login/surfconext", ctx -> {
-			ctx.html("<a href=\"https://connect.test.surfconext.nl/oidc/authorize?scope=openid&&response_type=code&redirect_uri=http://localhost:7000/login/surfconext&state=example&nonce=example&response_mode=form_post&client_id=" + CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_ID") + "\">Login with surfconext</a>");
+			String redirectUrl = CONFIG.getProperty("AUTH_SURFCONEXT_REDIRECT_URL");
+			ctx.html("<a href=\"https://connect.test.surfconext.nl/oidc/authorize?scope=openid&&response_type=code&redirect_uri=" + redirectUrl + "&state=example&nonce=example&response_mode=form_post&client_id=" + CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_ID") + "\">Login with surfconext</a>");
+		});
+
+		app.get("/refresh", ctx -> {
+			String tokenToVerify = ctx.cookie("rsd_token");
+			String signingSecret = CONFIG.getProperty("PGRST_JWT_SECRET");
+			JwtVerifier verifier = new JwtVerifier(signingSecret);
+			verifier.verify(tokenToVerify);
+
+			JwtCreator jwtCreator = new JwtCreator(signingSecret);
+			String token = jwtCreator.refreshToken(tokenToVerify);
+			setJwtCookie(ctx, token);
 		});
 
 		app.exception(JWTVerificationException.class, (ex, ctx) -> {
 			ex.printStackTrace();
-			ctx.result("Invalid JWT!");
+			ctx.status(400);
+			ctx.json("{\"Message\": \"invalid JWT\"}");
 		});
+	}
+
+	static void setJwtCookie(Context ctx, String token) {
+		ctx.header("Set-Cookie", "rsd_token=" + token + "; Secure; HttpOnly; Path=/; SameSite=Lax");
 	}
 
 	static String decode(String base64UrlEncoded) {
