@@ -1,8 +1,73 @@
+-- maintainer tables
+ALTER TABLE maintainer_for_software ENABLE ROW LEVEL SECURITY;
+
+CREATE FUNCTION software_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
+$$
+BEGIN
+	RETURN QUERY SELECT software FROM maintainer_for_software WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN;
+END
+$$;
+
+CREATE POLICY maintainer_select ON maintainer_for_software FOR SELECT TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON maintainer_for_software FOR DELETE TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON maintainer_for_software FOR INSERT TO rsd_user
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON maintainer_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE maintainer_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE FUNCTION projects_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
+$$
+BEGIN
+	RETURN QUERY SELECT project FROM maintainer_for_project WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN;
+END
+$$;
+
+CREATE POLICY maintainer_select ON maintainer_for_project FOR SELECT TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON maintainer_for_project FOR DELETE TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON maintainer_for_project FOR INSERT TO rsd_user
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON maintainer_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 -- software
 ALTER TABLE software ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON software FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON software FOR SELECT TO web_anon, rsd_user
 	USING (is_published);
+
+CREATE POLICY maintainer_all_rights ON software TO rsd_user
+	USING (id IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (TRUE);
+
+CREATE FUNCTION insert_maintainer_new_software() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER as
+$$
+BEGIN
+	IF (SELECT current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
+	END IF;
+	INSERT INTO maintainer_for_software VALUES (uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'), NEW.id);
+	RETURN NULL;
+END
+$$;
+
+CREATE TRIGGER insert_maintainer_new_software AFTER INSERT ON software FOR EACH ROW EXECUTE PROCEDURE insert_maintainer_new_software();
 
 CREATE POLICY admin_all_rights ON software TO rsd_admin
 	USING (TRUE)
@@ -12,8 +77,12 @@ CREATE POLICY admin_all_rights ON software TO rsd_admin
 -- software relations
 ALTER TABLE repository_url ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON repository_url FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON repository_url FOR SELECT TO web_anon, rsd_user
 	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON repository_url TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON repository_url TO rsd_admin
 	USING (TRUE)
@@ -22,8 +91,12 @@ CREATE POLICY admin_all_rights ON repository_url TO rsd_admin
 
 ALTER TABLE license_for_software ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON license_for_software FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON license_for_software FOR SELECT TO web_anon, rsd_user
 	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON license_for_software TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON license_for_software TO rsd_admin
 	USING (TRUE)
@@ -32,8 +105,12 @@ CREATE POLICY admin_all_rights ON license_for_software TO rsd_admin
 
 ALTER TABLE contributor ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON contributor FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON contributor FOR SELECT TO web_anon, rsd_user
 	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON contributor TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON contributor TO rsd_admin
 	USING (TRUE)
@@ -42,8 +119,12 @@ CREATE POLICY admin_all_rights ON contributor TO rsd_admin
 
 ALTER TABLE software_for_software ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON software_for_software FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON software_for_software FOR SELECT TO web_anon, rsd_user
 	USING (origin IN (SELECT id FROM software) AND relation IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON software_for_software TO rsd_user
+	USING (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON software_for_software TO rsd_admin
 	USING (TRUE)
@@ -53,8 +134,12 @@ CREATE POLICY admin_all_rights ON software_for_software TO rsd_admin
 -- tags for software
 ALTER TABLE tag_for_software ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON tag_for_software FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON tag_for_software FOR SELECT TO web_anon, rsd_user
 	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON tag_for_software TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON tag_for_software TO rsd_admin
 	USING (TRUE)
@@ -64,8 +149,24 @@ CREATE POLICY admin_all_rights ON tag_for_software TO rsd_admin
 -- projects
 ALTER TABLE project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON project FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON project FOR SELECT TO web_anon, rsd_user
 	USING (is_published);
+
+CREATE POLICY maintainer_all_rights ON project TO rsd_user
+	USING (id IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (TRUE);
+
+CREATE FUNCTION insert_maintainer_new_project() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER as
+$$
+BEGIN
+	IF (SELECT current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
+	END IF;
+	INSERT INTO maintainer_for_project VALUES (uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'), NEW.id);
+	RETURN NULL;
+END
+$$;
+
+CREATE TRIGGER insert_maintainer_new_project AFTER INSERT ON project FOR EACH ROW EXECUTE PROCEDURE insert_maintainer_new_project();
 
 CREATE POLICY admin_all_rights ON project TO rsd_admin
 	USING (TRUE)
@@ -74,8 +175,12 @@ CREATE POLICY admin_all_rights ON project TO rsd_admin
 
 ALTER TABLE image_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON image_for_project FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON image_for_project FOR SELECT TO web_anon, rsd_user
 	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY maintainer_all_rights ON image_for_project TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON image_for_project TO rsd_admin
 	USING (TRUE)
@@ -85,8 +190,12 @@ CREATE POLICY admin_all_rights ON image_for_project TO rsd_admin
 -- project relations
 ALTER TABLE software_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON software_for_project FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON software_for_project FOR SELECT TO web_anon, rsd_user
 	USING (project IN (SELECT id FROM project) AND software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON software_for_project TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()) AND project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON software_for_project TO rsd_admin
 	USING (TRUE)
@@ -95,8 +204,12 @@ CREATE POLICY admin_all_rights ON software_for_project TO rsd_admin
 
 ALTER TABLE project_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON project_for_project FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON project_for_project FOR SELECT TO web_anon, rsd_user
 	USING (origin IN (SELECT id FROM project) AND relation IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON project_for_project TO rsd_user
+	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) AND relation IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (origin IN (SELECT * FROM projects_of_current_maintainer()) AND relation IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON project_for_project TO rsd_admin
 	USING (TRUE)
@@ -105,8 +218,12 @@ CREATE POLICY admin_all_rights ON project_for_project TO rsd_admin
 
 ALTER TABLE team_member ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON team_member FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON team_member FOR SELECT TO web_anon, rsd_user
 	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY maintainer_all_rights ON team_member TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON team_member TO rsd_admin
 	USING (TRUE)
@@ -116,8 +233,12 @@ CREATE POLICY admin_all_rights ON team_member TO rsd_admin
 -- topics and tags for projects
 ALTER TABLE topic_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON topic_for_project FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON topic_for_project FOR SELECT TO web_anon, rsd_user
 	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY maintainer_all_rights ON topic_for_project TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON topic_for_project TO rsd_admin
 	USING (TRUE)
@@ -126,8 +247,12 @@ CREATE POLICY admin_all_rights ON topic_for_project TO rsd_admin
 
 ALTER TABLE tag_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON tag_for_project FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON tag_for_project FOR SELECT TO web_anon, rsd_user
 	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY maintainer_all_rights ON tag_for_project TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON tag_for_project TO rsd_admin
 	USING (TRUE)
@@ -139,8 +264,12 @@ CREATE POLICY admin_all_rights ON tag_for_project TO rsd_admin
 -- should a mention only be visible if you can see at least one software or project for which it relates?
 ALTER TABLE mention ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON mention FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON mention FOR SELECT TO web_anon, rsd_user
 	USING (id IN (SELECT mention FROM mention_for_software) OR id IN (SELECT mention FROM output_for_project) OR id IN (SELECT mention FROM impact_for_project));
+
+CREATE POLICY maintainer_all_rights ON mention TO rsd_user
+	USING (id IN (SELECT mention FROM mention_for_software WHERE software IN (SELECT * FROM software_of_current_maintainer())) OR id IN (SELECT mention FROM output_for_project WHERE project IN (SELECT * FROM projects_of_current_maintainer())) OR id IN (SELECT mention FROM impact_for_project WHERE project IN (SELECT * FROM projects_of_current_maintainer())))
+	WITH CHECK (id IN (SELECT mention FROM mention_for_software WHERE software IN (SELECT * FROM software_of_current_maintainer())) OR id IN (SELECT mention FROM output_for_project WHERE project IN (SELECT * FROM projects_of_current_maintainer())) OR id IN (SELECT mention FROM impact_for_project WHERE project IN (SELECT * FROM projects_of_current_maintainer())));
 
 CREATE POLICY admin_all_rights ON mention TO rsd_admin
 	USING (TRUE)
@@ -149,8 +278,12 @@ CREATE POLICY admin_all_rights ON mention TO rsd_admin
 
 ALTER TABLE mention_for_software ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON mention_for_software FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON mention_for_software FOR SELECT TO web_anon, rsd_user
 	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON mention_for_software TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON mention_for_software TO rsd_admin
 	USING (TRUE)
@@ -159,8 +292,12 @@ CREATE POLICY admin_all_rights ON mention_for_software TO rsd_admin
 
 ALTER TABLE output_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON output_for_project FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON output_for_project FOR SELECT TO web_anon, rsd_user
 	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY maintainer_all_rights ON output_for_project TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON output_for_project TO rsd_admin
 	USING (TRUE)
@@ -169,8 +306,12 @@ CREATE POLICY admin_all_rights ON output_for_project TO rsd_admin
 
 ALTER TABLE impact_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON impact_for_project FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON impact_for_project FOR SELECT TO web_anon, rsd_user
 	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY maintainer_all_rights ON impact_for_project TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON impact_for_project TO rsd_admin
 	USING (TRUE)
@@ -180,8 +321,12 @@ CREATE POLICY admin_all_rights ON impact_for_project TO rsd_admin
 -- releases
 ALTER TABLE release ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON release FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON release FOR SELECT TO web_anon, rsd_user
 	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON release TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON release TO rsd_admin
 	USING (TRUE)
@@ -190,8 +335,12 @@ CREATE POLICY admin_all_rights ON release TO rsd_admin
 
 ALTER TABLE release_content ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON release_content FOR SELECT TO web_anon
+CREATE POLICY anyone_can_read ON release_content FOR SELECT TO web_anon, rsd_user
 	USING (release_id IN (SELECT id FROM release));
+
+CREATE POLICY maintainer_all_rights ON release_content TO rsd_user
+	USING (release_id IN (SELECT id FROM release WHERE software IN (SELECT * FROM software_of_current_maintainer())))
+	WITH CHECK (release_id IN (SELECT id FROM release WHERE software IN (SELECT * FROM software_of_current_maintainer())));
 
 CREATE POLICY admin_all_rights ON release_content TO rsd_admin
 	USING (TRUE)
@@ -201,8 +350,9 @@ CREATE POLICY admin_all_rights ON release_content TO rsd_admin
 -- accounts
 ALTER TABLE account ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anonymous_cannot_read ON account FOR SELECT TO web_anon
-	USING (FALSE);
+CREATE POLICY maintainer_all_rights ON account TO rsd_user
+	USING (id = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'))
+	WITH CHECK (id = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
 
 CREATE POLICY admin_all_rights ON account TO rsd_admin
 	USING (TRUE)
@@ -211,8 +361,9 @@ CREATE POLICY admin_all_rights ON account TO rsd_admin
 
 ALTER TABLE login_for_account ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anonymous_cannot_read ON login_for_account FOR SELECT TO web_anon
-	USING (FALSE);
+CREATE POLICY maintainer_all_rights ON login_for_account TO rsd_user
+	USING (account IN (SELECT id FROM account))
+	WITH CHECK (account IN (SELECT id FROM account));
 
 CREATE POLICY admin_all_rights ON login_for_account TO rsd_admin
 	USING (TRUE)

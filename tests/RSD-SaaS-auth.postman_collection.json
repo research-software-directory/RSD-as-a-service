@@ -1,0 +1,1219 @@
+{
+	"info": {
+		"_postman_id": "29b3a865-035f-4662-9d14-8077de7484c8",
+		"name": "RSD-SaaS-auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "post account admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.variables.set(\"account_id\", pm.response.json()[0].id);",
+							"pm.variables.set(\"jwt_user\", utils.jwt(\"rsd_user\", pm.variables.get(\"account_id\")));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/account",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post software anonymous",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"\tpm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Error message permission denied\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.message).to.eql(\"permission denied for table software\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post software admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Check content new software\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.eql(4);",
+							"\tpm.variables.set(\"id_unpublished\", jsonData.filter(sw => !sw.is_published)[0].id);",
+							"\tpm.variables.set(\"id_published\", jsonData.filter(sw => sw.is_published)[0].id);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n\t\t\"slug\": \"test-slug1\",\n\t\t\"brand_name\": \"Test software 1\",\n\t\t\"bullets\": \"\",\n\t\t\"get_started_url\": \"\",\n\t\t\"is_featured\": false,\n\t\t\"is_published\": true,\n\t\t\"read_more\": null,\n\t\t\"short_statement\": \"Test software for testing\"\n\t},\n\t{\n\t\t\"slug\": \"test-slug2\",\n\t\t\"brand_name\": \"Test software 2\",\n\t\t\"bullets\": \"\",\n\t\t\"get_started_url\": \"\",\n\t\t\"is_featured\": false,\n\t\t\"is_published\": true,\n\t\t\"read_more\": null,\n\t\t\"short_statement\": \"Test software for testing\"\n\t},\n\t{\n\t\t\"slug\": \"test-slug3\",\n\t\t\"brand_name\": \"Test software 3\",\n\t\t\"bullets\": \"\",\n\t\t\"get_started_url\": \"\",\n\t\t\"is_featured\": false,\n\t\t\"is_published\": true,\n\t\t\"read_more\": null,\n\t\t\"short_statement\": \"Test software for testing\"\n\t},\n\t{\n\t\t\"slug\": \"test-slug-unpublished\",\n\t\t\"brand_name\": \"Test software unpublished\",\n\t\t\"bullets\": \"\",\n\t\t\"get_started_url\": \"\",\n\t\t\"is_featured\": false,\n\t\t\"is_published\": false,\n\t\t\"read_more\": null,\n\t\t\"short_statement\": \"Test software for testing\"\n\t}\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post software user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.remove('Prefer');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"slug\": \"test-slug-user\",\n\t\"brand_name\": \"Test software user\",\n\t\"bullets\": \"\",\n\t\"get_started_url\": \"\",\n\t\"is_featured\": false,\n\t\"is_published\": true,\n\t\"read_more\": null,\n\t\"short_statement\": \"Test software for testing\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get software anonymous",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"No unpublished software visible\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.filter(sw => !sw.is_published).length).to.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get software user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Multiple software entries visible\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.be.above(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get software admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Some unpublished software visible\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.filter(sw => !sw.is_published).length).to.eql(1);",
+							"\tpm.expect(jsonData.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post repo url anonymous",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"\tpm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Error message permission denied\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.message).to.eql(\"permission denied for table repository_url\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"software\" : \"{{id_published}}\",\n\t\"url\" : \"https://github.com/\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/repository_url",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"repository_url"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post repo url admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Check content new repo urls\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.eql(2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n\t\t\"software\" : \"{{id_published}}\",\n\t\t\"url\" : \"https://github.com/\"\n\t},\n\t{\n\t\t\"software\" : \"{{id_unpublished}}\",\n\t\t\"url\" : \"https://github.com/\"\n\t}\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/repository_url",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"repository_url"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get repo url anonymous",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"No unpublished repo url visible\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.filter(sw => !sw.is_published).length).to.eql(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/repository_url",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"repository_url"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get repo url admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"All repo url visible\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.filter(sw => !sw.is_published).length).to.eql(2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/repository_url",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"repository_url"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post software related admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Check size response\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.eql(2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n\t\t\"origin\" : \"{{id_published}}\",\n\t\t\"relation\" : \"{{id_unpublished}}\"\n\t},\n\t{\n\t\t\"origin\" : \"{{id_unpublished}}\",\n\t\t\"relation\" : \"{{id_published}}\"\n\t}\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/software_for_software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software_for_software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get software related admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check content size\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.eql(2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/software_for_software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software_for_software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get software related anonymous",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check no content\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/software_for_software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software_for_software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post project user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.request.headers.remove('Prefer');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"slug\": \"project-user-1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/project",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get project maintainer user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Project has 1 maintainer\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.eql(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/maintainer_for_project",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"maintainer_for_project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete project maintainers admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check size deleted project maintainers\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/maintainer_for_project",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"maintainer_for_project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete project admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check size deleted projects\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/project",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete software related admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check content size\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.eql(2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/software_for_software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software_for_software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete repo url anonymous",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"\tpm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/repository_url",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"repository_url"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete repo url admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check content deleted repo url\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.eql(2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/repository_url",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"repository_url"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete software anonymous",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"\tpm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Error message permission denied\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.message).to.eql(\"permission denied for table software\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete software maintainers admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check size deleted software maintainers\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/maintainer_for_software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"maintainer_for_software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete software admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check size deleted software\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete all accounts admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check size deleted accounts\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/account",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"account"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_admin}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.request.headers.add({key: 'Prefer', value: 'return=representation'});",
+					"",
+					"// https://www.postman.com/postman/workspace/postman-team-collections/request/4630964-df7c0fff-babc-420d-ad45-e9e731d5c50f",
+					"// JWT generation script adapted from",
+					"// https://gist.github.com/corbanb/db03150abbe899285d6a86cc480f674d",
+					"",
+					"",
+					"function jwt(role, account) {",
+					"\tvar jwtSecret = pm.globals.get('jwt_secret')",
+					"",
+					"\t// Set headers for JWT",
+					"\tvar header = {",
+					"\t\t'typ': 'JWT',",
+					"\t\t'alg': 'HS256'",
+					"\t};",
+					"",
+					"\t// Prepare timestamp in seconds",
+					"\tvar currentTimestamp = Math.floor(Date.now() / 1000)",
+					"",
+					"\tvar data = {",
+					"\t\t'exp': currentTimestamp + 30, // expiry time is 30 seconds from time of creation",
+					"\t\t'role': role,",
+					"\t\t'account': account",
+					"\t}",
+					"",
+					"",
+					"\tfunction base64url(source) {",
+					"\t\t// Encode in classical base64",
+					"\t\tencodedSource = CryptoJS.enc.Base64.stringify(source)",
+					"\t\t",
+					"\t\t// Remove padding equal characters",
+					"\t\tencodedSource = encodedSource.replace(/=+$/, '')",
+					"\t\t",
+					"\t\t// Replace characters according to base64url specifications",
+					"\t\tencodedSource = encodedSource.replace(/\\+/g, '-')",
+					"\t\tencodedSource = encodedSource.replace(/\\//g, '_')",
+					"\t\t",
+					"\t\treturn encodedSource",
+					"\t}",
+					"",
+					"\t// encode header",
+					"\tvar stringifiedHeader = CryptoJS.enc.Utf8.parse(JSON.stringify(header))",
+					"\tvar encodedHeader = base64url(stringifiedHeader)",
+					"",
+					"\t// encode data",
+					"\tvar stringifiedData = CryptoJS.enc.Utf8.parse(JSON.stringify(data))",
+					"\tvar encodedData = base64url(stringifiedData)",
+					"",
+					"\t// build token",
+					"\tvar token = `${encodedHeader}.${encodedData}`",
+					"",
+					"\t// sign token",
+					"\tvar signature = CryptoJS.HmacSHA256(token, jwtSecret)",
+					"\tsignature = base64url(signature)",
+					"\tvar signedToken = `${token}.${signature}`",
+					"",
+					"\treturn signedToken",
+					"}",
+					"",
+					"const rsd_admin = jwt(\"rsd_admin\");",
+					"pm.variables.set(\"jwt_admin\", rsd_admin);",
+					"",
+					"utils = {",
+					"\tjwt: (role, account) => jwt(role, account)",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

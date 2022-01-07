@@ -75,6 +75,21 @@ services:
     networks:
       - net
 
+  test:
+    container_name: test
+    build:
+      context: .
+      # dockerfile to use for build
+      dockerfile: ./tests/dockerfile
+    env_file:
+      # configuration
+      - ./frontend/.env.production.local
+    depends_on:
+      - "database"
+      - "backend"
+    networks:
+      - net
+
 # define name for docker network
 # it should have name: rsd-as-a-service_net
 networks:
