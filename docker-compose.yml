@@ -87,7 +87,8 @@ services:
     depends_on:
       - "database"
       - "backend"
-    network_mode: "host"
+    networks:
+      - net
 
 # define name for docker network
 # it should have name: rsd-as-a-service_net

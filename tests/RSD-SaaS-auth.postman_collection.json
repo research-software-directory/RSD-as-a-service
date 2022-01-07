@@ -36,12 +36,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3500/account",
-					"protocol": "http",
+					"raw": "{{backend_url}}/account",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"account"
 					]
@@ -85,12 +83,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3500/software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software"
 					]
@@ -138,12 +134,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3500/software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software"
 					]
@@ -201,12 +195,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3500/software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software"
 					]
@@ -241,12 +233,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software"
 					]
@@ -288,12 +278,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software"
 					]
@@ -326,12 +314,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software"
 					]
@@ -387,12 +373,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3500/repository_url",
-					"protocol": "http",
+					"raw": "{{backend_url}}/repository_url",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"repository_url"
 					]
@@ -445,12 +429,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3500/repository_url",
-					"protocol": "http",
+					"raw": "{{backend_url}}/repository_url",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"repository_url"
 					]
@@ -485,12 +467,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/repository_url",
-					"protocol": "http",
+					"raw": "{{backend_url}}/repository_url",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"repository_url"
 					]
@@ -522,12 +502,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/repository_url",
-					"protocol": "http",
+					"raw": "{{backend_url}}/repository_url",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"repository_url"
 					]
@@ -580,12 +558,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3500/software_for_software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software_for_software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software_for_software"
 					]
@@ -629,12 +605,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/software_for_software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software_for_software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software_for_software"
 					]
@@ -681,12 +655,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/software_for_software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software_for_software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software_for_software"
 					]
@@ -744,12 +716,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3500/project",
-					"protocol": "http",
+					"raw": "{{backend_url}}/project",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"project"
 					]
@@ -803,12 +773,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/maintainer_for_project",
-					"protocol": "http",
+					"raw": "{{backend_url}}/maintainer_for_project",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"maintainer_for_project"
 					]
@@ -843,12 +811,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/maintainer_for_project",
-					"protocol": "http",
+					"raw": "{{backend_url}}/maintainer_for_project",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"maintainer_for_project"
 					]
@@ -883,12 +849,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/project",
-					"protocol": "http",
+					"raw": "{{backend_url}}/project",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"project"
 					]
@@ -923,12 +887,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/software_for_software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software_for_software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software_for_software"
 					]
@@ -958,12 +920,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/repository_url",
-					"protocol": "http",
+					"raw": "{{backend_url}}/repository_url",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"repository_url"
 					]
@@ -998,12 +958,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/repository_url",
-					"protocol": "http",
+					"raw": "{{backend_url}}/repository_url",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"repository_url"
 					]
@@ -1038,12 +996,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software"
 					]
@@ -1078,12 +1034,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/maintainer_for_software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/maintainer_for_software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"maintainer_for_software"
 					]
@@ -1118,12 +1072,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/software",
-					"protocol": "http",
+					"raw": "{{backend_url}}/software",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"software"
 					]
@@ -1158,12 +1110,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3500/account",
-					"protocol": "http",
+					"raw": "{{backend_url}}/account",
 					"host": [
-						"localhost"
+						"{{backend_url}}"
 					],
-					"port": "3500",
 					"path": [
 						"account"
 					]
