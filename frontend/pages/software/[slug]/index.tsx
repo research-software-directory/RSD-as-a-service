@@ -1,62 +1,84 @@
+import {useState} from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
-import {useRouter} from 'next/router'
-import {useSession} from 'next-auth/react'
 
-import DefaultLayout from '../../../components/layout/DefaultLayout'
-import PageTitle from '../../../components/layout/PageTitle'
-import IconButton from '@mui/material/IconButton'
-import EditIcon from '@mui/icons-material/Edit'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import AppHeader from '../../../components/layout/AppHeader'
+import AppFooter from '../../../components/layout/AppFooter'
+import PageContainer from '../../../components/layout/PageContainer'
+import ContentInTheMiddle from '../../../components/layout/ContentInTheMiddle'
+import SoftwareIntroSection from '../../../components/software/SoftwareIntroSection'
+import GetStartedSection from '../../../components/software/GetStartedSection'
+import CitationSection from '../../../components/software/CitationSection'
+import PageSnackbar from '../../../components/snackbar/PageSnackbar'
+import PageSnackbarContext, {snackbarDefaults} from '../../../components/snackbar/PageSnackbarContext'
+import AboutSection from '../../../components/software/AboutSection'
 
-import {getSoftwareItem} from '../../../utils/getSoftware'
+import {
+  getSoftwareItem,
+  getCitationsForSoftware,
+  getTagsForSoftware,
+  getLicenseForSoftware,
+  getContributorMentionCount,
+  Tag, License, ContributorMentionCount
+} from '../../../utils/getSoftware'
+import logger from '../../../utils/logger'
 import {SoftwareItem} from '../../../types/SoftwareItem'
+import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 
-export default function SoftwareIndexPage({software, slug}:{software:SoftwareItem, slug:string}) {
-  const router = useRouter()
-  const {status} = useSession()
-  // console.log("useSession.status...", status)
+export default function SoftwareIndexPage({software, citationInfo, tagsInfo, licenseInfo, softwareIntroCounts}:
+  {
+    slug: string, software: SoftwareItem, citationInfo: SoftwareCitationInfo, tagsInfo: Tag[], licenseInfo: License[],
+    softwareIntroCounts: ContributorMentionCount
+  }) {
+  const [options, setSnackbar] = useState(snackbarDefaults)
+
+  if (!software?.brand_name){
+    return (
+      <ContentInTheMiddle>
+        <h2>No content</h2>
+      </ContentInTheMiddle>
+    )
+  }
+
   return (
-    <DefaultLayout>
+    <>
       <Head>
         <title>{software?.brand_name} | RSD</title>
       </Head>
-      <PageTitle title={software?.brand_name}>
-        <div>
-          <Link href={'/software'} passHref>
-            {/* allow back button without javascript */}
-            <a>
-              <IconButton
-                title="Go back">
-                <ArrowBackIcon />
-              </IconButton>
-            </a>
-          </Link>
-          <IconButton
-            title="Edit"
-            onClick={()=>router.push(`/software/${slug}/edit`)}
-            disabled={status!=='authenticated'}
-          >
-            <EditIcon />
-          </IconButton>
-        </div>
-      </PageTitle>
-      <section>
-        {/* TODO! replace this with real components */}
-        <h2 className="my-4">{software.short_statement}</h2>
-        <ul>
-          { software.bullets.split('*').map((item, pos)=>{
-            if (pos===0) return null
-            return (
-              <li key={item}>{item}</li>
-            )
-          })}
-        </ul>
-      </section>
-      {/* <pre>
-        {JSON.stringify(software,null,2)}
-      </pre> */}
-    </DefaultLayout>
+      <PageSnackbarContext.Provider value={{options,setSnackbar}}>
+        <AppHeader />
+
+        <PageContainer>
+          <SoftwareIntroSection
+            brand_name={software.brand_name}
+            short_statement={software.short_statement}
+            counts={softwareIntroCounts}
+          />
+        </PageContainer>
+
+        <GetStartedSection
+          get_started_url={software.get_started_url}
+          repository_url={software.repository_url}
+        />
+        {
+          citationInfo ?
+            <CitationSection
+              citationInfo={citationInfo}
+              concept_doi={software.concept_doi}
+            />
+            :null
+        }
+        <AboutSection
+          brand_name={software.brand_name}
+          bullets={software.bullets}
+          read_more={software.read_more}
+          tags={tagsInfo}
+          licenses={licenseInfo}
+          repositories={software.repository_url}
+        />
+        <AppFooter />
+      </PageSnackbarContext.Provider>
+      <PageSnackbar options={options} setOptions={setSnackbar} />
+    </>
   )
 }
 
@@ -65,25 +87,36 @@ export default function SoftwareIndexPage({software, slug}:{software:SoftwareIte
 export async function getServerSideProps(context:any) {
   try{
     const {params} = context
-    // console.log("getServerSideProps...params...", params)
+    // console.log('getServerSideProps...params...', params)
     const software = await getSoftwareItem(params?.slug)
-    if (typeof software == 'undefined' ||
-    software?.length === 0){
-    // returning this value
-    // triggers 404 page on frontend
+    // console.log('getServerSideProps...software...', software)
+    if (typeof software == 'undefined'){
+      // returning notFound triggers 404 page
       return {
         notFound: true,
       }
     }
+
+    // get info about software
+    const citationInfo = await getCitationsForSoftware(software.id)
+    const tagsInfo = await getTagsForSoftware(software.id)
+    const licenseInfo = await getLicenseForSoftware(software.id)
+    const softwareIntroCounts = await getContributorMentionCount(software.id)
+
+
     return {
     // will be passed to the page component as props
     // see params in SoftwareIndexPage
       props: {
-        software: software[0],
-        slug: params?.slug
-      },
+        software,
+        citationInfo,
+        tagsInfo,
+        licenseInfo,
+        softwareIntroCounts
+      }
     }
-  }catch(e){
+  }catch(e:any){
+    logger(`SoftwareIndexPage.getServerSideProps: ${e.message}`,'error')
     return {
       notFound: true,
     }

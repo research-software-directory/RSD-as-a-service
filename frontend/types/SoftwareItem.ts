@@ -1,115 +1,41 @@
-// based on one record taken from legacy RSD
-const softwareItem={
-  'primaryKey': {
-    'id': '3d-e-chem-knime-kripodb',
-    'collection': 'software'
-  },
-  'createdAt': '2017-11-14T13:37:17Z',
-  'updatedAt': '2019-01-31T08:28:20Z',
-  'brandName': 'KNIME node for Kripo',
-  'bullets': '* For cheminformaticans who want to do structure-based protein binding site comparison and bioisosteric replacement for ligand design\n* It makes the Kripo Python library available in the KNIME workflow platform as workflow nodes.\n* Kripo encodes the interactions of protein and bound ligand also known as a pharmacophore into a fingerprint, the fingerprints can be compared to each other to find similar pharmacophores\n* The Kripo software is open source while most other similar software is commercial or requires registration',
-  'conceptDOI': '10.5281/zenodo.597262',
-  'contributors': [
-    {
-      'foreignKey': {
-        'collection': 'person',
-        'id': 's.verhoeven'
-      },
-      'isContactPerson': true,
-      'affiliations': [
-        {
-          'foreignKey': {
-            'collection': 'organization',
-            'id': 'nlesc'
-          }
-        }
-      ]
-    }
-  ],
-  'getStartedURL': 'https://www.knime.com/3d-e-chem-nodes-for-knime',
-  'repositoryURLs': {
-    'github': [
-      'https://github.com/3D-e-Chem/knime-kripodb'
-    ]
-  },
-  'isFeatured': false,
-  'isPublished': true,
-  'license': [
-    'GPL-3.0'
-  ],
-  'programmingLanguage': [
-    'Java',
-    'Python'
-  ],
-  'readMore': null,
-  'shortStatement': 'A node for the KNIME workflow systems that allows you to compare different binding sites in proteins with each other.',
-  'slug': 'knime-kripodb',
-  'tags': [
-    'Workflow technologies'
-  ],
-  'testimonials': [],
-  'related': {
-    'software': [],
-    'mentions': [
-      {
-        'foreignKey': {
-          'id': 'BBEY84IC',
-          'collection': 'mention'
-        }
-      },
-      {
-        'foreignKey': {
-          'id': 'SJRUXGD3',
-          'collection': 'mention'
-        }
-      }
-    ],
-    'projects': [
-      {
-        'foreignKey': {
-          'id': '1091',
-          'collection': 'project'
-        }
-      }
-    ],
-    'organizations': [
-      {
-        'foreignKey': {
-          'id': 'nlesc',
-          'collection': 'organization'
-        }
-      },
-      {
-        'foreignKey': {
-          'id': 'vua',
-          'collection': 'organization'
-        }
-      },
-      {
-        'foreignKey': {
-          'id': 'radboud.university.nijmegen',
-          'collection': 'organization'
-        }
-      }
-    ]
-  },
-  'createdBy': 'Unknown',
-  'updatedBy': 'sverhoeven'
+// based on one record
+// http://localhost:3500/software?select=*,repository_url!left(url)&slug=eq.ggir
+// const rsdSoftwareItem = {
+//   'id': 'c7ef905a-94db-49fb-8980-4dba098ca9f7',
+//   'slug': 'ggir',
+//   'brand_name': 'GGIR',
+//   'bullets': '* GGIR is an R-package to process and analysis multi-day data collected with wearable raw data accelerometers for physical activity and sleep research.\n* GGIR uses this information to describe the data per day of measurement or per measurement, including estimates of physical activity, inactivity, and sleep. As part of the pipeline GGIR performs automatic signal calibration, detection of sustained abnormally high values, detection of sensor non-wear and calculation of average magnitude acceleration based on a variety of metrics.\n* GGIR is the only open source licensed software that provides a full pipeline for both physical activity and sleep analyses, with a high freedom for the user to configure the analyses to their needs.\n* The package has been used for domain science in 70+ publications, and is supported by 8 methodological publications.',
+//   'concept_doi': '10.5281/zenodo.1051064',
+//   'get_started_url': 'https://cran.r-project.org/web/packages/GGIR/vignettes/GGIR.html',
+//   'is_featured': true,
+//   'is_published': true,
+//   'read_more': 'The package has been developed and tested for binary data from GENEActiv and GENEA devices, .csv-export data from Actigraph devices, and .cwa and .wav-format data from Axivity. These devices are currently widely used in research on human daily physical activity.\n\nA list of publications using GGIR can be found here: https://github.com/wadpac/GGIR/wiki/Publication-list\n\nThe package vignette which gives a general introduction can be found here: https://cran.r-project.org/web/packages/GGIR/vignettes/GGIR.html.\n',
+//   'short_statement': 'Converts raw data from wearables into insightful reports for researchers investigating human daily physical activity and sleep.',
+//   'created_at': '2021-12-21T11:52:06.041581',
+//   'updated_at': '2021-12-21T11:52:06.041581',
+//   'repository_url': [
+//     {
+//       'url': 'https://github.com/wadpac/GGIR'
+//     }
+//   ]
+// }
+
+export type RepositoryUrl = {
+  url:string
 }
 
-const rsdSoftwareItem = {
-  'id': 'b2d2b41d-a387-4a2f-ae4b-8bda13f323e7',
-  'slug': '3d-e-chem-knime-pharmacophore',
-  'brand_name': 'KNIME Pharmacophore',
-  'bullets': '* For cheminformations who are working with pharmacphores in KNIME workflows.\n* Adds pharmacophore data type to KNIME\n* Adds nodes to read, write and align pharmacophores\n',
-  'get_started_url': 'https://github.com/3D-e-Chem/knime-pharmacophore',
-  'is_featured': false,
-  'is_published': true,
-  'read_more': 'A pharmacophore is an abstract description of molecular features that are necessary for molecular recognition of a ligand by a biological macromolecule. This plugin for the KNIME workflow system adds the Pharmacophore (Phar) data type to KNIME, and adds nodes to read, write, and manipulate pharmacophores inside KNIME. It includes the [KNIME Silicos-it](https://www.research-software.nl/software/3d-e-chem-knime-silicos-it), [Kripo pharmacophore retrieval](https://www.research-software.nl/software/3d-e-chem-knime-kripodb) and [molviewer pharmacophore viewer](https://www.research-software.nl/software/knime-molviewer) nodes. \n\n\n',
-  'short_statement': 'A plugin for the KNIME workflow system that adds a Pharmacophore data type and nodes to read, write, and align them.',
-  'created_at': '2021-12-09T15:25:13.254331',
-  'updated_at': '2021-12-09T15:25:13.254331'
+export type SoftwareItem = {
+  id: string,
+  slug: string,
+  brand_name: string,
+  bullets: string,
+  concept_doi: string,
+  get_started_url: string,
+  is_featured: boolean,
+  is_published: boolean,
+  read_more: string,
+  short_statement: string,
+  created_at: string,
+  updated_at: string,
+  repository_url: RepositoryUrl[]
 }
-
-
-export type SoftwareItem = typeof rsdSoftwareItem

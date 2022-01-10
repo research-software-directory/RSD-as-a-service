@@ -3,19 +3,18 @@
 @tailwind utilities;
 
 /**
-  Resize screen on smartphone using rem and font size
+  Default values
 **/
-/* @media screen and (max-width: 480px) {
-  html{
-    font-size: 95%;
-  }
-} */
+
+body{
+  font-size: 1rem;
+  font-weight: 300;
+}
 
 #__next {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-  font-weight: 300;
 }
 
 /* ---------------------------------

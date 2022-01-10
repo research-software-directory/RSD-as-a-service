@@ -18,6 +18,7 @@ const StyledLink = styled('a')(({theme})=>({
 
 const StyledLabel = styled('div')(({})=>({
   minWidth: '5rem',
+  padding: '0rem 0.5rem',
   textAlign: 'center'
 }))
 

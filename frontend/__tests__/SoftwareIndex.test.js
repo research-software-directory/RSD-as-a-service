@@ -11,7 +11,7 @@ global.fetch=jest.fn(()=>({
     // mock getting Content-Range from the header
     get:()=>'0-11/200'
   },
-  statusText:"OK",
+  statusText:'OK',
   json: jest.fn(()=>Promise.resolve(mockedResponse))
 }))
 
@@ -41,16 +41,16 @@ describe('pages/software/index.tsx', () => {
         tags:[],
         // user session
         session:{
-          expires: "test",
-          user: {name:"Test user"}
+          expires: 'test',
+          user: {name:'Test user'}
         }
       }
     ))
-    const heading = await screen.findByRole("heading",{
-      name: "Software"
+    const heading = await screen.findByRole('heading',{
+      name: 'Software'
     })
     expect(heading).toBeInTheDocument()
-    expect(heading.innerHTML).toEqual("Software")
+    expect(heading.innerHTML).toEqual('Software')
   })
   it('renders software card title',async()=>{
     render(WrappedComponentWithProps(
@@ -62,8 +62,8 @@ describe('pages/software/index.tsx', () => {
         tags:[],
         // user session
         session:{
-          expires: "test",
-          user: {name:"Test user"}
+          expires: 'test',
+          user: {name:'Test user'}
         }
       }
     ))

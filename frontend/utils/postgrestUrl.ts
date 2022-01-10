@@ -45,7 +45,7 @@ export function softwareUrl(props:PostgrestParams){
   }
 
   // add limit and offset
-  url+=`&limit=${limit}&offset=${offset}`
+  url+=`&limit=${limit || 12}&offset=${offset || 0}`
 
   return url
 }
@@ -59,7 +59,7 @@ type QueryParams={
 }
 
 export function ssrSoftwareUrl(params:QueryParams){
-  const {search,filter,rows,page, query} = params
+  const {search,filter,rows,page,query} = params
   let url='/software?'
   if (search){
     url+=`search=${encodeURIComponent(search)}`

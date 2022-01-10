@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import router from 'next/router'
 import {SessionProvider} from 'next-auth/react'
 import Head from 'next/head'
@@ -34,15 +34,12 @@ export default function RsdApp(props:MuiAppProps) {
   // console .log("session...", JSON.stringify(session))
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
-      // console.log("routeChangeStart...")
       nprogress.start()
     })
     router.events.on('routeChangeComplete', ()=>{
-      // console.log("routeChangeComplete...")
       nprogress.done()
     })
     router.events.on('routeChangeError', ()=>{
-      // console.log("routeChangeError...")
       nprogress.done()
     })
   },[])
