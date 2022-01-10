@@ -11,6 +11,8 @@ import {menuItems} from '../../config/menuItems'
 import {userMenuItems} from '../../config/userMenuItems'
 import UserMenu from './UserMenu'
 
+import {getRedirectUrl} from '../../utils/surfConext'
+
 export default function AppHeader(){
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
@@ -22,7 +24,14 @@ export default function AppHeader(){
       const paths = window.location.pathname.split('/')
       if (paths.length > 0) setActivePath(`/${paths[1]}`)
     }
-  },[])
+  }, [])
+
+  async function redirectToSurf(){
+    const url = await getRedirectUrl()
+    if (url){
+      window.location.href = url
+    }
+  }
 
   function getMenuItems(){
     return menuItems.map(item=>{
@@ -54,14 +63,15 @@ export default function AppHeader(){
     }
 
     return (
-      <Link href="/login" passHref>
+      // <Link href="/login" passHref>
         <Button
           variant="text"
+          onClick={redirectToSurf}
         >
           <LoginIcon />
           <span className="ml-4">Sign In</span>
         </Button>
-      </Link>
+      // </Link>
     )
   }
 

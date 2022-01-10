@@ -7,7 +7,6 @@ import {useAuth, defaultSession, Session} from '../auth'
 export default function Logout({session}:{session:Session}) {
   const {setSession} = useAuth()
   useEffect(() => {
-    debugger
     setSession(session)
   },[session,setSession])
   return (
