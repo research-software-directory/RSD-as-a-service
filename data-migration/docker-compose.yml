@@ -1,0 +1,12 @@
+version: "3.0"
+
+services:
+  data-migration:
+    container_name: data-migration
+    build:
+      context: ../
+      dockerfile: ./data-migration/dockerfile
+    image: rsd/data-migration:0.0.2
+    environment:
+      PROPERTIES: "/usr/mymaven/.env.production.local"
+    network_mode: "host"
