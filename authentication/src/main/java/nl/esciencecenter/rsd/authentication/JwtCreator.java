@@ -10,7 +10,8 @@ import java.util.Map;
 
 public class JwtCreator {
 
-	static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
+	// static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
+	static final long ONE_HOUR_IN_MILLISECONDS = 360_000L; // 6 * 60 * 1000
 	final String SIGNING_SECRET;
 	final Algorithm SIGNING_ALGORITHM;
 
@@ -22,6 +23,7 @@ public class JwtCreator {
 
 	String createUserJwt(String account) {
 		return JWT.create()
+				.withClaim("iss", "rsd_auth")
 				.withClaim("role", "rsd_user")
 				.withClaim("account", account)
 				.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
@@ -30,6 +32,7 @@ public class JwtCreator {
 
 	String createAdminJwt() {
 		return JWT.create()
+				.withClaim("iss", "rsd_auth")
 				.withClaim("role", "rsd_admin")
 				.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 				.sign(SIGNING_ALGORITHM);

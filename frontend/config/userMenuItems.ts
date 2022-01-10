@@ -1,11 +1,11 @@
-import {signOut} from 'next-auth/react'
 import {MenuItemType} from './menuItems'
 
 export const userMenuItems:MenuItemType[]=[{
   label:'Logout',
-  fn: ()=>{
-    // next-auth method to signout user
-    signOut()
+  fn: () => {
+    // forward to logout route
+    // it removes cookies and resets the authContext
+    location.href='/logout'
   }
 },{
   label:'My software',

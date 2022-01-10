@@ -2,13 +2,14 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 
 type Data = {
-  name: string,
-  version:string
+  module: string,
+  version: string,
+  status: string
 }
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({name: 'John Doe', version:'v1'})
+  res.status(200).json({module: 'frontend/api', version:'v1', status:'live'})
 }

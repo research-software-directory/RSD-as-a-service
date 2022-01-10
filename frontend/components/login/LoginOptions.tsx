@@ -1,48 +1,24 @@
-import {signIn} from 'next-auth/react'
-
 import Image from 'next/image'
 import Button from '@mui/material/Button'
 
+import {getRedirectUrl} from '../../utils/surfConext'
 import LogoSURF from '../../assets/LogoSURFconext.png'
-// import GitHubIcon from '@mui/icons-material/GitHub';
-// import OrcidIcon from './OrcidIcon';
-
-function signInWith(provider:string){
-  signIn(provider,{
-    callbackUrl:'http://localhost:3000/user/profile'
-  })
-}
 
 export default function LoginOptions() {
+  // redirect to SURFConext oAuth2 page
+  async function redirectToSurf(){
+    const url = await getRedirectUrl()
+    if (url){
+      window.location.href = url
+    }
+  }
   return (
     <section className="grid gap-4 mx-auto mt-20 w-1/4">
       <h2>Login with</h2>
       <Button
-        onClick={()=>signInWith('surfconext')}>
+        onClick={redirectToSurf}>
         <Image src={LogoSURF} alt="Login with SURFconext" />
-        {/* SURFConext */}
       </Button>
-      {/* <Button
-        variant="outlined"
-        autoFocus
-        sx={{textTransform:'inherit'}}
-        onClick={()=>signInWith('github')}>
-        <GitHubIcon sx={{marginRight:'1rem'}}/>
-          GitHub
-      </Button>
-      <Button variant="outlined" sx={{textTransform:'inherit'}}
-        onClick={()=>signInWith('orcid')}>
-        <OrcidIcon className="h-6 mr-4" />
-        ORCID
-      </Button>
-      <Button variant="outlined" sx={{textTransform:'inherit'}}
-        onClick={()=>signInWith('azure-ad')}>
-        Azure AD
-      </Button>
-      <Button variant="outlined" sx={{textTransform:'inherit'}}
-        onClick={()=>router.push("/signin")}>
-        Email and Password
-      </Button> */}
     </section>
   )
 }
