@@ -51,7 +51,7 @@ export function AuthProvider(props: any) {
         // token expired
         setSession(defaultSession)
       }else{
-        console.log(`schedule refresh in ${waitInMs/1000}sec.`)
+        // console.log(`schedule refresh in ${waitInMs/1000}sec.`)
         schedule = setTimeout(() => {
           // refresh token by sending current valid cookie
           refreshSession()
@@ -59,11 +59,11 @@ export function AuthProvider(props: any) {
               // update only if "valid" session
               if (newSession?.status === 'authenticated') {
                 setSession(newSession)
-                console.log('AuthProvider...session...UPDATED')
+                // console.log('AuthProvider...session...UPDATED')
               } else {
                 // replace with default, not authenticated
                 setSession(defaultSession)
-                console.log('AuthProvider...session...REMOVED')
+                // console.log('AuthProvider...session...REMOVED')
               }
             })
         },waitInMs)
@@ -71,7 +71,7 @@ export function AuthProvider(props: any) {
     }
     return () => {
       if (schedule) {
-        console.log('remove schedule...', schedule)
+        // console.log('remove schedule...', schedule)
         clearTimeout(schedule)
       }
     }
@@ -133,7 +133,7 @@ export function getSessionSeverSide(req: IncomingMessage|undefined, res: Outgoin
   // remove invalid cookie
   if (session.status === 'invalid') {
     // console.log('remove rsd cookies...')
-    removeRsdCookiesNode(res)
+    removeRsdTokenNode(res)
     // return default
     return defaultSession
   }
@@ -196,12 +196,11 @@ export function createSession(token:string|null):Session {
  * Use this function from _middleware functions of Next SSR
  * @param res
  */
-export function removeRsdCookiesNode(res: OutgoingMessage) {
+export function removeRsdTokenNode(res: OutgoingMessage) {
   try {
     res.setHeader(
       'Set-Cookie', [
-        'rsd_token=deleted; Max-Age=0;Secure; HttpOnly; Path=/; SameSite=Lax;',
-        'rsd_pathname=deleted; Max-Age=0; Path=/;'
+        'rsd_token=deleted; Max-Age=0; Secure; HttpOnly; Path=/; SameSite=Lax;'
       ]
     )
   } catch (e:any) {
@@ -217,7 +216,7 @@ export function removeRsdCookiesNode(res: OutgoingMessage) {
  */
 export async function refreshSession():Promise<Session|null> {
   try {
-    const url = '/api/v1/token/refresh'
+    const url = '/api/fe/token/refresh'
     const resp = await fetch(url)
 
     // console.group('refreshSession')

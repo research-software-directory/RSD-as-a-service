@@ -47,7 +47,7 @@ services:
     build:
       context: .
       dockerfile: ./authentication/dockerfile
-    image: rsd/auth:0.0.2
+    image: rsd/auth:0.0.4
     # ports:
     #   - "7000:7000"
     expose:

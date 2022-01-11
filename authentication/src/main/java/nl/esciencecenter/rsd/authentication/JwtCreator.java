@@ -10,8 +10,7 @@ import java.util.Map;
 
 public class JwtCreator {
 
-	// static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
-	static final long ONE_HOUR_IN_MILLISECONDS = 360_000L; // 6 * 60 * 1000
+	static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
 	final String SIGNING_SECRET;
 	final Algorithm SIGNING_ALGORITHM;
 

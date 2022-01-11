@@ -1,5 +1,6 @@
 // Obtain refresh token from RSD auth service
 import type {NextApiRequest, NextApiResponse} from 'next'
+import cookie from 'cookie'
 import {createSession, Session} from '../../../../auth'
 import logger from '../../../../utils/logger'
 
@@ -36,30 +37,33 @@ export default async function RefreshToken(
   // include cookie
   try {
     // extract cookie to send
-    const cookie = req.headers.cookie!
-    const url = `${process.env.AUTH_URL}/refresh`
+    const cookies = req.headers.cookie!
+    const url = `${process.env.RSD_AUTH_URL}/refresh`
     // make request and pass cookies
     const resp = await fetch(url, {
       headers: {
-        cookie
+        cookie:cookies
       }
     })
 
-    // console.group('api/v1/token/refresh')
+    // console.group('api/fe/token/refresh')
     // console.log('url...', url)
     // console.log('status...', resp.status)
     // console.log('text...', resp.statusText)
     // console.groupEnd()
 
     if (resp.status === 200) {
-      const data = await resp.json()
-      if (data.token) {
-        const session = createSession(data.token)
+      // extract cookie from response header
+      const raw_cookies = resp.headers.get('set-cookie')
+      let rsd_token = null
+      if (raw_cookies) {
+        rsd_token = cookie.parse(raw_cookies)?.rsd_token
+      }
+      if (rsd_token && raw_cookies) {
+        const session = createSession(rsd_token)
         if (session.status === 'authenticated') {
-          // replace old cookie
-          res.setHeader('Set-Cookie', [
-            `rsd_token=${session.token}; Secure; HttpOnly; Path=/; SameSite=Lax;`,
-          ])
+          // replace old cookie in out reponse to FE
+          res.setHeader('set-cookie',raw_cookies)
         }
         return res.status(200).json({session})
       }
@@ -69,13 +73,13 @@ export default async function RefreshToken(
     }
     // ELSE: remove old/invalid/expired cookie
     removeRsdTokenCookie(res)
-    logger(`api/v1/token/refresh:" ${resp.statusText}`, 'error')
+    logger(`api/fe/token/refresh:" ${resp.statusText}`, 'error')
     // proxy response from auth
     return res.status(resp.status).json({message: resp.statusText})
   } catch (e: any) {
     // remove old/invalid/expired cookie
     removeRsdTokenCookie(res)
-    logger(`api/v1/token/refresh:" ${e?.message}`, 'error')
+    logger(`api/fe/token/refresh:" ${e?.message}`, 'error')
     return res.status(500).json({message: e?.message})
   }
 }

@@ -16,6 +16,7 @@ import java.util.Properties;
 
 public class Main {
 	static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
+	static final long ONE_HOUR_IN_SECONDS = 3600; // 60 * 60
 	static final Properties CONFIG = new Properties();
 
 	public static void main(String[] args) throws IOException {
@@ -63,11 +64,6 @@ public class Main {
 			}
 		});
 
-		app.get("/login/surfconext", ctx -> {
-			String redirectUrl = CONFIG.getProperty("AUTH_SURFCONEXT_REDIRECT_URL");
-			ctx.html("<a href=\"https://connect.test.surfconext.nl/oidc/authorize?scope=openid&&response_type=code&redirect_uri=" + redirectUrl + "&state=example&nonce=example&response_mode=form_post&client_id=" + CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_ID") + "\">Login with surfconext</a>");
-		});
-
 		app.get("/refresh", ctx -> {
 			try{
 				String tokenToVerify = ctx.cookie("rsd_token");
@@ -78,8 +74,6 @@ public class Main {
 				JwtCreator jwtCreator = new JwtCreator(signingSecret);
 				String token = jwtCreator.refreshToken(tokenToVerify);
 				setJwtCookie(ctx, token);
-				// return token as response too
-				ctx.json("{\"token\": \"" + token + "\"}");
 			}catch (RuntimeException ex){
 				ex.printStackTrace();
 				ctx.status(400);
@@ -95,8 +89,7 @@ public class Main {
 	}
 
 	static void setJwtCookie(Context ctx, String token) {
-		// Max-Age of 1 hour in seconds
-		ctx.header("Set-Cookie", "rsd_token=" + token + "; Secure; HttpOnly; Path=/; SameSite=Lax;");
+		ctx.header("Set-Cookie", "rsd_token=" + token + "; Secure; HttpOnly; Path=/; SameSite=Lax; Max-Age=" + ONE_HOUR_IN_SECONDS);
 	}
 
 	static String decode(String base64UrlEncoded) {

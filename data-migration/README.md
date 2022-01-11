@@ -8,6 +8,8 @@ This directory contains a `java` program that migrates data from the existing RS
 docker-compose build
 ```
 
+You might see an error from the service `data-migration_1`. This is intentional and is used as a workaround to only download dependencies if needed but to not start the program. The whole process itself should end successfully.
+
 ## Run solution
 
 ```bash

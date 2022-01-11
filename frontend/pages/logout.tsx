@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 import ContentInTheMiddle from '../components/layout/ContentInTheMiddle'
-import {getRsdTokenNode, removeRsdCookiesNode} from '../auth'
+import {getRsdTokenNode, removeRsdTokenNode} from '../auth'
 import Button from '@mui/material/Button'
 import {useAuth, defaultSession, Session} from '../auth'
 
@@ -32,8 +32,8 @@ export function getServerSideProps(context: any) {
   // console.log('session...', session)
   // remove old cookie
   if (token) {
-    // console.log('removeRsdCookiesNode...')
-    removeRsdCookiesNode(res)
+    // console.log('removeRsdTokenNode...')
+    removeRsdTokenNode(res)
   }
   // console.groupEnd()
   return {

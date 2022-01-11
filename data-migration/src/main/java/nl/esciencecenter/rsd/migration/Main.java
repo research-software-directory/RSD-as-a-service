@@ -32,7 +32,7 @@ public class Main {
 	public static final String LEGACY_RSD_PERSON_URI = "https://research-software.nl/api/person";
 	public static final String LEGACY_RSD_MENTION_URI = "https://research-software.nl/api/mention";
 	public static final String LEGACY_RSD_RELEASE_URI = "https://research-software.nl/api/release";
-	public static final String POSTGREST_URI = "http://localhost/api/v2";
+	public static final String POSTGREST_URI = "http://localhost/api/v1";
 
 	public static void main(String[] args) throws IOException {
 		CONFIG.load(new FileReader(args[0]));
