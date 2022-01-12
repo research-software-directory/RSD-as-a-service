@@ -22,6 +22,7 @@ public class JwtCreator {
 
 	String createUserJwt(String account) {
 		return JWT.create()
+				.withClaim("iss", "rsd_auth")
 				.withClaim("role", "rsd_user")
 				.withClaim("account", account)
 				.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
@@ -30,6 +31,7 @@ public class JwtCreator {
 
 	String createAdminJwt() {
 		return JWT.create()
+				.withClaim("iss", "rsd_auth")
 				.withClaim("role", "rsd_admin")
 				.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 				.sign(SIGNING_ALGORITHM);

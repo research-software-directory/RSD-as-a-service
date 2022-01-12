@@ -1,15 +1,17 @@
-import {useEffect, useState} from 'react'
+import {useEffect} from 'react'
 import router from 'next/router'
-import {SessionProvider} from 'next-auth/react'
+import App, {AppContext} from 'next/app'
 import Head from 'next/head'
 import {AppProps} from 'next/app'
 import {ThemeProvider} from '@mui/material/styles'
-// import CssBaseline from '@mui/material/CssBaseline'
 import {CacheProvider, EmotionCache} from '@emotion/react'
 import {rsdMuiTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
-// show loading bar at the top of the screen
+// loading bar at the top of the screen
 import nprogress from 'nprogress'
+// authentication
+import {AuthProvider, Session, getSessionSeverSide} from '../auth'
+import {saveLocationCookie} from '../utils/locationCookie'
 
 // global CSS and tailwind
 import '../styles/global.css'
@@ -22,16 +24,16 @@ const clientSideEmotionCache = createEmotionCache()
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps{
   emotionCache: EmotionCache
+  session: Session
 }
 
 // define npgrogres setup, no spinner
 // just a tiny bar at the top of the screen
 nprogress.configure({showSpinner:false})
 
-export default function RsdApp(props:MuiAppProps) {
-  const {Component, emotionCache = clientSideEmotionCache, pageProps} = props
-  const {pageProps:{session}} = props
-  // console .log("session...", JSON.stringify(session))
+function RsdApp(props:MuiAppProps) {
+  const {Component, emotionCache = clientSideEmotionCache, pageProps, session} = props
+
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
       nprogress.start()
@@ -42,7 +44,12 @@ export default function RsdApp(props:MuiAppProps) {
     router.events.on('routeChangeError', ()=>{
       nprogress.done()
     })
-  },[])
+  }, [])
+
+  // save location cookie
+  if (typeof document != 'undefined') {
+    saveLocationCookie()
+  }
 
   return (
     <CacheProvider value={emotionCache}>
@@ -53,10 +60,35 @@ export default function RsdApp(props:MuiAppProps) {
       <ThemeProvider theme={rsdMuiTheme}>
         {/* CssBaseline from MUI-5*/}
         {/* <CssBaseline /> */}
-        <SessionProvider session={session}>
+        <AuthProvider session={session}>
           <Component {...pageProps} />
-        </SessionProvider>
+        </AuthProvider>
       </ThemeProvider>
     </CacheProvider>
   )
 }
+
+/**
+ * Extract session info from httpOnly cookie (server side)
+ * @param appContext
+ * @returns
+ */
+RsdApp.getInitialProps = async(appContext:AppContext) => {
+  const appProps = await App.getInitialProps(appContext)
+  const {req, res} = appContext.ctx
+
+  // extract user session from cookies
+  const session = getSessionSeverSide(req, res)
+
+  // console.group('RsdApp.getInitialProps')
+  // console.log('session...', session)
+  // console.groupEnd()
+
+  // return app props and session info from cookie
+  return {
+    ...appProps,
+    session
+  }
+}
+
+export default RsdApp

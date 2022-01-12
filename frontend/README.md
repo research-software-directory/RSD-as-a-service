@@ -14,10 +14,13 @@ Based on the features in the legacy application and the current requirements we 
 
 ### Environment variables
 
-For oAuth implementation we need number of env variables. Copy env.local.example file to `env.local` and provide values required for next-auth module.
+For oAuth implementation we need env variables. Copy env.local.example file to `env.local` and provide values required for next-auth module. In addition we use few public env variables that exposed to the browser. These values are stored in .env file. See [next documentation page for more info](https://nextjs.org/docs/basic-features/environment-variables).
 
-- `env.local` file is used when running frontend locally with `yarn dev`
-- `env.production.local` file is used when running frontend with docker compose `docker-compose up`
+- `env` file contains public env variables. If different values are required for production create env.production file
+- `env.development` development specific values, when running frontend using `yarn dev`.
+- `env.local` contains secrets when running frontend in local development (yarn dev). This file is not in the repo. You will need to create it and add secrets to it.
+- `env.local.example` this is example file. copy to env.local for local development and env.production.local
+- `env.production.local` file is used when running frontend with docker compose `docker-compose up`.
 
 ## Docker compose frontend only
 

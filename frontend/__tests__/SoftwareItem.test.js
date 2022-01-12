@@ -2,10 +2,18 @@ import {render, screen} from '@testing-library/react'
 import SoftwareItemPage, {getServerSideProps} from '../pages/software/[slug]/index'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
-import {getSoftwareItem} from '../utils/getSoftware'
+import {
+  getSoftwareItem,
+  getCitationsForSoftware,
+  getTagsForSoftware,
+  getLicenseForSoftware,
+  getContributorMentionCount
+} from '../utils/getSoftware'
 
 // mock fetch response
 import softwareItem from './__mocks__/softwareItem.json'
+
+jest.mock('../utils/getSoftware')
 // const mockedResponse=[softwareItem]
 // global.fetch=jest.fn(()=>({
 //   status:206,
@@ -19,8 +27,11 @@ import softwareItem from './__mocks__/softwareItem.json'
 
 describe('pages/software/[slug]/index.tsx', () => {
 
-  // TODO
-  it.skip('getServerSideProps returns mocked values in the props', async() => {
+  // TODO create mocks for these tests
+  it.skip('getServerSideProps returns mocked values in the props', async () => {
+
+    // getSoftwareItem.mockImplementation(()=>softwareItem)
+
     const resp = await getServerSideProps({params:{slug:'test-slug'}})
     expect(resp).toEqual({
       props:{

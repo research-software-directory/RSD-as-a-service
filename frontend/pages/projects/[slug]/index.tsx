@@ -1,19 +1,19 @@
 import Head from 'next/head'
 import {useRouter} from 'next/router'
-import {useSession} from 'next-auth/react'
 
 import DefaultLayout from '../../../components/layout/DefaultLayout'
 import PageTitle from '../../../components/layout/PageTitle'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import {useAuth} from '../../../auth'
 
 import {getProjectItem} from '../../../utils/getProjects'
 import {ProjectItem} from '../../../types/ProjectItem'
 
 export default function ProjectItemPage({project, slug}:{project:ProjectItem, slug:string}) {
   const router = useRouter()
-  const {status} = useSession()
+  const {session: {status}} = useAuth()
   // console.log("useSession.status...", status)
   return (
     <DefaultLayout>

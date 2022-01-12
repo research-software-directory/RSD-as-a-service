@@ -11,7 +11,7 @@ export async function getProjectList({limit=12,offset=0,baseUrl='/api/v1',}:
     const headers = new Headers()
     // console.log(`getSoftwareList...url...`,url)
     // request estimated count - faster method
-    headers.append('Prefer','count=estimated')
+    headers.append('Prefer','count=exact')
     const resp = await fetch(url,{method:'GET', headers})
 
     if ([200,206].includes(resp.status)){

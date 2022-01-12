@@ -1,6 +1,6 @@
 {
   "name": "rsd-frontend",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,7 +11,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "backend:dev":"docker-compose up --scale data-migration=0 --scale frontend=0"
+    "backend:dev": "docker-compose up --scale test=0"
   },
   "dependencies": {
     "@emotion/react": "^11.7.0",
@@ -19,8 +19,9 @@
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.0",
     "@mui/material": "^5.2.1",
+    "cookie": "^0.4.1",
+    "jsonwebtoken": "^8.5.1",
     "next": "12.0.7",
-    "next-auth": "^4.0.2",
     "nprogress": "^0.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -29,6 +30,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.0",
     "@testing-library/react": "^12.1.2",
+    "@types/cookie": "^0.4.1",
+    "@types/jsonwebtoken": "^8.5.6",
     "@types/node": "16.11.10",
     "@types/nprogress": "^0.2.0",
     "@types/react": "17.0.37",

@@ -15,8 +15,8 @@ import java.util.Date;
 import java.util.Properties;
 
 public class Main {
-
 	static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
+	static final long ONE_HOUR_IN_SECONDS = 3600; // 60 * 60
 	static final Properties CONFIG = new Properties();
 
 	public static void main(String[] args) throws IOException {
@@ -42,29 +42,43 @@ public class Main {
 		});
 
 		app.post("/login/surfconext", ctx -> {
-			String code = ctx.formParam("code");
-			String redirectUrl = CONFIG.getProperty("AUTH_SURFCONEXT_REDIRECT_URL");
-			String account = new SurfconextLogin(code, redirectUrl).account();
-			JwtCreator jwtCreator = new JwtCreator(CONFIG.getProperty("PGRST_JWT_SECRET"));
-			String token = jwtCreator.createUserJwt(account);
-			setJwtCookie(ctx, token);
-			ctx.result(token);
-		});
-
-		app.get("/login/surfconext", ctx -> {
-			String redirectUrl = CONFIG.getProperty("AUTH_SURFCONEXT_REDIRECT_URL");
-			ctx.html("<a href=\"https://connect.test.surfconext.nl/oidc/authorize?scope=openid&&response_type=code&redirect_uri=" + redirectUrl + "&state=example&nonce=example&response_mode=form_post&client_id=" + CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_ID") + "\">Login with surfconext</a>");
+			try{
+				String returnPath = ctx.cookie("rsd_pathname");
+				String code = ctx.formParam("code");
+				String redirectUrl = CONFIG.getProperty("NEXT_PUBLIC_SURFCONEXT_REDIRECT");
+				String account = new SurfconextLogin(code, redirectUrl).account();
+				JwtCreator jwtCreator = new JwtCreator(CONFIG.getProperty("PGRST_JWT_SECRET"));
+				String token = jwtCreator.createUserJwt(account);
+				setJwtCookie(ctx, token);
+				// redirect based on info
+				if (returnPath != null && !returnPath.trim().isEmpty()){
+					returnPath = returnPath.trim();
+					ctx.redirect(returnPath);
+				}else{
+					ctx.redirect("/");
+				}
+			}catch (RuntimeException ex){
+				ex.printStackTrace();
+				ctx.status(400);
+				ctx.redirect("/login/failed");
+			}
 		});
 
 		app.get("/refresh", ctx -> {
-			String tokenToVerify = ctx.cookie("rsd_token");
-			String signingSecret = CONFIG.getProperty("PGRST_JWT_SECRET");
-			JwtVerifier verifier = new JwtVerifier(signingSecret);
-			verifier.verify(tokenToVerify);
+			try{
+				String tokenToVerify = ctx.cookie("rsd_token");
+				String signingSecret = CONFIG.getProperty("PGRST_JWT_SECRET");
+				JwtVerifier verifier = new JwtVerifier(signingSecret);
+				verifier.verify(tokenToVerify);
 
-			JwtCreator jwtCreator = new JwtCreator(signingSecret);
-			String token = jwtCreator.refreshToken(tokenToVerify);
-			setJwtCookie(ctx, token);
+				JwtCreator jwtCreator = new JwtCreator(signingSecret);
+				String token = jwtCreator.refreshToken(tokenToVerify);
+				setJwtCookie(ctx, token);
+			}catch (RuntimeException ex){
+				ex.printStackTrace();
+				ctx.status(400);
+				ctx.json("{\"message\": \"failed to refresh token\"}");
+			}
 		});
 
 		app.exception(JWTVerificationException.class, (ex, ctx) -> {
@@ -75,7 +89,7 @@ public class Main {
 	}
 
 	static void setJwtCookie(Context ctx, String token) {
-		ctx.header("Set-Cookie", "rsd_token=" + token + "; Secure; HttpOnly; Path=/; SameSite=Lax");
+		ctx.header("Set-Cookie", "rsd_token=" + token + "; Secure; HttpOnly; Path=/; SameSite=Lax; Max-Age=" + ONE_HOUR_IN_SECONDS);
 	}
 
 	static String decode(String base64UrlEncoded) {

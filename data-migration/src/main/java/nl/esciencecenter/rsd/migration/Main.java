@@ -32,7 +32,7 @@ public class Main {
 	public static final String LEGACY_RSD_PERSON_URI = "https://research-software.nl/api/person";
 	public static final String LEGACY_RSD_MENTION_URI = "https://research-software.nl/api/mention";
 	public static final String LEGACY_RSD_RELEASE_URI = "https://research-software.nl/api/release";
-	public static final String POSTGREST_URI = "http://localhost:3500";
+	public static final String POSTGREST_URI = "http://localhost/api/v1";
 
 	public static void main(String[] args) throws IOException {
 		CONFIG.load(new FileReader(args[0]));
@@ -104,7 +104,7 @@ public class Main {
 		for (int tryConnectionCount = 0; tryConnectionCount < maxTries; tryConnectionCount++) {
 			pauseExecution(500);
 			try {
-				getPostgREST(URI.create(POSTGREST_URI));
+				getPostgREST(URI.create(POSTGREST_URI + "/"));
 			} catch (RuntimeException e) {
 				continue;
 			}

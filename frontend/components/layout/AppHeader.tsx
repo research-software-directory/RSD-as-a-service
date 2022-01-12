@@ -1,7 +1,7 @@
 // external dependencies
 import {useState, useEffect} from 'react'
 import Link from 'next/link'
-import {useSession} from 'next-auth/react'
+import {useAuth} from '../../auth'
 import Button from '@mui/material/Button'
 import LoginIcon from '@mui/icons-material/Login'
 // local dependencies (project components)
@@ -11,9 +11,12 @@ import {menuItems} from '../../config/menuItems'
 import {userMenuItems} from '../../config/userMenuItems'
 import UserMenu from './UserMenu'
 
+import {getRedirectUrl} from '../../utils/surfConext'
+
 export default function AppHeader(){
   const [activePath, setActivePath] = useState('/')
-  const {data, status} = useSession()
+  const {session} = useAuth()
+  const status = session?.status || 'loading'
 
   useEffect(()=>{
     // set activePath to currently loaded route/page
@@ -21,7 +24,14 @@ export default function AppHeader(){
       const paths = window.location.pathname.split('/')
       if (paths.length > 0) setActivePath(`/${paths[1]}`)
     }
-  },[])
+  }, [])
+
+  async function redirectToSurf(){
+    const url = await getRedirectUrl()
+    if (url){
+      window.location.href = url
+    }
+  }
 
   function getMenuItems(){
     return menuItems.map(item=>{
@@ -46,21 +56,22 @@ export default function AppHeader(){
       // we show user menu with the avatar and user specific options
       return (
         <UserMenu
-          name={`${data?.name ?? 'No Name'}`}
+          name='No Name'
           menuOptions={userMenuItems}
         />
       )
     }
 
     return (
-      <Link href="/login" passHref>
+      // <Link href="/login" passHref>
         <Button
           variant="text"
+          onClick={redirectToSurf}
         >
           <LoginIcon />
           <span className="ml-4">Sign In</span>
         </Button>
-      </Link>
+      // </Link>
     )
   }
 

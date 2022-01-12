@@ -57,7 +57,7 @@ export default function CitationFormat({citation}:{citation:SoftwareCitationCont
         }}
       >
         <DownloadIcon sx={{mr:1}}/>
-        <a href={`/api/v1/cite/${citation.id}?f=${format.f}&e=${format.e}&t=${format.t}`}
+        <a href={`/api/fe/cite/${citation.id}?f=${format.f}&e=${format.e}&t=${format.t}`}
           download={`citation.${format.e}`}
         >
           Download file
