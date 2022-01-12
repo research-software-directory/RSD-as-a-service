@@ -11,10 +11,10 @@ In order to use the collection on Postman, you need to set two (global) variable
 
 ## Run test locally
 
-Fron the backend-postgres directory run the following docker-compose command.
+From the backend-postgrest directory run the following docker-compose command.
 
 ```bash
-# run test and stop containers
+# run test and clean up the containers on exit
 docker-compose -f auth-test.yml up \
   --abort-on-container-exit \
   --exit-code-from auth-test \

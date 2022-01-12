@@ -13,10 +13,11 @@ You might see an error from the service `data-migration_1`. This is intentional 
 ## Run solution
 
 ```bash
-# ensure main RSD application is started too
+# ensure main RSD application is started
 # cd ../ & docker-compose up
-# run data-migation docker compose
-docker-compose up
+# run data-migation && clean up on exit 0
+docker-compose up --abort-on-container-exit \
+  && docker-compose down
 ```
 
 ## Possible errors
