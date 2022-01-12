@@ -45,7 +45,7 @@ public class Main {
 			try{
 				String returnPath = ctx.cookie("rsd_pathname");
 				String code = ctx.formParam("code");
-				String redirectUrl = CONFIG.getProperty("AUTH_SURFCONEXT_REDIRECT_URL");
+				String redirectUrl = CONFIG.getProperty("NEXT_PUBLIC_SURFCONEXT_REDIRECT");
 				String account = new SurfconextLogin(code, redirectUrl).account();
 				JwtCreator jwtCreator = new JwtCreator(CONFIG.getProperty("PGRST_JWT_SECRET"));
 				String token = jwtCreator.createUserJwt(account);

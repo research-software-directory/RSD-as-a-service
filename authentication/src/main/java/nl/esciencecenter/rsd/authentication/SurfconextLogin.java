@@ -45,7 +45,7 @@ public class SurfconextLogin implements Login {
 		form.put("grant_type", "authorization_code");
 		form.put("redirect_uri", REDIRECT_URL);
 		form.put("scope", "openid");
-		form.put("client_id", CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_ID"));
+		form.put("client_id", CONFIG.getProperty("NEXT_PUBLIC_SURFCONEXT_CLIENT_ID"));
 		form.put("client_secret", CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_SECRET"));
 		return form;
 	}
