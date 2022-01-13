@@ -1,7 +1,7 @@
 CREATE TABLE account (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+	updated_at TIMESTAMP NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_account() RETURNS TRIGGER LANGUAGE plpgsql as
@@ -36,7 +36,7 @@ CREATE TABLE login_for_account (
 	account UUID REFERENCES account (id) NOT NULL,
 	sub VARCHAR NOT NULL,
 	created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+	updated_at TIMESTAMP NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_login_for_account() RETURNS TRIGGER LANGUAGE plpgsql as
