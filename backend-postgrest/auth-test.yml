@@ -5,8 +5,9 @@ services:
     container_name: database-test
     build: ../database
     image: rsd/database-test:0.0.2
-    expose:
-      - 5432
+    ports:
+      # enable connection from outside
+      - "5432:5432"
     environment:
       POSTGRES_DB: "rsd-db"
       POSTGRES_USER: "rsd"
@@ -23,8 +24,9 @@ services:
     container_name: backend-test
     build: .
     image: rsd/backend-postgrest-test:0.0.2
-    expose:
-      - 3500
+    ports:
+      # enable connection from outside
+      - "3500:3500"
     environment:
       PGRST_DB_URI: "postgres://authenticator:simplepassword@database:5432/rsd-db"
       PGRST_DB_ANON_ROLE: "web_anon"
