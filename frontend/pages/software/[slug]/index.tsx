@@ -11,6 +11,7 @@ import CitationSection from '../../../components/software/CitationSection'
 import PageSnackbar from '../../../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../../../components/snackbar/PageSnackbarContext'
 import AboutSection from '../../../components/software/AboutSection'
+import MentionsSection from '../../../components/software/MentionsSection'
 
 import {
   getSoftwareItem,
@@ -18,17 +19,27 @@ import {
   getTagsForSoftware,
   getLicenseForSoftware,
   getContributorMentionCount,
-  Tag, License, ContributorMentionCount
+  getMentionsForSoftware,
+  Tag, License, ContributorMentionCount,Mention
 } from '../../../utils/getSoftware'
 import logger from '../../../utils/logger'
 import {SoftwareItem} from '../../../types/SoftwareItem'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
+import {ScriptProps} from 'next/script'
 
-export default function SoftwareIndexPage({software, citationInfo, tagsInfo, licenseInfo, softwareIntroCounts}:
-  {
-    slug: string, software: SoftwareItem, citationInfo: SoftwareCitationInfo, tagsInfo: Tag[], licenseInfo: License[],
-    softwareIntroCounts: ContributorMentionCount
-  }) {
+interface SoftwareIndexData extends ScriptProps{
+  slug: string,
+  software: SoftwareItem,
+  citationInfo: SoftwareCitationInfo,
+  tagsInfo: Tag[],
+  licenseInfo: License[],
+  softwareIntroCounts: ContributorMentionCount,
+  mentions: Mention[]
+}
+
+
+export default function SoftwareIndexPage(props:SoftwareIndexData) {
+  const {software, citationInfo, tagsInfo, licenseInfo, softwareIntroCounts, mentions} = props
   const [options, setSnackbar] = useState(snackbarDefaults)
 
   if (!software?.brand_name){
@@ -75,6 +86,7 @@ export default function SoftwareIndexPage({software, citationInfo, tagsInfo, lic
           licenses={licenseInfo}
           repositories={software.repository_url}
         />
+        <MentionsSection mentions={mentions} />
         <AppFooter />
       </PageSnackbarContext.Provider>
       <PageSnackbar options={options} setOptions={setSnackbar} />
@@ -102,6 +114,7 @@ export async function getServerSideProps(context:any) {
     const tagsInfo = await getTagsForSoftware(software.id)
     const licenseInfo = await getLicenseForSoftware(software.id)
     const softwareIntroCounts = await getContributorMentionCount(software.id)
+    const mentions = await getMentionsForSoftware(software.id)
 
 
     return {
@@ -112,7 +125,8 @@ export async function getServerSideProps(context:any) {
         citationInfo,
         tagsInfo,
         licenseInfo,
-        softwareIntroCounts
+        softwareIntroCounts,
+        mentions
       }
     }
   }catch(e:any){
