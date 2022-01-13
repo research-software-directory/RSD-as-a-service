@@ -348,9 +348,25 @@ ALTER TABLE software_for_software ENABLE ROW LEVEL SECURITY;
 CREATE POLICY anyone_can_read ON software_for_software FOR SELECT TO web_anon, rsd_user
 	USING (origin IN (SELECT id FROM software) AND relation IN (SELECT id FROM software));
 
-CREATE POLICY maintainer_all_rights ON software_for_software TO rsd_user
-	USING (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT * FROM software_of_current_maintainer()))
-	WITH CHECK (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT * FROM software_of_current_maintainer()));
+CREATE POLICY maintainer_can_read ON software_for_software FOR SELECT TO rsd_user
+	USING (origin IN (SELECT * FROM software_of_current_maintainer()) OR relation IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_origin_insert ON software_for_software FOR INSERT TO rsd_user
+	WITH CHECK (origin IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_origin');
+
+CREATE POLICY maintainer_relation_insert ON software_for_software FOR INSERT TO rsd_user
+	WITH CHECK (relation IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_relation');
+
+CREATE POLICY maintainer_origin_upgrade_status ON software_for_software FOR UPDATE TO rsd_user
+	USING (relation IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_origin')
+	WITH CHECK (status = 'approved');
+
+CREATE POLICY maintainer_relation_upgrade_status ON software_for_software FOR UPDATE TO rsd_user
+	USING (origin IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_relation')
+	WITH CHECK (status = 'approved');
+
+CREATE POLICY maintainer_delete ON software_for_software FOR DELETE TO rsd_user
+	USING (origin IN (SELECT * FROM software_of_current_maintainer()) OR relation IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON software_for_software TO rsd_admin
 	USING (TRUE)
