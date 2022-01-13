@@ -368,3 +368,18 @@ CREATE POLICY maintainer_all_rights ON login_for_account TO rsd_user
 CREATE POLICY admin_all_rights ON login_for_account TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
+
+
+-- organisation
+ALTER TABLE organisation ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON organisation FOR SELECT TO web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY maintainer_can_update ON organisation FOR UPDATE TO rsd_user
+	USING (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'))
+	WITH CHECK (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+
+CREATE POLICY admin_all_rights ON organisation TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
