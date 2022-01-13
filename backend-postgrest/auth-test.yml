@@ -1,0 +1,66 @@
+version: "3.0"
+
+services:
+  database:
+    container_name: database-test
+    build: ../database
+    image: rsd/database-test:0.0.2
+    ports:
+      # enable connection from outside
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "rsd-db"
+      POSTGRES_USER: "rsd"
+      POSTGRES_PASSWORD: "securepassword"
+    volumes:
+      # persist data in named docker volume
+      # to remove use: docker-compose down --volumes
+      # to inspect use: docker volume ls
+      - pgdb-test:/var/lib/postgresql/data/
+    networks:
+      - net-test
+
+  backend:
+    container_name: backend-test
+    build: .
+    image: rsd/backend-postgrest-test:0.0.2
+    ports:
+      # enable connection from outside
+      - "3500:3500"
+    environment:
+      PGRST_DB_URI: "postgres://authenticator:simplepassword@database:5432/rsd-db"
+      PGRST_DB_ANON_ROLE: "web_anon"
+      PGRST_DB_SCHEMA: "public"
+      PGRST_SERVER_PORT: "3500"
+    env_file:
+      - ../frontend/.env.production.local
+    depends_on:
+      - "database"
+    networks:
+      - net-test
+
+  auth-test:
+    container_name: auth-test
+    build:
+      context: .
+      # dockerfile to use for build
+      dockerfile: ./tests/dockerfile
+    image: rsd/auth-test:0.0.1
+    env_file:
+      # configuration
+      - ../frontend/.env.production.local
+    depends_on:
+      - "database"
+      - "backend"
+    networks:
+      - net-test
+
+# define name for docker network
+# it should have name: rsd-as-a-service_net
+networks:
+  net-test:
+
+# named volumes can be managed easier using docker-compose
+# volume should have name rsd-as-a-service_pgdb
+volumes:
+  pgdb-test:

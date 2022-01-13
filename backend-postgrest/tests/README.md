@@ -5,5 +5,18 @@ This service can automatically be build and started with `docker-compose`. It do
 The service runs its tests using the `newman` npm package. Postman can be used as a GUI for running and editing tests by importing the json file from this directory.
 
 In order to use the collection on Postman, you need to set two (global) variables first:
+
 * `jwt_secret` should have the same value as `PGRST_JWT_SECRET` (as is used by PostgREST)
 * `backend_url` should have the value of the PostgREST url, currently `http://localhost:3500`
+
+## Run test locally
+
+From the backend-postgrest directory run the following docker-compose command.
+
+```bash
+# run test and clean up the containers on exit
+docker-compose -f auth-test.yml up \
+  --abort-on-container-exit \
+  --exit-code-from auth-test \
+  && docker-compose -f auth-test.yml down --volumes
+```
