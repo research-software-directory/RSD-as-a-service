@@ -1,19 +1,3 @@
-CREATE TABLE software_for_project (
-	software UUID references software (id),
-	project UUID references project (id),
-	PRIMARY KEY (software, project)
-);
-
-
-
-CREATE TABLE project_for_project (
-	origin UUID references project (id),
-	relation UUID references project (id),
-	PRIMARY KEY (origin, relation)
-);
-
-
-
 CREATE TABLE team_member (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	project UUID references project (id) NOT NULL,

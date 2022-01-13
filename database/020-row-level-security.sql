@@ -117,20 +117,6 @@ CREATE POLICY admin_all_rights ON contributor TO rsd_admin
 	WITH CHECK (TRUE);
 
 
-ALTER TABLE software_for_software ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON software_for_software FOR SELECT TO web_anon, rsd_user
-	USING (origin IN (SELECT id FROM software) AND relation IN (SELECT id FROM software));
-
-CREATE POLICY maintainer_all_rights ON software_for_software TO rsd_user
-	USING (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT * FROM software_of_current_maintainer()))
-	WITH CHECK (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT * FROM software_of_current_maintainer()));
-
-CREATE POLICY admin_all_rights ON software_for_software TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
-
 -- tags for software
 ALTER TABLE tag_for_software ENABLE ROW LEVEL SECURITY;
 
@@ -188,34 +174,6 @@ CREATE POLICY admin_all_rights ON image_for_project TO rsd_admin
 
 
 -- project relations
-ALTER TABLE software_for_project ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON software_for_project FOR SELECT TO web_anon, rsd_user
-	USING (project IN (SELECT id FROM project) AND software IN (SELECT id FROM software));
-
-CREATE POLICY maintainer_all_rights ON software_for_project TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()) AND project IN (SELECT * FROM projects_of_current_maintainer()))
-	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND project IN (SELECT * FROM projects_of_current_maintainer()));
-
-CREATE POLICY admin_all_rights ON software_for_project TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
-
-ALTER TABLE project_for_project ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON project_for_project FOR SELECT TO web_anon, rsd_user
-	USING (origin IN (SELECT id FROM project) AND relation IN (SELECT id FROM software));
-
-CREATE POLICY maintainer_all_rights ON project_for_project TO rsd_user
-	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) AND relation IN (SELECT * FROM projects_of_current_maintainer()))
-	WITH CHECK (origin IN (SELECT * FROM projects_of_current_maintainer()) AND relation IN (SELECT * FROM projects_of_current_maintainer()));
-
-CREATE POLICY admin_all_rights ON project_for_project TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
-
 ALTER TABLE team_member ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON team_member FOR SELECT TO web_anon, rsd_user
@@ -381,5 +339,47 @@ CREATE POLICY maintainer_can_update ON organisation FOR UPDATE TO rsd_user
 	WITH CHECK (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
 
 CREATE POLICY admin_all_rights ON organisation TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+-- inter relations
+ALTER TABLE software_for_software ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON software_for_software FOR SELECT TO web_anon, rsd_user
+	USING (origin IN (SELECT id FROM software) AND relation IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON software_for_software TO rsd_user
+	USING (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON software_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE software_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON software_for_project FOR SELECT TO web_anon, rsd_user
+	USING (project IN (SELECT id FROM project) AND software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON software_for_project TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()) AND project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON software_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE project_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON project_for_project FOR SELECT TO web_anon, rsd_user
+	USING (origin IN (SELECT id FROM project) AND relation IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON project_for_project TO rsd_user
+	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) AND relation IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (origin IN (SELECT * FROM projects_of_current_maintainer()) AND relation IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON project_for_project TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);

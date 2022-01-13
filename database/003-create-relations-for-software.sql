@@ -96,11 +96,3 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_contributor BEFORE UPDATE ON contributor FOR EACH ROW EXECUTE PROCEDURE sanitise_update_contributor();
-
-
-
-CREATE TABLE software_for_software (
-	origin UUID references software (id),
-	relation UUID references software (id),
-	PRIMARY KEY (origin, relation)
-);

@@ -32,17 +32,3 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
-
-
-CREATE TABLE software_for_organisation (
-	software UUID references software (id),
-	organisation UUID references organisation (id),
-	PRIMARY KEY (software, organisation)
-);
-
-
-CREATE TABLE project_for_organisation (
-	project UUID references project (id),
-	organisation UUID references organisation (id),
-	PRIMARY KEY (project, organisation)
-);
