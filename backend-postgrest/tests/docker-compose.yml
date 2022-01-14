@@ -3,8 +3,8 @@ version: "3.0"
 services:
   database:
     container_name: database-test
-    build: ../database
-    image: rsd/database-test:0.0.2
+    build: ../../database
+    image: rsd/database-test:0.0.3
     ports:
       # enable connection from outside
       - "5432:5432"
@@ -22,8 +22,8 @@ services:
 
   backend:
     container_name: backend-test
-    build: .
-    image: rsd/backend-postgrest-test:0.0.2
+    build: ../
+    image: rsd/backend-postgrest-test:0.0.3
     ports:
       # enable connection from outside
       - "3500:3500"
@@ -33,22 +33,22 @@ services:
       PGRST_DB_SCHEMA: "public"
       PGRST_SERVER_PORT: "3500"
     env_file:
-      - ../frontend/.env.production.local
+      - ../../frontend/.env.production.local
     depends_on:
       - "database"
     networks:
       - net-test
 
-  auth-test:
-    container_name: auth-test
+  postgrest-test:
+    container_name: postgrest-test
     build:
       context: .
       # dockerfile to use for build
-      dockerfile: ./tests/dockerfile
-    image: rsd/auth-test:0.0.1
+      dockerfile: ./dockerfile
+    image: rsd/auth-test:0.0.2
     env_file:
       # configuration
-      - ../frontend/.env.production.local
+      - ../../frontend/.env.production.local
     depends_on:
       - "database"
       - "backend"

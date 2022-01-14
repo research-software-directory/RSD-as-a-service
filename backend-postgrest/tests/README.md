@@ -9,14 +9,20 @@ In order to use the collection on Postman, you need to set two (global) variable
 * `jwt_secret` should have the same value as `PGRST_JWT_SECRET` (as is used by PostgREST)
 * `backend_url` should have the value of the PostgREST url, currently `http://localhost:3500`
 
+## Build test container
+
+```bash
+docker-compose build
+```
+
 ## Run test locally
 
 From the backend-postgrest directory run the following docker-compose command.
 
 ```bash
 # run test and clean up the containers on exit
-docker-compose -f auth-test.yml up \
+docker-compose up \
   --abort-on-container-exit \
-  --exit-code-from auth-test \
-  && docker-compose -f auth-test.yml down --volumes
+  --exit-code-from postgrest-test \
+  && docker-compose down --volumes
 ```
