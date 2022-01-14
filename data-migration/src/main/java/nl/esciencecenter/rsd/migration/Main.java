@@ -423,7 +423,7 @@ public class Main {
 			mentionToSave.add("author", mentionFromLegacyRSD.get("author"));
 			mentionToSave.add("date", mentionFromLegacyRSD.get("date"));
 			mentionToSave.add("image", mentionFromLegacyRSD.get("image"));
-			mentionToSave.add("is_corporate_blog", mentionFromLegacyRSD.get("isCorporateBlog"));
+			mentionToSave.add("is_featured", mentionFromLegacyRSD.get("isCorporateBlog"));
 			mentionToSave.add("title", mentionFromLegacyRSD.get("title"));
 			mentionToSave.add("type", mentionFromLegacyRSD.get("type"));
 			mentionToSave.add("url", mentionFromLegacyRSD.get("url"));

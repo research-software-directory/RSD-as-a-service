@@ -25,7 +25,7 @@ CREATE TABLE mention (
 	author VARCHAR,
 	date TIMESTAMP,
 	image VARCHAR,
-	is_corporate_blog BOOLEAN NOT NULL,
+	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	title VARCHAR NOT NULL,
 	type mention_type NOT NULL,
 	url VARCHAR,

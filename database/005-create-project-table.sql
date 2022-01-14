@@ -15,7 +15,7 @@ CREATE TABLE project (
 	subtitle VARCHAR,
 	title VARCHAR,
 	created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+	updated_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE image_for_project (
