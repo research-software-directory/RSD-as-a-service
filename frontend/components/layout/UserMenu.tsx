@@ -39,6 +39,7 @@ export default function UserMenu(props:UserMenuType) {
         menuOptions.map(item=>{
           return (
             <MenuItem
+              data-testid="user-menu-option"
               key={item.label}
               onClick={()=>handleClose(item)}>
               {item.label}
@@ -52,6 +53,7 @@ export default function UserMenu(props:UserMenuType) {
   return (
     <>
       <Button
+        data-testid="user-menu-button"
         aria-controls="user-menu"
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
