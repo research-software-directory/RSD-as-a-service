@@ -1,0 +1,128 @@
+[
+  {
+    "date": "2018-12-20T00:00:00",
+    "is_featured": true,
+    "title": "Portable HPC workflows with Snakemake, Conda, and Xenon",
+    "type": "blogPost",
+    "url": "https://blog.esciencecenter.nl/portable-hpc-workflows-with-snakemake-and-xenon-e971e5127391",
+    "image": "https://miro.medium.com/max/1200/1*Dkns3eBVvWMJHsR08BZaCQ.jpeg",
+    "author": "Jurriaan H. Spaaks"
+  },
+  {
+    "date": "2017-11-07T00:00:00",
+    "is_featured": false,
+    "title": "NLeSC/xenon-cli: v2.0.0",
+    "type": "computerProgram",
+    "url": "https://doi.org/10.5281/zenodo.597603",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2018-04-15T09:29:07",
+    "is_featured": false,
+    "title": "sv-callers",
+    "type": "computerProgram",
+    "url": "https://doi.org/10.5281/zenodo.1217112",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2018-04-11T00:00:00",
+    "is_featured": false,
+    "title": "sv-callers workflow",
+    "type": "computerProgram",
+    "url": "https://doi.org/10.5281/zenodo.1217112",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2017-11-13T00:00:00",
+    "is_featured": false,
+    "title": "PyXenon 2.2.0: Python interface to Xenon 2.2",
+    "type": "computerProgram",
+    "url": "https://doi.org/10.5281/zenodo.1045888",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2017-11-07T00:00:00",
+    "is_featured": false,
+    "title": "NLeSC/xenon-grpc: v2.0.0",
+    "type": "computerProgram",
+    "url": "https://doi.org/10.5281/zenodo.1043481",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2018-10-29T00:00:00",
+    "is_featured": false,
+    "title": "A portable and scalable workflow for detecting  structural variants in whole-genome sequencing data.",
+    "type": "conferencePaper",
+    "url": "https://doi.org/10.1109/eScience.2018.00064",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2016-12-30T00:00:00",
+    "is_featured": false,
+    "title": "Using modular 3D digital earth applications based on point clouds for the study of complex sites",
+    "type": "journalArticle",
+    "url": "https://doi.org/10.1080/17538947.2016.1205673",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2020-01-25T00:00:00",
+    "is_featured": false,
+    "title": "sv-callers: a highly portable parallel workflow for structural variant detection in whole-genome sequence data",
+    "type": "journalArticle",
+    "url": "https://doi.org/10.7717/peerj.8214",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2019-09-13T00:00:00",
+    "is_featured": false,
+    "title": "Xenon introduction & highly portable parallel [genomics] workflows based on Snakemake/Xenon.",
+    "type": "presentation",
+    "url": "https://www.dtls.nl/community/meetings/programmers-meetings/",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2019-06-19T00:00:00",
+    "is_featured": false,
+    "title": "Portable HPC workflows and software re-use",
+    "type": "presentation",
+    "url": "https://betterscientificsoftware.github.io/swe-cse-bof/2019-06-isc19-bof/",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2016-02-01T00:00:00",
+    "is_featured": false,
+    "title": "Tutorial Distributed Computing With Xenon 1.1.0",
+    "type": "report",
+    "url": "https://doi.org/10.5281/zenodo.1064100",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2017-10-16T00:00:00",
+    "is_featured": false,
+    "title": "Xenon - A Uniform Interface To Distributed Storage And Compute Resources",
+    "type": "report",
+    "url": "https://doi.org/10.5281/zenodo.1064695",
+    "image": null,
+    "author": null
+  },
+  {
+    "date": "2017-10-03T00:00:00",
+    "is_featured": false,
+    "title": "Xenon tutorial on readthedocs.io",
+    "type": "webpage",
+    "url": "https://xenonrse2017.readthedocs.io/en/latest/",
+    "image": null,
+    "author": null
+  }
+]

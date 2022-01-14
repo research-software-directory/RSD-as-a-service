@@ -1,67 +1,30 @@
-import Link from 'next/link'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Badge from '@mui/material/Badge'
 
-import MentionIsFeatured from './MentionIsFeatured'
+import MentionItem from './MentionItem'
 import {Mention} from '../../utils/getSoftware'
 import {mentionType,MentionType} from '../../types/MentionType'
 import {sortOnDateProp} from '../../utils/sortFn'
-import {isoStrToLocalDateStr} from '../../utils/dateFn'
 
-type MentionByType={
+export type MentionByType={
   [key:string]: Mention[]
 }
 
-export default function MentionsByType({mentions}: { mentions: Mention[] }) {
-  const {mentionByType, featuredMentions} = clasifyMentions(mentions)
+export default function MentionsByType({mentionByType}: { mentionByType: MentionByType }) {
   const mentionTypes = Object.keys(mentionByType).sort()
-
   return (
-    <section>
-      {featuredMentions.map(item => {
-        return (
-          <MentionIsFeatured key={item.url} mention={item} />
-        )
-      })}
+    <>
       {mentionTypes.map((key) => {
         const items = mentionByType[key]
         return renderMentionSectionForType(key as MentionType, items)
       })}
-    </section>
+    </>
   )
 }
 
-function clasifyMentions(mentions: Mention[]) {
-  let mentionByType: MentionByType = {}
-  let featuredMentions:Mention[]=[]
-
-  mentions.forEach(item => {
-    // remove array with software uuid
-    delete item.mention_for_software
-    // check if type prop exists
-    let mType = item?.type as string ?? 'default'
-    // extract featured mentions
-    if (item.is_featured === true) {
-      mType = 'featured'
-      featuredMentions.push(item)
-    } else if (mentionByType?.hasOwnProperty(item.type)) {
-      mentionByType[mType].push(item)
-    } else {
-      // create array for new type
-      mentionByType[mType] = []
-      // and add this item
-      mentionByType[mType].push(item)
-    }
-  })
-
-  return {
-    mentionByType,
-    featuredMentions
-  }
-}
 
 function renderMentionSectionForType(key: MentionType, items: Mention[]) {
   // do not render accordion/section if no items
@@ -138,18 +101,7 @@ function renderMentionItemsForType(items: Mention[]) {
         }).map((item, pos) => {
           return (
             <li key={pos} className="p-4 hover:bg-grey-200 hover:text-black">
-              {item.url ?
-                <Link href={item.url} passHref>
-                  <a className="hover:text-black" target="_blank">
-                    <div>{item.title}</div>
-                    <div>{isoStrToLocalDateStr(item.date)}</div>
-                  </a>
-                </Link>
-                :<div>
-                  <div>{item.title}</div>
-                  <div>{isoStrToLocalDateStr(item.date)}</div>
-                </div>
-              }
+              <MentionItem pos={pos + 1} item={item} />
             </li>
           )
         })
