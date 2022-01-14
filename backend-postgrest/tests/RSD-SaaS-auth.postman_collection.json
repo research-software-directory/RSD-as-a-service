@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3fbe59c1-7b22-41db-ab3f-b8886117dd3a",
+		"_postman_id": "37d981a4-d5ef-4bbd-9eb8-b46165fe8452",
 		"name": "RSD-SaaS-auth",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1247,15 +1247,6 @@
 						],
 						"type": "text/javascript"
 					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"pm.request.headers.remove('Prefer');"
-						],
-						"type": "text/javascript"
-					}
 				}
 			],
 			"protocolProfileBehavior": {
@@ -1276,7 +1267,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"slug\": \"project-user-1\"\n}",
+					"raw": "{\n\t\"slug\": \"project-user-1\",\n\t\"is_published\": true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1338,6 +1329,264 @@
 					],
 					"path": [
 						"maintainer_for_project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post organisation admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.variables.set(\"organisation_id_1\", pm.response.json()[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\" : \"eScience Center\",\n\t\"primary_maintainer\" : \"{{account_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/organisation",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"organisation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post software organisation non maintainer wrong",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {",
+							"\tpm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user_2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"software\" : \"{{software_id_1}}\",\n\t\"organisation\" : \"{{organisation_id_1}}\",\n\t\"status\" : \"approved\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/software_for_organisation",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software_for_organisation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post software organisation non maintainer wrong 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {",
+							"\tpm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user_2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"software\" : \"{{software_id_1}}\",\n\t\"organisation\" : \"{{organisation_id_1}}\",\n\t\"status\" : \"requested_by_origin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/software_for_organisation",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software_for_organisation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post software organisation relation maintainer of both",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"software\" : \"{{software_id_1}}\",\n\t\"organisation\" : \"{{organisation_id_1}}\",\n\t\"status\" : \"approved\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/software_for_organisation",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software_for_organisation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete software organisation admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check deleted not empty\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/software_for_organisation",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software_for_organisation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete organisation admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check deleted not empty\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/organisation",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"organisation"
 					]
 				}
 			},
