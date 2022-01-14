@@ -369,11 +369,11 @@ CREATE POLICY maintainer_relation_insert ON software_for_software FOR INSERT TO 
 CREATE POLICY maintainer_both_insert ON software_for_software FOR INSERT TO rsd_user
 	WITH CHECK (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT * FROM software_of_current_maintainer()) AND status = 'approved');
 
-CREATE POLICY maintainer_origin_upgrade_status ON software_for_software FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_relation_upgrade_status ON software_for_software FOR UPDATE TO rsd_user
 	USING (relation IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_origin')
 	WITH CHECK (status = 'approved');
 
-CREATE POLICY maintainer_relation_upgrade_status ON software_for_software FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_origin_upgrade_status ON software_for_software FOR UPDATE TO rsd_user
 	USING (origin IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_relation')
 	WITH CHECK (status = 'approved');
 
@@ -402,11 +402,11 @@ CREATE POLICY maintainer_relation_insert ON software_for_project FOR INSERT TO r
 CREATE POLICY maintainer_both_insert ON software_for_project FOR INSERT TO rsd_user
 	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND project IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'approved');
 
-CREATE POLICY maintainer_origin_upgrade_status ON software_for_project FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_relation_upgrade_status ON software_for_project FOR UPDATE TO rsd_user
 	USING (project IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_origin')
 	WITH CHECK (status = 'approved');
 
-CREATE POLICY maintainer_relation_upgrade_status ON software_for_project FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_origin_upgrade_status ON software_for_project FOR UPDATE TO rsd_user
 	USING (software IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_relation')
 	WITH CHECK (status = 'approved');
 
@@ -435,11 +435,11 @@ CREATE POLICY maintainer_relation_insert ON project_for_project FOR INSERT TO rs
 CREATE POLICY maintainer_both_insert ON project_for_project FOR INSERT TO rsd_user
 	WITH CHECK (origin IN (SELECT * FROM projects_of_current_maintainer()) AND relation IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'approved');
 
-CREATE POLICY maintainer_origin_upgrade_status ON project_for_project FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_relation_upgrade_status ON project_for_project FOR UPDATE TO rsd_user
 	USING (relation IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_origin')
 	WITH CHECK (status = 'approved');
 
-CREATE POLICY maintainer_relation_upgrade_status ON project_for_project FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_origin_upgrade_status ON project_for_project FOR UPDATE TO rsd_user
 	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_relation')
 	WITH CHECK (status = 'approved');
 
@@ -468,11 +468,11 @@ CREATE POLICY maintainer_relation_insert ON software_for_organisation FOR INSERT
 CREATE POLICY maintainer_both_insert ON software_for_organisation FOR INSERT TO rsd_user
 	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'approved');
 
-CREATE POLICY maintainer_origin_upgrade_status ON software_for_organisation FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_relation_upgrade_status ON software_for_organisation FOR UPDATE TO rsd_user
 	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'requested_by_origin')
 	WITH CHECK (status = 'approved');
 
-CREATE POLICY maintainer_relation_upgrade_status ON software_for_organisation FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_origin_upgrade_status ON software_for_organisation FOR UPDATE TO rsd_user
 	USING (software IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_relation')
 	WITH CHECK (status = 'approved');
 
@@ -501,11 +501,11 @@ CREATE POLICY maintainer_relation_insert ON project_for_organisation FOR INSERT 
 CREATE POLICY maintainer_both_insert ON project_for_organisation FOR INSERT TO rsd_user
 	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()) AND organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'approved');
 
-CREATE POLICY maintainer_origin_upgrade_status ON project_for_organisation FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_relation_upgrade_status ON project_for_organisation FOR UPDATE TO rsd_user
 	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'requested_by_origin')
 	WITH CHECK (status = 'approved');
 
-CREATE POLICY maintainer_relation_upgrade_status ON project_for_organisation FOR UPDATE TO rsd_user
+CREATE POLICY maintainer_origin_upgrade_status ON project_for_organisation FOR UPDATE TO rsd_user
 	USING (project IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_relation')
 	WITH CHECK (status = 'approved');
 
