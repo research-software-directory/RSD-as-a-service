@@ -12,7 +12,7 @@ const darkTheme = createTheme({
 
 export default function MentionsSection({mentions}: { mentions: Mention[] }) {
 
-  // render nothing if no data
+  // do not render section if no data
   if (mentions.length === 0) return null
 
   return (

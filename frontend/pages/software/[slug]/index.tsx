@@ -87,6 +87,8 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
           repositories={software.repository_url}
         />
         <MentionsSection mentions={mentions} />
+        {/* temporary spacer */}
+        <section className="py-12"></section>
         <AppFooter />
       </PageSnackbarContext.Provider>
       <PageSnackbar options={options} setOptions={setSnackbar} />

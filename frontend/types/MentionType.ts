@@ -5,26 +5,26 @@
 
 export const mentionType = {
   attachment: 'Attachment',
-  blogPost:'BlogPost',
-  book:'Book',
+  blogPost:'Blogposts',
+  book:'Books',
   bookSection:'Book section',
-  computerProgram:'Computer program',
-  conferencePaper:'Conference paper',
-  document:'Document',
-  interview:'Interview',
-  journalArticle:'Journal article',
-  magazineArticle:'Magazine article',
-  manuscript:'Manuscript',
-  newspaperArticle:'Newspaper article',
-  note:'Note',
-  presentation:'Presentation',
-  radioBroadcast:'Radio broadcast',
-  report:'Report',
+  computerProgram:'Computer programs',
+  conferencePaper:'Conference papers',
+  document:'Documents',
+  interview:'Interviews',
+  journalArticle:'Journal articles',
+  magazineArticle:'Magazine articles',
+  manuscript:'Manuscripts',
+  newspaperArticle:'Newspaper articles',
+  note:'Notes',
+  presentation:'Presentations',
+  radioBroadcast:'Radio broadcasts',
+  report:'Reports',
   thesis:'Thesis',
-  videoRecording:'Video recording',
-  webpage : 'Webpage',
-  // additional type to split coportate blog?
-  corporateBlog : 'Corporate blog'
+  videoRecording:'Video recordings',
+  webpage : 'Webpages',
+  // additional type for featured mentions
+  featured : 'Featured mentions'
 }
 
 export type MentionType = keyof typeof mentionType

@@ -206,9 +206,9 @@ export async function getContributorMentionCount(uuid:string){
 
 export type Mention = {
   date: string,
-  is_corporate_blog: boolean,
+  is_featured: boolean,
   title: string,
-  type: keyof typeof MentionType,
+  type: MentionType,
   url: string,
   // url to external image
   image: string,
@@ -220,7 +220,7 @@ export async function getMentionsForSoftware(uuid: string) {
   try {
     // this request is always perfomed from backend
     // the content is order by type ascending
-    const url = `${process.env.POSTGREST_URL}/mention?select=date,is_corporate_blog,title,type,url,image,author,mention_for_software!inner(software)&mention_for_software.software=eq.${uuid}&order=type.asc`
+    const url = `${process.env.POSTGREST_URL}/mention?select=date,is_featured,title,type,url,image,author,mention_for_software!inner(software)&mention_for_software.software=eq.${uuid}&order=type.asc`
     const resp = await fetch(url, {method: 'GET'})
     if (resp.status === 200) {
       const data: ContributorMentionCount[] = await resp.json()
