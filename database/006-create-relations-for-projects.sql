@@ -7,7 +7,7 @@ CREATE TABLE team_member (
 	given_names VARCHAR NOT NULL,
 	name_particle VARCHAR,
 	name_suffix VARCHAR,
-	avatar_data BYTEA,
+	avatar_data VARCHAR,
 	avatar_mime_type VARCHAR(100),
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL

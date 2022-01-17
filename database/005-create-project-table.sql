@@ -20,7 +20,7 @@ CREATE TABLE project (
 
 CREATE TABLE image_for_project (
 	project UUID references project (id) PRIMARY KEY,
-	data BYTEA,
+	data VARCHAR,
 	mime_type VARCHAR(100)
 );
 
