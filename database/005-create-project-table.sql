@@ -49,3 +49,33 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_project BEFORE UPDATE ON project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_project();
+
+
+CREATE OR REPLACE FUNCTION get_project_image(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
+$$
+DECLARE headers TEXT;
+DECLARE blob BYTEA;
+
+BEGIN
+	SELECT format(
+		'[{"Content-Type": "%s"},'
+		'{"Content-Disposition": "inline; filename=\"%s\""},'
+		'{"Cache-Control": "max-age=259200"}]',
+		mime_type,
+		id)
+	FROM image_for_project WHERE project = id INTO headers;
+
+PERFORM set_config('response.headers', headers, TRUE);
+
+SELECT decode(image_for_project.data, 'base64') FROM image_for_project WHERE image_for_project.project = get_project_image.id INTO blob;
+
+IF FOUND
+	THEN RETURN(blob);
+ELSE RAISE SQLSTATE 'PT404'
+	USING
+		message = 'NOT FOUND',
+		detail = 'File not found',
+		hint = format('%s seems to be an invalid file id', get_project_image.id);
+END IF;
+END
+$$;
