@@ -27,21 +27,4 @@ export default function ImageAsBackground({src, alt, className}:
       className={className}
     ></div>
   )
-  // image as div background scales better imho
-  // return (
-  //   <div className="flex-1">
-  //     <img
-  //       src={src}
-  //       alt={alt}
-  //       className={className}
-  //       style={{
-  //         width: '100%',
-  //         height: '100%',
-  //         maxHeight: '15rem',
-  //         maxWidth: '100%',
-  //         objectFit: 'cover'
-  //       }}
-  //       />
-  //   </div>
-  // )
 }
