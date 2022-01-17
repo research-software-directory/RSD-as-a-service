@@ -51,28 +51,6 @@ $$;
 CREATE TRIGGER sanitise_update_project BEFORE UPDATE ON project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_project();
 
 
-CREATE FUNCTION sanitise_insert_image_for_project() RETURNS TRIGGER LANGUAGE plpgsql as
-$$
-BEGIN
-	NEW.id = gen_random_uuid();
-	return NEW;
-END
-$$;
-
-CREATE TRIGGER sanitise_insert_image_for_project BEFORE INSERT ON image_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_image_for_project();
-
-
-CREATE FUNCTION sanitise_update_image_for_project() RETURNS TRIGGER LANGUAGE plpgsql as
-$$
-BEGIN
-	NEW.id = OLD.id;
-	return NEW;
-END
-$$;
-
-CREATE TRIGGER sanitise_update_image_for_project BEFORE UPDATE ON image_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_image_for_project();
-
-
 CREATE FUNCTION get_project_image(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
 $$
 DECLARE headers TEXT;
@@ -89,17 +67,17 @@ BEGIN
 		project_slug)
 	FROM image_for_project WHERE project = id INTO headers;
 
-PERFORM set_config('response.headers', headers, TRUE);
+	PERFORM set_config('response.headers', headers, TRUE);
 
-SELECT decode(image_for_project.data, 'base64') FROM image_for_project WHERE image_for_project.project = get_project_image.id INTO blob;
+	SELECT decode(image_for_project.data, 'base64') FROM image_for_project WHERE image_for_project.project = get_project_image.id INTO blob;
 
-IF FOUND
-	THEN RETURN(blob);
-ELSE RAISE SQLSTATE 'PT404'
-	USING
-		message = 'NOT FOUND',
-		detail = 'File not found',
-		hint = format('%s seems to be an invalid file id', get_project_image.id);
-END IF;
+	IF FOUND
+		THEN RETURN(blob);
+	ELSE RAISE SQLSTATE 'PT404'
+		USING
+			message = 'NOT FOUND',
+			detail = 'File not found',
+			hint = format('%s seems to be an invalid file id', get_project_image.id);
+	END IF;
 END
 $$;

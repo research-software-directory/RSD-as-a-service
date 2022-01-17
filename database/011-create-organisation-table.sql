@@ -26,6 +26,7 @@ CREATE FUNCTION sanitise_update_organisation() RETURNS TRIGGER LANGUAGE plpgsql 
 $$
 BEGIN
 	NEW.id = OLD.id;
+	NEW.slug = OLD.slug;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
 	return NEW;

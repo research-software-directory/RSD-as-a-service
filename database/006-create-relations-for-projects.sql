@@ -53,17 +53,17 @@ BEGIN
 		team_member.id)
 	FROM team_member WHERE team_member.id = get_team_member_image.id INTO headers;
 
-PERFORM set_config('response.headers', headers, TRUE);
+	PERFORM set_config('response.headers', headers, TRUE);
 
-SELECT decode(team_member.avatar_data, 'base64') FROM team_member WHERE team_member.id = get_team_member_image.id INTO blob;
+	SELECT decode(team_member.avatar_data, 'base64') FROM team_member WHERE team_member.id = get_team_member_image.id INTO blob;
 
-IF FOUND
-	THEN RETURN(blob);
-ELSE RAISE SQLSTATE 'PT404'
-	USING
-		message = 'NOT FOUND',
-		detail = 'File not found',
-		hint = format('%s seems to be an invalid file id', get_team_member_image.id);
-END IF;
+	IF FOUND
+		THEN RETURN(blob);
+	ELSE RAISE SQLSTATE 'PT404'
+		USING
+			message = 'NOT FOUND',
+			detail = 'File not found',
+			hint = format('%s seems to be an invalid file id', get_team_member_image.id);
+	END IF;
 END
 $$;

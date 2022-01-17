@@ -112,18 +112,18 @@ BEGIN
 		contributor.id)
 	FROM contributor WHERE contributor.id = get_contributor_image.id INTO headers;
 
-PERFORM set_config('response.headers', headers, TRUE);
+	PERFORM set_config('response.headers', headers, TRUE);
 
-SELECT decode(contributor.avatar_data, 'base64') FROM contributor WHERE contributor.id = get_contributor_image.id INTO blob;
+	SELECT decode(contributor.avatar_data, 'base64') FROM contributor WHERE contributor.id = get_contributor_image.id INTO blob;
 
-IF FOUND
-	THEN RETURN(blob);
-ELSE RAISE SQLSTATE 'PT404'
-	USING
-		message = 'NOT FOUND',
-		detail = 'File not found',
-		hint = format('%s seems to be an invalid file id', get_contributor_image.id);
-END IF;
+	IF FOUND
+		THEN RETURN(blob);
+	ELSE RAISE SQLSTATE 'PT404'
+		USING
+			message = 'NOT FOUND',
+			detail = 'File not found',
+			hint = format('%s seems to be an invalid file id', get_contributor_image.id);
+	END IF;
 END
 $$;
 
