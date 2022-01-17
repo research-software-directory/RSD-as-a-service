@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import Head from 'next/head'
 
+import {app} from '../../../config/app'
 import AppHeader from '../../../components/layout/AppHeader'
 import AppFooter from '../../../components/layout/AppFooter'
 import PageContainer from '../../../components/layout/PageContainer'
@@ -12,6 +13,7 @@ import PageSnackbar from '../../../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../../../components/snackbar/PageSnackbarContext'
 import AboutSection from '../../../components/software/AboutSection'
 import MentionsSection from '../../../components/software/MentionsSection'
+import ContributorsSection from '../../../components/software/ContributorsSection'
 
 import {
   getSoftwareItem,
@@ -20,12 +22,14 @@ import {
   getLicenseForSoftware,
   getContributorMentionCount,
   getMentionsForSoftware,
-  Tag, License, ContributorMentionCount,Mention
+  getContributorsForSoftware,
+  Tag, License, ContributorMentionCount, Mention,
 } from '../../../utils/getSoftware'
 import logger from '../../../utils/logger'
 import {SoftwareItem} from '../../../types/SoftwareItem'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {ScriptProps} from 'next/script'
+import {Contributor} from '../../../types/Contributor'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string,
@@ -35,11 +39,12 @@ interface SoftwareIndexData extends ScriptProps{
   licenseInfo: License[],
   softwareIntroCounts: ContributorMentionCount,
   mentions: Mention[]
+  contributors: Contributor[]
 }
 
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
-  const {software, citationInfo, tagsInfo, licenseInfo, softwareIntroCounts, mentions} = props
+  const {software, citationInfo, tagsInfo, licenseInfo, softwareIntroCounts, mentions ,contributors} = props
   const [options, setSnackbar] = useState(snackbarDefaults)
 
   if (!software?.brand_name){
@@ -53,7 +58,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   return (
     <>
       <Head>
-        <title>{software?.brand_name} | RSD</title>
+        <title>{software?.brand_name} | {app.title}</title>
       </Head>
       <PageSnackbarContext.Provider value={{options,setSnackbar}}>
         <AppHeader />
@@ -89,6 +94,9 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         <MentionsSection mentions={mentions} />
         {/* temporary spacer */}
         <section className="py-12"></section>
+        <ContributorsSection contributors={contributors} />
+        {/* temporary spacer */}
+        <section className="py-12"></section>
         <AppFooter />
       </PageSnackbarContext.Provider>
       <PageSnackbar options={options} setOptions={setSnackbar} />
@@ -110,25 +118,47 @@ export async function getServerSideProps(context:any) {
         notFound: true,
       }
     }
+    // fetch all info about software based on software.id in parallel
+    const fetchData = [
+      // citationInfo
+      getCitationsForSoftware(software.id),
+      // tagsInfo
+      getTagsForSoftware(software.id),
+      // licenseInfo
+      getLicenseForSoftware(software.id),
+      // softwareIntroCounts
+      getContributorMentionCount(software.id),
+      // mentions
+      getMentionsForSoftware(software.id),
+      // contributors
+      getContributorsForSoftware(software.id)
+    ]
+    const [
+      citationInfo,
+      tagsInfo,
+      licenseInfo,
+      softwareIntroCounts,
+      mentions,
+      contributors
+    ] = await Promise.all(fetchData)
 
-    // get info about software
-    const citationInfo = await getCitationsForSoftware(software.id)
-    const tagsInfo = await getTagsForSoftware(software.id)
-    const licenseInfo = await getLicenseForSoftware(software.id)
-    const softwareIntroCounts = await getContributorMentionCount(software.id)
-    const mentions = await getMentionsForSoftware(software.id)
-
+    // const citationInfo = await getCitationsForSoftware(software.id)
+    // const tagsInfo = await getTagsForSoftware(software.id)
+    // const licenseInfo = await getLicenseForSoftware(software.id)
+    // const softwareIntroCounts = await getContributorMentionCount(software.id)
+    // const mentions = await getMentionsForSoftware(software.id)
+    // const contributors = await getContributorsForSoftware(software.id)
 
     return {
-    // will be passed to the page component as props
-    // see params in SoftwareIndexPage
+    // pass data to page component as props
       props: {
         software,
         citationInfo,
         tagsInfo,
         licenseInfo,
         softwareIntroCounts,
-        mentions
+        mentions,
+        contributors
       }
     }
   }catch(e:any){

@@ -10,7 +10,12 @@ function clasifyContributors(contributors: Contributor[]) {
   contributors.forEach(item => {
     // construct file name
     if (item.avatar_mime_type) {
-      item.avatar_url = `/images/contributor/${item.id}.${item.avatar_mime_type.split('/')[1]}`
+      // preferably
+      // construct image path using id and mime type, example: 2023dbe4-f49c-4af9-b37e-13eacf5809a1.png
+      // item.avatar_url = `/image/contributor/${item.id}.${item.avatar_mime_type.split('/')[1]}`
+      // currently we use posgrest + nginx approach
+      // image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
+      item.avatar_url = `/image/rpc/get_contributor_image?id=${item.id}`
     } else {
       item.avatar_url=null
     }
