@@ -77,14 +77,16 @@ CREATE FUNCTION get_project_image(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql
 $$
 DECLARE headers TEXT;
 DECLARE blob BYTEA;
+DECLARE project_slug VARCHAR;
 
 BEGIN
+	SELECT slug FROM project WHERE project.id = get_project_image.id INTO project_slug;
 	SELECT format(
 		'[{"Content-Type": "%s"},'
 		'{"Content-Disposition": "inline; filename=\"%s\""},'
 		'{"Cache-Control": "max-age=259200"}]',
 		mime_type,
-		id)
+		project_slug)
 	FROM image_for_project WHERE project = id INTO headers;
 
 PERFORM set_config('response.headers', headers, TRUE);
