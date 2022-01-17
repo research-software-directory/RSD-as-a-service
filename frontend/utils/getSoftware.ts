@@ -2,6 +2,7 @@ import {SoftwareItem} from '../types/SoftwareItem'
 import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
+import {MentionType} from '../types/MentionType'
 
 /**
  * postgREST api uri to retreive software index data.
@@ -181,7 +182,7 @@ export type ContributorMentionCount = {
 export async function getContributorMentionCount(uuid:string){
   try{
     // this request is always perfomed from backend
-    // the content is order by license ascending
+    // the content is order by id ascending
     const url = `${process.env.POSTGREST_URL}/count_software_contributors_mentions?id=eq.${uuid}`
     const resp = await fetch(url,{method:'GET'})
     if (resp.status===200){
@@ -194,6 +195,43 @@ export async function getContributorMentionCount(uuid:string){
     }
   }catch(e:any){
     logger(`getContributorMentionCount: ${e?.message}`,'error')
+    return undefined
+  }
+}
+
+/**
+ * MENTIONS
+ * @param uuid
+ */
+
+export type Mention = {
+  date: string,
+  is_featured: boolean,
+  title: string,
+  type: MentionType,
+  url: string,
+  // url to external image
+  image: string,
+  author: string,
+  mention_for_software?:any[]
+}
+
+export async function getMentionsForSoftware(uuid: string) {
+  try {
+    // this request is always perfomed from backend
+    // the content is order by type ascending
+    const url = `${process.env.POSTGREST_URL}/mention?select=date,is_featured,title,type,url,image,author,mention_for_software!inner(software)&mention_for_software.software=eq.${uuid}&order=type.asc`
+    const resp = await fetch(url, {method: 'GET'})
+    if (resp.status === 200) {
+      const data: ContributorMentionCount[] = await resp.json()
+      return data
+    } else if (resp.status === 404) {
+      logger(`getContributorMentionCount: 404 [${url}]`, 'error')
+      // query not found
+      return undefined
+    }
+  } catch (e: any) {
+    logger(`getContributorMentionCount: ${e?.message}`, 'error')
     return undefined
   }
 }
