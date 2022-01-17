@@ -60,6 +60,7 @@ public class Main {
 		JsonArray allPersonsFromLegacyRSD = JsonParser.parseString(allPersonsString).getAsJsonArray();
 		saveContributors(allPersonsFromLegacyRSD, allSoftwareFromLegacyRSD, slugToIdSoftware, "contributors", "/contributor", "software");
 		saveSoftwareRelatedToSoftware(allSoftwareFromLegacyRSD, legacyIdToNewIdSoftware);
+		saveTestimonialsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware);
 
 		String allProjectsString = get(URI.create(LEGACY_RSD_PROJECT_URI));
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
@@ -295,6 +296,26 @@ public class Main {
 		post(URI.create(POSTGREST_URI + "/software_for_software"), allRelationsToSave.toString());
 	}
 
+	public static void saveTestimonialsForSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
+		JsonArray allTestimonialsToSave = new JsonArray();
+		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
+
+//			an example of an entry with multiple testimonials is with slug ggir
+			JsonArray testimonials = softwareFromLegacyRSD.get("testimonials").getAsJsonArray();
+			String slug = softwareFromLegacyRSD.get("slug").getAsString();
+			testimonials.forEach(jsonMention -> {
+				JsonObject testimonialToSave = new JsonObject();
+				testimonialToSave.addProperty("software", slugToId.get(slug));
+				testimonialToSave.add("affiliation", jsonMention.getAsJsonObject().getAsJsonPrimitive("affiliation"));
+				testimonialToSave.add("person", jsonMention.getAsJsonObject().getAsJsonPrimitive("person"));
+				testimonialToSave.add("text", jsonMention.getAsJsonObject().getAsJsonPrimitive("text"));
+				allTestimonialsToSave.add(testimonialToSave);
+			});
+		});
+		post(URI.create(POSTGREST_URI + "/testimonial"), allTestimonialsToSave.toString());
+	}
+
 	public static void saveProjects(JsonArray allProjectsFromLegacyRSD) {
 		JsonArray allProjectsToSave = new JsonArray();
 		allProjectsFromLegacyRSD.forEach(jsonElement -> {
@@ -519,7 +540,8 @@ public class Main {
 			JsonElement conceptDoiElement = entity.getAsJsonObject().get("conceptDOI");
 			if (conceptDoiElement == null || conceptDoiElement.isJsonNull()) return;
 			String conceptDoi = conceptDoiElement.getAsString();
-			if (conceptDoi.equals("10.0000/FIXME")) return; // problematic entry as it is not unique, luckily no release uses it
+			if (conceptDoi.equals("10.0000/FIXME"))
+				return; // problematic entry as it is not unique, luckily no release uses it
 //			problematic entry as it has two software-entries, corrected manually
 			if (conceptDoi.equals("10.5281/zenodo.3964180")) {
 				String handPickedSlug = "gh-action-set-up-singularity";
@@ -530,7 +552,8 @@ public class Main {
 
 			String slug = entity.getAsJsonObject().getAsJsonPrimitive("slug").getAsString();
 			String id = slugToId.get(slug);
-			if (conceptDoiToSoftwareId.containsKey(conceptDoi)) throw new RuntimeException("Concept DOI " + conceptDoi + " is not unique");
+			if (conceptDoiToSoftwareId.containsKey(conceptDoi))
+				throw new RuntimeException("Concept DOI " + conceptDoi + " is not unique");
 			conceptDoiToSoftwareId.put(conceptDoi, id);
 		});
 		return conceptDoiToSoftwareId;
@@ -544,14 +567,22 @@ public class Main {
 
 			String legacyConceptDoi = legacyRelease.get("conceptDOI").getAsString();
 //			some problematic entries, corrected manually:
-			if (legacyConceptDoi.equals("10.5281/zenodo.3563088")) return; // matching conceptDOI 10.5281/zenodo.883726 is already present
-			if (legacyConceptDoi.equals("10.5281/zenodo.3630355")) return; // matching conceptDOI 10.5281/zenodo.3630354 is already present
-			if (legacyConceptDoi.equals("10.5281/zenodo.3686602")) return; // matching conceptDOI 10.5281/zenodo.3686601 is already present
-			if (legacyConceptDoi.equals("10.5281/zenodo.3716378")) return; // this is a valid conceptDOI, but conceptDOI 10.5281/zenodo.3859772 seems to be the same content but is newer and is present in the legacy RSD, see also https://zenodo.org/record/3834230 and https://zenodo.org/record/5717374
-			if (legacyConceptDoi.equals("10.5281/zenodo.3889758")) return; // matching conceptDOI 10.5281/zenodo.3859772 is already present
-			if (legacyConceptDoi.equals("10.5281/zenodo.3889772")) return; // matching conceptDOI 10.5281/zenodo.3889771 not present in legacy RSD, proposed solution was to ignore it
-			if (legacyConceptDoi.equals("10.5281/zenodo.4336539")) return; // matching conceptDOI 10.5281/zenodo.4336538 is already present
-			if (legacyConceptDoi.equals("10.5281/zenodo.4590883")) return; // matching conceptDOI 10.5281/zenodo.4590882 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3563088"))
+				return; // matching conceptDOI 10.5281/zenodo.883726 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3630355"))
+				return; // matching conceptDOI 10.5281/zenodo.3630354 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3686602"))
+				return; // matching conceptDOI 10.5281/zenodo.3686601 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3716378"))
+				return; // this is a valid conceptDOI, but conceptDOI 10.5281/zenodo.3859772 seems to be the same content but is newer and is present in the legacy RSD, see also https://zenodo.org/record/3834230 and https://zenodo.org/record/5717374
+			if (legacyConceptDoi.equals("10.5281/zenodo.3889758"))
+				return; // matching conceptDOI 10.5281/zenodo.3859772 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.3889772"))
+				return; // matching conceptDOI 10.5281/zenodo.3889771 not present in legacy RSD, proposed solution was to ignore it
+			if (legacyConceptDoi.equals("10.5281/zenodo.4336539"))
+				return; // matching conceptDOI 10.5281/zenodo.4336538 is already present
+			if (legacyConceptDoi.equals("10.5281/zenodo.4590883"))
+				return; // matching conceptDOI 10.5281/zenodo.4590882 is already present
 			releaseToSave.addProperty("software", conceptDoiToSoftwareId.get(legacyConceptDoi));
 			releaseToSave.add("is_citable", legacyRelease.get("isCitable"));
 			releaseToSave.add("latest_schema_dot_org", legacyRelease.get("latestSchema_dot_org"));
