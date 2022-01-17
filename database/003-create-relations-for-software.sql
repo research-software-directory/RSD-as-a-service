@@ -96,3 +96,34 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_contributor BEFORE UPDATE ON contributor FOR EACH ROW EXECUTE PROCEDURE sanitise_update_contributor();
+
+
+
+CREATE TABLE testimonial (
+	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	software UUID REFERENCES software (id) NOT NULL,
+	affiliation VARCHAR(100),
+	person VARCHAR(100) NOT NULL,
+	text VARCHAR(500) NOT NULL
+);
+
+CREATE FUNCTION sanitise_insert_testimonial() RETURNS TRIGGER LANGUAGE plpgsql as
+$$
+BEGIN
+	NEW.id = gen_random_uuid();
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_testimonial BEFORE INSERT ON testimonial FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_testimonial();
+
+
+CREATE FUNCTION sanitise_update_testimonial() RETURNS TRIGGER LANGUAGE plpgsql as
+$$
+BEGIN
+	NEW.id = OLD.id;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_testimonial BEFORE UPDATE ON testimonial FOR EACH ROW EXECUTE PROCEDURE sanitise_update_testimonial();
