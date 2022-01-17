@@ -51,6 +51,28 @@ $$;
 CREATE TRIGGER sanitise_update_project BEFORE UPDATE ON project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_project();
 
 
+CREATE FUNCTION sanitise_insert_image_for_project() RETURNS TRIGGER LANGUAGE plpgsql as
+$$
+BEGIN
+	NEW.id = gen_random_uuid();
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_image_for_project BEFORE INSERT ON image_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_image_for_project();
+
+
+CREATE FUNCTION sanitise_update_image_for_project() RETURNS TRIGGER LANGUAGE plpgsql as
+$$
+BEGIN
+	NEW.id = OLD.id;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_image_for_project BEFORE UPDATE ON image_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_image_for_project();
+
+
 CREATE OR REPLACE FUNCTION get_project_image(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
 $$
 DECLARE headers TEXT;
