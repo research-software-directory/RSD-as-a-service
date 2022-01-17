@@ -1,5 +1,6 @@
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	slug VARCHAR(100) UNIQUE NOT NULL,
 	primary_maintainer UUID REFERENCES account (id),
 	name VARCHAR NOT NULL,
 	ror_id VARCHAR,
