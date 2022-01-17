@@ -73,7 +73,7 @@ $$;
 CREATE TRIGGER sanitise_update_image_for_project BEFORE UPDATE ON image_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_image_for_project();
 
 
-CREATE OR REPLACE FUNCTION get_project_image(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION get_project_image(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
 $$
 DECLARE headers TEXT;
 DECLARE blob BYTEA;
