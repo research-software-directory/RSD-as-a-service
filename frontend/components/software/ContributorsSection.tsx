@@ -5,17 +5,17 @@ import ContactPersonCard from './ContactPersonCard'
 
 function clasifyContributors(contributors: Contributor[]) {
   const contributorList:Contributor[] = []
-  let contact:Contributor|null=null
+  let contact: Contributor | null = null
 
   contributors.forEach(item => {
     // construct file name
     if (item.avatar_mime_type) {
-      // preferably
-      // construct image path using id and mime type, example: 2023dbe4-f49c-4af9-b37e-13eacf5809a1.png
-      // item.avatar_url = `/image/contributor/${item.id}.${item.avatar_mime_type.split('/')[1]}`
-      // currently we use posgrest + nginx approach
-      // image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
+      // construct image path
+      // currently we use posgrest + nginx approach image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
+      // NOTE! the images will fail when running frontend in development due to origin being localhost:3000 instead of localhost
       item.avatar_url = `/image/rpc/get_contributor_image?id=${item.id}`
+      // debugger
+      // console.log('image',item.avatar_url)
     } else {
       item.avatar_url=null
     }

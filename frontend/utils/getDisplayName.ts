@@ -31,7 +31,7 @@ export function getDisplayInitials(contributor: Contributor) {
   // add particle, eg. van
   if (contributor.name_particle) {
     // split on space and take first chars
-    displayInitials += `${contributor.name_particle.split(' ').map(i=>i[0])}`
+    displayInitials += `${contributor.name_particle.split(' ').map(i=>i[0]).join('')}`
   }
   // then family names
   if (contributor.family_names) {
