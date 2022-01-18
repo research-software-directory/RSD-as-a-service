@@ -34,7 +34,9 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
         {/* </div> */}
         <div className="flex-1 flex flex-col items-center py-4 md:items-start lg:pt-8">
           <h5 className="text-primary text-2xl">{displayName}</h5>
-          <h6 className="py-2">Placeholder for ogranisation name</h6>
+          <h6 className="py-2">
+            {person?.affiliation ?? 'Organisation unknown'}
+          </h6>
           <a className="flex items-center md:items-start"
             href={`mailto:${person.email_address}`}>
             {/* <div className="flex items-center" style={{opacity:'inherit'}}> */}

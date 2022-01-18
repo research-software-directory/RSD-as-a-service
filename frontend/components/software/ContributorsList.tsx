@@ -31,7 +31,7 @@ export default function ContributorsList({contributors}: { contributors: Contrib
                   {displayName}
                 </div>
                 <div>
-                  Placeholder for ogranisation name
+                  {item?.affiliation ?? 'Organisation unknown'}
                 </div>
               </div>
             </div>

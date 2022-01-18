@@ -29,7 +29,9 @@ export type Contributor = {
   // avatar_data: string | null
   // construct url based on id and mime-type
   avatar_url: string|null
-  avatar_mime_type: string | null,
+  avatar_mime_type: string | null
+  // NOTE! it should be added later
+  affiliation:string
   created_at: string
   updated_at: string
 }
