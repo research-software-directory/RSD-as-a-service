@@ -1,5 +1,6 @@
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	slug VARCHAR(100) UNIQUE NOT NULL,
 	primary_maintainer UUID REFERENCES account (id),
 	name VARCHAR NOT NULL,
 	ror_id VARCHAR,
@@ -25,6 +26,7 @@ CREATE FUNCTION sanitise_update_organisation() RETURNS TRIGGER LANGUAGE plpgsql 
 $$
 BEGIN
 	NEW.id = OLD.id;
+	NEW.slug = OLD.slug;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
 	return NEW;

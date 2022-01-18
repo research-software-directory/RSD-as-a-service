@@ -42,7 +42,7 @@ public class Main {
 		});
 
 		app.post("/login/surfconext", ctx -> {
-			try{
+			try {
 				String returnPath = ctx.cookie("rsd_pathname");
 				String code = ctx.formParam("code");
 				String redirectUrl = CONFIG.getProperty("NEXT_PUBLIC_SURFCONEXT_REDIRECT");
@@ -51,13 +51,13 @@ public class Main {
 				String token = jwtCreator.createUserJwt(account);
 				setJwtCookie(ctx, token);
 				// redirect based on info
-				if (returnPath != null && !returnPath.trim().isEmpty()){
+				if (returnPath != null && !returnPath.trim().isEmpty()) {
 					returnPath = returnPath.trim();
 					ctx.redirect(returnPath);
-				}else{
+				} else {
 					ctx.redirect("/");
 				}
-			}catch (RuntimeException ex){
+			} catch (RuntimeException ex) {
 				ex.printStackTrace();
 				ctx.status(400);
 				ctx.redirect("/login/failed");
@@ -65,7 +65,7 @@ public class Main {
 		});
 
 		app.get("/refresh", ctx -> {
-			try{
+			try {
 				String tokenToVerify = ctx.cookie("rsd_token");
 				String signingSecret = CONFIG.getProperty("PGRST_JWT_SECRET");
 				JwtVerifier verifier = new JwtVerifier(signingSecret);
@@ -74,7 +74,7 @@ public class Main {
 				JwtCreator jwtCreator = new JwtCreator(signingSecret);
 				String token = jwtCreator.refreshToken(tokenToVerify);
 				setJwtCookie(ctx, token);
-			}catch (RuntimeException ex){
+			} catch (RuntimeException ex) {
 				ex.printStackTrace();
 				ctx.status(400);
 				ctx.json("{\"message\": \"failed to refresh token\"}");
