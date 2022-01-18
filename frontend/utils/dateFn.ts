@@ -55,3 +55,39 @@ export function isoStrToLocalDateStr(isoString: string, locale = 'en-US',
   }
   return ''
 }
+
+/**
+ * Get human readible time difference like: right now, X hours ago, X days ago etc..
+ * @param isoString
+ * @param since
+ * @returns
+ */
+export function getTimeAgoSince(since: Date, isoStringDate: string | null) {
+  try {
+    // if not provided we do not show
+    if (!isoStringDate) return null
+    // convert to date
+    const updated = isoStrToDate(isoStringDate)
+    if (!updated) return null
+
+    if (since > updated) {
+      const msDiff = since.getTime() - updated.getTime()
+      const hours = 1000 * 60 * 60
+      const hoursDiff = Math.floor(msDiff / hours)
+      if (hoursDiff > 24) {
+        const daysDiff = Math.floor(hoursDiff / 24)
+        if (daysDiff > 1) return `${hoursDiff} days ago`
+        return '1 day ago'
+      } else if (hoursDiff === 1) {
+        return '1 hour ago'
+      } else {
+        return `${hoursDiff} hours ago`
+      }
+    } else {
+      return 'right now'
+    }
+  } catch (e) {
+    // on fail return nothing
+    return null
+  }
+}

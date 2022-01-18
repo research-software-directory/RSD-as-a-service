@@ -5,10 +5,11 @@ import PageContainer from '../layout/PageContainer'
 import SoftwareGrid from './SoftwareGrid'
 
 
-export default function RelatedToolsSection({relatedTools=[]}: { relatedTools: RelatedTools[] }) {
+export default function RelatedToolsSection({relatedTools=[]}: {relatedTools: RelatedTools[]}) {
   // do not render if no data
   if (relatedTools?.length === 0) return null
 
+  // prepare related software items to be used by SoftwareGrid
   const relatedSoftware:SoftwareItem[] = relatedTools.map(item => {
     return {
       id: item.software.id,
@@ -17,7 +18,7 @@ export default function RelatedToolsSection({relatedTools=[]}: { relatedTools: R
       bullets: null,
       concept_doi: '',
       get_started_url: '',
-      // we do not have featured software layout
+      // we do not use featured software layout
       is_featured: false,
       is_published: true,
       read_more: null,
