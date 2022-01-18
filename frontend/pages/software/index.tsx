@@ -3,6 +3,7 @@ import Head from 'next/head'
 import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination'
 
+import {app} from '../../config/app'
 import DefaultLayout from '../../components/layout/DefaultLayout'
 import PageTitle from '../../components/layout/PageTitle'
 import Searchbox from '../../components/software/Searchbox'
@@ -81,7 +82,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   return (
     <DefaultLayout>
       <Head>
-        <title>Software | RSD</title>
+        <title>Software | {app.title}</title>
       </Head>
       <PageTitle title="Software">
         <div className="flex flex-wrap justify-end">

@@ -15,7 +15,7 @@ export default function MentionItem({item, pos}: {item: Mention, pos:number}) {
           <div>{isoStrToLocalDateStr(item.date)}</div>
         </div>
         <div className="flex justify-center items-center">
-          <LinkIcon />
+          {item?.url ? <LinkIcon /> : null}
         </div>
       </div>
     )

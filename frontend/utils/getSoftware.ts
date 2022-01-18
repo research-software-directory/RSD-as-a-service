@@ -3,6 +3,8 @@ import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {MentionType} from '../types/MentionType'
+import {Contributor} from '../types/Contributor'
+import {Testimonial} from '../types/Testimonial'
 
 /**
  * postgREST api uri to retreive software index data.
@@ -226,12 +228,61 @@ export async function getMentionsForSoftware(uuid: string) {
       const data: ContributorMentionCount[] = await resp.json()
       return data
     } else if (resp.status === 404) {
-      logger(`getContributorMentionCount: 404 [${url}]`, 'error')
+      logger(`getMentionsForSoftware: 404 [${url}]`, 'error')
       // query not found
       return undefined
     }
   } catch (e: any) {
-    logger(`getContributorMentionCount: ${e?.message}`, 'error')
+    logger(`getMentionsForSoftware: ${e?.message}`, 'error')
     return undefined
   }
 }
+
+/**
+ * TESTIMONIALS
+ */
+export async function getTestimonialsForSoftware(uuid: string) {
+  try {
+    // this request is always perfomed from backend
+    // the content is NOT ordered
+    const url = `${process.env.POSTGREST_URL}/testimonial?software=eq.${uuid}`
+    const resp = await fetch(url, {method: 'GET'})
+    if (resp.status === 200) {
+      const data: Testimonial[] = await resp.json()
+      return data
+    } else if (resp.status === 404) {
+      logger(`getTestimonialsForSoftware: 404 [${url}]`, 'error')
+      // query not found
+      return []
+    }
+  } catch (e: any) {
+    logger(`getTestimonialsForSoftware: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+/**
+ * CONTRIBUTORS
+ */
+
+export async function getContributorsForSoftware(uuid: string) {
+  try {
+    // this request is always perfomed from backend
+    // the content is order by family_names ascending
+    const columns = 'id,software,is_contact_person,email_address,family_names,given_names,name_particle,name_suffix,avatar_mime_type'
+    const url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${uuid}&order=family_names.asc`
+    const resp = await fetch(url, {method: 'GET'})
+    if (resp.status === 200) {
+      const data: Contributor[] = await resp.json()
+      return data
+    } else if (resp.status === 404) {
+      logger(`getContributorsForSoftware: 404 [${url}]`, 'error')
+      // query not found
+      return undefined
+    }
+  } catch (e: any) {
+    logger(`getContributorsForSoftware: ${e?.message}`, 'error')
+    return undefined
+  }
+}
+
