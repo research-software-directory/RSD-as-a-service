@@ -19,14 +19,14 @@ export default function AboutSection({brand_name = '', bullets = '', read_more =
 
   return (
     <PageContainer className="flex flex-col px-4 py-12 lg:flex-row lg:pt-0 lg:pb-12">
-      <div className="flex-[3] pr-4">
+      <div className="flex-[3] 2xl:flex-[4] pr-12">
         <AboutStatement
           brand_name={brand_name}
           bullets={bullets}
           read_more={read_more}
         />
       </div>
-      <div className="flex-1 lg:pl-8">
+      <div className="flex-1">
         <AboutTags tags={tags || []} />
         <AboutLanguages languages={['Test 1', 'Test 2', 'Test 3']} />
         <AboutLicense license={license || []} />

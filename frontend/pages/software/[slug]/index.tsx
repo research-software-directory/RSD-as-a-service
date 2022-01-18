@@ -76,7 +76,6 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       </Head>
       <PageSnackbarContext.Provider value={{options,setSnackbar}}>
         <AppHeader />
-
         <PageContainer>
           <SoftwareIntroSection
             brand_name={software.brand_name}
@@ -84,19 +83,14 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
             counts={softwareIntroCounts}
           />
         </PageContainer>
-
         <GetStartedSection
           get_started_url={software.get_started_url}
           repository_url={software.repository_url}
         />
-        {
-          citationInfo ?
-            <CitationSection
-              citationInfo={citationInfo}
-              concept_doi={software.concept_doi}
-            />
-            :null
-        }
+        <CitationSection
+          citationInfo={citationInfo}
+          concept_doi={software.concept_doi}
+        />
         <AboutSection
           brand_name={software.brand_name}
           bullets={software?.bullets ?? ''}
@@ -111,10 +105,13 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         <TestimonialSection
           testimonials={testimonials}
         />
-        <ContributorsSection contributors={contributors} />
-
-        <RelatedToolsSection relatedTools={relatedTools}/>
-        {/* temporary spacer */}
+        <ContributorsSection
+          contributors={contributors}
+        />
+        <RelatedToolsSection
+          relatedTools={relatedTools}
+        />
+        {/* bottom spacer */}
         <section className="py-12"></section>
         <AppFooter />
       </PageSnackbarContext.Provider>
