@@ -14,6 +14,7 @@ import PageSnackbarContext, {snackbarDefaults} from '../../../components/snackba
 import AboutSection from '../../../components/software/AboutSection'
 import MentionsSection from '../../../components/software/MentionsSection'
 import ContributorsSection from '../../../components/software/ContributorsSection'
+import TestimonialSection from '../../../components/software/TestimonialsSection'
 
 import {
   getSoftwareItem,
@@ -22,6 +23,7 @@ import {
   getLicenseForSoftware,
   getContributorMentionCount,
   getMentionsForSoftware,
+  getTestimonialsForSoftware,
   getContributorsForSoftware,
   Tag, License, ContributorMentionCount, Mention,
 } from '../../../utils/getSoftware'
@@ -30,6 +32,7 @@ import {SoftwareItem} from '../../../types/SoftwareItem'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {ScriptProps} from 'next/script'
 import {Contributor} from '../../../types/Contributor'
+import {Testimonial} from '../../../types/Testimonial'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string,
@@ -38,14 +41,20 @@ interface SoftwareIndexData extends ScriptProps{
   tagsInfo: Tag[],
   licenseInfo: License[],
   softwareIntroCounts: ContributorMentionCount,
-  mentions: Mention[]
+  mentions: Mention[],
+  testimonials: Testimonial[],
   contributors: Contributor[]
 }
 
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
-  const {software, citationInfo, tagsInfo, licenseInfo, softwareIntroCounts, mentions ,contributors} = props
   const [options, setSnackbar] = useState(snackbarDefaults)
+  // extract data from props
+  const {
+    software, citationInfo, tagsInfo,
+    licenseInfo, softwareIntroCounts,
+    mentions, testimonials, contributors
+  } = props
 
   if (!software?.brand_name){
     return (
@@ -91,9 +100,12 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
           licenses={licenseInfo}
           repositories={software.repository_url}
         />
-        <MentionsSection mentions={mentions} />
-        {/* temporary spacer */}
-        <section className="py-12"></section>
+        <MentionsSection
+          mentions={mentions}
+        />
+        <TestimonialSection
+          testimonials={testimonials}
+        />
         <ContributorsSection contributors={contributors} />
         {/* temporary spacer */}
         <section className="py-12"></section>
@@ -130,6 +142,8 @@ export async function getServerSideProps(context:any) {
       getContributorMentionCount(software.id),
       // mentions
       getMentionsForSoftware(software.id),
+      // testimonials
+      getTestimonialsForSoftware(software.id),
       // contributors
       getContributorsForSoftware(software.id)
     ]
@@ -139,6 +153,7 @@ export async function getServerSideProps(context:any) {
       licenseInfo,
       softwareIntroCounts,
       mentions,
+      testimonials,
       contributors
     ] = await Promise.all(fetchData)
 
@@ -158,6 +173,7 @@ export async function getServerSideProps(context:any) {
         licenseInfo,
         softwareIntroCounts,
         mentions,
+        testimonials,
         contributors
       }
     }

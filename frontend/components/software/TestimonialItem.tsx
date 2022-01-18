@@ -1,0 +1,44 @@
+import styled from '@mui/system/styled'
+import {Testimonial} from '../../types/Testimonial'
+
+const TestimonialContent = styled('div')(({theme}) => ({
+  position:'relative',
+  backgroundColor: `${theme.palette.primary.main}`,
+  color: `${theme.palette.common.white}`,
+  padding: '2.5rem',
+  fontSize:'1.5rem',
+  '&::after': {
+    content: '""',
+    width: 0,
+    height: 0,
+    border: '0 solid transparent',
+    position: 'absolute',
+    left: '4.5rem',
+    top: '100%',
+    borderTopWidth: 0,
+    borderBottomWidth: '1.5rem',
+    borderRight: '16px solid #00A3E3'
+  }
+}))
+
+const GivenBy = styled('div')(({theme}) => ({
+  margin: '20px 0 4em',
+  paddingLeft:'6rem'
+}))
+
+export default function TestimonialItem({item}: { item: Testimonial }) {
+
+  return (
+    <div>
+      <TestimonialContent>
+        <blockquote className="before:content-['\201C'] after:content-['\201C']">
+          {item.text}
+        </blockquote>
+        {/* &quot;  &quot; */}
+      </TestimonialContent>
+      <GivenBy>
+        – {item.person}, {item.affiliation}
+      </GivenBy>
+    </div>
+  )
+}
