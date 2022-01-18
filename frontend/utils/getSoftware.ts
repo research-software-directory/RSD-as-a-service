@@ -286,3 +286,37 @@ export async function getContributorsForSoftware(uuid: string) {
   }
 }
 
+/**
+ * RELATED TOOLS
+ */
+
+export type RelatedTools = {
+  origin:string,
+  software: {
+    id: string
+    slug: string
+    brand_name: string
+    short_statement: string|null
+  }
+}
+
+export async function getRelatedToolsForSoftware(uuid: string) {
+  try {
+    // this request is always perfomed from backend
+    // the content is order by family_names ascending
+    const select = 'origin,relation,software!software_for_software_relation_fkey(id,slug,brand_name,short_statement)'
+    const url = `${process.env.POSTGREST_URL}/software_for_software?select=${select}&&origin=eq.${uuid}&status=eq.approved`
+    const resp = await fetch(url, {method: 'GET'})
+    if (resp.status === 200) {
+      const data: RelatedTools[] = await resp.json()
+      return data
+    } else if (resp.status === 404) {
+      logger(`getContributorsForSoftware: 404 [${url}]`, 'error')
+      // query not found
+      return []
+    }
+  } catch (e: any) {
+    logger(`getContributorsForSoftware: ${e?.message}`, 'error')
+    return []
+  }
+}
