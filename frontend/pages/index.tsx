@@ -11,6 +11,7 @@ export default function Home(){
       </Head>
       <DefaultLayout>
         <h1>Home page</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, eligendi, magnam eaque quas necessitatibus in eius suscipit numquam dolorem cumque nulla recusandae debitis, deserunt ipsam distinctio quaerat illum. Provident, quos.</p>
       </DefaultLayout>
     </>
   )
