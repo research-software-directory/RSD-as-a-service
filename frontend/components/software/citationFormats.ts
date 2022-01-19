@@ -9,3 +9,5 @@ export const citationFormats = [
   {label:'CodeMeta',format:'codemeta',contentType:'application/json',ext:'json'},
   {label:'Citation File Format',format:'cff',contentType:'text/yaml',ext:'cff'}
 ]
+
+export type CitationFormatType = typeof citationFormats[0]

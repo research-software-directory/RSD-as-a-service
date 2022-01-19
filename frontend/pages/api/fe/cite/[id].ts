@@ -23,7 +23,7 @@ export default async function handler(
     const id = req.query?.id.toString()
     const format = req.query?.f.toString()
     const type = req.query?.t.toString()
-    const ext = req.query?.e.toString()
+    const name = req.query?.n.toString()
 
     // make request to postgREST api
     const url = `${process.env.POSTGREST_URL}/release_content?select=${format}&id=eq.${id}`
@@ -34,7 +34,7 @@ export default async function handler(
       const data:any[] = await resp.json()
       const content = data[0][format]
       // add reponse headers
-      res.setHeader('Content-Disposition',`attachment; filename=citation.${ext}`)
+      res.setHeader('Content-Disposition',`attachment; filename=${name}`)
       res.setHeader('Content-Type',type)
       // send content
       res.status(200).send(content)
