@@ -4,7 +4,7 @@ version: "3.0"
 services:
   database:
     container_name: database
-    image: ghcr.io/dmijatovic/rsd/database:0.3.2
+    image: ghcr.io/research-software-directory/rsd-saas/database:0.3.6
     expose:
       - 5432
     environment:
@@ -21,7 +21,7 @@ services:
 
   backend:
     container_name: backend
-    image: ghcr.io/dmijatovic/rsd/backend:0.3.2
+    image: ghcr.io/research-software-directory/rsd-saas/backend:0.3.6
     expose:
       - 3500
     environment:
@@ -38,7 +38,7 @@ services:
 
   auth:
     container_name: auth
-    image: ghcr.io/dmijatovic/rsd/auth:0.3.2
+    image: ghcr.io/research-software-directory/rsd-saas/auth:0.3.6
     expose:
       - 7000
     environment:
@@ -53,7 +53,7 @@ services:
 
   frontend:
     container_name: frontend
-    image: ghcr.io/dmijatovic/rsd/frontend:0.3.2
+    image: ghcr.io/research-software-directory/rsd-saas/frontend:0.3.6
     environment:
       - POSTGREST_URL
       - RSD_AUTH_URL
@@ -71,7 +71,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: ghcr.io/dmijatovic/rsd/nginx:0.3.2
+    image: ghcr.io/research-software-directory/rsd-saas/nginx:0.3.6
     ports:
       - "80:80"
     depends_on:
