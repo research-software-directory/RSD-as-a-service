@@ -1,0 +1,93 @@
+# THIS DOCKER FILE REQUIRES .env FILE
+version: "3.0"
+
+services:
+  database:
+    container_name: database
+    image: ghcr.io/dmijatovic/rsd/database:0.3.2
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    volumes:
+      # persist data in named docker volume
+      # to remove use: docker-compose down --volumes
+      # to inspect use: docker volume ls
+      - pgdb:/var/lib/postgresql/data/
+    networks:
+      - net
+
+  backend:
+    container_name: backend
+    image: ghcr.io/dmijatovic/rsd/backend:0.3.2
+    expose:
+      - 3500
+    environment:
+      # it needs to be here to use values from .env file
+      - PGRST_DB_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/rsd-db
+      - PGRST_DB_ANON_ROLE
+      - PGRST_DB_SCHEMA
+      - PGRST_SERVER_PORT
+      - PGRST_JWT_SECRET
+    depends_on:
+      - database
+    networks:
+      - net
+
+  auth:
+    container_name: auth
+    image: ghcr.io/dmijatovic/rsd/auth:0.3.2
+    expose:
+      - 7000
+    environment:
+      PROPERTIES: "/usr/mymaven/.env.production.local"
+    volumes:
+      - .env:/usr/mymaven/.env.production.local
+    depends_on:
+      - database
+      - backend
+    networks:
+      - net
+
+  frontend:
+    container_name: frontend
+    image: ghcr.io/dmijatovic/rsd/frontend:0.3.2
+    environment:
+      - POSTGREST_URL
+      - RSD_AUTH_URL
+      - PGRST_JWT_SECRET
+    # env_file:
+    #   - ./frontend/.env.production.local
+    expose:
+      - 3000
+    depends_on:
+      - database
+      - backend
+      - auth
+    networks:
+      - net
+
+  nginx:
+    container_name: nginx
+    image: ghcr.io/dmijatovic/rsd/nginx:0.3.2
+    ports:
+      - "80:80"
+    depends_on:
+      - database
+      - backend
+      - auth
+      - frontend
+    networks:
+      - net
+
+# define name for docker network
+# it should have name: rsd-as-a-service_net
+networks:
+  net:
+
+# named volumes can be managed easier using docker-compose
+# volume should have name rsd-as-a-service_pgdb
+volumes:
+  pgdb:

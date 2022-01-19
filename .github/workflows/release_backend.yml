@@ -1,0 +1,55 @@
+
+name: docker build backend
+
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - "database/**"
+      - "backend-postgrest/**"
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "postgrest tests"
+        working-directory: backend-postgrest/tests
+        run: |
+          docker-compose up \
+          --abort-on-container-exit \
+          --exit-code-from postgrest-tests
+  build:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      # each job needs checkout
+      - uses: actions/checkout@v2
+      - name: "get-npm-version"
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+        with:
+          path: deployment
+      - name: "build rsd-saas/database image"
+        run: |
+          IMAGE_TAG=ghcr.io/research-software-directory/rsd-saas/database:${{steps.package-version.outputs.current-version}}
+          echo image_tag $IMAGE_TAG
+          docker build -t $IMAGE_TAG -f database/dockerfile ./database
+      - name: "build rsd-saas/postgrest image"
+        run: |
+          IMAGE_TAG=ghcr.io/research-software-directory/rsd-saas/backend:${{steps.package-version.outputs.current-version}}
+          echo image_tag $IMAGE_TAG
+          docker build -t $IMAGE_TAG -f backend-postgrest/dockerfile .
+      - name: "login to ghcr"
+        run: echo "${{secrets.GITHUB_TOKEN}}" | docker login https://ghcr.io -u ${{github.actor}} --password-stdin
+      - name: "push images to ghcr"
+        run: |
+          IMAGE_TAG=ghcr.io/research-software-directory/rsd-saas/database:${{steps.package-version.outputs.current-version}}
+          echo database image_tag $IMAGE_TAG
+          docker push $IMAGE_TAG
+          IMAGE_TAG=ghcr.io/research-software-directory/rsd-saas/backend:${{steps.package-version.outputs.current-version}}
+          echo bakcend image_tag $IMAGE_TAG
+          docker push $IMAGE_TAG
+
+

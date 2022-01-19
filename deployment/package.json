@@ -1,0 +1,10 @@
+{
+  "name": "rsd-saas",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "echo not a node app"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

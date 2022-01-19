@@ -1,0 +1,36 @@
+
+name: docker build nginx
+
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - "nginx/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "get-npm-version"
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+        with:
+          path: deployment
+      - name: "show version number"
+        run: echo build rsd-saas/nginx:${{steps.package-version.outputs.current-version}}
+      - name: "build the nginx docker image"
+        run: |
+          IMAGE_TAG=ghcr.io/research-software-directory/rsd/nginx:${{steps.package-version.outputs.current-version}}
+          echo image_tag $IMAGE_TAG
+          docker build -t $IMAGE_TAG -f nginx/Dockerfile ./nginx
+      - name: "login to ghcr"
+        run: echo "${{secrets.GITHUB_TOKEN}}" | docker login https://ghcr.io -u ${{github.actor}} --password-stdin
+      - name: "push image to ghcr"
+        run: |
+          IMAGE_TAG=ghcr.io/research-software-directory/rsd/nginx:${{steps.package-version.outputs.current-version}}
+          echo image_tag $IMAGE_TAG
+          docker push $IMAGE_TAG
+
+
