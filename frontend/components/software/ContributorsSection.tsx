@@ -46,7 +46,7 @@ export default function ContributorsSection({contributors}: { contributors: Cont
             <ContactPersonCard person={contact} />
           </div>
           <div className="2xl:flex-[3]">
-            <ContributorsList contributors={contributors} />
+            <ContributorsList contributors={contributorList} />
           </div>
         </section>
       </PageContainer>
