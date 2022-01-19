@@ -7,7 +7,7 @@ on:
     - "frontend/**"
 
 jobs:
-  run-tests:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,9 +23,3 @@ jobs:
       - name: "run unit test"
         working-directory: frontend
         run: yarn test:coverage
-      - name: "upload test coverage"
-        uses: actions/upload-artifact@v2
-        with:
-          name: code coverage frontend
-          path: frontend/coverage
-          retention-days: 30
