@@ -17,7 +17,7 @@ const darkTheme = createTheme({
 export default function CitationSection({citationInfo,concept_doi}:
   {citationInfo:SoftwareCitationInfo, concept_doi:string}) {
   const [version, setVersion]=useState('')
-  const [citation, setCitation]=useState<SoftwareCitationContent>()
+  const [citation, setCitation] = useState<SoftwareCitationContent>()
 
   useEffect(()=>{
     // select first option by default
@@ -26,6 +26,11 @@ export default function CitationSection({citationInfo,concept_doi}:
       setCitation(citationInfo?.release_content[0])
     }
   },[citationInfo])
+
+  // do not render section if no data
+  if (!citationInfo) return null
+  // do not render section if not citable
+  if (citationInfo.is_citable===false) return null
 
   // prepare release versions
   const versions = citationInfo?.release_content?.map((item,pos)=>{
@@ -39,11 +44,6 @@ export default function CitationSection({citationInfo,concept_doi}:
     setVersion(target?.value)
     setCitation(cite)
   }
-
-  // do not render section if no data
-  if (!citationInfo) return null
-  // do not render section if not citable
-  if (citationInfo.is_citable===false) return null
 
   // render section
   return (

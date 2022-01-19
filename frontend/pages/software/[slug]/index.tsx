@@ -15,6 +15,7 @@ import AboutSection from '../../../components/software/AboutSection'
 import MentionsSection from '../../../components/software/MentionsSection'
 import ContributorsSection from '../../../components/software/ContributorsSection'
 import TestimonialSection from '../../../components/software/TestimonialsSection'
+import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
 
 import {
   getSoftwareItem,
@@ -25,7 +26,9 @@ import {
   getMentionsForSoftware,
   getTestimonialsForSoftware,
   getContributorsForSoftware,
-  Tag, License, ContributorMentionCount, Mention,
+  getRelatedToolsForSoftware,
+  Tag, License, ContributorMentionCount,
+  Mention,RelatedTools
 } from '../../../utils/getSoftware'
 import logger from '../../../utils/logger'
 import {SoftwareItem} from '../../../types/SoftwareItem'
@@ -43,7 +46,8 @@ interface SoftwareIndexData extends ScriptProps{
   softwareIntroCounts: ContributorMentionCount,
   mentions: Mention[],
   testimonials: Testimonial[],
-  contributors: Contributor[]
+  contributors: Contributor[],
+  relatedTools: RelatedTools[]
 }
 
 
@@ -53,7 +57,8 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   const {
     software, citationInfo, tagsInfo,
     licenseInfo, softwareIntroCounts,
-    mentions, testimonials, contributors
+    mentions, testimonials, contributors,
+    relatedTools
   } = props
 
   if (!software?.brand_name){
@@ -71,7 +76,6 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       </Head>
       <PageSnackbarContext.Provider value={{options,setSnackbar}}>
         <AppHeader />
-
         <PageContainer>
           <SoftwareIntroSection
             brand_name={software.brand_name}
@@ -79,23 +83,18 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
             counts={softwareIntroCounts}
           />
         </PageContainer>
-
         <GetStartedSection
           get_started_url={software.get_started_url}
           repository_url={software.repository_url}
         />
-        {
-          citationInfo ?
-            <CitationSection
-              citationInfo={citationInfo}
-              concept_doi={software.concept_doi}
-            />
-            :null
-        }
+        <CitationSection
+          citationInfo={citationInfo}
+          concept_doi={software.concept_doi}
+        />
         <AboutSection
           brand_name={software.brand_name}
-          bullets={software.bullets}
-          read_more={software.read_more}
+          bullets={software?.bullets ?? ''}
+          read_more={software?.read_more ?? ''}
           tags={tagsInfo}
           licenses={licenseInfo}
           repositories={software.repository_url}
@@ -106,8 +105,13 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         <TestimonialSection
           testimonials={testimonials}
         />
-        <ContributorsSection contributors={contributors} />
-        {/* temporary spacer */}
+        <ContributorsSection
+          contributors={contributors}
+        />
+        <RelatedToolsSection
+          relatedTools={relatedTools}
+        />
+        {/* bottom spacer */}
         <section className="py-12"></section>
         <AppFooter />
       </PageSnackbarContext.Provider>
@@ -145,7 +149,9 @@ export async function getServerSideProps(context:any) {
       // testimonials
       getTestimonialsForSoftware(software.id),
       // contributors
-      getContributorsForSoftware(software.id)
+      getContributorsForSoftware(software.id),
+      // relatedTools
+      getRelatedToolsForSoftware(software.id)
     ]
     const [
       citationInfo,
@@ -154,7 +160,8 @@ export async function getServerSideProps(context:any) {
       softwareIntroCounts,
       mentions,
       testimonials,
-      contributors
+      contributors,
+      relatedTools
     ] = await Promise.all(fetchData)
 
     // const citationInfo = await getCitationsForSoftware(software.id)
@@ -174,7 +181,8 @@ export async function getServerSideProps(context:any) {
         softwareIntroCounts,
         mentions,
         testimonials,
-        contributors
+        contributors,
+        relatedTools
       }
     }
   }catch(e:any){

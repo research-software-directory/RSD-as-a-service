@@ -3,12 +3,14 @@ FROM node:16.13-buster-slim AS builder
 
 WORKDIR /app
 
-# copy all files
-# not excluded in .dockerignore
-COPY . .
-
+# copy
+COPY package.json yarn.lock ./
 # install
 RUN yarn install --frozen-lockfile
+
+# copy all other files
+# not excluded in .dockerignore
+COPY . .
 
 # test solution
 RUN yarn test

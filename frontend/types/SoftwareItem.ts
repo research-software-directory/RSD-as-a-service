@@ -28,14 +28,14 @@ export type SoftwareItem = {
   id: string,
   slug: string,
   brand_name: string,
-  bullets: string,
+  bullets: string|null,
   concept_doi: string,
   get_started_url: string,
   is_featured: boolean,
   is_published: boolean,
-  read_more: string,
+  read_more: string|null,
   short_statement: string,
   created_at: string,
-  updated_at: string,
+  updated_at: string|null,
   repository_url: RepositoryUrl[]
 }
