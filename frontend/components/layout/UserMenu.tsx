@@ -56,7 +56,7 @@ export default function UserMenu(props:UserMenuType) {
         data-testid="user-menu-button"
         aria-controls="user-menu"
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
+        aria-expanded={open ? 'true' : 'false'}
         onClick={handleClick}
       >
         <Avatar

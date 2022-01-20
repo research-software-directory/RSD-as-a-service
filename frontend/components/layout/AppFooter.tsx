@@ -11,9 +11,9 @@ export default function AppFooter () {
           <div className="text-xl mb-4">
             The Research Software Directory aims to promote the impact,
             the exchange and re-use of research software.
-            Please use our tools!&nbsp;<Link href="/about" passHref>
+            {/* Please use our tools!&nbsp;<Link href="/about" passHref>
               <a className="underline mr-2">Read more</a>
-            </Link>
+            </Link> */}
           </div>
           <a target="_blank" href="https://esciencecenter.nl" rel="noreferrer"
             className="hover:text-primary"

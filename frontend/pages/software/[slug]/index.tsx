@@ -4,6 +4,7 @@ import {app} from '../../../config/app'
 import PageMeta from '../../../components/seo/PageMeta'
 import OgMetaTags from '../../../components/seo/OgMetaTags'
 import CitationMeta from '../../../components/seo/CitationMeta'
+import CanoncialUrl from '../../../components/seo/CanonicalUrl'
 import AppHeader from '../../../components/layout/AppHeader'
 import AppFooter from '../../../components/layout/AppFooter'
 import PageContainer from '../../../components/layout/PageContainer'
@@ -105,6 +106,9 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         title={software?.brand_name}
         description={software.short_statement}
         url={resolvedUrl}
+      />
+      <CanoncialUrl
+        canonicalUrl={resolvedUrl}
       />
       <PageSnackbarContext.Provider value={{options,setSnackbar}}>
         <AppHeader />
