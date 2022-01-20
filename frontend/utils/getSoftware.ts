@@ -45,7 +45,7 @@ export async function getSoftwareList(url:string){
 }
 
 // query for software item page based on slug
-export async function getSoftwareItem(slug:string){
+export async function getSoftwareItem(slug:string|undefined){
   try{
     // this request is always perfomed from backend
     const url = `${process.env.POSTGREST_URL}/software?select=*,repository_url!left(url)&slug=eq.${slug}`
