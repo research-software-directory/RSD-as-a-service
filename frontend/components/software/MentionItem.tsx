@@ -24,7 +24,7 @@ export default function MentionItem({item, pos}: {item: Mention, pos:number}) {
   if (item?.url) {
     return (
       <Link href={item.url} passHref>
-        <a className="hover:text-black" target="_blank">
+        <a className="hover:text-black" target="_blank" rel="noreferrer">
           {renderItemBody()}
         </a>
       </Link>

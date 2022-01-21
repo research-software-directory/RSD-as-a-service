@@ -1,7 +1,10 @@
-import {useState} from 'react'
-import Head from 'next/head'
+import {useEffect, useState} from 'react'
 
 import {app} from '../../../config/app'
+import PageMeta from '../../../components/seo/PageMeta'
+import OgMetaTags from '../../../components/seo/OgMetaTags'
+import CitationMeta from '../../../components/seo/CitationMeta'
+import CanoncialUrl from '../../../components/seo/CanonicalUrl'
 import AppHeader from '../../../components/layout/AppHeader'
 import AppFooter from '../../../components/layout/AppFooter'
 import PageContainer from '../../../components/layout/PageContainer'
@@ -16,7 +19,6 @@ import MentionsSection from '../../../components/software/MentionsSection'
 import ContributorsSection from '../../../components/software/ContributorsSection'
 import TestimonialSection from '../../../components/software/TestimonialsSection'
 import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
-
 import {
   getSoftwareItem,
   getCitationsForSoftware,
@@ -36,6 +38,8 @@ import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {ScriptProps} from 'next/script'
 import {Contributor} from '../../../types/Contributor'
 import {Testimonial} from '../../../types/Testimonial'
+import {GetServerSidePropsContext} from 'next'
+import {getDisplayName} from '../../../utils/getDisplayName'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string,
@@ -50,9 +54,10 @@ interface SoftwareIndexData extends ScriptProps{
   relatedTools: RelatedTools[]
 }
 
-
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
   const [options, setSnackbar] = useState(snackbarDefaults)
+  const [resolvedUrl, setResolvedUrl] = useState('')
+  const [author, setAuthor] = useState('')
   // extract data from props
   const {
     software, citationInfo, tagsInfo,
@@ -60,6 +65,19 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     mentions, testimonials, contributors,
     relatedTools
   } = props
+
+  useEffect(() => {
+    if (typeof location != 'undefined') {
+      setResolvedUrl(location.href)
+    }
+  }, [])
+  useEffect(() => {
+    const contact = contributors.filter(item => item.is_contact_person)
+    if (contact.length > 0) {
+      const name = getDisplayName(contact[0])
+      setAuthor(name||'')
+    }
+  },[contributors])
 
   if (!software?.brand_name){
     return (
@@ -71,9 +89,27 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
 
   return (
     <>
-      <Head>
-        <title>{software?.brand_name} | {app.title}</title>
-      </Head>
+      {/* Page Head meta tags */}
+      <PageMeta
+        title={`${software?.brand_name} | ${app.title}`}
+        description={software.short_statement}
+      />
+      {/* Page Head meta tags */}
+      <CitationMeta
+        title={software?.brand_name}
+        author={author}
+        publication_date={software.created_at}
+        concept_doi={software.concept_doi}
+      />
+      {/* Page Head meta tags */}
+      <OgMetaTags
+        title={software?.brand_name}
+        description={software.short_statement}
+        url={resolvedUrl}
+      />
+      <CanoncialUrl
+        canonicalUrl={resolvedUrl}
+      />
       <PageSnackbarContext.Provider value={{options,setSnackbar}}>
         <AppHeader />
         <PageContainer>
@@ -122,11 +158,11 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
 
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps(context:any) {
-  try{
+export async function getServerSideProps(context:GetServerSidePropsContext) {
+  try {
     const {params} = context
     // console.log('getServerSideProps...params...', params)
-    const software = await getSoftwareItem(params?.slug)
+    const software = await getSoftwareItem(params?.slug?.toString())
     // console.log('getServerSideProps...software...', software)
     if (typeof software == 'undefined'){
       // returning notFound triggers 404 page
@@ -134,7 +170,7 @@ export async function getServerSideProps(context:any) {
         notFound: true,
       }
     }
-    // fetch all info about software based on software.id in parallel
+    // fetch all info about software in parallel based on software.id
     const fetchData = [
       // citationInfo
       getCitationsForSoftware(software.id),
@@ -164,15 +200,8 @@ export async function getServerSideProps(context:any) {
       relatedTools
     ] = await Promise.all(fetchData)
 
-    // const citationInfo = await getCitationsForSoftware(software.id)
-    // const tagsInfo = await getTagsForSoftware(software.id)
-    // const licenseInfo = await getLicenseForSoftware(software.id)
-    // const softwareIntroCounts = await getContributorMentionCount(software.id)
-    // const mentions = await getMentionsForSoftware(software.id)
-    // const contributors = await getContributorsForSoftware(software.id)
-
-    return {
     // pass data to page component as props
+    return {
       props: {
         software,
         citationInfo,
