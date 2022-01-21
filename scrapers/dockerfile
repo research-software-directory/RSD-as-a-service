@@ -1,0 +1,15 @@
+FROM maven:3.8.3-openjdk-17 AS builder
+WORKDIR /usr/mymaven
+RUN mkdir --parents ./src/main
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY ./src/main ./src/main
+RUN mvn package --offline
+
+FROM openjdk:17.0-jdk-slim-bullseye
+RUN apt-get update && apt-get --yes install cron
+COPY jobs.cron /etc/cron.d/jobs.cron
+RUN crontab /etc/cron.d/jobs.cron
+WORKDIR /usr/myjava
+COPY --from=builder /usr/mymaven/target/*-jar-with-dependencies.jar scrapers.jar
+CMD printenv > /etc/environment && cron -f
