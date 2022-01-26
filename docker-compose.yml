@@ -4,7 +4,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.2
+    image: rsd/database:0.0.3
     ports:
     # enable connection from outside
       - "5432:5432"
@@ -93,6 +93,18 @@ services:
       - "frontend"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - net
+
+  scrapers:
+    container_name: scrapers
+    build: ./scrapers
+    image: rsd/scrapers:0.0.1
+    env_file:
+      - ./frontend/.env.production.local
+    depends_on:
+      - "database"
+      - "backend"
     networks:
       - net
 

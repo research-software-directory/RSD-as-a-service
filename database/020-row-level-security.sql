@@ -1,7 +1,7 @@
 -- maintainer tables
 ALTER TABLE maintainer_for_software ENABLE ROW LEVEL SECURITY;
 
-CREATE FUNCTION software_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
+CREATE FUNCTION software_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
 	RETURN QUERY SELECT software FROM maintainer_for_software WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
@@ -25,7 +25,7 @@ CREATE POLICY admin_all_rights ON maintainer_for_software TO rsd_admin
 
 ALTER TABLE maintainer_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE FUNCTION projects_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
+CREATE FUNCTION projects_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
 	RETURN QUERY SELECT project FROM maintainer_for_project WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
@@ -57,7 +57,7 @@ CREATE POLICY maintainer_all_rights ON software TO rsd_user
 	USING (id IN (SELECT * FROM software_of_current_maintainer()))
 	WITH CHECK (TRUE);
 
-CREATE FUNCTION insert_maintainer_new_software() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER as
+CREATE FUNCTION insert_maintainer_new_software() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
 	IF (SELECT current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
@@ -142,7 +142,7 @@ CREATE POLICY maintainer_all_rights ON project TO rsd_user
 	USING (id IN (SELECT * FROM projects_of_current_maintainer()))
 	WITH CHECK (TRUE);
 
-CREATE FUNCTION insert_maintainer_new_project() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER as
+CREATE FUNCTION insert_maintainer_new_project() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
 	IF (SELECT current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
@@ -343,7 +343,7 @@ CREATE POLICY admin_all_rights ON organisation TO rsd_admin
 	WITH CHECK (TRUE);
 
 
-CREATE FUNCTION organisations_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER as
+CREATE FUNCTION organisations_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
 	RETURN QUERY SELECT id FROM organisation WHERE primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
@@ -513,5 +513,16 @@ CREATE POLICY maintainer_delete ON project_for_organisation FOR DELETE TO rsd_us
 	USING (project IN (SELECT * FROM projects_of_current_maintainer()) OR organisation IN (SELECT * FROM organisations_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON project_for_organisation TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+-- software scraped data
+ALTER TABLE programming_languages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON programming_languages FOR SELECT TO web_anon, rsd_user
+	USING (repository_url IN (SELECT id FROM repository_url));
+
+CREATE POLICY admin_all_rights ON programming_languages TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);

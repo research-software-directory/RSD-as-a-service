@@ -1,0 +1,1 @@
+*/6 * * * * /usr/local/openjdk-17/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.language.Main > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
