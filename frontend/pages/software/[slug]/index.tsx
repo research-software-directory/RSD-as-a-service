@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import {GetServerSidePropsContext} from 'next'
 
 import {app} from '../../../config/app'
 import PageMeta from '../../../components/seo/PageMeta'
@@ -38,7 +39,6 @@ import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {ScriptProps} from 'next/script'
 import {Contributor} from '../../../types/Contributor'
 import {Testimonial} from '../../../types/Testimonial'
-import {GetServerSidePropsContext} from 'next'
 import {getDisplayName} from '../../../utils/getDisplayName'
 
 interface SoftwareIndexData extends ScriptProps{

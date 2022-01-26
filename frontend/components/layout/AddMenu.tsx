@@ -1,22 +1,17 @@
 import {useState} from 'react'
+import {useRouter} from 'next/router'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import Avatar from '@mui/material/Avatar'
+import AddIcon from '@mui/icons-material/Add'
 
 import {MenuItemType} from '../../config/menuItems'
-import router from 'next/router'
+import {addMenuItems} from '../../config/addMenuItems'
 
-type UserMenuType={
-  name:string,
-  image?:string
-  menuOptions?:MenuItemType[]
-}
-
-export default function UserMenu(props:UserMenuType) {
+export default function AddMenu() {
+  const router = useRouter()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const {name, image, menuOptions} = props
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>){
     setAnchorEl(event.currentTarget)
@@ -34,12 +29,12 @@ export default function UserMenu(props:UserMenuType) {
   }
 
   function renderMenuOptions(){
-    if (menuOptions){
+    if (addMenuItems){
       return (
-        menuOptions.map(item=>{
+        addMenuItems.map(item=>{
           return (
             <MenuItem
-              data-testid="user-menu-option"
+              data-testid="add-menu-option"
               key={item.label}
               onClick={()=>handleClose(item)}>
               {item.label}
@@ -50,19 +45,30 @@ export default function UserMenu(props:UserMenuType) {
     }
   }
 
+  function isAddingDisabled() {
+    switch (router?.pathname.toLowerCase()) {
+      // adding new software should disabled
+      // during process of adding/editing an item
+      case '/software/add':
+      case '/software/[slug]/edit':
+        return true
+      default:
+        return false
+    }
+  }
+
   return (
     <>
       <IconButton
-        data-testid="user-menu-button"
-        aria-controls="user-menu"
+        size="large"
+        data-testid="add-menu-button"
+        aria-controls="add-menu"
         aria-haspopup="true"
         aria-expanded={open ? 'true' : 'false'}
         onClick={handleClick}
+        disabled={isAddingDisabled()}
       >
-        <Avatar
-          alt={name ?? 'Unknown'}
-          src={image}
-        />
+        <AddIcon />
       </IconButton>
       <Menu
         anchorEl={anchorEl}

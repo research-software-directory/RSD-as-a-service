@@ -1,7 +1,7 @@
 import Head from 'next/head'
 
 export default function CitationMeta({title, author, publication_date, concept_doi}: {
-  title:string,author:string,publication_date:string|null,concept_doi:string
+  title:string,author:string,publication_date:string|null,concept_doi:string|null
 }) {
   // do not render citation meta tags if concept_doi is not present
   if (!concept_doi) return null
