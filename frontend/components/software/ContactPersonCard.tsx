@@ -12,7 +12,7 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
   const displayName = getDisplayName(person)
   return (
     <article className="flex flex-col bg-white max-w-md">
-      <h4 className="text-center font-medium px-6 py-4 uppercase bg-primary text-white md:text-left">Contact person</h4>
+      <h3 className="text-center font-medium px-6 py-4 uppercase bg-primary text-white md:text-left">Contact person</h3>
       <div className="flex flex-col p-6 md:flex-row 2xl:flex-col">
         {/* <div className="self-center md:mr-8 2xl:mr-0"> */}
         <Avatar

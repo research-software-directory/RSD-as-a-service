@@ -35,9 +35,9 @@ export default function AboutSourceCode({repository=[]}:{repository: string[]}) 
       <span className="font-bold text-primary">{code}</span>
       <span className="text-primary pl-2">Source code</span>
     </div>
-    <ul className="py-1">
+    <div className="py-1">
       {getIcons()}
-    </ul>
+    </div>
     </>
   )
 }
