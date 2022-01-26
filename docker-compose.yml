@@ -105,7 +105,6 @@ services:
     depends_on:
       - "database"
       - "backend"
-      - "nginx"
     networks:
       - net
 
