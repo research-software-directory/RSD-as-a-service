@@ -47,7 +47,7 @@ export default function AddMenu() {
 
   function isAddingDisabled() {
     switch (router?.pathname.toLowerCase()) {
-      // adding new software should disabled
+      // adding new software should be disabled
       // during process of adding/editing an item
       case '/software/add':
       case '/software/[slug]/edit':

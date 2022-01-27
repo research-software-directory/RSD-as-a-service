@@ -7,7 +7,6 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import SaveIcon from '@mui/icons-material/Save'
-import EditIcon from '@mui/icons-material/Edit'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -19,21 +18,36 @@ import {NewSoftwareItem} from '../../../types/SoftwareItem'
 import {addSoftware} from '../../../utils/editSoftware'
 import HelperTextWithCounter from './HelperTextWithCounter'
 
-type AddSoftwareForm = {
-  title: string,
-  short_statement:string
-}
-
 const initalState = {
   open: false,
   loading: false,
   error:''
 }
 
-const addInfo = `
-Please provide title and short statement for your software.
-The url will be automatically generated from title and shown under the "Slug" label.
-`
+type AddSoftwareForm = {
+  name: string,
+  short_statement:string
+}
+
+const config = {
+  addInfo:`
+  Please provide name and short description for your software.
+  The url slug is generated from name input and shown under "Slug" label.
+  `,
+  name: {
+    label: 'Name',
+    help: 'Provide software name to use as a title of your software page.',
+    required: 'Name is required',
+  },
+  short_statement: {
+    label: 'Short description',
+    help: 'Provide short description of your software to use as page subtitle.',
+    required: 'Name is required',
+  },
+  slug: {
+    label:'Slug (generated from software name)'
+  }
+}
 
 export default function AddSoftwareModal({action = 'close', onCancel}: { action: string, onCancel: Function }) {
   const {session} = useAuth()
@@ -43,11 +57,11 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
   const {register, handleSubmit, watch, formState, reset} = useForm<AddSoftwareForm>({
     mode: 'onChange',
     defaultValues: {
-      title: '',
+      name: '',
       short_statement:''
     }
   })
-  const {errors, isDirty, isValid} = formState
+  const {errors, isValid} = formState
 
   // console.group('AddSoftwareModal')
   // console.log('errors...', errors)
@@ -92,9 +106,9 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
     }
     // create data object
     const software:NewSoftwareItem = {
-      brand_name: data.title,
+      brand_name: data.name,
       short_statement: data.short_statement,
-      slug: getSlugFromString(data.title),
+      slug: getSlugFromString(data.name),
       is_featured: false,
       is_published: false,
       bullets: null,
@@ -138,7 +152,7 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
       )
     }
     // show default info
-    return addInfo
+    return config.addInfo
   }
 
   function isSaveDisabled() {
@@ -148,7 +162,7 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
   }
 
   // construct slug from title
-  const data = watch(['title','short_statement'])
+  const data = watch(['name','short_statement'])
   const softwareSlug = getSlugFromString(data[0])
 
   return (
@@ -177,9 +191,10 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
           <section className="py-4">
             <TextField
               autoFocus
-              error={errors.title?.message!==undefined}
-              id="title"
-              label="Title"
+              autoComplete="off"
+              error={errors.name?.message!==undefined}
+              id="name"
+              label={config.name.label}
               type="text"
               fullWidth
               variant="standard"
@@ -193,15 +208,15 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
               helperText={
                 <HelperTextWithCounter
                   message={
-                    errors.title?.message ?
-                    errors.title?.message :
-                    'Provide title for your software page.'
+                    errors.name?.message ?
+                    errors.name?.message :
+                    config.name.help
                   }
                   count={`${data[0]?.length || 0}/100`}
                 />
               }
-              {...register('title', {
-                required: 'Title is required',
+              {...register('name', {
+                required: config.name.required,
                 minLength: {value: 3, message: 'Minimum length is 3'},
                 maxLength: {value: 100, message: 'Maximum length is 100'},
               })}
@@ -212,7 +227,7 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
               maxRows={5}
               error={errors.short_statement?.message!==undefined}
               id="short_statement"
-              label="Short description"
+              label={config.short_statement.label}
               type="text"
               fullWidth
               variant="standard"
@@ -228,26 +243,27 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
                   message={
                     errors.short_statement?.message ?
                     errors.short_statement?.message :
-                    'Provide short description of your software, to use as page subtitle.'
+                    config.short_statement.help
                   }
                   count={`${data[1]?.length}/300`}
                 />
               }
               {...register('short_statement', {
-                required: 'Short statement is required',
+                required: config.short_statement.required,
                 minLength: {value: 10, message: 'Minimum length is 10'},
                 maxLength: {value: 300, message: 'Maximum length is 300'},
               })}
             />
             <div className="mt-2 py-4">
-              <div className="text-sm mb-2">Slug (generated from page title)</div>
+              <div className="text-sm mb-2">{config.slug.label}</div>
               <div className="px-2 py-1 bg-grey-200 h-8">{softwareSlug}</div>
             </div>
           </section>
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',
-          border:'1px solid #eee'
+          borderTop: '1px solid',
+          borderColor: 'divider'
         }}>
           <Button
             tabIndex={1}
@@ -260,7 +276,13 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
           <Button
             tabIndex={0}
             type="submit"
-            variant='contained'
+            variant="contained"
+            sx={{
+              // overwrite tailwind preflight.css for submit type
+              '&[type="submit"]:not(.Mui-disabled)': {
+                backgroundColor:'primary.main'
+              }
+            }}
             endIcon={
               <SaveIcon />
             }
