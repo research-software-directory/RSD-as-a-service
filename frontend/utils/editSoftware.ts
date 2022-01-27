@@ -1,7 +1,7 @@
 import logger from './logger'
 import {NewSoftwareItem, SoftwareTableItem} from '../types/SoftwareItem'
 
-function createHeaders(token: string) {
+export function createHeaders(token: string) {
   return {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`

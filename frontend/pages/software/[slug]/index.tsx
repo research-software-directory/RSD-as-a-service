@@ -160,9 +160,11 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try {
-    const {params} = context
+    const {params, req: {cookies}} = context
+    // extract rsd_token
+    const token = cookies['rsd_token']
     // console.log('getServerSideProps...params...', params)
-    const software = await getSoftwareItem(params?.slug?.toString())
+    const software = await getSoftwareItem(params?.slug?.toString(),token)
     // console.log('getServerSideProps...software...', software)
     if (typeof software == 'undefined'){
       // returning notFound triggers 404 page

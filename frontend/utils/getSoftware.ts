@@ -5,6 +5,7 @@ import logger from './logger'
 import {MentionType} from '../types/MentionType'
 import {Contributor} from '../types/Contributor'
 import {Testimonial} from '../types/Testimonial'
+import {createHeaders} from './editSoftware'
 
 /**
  * postgREST api uri to retreive software index data.
@@ -45,11 +46,20 @@ export async function getSoftwareList(url:string){
 }
 
 // query for software item page based on slug
-export async function getSoftwareItem(slug:string|undefined){
-  try{
+export async function getSoftwareItem(slug:string|undefined, token?:string){
+  try {
+    // console.log('token...', token)
     // this request is always perfomed from backend
     const url = `${process.env.POSTGREST_URL}/software?select=*,repository_url!left(url)&slug=eq.${slug}`
-    const resp = await fetch(url,{method:'GET'})
+    let resp
+    if (token) {
+      resp = await fetch(url, {
+        method: 'GET',
+        headers: createHeaders(token)
+      })
+    } else {
+      resp = await fetch(url,{method:'GET'})
+    }
     if (resp.status===200){
       const data:SoftwareItem[] = await resp.json()
       return data[0]
@@ -98,16 +108,20 @@ export async function getCitationsForSoftware(uuid:string){
     const url = `${process.env.POSTGREST_URL}/release?select=*,release_content(*)&software=eq.${uuid}&release_content.order=date_published.desc`
     const resp = await fetch(url,{method:'GET'})
     if (resp.status===200){
-      const data:SoftwareCitationInfo[] = await resp.json()
-      return data[0]
+      const data: SoftwareCitationInfo[] = await resp.json()
+      // console.log('data...', data)
+      if (data.length > 0) {
+        return data[0]
+      }
+      return null
     } else if (resp.status===404){
       logger(`getReleasesForSoftware: 404 [${url}]`,'error')
       // query not found
-      return undefined
+      return null
     }
   }catch(e:any){
     logger(`getReleasesForSoftware: ${e?.message}`,'error')
-    return undefined
+    return null
   }
 }
 
@@ -133,11 +147,11 @@ export async function getTagsForSoftware(uuid:string){
     } else if (resp.status===404){
       logger(`getTagsForSoftware: 404 [${url}]`,'error')
       // query not found
-      return undefined
+      return null
     }
   }catch(e:any){
     logger(`getTagsForSoftware: ${e?.message}`,'error')
-    return undefined
+    return null
   }
 }
 
@@ -163,11 +177,11 @@ export async function getLicenseForSoftware(uuid:string){
     } else if (resp.status===404){
       logger(`getLicenseForSoftware: 404 [${url}]`,'error')
       // query not found
-      return undefined
+      return null
     }
   }catch(e:any){
     logger(`getLicenseForSoftware: ${e?.message}`,'error')
-    return undefined
+    return null
   }
 }
 
@@ -188,16 +202,19 @@ export async function getContributorMentionCount(uuid:string){
     const url = `${process.env.POSTGREST_URL}/count_software_contributors_mentions?id=eq.${uuid}`
     const resp = await fetch(url,{method:'GET'})
     if (resp.status===200){
-      const data:ContributorMentionCount[] = await resp.json()
-      return data[0]
+      const data: ContributorMentionCount[] = await resp.json()
+      if (data.length > 0) {
+        return data[0]
+      }
+      return null
     } else if (resp.status===404){
       logger(`getContributorMentionCount: 404 [${url}]`,'error')
       // query not found
-      return undefined
+      return null
     }
   }catch(e:any){
     logger(`getContributorMentionCount: ${e?.message}`,'error')
-    return undefined
+    return null
   }
 }
 

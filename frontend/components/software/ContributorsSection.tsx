@@ -7,6 +7,7 @@ function clasifyContributors(contributors: Contributor[]) {
   const contributorList:Contributor[] = []
   let contact: Contributor | null = null
 
+
   contributors.forEach(item => {
     // construct file name
     if (item.avatar_mime_type) {
@@ -32,6 +33,9 @@ function clasifyContributors(contributors: Contributor[]) {
 }
 
 export default function ContributorsSection({contributors}: { contributors: Contributor[] }) {
+  // do not show section if no content
+  if (contributors.length===0) return null
+  // clasify
   const {contact, contributorList} = clasifyContributors(contributors)
   return (
     <section className="bg-grey-200">
