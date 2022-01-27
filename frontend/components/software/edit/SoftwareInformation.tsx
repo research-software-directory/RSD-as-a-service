@@ -32,7 +32,7 @@ export default function SoftwareInformation() {
   return (
     <EditSoftwareSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0'>
       <div className="xl:px-8">
-        <h2>Middle pannel</h2>
+        <h2>Middle panel</h2>
         {loading ?
           <CircularProgress />
           :
@@ -42,7 +42,7 @@ export default function SoftwareInformation() {
         }
       </div>
       <div className="my-8 xl:my-0">
-        <h2>Right pannel</h2>
+        <h2>Right panel</h2>
       </div>
     </EditSoftwareSection>
   )
