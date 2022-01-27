@@ -3,7 +3,7 @@ import SoftwareIndexPage, {getServerSideProps} from '../pages/software/index'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
 // mock fetch response
-import softwareItem from './__mocks__/softwareItem.json'
+import softwareItem from './__fixtures__/softwareItem.json'
 const mockedResponse=[softwareItem]
 global.fetch=jest.fn(()=>({
   status:206,

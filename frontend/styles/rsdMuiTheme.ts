@@ -95,14 +95,14 @@ const rsdMuiTheme = createTheme({
   // in Mui components
   // see https://mui.com/customization/theme-components/
   components: {
-    MuiButton:{
-      styleOverrides:{
-        root:{
-          // remove upper text transform from buttons
-          textTransform:'inherit'
-        }
-      }
-    },
+    // MuiButton:{
+    //   styleOverrides:{
+    //     root:{
+    //       // remove upper text transform from buttons
+    //       textTransform:'inherit'
+    //     }
+    //   }
+    // },
     MuiListItemText:{
       styleOverrides:{
         primary:{

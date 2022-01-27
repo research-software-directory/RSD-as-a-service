@@ -10,6 +10,7 @@ import AppMenuItem from './AppMenuItem'
 import {menuItems} from '../../config/menuItems'
 import {userMenuItems} from '../../config/userMenuItems'
 import UserMenu from './UserMenu'
+import AddMenu from './AddMenu'
 
 import {getRedirectUrl} from '../../utils/surfConext'
 
@@ -67,6 +68,9 @@ export default function AppHeader(){
         <Button
           variant="text"
           onClick={redirectToSurf}
+          sx= {{
+            textTransform:'inherit'
+          }}
         >
           <LoginIcon />
           <span className="ml-4">Sign In</span>
@@ -86,6 +90,7 @@ export default function AppHeader(){
             {getMenuItems()}
           </div>
           <div className="flex-1 min-w-[8rem] text-right sm:flex-none">
+            {status==='authenticated' ? <AddMenu/> : null}
             {getLoginButton()}
           </div>
         </section>

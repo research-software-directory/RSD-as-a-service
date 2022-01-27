@@ -2,7 +2,7 @@ import {render,screen} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
 
 import CitationSection from './CitationSection'
-import citationInfo from './__mocks__/softwareCitationInfo.json'
+import citationInfo from './__fixtures__/softwareCitationInfo.json'
 
 
 it('should NOT render citation section when no data provided',()=>{

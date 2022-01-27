@@ -6,9 +6,9 @@
 // import {SessionProvider} from 'next-auth/react'
 import {rsdMuiTheme} from '../../styles/rsdMuiTheme'
 import {ThemeProvider} from '@mui/material/styles'
-import {AuthProvider, defaultSession} from '../../auth'
+import {AuthProvider, defaultSession, Session} from '../../auth'
 
-export function WrappedComponentWithProps(Component: any, props?: any, session?: any) {
+export function WrappedComponentWithProps(Component: any, props?: any, session?: Session) {
   if (session) {
     return (
       <ThemeProvider theme={rsdMuiTheme}>

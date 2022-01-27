@@ -15,7 +15,7 @@ const darkTheme = createTheme({
 })
 
 export default function CitationSection({citationInfo,concept_doi}:
-  {citationInfo:SoftwareCitationInfo, concept_doi:string}) {
+  {citationInfo:SoftwareCitationInfo, concept_doi:string|null}) {
   const [version, setVersion]=useState('')
   const [citation, setCitation] = useState<SoftwareCitationContent>()
 
@@ -67,7 +67,7 @@ export default function CitationSection({citationInfo,concept_doi}:
             }
           </div>
           <div className="flex-[3] flex flex-col justify-between md:px-4">
-            <CitationDoi doi={citation?.doi ?? concept_doi} />
+            <CitationDoi doi={citation?.doi ?? concept_doi ?? ''} />
             {
               // only when citability full
               citation?.citability==='full' ?

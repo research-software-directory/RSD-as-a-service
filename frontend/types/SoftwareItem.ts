@@ -24,18 +24,24 @@ export type RepositoryUrl = {
   url:string
 }
 
-export type SoftwareItem = {
-  id: string,
+export type NewSoftwareItem = {
   slug: string,
   brand_name: string,
-  bullets: string|null,
-  concept_doi: string,
-  get_started_url: string,
+  bullets: string | null,
+  concept_doi: string | null,
+  get_started_url: string | null,
   is_featured: boolean,
   is_published: boolean,
-  read_more: string|null,
+  read_more: string | null,
   short_statement: string,
+}
+
+export type SoftwareTableItem = NewSoftwareItem & {
+  id: string,
   created_at: string,
-  updated_at: string|null,
+  updated_at: string | null,
+}
+
+export type SoftwareItem = SoftwareTableItem & {
   repository_url: RepositoryUrl[]
 }

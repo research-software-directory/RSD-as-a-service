@@ -2,7 +2,7 @@ import {render,screen} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
 
 import AboutSection from './AboutSection'
-import softwareItemInfo from './__mocks__/softwareItemInfo.json'
+import softwareItemInfo from './__fixtures__/softwareItemInfo.json'
 
 it('should NOT render about section when brand_name NOT provided',()=>{
   render(WrappedComponentWithProps(AboutSection))
@@ -37,10 +37,5 @@ describe('with __mocked__ data', () => {
     const noTags = screen.getByText('No tags avaliable')
     expect(noTags).toBeInTheDocument()
   })
-
-  // it.only('should not render "Programming language" title', () => {
-  //   const noLanguages = screen.queryByText('Programming language')
-  //   expect(noLanguages).toBeInTheDocument()
-  // })
 
 })

@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import {GetServerSidePropsContext} from 'next'
 
 import {app} from '../../../config/app'
 import PageMeta from '../../../components/seo/PageMeta'
@@ -38,7 +39,6 @@ import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {ScriptProps} from 'next/script'
 import {Contributor} from '../../../types/Contributor'
 import {Testimonial} from '../../../types/Testimonial'
-import {GetServerSidePropsContext} from 'next'
 import {getDisplayName} from '../../../utils/getDisplayName'
 
 interface SoftwareIndexData extends ScriptProps{
@@ -160,9 +160,11 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try {
-    const {params} = context
+    const {params, req: {cookies}} = context
+    // extract rsd_token
+    const token = cookies['rsd_token']
     // console.log('getServerSideProps...params...', params)
-    const software = await getSoftwareItem(params?.slug?.toString())
+    const software = await getSoftwareItem(params?.slug?.toString(),token)
     // console.log('getServerSideProps...software...', software)
     if (typeof software == 'undefined'){
       // returning notFound triggers 404 page
