@@ -157,7 +157,7 @@ public class Main {
 		} else if (readMore == null || readMore.isJsonNull()) {
 			return bullets;
 		} else {
-			return new JsonPrimitive(bullets.getAsString() + "\n" + readMore.getAsString());
+			return new JsonPrimitive(bullets.getAsString() + "\n\n" + readMore.getAsString());
 		}
 	}
 
