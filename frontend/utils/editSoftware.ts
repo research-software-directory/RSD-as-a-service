@@ -11,6 +11,7 @@ function createHeaders(token: string) {
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
   try {
+    // console.log('addSoftware...called...', software)
     const url = '/api/v1/software'
     // make post request
     const resp = await fetch(url, {

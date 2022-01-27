@@ -95,6 +95,7 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
   }
 
   function onSubmit(data: AddSoftwareForm) {
+    // console.log('onSubmit...data', data)
     const {token} = session
     // set flags
     if (token && data) {

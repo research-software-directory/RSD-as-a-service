@@ -1,3 +1,5 @@
+/* eslint-disable jest/no-disabled-tests */
+
 import {render, screen} from '@testing-library/react'
 import SoftwareItemPage, {getServerSideProps} from '../pages/software/[slug]/index'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
@@ -11,7 +13,7 @@ import {
 } from '../utils/getSoftware'
 
 // mock fetch response
-import softwareItem from './__mocks__/softwareItem.json'
+import softwareItem from './__fixtures__/softwareItem.json'
 
 jest.mock('../utils/getSoftware')
 // const mockedResponse=[softwareItem]
