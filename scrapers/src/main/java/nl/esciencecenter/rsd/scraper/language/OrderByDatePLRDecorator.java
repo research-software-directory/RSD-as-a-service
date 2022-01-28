@@ -21,6 +21,14 @@ public class OrderByDatePLRDecorator implements ProgrammingLanguagesRepository {
 	}
 
 	@Override
+	public Collection<LicenseData> licenseData() {
+		Collection<LicenseData> data = origin.licenseData();
+		return data.stream()
+				.sorted(Comparator.comparing(LicenseData::lastUpdated, Comparator.nullsFirst(Comparator.naturalOrder())))
+				.toList();
+	}
+
+	@Override
 	public void save(String data) {
 		origin.save(data);
 	}

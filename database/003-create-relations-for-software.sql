@@ -1,7 +1,9 @@
 CREATE TABLE repository_url (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID references software (id) NOT NULL,
-	url VARCHAR NOT NULL
+	url VARCHAR NOT NULL,
+	license VARCHAR,
+	license_scraped_at TIMESTAMP
 );
 
 
@@ -31,13 +33,18 @@ CREATE TRIGGER sanitise_update_repository_url BEFORE UPDATE ON software FOR EACH
 CREATE TABLE license_for_software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID references software (id) NOT NULL,
-	license VARCHAR(100) NOT NULL
+	license VARCHAR(100) NOT NULL,
+	UNIQUE(software, license),
+	created_at TIMESTAMP NOT NULL,
+	updated_at TIMESTAMP NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_license_for_software() RETURNS TRIGGER LANGUAGE plpgsql as
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
+	NEW.created_at = LOCALTIMESTAMP;
+	NEW.updated_at = NEW.created_at;
 	return NEW;
 END
 $$;
@@ -49,6 +56,8 @@ CREATE FUNCTION sanitise_update_license_for_software() RETURNS TRIGGER LANGUAGE 
 $$
 BEGIN
 	NEW.id = OLD.id;
+	NEW.created_at = OLD.created_at;
+	NEW.updated_at = LOCALTIMESTAMP;
 	return NEW;
 END
 $$;

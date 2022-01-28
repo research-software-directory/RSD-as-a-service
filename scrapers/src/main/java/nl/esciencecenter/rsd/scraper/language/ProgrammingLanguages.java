@@ -4,5 +4,5 @@ public interface ProgrammingLanguages {
 
 	String data(String repo);
 
-	void save(String data);
+	String license(String repo);
 }

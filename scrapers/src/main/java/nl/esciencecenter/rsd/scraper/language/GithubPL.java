@@ -1,5 +1,6 @@
 package nl.esciencecenter.rsd.scraper.language;
 
+import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
 
@@ -22,7 +23,11 @@ public class GithubPL implements ProgrammingLanguages {
 	}
 
 	@Override
-	public void save(String data) {
-		throw new UnsupportedOperationException();
+	public String license(String repo) {
+		Objects.requireNonNull(repo);
+		String repoData = Config.apiCredentialsGithub()
+				.map(apiCredentials -> Utils.get(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials)))
+				.orElseGet(() -> Utils.get(baseApiUrl + "/repos/" + repo));
+		return JsonParser.parseString(repoData).getAsJsonObject().getAsJsonObject("license").getAsJsonPrimitive("spdx_id").getAsString();
 	}
 }

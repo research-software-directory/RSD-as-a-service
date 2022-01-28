@@ -40,6 +40,22 @@ public class PostgrestPLR implements ProgrammingLanguagesRepository {
 	}
 
 	@Override
+	public Collection<LicenseData> licenseData() {
+		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl)).getAsJsonArray();
+		Collection<LicenseData> result = new ArrayList<>();
+		for (JsonElement element : data) {
+			JsonObject jsonObject = element.getAsJsonObject();
+			String id = jsonObject.getAsJsonPrimitive("id").getAsString();
+			String software = jsonObject.getAsJsonPrimitive("software").getAsString();
+			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
+			JsonElement jsonScrapedAt = jsonObject.get("license_scraped_at");
+			LocalDateTime updatedAt = jsonScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonScrapedAt.getAsString());
+			result.add(new LicenseData(id, software, url, updatedAt));
+		}
+		return result;
+	}
+
+	@Override
 	public void save(String data) {
 		Utils.postAsAdmin(baseUrl, data, "Prefer", "resolution=merge-duplicates");
 	}

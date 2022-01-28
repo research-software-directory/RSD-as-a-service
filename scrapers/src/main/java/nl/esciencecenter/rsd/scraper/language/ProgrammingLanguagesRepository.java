@@ -6,5 +6,7 @@ public interface ProgrammingLanguagesRepository {
 
 	Collection<RepositoryUrlData> data();
 
+	Collection<LicenseData> licenseData();
+
 	void save(String data);
 }

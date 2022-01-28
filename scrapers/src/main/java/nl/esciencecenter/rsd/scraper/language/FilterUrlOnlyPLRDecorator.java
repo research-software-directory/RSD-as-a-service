@@ -22,6 +22,14 @@ public class FilterUrlOnlyPLRDecorator implements ProgrammingLanguagesRepository
 	}
 
 	@Override
+	public Collection<LicenseData> licenseData() {
+		Collection<LicenseData> data = origin.licenseData();
+		return data.stream()
+				.filter(repositoryUrlData -> repositoryUrlData.url().startsWith(urlFilter))
+				.toList();
+	}
+
+	@Override
 	public void save(String data) {
 		origin.save(data);
 	}
