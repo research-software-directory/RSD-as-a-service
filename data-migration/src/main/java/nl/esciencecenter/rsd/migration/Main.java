@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -136,17 +137,28 @@ public class Main {
 
 			softwareToSave.add("slug", softwareFromLegacyRSD.get("slug"));
 			softwareToSave.add("brand_name", softwareFromLegacyRSD.get("brandName"));
-			softwareToSave.add("bullets", softwareFromLegacyRSD.get("bullets"));
 			softwareToSave.add("concept_doi", jsonNullIfEquals(softwareFromLegacyRSD.get("conceptDOI"), "10.0000/FIXME"));
+			softwareToSave.add("description", mergeBulletsReadMore(softwareFromLegacyRSD.get("bullets"), softwareFromLegacyRSD.get("readMore")));
 			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
 			softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
-			softwareToSave.add("read_more", softwareFromLegacyRSD.get("readMore"));
 			softwareToSave.add("short_statement", softwareFromLegacyRSD.get("shortStatement"));
 
 			allSoftwareToSave.add(softwareToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/software"), allSoftwareToSave.toString());
+	}
+
+	public static JsonElement mergeBulletsReadMore(JsonElement bullets, JsonElement readMore) {
+		if ((bullets == null || bullets.isJsonNull()) && (readMore == null || readMore.isJsonNull())) {
+			return JsonNull.INSTANCE;
+		} else if (bullets == null || bullets.isJsonNull()) {
+			return readMore;
+		} else if (readMore == null || readMore.isJsonNull()) {
+			return bullets;
+		} else {
+			return new JsonPrimitive(bullets.getAsString() + "\n\n" + readMore.getAsString());
+		}
 	}
 
 	public static Map<String, String> slugToId(String endpoint) {
