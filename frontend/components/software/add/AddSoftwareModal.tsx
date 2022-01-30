@@ -16,7 +16,8 @@ import {useAuth} from '../../../auth'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 import {NewSoftwareItem} from '../../../types/SoftwareItem'
 import {addSoftware} from '../../../utils/editSoftware'
-import HelperTextWithCounter from './HelperTextWithCounter'
+import TextFieldWithCounter from '../../form/TextFieldWithCounter'
+// import HelperTextWithCounter from './HelperTextWithCounter'
 
 const initalState = {
   open: false,
@@ -25,7 +26,7 @@ const initalState = {
 }
 
 type AddSoftwareForm = {
-  name: string,
+  brand_name: string,
   short_statement:string
 }
 
@@ -34,7 +35,7 @@ const config = {
   Please provide name and short description for your software.
   The url slug is generated from name input and shown under "Slug" label.
   `,
-  name: {
+  brand_name: {
     label: 'Name',
     help: 'Provide software name to use as a title of your software page.',
     required: 'Name is required',
@@ -57,7 +58,7 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
   const {register, handleSubmit, watch, formState, reset} = useForm<AddSoftwareForm>({
     mode: 'onChange',
     defaultValues: {
-      name: '',
+      brand_name: '',
       short_statement:''
     }
   })
@@ -107,9 +108,9 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
     }
     // create data object
     const software:NewSoftwareItem = {
-      brand_name: data.name,
+      brand_name: data.brand_name,
       short_statement: data.short_statement,
-      slug: getSlugFromString(data.name),
+      slug: getSlugFromString(data.brand_name),
       is_featured: false,
       is_published: false,
       description: null,
@@ -162,8 +163,8 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
   }
 
   // construct slug from title
-  const data = watch(['name','short_statement'])
-  const softwareSlug = getSlugFromString(data[0])
+  const data = watch()
+  const softwareSlug = getSlugFromString(data.brand_name)
 
   return (
     <Dialog
@@ -189,66 +190,30 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
             {renderDialogText()}
           </section>
           <section className="py-4">
-            <TextField
-              autoFocus
-              autoComplete="off"
-              error={errors.name?.message!==undefined}
-              id="name"
-              label={config.name.label}
-              type="text"
-              fullWidth
-              variant="standard"
-              defaultValue=""
-              FormHelperTextProps={{
-                sx:{
-                  display: 'flex',
-                  justifyContent:'space-between'
-                }
+            <TextFieldWithCounter
+              options={{
+                error: errors.brand_name?.message !== undefined,
+                label: config.brand_name.label,
+                helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help,
+                helperTextCnt:`${data?.brand_name?.length || 0}/100`
               }}
-              helperText={
-                <HelperTextWithCounter
-                  message={
-                    errors.name?.message ?
-                    errors.name?.message :
-                    config.name.help
-                  }
-                  count={`${data[0]?.length || 0}/100`}
-                />
-              }
-              {...register('name', {
-                required: config.name.required,
+              register={register('brand_name', {
+                required: config.brand_name.required,
                 minLength: {value: 3, message: 'Minimum length is 3'},
                 maxLength: {value: 100, message: 'Maximum length is 100'},
               })}
             />
             <div className="py-2"></div>
-            <TextField
-              multiline={true}
-              maxRows={5}
-              error={errors.short_statement?.message!==undefined}
-              id="short_statement"
-              label={config.short_statement.label}
-              type="text"
-              fullWidth
-              variant="standard"
-              defaultValue=""
-              FormHelperTextProps={{
-                sx:{
-                  display: 'flex',
-                  justifyContent:'space-between'
-                }
+            <TextFieldWithCounter
+              options={{
+                multiline:true,
+                maxRows:5,
+                error: errors?.short_statement?.message !== undefined,
+                label: config.short_statement.label,
+                helperTextMessage: errors?.short_statement?.message ?? config.short_statement.help,
+                helperTextCnt:`${data?.short_statement?.length || 0}/300`
               }}
-              helperText={
-                <HelperTextWithCounter
-                  message={
-                    errors.short_statement?.message ?
-                    errors.short_statement?.message :
-                    config.short_statement.help
-                  }
-                  count={`${data[1]?.length}/300`}
-                />
-              }
-              {...register('short_statement', {
+              register={register('short_statement', {
                 required: config.short_statement.required,
                 minLength: {value: 10, message: 'Minimum length is 10'},
                 maxLength: {value: 300, message: 'Maximum length is 300'},
