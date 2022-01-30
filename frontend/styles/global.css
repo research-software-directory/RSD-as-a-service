@@ -40,9 +40,12 @@ RangeError: Maximum call stack size exceeded
   h3 {
     @apply text-xl;
   }
-
-  a {
+  a {   
     @apply cursor-pointer no-underline transition duration-100 hover:text-primary
+  }
+
+  body{
+    @apply text-secondary
   }
 }
 
@@ -118,4 +121,12 @@ Tailwind remove max-width for markdown
 */
 .prose{
   max-width: none;
+}
+
+/* ---------------------
+ MARKDOWN EDIT / PREVIEW
+ */
+
+ #markdown-textarea:focus-visible{
+  outline:none;
 }

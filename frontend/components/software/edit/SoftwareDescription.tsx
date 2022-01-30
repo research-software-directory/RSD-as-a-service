@@ -1,24 +1,41 @@
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 
 import ReactMarkdown from 'react-markdown'
 
-export default function SoftwareDescription({markdown,onSave}:{markdown:string,onSave:Function}) {
+export default function SoftwareDescription({markdown,register}:
+  { markdown:string, register: any }) {
   const [tab, setTab] = useState(0)
-  const [localMarkdown, setMarkdown] = useState(markdown)
-  const [touched, setTouched] = useState(false)
+
+  useEffect(() => {
+    // debugger
+    const textInput = document.getElementById('markdown-textarea')
+    if (textInput) {
+      const height = textInput.scrollHeight
+      if (height > 432) {
+        textInput.style.height = `${height}px`
+      } else {
+        // default height
+        textInput.style.height = '432px'
+      }
+    }
+  },[])
 
   function handleChange(event: React.SyntheticEvent, newValue: number){
     setTab(newValue)
   }
 
   return (
-    <article>
+    <article className="border rounded-sm min-h-[33rem]">
       <Tabs
         value={tab}
         onChange={handleChange}
-        aria-label="Tabs">
+        aria-label="Tabs"
+        sx={{
+          padding:'1rem 2rem'
+        }}
+      >
         <Tab
           id={`tab-${tab}`}
           label="Markdown"
@@ -38,17 +55,14 @@ export default function SoftwareDescription({markdown,onSave}:{markdown:string,o
         <textarea
           name="markdown-input"
           id="markdown-textarea"
-          onChange={({target}) => {
-            setMarkdown(target.value)
-            setTouched(true)
+          rows={20}
+          className="text-secondary w-full h-full py-4 px-8 font-mono text-sm"
+          onInput={({target}:{target:any}) => {
+            // debugger
+            target.style.height = ''
+            target.style.height = target.scrollHeight + 'px'
           }}
-          value={localMarkdown}
-          onBlur={({target}) => {
-            if (touched) {
-              onSave(target.value)
-              setTouched(false)
-            }
-          }}
+          {...register}
         ></textarea>
       </div>
       <div
@@ -58,9 +72,10 @@ export default function SoftwareDescription({markdown,onSave}:{markdown:string,o
       >
         <div>
           <ReactMarkdown
-            className="prose"
+            className="prose py-4 px-8"
+            linkTarget="_blank"
           >
-            {localMarkdown}
+            {markdown}
           </ReactMarkdown>
         </div>
       </div>
