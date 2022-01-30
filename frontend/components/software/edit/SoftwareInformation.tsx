@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 
 import CircularProgress from '@mui/material/CircularProgress'
-import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
@@ -15,6 +14,7 @@ import EditSoftwareSection from './EditSoftwareSection'
 import EditSectionTitle from './EditSectionTitle'
 import SoftwareDescription from './SoftwareDescription'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
+import {updateSoftware} from '../../../utils/editSoftware'
 
 const config = {
   brand_name: {
@@ -25,12 +25,15 @@ const config = {
   short_statement: {
     label: 'Short description',
     help: 'Provide short description of your software to use as page subtitle.',
-    required: 'Name is required',
+    required: 'Short description is required',
   },
   get_started_url: {
     label: 'Get Started Url',
     help: 'Link to software repo, documentation or starting point web page.',
-    // required: 'Name is required',
+  },
+  description: {
+    label: 'Description',
+    help:'What your software can do for your users?'
   }
 }
 
@@ -87,6 +90,19 @@ export default function SoftwareInformation() {
 
   function onSubmit(data: SoftwareTableItem) {
     console.log('save data...', data)
+
+    updateSoftware({
+      software: data,
+      token: session.token
+    }).then(resp => {
+      debugger
+      console.log('resp...', resp)
+      if (resp.status === 200) {
+
+      } else {
+
+      }
+    })
   }
 
   function resetForm(software:SoftwareTableItem|undefined) {
@@ -97,8 +113,11 @@ export default function SoftwareInformation() {
         slug: software?.slug,
         brand_name: software?.brand_name,
         short_statement: software?.short_statement,
-        get_started_url: software?.get_started_url ?? '',
-        description: software?.description
+        get_started_url: software?.get_started_url,
+        description: software?.description,
+        concept_doi: software?.concept_doi,
+        is_featured: software?.is_featured,
+        is_published: software?.is_published,
       })
     } else {
       reset()
@@ -193,21 +212,25 @@ export default function SoftwareInformation() {
               helperTextCnt:`${data?.get_started_url?.length || 0}/200`
             }}
             register={register('get_started_url', {
-              minLength: {value: 10, message: 'Minimum length is 10'},
+              // minLength: {value: 10, message: 'Minimum length is 10'},
               maxLength: {value: 200, message: 'Maximum length is 200'},
+              pattern: {
+                value: /https?:\/\/\w+\.\w+\//,
+                message:'Url should start with htps://, have at least one dot (.) and at least one slash (/).'
+              }
             })}
           />
 
           <div className="py-2"></div>
           <EditSectionTitle
-            title="Description"
-            subtitle={`What <strong>${software?.brand_name}</strong> can do for your users?`}
+            title={config.description.label}
+            subtitle={config.description.help}
           />
-
           <SoftwareDescription
             markdown={data?.description||''}
             register={register('description')}
           />
+          {/* add white space at the bottom */}
           <div className="py-4"></div>
         </div>
         <div className="py-4 xl:my-0">

@@ -46,7 +46,7 @@ export async function addSoftware({software, token}:
 
 export async function editSoftware({slug, token}: { slug: string, token: string }) {
   try {
-    // this request is always perfomed from backend
+    // GET
     const url = `/api/v1/software?slug=eq.${slug}`
     const resp = await fetch(url, {
       method: 'GET',
@@ -58,5 +58,48 @@ export async function editSoftware({slug, token}: { slug: string, token: string 
     }
   } catch (e: any) {
     logger(`getSoftwareItem: ${e?.message}`, 'error')
+  }
+}
+
+export async function updateSoftware({software, token}:
+  { software: SoftwareTableItem, token:string }) {
+  try {
+    // PUT
+    const url = `/api/v1/software?id=eq.${software.id}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createHeaders(token),
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify(software)
+    })
+    debugger
+    if ([200,204].includes(resp.status)) {
+      // just return id
+      return {
+        status: 200,
+        message: software.id
+      }
+    } else {
+      const message = await resp.json()
+      if (message) {
+        return {
+          status: resp.status,
+          message
+        }
+      } else {
+        return {
+          status: resp.status,
+          message: resp.statusText
+        }
+      }
+    }
+  } catch (e: any) {
+    logger(`updateSoftware: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
   }
 }
