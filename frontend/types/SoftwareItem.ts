@@ -21,6 +21,7 @@
 // }
 
 export type RepositoryUrl = {
+  id?:string,
   url:string
 }
 

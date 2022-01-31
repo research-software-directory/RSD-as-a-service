@@ -6,14 +6,14 @@ import {SnackbarOptions} from './PageSnackbarContext'
 
 export default function PageSnackbar({options, setOptions}:{options:SnackbarOptions, setOptions:Function}){
 
-  const {open, severity, message, duration} = options
+  const {open, severity, message, duration, anchor} = options
 
   function slideTransition (props:any){
     // console.log("slideTransition.props: ", props)
     return <Slide {...props} direction="up" />
   };
 
-  // console.log("PageSnackbar.options: ", options)
+  // console.log('PageSnackbar.options: ', options)
   function handleClose(event: React.SyntheticEvent | Event, reason?: string){
     if (reason!=='clickaway'){
       setOptions({
@@ -27,6 +27,7 @@ export default function PageSnackbar({options, setOptions}:{options:SnackbarOpti
   return (
     <Snackbar
       open={open}
+      anchorOrigin={anchor}
       autoHideDuration={duration}
       onClose={handleClose}
       TransitionComponent={slideTransition}>

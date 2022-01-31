@@ -4,14 +4,22 @@ export type SnackbarOptions={
   severity:'error'|'info'|'warning'|'success',
   message:string,
   open?:boolean,
-  duration?:number
+  duration?: number,
+  anchor?: {
+    vertical:'top' | 'bottom',
+    horizontal:'left' | 'center' | 'right'
+  }
 }
 
 export const snackbarDefaults:SnackbarOptions={
   open: false,
   severity: 'info',
   message: '',
-  duration: 5000
+  duration: 5000,
+  anchor: {
+    vertical: 'bottom',
+    horizontal: 'center'
+  }
 }
 
 export type PageSnackbarType={

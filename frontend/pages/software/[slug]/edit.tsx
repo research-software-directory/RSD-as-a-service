@@ -18,6 +18,7 @@ import DefaultLayout from '../../../components/layout/DefaultLayout'
 import PageTitle from '../../../components/layout/PageTitle'
 import {editSoftwareMenu} from '../../../components/software/edit/editSoftwareSteps'
 import logger from '../../../utils/logger'
+import EditSoftwareNav from '../../../components/software/edit/EditSoftwareNav'
 
 export default function SoftwareItemEdit() {
   const [options, setSnackbar] = useState(snackbarDefaults)
@@ -27,58 +28,24 @@ export default function SoftwareItemEdit() {
   const [step, setStep] = useState(editSoftwareMenu[0])
 
   return (
-    <ProtectedContent>
-      <DefaultLayout>
+    <DefaultLayout>
         <Head>
           <title>Edit software | {app.title}</title>
         </Head>
-        <PageSnackbarContext.Provider value={{options,setSnackbar}}>
-          <PageTitle title={'Edit software'}>
-            <nav className="w-full md:w-auto">
-              <IconButton
-                title="Go back"
-                onClick={()=>router.back()}>
-                <ArrowBackIcon />
-              </IconButton>
-              <IconButton
-                title="Save"
-                onClick={() => {
-                  // router.replace(`/software/${slug}`)
-                  console.log('TODO! Save software item')
-                }}>
-                <SaveIcon />
-              </IconButton>
-            </nav>
-          </PageTitle>
+        <ProtectedContent>
+          <PageSnackbarContext.Provider value={{options,setSnackbar}}>
           <section className="md:flex">
-            <nav>
-              <List sx={{
-                width:['100%','100%','15rem'],
-                // border: '1px solid #ccc'
-              }}>
-                {editSoftwareMenu.map((item, pos) => {
-                  return (
-                    <ListItemButton
-                      key={`step-${pos}`}
-                      selected={item.label===step.label}
-                      onClick={()=>setStep(editSoftwareMenu[pos])}
-                    >
-                      <ListItemIcon>
-                          {item.icon}
-                      </ListItemIcon>
-                      <ListItemText primary={item.label} secondary={item.status} />
-                    </ListItemButton>
-                  )
-                })}
-              </List>
-            </nav>
-            {/* Here we load step component */}
+            <EditSoftwareNav
+              step={step}
+              setStep={setStep}
+            />
+            {/* Here we load main component of each step */}
             {step.component}
           </section>
-        </PageSnackbarContext.Provider>
+          </PageSnackbarContext.Provider>
         <PageSnackbar options={options} setOptions={setSnackbar} />
+      </ProtectedContent>
       </DefaultLayout>
-    </ProtectedContent>
   )
 }
 

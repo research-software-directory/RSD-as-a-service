@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useContext} from 'react'
 import {useRouter} from 'next/router'
 
 import CircularProgress from '@mui/material/CircularProgress'
@@ -7,14 +7,15 @@ import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
 
 import {useAuth} from '../../../auth'
-import {SoftwareTableItem} from '../../../types/SoftwareItem'
-import {editSoftware} from '../../../utils/editSoftware'
+import {SoftwareItem} from '../../../types/SoftwareItem'
+import {getSoftwareToEdit} from '../../../utils/editSoftware'
 import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import EditSoftwareSection from './EditSoftwareSection'
 import EditSectionTitle from './EditSectionTitle'
 import SoftwareDescription from './SoftwareDescription'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
-import {updateSoftware} from '../../../utils/editSoftware'
+import {updateSoftwareInfo} from '../../../utils/editSoftware'
+import snackbarContext from '../../snackbar/PageSnackbarContext'
 
 const config = {
   brand_name: {
@@ -31,22 +32,26 @@ const config = {
     label: 'Get Started Url',
     help: 'Link to software repo, documentation or starting point web page.',
   },
+  repository_url: {
+    label: 'Repository Url',
+    help: 'Link to source code repository',
+  },
   description: {
     label: 'Description',
     help:'What your software can do for your users?'
   }
 }
 
-
 export default function SoftwareInformation() {
   const {session} = useAuth()
+  const {setSnackbar} = useContext(snackbarContext)
   const router = useRouter()
   const slug = router.query['slug']?.toString()
   const [loading, setLoading] = useState(false)
-  const [software, setSoftware] = useState<SoftwareTableItem>()
+  const [software, setSoftware] = useState<SoftwareItem>()
   const {token} = session
 
-  const {register, handleSubmit, watch, formState, reset} = useForm<SoftwareTableItem>({
+  const {register, handleSubmit, watch, formState, reset} = useForm<SoftwareItem>({
     mode: 'onChange'
   })
 
@@ -63,7 +68,7 @@ export default function SoftwareInformation() {
   useEffect(() => {
     if (slug && token) {
       setLoading(true)
-      editSoftware({slug, token})
+      getSoftwareToEdit({slug, token})
         .then(data => {
           // debugger
           setSoftware(data)
@@ -88,24 +93,42 @@ export default function SoftwareInformation() {
     </ContentInTheMiddle>
   )
 
-  function onSubmit(data: SoftwareTableItem) {
-    console.log('save data...', data)
-
-    updateSoftware({
+  function onSubmit(data: SoftwareItem) {
+    // console.log('save data...', data)
+    updateSoftwareInfo({
       software: data,
       token: session.token
     }).then(resp => {
-      debugger
-      console.log('resp...', resp)
+      // debugger
+      // console.log('resp...', resp)
       if (resp.status === 200) {
-
+        setSnackbar({
+          open: true,
+          severity: 'success',
+          message: `${software?.brand_name} saved`,
+          duration: 5000,
+          anchor: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          }
+        })
+        // reset form
+        resetForm(data)
       } else {
-
+        setSnackbar({
+          open: true,
+          severity: 'error',
+          message: resp.message,
+          anchor: {
+            vertical: 'top',
+            horizontal: 'right'
+          }
+        })
       }
     })
   }
 
-  function resetForm(software:SoftwareTableItem|undefined) {
+  function resetForm(software:SoftwareItem|undefined) {
     // debugger
     if (software) {
       reset({
@@ -118,10 +141,15 @@ export default function SoftwareInformation() {
         concept_doi: software?.concept_doi,
         is_featured: software?.is_featured,
         is_published: software?.is_published,
+        repository_url: software?.repository_url
       })
     } else {
       reset()
     }
+  }
+
+  function repositoryUrlHelp() {
+
   }
 
   return (
@@ -133,39 +161,44 @@ export default function SoftwareInformation() {
       <input type="hidden"
         {...register('slug',{required:'slug is required'})}
       />
+      <div className="flex pl-8 py-4 w-full">
+        <h1 className="flex-1 text-primary">{software?.brand_name}</h1>
+        <div>
+          <Button
+            tabIndex={0}
+            type="submit"
+            onClick={()=>resetForm(software)}
+            disabled={!isDirty}
+            sx={{
+              marginRight:'2rem'
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            tabIndex={0}
+            type="submit"
+            variant="contained"
+            sx={{
+              // overwrite tailwind preflight.css for submit type
+              '&[type="submit"]:not(.Mui-disabled)': {
+                backgroundColor:'primary.main'
+              }
+            }}
+            endIcon={
+              <SaveIcon />
+            }
+            disabled={!isDirty}
+          >
+            Save
+          </Button>
+        </div>
+      </div>
       <EditSoftwareSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0'>
         <div className="py-4 xl:px-8">
           <EditSectionTitle
             title="Software information"
           >
-            <Button
-              tabIndex={0}
-              type="submit"
-              onClick={()=>resetForm(software)}
-              disabled={!isDirty}
-              sx={{
-                marginRight:'2rem'
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              tabIndex={0}
-              type="submit"
-              variant="contained"
-              sx={{
-                // overwrite tailwind preflight.css for submit type
-                '&[type="submit"]:not(.Mui-disabled)': {
-                  backgroundColor:'primary.main'
-                }
-              }}
-              endIcon={
-                <SaveIcon />
-              }
-              disabled={!isDirty}
-            >
-              Save
-            </Button>
           </EditSectionTitle>
 
           <TextFieldWithCounter
@@ -203,7 +236,6 @@ export default function SoftwareInformation() {
             title='Project URL'
             subtitle='Where users can find the information to start?'
           />
-
           <TextFieldWithCounter
             options={{
               error: errors?.get_started_url?.message !== undefined,
@@ -212,6 +244,27 @@ export default function SoftwareInformation() {
               helperTextCnt:`${data?.get_started_url?.length || 0}/200`
             }}
             register={register('get_started_url', {
+              // minLength: {value: 10, message: 'Minimum length is 10'},
+              maxLength: {value: 200, message: 'Maximum length is 200'},
+              pattern: {
+                value: /https?:\/\/\w+\.\w+\//,
+                message:'Url should start with htps://, have at least one dot (.) and at least one slash (/).'
+              }
+            })}
+          />
+          <div className="py-2"></div>
+          <TextFieldWithCounter
+            options={{
+              error: errors?.repository_url !== undefined,
+              label: config.repository_url.label,
+              helperTextMessage: errors?.repository_url !== undefined
+                ? errors?.repository_url[0]?.url?.message
+                : config.get_started_url.help,
+              helperTextCnt: `${data?.repository_url?.length > 0
+                ? data?.repository_url[0]?.url?.length
+                : 0}/200`
+            }}
+            register={register('repository_url.0.url', {
               // minLength: {value: 10, message: 'Minimum length is 10'},
               maxLength: {value: 200, message: 'Maximum length is 200'},
               pattern: {
