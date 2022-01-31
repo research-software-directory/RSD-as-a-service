@@ -174,7 +174,6 @@ export async function updateRepositoryTable({data, token}:
       },
       body: JSON.stringify(data)
     })
-    debugger
     // OK
     if ([200, 204].includes(resp.status)) {
       // just return id
@@ -216,7 +215,6 @@ export async function addToRepositoryTable({data, token}:
   { data: RepositoryUrl, token: string }) {
   try {
     // add new repository
-    debugger
     const url = '/api/v1/repository_url'
     const resp = await fetch(url, {
       method: 'POST',
@@ -226,7 +224,6 @@ export async function addToRepositoryTable({data, token}:
       },
       body: JSON.stringify(data)
     })
-    debugger
     // OK
     if ([200, 201].includes(resp.status)) {
       // just return id
@@ -261,5 +258,36 @@ export async function addToRepositoryTable({data, token}:
       status: 500,
       message: e?.message
     }
+  }
+}
+
+export async function isMaintainerOfSoftware({slug, uid, token}:
+  {slug: string, uid: string, token: string}) {
+  try {
+    // return false directly when missing info
+    if (!slug || !uid || !token) return false
+    // build url
+    const url = `/api/v1/maintainer_for_software_by_slug?maintainer=eq.${uid}&slug=eq.${slug}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createHeaders(token)
+    })
+    // MAINTAINER
+    if (resp.status === 200) {
+      const json = await resp.json()
+      // it should return exactly 1 item
+      if (json?.length === 1) {
+        // having maintainer equal to uid
+        return json[0].maintainer === uid
+      }
+      return false
+    }
+    // ERRORS AS NOT MAINTAINER
+    logger(`isMaintainerOfSoftware: Not a maintainer of ${slug}. ${resp.status}:${resp.statusText}`,'warn')
+    return false
+  } catch (e:any) {
+    logger(`isMaintainerOfSoftware: ${e?.message}`, 'error')
+    // ERRORS AS NOT MAINTAINER
+    return false
   }
 }

@@ -1,7 +1,6 @@
 import {useEffect, useState, useContext} from 'react'
 import {useRouter} from 'next/router'
 
-import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
@@ -9,7 +8,7 @@ import {useForm} from 'react-hook-form'
 import {useAuth} from '../../../auth'
 import {SoftwareItem} from '../../../types/SoftwareItem'
 import {getSoftwareToEdit} from '../../../utils/editSoftware'
-import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
+import ContentLoader from '../../layout/ContentLoader'
 import EditSoftwareSection from './EditSoftwareSection'
 import EditSectionTitle from './EditSectionTitle'
 import SoftwareDescription from './SoftwareDescription'
@@ -88,9 +87,7 @@ export default function SoftwareInformation() {
 
 
   if (loading) return (
-    <ContentInTheMiddle>
-      <CircularProgress />
-    </ContentInTheMiddle>
+    <ContentLoader />
   )
 
   function onSubmit(data: SoftwareItem) {

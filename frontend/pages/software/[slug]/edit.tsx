@@ -32,7 +32,7 @@ export default function SoftwareItemEdit() {
         <Head>
           <title>Edit software | {app.title}</title>
         </Head>
-        <ProtectedContent>
+        <ProtectedContent slug={slug?.toString()}>
           <PageSnackbarContext.Provider value={{options,setSnackbar}}>
           <section className="md:flex">
             <EditSoftwareNav
