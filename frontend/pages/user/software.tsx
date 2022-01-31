@@ -1,5 +1,5 @@
 import DefaultLayout from '../../components/layout/DefaultLayout'
-import ProtectedContent from '../../components/layout/ProtectedContent'
+import ProtectedContent from '../../auth/ProtectedContent'
 
 export default function UserProfilePage() {
   return (

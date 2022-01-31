@@ -114,6 +114,8 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
       is_featured: false,
       is_published: false,
       description: null,
+      description_type: 'markdown',
+      description_url: null,
       get_started_url: null,
       concept_doi: null
     }

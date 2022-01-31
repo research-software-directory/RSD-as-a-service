@@ -1,9 +1,17 @@
 import ContentInTheMiddle from '../layout/ContentInTheMiddle'
 import SoftwareCard from './SoftwareCard'
-import {SoftwareItem} from '../../types/SoftwareItem'
+
+
+export type SoftwareGridType = {
+  slug: string,
+  brand_name: string,
+  short_statement: string,
+  is_featured: boolean,
+  updated_at: string | null,
+}
 
 // render software cards
-export default function SoftwareGrid({software}:{software:SoftwareItem[]}){
+export default function SoftwareGrid({software}:{software:SoftwareGridType[]}){
   // console.log("renderItems...software...", software)
 
   if (software.length===0){

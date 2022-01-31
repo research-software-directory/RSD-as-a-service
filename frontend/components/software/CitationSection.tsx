@@ -27,11 +27,13 @@ export default function CitationSection({citationInfo,concept_doi}:
     }
   },[citationInfo])
 
-  // do not render section if no data
-  if (!citationInfo) return null
-  // do not render section if not citable
-  if (citationInfo.is_citable===false) return null
-
+  // do not render section if no data or not citable
+  if (!citationInfo || citationInfo.is_citable === false) {
+    // only return spacer
+    return (
+      <section className="py-4"></section>
+    )
+  }
   // prepare release versions
   const versions = citationInfo?.release_content?.map((item,pos)=>{
     return {label:item.tag,value:`${pos}`}

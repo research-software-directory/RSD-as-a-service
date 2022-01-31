@@ -2,8 +2,15 @@ import Link from 'next/link'
 import StarIcon from '@mui/icons-material/Star'
 import {getTimeAgoSince} from '../../utils/dateFn'
 
-export default function SoftwareCard({href,brand_name,short_statement,is_featured,updated_at}:
-  {href:string,brand_name:string,short_statement:string,is_featured:boolean,updated_at:string|null}) {
+type SoftwareCardType = {
+  href: string
+  brand_name: string
+  short_statement: string,
+  is_featured: boolean,
+  updated_at: string | null
+}
+
+export default function SoftwareCard({href,brand_name,short_statement,is_featured,updated_at}:SoftwareCardType) {
 
   const colors = is_featured ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'
   const today = new Date()

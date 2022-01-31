@@ -11,7 +11,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
 import {app} from '../../../config/app'
-import ProtectedContent from '../../../components/layout/ProtectedContent'
+import ProtectedContent from '../../../auth/ProtectedContent'
 import PageSnackbar from '../../../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../../../components/snackbar/PageSnackbarContext'
 import DefaultLayout from '../../../components/layout/DefaultLayout'

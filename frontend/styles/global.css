@@ -127,6 +127,10 @@ Tailwind remove max-width for markdown
  MARKDOWN EDIT / PREVIEW
  */
 
- #markdown-textarea:focus-visible{
+#markdown-textarea:focus-visible{
   outline:none;
+}
+
+#markdown-textarea:disabled{
+  cursor: not-allowed;
 }

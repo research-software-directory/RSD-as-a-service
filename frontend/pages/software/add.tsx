@@ -1,5 +1,5 @@
 import {useRouter} from 'next/router'
-import ProtectedContent from '../../components/layout/ProtectedContent'
+import ProtectedContent from '../../auth/ProtectedContent'
 import AppHeader from '../../components/layout/AppHeader'
 import PageContainer from '../../components/layout/PageContainer'
 import AppFooter from '../../components/layout/AppFooter'

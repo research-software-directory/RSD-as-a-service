@@ -44,3 +44,11 @@ LEFT JOIN
 WHERE
 	software.is_published
 ;
+
+-- Software maintainer by software slug
+CREATE VIEW maintainer_for_software_by_slug as
+SELECT
+	maintainer,software,slug from maintainer_for_software
+LEFT JOIN
+	software on software.id=maintainer_for_software.software
+;

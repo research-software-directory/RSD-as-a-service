@@ -1,10 +1,11 @@
 import {useState,useEffect} from 'react'
-import {useAuth} from '../../auth'
-import ContentInTheMiddle from './ContentInTheMiddle'
-import ContentLoader from './ContentLoader'
+import {useAuth} from '.'
 
-import {isMaintainerOfSoftware} from '../../utils/editSoftware'
-import logger from '../../utils/logger'
+import PageErrorMessage from '../components/layout/PageErrorMessage'
+import ContentInTheMiddle from '../components/layout/ContentInTheMiddle'
+import ContentLoader from '../components/layout/ContentLoader'
+import {isMaintainerOfSoftware} from '../utils/editSoftware'
+import logger from '../utils/logger'
 
 /**
  * Wrap the content you want to protect in this component.
@@ -14,13 +15,13 @@ import logger from '../../utils/logger'
  * based on page slug. NOTE! Slug is optional prop and if not provided the
  * maintainer validation is not performed.
  */
-export default function ProtectedContent({children, slug}:{children:any,slug?:string}) {
+export default function ProtectedContent({children, slug}: { children: any, slug?: string }) {
   const {session} = useAuth()
   // const status = session?.status ?? 'loading'
   const [isMaintainer, setIsMaintainer] = useState(false)
   // if slug is provided we need to make api call to check if user
   // is maintainer of the software
-  const [status,setStatus]=useState(slug ? 'loading' : session?.status)
+  const [status, setStatus] = useState(slug ? 'loading' : session?.status)
 
   useEffect(() => {
     let abort = false
@@ -40,31 +41,41 @@ export default function ProtectedContent({children, slug}:{children:any,slug?:st
         setStatus(session.status)
       })
     } else if (session?.status) {
-      debugger
       setStatus(session.status)
     }
     () => { abort = true }
-  },[slug,session.token,session?.user?.account,session.status])
+  }, [slug, session.token, session?.user?.account, session.status])
 
   // return nothing
-  if (status==='loading') return <ContentLoader />
+  if (status === 'loading') return <ContentLoader />
 
   // authenticated user not on 'protected' section
   if (status === 'authenticated' && !slug) {
-    logger('ProtectedContent...authenticated user...not protected section','info')
+    logger('ProtectedContent...authenticated user...not protected section', 'info')
     return children
   }
 
   // isMaintainer of software and is authenticated
   if (status === 'authenticated' && slug && isMaintainer) {
-    logger(`ProtectedContent...authenticated user...maintainer of ${slug}`,'info')
+    logger(`ProtectedContent...authenticated user...maintainer of ${slug}`, 'info')
     return children
   }
 
   // not authenticated
+  if (status !== 'authenticated') {
+    return (
+      <PageErrorMessage
+        statusCode={401}
+        message='UNAUTHORIZED'
+      />
+    )
+  }
+
+  // authenticated but not maintainer = 403
   return (
-    <ContentInTheMiddle>
-      <h1 className="text-error">401 UNAUTHORIZED</h1>
-    </ContentInTheMiddle>
+    <PageErrorMessage
+      statusCode={403}
+      message='FORBIDDEN'
+    />
   )
 }

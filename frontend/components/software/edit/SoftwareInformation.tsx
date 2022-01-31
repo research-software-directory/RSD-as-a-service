@@ -4,6 +4,9 @@ import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
 import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 import {useAuth} from '../../../auth'
 import {SoftwareItem} from '../../../types/SoftwareItem'
@@ -11,10 +14,11 @@ import {getSoftwareToEdit} from '../../../utils/editSoftware'
 import ContentLoader from '../../layout/ContentLoader'
 import EditSoftwareSection from './EditSoftwareSection'
 import EditSectionTitle from './EditSectionTitle'
-import SoftwareDescription from './SoftwareDescription'
+// import SoftwareDescription from './SoftwareDescription'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 import {updateSoftwareInfo} from '../../../utils/editSoftware'
 import snackbarContext from '../../snackbar/PageSnackbarContext'
+import MarkdownInputWithPreview from '../../form/MarkdownInputWithPreview'
 
 const config = {
   brand_name: {
@@ -29,7 +33,7 @@ const config = {
   },
   get_started_url: {
     label: 'Get Started Url',
-    help: 'Link to software repo, documentation or starting point web page.',
+    help: 'Link to source code repository or documentation web page.',
   },
   repository_url: {
     label: 'Repository Url',
@@ -37,8 +41,12 @@ const config = {
   },
   description: {
     label: 'Description',
-    help:'What your software can do for your users?'
-  }
+    help: 'What your software can do for your users?'
+  },
+  description_url: {
+    label: 'Url to markdown file',
+    help: 'Point to the location of markdown file including the filename.'
+  },
 }
 
 export default function SoftwareInformation() {
@@ -50,19 +58,19 @@ export default function SoftwareInformation() {
   const [software, setSoftware] = useState<SoftwareItem>()
   const {token} = session
 
-  const {register, handleSubmit, watch, formState, reset} = useForm<SoftwareItem>({
+  const {register, handleSubmit, watch, formState, reset, setValue} = useForm<SoftwareItem>({
     mode: 'onChange'
   })
 
   const {errors, isDirty, isValid} = formState
   const data = watch()
 
-  console.group('SoftwareInformation')
-  console.log('errors...', errors)
-  console.log('isDirty...', isDirty)
-  console.log('isValid...', isValid)
-  console.log('data...', data)
-  console.groupEnd()
+  // console.group('SoftwareInformation')
+  // console.log('errors...', errors)
+  // console.log('isDirty...', isDirty)
+  // console.log('isValid...', isValid)
+  // console.log('data...', data)
+  // console.groupEnd()
 
   useEffect(() => {
     if (slug && token) {
@@ -83,6 +91,7 @@ export default function SoftwareInformation() {
       // when software changes
       resetForm(software)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[software])
 
 
@@ -135,6 +144,8 @@ export default function SoftwareInformation() {
         short_statement: software?.short_statement,
         get_started_url: software?.get_started_url,
         description: software?.description,
+        description_url: software?.description_url,
+        description_type: software?.description_type,
         concept_doi: software?.concept_doi,
         is_featured: software?.is_featured,
         is_published: software?.is_published,
@@ -145,8 +156,11 @@ export default function SoftwareInformation() {
     }
   }
 
-  function repositoryUrlHelp() {
-
+  function isSaveDisabled() {
+    if (isDirty === false || isValid === false) {
+      return true
+    }
+    return false
   }
 
   return (
@@ -185,7 +199,7 @@ export default function SoftwareInformation() {
             endIcon={
               <SaveIcon />
             }
-            disabled={!isDirty}
+            disabled={isSaveDisabled()}
           >
             Save
           </Button>
@@ -244,8 +258,8 @@ export default function SoftwareInformation() {
               // minLength: {value: 10, message: 'Minimum length is 10'},
               maxLength: {value: 200, message: 'Maximum length is 200'},
               pattern: {
-                value: /https?:\/\/\w+\.\w+\//,
-                message:'Url should start with htps://, have at least one dot (.) and at least one slash (/).'
+                value: /^https?:\/\/.+\..+/,
+                message:'Url should start with http(s):// and use at least one dot (.)'
               }
             })}
           />
@@ -256,7 +270,7 @@ export default function SoftwareInformation() {
               label: config.repository_url.label,
               helperTextMessage: errors?.repository_url !== undefined
                 ? errors?.repository_url[0]?.url?.message
-                : config.get_started_url.help,
+                : config.repository_url.help,
               helperTextCnt: `${data?.repository_url?.length > 0
                 ? data?.repository_url[0]?.url?.length
                 : 0}/200`
@@ -265,7 +279,7 @@ export default function SoftwareInformation() {
               // minLength: {value: 10, message: 'Minimum length is 10'},
               maxLength: {value: 200, message: 'Maximum length is 200'},
               pattern: {
-                value: /https?:\/\/\w+\.\w+\//,
+                value: /^https?:\/\/.+\..+/,
                 message:'Url should start with htps://, have at least one dot (.) and at least one slash (/).'
               }
             })}
@@ -276,9 +290,54 @@ export default function SoftwareInformation() {
             title={config.description.label}
             subtitle={config.description.help}
           />
-          <SoftwareDescription
-            markdown={data?.description||''}
+          <div>
+            <RadioGroup
+              aria-labelledby="radio-group"
+              name="controlled-radio-buttons-group"
+              value={data.description_type}
+              defaultValue={data.description_type}
+              onChange={({target}) => {
+                setValue('description_type', target.value as 'markdown'|'link' )
+              }}
+            >
+              <FormControlLabel
+                label="Use markdown from this url"
+                value="link"
+                control={<Radio />}
+              />
+
+              <TextFieldWithCounter
+                options={{
+                  // autofocus: data.description_type === 'link',
+                  disabled: data.description_type !== 'link',
+                  error: errors?.description_url !== undefined,
+                  label: config.description_url.label,
+                  helperTextMessage: errors?.description_url?.message ?? config.description_url.help,
+                  helperTextCnt:`${data?.description_url?.length || 0}/200`
+                }}
+                register={register('description_url', {
+                  // minLength: {value: 10, message: 'Minimum length is 10'},
+                  maxLength: {value: 200, message: 'Maximum length is 200'},
+                  pattern: {
+                    value: /^https?:\/\/.+\..+.md$/,
+                    message:'Url should start with http(s):// have at least one dot (.) and end with (.md)'
+                  }
+                })}
+              />
+              <div className="py-2"></div>
+              <FormControlLabel
+                label="New markdown"
+                value="markdown"
+                control={<Radio />}
+              />
+            </RadioGroup>
+          </div>
+
+          <MarkdownInputWithPreview
+            markdown={data?.description || ''}
             register={register('description')}
+            disabled={data.description_type !== 'markdown'}
+            // autofocus={data.description_type === 'markdown'}
           />
           {/* add white space at the bottom */}
           <div className="py-4"></div>

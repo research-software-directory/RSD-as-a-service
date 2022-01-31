@@ -1,7 +1,9 @@
+import {useEffect, useRef} from 'react'
 import TextField from '@mui/material/TextField'
 import HelperTextWithCounter from './HelperTextWithCounter'
 
 type TextFieldWidthCounterType = {
+  autofocus?:boolean
   autoComplete?: string
   multiline?: boolean
   maxRows?: number
@@ -13,13 +15,23 @@ type TextFieldWidthCounterType = {
   defaultValue?:string
   helperTextMessage?: string
   helperTextCnt?: string
+  disabled?: boolean
 }
 
 export default function TextFieldWithCounter({options, register}:
-  { options: TextFieldWidthCounterType, register: any}) {
+  { options: TextFieldWidthCounterType, register: any }) {
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  useEffect(() => {
+    if (options.autofocus === true && inputRef.current) {
+      inputRef.current?.focus()
+    }
+  },[options.autofocus])
 
   return (
     <TextField
+      inputRef={inputRef}
+      disabled={options?.disabled ?? false}
       autoComplete={options?.autoComplete ?? 'off'}
       multiline={options?.multiline ?? false}
       maxRows={options?.maxRows ?? undefined}

@@ -4,12 +4,14 @@ import Tab from '@mui/material/Tab'
 
 import ReactMarkdown from 'react-markdown'
 
-export default function SoftwareDescription({markdown,register}:
-  { markdown:string, register: any }) {
+export default function MarkdownInputWithPreview({markdown,register,disabled=true,autofocus=false}:
+  { markdown:string, register: any, disabled?:boolean,autofocus?:boolean }) {
   const [tab, setTab] = useState(0)
 
   useEffect(() => {
-    // debugger
+    // NOTE! useRef seems not to work properly when used
+    // in combination with react-form-hook
+    // this is quickfix using object id
     const textInput = document.getElementById('markdown-textarea')
     if (textInput) {
       const height = textInput.scrollHeight
@@ -20,7 +22,19 @@ export default function SoftwareDescription({markdown,register}:
         textInput.style.height = '432px'
       }
     }
-  },[])
+  }, [])
+
+  useEffect(() => {
+    if (autofocus === true) {
+      // NOTE! useRef seems not to work properly when used
+      // in combination with react-form-hook
+      // this is quickfix using object id
+      const textInput = document.getElementById('markdown-textarea')
+      if (textInput) {
+        textInput.focus()
+      }
+    }
+  },[autofocus])
 
   function handleChange(event: React.SyntheticEvent, newValue: number){
     setTab(newValue)
@@ -53,6 +67,8 @@ export default function SoftwareDescription({markdown,register}:
         hidden={tab !== 0}
       >
         <textarea
+          autoFocus={autofocus}
+          disabled={disabled}
           name="markdown-input"
           id="markdown-textarea"
           rows={20}

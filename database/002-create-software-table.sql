@@ -1,9 +1,16 @@
+CREATE TYPE description_type as ENUM (
+	'link',
+	'markdown'
+);
+
 CREATE TABLE software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	slug VARCHAR(100) UNIQUE NOT NULL,
 	brand_name VARCHAR(100) NOT NULL,
 	concept_doi VARCHAR,
 	description VARCHAR,
+	description_url VARCHAR(200),
+	description_type description_type DEFAULT 'markdown' NOT NULL,
 	get_started_url VARCHAR,
 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,

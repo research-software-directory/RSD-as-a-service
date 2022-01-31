@@ -1,5 +1,9 @@
 import logger from './logger'
-import {NewSoftwareItem, SoftwareTableItem, SoftwareItem, RepositoryUrl} from '../types/SoftwareItem'
+import {
+  NewSoftwareItem, SoftwareTableItem,
+  SoftwareItem, RepositoryUrl,
+  SoftwarePropsToSave
+} from '../types/SoftwareItem'
 import {getPropsFromObject} from './getPropsFromObject'
 
 export function createHeaders(token: string) {
@@ -63,14 +67,17 @@ export async function getSoftwareToEdit({slug, token}: { slug: string, token: st
   }
 }
 
+/**
+ * Entry function to update all software info from edit page
+ * It updates data in software and repostory_url tables.
+ * Only on successful update on all tables returns status 200.
+ */
 export async function updateSoftwareInfo({software, token}:
   {software:SoftwareItem,token:string}) {
   try {
-    debugger
-    const softwareTable = getPropsFromObject(software, [
-      'id', 'slug', 'brand_name', 'concept_doi', 'description', 'get_started_url',
-      'is_featured','is_published','short_statement'
-    ])
+    // debugger
+    // NOTE! update this list when
+    const softwareTable = getPropsFromObject(software, SoftwarePropsToSave)
     const repoTable = {
       id: software?.repository_url[0].id,
       software: software.id,
@@ -164,7 +171,6 @@ export async function updateRepositoryTable({data, token}:
   { data: RepositoryUrl, token: string }) {
   try {
     // PATCH
-    debugger
     const url = `/api/v1/repository_url?id=eq.${data.id}`
     const resp = await fetch(url, {
       method: 'PATCH',
