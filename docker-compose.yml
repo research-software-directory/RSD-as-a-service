@@ -4,7 +4,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.4
+    image: rsd/database:0.0.5
     ports:
     # enable connection from outside
       - "5432:5432"
@@ -99,7 +99,7 @@ services:
   scrapers:
     container_name: scrapers
     build: ./scrapers
-    image: rsd/scrapers:0.0.1
+    image: rsd/scrapers:0.0.2
     env_file:
       - ./frontend/.env.production.local
     depends_on:

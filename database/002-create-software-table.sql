@@ -6,7 +6,7 @@ CREATE TABLE software (
 	description VARCHAR,
 	get_started_url VARCHAR,
 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
-	is_published  BOOLEAN DEFAULT FALSE NOT NULL,
+	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	short_statement VARCHAR(300),
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
