@@ -27,12 +27,11 @@ export type RepositoryUrl = {
 export type NewSoftwareItem = {
   slug: string,
   brand_name: string,
-  bullets: string | null,
   concept_doi: string | null,
+  description: string | null,
   get_started_url: string | null,
   is_featured: boolean,
   is_published: boolean,
-  read_more: string | null,
   short_statement: string,
 }
 

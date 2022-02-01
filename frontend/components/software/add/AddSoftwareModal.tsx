@@ -112,8 +112,7 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
       slug: getSlugFromString(data.name),
       is_featured: false,
       is_published: false,
-      bullets: null,
-      read_more: null,
+      description: null,
       get_started_url: null,
       concept_doi: null
     }

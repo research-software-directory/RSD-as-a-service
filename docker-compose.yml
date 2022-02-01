@@ -4,7 +4,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.3
+    image: rsd/database:0.0.4
     ports:
     # enable connection from outside
       - "5432:5432"
@@ -67,7 +67,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.3.8
+    image: rsd/frontend:0.4.0
     env_file:
       - ./frontend/.env.production.local
     # ports:
@@ -82,17 +82,17 @@ services:
       - net
 
   nginx:
+    build:
+      context: ./nginx
     container_name: nginx
-    image: nginx:1.21
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - "database"
       - "backend"
       - "auth"
       - "frontend"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - net
 

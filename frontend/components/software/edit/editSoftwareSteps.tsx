@@ -21,8 +21,8 @@ export type EditSoftwarePage = {
 }
 
 export const editSoftwareMenu:EditSoftwarePage[] = [
-  {label: 'Software information', icon: <Filter1Icon />, component: <SoftwareInformation />, status:'Requiered information'},
-  {label: 'Contributors', icon: <Filter2Icon />, component: <SoftwareContributors />, status: 'Requiered information'},
+  {label: 'Software information', icon: <Filter1Icon />, component: <SoftwareInformation />, status:'Required information'},
+  {label: 'Contributors', icon: <Filter2Icon />, component: <SoftwareContributors />, status: 'Required information'},
   {label: 'Organisations', icon: <Filter3Icon/>, component: <SoftwareOgranisations/>, status:'Optional information'},
   {label: 'Mentions', icon: <Filter4Icon />, component: <SoftwareMentions />, status: 'Optional information'},
   {label: 'Testimonials', icon: <Filter5Icon />, component: <SoftwareTestimonials />, status:'Optional information'},

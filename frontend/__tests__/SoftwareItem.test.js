@@ -1,7 +1,7 @@
 /* eslint-disable jest/no-disabled-tests */
 
 import {render, screen} from '@testing-library/react'
-import SoftwareItemPage, {getServerSideProps} from '../pages/software/[slug]/index'
+// import SoftwareItemPage, {getServerSideProps} from '../pages/software/[slug]/index'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
 import {

@@ -1,7 +1,7 @@
 -- maintainer tables
 ALTER TABLE maintainer_for_software ENABLE ROW LEVEL SECURITY;
 
-CREATE FUNCTION software_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER AS
+CREATE FUNCTION software_of_current_maintainer() RETURNS SETOF UUID STABLE LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
 	RETURN QUERY SELECT software FROM maintainer_for_software WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
@@ -25,7 +25,7 @@ CREATE POLICY admin_all_rights ON maintainer_for_software TO rsd_admin
 
 ALTER TABLE maintainer_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE FUNCTION projects_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER AS
+CREATE FUNCTION projects_of_current_maintainer() RETURNS SETOF UUID STABLE LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
 	RETURN QUERY SELECT project FROM maintainer_for_project WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');

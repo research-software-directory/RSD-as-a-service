@@ -55,7 +55,6 @@ it('modal has textbox with Short description that can be entered', async() => {
 
 // TODO! cannot mock addSoftware method?!?
 // Further investigation needed why mocking is not working
-// eslint-disable-next-line jest/no-commented-out-tests
 // it.skip('calls addSoftware with proper params', async() => {
 //   render(WrappedComponentWithProps(AddSoftwareModal,{action:'open'}, {
 //     user: 'Test user',

@@ -111,3 +111,11 @@ pre {
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+
+
+/* ---------------------
+Tailwind remove max-width for markdown
+*/
+.prose{
+  max-width: none;
+}

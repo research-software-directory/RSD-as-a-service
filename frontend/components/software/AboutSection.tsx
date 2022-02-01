@@ -7,8 +7,8 @@ import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
 import {RepositoryUrl} from '../../types/SoftwareItem'
 
-export default function AboutSection({brand_name = '', bullets = '', read_more = '', tags, licenses, repositories}:
-  { brand_name: string, bullets: string, read_more: string, tags:Tag[], licenses: License[], repositories:RepositoryUrl[]}) {
+export default function AboutSection({brand_name = '', description = '', tags, licenses, repositories}:
+  { brand_name: string, description: string, tags:Tag[], licenses: License[], repositories:RepositoryUrl[]}) {
 
   if (brand_name==='') return null
 
@@ -22,8 +22,7 @@ export default function AboutSection({brand_name = '', bullets = '', read_more =
       <div className="flex-[3] 2xl:flex-[4] pr-12">
         <AboutStatement
           brand_name={brand_name}
-          bullets={bullets}
-          read_more={read_more}
+          description={description}
         />
       </div>
       <div className="flex-1">
