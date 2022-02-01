@@ -1,4 +1,4 @@
-package nl.esciencecenter.rsd.scraper.language;
+package nl.esciencecenter.rsd.scraper;
 
 import java.time.LocalDateTime;
 

@@ -1,16 +1,14 @@
-package nl.esciencecenter.rsd.scraper.language;
+package nl.esciencecenter.rsd.scraper;
 
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.Config;
-import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.util.Objects;
 
-public class GithubPL implements ProgrammingLanguages {
+public class GithubSI implements SoftwareInfo {
 
 	private final String baseApiUrl;
 
-	public GithubPL(String baseApiUrl) {
+	public GithubSI(String baseApiUrl) {
 		this.baseApiUrl = Objects.requireNonNull(baseApiUrl);
 	}
 

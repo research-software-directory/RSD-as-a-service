@@ -1,14 +1,14 @@
-package nl.esciencecenter.rsd.scraper.language;
+package nl.esciencecenter.rsd.scraper;
 
 import java.util.Collection;
 import java.util.Objects;
 
-public class FilterUrlOnlyPLRDecorator implements ProgrammingLanguagesRepository {
+public class FilterUrlOnlySIRDecorator implements SoftwareInfoRepository {
 
-	private final ProgrammingLanguagesRepository origin;
+	private final SoftwareInfoRepository origin;
 	private final String urlFilter;
 
-	public FilterUrlOnlyPLRDecorator(ProgrammingLanguagesRepository origin, String urlFilter) {
+	public FilterUrlOnlySIRDecorator(SoftwareInfoRepository origin, String urlFilter) {
 		this.origin = Objects.requireNonNull(origin);
 		this.urlFilter = Objects.requireNonNull(urlFilter);
 	}

@@ -1,21 +1,20 @@
-package nl.esciencecenter.rsd.scraper.language;
+package nl.esciencecenter.rsd.scraper;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-public class PostgrestPLR implements ProgrammingLanguagesRepository {
+public class PostgrestSIR implements SoftwareInfoRepository {
 
 	private final String baseUrl;
 
-	public PostgrestPLR(String baseUrl) {
+	public PostgrestSIR(String baseUrl) {
 		this.baseUrl = Objects.requireNonNull(baseUrl);
 	}
 

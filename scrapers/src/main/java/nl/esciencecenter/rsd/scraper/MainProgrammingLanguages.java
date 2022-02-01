@@ -1,17 +1,16 @@
-package nl.esciencecenter.rsd.scraper.language;
+package nl.esciencecenter.rsd.scraper;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import nl.esciencecenter.rsd.scraper.Config;
 
 import java.util.Collection;
 
-public class Main {
+public class MainProgrammingLanguages {
 
 
 	public static void main(String[] args) {
 		System.out.println("Start scraping programming languages");
-		ProgrammingLanguagesRepository existingLanguagesSorted = new OrderByDatePLRDecorator(new FilterUrlOnlyPLRDecorator(new PostgrestPLR(Config.backendBaseUrl() + "/repository_url?select=id,url,programming_languages(languages,updated_at)"), "https://github.com"));
+		SoftwareInfoRepository existingLanguagesSorted = new OrderByDateSIRDecorator(new FilterUrlOnlySIRDecorator(new PostgrestSIR(Config.backendBaseUrl() + "/repository_url?select=id,url,programming_languages(languages,updated_at)"), "https://github.com"));
 		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.data();
 		JsonArray allDataToSave = new JsonArray();
 		int countRequests = 0;
@@ -25,7 +24,7 @@ public class Main {
 				String repo = repoUrl.replace("https://github.com/", "");
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-				String scrapedJsonData = new GithubPL("https://api.github.com").data(repo);
+				String scrapedJsonData = new GithubSI("https://api.github.com").data(repo);
 				JsonObject newData = new JsonObject();
 				newData.addProperty("repository_url", repositoryUrlData.id());
 				newData.addProperty("languages", scrapedJsonData);
@@ -34,7 +33,7 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
-		new PostgrestPLR(Config.backendBaseUrl() + "/programming_languages").save(allDataToSave.toString());
+		new PostgrestSIR(Config.backendBaseUrl() + "/programming_languages").save(allDataToSave.toString());
 		System.out.println("Done scraping programming languages");
 	}
 }

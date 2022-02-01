@@ -1,14 +1,14 @@
-package nl.esciencecenter.rsd.scraper.language;
+package nl.esciencecenter.rsd.scraper;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class OrderByDatePLRDecorator implements ProgrammingLanguagesRepository {
+public class OrderByDateSIRDecorator implements SoftwareInfoRepository {
 
-	private final ProgrammingLanguagesRepository origin;
+	private final SoftwareInfoRepository origin;
 
-	public OrderByDatePLRDecorator(ProgrammingLanguagesRepository origin) {
+	public OrderByDateSIRDecorator(SoftwareInfoRepository origin) {
 		this.origin = Objects.requireNonNull(origin);
 	}
 

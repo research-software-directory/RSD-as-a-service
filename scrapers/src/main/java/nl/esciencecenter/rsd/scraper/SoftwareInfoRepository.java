@@ -1,8 +1,8 @@
-package nl.esciencecenter.rsd.scraper.language;
+package nl.esciencecenter.rsd.scraper;
 
 import java.util.Collection;
 
-public interface ProgrammingLanguagesRepository {
+public interface SoftwareInfoRepository {
 
 	Collection<RepositoryUrlData> data();
 
