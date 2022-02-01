@@ -26,14 +26,12 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			JsonObject jsonObject = element.getAsJsonObject();
 			String id = jsonObject.getAsJsonPrimitive("id").getAsString();
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
-			String programmingLanguagesData = null;
 			LocalDateTime updatedAt = null;
 			JsonArray programmingLanguages = jsonObject.getAsJsonArray("programming_languages");
 			if (!programmingLanguages.isEmpty()) {
-				programmingLanguagesData = programmingLanguages.get(0).getAsJsonObject().getAsJsonPrimitive("languages").getAsString();
 				updatedAt = LocalDateTime.parse(programmingLanguages.get(0).getAsJsonObject().getAsJsonPrimitive("updated_at").getAsString());
 			}
-			result.add(new RepositoryUrlData(id, url, programmingLanguagesData, updatedAt));
+			result.add(new RepositoryUrlData(id, url, updatedAt));
 		}
 		return result;
 	}

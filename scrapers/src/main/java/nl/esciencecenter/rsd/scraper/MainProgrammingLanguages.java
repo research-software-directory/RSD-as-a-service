@@ -10,7 +10,7 @@ public class MainProgrammingLanguages {
 
 	public static void main(String[] args) {
 		System.out.println("Start scraping programming languages");
-		SoftwareInfoRepository existingLanguagesSorted = new OrderByDateSIRDecorator(new FilterUrlOnlySIRDecorator(new PostgrestSIR(Config.backendBaseUrl() + "/repository_url?select=id,url,programming_languages(languages,updated_at)"), "https://github.com"));
+		SoftwareInfoRepository existingLanguagesSorted = new OrderByDateSIRDecorator(new FilterUrlOnlySIRDecorator(new PostgrestSIR(Config.backendBaseUrl() + "/repository_url?select=id,url,programming_languages(updated_at)"), "https://github.com"));
 		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.data();
 		JsonArray allDataToSave = new JsonArray();
 		int countRequests = 0;
