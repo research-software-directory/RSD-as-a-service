@@ -2,22 +2,12 @@ import {useState} from 'react'
 import {useRouter} from 'next/router'
 import Head from 'next/head'
 
-import {IconButton} from '@mui/material'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import SaveIcon from '@mui/icons-material/Save'
-import List from '@mui/material/List'
-import ListItemButton from '@mui/material/ListItemButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-
 import {app} from '../../../config/app'
 import ProtectedContent from '../../../auth/ProtectedContent'
 import PageSnackbar from '../../../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../../../components/snackbar/PageSnackbarContext'
 import DefaultLayout from '../../../components/layout/DefaultLayout'
-import PageTitle from '../../../components/layout/PageTitle'
 import {editSoftwareMenu} from '../../../components/software/edit/editSoftwareSteps'
-import logger from '../../../utils/logger'
 import EditSoftwareNav from '../../../components/software/edit/EditSoftwareNav'
 
 export default function SoftwareItemEdit() {

@@ -6,7 +6,7 @@ services:
     build:
       context: ../
       dockerfile: ./data-migration/dockerfile
-    image: rsd/data-migration:0.0.6
+    image: rsd/data-migration:0.0.5
     environment:
       PROPERTIES: "/usr/mymaven/.env.production.local"
     network_mode: "host"

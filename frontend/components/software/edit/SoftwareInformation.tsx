@@ -1,4 +1,4 @@
-import {useEffect, useState, useContext} from 'react'
+import {useEffect, useState, useContext, useCallback} from 'react'
 import {useRouter} from 'next/router'
 
 import Button from '@mui/material/Button'
@@ -12,13 +12,12 @@ import {useAuth} from '../../../auth'
 import {SoftwareItem} from '../../../types/SoftwareItem'
 import {getSoftwareToEdit} from '../../../utils/editSoftware'
 import ContentLoader from '../../layout/ContentLoader'
-import EditSoftwareSection from './EditSoftwareSection'
-import EditSectionTitle from './EditSectionTitle'
-// import SoftwareDescription from './SoftwareDescription'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
+import MarkdownInputWithPreview from '../../form/MarkdownInputWithPreview'
 import {updateSoftwareInfo} from '../../../utils/editSoftware'
 import snackbarContext from '../../snackbar/PageSnackbarContext'
-import MarkdownInputWithPreview from '../../form/MarkdownInputWithPreview'
+import EditSoftwareSection from './EditSoftwareSection'
+import EditSectionTitle from './EditSectionTitle'
 
 const config = {
   brand_name: {
@@ -51,109 +50,107 @@ const config = {
 
 export default function SoftwareInformation() {
   const {session} = useAuth()
-  const {setSnackbar} = useContext(snackbarContext)
+  const {token} = session
+  const {options:snackbarOptions, setSnackbar} = useContext(snackbarContext)
   const router = useRouter()
   const slug = router.query['slug']?.toString()
   const [loading, setLoading] = useState(false)
+  // store data received from backend
   const [software, setSoftware] = useState<SoftwareItem>()
-  const {token} = session
-
-  const {register, handleSubmit, watch, formState, reset, setValue} = useForm<SoftwareItem>({
+  // destructure methods from react-form-hook
+  const {register, handleSubmit, watch, formState, reset} = useForm<SoftwareItem>({
     mode: 'onChange'
   })
-
+  // destructure form states
   const {errors, isDirty, isValid} = formState
-  const data = watch()
+  // form data provided by react-hook-form
+  const formData = watch()
 
   // console.group('SoftwareInformation')
+  // console.log('token...', token)
+  // console.log('slug...', slug)
+  // console.log('loading...', loading)
   // console.log('errors...', errors)
   // console.log('isDirty...', isDirty)
   // console.log('isValid...', isValid)
-  // console.log('data...', data)
+  // console.log('formData...', formData)
+  // console.log('software...', software)
   // console.groupEnd()
 
+  const resetForm = useCallback(() => {
+    if (software) {
+      reset(software)
+    } else {
+      reset()
+    }
+  },[reset,software])
+
   useEffect(() => {
+    let abort = false
     if (slug && token) {
       setLoading(true)
       getSoftwareToEdit({slug, token})
         .then(data => {
-          // debugger
+          // exit on abort
+          if (abort) return
+          // set data
           setSoftware(data)
           setLoading(false)
         })
     }
+    ()=>{abort=true}
   }, [slug, token])
 
   useEffect(() => {
-    // debugger
-    if (software) {
-      // update form values
-      // when software changes
-      resetForm(software)
+    // update form values
+    // when software changes
+    if (software?.id) {
+      resetForm()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[software])
-
+  }, [
+    software?.id,
+    software?.slug,
+    software?.brand_name,
+    software?.short_statement,
+    software?.get_started_url,
+    software?.description,
+    software?.description_url,
+    software?.description_type,
+    software?.concept_doi,
+    software?.is_featured,
+    software?.is_published,
+    resetForm
+  ])
 
   if (loading) return (
     <ContentLoader />
   )
 
-  function onSubmit(data: SoftwareItem) {
-    // console.log('save data...', data)
+  function onSubmit(formData: SoftwareItem) {
     updateSoftwareInfo({
-      software: data,
+      software: formData,
       token: session.token
     }).then(resp => {
-      // debugger
-      // console.log('resp...', resp)
+      // if OK
       if (resp.status === 200) {
         setSnackbar({
+          ...snackbarOptions,
           open: true,
           severity: 'success',
           message: `${software?.brand_name} saved`,
-          duration: 5000,
-          anchor: {
-            vertical: 'bottom',
-            horizontal: 'center'
-          }
         })
-        // reset form
-        resetForm(data)
+        // update software state
+        // to equal data in the form
+        setSoftware(formData)
       } else {
         setSnackbar({
+          ...snackbarOptions,
           open: true,
           severity: 'error',
-          message: resp.message,
-          anchor: {
-            vertical: 'top',
-            horizontal: 'right'
-          }
+          message: resp.message
         })
       }
     })
-  }
-
-  function resetForm(software:SoftwareItem|undefined) {
-    // debugger
-    if (software) {
-      reset({
-        id: software?.id,
-        slug: software?.slug,
-        brand_name: software?.brand_name,
-        short_statement: software?.short_statement,
-        get_started_url: software?.get_started_url,
-        description: software?.description,
-        description_url: software?.description_url,
-        description_type: software?.description_type,
-        concept_doi: software?.concept_doi,
-        is_featured: software?.is_featured,
-        is_published: software?.is_published,
-        repository_url: software?.repository_url
-      })
-    } else {
-      reset()
-    }
   }
 
   function isSaveDisabled() {
@@ -178,7 +175,7 @@ export default function SoftwareInformation() {
           <Button
             tabIndex={0}
             type="submit"
-            onClick={()=>resetForm(software)}
+            onClick={resetForm}
             disabled={!isDirty}
             sx={{
               marginRight:'2rem'
@@ -217,7 +214,7 @@ export default function SoftwareInformation() {
               error: errors?.brand_name?.message !== undefined,
               label: config.brand_name.label,
               helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help,
-              helperTextCnt:`${data?.brand_name?.length || 0}/100`
+              helperTextCnt:`${formData?.brand_name?.length || 0}/100`
             }}
             register={register('brand_name', {
               required: config.brand_name.required,
@@ -233,7 +230,7 @@ export default function SoftwareInformation() {
               error: errors?.short_statement?.message !== undefined,
               label: config.short_statement.label,
               helperTextMessage: errors?.short_statement?.message ?? config.short_statement.help,
-              helperTextCnt:`${data?.short_statement?.length || 0}/300`
+              helperTextCnt:`${formData?.short_statement?.length || 0}/300`
             }}
             register={register('short_statement', {
               required: config.short_statement.required,
@@ -252,10 +249,9 @@ export default function SoftwareInformation() {
               error: errors?.get_started_url?.message !== undefined,
               label: config.get_started_url.label,
               helperTextMessage: errors?.get_started_url?.message ?? config.get_started_url.help,
-              helperTextCnt:`${data?.get_started_url?.length || 0}/200`
+              helperTextCnt:`${formData?.get_started_url?.length || 0}/200`
             }}
             register={register('get_started_url', {
-              // minLength: {value: 10, message: 'Minimum length is 10'},
               maxLength: {value: 200, message: 'Maximum length is 200'},
               pattern: {
                 value: /^https?:\/\/.+\..+/,
@@ -271,12 +267,11 @@ export default function SoftwareInformation() {
               helperTextMessage: errors?.repository_url !== undefined
                 ? errors?.repository_url[0]?.url?.message
                 : config.repository_url.help,
-              helperTextCnt: `${data?.repository_url?.length > 0
-                ? data?.repository_url[0]?.url?.length
+              helperTextCnt: `${formData?.repository_url?.length > 0
+                ? formData?.repository_url[0]?.url?.length
                 : 0}/200`
             }}
             register={register('repository_url.0.url', {
-              // minLength: {value: 10, message: 'Minimum length is 10'},
               maxLength: {value: 200, message: 'Maximum length is 200'},
               pattern: {
                 value: /^https?:\/\/.+\..+/,
@@ -290,53 +285,48 @@ export default function SoftwareInformation() {
             title={config.description.label}
             subtitle={config.description.help}
           />
-          <div>
-            <RadioGroup
-              aria-labelledby="radio-group"
-              name="controlled-radio-buttons-group"
-              value={data.description_type}
-              defaultValue={data.description_type}
-              onChange={({target}) => {
-                setValue('description_type', target.value as 'markdown'|'link' )
-              }}
-            >
-              <FormControlLabel
-                label="Use markdown from this url"
-                value="link"
-                control={<Radio />}
-              />
 
-              <TextFieldWithCounter
-                options={{
-                  // autofocus: data.description_type === 'link',
-                  disabled: data.description_type !== 'link',
-                  error: errors?.description_url !== undefined,
-                  label: config.description_url.label,
-                  helperTextMessage: errors?.description_url?.message ?? config.description_url.help,
-                  helperTextCnt:`${data?.description_url?.length || 0}/200`
-                }}
-                register={register('description_url', {
-                  // minLength: {value: 10, message: 'Minimum length is 10'},
-                  maxLength: {value: 200, message: 'Maximum length is 200'},
-                  pattern: {
-                    value: /^https?:\/\/.+\..+.md$/,
-                    message:'Url should start with http(s):// have at least one dot (.) and end with (.md)'
-                  }
-                })}
-              />
-              <div className="py-2"></div>
-              <FormControlLabel
-                label="New markdown"
-                value="markdown"
-                control={<Radio />}
-              />
-            </RadioGroup>
-          </div>
+          <RadioGroup
+            aria-labelledby="radio-group"
+            value={formData?.description_type}
+            defaultValue={formData?.description_type}
+          >
+            <FormControlLabel
+              label="Use markdown from this url"
+              value="link"
+              control={<Radio {...register('description_type')} />}
+            />
+
+            <TextFieldWithCounter
+              options={{
+                // autofocus: formData?.description_type === 'link',
+                disabled: formData?.description_type !== 'link',
+                error: errors?.description_url !== undefined,
+                label: config.description_url.label,
+                helperTextMessage: errors?.description_url?.message ?? config.description_url.help,
+                helperTextCnt:`${formData?.description_url?.length || 0}/200`
+              }}
+              register={register('description_url', {
+                maxLength: {value: 200, message: 'Maximum length is 200'},
+                pattern: {
+                  value: /^https?:\/\/.+\..+.md$/,
+                  message:'Url should start with http(s):// have at least one dot (.) and end with (.md)'
+                }
+              })}
+            />
+            <div className="py-2"></div>
+
+            <FormControlLabel
+              label="New markdown"
+              value="markdown"
+              control={<Radio {...register('description_type')}/>}
+            />
+          </RadioGroup>
 
           <MarkdownInputWithPreview
-            markdown={data?.description || ''}
+            markdown={formData?.description || ''}
             register={register('description')}
-            disabled={data.description_type !== 'markdown'}
+            disabled={formData?.description_type !== 'markdown'}
             // autofocus={data.description_type === 'markdown'}
           />
           {/* add white space at the bottom */}
