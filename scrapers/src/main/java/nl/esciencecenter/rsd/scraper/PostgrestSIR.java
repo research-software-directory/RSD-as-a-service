@@ -19,8 +19,8 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<RepositoryUrlData> data() {
-		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl)).getAsJsonArray();
+	public Collection<RepositoryUrlData> repositoryUrldata() {
+		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl + "/repository_url?select=id,url,programming_languages(updated_at)")).getAsJsonArray();
 		Collection<RepositoryUrlData> result = new ArrayList<>();
 		for (JsonElement element : data) {
 			JsonObject jsonObject = element.getAsJsonObject();
@@ -38,7 +38,7 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 
 	@Override
 	public Collection<LicenseData> licenseData() {
-		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl)).getAsJsonArray();
+		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl + "/repository_url?select=id,software,url,license_scraped_at)")).getAsJsonArray();
 		Collection<LicenseData> result = new ArrayList<>();
 		for (JsonElement element : data) {
 			JsonObject jsonObject = element.getAsJsonObject();

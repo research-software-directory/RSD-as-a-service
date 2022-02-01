@@ -13,8 +13,8 @@ public class OrderByDateSIRDecorator implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<RepositoryUrlData> data() {
-		Collection<RepositoryUrlData> data = origin.data();
+	public Collection<RepositoryUrlData> repositoryUrldata() {
+		Collection<RepositoryUrlData> data = origin.repositoryUrldata();
 		return data.stream()
 				.sorted(Comparator.comparing(RepositoryUrlData::lastUpdated, Comparator.nullsFirst(Comparator.naturalOrder())))
 				.toList();

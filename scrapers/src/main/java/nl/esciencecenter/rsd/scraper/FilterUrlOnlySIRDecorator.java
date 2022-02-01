@@ -14,8 +14,8 @@ public class FilterUrlOnlySIRDecorator implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<RepositoryUrlData> data() {
-		Collection<RepositoryUrlData> data = origin.data();
+	public Collection<RepositoryUrlData> repositoryUrldata() {
+		Collection<RepositoryUrlData> data = origin.repositoryUrldata();
 		return data.stream()
 				.filter(repositoryUrlData -> repositoryUrlData.url().startsWith(urlFilter))
 				.toList();

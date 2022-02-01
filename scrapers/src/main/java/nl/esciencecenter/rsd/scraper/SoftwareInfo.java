@@ -2,7 +2,7 @@ package nl.esciencecenter.rsd.scraper;
 
 public interface SoftwareInfo {
 
-	String data(String repo);
+	String languages();
 
-	String license(String repo);
+	String license();
 }
