@@ -18,6 +18,7 @@ import {updateSoftwareInfo} from '../../../utils/editSoftware'
 import snackbarContext from '../../snackbar/PageSnackbarContext'
 import EditSoftwareSection from './EditSoftwareSection'
 import EditSectionTitle from './EditSectionTitle'
+import RemoteMarkdown from '../../form/RemoteMarkdown'
 
 const config = {
   brand_name: {
@@ -78,12 +79,17 @@ export default function SoftwareInformation() {
   // console.groupEnd()
 
   const resetForm = useCallback(() => {
+    debugger
     if (software) {
       reset(software)
     } else {
       reset()
     }
-  },[reset,software])
+  }, [reset, software])
+
+  useEffect(() => {
+
+  },[])
 
   useEffect(() => {
     let abort = false
@@ -160,6 +166,31 @@ export default function SoftwareInformation() {
     return false
   }
 
+  function renderMarkdownComponents() {
+    if (formData?.description_type === 'link') {
+      return (
+         <RemoteMarkdown
+          formData={formData}
+          register={register}
+          config={config}
+          errors={errors}
+        />
+      )
+    }
+    // default is custom markdown
+    return (
+      <>
+        <div className="py-4"></div>
+        <MarkdownInputWithPreview
+          markdown={formData?.description || ''}
+          register={register('description')}
+          disabled={formData?.description_type !== 'markdown'}
+          // autofocus={data.description_type === 'markdown'}
+        />
+      </>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex-1'>
       {/* hidden inputs */}
@@ -174,7 +205,7 @@ export default function SoftwareInformation() {
         <div>
           <Button
             tabIndex={0}
-            type="submit"
+            type="button"
             onClick={resetForm}
             disabled={!isDirty}
             sx={{
@@ -287,48 +318,27 @@ export default function SoftwareInformation() {
           />
 
           <RadioGroup
+            row
             aria-labelledby="radio-group"
             value={formData?.description_type}
             defaultValue={formData?.description_type}
           >
             <FormControlLabel
-              label="Use markdown from this url"
+              label="Document url"
               value="link"
               control={<Radio {...register('description_type')} />}
-            />
-
-            <TextFieldWithCounter
-              options={{
-                // autofocus: formData?.description_type === 'link',
-                disabled: formData?.description_type !== 'link',
-                error: errors?.description_url !== undefined,
-                label: config.description_url.label,
-                helperTextMessage: errors?.description_url?.message ?? config.description_url.help,
-                helperTextCnt:`${formData?.description_url?.length || 0}/200`
-              }}
-              register={register('description_url', {
-                maxLength: {value: 200, message: 'Maximum length is 200'},
-                pattern: {
-                  value: /^https?:\/\/.+\..+.md$/,
-                  message:'Url should start with http(s):// have at least one dot (.) and end with (.md)'
-                }
-              })}
             />
             <div className="py-2"></div>
 
             <FormControlLabel
-              label="New markdown"
+              label="Custom markdown"
               value="markdown"
               control={<Radio {...register('description_type')}/>}
             />
           </RadioGroup>
 
-          <MarkdownInputWithPreview
-            markdown={formData?.description || ''}
-            register={register('description')}
-            disabled={formData?.description_type !== 'markdown'}
-            // autofocus={data.description_type === 'markdown'}
-          />
+          {renderMarkdownComponents()}
+
           {/* add white space at the bottom */}
           <div className="py-4"></div>
         </div>
