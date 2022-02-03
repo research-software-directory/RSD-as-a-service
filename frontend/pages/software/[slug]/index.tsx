@@ -30,6 +30,7 @@ import {
   getTestimonialsForSoftware,
   getContributorsForSoftware,
   getRelatedToolsForSoftware,
+  getRemoteMarkdown,
   Tag, License, ContributorMentionCount,
   Mention,RelatedTools
 } from '../../../utils/getSoftware'
@@ -171,6 +172,15 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         notFound: true,
       }
     }
+    // Download remote markdown
+    if (software.description_type === 'link' && software.description_url) {
+      const markdown = await getRemoteMarkdown(software.description_url)
+      if (typeof markdown === 'string') {
+        // NOTE! we always use description on software page view to show markdown
+        software.description = markdown
+      }
+    }
+
     // fetch all info about software in parallel based on software.id
     const fetchData = [
       // citationInfo

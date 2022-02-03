@@ -2,7 +2,7 @@ import {useState, useRef, useEffect} from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdownWithSettings from '../layout/ReactMarkdownWithSettings'
 
 export default function MarkdownInputWithPreview({markdown,register,disabled=true,autofocus=false}:
   { markdown:string, register: any, disabled?:boolean,autofocus?:boolean }) {
@@ -87,12 +87,10 @@ export default function MarkdownInputWithPreview({markdown,register,disabled=tru
         hidden={tab!==1}
       >
         <div>
-          <ReactMarkdown
-            className="prose py-4 px-8"
-            linkTarget="_blank"
-          >
-            {markdown}
-          </ReactMarkdown>
+          <ReactMarkdownWithSettings
+            className='py-4 px-8'
+            markdown={markdown}
+          />
         </div>
       </div>
     </article>

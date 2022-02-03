@@ -22,7 +22,11 @@ export default function AboutSourceCode({repository=[]}:{repository: string[]}) 
       } else {
         return (
           <a key={pos} href={item} title="Repository" target="_blank" rel="noreferrer">
-            <FolderOpenIcon />
+            <FolderOpenIcon sx={{
+              width: '3rem',
+              height: '3rem',
+              color: 'secondary'
+            }} />
           </a>
         )
       }

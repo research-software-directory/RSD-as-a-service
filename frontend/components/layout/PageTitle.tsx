@@ -9,7 +9,7 @@ const PageTitleStyled = styled('section')(({theme})=>({
   padding: '1rem 0rem 1rem 0rem',
   alignItems: 'center',
   // borderBottom: `1px solid ${theme.palette.divider}`,
-  // backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.palette.background.paper,
   zIndex: 9,
   '@media (max-width: 640px)':{
     flexDirection:'column',

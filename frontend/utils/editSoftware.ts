@@ -49,11 +49,14 @@ export async function addSoftware({software, token}:
   }
 }
 
-export async function getSoftwareToEdit({slug, token}: { slug: string, token: string }) {
+export async function getSoftwareToEdit({slug, token, baseUrl}:
+  { slug: string, token: string, baseUrl?: string }) {
   try {
     // GET
-    const select ='*,repository_url!left(id,url)'
-    const url = `/api/v1/software?select=${select}&slug=eq.${slug}`
+    const select = '*,repository_url!left(id,url)'
+    const url = baseUrl
+      ? `${baseUrl}/software?select=${select}&slug=eq.${slug}`
+      : `/api/v1/software?select=${select}&slug=eq.${slug}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createHeaders(token),

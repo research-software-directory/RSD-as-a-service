@@ -2,7 +2,6 @@ import {useState,useEffect} from 'react'
 import {useAuth} from '.'
 
 import PageErrorMessage from '../components/layout/PageErrorMessage'
-import ContentInTheMiddle from '../components/layout/ContentInTheMiddle'
 import ContentLoader from '../components/layout/ContentLoader'
 import {isMaintainerOfSoftware} from '../utils/editSoftware'
 import logger from '../utils/logger'
@@ -43,7 +42,7 @@ export default function ProtectedContent({children, slug}: { children: any, slug
     } else if (session?.status) {
       setStatus(session.status)
     }
-    () => { abort = true }
+    return () => { abort = true }
   }, [slug, session.token, session?.user?.account, session.status])
 
   // return nothing
@@ -65,7 +64,7 @@ export default function ProtectedContent({children, slug}: { children: any, slug
   if (status !== 'authenticated') {
     return (
       <PageErrorMessage
-        statusCode={401}
+        status={401}
         message='UNAUTHORIZED'
       />
     )
@@ -74,7 +73,7 @@ export default function ProtectedContent({children, slug}: { children: any, slug
   // authenticated but not maintainer = 403
   return (
     <PageErrorMessage
-      statusCode={403}
+      status={403}
       message='FORBIDDEN'
     />
   )

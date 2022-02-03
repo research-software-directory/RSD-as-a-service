@@ -1,16 +1,9 @@
 import {useEffect, useState, useContext, useCallback} from 'react'
-import {useRouter} from 'next/router'
-
-import Button from '@mui/material/Button'
-import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 
-import {useAuth} from '../../../auth'
-import {SoftwareItem} from '../../../types/SoftwareItem'
-import {getSoftwareToEdit} from '../../../utils/editSoftware'
 import ContentLoader from '../../layout/ContentLoader'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 import MarkdownInputWithPreview from '../../form/MarkdownInputWithPreview'
@@ -18,7 +11,12 @@ import {updateSoftwareInfo} from '../../../utils/editSoftware'
 import snackbarContext from '../../snackbar/PageSnackbarContext'
 import EditSoftwareSection from './EditSoftwareSection'
 import EditSectionTitle from './EditSectionTitle'
-import RemoteMarkdown from '../../form/RemoteMarkdown'
+import RemoteMarkdownPreview from '../../form/RemoteMarkdownPreview'
+import {getSoftwareToEdit} from '../../../utils/editSoftware'
+import EditSoftwareStickyHeader from './EditSoftwareStickyHeader'
+import {SoftwareItem} from '../../../types/SoftwareItem'
+import editSoftwareContext from './editSoftwareContext'
+import {EditSoftwareActionType} from './editSoftwareContext'
 
 const config = {
   brand_name: {
@@ -41,7 +39,7 @@ const config = {
   },
   description: {
     label: 'Description',
-    help: 'What your software can do for your users?'
+    help: (brand_name:string)=>`What ${brand_name} can do for you`
   },
   description_url: {
     label: 'Url to markdown file',
@@ -49,21 +47,18 @@ const config = {
   },
 }
 
-export default function SoftwareInformation() {
-  const {session} = useAuth()
-  const {token} = session
-  const {options:snackbarOptions, setSnackbar} = useContext(snackbarContext)
-  const router = useRouter()
-  const slug = router.query['slug']?.toString()
-  const [loading, setLoading] = useState(false)
-  // store data received from backend
+export default function SoftwareInformation({slug,token}:{slug:string,token: string}) {
+  const {options: snackbarOptions, setSnackbar} = useContext(snackbarContext)
+  const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const [software, setSoftware] = useState<SoftwareItem>()
   // destructure methods from react-form-hook
   const {register, handleSubmit, watch, formState, reset} = useForm<SoftwareItem>({
     mode: 'onChange'
   })
-  // destructure form states
+  // destructure formState
   const {errors, isDirty, isValid} = formState
+  // destructure pageState
+  const {loading} = pageState
   // form data provided by react-hook-form
   const formData = watch()
 
@@ -76,10 +71,10 @@ export default function SoftwareInformation() {
   // console.log('isValid...', isValid)
   // console.log('formData...', formData)
   // console.log('software...', software)
+  // console.log('editState...', state)
   // console.groupEnd()
 
   const resetForm = useCallback(() => {
-    debugger
     if (software) {
       reset(software)
     } else {
@@ -88,24 +83,52 @@ export default function SoftwareInformation() {
   }, [reset, software])
 
   useEffect(() => {
-
-  },[])
-
-  useEffect(() => {
     let abort = false
     if (slug && token) {
-      setLoading(true)
+      // setLoading(true)
+      dispatchPageState({
+        type: EditSoftwareActionType.SET_LOADING,
+        payload: {loading: true}
+      })
       getSoftwareToEdit({slug, token})
         .then(data => {
+          // debugger
           // exit on abort
           if (abort) return
           // set data
           setSoftware(data)
-          setLoading(false)
+          dispatchPageState({
+            type: EditSoftwareActionType.UPDATE_STATE,
+            payload: {
+              software: {
+                slug,
+                id: data?.id ?? '',
+                brand_name: data?.brand_name ?? ''
+              },
+              loading:false
+            }
+          })
         })
     }
-    ()=>{abort=true}
-  }, [slug, token])
+    return ()=>{abort=true}
+  }, [slug,token,dispatchPageState])
+
+  useEffect(() => {
+    // update form state
+    // only if values are different (avoid loop)
+    if (
+      pageState?.isDirty !== isDirty ||
+      pageState?.isValid !== isValid
+    ) {
+      dispatchPageState({
+        type: EditSoftwareActionType.UPDATE_STATE,
+        payload: {
+          isDirty,
+          isValid
+        }
+      })
+    }
+  },[isDirty,isValid,pageState,dispatchPageState])
 
   useEffect(() => {
     // update form values
@@ -133,9 +156,10 @@ export default function SoftwareInformation() {
   )
 
   function onSubmit(formData: SoftwareItem) {
+    debugger
     updateSoftwareInfo({
       software: formData,
-      token: session.token
+      token
     }).then(resp => {
       // if OK
       if (resp.status === 200) {
@@ -146,8 +170,16 @@ export default function SoftwareInformation() {
           message: `${software?.brand_name} saved`,
         })
         // update software state
-        // to equal data in the form
+        // to be equal to data in the form
         setSoftware(formData)
+        dispatchPageState({
+          type: EditSoftwareActionType.SET_SOFTWARE_INFO,
+          payload: {
+            id: formData?.id,
+            slug,
+            brand_name:formData?.brand_name
+          }
+        })
       } else {
         setSnackbar({
           ...snackbarOptions,
@@ -166,31 +198,6 @@ export default function SoftwareInformation() {
     return false
   }
 
-  function renderMarkdownComponents() {
-    if (formData?.description_type === 'link') {
-      return (
-         <RemoteMarkdown
-          formData={formData}
-          register={register}
-          config={config}
-          errors={errors}
-        />
-      )
-    }
-    // default is custom markdown
-    return (
-      <>
-        <div className="py-4"></div>
-        <MarkdownInputWithPreview
-          markdown={formData?.description || ''}
-          register={register('description')}
-          disabled={formData?.description_type !== 'markdown'}
-          // autofocus={data.description_type === 'markdown'}
-        />
-      </>
-    )
-  }
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='flex-1'>
       {/* hidden inputs */}
@@ -200,46 +207,17 @@ export default function SoftwareInformation() {
       <input type="hidden"
         {...register('slug',{required:'slug is required'})}
       />
-      <div className="flex pl-8 py-4 w-full">
-        <h1 className="flex-1 text-primary">{software?.brand_name}</h1>
-        <div>
-          <Button
-            tabIndex={0}
-            type="button"
-            onClick={resetForm}
-            disabled={!isDirty}
-            sx={{
-              marginRight:'2rem'
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            tabIndex={0}
-            type="submit"
-            variant="contained"
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
-            disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
-        </div>
-      </div>
+      <EditSoftwareStickyHeader
+        brand_name={software?.brand_name ?? ''}
+        isCancelDisabled={!isDirty}
+        isSaveDisabled={isSaveDisabled()}
+        onCancel={resetForm}
+      />
       <EditSoftwareSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0'>
         <div className="py-4 xl:px-8">
           <EditSectionTitle
             title="Software information"
-          >
-          </EditSectionTitle>
-
+          />
           <TextFieldWithCounter
             options={{
               error: errors?.brand_name?.message !== undefined,
@@ -314,18 +292,19 @@ export default function SoftwareInformation() {
           <div className="py-2"></div>
           <EditSectionTitle
             title={config.description.label}
-            subtitle={config.description.help}
+            subtitle={config.description.help(software?.brand_name ?? '')}
           />
 
           <RadioGroup
             row
             aria-labelledby="radio-group"
-            value={formData?.description_type}
-            defaultValue={formData?.description_type}
+            value={formData?.description_type ?? 'markdown'}
+            defaultValue={formData?.description_type ?? 'markdown'}
           >
             <FormControlLabel
               label="Document url"
               value="link"
+              defaultValue={'link'}
               control={<Radio {...register('description_type')} />}
             />
             <div className="py-2"></div>
@@ -333,6 +312,7 @@ export default function SoftwareInformation() {
             <FormControlLabel
               label="Custom markdown"
               value="markdown"
+              defaultValue={'markdown'}
               control={<Radio {...register('description_type')}/>}
             />
           </RadioGroup>
@@ -350,4 +330,36 @@ export default function SoftwareInformation() {
       </EditSoftwareSection>
     </form>
   )
+
+  function renderMarkdownComponents() {
+    if (formData?.description_type === 'link') {
+      return (
+         <RemoteMarkdownPreview
+          url={formData?.description_url ?? ''}
+          label={config.description_url.label}
+          help={config.description_url.help}
+          errors={errors?.description_url}
+          register={register('description_url', {
+            maxLength: {value: 200, message: 'Maximum length is 200'},
+            pattern: {
+              value: /^https?:\/\/.+\..+.md$/,
+              message: 'Url should start with http(s):// have at least one dot (.) and end with (.md)'
+            }
+          })}
+        />
+      )
+    }
+    // default is custom markdown
+    return (
+      <>
+        <div className="py-4"></div>
+        <MarkdownInputWithPreview
+          markdown={formData?.description || ''}
+          register={register('description')}
+          disabled={formData?.description_type !== 'markdown'}
+          // autofocus={data.description_type === 'markdown'}
+        />
+      </>
+    )
+  }
 }

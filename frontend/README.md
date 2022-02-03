@@ -10,7 +10,8 @@ Based on the features in the legacy application and the current requirements we 
 
 - intall dependencies `yarn install`
 - create env.local and env.production.local file. Use env.local.example as template.
-- run `yarn dev` to start application in development mode
+- run all app modules `docker-compose up`
+- open another terminal and run `yarn dev` to start application in development mode
 
 ### Environment variables
 
