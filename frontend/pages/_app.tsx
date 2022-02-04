@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import router from 'next/router'
 import App, {AppContext} from 'next/app'
 import Head from 'next/head'
@@ -12,6 +12,9 @@ import nprogress from 'nprogress'
 // authentication
 import {AuthProvider, Session, getSessionSeverSide} from '../auth'
 import {saveLocationCookie} from '../utils/locationCookie'
+// snackbar notifications
+import PageSnackbar from '../components/snackbar/PageSnackbar'
+import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
 
 // global CSS and tailwind
 import '../styles/global.css'
@@ -33,6 +36,8 @@ nprogress.configure({showSpinner:false})
 
 function RsdApp(props:MuiAppProps) {
   const {Component, emotionCache = clientSideEmotionCache, pageProps, session} = props
+
+  const [options, setSnackbar] = useState(snackbarDefaults)
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -61,7 +66,10 @@ function RsdApp(props:MuiAppProps) {
         {/* CssBaseline from MUI-5*/}
         {/* <CssBaseline /> */}
         <AuthProvider session={session}>
-          <Component {...pageProps} />
+          <PageSnackbarContext.Provider value={{options, setSnackbar}}>
+            <Component {...pageProps} />
+          </PageSnackbarContext.Provider>
+          <PageSnackbar options={options} setOptions={setSnackbar} />
         </AuthProvider>
       </ThemeProvider>
     </CacheProvider>

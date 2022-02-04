@@ -8,20 +8,53 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 const {colors,muiTypography} = require('./styles/themeConfig')
 
 module.exports = {
+  // disable preflight = normalize by tailwind
   // corePlugins: {
-  //   // disable preflight = normalize by tailwind
   //   preflight: false,
   // },
   content: [
+    './auth/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    fontFamily: {
+      // sans is default font used
+      // we set Roboto as first font-type
+      // and then the defaults from tailwind
+      sans: [
+        'Roboto',
+        'ui-sans-serif',
+        'system-ui',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        'Segoe UI',
+        'Helvetica Neue',
+        'Arial',
+        'Noto Sans',
+        'sans-serif',
+        'Apple Color Emoji',
+        'Segoe UI Emoji',
+        'Segoe UI Symbol',
+        'Noto Color Emoji'
+      ],
+      mono: [
+        'ui-monospace',
+        'SFMono-Regular',
+        'Menlo',
+        'Monaco',
+        'Consolas',
+        '"Liberation Mono"',
+        '"Courier New"',
+        'monospace',
+      ],
+    },
     extend: {
-      screens: {
-        // 1920 - 64
-        hd:'1800px'
-      },
+      // ultra large resolutions
+      // not relevant at the moment
+      // screens: {
+      //   qhd:'2304px'
+      // },
       colors: {
         paper: colors.white,
         primary: colors.primary,

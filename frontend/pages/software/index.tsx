@@ -15,6 +15,7 @@ import {rowsPerPageOptions} from '../../config/pagination'
 import {getSoftwareList, getTagsWithCount, TagItem} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
+import logger from '../../utils/logger'
 
 export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareItem[]
@@ -76,7 +77,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
 
   // TODO! handle sort options
   function handleSort(sortOn:string){
-    console.warn('TODO! Sort on...', sortOn)
+    logger(`software.index.handleSort: TODO! Sort on...${sortOn}`,'warn')
   }
 
   return (

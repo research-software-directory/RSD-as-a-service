@@ -337,3 +337,34 @@ export async function getRelatedToolsForSoftware(uuid: string) {
     return []
   }
 }
+
+/**
+ * REMOTE MARKDOWN FILE
+ */
+export async function getRemoteMarkdown(url: string) {
+  try {
+    const resp = await fetch(url)
+    if (resp.status === 200) {
+      const markdown = await resp.text()
+      return markdown
+    }
+    if (resp.status === 404) {
+      return ({
+        status: resp.status,
+        message: 'Markdown file not found.'
+      })
+    } else {
+      // create error
+      return ({
+        status: resp.status,
+        message: resp.statusText
+      })
+    }
+  } catch (e: any) {
+    logger(`getRemoteMarkdown: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}

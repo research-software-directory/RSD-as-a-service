@@ -8,8 +8,17 @@ import logger from '../utils/logger'
 // refresh schedule margin 5min. before expiration time
 const REFRESH_MARGIN = 5 * 60 * 1000
 
+export type RsdUser = {
+  iss: 'rsd_auth',
+  role: 'rsd_user' | 'rsd_admin',
+  // expiration time
+  exp: number,
+  // uid
+  account: string
+}
+
 export type Session = {
-  user: string | JwtPayload | null,
+  user: RsdUser | null,
   token: string,
   status: 'authenticated' | 'missing' | 'invalid' | 'expired' | 'jwtkey' | 'loading',
 }
@@ -79,7 +88,6 @@ export function AuthProvider(props: any) {
   // console.group('AuthProvider')
   // console.log('session...', session)
   // console.groupEnd()
-
   return <AuthContext.Provider value={{session, setSession}} {...props}/>
 }
 
@@ -173,19 +181,19 @@ export function createSession(token:string|null):Session {
       // decode JWT
       const decoded = decodeJwt(token)
       return {
-        user: decoded,
+        user: decoded as RsdUser,
         token,
         status: 'authenticated'
       }
     }
     return {
-      user: '',
+      user: null,
       token,
       status: result
     }
   }
   return {
-    user: '',
+    user: null,
     token: '',
     status: 'missing'
   }

@@ -8,7 +8,7 @@ export default function AppFooter () {
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[_2fr,1fr] lg:container lg:mx-auto">
 
         <div className="pt-10 sm:pb-10">
-          <div className="text-xl mb-4">
+          <div className="text-lg mb-4">
             The Research Software Directory aims to promote the impact,
             the exchange and re-use of research software.
             {/* Please use our tools!&nbsp;<Link href="/about" passHref>
@@ -24,14 +24,14 @@ export default function AppFooter () {
         </div>
 
         <div className="pb-10 sm:pt-10">
-          <div className="text-xl">Questions or comments?</div>
+          <div className="text-lg">Questions or comments?</div>
           <a href="mailto:rsd@esciencecenter.nl"
             className="mt-2 text-primary hover:text-white flex"
           >
             <Mail className="mr-2"/> rsd@esciencecenter.nl
           </a>
 
-          <div className="mt-8 text-xl">Netherlands eScience Center</div>
+          <div className="mt-8 text-lg">Netherlands eScience Center</div>
           <div className="flex flex-col">
             <Link href="/" passHref>
               <a className="footer-link">Home</a>

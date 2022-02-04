@@ -17,14 +17,21 @@ export default function CitationDoi({doi}:{doi:string}) {
         open:true,
         severity:'info',
         message:'Copied to clipboard',
-        duration: 3000
+        duration: 3000,
+        anchor: {
+          vertical: 'bottom',
+          horizontal: 'center'
+        }
       })
     } else {
       setSnackbar({
         open:true,
         severity:'error',
         message:`Failed to copy doi ${doi} `,
-        duration: 7000
+        anchor: {
+          vertical: 'bottom',
+          horizontal: 'center'
+        }
       })
     }
   }

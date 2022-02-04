@@ -1,5 +1,5 @@
 
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdownWithSettings from '../layout/ReactMarkdownWithSettings'
 
 
 export default function AboutStatement({brand_name = '', description = ''}:
@@ -16,9 +16,9 @@ export default function AboutStatement({brand_name = '', description = ''}:
       >
         What {brand_name} can do for you
       </h2>
-      <ReactMarkdown className="prose">
-        {description}
-      </ReactMarkdown>
+      <ReactMarkdownWithSettings
+        markdown={description}
+      />
     </>
   )
 }
