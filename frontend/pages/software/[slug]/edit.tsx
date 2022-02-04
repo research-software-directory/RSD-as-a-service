@@ -6,8 +6,6 @@ import Head from 'next/head'
 import {app} from '../../../config/app'
 import {useAuth} from '../../../auth'
 import ProtectedContent from '../../../auth/ProtectedContent'
-import PageSnackbar from '../../../components/snackbar/PageSnackbar'
-import PageSnackbarContext, {snackbarDefaults} from '../../../components/snackbar/PageSnackbarContext'
 import DefaultLayout from '../../../components/layout/DefaultLayout'
 import {editSoftwareMenu, EditSoftwarePageStep} from '../../../components/software/edit/editSoftwareSteps'
 import EditSoftwareNav from '../../../components/software/edit/EditSoftwareNav'
@@ -18,7 +16,7 @@ import {editSoftwareReducer} from '../../../components/software/edit/editSoftwar
 export default function SoftwareItemEdit() {
   const {session} = useAuth()
   const {token} = session
-  const [options, setSnackbar] = useState(snackbarDefaults)
+  // const [options, setSnackbar] = useState(snackbarDefaults)
   const router = useRouter()
   const slug = router.query['slug']
   const [pageState, dispatchPageState] = useReducer(editSoftwareReducer,{
@@ -31,7 +29,8 @@ export default function SoftwareItemEdit() {
     isValid: false
   })
 
-  // TODO! detecting route change does not work properly!!!
+  // TODO! detecting route change does not work properly
+  // further investigation needed
   // Router.events.on('routeChangeStart', () => {
   //   debugger
   //   console.log('SoftwareItemEdit...Router.on.routeChangeStart')
@@ -97,7 +96,6 @@ export default function SoftwareItemEdit() {
         <title>Edit software | {app.title}</title>
       </Head>
       <ProtectedContent slug={slug?.toString()}>
-        <PageSnackbarContext.Provider value={{options, setSnackbar}}>
         <EditSoftwareContext.Provider value={{pageState, dispatchPageState}}>
         <section className="md:flex">
           <EditSoftwareNav
@@ -107,8 +105,6 @@ export default function SoftwareItemEdit() {
           {renderStepComponent()}
         </section>
         </EditSoftwareContext.Provider>
-        </PageSnackbarContext.Provider>
-        <PageSnackbar options={options} setOptions={setSnackbar} />
       </ProtectedContent>
     </DefaultLayout>
   )
