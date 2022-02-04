@@ -46,7 +46,6 @@ export default function CitationFormat({citation}: { citation: SoftwareCitationC
 
   function onFormatChange({target}:{target:SelectChangeEvent['target']}){
     if (target?.value) {
-      debugger
       setFormat({
         v: target?.value,
         f: options[parseInt(target.value)].format,

@@ -78,7 +78,6 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
 export async function updateSoftwareInfo({software, token}:
   {software:SoftwareItem,token:string}) {
   try {
-    // debugger
     // NOTE! update this list when
     const softwareTable = getPropsFromObject(software, SoftwarePropsToSave)
     const repoTable = {
@@ -86,15 +85,20 @@ export async function updateSoftwareInfo({software, token}:
       software: software.id,
       url: software?.repository_url[0].url
     }
+    const promises = [updateSoftwareTable({software: softwareTable, token})]
+    // decide on repo table action
+    if (repoTable.url != '') {
+      if (repoTable.id){
+        promises.push(updateRepositoryTable({data: repoTable, token}))
+      }else {
+        promises.push(addToRepositoryTable({data: repoTable, token}))
+      }
+    } else if (repoTable.url === '' && repoTable.id) {
+      // not possible to foreign key relations - do nothing for now
+      // promises.push(deleteFromRepositoryTable({data: repoTable, token}))
+    }
 
-    const [respSoftware,respRepo] = await Promise.all([
-      updateSoftwareTable({
-        software:softwareTable, token
-      }),
-      repoTable.id
-        ? updateRepositoryTable({data: repoTable, token})
-        : addToRepositoryTable({data: repoTable,token})
-    ])
+    const [respSoftware, respRepo] = await Promise.all(promises)
 
     // both OK
     if ([200, 204].includes(respSoftware.status) &&
@@ -133,34 +137,9 @@ export async function updateSoftwareTable({software, token}:
       },
       body: JSON.stringify(software)
     })
-    // OK
-    if ([200,204].includes(resp.status)) {
-      // just return id
-      return {
-        status: 200,
-        message: software.id
-      }
-    }
-    // not authorized, 404 seem to be returned mostly
-    if ([401,403,404].includes(resp.status)) {
-      return {
-        status: resp.status,
-        message: `
-          ${resp.statusText}.
-          You might not have sufficient priveleges to edit this software.
-          Please contact site administrators.
-        `
-      }
-    } else {
-      return {
-        status: resp.status,
-        message: `
-          Failed to save changes.
-          ${resp.statusText}.
-          Please contact site administrators.
-        `
-      }
-    }
+
+    return extractReturnMessage(resp, software.id)
+
   } catch (e: any) {
     logger(`updateSoftware: ${e?.message}`, 'error')
     return {
@@ -183,34 +162,9 @@ export async function updateRepositoryTable({data, token}:
       },
       body: JSON.stringify(data)
     })
-    // OK
-    if ([200, 204].includes(resp.status)) {
-      // just return id
-      return {
-        status: 200,
-        message: data.id
-      }
-    }
-    // not authorized, 404 seem to be returned mostly
-    if ([401, 403, 404].includes(resp.status)) {
-      return {
-        status: resp.status,
-        message: `
-          ${resp.statusText}.
-          You might not have sufficient priveleges to edit this software.
-          Please contact site administrators.
-        `
-      }
-    } else {
-      return {
-        status: resp.status,
-        message: `
-          Failed to save changes.
-          ${resp.statusText}.
-          Please contact site administrators.
-        `
-      }
-    }
+
+    return extractReturnMessage(resp, data.id ?? '')
+
   } catch (e: any) {
     logger(`updateSoftware: ${e?.message}`, 'error')
     return {
@@ -233,34 +187,9 @@ export async function addToRepositoryTable({data, token}:
       },
       body: JSON.stringify(data)
     })
-    // OK
-    if ([200, 201].includes(resp.status)) {
-      // just return id
-      return {
-        status: 200,
-        message: data.id
-      }
-    }
-    // not authorized, 404 seem to be returned mostly
-    if ([401, 403, 404].includes(resp.status)) {
-      return {
-        status: resp.status,
-        message: `
-          ${resp.statusText}.
-          You might not have sufficient priveleges to edit this software.
-          Please contact site administrators.
-        `
-      }
-    } else {
-      return {
-        status: resp.status,
-        message: `
-          Failed to save changes.
-          ${resp.statusText}.
-          Please contact site administrators.
-        `
-      }
-    }
+
+    return extractReturnMessage(resp, data.id ?? '')
+
   } catch (e: any) {
     logger(`updateSoftware: ${e?.message}`, 'error')
     return {
@@ -269,6 +198,31 @@ export async function addToRepositoryTable({data, token}:
     }
   }
 }
+
+export async function deleteFromRepositoryTable({data, token}:
+  { data: RepositoryUrl, token: string }) {
+  try {
+    // PATCH
+    const url = `/api/v1/repository_url?id=eq.${data.id}`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createHeaders(token)
+      },
+      body: JSON.stringify(data)
+    })
+
+    return extractReturnMessage(resp, data.id ?? '')
+
+  } catch (e: any) {
+    logger(`updateSoftware: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
 
 export async function isMaintainerOfSoftware({slug, uid, token}:
   {slug: string, uid: string, token: string}) {
@@ -298,5 +252,37 @@ export async function isMaintainerOfSoftware({slug, uid, token}:
     logger(`isMaintainerOfSoftware: ${e?.message}`, 'error')
     // ERRORS AS NOT MAINTAINER
     return false
+  }
+}
+
+
+function extractReturnMessage(resp:Response, dataId:string) {
+  // OK
+  if ([200,201,204].includes(resp.status)) {
+    // just return id
+    return {
+      status: 200,
+      message: dataId
+    }
+  }
+  // not authorized, 404 seem to be returned mostly
+  if ([401, 403, 404].includes(resp.status)) {
+    return {
+      status: resp.status,
+      message: `
+          ${resp.statusText}.
+          You might not have sufficient priveleges to edit this software.
+          Please contact site administrators.
+        `
+    }
+  } else {
+    return {
+      status: resp.status,
+      message: `
+          Failed to save changes.
+          ${resp.statusText}.
+          Please contact site administrators.
+        `
+    }
   }
 }

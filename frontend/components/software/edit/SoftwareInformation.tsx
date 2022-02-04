@@ -156,7 +156,6 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
   )
 
   function onSubmit(formData: SoftwareItem) {
-    debugger
     updateSoftwareInfo({
       software: formData,
       token

@@ -43,7 +43,12 @@ export function editSoftwareReducer(state: EditSoftwareState = initialState, act
     case EditSoftwareActionType.SET_EDIT_STEP:
       return {
         ...state,
-        step: action.payload
+        // default values
+        isDirty: false,
+        isValid: true,
+        loading: true,
+        // new step
+        step: action.payload,
       }
     case EditSoftwareActionType.SET_SOFTWARE_INFO:
       return {

@@ -74,7 +74,6 @@ export default function MarkdownInputWithPreview({markdown,register,disabled=tru
           rows={20}
           className="text-secondary w-full h-full py-4 px-8 font-mono text-sm"
           onInput={({target}:{target:any}) => {
-            // debugger
             target.style.height = ''
             target.style.height = target.scrollHeight + 'px'
           }}
