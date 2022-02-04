@@ -16,3 +16,21 @@ export function useDebounce(value:string, delay:number) {
     },[value, delay])
   return debouncedValue
 }
+
+export function useDebounceValid(value: string, errors:any, delay: number = 500) {
+  // state debounced value
+  const debounced = useDebounce(value, delay)
+  const [debouncedValue, setDebouncedValue] = useState(debounced)
+  useEffect(() => {
+    // update debounced value if no errors
+    if (!errors) {
+      // debugger
+      setDebouncedValue(debounced)
+    } else {
+      // debugger
+      // empty value if has errors
+      setDebouncedValue('')
+    }
+  }, [debounced, errors])
+  return debouncedValue
+}

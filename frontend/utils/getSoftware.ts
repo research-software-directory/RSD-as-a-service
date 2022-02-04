@@ -348,16 +348,16 @@ export async function getRemoteMarkdown(url: string) {
       const markdown = await resp.text()
       return markdown
     }
-    if (resp.status === 404) {
+    if ([400,404].includes(resp.status)) {
       return ({
         status: resp.status,
-        message: 'Markdown file not found.'
+        message: 'Markdown file not found. Validate url.'
       })
     } else {
       // create error
       return ({
         status: resp.status,
-        message: resp.statusText
+        message: resp?.statusText ?? 'Markdown file not found.'
       })
     }
   } catch (e: any) {
