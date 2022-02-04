@@ -11,13 +11,13 @@ public class MainProgrammingLanguages {
 	public static void main(String[] args) {
 		System.out.println("Start scraping programming languages");
 		SoftwareInfoRepository existingLanguagesSorted = new OrderByDateSIRDecorator(new FilterUrlOnlySIRDecorator(new PostgrestSIR(Config.backendBaseUrl()), "https://github.com"));
-		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.repositoryUrldata();
+		Collection<ProgrammingLanguageData> dataToScrape = existingLanguagesSorted.repositoryUrlData();
 		JsonArray allDataToSave = new JsonArray();
 		int countRequests = 0;
 		int maxRequests = Config.maxRequestsGithub();
-		for (RepositoryUrlData repositoryUrlData : dataToScrape) {
+		for (ProgrammingLanguageData programmingLanguageData : dataToScrape) {
 			try {
-				String repoUrl = repositoryUrlData.url();
+				String repoUrl = programmingLanguageData.url();
 				if (!repoUrl.startsWith("https://github.com/")) continue;
 				countRequests += 1;
 				if (countRequests > maxRequests) break;
@@ -26,7 +26,7 @@ public class MainProgrammingLanguages {
 
 				String scrapedJsonData = new GithubSI("https://api.github.com", repo).languages();
 				JsonObject newData = new JsonObject();
-				newData.addProperty("repository_url", repositoryUrlData.id());
+				newData.addProperty("repository_url", programmingLanguageData.id());
 				newData.addProperty("languages", scrapedJsonData);
 				allDataToSave.add(newData);
 			} catch (RuntimeException e) {

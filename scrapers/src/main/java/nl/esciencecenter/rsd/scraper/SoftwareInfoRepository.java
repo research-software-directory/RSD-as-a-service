@@ -4,9 +4,11 @@ import java.util.Collection;
 
 public interface SoftwareInfoRepository {
 
-	Collection<RepositoryUrlData> repositoryUrldata();
+	Collection<ProgrammingLanguageData> repositoryUrlData();
 
-	Collection<LicenseData> licenseData();
+	Collection<RepositoryUrlData> licenseData();
+
+	Collection<RepositoryUrlData> commitData();
 
 	void save(String data);
 }

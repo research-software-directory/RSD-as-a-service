@@ -19,9 +19,9 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<RepositoryUrlData> repositoryUrldata() {
+	public Collection<ProgrammingLanguageData> repositoryUrlData() {
 		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl + "/repository_url?select=id,url,programming_languages(updated_at)")).getAsJsonArray();
-		Collection<RepositoryUrlData> result = new ArrayList<>();
+		Collection<ProgrammingLanguageData> result = new ArrayList<>();
 		for (JsonElement element : data) {
 			JsonObject jsonObject = element.getAsJsonObject();
 			String id = jsonObject.getAsJsonPrimitive("id").getAsString();
@@ -31,25 +31,39 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			if (!programmingLanguages.isEmpty()) {
 				updatedAt = LocalDateTime.parse(programmingLanguages.get(0).getAsJsonObject().getAsJsonPrimitive("updated_at").getAsString());
 			}
-			result.add(new RepositoryUrlData(id, url, updatedAt));
+			result.add(new ProgrammingLanguageData(id, url, updatedAt));
 		}
 		return result;
 	}
 
 	@Override
-	public Collection<LicenseData> licenseData() {
-		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl + "/repository_url?select=id,software,url,license_scraped_at)")).getAsJsonArray();
-		Collection<LicenseData> result = new ArrayList<>();
+	public Collection<RepositoryUrlData> licenseData() {
+		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl + "/repository_url")).getAsJsonArray();
+		Collection<RepositoryUrlData> result = new ArrayList<>();
 		for (JsonElement element : data) {
 			JsonObject jsonObject = element.getAsJsonObject();
 			String id = jsonObject.getAsJsonPrimitive("id").getAsString();
 			String software = jsonObject.getAsJsonPrimitive("software").getAsString();
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
-			JsonElement jsonScrapedAt = jsonObject.get("license_scraped_at");
-			LocalDateTime updatedAt = jsonScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonScrapedAt.getAsString());
-			result.add(new LicenseData(id, software, url, updatedAt));
+
+			JsonElement jsonLicence = jsonObject.get("license");
+			String license = jsonLicence.isJsonNull() ? null : jsonLicence.getAsString();
+			JsonElement jsonLicenseScrapedAt = jsonObject.get("license_scraped_at");
+			LocalDateTime licensScrapedAt = jsonLicenseScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonLicenseScrapedAt.getAsString());
+
+			JsonElement jsonCommits = jsonObject.get("commit_history");
+			String commits = jsonCommits.isJsonNull() ? null : jsonCommits.getAsString();
+			JsonElement jsonCommitsScrapedAt = jsonObject.get("commit_history_scraped_at");
+			LocalDateTime commitsScrapedAt = jsonCommitsScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonCommitsScrapedAt.getAsString());
+
+			result.add(new RepositoryUrlData(id, software, url, license, licensScrapedAt, commits, commitsScrapedAt));
 		}
 		return result;
+	}
+
+	@Override
+	public Collection<RepositoryUrlData> commitData() {
+		return licenseData();
 	}
 
 	@Override

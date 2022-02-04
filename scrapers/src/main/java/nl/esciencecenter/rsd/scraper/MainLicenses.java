@@ -11,12 +11,12 @@ public class MainLicenses {
 	public static void main(String[] args) {
 		System.out.println("Start scraping licenses");
 		SoftwareInfoRepository existingLicensesSorted = new OrderByDateSIRDecorator(new FilterUrlOnlySIRDecorator(new PostgrestSIR(Config.backendBaseUrl()), "https://github.com"));
-		Collection<LicenseData> dataToScrape = existingLicensesSorted.licenseData();
+		Collection<RepositoryUrlData> dataToScrape = existingLicensesSorted.licenseData();
 		JsonArray allDataToSave = new JsonArray();
 		String scrapedAt = LocalDateTime.now().toString();
 		int countRequests = 0;
 		int maxRequests = Config.maxRequestsGithub();
-		for (LicenseData licenseData : dataToScrape) {
+		for (RepositoryUrlData licenseData : dataToScrape) {
 			try {
 				String repoUrl = licenseData.url();
 				countRequests += 1;
