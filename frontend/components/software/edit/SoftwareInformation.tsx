@@ -166,7 +166,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           ...snackbarOptions,
           open: true,
           severity: 'success',
-          message: `${software?.brand_name} saved`,
+          message: `${formData?.brand_name} saved`,
         })
         // update software state
         // to be equal to data in the form
