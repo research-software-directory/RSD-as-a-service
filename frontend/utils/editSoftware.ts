@@ -1,10 +1,14 @@
 import logger from './logger'
+
 import {
   NewSoftwareItem, SoftwareTableItem,
   SoftwareItem, RepositoryUrl,
-  SoftwarePropsToSave
-} from '../types/SoftwareItem'
+  SoftwarePropsToSave, Tag,
+  EditSoftwareItem,
+  License
+} from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
+import {AutocompleteOption} from '../types/AutocompleteOptions'
 
 export function createHeaders(token: string) {
   return {
@@ -76,7 +80,7 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
  * Only on successful update on all tables returns status 200.
  */
 export async function updateSoftwareInfo({software, token}:
-  {software:SoftwareItem,token:string}) {
+  { software: EditSoftwareItem,token:string}) {
   try {
     // NOTE! update this list when
     const softwareTable = getPropsFromObject(software, SoftwarePropsToSave)
@@ -97,22 +101,32 @@ export async function updateSoftwareInfo({software, token}:
       // not possible to foreign key relations - do nothing for now
       // promises.push(deleteFromRepositoryTable({data: repoTable, token}))
     }
-
-    const [respSoftware, respRepo] = await Promise.all(promises)
-
-    // both OK
-    if ([200, 204].includes(respSoftware.status) &&
-      [200, 204].includes(respRepo.status)){
+    // check if tags need to be added
+    if (software.tags?.length > 0) {
+      const tags = AutocompleteToTags(software.tags,software.id)
+      // add tags update to list
+      if (tags.length>0) promises.push(upsertTagsForSoftware({software:software.id, data:tags, token}))
+    }
+    // check if liceses need to be added
+    if (software.licenses?.length > 0) {
+      const licenses = AutocompleteToLicenses(software.licenses,software.id)
+      // add tags update to list
+      if (licenses.length>0) promises.push(upsertLicensesForSoftware({software: software.id, data: licenses, token}))
+    }
+    // make all requests
+    const responses = await Promise.all(promises)
+    const errors = extractErrorMessages(responses)
+    // return result
+    if (errors.length > 0) {
+      // return first error for now
       return {
-        status: 200,
-        message: software.id
+        status: errors[0].status,
+        message: errors[0].message
       }
     }
-    // NOT OK
-    if ([200, 204].includes(respSoftware.status) === false) {
-      return respSoftware
-    } else {
-      return respRepo
+    return {
+      status: 200,
+      message: software.id
     }
   } catch (e: any) {
     logger(`updateSoftwareInfo: ${e?.message}`, 'error')
@@ -223,6 +237,56 @@ export async function deleteFromRepositoryTable({data, token}:
   }
 }
 
+export async function upsertTagsForSoftware({software, data, token}:{software:string, data:Tag[],token:string}) {
+  try {
+    // PATCH
+    const url = `/api/v1/tag_for_software?software=eq.${software}`
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createHeaders(token),
+        // this will add new items and update existing
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify(data)
+    })
+
+    return extractReturnMessage(resp, software ?? '')
+
+  } catch (e: any) {
+    logger(`upsertTagsForSoftware: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function upsertLicensesForSoftware({software, data, token}: { software: string, data: License[], token: string }) {
+  try {
+    // PATCH
+    const url = `/api/v1/license_for_software?software=eq.${software}`
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createHeaders(token),
+        // this will add new items and update existing
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify(data)
+    })
+
+    return extractReturnMessage(resp, software ?? '')
+
+  } catch (e: any) {
+    logger(`upsertLicensesForSoftware: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
 
 export async function isMaintainerOfSoftware({slug, uid, token}:
   {slug: string, uid: string, token: string}) {
@@ -286,3 +350,42 @@ function extractReturnMessage(resp:Response, dataId:string) {
     }
   }
 }
+
+function extractErrorMessages(responses: { status: number, message: string }[]) {
+  let errors: { status: number, message: string }[] = []
+  responses.forEach(resp => {
+    if (resp.status !== 200) {
+      errors.push(resp)
+    }
+  })
+  return errors
+}
+
+function AutocompleteToTags(options: AutocompleteOption<Tag>[],softwareId: string) {
+  const tags: Tag[] = options
+    .filter(item => !item.data.software)
+    // only new items to be added
+    .map(item => {
+      return {
+        software: softwareId,
+        tag: item.data.tag
+      }
+    })
+  debugger
+  return tags
+}
+
+function AutocompleteToLicenses(options: AutocompleteOption<License>[],softwareId: string) {
+  const items: License[] = options
+    // only new items to be added
+    .filter(item=>item.data.hasOwnProperty('id')===false)
+    .map(item => {
+      return {
+        software: softwareId,
+        license: item.key
+      }
+    })
+  debugger
+  return items
+}
+

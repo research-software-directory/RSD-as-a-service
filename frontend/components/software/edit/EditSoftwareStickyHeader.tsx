@@ -6,7 +6,7 @@ import StickyHeader from '../../layout/StickyHeader'
 export default function StickyHeaderEditSoftware({brand_name, isCancelDisabled, isSaveDisabled, onCancel}:
   { brand_name: string, isCancelDisabled:boolean, isSaveDisabled:boolean, onCancel:Function }) {
   return (
-    <StickyHeader className="flex pl-8 py-4 w-full bg-white">
+    <StickyHeader className="flex py-4 w-full bg-white md:pl-[3rem]">
       <h1 className="flex-1 text-primary">{brand_name}</h1>
       <div>
         <Button

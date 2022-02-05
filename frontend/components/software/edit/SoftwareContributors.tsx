@@ -20,7 +20,7 @@ export default function SoftwareContributors() {
         isSaveDisabled={true}
         onCancel={resetForm}
       />
-      <EditSoftwareSection className="pl-8">
+      <EditSoftwareSection>
         <div className="py-4">
           <EditSectionTitle
             title="Contributors"

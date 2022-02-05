@@ -1,4 +1,4 @@
-import {SoftwareItem} from '../types/SoftwareItem'
+import {SoftwareItem,Tag} from '../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
@@ -126,20 +126,16 @@ export async function getCitationsForSoftware(uuid:string){
 }
 
 
-/**
- * TAGS
- */
-
-export type Tag = {
-  software:string
-  tag: string
-}
-
-export async function getTagsForSoftware(uuid:string){
+export async function getTagsForSoftware(uuid:string,frontend?:boolean){
   try{
     // this request is always perfomed from backend
     // the content is order by tag ascending
-    const url = `${process.env.POSTGREST_URL}/tag_for_software?&software=eq.${uuid}&order=tag.asc`
+    let url=''
+    if (frontend === true) {
+      url = `/api/v1/tag_for_software?&software=eq.${uuid}&order=tag.asc`
+    } else {
+      url = `${process.env.POSTGREST_URL}/tag_for_software?&software=eq.${uuid}&order=tag.asc`
+    }
     const resp = await fetch(url,{method:'GET'})
     if (resp.status===200){
       const data:Tag[] = await resp.json()
@@ -165,11 +161,16 @@ export type License = {
   license: string
 }
 
-export async function getLicenseForSoftware(uuid:string){
+export async function getLicenseForSoftware(uuid:string,frontend?:boolean){
   try{
     // this request is always perfomed from backend
     // the content is order by license ascending
-    const url = `${process.env.POSTGREST_URL}/license_for_software?&software=eq.${uuid}&order=license.asc`
+    let url = ''
+    if (frontend === true) {
+      url = `/api/v1/license_for_software?&software=eq.${uuid}&order=license.asc`
+    } else {
+      url = `${process.env.POSTGREST_URL}/license_for_software?&software=eq.${uuid}&order=license.asc`
+    }
     const resp = await fetch(url,{method:'GET'})
     if (resp.status===200){
       const data:License[] = await resp.json()

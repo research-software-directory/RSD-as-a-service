@@ -31,11 +31,11 @@ import {
   getContributorsForSoftware,
   getRelatedToolsForSoftware,
   getRemoteMarkdown,
-  Tag, License, ContributorMentionCount,
+  ContributorMentionCount,
   Mention,RelatedTools
 } from '../../../utils/getSoftware'
 import logger from '../../../utils/logger'
-import {SoftwareItem} from '../../../types/SoftwareItem'
+import {License, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {ScriptProps} from 'next/script'
 import {Contributor} from '../../../types/Contributor'

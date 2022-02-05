@@ -1,5 +1,8 @@
-// based on one record
-// http://localhost:3500/software?select=*,repository_url!left(url)&slug=eq.ggir
+/**
+ * Types used in software pages (view/add/edit)
+ */
+
+import {AutocompleteOption} from './AutocompleteOptions'
 
 export type RepositoryUrl = {
   id?:string,
@@ -47,3 +50,27 @@ export const SoftwarePropsToSave = [
   'is_published',
   'short_statement'
 ]
+
+export type EditSoftwareItem = SoftwareItem & {
+  tags: AutocompleteOption<Tag>[]
+  licenses: AutocompleteOption<License>[]
+}
+
+/**
+ * TAGS
+ */
+
+export type Tag = {
+  software: string
+  tag: string
+}
+
+/**
+ * LiCENSES
+ */
+
+export type License = {
+  id?: string,
+  software: string
+  license: string
+}
