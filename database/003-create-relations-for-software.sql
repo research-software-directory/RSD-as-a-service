@@ -3,7 +3,9 @@ CREATE TABLE repository_url (
 	software UUID references software (id) NOT NULL,
 	url VARCHAR NOT NULL,
 	license VARCHAR,
-	license_scraped_at TIMESTAMP
+	license_scraped_at TIMESTAMP,
+	commit_history JSONB,
+	commit_history_scraped_at TIMESTAMP
 );
 
 

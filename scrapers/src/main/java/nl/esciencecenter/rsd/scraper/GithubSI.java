@@ -17,7 +17,6 @@ public class GithubSI implements SoftwareInfo {
 
 	@Override
 	public String languages() {
-		Objects.requireNonNull(repo);
 		return Config.apiCredentialsGithub()
 				.map(apiCredentials -> Utils.get(baseApiUrl + "/repos/" + repo + "/languages", "Authorization", "Basic " + Utils.base64Encode(apiCredentials)))
 				.orElseGet(() -> Utils.get(baseApiUrl + "/repos/" + repo + "/languages"));
@@ -25,11 +24,17 @@ public class GithubSI implements SoftwareInfo {
 
 	@Override
 	public String license() {
-		Objects.requireNonNull(repo);
 		String repoData = Config.apiCredentialsGithub()
 				.map(apiCredentials -> Utils.get(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials)))
 				.orElseGet(() -> Utils.get(baseApiUrl + "/repos/" + repo));
 		JsonElement jsonLicense = JsonParser.parseString(repoData).getAsJsonObject().get("license");
 		return jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().getAsJsonPrimitive("spdx_id").getAsString();
+	}
+
+	@Override
+	public String contributions() {
+		return Config.apiCredentialsGithub()
+				.map(apiCredentials -> Utils.get(baseApiUrl + "/repos/" + repo + "/stats/contributors", "Authorization", "Basic " + Utils.base64Encode(apiCredentials)))
+				.orElseGet(() -> Utils.get(baseApiUrl + "/repos/" + repo + "/stats/contributors"));
 	}
 }

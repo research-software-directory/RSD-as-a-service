@@ -13,18 +13,26 @@ public class OrderByDateSIRDecorator implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<RepositoryUrlData> repositoryUrldata() {
-		Collection<RepositoryUrlData> data = origin.repositoryUrldata();
+	public Collection<ProgrammingLanguageData> repositoryUrlData() {
+		Collection<ProgrammingLanguageData> data = origin.repositoryUrlData();
 		return data.stream()
-				.sorted(Comparator.comparing(RepositoryUrlData::lastUpdated, Comparator.nullsFirst(Comparator.naturalOrder())))
+				.sorted(Comparator.comparing(ProgrammingLanguageData::lastUpdated, Comparator.nullsFirst(Comparator.naturalOrder())))
 				.toList();
 	}
 
 	@Override
-	public Collection<LicenseData> licenseData() {
-		Collection<LicenseData> data = origin.licenseData();
+	public Collection<RepositoryUrlData> licenseData() {
+		Collection<RepositoryUrlData> data = origin.licenseData();
 		return data.stream()
-				.sorted(Comparator.comparing(LicenseData::lastUpdated, Comparator.nullsFirst(Comparator.naturalOrder())))
+				.sorted(Comparator.comparing(RepositoryUrlData::licenseScrapedAt, Comparator.nullsFirst(Comparator.naturalOrder())))
+				.toList();
+	}
+
+	@Override
+	public Collection<RepositoryUrlData> commitData() {
+		Collection<RepositoryUrlData> data = origin.licenseData();
+		return data.stream()
+				.sorted(Comparator.comparing(RepositoryUrlData::commitHistoryScrapedAt, Comparator.nullsFirst(Comparator.naturalOrder())))
 				.toList();
 	}
 

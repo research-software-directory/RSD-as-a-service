@@ -11,12 +11,12 @@ public class MainLicenses {
 	public static void main(String[] args) {
 		System.out.println("Start scraping licenses");
 		SoftwareInfoRepository existingLicensesSorted = new OrderByDateSIRDecorator(new FilterUrlOnlySIRDecorator(new PostgrestSIR(Config.backendBaseUrl()), "https://github.com"));
-		Collection<LicenseData> dataToScrape = existingLicensesSorted.licenseData();
+		Collection<RepositoryUrlData> dataToScrape = existingLicensesSorted.licenseData();
 		JsonArray allDataToSave = new JsonArray();
 		String scrapedAt = LocalDateTime.now().toString();
 		int countRequests = 0;
 		int maxRequests = Config.maxRequestsGithub();
-		for (LicenseData licenseData : dataToScrape) {
+		for (RepositoryUrlData licenseData : dataToScrape) {
 			try {
 				String repoUrl = licenseData.url();
 				countRequests += 1;
@@ -32,8 +32,11 @@ public class MainLicenses {
 				newData.addProperty("url", licenseData.url());
 				newData.addProperty("license", scrapedLicense);
 				newData.addProperty("license_scraped_at", scrapedAt);
+				newData.addProperty("commit_history", licenseData.commitHistory());
+				newData.addProperty("commit_history_scraped_at", licenseData.commitHistoryScrapedAt() == null ? null : licenseData.commitHistoryScrapedAt().toString());
 				allDataToSave.add(newData);
 			} catch (RuntimeException e) {
+				System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 				e.printStackTrace();
 			}
 		}

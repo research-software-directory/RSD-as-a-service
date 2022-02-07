@@ -14,16 +14,24 @@ public class FilterUrlOnlySIRDecorator implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<RepositoryUrlData> repositoryUrldata() {
-		Collection<RepositoryUrlData> data = origin.repositoryUrldata();
+	public Collection<ProgrammingLanguageData> repositoryUrlData() {
+		Collection<ProgrammingLanguageData> data = origin.repositoryUrlData();
 		return data.stream()
 				.filter(repositoryUrlData -> repositoryUrlData.url().startsWith(urlFilter))
 				.toList();
 	}
 
 	@Override
-	public Collection<LicenseData> licenseData() {
-		Collection<LicenseData> data = origin.licenseData();
+	public Collection<RepositoryUrlData> licenseData() {
+		Collection<RepositoryUrlData> data = origin.licenseData();
+		return data.stream()
+				.filter(repositoryUrlData -> repositoryUrlData.url().startsWith(urlFilter))
+				.toList();
+	}
+
+	@Override
+	public Collection<RepositoryUrlData> commitData() {
+		Collection<RepositoryUrlData> data = origin.commitData();
 		return data.stream()
 				.filter(repositoryUrlData -> repositoryUrlData.url().startsWith(urlFilter))
 				.toList();
