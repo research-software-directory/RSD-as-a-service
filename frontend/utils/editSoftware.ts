@@ -412,13 +412,16 @@ export async function deleteLicenses({ids, token}:
   }
 }
 
-export async function isMaintainerOfSoftware({slug, uid, token}:
-  {slug: string, uid: string, token: string}) {
+export async function isMaintainerOfSoftware({slug, account,token,frontend=true}:
+  { slug?: string, account?: string, token?: string,frontend?:boolean}) {
   try {
     // return false directly when missing info
-    if (!slug || !uid || !token) return false
+    if (!slug || !account || !token) return false
     // build url
-    const url = `/api/v1/maintainer_for_software_by_slug?maintainer=eq.${uid}&slug=eq.${slug}`
+    let url = `/api/v1/maintainer_for_software_by_slug?maintainer=eq.${account}&slug=eq.${slug}`
+    if (frontend==false) {
+      url = `${process.env.POSTGREST_URL}/maintainer_for_software_by_slug?maintainer=eq.${account}&slug=eq.${slug}`
+    }
     const resp = await fetch(url, {
       method: 'GET',
       headers: createHeaders(token)
@@ -429,7 +432,7 @@ export async function isMaintainerOfSoftware({slug, uid, token}:
       // it should return exactly 1 item
       if (json?.length === 1) {
         // having maintainer equal to uid
-        return json[0].maintainer === uid
+        return json[0].maintainer === account
       }
       return false
     }

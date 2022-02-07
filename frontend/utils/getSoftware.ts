@@ -133,11 +133,9 @@ export async function getTagsForSoftware(uuid:string,frontend?:boolean,token?:st
   try{
     // this request is always perfomed from backend
     // the content is order by tag ascending
-    let url=''
+    let url = `${process.env.POSTGREST_URL}/tag_for_software?software=eq.${uuid}&order=tag.asc`
     if (frontend === true) {
       url = `/api/v1/tag_for_software?software=eq.${uuid}&order=tag.asc`
-    } else {
-      url = `${process.env.POSTGREST_URL}/tag_for_software?software=eq.${uuid}&order=tag.asc`
     }
     const resp = await fetch(url, {
       method: 'GET',
@@ -171,11 +169,9 @@ export async function getLicenseForSoftware(uuid:string,frontend?:boolean,token?
   try{
     // this request is always perfomed from backend
     // the content is order by license ascending
-    let url = ''
+    let url = `${process.env.POSTGREST_URL}/license_for_software?&software=eq.${uuid}&order=license.asc`
     if (frontend === true) {
       url = `/api/v1/license_for_software?&software=eq.${uuid}&order=license.asc`
-    } else {
-      url = `${process.env.POSTGREST_URL}/license_for_software?&software=eq.${uuid}&order=license.asc`
     }
     const resp = await fetch(url, {
       method: 'GET',

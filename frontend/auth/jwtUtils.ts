@@ -22,6 +22,14 @@ export function decodeJwt(token: string) {
   return jwt.decode(token)
 }
 
+export function getAccountFromToken(token?: string) {
+  if (token) {
+    const user = jwt.decode(token) as any
+    return user?.account
+  }
+  return undefined
+}
+
 /**
  * Verify JWT. USE ONLY ON THE SERVER SIDE (only from getServerSideProps function or api).
  * jwt secret is available only in Node mode (backend mode).

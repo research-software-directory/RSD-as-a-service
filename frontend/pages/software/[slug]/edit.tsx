@@ -1,4 +1,4 @@
-import {useState, useReducer} from 'react'
+import {useReducer, useEffect} from 'react'
 import {useRouter} from 'next/router'
 import Head from 'next/head'
 // import nprogress from 'nprogress'
@@ -9,14 +9,13 @@ import ProtectedContent from '../../../auth/ProtectedContent'
 import DefaultLayout from '../../../components/layout/DefaultLayout'
 import {editSoftwareMenu, EditSoftwarePageStep} from '../../../components/software/edit/editSoftwareSteps'
 import EditSoftwareNav from '../../../components/software/edit/EditSoftwareNav'
-import EditSoftwareContext,{EditSoftwareActionType, EditSoftwareState} from '../../../components/software/edit/editSoftwareContext'
+import EditSoftwareContext,{EditSoftwareActionType} from '../../../components/software/edit/editSoftwareContext'
 import ContentLoader from '../../../components/layout/ContentLoader'
 import {editSoftwareReducer} from '../../../components/software/edit/editSoftwareContext'
 
 export default function SoftwareItemEdit() {
   const {session} = useAuth()
   const {token} = session
-  // const [options, setSnackbar] = useState(snackbarDefaults)
   const router = useRouter()
   const slug = router.query['slug']
   const [pageState, dispatchPageState] = useReducer(editSoftwareReducer,{
@@ -44,20 +43,11 @@ export default function SoftwareItemEdit() {
   //   }
   // })
   // useEffect(() => {
-  //   if (pageState.isDirty === true && typeof window != 'undefined') {
-  //     debugger
-  //     window.addEventListener('beforeunload', (e) => {
-  //       e.preventDefault()
-  //       e.returnValue=''
-  //     })
-  //   } else {
-  //     // remove listening
-  //     window.removeEventListener('beforeunload', (e) => { })
-  //   }
   //   return () => {
   //     debugger
-  //     window.removeEventListener('beforeunload', (e) => {})
-  //     Router.events.off('routeChangeStart',()=>{})
+  //     if (pageState.isDirty === true) {
+  //       alert('Unsaved changes')
+  //     }
   //   }
   // },[pageState.isDirty])
 
@@ -97,13 +87,13 @@ export default function SoftwareItemEdit() {
       </Head>
       <ProtectedContent slug={slug?.toString()}>
         <EditSoftwareContext.Provider value={{pageState, dispatchPageState}}>
-        <section className="md:flex">
-          <EditSoftwareNav
-            onChangeStep={onChangeStep}
-          />
-          {/* Here we load main component of each step */}
-          {renderStepComponent()}
-        </section>
+          <section className="md:flex">
+            <EditSoftwareNav
+              onChangeStep={onChangeStep}
+            />
+            {/* Here we load main component of each step */}
+            {renderStepComponent()}
+          </section>
         </EditSoftwareContext.Provider>
       </ProtectedContent>
     </DefaultLayout>

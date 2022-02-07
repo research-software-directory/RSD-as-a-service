@@ -32,6 +32,7 @@ import {
   ContributorMentionCount,
   Mention,RelatedTools
 } from '../../../utils/getSoftware'
+import {isMaintainerOfSoftware} from '../../../utils/editSoftware'
 import logger from '../../../utils/logger'
 import {License, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
@@ -39,6 +40,8 @@ import {ScriptProps} from 'next/script'
 import {Contributor} from '../../../types/Contributor'
 import {Testimonial} from '../../../types/Testimonial'
 import {getDisplayName} from '../../../utils/getDisplayName'
+import {getAccountFromToken} from '../../../auth/jwtUtils'
+import EditSoftwareButton from '../../../components/software/edit/EditSoftwareButton'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string,
@@ -50,7 +53,8 @@ interface SoftwareIndexData extends ScriptProps{
   mentions: Mention[],
   testimonials: Testimonial[],
   contributors: Contributor[],
-  relatedTools: RelatedTools[]
+  relatedTools: RelatedTools[],
+  isMaintainer: boolean
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
@@ -61,7 +65,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     software, citationInfo, tagsInfo,
     licenseInfo, softwareIntroCounts,
     mentions, testimonials, contributors,
-    relatedTools
+    relatedTools, isMaintainer, slug
   } = props
 
   useEffect(() => {
@@ -108,7 +112,11 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <CanoncialUrl
         canonicalUrl={resolvedUrl}
       />
-      <AppHeader />
+      <AppHeader editButton={
+        isMaintainer ?
+        <EditSoftwareButton slug={slug} />
+        : undefined
+      }/>
       <PageContainer>
         <SoftwareIntroSection
           brand_name={software.brand_name}
@@ -157,8 +165,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const {params, req: {cookies}} = context
     // extract rsd_token
     const token = cookies['rsd_token']
-    // console.log('getServerSideProps...params...', params)
-    const software = await getSoftwareItem(params?.slug?.toString(),token)
+    const slug = params?.slug?.toString()
+    const account = getAccountFromToken(token)
+    const software = await getSoftwareItem(slug,token)
     // console.log('getServerSideProps...software...', software)
     if (typeof software == 'undefined'){
       // returning notFound triggers 404 page
@@ -166,7 +175,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         notFound: true,
       }
     }
-    // Download remote markdown
+    // download remote markdown
     if (software.description_type === 'link' && software.description_url) {
       const markdown = await getRemoteMarkdown(software.description_url)
       if (typeof markdown === 'string') {
@@ -174,7 +183,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         software.description = markdown
       }
     }
-
     // fetch all info about software in parallel based on software.id
     const fetchData = [
       // citationInfo
@@ -192,7 +200,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // contributors
       getContributorsForSoftware(software.id),
       // relatedTools
-      getRelatedToolsForSoftware(software.id)
+      getRelatedToolsForSoftware(software.id),
+      // check if maintainer
+      isMaintainerOfSoftware({slug,account,token,frontend:false})
     ]
     const [
       citationInfo,
@@ -202,7 +212,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       mentions,
       testimonials,
       contributors,
-      relatedTools
+      relatedTools,
+      isMaintainer
     ] = await Promise.all(fetchData)
 
     // pass data to page component as props
@@ -216,7 +227,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         mentions,
         testimonials,
         contributors,
-        relatedTools
+        relatedTools,
+        isMaintainer,
+        slug
       }
     }
   }catch(e:any){
