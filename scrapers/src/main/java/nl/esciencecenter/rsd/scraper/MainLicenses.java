@@ -36,6 +36,7 @@ public class MainLicenses {
 				newData.addProperty("commit_history_scraped_at", licenseData.commitHistoryScrapedAt() == null ? null : licenseData.commitHistoryScrapedAt().toString());
 				allDataToSave.add(newData);
 			} catch (RuntimeException e) {
+				System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 				e.printStackTrace();
 			}
 		}

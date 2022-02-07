@@ -30,6 +30,7 @@ public class MainProgrammingLanguages {
 				newData.addProperty("languages", scrapedJsonData);
 				allDataToSave.add(newData);
 			} catch (RuntimeException e) {
+				System.out.println("Exception when handling data from url " + programmingLanguageData.url() + ":");
 				e.printStackTrace();
 			}
 		}

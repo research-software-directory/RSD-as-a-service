@@ -36,6 +36,7 @@ public class MainCommits {
 				newData.addProperty("commit_history_scraped_at", scrapedAt);
 				allDataToSave.add(newData);
 			} catch (RuntimeException e) {
+				System.out.println("Exception when handling data from url " + commitData.url() + ":");
 				e.printStackTrace();
 			}
 		}
