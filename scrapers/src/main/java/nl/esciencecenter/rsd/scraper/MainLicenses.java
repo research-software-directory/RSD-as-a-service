@@ -32,6 +32,8 @@ public class MainLicenses {
 				newData.addProperty("url", licenseData.url());
 				newData.addProperty("license", scrapedLicense);
 				newData.addProperty("license_scraped_at", scrapedAt);
+				newData.addProperty("commit_history", licenseData.commitHistory());
+				newData.addProperty("commit_history_scraped_at", licenseData.commitHistoryScrapedAt() == null ? null : licenseData.commitHistoryScrapedAt().toString());
 				allDataToSave.add(newData);
 			} catch (RuntimeException e) {
 				e.printStackTrace();
