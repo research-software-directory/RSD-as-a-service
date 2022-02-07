@@ -35,16 +35,16 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
   // form data provided by react-hook-form
   const formData = watch()
 
-  console.group('SoftwareInformation')
+  // console.group('SoftwareInformation')
   // console.log('token...', token)
   // console.log('slug...', slug)
-  console.log('loading...', loading)
-  console.log('errors...', errors)
-  console.log('isDirty...', isDirty)
-  console.log('isValid...', isValid)
-  console.log('formData...', formData)
-  console.log('editSoftware...', editSoftware)
-  console.groupEnd()
+  // console.log('loading...', loading)
+  // console.log('errors...', errors)
+  // console.log('isDirty...', isDirty)
+  // console.log('isValid...', isValid)
+  // console.log('formData...', formData)
+  // console.log('editSoftware...', editSoftware)
+  // console.groupEnd()
 
   useEffect(() => {
     if (editSoftware?.id && apiLoading === false) {
@@ -92,6 +92,8 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
   function onSubmit(formData: EditSoftwareItem) {
     updateSoftwareInfo({
       software: formData,
+      tagsInDb: editSoftware?.tags || [],
+      licensesInDb: editSoftware?.licenses || [],
       token
     }).then(resp => {
       // if OK
@@ -217,6 +219,12 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           <div className="py-4"></div>
         </div>
         <div className="py-4 xl:my-0">
+          <SoftwarePageStatus
+            formData={formData}
+            config={config}
+            control={control}
+          />
+          <div className="py-4"></div>
           <EditSectionTitle
             title="Citation"
           />
@@ -234,7 +242,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           <EditSectionTitle
             title="Keywords"
           />
-          <SoftwareKeywords control={control} setValue={setValue} />
+          <SoftwareKeywords control={control}/>
 
           <div className="py-4"></div>
           <EditSectionTitle
@@ -242,14 +250,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
             subtitle="What licenses do apply to your software?"
           />
           <SoftwareLicenses control={control} />
-
-          <div className="py-4"></div>
-
-          <SoftwarePageStatus
-            formData={formData}
-            config={config}
-            control={control}
-          />
+          {/* <div className="py-4"></div>           */}
         </div>
       </EditSoftwareSection>
     </form>

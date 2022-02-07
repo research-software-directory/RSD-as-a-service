@@ -101,12 +101,15 @@ export async function getTagsWithCount(){
  * @returns SoftwareCitationInfo
  */
 
-export async function getCitationsForSoftware(uuid:string){
+export async function getCitationsForSoftware(uuid:string,token?:string){
   try{
     // this request is always perfomed from backend
     // the release content is order by date_published
     const url = `${process.env.POSTGREST_URL}/release?select=*,release_content(*)&software=eq.${uuid}&release_content.order=date_published.desc`
-    const resp = await fetch(url,{method:'GET'})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createHeaders(token)
+    })
     if (resp.status===200){
       const data: SoftwareCitationInfo[] = await resp.json()
       // console.log('data...', data)
@@ -126,17 +129,20 @@ export async function getCitationsForSoftware(uuid:string){
 }
 
 
-export async function getTagsForSoftware(uuid:string,frontend?:boolean){
+export async function getTagsForSoftware(uuid:string,frontend?:boolean,token?:string){
   try{
     // this request is always perfomed from backend
     // the content is order by tag ascending
     let url=''
     if (frontend === true) {
-      url = `/api/v1/tag_for_software?&software=eq.${uuid}&order=tag.asc`
+      url = `/api/v1/tag_for_software?software=eq.${uuid}&order=tag.asc`
     } else {
-      url = `${process.env.POSTGREST_URL}/tag_for_software?&software=eq.${uuid}&order=tag.asc`
+      url = `${process.env.POSTGREST_URL}/tag_for_software?software=eq.${uuid}&order=tag.asc`
     }
-    const resp = await fetch(url,{method:'GET'})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createHeaders(token)
+    })
     if (resp.status===200){
       const data:Tag[] = await resp.json()
       return data
@@ -161,7 +167,7 @@ export type License = {
   license: string
 }
 
-export async function getLicenseForSoftware(uuid:string,frontend?:boolean){
+export async function getLicenseForSoftware(uuid:string,frontend?:boolean,token?:string){
   try{
     // this request is always perfomed from backend
     // the content is order by license ascending
@@ -171,7 +177,10 @@ export async function getLicenseForSoftware(uuid:string,frontend?:boolean){
     } else {
       url = `${process.env.POSTGREST_URL}/license_for_software?&software=eq.${uuid}&order=license.asc`
     }
-    const resp = await fetch(url,{method:'GET'})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createHeaders(token)
+    })
     if (resp.status===200){
       const data:License[] = await resp.json()
       return data

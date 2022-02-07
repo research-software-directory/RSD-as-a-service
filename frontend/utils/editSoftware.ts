@@ -10,10 +10,19 @@ import {
 import {getPropsFromObject} from './getPropsFromObject'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 
-export function createHeaders(token: string) {
+type AuthHeader = {
+  'Content-Type': string;
+  Authorization?: string;
+}
+export function createHeaders(token?: string): AuthHeader {
+  if (token) {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  }
   return {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
+    'Content-Type': 'application/json'
   }
 }
 
@@ -76,11 +85,12 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
 
 /**
  * Entry function to update all software info from edit page
- * It updates data in software and repostory_url tables.
- * Only on successful update on all tables returns status 200.
+ * It updates data in software, repostory_url, tags_for_software, licenses_for_software tables.
+ * It returns status 200 only when update to all tables is successful.
+ * On failure it return error status code from the first error.
  */
-export async function updateSoftwareInfo({software, token}:
-  { software: EditSoftwareItem,token:string}) {
+export async function updateSoftwareInfo({software,tagsInDb,licensesInDb, token}:
+  {software: EditSoftwareItem,tagsInDb:AutocompleteOption<Tag>[],licensesInDb: AutocompleteOption<License>[],token:string}) {
   try {
     // NOTE! update this list when
     const softwareTable = getPropsFromObject(software, SoftwarePropsToSave)
@@ -103,15 +113,59 @@ export async function updateSoftwareInfo({software, token}:
     }
     // check if tags need to be added
     if (software.tags?.length > 0) {
-      const tags = AutocompleteToTags(software.tags,software.id)
-      // add tags update to list
-      if (tags.length>0) promises.push(upsertTagsForSoftware({software:software.id, data:tags, token}))
+      const tagsToAdd = tagsNotInReferenceList({
+        tagList: software.tags,
+        referenceList: tagsInDb
+      }).map(item => {
+        return {
+          software: software.id,
+          tag: item.data.tag
+        }
+      })
+      // add tags to tags_for_software table
+      if (tagsToAdd.length > 0) promises.push(upsertTagsForSoftware({
+        software: software.id, data: tagsToAdd, token
+      }))
+    }
+    // check if tags need to be deleted from db
+    if (tagsInDb.length > 0){
+      // delete tags from tags_for_software table
+      const tagsToDel = tagsNotInReferenceList({
+        tagList: tagsInDb,
+        referenceList: software.tags
+      }).map(item => item.data.tag)
+      // add delete tags api call
+      if (tagsToDel.length > 0) promises.push(deleteTagsForSoftware({
+        software: software.id, tags: tagsToDel, token
+      }))
     }
     // check if liceses need to be added
     if (software.licenses?.length > 0) {
-      const licenses = AutocompleteToLicenses(software.licenses,software.id)
+      const licensesToAdd = licensesNotInReferenceList({
+        list: software.licenses,
+        referenceList: licensesInDb
+      }).map((item)=>{
+        return {
+          software: software.id,
+          license: item.key
+        }
+      })
       // add tags update to list
-      if (licenses.length>0) promises.push(upsertLicensesForSoftware({software: software.id, data: licenses, token}))
+      if (licensesToAdd.length > 0) promises.push(upsertLicensesForSoftware({
+        software: software.id, data: licensesToAdd, token
+      }))
+    }
+    // check if licenses need to be deleted
+    if (licensesInDb.length > 0) {
+      const licenseToDel = licensesNotInReferenceList({
+        list: licensesInDb,
+        referenceList: software.licenses
+      }).map((item) => {
+        return item?.data?.id ?? ''
+      })
+      if (licenseToDel.length > 0) promises.push(deleteLicenses({
+        ids: licenseToDel, token
+      }))
     }
     // make all requests
     const responses = await Promise.all(promises)
@@ -262,9 +316,58 @@ export async function upsertTagsForSoftware({software, data, token}:{software:st
   }
 }
 
-export async function upsertLicensesForSoftware({software, data, token}: { software: string, data: License[], token: string }) {
+export async function deleteTagsForSoftware({software,tags,token}: { software: string,tags:string[],token: string }) {
   try {
-    // PATCH
+    if (!software) return {
+      status: 400,
+      message: 'Missing software id'
+    }
+    // DELETE where software uuid and tag in list
+    const url = `/api/v1/tag_for_software?software=eq.${software}&tag=in.("${encodeURIComponent(tags.join('","'))}")`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createHeaders(token),
+      }
+    })
+
+    return extractReturnMessage(resp, software ?? '')
+
+  } catch (e: any) {
+    logger(`upsertTagsForSoftware: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+// NOT NEEDED FOR NOW
+// export async function deleteAllTagsForSoftware({software, token}: { software: string, token: string }) {
+//   try {
+//     // DELETE where software uuid
+//     const url = `/api/v1/tag_for_software?software=eq.${software}`
+//     const resp = await fetch(url, {
+//       method: 'DELETE',
+//       headers: {
+//         ...createHeaders(token),
+//       }
+//     })
+
+//     return extractReturnMessage(resp, software ?? '')
+
+//   } catch (e: any) {
+//     logger(`upsertTagsForSoftware: ${e?.message}`, 'error')
+//     return {
+//       status: 500,
+//       message: e?.message
+//     }
+//   }
+// }
+
+export async function upsertLicensesForSoftware({software, data, token}:
+  {software: string, data: License[], token: string}) {
+  try {
     const url = `/api/v1/license_for_software?software=eq.${software}`
     const resp = await fetch(url, {
       method: 'POST',
@@ -287,6 +390,27 @@ export async function upsertLicensesForSoftware({software, data, token}: { softw
   }
 }
 
+export async function deleteLicenses({ids, token}:
+  {ids: string[], token: string}) {
+  try {
+    const url = `/api/v1/license_for_software?id=in.("${ids.join('","')}")`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createHeaders(token),
+      }
+    })
+
+    return extractReturnMessage(resp, ids.toString())
+
+  } catch (e: any) {
+    logger(`upsertLicensesForSoftware: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
 
 export async function isMaintainerOfSoftware({slug, uid, token}:
   {slug: string, uid: string, token: string}) {
@@ -351,6 +475,41 @@ function extractReturnMessage(resp:Response, dataId:string) {
   }
 }
 
+export function tagsNotInReferenceList({tagList, referenceList}:
+  { tagList: AutocompleteOption<Tag>[], referenceList: AutocompleteOption<Tag>[] }) {
+  if (tagList.length > 0) {
+    // tagList in initalList not present in saveList should be removed from db
+    const tagsNotInReferenceList = tagList.filter(({data: {tag: iTag}}) => {
+      // if item cannot be found in saveList
+      return !referenceList.some(({data: {tag: sTag}}) => {
+        // compare inital item with items in saveList
+        return iTag === sTag
+      })
+    })
+    // debugger
+    return tagsNotInReferenceList
+  }
+  return []
+}
+
+export function licensesNotInReferenceList({list, referenceList}:
+  { list: AutocompleteOption<License>[], referenceList: AutocompleteOption<License>[] }) {
+  if (list.length > 0) {
+    // list in initalList not present in saveList should be removed from db
+    const itemsNotInReferenceList = list.filter(({data: {license: lLicense}}) => {
+      // if item cannot be found in saveList
+      return !referenceList.some(({data: {license: rLicense}}) => {
+        // compare inital item with items in saveList
+        return lLicense === rLicense
+      })
+    })
+    // debugger
+    return itemsNotInReferenceList
+  }
+  return []
+}
+
+
 function extractErrorMessages(responses: { status: number, message: string }[]) {
   let errors: { status: number, message: string }[] = []
   responses.forEach(resp => {
@@ -360,32 +519,3 @@ function extractErrorMessages(responses: { status: number, message: string }[]) 
   })
   return errors
 }
-
-function AutocompleteToTags(options: AutocompleteOption<Tag>[],softwareId: string) {
-  const tags: Tag[] = options
-    .filter(item => !item.data.software)
-    // only new items to be added
-    .map(item => {
-      return {
-        software: softwareId,
-        tag: item.data.tag
-      }
-    })
-  debugger
-  return tags
-}
-
-function AutocompleteToLicenses(options: AutocompleteOption<License>[],softwareId: string) {
-  const items: License[] = options
-    // only new items to be added
-    .filter(item=>item.data.hasOwnProperty('id')===false)
-    .map(item => {
-      return {
-        software: softwareId,
-        license: item.key
-      }
-    })
-  debugger
-  return items
-}
-

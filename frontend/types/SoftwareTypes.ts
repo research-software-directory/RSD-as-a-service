@@ -61,6 +61,7 @@ export type EditSoftwareItem = SoftwareItem & {
  */
 
 export type Tag = {
+  id?: string,
   software: string
   tag: string
 }

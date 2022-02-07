@@ -37,8 +37,8 @@ export default function useEditSoftwareData({slug, token}: {slug: string, token:
     if (software?.id) {
       // make all requests
       const requests = [
-        getTagsForSoftware(software.id, true),
-        getLicenseForSoftware(software.id, true)
+        getTagsForSoftware(software.id, true, token),
+        getLicenseForSoftware(software.id, true, token)
       ]
       Promise.all(requests)
         .then(([respTag, respLicense]) => {
@@ -70,7 +70,7 @@ export default function useEditSoftwareData({slug, token}: {slug: string, token:
       })
     }
     return ()=>{abort=true}
-  },[software,slug])
+  },[software,slug,token])
 
   return {
     slug,

@@ -13,8 +13,6 @@ import ContentInTheMiddle from '../../../components/layout/ContentInTheMiddle'
 import SoftwareIntroSection from '../../../components/software/SoftwareIntroSection'
 import GetStartedSection from '../../../components/software/GetStartedSection'
 import CitationSection from '../../../components/software/CitationSection'
-// import PageSnackbar from '../../../components/snackbar/PageSnackbar'
-// import PageSnackbarContext, {snackbarDefaults} from '../../../components/snackbar/PageSnackbarContext'
 import AboutSection from '../../../components/software/AboutSection'
 import MentionsSection from '../../../components/software/MentionsSection'
 import ContributorsSection from '../../../components/software/ContributorsSection'
@@ -56,7 +54,6 @@ interface SoftwareIndexData extends ScriptProps{
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
-  // const [options, setSnackbar] = useState(snackbarDefaults)
   const [resolvedUrl, setResolvedUrl] = useState('')
   const [author, setAuthor] = useState('')
   // extract data from props
@@ -181,12 +178,12 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     // fetch all info about software in parallel based on software.id
     const fetchData = [
       // citationInfo
-      getCitationsForSoftware(software.id),
+      getCitationsForSoftware(software.id,token),
       // tagsInfo
-      getTagsForSoftware(software.id),
+      getTagsForSoftware(software.id,false,token),
       // licenseInfo
-      getLicenseForSoftware(software.id),
-      // softwareIntroCounts
+      getLicenseForSoftware(software.id,false,token),
+      // softwareMentionCounts
       getContributorMentionCount(software.id),
       // mentions
       getMentionsForSoftware(software.id),
