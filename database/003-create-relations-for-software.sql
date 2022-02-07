@@ -2,6 +2,8 @@ CREATE TABLE repository_url (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID references software (id) NOT NULL,
 	url VARCHAR NOT NULL,
+	languages JSONB,
+	languages_scraped_at TIMESTAMP,
 	license VARCHAR,
 	license_scraped_at TIMESTAMP,
 	commit_history JSONB,

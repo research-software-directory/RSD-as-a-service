@@ -515,14 +515,3 @@ CREATE POLICY maintainer_delete ON project_for_organisation FOR DELETE TO rsd_us
 CREATE POLICY admin_all_rights ON project_for_organisation TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
-
-
--- software scraped data
-ALTER TABLE programming_languages ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON programming_languages FOR SELECT TO web_anon, rsd_user
-	USING (repository_url IN (SELECT id FROM repository_url));
-
-CREATE POLICY admin_all_rights ON programming_languages TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);

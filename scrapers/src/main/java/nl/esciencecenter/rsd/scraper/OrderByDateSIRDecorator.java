@@ -13,10 +13,10 @@ public class OrderByDateSIRDecorator implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<ProgrammingLanguageData> repositoryUrlData() {
-		Collection<ProgrammingLanguageData> data = origin.repositoryUrlData();
+	public Collection<RepositoryUrlData> languagesData() {
+		Collection<RepositoryUrlData> data = origin.languagesData();
 		return data.stream()
-				.sorted(Comparator.comparing(ProgrammingLanguageData::lastUpdated, Comparator.nullsFirst(Comparator.naturalOrder())))
+				.sorted(Comparator.comparing(RepositoryUrlData::languagesScrapedAt, Comparator.nullsFirst(Comparator.naturalOrder())))
 				.toList();
 	}
 
@@ -37,7 +37,7 @@ public class OrderByDateSIRDecorator implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public void save(String data) {
+	public void save(Collection<RepositoryUrlData> data) {
 		origin.save(data);
 	}
 }
