@@ -8,8 +8,8 @@ export default function EditSoftwareButton({slug}:{slug:string}) {
     <IconButton
       size="large"
       title="Edit software"
-      data-testid="edit-menu-button"
-      aria-label="edit-menu"
+      data-testid="edit-software-button"
+      aria-label="edit-software"
       onClick={() => {
         router.push(`/software/${slug}/edit`)
       }}

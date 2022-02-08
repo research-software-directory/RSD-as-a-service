@@ -17,7 +17,7 @@ export default function Logout({session}:{session:Session}) {
           You can go now doing something else :-)
          </p>
          <Button onClick={() => window.location.href = '/'}>
-           Go home
+           Home
          </Button>
       </div>
     </ContentInTheMiddle>
