@@ -1,6 +1,7 @@
 import {useEffect, useState, useContext} from 'react'
 import {useForm} from 'react-hook-form'
 
+import {app} from '../../../config/app'
 import ContentLoader from '../../layout/ContentLoader'
 import snackbarContext from '../../snackbar/PageSnackbarContext'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
@@ -17,14 +18,16 @@ import SoftwareLicenses from './SoftwareLicenses'
 import SoftwarePageStatus from './SoftwarePageStatus'
 import {editConfigStep1 as config} from './editConfig'
 import useEditSoftwareData from '../../../utils/useEditSoftwareData'
+import useOnUnsaveChange from '../../../utils/useOnUnsavedChange'
 
 export default function SoftwareInformation({slug,token}:{slug:string,token: string}) {
   const {options: snackbarOptions, setSnackbar} = useContext(snackbarContext)
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {loading:apiLoading, editSoftware, setEditSoftware} = useEditSoftwareData({slug,token})
   const [loading, setLoading] = useState(true)
+
   // destructure methods from react-hook-form
-  const {register, handleSubmit, watch, formState, reset, control, setValue} = useForm<EditSoftwareItem>({
+  const {register, handleSubmit, watch, formState, reset, control} = useForm<EditSoftwareItem>({
     mode: 'onChange',
     defaultValues: {
       ...editSoftware
@@ -34,6 +37,12 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
   const {errors, isDirty, isValid} = formState
   // form data provided by react-hook-form
   const formData = watch()
+  // watch for unsaved changes
+  useOnUnsaveChange({
+    isDirty,
+    isValid,
+    warning: app.unsavedChangesMessage
+  })
 
   // console.group('SoftwareInformation')
   // console.log('token...', token)

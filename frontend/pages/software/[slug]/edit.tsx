@@ -1,7 +1,6 @@
-import {useReducer, useEffect} from 'react'
+import {useReducer} from 'react'
 import {useRouter} from 'next/router'
 import Head from 'next/head'
-// import nprogress from 'nprogress'
 
 import {app} from '../../../config/app'
 import {useAuth} from '../../../auth'
@@ -13,7 +12,7 @@ import EditSoftwareContext,{EditSoftwareActionType} from '../../../components/so
 import ContentLoader from '../../../components/layout/ContentLoader'
 import {editSoftwareReducer} from '../../../components/software/edit/editSoftwareContext'
 
-export default function SoftwareItemEdit() {
+export default function EditSoftwareItem() {
   const {session} = useAuth()
   const {token} = session
   const router = useRouter()
@@ -21,35 +20,10 @@ export default function SoftwareItemEdit() {
   const [pageState, dispatchPageState] = useReducer(editSoftwareReducer,{
     // default step is first step
     step: editSoftwareMenu[0],
-    // we keep basic software info to share it with all other components
-    // software,
     // current form state is shared to warn for unsaved changes
     isDirty: false,
     isValid: false
   })
-
-  // TODO! detecting route change does not work properly
-  // further investigation needed
-  // Router.events.on('routeChangeStart', () => {
-  //   debugger
-  //   console.log('SoftwareItemEdit...Router.on.routeChangeStart')
-  //   // notify user about unsaved changes
-  //   if (pageState.isDirty === true) {
-  //     const leavePage = confirm(app.unsavedChangesMessage)
-  //     if (leavePage === false) {
-  //       nprogress.done()
-  //       throw 'Cancel page navigation'
-  //     }
-  //   }
-  // })
-  // useEffect(() => {
-  //   return () => {
-  //     debugger
-  //     if (pageState.isDirty === true) {
-  //       alert('Unsaved changes')
-  //     }
-  //   }
-  // },[pageState.isDirty])
 
   function onChangeStep({nextStep}:{nextStep:EditSoftwarePageStep}) {
     // changes made but not saved or cancelled

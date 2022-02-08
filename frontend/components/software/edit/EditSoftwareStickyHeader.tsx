@@ -9,7 +9,7 @@ export default function StickyHeaderEditSoftware({brand_name, isCancelDisabled, 
     <StickyHeader className="flex py-4 w-full bg-white md:pl-[3rem]">
       <h1 className="flex-1 text-primary">{brand_name}</h1>
       <div>
-        <Button
+        {/* <Button
           tabIndex={1}
           type="button"
           onClick={()=>onCancel()}
@@ -19,7 +19,7 @@ export default function StickyHeaderEditSoftware({brand_name, isCancelDisabled, 
           }}
         >
           Cancel
-        </Button>
+        </Button> */}
         <Button
           tabIndex={0}
           type="submit"
