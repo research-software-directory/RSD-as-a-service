@@ -1,13 +1,63 @@
+import {useContext,useEffect,useState,useRef} from 'react'
 import Button from '@mui/material/Button'
 import SaveIcon from '@mui/icons-material/Save'
 
 import StickyHeader from '../../layout/StickyHeader'
+import editSoftwareContext from './editSoftwareContext'
 
-export default function StickyHeaderEditSoftware({brand_name, isCancelDisabled, isSaveDisabled, onCancel}:
-  { brand_name: string, isCancelDisabled:boolean, isSaveDisabled:boolean, onCancel:Function }) {
+export default function StickyHeaderEditSoftware() {
+  const {pageState} = useContext(editSoftwareContext)
+  const {isDirty, isValid} = pageState
+  const headerRef = useRef(null)
+  const [classes, setClasses] = useState('')
+
+  useEffect(() => {
+    /**
+     * Observe when header (h1 element) moves in/outside a certain area.
+     * It is used to add the border at the bottom of sticky header (border-b-2 class).
+     * The logic is oposite to "common" observer approach:
+     * 1. we ignore first 68px at the top of the screen.
+     * 2. when header reaches this area the observer will set isIntersecting flag to false
+     * 3. when isIntersecting===false, the header is at first 68px of the screen and we add border
+     * More info: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+     */
+    const observer = new IntersectionObserver((e) => {
+      const h1 = e[0]
+      if (h1.isIntersecting===true) {
+        setClasses('')
+      } else {
+        setClasses('border-b-2')
+      }
+    }, {
+      //
+      rootMargin:'-68px'
+    })
+    const el = headerRef.current
+    if (el) {
+      observer.observe(el)
+    }
+    return () => {
+      // remove observer
+      if (observer && el) {
+        observer.unobserve(el)
+      }
+    }
+  },[])
+
+  function isSaveDisabled() {
+    if (isDirty === false || isValid === false) {
+      return true
+    }
+    return false
+  }
+
   return (
-    <StickyHeader className="flex py-4 w-full bg-white md:pl-[3rem]">
-      <h1 className="flex-1 text-primary">{brand_name}</h1>
+    <StickyHeader className={`flex py-4 w-full bg-white ${classes}`}>
+      <h1
+        ref={headerRef}
+        className="flex-1 text-primary">
+        {pageState?.software?.brand_name || ''}
+      </h1>
       <div>
         {/* <Button
           tabIndex={1}
@@ -24,6 +74,7 @@ export default function StickyHeaderEditSoftware({brand_name, isCancelDisabled, 
           tabIndex={0}
           type="submit"
           variant="contained"
+          form={pageState?.step?.id}
           sx={{
             // overwrite tailwind preflight.css for submit type
             '&[type="submit"]:not(.Mui-disabled)': {
@@ -33,7 +84,7 @@ export default function StickyHeaderEditSoftware({brand_name, isCancelDisabled, 
           endIcon={
             <SaveIcon />
           }
-          disabled={isSaveDisabled}
+          disabled={isSaveDisabled()}
         >
           Save
         </Button>

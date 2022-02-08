@@ -1,5 +1,5 @@
 
-export const editConfigStep1 = {
+export const softwareInformation = {
   brand_name: {
     label: 'Name',
     help: 'Provide software name to use as a title of your software page.',

@@ -8,7 +8,6 @@ import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 import {updateSoftwareInfo} from '../../../utils/editSoftware'
 import {EditSoftwareItem} from '../../../types/SoftwareTypes'
 import EditSoftwareSection from './EditSoftwareSection'
-import EditSoftwareStickyHeader from './EditSoftwareStickyHeader'
 import EditSectionTitle from './EditSectionTitle'
 import editSoftwareContext from './editSoftwareContext'
 import {EditSoftwareActionType} from './editSoftwareContext'
@@ -16,7 +15,7 @@ import SoftwareMarkdown from './SoftwareMarkdown'
 import SoftwareKeywords from './SoftwareKeywords'
 import SoftwareLicenses from './SoftwareLicenses'
 import SoftwarePageStatus from './SoftwarePageStatus'
-import {editConfigStep1 as config} from './editConfig'
+import {softwareInformation as config} from './editSoftwareConfig'
 import useEditSoftwareData from '../../../utils/useEditSoftwareData'
 import useOnUnsaveChange from '../../../utils/useOnUnsavedChange'
 
@@ -71,8 +70,13 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           loading:false
         }
       })
-      // remove loading flag
+      // debugger
       setLoading(false)
+      // slow it down so loader can be seen :-)
+      // setTimeout(() => {
+      //   // remove loading flag
+      //   setLoading(false)
+      // },500)
     }
   },[reset,editSoftware,apiLoading,slug,dispatchPageState])
 
@@ -87,7 +91,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
         type: EditSoftwareActionType.UPDATE_STATE,
         payload: {
           isDirty,
-          isValid
+          isValid,
         }
       })
     }
@@ -98,67 +102,53 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
     <ContentLoader />
   )
 
-  function onSubmit(formData: EditSoftwareItem) {
-    updateSoftwareInfo({
+  async function onSubmit(formData: EditSoftwareItem) {
+    const resp = await updateSoftwareInfo({
       software: formData,
       tagsInDb: editSoftware?.tags || [],
       licensesInDb: editSoftware?.licenses || [],
       token
-    }).then(resp => {
-      // if OK
-      if (resp.status === 200) {
-        setSnackbar({
-          ...snackbarOptions,
-          open: true,
-          severity: 'success',
-          message: `${formData?.brand_name} saved`,
-        })
-        // update software state
-        // to be equal to data in the form
-        setEditSoftware(formData)
-        dispatchPageState({
-          type: EditSoftwareActionType.SET_SOFTWARE_INFO,
-          payload: {
-            id: formData?.id,
-            slug,
-            brand_name:formData?.brand_name
-          }
-        })
-      } else {
-        setSnackbar({
-          ...snackbarOptions,
-          open: true,
-          severity: 'error',
-          message: resp.message
-        })
-      }
     })
-  }
-
-  function isSaveDisabled() {
-    if (isDirty === false || isValid === false) {
-      return true
+    // if OK
+    if (resp.status === 200) {
+      setSnackbar({
+        ...snackbarOptions,
+        open: true,
+        severity: 'success',
+        message: `${formData?.brand_name} saved`,
+      })
+      // update software state
+      // to be equal to data in the form
+      setEditSoftware(formData)
+      dispatchPageState({
+        type: EditSoftwareActionType.SET_SOFTWARE_INFO,
+        payload: {
+          id: formData?.id,
+          slug,
+          brand_name:formData?.brand_name
+        }
+      })
+    } else {
+      setSnackbar({
+        ...snackbarOptions,
+        open: true,
+        severity: 'error',
+        message: resp.message
+      })
     }
-    return false
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='flex-1'>
+    <form
+      id={pageState.step?.id}
+      onSubmit={handleSubmit(onSubmit)}
+      className='flex-1'>
       {/* hidden inputs */}
       <input type="hidden"
         {...register('id',{required:'id is required'})}
       />
       <input type="hidden"
         {...register('slug',{required:'slug is required'})}
-      />
-      <EditSoftwareStickyHeader
-        brand_name={formData?.brand_name ?? ''}
-        isCancelDisabled={!isDirty}
-        isSaveDisabled={isSaveDisabled()}
-        onCancel={() => {
-          // reset back to inital
-          reset(editSoftware)
-        }}
       />
       <EditSoftwareSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
         <div className="py-4 xl:pl-[3rem]">

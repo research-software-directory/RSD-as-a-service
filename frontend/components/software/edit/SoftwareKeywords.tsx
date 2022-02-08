@@ -1,7 +1,7 @@
 import {useEffect, useState, useContext} from 'react'
 
 import editSoftwareContext from './editSoftwareContext'
-import {editConfigStep1 as config} from './editConfig'
+import {softwareInformation as config} from './editSoftwareConfig'
 import {Tag} from '../../../types/SoftwareTypes'
 import useTagOptions from '../../../utils/useTagOptions'
 import ControlledAutocomplete,{AutocompleteOption} from '../../form/ControlledAutocomplete'

@@ -11,6 +11,7 @@ import EditSoftwareNav from '../../../components/software/edit/EditSoftwareNav'
 import EditSoftwareContext,{EditSoftwareActionType} from '../../../components/software/edit/editSoftwareContext'
 import ContentLoader from '../../../components/layout/ContentLoader'
 import {editSoftwareReducer} from '../../../components/software/edit/editSoftwareContext'
+import EditSoftwareStickyHeader from '../../../components/software/edit/EditSoftwareStickyHeader'
 
 export default function EditSoftwareItem() {
   const {session} = useAuth()
@@ -61,6 +62,7 @@ export default function EditSoftwareItem() {
       </Head>
       <ProtectedContent slug={slug?.toString()}>
         <EditSoftwareContext.Provider value={{pageState, dispatchPageState}}>
+          <EditSoftwareStickyHeader />
           <section className="md:flex">
             <EditSoftwareNav
               onChangeStep={onChangeStep}

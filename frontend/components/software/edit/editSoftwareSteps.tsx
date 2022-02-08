@@ -11,7 +11,7 @@ import SoftwareContributors from './SoftwareContributors'
 import SoftwareOgranisations from './SoftwareOgranisations'
 import SoftwareMentions from './SoftwareMentions'
 import SoftwareTestimonials from './SoftwareTestimonials'
-import RelatedSoftwareInfo from './RelatedSoftwareInfo'
+import RelatedSoftwareInfo from './RelatedSoftwareEdit'
 
 export type EditSoftwarePageStep = {
   id:string,
