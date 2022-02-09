@@ -66,7 +66,7 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
   { slug: string, token: string, baseUrl?: string }) {
   try {
     // GET
-    const select = '*,repository_url!left(id,url)'
+    const select = '*,repository_url!left(url)'
     const url = baseUrl
       ? `${baseUrl}/software?select=${select}&slug=eq.${slug}`
       : `/api/v1/software?select=${select}&slug=eq.${slug}`
@@ -95,22 +95,12 @@ export async function updateSoftwareInfo({software,tagsInDb,licensesInDb, token}
     // NOTE! update this list when
     const softwareTable = getPropsFromObject(software, SoftwarePropsToSave)
     const repoTable = {
-      id: software?.repository_url[0].id,
       software: software.id,
-      url: software?.repository_url[0].url
+      url: software?.repository_url[0]?.url
     }
     const promises = [updateSoftwareTable({software: softwareTable, token})]
-    // decide on repo table action
-    if (repoTable.url != '') {
-      if (repoTable.id){
-        promises.push(updateRepositoryTable({data: repoTable, token}))
-      }else {
-        promises.push(addToRepositoryTable({data: repoTable, token}))
-      }
-    } else if (repoTable.url === '' && repoTable.id) {
-      // not possible to foreign key relations - do nothing for now
-      // promises.push(deleteFromRepositoryTable({data: repoTable, token}))
-    }
+    // update repo table
+    promises.push(updateRepositoryTable({data: repoTable, token}))
     // check if tags need to be added
     if (software.tags?.length > 0) {
       const tagsToAdd = tagsNotInReferenceList({
@@ -221,7 +211,7 @@ export async function updateRepositoryTable({data, token}:
   { data: RepositoryUrl, token: string }) {
   try {
     // PATCH
-    const url = `/api/v1/repository_url?id=eq.${data.id}`
+    const url = `/api/v1/repository_url?software=eq.${data.software}`
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
@@ -231,7 +221,7 @@ export async function updateRepositoryTable({data, token}:
       body: JSON.stringify(data)
     })
 
-    return extractReturnMessage(resp, data.id ?? '')
+    return extractReturnMessage(resp, data.software ?? '')
 
   } catch (e: any) {
     logger(`updateSoftware: ${e?.message}`, 'error')
@@ -256,7 +246,7 @@ export async function addToRepositoryTable({data, token}:
       body: JSON.stringify(data)
     })
 
-    return extractReturnMessage(resp, data.id ?? '')
+    return extractReturnMessage(resp, data.software ?? '')
 
   } catch (e: any) {
     logger(`updateSoftware: ${e?.message}`, 'error')
@@ -271,7 +261,7 @@ export async function deleteFromRepositoryTable({data, token}:
   { data: RepositoryUrl, token: string }) {
   try {
     // PATCH
-    const url = `/api/v1/repository_url?id=eq.${data.id}`
+    const url = `/api/v1/repository_url?software=eq.${data.software}`
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -280,7 +270,7 @@ export async function deleteFromRepositoryTable({data, token}:
       body: JSON.stringify(data)
     })
 
-    return extractReturnMessage(resp, data.id ?? '')
+    return extractReturnMessage(resp, data.software ?? '')
 
   } catch (e: any) {
     logger(`updateSoftware: ${e?.message}`, 'error')

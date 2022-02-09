@@ -5,7 +5,7 @@
 import {AutocompleteOption} from './AutocompleteOptions'
 
 export type RepositoryUrl = {
-  id?:string,
+  software:string,
   url:string
 }
 
