@@ -23,8 +23,10 @@ public class MainLicenses {
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
 				String scrapedLicense = new GithubSI("https://api.github.com", repo).license();
-				RepositoryUrlData updatedData = new RepositoryUrlData(licenseData.id(), licenseData.software(), licenseData.url(),
-						scrapedLicense, scrapedAt, licenseData.commitHistory(), licenseData.commitHistoryScrapedAt(), licenseData.languages(), licenseData.languagesScrapedAt());
+				RepositoryUrlData updatedData = new RepositoryUrlData(licenseData.software(), licenseData.url(),
+						scrapedLicense, scrapedAt,
+						licenseData.commitHistory(), licenseData.commitHistoryScrapedAt(),
+						licenseData.languages(), licenseData.languagesScrapedAt());
 				updatedDataAll.add(updatedData);
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + licenseData.url() + ":");

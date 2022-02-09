@@ -29,7 +29,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		Collection<RepositoryUrlData> result = new ArrayList<>();
 		for (JsonElement element : data) {
 			JsonObject jsonObject = element.getAsJsonObject();
-			String id = jsonObject.getAsJsonPrimitive("id").getAsString();
 			String software = jsonObject.getAsJsonPrimitive("software").getAsString();
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
 
@@ -48,7 +47,7 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			JsonElement jsonLanguagesScrapedAt = jsonObject.get("languages_scraped_at");
 			LocalDateTime languagesScrapedAt = jsonLanguagesScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonLanguagesScrapedAt.getAsString());
 
-			result.add(new RepositoryUrlData(id, software, url, license, licensScrapedAt, commits, commitsScrapedAt, languages, languagesScrapedAt));
+			result.add(new RepositoryUrlData(software, url, license, licensScrapedAt, commits, commitsScrapedAt, languages, languagesScrapedAt));
 		}
 		return result;
 	}
@@ -64,12 +63,11 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		for (RepositoryUrlData repositoryUrlData : data) {
 			JsonObject newDataJson = new JsonObject();
 //			we have to add all existing columns, otherwise PostgREST will not do the UPSERT
-			newDataJson.addProperty("id", repositoryUrlData.id());
 			newDataJson.addProperty("software", repositoryUrlData.software());
 			newDataJson.addProperty("url", repositoryUrlData.url());
 
 			newDataJson.addProperty("license", repositoryUrlData.license());
-			newDataJson.addProperty("license_scraped_at", repositoryUrlData.languagesScrapedAt() == null ? null : repositoryUrlData.languagesScrapedAt().toString());
+			newDataJson.addProperty("license_scraped_at", repositoryUrlData.licenseScrapedAt() == null ? null : repositoryUrlData.licenseScrapedAt().toString());
 
 			newDataJson.addProperty("commit_history", repositoryUrlData.commitHistory());
 			newDataJson.addProperty("commit_history_scraped_at", repositoryUrlData.commitHistoryScrapedAt() == null ? null : repositoryUrlData.commitHistoryScrapedAt().toString());

@@ -23,8 +23,10 @@ public class MainProgrammingLanguages {
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
 				String scrapedLanguages = new GithubSI("https://api.github.com", repo).languages();
-				RepositoryUrlData updatedData = new RepositoryUrlData(programmingLanguageData.id(), programmingLanguageData.software(), programmingLanguageData.url(),
-						programmingLanguageData.license(), programmingLanguageData.licenseScrapedAt(), programmingLanguageData.commitHistory(), programmingLanguageData.commitHistoryScrapedAt(), scrapedLanguages, scrapedAt);
+				RepositoryUrlData updatedData = new RepositoryUrlData(programmingLanguageData.software(), programmingLanguageData.url(),
+						programmingLanguageData.license(), programmingLanguageData.licenseScrapedAt(),
+						programmingLanguageData.commitHistory(), programmingLanguageData.commitHistoryScrapedAt(),
+						scrapedLanguages, scrapedAt);
 				updatedDataAll.add(updatedData);
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + programmingLanguageData.url() + ":");
