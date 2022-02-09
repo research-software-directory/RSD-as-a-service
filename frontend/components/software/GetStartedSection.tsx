@@ -1,7 +1,7 @@
 
 import LinkIcon from '@mui/icons-material/Link'
 import CommitsChart from './CommitsChart'
-import {SoftwareItem} from '../../types/SoftwareItem'
+import {SoftwareItem} from '../../types/SoftwareTypes'
 
 export default function GetStartedSection({get_started_url,repository_url}:
   {get_started_url:string|null, repository_url:SoftwareItem['repository_url']}) {

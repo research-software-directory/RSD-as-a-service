@@ -1,6 +1,6 @@
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
+import {Tag} from '../../types/SoftwareTypes'
 
-import {Tag} from '../../utils/getSoftware'
 
 export default function Tags({tags = []}: { tags: Tag[] }) {
 

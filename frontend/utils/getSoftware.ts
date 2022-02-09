@@ -1,4 +1,4 @@
-import {SoftwareItem} from '../types/SoftwareItem'
+import {SoftwareItem,Tag} from '../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
@@ -101,12 +101,15 @@ export async function getTagsWithCount(){
  * @returns SoftwareCitationInfo
  */
 
-export async function getCitationsForSoftware(uuid:string){
+export async function getCitationsForSoftware(uuid:string,token?:string){
   try{
     // this request is always perfomed from backend
     // the release content is order by date_published
     const url = `${process.env.POSTGREST_URL}/release?select=*,release_content(*)&software=eq.${uuid}&release_content.order=date_published.desc`
-    const resp = await fetch(url,{method:'GET'})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createHeaders(token)
+    })
     if (resp.status===200){
       const data: SoftwareCitationInfo[] = await resp.json()
       // console.log('data...', data)
@@ -126,21 +129,18 @@ export async function getCitationsForSoftware(uuid:string){
 }
 
 
-/**
- * TAGS
- */
-
-export type Tag = {
-  software:string
-  tag: string
-}
-
-export async function getTagsForSoftware(uuid:string){
+export async function getTagsForSoftware(uuid:string,frontend?:boolean,token?:string){
   try{
     // this request is always perfomed from backend
     // the content is order by tag ascending
-    const url = `${process.env.POSTGREST_URL}/tag_for_software?&software=eq.${uuid}&order=tag.asc`
-    const resp = await fetch(url,{method:'GET'})
+    let url = `${process.env.POSTGREST_URL}/tag_for_software?software=eq.${uuid}&order=tag.asc`
+    if (frontend === true) {
+      url = `/api/v1/tag_for_software?software=eq.${uuid}&order=tag.asc`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createHeaders(token)
+    })
     if (resp.status===200){
       const data:Tag[] = await resp.json()
       return data
@@ -165,12 +165,18 @@ export type License = {
   license: string
 }
 
-export async function getLicenseForSoftware(uuid:string){
+export async function getLicenseForSoftware(uuid:string,frontend?:boolean,token?:string){
   try{
     // this request is always perfomed from backend
     // the content is order by license ascending
-    const url = `${process.env.POSTGREST_URL}/license_for_software?&software=eq.${uuid}&order=license.asc`
-    const resp = await fetch(url,{method:'GET'})
+    let url = `${process.env.POSTGREST_URL}/license_for_software?&software=eq.${uuid}&order=license.asc`
+    if (frontend === true) {
+      url = `/api/v1/license_for_software?&software=eq.${uuid}&order=license.asc`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createHeaders(token)
+    })
     if (resp.status===200){
       const data:License[] = await resp.json()
       return data
@@ -348,16 +354,16 @@ export async function getRemoteMarkdown(url: string) {
       const markdown = await resp.text()
       return markdown
     }
-    if (resp.status === 404) {
+    if ([400,404].includes(resp.status)) {
       return ({
         status: resp.status,
-        message: 'Markdown file not found.'
+        message: 'Markdown file not found. Validate url.'
       })
     } else {
       // create error
       return ({
         status: resp.status,
-        message: resp.statusText
+        message: resp?.statusText ?? 'Markdown file not found.'
       })
     }
   } catch (e: any) {

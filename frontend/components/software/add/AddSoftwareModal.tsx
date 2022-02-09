@@ -14,7 +14,7 @@ import {useForm} from 'react-hook-form'
 
 import {useAuth} from '../../../auth'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
-import {NewSoftwareItem} from '../../../types/SoftwareItem'
+import {NewSoftwareItem} from '../../../types/SoftwareTypes'
 import {addSoftware} from '../../../utils/editSoftware'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 // import HelperTextWithCounter from './HelperTextWithCounter'

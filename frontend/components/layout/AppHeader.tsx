@@ -14,7 +14,7 @@ import AddMenu from './AddMenu'
 
 import {getRedirectUrl} from '../../utils/surfConext'
 
-export default function AppHeader(){
+export default function AppHeader({editButton}:{editButton?:JSX.Element}){
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
@@ -90,6 +90,7 @@ export default function AppHeader(){
             {getMenuItems()}
           </div>
           <div className="flex-1 min-w-[8rem] text-right sm:flex-none">
+            {editButton ? editButton : null}
             {status==='authenticated' ? <AddMenu/> : null}
             {getLoginButton()}
           </div>

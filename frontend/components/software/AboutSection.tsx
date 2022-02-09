@@ -1,11 +1,10 @@
-import {Tag,License} from '../../utils/getSoftware'
+import {RepositoryUrl,Tag,License} from '../../types/SoftwareTypes'
 import PageContainer from '../layout/PageContainer'
 import AboutStatement from './AboutStatement'
 import AboutTags from './AboutTags'
 import AboutLanguages from './AboutLanguages'
 import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
-import {RepositoryUrl} from '../../types/SoftwareItem'
 
 export default function AboutSection({brand_name = '', description = '', tags, licenses, repositories}:
   { brand_name: string, description: string, tags:Tag[], licenses: License[], repositories:RepositoryUrl[]}) {

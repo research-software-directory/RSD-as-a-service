@@ -16,7 +16,7 @@ import logger from '../utils/logger'
  */
 export default function ProtectedContent({children, slug}: { children: any, slug?: string }) {
   const {session} = useAuth()
-  // const status = session?.status ?? 'loading'
+  // keep maintainer flag
   const [isMaintainer, setIsMaintainer] = useState(false)
   // if slug is provided we need to make api call to check if user
   // is maintainer of the software
@@ -30,7 +30,7 @@ export default function ProtectedContent({children, slug}: { children: any, slug
       // of this software
       isMaintainerOfSoftware({
         slug,
-        uid: session?.user?.account ?? '',
+        account: session?.user?.account ?? '',
         token: session?.token
       }).then(resp => {
         // stop on abort
@@ -50,13 +50,13 @@ export default function ProtectedContent({children, slug}: { children: any, slug
 
   // authenticated user not on 'protected' section
   if (status === 'authenticated' && !slug) {
-    logger('ProtectedContent...authenticated user...not protected section', 'info')
+    // logger('ProtectedContent...authenticated user...not protected section', 'info')
     return children
   }
 
   // isMaintainer of software and is authenticated
   if (status === 'authenticated' && slug && isMaintainer) {
-    logger(`ProtectedContent...authenticated user...maintainer of ${slug}`, 'info')
+    // logger(`ProtectedContent...authenticated user...maintainer of ${slug}`, 'info')
     return children
   }
 
