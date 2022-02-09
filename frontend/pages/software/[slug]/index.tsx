@@ -13,8 +13,6 @@ import ContentInTheMiddle from '../../../components/layout/ContentInTheMiddle'
 import SoftwareIntroSection from '../../../components/software/SoftwareIntroSection'
 import GetStartedSection from '../../../components/software/GetStartedSection'
 import CitationSection from '../../../components/software/CitationSection'
-// import PageSnackbar from '../../../components/snackbar/PageSnackbar'
-// import PageSnackbarContext, {snackbarDefaults} from '../../../components/snackbar/PageSnackbarContext'
 import AboutSection from '../../../components/software/AboutSection'
 import MentionsSection from '../../../components/software/MentionsSection'
 import ContributorsSection from '../../../components/software/ContributorsSection'
@@ -31,16 +29,19 @@ import {
   getContributorsForSoftware,
   getRelatedToolsForSoftware,
   getRemoteMarkdown,
-  Tag, License, ContributorMentionCount,
+  ContributorMentionCount,
   Mention,RelatedTools
 } from '../../../utils/getSoftware'
+import {isMaintainerOfSoftware} from '../../../utils/editSoftware'
 import logger from '../../../utils/logger'
-import {SoftwareItem} from '../../../types/SoftwareItem'
+import {License, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {ScriptProps} from 'next/script'
 import {Contributor} from '../../../types/Contributor'
 import {Testimonial} from '../../../types/Testimonial'
 import {getDisplayName} from '../../../utils/getDisplayName'
+import {getAccountFromToken} from '../../../auth/jwtUtils'
+import EditSoftwareButton from '../../../components/software/edit/EditSoftwareButton'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string,
@@ -52,11 +53,11 @@ interface SoftwareIndexData extends ScriptProps{
   mentions: Mention[],
   testimonials: Testimonial[],
   contributors: Contributor[],
-  relatedTools: RelatedTools[]
+  relatedTools: RelatedTools[],
+  isMaintainer: boolean
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
-  // const [options, setSnackbar] = useState(snackbarDefaults)
   const [resolvedUrl, setResolvedUrl] = useState('')
   const [author, setAuthor] = useState('')
   // extract data from props
@@ -64,7 +65,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     software, citationInfo, tagsInfo,
     licenseInfo, softwareIntroCounts,
     mentions, testimonials, contributors,
-    relatedTools
+    relatedTools, isMaintainer, slug
   } = props
 
   useEffect(() => {
@@ -111,7 +112,11 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <CanoncialUrl
         canonicalUrl={resolvedUrl}
       />
-      <AppHeader />
+      <AppHeader editButton={
+        isMaintainer ?
+        <EditSoftwareButton slug={slug} />
+        : undefined
+      }/>
       <PageContainer>
         <SoftwareIntroSection
           brand_name={software.brand_name}
@@ -160,8 +165,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const {params, req: {cookies}} = context
     // extract rsd_token
     const token = cookies['rsd_token']
-    // console.log('getServerSideProps...params...', params)
-    const software = await getSoftwareItem(params?.slug?.toString(),token)
+    const slug = params?.slug?.toString()
+    const account = getAccountFromToken(token)
+    const software = await getSoftwareItem(slug,token)
     // console.log('getServerSideProps...software...', software)
     if (typeof software == 'undefined'){
       // returning notFound triggers 404 page
@@ -169,7 +175,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         notFound: true,
       }
     }
-    // Download remote markdown
+    // download remote markdown
     if (software.description_type === 'link' && software.description_url) {
       const markdown = await getRemoteMarkdown(software.description_url)
       if (typeof markdown === 'string') {
@@ -177,16 +183,15 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         software.description = markdown
       }
     }
-
     // fetch all info about software in parallel based on software.id
     const fetchData = [
       // citationInfo
-      getCitationsForSoftware(software.id),
+      getCitationsForSoftware(software.id,token),
       // tagsInfo
-      getTagsForSoftware(software.id),
+      getTagsForSoftware(software.id,false,token),
       // licenseInfo
-      getLicenseForSoftware(software.id),
-      // softwareIntroCounts
+      getLicenseForSoftware(software.id,false,token),
+      // softwareMentionCounts
       getContributorMentionCount(software.id),
       // mentions
       getMentionsForSoftware(software.id),
@@ -195,7 +200,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // contributors
       getContributorsForSoftware(software.id),
       // relatedTools
-      getRelatedToolsForSoftware(software.id)
+      getRelatedToolsForSoftware(software.id),
+      // check if maintainer
+      isMaintainerOfSoftware({slug,account,token,frontend:false})
     ]
     const [
       citationInfo,
@@ -205,7 +212,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       mentions,
       testimonials,
       contributors,
-      relatedTools
+      relatedTools,
+      isMaintainer
     ] = await Promise.all(fetchData)
 
     // pass data to page component as props
@@ -219,7 +227,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         mentions,
         testimonials,
         contributors,
-        relatedTools
+        relatedTools,
+        isMaintainer,
+        slug
       }
     }
   }catch(e:any){

@@ -1,64 +1,62 @@
-/* eslint-disable jest/no-disabled-tests */
-
 import {render, screen} from '@testing-library/react'
-// import SoftwareItemPage, {getServerSideProps} from '../pages/software/[slug]/index'
+import SoftwareItemPage from '../pages/software/[slug]/index'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
-import {
-  getSoftwareItem,
-  getCitationsForSoftware,
-  getTagsForSoftware,
-  getLicenseForSoftware,
-  getContributorMentionCount
-} from '../utils/getSoftware'
-
 // mock fetch response
-import softwareItem from './__fixtures__/softwareItem.json'
+import softwareIndexData from './__fixtures__/softwareIndexData'
 
 jest.mock('../utils/getSoftware')
-// const mockedResponse=[softwareItem]
-// global.fetch=jest.fn(()=>({
-//   status:206,
-//   headers:{
-//     // mock getting Content-Range from the header
-//     get:()=>'0-11/200'
-//   },
-//   statusText:'OK',
-//   json: jest.fn(()=>Promise.resolve(mockedResponse))
-// }))
 
 describe('pages/software/[slug]/index.tsx', () => {
-
-  // TODO create mocks for these tests
-  it.skip('getServerSideProps returns mocked values in the props', async () => {
-
-    // getSoftwareItem.mockImplementation(()=>softwareItem)
-
-    const resp = await getServerSideProps({params:{slug:'test-slug'}})
-    expect(resp).toEqual({
-      props:{
-        // count is extracted from response header
-        count:200,
-        // default query param values
-        page:0,
-        rows:12,
-        // mocked data
-        software: softwareItem,
-        tags: undefined,
-      }
-    })
-  })
-
-  it.skip('renders heading with software title', async() => {
+  it('renders heading with software title', async() => {
     render(WrappedComponentWithProps(
-      SoftwareItemPage,{
-        slug:'test-slug',
-        software: softwareItem,
-        // citationInfo:
-      }
+      SoftwareItemPage,
+      softwareIndexData
     ))
-    const title = await screen.findByText(softwareItem.brand_name)
+    const title = await screen.findByText(softwareIndexData.software.brand_name)
     expect(title).toBeInTheDocument()
-    screen.debug()
+    // screen.debug()
+  })
+  it('renders edit button when isMaintainer=true', () => {
+    // set isMaintainer to true
+    softwareIndexData.isMaintainer=true
+    render(WrappedComponentWithProps(
+      SoftwareItemPage,
+      softwareIndexData
+    ))
+    const editBtn = screen.getByTestId('edit-software-button')
+    expect(editBtn).toBeInTheDocument()
+    // screen.debug(editBtn)
+  })
+  it('DOES NOT render edit button when isMaintainer=false', () => {
+    // set isMaintainer to true
+    softwareIndexData.isMaintainer=false
+    render(WrappedComponentWithProps(
+      SoftwareItemPage,
+      softwareIndexData
+    ))
+    const editBtn = screen.queryByTestId('edit-software-button')
+    expect(editBtn).not.toBeInTheDocument()
+    // screen.debug(editBtn)
+  })
+  it('render mentions count', () => {
+    render(WrappedComponentWithProps(
+      SoftwareItemPage,
+      softwareIndexData
+    ))
+    const expected = softwareIndexData.softwareIntroCounts.mention_cnt
+    const mentions = screen.getByText(expected)
+    expect(mentions).toBeInTheDocument()
+    // screen.debug(editBtn)
+  })
+  it('render contributor_cnt count', () => {
+    render(WrappedComponentWithProps(
+      SoftwareItemPage,
+      softwareIndexData
+    ))
+    const expected = softwareIndexData.softwareIntroCounts.contributor_cnt
+    const contributor_cnt = screen.getByText(expected)
+    expect(contributor_cnt).toBeInTheDocument()
+    // screen.debug(editBtn)
   })
 })

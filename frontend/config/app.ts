@@ -1,5 +1,5 @@
 
 export const app = {
   title: 'Research Software Directory',
-  unsavedChangesMessage:'Do you want to leave this page without saving your latest changes?'
+  unsavedChangesMessage: 'Moving away from editing will discard your changes. This action can not be undone.'
 }

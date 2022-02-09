@@ -1,7 +1,6 @@
-import {useState, useReducer} from 'react'
+import {useReducer} from 'react'
 import {useRouter} from 'next/router'
 import Head from 'next/head'
-// import nprogress from 'nprogress'
 
 import {app} from '../../../config/app'
 import {useAuth} from '../../../auth'
@@ -9,57 +8,23 @@ import ProtectedContent from '../../../auth/ProtectedContent'
 import DefaultLayout from '../../../components/layout/DefaultLayout'
 import {editSoftwareMenu, EditSoftwarePageStep} from '../../../components/software/edit/editSoftwareSteps'
 import EditSoftwareNav from '../../../components/software/edit/EditSoftwareNav'
-import EditSoftwareContext,{EditSoftwareActionType, EditSoftwareState} from '../../../components/software/edit/editSoftwareContext'
+import EditSoftwareContext,{EditSoftwareActionType} from '../../../components/software/edit/editSoftwareContext'
 import ContentLoader from '../../../components/layout/ContentLoader'
 import {editSoftwareReducer} from '../../../components/software/edit/editSoftwareContext'
+import EditSoftwareStickyHeader from '../../../components/software/edit/EditSoftwareStickyHeader'
 
-export default function SoftwareItemEdit() {
+export default function EditSoftwareItem() {
   const {session} = useAuth()
   const {token} = session
-  // const [options, setSnackbar] = useState(snackbarDefaults)
   const router = useRouter()
   const slug = router.query['slug']
   const [pageState, dispatchPageState] = useReducer(editSoftwareReducer,{
     // default step is first step
     step: editSoftwareMenu[0],
-    // we keep basic software info to share it with all other components
-    // software,
     // current form state is shared to warn for unsaved changes
     isDirty: false,
     isValid: false
   })
-
-  // TODO! detecting route change does not work properly
-  // further investigation needed
-  // Router.events.on('routeChangeStart', () => {
-  //   debugger
-  //   console.log('SoftwareItemEdit...Router.on.routeChangeStart')
-  //   // notify user about unsaved changes
-  //   if (pageState.isDirty === true) {
-  //     const leavePage = confirm(app.unsavedChangesMessage)
-  //     if (leavePage === false) {
-  //       nprogress.done()
-  //       throw 'Cancel page navigation'
-  //     }
-  //   }
-  // })
-  // useEffect(() => {
-  //   if (pageState.isDirty === true && typeof window != 'undefined') {
-  //     debugger
-  //     window.addEventListener('beforeunload', (e) => {
-  //       e.preventDefault()
-  //       e.returnValue=''
-  //     })
-  //   } else {
-  //     // remove listening
-  //     window.removeEventListener('beforeunload', (e) => { })
-  //   }
-  //   return () => {
-  //     debugger
-  //     window.removeEventListener('beforeunload', (e) => {})
-  //     Router.events.off('routeChangeStart',()=>{})
-  //   }
-  // },[pageState.isDirty])
 
   function onChangeStep({nextStep}:{nextStep:EditSoftwarePageStep}) {
     // changes made but not saved or cancelled
@@ -97,13 +62,14 @@ export default function SoftwareItemEdit() {
       </Head>
       <ProtectedContent slug={slug?.toString()}>
         <EditSoftwareContext.Provider value={{pageState, dispatchPageState}}>
-        <section className="md:flex">
-          <EditSoftwareNav
-            onChangeStep={onChangeStep}
-          />
-          {/* Here we load main component of each step */}
-          {renderStepComponent()}
-        </section>
+          <EditSoftwareStickyHeader />
+          <section className="md:flex">
+            <EditSoftwareNav
+              onChangeStep={onChangeStep}
+            />
+            {/* Here we load main component of each step */}
+            {renderStepComponent()}
+          </section>
         </EditSoftwareContext.Provider>
       </ProtectedContent>
     </DefaultLayout>
