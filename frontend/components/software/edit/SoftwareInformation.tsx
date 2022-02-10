@@ -4,7 +4,6 @@ import {useForm} from 'react-hook-form'
 import {app} from '../../../config/app'
 import ContentLoader from '../../layout/ContentLoader'
 import snackbarContext from '../../snackbar/PageSnackbarContext'
-import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 import {updateSoftwareInfo} from '../../../utils/editSoftware'
 import {EditSoftwareItem} from '../../../types/SoftwareTypes'
 import EditSoftwareSection from './EditSoftwareSection'
@@ -18,6 +17,7 @@ import SoftwarePageStatus from './SoftwarePageStatus'
 import {softwareInformation as config} from './editSoftwareConfig'
 import useEditSoftwareData from '../../../utils/useEditSoftwareData'
 import useOnUnsaveChange from '../../../utils/useOnUnsavedChange'
+import ControlledTextField from '../../form/ControlledTextField'
 
 export default function SoftwareInformation({slug,token}:{slug:string,token: string}) {
   const {options: snackbarOptions, setSnackbar} = useContext(snackbarContext)
@@ -33,7 +33,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
     }
   })
   // destructure formState
-  const {errors, isDirty, isValid} = formState
+  const {isDirty, isValid} = formState
   // form data provided by react-hook-form
   const formData = watch()
   // watch for unsaved changes
@@ -72,11 +72,6 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       })
       // debugger
       setLoading(false)
-      // slow it down so loader can be seen :-)
-      // setTimeout(() => {
-      //   // remove loading flag
-      //   setLoading(false)
-      // },500)
     }
   },[reset,editSoftware,apiLoading,slug,dispatchPageState])
 
@@ -107,7 +102,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       software: formData,
       tagsInDb: editSoftware?.tags || [],
       licensesInDb: editSoftware?.licenses || [],
-      repositoryInDb: editSoftware?.repository_url || [],
+      repositoryInDb: editSoftware?.repository_url ?? null,
       token
     })
     // if OK
@@ -156,26 +151,32 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           <EditSectionTitle
             title="Software information"
           />
-          <TextFieldWithCounter
+          <ControlledTextField
             options={{
-              error: errors?.brand_name?.message !== undefined,
+              name: 'brand_name',
               label: config.brand_name.label,
-              helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help,
-              helperTextCnt:`${formData?.brand_name?.length || 0}/${config.brand_name.validation.maxLength.value}`
+              useNull: true,
+              defaultValue: editSoftware?.brand_name,
+              helperTextMessage: config.brand_name.help,
+              helperTextCnt: `${formData?.brand_name?.length || 0}/${config.brand_name.validation.maxLength.value}`,
             }}
-            register={register('brand_name',config.brand_name.validation)}
+            control={control}
+            rules={config.brand_name.validation}
           />
           <div className="py-2"></div>
-          <TextFieldWithCounter
+          <ControlledTextField
             options={{
+              name: 'short_statement',
+              label: config.short_statement.label,
               multiline:true,
               maxRows:5,
-              error: errors?.short_statement?.message !== undefined,
-              label: config.short_statement.label,
-              helperTextMessage: errors?.short_statement?.message ?? config.short_statement.help,
-              helperTextCnt:`${formData?.short_statement?.length || 0}/${config.short_statement.validation.maxLength.value}`
+              useNull: true,
+              defaultValue: editSoftware?.short_statement,
+              helperTextMessage: config.short_statement.help,
+              helperTextCnt: `${formData?.short_statement?.length || 0}/${config.short_statement.validation.maxLength.value}`,
             }}
-            register={register('short_statement',config.short_statement.validation)}
+            control={control}
+            rules={config.short_statement.validation}
           />
 
           <div className="py-2"></div>
@@ -183,42 +184,45 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
             title='Project URL'
             subtitle='Where users can find the information to start?'
           />
-          <TextFieldWithCounter
+          <ControlledTextField
             options={{
-              error: errors?.get_started_url?.message !== undefined,
+              name: 'get_started_url',
               label: config.get_started_url.label,
-              helperTextMessage: errors?.get_started_url?.message ?? config.get_started_url.help,
-              helperTextCnt:`${formData?.get_started_url?.length || 0}/${config.get_started_url.validation.maxLength.value}`
+              useNull: true,
+              defaultValue: editSoftware?.get_started_url,
+              helperTextMessage: config.get_started_url.help,
+              helperTextCnt: `${formData?.get_started_url?.length || 0}/${config.get_started_url.validation.maxLength.value}`,
             }}
-            register={register('get_started_url', config.get_started_url.validation)}
+            control={control}
+            rules={config.get_started_url.validation}
           />
           <div className="py-2"></div>
-          <TextFieldWithCounter
+          <ControlledTextField
             options={{
-              error: errors?.repository_url !== undefined,
+              name: 'repository_url',
               label: config.repository_url.label,
-              helperTextMessage: errors?.repository_url !== undefined
-                ? errors?.repository_url[0]?.url?.message
-                : config.repository_url.help,
-              helperTextCnt: `${formData?.repository_url?.length > 0
-                ? formData?.repository_url[0]?.url?.length
-                : 0}/${config.repository_url.validation.maxLength.value}`
+              useNull: true,
+              defaultValue: editSoftware?.repository_url,
+              helperTextMessage: config.repository_url.help,
+              helperTextCnt: `${formData?.repository_url?.length || 0}/${config.repository_url.validation.maxLength.value}`,
             }}
-            register={register('repository_url.0.url', config.repository_url.validation )}
+            control={control}
+            rules={config.repository_url.validation}
           />
 
           <div className="py-2"></div>
           <SoftwareMarkdown
+            control={control}
             register={register}
-            errors={errors}
             config={config}
+            defaultDescriptionUrl={editSoftware?.description_url ?? null}
             formData={formData}
           />
 
           {/* add white space at the bottom */}
           <div className="py-4"></div>
         </div>
-        <div className="py-4 xl:my-0">
+        <div className="py-4 min-w-[21rem] xl:my-0">
           <SoftwarePageStatus
             formData={formData}
             config={config}
@@ -228,14 +232,17 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           <EditSectionTitle
             title="Citation"
           />
-          <TextFieldWithCounter
+          <ControlledTextField
             options={{
-              error: errors?.concept_doi?.message !== undefined,
+              name: 'concept_doi',
               label: config.concept_doi.label,
-              helperTextMessage: errors?.concept_doi?.message ?? config.concept_doi.help,
-              helperTextCnt:`${formData?.concept_doi?.length || 0}/${config.concept_doi.options.maxLength.value}`
+              useNull: true,
+              defaultValue: editSoftware?.concept_doi,
+              helperTextMessage: config.concept_doi.help,
+              helperTextCnt: `${formData?.concept_doi?.length || 0}/${config.concept_doi.validation.maxLength.value}`,
             }}
-            register={register('concept_doi', config.concept_doi.options)}
+            control={control}
+            rules={config.concept_doi.validation}
           />
 
           <div className="py-4"></div>

@@ -41,7 +41,7 @@ export default function TextFieldWithCounter({options, register}:
       type={options?.type ?? 'text'}
       fullWidth={options?.fullWidth ?? true }
       variant={options?.variant ?? 'standard'}
-      defaultValue={options?.defaultValue ?? ''}
+      defaultValue={options?.defaultValue ?? null}
       FormHelperTextProps={{
         sx:{
           display: 'flex',

@@ -2,17 +2,16 @@
 import GitHubIcon from '@mui/icons-material/GitHub'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 
-export default function AboutSourceCode({repository=[]}:{repository: string[]}) {
+export default function AboutSourceCode({repository}:{repository: string|null}) {
   const code = '</>'
 
-  function getIcons() {
+  function getIcon() {
     // abort if no info
-    if (repository?.length === 0) return null
-    // return github icon or folder icon for other urls
-    return repository.map((item, pos) => {
-      if (item.toLowerCase().indexOf('github') > -1) {
+    if (repository && repository.length > 3) {
+      // return github icon or folder icon for other urls
+      if (repository?.toLowerCase()?.indexOf('github') > -1) {
         return (
-          <a key={pos} href={item} title="Github repository" target="_blank" rel="noreferrer">
+          <a key={repository} href={repository} title="Github repository" target="_blank" rel="noreferrer">
             <GitHubIcon sx={{
               width: '3rem',
               height: '3rem'
@@ -21,7 +20,7 @@ export default function AboutSourceCode({repository=[]}:{repository: string[]}) 
         )
       } else {
         return (
-          <a key={pos} href={item} title="Repository" target="_blank" rel="noreferrer">
+          <a key={repository} href={repository} title="Repository" target="_blank" rel="noreferrer">
             <FolderOpenIcon sx={{
               width: '3rem',
               height: '3rem',
@@ -30,7 +29,8 @@ export default function AboutSourceCode({repository=[]}:{repository: string[]}) 
           </a>
         )
       }
-    })
+    }
+    return null
   }
 
   return (
@@ -40,7 +40,7 @@ export default function AboutSourceCode({repository=[]}:{repository: string[]}) 
       <span className="text-primary pl-2">Source code</span>
     </div>
     <div className="py-1">
-      {getIcons()}
+      {getIcon()}
     </div>
     </>
   )

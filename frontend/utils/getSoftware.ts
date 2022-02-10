@@ -350,7 +350,8 @@ export async function getRelatedToolsForSoftware(uuid: string) {
 export async function getRemoteMarkdown(url: string) {
   try {
     const resp = await fetch(url)
-    if (resp.status === 200) {
+    // debugger
+    if (resp?.status === 200) {
       const markdown = await resp.text()
       return markdown
     }
@@ -362,14 +363,14 @@ export async function getRemoteMarkdown(url: string) {
     } else {
       // create error
       return ({
-        status: resp.status,
+        status: resp.status ?? 404,
         message: resp?.statusText ?? 'Markdown file not found.'
       })
     }
   } catch (e: any) {
     logger(`getRemoteMarkdown: ${e?.message}`, 'error')
     return {
-      status: 500,
+      status: 404,
       message: e?.message
     }
   }

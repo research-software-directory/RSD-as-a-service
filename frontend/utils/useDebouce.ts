@@ -20,17 +20,28 @@ export function useDebounce(value:string, delay:number) {
 export function useDebounceValid(value: string, errors:any, delay: number = 500) {
   // state debounced value
   const debounced = useDebounce(value, delay)
-  const [debouncedValue, setDebouncedValue] = useState(debounced)
+  const [debouncedValue, setDebouncedValue] = useState<string>()
+
   useEffect(() => {
     // update debounced value if no errors
-    if (!errors) {
-      // debugger
-      setDebouncedValue(debounced)
+    if (!errors){
+      // NOTE! only when value and debounced have same value
+      // it means that user stopped typing and the final input (value)
+      // is valid according to the validation rules provided to react-hook-form
+      if (value === debounced) {
+        setDebouncedValue(debounced)
+      } else {
+        setDebouncedValue(undefined)
+      }
     } else {
-      // debugger
-      // empty value if has errors
-      setDebouncedValue('')
+      setDebouncedValue(undefined)
     }
-  }, [debounced, errors])
+  }, [debounced,value,errors])
+  // console.group('useDebounceValid')
+  // console.log('delay...', delay)
+  // console.log('value...', value)
+  // console.log('debouncedValue...', debouncedValue)
+  // console.log('errors...', errors)
+  // console.groupEnd()
   return debouncedValue
 }

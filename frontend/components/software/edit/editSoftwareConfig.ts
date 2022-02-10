@@ -48,13 +48,21 @@ export const softwareInformation = {
   },
   // field for markdown url
   description_url: {
-    label: 'Url to markdown file',
-    help: 'Point to the location of markdown file including the filename.'
+    label: 'Url location of markdown file',
+    help: 'Point to the location of markdown file including the filename.',
+    validation: {
+      required: 'Valid markdown url must be provided',
+      maxLength: {value: 200, message: 'Maximum length is 200'},
+      pattern: {
+        value: /^https?:\/\/.+\..+.md$/,
+        message: 'Url should start with http(s):// have at least one dot (.) and end with (.md)'
+      }
+    }
   },
   concept_doi: {
     label: 'Concept DOI',
     help: 'Inital DOI of your software',
-    options: {
+    validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
     }
@@ -74,3 +82,5 @@ export const softwareInformation = {
     help:'Select license'
   }
 }
+
+export type SoftwareInformationConfig = typeof softwareInformation

@@ -5,7 +5,8 @@ import {
   SoftwareItem, RepositoryUrl,
   SoftwarePropsToSave, Tag,
   EditSoftwareItem,
-  License
+  License,
+  SoftwareItemFromDB
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
@@ -75,8 +76,16 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
       headers: createHeaders(token),
     })
     if (resp.status === 200) {
-      const data: SoftwareItem[] = await resp.json()
-      return data[0]
+      const data:SoftwareItemFromDB[] = await resp.json()
+      // fix repositoryUrl
+      const software: SoftwareItem = getPropsFromObject(data[0], SoftwarePropsToSave)
+      // repository url should at least be http://a.b
+      if (data[0]?.repository_url[0]?.url?.length > 9) {
+        software.repository_url = data[0]?.repository_url[0]?.url
+      } else {
+        software.repository_url = null
+      }
+      return software
     }
   } catch (e: any) {
     logger(`getSoftwareItem: ${e?.message}`, 'error')
@@ -89,35 +98,37 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
  * It returns status 200 only when update to all tables is successful.
  * On failure it returns the error status code of the first error.
  */
-export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repositoryInDb, token}:
-  { software: EditSoftwareItem, tagsInDb: AutocompleteOption<Tag>[], licensesInDb: AutocompleteOption<License>[],repositoryInDb:RepositoryUrl[],token:string}) {
+export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repositoryInDb, token}:{
+  software: EditSoftwareItem, tagsInDb: AutocompleteOption<Tag>[], licensesInDb: AutocompleteOption<License>[],
+  repositoryInDb: string|null, token: string
+}) {
   try {
     // NOTE! update SoftwarePropsToSave list if the data structure changes
     const softwareTable = getPropsFromObject(software, SoftwarePropsToSave)
     // add update to software table async call
     const promises = [updateSoftwareTable({software: softwareTable, token})]
     // repository table
-    if (repositoryInDb.length > 0) {
+    if (repositoryInDb) {
       // we already had repositoryUrl entry
-      if (software?.repository_url[0]?.url==='') {
-        // and now we have empty string => the record should be removed
+      if (!software?.repository_url) {
+        // and now we have empty string or null => the record should be removed
         promises.push(deleteFromRepositoryTable({software:software.id,token}))
-      } else if (software?.repository_url[0]?.url !== repositoryInDb[0].url) {
+      } else if (software?.repository_url !== repositoryInDb) {
         // if the repo values are not equal => the record should be updated
         promises.push(updateRepositoryTable({
           data: {
             software: software.id,
-            url: software?.repository_url[0]?.url
+            url: software?.repository_url
           },
           token
         }))
       }
-    } else if (software?.repository_url[0]?.url !== '') {
-      // new entry to repostory table
+    } else if (software?.repository_url) {
+      // new entry to repository table
       promises.push(addToRepositoryTable({
         data: {
           software: software.id,
-          url: software?.repository_url[0]?.url
+          url: software?.repository_url
         },
         token
       }))
@@ -236,7 +247,9 @@ export async function addToRepositoryTable({data, token}:
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
-        ...createHeaders(token)
+        ...createHeaders(token),
+        // merging also works with POST method
+        'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify(data)
     })
@@ -531,18 +544,18 @@ export function licensesNotInReferenceList({list, referenceList}:
   return []
 }
 
-export function formatRepositoryUrl(editSoftware: EditSoftwareItem, formData: EditSoftwareItem) {
-  // check
-  const newData = {
-    ...formData
-  }
-  // format repositoryUrl
-  if (newData.repository_url[0].url === '') {
-    // there was no repoUrl and it is still not defined
-    newData.repository_url=[]
-  }
-  return newData
-}
+// export function formatRepositoryUrl(editSoftware: EditSoftwareItem, formData: EditSoftwareItem) {
+//   // check
+//   const newData = {
+//     ...formData
+//   }
+//   // format repositoryUrl
+//   if (newData.repository_url[0].url === '') {
+//     // there was no repoUrl and it is still not defined
+//     newData.repository_url=[]
+//   }
+//   return newData
+// }
 
 
 function extractErrorMessages(responses: { status: number, message: string }[]) {
