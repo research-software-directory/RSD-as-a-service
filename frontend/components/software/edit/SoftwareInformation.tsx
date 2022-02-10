@@ -107,6 +107,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       software: formData,
       tagsInDb: editSoftware?.tags || [],
       licensesInDb: editSoftware?.licenses || [],
+      repositoryInDb: editSoftware?.repository_url || [],
       token
     })
     // if OK

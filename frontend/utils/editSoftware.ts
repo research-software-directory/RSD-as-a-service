@@ -85,22 +85,43 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
 
 /**
  * Entry function to update all software info from edit page
- * It updates data in software, repostory_url, tags_for_software, licenses_for_software tables.
+ * It updates data in software, repostory_url, tags_for_software and licenses_for_software.
  * It returns status 200 only when update to all tables is successful.
- * On failure it return error status code from the first error.
+ * On failure it returns the error status code of the first error.
  */
-export async function updateSoftwareInfo({software,tagsInDb,licensesInDb, token}:
-  {software: EditSoftwareItem,tagsInDb:AutocompleteOption<Tag>[],licensesInDb: AutocompleteOption<License>[],token:string}) {
+export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repositoryInDb, token}:
+  { software: EditSoftwareItem, tagsInDb: AutocompleteOption<Tag>[], licensesInDb: AutocompleteOption<License>[],repositoryInDb:RepositoryUrl[],token:string}) {
   try {
-    // NOTE! update this list when
+    // NOTE! update SoftwarePropsToSave list if the data structure changes
     const softwareTable = getPropsFromObject(software, SoftwarePropsToSave)
-    const repoTable = {
-      software: software.id,
-      url: software?.repository_url[0]?.url
-    }
+    // add update to software table async call
     const promises = [updateSoftwareTable({software: softwareTable, token})]
-    // update repo table
-    promises.push(updateRepositoryTable({data: repoTable, token}))
+    // repository table
+    if (repositoryInDb.length > 0) {
+      // we already had repositoryUrl entry
+      if (software?.repository_url[0]?.url==='') {
+        // and now we have empty string => the record should be removed
+        promises.push(deleteFromRepositoryTable({software:software.id,token}))
+      } else if (software?.repository_url[0]?.url !== repositoryInDb[0].url) {
+        // if the repo values are not equal => the record should be updated
+        promises.push(updateRepositoryTable({
+          data: {
+            software: software.id,
+            url: software?.repository_url[0]?.url
+          },
+          token
+        }))
+      }
+    } else if (software?.repository_url[0]?.url !== '') {
+      // new entry to repostory table
+      promises.push(addToRepositoryTable({
+        data: {
+          software: software.id,
+          url: software?.repository_url[0]?.url
+        },
+        token
+      }))
+    }
     // check if tags need to be added
     if (software.tags?.length > 0) {
       const tagsToAdd = tagsNotInReferenceList({
@@ -113,7 +134,7 @@ export async function updateSoftwareInfo({software,tagsInDb,licensesInDb, token}
         }
       })
       // add tags to tags_for_software table
-      if (tagsToAdd.length > 0) promises.push(upsertTagsForSoftware({
+      if (tagsToAdd.length > 0) promises.push(addTagsForSoftware({
         software: software.id, data: tagsToAdd, token
       }))
     }
@@ -141,7 +162,7 @@ export async function updateSoftwareInfo({software,tagsInDb,licensesInDb, token}
         }
       })
       // add tags update to list
-      if (licensesToAdd.length > 0) promises.push(upsertLicensesForSoftware({
+      if (licensesToAdd.length > 0) promises.push(addLicensesForSoftware({
         software: software.id, data: licensesToAdd, token
       }))
     }
@@ -207,31 +228,6 @@ export async function updateSoftwareTable({software, token}:
   }
 }
 
-export async function updateRepositoryTable({data, token}:
-  { data: RepositoryUrl, token: string }) {
-  try {
-    // PATCH
-    const url = `/api/v1/repository_url?software=eq.${data.software}`
-    const resp = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        ...createHeaders(token),
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify(data)
-    })
-
-    return extractReturnMessage(resp, data.software ?? '')
-
-  } catch (e: any) {
-    logger(`updateSoftware: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
 export async function addToRepositoryTable({data, token}:
   { data: RepositoryUrl, token: string }) {
   try {
@@ -239,31 +235,6 @@ export async function addToRepositoryTable({data, token}:
     const url = '/api/v1/repository_url'
     const resp = await fetch(url, {
       method: 'POST',
-      headers: {
-        ...createHeaders(token),
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify(data)
-    })
-
-    return extractReturnMessage(resp, data.software ?? '')
-
-  } catch (e: any) {
-    logger(`updateSoftware: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function deleteFromRepositoryTable({data, token}:
-  { data: RepositoryUrl, token: string }) {
-  try {
-    // PATCH
-    const url = `/api/v1/repository_url?software=eq.${data.software}`
-    const resp = await fetch(url, {
-      method: 'DELETE',
       headers: {
         ...createHeaders(token)
       },
@@ -281,16 +252,74 @@ export async function deleteFromRepositoryTable({data, token}:
   }
 }
 
-export async function upsertTagsForSoftware({software, data, token}:{software:string, data:Tag[],token:string}) {
+export async function updateRepositoryTable({data, token}:
+  { data: RepositoryUrl, token: string }) {
   try {
     // PATCH
+    const url = `/api/v1/repository_url?software=eq.${data.software}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createHeaders(token),
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({
+        ...data,
+        // we clean repo stats when url is changed
+        languages: null,
+        languages_scraped_at: null,
+        license: null,
+        license_scraped_at: null,
+        commit_history: null,
+        commit_history_scraped_at: null
+      })
+    })
+
+    return extractReturnMessage(resp, data.software ?? '')
+
+  } catch (e: any) {
+    logger(`updateSoftware: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+
+export async function deleteFromRepositoryTable({software, token}:
+  { software: string, token: string }) {
+  try {
+    // DELETE
+    const url = `/api/v1/repository_url?software=eq.${software}`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createHeaders(token)
+      }
+    })
+
+    return extractReturnMessage(resp, software ?? '')
+
+  } catch (e: any) {
+    logger(`updateSoftware: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function addTagsForSoftware({software, data, token}:{software:string, data:Tag[],token:string}) {
+  try {
+    // POST
     const url = `/api/v1/tag_for_software?software=eq.${software}`
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
         ...createHeaders(token),
         // this will add new items and update existing
-        'Prefer': 'resolution=merge-duplicates'
+        // 'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify(data)
     })
@@ -355,7 +384,7 @@ export async function deleteTagsForSoftware({software,tags,token}: { software: s
 //   }
 // }
 
-export async function upsertLicensesForSoftware({software, data, token}:
+export async function addLicensesForSoftware({software, data, token}:
   {software: string, data: License[], token: string}) {
   try {
     const url = `/api/v1/license_for_software?software=eq.${software}`
@@ -500,6 +529,19 @@ export function licensesNotInReferenceList({list, referenceList}:
     return itemsNotInReferenceList
   }
   return []
+}
+
+export function formatRepositoryUrl(editSoftware: EditSoftwareItem, formData: EditSoftwareItem) {
+  // check
+  const newData = {
+    ...formData
+  }
+  // format repositoryUrl
+  if (newData.repository_url[0].url === '') {
+    // there was no repoUrl and it is still not defined
+    newData.repository_url=[]
+  }
+  return newData
 }
 
 
