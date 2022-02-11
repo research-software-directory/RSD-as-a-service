@@ -292,7 +292,7 @@ export async function getContributorsForSoftware(uuid: string) {
   try {
     // this request is always perfomed from backend
     // the content is order by family_names ascending
-    const columns = 'id,software,is_contact_person,email_address,family_names,given_names,name_particle,name_suffix,avatar_mime_type'
+    const columns = 'id,software,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
     const url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${uuid}&order=family_names.asc`
     const resp = await fetch(url, {method: 'GET'})
     if (resp.status === 200) {
@@ -334,12 +334,12 @@ export async function getRelatedToolsForSoftware(uuid: string) {
       const data: RelatedTools[] = await resp.json()
       return data
     } else if (resp.status === 404) {
-      logger(`getContributorsForSoftware: 404 [${url}]`, 'error')
+      logger(`getRelatedToolsForSoftware: 404 [${url}]`, 'error')
       // query not found
       return []
     }
   } catch (e: any) {
-    logger(`getContributorsForSoftware: ${e?.message}`, 'error')
+    logger(`getRelatedToolsForSoftware: ${e?.message}`, 'error')
     return []
   }
 }

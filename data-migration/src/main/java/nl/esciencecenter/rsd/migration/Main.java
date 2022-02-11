@@ -282,8 +282,8 @@ public class Main {
 				contributorToSave.add("email_address", nullIfBlank(personData.get("emailAddress")));
 				contributorToSave.add("family_names", personData.get("familyNames"));
 				contributorToSave.add("given_names", personData.get("givenNames"));
-				contributorToSave.add("name_particle", nullIfBlank(personData.get("nameParticle")));
-				contributorToSave.add("name_suffix", nullIfBlank(personData.get("nameSuffix")));
+				// contributorToSave.add("name_particle", nullIfBlank(personData.get("nameParticle")));
+				// contributorToSave.add("name_suffix", nullIfBlank(personData.get("nameSuffix")));
 				if (personData.has("avatar")) {
 					contributorToSave.add("avatar_data", personData.getAsJsonObject("avatar").get("data"));
 					contributorToSave.add("avatar_mime_type", personData.getAsJsonObject("avatar").get("mimeType"));
