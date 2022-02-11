@@ -5,7 +5,7 @@ import logger from './logger'
 import {MentionType} from '../types/MentionType'
 import {Contributor} from '../types/Contributor'
 import {Testimonial} from '../types/Testimonial'
-import {createHeaders} from './editSoftware'
+import {createJsonHeaders} from './fetchHelpers'
 
 /**
  * postgREST api uri to retreive software index data.
@@ -55,7 +55,7 @@ export async function getSoftwareItem(slug:string|undefined, token?:string){
     if (token) {
       resp = await fetch(url, {
         method: 'GET',
-        headers: createHeaders(token)
+        headers: createJsonHeaders(token)
       })
     } else {
       resp = await fetch(url,{method:'GET'})
@@ -108,7 +108,7 @@ export async function getCitationsForSoftware(uuid:string,token?:string){
     const url = `${process.env.POSTGREST_URL}/release?select=*,release_content(*)&software=eq.${uuid}&release_content.order=date_published.desc`
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token)
+      headers: createJsonHeaders(token)
     })
     if (resp.status===200){
       const data: SoftwareCitationInfo[] = await resp.json()
@@ -139,7 +139,7 @@ export async function getTagsForSoftware(uuid:string,frontend?:boolean,token?:st
     }
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token)
+      headers: createJsonHeaders(token)
     })
     if (resp.status===200){
       const data:Tag[] = await resp.json()
@@ -175,7 +175,7 @@ export async function getLicenseForSoftware(uuid:string,frontend?:boolean,token?
     }
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token)
+      headers: createJsonHeaders(token)
     })
     if (resp.status===200){
       const data:License[] = await resp.json()

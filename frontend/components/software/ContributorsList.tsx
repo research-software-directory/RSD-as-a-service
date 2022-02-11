@@ -1,5 +1,6 @@
-import Avatar from '@mui/material/Avatar'
+
 import {Contributor} from '../../types/Contributor'
+import ContributorAvatar from './ContributorAvatar'
 import {getDisplayName, getDisplayInitials} from '../../utils/getDisplayName'
 
 export default function ContributorsList({contributors}: { contributors: Contributor[] }) {
@@ -14,18 +15,11 @@ export default function ContributorsList({contributors}: { contributors: Contrib
         if (displayName) {
           return (
             <div key={displayName} className="flex py-4 pr-4 md:pr-8 2xl:pr-12 2xl:pb-8">
-              <Avatar
-                alt={displayName ?? 'Unknown'}
-                src={item.avatar_url ?? ''}
-                sx={{
-                  width: '3rem',
-                  height: '3rem',
-                  fontSize: '1rem',
-                  marginRight: '1rem'
-                }}
-              >
-                {getDisplayInitials(item)}
-              </Avatar>
+              <ContributorAvatar
+                avatarUrl={item.avatar_url ?? ''}
+                displayName={displayName}
+                displayInitials={getDisplayInitials(item)}
+              />
               <div>
                 <div className="text-primary text-xl">
                   {displayName}

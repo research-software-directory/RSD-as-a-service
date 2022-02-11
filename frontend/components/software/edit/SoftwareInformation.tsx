@@ -220,7 +220,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           />
 
           {/* add white space at the bottom */}
-          <div className="py-4"></div>
+          <div className="xl:py-4"></div>
         </div>
         <div className="py-4 min-w-[21rem] xl:my-0">
           <SoftwarePageStatus
@@ -257,7 +257,8 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
             subtitle="What licenses do apply to your software?"
           />
           <SoftwareLicenses control={control} />
-          {/* <div className="py-4"></div>           */}
+          {/* add white space at the bottom */}
+          <div className="py-4"></div>
         </div>
       </EditSoftwareSection>
     </form>

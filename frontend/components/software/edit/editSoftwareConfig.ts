@@ -84,3 +84,65 @@ export const softwareInformation = {
 }
 
 export type SoftwareInformationConfig = typeof softwareInformation
+
+export const contributorInformation = {
+  software: {
+    label:'hidden software id'
+  },
+  is_contact_person: {
+    label: 'Contact person',
+    help:'Is this contributor main contact person'
+  },
+  given_names: {
+    label: 'Name / Given name(s)',
+    help: '',
+    validation: {
+      required: 'Name is required',
+      minLength: {value: 2, message: 'Minimum length is 2'},
+      maxLength: {value: 100, message: 'Maximum length is 100'},
+    }
+  },
+  family_names: {
+    label: 'Last name / Family name(s)',
+    help: 'Family names including "de/van/van den"',
+    validation: {
+      required: 'Family name is required',
+      minLength: {value: 2, message: 'Minimum length is 2'},
+      maxLength: {value: 100, message: 'Maximum length is 100'},
+    }
+  },
+  email_address: {
+    label: 'Email',
+    help: 'Contact email',
+    validation: {
+      minLength: {value: 5, message: 'Minimum length is 5'},
+      maxLength: {value: 100, message: 'Maximum length is 100'},
+    }
+  },
+  affiliation: {
+    label: 'Affiliation',
+    help: 'Where the contributor works currently?',
+    validation: {
+      minLength: {value: 5, message: 'Minimum length is 5'},
+      maxLength: {value: 100, message: 'Maximum length is 100'},
+    }
+  },
+  role: {
+    label: 'Role',
+    help: 'For this software',
+    validation: {
+      minLength: {value: 5, message: 'Minimum length is 5'},
+      maxLength: {value: 100, message: 'Maximum length is 100'},
+    }
+  },
+  orcid: {
+    label: 'ORCID',
+    help: 'Only the personal part of ID',
+    validation: {
+      minLength: {value: 10, message: 'Minimum length is 10'},
+      maxLength: {value: 100, message: 'Maximum length is 100'},
+    }
+  }
+}
+
+export type ContributorInformationConfig = typeof contributorInformation

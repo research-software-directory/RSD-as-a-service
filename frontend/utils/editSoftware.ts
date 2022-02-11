@@ -10,22 +10,7 @@ import {
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
-
-type AuthHeader = {
-  'Content-Type': string;
-  Authorization?: string;
-}
-export function createHeaders(token?: string): AuthHeader {
-  if (token) {
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  }
-  return {
-    'Content-Type': 'application/json'
-  }
-}
+import {createJsonHeaders} from './fetchHelpers'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
@@ -35,7 +20,7 @@ export async function addSoftware({software, token}:
     // make post request
     const resp = await fetch(url, {
       method: 'POST',
-      headers: createHeaders(token),
+      headers: createJsonHeaders(token),
       body: JSON.stringify(software)
     })
     if (resp.status === 201) {
@@ -73,7 +58,7 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
       : `/api/v1/software?select=${select}&slug=eq.${slug}`
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token),
+      headers: createJsonHeaders(token),
     })
     if (resp.status === 200) {
       const data:SoftwareItemFromDB[] = await resp.json()
@@ -222,7 +207,7 @@ export async function updateSoftwareTable({software, token}:
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify(software)
@@ -247,7 +232,7 @@ export async function addToRepositoryTable({data, token}:
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         // merging also works with POST method
         'Prefer': 'resolution=merge-duplicates'
       },
@@ -273,7 +258,7 @@ export async function updateRepositoryTable({data, token}:
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify({
@@ -308,7 +293,7 @@ export async function deleteFromRepositoryTable({software, token}:
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
-        ...createHeaders(token)
+        ...createJsonHeaders(token)
       }
     })
 
@@ -330,7 +315,7 @@ export async function addTagsForSoftware({software, data, token}:{software:strin
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         // this will add new items and update existing
         // 'Prefer': 'resolution=merge-duplicates'
       },
@@ -359,7 +344,7 @@ export async function deleteTagsForSoftware({software,tags,token}: { software: s
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
       }
     })
 
@@ -374,29 +359,6 @@ export async function deleteTagsForSoftware({software,tags,token}: { software: s
   }
 }
 
-// NOT NEEDED FOR NOW
-// export async function deleteAllTagsForSoftware({software, token}: { software: string, token: string }) {
-//   try {
-//     // DELETE where software uuid
-//     const url = `/api/v1/tag_for_software?software=eq.${software}`
-//     const resp = await fetch(url, {
-//       method: 'DELETE',
-//       headers: {
-//         ...createHeaders(token),
-//       }
-//     })
-
-//     return extractReturnMessage(resp, software ?? '')
-
-//   } catch (e: any) {
-//     logger(`upsertTagsForSoftware: ${e?.message}`, 'error')
-//     return {
-//       status: 500,
-//       message: e?.message
-//     }
-//   }
-// }
-
 export async function addLicensesForSoftware({software, data, token}:
   {software: string, data: License[], token: string}) {
   try {
@@ -404,7 +366,7 @@ export async function addLicensesForSoftware({software, data, token}:
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         // this will add new items and update existing
         'Prefer': 'resolution=merge-duplicates'
       },
@@ -429,7 +391,7 @@ export async function deleteLicenses({ids, token}:
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
       }
     })
 
@@ -456,7 +418,7 @@ export async function isMaintainerOfSoftware({slug, account,token,frontend=true}
     }
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token)
+      headers: createJsonHeaders(token)
     })
     // MAINTAINER
     if (resp.status === 200) {
