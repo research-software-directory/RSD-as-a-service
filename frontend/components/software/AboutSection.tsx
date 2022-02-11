@@ -6,15 +6,13 @@ import AboutLanguages from './AboutLanguages'
 import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
 
-export default function AboutSection({brand_name = '', description = '', tags, licenses, repositories}:
-  { brand_name: string, description: string, tags:Tag[], licenses: License[], repositories:RepositoryUrl[]}) {
+export default function AboutSection({brand_name = '', description = '', tags, licenses, repository}:
+  { brand_name: string, description: string, tags:Tag[], licenses: License[], repository:string|null}) {
 
   if (brand_name==='') return null
 
   // extract only license text
   const license = licenses?.map(item => item.license)
-  // extract only repo url
-  const repository = repositories?.map(item=>item?.url)
 
   return (
     <PageContainer className="flex flex-col px-4 py-12 lg:flex-row lg:pt-0 lg:pb-12">

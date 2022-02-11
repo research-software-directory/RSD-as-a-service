@@ -1,4 +1,5 @@
-import {useContext,useEffect,useState,useRef} from 'react'
+import {useContext, useEffect, useState, useRef} from 'react'
+import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
 import SaveIcon from '@mui/icons-material/Save'
 
@@ -10,6 +11,7 @@ export default function StickyHeaderEditSoftware() {
   const {isDirty, isValid} = pageState
   const headerRef = useRef(null)
   const [classes, setClasses] = useState('')
+  const router = useRouter()
 
   useEffect(() => {
     /**
@@ -70,6 +72,20 @@ export default function StickyHeaderEditSoftware() {
         >
           Cancel
         </Button> */}
+        <Button
+          tabIndex={1}
+          type="button"
+          color="secondary"
+          onClick={() => {
+            const slug = router.query['slug']
+            router.push(`/software/${slug}`)
+          }}
+          sx={{
+            marginRight:'2rem'
+          }}
+        >
+          PREVIEW
+        </Button>
         <Button
           tabIndex={0}
           type="submit"

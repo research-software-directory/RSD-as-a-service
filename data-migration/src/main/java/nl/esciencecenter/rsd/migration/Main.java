@@ -144,6 +144,18 @@ public class Main {
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
 			softwareToSave.add("short_statement", softwareFromLegacyRSD.get("shortStatement"));
 
+//			see the comments at saveRepoUrls(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId)
+			JsonArray urls = softwareFromLegacyRSD.get("repositoryURLs").getAsJsonObject().get("github").getAsJsonArray();
+			if (urls.size() > 1) {
+				JsonElement existingDescriptionJson = softwareToSave.get("description");
+				String existingDescription = existingDescriptionJson.isJsonNull() ? "" : existingDescriptionJson.getAsString();
+				existingDescription += existingDescription.equals("") ? "Additional repositories:" : "\n\nAdditional repositories:";
+				for (int i = 1; i < urls.size(); i++) {
+					existingDescription += "\n* " + urls.get(i).getAsJsonPrimitive().getAsString();
+				}
+				softwareToSave.addProperty("description", existingDescription);
+			}
+
 			allSoftwareToSave.add(softwareToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/software"), allSoftwareToSave.toString());
@@ -191,14 +203,17 @@ public class Main {
 			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
 
 //			an example of an entry with multiple urls is with slug vantage6
+//			the only element in the object "repositoryURLs" is "github"
 			JsonArray urls = softwareFromLegacyRSD.get("repositoryURLs").getAsJsonObject().get("github").getAsJsonArray();
 			String slug = softwareFromLegacyRSD.get("slug").getAsString();
-			urls.forEach(jsonUrl -> {
+//			we only save the first url, the rest we add to the description of the software
+			if (urls.size() > 0) {
+				JsonElement jsonUrl = urls.get(0);
 				JsonObject repoUrlToSave = new JsonObject();
 				repoUrlToSave.addProperty("software", slugToId.get(slug));
 				repoUrlToSave.add("url", jsonUrl);
 				allRepoUrlsToSave.add(repoUrlToSave);
-			});
+			}
 		});
 		post(URI.create(POSTGREST_URI + "/repository_url"), allRepoUrlsToSave.toString());
 	}

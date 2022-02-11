@@ -1,9 +1,7 @@
 package nl.esciencecenter.rsd.scraper;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class MainLicenses {
@@ -12,8 +10,8 @@ public class MainLicenses {
 		System.out.println("Start scraping licenses");
 		SoftwareInfoRepository existingLicensesSorted = new OrderByDateSIRDecorator(new FilterUrlOnlySIRDecorator(new PostgrestSIR(Config.backendBaseUrl()), "https://github.com"));
 		Collection<RepositoryUrlData> dataToScrape = existingLicensesSorted.licenseData();
-		JsonArray allDataToSave = new JsonArray();
-		String scrapedAt = LocalDateTime.now().toString();
+		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
+		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
 		int maxRequests = Config.maxRequestsGithub();
 		for (RepositoryUrlData licenseData : dataToScrape) {
@@ -25,22 +23,17 @@ public class MainLicenses {
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
 				String scrapedLicense = new GithubSI("https://api.github.com", repo).license();
-				JsonObject newData = new JsonObject();
-				newData.addProperty("id", licenseData.id());
-//				we have to add all existing columns, otherwise PostgREST will not do the UPSERT
-				newData.addProperty("software", licenseData.software());
-				newData.addProperty("url", licenseData.url());
-				newData.addProperty("license", scrapedLicense);
-				newData.addProperty("license_scraped_at", scrapedAt);
-				newData.addProperty("commit_history", licenseData.commitHistory());
-				newData.addProperty("commit_history_scraped_at", licenseData.commitHistoryScrapedAt() == null ? null : licenseData.commitHistoryScrapedAt().toString());
-				allDataToSave.add(newData);
+				RepositoryUrlData updatedData = new RepositoryUrlData(licenseData.software(), licenseData.url(),
+						scrapedLicense, scrapedAt,
+						licenseData.commitHistory(), licenseData.commitHistoryScrapedAt(),
+						licenseData.languages(), licenseData.languagesScrapedAt());
+				updatedDataAll.add(updatedData);
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 				e.printStackTrace();
 			}
 		}
-		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url").save(allDataToSave.toString());
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url").save(updatedDataAll);
 		System.out.println("Done scraping licenses");
 	}
 }

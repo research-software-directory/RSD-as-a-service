@@ -5,7 +5,7 @@
 import {AutocompleteOption} from './AutocompleteOptions'
 
 export type RepositoryUrl = {
-  id?:string,
+  software:string,
   url:string
 }
 
@@ -29,8 +29,13 @@ export type SoftwareTableItem = NewSoftwareItem & {
 }
 
 export type SoftwareItem = SoftwareTableItem & {
+  repository_url: string | null
+}
+
+export type SoftwareItemFromDB = SoftwareTableItem & {
   repository_url: RepositoryUrl[]
 }
+
 
 // used in editSoftware.updateSoftwareInfo function
 // to extract the properties needed for PATCH method

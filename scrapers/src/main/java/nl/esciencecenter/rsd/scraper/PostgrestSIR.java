@@ -19,21 +19,8 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<ProgrammingLanguageData> repositoryUrlData() {
-		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl + "/repository_url?select=id,url,programming_languages(updated_at)")).getAsJsonArray();
-		Collection<ProgrammingLanguageData> result = new ArrayList<>();
-		for (JsonElement element : data) {
-			JsonObject jsonObject = element.getAsJsonObject();
-			String id = jsonObject.getAsJsonPrimitive("id").getAsString();
-			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
-			LocalDateTime updatedAt = null;
-			JsonArray programmingLanguages = jsonObject.getAsJsonArray("programming_languages");
-			if (!programmingLanguages.isEmpty()) {
-				updatedAt = LocalDateTime.parse(programmingLanguages.get(0).getAsJsonObject().getAsJsonPrimitive("updated_at").getAsString());
-			}
-			result.add(new ProgrammingLanguageData(id, url, updatedAt));
-		}
-		return result;
+	public Collection<RepositoryUrlData> languagesData() {
+		return licenseData();
 	}
 
 	@Override
@@ -42,7 +29,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		Collection<RepositoryUrlData> result = new ArrayList<>();
 		for (JsonElement element : data) {
 			JsonObject jsonObject = element.getAsJsonObject();
-			String id = jsonObject.getAsJsonPrimitive("id").getAsString();
 			String software = jsonObject.getAsJsonPrimitive("software").getAsString();
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
 
@@ -56,7 +42,12 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			JsonElement jsonCommitsScrapedAt = jsonObject.get("commit_history_scraped_at");
 			LocalDateTime commitsScrapedAt = jsonCommitsScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonCommitsScrapedAt.getAsString());
 
-			result.add(new RepositoryUrlData(id, software, url, license, licensScrapedAt, commits, commitsScrapedAt));
+			JsonElement jsonLanguages = jsonObject.get("languages");
+			String languages = jsonLanguages.isJsonNull() ? null : jsonLanguages.getAsString();
+			JsonElement jsonLanguagesScrapedAt = jsonObject.get("languages_scraped_at");
+			LocalDateTime languagesScrapedAt = jsonLanguagesScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonLanguagesScrapedAt.getAsString());
+
+			result.add(new RepositoryUrlData(software, url, license, licensScrapedAt, commits, commitsScrapedAt, languages, languagesScrapedAt));
 		}
 		return result;
 	}
@@ -67,7 +58,24 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public void save(String data) {
-		Utils.postAsAdmin(baseUrl, data, "Prefer", "resolution=merge-duplicates");
+	public void save(Collection<RepositoryUrlData> data) {
+		JsonArray dataAsJsonArray = new JsonArray();
+		for (RepositoryUrlData repositoryUrlData : data) {
+			JsonObject newDataJson = new JsonObject();
+//			we have to add all existing columns, otherwise PostgREST will not do the UPSERT
+			newDataJson.addProperty("software", repositoryUrlData.software());
+			newDataJson.addProperty("url", repositoryUrlData.url());
+
+			newDataJson.addProperty("license", repositoryUrlData.license());
+			newDataJson.addProperty("license_scraped_at", repositoryUrlData.licenseScrapedAt() == null ? null : repositoryUrlData.licenseScrapedAt().toString());
+
+			newDataJson.addProperty("commit_history", repositoryUrlData.commitHistory());
+			newDataJson.addProperty("commit_history_scraped_at", repositoryUrlData.commitHistoryScrapedAt() == null ? null : repositoryUrlData.commitHistoryScrapedAt().toString());
+
+			newDataJson.addProperty("languages", repositoryUrlData.languages());
+			newDataJson.addProperty("languages_scraped_at", repositoryUrlData.languagesScrapedAt() == null ? null : repositoryUrlData.languagesScrapedAt().toString());
+			dataAsJsonArray.add(newDataJson);
+		}
+		Utils.postAsAdmin(baseUrl, dataAsJsonArray.toString(), "Prefer", "resolution=merge-duplicates");
 	}
 }

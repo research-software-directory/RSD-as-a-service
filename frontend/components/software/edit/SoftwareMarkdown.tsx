@@ -2,34 +2,42 @@ import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 
-import RemoteMarkdownPreview from '../../form/RemoteMarkdownPreview'
+import ControlledRemoteMarkdown from '../../form/ControlledRemoteMarkdown'
 import MarkdownInputWithPreview from '../../form/MarkdownInputWithPreview'
 import {SoftwareItem} from '../../../types/SoftwareTypes'
 import EditSectionTitle from './EditSectionTitle'
+import {SoftwareInformationConfig} from './editSoftwareConfig'
 
-export default function SoftwareMarkdown({register,errors,config,formData}: {
-  register:any,errors:any,config:any,formData:SoftwareItem
-}) {
+type SoftwareMarkdownProps = {
+  register: any,
+  control: any,
+  config: SoftwareInformationConfig,
+  defaultDescriptionUrl: string | null,
+  formData: SoftwareItem
+}
+
+export default function SoftwareMarkdown({register, control, config,
+  defaultDescriptionUrl, formData}:SoftwareMarkdownProps) {
 
   function renderMarkdownComponents() {
     if (formData?.description_type === 'link') {
       return (
-         <RemoteMarkdownPreview
-          url={formData?.description_url ?? ''}
-          label={config.description_url.label}
-          help={config.description_url.help}
-          errors={errors?.description_url}
-          register={register('description_url', {
-            maxLength: {value: 200, message: 'Maximum length is 200'},
-            pattern: {
-              value: /^https?:\/\/.+\..+.md$/,
-              message: 'Url should start with http(s):// have at least one dot (.) and end with (.md)'
-            }
-          })}
+        <ControlledRemoteMarkdown
+          options={{
+            autofocus: true,
+            name: 'description_url',
+            label: config.description_url.label,
+            useNull: true,
+            defaultValue: defaultDescriptionUrl,
+            helperTextMessage: config.description_url.help,
+            helperTextCnt: `${formData?.description_url?.length || 0}/${config.description_url.validation.maxLength.value}`,
+          }}
+          control={control}
+          rules={config.description_url.validation}
         />
       )
     }
-    // default is custom markdown
+    // custom markdown is default
     return (
       <>
         <div className="py-4"></div>
@@ -37,7 +45,6 @@ export default function SoftwareMarkdown({register,errors,config,formData}: {
           markdown={formData?.description || ''}
           register={register('description')}
           disabled={formData?.description_type !== 'markdown'}
-          // autofocus={data.description_type === 'markdown'}
         />
       </>
     )

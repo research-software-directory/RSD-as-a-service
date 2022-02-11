@@ -137,7 +137,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         description={software?.description ?? ''}
         tags={tagsInfo}
         licenses={licenseInfo}
-        repositories={software.repository_url}
+        repository={software.repository_url}
       />
       <MentionsSection
         mentions={mentions}

@@ -14,8 +14,8 @@ public class FilterUrlOnlySIRDecorator implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<ProgrammingLanguageData> repositoryUrlData() {
-		Collection<ProgrammingLanguageData> data = origin.repositoryUrlData();
+	public Collection<RepositoryUrlData> languagesData() {
+		Collection<RepositoryUrlData> data = origin.languagesData();
 		return data.stream()
 				.filter(repositoryUrlData -> repositoryUrlData.url().startsWith(urlFilter))
 				.toList();
@@ -38,7 +38,7 @@ public class FilterUrlOnlySIRDecorator implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public void save(String data) {
+	public void save(Collection<RepositoryUrlData> data) {
 		origin.save(data);
 	}
 }
