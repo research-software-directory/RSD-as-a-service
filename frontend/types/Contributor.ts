@@ -2,7 +2,6 @@
  * Table definitions in 003-create-relations-for-software.sql
  */
 
-
 export type NewContributor = {
   software: string
   is_contact_person: boolean
@@ -20,16 +19,29 @@ export type NewContributor = {
   // NOTE! construct url based on id and mime-type
   // avatar_data: string | null
   avatar_data: string | null
-  avatar_mime_type: string | null
+  avatar_mime_type?: string | null
 }
 
 
 export type Contributor = NewContributor & {
-  id: string
+  id?: string
   avatar_url: string|null
   created_at: string
   updated_at: string
 }
+
+
+export type SearchContributor = {
+  given_names: string
+  family_names: string
+  email_address: string | null
+  // NOTE! added on 2022-02-11
+  affiliation: string | null
+  display_name: string | null,
+  orcid?: string
+  source: 'RSD'|'ORCID'
+}
+
 
 export const ContributorProps = [
   'id',

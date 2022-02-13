@@ -15,18 +15,9 @@ import ContributorAvatar from '../ContributorAvatar'
 import {contributorInformation as config} from './editSoftwareConfig'
 import {getDisplayInitials, getDisplayName} from '../../../utils/getDisplayName'
 
-
-const initalState = {
-  open: false,
-  loading: false,
-  error:''
-}
-
 export default function EditContributorModal({open,contributor,onClose}:
   {open:boolean, contributor: Contributor | undefined, onClose:(state:boolean)=>void}) {
-  // const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  // const [error,setError] = useState<string>()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const {handleSubmit, watch, formState, reset, control} = useForm<Contributor>({
     mode: 'onChange',
@@ -34,20 +25,22 @@ export default function EditContributorModal({open,contributor,onClose}:
       ...contributor
     }
   })
+
+  if (!contributor) return null
+
   // extract
   const {errors, isValid, isDirty} = formState
-
   const formData = watch()
 
-  console.group('EditContributorModal')
-  console.log('open...', open)
-  console.log('errors...', errors)
-  console.log('isDirty...', isDirty)
-  console.log('isValid...', isValid)
-  console.log('smallScreen...', smallScreen)
-  console.log('contributor...', contributor)
-  console.log('formData...', formData)
-  console.groupEnd()
+  // console.group('EditContributorModal')
+  // console.log('open...', open)
+  // console.log('errors...', errors)
+  // console.log('isDirty...', isDirty)
+  // console.log('isValid...', isValid)
+  // console.log('smallScreen...', smallScreen)
+  // console.log('contributor...', contributor)
+  // console.log('formData...', formData)
+  // console.groupEnd()
 
   function handleCancel() {
     // reset form
@@ -86,7 +79,7 @@ export default function EditContributorModal({open,contributor,onClose}:
               <ContributorAvatar
                 size={8}
                 avatarUrl={contributor?.avatar_url ?? ''}
-                displayName={getDisplayName(contributor) ?? ''}
+                displayName={getDisplayName(contributor ?? {}) ?? ''}
                 displayInitials={getDisplayInitials(contributor) ?? ''}
               />
             </div>
@@ -215,26 +208,7 @@ export default function EditContributorModal({open,contributor,onClose}:
     </Dialog>
   )
 
-  // function renderDialogText() {
-  //   // show error message
-  //   if (state.error) {
-  //     return (
-  //       <Alert severity="error">
-  //         {state.error}
-  //       </Alert>
-  //     )
-  //   }
-  //   // show loading circle
-  //   if (state.loading) {
-  //     return (
-  //       <CircularProgress size="1.5rem" />
-  //     )
-  //   }
-  //   // show default info
-  //   return config.addInfo
-  // }
-
-   function isSaveDisabled() {
+  function isSaveDisabled() {
     if (loading == true) return true
     if (isValid === false) return true
     if (isDirty === false) return true

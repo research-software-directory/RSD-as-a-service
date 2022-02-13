@@ -4,7 +4,6 @@ import EditSoftwareSection from './EditSoftwareSection'
 import editSoftwareContext from './editSoftwareContext'
 import EditSectionTitle from './EditSectionTitle'
 
-import ContributorAutocomplete from './ContributorAutocomplete'
 import {getContributorsForSoftware} from '../../../utils/editContributors'
 import {Contributor} from '../../../types/Contributor'
 
@@ -12,8 +11,9 @@ import SoftwareContributorsList from './SoftwareContributorsList'
 import EditContributorModal from './EditContributorModal'
 import ConfirmDeleteModal from '../../layout/ConfirmDeleteModal'
 import {getDisplayName} from '../../../utils/getDisplayName'
+import FindContributor from './FindContributor'
 
-export default function SoftwareContributors({slug,token}:{slug:string,token: string}) {
+export default function SoftwareContributors({slug,token}:{slug:string,token:string}) {
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {software} = pageState
   const [contributors, setContributors] = useState<Contributor[]>([])
@@ -69,47 +69,39 @@ export default function SoftwareContributors({slug,token}:{slug:string,token: st
   }
 
   return (
-    <section className="flex-1">
-      <EditSoftwareSection>
-        <div className="py-4">
-          {/* <EditSectionTitle
-            title="Contributors"
-          >
-          </EditSectionTitle> */}
-          {/* <ContributorAutocomplete
-            options={{
-              name:'find-contributor'
-            }}
-          /> */}
-
-          <section className='max-w-[30rem]'>
-            <h2 className="flex pr-4 justify-between">
-              <span>Contributors list</span>
-              <span>{contributors?.length}</span>
-            </h2>
-            <SoftwareContributorsList
-              contributors={contributors}
-              onEdit={(pos) => {
-                // debugger
-                const contributor = contributors[pos]
-                if (contributor) {
-                  setEditContributor(contributor)
-                  setModal({
-                    edit: true,
-                    delete:false
-                  })
-                }
-              }}
-              onDelete={(pos) => {
-                setDelContributor(pos)
+    <>
+      <EditSoftwareSection className='xl:pl-8 xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
+        <section className="py-6">
+          <h2 className="flex pr-4 pb-4 justify-between">
+            <span>Contributors list</span>
+            <span>{contributors?.length}</span>
+          </h2>
+          <SoftwareContributorsList
+            contributors={contributors}
+            onEdit={(pos) => {
+              // debugger
+              const contributor = contributors[pos]
+              if (contributor) {
+                setEditContributor(contributor)
                 setModal({
-                    edit: false,
-                    delete: true
-                  })
-              }}
-            />
-          </section>
-        </div>
+                  edit: true,
+                  delete:false
+                })
+              }
+            }}
+            onDelete={(pos) => {
+              setDelContributor(pos)
+              setModal({
+                  edit: false,
+                  delete: true
+                })
+            }}
+          />
+        </section>
+        <section className="py-6">
+          <h2 className="pb-8">Add contributor</h2>
+          <FindContributor />
+        </section>
       </EditSoftwareSection>
       <EditContributorModal
         open={modal.edit}
@@ -133,6 +125,6 @@ export default function SoftwareContributors({slug,token}:{slug:string,token: st
         }}
         onDelete={deleteContributor}
       />
-    </section>
+    </>
   )
 }
