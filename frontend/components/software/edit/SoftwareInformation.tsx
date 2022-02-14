@@ -136,7 +136,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
 
   return (
     <form
-      id={pageState.step?.id}
+      id={pageState.step?.formId}
       onSubmit={handleSubmit(onSubmit)}
       className='flex-1'>
       {/* hidden inputs */}

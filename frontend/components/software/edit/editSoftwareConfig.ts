@@ -86,6 +86,12 @@ export const softwareInformation = {
 export type SoftwareInformationConfig = typeof softwareInformation
 
 export const contributorInformation = {
+  findContributor: {
+    title: 'Add contributor',
+    subtitle: 'We search by name in RSD and ORCID databases',
+    label: '{First name} {Last name}',
+    help: 'Type at least 3 letters of contributor\'s name'
+  },
   software: {
     label:'hidden software id'
   },
@@ -94,7 +100,7 @@ export const contributorInformation = {
     help:'Is this contributor main contact person'
   },
   given_names: {
-    label: 'Name / Given name(s)',
+    label: 'First name / Given name(s)',
     help: '',
     validation: {
       required: 'Name is required',
@@ -117,6 +123,10 @@ export const contributorInformation = {
     validation: {
       minLength: {value: 5, message: 'Minimum length is 5'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
+      pattern: {
+        value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        message: 'Invalid email address'
+      }
     }
   },
   affiliation: {

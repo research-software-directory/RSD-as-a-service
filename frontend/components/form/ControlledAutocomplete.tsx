@@ -1,12 +1,7 @@
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import {Controller} from 'react-hook-form'
-
-export type AutocompleteOption<T> = {
-  key: string
-  label: string
-  data: T
-}
+import {AutocompleteOption} from '../../types/AutocompleteOptions'
 
 export default function ControlledAutocomplete<T>({name,control, options, label, rules}:
   {name:string,control: any, options: AutocompleteOption<T>[], label: string, rules?: any}) {

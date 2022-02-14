@@ -13,9 +13,9 @@ export default function ControlledSwitch({label, name, defaultValue = false, rul
       control={control}
       render={({field}) => {
         const {onChange, value} = field
+        // console.log('ControlledSwitch.value...', value)
         return (
           <FormControlLabel
-            defaultValue={value}
             control={
               <Switch
                 checked={value}

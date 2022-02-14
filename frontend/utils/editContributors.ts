@@ -2,11 +2,13 @@
  * CONTRIBUTORS
  */
 
-import {AutocompleteOption} from '../components/form/ControlledAutocomplete'
+import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {Contributor, ContributorProps, SearchContributor} from '../types/Contributor'
-import {createJsonHeaders} from './fetchHelpers'
+import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import {getORCID} from './getORCID'
+import {getPropsFromObject} from './getPropsFromObject'
 import logger from './logger'
+import {sortOnStrProp} from './sortFn'
 
 export function getAvatarUrl({id, avatar_mime_type}:{id?:string|null,avatar_mime_type?:string|null}) {
   if (avatar_mime_type) {
@@ -20,15 +22,26 @@ export function getAvatarUrl({id, avatar_mime_type}:{id?:string|null,avatar_mime
   return null
 }
 
+export function getAvatarUrlAsBase64({avatar_mime_type,avatar_data}:
+  {avatar_mime_type?: string | null, avatar_data: string | null}) {
+  if (avatar_mime_type && avatar_data) {
+    // construct image path
+    // currently we use posgrest + nginx approach image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
+    // NOTE! the images will fail when running frontend in development due to origin being localhost:3000 instead of localhost
+    return `data:${avatar_mime_type};base64,${avatar_data}`
+    // debugger
+    // console.log('image',item.avatar_url)
+  }
+  return null
+}
+
 export async function getContributorsForSoftware({software, token, frontend}:
   { software: string, token?: string, frontend?: boolean }) {
   try {
-    // this request is always perfomed from backend
-    // the content is order by family_names ascending
-    // const columns = 'id,software,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
+    // use standardized list of columns
     const columns = ContributorProps.join(',')
     // debugger
-    let url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${software}&order=family_names.asc`
+    let url = `${process.env.POSTGREST_URL}/contributor?select=${columns},avatar_data&software=eq.${software}&order=family_names.asc`
     if (frontend) {
       url = `/api/v1/contributor?select=${columns}&software=eq.${software}&order=family_names.asc`
     }
@@ -45,7 +58,7 @@ export async function getContributorsForSoftware({software, token, frontend}:
         ...item,
         // add avatar url based on uuid
         avatar_url: getAvatarUrl(item)
-      }))
+      })).sort((a,b)=>sortOnStrProp(a,b,'given_names'))
     } else if (resp.status === 404) {
       logger(`getContributorsForSoftware: 404 [${url}]`, 'error')
       // query not found
@@ -100,7 +113,7 @@ async function findRSDContributor({searchFor, token, frontend}:
       const options: AutocompleteOption<SearchContributor>[] = data.map(item => {
         return {
           key: item.display_name ?? '',
-          label: `${item.display_name} source: RSD`,
+          label: item.display_name ?? '',
           data: {
             ...item,
             // add avatar url based on uuid
@@ -121,4 +134,114 @@ async function findRSDContributor({searchFor, token, frontend}:
     logger(`findRSDContributor: ${e?.message}`, 'error')
     return []
   }
+}
+
+export async function addContributorToDb({contributor, token}: { contributor: Contributor, token: string }) {
+  try {
+    const url = '/api/v1/contributor'
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createJsonHeaders(token),
+        // 'Prefer': 'return=representation',
+        'Prefer': 'return=headers-only'
+      },
+      body:JSON.stringify(contributor)
+    })
+    if (resp.status === 201) {
+      // we need to return id of created record
+      // it can be extracted from header.location
+      const id = resp.headers.get('location')?.split('.')[1]
+      return {
+        status: 201,
+        message: id
+      }
+    } else {
+      return extractReturnMessage(resp)
+    }
+  } catch (e: any) {
+    logger(`addContributorToDb: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function updateContributorInDb({data, token}: { data: Contributor, token: string }) {
+
+  const contributor = prepareContributorData(data)
+  const resp = await patchContributor({contributor, token})
+
+  if (resp.status === 200) {
+    // if we uploaded new image
+    if (data.avatar_b64 &&
+      data?.avatar_b64.length > 10) {
+      // clean it from memory data
+      data.avatar_b64 = null
+      // and we use avatar url instead
+      data.avatar_url = getAvatarUrl(data)
+    }
+    return {
+      status: 200,
+      message: data
+    }
+  } else {
+    return resp
+  }
+}
+
+export async function patchContributor({contributor, token}: { contributor: Contributor, token: string }) {
+  try {
+    const url = `/api/v1/contributor?id=eq.${contributor.id}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createJsonHeaders(token),
+      },
+      body: JSON.stringify(contributor)
+    })
+    // debugger
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    logger(`patchContributor: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+
+export async function deleteContributorsById({ids,token}:{ids:string[],token:string}) {
+  try{
+    const url = `/api/v1/contributor?id=in.("${ids.join('","')}")`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createJsonHeaders(token),
+      }
+    })
+    return extractReturnMessage(resp, ids.toString())
+  } catch (e: any) {
+    logger(`deleteContributorsById: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+
+export function prepareContributorData(data: Contributor) {
+  const contributor = getPropsFromObject(data, ContributorProps)
+  // save new base64 image
+  if (data?.avatar_b64 &&
+    data?.avatar_b64.length > 10 &&
+    data?.avatar_mime_type !== null) {
+    // split base64 to use only encoded content
+    contributor.avatar_data = data?.avatar_b64.split(',')[1]
+  }
+  return contributor
 }

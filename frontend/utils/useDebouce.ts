@@ -61,11 +61,11 @@ export function useDebounceWithAutocomplete(value: string, selected: string|unde
       setDebouncedValue(undefined)
     }
   }, [debounced, value, selected])
-  console.group('useDebounceWithAutocomplete')
+  // console.group('useDebounceWithAutocomplete')
   // console.log('delay...', delay)
-  console.log('value...', value)
-  console.log('debouncedValue...', debouncedValue)
-  console.log('selected...', selected)
-  console.groupEnd()
+  // console.log('value...', value)
+  // console.log('debouncedValue...', debouncedValue)
+  // console.log('selected...', selected)
+  // console.groupEnd()
   return debouncedValue
 }

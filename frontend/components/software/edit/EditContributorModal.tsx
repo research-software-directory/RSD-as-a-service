@@ -1,35 +1,45 @@
-import {useEffect, useState} from 'react'
+import {useEffect,useState, useContext} from 'react'
 import {
-  Alert, Button, CircularProgress,
-  Dialog, DialogActions, DialogContent,
+  Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
 } from '@mui/material'
 import SaveIcon from '@mui/icons-material/Save'
-
+import UploadIcon from '@mui/icons-material/Upload'
+import DeleteIcon from '@mui/icons-material/Delete'
+import IconButton from '@mui/material/IconButton'
 import {useForm} from 'react-hook-form'
 
+import snackbarContext from '../../snackbar/PageSnackbarContext'
 import {Contributor} from '../../../types/Contributor'
 import ControlledTextField from '../../form/ControlledTextField'
 import ControlledSwitch from '../../form/ControlledSwitch'
 import ContributorAvatar from '../ContributorAvatar'
 import {contributorInformation as config} from './editSoftwareConfig'
 import {getDisplayInitials, getDisplayName} from '../../../utils/getDisplayName'
+import logger from '../../../utils/logger'
 
-export default function EditContributorModal({open,contributor,onClose}:
-  {open:boolean, contributor: Contributor | undefined, onClose:(state:boolean)=>void}) {
-  const [loading, setLoading] = useState(false)
+type EditContributorModalProps = {
+  open: boolean,
+  onCancel: () => void,
+  onSubmit: ({data, pos}: { data: Contributor, pos?: number }) => void,
+  contributor?: Contributor,
+  pos?: number
+}
+
+export default function EditContributorModal({open, onCancel, onSubmit, contributor, pos}: EditContributorModalProps) {
+  const {options: snackbarOptions, setSnackbar} = useContext(snackbarContext)
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control} = useForm<Contributor>({
+  const [b64Image, setB64Image]=useState<string>()
+  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Contributor>({
     mode: 'onChange',
     defaultValues: {
-      ...contributor
+      ...contributor,
+      avatar_b64:null
     }
   })
 
-  if (!contributor) return null
-
   // extract
-  const {errors, isValid, isDirty} = formState
+  const {isValid, isDirty} = formState
   const formData = watch()
 
   // console.group('EditContributorModal')
@@ -42,15 +52,60 @@ export default function EditContributorModal({open,contributor,onClose}:
   // console.log('formData...', formData)
   // console.groupEnd()
 
+  useEffect(() => {
+    if (contributor) {
+      reset(contributor)
+    }
+  }, [contributor,reset])
+
   function handleCancel() {
     // reset form
     reset()
+    // remove image upload
+    setB64Image(undefined)
     // hide
-    onClose(false)
+    onCancel()
   }
 
-  function onSubmit(data: Contributor) {
-    console.log('onSubmit...data', data)
+  function handleFileUpload({target}:{target: any}) {
+    try {
+      // debugger
+      let file = target.files[0]
+      if (typeof file == 'undefined') return
+      // check file size
+      if (file.size > 2097152) {
+        // alert('The file is too large. Please select image < 2MB.')
+        setSnackbar({
+          ...snackbarOptions,
+          open: true,
+          severity: 'error',
+          message: 'The file is too large. Please select image < 2MB.',
+          duration: undefined
+        })
+        return
+      }
+      let reader = new FileReader()
+      reader.onloadend = function () {
+        if (reader.result) {
+          // write to new avatar b64
+          setValue('avatar_b64', reader.result as string)
+          setValue('avatar_mime_type', file.type,{shouldDirty: true})
+        }
+      }
+      reader.readAsDataURL(file)
+    } catch (e:any) {
+      logger(`handleFileUpload: ${e.message}`,'error')
+    }
+  }
+
+  function getAvatarUrl() {
+    if (formData?.avatar_b64 && formData?.avatar_b64?.length > 10) {
+      return formData?.avatar_b64
+    }
+    if (formData?.avatar_url && formData?.avatar_url.length > 10) {
+      return formData?.avatar_url
+    }
+    return ''
   }
 
   return (
@@ -67,31 +122,111 @@ export default function EditContributorModal({open,contributor,onClose}:
         color: 'primary.main',
         fontWeight: 500
       }}>
-        Contributor {contributor?.given_names}
+        Contributor
       </DialogTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit((data: Contributor) => onSubmit({data, pos}))}
+        autoComplete="off"
+      >
+        {/* hidden inputs */}
+        <input type="hidden"
+          {...register('id')}
+        />
+        <input type="hidden"
+          {...register('software')}
+        />
+        <input type="hidden"
+          {...register('avatar_mime_type')}
+        />
+        <input type="hidden"
+          {...register('avatar_b64')}
+        />
         <DialogContent sx={{
           width: ['100%', '37rem'],
-          marginBottom:'2rem'
         }}>
           <section className="grid grid-cols-[1fr,2fr] gap-8">
             <div>
-              <ContributorAvatar
-                size={8}
-                avatarUrl={contributor?.avatar_url ?? ''}
-                displayName={getDisplayName(contributor ?? {}) ?? ''}
-                displayInitials={getDisplayInitials(contributor) ?? ''}
+              <label htmlFor="upload-avatar-image"
+                  style={{cursor:'pointer'}}
+                  title="Click to upload an image"
+                >
+                <ContributorAvatar
+                  size={8}
+                  avatarUrl={getAvatarUrl()}
+                  displayName={getDisplayName(contributor ?? {}) ?? ''}
+                  displayInitials={getDisplayInitials(contributor ?? {}) ?? ''}
+                />
+              </label>
+              <input
+                id="upload-avatar-image"
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleFileUpload}
+                style={{display:'none'}}
               />
+              <div className="flex pt-4">
+                <Button
+                  title="Remove image"
+                  // color='primary'
+                  disabled={!formData.avatar_b64 && !formData.avatar_url}
+                  onClick={() => {
+                    if (formData?.avatar_b64) {
+                      setValue('avatar_b64', null)
+                    }
+                    if (formData.avatar_url) {
+                      setValue('avatar_url', null)
+                    }
+                    setValue('avatar_mime_type',null,{shouldDirty: true})
+                  }}
+                >
+                  remove <DeleteIcon/>
+                </Button>
+              </div>
             </div>
             <div>
-              <ControlledSwitch
-                name="is_contact_person"
-                label="Contact person"
-                control={control}
-                defaultValue={contributor?.is_contact_person}
-              />
-              <div className="py-2"></div>
               <ControlledTextField
+                control={control}
+                options={{
+                  name: 'given_names',
+                  label: config.given_names.label,
+                  useNull: true,
+                  defaultValue: contributor?.given_names,
+                  helperTextMessage: config.given_names.help,
+                  // helperTextCnt: `${formData?.given_names?.length || 0}/${config.given_names.validation.maxLength.value}`,
+                }}
+                rules={config.given_names.validation}
+              />
+              <div className="py-4"></div>
+              <ControlledTextField
+                control={control}
+                options={{
+                  name: 'family_names',
+                  label: config.family_names.label,
+                  useNull: true,
+                  defaultValue: contributor?.family_names,
+                  helperTextMessage: config.family_names.help,
+                  // helperTextCnt: `${formData?.family_names?.length || 0}/${config.family_names.validation.maxLength.value}`,
+                }}
+                rules={config.family_names.validation}
+              />
+            </div>
+          </section>
+          <div className="py-4"></div>
+          <section className="py-4 grid grid-cols-[1fr,1fr] gap-8">
+            <ControlledTextField
+              control={control}
+              options={{
+                name: 'email_address',
+                label: config.email_address.label,
+                type: 'email',
+                useNull: true,
+                defaultValue: contributor?.email_address,
+                helperTextMessage: config.email_address.help,
+                // helperTextCnt: `${formData?.email_address?.length || 0}/${config.email_address.validation.maxLength.value}`,
+              }}
+              rules={config.email_address.validation}
+            />
+
+            <ControlledTextField
                 options={{
                   name: 'orcid',
                   label: config.orcid.label,
@@ -103,34 +238,6 @@ export default function EditContributorModal({open,contributor,onClose}:
                 control={control}
                 rules={config.orcid.validation}
               />
-            </div>
-          </section>
-          <div className="py-8"></div>
-          <section className="py-4 grid grid-cols-[1fr,2fr] gap-8">
-            <ControlledTextField
-              control={control}
-              options={{
-                name: 'given_names',
-                label: config.given_names.label,
-                useNull: true,
-                defaultValue: contributor?.given_names,
-                helperTextMessage: config.given_names.help,
-                // helperTextCnt: `${formData?.given_names?.length || 0}/${config.given_names.validation.maxLength.value}`,
-              }}
-              rules={config.given_names.validation}
-            />
-            <ControlledTextField
-              control={control}
-              options={{
-                name: 'family_names',
-                label: config.family_names.label,
-                useNull: true,
-                defaultValue: contributor?.family_names,
-                helperTextMessage: config.family_names.help,
-                // helperTextCnt: `${formData?.family_names?.length || 0}/${config.family_names.validation.maxLength.value}`,
-              }}
-              rules={config.family_names.validation}
-            />
 
             <ControlledTextField
               control={control}
@@ -148,20 +255,6 @@ export default function EditContributorModal({open,contributor,onClose}:
             <ControlledTextField
               control={control}
               options={{
-                name: 'email_address',
-                label: config.email_address.label,
-                useNull: true,
-                defaultValue: contributor?.email_address,
-                helperTextMessage: config.email_address.help,
-                // helperTextCnt: `${formData?.email_address?.length || 0}/${config.email_address.validation.maxLength.value}`,
-              }}
-              rules={config.email_address.validation}
-            />
-          </section>
-          <section>
-            <ControlledTextField
-              control={control}
-              options={{
                 name: 'affiliation',
                 label: config.affiliation.label,
                 useNull: true,
@@ -170,6 +263,15 @@ export default function EditContributorModal({open,contributor,onClose}:
                 // helperTextCnt: `${formData?.affiliation?.length || 0}/${config.affiliation.validation.maxLength.value}`,
               }}
               rules={config.affiliation.validation}
+            />
+
+          </section>
+          <section>
+            <ControlledSwitch
+              name="is_contact_person"
+              label="Contact person"
+              control={control}
+              defaultValue={contributor?.is_contact_person ?? false}
             />
           </section>
         </DialogContent>
@@ -209,8 +311,7 @@ export default function EditContributorModal({open,contributor,onClose}:
   )
 
   function isSaveDisabled() {
-    if (loading == true) return true
-    if (isValid === false) return true
+    // if (isValid === false) return true
     if (isDirty === false) return true
     return false
   }

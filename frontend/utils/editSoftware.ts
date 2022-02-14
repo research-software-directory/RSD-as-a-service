@@ -10,7 +10,7 @@ import {
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
-import {createJsonHeaders} from './fetchHelpers'
+import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
@@ -441,36 +441,36 @@ export async function isMaintainerOfSoftware({slug, account,token,frontend=true}
 }
 
 
-function extractReturnMessage(resp:Response, dataId:string) {
-  // OK
-  if ([200,201,204].includes(resp.status)) {
-    // just return id
-    return {
-      status: 200,
-      message: dataId
-    }
-  }
-  // not authorized, 404 seem to be returned mostly
-  if ([401, 403, 404].includes(resp.status)) {
-    return {
-      status: resp.status,
-      message: `
-          ${resp.statusText}.
-          You might not have sufficient priveleges to edit this software.
-          Please contact site administrators.
-        `
-    }
-  } else {
-    return {
-      status: resp.status,
-      message: `
-          Failed to save changes.
-          ${resp.statusText}.
-          Please contact site administrators.
-        `
-    }
-  }
-}
+// function extractReturnMessage(resp:Response, dataId:string) {
+//   // OK
+//   if ([200,201,204].includes(resp.status)) {
+//     // just return id
+//     return {
+//       status: 200,
+//       message: dataId
+//     }
+//   }
+//   // not authorized, 404 seem to be returned mostly
+//   if ([401, 403, 404].includes(resp.status)) {
+//     return {
+//       status: resp.status,
+//       message: `
+//           ${resp.statusText}.
+//           You might not have sufficient priveleges to edit this software.
+//           Please contact site administrators.
+//         `
+//     }
+//   } else {
+//     return {
+//       status: resp.status,
+//       message: `
+//           Failed to save changes.
+//           ${resp.statusText}.
+//           Please contact site administrators.
+//         `
+//     }
+//   }
+// }
 
 export function tagsNotInReferenceList({tagList, referenceList}:
   { tagList: AutocompleteOption<Tag>[], referenceList: AutocompleteOption<Tag>[] }) {

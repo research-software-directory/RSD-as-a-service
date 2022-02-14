@@ -1,11 +1,20 @@
-import {SyntheticEvent, useEffect, useState} from 'react'
+import {HTMLAttributes, SyntheticEvent, useEffect, useState} from 'react'
 import {Autocomplete, Button, CircularProgress, TextField} from '@mui/material'
-import {AutocompleteOption} from '../../form/ControlledAutocomplete'
-import {SearchContributor} from '../../../types/Contributor'
+import {Contributor, SearchContributor} from '../../../types/Contributor'
 import {useDebounceWithAutocomplete} from '../../../utils/useDebouce'
 import {searchForContributor} from '../../../utils/editContributors'
+import {AutocompleteOption} from '../../../types/AutocompleteOptions'
+import FindContributorItem from './FindContributorItem'
+import {splitName} from '../../../utils/getDisplayName'
+import {contributorInformation as config} from './editSoftwareConfig'
 
-export default function AsyncAutocomplete() {
+export type Name = {
+  given_names: string
+  family_names?: string
+}
+
+export default function FindContributor({onAdd, onCreate}:
+  { onAdd: (item: Contributor) => void, onCreate:(name:Name)=>void}) {
   const [open, setOpen] = useState(false)
   const [options, setOptions] = useState<AutocompleteOption<SearchContributor>[]>([])
   const [selected, setSelected] = useState<AutocompleteOption<SearchContributor>>()
@@ -24,7 +33,10 @@ export default function AsyncAutocomplete() {
       })
       // debugger
       if (abort) return
+      // set options
       setOptions(resp ?? [])
+      // clean selected option
+      setSelected(undefined)
       setLoading(false)
     }
     // if we have search term at least 3 chars long
@@ -38,12 +50,25 @@ export default function AsyncAutocomplete() {
   }, [searchFor])
 
   function createNewContributor() {
-    // alert(`Create ${newInputValue} `)
-    console.log('createNewContributor...' , newInputValue)
+    // console.log('createNewContributor...', newInputValue)
+    const name = splitName(newInputValue)
+    onCreate(name)
+    // reset value
+    // setInputValue('')
   }
 
   function addContributor() {
-    console.log('addContributor...' , selected)
+    // console.log('addContributor...', selected)
+    if (selected && selected.data) {
+      onAdd({
+        ...selected.data,
+        is_contact_person: false,
+        software: ''
+      })
+      // remove selected value?
+      // setSelected(undefined)
+      // setInputValue('')
+    }
   }
 
   function renderActionButton() {
@@ -69,6 +94,10 @@ export default function AsyncAutocomplete() {
         </Button>
       )
     } else {
+      // console.group('renderActionButton')
+      // console.log('selected...', selected)
+      // console.log('newInputValue...', newInputValue)
+      // console.groupEnd()
       return (
         <div className="w-[5rem]"></div>
       )
@@ -80,7 +109,7 @@ export default function AsyncAutocomplete() {
    * value to useDebounce, which returns searchFor value after the timeout.
    */
   function onInputChange(e: SyntheticEvent, newInputValue: string) {
-    console.log('onInputChange...', newInputValue)
+    // console.log('onInputChange...', newInputValue)
     setInputValue(newInputValue)
   }
 
@@ -92,19 +121,29 @@ export default function AsyncAutocomplete() {
     // debugger
     if (typeof value == 'string') {
       // freeSolo - new contributor
-      console.log('onAutocompleteChange...freeSolo...', value)
+      // console.log('onAutocompleteChange...freeSolo...', value)
       // we clean selected option
       setSelected(undefined)
     } else if (value === null) {
       // cleaned
-      console.log('onAutocompleteChange...cleaned...', value)
+      // console.log('onAutocompleteChange...cleaned...', value)
       // we clean selected option
       setSelected(undefined)
     } else if (value && value?.key) {
       // existing contributor
-      console.log('onAutocompleteChange...option...', value)
+      // console.log('onAutocompleteChange...option...', value)
       setSelected(value)
     }
+  }
+
+  function renderOption(props: HTMLAttributes<HTMLLIElement>,
+    option: AutocompleteOption<SearchContributor>,
+    state: object) {
+    return (
+      <li {...props} key={option.key}>
+        <FindContributorItem option={option} />
+      </li>
+    )
   }
 
   return (
@@ -122,6 +161,9 @@ export default function AsyncAutocomplete() {
         onClose={() => {
           setOpen(false)
         }}
+        // used to reset value
+        // value={newInputValue}
+        inputValue={newInputValue}
         isOptionEqualToValue={(option, value) => option.data.display_name === value.data.display_name}
         getOptionLabel={(option) => option.label}
         onInputChange={onInputChange}
@@ -132,8 +174,8 @@ export default function AsyncAutocomplete() {
           <TextField
             {...params}
             variant="standard"
-            label="Contributor"
-            helperText="Type at least 3 letters of contributor name"
+            label={config.findContributor.label}
+            helperText={config.findContributor.help}
             InputProps={{
               ...params.InputProps,
               endAdornment: (
@@ -145,6 +187,7 @@ export default function AsyncAutocomplete() {
             }}
           />
         )}
+        renderOption={renderOption}
       />
       {renderActionButton()}
     </section>

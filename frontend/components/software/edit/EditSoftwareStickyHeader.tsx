@@ -84,26 +84,29 @@ export default function StickyHeaderEditSoftware() {
             marginRight:'2rem'
           }}
         >
-          PREVIEW
+          VIEW
         </Button>
-        <Button
-          tabIndex={0}
-          type="submit"
-          variant="contained"
-          form={pageState?.step?.id}
-          sx={{
-            // overwrite tailwind preflight.css for submit type
-            '&[type="submit"]:not(.Mui-disabled)': {
-              backgroundColor:'primary.main'
+        {pageState?.step?.formId ?
+          <Button
+            tabIndex={0}
+            type="submit"
+            variant="contained"
+            form={pageState?.step?.formId}
+            sx={{
+              // overwrite tailwind preflight.css for submit type
+              '&[type="submit"]:not(.Mui-disabled)': {
+                backgroundColor:'primary.main'
+              }
+            }}
+            endIcon={
+              <SaveIcon />
             }
-          }}
-          endIcon={
-            <SaveIcon />
-          }
-          disabled={isSaveDisabled()}
-        >
-          Save
-        </Button>
+            disabled={isSaveDisabled()}
+          >
+            Save
+          </Button>
+        : null
+        }
       </div>
     </StickyHeader>
   )

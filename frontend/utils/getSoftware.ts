@@ -3,7 +3,7 @@ import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {MentionType} from '../types/MentionType'
-import {Contributor} from '../types/Contributor'
+import {Contributor, ContributorProps} from '../types/Contributor'
 import {Testimonial} from '../types/Testimonial'
 import {createJsonHeaders} from './fetchHelpers'
 
@@ -292,7 +292,8 @@ export async function getContributorsForSoftware(uuid: string) {
   try {
     // this request is always perfomed from backend
     // the content is order by family_names ascending
-    const columns = 'id,software,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
+    const columns = ContributorProps.join(',')
+    // 'id,software,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
     const url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${uuid}&order=family_names.asc`
     const resp = await fetch(url, {method: 'GET'})
     if (resp.status === 200) {
