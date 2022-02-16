@@ -69,6 +69,30 @@ export async function getSoftwareItem(slug:string|undefined, token?:string){
   }
 }
 
+// query for software item page based on slug
+export async function getRepostoryInfoForSoftware(software: string | undefined, token?: string) {
+  try {
+    // console.log('token...', token)
+    // this request is always perfomed from backend
+    const url = `${process.env.POSTGREST_URL}/repository_url?software=eq.${software}`
+    let resp
+    if (token) {
+      resp = await fetch(url, {
+        method: 'GET',
+        headers: createJsonHeaders(token)
+      })
+    } else {
+      resp = await fetch(url, {method: 'GET'})
+    }
+    if (resp.status === 200) {
+      const data: SoftwareItem[] = await resp.json()
+      return data[0]
+    }
+  } catch (e: any) {
+    logger(`getSoftwareItem: ${e?.message}`, 'error')
+  }
+}
+
 // Get
 export type TagItem={
   count: number
