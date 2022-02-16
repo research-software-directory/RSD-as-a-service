@@ -61,7 +61,7 @@ export const softwareInformation = {
   },
   concept_doi: {
     label: 'Concept DOI',
-    help: 'Inital DOI of your software',
+    help: 'Initial DOI of your software',
     validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
@@ -89,8 +89,8 @@ export const contributorInformation = {
   findContributor: {
     title: 'Add contributor',
     subtitle: 'We search by name in RSD and ORCID databases',
-    label: '{First name} {Last name}',
-    help: 'Type at least 3 letters of contributor\'s name'
+    label: 'Find contributor',
+    help: 'At least 3 letters of contributor\'s name, pattern {First name} {Last name}'
   },
   is_contact_person: {
     label: 'Contact person',
@@ -101,8 +101,8 @@ export const contributorInformation = {
     help: '',
     validation: {
       required: 'Name is required',
-      minLength: {value: 2, message: 'Minimum length is 2'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      minLength: {value: 1, message: 'Minimum length is 1'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   },
   family_names: {
@@ -111,7 +111,7 @@ export const contributorInformation = {
     validation: {
       required: 'Family name is required',
       minLength: {value: 2, message: 'Minimum length is 2'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   },
   email_address: {
@@ -130,24 +130,28 @@ export const contributorInformation = {
     label: 'Affiliation',
     help: 'Where the contributor works currently?',
     validation: {
-      minLength: {value: 5, message: 'Minimum length is 5'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      minLength: {value: 2, message: 'Minimum length is 2'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   },
   role: {
     label: 'Role',
     help: 'For this software',
     validation: {
-      minLength: {value: 5, message: 'Minimum length is 5'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      minLength: {value: 2, message: 'Minimum length is 2'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   },
   orcid: {
     label: 'ORCID',
-    help: 'Only the personal part of ID',
+    help: '16 digits, pattern 0000-0000-0000-0000',
     validation: {
-      minLength: {value: 10, message: 'Minimum length is 10'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      pattern: {
+        value: /\d{4}-\d{4}-\d{4}-\d{4}/,
+        message: 'Invalid pattern, not a 0000-0000-0000-0000'
+      }
+      // minLength: {value: 16, message: 'Minimum length is 16'},
+      // maxLength: {value: 19, message: 'Maximum length is 19'},
     }
   }
 }
