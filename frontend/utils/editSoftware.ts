@@ -483,7 +483,7 @@ export function tagsNotInReferenceList({tagList, referenceList}:
         return iTag === sTag
       })
     })
-    // debugger
+
     return tagsNotInReferenceList
   }
   return []
@@ -500,25 +500,11 @@ export function licensesNotInReferenceList({list, referenceList}:
         return lLicense === rLicense
       })
     })
-    // debugger
+
     return itemsNotInReferenceList
   }
   return []
 }
-
-// export function formatRepositoryUrl(editSoftware: EditSoftwareItem, formData: EditSoftwareItem) {
-//   // check
-//   const newData = {
-//     ...formData
-//   }
-//   // format repositoryUrl
-//   if (newData.repository_url[0].url === '') {
-//     // there was no repoUrl and it is still not defined
-//     newData.repository_url=[]
-//   }
-//   return newData
-// }
-
 
 function extractErrorMessages(responses: { status: number, message: string }[]) {
   let errors: { status: number, message: string }[] = []

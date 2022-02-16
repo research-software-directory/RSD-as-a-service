@@ -92,9 +92,6 @@ export const contributorInformation = {
     label: '{First name} {Last name}',
     help: 'Type at least 3 letters of contributor\'s name'
   },
-  software: {
-    label:'hidden software id'
-  },
   is_contact_person: {
     label: 'Contact person',
     help:'Is this contributor main contact person'

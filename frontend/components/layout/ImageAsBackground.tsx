@@ -3,7 +3,6 @@ import PhotoSizeSelectActualOutlinedIcon from '@mui/icons-material/PhotoSizeSele
 
 export default function ImageAsBackground({src, alt, className}:
   { src: string, alt: string, className:string }) {
-  // debugger
   let imageUrl = src
   if (!imageUrl) {
     return (

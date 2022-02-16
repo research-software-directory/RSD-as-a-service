@@ -61,17 +61,6 @@ export default function StickyHeaderEditSoftware() {
         {pageState?.software?.brand_name || ''}
       </h1>
       <div>
-        {/* <Button
-          tabIndex={1}
-          type="button"
-          onClick={()=>onCancel()}
-          disabled={isCancelDisabled}
-          sx={{
-            marginRight:'2rem'
-          }}
-        >
-          Cancel
-        </Button> */}
         <Button
           tabIndex={1}
           type="button"

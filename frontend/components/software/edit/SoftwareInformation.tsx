@@ -70,7 +70,6 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           loading:false
         }
       })
-      // debugger
       setLoading(false)
     }
   },[reset,editSoftware,apiLoading,slug,dispatchPageState])

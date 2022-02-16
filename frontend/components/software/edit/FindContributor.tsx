@@ -31,7 +31,7 @@ export default function FindContributor({onAdd, onCreate}:
         searchFor,
         frontend:true
       })
-      // debugger
+      // exit on abort
       if (abort) return
       // set options
       setOptions(resp ?? [])
@@ -50,7 +50,6 @@ export default function FindContributor({onAdd, onCreate}:
   }, [searchFor])
 
   function createNewContributor() {
-    // console.log('createNewContributor...', newInputValue)
     const name = splitName(newInputValue)
     onCreate(name)
     // reset value
@@ -58,21 +57,19 @@ export default function FindContributor({onAdd, onCreate}:
   }
 
   function addContributor() {
-    // console.log('addContributor...', selected)
     if (selected && selected.data) {
       onAdd({
         ...selected.data,
         is_contact_person: false,
         software: ''
       })
-      // remove selected value?
+      // reset values
       // setSelected(undefined)
       // setInputValue('')
     }
   }
 
   function renderActionButton() {
-    // debugger
     if (selected &&
       selected.label === newInputValue) {
       return (
@@ -109,7 +106,6 @@ export default function FindContributor({onAdd, onCreate}:
    * value to useDebounce, which returns searchFor value after the timeout.
    */
   function onInputChange(e: SyntheticEvent, newInputValue: string) {
-    // console.log('onInputChange...', newInputValue)
     setInputValue(newInputValue)
   }
 
@@ -118,7 +114,6 @@ export default function FindContributor({onAdd, onCreate}:
    * NOTE! the input value will also be updated and onInputChange event will occure too.
    */
   function onAutocompleteChange(e: SyntheticEvent, value: string | AutocompleteOption<SearchContributor> | null) {
-    // debugger
     if (typeof value == 'string') {
       // freeSolo - new contributor
       // console.log('onAutocompleteChange...freeSolo...', value)

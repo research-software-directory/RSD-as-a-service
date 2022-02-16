@@ -14,10 +14,7 @@ export function getAvatarUrl({id, avatar_mime_type}:{id?:string|null,avatar_mime
   if (avatar_mime_type) {
     // construct image path
     // currently we use posgrest + nginx approach image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
-    // NOTE! the images will fail when running frontend in development due to origin being localhost:3000 instead of localhost
     return `/image/rpc/get_contributor_image?id=${id}`
-    // debugger
-    // console.log('image',item.avatar_url)
   }
   return null
 }
@@ -25,12 +22,8 @@ export function getAvatarUrl({id, avatar_mime_type}:{id?:string|null,avatar_mime
 export function getAvatarUrlAsBase64({avatar_mime_type,avatar_data}:
   {avatar_mime_type?: string | null, avatar_data: string | null}) {
   if (avatar_mime_type && avatar_data) {
-    // construct image path
-    // currently we use posgrest + nginx approach image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
-    // NOTE! the images will fail when running frontend in development due to origin being localhost:3000 instead of localhost
+    // construct the image src content for base64 images
     return `data:${avatar_mime_type};base64,${avatar_data}`
-    // debugger
-    // console.log('image',item.avatar_url)
   }
   return null
 }
@@ -40,7 +33,7 @@ export async function getContributorsForSoftware({software, token, frontend}:
   try {
     // use standardized list of columns
     const columns = ContributorProps.join(',')
-    // debugger
+
     let url = `${process.env.POSTGREST_URL}/contributor?select=${columns},avatar_data&software=eq.${software}&order=family_names.asc`
     if (frontend) {
       url = `/api/v1/contributor?select=${columns}&software=eq.${software}&order=family_names.asc`
@@ -51,7 +44,7 @@ export async function getContributorsForSoftware({software, token, frontend}:
         ...createJsonHeaders(token),
       }
     })
-    // debugger
+
     if (resp.status === 200) {
       const data: Contributor[] = await resp.json()
       return data.map(item => ({
@@ -96,7 +89,7 @@ export async function searchForContributor({searchFor, token, frontend}:
 async function findRSDContributor({searchFor, token, frontend}:
   { searchFor: string, token?: string, frontend?: boolean }) {
   try {
-    // debugger
+
     let url = `${process.env.POSTGREST_URL}/unique_countributors?display_name=ilike.*${searchFor}*&limit=20`
     if (frontend) {
       url = `/api/v1/unique_countributors?display_name=ilike.*${searchFor}*&limit=20`
@@ -107,7 +100,7 @@ async function findRSDContributor({searchFor, token, frontend}:
         ...createJsonHeaders(token),
       }
     })
-    // debugger
+
     if (resp.status === 200) {
       const data: SearchContributor[] = await resp.json()
       const options: AutocompleteOption<SearchContributor>[] = data.map(item => {
@@ -116,8 +109,6 @@ async function findRSDContributor({searchFor, token, frontend}:
           label: item.display_name ?? '',
           data: {
             ...item,
-            // add avatar url based on uuid
-            // avatar_url: getAvatarUrl(item),
             source: 'RSD'
           }
         }
@@ -202,7 +193,6 @@ export async function patchContributor({contributor, token}: { contributor: Cont
       },
       body: JSON.stringify(contributor)
     })
-    // debugger
     return extractReturnMessage(resp)
   } catch (e: any) {
     logger(`patchContributor: ${e?.message}`, 'error')
@@ -236,7 +226,7 @@ export async function deleteContributorsById({ids,token}:{ids:string[],token:str
 
 export function prepareContributorData(data: Contributor) {
   const contributor = getPropsFromObject(data, ContributorProps)
-  // save new base64 image
+  // do we need to save new base64 image
   if (data?.avatar_b64 &&
     data?.avatar_b64.length > 10 &&
     data?.avatar_mime_type !== null) {

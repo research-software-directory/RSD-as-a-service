@@ -351,7 +351,7 @@ export async function getRelatedToolsForSoftware(uuid: string) {
 export async function getRemoteMarkdown(url: string) {
   try {
     const resp = await fetch(url)
-    // debugger
+
     if (resp?.status === 200) {
       const markdown = await resp.text()
       return markdown

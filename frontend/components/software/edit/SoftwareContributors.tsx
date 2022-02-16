@@ -84,9 +84,8 @@ export default function SoftwareContributors({slug, token}: { slug: string, toke
         frontend:true
       })
       if (abort) return
-      // debugger
+      // update state
       setContributors(resp ?? [])
-      // setReferenceList(resp ?? [])
       setLoading(false)
     }
     if (software?.id && token) {

@@ -1,5 +1,3 @@
-import ContributorAvatar from '../ContributorAvatar'
-import {getDisplayInitials, getDisplayName} from '../../../utils/getDisplayName'
 import {AutocompleteOption} from '../../../types/AutocompleteOptions'
 import {SearchContributor} from '../../../types/Contributor'
 
@@ -34,12 +32,6 @@ export default function FindContributorItem({option}: { option: AutocompleteOpti
     <article className="flex-1">
       <div className="grid grid-cols-[3fr,1fr] gap-2">
         <div className="flex items-center">
-          {/* <ContributorAvatar
-            size={2}
-            avatarUrl={''}
-            displayName={getDisplayName(option.data) ?? ''}
-            displayInitials={getDisplayInitials(option.data) ?? ''}
-          /> */}
           <strong><span className="flex-1">{option.label}</span></strong>
         </div>
         <span className="text-right">{option.data?.source}</span>

@@ -38,7 +38,7 @@ export default function useSpdxLicenses() {
                 data: item
               }
             })
-          // debugger
+          // update state
           setOptions(options)
         }
       } else {

@@ -22,7 +22,6 @@ export default function useEditSoftwareData({slug, token}: {slug: string, token:
     if (slug && token) {
       getSoftwareToEdit({slug, token})
         .then(data => {
-          // debugger
           // exit on abort
           if (abort) return
           // set data

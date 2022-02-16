@@ -4,9 +4,7 @@ import {
   DialogTitle, useMediaQuery
 } from '@mui/material'
 import SaveIcon from '@mui/icons-material/Save'
-import UploadIcon from '@mui/icons-material/Upload'
 import DeleteIcon from '@mui/icons-material/Delete'
-import IconButton from '@mui/material/IconButton'
 import {useForm} from 'react-hook-form'
 
 import snackbarContext from '../../snackbar/PageSnackbarContext'
@@ -69,12 +67,11 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
 
   function handleFileUpload({target}:{target: any}) {
     try {
-      // debugger
       let file = target.files[0]
       if (typeof file == 'undefined') return
       // check file size
       if (file.size > 2097152) {
-        // alert('The file is too large. Please select image < 2MB.')
+        // file is to large > 2MB
         setSnackbar({
           ...snackbarOptions,
           open: true,

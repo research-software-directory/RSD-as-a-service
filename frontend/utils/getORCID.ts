@@ -35,10 +35,9 @@ export async function getORCID({searchFor}: { searchFor: string }) {
         ...createJsonHeaders(undefined),
       }
     })
-    // debugger
+
     if (resp.status === 200) {
       const json:any = await resp.json()
-      // debugger
       const options = buildAutocompleteOptions(json['expanded-result'])
       // debugger
       return options
@@ -86,7 +85,6 @@ function buildAutocompleteOptions(data: OrcidRecord[]): AutocompleteOption<Searc
       }
     }
   })
-  // debugger
   return options.sort((a,b)=>sortOnStrProp(a,b,'label'))
 }
 

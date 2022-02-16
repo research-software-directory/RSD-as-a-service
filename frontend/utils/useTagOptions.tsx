@@ -19,7 +19,7 @@ const tagOptions = [
 
 export default function useTagOptions(softwareId: string) {
   const [options, setOptions] = useState<AutocompleteOption<Tag>[]>([])
-  // debugger
+
   useEffect(() => {
     const tags = tagOptions.map(item => {
       return {
@@ -32,6 +32,7 @@ export default function useTagOptions(softwareId: string) {
       }
     })
     setOptions(tags)
-  },[softwareId])
+  }, [softwareId])
+
   return options
 }
