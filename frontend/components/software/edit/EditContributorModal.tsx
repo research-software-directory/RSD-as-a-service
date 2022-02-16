@@ -156,7 +156,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
               <input
                 id="upload-avatar-image"
                 type="file"
-                accept="image/png, image/jpeg"
+                accept="image/*"
                 onChange={handleFileUpload}
                 style={{display:'none'}}
               />
@@ -220,7 +220,10 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                 helperTextMessage: config.email_address.help,
                 // helperTextCnt: `${formData?.email_address?.length || 0}/${config.email_address.validation.maxLength.value}`,
               }}
-              rules={config.email_address.validation}
+              rules={{
+                ...config.email_address.validation,
+                required: true
+              }}
             />
 
             <ControlledTextField

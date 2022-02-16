@@ -26,18 +26,10 @@ export default function SoftwareContributorsList({contributors, onEdit, onDelete
     return displayName
   }
 
-  function getSecondaryText(item:Contributor) {
-    if (item?.affiliation) {
-      return item?.affiliation
-    }
-    return 'Affiliation unknown'
-  }
-
   function renderList() {
     return contributors.map((item,pos) => {
       const displayName = getDisplayName(item)
       const displayInitials = getDisplayInitials(item)
-      const affiliation = getSecondaryText(item)
       return (
         <ListItem
           key={JSON.stringify(item)}
@@ -80,7 +72,7 @@ export default function SoftwareContributorsList({contributors, onEdit, onDelete
                 displayInitials={displayInitials}
               />
             </ListItemAvatar>
-            <ListItemText primary={getPrimaryText(item)} secondary={affiliation} />
+            <ListItemText primary={getPrimaryText(item)} secondary={item?.affiliation ?? ' '} />
         </ListItem>
       )
     })
