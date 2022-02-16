@@ -610,6 +610,9 @@ public class Main {
 				return; // matching conceptDOI 10.5281/zenodo.4336538 is already present
 			if (legacyConceptDoi.equals("10.5281/zenodo.4590883"))
 				return; // matching conceptDOI 10.5281/zenodo.4590882 is already present
+			if (conceptDoiToSoftwareId.get(legacyConceptDoi) == null) {
+				return;
+			}
 			releaseToSave.addProperty("software", conceptDoiToSoftwareId.get(legacyConceptDoi));
 			releaseToSave.add("is_citable", legacyRelease.get("isCitable"));
 			releaseToSave.add("latest_schema_dot_org", legacyRelease.get("latestSchema_dot_org"));
