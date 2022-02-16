@@ -220,10 +220,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                 helperTextMessage: config.email_address.help,
                 // helperTextCnt: `${formData?.email_address?.length || 0}/${config.email_address.validation.maxLength.value}`,
               }}
-              rules={{
-                ...config.email_address.validation,
-                required: true
-              }}
+              rules={config.email_address.validation}
             />
 
             <ControlledTextField

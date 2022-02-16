@@ -11,6 +11,7 @@ import {Contributor} from '../../../types/Contributor'
 import ContributorAvatar from '../ContributorAvatar'
 import {getDisplayInitials, getDisplayName} from '../../../utils/getDisplayName'
 import {Alert, AlertTitle} from '@mui/material'
+import {combineRoleAndAffiliation} from '../../../utils/editContributors'
 
 
 export default function SoftwareContributorsList({contributors, onEdit, onDelete}:
@@ -25,6 +26,7 @@ export default function SoftwareContributorsList({contributors, onEdit, onDelete
     }
     return displayName
   }
+
 
   function renderList() {
     return contributors.map((item,pos) => {
@@ -72,7 +74,7 @@ export default function SoftwareContributorsList({contributors, onEdit, onDelete
                 displayInitials={displayInitials}
               />
             </ListItemAvatar>
-            <ListItemText primary={getPrimaryText(item)} secondary={item?.affiliation ?? ' '} />
+            <ListItemText primary={getPrimaryText(item)} secondary={combineRoleAndAffiliation(item)} />
         </ListItem>
       )
     })

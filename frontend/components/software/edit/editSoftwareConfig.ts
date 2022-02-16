@@ -116,7 +116,7 @@ export const contributorInformation = {
   },
   email_address: {
     label: 'Email',
-    help: 'Contact email',
+    help: 'Contact person should have an email',
     validation: {
       minLength: {value: 5, message: 'Minimum length is 5'},
       maxLength: {value: 100, message: 'Maximum length is 100'},

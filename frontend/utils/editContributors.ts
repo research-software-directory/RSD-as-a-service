@@ -235,3 +235,11 @@ export function prepareContributorData(data: Contributor) {
   }
   return contributor
 }
+
+export function combineRoleAndAffiliation(item:Contributor){
+  if (item?.role && item?.affiliation) return `${item?.role}, ${item?.affiliation}`
+
+  if (item?.role) return item?.role
+
+  return item?.affiliation ?? ''
+}
