@@ -294,7 +294,7 @@ export async function getContributorsForSoftware(uuid: string) {
     // the content is order by family_names ascending
     const columns = ContributorProps.join(',')
     // 'id,software,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
-    const url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${uuid}&order=family_names.asc`
+    const url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${uuid}&order=given_names.asc`
     const resp = await fetch(url, {method: 'GET'})
     if (resp.status === 200) {
       const data: Contributor[] = await resp.json()

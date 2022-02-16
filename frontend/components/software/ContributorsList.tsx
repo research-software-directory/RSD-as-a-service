@@ -25,7 +25,7 @@ export default function ContributorsList({contributors}: { contributors: Contrib
                   {displayName}
                 </div>
                 <div>
-                  {item?.affiliation ?? 'Organisation unknown'}
+                  {item?.affiliation ?? ''}
                 </div>
               </div>
             </div>

@@ -12,7 +12,8 @@ function clasifyContributors(contributors: Contributor[]) {
   contributors.forEach(item => {
     // construct file name
     item.avatar_url = getAvatarUrl(item)
-    if (item.is_contact_person === true) {
+    // take first contact person to be show as contact
+    if (item.is_contact_person === true && contact===null) {
       contact = item
     } else {
       contributorList.push(item)
