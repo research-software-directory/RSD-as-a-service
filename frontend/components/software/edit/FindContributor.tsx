@@ -171,8 +171,16 @@ export default function FindContributor({onAdd, onCreate}:
             variant="standard"
             label={config.findContributor.label}
             helperText={config.findContributor.help}
+            onKeyDown={(e) => {
+              // dissable enter key because it crashes
+              // the rest of autocomplete process
+              if (e.key === 'Enter') {
+                e.stopPropagation()
+              }
+            }}
             InputProps={{
               ...params.InputProps,
+              'aria-label': 'Search',
               endAdornment: (
                 <>
                   {loading ? <CircularProgress color="inherit" size={20} /> : null}
