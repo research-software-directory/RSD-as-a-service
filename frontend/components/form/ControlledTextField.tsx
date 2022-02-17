@@ -76,7 +76,6 @@ export default function ControlledTextField({options, control, rules}: {
             onChange={({target}) => {
               // use null instead of empty string
               if (target.value === '' && options?.useNull) {
-                // debugger
                 onChange(null)
               } else {
                 onChange(target.value)

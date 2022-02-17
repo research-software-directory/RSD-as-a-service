@@ -10,22 +10,7 @@ import {
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
-
-type AuthHeader = {
-  'Content-Type': string;
-  Authorization?: string;
-}
-export function createHeaders(token?: string): AuthHeader {
-  if (token) {
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  }
-  return {
-    'Content-Type': 'application/json'
-  }
-}
+import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
@@ -35,7 +20,7 @@ export async function addSoftware({software, token}:
     // make post request
     const resp = await fetch(url, {
       method: 'POST',
-      headers: createHeaders(token),
+      headers: createJsonHeaders(token),
       body: JSON.stringify(software)
     })
     if (resp.status === 201) {
@@ -73,7 +58,7 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
       : `/api/v1/software?select=${select}&slug=eq.${slug}`
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token),
+      headers: createJsonHeaders(token),
     })
     if (resp.status === 200) {
       const data:SoftwareItemFromDB[] = await resp.json()
@@ -222,7 +207,7 @@ export async function updateSoftwareTable({software, token}:
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify(software)
@@ -247,7 +232,7 @@ export async function addToRepositoryTable({data, token}:
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         // merging also works with POST method
         'Prefer': 'resolution=merge-duplicates'
       },
@@ -273,7 +258,7 @@ export async function updateRepositoryTable({data, token}:
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify({
@@ -308,7 +293,7 @@ export async function deleteFromRepositoryTable({software, token}:
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
-        ...createHeaders(token)
+        ...createJsonHeaders(token)
       }
     })
 
@@ -330,7 +315,7 @@ export async function addTagsForSoftware({software, data, token}:{software:strin
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         // this will add new items and update existing
         // 'Prefer': 'resolution=merge-duplicates'
       },
@@ -359,7 +344,7 @@ export async function deleteTagsForSoftware({software,tags,token}: { software: s
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
       }
     })
 
@@ -374,29 +359,6 @@ export async function deleteTagsForSoftware({software,tags,token}: { software: s
   }
 }
 
-// NOT NEEDED FOR NOW
-// export async function deleteAllTagsForSoftware({software, token}: { software: string, token: string }) {
-//   try {
-//     // DELETE where software uuid
-//     const url = `/api/v1/tag_for_software?software=eq.${software}`
-//     const resp = await fetch(url, {
-//       method: 'DELETE',
-//       headers: {
-//         ...createHeaders(token),
-//       }
-//     })
-
-//     return extractReturnMessage(resp, software ?? '')
-
-//   } catch (e: any) {
-//     logger(`upsertTagsForSoftware: ${e?.message}`, 'error')
-//     return {
-//       status: 500,
-//       message: e?.message
-//     }
-//   }
-// }
-
 export async function addLicensesForSoftware({software, data, token}:
   {software: string, data: License[], token: string}) {
   try {
@@ -404,7 +366,7 @@ export async function addLicensesForSoftware({software, data, token}:
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
         // this will add new items and update existing
         'Prefer': 'resolution=merge-duplicates'
       },
@@ -429,7 +391,7 @@ export async function deleteLicenses({ids, token}:
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
-        ...createHeaders(token),
+        ...createJsonHeaders(token),
       }
     })
 
@@ -456,7 +418,7 @@ export async function isMaintainerOfSoftware({slug, account,token,frontend=true}
     }
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token)
+      headers: createJsonHeaders(token)
     })
     // MAINTAINER
     if (resp.status === 200) {
@@ -479,36 +441,36 @@ export async function isMaintainerOfSoftware({slug, account,token,frontend=true}
 }
 
 
-function extractReturnMessage(resp:Response, dataId:string) {
-  // OK
-  if ([200,201,204].includes(resp.status)) {
-    // just return id
-    return {
-      status: 200,
-      message: dataId
-    }
-  }
-  // not authorized, 404 seem to be returned mostly
-  if ([401, 403, 404].includes(resp.status)) {
-    return {
-      status: resp.status,
-      message: `
-          ${resp.statusText}.
-          You might not have sufficient priveleges to edit this software.
-          Please contact site administrators.
-        `
-    }
-  } else {
-    return {
-      status: resp.status,
-      message: `
-          Failed to save changes.
-          ${resp.statusText}.
-          Please contact site administrators.
-        `
-    }
-  }
-}
+// function extractReturnMessage(resp:Response, dataId:string) {
+//   // OK
+//   if ([200,201,204].includes(resp.status)) {
+//     // just return id
+//     return {
+//       status: 200,
+//       message: dataId
+//     }
+//   }
+//   // not authorized, 404 seem to be returned mostly
+//   if ([401, 403, 404].includes(resp.status)) {
+//     return {
+//       status: resp.status,
+//       message: `
+//           ${resp.statusText}.
+//           You might not have sufficient priveleges to edit this software.
+//           Please contact site administrators.
+//         `
+//     }
+//   } else {
+//     return {
+//       status: resp.status,
+//       message: `
+//           Failed to save changes.
+//           ${resp.statusText}.
+//           Please contact site administrators.
+//         `
+//     }
+//   }
+// }
 
 export function tagsNotInReferenceList({tagList, referenceList}:
   { tagList: AutocompleteOption<Tag>[], referenceList: AutocompleteOption<Tag>[] }) {
@@ -521,7 +483,7 @@ export function tagsNotInReferenceList({tagList, referenceList}:
         return iTag === sTag
       })
     })
-    // debugger
+
     return tagsNotInReferenceList
   }
   return []
@@ -538,25 +500,11 @@ export function licensesNotInReferenceList({list, referenceList}:
         return lLicense === rLicense
       })
     })
-    // debugger
+
     return itemsNotInReferenceList
   }
   return []
 }
-
-// export function formatRepositoryUrl(editSoftware: EditSoftwareItem, formData: EditSoftwareItem) {
-//   // check
-//   const newData = {
-//     ...formData
-//   }
-//   // format repositoryUrl
-//   if (newData.repository_url[0].url === '') {
-//     // there was no repoUrl and it is still not defined
-//     newData.repository_url=[]
-//   }
-//   return newData
-// }
-
 
 function extractErrorMessages(responses: { status: number, message: string }[]) {
   let errors: { status: number, message: string }[] = []

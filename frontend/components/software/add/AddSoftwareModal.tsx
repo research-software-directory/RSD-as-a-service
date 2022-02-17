@@ -73,14 +73,12 @@ export default function AddSoftwareModal({action = 'close', onCancel}: { action:
 
   useEffect(() => {
     if (action.toLowerCase() === 'open' && state.open === false) {
-      // debugger
       setState({
         ...state,
         open:true
       })
     }
     if (action.toLowerCase() !== 'open' && state.open === true) {
-      debugger
       setState({
         ...state,
         open:true

@@ -3,9 +3,9 @@ import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {MentionType} from '../types/MentionType'
-import {Contributor} from '../types/Contributor'
+import {Contributor, ContributorProps} from '../types/Contributor'
 import {Testimonial} from '../types/Testimonial'
-import {createHeaders} from './editSoftware'
+import {createJsonHeaders} from './fetchHelpers'
 
 /**
  * postgREST api uri to retreive software index data.
@@ -55,7 +55,7 @@ export async function getSoftwareItem(slug:string|undefined, token?:string){
     if (token) {
       resp = await fetch(url, {
         method: 'GET',
-        headers: createHeaders(token)
+        headers: createJsonHeaders(token)
       })
     } else {
       resp = await fetch(url,{method:'GET'})
@@ -108,7 +108,7 @@ export async function getCitationsForSoftware(uuid:string,token?:string){
     const url = `${process.env.POSTGREST_URL}/release?select=*,release_content(*)&software=eq.${uuid}&release_content.order=date_published.desc`
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token)
+      headers: createJsonHeaders(token)
     })
     if (resp.status===200){
       const data: SoftwareCitationInfo[] = await resp.json()
@@ -139,7 +139,7 @@ export async function getTagsForSoftware(uuid:string,frontend?:boolean,token?:st
     }
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token)
+      headers: createJsonHeaders(token)
     })
     if (resp.status===200){
       const data:Tag[] = await resp.json()
@@ -175,7 +175,7 @@ export async function getLicenseForSoftware(uuid:string,frontend?:boolean,token?
     }
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createHeaders(token)
+      headers: createJsonHeaders(token)
     })
     if (resp.status===200){
       const data:License[] = await resp.json()
@@ -201,12 +201,15 @@ export type ContributorMentionCount = {
   mention_cnt: number | null
 }
 
-export async function getContributorMentionCount(uuid:string){
+export async function getContributorMentionCount(uuid: string,token?: string){
   try{
     // this request is always perfomed from backend
     // the content is order by id ascending
     const url = `${process.env.POSTGREST_URL}/count_software_contributors_mentions?id=eq.${uuid}`
-    const resp = await fetch(url,{method:'GET'})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
     if (resp.status===200){
       const data: ContributorMentionCount[] = await resp.json()
       if (data.length > 0) {
@@ -241,12 +244,15 @@ export type Mention = {
   mention_for_software?:any[]
 }
 
-export async function getMentionsForSoftware(uuid: string) {
+export async function getMentionsForSoftware(uuid: string,token?:string) {
   try {
     // this request is always perfomed from backend
     // the content is order by type ascending
     const url = `${process.env.POSTGREST_URL}/mention?select=date,is_featured,title,type,url,image,author,mention_for_software!inner(software)&mention_for_software.software=eq.${uuid}&order=type.asc`
-    const resp = await fetch(url, {method: 'GET'})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
     if (resp.status === 200) {
       const data: ContributorMentionCount[] = await resp.json()
       return data
@@ -264,12 +270,15 @@ export async function getMentionsForSoftware(uuid: string) {
 /**
  * TESTIMONIALS
  */
-export async function getTestimonialsForSoftware(uuid: string) {
+export async function getTestimonialsForSoftware(uuid: string,token?:string) {
   try {
     // this request is always perfomed from backend
     // the content is NOT ordered
     const url = `${process.env.POSTGREST_URL}/testimonial?software=eq.${uuid}`
-    const resp = await fetch(url, {method: 'GET'})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
     if (resp.status === 200) {
       const data: Testimonial[] = await resp.json()
       return data
@@ -288,13 +297,17 @@ export async function getTestimonialsForSoftware(uuid: string) {
  * CONTRIBUTORS
  */
 
-export async function getContributorsForSoftware(uuid: string) {
+export async function getContributorsForSoftware(uuid: string,token?:string) {
   try {
     // this request is always perfomed from backend
     // the content is order by family_names ascending
-    const columns = 'id,software,is_contact_person,email_address,family_names,given_names,name_particle,name_suffix,avatar_mime_type'
-    const url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${uuid}&order=family_names.asc`
-    const resp = await fetch(url, {method: 'GET'})
+    const columns = ContributorProps.join(',')
+    // 'id,software,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
+    const url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${uuid}&order=given_names.asc`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
     if (resp.status === 200) {
       const data: Contributor[] = await resp.json()
       return data
@@ -323,23 +336,25 @@ export type RelatedTools = {
   }
 }
 
-export async function getRelatedToolsForSoftware(uuid: string) {
+export async function getRelatedToolsForSoftware(uuid: string,token?:string) {
   try {
     // this request is always perfomed from backend
-    // the content is order by family_names ascending
     const select = 'origin,relation,software!software_for_software_relation_fkey(id,slug,brand_name,short_statement)'
     const url = `${process.env.POSTGREST_URL}/software_for_software?select=${select}&&origin=eq.${uuid}&status=eq.approved`
-    const resp = await fetch(url, {method: 'GET'})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
     if (resp.status === 200) {
       const data: RelatedTools[] = await resp.json()
       return data
     } else if (resp.status === 404) {
-      logger(`getContributorsForSoftware: 404 [${url}]`, 'error')
+      logger(`getRelatedToolsForSoftware: 404 [${url}]`, 'error')
       // query not found
       return []
     }
   } catch (e: any) {
-    logger(`getContributorsForSoftware: ${e?.message}`, 'error')
+    logger(`getRelatedToolsForSoftware: ${e?.message}`, 'error')
     return []
   }
 }
@@ -350,7 +365,7 @@ export async function getRelatedToolsForSoftware(uuid: string) {
 export async function getRemoteMarkdown(url: string) {
   try {
     const resp = await fetch(url)
-    // debugger
+
     if (resp?.status === 200) {
       const markdown = await resp.text()
       return markdown

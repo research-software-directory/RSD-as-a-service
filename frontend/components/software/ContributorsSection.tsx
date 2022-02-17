@@ -2,6 +2,7 @@ import {Contributor} from '../../types/Contributor'
 import PageContainer from '../layout/PageContainer'
 import ContributorsList from './ContributorsList'
 import ContactPersonCard from './ContactPersonCard'
+import {getAvatarUrl} from '../../utils/editContributors'
 
 function clasifyContributors(contributors: Contributor[]) {
   const contributorList:Contributor[] = []
@@ -10,17 +11,9 @@ function clasifyContributors(contributors: Contributor[]) {
 
   contributors.forEach(item => {
     // construct file name
-    if (item.avatar_mime_type) {
-      // construct image path
-      // currently we use posgrest + nginx approach image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
-      // NOTE! the images will fail when running frontend in development due to origin being localhost:3000 instead of localhost
-      item.avatar_url = `/image/rpc/get_contributor_image?id=${item.id}`
-      // debugger
-      // console.log('image',item.avatar_url)
-    } else {
-      item.avatar_url=null
-    }
-    if (item.is_contact_person === true) {
+    item.avatar_url = getAvatarUrl(item)
+    // take first contact person to be show as contact
+    if (item.is_contact_person === true && contact===null) {
       contact = item
     } else {
       contributorList.push(item)

@@ -9,11 +9,11 @@ export default function RelatedToolsSection({relatedTools=[]}: {relatedTools: Re
   // prepare related software items to be used by SoftwareGrid
   const relatedSoftware:SoftwareGridType[] = relatedTools.map(item => {
     return {
-      id: item.software.id,
-      slug: item.software.slug,
-      brand_name: item.software.brand_name,
+      id: item.software?.id,
+      slug: item.software?.slug,
+      brand_name: item.software?.brand_name,
       is_featured: false,
-      short_statement: item.software.short_statement||'',
+      short_statement: item.software?.short_statement||'',
       updated_at: null,
     }
   })

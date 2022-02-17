@@ -192,15 +192,15 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // licenseInfo
       getLicenseForSoftware(software.id,false,token),
       // softwareMentionCounts
-      getContributorMentionCount(software.id),
+      getContributorMentionCount(software.id,token),
       // mentions
-      getMentionsForSoftware(software.id),
+      getMentionsForSoftware(software.id,token),
       // testimonials
-      getTestimonialsForSoftware(software.id),
+      getTestimonialsForSoftware(software.id,token),
       // contributors
-      getContributorsForSoftware(software.id),
+      getContributorsForSoftware(software.id,token),
       // relatedTools
-      getRelatedToolsForSoftware(software.id),
+      getRelatedToolsForSoftware(software.id,token),
       // check if maintainer
       isMaintainerOfSoftware({slug,account,token,frontend:false})
     ]

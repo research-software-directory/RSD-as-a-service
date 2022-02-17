@@ -13,7 +13,7 @@ export type PostgrestParams={
 export function softwareUrl(props:PostgrestParams){
   const {baseUrl,search,columns,filters,order,limit,offset} = props
   let url = `${baseUrl}/software?`
-  // debugger
+
   if (columns){
     url+=`select=${columns.join(',')}`
   }

@@ -52,3 +52,13 @@ SELECT
 LEFT JOIN
 	software on software.id=maintainer_for_software.software
 ;
+
+-- UNIQUE contributor display_names
+CREATE VIEW unique_countributors as
+SELECT distinct
+	(CONCAT(given_names,' ',family_names)) as display_name, affiliation, orcid, given_names, family_names, email_address, avatar_mime_type
+FROM
+	contributor
+ORDER BY
+	display_name asc
+;

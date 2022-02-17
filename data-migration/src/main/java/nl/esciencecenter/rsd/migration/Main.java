@@ -280,10 +280,18 @@ public class Main {
 				String personId = contributorFromLegacyRSD.getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
 				JsonObject personData = personIdToObject.get(personId);
 				contributorToSave.add("email_address", nullIfBlank(personData.get("emailAddress")));
-				contributorToSave.add("family_names", personData.get("familyNames"));
+				String familyNames = personData.getAsJsonPrimitive("familyNames").getAsString();
+				JsonElement nameParticleJson = personData.get("nameParticle");
+				if (!(nameParticleJson == null || nameParticleJson.isJsonNull())) {
+					String nameParticle = nameParticleJson.getAsString().strip();
+					if (!nameParticle.isEmpty()) {
+						familyNames = nameParticle + " " + familyNames;
+					}
+				}
+				contributorToSave.addProperty("family_names", familyNames);
 				contributorToSave.add("given_names", personData.get("givenNames"));
-				contributorToSave.add("name_particle", nullIfBlank(personData.get("nameParticle")));
-				contributorToSave.add("name_suffix", nullIfBlank(personData.get("nameSuffix")));
+//				we skip the name suffix, as there are currently no valid entries in the legacy RSD
+//				contributorToSave.add("name_suffix", nullIfBlank(personData.get("nameSuffix")));
 				if (personData.has("avatar")) {
 					contributorToSave.add("avatar_data", personData.getAsJsonObject("avatar").get("data"));
 					contributorToSave.add("avatar_mime_type", personData.getAsJsonObject("avatar").get("mimeType"));
@@ -610,6 +618,9 @@ public class Main {
 				return; // matching conceptDOI 10.5281/zenodo.4336538 is already present
 			if (legacyConceptDoi.equals("10.5281/zenodo.4590883"))
 				return; // matching conceptDOI 10.5281/zenodo.4590882 is already present
+			if (conceptDoiToSoftwareId.get(legacyConceptDoi) == null) {
+				return;
+			}
 			releaseToSave.addProperty("software", conceptDoiToSoftwareId.get(legacyConceptDoi));
 			releaseToSave.add("is_citable", legacyRelease.get("isCitable"));
 			releaseToSave.add("latest_schema_dot_org", legacyRelease.get("latestSchema_dot_org"));

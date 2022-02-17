@@ -50,8 +50,7 @@ export default function ControlledRemoteMarkdown({control, rules, options}: Cont
     const getMarkdown=async(url:string)=>{
       setLoading(true)
       const markdown = await getRemoteMarkdown(url)
-      // debugger
-      // on abort exit
+      // exit on abort
       if (abort) return
       if (typeof markdown === 'string') {
         setState({

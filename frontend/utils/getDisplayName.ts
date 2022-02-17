@@ -1,42 +1,44 @@
-import {Contributor} from '../types/Contributor'
-
-export function getDisplayName(contributor: Contributor) {
+// export function getDisplayName(contributor: Contributor | undefined) {
+export function getDisplayName({given_names, family_names}:
+  {given_names?: string, family_names?: string}) {
   let displayName = null
   // start with given names (first name)
-  if (contributor.given_names) {
-    displayName = contributor.given_names
-  }
-  // add particle, eg. van
-  if (contributor.name_particle) {
-    displayName += ` ${contributor.name_particle}`
+  if (given_names) {
+    displayName = given_names
   }
   // then family names
-  if (contributor.family_names) {
-    displayName += ` ${contributor.family_names}`
-  }
-  // end with suffix? no prefix
-  if (contributor.name_suffix) {
-    displayName += ` ${contributor.name_suffix}`
+  if (family_names) {
+    displayName += ` ${family_names}`
   }
   return displayName
 }
 
-export function getDisplayInitials(contributor: Contributor) {
+export function getDisplayInitials({given_names, family_names}:
+  {given_names?: string, family_names?: string}) {
   let displayInitials = ''
   // start with given names (first name)
-  if (contributor.given_names) {
+  if (given_names) {
     // take first char
-    displayInitials = contributor.given_names[0]
-  }
-  // add particle, eg. van
-  if (contributor.name_particle) {
-    // split on space and take first chars
-    displayInitials += `${contributor.name_particle.split(' ').map(i=>i[0]).join('')}`
+    displayInitials = given_names[0]
   }
   // then family names
-  if (contributor.family_names) {
-    // take first char
-    displayInitials += `${contributor.family_names[0]}`
+  if (family_names) {
+    // take first char of each family name part
+    displayInitials += `${family_names.split(' ').map(i => i[0]).join('')}`
   }
   return displayInitials
+}
+
+/**
+ * Spliting display name in given_names and family_names.
+ * Simply we use first word as given name and the rest as family names
+ * @param name
+ * @returns
+ */
+export function splitName(name: string) {
+  const names = name.split(' ')
+  return {
+    given_names: names[0],
+    family_names: names.slice(1).join(' ')
+  }
 }

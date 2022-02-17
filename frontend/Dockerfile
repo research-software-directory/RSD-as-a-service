@@ -6,7 +6,7 @@ WORKDIR /app
 # copy
 COPY package.json yarn.lock ./
 # install
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --silent
 
 # copy all other files
 # not excluded in .dockerignore

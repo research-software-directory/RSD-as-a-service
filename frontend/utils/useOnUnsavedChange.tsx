@@ -23,7 +23,6 @@ function onRouteChangeNext(e:any,warning:string) {
  * @param warning
  */
 function onWebsiteChange(e: any, warning: string) {
-  // debugger
   // If you prevent default behavior in Mozilla Firefox prompt will always be shown
   e.preventDefault()
   // Chrome requires returnValue to be set, but it does not shows custom message
