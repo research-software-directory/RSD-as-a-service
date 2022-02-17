@@ -15,8 +15,11 @@ export default function SoftwareCard({href,brand_name,short_statement,is_feature
   const colors = is_featured ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'
   const today = new Date()
 
-  function getInitals(){
-    return brand_name.slice(0,2).toUpperCase()
+  function getInitals() {
+    if (brand_name) {
+      return brand_name.slice(0,2).toUpperCase()
+    }
+    return ''
   }
 
   function renderFeatured(){
