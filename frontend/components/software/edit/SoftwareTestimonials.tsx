@@ -11,11 +11,14 @@ import {
   postTestimonial, getTestimonialsForSoftware,
   patchTestimonial, deleteTestimonialById
 } from '../../../utils/editTestimonial'
-import SoftwareTestimonialList from './SoftwareTestimonialsList'
 import EditTestimonialModal from './EditTestimonialModal'
 import ContentLoader from '../../layout/ContentLoader'
 import {sortOnNumProp} from '../../../utils/sortFn'
 import ConfirmDeleteModal from '../../layout/ConfirmDeleteModal'
+
+import SoftwareTestimonialsDndList from './SoftwareTestimonialsDndList'
+import {DropResult} from 'react-beautiful-dnd'
+import {reorderList} from '../../../utils/dndHelpers'
 
 type ModalProps = {
   open: boolean
@@ -162,12 +165,12 @@ export default function SoftwareTestimonials({token}: {token: string }) {
   }
 
   async function onSubmitTestimonial({data,pos}:{data:Testimonial,pos?:number}) {
-    debugger
+    // debugger
     closeModals()
     // if id present we update
     if (data?.id) {
       const resp = await patchTestimonial({testimonial: data, token})
-      debugger
+      // debugger
       if (resp.status === 200) {
         updateTestimonialList({data,pos})
       } else {
@@ -176,7 +179,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     } else {
       // new testimonial
       const resp = await postTestimonial({testimonial: data, token})
-      debugger
+      // debugger
       if (resp.status === 201) {
         // we receive processed item as message
         const record = resp.message
@@ -205,11 +208,11 @@ export default function SoftwareTestimonials({token}: {token: string }) {
   async function deleteTestimonial(pos?:number) {
     if (!pos) return
     closeModals()
-    debugger
+    // debugger
     const testimonial = testimonials[pos]
     if (testimonial?.id) {
       const resp = await deleteTestimonialById({id: testimonial?.id, token})
-      debugger
+      // debugger
       if (resp.status === 200) {
         // showSuccessMessage("Removed teste")
         removeFromTestimonialList(pos)
@@ -226,6 +229,27 @@ export default function SoftwareTestimonials({token}: {token: string }) {
       ...testimonials.slice(pos+1)
     ]
     setTestimonials(list)
+  }
+
+  function onDragEnd({destination, source}: DropResult){
+    // dropped outside the list
+    if (!destination) return
+    // console.group('onDragEnd')
+    // console.log('destination...',destination)
+    // console.log('source...', source)
+    // console.groupEnd()
+    // debugger
+    const newItems = reorderList({
+      list:testimonials,
+      startIndex:source.index,
+      endIndex:destination.index
+    }).map((item,pos)=>{
+      // renumber
+      item.position=pos+1
+      return item
+    })
+    // debugger
+    setTestimonials(newItems)
   }
 
   return (
@@ -248,10 +272,11 @@ export default function SoftwareTestimonials({token}: {token: string }) {
               Add
             </Button>
           </EditSectionTitle>
-          <SoftwareTestimonialList
+          <SoftwareTestimonialsDndList
             testimonials={testimonials}
             onEdit={onEdit}
             onDelete={onDelete}
+            onDragEnd={onDragEnd}
           />
         </div>
       </EditSoftwareSection>
