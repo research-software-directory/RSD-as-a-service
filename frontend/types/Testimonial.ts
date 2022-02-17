@@ -8,4 +8,13 @@ const testimonial = {
   'text': 'It’s quite amazing to see how, thanks to this tool, a student can, in some ways, outperform the expert.'
 }
 
-export type Testimonial = typeof testimonial
+export type NewTestimonial = {
+  software: string,
+  affiliation: string,
+  person: string,
+  text: string
+}
+
+export type Testimonial = NewTestimonial & {
+  id:string
+}
