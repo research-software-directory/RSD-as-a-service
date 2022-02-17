@@ -342,9 +342,9 @@ public class Main {
 			testimonials.forEach(jsonMention -> {
 				JsonObject testimonialToSave = new JsonObject();
 				testimonialToSave.addProperty("software", slugToId.get(slug));
-				testimonialToSave.add("affiliation", jsonMention.getAsJsonObject().getAsJsonPrimitive("affiliation"));
-				testimonialToSave.add("person", jsonMention.getAsJsonObject().getAsJsonPrimitive("person"));
-				testimonialToSave.add("text", jsonMention.getAsJsonObject().getAsJsonPrimitive("text"));
+				// testimonialToSave.add("affiliation", jsonMention.getAsJsonObject().getAsJsonPrimitive("affiliation"));
+				testimonialToSave.add("source", jsonMention.getAsJsonObject().getAsJsonPrimitive("person"));
+				testimonialToSave.add("message", jsonMention.getAsJsonObject().getAsJsonPrimitive("text"));
 				allTestimonialsToSave.add(testimonialToSave);
 			});
 		});

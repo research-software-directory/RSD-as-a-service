@@ -4,7 +4,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.8
+    image: rsd/database:0.0.9
     ports:
     # enable connection from outside
       - "5432:5432"
@@ -82,9 +82,10 @@ services:
       - net
 
   nginx:
+    container_name: nginx
     build:
       context: ./nginx
-    container_name: nginx
+    image: rsd/nginx:0.0.2
     ports:
       - "80:80"
       - "443:443"

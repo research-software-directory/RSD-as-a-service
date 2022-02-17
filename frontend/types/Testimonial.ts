@@ -9,10 +9,10 @@ const testimonial = {
 }
 
 export type NewTestimonial = {
+  pos?: number
   software: string,
-  affiliation: string,
-  person: string,
-  text: string
+  message: string,
+  source: string,
 }
 
 export type Testimonial = NewTestimonial & {
