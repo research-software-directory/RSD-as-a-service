@@ -135,7 +135,6 @@ export async function addContributorToDb({contributor, token}: { contributor: Co
       method: 'POST',
       headers: {
         ...createJsonHeaders(token),
-        // 'Prefer': 'return=representation',
         'Prefer': 'return=headers-only'
       },
       body:JSON.stringify(contributor)

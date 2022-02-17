@@ -9,6 +9,7 @@ export type ControlledTextFieldOptions = {
   autoComplete?: string
   multiline?: boolean
   maxRows?: number
+  rows?: number
   label: string
   type?: string
   fullWidth?: boolean
@@ -54,6 +55,7 @@ export default function ControlledTextField({options, control, rules}: {
             autoComplete={options?.autoComplete ?? 'off'}
             multiline={options?.multiline ?? false}
             maxRows={options?.maxRows ?? undefined}
+            rows={options?.rows ?? undefined}
             error={error ? true: false}
             label={options?.label ?? 'Label not provided'}
             type={options?.type ?? 'text'}

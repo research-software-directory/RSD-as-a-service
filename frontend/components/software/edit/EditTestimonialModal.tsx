@@ -1,35 +1,27 @@
-import {useEffect,useState, useContext} from 'react'
+import {useEffect} from 'react'
 import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
 } from '@mui/material'
 import SaveIcon from '@mui/icons-material/Save'
-import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
-import snackbarContext from '../../snackbar/PageSnackbarContext'
-import {testimonial} from '../../../types/testimonial'
 import ControlledTextField from '../../form/ControlledTextField'
-import ControlledSwitch from '../../form/ControlledSwitch'
-import testimonialAvatar from '../testimonialAvatar'
 import {testimonialInformation as config} from './editSoftwareConfig'
-import {getDisplayInitials, getDisplayName} from '../../../utils/getDisplayName'
-import logger from '../../../utils/logger'
 import {Testimonial} from '../../../types/Testimonial'
 
 type EditTestimonialModalProps = {
   open: boolean,
   onCancel: () => void,
-  onSubmit: ({data, pos}: { data: testimonial, pos?: number }) => void,
+  onSubmit: ({data, pos}: { data: Testimonial, pos?: number }) => void,
   testimonial?: Testimonial,
+  // item position in the array
   pos?: number
 }
 
 export default function EditTestimonialModal({open, onCancel, onSubmit, testimonial, pos}: EditTestimonialModalProps) {
-  const {options: snackbarOptions, setSnackbar} = useContext(snackbarContext)
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const [b64Image, setB64Image]=useState<string>()
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<testimonial>({
+  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Testimonial>({
     mode: 'onChange',
     defaultValues: {
       ...testimonial
@@ -42,7 +34,6 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
 
   // console.group('EditTestimonialModal')
   // console.log('open...', open)
-  // console.log('errors...', errors)
   // console.log('isDirty...', isDirty)
   // console.log('isValid...', isValid)
   // console.log('smallScreen...', smallScreen)
@@ -59,8 +50,6 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
   function handleCancel() {
     // reset form
     reset()
-    // remove image upload
-    setB64Image(undefined)
     // hide
     onCancel()
   }
@@ -79,9 +68,9 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
         color: 'primary.main',
         fontWeight: 500
       }}>
-        testimonial
+        Testimonial
       </DialogTitle>
-      <form onSubmit={handleSubmit((data: testimonial) => onSubmit({data, pos}))}
+      <form onSubmit={handleSubmit((data: Testimonial) => onSubmit({data, pos}))}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -91,100 +80,42 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
         <input type="hidden"
           {...register('software')}
         />
+        <input type="hidden"
+          {...register('position')}
+        />
         <DialogContent sx={{
           width: ['100%', '37rem'],
+          padding: '2rem 1.5rem 2.5rem'
         }}>
-          <section className="grid grid-cols-[1fr,2fr] gap-8">
-            <ControlledTextField
-              control={control}
-              options={{
-                name: 'text',
-                multiline: true,
-                label: config.text.label,
-                useNull: true,
-                defaultValue: testimonial?.text,
-                helperTextMessage: config.text.help,
-                helperTextCnt: `${formData?.text?.length || 0}/${config.text.validation.maxLength.value}`,
-              }}
-              rules={config.text.validation}
-            />
-            <div className="py-4"></div>
-            <ControlledTextField
-              control={control}
-              options={{
-                name: 'person',
-                label: config.person.label,
-                useNull: true,
-                defaultValue: testimonial?.person,
-                helperTextMessage: config.person.help,
-                helperTextCnt: `${formData?.person?.length || 0}/${config.person.validation.maxLength.value}`,
-              }}
-              rules={config.person.validation}
-            />
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'message',
+              variant: 'outlined',
+              multiline: true,
+              rows: 4,
+              label: config.message.label,
+              useNull: true,
+              defaultValue: testimonial?.message,
+              helperTextMessage: config.message.help,
+              helperTextCnt: `${formData?.message?.length || 0}/${config.message.validation.maxLength.value}`,
+            }}
+            rules={config.message.validation}
+          />
           <div className="py-4"></div>
-          <section className="py-4 grid grid-cols-[1fr,1fr] gap-8">
-            <ControlledTextField
-              control={control}
-              options={{
-                name: 'email_address',
-                label: config.email_address.label,
-                type: 'email',
-                useNull: true,
-                defaultValue: testimonial?.email_address,
-                helperTextMessage: config.email_address.help,
-                // helperTextCnt: `${formData?.email_address?.length || 0}/${config.email_address.validation.maxLength.value}`,
-              }}
-              rules={config.email_address.validation}
-            />
-
-            <ControlledTextField
-                options={{
-                  name: 'orcid',
-                  label: config.orcid.label,
-                  useNull: true,
-                  defaultValue: testimonial?.orcid,
-                  helperTextMessage: config.orcid.help,
-                  // helperTextCnt: `${formData?.orcid?.length || 0}/${config.orcid.validation.maxLength.value}`,
-                }}
-                control={control}
-                rules={config.orcid.validation}
-              />
-
-            <ControlledTextField
-              control={control}
-              options={{
-                name: 'role',
-                label: config.role.label,
-                useNull: true,
-                defaultValue: testimonial?.role,
-                helperTextMessage: config.role.help,
-                // helperTextCnt: `${formData?.role?.length || 0}/${config.role.validation.maxLength.value}`,
-              }}
-              rules={config.role.validation}
-            />
-
-            <ControlledTextField
-              control={control}
-              options={{
-                name: 'affiliation',
-                label: config.affiliation.label,
-                useNull: true,
-                defaultValue: testimonial?.affiliation,
-                helperTextMessage: config.affiliation.help,
-                // helperTextCnt: `${formData?.affiliation?.length || 0}/${config.affiliation.validation.maxLength.value}`,
-              }}
-              rules={config.affiliation.validation}
-            />
-
-          </section>
-          <section>
-            <ControlledSwitch
-              name="is_contact_person"
-              label="Contact person"
-              control={control}
-              defaultValue={testimonial?.is_contact_person ?? false}
-            />
-          </section>
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'source',
+              // variant: 'outlined',
+              label: config.source.label,
+              useNull: true,
+              defaultValue: testimonial?.source,
+              helperTextMessage: config.source.help,
+              helperTextCnt: `${formData?.source?.length || 0}/${config.source.validation.maxLength.value}`,
+            }}
+            rules={config.source.validation}
+          />
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',
@@ -222,7 +153,7 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
   )
 
   function isSaveDisabled() {
-    // if (isValid === false) return true
+    if (isValid === false) return true
     if (isDirty === false) return true
     return false
   }

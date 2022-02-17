@@ -161,28 +161,20 @@ export const contributorInformation = {
 export type ContributorInformationConfig = typeof contributorInformation
 
 export const testimonialInformation = {
-  text: {
-    label: 'Testimonial',
-    help: 'What credits the software gets',
+  message: {
+    label: 'Message',
+    help: 'What credits the software received?',
     validation: {
-      required: 'The message of testimonial is required',
+      required: 'The message is required',
       minLength: {value: 2, message: 'Minimum length is 2'},
       maxLength: {value: 280, message: 'Maximum length is 280'},
     }
   },
-  person: {
-    label: 'Person',
-    help: 'Who created it?',
+  source: {
+    label: 'Source',
+    help: 'Who provided the credits?',
     validation: {
-      required: 'The person who created testimonal is required',
-      minLength: {value: 2, message: 'Minimum length is 2'},
-      maxLength: {value: 140, message: 'Maximum length is 140'},
-    }
-  },
-  affiliation: {
-    label: 'Affiliation',
-    help: 'Where this person works?',
-    validation: {
+      required: 'The source of testimonal is required',
       minLength: {value: 2, message: 'Minimum length is 2'},
       maxLength: {value: 140, message: 'Maximum length is 140'},
     }

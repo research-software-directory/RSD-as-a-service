@@ -40,7 +40,7 @@ type ModalStates = {
   delete: DeleteModalProps
 }
 
-export default function SoftwareContributors({slug, token}: { slug: string, token: string }) {
+export default function SoftwareContributors({token}: {token: string }) {
   const {options: snackbarOptions, setSnackbar} = useContext(snackbarContext)
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {software} = pageState
@@ -281,8 +281,8 @@ export default function SoftwareContributors({slug, token}: { slug: string, toke
 
   return (
     <>
-      <EditSoftwareSection className='md:flex md:flex-col-reverse md:justify-end xl:pl-8 xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
-        <section className="py-6">
+      <EditSoftwareSection className='md:flex md:flex-col-reverse md:justify-end xl:pl-[3rem] xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
+        <section className="py-4">
           <h2 className="flex pr-4 pb-4 justify-between">
             <span>Contributors</span>
             <span>{contributors?.length}</span>
@@ -293,7 +293,7 @@ export default function SoftwareContributors({slug, token}: { slug: string, toke
             onDelete={onDeleteContributor}
           />
         </section>
-        <section className="py-6">
+        <section className="py-4">
           <EditSectionTitle
             title={config.findContributor.title}
             subtitle={config.findContributor.subtitle}

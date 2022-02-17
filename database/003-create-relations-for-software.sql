@@ -119,13 +119,12 @@ END
 $$;
 
 
-
 CREATE TABLE testimonial (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID REFERENCES software (id) NOT NULL,
 	message VARCHAR(500) NOT NULL,
 	source VARCHAR(200) NOT NULL,
-	pos INTEGER
+	position INTEGER
 );
 
 CREATE FUNCTION sanitise_insert_testimonial() RETURNS TRIGGER LANGUAGE plpgsql as
