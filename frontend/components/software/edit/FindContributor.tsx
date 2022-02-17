@@ -40,7 +40,7 @@ export default function FindContributor({onAdd, onCreate}:
       setLoading(false)
     }
     // if we have search term at least 3 chars long
-    if (searchFor && searchFor.length > 2) {
+    if (searchFor && searchFor.length > config.findContributor.validation.minLength) {
       searchContributor(searchFor)
     } else if (abort===false) {
       setOptions([])
@@ -81,7 +81,7 @@ export default function FindContributor({onAdd, onCreate}:
         </Button>
       )
     } else if (typeof selected == 'undefined' &&
-      newInputValue?.length > 5) {
+      newInputValue?.length > config.findContributor.validation.minLength) {
       return (
         <Button
           onClick={createNewContributor}
@@ -122,7 +122,6 @@ export default function FindContributor({onAdd, onCreate}:
     } else if (value === null) {
       // cleaned
       // console.log('onAutocompleteChange...cleaned...', value)
-      // we clean selected option
       setSelected(undefined)
     } else if (value && value?.key) {
       // existing contributor

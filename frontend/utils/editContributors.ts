@@ -166,21 +166,46 @@ export async function updateContributorInDb({data, token}: { data: Contributor, 
   const resp = await patchContributor({contributor, token})
 
   if (resp.status === 200) {
-    // if we uploaded new image
-    if (data.avatar_b64 &&
-      data?.avatar_b64.length > 10) {
-      // clean it from memory data
-      data.avatar_b64 = null
-      // and we use avatar url instead
-      data.avatar_url = getAvatarUrl(data)
-    }
+    // if we uploaded new image we remove
+    // data and construct avatar_url
+    const returned = removeBase64Data(data)
+    // if (data.avatar_b64 &&
+    //   data?.avatar_b64.length > 10) {
+    //   // clean it from memory data
+    //   data.avatar_b64 = null
+    //   // and we use avatar url instead
+    //   data.avatar_url = getAvatarUrl(data)
+    // }
     return {
       status: 200,
-      message: data
+      message: returned
     }
   } else {
     return resp
   }
+}
+
+export function prepareContributorData(data: Contributor) {
+  const contributor = getPropsFromObject(data, ContributorProps)
+  // do we need to save new base64 image
+  if (data?.avatar_b64 &&
+    data?.avatar_b64.length > 10 &&
+    data?.avatar_mime_type !== null) {
+    // split base64 to use only encoded content
+    contributor.avatar_data = data?.avatar_b64.split(',')[1]
+  }
+  return contributor
+}
+
+export function removeBase64Data(contributor: Contributor) {
+  if (contributor.avatar_b64 &&
+    contributor?.avatar_b64.length > 10) {
+    // clean it from memory data
+    contributor.avatar_b64 = null
+    // and we use avatar url instead
+    contributor.avatar_url = getAvatarUrl(contributor)
+  }
+  return contributor
 }
 
 export async function patchContributor({contributor, token}: { contributor: Contributor, token: string }) {
@@ -223,18 +248,6 @@ export async function deleteContributorsById({ids,token}:{ids:string[],token:str
   }
 }
 
-
-export function prepareContributorData(data: Contributor) {
-  const contributor = getPropsFromObject(data, ContributorProps)
-  // do we need to save new base64 image
-  if (data?.avatar_b64 &&
-    data?.avatar_b64.length > 10 &&
-    data?.avatar_mime_type !== null) {
-    // split base64 to use only encoded content
-    contributor.avatar_data = data?.avatar_b64.split(',')[1]
-  }
-  return contributor
-}
 
 export function combineRoleAndAffiliation(item:Contributor){
   if (item?.role && item?.affiliation) return `${item?.role}, ${item?.affiliation}`

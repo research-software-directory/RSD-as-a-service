@@ -89,8 +89,12 @@ export const contributorInformation = {
   findContributor: {
     title: 'Add contributor',
     subtitle: 'We search by name in RSD and ORCID databases',
-    label: 'Find contributor',
-    help: 'At least 3 letters of contributor\'s name, pattern {First name} {Last name}'
+    label: 'Find or add contributor',
+    help: 'At least 3 letters, use pattern {First name} {Last name}',
+    validation: {
+      // custom validation rule, not in use by react-hook-form
+      minLength: 2,
+    }
   },
   is_contact_person: {
     label: 'Contact person',
@@ -150,8 +154,6 @@ export const contributorInformation = {
         value: /\d{4}-\d{4}-\d{4}-\d{4}/,
         message: 'Invalid pattern, not a 0000-0000-0000-0000'
       }
-      // minLength: {value: 16, message: 'Minimum length is 16'},
-      // maxLength: {value: 19, message: 'Maximum length is 19'},
     }
   }
 }

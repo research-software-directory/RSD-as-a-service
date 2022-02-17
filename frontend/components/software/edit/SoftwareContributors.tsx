@@ -4,11 +4,12 @@ import {app} from '../../../config/app'
 import snackbarContext from '../../snackbar/PageSnackbarContext'
 import ContentLoader from '../../layout/ContentLoader'
 import EditSoftwareSection from './EditSoftwareSection'
-import editSoftwareContext, {EditSoftwareActionType} from './editSoftwareContext'
+import editSoftwareContext from './editSoftwareContext'
 import EditSectionTitle from './EditSectionTitle'
 import {
   addContributorToDb, deleteContributorsById,
-  getContributorsForSoftware, updateContributorInDb
+  getAvatarUrl, getContributorsForSoftware,
+  prepareContributorData, updateContributorInDb
 } from '../../../utils/editContributors'
 import {Contributor, ContributorProps} from '../../../types/Contributor'
 import useOnUnsaveChange from '../../../utils/useOnUnsavedChange'
@@ -53,11 +54,7 @@ export default function SoftwareContributors({slug, token}: { slug: string, toke
       open: false
     }
   })
-  // we use react-hook-form and pageState to enable/disable Save button in the header
-  // when user clicks on the Save button it will trigger onSubmit event in this component
-  // const {handleSubmit} = useForm<{changed:boolean}>({
-  //   mode: 'onChange'
-  // })
+  // we use pageState to enable/disable Save button in the header
   // extract from (shared) pageState
   const {isDirty,isValid} = pageState
   // // watch for unsaved changes
@@ -124,23 +121,24 @@ export default function SoftwareContributors({slug, token}: { slug: string, toke
     // set defaults
     newContributor.software = software?.id ?? ''
     newContributor.is_contact_person = false
-    // show modal and pass the data
-    setModal({
-      edit:{
-        open: true,
-        pos: undefined,
-        contributor: newContributor
-      },
-      delete: {
-        open: false,
-        pos: undefined
-      }
-    })
+
+    loadContributorIntoModal(newContributor)
   }
 
-  function onEditContributor(pos:number) {
-    // select contributor
-    const contributor = contributors[pos]
+  async function onAddContributor(item: Contributor) {
+    // update software id if missing
+    if (item.software === '' &&
+      software?.id &&
+      software?.id !== '') {
+      item.software = software?.id
+    }
+    // extract props into new object
+    const contributor: Contributor = getPropsFromObject(item, ContributorProps)
+
+    loadContributorIntoModal(contributor)
+  }
+
+  function loadContributorIntoModal(contributor: Contributor,pos?:number) {
     if (contributor) {
       // show modal and pass data
       setModal({
@@ -154,6 +152,12 @@ export default function SoftwareContributors({slug, token}: { slug: string, toke
         }
       })
     }
+  }
+
+  function onEditContributor(pos:number) {
+    // select contributor
+    const contributor = contributors[pos]
+    loadContributorIntoModal(contributor,pos)
   }
 
   async function onSubmitContributor({data, pos}:{data:Contributor,pos?: number}) {
@@ -187,33 +191,25 @@ export default function SoftwareContributors({slug, token}: { slug: string, toke
       }
     } else {
       // this is completely new contributor we need to add to DB
-      onAddContributor(data)
-    }
-  }
-
-  async function onAddContributor(item: Contributor) {
-    // update software id if missing
-    if (item.software === '' &&
-      software?.id &&
-      software?.id !== '') {
-      item.software = software?.id
-    }
-    // extract props into new object
-    const contributor: Contributor = getPropsFromObject(item, ContributorProps)
-    // add contributor to database
-    const resp = await addContributorToDb({contributor, token})
-    if (resp.status === 201) {
-      // id of created record is provided in return message
-      contributor.id = resp.message
-      // update contributor list
-      updateContributorList({data:contributor})
-    } else {
-      setSnackbar({
-        ...snackbarOptions,
-        open: true,
-        severity: 'error',
-        message: `Failed to add ${getDisplayName(contributor)}. Error: ${resp.message}`,
-      })
+      const contributor = prepareContributorData(data)
+      const resp = await addContributorToDb({contributor, token})
+      if (resp.status === 201) {
+        // id of created record is provided in returned in message
+        contributor.id = resp.message
+        // remove avatar data
+        contributor.avatar_data = null
+        // construct url
+        contributor.avatar_url = getAvatarUrl(contributor)
+        // update contributors list
+        updateContributorList({data:contributor})
+      } else {
+        setSnackbar({
+          ...snackbarOptions,
+          open: true,
+          severity: 'error',
+          message: `Failed to add ${getDisplayName(data)}. Error: ${resp.message}`,
+        })
+      }
     }
   }
 
