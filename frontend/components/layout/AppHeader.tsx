@@ -13,6 +13,7 @@ import UserMenu from './UserMenu'
 import AddMenu from './AddMenu'
 
 import {getRedirectUrl} from '../../utils/surfConext'
+import JavascriptSupportWarning from './JavascriptSupportWarning'
 
 export default function AppHeader({editButton}:{editButton?:JSX.Element}){
   const [activePath, setActivePath] = useState('/')
@@ -89,6 +90,7 @@ export default function AppHeader({editButton}:{editButton?:JSX.Element}){
           <div className="flex flex-1 md:justify-center md:items-center">
             {getMenuItems()}
           </div>
+          <JavascriptSupportWarning />
           <div className="flex-1 min-w-[8rem] text-right sm:flex-none">
             {editButton ? editButton : null}
             {status==='authenticated' ? <AddMenu/> : null}
