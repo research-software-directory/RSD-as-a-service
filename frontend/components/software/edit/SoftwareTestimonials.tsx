@@ -238,8 +238,15 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     const list = [
       ...testimonials.slice(0, pos),
       ...testimonials.slice(pos+1)
-    ]
+    ].map((item,pos) => {
+      item.position = pos + 1
+      return item
+    })
+
+    // update list
     setTestimonials(list)
+    // save new positions to db
+    patchPositions(list)
   }
 
   function onDragEnd({destination, source}: DropResult){
@@ -273,12 +280,11 @@ export default function SoftwareTestimonials({token}: {token: string }) {
   }
 
   /**
-   * We patch the position prop of items. This fn is called by "dummy" form which is
-   * linked to Save button at the header of the page.
+   * We patch the position prop of items.
    * @param data
    */
-  async function patchPositions(data: any) {
-    const resp = await patchTestimonialPositions({testimonials, token})
+  async function patchPositions(data:Testimonial[]) {
+    const resp = await patchTestimonialPositions({testimonials:data, token})
     if (resp.status === 200) {
       // after we patched all items
       dispatchPageState({
@@ -293,6 +299,14 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     }
   }
 
+  /**
+   * This fn is called by "dummy" form which is
+   * linked to Save button at the header of the page
+   */
+  function patchSubmit() {
+    patchPositions(testimonials)
+  }
+
   function getTestimonialSubtitle() {
     if (testimonials?.length === 1) {
       return `${software?.brand_name} has 1 testimonial`
@@ -304,7 +318,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     <section className="flex-1">
       <form
         id={pageState.step?.formId}
-        onSubmit={handleSubmit(patchPositions)}>
+        onSubmit={handleSubmit(patchSubmit)}>
         {/*
           This form is used to enable Save button in the header
           and trigger save of changed items positions by drag-and-drop

@@ -7,9 +7,9 @@ export async function getTestimonialsForSoftware({software, frontend, token}:
   {software: string, frontend?: boolean, token?: string}) {
   try {
 
-    let url = `${process.env.POSTGREST_URL}/testimonial?software=eq.${software}`
+    let url = `${process.env.POSTGREST_URL}/testimonial?software=eq.${software}&order=position.asc`
     if (frontend === true) {
-      url = `/api/v1/testimonial?software=eq.${software}`
+      url = `/api/v1/testimonial?software=eq.${software}&order=position.asc`
     }
 
     const resp = await fetch(url, {
