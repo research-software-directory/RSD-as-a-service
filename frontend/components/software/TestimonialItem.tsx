@@ -32,12 +32,12 @@ export default function TestimonialItem({item}: { item: Testimonial }) {
     <div>
       <TestimonialContent>
         <blockquote className="before:content-['\201C'] after:content-['\201C']">
-          {item.text}
+          {item.message}
         </blockquote>
         {/* &quot;  &quot; */}
       </TestimonialContent>
       <GivenBy>
-        – {item.person}, {item.affiliation}
+        – {item.source}
       </GivenBy>
     </div>
   )

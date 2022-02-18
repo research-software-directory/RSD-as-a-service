@@ -25,8 +25,6 @@ import {
   getLicenseForSoftware,
   getContributorMentionCount,
   getMentionsForSoftware,
-  getTestimonialsForSoftware,
-  getContributorsForSoftware,
   getRelatedToolsForSoftware,
   getRemoteMarkdown,
   ContributorMentionCount,
@@ -42,6 +40,8 @@ import {Testimonial} from '../../../types/Testimonial'
 import {getDisplayName} from '../../../utils/getDisplayName'
 import {getAccountFromToken} from '../../../auth/jwtUtils'
 import EditSoftwareButton from '../../../components/software/edit/EditSoftwareButton'
+import {getContributorsForSoftware} from '../../../utils/editContributors'
+import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string,
@@ -196,9 +196,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // mentions
       getMentionsForSoftware(software.id,token),
       // testimonials
-      getTestimonialsForSoftware(software.id,token),
+      getTestimonialsForSoftware({software: software.id, frontend: false, token}),
       // contributors
-      getContributorsForSoftware(software.id,token),
+      getContributorsForSoftware({software:software.id,frontend:false,token}),
       // relatedTools
       getRelatedToolsForSoftware(software.id,token),
       // check if maintainer

@@ -63,7 +63,7 @@ export default function SoftwareContributorsList({contributors, onEdit, onDelete
             // this makes space for buttons
             paddingRight:'6.5rem',
             '&:hover': {
-              backgroundColor:'#eee'
+              backgroundColor:'grey.100'
             }
           }}
           >

@@ -62,11 +62,6 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
         <title>Projects | RSD</title>
       </Head>
       <PageTitle title="Projects">
-        <noscript>
-          <Alert severity="warning">
-            Limited functionality: Your browser does not support JavaScript.
-          </Alert>
-        </noscript>
         <TablePagination
           component="nav"
           count={count}

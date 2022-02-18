@@ -268,61 +268,6 @@ export async function getMentionsForSoftware(uuid: string,token?:string) {
 }
 
 /**
- * TESTIMONIALS
- */
-export async function getTestimonialsForSoftware(uuid: string,token?:string) {
-  try {
-    // this request is always perfomed from backend
-    // the content is NOT ordered
-    const url = `${process.env.POSTGREST_URL}/testimonial?software=eq.${uuid}`
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders(token)
-    })
-    if (resp.status === 200) {
-      const data: Testimonial[] = await resp.json()
-      return data
-    } else if (resp.status === 404) {
-      logger(`getTestimonialsForSoftware: 404 [${url}]`, 'error')
-      // query not found
-      return []
-    }
-  } catch (e: any) {
-    logger(`getTestimonialsForSoftware: ${e?.message}`, 'error')
-    return []
-  }
-}
-
-/**
- * CONTRIBUTORS
- */
-
-export async function getContributorsForSoftware(uuid: string,token?:string) {
-  try {
-    // this request is always perfomed from backend
-    // the content is order by family_names ascending
-    const columns = ContributorProps.join(',')
-    // 'id,software,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
-    const url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${uuid}&order=given_names.asc`
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders(token)
-    })
-    if (resp.status === 200) {
-      const data: Contributor[] = await resp.json()
-      return data
-    } else if (resp.status === 404) {
-      logger(`getContributorsForSoftware: 404 [${url}]`, 'error')
-      // query not found
-      return undefined
-    }
-  } catch (e: any) {
-    logger(`getContributorsForSoftware: ${e?.message}`, 'error')
-    return undefined
-  }
-}
-
-/**
  * RELATED TOOLS
  */
 
