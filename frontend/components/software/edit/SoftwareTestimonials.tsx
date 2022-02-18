@@ -217,7 +217,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
   }
 
   async function deleteTestimonial(pos?:number) {
-    if (!pos) return
+    if (typeof pos=='undefined') return
     closeModals()
     // debugger
     const testimonial = testimonials[pos]

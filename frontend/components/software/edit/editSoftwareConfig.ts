@@ -167,7 +167,7 @@ export const testimonialInformation = {
     validation: {
       required: 'The message is required',
       minLength: {value: 2, message: 'Minimum length is 2'},
-      maxLength: {value: 280, message: 'Maximum length is 280'},
+      maxLength: {value: 500, message: 'Maximum length is 500'},
     }
   },
   source: {
@@ -176,7 +176,7 @@ export const testimonialInformation = {
     validation: {
       required: 'The source of testimonal is required',
       minLength: {value: 2, message: 'Minimum length is 2'},
-      maxLength: {value: 140, message: 'Maximum length is 140'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   }
 }
