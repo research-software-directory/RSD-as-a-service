@@ -20,6 +20,7 @@ import TestimonialSection from '../../../components/software/TestimonialsSection
 import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
 import {
   getSoftwareItem,
+  getRepostoryInfoForSoftware,
   getCitationsForSoftware,
   getTagsForSoftware,
   getLicenseForSoftware,
@@ -32,7 +33,7 @@ import {
 } from '../../../utils/getSoftware'
 import {isMaintainerOfSoftware} from '../../../utils/editSoftware'
 import logger from '../../../utils/logger'
-import {License, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
+import {License, RepositoryInfo, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {ScriptProps} from 'next/script'
 import {Contributor} from '../../../types/Contributor'
@@ -44,16 +45,17 @@ import {getContributorsForSoftware} from '../../../utils/editContributors'
 import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
 
 interface SoftwareIndexData extends ScriptProps{
-  slug: string,
-  software: SoftwareItem,
-  citationInfo: SoftwareCitationInfo,
-  tagsInfo: Tag[],
-  licenseInfo: License[],
-  softwareIntroCounts: ContributorMentionCount,
-  mentions: Mention[],
-  testimonials: Testimonial[],
-  contributors: Contributor[],
-  relatedTools: RelatedTools[],
+  slug: string
+  software: SoftwareItem
+  citationInfo: SoftwareCitationInfo
+  tagsInfo: Tag[]
+  licenseInfo: License[]
+  repositoryInfo: RepositoryInfo
+  softwareIntroCounts: ContributorMentionCount
+  mentions: Mention[]
+  testimonials: Testimonial[]
+  contributors: Contributor[]
+  relatedTools: RelatedTools[]
   isMaintainer: boolean
 }
 
@@ -63,7 +65,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   // extract data from props
   const {
     software, citationInfo, tagsInfo,
-    licenseInfo, softwareIntroCounts,
+    licenseInfo, repositoryInfo, softwareIntroCounts,
     mentions, testimonials, contributors,
     relatedTools, isMaintainer, slug
   } = props
@@ -126,7 +128,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       </PageContainer>
       <GetStartedSection
         get_started_url={software.get_started_url}
-        repository_url={software.repository_url}
+        repository_url={repositoryInfo.url}
       />
       <CitationSection
         citationInfo={citationInfo}
@@ -137,7 +139,8 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         description={software?.description ?? ''}
         tags={tagsInfo}
         licenses={licenseInfo}
-        repository={software.repository_url}
+        repository={repositoryInfo.url}
+        languages={repositoryInfo.languages}
       />
       <MentionsSection
         mentions={mentions}
@@ -190,7 +193,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // tagsInfo
       getTagsForSoftware(software.id,false,token),
       // licenseInfo
-      getLicenseForSoftware(software.id,false,token),
+      getLicenseForSoftware(software.id, false, token),
+      // repositoryInfo: url, languages and commits
+      getRepostoryInfoForSoftware(software.id, token),
       // softwareMentionCounts
       getContributorMentionCount(software.id,token),
       // mentions
@@ -208,6 +213,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       citationInfo,
       tagsInfo,
       licenseInfo,
+      repositoryInfo,
       softwareIntroCounts,
       mentions,
       testimonials,
@@ -223,6 +229,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         citationInfo,
         tagsInfo,
         licenseInfo,
+        repositoryInfo,
         softwareIntroCounts,
         mentions,
         testimonials,

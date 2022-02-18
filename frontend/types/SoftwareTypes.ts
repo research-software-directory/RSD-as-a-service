@@ -80,3 +80,23 @@ export type License = {
   software: string
   license: string
 }
+
+
+export type ProgramingLanguages = {
+  [key: string]: number
+}
+
+export type CommitHistory = {
+  [key: string]: number
+}
+
+/**
+ * REPOSITORY METRICS
+ */
+export type RepositoryInfo = {
+  software: string,
+  url: string,
+  languages: ProgramingLanguages,
+  license: string,
+  commit_history: CommitHistory
+}
