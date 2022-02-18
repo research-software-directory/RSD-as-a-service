@@ -18,6 +18,8 @@ export default function SoftwareTestimonialListDnd({item,index,secondaryAction}:
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           sx={{
+            // spacing
+            paddingRight:'8rem',
             backgroundColor: snapshot.isDragging ? 'grey.100' : 'paper'
           }}
           secondaryAction={secondaryAction}
