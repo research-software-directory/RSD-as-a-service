@@ -342,8 +342,19 @@ public class Main {
 			testimonials.forEach(jsonMention -> {
 				JsonObject testimonialToSave = new JsonObject();
 				testimonialToSave.addProperty("software", slugToId.get(slug));
-				// testimonialToSave.add("affiliation", jsonMention.getAsJsonObject().getAsJsonPrimitive("affiliation"));
-				testimonialToSave.add("source", jsonMention.getAsJsonObject().getAsJsonPrimitive("person"));
+				JsonElement personJson = jsonMention.getAsJsonObject().get("person");
+				JsonElement affiliationJson = jsonMention.getAsJsonObject().get("affiliation");
+				JsonElement sourceJson;
+				if ((personJson == null || personJson.isJsonNull()) && (affiliationJson == null || affiliationJson.isJsonNull())) {
+					sourceJson = JsonNull.INSTANCE;
+				} else if (personJson == null || personJson.isJsonNull()) {
+					sourceJson = affiliationJson;
+				} else if (affiliationJson == null || affiliationJson.isJsonNull()) {
+					sourceJson = personJson;
+				} else {
+					sourceJson = new JsonPrimitive(personJson.getAsString() + ", " + affiliationJson.getAsString());
+				}
+				testimonialToSave.add("source", sourceJson);
 				testimonialToSave.add("message", jsonMention.getAsJsonObject().getAsJsonPrimitive("text"));
 				allTestimonialsToSave.add(testimonialToSave);
 			});
