@@ -25,8 +25,6 @@ import {
   getLicenseForSoftware,
   getContributorMentionCount,
   getMentionsForSoftware,
-  // getTestimonialsForSoftware,
-  // getContributorsForSoftware,
   getRelatedToolsForSoftware,
   getRemoteMarkdown,
   ContributorMentionCount,

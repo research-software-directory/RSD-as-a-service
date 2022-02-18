@@ -7,8 +7,7 @@ import {DropResult} from 'react-beautiful-dnd'
 
 import {
   DragDropContext,
-  Droppable,
-  OnDragEndResponder
+  Droppable
 } from 'react-beautiful-dnd'
 
 import SoftwareTestimonialListItemDnd from './SoftwareTestimonialsDndListItem'
@@ -77,19 +76,8 @@ export default function SoftwareTestimonialListDnd({testimonials, onEdit, onDele
             {renderList()}
             {provided.placeholder}
           </List>
-          // <div ref={provided.innerRef} {...provided.droppableProps}>
-          //   {items.map((item, index) => (
-          //     <DraggableListItem item={item} index={index} key={item.id} />
-          //   ))}
-          //   {provided.placeholder}
-          // </div>
         )}
       </Droppable>
     </DragDropContext>
-    // <List sx={{
-    //   width: '100%',
-    // }}>
-    //   {renderList()}
-    // </List>
   )
 }
