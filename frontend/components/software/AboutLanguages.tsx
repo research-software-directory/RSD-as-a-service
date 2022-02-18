@@ -3,7 +3,7 @@ import {PrograminLanguages} from '../../types/SoftwareTypes'
 
 export default function AboutLanguages({languages}: {languages: PrograminLanguages }) {
 
-  if (typeof languages == 'undefined') return null
+  if (typeof languages == 'undefined' || languages === null) return null
 
   // extract language keys
   const keys = Object.keys(languages)
@@ -24,25 +24,6 @@ export default function AboutLanguages({languages}: {languages: PrograminLanguag
       }
     }
   })
-
-  function getStatBar(key: string) {
-    // calculate percentage of total code base
-    const pct = Math.round((languages[key] / total) * 100)
-    if (pct > 0) {
-      // return bar scaled to pct
-      return (
-        <div
-          title={`${pct}%`}
-          className="bg-grey-400"
-          style={{
-            width: `${pct}%`,
-            height: '0.5rem',
-            opacity: 0.5
-          }}>
-        </div>
-      )
-    }
-  }
 
   return (
     <>
