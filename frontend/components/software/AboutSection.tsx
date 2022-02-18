@@ -1,4 +1,4 @@
-import {Tag,License, PrograminLanguages} from '../../types/SoftwareTypes'
+import {Tag,License, ProgramingLanguages} from '../../types/SoftwareTypes'
 import PageContainer from '../layout/PageContainer'
 import AboutStatement from './AboutStatement'
 import AboutTags from './AboutTags'
@@ -12,7 +12,7 @@ type AboutSectionType = {
   tags: Tag[]
   licenses: License[]
   repository: string | null
-  languages: PrograminLanguages
+  languages: ProgramingLanguages
 }
 
 

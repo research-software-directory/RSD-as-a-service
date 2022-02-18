@@ -82,7 +82,7 @@ export type License = {
 }
 
 
-export type PrograminLanguages = {
+export type ProgramingLanguages = {
   [key: string]: number
 }
 
@@ -96,7 +96,7 @@ export type CommitHistory = {
 export type RepositoryInfo = {
   software: string,
   url: string,
-  languages: PrograminLanguages,
+  languages: ProgramingLanguages,
   license: string,
   commit_history: CommitHistory
 }
