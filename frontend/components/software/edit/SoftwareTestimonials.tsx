@@ -293,6 +293,13 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     }
   }
 
+  function getTestimonialSubtitle() {
+    if (testimonials?.length === 1) {
+      return `${software?.brand_name} has 1 testimonial`
+    }
+    return `${software?.brand_name} has ${testimonials?.length} testimonials`
+  }
+
   return (
     <section className="flex-1">
       <form
@@ -308,7 +315,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
         <div className="py-4">
           <EditSectionTitle
             title={'Testimonials'}
-            subtitle={testimonials?.length > 0 ? `You have ${testimonials?.length} testimonials` : ''}
+            subtitle={getTestimonialSubtitle()}
           >
             <Button
               startIcon={<AddIcon />}
