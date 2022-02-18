@@ -2,14 +2,16 @@ import {useContext, useEffect, useState} from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import {Button} from '@mui/material'
 
+import {useForm} from 'react-hook-form'
+
 import snackbarContext,{snackbarDefaults} from '../../snackbar/PageSnackbarContext'
 import EditSoftwareSection from './EditSoftwareSection'
-import editSoftwareContext from './editSoftwareContext'
+import editSoftwareContext, {EditSoftwareActionType} from './editSoftwareContext'
 import EditSectionTitle from './EditSectionTitle'
 import {Testimonial} from '../../../types/Testimonial'
 import {
   postTestimonial, getTestimonialsForSoftware,
-  patchTestimonial, deleteTestimonialById
+  patchTestimonial, deleteTestimonialById, patchTestimonialPositions
 } from '../../../utils/editTestimonial'
 import EditTestimonialModal from './EditTestimonialModal'
 import ContentLoader from '../../layout/ContentLoader'
@@ -52,6 +54,15 @@ export default function SoftwareTestimonials({token}: {token: string }) {
       open: false
     }
   })
+
+  // destructure methods from react-hook-form
+  const {handleSubmit, reset, control} = useForm<{update:boolean}>({
+    mode: 'onChange',
+    defaultValues: {
+      update:false
+    }
+  })
+
   useEffect(() => {
     let abort = false
     const getTestimonials = async (software:string,token:string) => {
@@ -238,7 +249,6 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     // console.log('destination...',destination)
     // console.log('source...', source)
     // console.groupEnd()
-    // debugger
     const newItems = reorderList({
       list:testimonials,
       startIndex:source.index,
@@ -250,10 +260,50 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     })
     // debugger
     setTestimonials(newItems)
+    // position changed
+    if (source.index !== destination.index) {
+      dispatchPageState({
+        type: EditSoftwareActionType.UPDATE_STATE,
+        payload: {
+          isDirty:true,
+          isValid:true,
+        }
+      })
+    }
+  }
+
+  /**
+   * We patch the position prop of items. This fn is called by "dummy" form which is
+   * linked to Save button at the header of the page.
+   * @param data
+   */
+  async function patchPositions(data: any) {
+    const resp = await patchTestimonialPositions({testimonials, token})
+    if (resp.status === 200) {
+      // after we patched all items
+      dispatchPageState({
+        type: EditSoftwareActionType.UPDATE_STATE,
+        payload: {
+          isDirty:false,
+          isValid:true,
+        }
+      })
+    } else {
+      showErrorMessage(`Failed to update testimonial positions! Error: ${resp.message}`)
+    }
   }
 
   return (
     <section className="flex-1">
+      <form
+        id={pageState.step?.formId}
+        onSubmit={handleSubmit(patchPositions)}>
+        {/*
+          This form is used to enable Save button in the header
+          and trigger save of changed items positions by drag-and-drop
+          <input type="hidden" {...register('update') } />
+        */}
+      </form>
       <EditSoftwareSection>
         <div className="py-4">
           <EditSectionTitle
@@ -261,12 +311,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
             subtitle={testimonials?.length > 0 ? `You have ${testimonials?.length} testimonials` : ''}
           >
             <Button
-              // variant='contained'
               startIcon={<AddIcon />}
-              // endIcon={<AddIcon />}
-              // sx={{
-              //   marginRight: '2rem'
-              // }}
               onClick={onAdd}
             >
               Add

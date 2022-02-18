@@ -95,6 +95,44 @@ export async function patchTestimonial({testimonial, token}: { testimonial: Test
   }
 }
 
+export async function patchTestimonialPositions({testimonials, token}: { testimonials: Testimonial[], token: string }) {
+  try {
+    // create all requests
+    const requests = testimonials.map(testimonial => {
+      const url = `/api/v1/testimonial?id=eq.${testimonial.id}`
+      return fetch(url, {
+        method: 'PATCH',
+        headers: {
+          ...createJsonHeaders(token),
+        },
+        // just update position!
+        body: JSON.stringify({
+          position: testimonial.position
+        })
+      })
+    })
+    // execute them in parallel
+    const responses = await Promise.all(requests)
+    // check for errors
+    responses.map(resp => {
+      const msg = extractReturnMessage(resp)
+      if ([200, 201].includes(msg.status) === false) {
+        // maybe throw error here?
+        // return msg
+        throw new Error(msg?.message ?? 'Unknown error')
+      }
+    })
+    // or first response
+    return extractReturnMessage(responses[0])
+  } catch (e: any) {
+    logger(`patchTestimonial: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
 
 export async function deleteTestimonialById({id, token}: { id: string, token: string }) {
   try {
