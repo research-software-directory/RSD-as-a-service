@@ -1,4 +1,4 @@
-import {RepositoryUrl,Tag,License} from '../../types/SoftwareTypes'
+import {Tag,License, PrograminLanguages} from '../../types/SoftwareTypes'
 import PageContainer from '../layout/PageContainer'
 import AboutStatement from './AboutStatement'
 import AboutTags from './AboutTags'
@@ -6,8 +6,18 @@ import AboutLanguages from './AboutLanguages'
 import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
 
-export default function AboutSection({brand_name = '', description = '', tags, licenses, repository}:
-  { brand_name: string, description: string, tags:Tag[], licenses: License[], repository:string|null}) {
+type AboutSectionType = {
+  brand_name: string
+  description: string
+  tags: Tag[]
+  licenses: License[]
+  repository: string | null
+  languages: PrograminLanguages
+}
+
+
+export default function AboutSection({brand_name = '', description = '', tags, licenses, repository, languages}:
+  AboutSectionType) {
 
   if (brand_name==='') return null
 
@@ -24,7 +34,7 @@ export default function AboutSection({brand_name = '', description = '', tags, l
       </div>
       <div className="flex-1">
         <AboutTags tags={tags || []} />
-        <AboutLanguages languages={['Test 1', 'Test 2', 'Test 3']} />
+        <AboutLanguages languages={languages} />
         <AboutLicense license={license || []} />
         <AboutSourceCode repository={repository} />
       </div>

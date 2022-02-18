@@ -1,10 +1,8 @@
-import {SoftwareItem,Tag} from '../types/SoftwareTypes'
+import {RepositoryInfo, SoftwareItem,Tag} from '../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {MentionType} from '../types/MentionType'
-import {Contributor, ContributorProps} from '../types/Contributor'
-import {Testimonial} from '../types/Testimonial'
 import {createJsonHeaders} from './fetchHelpers'
 
 /**
@@ -84,9 +82,18 @@ export async function getRepostoryInfoForSoftware(software: string | undefined, 
     } else {
       resp = await fetch(url, {method: 'GET'})
     }
+
     if (resp.status === 200) {
-      const data: SoftwareItem[] = await resp.json()
-      return data[0]
+      const data:any = await resp.json()
+      if (data?.length === 1) {
+        const info: RepositoryInfo = {
+          ...data[0],
+          // parse JSONB
+          languages: JSON.parse(data[0].languages),
+          commit_history: JSON.parse(data[0].commit_history)
+        }
+        return info
+      }
     }
   } catch (e: any) {
     logger(`getSoftwareItem: ${e?.message}`, 'error')
