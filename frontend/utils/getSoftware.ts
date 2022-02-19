@@ -94,9 +94,11 @@ export async function getRepostoryInfoForSoftware(software: string | undefined, 
         }
         return info
       }
+      return null
     }
   } catch (e: any) {
     logger(`getSoftwareItem: ${e?.message}`, 'error')
+    return null
   }
 }
 
