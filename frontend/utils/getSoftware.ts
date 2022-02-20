@@ -67,7 +67,7 @@ export async function getSoftwareItem(slug:string|undefined, token?:string){
   }
 }
 
-// query for software item page based on slug
+// query for software item page based on software id
 export async function getRepostoryInfoForSoftware(software: string | undefined, token?: string) {
   try {
     // console.log('token...', token)

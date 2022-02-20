@@ -56,6 +56,14 @@ export function isoStrToLocalDateStr(isoString: string, locale = 'en-US',
   return ''
 }
 
+export function formatDateToStr(date: Date|undefined, locale = 'en-US',
+  options = defaultDateFormattingOptions): string {
+  if (date) {
+    return date.toLocaleDateString(locale, options)
+  }
+  return ''
+}
+
 /**
  * Get human readible time difference like: right now, X hours ago, X days ago etc..
  * @param isoString
@@ -76,7 +84,13 @@ export function getTimeAgoSince(since: Date, isoStringDate: string | null) {
       const hoursDiff = Math.floor(msDiff / hours)
       if (hoursDiff > 24) {
         const daysDiff = Math.floor(hoursDiff / 24)
-        if (daysDiff > 1) return `${hoursDiff} days ago`
+        if (daysDiff > 30) {
+          const monthDiff = Math.floor(daysDiff / 30)
+          return `${monthDiff} months ago`
+        }else if (daysDiff > 7) {
+          const weeksDiff = Math.floor(daysDiff / 7)
+          return `${weeksDiff} weeks ago`
+        } else if (daysDiff > 1) return `${daysDiff} days ago`
         return '1 day ago'
       } else if (hoursDiff === 1) {
         return '1 hour ago'
