@@ -100,3 +100,24 @@ export type RepositoryInfo = {
   license: string,
   commit_history: CommitHistory
 }
+
+/**
+ * RELATED TOOLS / SOFTWARE
+ */
+
+export type RelatedSoftware = {
+  id: string,
+  slug: string,
+  brand_name: string,
+  short_statement: string,
+}
+
+export type RelatedTools = {
+  origin: string,
+  software: RelatedSoftware
+}
+
+export type SoftwareForSoftware = {
+  origin: string,
+  relation: string
+}

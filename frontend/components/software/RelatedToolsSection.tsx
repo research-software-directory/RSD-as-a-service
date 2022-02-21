@@ -1,4 +1,4 @@
-import {RelatedTools} from '../../utils/getSoftware'
+import {RelatedTools} from '../../types/SoftwareTypes'
 import PageContainer from '../layout/PageContainer'
 import SoftwareGrid, {SoftwareGridType} from './SoftwareGrid'
 
@@ -7,16 +7,19 @@ export default function RelatedToolsSection({relatedTools=[]}: {relatedTools: Re
   if (relatedTools?.length === 0) return null
 
   // prepare related software items to be used by SoftwareGrid
-  const relatedSoftware:SoftwareGridType[] = relatedTools.map(item => {
-    return {
-      id: item.software?.id,
-      slug: item.software?.slug,
-      brand_name: item.software?.brand_name,
-      is_featured: false,
-      short_statement: item.software?.short_statement||'',
-      updated_at: null,
-    }
-  })
+  const relatedSoftware: SoftwareGridType[] = relatedTools
+    // filter out items without slug (seem to be some)
+    .filter(item => item.software?.slug)
+    .map(item => {
+      return {
+        id: item.software?.id,
+        slug: item.software?.slug,
+        brand_name: item.software?.brand_name,
+        is_featured: false,
+        short_statement: item.software?.short_statement || '',
+        updated_at: null,
+      }
+    })
 
   return (
     <section>

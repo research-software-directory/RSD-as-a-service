@@ -321,7 +321,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
         onSubmit={handleSubmit(patchSubmit)}>
         {/*
           This form is used to enable Save button in the header
-          and trigger save of changed items positions by drag-and-drop
+          and trigger saving item positions when drag-and-drop
           <input type="hidden" {...register('update') } />
         */}
       </form>

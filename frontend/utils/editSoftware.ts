@@ -10,7 +10,7 @@ import {
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
-import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
+import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from './fetchHelpers'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
@@ -506,12 +506,12 @@ export function licensesNotInReferenceList({list, referenceList}:
   return []
 }
 
-function extractErrorMessages(responses: { status: number, message: string }[]) {
-  let errors: { status: number, message: string }[] = []
-  responses.forEach(resp => {
-    if (resp.status !== 200) {
-      errors.push(resp)
-    }
-  })
-  return errors
-}
+// function extractErrorMessages(responses: { status: number, message: string }[]) {
+//   let errors: { status: number, message: string }[] = []
+//   responses.forEach(resp => {
+//     if (resp.status !== 200) {
+//       errors.push(resp)
+//     }
+//   })
+//   return errors
+// }

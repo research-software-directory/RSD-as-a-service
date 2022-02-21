@@ -26,14 +26,13 @@ import {
   getLicenseForSoftware,
   getContributorMentionCount,
   getMentionsForSoftware,
-  getRelatedToolsForSoftware,
   getRemoteMarkdown,
   ContributorMentionCount,
-  Mention,RelatedTools
+  Mention
 } from '../../../utils/getSoftware'
 import {isMaintainerOfSoftware} from '../../../utils/editSoftware'
 import logger from '../../../utils/logger'
-import {License, RepositoryInfo, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
+import {License, RelatedTools, RepositoryInfo, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {ScriptProps} from 'next/script'
 import {Contributor} from '../../../types/Contributor'
@@ -43,6 +42,7 @@ import {getAccountFromToken} from '../../../auth/jwtUtils'
 import EditSoftwareButton from '../../../components/software/edit/EditSoftwareButton'
 import {getContributorsForSoftware} from '../../../utils/editContributors'
 import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
+import {getRelatedToolsForSoftware} from '../../../utils/editRelatedSoftware'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -201,11 +201,11 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // mentions
       getMentionsForSoftware(software.id,token),
       // testimonials
-      getTestimonialsForSoftware({software: software.id, frontend: false, token}),
+      getTestimonialsForSoftware({software:software.id,frontend: false,token}),
       // contributors
       getContributorsForSoftware({software:software.id,frontend:false,token}),
       // relatedTools
-      getRelatedToolsForSoftware(software.id,token),
+      getRelatedToolsForSoftware({software:software.id,frontend:false,token}),
       // check if maintainer
       isMaintainerOfSoftware({slug,account,token,frontend:false})
     ]

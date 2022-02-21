@@ -182,3 +182,10 @@ export const testimonialInformation = {
 }
 
 export type TestimonialInformationConfig = typeof softwareInformation
+
+
+export const relatedSoftwareInformation = {
+  title: 'Related software',
+  subtitle: 'Which software is often used with this software?',
+  help: 'Select related RSD software'
+}
