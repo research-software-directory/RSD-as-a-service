@@ -440,38 +440,6 @@ export async function isMaintainerOfSoftware({slug, account,token,frontend=true}
   }
 }
 
-
-// function extractReturnMessage(resp:Response, dataId:string) {
-//   // OK
-//   if ([200,201,204].includes(resp.status)) {
-//     // just return id
-//     return {
-//       status: 200,
-//       message: dataId
-//     }
-//   }
-//   // not authorized, 404 seem to be returned mostly
-//   if ([401, 403, 404].includes(resp.status)) {
-//     return {
-//       status: resp.status,
-//       message: `
-//           ${resp.statusText}.
-//           You might not have sufficient priveleges to edit this software.
-//           Please contact site administrators.
-//         `
-//     }
-//   } else {
-//     return {
-//       status: resp.status,
-//       message: `
-//           Failed to save changes.
-//           ${resp.statusText}.
-//           Please contact site administrators.
-//         `
-//     }
-//   }
-// }
-
 export function tagsNotInReferenceList({tagList, referenceList}:
   { tagList: AutocompleteOption<Tag>[], referenceList: AutocompleteOption<Tag>[] }) {
   if (tagList.length > 0) {
@@ -505,13 +473,3 @@ export function licensesNotInReferenceList({list, referenceList}:
   }
   return []
 }
-
-// function extractErrorMessages(responses: { status: number, message: string }[]) {
-//   let errors: { status: number, message: string }[] = []
-//   responses.forEach(resp => {
-//     if (resp.status !== 200) {
-//       errors.push(resp)
-//     }
-//   })
-//   return errors
-// }
