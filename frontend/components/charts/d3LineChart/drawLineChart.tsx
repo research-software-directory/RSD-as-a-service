@@ -37,7 +37,7 @@ function timeRange(data: LineData[]) {
     new Date(first),
     new Date(last)
   ]
-  // console.log('drawLineChart.timeRange...', range)
+
   return range
 }
 
@@ -49,13 +49,6 @@ export default function drawLineChart(props: LineChartConfig) {
   // defined dimensions
   const width = w - margin.left - margin.right
   const height = h - margin.top - margin.bottom
-
-  // console.group('drawLineChart...')
-  // console.log('dim...', props.dim)
-  // console.log('width...', width)
-  // console.log('height...', height)
-  // console.log('svgEl...', svgEl)
-  // console.groupEnd()
 
   // select svg element
   const svg = d3.select(svgEl)

@@ -24,9 +24,7 @@ export default function SingleLineChart({data = []}:{data: Point[]}) {
   }, [divRef])
 
   useEffect(() => {
-    // debugger
     if (size?.w && size?.h) {
-      // console.log('drawLineChart...',{w:size?.w,h:size?.h})
       drawLineChart({
         dim: {w:size?.w,h:size?.h},
         svgEl: svgRef.current,
@@ -34,12 +32,6 @@ export default function SingleLineChart({data = []}:{data: Point[]}) {
       })
     }
   },[size?.w,size.h,data])
-
-  // debugger
-  // console.group('SingleLineChart...')
-  // console.log('element...', element)
-  // console.log('size...', size)
-  // console.groupEnd()
 
   return (
     <div ref={divRef} className="flex-1 overflow-hidden relative">
