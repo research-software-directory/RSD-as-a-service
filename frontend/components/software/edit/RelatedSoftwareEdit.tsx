@@ -5,19 +5,19 @@ import {app} from '../../../config/app'
 import snackbarContext,{snackbarDefaults} from '../../snackbar/PageSnackbarContext'
 import useRelatedSoftwareItems from '../../../utils/useRelatedSoftwareItems'
 import useOnUnsaveChange from '../../../utils/useOnUnsavedChange'
-import {AutocompleteOption} from '../../../types/AutocompleteOptions'
+import useRelatedSoftwareOptions from '../../../utils/useRelatedSoftwareOptions'
+import {saveRelatedSoftware} from '../../../utils/editRelatedSoftware'
+import {AutocompleteOptionWithLink} from '../../../types/AutocompleteOptions'
 import {RelatedSoftware} from '../../../types/SoftwareTypes'
+import ContentLoader from '../../layout/ContentLoader'
+import ControlledAutocompleteWithLink from '../../form/ControlledAutocompleteWithLink'
 import EditSoftwareSection from './EditSoftwareSection'
 import editSoftwareContext, {EditSoftwareActionType} from './editSoftwareContext'
 import EditSectionTitle from './EditSectionTitle'
-import ContentLoader from '../../layout/ContentLoader'
-import ControlledAutocomplete from '../../form/ControlledAutocomplete'
-import useRelatedSoftwareOptions from '../../../utils/useRelatedSoftwareOptions'
-import {saveRelatedSoftware} from '../../../utils/editRelatedSoftware'
 import {relatedSoftwareInformation as config} from './editSoftwareConfig'
 
 type RelatedSoftwareForm = {
-  relatedSoftware: AutocompleteOption<RelatedSoftware>[]
+  relatedSoftware: AutocompleteOptionWithLink<RelatedSoftware>[]
 }
 
 export default function RelatedSoftwareEdit({token}: { token: string }) {
@@ -25,7 +25,7 @@ export default function RelatedSoftwareEdit({token}: { token: string }) {
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {software} = pageState
   const [loading, setLoading] = useState(true)
-  const [selected, setSelected] = useState<AutocompleteOption<RelatedSoftware>[]>([])
+  const [selected, setSelected] = useState<AutocompleteOptionWithLink<RelatedSoftware>[]>([])
   const options = useRelatedSoftwareOptions({
     software: software?.id ?? '',
     token
@@ -149,7 +149,7 @@ export default function RelatedSoftwareEdit({token}: { token: string }) {
               id={pageState.step?.formId}
               onSubmit={handleSubmit(onSubmit)}
             >
-              <ControlledAutocomplete
+              <ControlledAutocompleteWithLink
                 name="relatedSoftware"
                 control={control}
                 options={options}

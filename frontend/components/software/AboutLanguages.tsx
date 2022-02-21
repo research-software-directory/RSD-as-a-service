@@ -35,7 +35,6 @@ function calculateStats(languages: ProgramingLanguages) {
     })
     // do we need Other category?
     if (totPct < 100 && (keys.length - totLang.length > 1)) {
-      debugger
       // add other to stats
       stats['Other'] = {
         val: total - totVal,

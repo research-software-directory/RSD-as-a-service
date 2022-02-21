@@ -1,4 +1,4 @@
-import {AutocompleteOption} from '../types/AutocompleteOptions'
+import {AutocompleteOption, AutocompleteOptionWithLink} from '../types/AutocompleteOptions'
 import {RelatedSoftware, RelatedTools, SoftwareForSoftware} from '../types/SoftwareTypes'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
@@ -147,6 +147,19 @@ export function relatedSoftwareToOptions(software: RelatedSoftware[] | undefined
   return options
 }
 
+export function relatedSoftwareToOptionsWithLink(software: RelatedSoftware[] | undefined): AutocompleteOptionWithLink<RelatedSoftware>[] {
+  if (typeof software == 'undefined') return []
+  const options = software.map(item => {
+    return {
+      key: item.id,
+      label: item.brand_name,
+      link: `/software/${item.slug}`,
+      data: item
+    }
+  })
+  return options
+}
+
 export function relatedToolsToOptions(software: RelatedTools[] | undefined) {
   if (typeof software == 'undefined') return []
   const options:AutocompleteOption<RelatedSoftware>[] = []
@@ -155,6 +168,22 @@ export function relatedToolsToOptions(software: RelatedTools[] | undefined) {
       options.push({
         key: item?.software?.id,
         label: item?.software?.brand_name,
+        data: item?.software
+      })
+    }
+  })
+  return options
+}
+
+export function relatedToolsToOptionsWithLink(software: RelatedTools[] | undefined) {
+  if (typeof software == 'undefined') return []
+  const options: AutocompleteOptionWithLink<RelatedSoftware>[] = []
+  software.forEach(item => {
+    if (item?.software?.id) {
+      options.push({
+        key: item?.software?.id,
+        label: item?.software?.brand_name,
+        link: `/software/${item?.software?.slug}`,
         data: item?.software
       })
     }

@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react'
 // import {softwareOfCurrenMaintaner} from '../auth/maintainer'
-import {AutocompleteOption} from '../types/AutocompleteOptions'
+import {AutocompleteOptionWithLink} from '../types/AutocompleteOptions'
 import {RelatedSoftware} from '../types/SoftwareTypes'
 
-import {getRelatedToolsForSoftware, relatedToolsToOptions} from './editRelatedSoftware'
+import {getRelatedToolsForSoftware, relatedToolsToOptionsWithLink} from './editRelatedSoftware'
 
 export default function useRelatedSoftwareItems({software,token}:{software:string,token:string}) {
-  const [selected, setSelected] = useState<AutocompleteOption<RelatedSoftware>[]>([])
+  const [selected, setSelected] = useState<AutocompleteOptionWithLink<RelatedSoftware>[]>([])
 
   useEffect(() => {
     let abort = false
@@ -21,7 +21,7 @@ export default function useRelatedSoftwareItems({software,token}:{software:strin
       // exit on abort
         if (abort) return
       if (relatedTools && relatedTools?.length > 0) {
-        const options = relatedToolsToOptions(relatedTools)
+        const options = relatedToolsToOptionsWithLink(relatedTools)
         setSelected(options)
       } else {
         setSelected([])

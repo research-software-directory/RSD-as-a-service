@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react'
-import {AutocompleteOption} from '../types/AutocompleteOptions'
+import {AutocompleteOption, AutocompleteOptionWithLink} from '../types/AutocompleteOptions'
 import {RelatedSoftware} from '../types/SoftwareTypes'
-import {relatedSoftwareToOptions} from './editRelatedSoftware'
+import {relatedSoftwareToOptions,relatedSoftwareToOptionsWithLink} from './editRelatedSoftware'
 import {getRelatedSoftwareList} from './editRelatedSoftware'
 
 
 export default function useRelatedSoftwareOptions({software,token}:{software:string,token:string}) {
-  const [options, setOptions] = useState<AutocompleteOption<RelatedSoftware>[]>([])
+  const [options, setOptions] = useState<AutocompleteOptionWithLink<RelatedSoftware>[]>([])
 
   useEffect(() => {
     let abort = false
@@ -16,7 +16,7 @@ export default function useRelatedSoftwareOptions({software,token}:{software:str
       // debugger
       if (resp.length > 0) {
         // prepare options
-        const options = relatedSoftwareToOptions(resp)
+        const options = relatedSoftwareToOptionsWithLink(resp)
         // exit on abort
         if (abort) return
         // debugger
