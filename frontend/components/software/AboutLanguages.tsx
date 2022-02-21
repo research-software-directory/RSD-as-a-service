@@ -67,9 +67,8 @@ export default function AboutLanguages({languages}: {languages: ProgramingLangua
       {Object?.keys(stats)?.map((key) => {
         return (
           <li key={key}>
-            {key}
+            {key} <span className="text-grey-500 ml-2">{stats[key].pct}%</span>
             <div
-              title={`${stats[key].pct}%`}
               className="bg-grey-400"
               style={{
                 width: `${stats[key].pct}%`,

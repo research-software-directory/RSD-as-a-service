@@ -1,10 +1,10 @@
 
 import LinkIcon from '@mui/icons-material/Link'
 import CommitsChart from './CommitsChart'
-import {SoftwareItem} from '../../types/SoftwareTypes'
+import {CommitHistory} from '../../types/SoftwareTypes'
 
-export default function GetStartedSection({get_started_url,repository_url}:
-  {get_started_url:string|null, repository_url:SoftwareItem['repository_url']}) {
+export default function GetStartedSection({get_started_url, commit_history}:
+  {get_started_url: string | null, commit_history: CommitHistory}) {
 
   function renderGetStartedUrl() {
     if (get_started_url) {
@@ -27,12 +27,10 @@ export default function GetStartedSection({get_started_url,repository_url}:
       <article className="flex flex-col flex-1 items-start px-4 lg:flex-row lg:items-center lg:px-4 lg:container lg:mx-auto">
         {/* render get started url if present */}
         {renderGetStartedUrl()}
-        <div className="flex-1 pl-0 pt-8 lg:pl-24 w-full">
-          <CommitsChart />
-          <div className="software_commitsStat" id="commitsStat">
-            <b>154 commits</b> | Last update: <b>December 20, 2021</b>
-          </div>
-        </div>
+
+        <CommitsChart
+          commit_history={commit_history}
+        />
       </article>
     </section>
   )

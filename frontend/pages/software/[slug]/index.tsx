@@ -128,7 +128,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       </PageContainer>
       <GetStartedSection
         get_started_url={software.get_started_url}
-        repository_url={repositoryInfo.url}
+        commit_history={repositoryInfo?.commit_history}
       />
       <CitationSection
         citationInfo={citationInfo}
@@ -139,8 +139,8 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         description={software?.description ?? ''}
         tags={tagsInfo}
         licenses={licenseInfo}
-        repository={repositoryInfo.url}
-        languages={repositoryInfo.languages}
+        repository={repositoryInfo?.url}
+        languages={repositoryInfo?.languages}
       />
       <MentionsSection
         mentions={mentions}

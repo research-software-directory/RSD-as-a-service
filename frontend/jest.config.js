@@ -23,6 +23,10 @@ const customJestConfig = {
     './utils/**/*.{js,jsx,ts,tsx}',
     '!./utils/jest/**'
   ],
+  moduleNameMapper: {
+    // need to map d3 to avoid SyntaxError: Unexpected token 'export'
+    'd3': '<rootDir>/node_modules/d3/dist/d3.min.js',
+  }
   // modulePathIgnorePatterns: ['__mocks__', '__fixtures__','utils/jest'],
 }
 
