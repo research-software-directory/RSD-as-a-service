@@ -12,7 +12,12 @@ export default function useRelatedSoftwareItems({software,token}:{software:strin
     let abort = false
 
     async function getData() {
-      const relatedTools = await getRelatedToolsForSoftware({software, token, frontend: true})
+      const relatedTools = await getRelatedToolsForSoftware({
+        software,
+        columns: 'id,slug,brand_name',
+        token,
+        frontend: true
+      })
       // exit on abort
         if (abort) return
       if (relatedTools && relatedTools?.length > 0) {

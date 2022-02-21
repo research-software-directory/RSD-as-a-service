@@ -1,14 +1,13 @@
-import {request} from 'http'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {RelatedSoftware, RelatedTools, SoftwareForSoftware} from '../types/SoftwareTypes'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 
-export async function getRelatedToolsForSoftware({software, token, frontend}:
-  { software: string, token?: string, frontend?: boolean }) {
+export async function getRelatedToolsForSoftware({software, token, frontend, columns ='id,slug,brand_name,short_statement'}:
+  { software: string, token?: string, frontend?: boolean, columns?:string}) {
   try {
     // this request is always perfomed from backend
-    const select = 'origin,relation,software!software_for_software_relation_fkey(id,slug,brand_name,short_statement)'
+    const select = `origin,relation,software!software_for_software_relation_fkey(${columns})`
     let url = `${process.env.POSTGREST_URL}/software_for_software?select=${select}&origin=eq.${software}`
     if (frontend) {
       url = `/api/v1/software_for_software?select=${select}&origin=eq.${software}`
@@ -35,7 +34,7 @@ export async function getRelatedSoftwareList({software, token}:{
   software: string, token?: string
 }) {
   try {
-    const url = `/api/v1/software?select=id,slug,brand_name,short_statement&id=neq.${software}&order=brand_name.asc`
+    const url = `/api/v1/software?select=id,slug,brand_name&id=neq.${software}&order=brand_name.asc`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)

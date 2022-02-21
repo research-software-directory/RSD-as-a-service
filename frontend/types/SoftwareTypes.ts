@@ -109,7 +109,7 @@ export type RelatedSoftware = {
   id: string,
   slug: string,
   brand_name: string,
-  short_statement: string,
+  short_statement?: string,
 }
 
 export type RelatedTools = {
