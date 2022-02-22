@@ -47,3 +47,12 @@ export function extractReturnMessage(resp: Response, dataId?: string) {
   }
 }
 
+export function extractErrorMessages(responses: { status: number, message: string }[]) {
+  let errors: { status: number, message: string }[] = []
+  responses.forEach(resp => {
+    if (resp.status !== 200) {
+      errors.push(resp)
+    }
+  })
+  return errors
+}

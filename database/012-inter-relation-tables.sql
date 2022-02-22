@@ -7,7 +7,6 @@ CREATE TYPE relation_status as ENUM (
 CREATE TABLE software_for_software (
 	origin UUID references software (id),
 	relation UUID references software (id),
-	status relation_status NOT NULL DEFAULT 'approved',
 	PRIMARY KEY (origin, relation)
 );
 

@@ -56,6 +56,7 @@ export const editSoftwareMenu:EditSoftwarePageStep[] = [
     status: 'Optional information'
   },
   {
+    formId: 'related-software',
     label: 'Related software',
     icon: <Filter6Icon />,
     component: (props?) => <RelatedSoftwareInfo {...props} />,
