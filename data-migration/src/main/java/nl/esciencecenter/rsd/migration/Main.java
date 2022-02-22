@@ -18,9 +18,11 @@ import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 public class Main {
 
@@ -33,6 +35,7 @@ public class Main {
 	public static final String LEGACY_RSD_PERSON_URI = "https://research-software.nl/api/person";
 	public static final String LEGACY_RSD_MENTION_URI = "https://research-software.nl/api/mention";
 	public static final String LEGACY_RSD_RELEASE_URI = "https://research-software.nl/api/release";
+	public static final String LEGACY_RSD_ORGANISATION_URI = "https://research-software.nl/api/organization";
 	public static final String POSTGREST_URI = "http://localhost/api/v1";
 
 	public static void main(String[] args) throws IOException {
@@ -59,7 +62,10 @@ public class Main {
 		saveTagsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		String allPersonsString = get(URI.create(LEGACY_RSD_PERSON_URI));
 		JsonArray allPersonsFromLegacyRSD = JsonParser.parseString(allPersonsString).getAsJsonArray();
-		saveContributors(allPersonsFromLegacyRSD, allSoftwareFromLegacyRSD, slugToIdSoftware, "contributors", "/contributor", "software");
+		String allOrganisationsString = get(URI.create(LEGACY_RSD_ORGANISATION_URI));
+		JsonArray allOrganisationsFromLegacyRSD = JsonParser.parseString(allOrganisationsString).getAsJsonArray();
+		Map<String, String> organisationKeyToName = createOrganisationKeyToName(allOrganisationsFromLegacyRSD);
+		saveContributors(allPersonsFromLegacyRSD, allSoftwareFromLegacyRSD, slugToIdSoftware, organisationKeyToName, "contributors", "/contributor", "software");
 		saveSoftwareRelatedToSoftware(allSoftwareFromLegacyRSD, legacyIdToNewIdSoftware);
 		saveTestimonialsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware);
 
@@ -73,7 +79,7 @@ public class Main {
 		saveProjectImages(allProjectsFromLegacyRSD);
 		saveSoftwareRelatedToProjects(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyIdToNewIdProject);
 		saveProjectsRelatedToProjects(allProjectsFromLegacyRSD, legacyIdToNewIdProject);
-		saveContributors(allPersonsFromLegacyRSD, allProjectsFromLegacyRSD, slugToIdProject, "team", "/team_member", "project");
+		saveContributors(allPersonsFromLegacyRSD, allProjectsFromLegacyRSD, slugToIdProject, null, "team", "/team_member", "project");
 
 		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
 		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
@@ -254,7 +260,21 @@ public class Main {
 		post(URI.create(POSTGREST_URI + "/tag_for_software"), allTagsToSave.toString());
 	}
 
-	public static void saveContributors(JsonArray allPersonsFromLegacyRSD, JsonArray allEntitiesFromLegacyRSD, Map<String, String> slugToId, String personKey, String endpoint, String relationKey) {
+	public static Map<String, String> createOrganisationKeyToName(JsonArray allOrganisationsFromLegacyRSD) {
+		Map<String, String> result = new HashMap<>();
+		for (JsonElement jsonElement : allOrganisationsFromLegacyRSD) {
+			JsonObject organisation = jsonElement.getAsJsonObject();
+			String key = organisation.getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
+			String name = organisation.getAsJsonPrimitive("name").getAsString();
+			if (result.containsKey(key)) {
+				throw new RuntimeException("Duplicate organisation key found: " + key);
+			}
+			result.put(key, name);
+		}
+		return result;
+	}
+
+	public static void saveContributors(JsonArray allPersonsFromLegacyRSD, JsonArray allEntitiesFromLegacyRSD, Map<String, String> slugToId, Map<String, String> organisationKeyToName, String personKey, String endpoint, String relationKey) {
 //		TODO: affiliations from contributors? YES, mapping to ROR possible?
 //		each person has an id, we need to find the person given this id since the software api only lists the id's
 		Map<String, JsonObject> personIdToObject = new HashMap<>();
@@ -292,6 +312,25 @@ public class Main {
 				contributorToSave.add("given_names", personData.get("givenNames"));
 //				we skip the name suffix, as there are currently no valid entries in the legacy RSD
 //				contributorToSave.add("name_suffix", nullIfBlank(personData.get("nameSuffix")));
+
+				if (organisationKeyToName != null) {
+					JsonArray affiliations = contributorFromLegacyRSD.getAsJsonArray("affiliations");
+					Set<String> allAffiliations = new HashSet<>();
+					for (JsonElement affiliation : affiliations) {
+						String organisationKey = affiliation.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+						String affiliationName = organisationKeyToName.get(organisationKey);
+						if (affiliationName == null) {
+							throw new RuntimeException("No organisation name found for key " + organisationKey + " for contributor " + contributorFromLegacyRSD);
+						}
+						allAffiliations.add(affiliationName);
+					}
+					if (allAffiliations.isEmpty()) {
+						contributorToSave.add("affiliation", JsonNull.INSTANCE);
+					} else {
+						contributorToSave.addProperty("affiliation", String.join(", ", allAffiliations));
+					}
+				}
+
 				if (personData.has("avatar")) {
 					contributorToSave.add("avatar_data", personData.getAsJsonObject("avatar").get("data"));
 					contributorToSave.add("avatar_mime_type", personData.getAsJsonObject("avatar").get("mimeType"));
