@@ -54,17 +54,6 @@ export default function RelatedSoftwareEdit({token}: { token: string }) {
     warning: app.unsavedChangesMessage
   })
 
-  // console.group('RelatedSoftwareEdit')
-  // console.log('token...', token)
-  // console.log('slug...', slug)
-  // console.log('loading...', loading)
-  // console.log('errors...', errors)
-  // console.log('isDirty...', isDirty)
-  // console.log('isValid...', isValid)
-  // console.log('formData...', formData)
-  // console.log('relatedSoftware...', relatedSoftware)
-  // console.groupEnd()
-
   useEffect(() => {
     reset({
       relatedSoftware
