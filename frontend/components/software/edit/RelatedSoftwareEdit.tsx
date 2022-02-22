@@ -2,13 +2,13 @@ import {useContext, useEffect, useState} from 'react'
 import {useForm} from 'react-hook-form'
 
 import {app} from '../../../config/app'
-import snackbarContext,{snackbarDefaults} from '../../snackbar/PageSnackbarContext'
+import {AutocompleteOptionWithLink} from '../../../types/AutocompleteOptions'
+import {RelatedSoftware} from '../../../types/SoftwareTypes'
+import useSnackbar from '../../snackbar/useSnackbar'
 import useRelatedSoftwareItems from '../../../utils/useRelatedSoftwareItems'
 import useOnUnsaveChange from '../../../utils/useOnUnsavedChange'
 import useRelatedSoftwareOptions from '../../../utils/useRelatedSoftwareOptions'
 import {saveRelatedSoftware} from '../../../utils/editRelatedSoftware'
-import {AutocompleteOptionWithLink} from '../../../types/AutocompleteOptions'
-import {RelatedSoftware} from '../../../types/SoftwareTypes'
 import ContentLoader from '../../layout/ContentLoader'
 import ControlledAutocompleteWithLink from '../../form/ControlledAutocompleteWithLink'
 import EditSoftwareSection from './EditSoftwareSection'
@@ -21,7 +21,7 @@ type RelatedSoftwareForm = {
 }
 
 export default function RelatedSoftwareEdit({token}: { token: string }) {
-  const {setSnackbar} = useContext(snackbarContext)
+  const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {software} = pageState
   const [loading, setLoading] = useState(true)
@@ -84,27 +84,6 @@ export default function RelatedSoftwareEdit({token}: { token: string }) {
     <ContentLoader />
   )
 
-  function onSuccess() {
-    // show notification
-    setSnackbar({
-      ...snackbarDefaults,
-      open: true,
-      severity: 'success',
-      duration: 5000,
-      message: 'Saved related software'
-    })
-  }
-
-  function onError(message:string) {
-    setSnackbar({
-      ...snackbarDefaults,
-      open: true,
-      severity: 'error',
-      duration: undefined,
-      message: 'Failed to save related software'
-    })
-  }
-
   async function onSubmit(data:RelatedSoftwareForm) {
     if (typeof software?.id == 'undefined') return
 
@@ -118,9 +97,9 @@ export default function RelatedSoftwareEdit({token}: { token: string }) {
     if (resp && resp.status === 200) {
       setSelected(data.relatedSoftware)
       reset(data)
-      onSuccess()
+      showSuccessMessage('Saved related software')
     } else {
-      onError('Failed to save trelated software')
+      showErrorMessage(`Failed to save related software. ${resp?.message}`)
     }
   }
 
