@@ -28,7 +28,6 @@ type EditTestimonialModal = ModalProps & {
 }
 
 export default function SoftwareTestimonials({token}: {token: string }) {
-  // const { setSnackbar } = useContext(snackbarContext)
   const {showErrorMessage, showSuccessMessage} = useSnackbar()
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {software} = pageState

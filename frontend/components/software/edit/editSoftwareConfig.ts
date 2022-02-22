@@ -184,6 +184,25 @@ export const testimonialInformation = {
 export type TestimonialInformationConfig = typeof softwareInformation
 
 
+export const mentionInformation = {
+  sectionTitle: 'Mentions',
+  title: {
+    label: 'Title',
+    help: 'Article title',
+    validation: {
+      required: 'The title is required',
+    }
+  },
+  author: {
+    label: 'Author',
+    help: 'List all authors',
+    validation: {
+      required:false
+    }
+  }
+}
+
+
 export const relatedSoftwareInformation = {
   title: 'Related software',
   subtitle: 'Which software is often used with this software?',

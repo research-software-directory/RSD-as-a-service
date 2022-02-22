@@ -28,3 +28,16 @@ export const mentionType = {
 }
 
 export type MentionType = keyof typeof mentionType
+
+export type MentionItem = {
+  id: string
+  author?: string
+  date?: string
+  image?: string
+  is_featured: boolean
+  title: string
+  type: MentionType
+  url?: string
+  version?: number
+  zotero_key?: string
+}
