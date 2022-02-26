@@ -11,7 +11,7 @@ import {
 } from 'react-beautiful-dnd'
 
 import SoftwareTestimonialListItemDnd from './SoftwareTestimonialsDndListItem'
-import {Testimonial} from '../../../types/Testimonial'
+import {Testimonial} from '../../../../types/Testimonial'
 
 export default function SoftwareTestimonialListDnd({testimonials, onEdit, onDelete, onDragEnd}:
   { testimonials:Testimonial[], onEdit:(pos:number)=>void,

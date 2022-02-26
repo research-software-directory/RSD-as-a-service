@@ -1,27 +1,27 @@
 import {useContext, useEffect, useState} from 'react'
 import AddIcon from '@mui/icons-material/Add'
-import {Button} from '@mui/material'
+import Button from '@mui/material/Button'
 
 import {useForm} from 'react-hook-form'
 import {DropResult} from 'react-beautiful-dnd'
 
-import useSnackbar from '../../snackbar/useSnackbar'
-import {Testimonial} from '../../../types/Testimonial'
+import useSnackbar from '../../../snackbar/useSnackbar'
+import {Testimonial} from '../../../../types/Testimonial'
 import {
   postTestimonial, getTestimonialsForSoftware,
   patchTestimonial, deleteTestimonialById, patchTestimonialPositions
-} from '../../../utils/editTestimonial'
-import {reorderList} from '../../../utils/dndHelpers'
-import {sortOnNumProp} from '../../../utils/sortFn'
-import ContentLoader from '../../layout/ContentLoader'
-import ConfirmDeleteModal from '../../layout/ConfirmDeleteModal'
+} from '../../../../utils/editTestimonial'
+import {reorderList} from '../../../../utils/dndHelpers'
+import {sortOnNumProp} from '../../../../utils/sortFn'
+import ContentLoader from '../../../layout/ContentLoader'
+import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
 
 import EditTestimonialModal from './EditTestimonialModal'
-import EditSoftwareSection from './EditSoftwareSection'
-import editSoftwareContext, {EditSoftwareActionType} from './editSoftwareContext'
-import EditSectionTitle from './EditSectionTitle'
+import EditSoftwareSection from '../EditSoftwareSection'
+import editSoftwareContext, {EditSoftwareActionType} from '../editSoftwareContext'
+import EditSectionTitle from '../EditSectionTitle'
 import SoftwareTestimonialsDndList from './SoftwareTestimonialsDndList'
-import {ModalProps,ModalStates} from './editSoftwareTypes'
+import {ModalProps,ModalStates} from '../editSoftwareTypes'
 
 type EditTestimonialModal = ModalProps & {
   testimonial?: Testimonial
@@ -290,7 +290,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
       <EditSoftwareSection>
         <div className="py-4">
           <EditSectionTitle
-            title={'Testimonials'}
+            title="Testimonials"
             subtitle={getTestimonialSubtitle()}
           >
             <Button

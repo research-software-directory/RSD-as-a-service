@@ -1,12 +1,12 @@
 import {HTMLAttributes, SyntheticEvent, useEffect, useState} from 'react'
 import {Autocomplete, Button, CircularProgress, TextField} from '@mui/material'
-import {Contributor, SearchContributor} from '../../../types/Contributor'
-import {useDebounceWithAutocomplete} from '../../../utils/useDebouce'
-import {searchForContributor} from '../../../utils/editContributors'
-import {AutocompleteOption} from '../../../types/AutocompleteOptions'
+import {Contributor, SearchContributor} from '../../../../types/Contributor'
+import {useDebounceWithAutocomplete} from '../../../../utils/useDebouce'
+import {searchForContributor} from '../../../../utils/editContributors'
+import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
 import FindContributorItem from './FindContributorItem'
-import {splitName} from '../../../utils/getDisplayName'
-import {contributorInformation as config} from './editSoftwareConfig'
+import {splitName} from '../../../../utils/getDisplayName'
+import {contributorInformation as config} from '../editSoftwareConfig'
 
 export type Name = {
   given_names: string

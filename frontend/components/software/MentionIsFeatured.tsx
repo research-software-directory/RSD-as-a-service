@@ -1,9 +1,9 @@
-import {Mention} from '../../utils/getSoftware'
 import Link from 'next/link'
 import {isoStrToLocalDateStr} from '../../utils/dateFn'
 import ImageAsBackground from '../layout/ImageAsBackground'
+import {MentionForSoftware} from '../../types/MentionType'
 
-export default function MentionIsFeatured({mention}: { mention: Mention }) {
+export default function MentionIsFeatured({mention}: { mention: MentionForSoftware }) {
   // do not render if no data
   if (!mention) return null
 

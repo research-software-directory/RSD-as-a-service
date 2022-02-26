@@ -6,9 +6,11 @@ import {
 import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
 
-import ControlledTextField from '../../form/ControlledTextField'
-import {mentionInformation as config} from './editSoftwareConfig'
-import {MentionItem} from '../../../types/MentionType'
+import ControlledTextField from '../../../form/ControlledTextField'
+import ControlledDropdown from '../../../form/ControlledDropdown'
+import ControlledSwitch from '../../../form/ControlledSwitch'
+import {mentionInformation as config} from '../editSoftwareConfig'
+import {MentionItem, mentionType,MentionType} from '../../../../types/MentionType'
 
 type EditMentionModalProps = {
   open: boolean,
@@ -19,9 +21,20 @@ type EditMentionModalProps = {
   pos?: number
 }
 
+const mentionTypeOptions = Object.keys(mentionType).map(key => {
+  const type = mentionType[key as MentionType]
+  return {
+    key: key,
+    label: type,
+    data: {
+      [`${key}`]: type
+    }
+  }
+})
+
 export default function EditMentionModal({open, onCancel, onSubmit, mention, pos}: EditMentionModalProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<MentionItem>({
+  const {handleSubmit, watch, formState, reset, control, register} = useForm<MentionItem>({
     mode: 'onChange',
     defaultValues: {
       ...mention
@@ -29,17 +42,17 @@ export default function EditMentionModal({open, onCancel, onSubmit, mention, pos
   })
 
   // extract
-  const {isValid, isDirty} = formState
+  const {isValid, isDirty, errors} = formState
   const formData = watch()
 
-  // console.group('EditMentionModal')
+  console.group('EditMentionModal')
   // console.log('open...', open)
-  // console.log('isDirty...', isDirty)
-  // console.log('isValid...', isValid)
-  // console.log('smallScreen...', smallScreen)
-  // console.log('testimonial...', testimonial)
-  // console.log('formData...', formData)
-  // console.groupEnd()
+  console.log('isDirty...', isDirty)
+  console.log('isValid...', isValid)
+  console.log('errors...', errors)
+  console.log('formData...', formData)
+  // console.log('mentionTypeOptions...', mentionTypeOptions)
+  console.groupEnd()
 
   useEffect(() => {
     if (mention) {
@@ -68,7 +81,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, mention, pos
         color: 'primary.main',
         fontWeight: 500
       }}>
-        Testimonial
+        Mention
       </DialogTitle>
       <form onSubmit={handleSubmit((data: MentionItem) => onSubmit({data, pos}))}
         autoComplete="off"
@@ -81,13 +94,33 @@ export default function EditMentionModal({open, onCancel, onSubmit, mention, pos
           width: ['100%', '37rem'],
           padding: '2rem 1.5rem 2.5rem'
         }}>
+          <div className="grid grid-cols-2 gap-4">
+            <ControlledDropdown
+              name="type"
+              label={config.mentionType.label}
+              control={control}
+              options={mentionTypeOptions}
+              rules={config.mentionType.validation}
+            />
+            <ControlledTextField
+              control={control}
+              options={{
+                name: 'date',
+                type: 'date',
+                label: config.date.label,
+                useNull: true,
+                defaultValue: mention?.date ?? new Date().toISOString().split('T')[0],
+                helperTextMessage: config.date.help,
+                // helperTextCnt: `${formData?.message?.length || 0}/${config.message.validation.maxLength.value}`,
+              }}
+              rules={config.date.validation}
+            />
+          </div>
+
           <ControlledTextField
             control={control}
             options={{
               name: 'title',
-              // variant: 'outlined',
-              // multiline: true,
-              // rows: 4,
               label: config.title.label,
               useNull: true,
               defaultValue: mention?.title,
@@ -101,15 +134,45 @@ export default function EditMentionModal({open, onCancel, onSubmit, mention, pos
             control={control}
             options={{
               name: 'author',
-              // variant: 'outlined',
               label: config.author.label,
               useNull: true,
               defaultValue: mention?.author,
-              helperTextMessage: config.author.help,
-              // helperTextCnt: `${formData?.source?.length || 0}/${config.source.validation.maxLength.value}`,
+              helperTextMessage: config.author.help
             }}
             rules={config.author.validation}
           />
+          <div className="py-4"></div>
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'url',
+              label: config.url.label,
+              useNull: true,
+              defaultValue: mention?.url,
+              helperTextMessage: config.url.help
+            }}
+            rules={config.url.validation}
+          />
+          <div className="py-4"></div>
+          <section className="flex">
+            <ControlledSwitch
+              name="is_featured"
+              label={config.is_featured.label}
+              control={control}
+              defaultValue={mention?.is_featured ?? false}
+            />
+            <ControlledTextField
+              control={control}
+              options={{
+                name: 'image',
+                label: config.image_url.label,
+                useNull: true,
+                defaultValue: mention?.image,
+                helperTextMessage: config.image_url.help,
+              }}
+              rules={config.image_url.validation}
+            />
+          </section>
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',

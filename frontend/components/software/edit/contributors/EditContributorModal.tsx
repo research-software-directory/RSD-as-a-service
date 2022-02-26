@@ -7,14 +7,14 @@ import SaveIcon from '@mui/icons-material/Save'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
-import snackbarContext from '../../snackbar/PageSnackbarContext'
-import {Contributor} from '../../../types/Contributor'
-import ControlledTextField from '../../form/ControlledTextField'
-import ControlledSwitch from '../../form/ControlledSwitch'
-import ContributorAvatar from '../ContributorAvatar'
-import {contributorInformation as config} from './editSoftwareConfig'
-import {getDisplayInitials, getDisplayName} from '../../../utils/getDisplayName'
-import logger from '../../../utils/logger'
+import snackbarContext from '../../../snackbar/PageSnackbarContext'
+import {Contributor} from '../../../../types/Contributor'
+import ControlledTextField from '../../../form/ControlledTextField'
+import ControlledSwitch from '../../../form/ControlledSwitch'
+import ContributorAvatar from '../../ContributorAvatar'
+import {contributorInformation as config} from '../editSoftwareConfig'
+import {getDisplayInitials, getDisplayName} from '../../../../utils/getDisplayName'
+import logger from '../../../../utils/logger'
 
 type EditContributorModalProps = {
   open: boolean,

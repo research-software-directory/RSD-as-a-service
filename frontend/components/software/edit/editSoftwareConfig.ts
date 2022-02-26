@@ -183,9 +183,22 @@ export const testimonialInformation = {
 
 export type TestimonialInformationConfig = typeof softwareInformation
 
-
 export const mentionInformation = {
   sectionTitle: 'Mentions',
+  mentionType: {
+    label: 'Type',
+    help: 'Select mention type',
+    validation: {
+      required: 'Mention type is required'
+    }
+  },
+  date: {
+    label: 'Date',
+    help: 'Article date',
+    validation: {
+      required: false
+    }
+  },
   title: {
     label: 'Title',
     help: 'Article title',
@@ -199,6 +212,39 @@ export const mentionInformation = {
     validation: {
       required:false
     }
+  },
+  url: {
+    label: 'Link',
+    help: 'Provide url to publication',
+    validation: {
+      pattern: {
+        value: /^https?:\/\/.+\..+/,
+        message: 'Url should start with http(s):// have at least one dot (.)'
+      }
+    }
+  },
+  is_featured: {
+    label: 'Featured',
+    validation: {
+      required: false
+    }
+  },
+  image_url: {
+    label: 'Image',
+    help:'Provide url to image',
+    validation: {
+      pattern: {
+        value: /^https?:\/\/.+\..+/,
+        message: 'Url should start with http(s):// have at least one dot (.)'
+      }
+    }
+  },
+  findMention: {
+    title: 'Find mention',
+    subtitle: 'Search mentions scraped from Zenodo',
+    label: 'Search for available mentions',
+    help: 'Type the title or the url of scraped mention'
+
   }
 }
 

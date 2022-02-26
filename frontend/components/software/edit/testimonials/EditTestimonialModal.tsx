@@ -6,9 +6,9 @@ import {
 import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
 
-import ControlledTextField from '../../form/ControlledTextField'
-import {testimonialInformation as config} from './editSoftwareConfig'
-import {Testimonial} from '../../../types/Testimonial'
+import ControlledTextField from '../../../form/ControlledTextField'
+import {testimonialInformation as config} from '../editSoftwareConfig'
+import {Testimonial} from '../../../../types/Testimonial'
 
 type EditTestimonialModalProps = {
   open: boolean,

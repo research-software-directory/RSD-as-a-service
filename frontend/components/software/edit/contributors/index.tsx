@@ -1,27 +1,27 @@
 import {useContext,useEffect,useState} from 'react'
 
-import {app} from '../../../config/app'
-import useSnackbar from '../../snackbar/useSnackbar'
-import ContentLoader from '../../layout/ContentLoader'
-import ConfirmDeleteModal from '../../layout/ConfirmDeleteModal'
-import {Contributor, ContributorProps} from '../../../types/Contributor'
+import {app} from '../../../../config/app'
+import useSnackbar from '../../../snackbar/useSnackbar'
+import ContentLoader from '../../../layout/ContentLoader'
+import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
+import {Contributor, ContributorProps} from '../../../../types/Contributor'
 import {
   addContributorToDb, deleteContributorsById,
   getAvatarUrl, getContributorsForSoftware,
   prepareContributorData, updateContributorInDb
-} from '../../../utils/editContributors'
-import useOnUnsaveChange from '../../../utils/useOnUnsavedChange'
-import {getDisplayName} from '../../../utils/getDisplayName'
-import {sortOnStrProp} from '../../../utils/sortFn'
-import {getPropsFromObject} from '../../../utils/getPropsFromObject'
+} from '../../../../utils/editContributors'
+import useOnUnsaveChange from '../../../../utils/useOnUnsavedChange'
+import {getDisplayName} from '../../../../utils/getDisplayName'
+import {sortOnStrProp} from '../../../../utils/sortFn'
+import {getPropsFromObject} from '../../../../utils/getPropsFromObject'
 import EditContributorModal from './EditContributorModal'
 import FindContributor, {Name} from './FindContributor'
 import SoftwareContributorsList from './SoftwareContributorsList'
-import EditSoftwareSection from './EditSoftwareSection'
-import editSoftwareContext from './editSoftwareContext'
-import EditSectionTitle from './EditSectionTitle'
-import {contributorInformation as config} from './editSoftwareConfig'
-import {ModalProps,ModalStates} from './editSoftwareTypes'
+import EditSoftwareSection from '../EditSoftwareSection'
+import editSoftwareContext from '../editSoftwareContext'
+import EditSectionTitle from '../EditSectionTitle'
+import {contributorInformation as config} from '../editSoftwareConfig'
+import {ModalProps,ModalStates} from '../editSoftwareTypes'
 
 type EditContributorModal = ModalProps & {
   contributor?: Contributor

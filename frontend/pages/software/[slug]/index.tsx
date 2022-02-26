@@ -28,7 +28,6 @@ import {
   getMentionsForSoftware,
   getRemoteMarkdown,
   ContributorMentionCount,
-  Mention
 } from '../../../utils/getSoftware'
 import {isMaintainerOfSoftware} from '../../../utils/editSoftware'
 import logger from '../../../utils/logger'
@@ -43,6 +42,7 @@ import EditSoftwareButton from '../../../components/software/edit/EditSoftwareBu
 import {getContributorsForSoftware} from '../../../utils/editContributors'
 import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
 import {getRelatedToolsForSoftware} from '../../../utils/editRelatedSoftware'
+import {MentionForSoftware} from '../../../types/MentionType'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -52,7 +52,7 @@ interface SoftwareIndexData extends ScriptProps{
   licenseInfo: License[]
   repositoryInfo: RepositoryInfo
   softwareIntroCounts: ContributorMentionCount
-  mentions: Mention[]
+  mentions: MentionForSoftware[]
   testimonials: Testimonial[]
   contributors: Contributor[]
   relatedTools: RelatedTools[]

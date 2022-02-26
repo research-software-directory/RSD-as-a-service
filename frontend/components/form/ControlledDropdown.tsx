@@ -3,19 +3,18 @@ import Autocomplete from '@mui/material/Autocomplete'
 import {Controller} from 'react-hook-form'
 import {AutocompleteOption} from '../../types/AutocompleteOptions'
 
-type ControlledAutocompleteType<T>={
+type ControlledDropdownType<T> = {
   name: string,
   control: any,
   options: AutocompleteOption<T>[],
   label: string,
   rules?: any,
-  defaultValue?: AutocompleteOption<T>[]
+  defaultValue?: AutocompleteOption<T> | null
 }
 
-export default function ControlledAutocomplete<T>({
-  name, control, options, label, rules, defaultValue = []
-}:ControlledAutocompleteType<T>) {
-
+export default function ControlledDropdown<T>({
+  name, control, options, label, rules, defaultValue = null
+}: ControlledDropdownType<T>) {
   let allRules = {required: false}
   if (rules) {
     allRules=rules
@@ -28,13 +27,14 @@ export default function ControlledAutocomplete<T>({
       rules={allRules}
       render={({field}) => {
         const {onChange, value} = field
+        // console.log('ControlledDropdown...value...', value)
         return (
           <Autocomplete
-            multiple={true}
             options={options}
             onChange={(e, items, reason) => {
               // here we pass items react-hook-form controller
               // and mui autocompletes
+              // debugger
               onChange(items)
             }}
             value={value}
@@ -42,8 +42,9 @@ export default function ControlledAutocomplete<T>({
               option: AutocompleteOption<T>,
               value: AutocompleteOption<T>) => {
               if (value) {
+                // debugger
                 // we compare key values
-                return option.key === value.key
+                return option.key === value?.key
               }
               return false
             }}

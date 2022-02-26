@@ -2,7 +2,6 @@
  * Based on database enum type from
  * database/008-create-mention-table.sql
  */
-
 export const mentionType = {
   attachment: 'Attachment',
   blogPost:'Blogposts',
@@ -29,15 +28,31 @@ export const mentionType = {
 
 export type MentionType = keyof typeof mentionType
 
+// as in mention table
 export type MentionItem = {
   id: string
   author?: string
   date?: string
+  // url to external image
   image?: string
   is_featured: boolean
   title: string
-  type: MentionType
+  type?: MentionType
   url?: string
   version?: number
   zotero_key?: string
+}
+
+// mention table joined with mention_for_software
+export type MentionForSoftware = {
+  id: string,
+  date: string,
+  is_featured: boolean,
+  title: string,
+  type: MentionType,
+  url: string,
+  // url to external image
+  image: string,
+  author: string,
+  mention_for_software?: any[]
 }

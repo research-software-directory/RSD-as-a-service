@@ -1,8 +1,8 @@
 import {useContext} from 'react'
 
-import EditSoftwareSection from './EditSoftwareSection'
-import editSoftwareContext from './editSoftwareContext'
-import EditSectionTitle from './EditSectionTitle'
+import EditSoftwareSection from '../EditSoftwareSection'
+import editSoftwareContext from '../editSoftwareContext'
+import EditSectionTitle from '../EditSectionTitle'
 
 
 export default function SoftwareOganisations() {

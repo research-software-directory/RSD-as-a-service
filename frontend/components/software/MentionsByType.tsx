@@ -5,12 +5,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Badge from '@mui/material/Badge'
 
 import MentionItem from './MentionItem'
-import {Mention} from '../../utils/getSoftware'
-import {mentionType,MentionType} from '../../types/MentionType'
+import {mentionType,MentionType,MentionForSoftware} from '../../types/MentionType'
 import {sortOnDateProp} from '../../utils/sortFn'
 
 export type MentionByType={
-  [key:string]: Mention[]
+  [key:string]: MentionForSoftware[]
 }
 
 export default function MentionsByType({mentionByType}: { mentionByType: MentionByType }) {
@@ -26,7 +25,7 @@ export default function MentionsByType({mentionByType}: { mentionByType: Mention
 }
 
 
-function renderMentionSectionForType(key: MentionType, items: Mention[]) {
+function renderMentionSectionForType(key: MentionType, items: MentionForSoftware[]) {
   // do not render accordion/section if no items
   if (items.length===0) return null
   return (
@@ -90,7 +89,7 @@ function renderMentionSectionForType(key: MentionType, items: Mention[]) {
   )
 }
 
-function renderMentionItemsForType(items: Mention[]) {
+function renderMentionItemsForType(items: MentionForSoftware[]) {
   if (items.length === 0) return null
   return (
     <ul>

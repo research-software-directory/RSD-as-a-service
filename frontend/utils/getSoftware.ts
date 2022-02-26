@@ -2,7 +2,7 @@ import {RepositoryInfo, SoftwareItem,Tag} from '../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
-import {MentionType} from '../types/MentionType'
+import {MentionForSoftware, MentionType} from '../types/MentionType'
 import {createJsonHeaders} from './fetchHelpers'
 
 /**
@@ -265,17 +265,17 @@ export async function getContributorMentionCount(uuid: string,token?: string){
  * @param uuid
  */
 
-export type Mention = {
-  date: string,
-  is_featured: boolean,
-  title: string,
-  type: MentionType,
-  url: string,
-  // url to external image
-  image: string,
-  author: string,
-  mention_for_software?:any[]
-}
+// export type Mention = {
+//   date: string,
+//   is_featured: boolean,
+//   title: string,
+//   type: MentionType,
+//   url: string,
+//   // url to external image
+//   image: string,
+//   author: string,
+//   mention_for_software?:any[]
+// }
 
 export async function getMentionsForSoftware(uuid: string,token?:string) {
   try {
@@ -287,7 +287,7 @@ export async function getMentionsForSoftware(uuid: string,token?:string) {
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data: ContributorMentionCount[] = await resp.json()
+      const data: MentionForSoftware[] = await resp.json()
       return data
     } else if (resp.status === 404) {
       logger(`getMentionsForSoftware: 404 [${url}]`, 'error')
