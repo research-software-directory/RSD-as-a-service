@@ -25,7 +25,6 @@ import {
   getTagsForSoftware,
   getLicenseForSoftware,
   getContributorMentionCount,
-  getMentionsForSoftware,
   getRemoteMarkdown,
   ContributorMentionCount,
 } from '../../../utils/getSoftware'
@@ -43,6 +42,7 @@ import {getContributorsForSoftware} from '../../../utils/editContributors'
 import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
 import {getRelatedToolsForSoftware} from '../../../utils/editRelatedSoftware'
 import {MentionForSoftware} from '../../../types/MentionType'
+import {getMentionsForSoftware} from '../../../utils/editMentions'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -199,7 +199,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // softwareMentionCounts
       getContributorMentionCount(software.id,token),
       // mentions
-      getMentionsForSoftware(software.id,token),
+      getMentionsForSoftware({software: software.id, frontend: false, token}),
       // testimonials
       getTestimonialsForSoftware({software:software.id,frontend: false,token}),
       // contributors
