@@ -3,7 +3,7 @@
  * database/008-create-mention-table.sql
  */
 export const mentionType = {
-  attachment: 'Attachment',
+  attachment:'Attachments',
   blogPost:'Blogposts',
   book:'Books',
   bookSection:'Book section',
@@ -26,6 +26,31 @@ export const mentionType = {
   featured : 'Featured mentions'
 }
 
+export const mentionTypeSingular = {
+  attachment: 'Attachment',
+  blogPost: 'Blogpost',
+  book: 'Book',
+  bookSection: 'Book section',
+  computerProgram: 'Computer program',
+  conferencePaper: 'Conference paper',
+  document: 'Document',
+  interview: 'Interview',
+  journalArticle: 'Journal article',
+  magazineArticle: 'Magazine article',
+  manuscript: 'Manuscript',
+  newspaperArticle: 'Newspaper article',
+  note: 'Note',
+  presentation: 'Presentation',
+  radioBroadcast: 'Radio broadcast',
+  report: 'Report',
+  thesis: 'Thesis',
+  videoRecording: 'Video recording',
+  webpage: 'Webpage',
+  // additional type for featured mentions
+  // featured: 'Featured mentions'
+}
+
+export type MentionEditType = keyof typeof mentionTypeSingular
 export type MentionType = keyof typeof mentionType
 
 // as in mention table

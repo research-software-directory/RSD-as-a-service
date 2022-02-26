@@ -6,7 +6,6 @@ import logger from './logger'
 
 export async function getMentionsForSoftware({software,token,frontend}:{software: string, token?: string,frontend?:boolean}) {
   try {
-    // this request is always perfomed from backend
     // the content is order by type ascending
     const cols ='id,date,is_featured,title,type,url,image,author'
     let url = `${process.env.POSTGREST_URL}/mention?select=${cols},mention_for_software!inner(software)&mention_for_software.software=eq.${software}&order=type.asc`
@@ -132,7 +131,6 @@ export async function removeMentionForSoftware({mention, software, token}:
   }
 }
 
-
 export function mentionsToAutocompleteOptions(mentions: MentionItem[]) {
   const options:AutocompleteOption<MentionItem>[] = mentions.map((item, pos) => {
     return {
@@ -169,7 +167,6 @@ export function clasifyMentionsByType(mentions: MentionForSoftware[]) {
       mentionByType[mType].push(item)
     }
   })
-
   return {
     mentionByType,
     featuredMentions

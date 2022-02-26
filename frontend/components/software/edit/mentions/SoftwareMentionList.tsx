@@ -1,45 +1,42 @@
-import {useEffect, useState, useContext} from 'react'
-import IconButton from '@mui/material/IconButton'
+import {useState, useContext} from 'react'
 import {Alert, AlertTitle} from '@mui/material'
 
-import {MentionForSoftware, MentionType} from '../../../../types/MentionType'
-import {sortOnDateProp} from '../../../../utils/sortFn'
-
-import SoftwareMentionItem from './SoftwareMentionItem'
+import {MentionEditType, MentionForSoftware} from '../../../../types/MentionType'
 import {removeMentionForSoftware} from '../../../../utils/editMentions'
-import editSoftwareContext from '../editSoftwareContext'
 import useSnackbar from '../../../snackbar/useSnackbar'
+import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
+import editSoftwareContext from '../editSoftwareContext'
+import SoftwareMentionItem from './SoftwareMentionItem'
 
-export default function SoftwareMentionList({items,token}:
-  { items: MentionForSoftware[], token: string }) {
+export default function SoftwareMentionList({category,items,token, onDelete}:
+  {category:MentionEditType, items: MentionForSoftware[], token: string, onDelete:(pos:number)=>void}) {
   const {showSuccessMessage, showErrorMessage} = useSnackbar()
   const {pageState} = useContext(editSoftwareContext)
   const {software} = pageState
-  const [mentions, setMentions] = useState(items)
+  const [modal, setModal] = useState<{open:boolean,pos?:number,displayName?:string}>({
+    open: false
+  })
 
-  useEffect(() => {
-    setMentions(items)
-  },[items])
+  // console.group('SoftwareMentionList')
+  // console.log('category...', category)
+  // console.log('items...', items)
+  // console.groupEnd()
 
-  function removeFromMentionList(pos: number) {
-    const newList = [
-      ...mentions.slice(0, pos),
-      ...mentions.slice(pos + 1)
-    ]
-    setMentions(newList)
-  }
-
-  async function removeMention(pos: number) {
-    debugger
-    const mention = mentions[pos]
+  async function removeMention(pos: number|undefined) {
+    if (typeof pos == 'undefined') return
+    const mention = items[pos]
+    // close modal first
+    setModal({open: false})
     if (mention?.id && software?.id) {
+      // remove from data
       const resp = await removeMentionForSoftware({
         mention: mention?.id,
         software:software?.id,
         token
       })
       if (resp.status === 200) {
-        removeFromMentionList(pos)
+        // remove from local state too
+        onDelete(pos)
         showSuccessMessage(`Removed mention from ${software?.brand_name}`)
       } else {
         showErrorMessage(`Failed to remove mention from ${software?.brand_name}`)
@@ -58,22 +55,38 @@ export default function SoftwareMentionList({items,token}:
     )
   }
 
+  function deleteMention(pos: number | undefined) {
+    if (typeof pos == 'undefined') return
+    const mention = items[pos]
+    if (mention && mention?.id) {
+      setModal({
+        open: true,
+        displayName: mention.title,
+        pos
+      })
+    }
+  }
+
   return (
     <>
-      {mentions.sort((a, b) => {
-        // sort mentions on date, newest at the top
-        return sortOnDateProp(a, b, 'date', 'desc')
-      }).map((item, pos) => {
+      {items.map((item, pos) => {
         return (
           <div key={pos} className="p-4 hover:bg-grey-200 hover:text-black">
             <SoftwareMentionItem
               pos={pos}
               item={item}
-              onDelete={removeMention}
+              onDelete={()=>deleteMention(pos)}
             />
           </div>
         )
       })}
+      <ConfirmDeleteModal
+        title="Remove mention"
+        open={modal.open}
+        displayName={modal.displayName ?? ''}
+        onCancel={()=>setModal({open:false})}
+        onDelete={()=>removeMention(modal.pos)}
+      />
     </>
   )
 }

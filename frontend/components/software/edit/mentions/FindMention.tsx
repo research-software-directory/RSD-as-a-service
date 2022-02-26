@@ -1,11 +1,12 @@
 import {HTMLAttributes, useState} from 'react'
+import {AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
+
 import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
-import {mentionInformation as config} from '../editSoftwareConfig'
 import AsyncAutocomplete from '../../../form/AsyncAutocomplete'
 import {MentionItem} from '../../../../types/MentionType'
-import {AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
-import {searchForAvailableMentions, mentionsToAutocompleteOptions, addMentionToSoftware} from '../../../../utils/editMentions'
+import {searchForAvailableMentions, mentionsToAutocompleteOptions} from '../../../../utils/editMentions'
 import logger from '../../../../utils/logger'
+import {mentionInformation as config} from '../editSoftwareConfig'
 import FindMentionItem from './FindMentionItem'
 
 export default function FindMention({software,token, onAdd}:

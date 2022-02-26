@@ -32,7 +32,7 @@ const mentionTypeOptions = Object.keys(mentionType).map(key => {
   }
 })
 
-export default function EditMentionModal({open, onCancel, onSubmit, mention, pos}: EditMentionModalProps) {
+export default function NewMentionModal({open, onCancel, onSubmit, mention, pos}: EditMentionModalProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
   const {handleSubmit, watch, formState, reset, control, register} = useForm<MentionItem>({
     mode: 'onChange',
@@ -45,14 +45,14 @@ export default function EditMentionModal({open, onCancel, onSubmit, mention, pos
   const {isValid, isDirty, errors} = formState
   const formData = watch()
 
-  console.group('EditMentionModal')
+  // console.group('EditMentionModal')
   // console.log('open...', open)
-  console.log('isDirty...', isDirty)
-  console.log('isValid...', isValid)
-  console.log('errors...', errors)
-  console.log('formData...', formData)
+  // console.log('isDirty...', isDirty)
+  // console.log('isValid...', isValid)
+  // console.log('errors...', errors)
+  // console.log('formData...', formData)
   // console.log('mentionTypeOptions...', mentionTypeOptions)
-  console.groupEnd()
+  // console.groupEnd()
 
   useEffect(() => {
     if (mention) {
