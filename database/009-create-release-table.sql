@@ -1,6 +1,6 @@
 CREATE TABLE release (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	software UUID references software (id) UNIQUE NOT NULL,
+	software UUID REFERENCES software (id) UNIQUE NOT NULL,
 	is_citable BOOLEAN,
 	latest_schema_dot_org VARCHAR,
 	created_at TIMESTAMP NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE release_content (
 	release_id UUID REFERENCES release (id) NOT NULL,
 	citability citability NOT NULL,
 	date_published DATE NOT NULL,
-	doi VARCHAR NOT NULL,
+	doi VARCHAR NOT NULL UNIQUE,
 	tag VARCHAR NOT NULL,
 	url VARCHAR NOT NULL,
 
