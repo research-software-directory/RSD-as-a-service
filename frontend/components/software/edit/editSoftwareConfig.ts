@@ -243,8 +243,11 @@ export const mentionInformation = {
     title: 'Find mention',
     subtitle: 'Search mentions scraped from Zenodo',
     label: 'Search for available mentions',
-    help: 'Type the title or the url of scraped mention',
+    help: 'Type the title or the url of scraped mention (at least 2 letters)',
+    // reset value after selected
+    reset: true,
     validation: {
+      // minlength to trigger api search
       minLength: 2
     }
   }

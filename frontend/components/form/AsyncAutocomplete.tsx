@@ -22,10 +22,11 @@ type AsyncAutocompleteProps<T> = {
   ) => ReactNode
   config: {
     // enables creation of new items
-    freeSolo:boolean
+    freeSolo: boolean
     minLength: number,
     label: string,
-    help: string
+    help: string,
+    reset?: boolean
   },
   defaultValue?: AutocompleteOption<T>
 }
@@ -34,7 +35,7 @@ type AsyncAutocompleteProps<T> = {
 export default function AsyncAutocomplete<T>({status,options,config,onSearch,onAdd,onCreate,onRenderOption,defaultValue}:AsyncAutocompleteProps<T>) {
   const [open, setOpen] = useState(false)
   const [newInputValue, setInputValue] = useState('')
-  const [selected, setSelected] = useState<AutocompleteOption<T>>()
+  const [selected, setSelected] = useState<AutocompleteOption<T>|null>(null)
   const searchFor = useDebounceWithAutocomplete(newInputValue, selected?.label, 500)
   const {loading,foundFor} = status
 
@@ -54,6 +55,10 @@ export default function AsyncAutocomplete<T>({status,options,config,onSearch,onA
   function addContributor() {
     if (selected && selected.data) {
       onAdd(selected)
+      if (config?.reset) {
+        // reset selected value to nothing
+        setSelected(null)
+      }
     }
   }
 
@@ -104,11 +109,11 @@ export default function AsyncAutocomplete<T>({status,options,config,onSearch,onA
       // freeSolo - new contributor
       // console.log('onAutocompleteChange...freeSolo...', value)
       // we clean selected option
-      setSelected(undefined)
+      setSelected(null)
     } else if (value === null) {
       // cleaned
       // console.log('onAutocompleteChange...cleaned...', value)
-      setSelected(undefined)
+      setSelected(null)
     } else if (value && value?.key) {
       // existing contributor
       // console.log('onAutocompleteChange...option...', value)
@@ -131,8 +136,8 @@ export default function AsyncAutocomplete<T>({status,options,config,onSearch,onA
         onClose={() => {
           setOpen(false)
         }}
-        // used to reset value
-        // value={newInputValue}
+        // use to control/reset value
+        value={selected}
         defaultValue={defaultValue}
         inputValue={newInputValue}
         filterOptions={(options: AutocompleteOption<T>[],

@@ -74,7 +74,7 @@ $$
 BEGIN
 	RETURN QUERY SELECT * FROM mention
 	WHERE id NOT IN (
-		SELECT mention FROM mention_for_software WHERE mention_for_software.software <> software_id
+		SELECT mention FROM mention_for_software WHERE mention_for_software.software = software_id
 	)
 	AND (
 		url ILIKE CONCAT('%', search_text, '%') OR title ILIKE CONCAT('%', search_text, '%')

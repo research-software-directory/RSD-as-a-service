@@ -1,7 +1,7 @@
 import {useContext, useState, useEffect} from 'react'
 
 import useSnackbar from '../../../snackbar/useSnackbar'
-import {MentionEditType, MentionForSoftware, MentionItem} from '../../../../types/MentionType'
+import {MentionEditType, MentionForSoftware, MentionItem, mentionType} from '../../../../types/MentionType'
 import {addMentionToSoftware} from '../../../../utils/editMentions'
 import logger from '../../../../utils/logger'
 import {getMentionsForSoftwareOfType} from '../../../../utils/editMentions'
@@ -51,8 +51,10 @@ export default function EditSoftwareMentions({token}:{token: string}) {
       if (resp.status === 200) {
         if (mention?.type) {
           await loadCategory(mention.type as MentionEditType)
+          showSuccessMessage(`Added mention to ${mentionType[mention.type]}`)
+        } else{
+          showSuccessMessage(`Added mention to ${software.brand_name}`)
         }
-        showSuccessMessage(`Added mention to category: ${mention.type}`)
       } else {
         showErrorMessage(`${resp.message}`)
       }

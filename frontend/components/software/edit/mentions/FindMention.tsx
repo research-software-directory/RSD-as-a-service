@@ -41,6 +41,11 @@ export default function FindMention({software,token, onAdd}:
 
   function addMention(option: AutocompleteOption<MentionItem>) {
     onAdd(option.data)
+    // reset options
+    if (config.findMention.reset === true) {
+      // remove search suggestion after adding
+      setOptions([])
+    }
   }
 
   function createMention(title: string) {
@@ -72,8 +77,10 @@ export default function FindMention({software,token, onAdd}:
           freeSolo: false,
           minLength: config.findMention.validation.minLength,
           label: config.findMention.label,
-          help: config.findMention.help
+          help: config.findMention.help,
+          reset: config.findMention.reset
         }}
+        defaultValue={undefined}
       />
     </section>
   )
