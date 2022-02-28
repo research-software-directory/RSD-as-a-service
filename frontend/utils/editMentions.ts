@@ -51,12 +51,12 @@ export async function getMentionsForSoftwareOfType({software, type, token, front
       const data: MentionForSoftware[] = await resp.json()
       return data
     } else if (resp.status === 404) {
-      logger(`getMentionsForSoftware: 404 [${url}]`, 'error')
+      logger(`getMentionsForSoftwareOfType: 404 [${url}]`, 'error')
       // query not found
       return []
     }
   } catch (e: any) {
-    logger(`getMentionsForSoftware: ${e?.message}`, 'error')
+    logger(`getMentionsForSoftwareOfType: ${e?.message}`, 'error')
     return []
   }
 }
@@ -68,22 +68,26 @@ export async function getMentionsForSoftwareOfType({software, type, token, front
  */
 export async function searchForAvailableMentions({software, searchFor, token}:
   {software:string, searchFor: string, token: string }) {
-  const url = `/api/v1/mention?select=*,mention_for_software!inner(software)&mention_for_software.software=neq.${software}&or=(url.ilike.*${searchFor}*,title.ilike.*${searchFor}*)&order=title.asc`
+  const url ='/api/v1/rpc/search_mentions_for_software'
   try {
     const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders(token)
+      method: 'POST',
+      headers: createJsonHeaders(token),
+      body: JSON.stringify({
+        software_id: software,
+        search_text: searchFor
+      })
     })
 
     if (resp.status === 200) {
       const json:MentionItem[] = await resp.json()
       return json
     } else {
-      logger(`searchMentions: 404 [${url}]`, 'error')
+      logger(`searchForAvailableMentions: 404 [${url}]`, 'error')
       return []
     }
   } catch (e:any) {
-    logger(`getMentionsForSoftware: ${e?.message}`, 'error')
+    logger(`searchForAvailableMentions: ${e?.message}`, 'error')
     return []
   }
 }
@@ -103,7 +107,7 @@ export async function addMentionToSoftware({mention, software, token}: { mention
     return extractReturnMessage(resp, mention)
 
   } catch (e:any) {
-    logger(`getMentionsForSoftware: ${e?.message}`, 'error')
+    logger(`addMentionToSoftware: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
