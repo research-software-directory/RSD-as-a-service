@@ -1,24 +1,37 @@
-import {useContext, useState} from 'react'
+import {useContext, useState, useEffect} from 'react'
 
 import useSnackbar from '../../../snackbar/useSnackbar'
-import {MentionEditType, MentionItem} from '../../../../types/MentionType'
+import {MentionEditType, MentionForSoftware, MentionItem} from '../../../../types/MentionType'
 import {addMentionToSoftware} from '../../../../utils/editMentions'
+import logger from '../../../../utils/logger'
+import {getMentionsForSoftwareOfType} from '../../../../utils/editMentions'
+import {sortOnDateProp} from '../../../../utils/sortFn'
 import EditSoftwareSection from '../EditSoftwareSection'
 import editSoftwareContext from '../editSoftwareContext'
 import NewMentionModal from './NewMentionModal'
 import FindMention from './FindMention'
-import SoftwareMentionsByType from './SoftwareMentionsByType'
+import SoftwareMentionsByType, {MentionByTypeState} from './SoftwareMentionsByType'
 import EditSectionTitle from '../EditSectionTitle'
-import logger from '../../../../utils/logger'
+import useMentionCountByType from './useMentionCountByType'
+import MentionCountContext from './MentionCountContext'
 
-export default function SoftwareMentions({token}:{token: string}) {
+export default function EditSoftwareMentions({token}:{token: string}) {
   const {showSuccessMessage, showErrorMessage} = useSnackbar()
   const {pageState} = useContext(editSoftwareContext)
   const {software} = pageState
-  const [category, setCategory] = useState<MentionEditType>('attachment')
+  const [loading, setLoading] = useState(false)
+  const [mentions, setMentions] = useState<MentionByTypeState>()
+  const {count, loading: loadCount} = useMentionCountByType({software: software?.id ?? '', token})
+  const [mentionCount, setMentionCount] = useState(count)
   const [modal, setModal] = useState<{open:boolean,mention?:MentionItem,pos?:number}>({
     open: false
   })
+
+  useEffect(() => {
+    if (count) {
+      setMentionCount(count)
+    }
+  },[count])
 
   function closeModal() {
     setModal({open:false})
@@ -36,12 +49,46 @@ export default function SoftwareMentions({token}:{token: string}) {
         token
       })
       if (resp.status === 200) {
-        setCategory(mention.type as MentionEditType ?? 'attachment')
+        if (mention?.type) {
+          await loadCategory(mention.type as MentionEditType)
+        }
         showSuccessMessage(`Added mention to category: ${mention.type}`)
       } else {
-        showErrorMessage(`Failed to add mention to ${software?.brand_name}`)
+        showErrorMessage(`${resp.message}`)
       }
     }
+  }
+
+  async function loadCategory(category: MentionEditType | undefined) {
+    // ignore request if category not provided
+    if (typeof category == 'undefined') return
+    // start request
+    setLoading(true)
+    const resp = await getMentionsForSoftwareOfType({
+      software:software?.id ?? '',
+      token,
+      type:category,
+      frontend:true
+    })
+    let items:MentionForSoftware[]=[]
+    if (resp) {
+      // sort on date
+      items = resp.sort((a, b) => {
+        // sort mentions on date, newest at the top
+        return sortOnDateProp(a, b, 'date', 'desc')
+      })
+    }
+    setMentions({
+      category,
+      items
+    })
+    if (mentionCount) {
+      setMentionCount({
+        ...mentionCount,
+        [category]: items.length
+      })
+    }
+    setLoading(false)
   }
 
   return (
@@ -56,11 +103,15 @@ export default function SoftwareMentions({token}:{token: string}) {
           onAdd={onAddMention}
         />
 
-        <SoftwareMentionsByType
-          software={software.id}
-          token={token}
-          showCategory={category}
-        />
+        <MentionCountContext.Provider value={{mentionCount,setMentionCount}}>
+          <SoftwareMentionsByType
+            loading={loading || loadCount}
+            token={token}
+            mentions={mentions}
+            onCategoryChange={loadCategory}
+            onDeleteMention={()=>loadCategory(mentions?.category)}
+          />
+        </MentionCountContext.Provider>
 
       </EditSoftwareSection>
       <NewMentionModal
