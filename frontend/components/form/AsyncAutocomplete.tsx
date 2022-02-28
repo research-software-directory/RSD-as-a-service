@@ -1,7 +1,8 @@
 import {useState, ReactNode, HTMLAttributes, SyntheticEvent, useEffect} from 'react'
 import Autocomplete, {AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
 import Button from '@mui/material/Button'
-import {CircularProgress, TextField} from '@mui/material'
+import {CircularProgress, FilterOptionsState, TextField} from '@mui/material'
+
 import {AutocompleteOption} from '../../types/AutocompleteOptions'
 import {useDebounceWithAutocomplete} from '../../utils/useDebouce'
 
@@ -134,6 +135,11 @@ export default function AsyncAutocomplete<T>({status,options,config,onSearch,onA
         // value={newInputValue}
         defaultValue={defaultValue}
         inputValue={newInputValue}
+        filterOptions={(options: AutocompleteOption<T>[],
+          state: FilterOptionsState<AutocompleteOption<T>>) => {
+          // return all options - it is already filtered by api
+          return options
+        }}
         isOptionEqualToValue={(option, value) => option.key === value.key}
         getOptionLabel={(option) => option.label}
         onInputChange={onInputChange}
