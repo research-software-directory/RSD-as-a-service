@@ -17,11 +17,6 @@ export default function SoftwareMentionList({category,items,token, onDelete}:
     open: false
   })
 
-  // console.group('SoftwareMentionList')
-  // console.log('category...', category)
-  // console.log('items...', items)
-  // console.groupEnd()
-
   async function removeMention(pos: number|undefined) {
     if (typeof pos == 'undefined') return
     const mention = items[pos]

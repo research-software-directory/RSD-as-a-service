@@ -1,4 +1,4 @@
-import {mentionType,MentionItem} from '../../../../types/MentionType'
+import {mentionTypeSingular,MentionItem, MentionEditType} from '../../../../types/MentionType'
 import {isoStrToLocalDateStr} from '../../../../utils/dateFn'
 
 export default function FindMentionItem({mention}: { mention: MentionItem }) {
@@ -28,7 +28,7 @@ export default function FindMentionItem({mention}: { mention: MentionItem }) {
     <div>
       {mention.type ?
         <div className="pr-4">
-          <strong>{mentionType[mention.type]}</strong>
+          <strong>{mentionTypeSingular[mention.type as MentionEditType]}</strong>
         </div>
         :null
       }

@@ -70,7 +70,7 @@ export default function FindMention({software,token, onAdd}:
         onRenderOption={renderOption}
         config={{
           freeSolo: false,
-          minLength: 2,
+          minLength: config.findMention.validation.minLength,
           label: config.findMention.label,
           help: config.findMention.help
         }}

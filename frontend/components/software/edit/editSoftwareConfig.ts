@@ -243,14 +243,16 @@ export const mentionInformation = {
     title: 'Find mention',
     subtitle: 'Search mentions scraped from Zenodo',
     label: 'Search for available mentions',
-    help: 'Type the title or the url of scraped mention'
-
+    help: 'Type the title or the url of scraped mention',
+    validation: {
+      minLength: 2
+    }
   }
 }
 
 
 export const relatedSoftwareInformation = {
   title: 'Related software',
-  subtitle: 'Which software is often used with this software?',
+  subtitle:(brand_name:string)=>`Mention software often used together with ${brand_name}`,
   help: 'Select related RSD software'
 }

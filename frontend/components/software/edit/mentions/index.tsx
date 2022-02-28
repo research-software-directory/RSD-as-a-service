@@ -9,6 +9,7 @@ import NewMentionModal from './NewMentionModal'
 import FindMention from './FindMention'
 import SoftwareMentionsByType from './SoftwareMentionsByType'
 import EditSectionTitle from '../EditSectionTitle'
+import logger from '../../../../utils/logger'
 
 export default function SoftwareMentions({token}:{token: string}) {
   const {showSuccessMessage, showErrorMessage} = useSnackbar()
@@ -19,17 +20,12 @@ export default function SoftwareMentions({token}:{token: string}) {
     open: false
   })
 
-  // console.group('SoftwareMentions')
-  // console.log('token...', token)
-  // console.log('software...', software)
-  // console.groupEnd()
-
   function closeModal() {
     setModal({open:false})
   }
 
   function onSubmitMention({data,pos}:{data:MentionItem,pos?:number}) {
-    console.log('Submit mention...', data)
+    logger('mentions.onSubmitMention...NOT IMPLEMENTED','warn')
   }
 
   async function onAddMention(mention:MentionItem) {

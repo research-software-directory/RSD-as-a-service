@@ -45,15 +45,6 @@ export default function NewMentionModal({open, onCancel, onSubmit, mention, pos}
   const {isValid, isDirty, errors} = formState
   const formData = watch()
 
-  // console.group('EditMentionModal')
-  // console.log('open...', open)
-  // console.log('isDirty...', isDirty)
-  // console.log('isValid...', isValid)
-  // console.log('errors...', errors)
-  // console.log('formData...', formData)
-  // console.log('mentionTypeOptions...', mentionTypeOptions)
-  // console.groupEnd()
-
   useEffect(() => {
     if (mention) {
       reset(mention)
