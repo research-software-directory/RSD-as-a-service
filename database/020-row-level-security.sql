@@ -226,8 +226,8 @@ CREATE POLICY anyone_can_read ON mention FOR SELECT TO web_anon, rsd_user
 	USING (id IN (SELECT mention FROM mention_for_software) OR id IN (SELECT mention FROM output_for_project) OR id IN (SELECT mention FROM impact_for_project));
 
 CREATE POLICY maintainer_all_rights ON mention TO rsd_user
-	USING (id IN (SELECT mention FROM mention_for_software WHERE software IN (SELECT * FROM software_of_current_maintainer())) OR id IN (SELECT mention FROM output_for_project WHERE project IN (SELECT * FROM projects_of_current_maintainer())) OR id IN (SELECT mention FROM impact_for_project WHERE project IN (SELECT * FROM projects_of_current_maintainer())))
-	WITH CHECK (id IN (SELECT mention FROM mention_for_software WHERE software IN (SELECT * FROM software_of_current_maintainer())) OR id IN (SELECT mention FROM output_for_project WHERE project IN (SELECT * FROM projects_of_current_maintainer())) OR id IN (SELECT mention FROM impact_for_project WHERE project IN (SELECT * FROM projects_of_current_maintainer())));
+	USING (TRUE)
+	WITH CHECK (TRUE);
 
 CREATE POLICY admin_all_rights ON mention TO rsd_admin
 	USING (TRUE)
