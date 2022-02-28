@@ -67,7 +67,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.5.5
+    image: rsd/frontend:0.5.6
     env_file:
       - ./frontend/.env.production.local
     # ports:
