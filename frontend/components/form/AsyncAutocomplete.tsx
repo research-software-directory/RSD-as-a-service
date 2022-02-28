@@ -39,23 +39,16 @@ export default function AsyncAutocomplete<T>({status,options,config,onSearch,onA
 
   useEffect(() => {
     // if we have search term at least minLength long
-    // we are not loading search already
-    // and new search term is not equal to search term we already have results
+    // and we are not searching already (loading)
+    // and new search term is different from search we already done
     if (searchFor
-      && searchFor.length > config.minLength
+      && searchFor.length >= config.minLength
       && loading === false
       && searchFor!== foundFor) {
       // debugger
       onSearch(searchFor)
     }
   },[searchFor,foundFor,loading,config.minLength,onSearch])
-
-  // console.group('AsyncAutocomplete')
-  // console.log('status...', status)
-  // console.log('newInputValue...', newInputValue)
-  // console.log('searchFor...', searchFor)
-  // console.log('selected...', selected)
-  // console.groupEnd()
 
   function addContributor() {
     if (selected && selected.data) {
