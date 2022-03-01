@@ -6,6 +6,7 @@ type TextFieldWidthCounterType = {
   autofocus?:boolean
   autoComplete?: string
   multiline?: boolean
+  rows?: number,
   maxRows?: number
   error?: boolean
   label: string
@@ -34,6 +35,7 @@ export default function TextFieldWithCounter({options, register}:
       disabled={options?.disabled ?? false}
       autoComplete={options?.autoComplete ?? 'off'}
       multiline={options?.multiline ?? false}
+      rows={options?.rows ?? undefined}
       maxRows={options?.maxRows ?? undefined}
       error={options?.error ?? false}
       id={options?.label ?? `input-${Math.floor(Math.random()*10000)}`}

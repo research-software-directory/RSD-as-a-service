@@ -473,3 +473,29 @@ export function licensesNotInReferenceList({list, referenceList}:
   }
   return []
 }
+
+
+// query for software item page based on slug
+export async function validSoftwareItem(slug: string | undefined, token?: string) {
+  try {
+    // this request is always perfomed from frontend
+    const url = `/api/v1/software?select=id,slug&slug=eq.${slug}`
+    let resp
+    if (token) {
+      resp = await fetch(url, {
+        method: 'GET',
+        headers: createJsonHeaders(token)
+      })
+    } else {
+      resp = await fetch(url, {method: 'GET'})
+    }
+    if (resp.status === 200) {
+      const data = await resp.json()
+      return data.length === 1
+    }
+    return false
+  } catch (e: any) {
+    logger(`validSoftwareItem: ${e?.message}`, 'error')
+    return false
+  }
+}
