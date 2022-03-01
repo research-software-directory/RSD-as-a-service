@@ -241,9 +241,9 @@ export const mentionInformation = {
   },
   findMention: {
     title: 'Find mention',
-    subtitle: 'Search mentions scraped from Zenodo',
+    subtitle: 'Search mentions scraped from Zotero',
     label: 'Search for mentions',
-    help: 'Type the title or the url of scraped mention (at least 2 letters)',
+    help: 'Type the title or the url of scraped mention (at least first 2 letters)',
     // reset value after selected
     reset: true,
     validation: {

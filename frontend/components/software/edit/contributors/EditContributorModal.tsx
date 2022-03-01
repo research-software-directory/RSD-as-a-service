@@ -40,16 +40,6 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   const {isValid, isDirty} = formState
   const formData = watch()
 
-  console.group('EditContributorModal')
-  // console.log('open...', open)
-  // console.log('errors...', errors)
-  console.log('isDirty...', isDirty)
-  console.log('isValid...', isValid)
-  // console.log('smallScreen...', smallScreen)
-  // console.log('contributor...', contributor)
-  console.log('formData...', formData)
-  console.groupEnd()
-
   useEffect(() => {
     if (contributor) {
       reset(contributor)
