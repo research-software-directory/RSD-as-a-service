@@ -1,26 +1,26 @@
 import {useEffect, useState, useContext} from 'react'
 import {useForm} from 'react-hook-form'
 
-import {app} from '../../../config/app'
-import ContentLoader from '../../layout/ContentLoader'
-import snackbarContext from '../../snackbar/PageSnackbarContext'
-import {updateSoftwareInfo} from '../../../utils/editSoftware'
-import {EditSoftwareItem} from '../../../types/SoftwareTypes'
-import EditSoftwareSection from './EditSoftwareSection'
-import EditSectionTitle from './EditSectionTitle'
-import editSoftwareContext from './editSoftwareContext'
-import {EditSoftwareActionType} from './editSoftwareContext'
+import {app} from '../../../../config/app'
+import {EditSoftwareItem} from '../../../../types/SoftwareTypes'
+import {updateSoftwareInfo} from '../../../../utils/editSoftware'
+import useEditSoftwareData from '../../../../utils/useEditSoftwareData'
+import useOnUnsaveChange from '../../../../utils/useOnUnsavedChange'
+import ContentLoader from '../../../layout/ContentLoader'
+import useSnackbar from '../../../snackbar/useSnackbar'
+import ControlledTextField from '../../../form/ControlledTextField'
+import EditSoftwareSection from '../EditSoftwareSection'
+import EditSectionTitle from '../EditSectionTitle'
+import editSoftwareContext from '../editSoftwareContext'
+import {EditSoftwareActionType} from '../editSoftwareContext'
 import SoftwareMarkdown from './SoftwareMarkdown'
 import SoftwareKeywords from './SoftwareKeywords'
 import SoftwareLicenses from './SoftwareLicenses'
 import SoftwarePageStatus from './SoftwarePageStatus'
-import {softwareInformation as config} from './editSoftwareConfig'
-import useEditSoftwareData from '../../../utils/useEditSoftwareData'
-import useOnUnsaveChange from '../../../utils/useOnUnsavedChange'
-import ControlledTextField from '../../form/ControlledTextField'
+import {softwareInformation as config} from '../editSoftwareConfig'
 
 export default function SoftwareInformation({slug,token}:{slug:string,token: string}) {
-  const {options: snackbarOptions, setSnackbar} = useContext(snackbarContext)
+  const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {loading:apiLoading, editSoftware, setEditSoftware} = useEditSoftwareData({slug,token})
   const [loading, setLoading] = useState(true)
@@ -42,17 +42,6 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
     isValid,
     warning: app.unsavedChangesMessage
   })
-
-  // console.group('SoftwareInformation')
-  // console.log('token...', token)
-  // console.log('slug...', slug)
-  // console.log('loading...', loading)
-  // console.log('errors...', errors)
-  // console.log('isDirty...', isDirty)
-  // console.log('isValid...', isValid)
-  // console.log('formData...', formData)
-  // console.log('editSoftware...', editSoftware)
-  // console.groupEnd()
 
   useEffect(() => {
     if (editSoftware?.id && apiLoading === false) {
@@ -106,12 +95,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
     })
     // if OK
     if (resp.status === 200) {
-      setSnackbar({
-        ...snackbarOptions,
-        open: true,
-        severity: 'success',
-        message: `${formData?.brand_name} saved`,
-      })
+      showSuccessMessage(`${formData?.brand_name} saved`)
       // update software state
       // to be equal to data in the form
       setEditSoftware(formData)
@@ -124,12 +108,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
         }
       })
     } else {
-      setSnackbar({
-        ...snackbarOptions,
-        open: true,
-        severity: 'error',
-        message: resp.message
-      })
+      showErrorMessage(`Failed to save. ${resp.message}`)
     }
   }
 

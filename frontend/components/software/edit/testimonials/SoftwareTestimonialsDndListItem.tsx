@@ -1,7 +1,7 @@
 
 import {ListItem, ListItemAvatar, ListItemText} from '@mui/material'
 import {Draggable} from 'react-beautiful-dnd'
-import {Testimonial} from '../../../types/Testimonial'
+import {Testimonial} from '../../../../types/Testimonial'
 
 export type DraggableListItemProps = {
   item: Testimonial

@@ -69,6 +69,22 @@ CREATE TABLE mention_for_software (
 );
 
 
+CREATE OR REPLACE FUNCTION search_mentions_for_software(software_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
+$$
+BEGIN
+	RETURN QUERY SELECT * FROM mention
+	WHERE id NOT IN (
+		SELECT mention FROM mention_for_software WHERE mention_for_software.software = software_id
+	)
+	AND (
+		url ILIKE CONCAT('%', search_text, '%') OR title ILIKE CONCAT('%', search_text, '%')
+	);
+	RETURN;
+END
+$$;
+
+
+
 
 CREATE TABLE output_for_project (
 	mention UUID REFERENCES mention (id),

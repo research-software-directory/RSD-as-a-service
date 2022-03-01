@@ -3,8 +3,8 @@ import {createTheme, ThemeProvider} from '@mui/material/styles'
 import PageContainer from '../layout/PageContainer'
 import MentionIsFeatured from './MentionIsFeatured'
 import MentionsByType, {MentionByType} from './MentionsByType'
-import {Mention} from '../../utils/getSoftware'
 import {sortOnDateProp} from '../../utils/sortFn'
+import {MentionForSoftware} from '../../types/MentionType'
 
 const darkTheme = createTheme({
   palette: {
@@ -12,15 +12,15 @@ const darkTheme = createTheme({
   },
 })
 
-export default function MentionsSection({mentions}: { mentions: Mention[] }) {
+export default function MentionsSection({mentions}: { mentions: MentionForSoftware[] }) {
   // do not render section if no data
   if (!mentions || mentions.length === 0) return null
   // split to featured and (not featured) mentions by type (different presentation)
   const {mentionByType, featuredMentions} = clasifyMentions(mentions)
 
-  function clasifyMentions(mentions: Mention[]) {
+  function clasifyMentions(mentions: MentionForSoftware[]) {
     let mentionByType: MentionByType = {}
-    let featuredMentions:Mention[]=[]
+    let featuredMentions:MentionForSoftware[]=[]
 
     mentions.forEach(item => {
       // remove array with software uuid

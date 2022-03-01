@@ -1,5 +1,5 @@
-import EditSectionTitle from './EditSectionTitle'
-import ControlledSwitch from '../../form/ControlledSwitch'
+import EditSectionTitle from '../EditSectionTitle'
+import ControlledSwitch from '../../../form/ControlledSwitch'
 
 
 export default function SoftwarePageStatus({control,config,formData}:

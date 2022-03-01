@@ -7,14 +7,14 @@ import SaveIcon from '@mui/icons-material/Save'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
-import snackbarContext from '../../snackbar/PageSnackbarContext'
-import {Contributor} from '../../../types/Contributor'
-import ControlledTextField from '../../form/ControlledTextField'
-import ControlledSwitch from '../../form/ControlledSwitch'
-import ContributorAvatar from '../ContributorAvatar'
-import {contributorInformation as config} from './editSoftwareConfig'
-import {getDisplayInitials, getDisplayName} from '../../../utils/getDisplayName'
-import logger from '../../../utils/logger'
+import snackbarContext from '../../../snackbar/PageSnackbarContext'
+import {Contributor} from '../../../../types/Contributor'
+import ControlledTextField from '../../../form/ControlledTextField'
+import ControlledSwitch from '../../../form/ControlledSwitch'
+import ContributorAvatar from '../../ContributorAvatar'
+import {contributorInformation as config} from '../editSoftwareConfig'
+import {getDisplayInitials, getDisplayName} from '../../../../utils/getDisplayName'
+import logger from '../../../../utils/logger'
 
 type EditContributorModalProps = {
   open: boolean,
@@ -39,16 +39,6 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   // extract
   const {isValid, isDirty} = formState
   const formData = watch()
-
-  // console.group('EditContributorModal')
-  // console.log('open...', open)
-  // console.log('errors...', errors)
-  // console.log('isDirty...', isDirty)
-  // console.log('isValid...', isValid)
-  // console.log('smallScreen...', smallScreen)
-  // console.log('contributor...', contributor)
-  // console.log('formData...', formData)
-  // console.groupEnd()
 
   useEffect(() => {
     if (contributor) {
@@ -308,8 +298,16 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   )
 
   function isSaveDisabled() {
-    // if (isValid === false) return true
-    if (isDirty === false) return true
+    // if pos is undefined we are creating
+    // new entry, but we might already have required
+    // information (first name - last name). In this
+    // case we only check if form is valid
+    if (typeof pos == 'undefined') {
+      if (isValid === false) return true
+    } else {
+      if (isValid === false) return true
+      if (isDirty === false) return true
+    }
     return false
   }
 }

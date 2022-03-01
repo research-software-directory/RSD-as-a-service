@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import LinkIcon from '@mui/icons-material/Link'
 
-import {Mention} from '../../utils/getSoftware'
 import {isoStrToLocalDateStr} from '../../utils/dateFn'
+import {MentionForSoftware} from '../../types/MentionType'
 
-export default function MentionItem({item, pos}: {item: Mention, pos:number}) {
+export default function MentionItem({item, pos}: {item: MentionForSoftware, pos:number}) {
 
   function renderItemBody() {
     return (

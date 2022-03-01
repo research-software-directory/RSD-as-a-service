@@ -1,52 +1,39 @@
 import {useContext,useEffect,useState} from 'react'
 
-import {app} from '../../../config/app'
-import snackbarContext from '../../snackbar/PageSnackbarContext'
-import ContentLoader from '../../layout/ContentLoader'
-import EditSoftwareSection from './EditSoftwareSection'
-import editSoftwareContext from './editSoftwareContext'
-import EditSectionTitle from './EditSectionTitle'
+import {app} from '../../../../config/app'
+import useSnackbar from '../../../snackbar/useSnackbar'
+import ContentLoader from '../../../layout/ContentLoader'
+import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
+import {Contributor, ContributorProps} from '../../../../types/Contributor'
 import {
   addContributorToDb, deleteContributorsById,
   getAvatarUrl, getContributorsForSoftware,
   prepareContributorData, updateContributorInDb
-} from '../../../utils/editContributors'
-import {Contributor, ContributorProps} from '../../../types/Contributor'
-import useOnUnsaveChange from '../../../utils/useOnUnsavedChange'
-import SoftwareContributorsList from './SoftwareContributorsList'
+} from '../../../../utils/editContributors'
+import useOnUnsaveChange from '../../../../utils/useOnUnsavedChange'
+import {getDisplayName} from '../../../../utils/getDisplayName'
+import {sortOnStrProp} from '../../../../utils/sortFn'
+import {getPropsFromObject} from '../../../../utils/getPropsFromObject'
 import EditContributorModal from './EditContributorModal'
-import ConfirmDeleteModal from '../../layout/ConfirmDeleteModal'
-import {getDisplayName} from '../../../utils/getDisplayName'
 import FindContributor, {Name} from './FindContributor'
-import {sortOnStrProp} from '../../../utils/sortFn'
-import {getPropsFromObject} from '../../../utils/getPropsFromObject'
-import {contributorInformation as config} from './editSoftwareConfig'
+import SoftwareContributorsList from './SoftwareContributorsList'
+import EditSoftwareSection from '../EditSoftwareSection'
+import editSoftwareContext from '../editSoftwareContext'
+import EditSectionTitle from '../EditSectionTitle'
+import {contributorInformation as config} from '../editSoftwareConfig'
+import {ModalProps,ModalStates} from '../editSoftwareTypes'
 
-type ModalProps = {
-  open: boolean
-  pos?: number
-}
-
-type EditModalProps = ModalProps & {
+type EditContributorModal = ModalProps & {
   contributor?: Contributor
 }
 
-type DeleteModalProps = ModalProps & {
-  displayName?: string
-}
-
-type ModalStates = {
-  edit: EditModalProps,
-  delete: DeleteModalProps
-}
-
 export default function SoftwareContributors({token}: {token: string }) {
-  const {options: snackbarOptions, setSnackbar} = useContext(snackbarContext)
+  const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {software} = pageState
   const [loading, setLoading] = useState(true)
   const [contributors, setContributors] = useState<Contributor[]>([])
-  const [modal, setModal] = useState<ModalStates>({
+  const [modal, setModal] = useState<ModalStates<EditContributorModal>>({
     edit: {
       open: false
     },
@@ -57,20 +44,12 @@ export default function SoftwareContributors({token}: {token: string }) {
   // we use pageState to enable/disable Save button in the header
   // extract from (shared) pageState
   const {isDirty,isValid} = pageState
-  // // watch for unsaved changes
+  // watch for unsaved changes
   useOnUnsaveChange({
     isDirty,
     isValid,
     warning: app.unsavedChangesMessage
   })
-  // console.group('SoftwareContributors')
-  // console.log('loading...', loading)
-  // console.log('token...', token)
-  // console.log('slug...', slug)
-  // console.log('isDirty...', isDirty)
-  // console.log('isValid...', isValid)
-  // console.log('contributors...', contributors)
-  // console.groupEnd()
 
   useEffect(() => {
     let abort = false
@@ -121,7 +100,6 @@ export default function SoftwareContributors({token}: {token: string }) {
     // set defaults
     newContributor.software = software?.id ?? ''
     newContributor.is_contact_person = false
-
     loadContributorIntoModal(newContributor)
   }
 
@@ -134,7 +112,6 @@ export default function SoftwareContributors({token}: {token: string }) {
     }
     // extract props into new object
     const contributor: Contributor = getPropsFromObject(item, ContributorProps)
-
     loadContributorIntoModal(contributor)
   }
 
@@ -175,19 +152,9 @@ export default function SoftwareContributors({token}: {token: string }) {
       if (resp.status === 200) {
         updateContributorList({data:resp.message,pos})
         // show notification
-        setSnackbar({
-          ...snackbarOptions,
-          open: true,
-          severity: 'success',
-          message: `Updated ${getDisplayName(data)}`,
-        })
+        showSuccessMessage(`Updated ${getDisplayName(data)}`)
       } else {
-        setSnackbar({
-          ...snackbarOptions,
-          open: true,
-          severity: 'error',
-          message: `Failed to update ${getDisplayName(data)}. Error: ${resp.message}`,
-        })
+        showErrorMessage(`Failed to update ${getDisplayName(data)}. Error: ${resp.message}`)
       }
     } else {
       // this is completely new contributor we need to add to DB
@@ -203,12 +170,7 @@ export default function SoftwareContributors({token}: {token: string }) {
         // update contributors list
         updateContributorList({data:contributor})
       } else {
-        setSnackbar({
-          ...snackbarOptions,
-          open: true,
-          severity: 'error',
-          message: `Failed to add ${getDisplayName(data)}. Error: ${resp.message}`,
-        })
+        showErrorMessage(`Failed to add ${getDisplayName(data)}. Error: ${resp.message}`)
       }
     }
   }
@@ -247,21 +209,10 @@ export default function SoftwareContributors({token}: {token: string }) {
         const resp = await deleteContributorsById({ids, token})
         if (resp.status === 200) {
           // show notification
-          setSnackbar({
-            ...snackbarOptions,
-            open: true,
-            severity: 'success',
-            message: `Removed ${getDisplayName(contributor)} from ${pageState.software.brand_name}`,
-            duration: 5000
-          })
+          showSuccessMessage(`Removed ${getDisplayName(contributor)} from ${pageState.software.brand_name}`)
           removeFromContributorList(pos)
         } else {
-          setSnackbar({
-            ...snackbarOptions,
-            open: true,
-            severity: 'error',
-            message: `Failed to remove ${getDisplayName(contributor)}. Error: ${resp.message}`,
-          })
+          showErrorMessage(`Failed to remove ${getDisplayName(contributor)}. Error: ${resp.message}`)
         }
       } else {
         // new contributor
@@ -317,9 +268,11 @@ export default function SoftwareContributors({token}: {token: string }) {
         onSubmit={onSubmitContributor}
       />
       <ConfirmDeleteModal
-        title="Remove contributor"
         open={modal.delete.open}
-        displayName={modal.delete.displayName ?? 'No name'}
+        title="Remove contributor"
+        body={
+          <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? 'No name'}</strong>?</p>
+        }
         onCancel={() => {
           setModal({
             edit:{open:false},

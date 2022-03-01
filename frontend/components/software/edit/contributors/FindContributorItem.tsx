@@ -1,5 +1,5 @@
-import {AutocompleteOption} from '../../../types/AutocompleteOptions'
-import {SearchContributor} from '../../../types/Contributor'
+import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
+import {SearchContributor} from '../../../../types/Contributor'
 
 export default function FindContributorItem({option}: { option: AutocompleteOption<SearchContributor> }) {
 

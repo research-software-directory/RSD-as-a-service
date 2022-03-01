@@ -25,10 +25,8 @@ import {
   getTagsForSoftware,
   getLicenseForSoftware,
   getContributorMentionCount,
-  getMentionsForSoftware,
   getRemoteMarkdown,
   ContributorMentionCount,
-  Mention
 } from '../../../utils/getSoftware'
 import {isMaintainerOfSoftware} from '../../../utils/editSoftware'
 import logger from '../../../utils/logger'
@@ -43,6 +41,8 @@ import EditSoftwareButton from '../../../components/software/edit/EditSoftwareBu
 import {getContributorsForSoftware} from '../../../utils/editContributors'
 import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
 import {getRelatedToolsForSoftware} from '../../../utils/editRelatedSoftware'
+import {MentionForSoftware} from '../../../types/MentionType'
+import {getMentionsForSoftware} from '../../../utils/editMentions'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -52,7 +52,7 @@ interface SoftwareIndexData extends ScriptProps{
   licenseInfo: License[]
   repositoryInfo: RepositoryInfo
   softwareIntroCounts: ContributorMentionCount
-  mentions: Mention[]
+  mentions: MentionForSoftware[]
   testimonials: Testimonial[]
   contributors: Contributor[]
   relatedTools: RelatedTools[]
@@ -199,7 +199,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // softwareMentionCounts
       getContributorMentionCount(software.id,token),
       // mentions
-      getMentionsForSoftware(software.id,token),
+      getMentionsForSoftware({software: software.id, frontend: false, token}),
       // testimonials
       getTestimonialsForSoftware({software:software.id,frontend: false,token}),
       // contributors

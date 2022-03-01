@@ -1,54 +1,41 @@
 import {useContext, useEffect, useState} from 'react'
 import AddIcon from '@mui/icons-material/Add'
-import {Button} from '@mui/material'
+import Button from '@mui/material/Button'
 
 import {useForm} from 'react-hook-form'
+import {DropResult} from 'react-beautiful-dnd'
 
-import snackbarContext,{snackbarDefaults} from '../../snackbar/PageSnackbarContext'
-import EditSoftwareSection from './EditSoftwareSection'
-import editSoftwareContext, {EditSoftwareActionType} from './editSoftwareContext'
-import EditSectionTitle from './EditSectionTitle'
-import {Testimonial} from '../../../types/Testimonial'
+import useSnackbar from '../../../snackbar/useSnackbar'
+import {Testimonial} from '../../../../types/Testimonial'
 import {
   postTestimonial, getTestimonialsForSoftware,
   patchTestimonial, deleteTestimonialById, patchTestimonialPositions
-} from '../../../utils/editTestimonial'
+} from '../../../../utils/editTestimonial'
+import {reorderList} from '../../../../utils/dndHelpers'
+import {sortOnNumProp} from '../../../../utils/sortFn'
+import ContentLoader from '../../../layout/ContentLoader'
+import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
+
 import EditTestimonialModal from './EditTestimonialModal'
-import ContentLoader from '../../layout/ContentLoader'
-import {sortOnNumProp} from '../../../utils/sortFn'
-import ConfirmDeleteModal from '../../layout/ConfirmDeleteModal'
-
+import EditSoftwareSection from '../EditSoftwareSection'
+import editSoftwareContext, {EditSoftwareActionType} from '../editSoftwareContext'
+import EditSectionTitle from '../EditSectionTitle'
 import SoftwareTestimonialsDndList from './SoftwareTestimonialsDndList'
-import {DropResult} from 'react-beautiful-dnd'
-import {reorderList} from '../../../utils/dndHelpers'
+import {ModalProps,ModalStates} from '../editSoftwareTypes'
 
-type ModalProps = {
-  open: boolean
-  pos?: number
-}
-
-type EditModalProps = ModalProps & {
+type EditTestimonialModal = ModalProps & {
   testimonial?: Testimonial
 }
 
-type DeleteModalProps = ModalProps & {
-  displayName?: string
-}
-
-type ModalStates = {
-  edit: EditModalProps,
-  delete: DeleteModalProps
-}
-
 export default function SoftwareTestimonials({token}: {token: string }) {
-  const {setSnackbar} = useContext(snackbarContext)
+  const {showErrorMessage, showSuccessMessage} = useSnackbar()
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {software} = pageState
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [loading, setLoading] = useState(true)
-  const [modal, setModal] = useState<ModalStates>({
+  const [modal, setModal] = useState<ModalStates<EditTestimonialModal>>({
     edit: {
-      open: false
+      open: false,
     },
     delete: {
       open: false
@@ -129,27 +116,6 @@ export default function SoftwareTestimonials({token}: {token: string }) {
       delete: {
         open:false
       }
-    })
-  }
-
-  function showSuccessMessage(message: string) {
-    // show notification
-    setSnackbar({
-      ...snackbarDefaults,
-      open: true,
-      severity: 'success',
-      duration: 5000,
-      message
-    })
-  }
-
-  function showErrorMessage(message: string) {
-    setSnackbar({
-      ...snackbarDefaults,
-      open: true,
-      severity: 'error',
-      duration: undefined,
-      message,
     })
   }
 
@@ -246,16 +212,12 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     // update list
     setTestimonials(list)
     // save new positions to db
-    patchPositions(list)
+    if (list.length > 0) patchPositions(list)
   }
 
   function onDragEnd({destination, source}: DropResult){
     // dropped outside the list
     if (!destination) return
-    // console.group('onDragEnd')
-    // console.log('destination...',destination)
-    // console.log('source...', source)
-    // console.groupEnd()
     const newItems = reorderList({
       list:testimonials,
       startIndex:source.index,
@@ -328,7 +290,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
       <EditSoftwareSection>
         <div className="py-4">
           <EditSectionTitle
-            title={'Testimonials'}
+            title="Testimonials"
             subtitle={getTestimonialSubtitle()}
           >
             <Button
@@ -356,7 +318,9 @@ export default function SoftwareTestimonials({token}: {token: string }) {
       <ConfirmDeleteModal
         title="Remove testimonial"
         open={modal.delete.open}
-        displayName={modal.delete.displayName ?? ''}
+        body={
+          <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? ''}</strong>?</p>
+        }
         onCancel={closeModals}
         onDelete={()=>deleteTestimonial(modal.delete.pos)}
       />

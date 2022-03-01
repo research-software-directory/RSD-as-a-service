@@ -2,11 +2,11 @@ import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 
-import ControlledRemoteMarkdown from '../../form/ControlledRemoteMarkdown'
-import MarkdownInputWithPreview from '../../form/MarkdownInputWithPreview'
-import {SoftwareItem} from '../../../types/SoftwareTypes'
-import EditSectionTitle from './EditSectionTitle'
-import {SoftwareInformationConfig} from './editSoftwareConfig'
+import ControlledRemoteMarkdown from '../../../form/ControlledRemoteMarkdown'
+import MarkdownInputWithPreview from '../../../form/MarkdownInputWithPreview'
+import {SoftwareItem} from '../../../../types/SoftwareTypes'
+import EditSectionTitle from '../EditSectionTitle'
+import {SoftwareInformationConfig} from '../editSoftwareConfig'
 
 type SoftwareMarkdownProps = {
   register: any,
