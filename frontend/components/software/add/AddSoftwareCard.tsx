@@ -9,11 +9,12 @@ import {useForm} from 'react-hook-form'
 
 import {useAuth} from '../../../auth'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
+import TextFieldWithLoader from '../../form/TextFieldWithLoader'
 import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import {NewSoftwareItem} from '../../../types/SoftwareTypes'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 import {validSoftwareItem} from '../../../utils/editSoftware'
-import {useDebounce} from '../../../utils/useDebouce'
+import {useDebounce, useDebounceValid} from '../../../utils/useDebouce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
 
@@ -32,6 +33,7 @@ export default function AddSoftwareCard() {
   const {session} = useAuth()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const router = useRouter()
+  const [validating,setValidating]=useState(false)
   const [state, setState] = useState(initalState)
   const {register, handleSubmit, watch, formState, reset, setError, clearErrors} = useForm<AddSoftwareForm>({
     mode: 'onChange',
@@ -42,7 +44,7 @@ export default function AddSoftwareCard() {
   })
   const {errors, isValid} = formState
   const brand_name = watch('brand_name')
-  const bouncedName = useDebounce(brand_name,2000)
+  const bouncedName = useDebounceValid(brand_name,errors['brand_name'])
 
   useEffect(() => {
     let abort = false
@@ -59,9 +61,15 @@ export default function AddSoftwareCard() {
       }
     }
     if (bouncedName) {
+      setValidating(true)
       // debugger
       const slug = getSlugFromString(bouncedName)
       validateSlug(slug)
+      // need to set timeout for loader to be visible
+      // if the speed drops the timer can be removed
+      setTimeout(() => {
+        setValidating(false)
+      },500)
     }
     return ()=>{abort=true}
   },[bouncedName,session?.token,setError,clearErrors])
@@ -155,7 +163,7 @@ export default function AddSoftwareCard() {
           {renderDialogText()}
         </section>
         <section className="py-8">
-          <TextFieldWithCounter
+          <TextFieldWithLoader
             options={{
               autofocus:true,
               error: errors.brand_name?.message !== undefined,
@@ -167,6 +175,7 @@ export default function AddSoftwareCard() {
             register={register('brand_name', {
               ...config.brand_name.validation
             })}
+            loading={validating}
           />
           <div className="py-4"></div>
           <TextFieldWithCounter
