@@ -6,14 +6,22 @@ import {addMentionToSoftware} from '../../../../utils/editMentions'
 import logger from '../../../../utils/logger'
 import {getMentionsForSoftwareOfType} from '../../../../utils/editMentions'
 import {sortOnDateProp} from '../../../../utils/sortFn'
+import ContentLoader from '../../../layout/ContentLoader'
 import EditSoftwareSection from '../EditSoftwareSection'
 import editSoftwareContext from '../editSoftwareContext'
+import {mentionInformation as config} from '../editSoftwareConfig'
 import NewMentionModal from './NewMentionModal'
 import FindMention from './FindMention'
-import SoftwareMentionsByType, {MentionByTypeState} from './SoftwareMentionsByType'
 import EditSectionTitle from '../EditSectionTitle'
 import useMentionCountByType from './useMentionCountByType'
 import MentionCountContext from './MentionCountContext'
+import SoftwareMentionCategories from './SoftwareMentionCategories'
+import SoftwareMentionList from './SoftwareMentionList'
+
+type MentionByTypeState = {
+  category: MentionEditType,
+  items: MentionForSoftware[]
+}
 
 export default function EditSoftwareMentions({token}:{token: string}) {
   const {showSuccessMessage, showErrorMessage} = useSnackbar()
@@ -93,28 +101,54 @@ export default function EditSoftwareMentions({token}:{token: string}) {
     setLoading(false)
   }
 
+  if (loadCount) {
+    return (
+      <ContentLoader />
+    )
+  }
+
   return (
-    <>
+    <MentionCountContext.Provider value={{mentionCount,setMentionCount}}>
       <EditSoftwareSection className="py-4 flex-1">
-        <EditSectionTitle
-          title="Mentions"
-        />
-        <FindMention
-          software={software.id ?? ''}
-          token={token}
-          onAdd={onAddMention}
-        />
-
-        <MentionCountContext.Provider value={{mentionCount,setMentionCount}}>
-          <SoftwareMentionsByType
-            loading={loading || loadCount}
-            token={token}
-            mentions={mentions}
-            onCategoryChange={loadCategory}
-            onDeleteMention={()=>loadCategory(mentions?.category)}
-          />
-        </MentionCountContext.Provider>
-
+        <section className="grid grid-cols-[1fr,4fr] gap-8">
+          <div>
+            <EditSectionTitle
+              title={config.sectionTitle}
+            />
+            <SoftwareMentionCategories
+              category={mentions?.category ?? 'attachment'}
+              onCategoryChange={loadCategory}
+            />
+          </div>
+          <div>
+            <EditSectionTitle
+              title={config.findMention.title}
+              subtitle={config.findMention.subtitle}
+            />
+            <FindMention
+              software={software.id ?? ''}
+              token={token}
+              onAdd={onAddMention}
+            />
+            <div className="py-4"></div>
+            <div className="flex-1 py-2">
+              <EditSectionTitle
+                title={mentionType[mentions?.category ?? 'attachment']}
+              />
+              <div className="py-2"></div>
+              {loading ?
+                <ContentLoader />
+                :
+                <SoftwareMentionList
+                  category={mentions?.category ?? 'attachment'}
+                  items={mentions?.items ?? []}
+                  token={token}
+                  onDelete={() => loadCategory(mentions?.category)}
+                />
+              }
+            </div>
+          </div>
+        </section>
       </EditSoftwareSection>
       <NewMentionModal
         open={modal.open}
@@ -123,6 +157,6 @@ export default function EditSoftwareMentions({token}:{token: string}) {
         onCancel={closeModal}
         onSubmit={onSubmitMention}
       />
-    </>
+    </MentionCountContext.Provider>
   )
 }

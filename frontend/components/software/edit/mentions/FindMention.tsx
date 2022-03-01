@@ -65,7 +65,7 @@ export default function FindMention({software,token, onAdd}:
   }
 
   return (
-    <section className="flex items-center max-w-[40rem]">
+    <section className="flex items-center max-w-[40rem] margin-auto">
       <AsyncAutocomplete
         status={status}
         options={options}
