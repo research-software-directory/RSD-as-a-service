@@ -14,7 +14,7 @@ import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import {NewSoftwareItem} from '../../../types/SoftwareTypes'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 import {validSoftwareItem} from '../../../utils/editSoftware'
-import {useDebounce, useDebounceValid} from '../../../utils/useDebouce'
+import {useDebounceValid} from '../../../utils/useDebouce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
 
@@ -35,7 +35,7 @@ export default function AddSoftwareCard() {
   const router = useRouter()
   const [validating,setValidating]=useState(false)
   const [state, setState] = useState(initalState)
-  const {register, handleSubmit, watch, formState, reset, setError, clearErrors} = useForm<AddSoftwareForm>({
+  const {register, handleSubmit, watch, formState, setError, clearErrors} = useForm<AddSoftwareForm>({
     mode: 'onChange',
     defaultValues: {
       brand_name: '',
