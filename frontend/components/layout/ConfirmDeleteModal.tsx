@@ -6,9 +6,19 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import WarningIcon from '@mui/icons-material/Warning'
 
-export default function ConfirmDeleteModal(
-  {open,title='Remove',displayName='this item',onCancel,onDelete}:
-  {open:boolean,title:string,displayName:string,onCancel:()=>void,onDelete:()=>void}) {
+type ConfirmDeleteModalProps = {
+  open: boolean,
+  title: string,
+  body: JSX.Element,
+  onCancel: () => void,
+  onDelete: () => void
+}
+
+export default function ConfirmDeleteModal({
+  open = false, title = 'Remove',
+  body = <p>Are you sure you want to remove <strong>this item</strong>?</p>,
+  onCancel, onDelete}: ConfirmDeleteModalProps
+) {
   const smallScreen = useMediaQuery('(max-width:600px)')
   // console.group('DeleteContributorModal')
   // console.log('open...', open)
@@ -40,7 +50,7 @@ export default function ConfirmDeleteModal(
           width:['100%','33rem']
         }}>
           <section className="min-h-[5rem] text-lg">
-          <p>Are you sure you want to remove <strong>{displayName}</strong>?</p>
+            {body}
           </section>
         </DialogContent>
         <DialogActions sx={{

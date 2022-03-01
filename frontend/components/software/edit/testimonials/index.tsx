@@ -318,7 +318,9 @@ export default function SoftwareTestimonials({token}: {token: string }) {
       <ConfirmDeleteModal
         title="Remove testimonial"
         open={modal.delete.open}
-        displayName={modal.delete.displayName ?? ''}
+        body={
+          <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? ''}</strong>?</p>
+        }
         onCancel={closeModals}
         onDelete={()=>deleteTestimonial(modal.delete.pos)}
       />

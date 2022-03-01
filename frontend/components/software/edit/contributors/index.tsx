@@ -268,9 +268,11 @@ export default function SoftwareContributors({token}: {token: string }) {
         onSubmit={onSubmitContributor}
       />
       <ConfirmDeleteModal
-        title="Remove contributor"
         open={modal.delete.open}
-        displayName={modal.delete.displayName ?? 'No name'}
+        title="Remove contributor"
+        body={
+          <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? 'No name'}</strong>?</p>
+        }
         onCancel={() => {
           setModal({
             edit:{open:false},

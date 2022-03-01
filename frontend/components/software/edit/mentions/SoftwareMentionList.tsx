@@ -76,9 +76,13 @@ export default function SoftwareMentionList({category,items,token, onDelete}:
         )
       })}
       <ConfirmDeleteModal
-        title="Remove mention"
         open={modal.open}
-        displayName={modal.displayName ?? ''}
+        title="Remove mention"
+        body={
+          <p>
+            Are you sure you want to remove <strong>{modal.displayName ?? ''}</strong> from <strong>{software.brand_name}</strong>?
+          </p>
+        }
         onCancel={()=>setModal({open:false})}
         onDelete={()=>removeMention(modal.pos)}
       />
