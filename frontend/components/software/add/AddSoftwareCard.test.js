@@ -5,10 +5,6 @@ import AddSoftwareCard from './AddSoftwareCard'
 import {addConfig} from './addConfig'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 
-// mock timer
-// jest.useFakeTimers()
-// jest.spyOn(global, 'setTimeout')
-
 // mock addSoftware
 import * as editSoftware from '../../../utils/editSoftware'
 const mockAddSoftware = jest.spyOn(editSoftware, 'addSoftware')
@@ -34,7 +30,6 @@ it('render card with title', async () => {
   render(WrappedComponentWithProps(AddSoftwareCard))
   const title = await screen.queryByText(addConfig.title)
   expect(title).toBeInTheDocument()
-  // screen.debug()
 })
 
 it('card has textbox with Name that can be entered', async() => {
