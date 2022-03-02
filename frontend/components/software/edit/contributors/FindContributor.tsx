@@ -50,7 +50,6 @@ export default function FindContributor({onAdd, onCreate}:
   }
 
   function createNewContributor(newInputValue: string) {
-    debugger
     const name = splitName(newInputValue)
     onCreate(name)
   }
