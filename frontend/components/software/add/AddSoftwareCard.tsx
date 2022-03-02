@@ -5,26 +5,27 @@ import SaveIcon from '@mui/icons-material/Save'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import useMediaQuery from '@mui/material/useMediaQuery'
+
 import {useForm} from 'react-hook-form'
 
 import {useAuth} from '../../../auth'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
-import TextFieldWithLoader from '../../form/TextFieldWithLoader'
 import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import {NewSoftwareItem} from '../../../types/SoftwareTypes'
-import {getSlugFromString} from '../../../utils/getSlugFromString'
+import {getSlugFromString,sanitizeSlugValue} from '../../../utils/getSlugFromString'
 import {validSoftwareItem} from '../../../utils/editSoftware'
 import {useDebounceValid} from '../../../utils/useDebouce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
+import SlugTextField from './SlugTextField'
 
 const initalState = {
-  open: false,
   loading: false,
   error:''
 }
 
 type AddSoftwareForm = {
+  slug: string,
   brand_name: string,
   short_statement: string,
 }
@@ -33,46 +34,63 @@ export default function AddSoftwareCard() {
   const {session} = useAuth()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const router = useRouter()
-  const [validating,setValidating]=useState(false)
+  const [baseUrl, setBaseUrl] = useState('')
+  const [slugValue, setSlugValue] = useState('')
+  const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initalState)
-  const {register, handleSubmit, watch, formState, setError, clearErrors} = useForm<AddSoftwareForm>({
+  const {register, handleSubmit, watch, formState, setError, setValue, clearErrors} = useForm<AddSoftwareForm>({
     mode: 'onChange',
     defaultValues: {
+      slug:'',
       brand_name: '',
       short_statement:''
     }
   })
   const {errors, isValid} = formState
-  const brand_name = watch('brand_name')
-  const bouncedName = useDebounceValid(brand_name,errors['brand_name'])
+  // watch for data change in the form
+  const data = watch()
+  // construct slug from title
+  const bouncedSlug = useDebounceValid(slugValue, errors['slug'])
+
+  useEffect(() => {
+    if (typeof location != 'undefined') {
+      setBaseUrl(`${location.origin}/software/`)
+    }
+  }, [])
+
+  useEffect(() => {
+    const softwareSlug = getSlugFromString(data.brand_name)
+    clearErrors('slug')
+    setSlugValue(softwareSlug)
+  },[data.brand_name,clearErrors])
 
   useEffect(() => {
     let abort = false
-    async function validateSlug(slug:string) {
-      // console.log('validateSlug...', slug)
-      const isValid = await validSoftwareItem(slug,session?.token)
+    async function validateSlug(slug: string) {
+      setValidating(true)
+      const isValid = await validSoftwareItem(slug, session?.token)
       // debugger
       if (abort) return
       if (isValid) {
-        setError('brand_name', {type: 'invalid-slug', message: `Slug is already taken: /software/${slug}`})
+        setError('slug', {
+          type: 'invalid-slug',
+          message: `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
+        })
       } else {
-        clearErrors('brand_name')
-        setState(initalState)
+        clearErrors('slug')
+        setValue('slug', slug, {
+          shouldValidate: true
+        })
       }
+      // we need to wait some time
+      setValidating(false)
     }
-    if (bouncedName) {
-      setValidating(true)
+    if (bouncedSlug) {
       // debugger
-      const slug = getSlugFromString(bouncedName)
-      validateSlug(slug)
-      // need to set timeout for loader to be visible
-      // if the speed drops the timer can be removed
-      setTimeout(() => {
-        setValidating(false)
-      },500)
+      validateSlug(bouncedSlug)
     }
     return ()=>{abort=true}
-  },[bouncedName,session?.token,setError,clearErrors])
+  },[bouncedSlug,session?.token,setError,setValue,clearErrors])
 
   function handleCancel() {
     // on cancel we send user back to prevous page
@@ -80,7 +98,6 @@ export default function AddSoftwareCard() {
   }
 
   function onSubmit(data: AddSoftwareForm) {
-    // console.log('onSubmit...data', data)
     const {token} = session
     // set flags
     if (token && data) {
@@ -94,7 +111,7 @@ export default function AddSoftwareCard() {
     const software:NewSoftwareItem = {
       brand_name: data.brand_name,
       short_statement: data.short_statement,
-      slug: getSlugFromString(data.brand_name),
+      slug: data.slug,
       is_featured: false,
       is_published: false,
       description: null,
@@ -145,15 +162,28 @@ export default function AddSoftwareCard() {
   function isSaveDisabled() {
     if (state.loading == true) return true
     // when manually setting errors, like with brand_name async validation
-    // we also need to ensure these errors are handled here too
-    if (errors && errors?.brand_name) return true
+    // we also need to ensure these errors are handled here
+    if (errors && errors?.slug) return true
     if (isValid === false) return true
     return false
   }
 
-  // construct slug from title
-  const data = watch()
-  const softwareSlug = getSlugFromString(data.brand_name)
+  function onSlugChange(slug: string) {
+    // if nothing is changed
+    const newSlug = sanitizeSlugValue(slug)
+    if (newSlug === slugValue) return
+    if (newSlug.length < config.slug.validation.minLength.value) {
+      setError('slug',{
+        type: 'invalid-slug',
+        message: config.slug.validation.minLength.message
+      })
+    } else {
+      // clear errors
+      if (errors?.slug) clearErrors('slug')
+    }
+    // save new value
+    setSlugValue(newSlug)
+  }
 
   return (
     <ContentInTheMiddle>
@@ -163,19 +193,18 @@ export default function AddSoftwareCard() {
           {renderDialogText()}
         </section>
         <section className="py-8">
-          <TextFieldWithLoader
+          <TextFieldWithCounter
             options={{
               autofocus:true,
               error: errors.brand_name?.message !== undefined,
               label: config.brand_name.label,
-              helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help(softwareSlug),
+              helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help,
               helperTextCnt: `${data?.brand_name?.length || 0}/100`,
               variant:'outlined'
             }}
             register={register('brand_name', {
               ...config.brand_name.validation
             })}
-            loading={validating}
           />
           <div className="py-4"></div>
           <TextFieldWithCounter
@@ -190,10 +219,19 @@ export default function AddSoftwareCard() {
             }}
             register={register('short_statement', config.short_statement.validation)}
           />
+          <div className="py-4"></div>
+          <SlugTextField
+            label={config.slug.label}
+            baseUrl={baseUrl}
+            value={slugValue}
+            error={errors.slug?.message !== undefined}
+            helperTextMessage={errors?.slug?.message ?? config.slug.help}
+            onSlugChange={onSlugChange}
+            loading={validating}
+          />
         </section>
         <section className='flex justify-end'>
           <Button
-            tabIndex={1}
             onClick={handleCancel}
             color="secondary"
             sx={{marginRight:'2rem'}}
@@ -201,7 +239,6 @@ export default function AddSoftwareCard() {
             Cancel
           </Button>
           <Button
-            tabIndex={0}
             type="submit"
             variant="contained"
             sx={{

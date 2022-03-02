@@ -6,12 +6,7 @@ export const addConfig = {
   `,
   brand_name: {
     label: 'Name',
-    help: (slug: string) => {
-      if (slug) {
-        return `The url will be: /software/${slug}`
-      }
-      return 'Provide software name to use as a title of your software page.'
-    },
+    help: 'Provide software name to use as a title of your software page.',
     validation: {
       required: 'Name is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
@@ -28,7 +23,11 @@ export const addConfig = {
     }
   },
   slug: {
-    label: 'The url for your software will be generated as:'
+    label: 'The url of this software will be',
+    help: 'You can change slug. Use letters, numbers and dash "-". Other characters are not allowed.',
+    validation: {
+      minLength: {value: 3, message: 'Minimum length is 3'}
+    }
   }
 }
 
