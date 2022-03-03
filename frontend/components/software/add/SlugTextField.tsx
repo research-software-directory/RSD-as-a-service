@@ -19,9 +19,10 @@ const TextField = styled(MuiTextField)(({theme}) => ({
   },
   '& .MuiInputAdornment-root': {
     backgroundColor: theme.palette.grey[100],
-    padding: '1.75rem 0.5rem',
+    padding: '1.75rem 0rem 1.75rem 1rem',
     borderTopLeftRadius: theme.shape.borderRadius + 'px',
     borderBottomLeftRadius: theme.shape.borderRadius + 'px',
+    marginRight:0
   },
 }))
 
