@@ -1,5 +1,5 @@
 
-import {render,screen,fireEvent,waitFor} from '@testing-library/react'
+import {render,screen} from '@testing-library/react'
 import {WrappedComponentWithPropsAndSession} from '../utils/jest/WrappedComponents'
 
 import ProtectedContent from './ProtectedContent'

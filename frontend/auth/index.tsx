@@ -1,12 +1,12 @@
 import {createContext, Dispatch, SetStateAction, useState, useContext, useEffect} from 'react'
 import verifyJwt, {decodeJwt} from './jwtUtils'
-import {JwtPayload} from 'jsonwebtoken'
 import {IncomingMessage, OutgoingMessage} from 'http'
 import cookie from 'cookie'
 import logger from '../utils/logger'
+import {refreshSession} from './refreshSession'
 
 // refresh schedule margin 5min. before expiration time
-const REFRESH_MARGIN = 5 * 60 * 1000
+export const REFRESH_MARGIN = 5 * 60 * 1000
 
 export type RsdUser = {
   iss: 'rsd_auth',
@@ -62,9 +62,11 @@ export function AuthProvider(props: any) {
       }else{
         // console.log(`schedule refresh in ${waitInMs/1000}sec.`)
         schedule = setTimeout(() => {
+          // console.log('call...refreshSession')
           // refresh token by sending current valid cookie
           refreshSession()
             .then(newSession => {
+              // console.log('newSession...', newSession)
               // update only if "valid" session
               if (newSession?.status === 'authenticated') {
                 setSession(newSession)
@@ -174,7 +176,7 @@ export function getRsdTokenNode(req: IncomingMessage){
  * @param token
  * @returns Session
  */
-export function createSession(token:string|null):Session {
+export function createSession(token: string | null): Session {
   if (token) {
     const result = verifyJwt(token)
     if (result === 'valid') {
@@ -213,38 +215,5 @@ export function removeRsdTokenNode(res: OutgoingMessage) {
     )
   } catch (e:any) {
     logger(`removeRsdTokenCookie: ${e?.message}`,'error')
-  }
-}
-
-/**
- * Refresh session by calling node api refresh endpoint.
- * It is called from frontend and enables the token refresh and
- * the cookie update. This approach is required because the cookie is httponly,
- * and the token validation requires a secret key (only available on the server).
- */
-export async function refreshSession():Promise<Session|null> {
-  try {
-    const url = '/api/fe/token/refresh'
-    const resp = await fetch(url)
-
-    // console.group('refreshSession')
-    // console.log('url...', url)
-    // console.log('status...', resp.status)
-    // console.log('text...', resp.statusText)
-    // console.groupEnd()
-
-    if (resp.status === 200) {
-      const data = await resp.json()
-      if (data?.session) {
-        return data.session
-      }
-      return null
-    } else {
-      logger(`refreshSession failed:" ${resp.statusText}`,'error')
-      return null
-    }
-  } catch (e:any) {
-    logger(`refreshSession failed:" ${e?.message}`, 'error')
-    return null
   }
 }
