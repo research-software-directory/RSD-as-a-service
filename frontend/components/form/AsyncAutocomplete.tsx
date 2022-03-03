@@ -73,7 +73,7 @@ export default function AsyncAutocomplete<T>({status,options,config,onSearch,onA
           Add
         </Button>
       )
-    } else if (typeof selected == 'undefined' &&
+    } else if (selected === null &&
       newInputValue?.length > config.minLength &&
       // freeSolo enables creation of custom items
       config.freeSolo===true) {

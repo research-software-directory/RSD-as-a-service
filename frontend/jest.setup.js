@@ -24,3 +24,6 @@ jest.mock('react-markdown', () => {
     }
   })
 })
+
+// TOKEN
+// process.env.PGRST_JWT_SECRET='reallyreallyreallyreallyverysafe'
