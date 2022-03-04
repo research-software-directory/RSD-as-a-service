@@ -7,9 +7,12 @@ COPY ./src/main ./src/main
 RUN mvn package --offline
 
 FROM openjdk:17.0-jdk-slim-bullseye
-RUN apt-get update && apt-get --yes install cron
+WORKDIR /usr/myjava
+RUN apt-get update && apt-get --yes install cron python pip nano
+COPY --from=builder /usr/mymaven/src/main/resources/requirements.txt requirements.txt
+RUN pip install --requirement requirements.txt
 COPY jobs.cron /etc/cron.d/jobs.cron
 RUN crontab /etc/cron.d/jobs.cron
-WORKDIR /usr/myjava
 COPY --from=builder /usr/mymaven/target/*-jar-with-dependencies.jar scrapers.jar
+COPY --from=builder /usr/mymaven/src/main/resources/releases.py releases.py
 CMD printenv > /etc/environment && cron -f
