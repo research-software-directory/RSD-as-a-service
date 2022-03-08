@@ -8,7 +8,7 @@ message: >-
   provided in this file.
 type: software
 authors:
-  - given-names: Ewan
+  - given-names: Ewan Jacov
     family-names: Cahen
     affiliation: Netherlands eScience Center
     email: e.cahen@esciencecenter.nl
