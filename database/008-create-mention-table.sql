@@ -30,7 +30,8 @@ CREATE TABLE mention (
 	type mention_type NOT NULL,
 	url VARCHAR,
 	version INTEGER,
-	zotero_key VARCHAR,
+	zotero_key VARCHAR UNIQUE NOT NULL,
+	scraped_at TIMESTAMP,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
 );
@@ -82,7 +83,6 @@ BEGIN
 	RETURN;
 END
 $$;
-
 
 
 
