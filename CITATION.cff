@@ -1,0 +1,56 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Research Software Directory (as a service)
+message: >-
+  Please cite this software using the information
+  provided in this file.
+type: software
+authors:
+  - given-names: Ewan Jacov
+    family-names: Cahen
+    affiliation: Netherlands eScience Center
+    email: e.cahen@esciencecenter.nl
+  - given-names: Dusan
+    family-names: Mijatovic
+    email: d.mijatovic@esciencecenter.nl
+    affiliation: Netherlands eScience Center
+    orcid: 'https://orcid.org/0000-0002-1898-4461'
+  - orcid: 'https://orcid.org/0000-0002-2170-3253'
+    affiliation: Netherlands eScience Center
+    given-names: Jesus
+    family-names: Garcia Gonzalez
+    email: j.g.gonzalez@esciencecenter.nl
+  - given-names: Jason
+    family-names: Maassen
+    email: j.maassen@esciencecenter.nl
+    affiliation: Netherlands eScience Center
+    orcid: 'https://orcid.org/0000-0002-8172-4865'
+  - given-names: Maaike
+    name-particle: de
+    family-names: Jong
+    email: m.dejong@esciencecenter.nl
+    affiliation: Netherlands eScience Center
+    orcid: 'https://orcid.org/0000-0003-4803-7411'
+identifiers:
+  - type: doi
+    value: 10.0000/FIXME
+    description: The archived releases for the sourcecode
+repository-code: >-
+  https://github.com/research-software-directory/RSD-as-a-service
+url: 'https://research-software.dev'
+abstract: >-
+  The Research Software Directory (as a service) is a
+  content management system that is tailored to
+  research software. Its main goal is to increase the
+  visibility, impact and reuse of research software. 
+keywords:
+  - Research Software
+  - Software Citation
+  - FAIR Sofware
+  - Software Impact
+  - Software Reuse
+license: Apache-2.0
+version: v0.1.1
+date-released: '2022-03-07'
