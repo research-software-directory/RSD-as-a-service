@@ -216,76 +216,81 @@ def get_citations(dois_data):
 	n_dois = len(dois_data)
 
 	for i_dois, data in enumerate(dois_data):
-		doi = data["concept_doi"]
-		release_id = data["release"][0]["id"] if len(data["release"]) > 0 else None
-		release = ReleaseScraper(doi)
-		if release.is_citable:
-			document = {
-				"is_citable": release.is_citable,
-				"latest_schema_dot_org": "" if release.latest_schema_dot_org is None else release.latest_schema_dot_org
-			}
-			if release_id is None:
-				document["software"] = data["id"]
-				backend_release_response = requests.post('{}/release'.format(backend_url), document, headers={'Authorization': 'Bearer ' + jwt_token, 'Prefer': 'return=representation'})
-			else:
-				document["id"] = release_id
-				backend_release_response = requests.patch('{}/release'.format(backend_url), document, headers={'Authorization': 'Bearer ' + jwt_token})
-			try:
-				backend_release_response.raise_for_status()
-			except requests.HTTPError as e:
-				print(e.response.text)
-				raise e
-			if release_id is None:
-				release_id = backend_release_response.json()[0]["id"]
-
-			release_data = release.releases
-			release_data_to_save = list()
-			for release_entry in release_data:
-				release_content = {
-					"release_id": release_id,
-					"citability": release_entry["citability"],
-					"date_published": release_entry["datePublished"],
-					"doi": release_entry["doi"],
-					"tag": release_entry["tag"],
-					"url": release_entry["url"]
-				}
-				if release_entry["citability"] == "full":
-					release_content["bibtex"] = release_entry["files"]["bibtex"],
-					release_content["cff"] = release_entry["files"]["cff"],
-					release_content["codemeta"] = release_entry["files"]["codemeta"],
-					release_content["endnote"] = release_entry["files"]["endnote"],
-					release_content["ris"] = release_entry["files"]["ris"],
-					release_content["schema_dot_org"] = release_entry["files"]["schema_dot_org"]
-				else:
-					release_content["bibtex"] = None,
-					release_content["cff"] = None,
-					release_content["codemeta"] = None,
-					release_content["endnote"] = None,
-					release_content["ris"] = None,
-					release_content["schema_dot_org"] = None
-
-				release_data_to_save.append(release_content)
-
-			backend_release_content_response = requests.post('{}/release_content?on_conflict=doi'.format(backend_url), json=release_data_to_save, headers={'Authorization': 'Bearer ' + jwt_token, 'Prefer': 'resolution=merge-duplicates'})
-			try:
-				backend_release_content_response.raise_for_status()
-			except requests.HTTPError as e:
-				print(e.response.text)
-				raise e
-
-		scraped_at_response = requests.patch('{}/software?id=eq.{}'.format(backend_url, data["id"]), '{{"releases_scraped_at": "{}"}}'.format(datetime.now()), headers={'Authorization': 'Bearer ' + jwt_token})
 		try:
-			scraped_at_response.raise_for_status()
-		except requests.HTTPError as e:
-			print(e.response.text)
-			raise e
+			doi = data["concept_doi"]
+			release_id = data["release"][0]["id"] if len(data["release"]) > 0 else None
+			release = ReleaseScraper(doi)
+			if release.is_citable:
+				document = {
+					"is_citable": release.is_citable,
+					"latest_schema_dot_org": "" if release.latest_schema_dot_org is None else release.latest_schema_dot_org
+				}
+				if release_id is None:
+					document["software"] = data["id"]
+					backend_release_response = requests.post('{}/release'.format(backend_url), document, headers={'Authorization': 'Bearer ' + jwt_token, 'Prefer': 'return=representation'})
+				else:
+					document["id"] = release_id
+					backend_release_response = requests.patch('{}/release'.format(backend_url), document, headers={'Authorization': 'Bearer ' + jwt_token})
+				try:
+					backend_release_response.raise_for_status()
+				except requests.HTTPError as e:
+					print(e.response.text)
+					raise e
+				if release_id is None:
+					release_id = backend_release_response.json()[0]["id"]
 
-		if release.message == "OK":
-			print("{0}/{1} \"{2}\" ({3}): {4}".format(i_dois + 1, n_dois, doi,
-															release.title, release.message))
-		else:
-			print('{0}/{1}: {2} {3}'.format(i_dois + 1, n_dois, doi,
-												   release.message))
+				release_data = release.releases
+				release_data_to_save = list()
+				for release_entry in release_data:
+					release_content = {
+						"release_id": release_id,
+						"citability": release_entry["citability"],
+						"date_published": release_entry["datePublished"],
+						"doi": release_entry["doi"],
+						"tag": release_entry["tag"],
+						"url": release_entry["url"]
+					}
+					if release_entry["citability"] == "full":
+						release_content["bibtex"] = release_entry["files"]["bibtex"],
+						release_content["cff"] = release_entry["files"]["cff"],
+						release_content["codemeta"] = release_entry["files"]["codemeta"],
+						release_content["endnote"] = release_entry["files"]["endnote"],
+						release_content["ris"] = release_entry["files"]["ris"],
+						release_content["schema_dot_org"] = release_entry["files"]["schema_dot_org"]
+					else:
+						release_content["bibtex"] = None,
+						release_content["cff"] = None,
+						release_content["codemeta"] = None,
+						release_content["endnote"] = None,
+						release_content["ris"] = None,
+						release_content["schema_dot_org"] = None
+
+					release_data_to_save.append(release_content)
+
+				backend_release_content_response = requests.post('{}/release_content?on_conflict=doi'.format(backend_url), json=release_data_to_save, headers={'Authorization': 'Bearer ' + jwt_token, 'Prefer': 'resolution=merge-duplicates'})
+				try:
+					backend_release_content_response.raise_for_status()
+				except requests.HTTPError as e:
+					print(e.response.text)
+					raise e
+
+			scraped_at_response = requests.patch('{}/software?id=eq.{}'.format(backend_url, data["id"]), '{{"releases_scraped_at": "{}"}}'.format(datetime.now()), headers={'Authorization': 'Bearer ' + jwt_token})
+			try:
+				scraped_at_response.raise_for_status()
+			except requests.HTTPError as e:
+				print(e.response.text)
+				raise e
+
+			if release.message == "OK":
+				print("{0}/{1} \"{2}\" ({3}): {4}".format(i_dois + 1, n_dois, doi,
+																release.title, release.message))
+			else:
+				print('{0}/{1}: {2} {3}'.format(i_dois + 1, n_dois, doi,
+													   release.message))
+		except BaseException as e:
+			print("Something went wrong with getting the releases for software with slug " + data["slug"] + ":")
+			print(e)
+			print("Continuing with the next release")
 
 
 if __name__ == "__main__":
@@ -294,7 +299,7 @@ if __name__ == "__main__":
 	number_releases_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB')
 	jwt_secret = os.environ.get('PGRST_JWT_SECRET')
 	jwt_token = jwt.encode({"role": "rsd_admin", "exp": datetime.now() + timedelta(minutes = 10)}, jwt_secret, algorithm="HS256")
-	response_dois = requests.get('{}/software?select=id,concept_doi,release(id)&concept_doi=not.is.null&order=releases_scraped_at.nullsfirst&limit={}'.format(backend_url, number_releases_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
+	response_dois = requests.get('{}/software?select=id,slug,concept_doi,release(id)&concept_doi=not.is.null&order=releases_scraped_at.nullsfirst&limit={}'.format(backend_url, number_releases_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
 	dois_data = response_dois.json()
 	github_api_token = os.environ.get('API_CREDENTIALS_GITHUB')
 	get_citations(dois_data)
