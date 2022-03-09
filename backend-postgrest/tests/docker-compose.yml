@@ -4,14 +4,14 @@ services:
   database:
     container_name: database-test
     build: ../../database
-    image: rsd/database-test:0.0.6
+    image: rsd/database-test:0.0.3
     ports:
       # enable connection from outside
       - "5432:5432"
     environment:
-      POSTGRES_DB: "rsd-db"
-      POSTGRES_USER: "rsd"
-      POSTGRES_PASSWORD: "securepassword"
+      - POSTGRES_DB=rsd-db
+      - POSTGRES_USER=rsd
+      - POSTGRES_PASSWORD=securepassword
     volumes:
       # persist data in named docker volume
       # to remove use: docker-compose down --volumes
@@ -23,32 +23,31 @@ services:
   backend:
     container_name: backend-test
     build: ../
-    image: rsd/backend-postgrest-test:0.0.4
+    image: rsd/backend-postgrest-test:0.0.3
     ports:
       # enable connection from outside
       - "3500:3500"
     environment:
-      PGRST_DB_URI: "postgres://authenticator:simplepassword@database:5432/rsd-db"
-      PGRST_DB_ANON_ROLE: "web_anon"
-      PGRST_DB_SCHEMA: "public"
-      PGRST_SERVER_PORT: "3500"
-    env_file:
-      - ../../frontend/.env.production.local
+      - PGRST_DB_URI=postgres://authenticator:simplepassword@database:5432/rsd-db
+      - PGRST_DB_ANON_ROLE=web_anon
+      - PGRST_DB_SCHEMA=public
+      - PGRST_SERVER_PORT=3500
+      - PGRST_JWT_SECRET=normaly_this_is_a_secret_string_that_none_knows_BUT_this_is_just_a_test
     depends_on:
       - "database"
     networks:
       - net-test
 
-  postgrest-test:
-    container_name: postgrest-test
+  postgrest-tests:
+    container_name: postgrest-tests
     build:
       context: .
       # dockerfile to use for build
       dockerfile: ./dockerfile
-    image: rsd/auth-test:0.0.4
-    env_file:
-      # configuration
-      - ../../frontend/.env.production.local
+    image: rsd/auth-test:0.0.2
+    environment:
+      - PGRST_JWT_SECRET=normaly_this_is_a_secret_string_that_none_knows_BUT_this_is_just_a_test
+      - POSTGREST_URL=http://backend:3500
     depends_on:
       - "database"
       - "backend"
@@ -56,7 +55,7 @@ services:
       - net-test
 
 # define name for docker network
-# it should have name: rsd-as-a-service_net
+# it should have name: rsd-as-a-service_net-test
 networks:
   net-test:
 

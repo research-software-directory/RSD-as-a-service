@@ -28,10 +28,19 @@ const mockResp = {
 
 process.env.NEXT_PUBLIC_SURFCONEXT_REDIRECT = 'https://dummy.redirect.com'
 
-it('returns authorization_endpoint from wellknown', async() => {
-  // mock return value from fetch
+it('returns authorization_endpoint from wellknown', async () => {
+	// mock provider api call
+	mockResolvedValueOnce({
+		provider: 'surfconext',
+    env: {
+      NEXT_PUBLIC_SURFCONEXT_CLIENT_ID: process.env.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID,
+      NEXT_PUBLIC_SURFCONEXT_REDIRECT: process.env.NEXT_PUBLIC_SURFCONEXT_REDIRECT,
+      NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL: process.env.NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL
+    }
+	})
+  // then mock return value from fetch
   mockResolvedValueOnce(mockResp)
-  const redirectUrl = await getRedirectUrl()
+	const redirectUrl = await getRedirectUrl('surfconext')
   const expected = `${mockResp['authorization_endpoint']}?redirect_uri=${process.env.NEXT_PUBLIC_SURFCONEXT_REDIRECT}&client_id=${process.env.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID}&scope=openid&response_type=code&response_mode=form_post&prompt=login+consent`
   expect(redirectUrl).toEqual(expected)
 })

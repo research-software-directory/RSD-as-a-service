@@ -4,6 +4,5 @@ RUN mkdir --parents ./src/main
 COPY data-migration/pom.xml .
 RUN mvn clean package -Dmaven.main.skip -Dmaven.test.skip && rm -r ./target && mvn exec:java --fail-never
 COPY data-migration/src/main ./src/main
-COPY frontend/.env.production.local .
 RUN mvn compile
-CMD mvn exec:java -Dexec.args=$PROPERTIES
+CMD mvn exec:java

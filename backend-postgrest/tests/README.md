@@ -17,12 +17,12 @@ docker-compose build
 
 ## Run test locally
 
-From the backend-postgrest directory run the following docker-compose command.
+From the backend-postgrest directory run the following docker-compose command. It will run tests and remove containers and volumes after performing the tests.
 
 ```bash
 # run test and clean up the containers on exit
 docker-compose up \
   --abort-on-container-exit \
-  --exit-code-from postgrest-test \
+  --exit-code-from postgrest-tests \
   && docker-compose down --volumes
 ```

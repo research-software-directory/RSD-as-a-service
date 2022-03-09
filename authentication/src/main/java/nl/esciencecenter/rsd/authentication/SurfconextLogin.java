@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import static nl.esciencecenter.rsd.authentication.Main.CONFIG;
-
 public class SurfconextLogin implements Login {
 
 	private final String CODE;
@@ -45,8 +43,8 @@ public class SurfconextLogin implements Login {
 		form.put("grant_type", "authorization_code");
 		form.put("redirect_uri", REDIRECT_URL);
 		form.put("scope", "openid");
-		form.put("client_id", CONFIG.getProperty("NEXT_PUBLIC_SURFCONEXT_CLIENT_ID"));
-		form.put("client_secret", CONFIG.getProperty("AUTH_SURFCONEXT_CLIENT_SECRET"));
+		form.put("client_id", Config.surfconextClientId());
+		form.put("client_secret", Config.surfconextClientSecret());
 		return form;
 	}
 
@@ -72,9 +70,9 @@ public class SurfconextLogin implements Login {
 	}
 
 	private String accountFromSubject(String subject) {
-		String backendUri = CONFIG.getProperty("POSTGREST_URL");
+		String backendUri = Config.backendBaseUrl();
 		URI queryUri = URI.create(backendUri + "/login_for_account?select=account,sub&sub=eq." + subject);
-		JwtCreator jwtCreator = new JwtCreator(CONFIG.getProperty("PGRST_JWT_SECRET"));
+		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String token = jwtCreator.createAdminJwt();
 		String responseLogin = getAsAdmin(queryUri, token);
 		JsonArray accountsWithSub = JsonParser.parseString(responseLogin).getAsJsonArray();
