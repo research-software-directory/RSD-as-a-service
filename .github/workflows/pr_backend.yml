@@ -1,0 +1,21 @@
+
+name: backend postgREST api tests
+
+on:
+  pull_request:
+    paths:
+      - "database/**"
+      - "backend-postgrest/**"
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "newman tests with docker-compose"
+        working-directory: backend-postgrest/test
+        run: |
+          docker-compose up \
+            --abort-on-container-exit \
+            --exit-code-from postgrest-tests
+

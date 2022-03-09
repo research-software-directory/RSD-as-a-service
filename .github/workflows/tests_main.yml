@@ -1,0 +1,36 @@
+
+name: frontend unit tests and api tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "install node v16 and cash yarn"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+      - name: "install dependencies"
+        working-directory: frontend
+        run: yarn install --frozen-lockfile
+      - name: "run unit test"
+        working-directory: frontend
+        run: yarn test:coverage
+
+  api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "newman tests with docker-compose"
+        working-directory: backend-postgrest/test
+        run: |
+          docker-compose up \
+            --abort-on-container-exit \
+            --exit-code-from postgrest-tests
