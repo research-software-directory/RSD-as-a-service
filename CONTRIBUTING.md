@@ -26,7 +26,7 @@ The sections below outline the steps in each case.
 For general questions (not directly related to the development of the software) you can send an email to rsd@esciencecenter.nl. Alternatively, you can also submit an issue on GitHub: 
 
 1. use the search functionality [here](https://github.com/research-software-directory/RSD-as-a-service/issues) to see if someone already filed the same issue;
-1. if you find a similar issue, you can add your own comments to the issue;
+1. if you find a similar issue, you can add your own comments to this issue;
 1. if your issue search did not yield any relevant results, make a new issue;
 1. apply the "question" label; apply other labels when relevant.
 
@@ -35,7 +35,7 @@ For general questions (not directly related to the development of the software) 
 If you find a bug or experience unexpected behaviour, you can submit an issue on GitHub: 
 
 1. use the search functionality [here](https://github.com/research-software-directory/RSD-as-a-service/issues) to see if someone already filed the same issue;
-1. if you find a similar issue, you can add your own comments to the issue;
+1. if you find a similar issue, you can add your own comments to this issue;
 1. if your issue search did not yield any relevant results, make a new issue, making sure to provide enough information to the rest of the community to understand the cause and context of the problem. Depending on the issue and your technical expertise, you may want to include:
     - the [SHA hashcode](https://help.github.com/articles/autolinked-references-and-urls/#commit-shas) of the commit that is causing your problem;
     - some identifying information (name and version number) for the version you're using;
@@ -47,13 +47,13 @@ If you find a bug or experience unexpected behaviour, you can submit an issue on
 To request a feature you can submit an issue on GitHub. Please keep in mind that our development resources are limited.  
 
 1. use the search functionality [here](https://github.com/research-software-directory/RSD-as-a-service/issues) to see if someone already filed the same issue;
-1. if you find a similar issue, you can add your own comment and suggestions to the issue;
+1. if you find a similar issue, you can add your own comments and suggestions to this issue;
 1. if your issue search did not yield any relevant results, make a new issue, making sure to provide enough information to the rest of the community to understand the feature you are requesting. We may get back to you with further questions.  
 1. apply the "feature" label; apply other labels when relevant.
 
 ### You want to make some kind of change to the code base youself
 
-Contributions to the code base are very welcome. Keep in mind, however, that this also requires interaction with the community to ensure that your contribution is adopted. 
+Contributions to the code base are very welcome. Keep in mind, however, that this also requires a good interaction with the community to ensure that your contribution is adopted. 
 
 1. (**important**) announce your plan to the rest of the community _before you start working_. This announcement should be in the form of a (new) issue;
 1. (**important**) wait until some kind of concensus is reached about your idea being a good idea; 
