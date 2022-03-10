@@ -30,9 +30,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files frontend
-.env.local
-.env.*.local
+# local env files except example
+.env
+.env.*
+!.env.example
 
 # vercel
 .vercel

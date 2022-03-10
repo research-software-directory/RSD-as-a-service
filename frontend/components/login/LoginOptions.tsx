@@ -7,7 +7,7 @@ import LogoSURF from '../../assets/LogoSURFconext.png'
 export default function LoginOptions() {
   // redirect to SURFConext oAuth2 page
   async function redirectToSurf(){
-    const url = await getRedirectUrl()
+    const url = await getRedirectUrl('surfconext')
     if (url){
       window.location.href = url
     }

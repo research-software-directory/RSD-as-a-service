@@ -1,0 +1,25 @@
+
+
+name: validate CITATION.cff
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - CITATION.cff
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: "validate cff"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out a copy of the repository
+        uses: actions/checkout@v3
+
+      # https://github.com/citation-file-format/cffconvert-github-action
+      - name: validate citation metadata in CITATION.cff
+        uses: citation-file-format/cffconvert-github-action@2.0.0
+        with:
+          args: "--validate"

@@ -79,7 +79,7 @@ public class Utils {
 	}
 
 	private static String adminJwt() {
-		String signingSecret = Config.jwtSigningSecert();
+		String signingSecret = Config.jwtSigningSecret();
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
 		String jwtString = JWT.create()
 				.withClaim("role", "rsd_admin")

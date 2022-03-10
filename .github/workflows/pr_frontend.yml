@@ -1,0 +1,25 @@
+
+name: frontend unit tests
+
+on:
+  pull_request:
+    paths:
+    - "frontend/**"
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "install node v16 and cash yarn"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+      - name: "install dependencies"
+        working-directory: frontend
+        run: yarn install --frozen-lockfile
+      - name: "run unit test"
+        working-directory: frontend
+        run: yarn test:coverage

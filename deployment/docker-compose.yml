@@ -1,15 +1,13 @@
+# THIS DOCKER FILE REQUIRES .env FILE
 version: "3.0"
 
 services:
   database:
     container_name: database
-    build: ./database
-    image: rsd/database:0.0.11
-    ports:
-    # enable connection from outside (development mode)
-     - "5432:5432"
+    image: ghcr.io/research-software-directory/rsd-saas/database:latest
+    expose:
+      - 5432
     environment:
-      # it uses values from .env file
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
@@ -23,8 +21,7 @@ services:
 
   backend:
     container_name: backend
-    build: ./backend-postgrest
-    image: rsd/backend-postgrest:0.0.1
+    image: ghcr.io/research-software-directory/rsd-saas/backend:latest
     expose:
       - 3500
     environment:
@@ -41,8 +38,7 @@ services:
 
   auth:
     container_name: auth
-    build: ./authentication
-    image: rsd/auth:0.0.5
+    image: ghcr.io/research-software-directory/rsd-saas/auth:latest
     expose:
       - 7000
     environment:
@@ -61,14 +57,8 @@ services:
 
   frontend:
     container_name: frontend
-    build:
-      context: ./frontend
-      # dockerfile to use for build
-      dockerfile: Dockerfile
-    # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.5.8
+    image: ghcr.io/research-software-directory/rsd-saas/frontend:latest
     environment:
-      # it uses values from .env file
       - POSTGREST_URL
       - RSD_AUTH_URL
       - PGRST_JWT_SECRET
@@ -86,8 +76,7 @@ services:
 
   scrapers:
     container_name: scrapers
-    build: ./scrapers
-    image: rsd/scrapers:0.0.3
+    image: ghcr.io/research-software-directory/rsd-saas/scrapers:latest
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -100,12 +89,9 @@ services:
       - backend
     networks:
       - net
-
   nginx:
     container_name: nginx
-    build:
-      context: ./nginx
-    image: rsd/nginx:0.0.2
+    image: ghcr.io/research-software-directory/rsd-saas/nginx:latest
     ports:
       - "80:80"
       - "443:443"

@@ -1,0 +1,24 @@
+
+
+name: FAIR software
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - README.md
+  workflow_dispatch:
+
+jobs:
+  fair-software:
+    name: "fair-software"
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/fair-software/howfairis-github-action
+      - name: Measure compliance with fair-software.eu recommendations
+        uses: fair-software/howfairis-github-action@0.2.0
+        env:
+          PYCHARM_HOSTED: "Trick colorama into displaying colored output"
+        with:
+          MY_REPO_URL: "https://github.com/${{github.repository}}"

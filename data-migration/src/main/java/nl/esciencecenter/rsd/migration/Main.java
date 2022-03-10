@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -21,13 +20,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 public class Main {
 
 	static final long TEN_MINUTES_IN_MILLISECONDS = 600_000L; // 10 * 60 * 1000
-	static final Properties CONFIG = new Properties();
 	static String jwtString;
 
 	public static final String LEGACY_RSD_SOFTWARE_URI = "https://research-software.nl/api/software";
@@ -39,8 +36,7 @@ public class Main {
 	public static final String POSTGREST_URI = "http://localhost/api/v1";
 
 	public static void main(String[] args) throws IOException {
-		CONFIG.load(new FileReader(args[0]));
-		String signingSecret = CONFIG.getProperty("PGRST_JWT_SECRET");
+		String signingSecret = System.getenv("PGRST_JWT_SECRET");
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
 		jwtString = JWT.create()
 				.withClaim("role", "rsd_admin")

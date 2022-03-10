@@ -1,6 +1,4 @@
-package nl.esciencecenter.rsd.scraper;
-
-import java.util.Optional;
+package nl.esciencecenter.rsd.authentication;
 
 public class Config {
 
@@ -18,12 +16,15 @@ public class Config {
 		return System.getenv("POSTGREST_URL");
 	}
 
-	public static int maxRequestsGithub() {
-		String valueAsString = System.getenv("MAX_REQUESTS_GITHUB");
-		return valueAsString == null ? 6 : Integer.parseInt(valueAsString);
+	public static String surfconextRedirect() {
+		return System.getenv("NEXT_PUBLIC_SURFCONEXT_REDIRECT");
 	}
 
-	public static Optional<String> apiCredentialsGithub() {
-		return Optional.ofNullable(System.getenv("API_CREDENTIALS_GITHUB"));
+	public static String surfconextClientId() {
+		return System.getenv("NEXT_PUBLIC_SURFCONEXT_CLIENT_ID");
+	}
+
+	public static String surfconextClientSecret() {
+		return System.getenv("AUTH_SURFCONEXT_CLIENT_SECRET");
 	}
 }
