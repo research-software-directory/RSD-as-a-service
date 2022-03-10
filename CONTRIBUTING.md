@@ -23,7 +23,7 @@ The sections below outline the steps in each case.
 
 ## You have a question, suggestion, comment, etc.
 
-For general questions (not directly related to the development of the software) you can send an email to rsd@esciencecenter.nl. Alternatively, you can also submit an issue on GitHub: 
+For general questions (not directly related to the development of the software) you can send an email to rsd@esciencecenter.nl. Alternatively, you can also submit an issue: 
 
 1. use the search functionality [here](https://github.com/research-software-directory/RSD-as-a-service/issues) to see if someone already filed the same issue;
 1. if you find a similar issue, you can add your own comments to this issue;
@@ -32,7 +32,7 @@ For general questions (not directly related to the development of the software) 
 
 ## You have found a bug
 
-If you find a bug or experience unexpected behaviour, you can submit an issue on GitHub: 
+If you find a bug or experience unexpected behaviour, you can submit an issue: 
 
 1. use the search functionality [here](https://github.com/research-software-directory/RSD-as-a-service/issues) to see if someone already filed the same issue;
 1. if you find a similar issue, you can add your own comments to this issue;
@@ -47,7 +47,7 @@ If you find a bug or experience unexpected behaviour, you can submit an issue on
 To request a feature you can submit an issue on GitHub. Please keep in mind that our development resources are limited, so we may not be able to honor your request.  
 
 1. use the search functionality [here](https://github.com/research-software-directory/RSD-as-a-service/issues) to see if someone already filed the same issue;
-1. if you find a similar issue, you can add your own comments and suggestions to this issue;
+1. if you find a similar issue, you can add your own comments and suggestions to this issue (having more people request the same feature may increase its priority);
 1. if your issue search did not yield any relevant results, make a new issue, making sure to provide enough information to the rest of the community to understand the feature you are requesting. We may get back to you with further questions.  
 1. apply the "feature" label; apply other labels when relevant.
 
