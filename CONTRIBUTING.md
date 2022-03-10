@@ -21,7 +21,7 @@ A contribution can be one of the following cases:
 
 The sections below outline the steps in each case.
 
-### You have a question, suggestion, comment, etc.
+## You have a question, suggestion, comment, etc.
 
 For general questions (not directly related to the development of the software) you can send an email to rsd@esciencecenter.nl. Alternatively, you can also submit an issue on GitHub: 
 
@@ -30,7 +30,7 @@ For general questions (not directly related to the development of the software) 
 1. if your issue search did not yield any relevant results, make a new issue;
 1. apply the "question" label; apply other labels when relevant.
 
-### You have found a bug
+## You have found a bug
 
 If you find a bug or experience unexpected behaviour, you can submit an issue on GitHub: 
 
@@ -42,16 +42,16 @@ If you find a bug or experience unexpected behaviour, you can submit an issue on
     - information about the operating system and browser you are using;
 1. apply the "bug" label; apply other labels when relevant.
 
-### You want to request a feature
+## You want to request a feature
 
-To request a feature you can submit an issue on GitHub. Please keep in mind that our development resources are limited.  
+To request a feature you can submit an issue on GitHub. Please keep in mind that our development resources are limited, so we may not be able to honor your request.  
 
 1. use the search functionality [here](https://github.com/research-software-directory/RSD-as-a-service/issues) to see if someone already filed the same issue;
 1. if you find a similar issue, you can add your own comments and suggestions to this issue;
 1. if your issue search did not yield any relevant results, make a new issue, making sure to provide enough information to the rest of the community to understand the feature you are requesting. We may get back to you with further questions.  
 1. apply the "feature" label; apply other labels when relevant.
 
-### You want to make some kind of change to the code base youself
+## You want to make some kind of change to the code base youself
 
 Contributions to the code base are very welcome. Keep in mind, however, that this also requires a good interaction with the community to ensure that your contribution is adopted. 
 
@@ -67,7 +67,7 @@ Contributions to the code base are very welcome. Keep in mind, however, that thi
 
 In case you feel like you've made a valuable contribution, but you don't know how to write or run tests for it, or how to generate the documentation: don't let this discourage you from making the pull request; we can help you! Just go ahead and submit the pull request, but keep in mind that you might be asked to append additional commits to your pull request (have a look at some of our old pull requests to see how this works.
 
-### You want to contribute in some other way
+## You want to contribute in some other way
 
 Contributions to the code are by no means the only way to contribute to the Research Software Directory. If you wish to contribute in some other way, please contact us at rsd@esciencecenter.nl. 
 
