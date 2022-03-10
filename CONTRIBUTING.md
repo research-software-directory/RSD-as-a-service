@@ -14,7 +14,7 @@ Help us keep the Research Software Directory open and inclusive. Please read and
 
 A contribution can be one of the following cases:
 1. you have a question, suggestion, comment, etc.;
-1. you have found a bug (including unexpected behavior, errors or lacking documentation)
+1. you have found a bug (including unexpected behavior, errors in documentation, etc.)
 1. you want to request a feature;
 1. you want to make some kind of change to the code base yourself (e.g. to fix a bug, to add a new feature, to update documentation).
 1. you wish to contribute in some other way.
