@@ -27,9 +27,9 @@ jobs:
   api-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: "newman tests with docker-compose"
-        working-directory: backend-postgrest/test
+        working-directory: backend-postgrest/tests
         run: |
           docker-compose up \
             --abort-on-container-exit \
