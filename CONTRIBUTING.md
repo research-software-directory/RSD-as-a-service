@@ -2,7 +2,7 @@
 
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
-The following is a set of guidelines for contributing to the Research Software Directory (as a Service), which is hosted on [GitHub](https://github.com/research-software-directory/RSD-as-a-service) on GitHub. 
+The following is a set of guidelines for contributing to the Research Software Directory (as a Service), which is hosted on [GitHub](https://github.com/research-software-directory/RSD-as-a-service). 
 These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document.
 We welcome any kind of contribution to our software, from simple comments or questions to a full fledged [pull request](https://help.github.com/articles/about-pull-requests/).
 
