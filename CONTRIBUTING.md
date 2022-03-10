@@ -8,7 +8,7 @@ We welcome any kind of contribution to our software, from simple comments or que
 
 ## Code of conduct
 
-Help us keep the Research Software Directory open and inclusive. Please read and follow our [Code of Conduct](https://github.com/research-software-directory/RSD-as-a-service/CODE_OF_CONDUCT.md).
+Help us keep the Research Software Directory open and inclusive. Please read and follow our [Code of Conduct](https://github.com/research-software-directory/RSD-as-a-service/blob/contributors/CODE_OF_CONDUCT.md).
 
 ## How to contribute
 
