@@ -1,5 +1,5 @@
 
-name: frontend unit tests and api tests
+name: all tests
 
 on:
   push:
