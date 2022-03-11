@@ -162,13 +162,21 @@ def get_mentions(since_version=None, keys_data=None):
 		)
 		resp.raise_for_status()
 
+	if by_key:
+		ids_to_update_scraped_at = ",".join([k["id"] for k in keys_data])
+		requests.patch(
+			backend_url + '/mention?id=in.(' + ids_to_update_scraped_at + ')',
+			json={'scraped_at': str(datetime.now())},
+			headers={'Authorization': 'Bearer %s' % jwt_token}
+		)
+
 if __name__ == "__main__":
 	print("Start scraping mentions")
 	backend_url = os.environ.get('POSTGREST_URL')
 	number_mentions_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB')
 	jwt_secret = os.environ.get('PGRST_JWT_SECRET')
 	jwt_token = jwt.encode({"role": "rsd_admin", "exp": datetime.now() + timedelta(minutes = 10)}, jwt_secret, algorithm="HS256")
-	response_mentions_to_scrape = requests.get('{}/mention?select=zotero_key&order=scraped_at.nullsfirst&limit={}'.format(backend_url, number_mentions_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
+	response_mentions_to_scrape = requests.get('{}/mention?select=id,zotero_key&order=scraped_at.nullsfirst&limit={}'.format(backend_url, number_mentions_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
 	mentions_data = response_mentions_to_scrape.json()
 	zotero_library = os.environ.get('ZOTERO_LIBRARY')
 	zotero_api_token = os.environ.get('ZOTERO_API_TOKEN')
