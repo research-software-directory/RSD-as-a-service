@@ -176,11 +176,7 @@ if __name__ == "__main__":
 	number_mentions_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB')
 	jwt_secret = os.environ.get('PGRST_JWT_SECRET')
 	jwt_token = jwt.encode({"role": "rsd_admin", "exp": datetime.now() + timedelta(minutes = 10)}, jwt_secret, algorithm="HS256")
-	response_mentions_to_scrape = requests.get('{}/mention?select=id,zotero_key&order=scraped_at.nullsfirst&limit={}'.format(backend_url, number_mentions_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
-	mentions_data = response_mentions_to_scrape.json()
 	zotero_library = os.environ.get('ZOTERO_LIBRARY')
 	zotero_api_token = os.environ.get('ZOTERO_API_TOKEN')
-	get_mentions(keys_data=mentions_data)
-
 	get_mentions()
 	print("Done scraping mentions")
