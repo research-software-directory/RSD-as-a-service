@@ -95,6 +95,8 @@ services:
       - MAX_REQUESTS_GITHUB
       - API_CREDENTIALS_GITHUB
       - ZENODO_ACCESS_TOKEN
+      - ZOTERO_LIBRARY
+      - ZOTERO_API_TOKEN
     depends_on:
       - database
       - backend
