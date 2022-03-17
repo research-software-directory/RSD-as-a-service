@@ -160,6 +160,44 @@ export const contributorInformation = {
 
 export type ContributorInformationConfig = typeof contributorInformation
 
+
+export const organisationInformation = {
+  title: 'Participating organisations',
+  findOrganisation: {
+    title: 'Add organisation',
+    subtitle: 'We search organisation name in RSD and ROR databases',
+    label: 'Find or add organisation',
+    help: 'At least fist 3 letters of organisation name',
+    validation: {
+      // custom validation rule, not in use by react-hook-form
+      minLength: 2,
+    }
+  },
+  name:{
+    label: 'Name',
+    help: 'Participating organisation',
+    validation: {
+      required: 'Organisation name is required',
+      minLength: {value: 2, message: 'Minimum length is 2'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
+    }
+  },
+  website: {
+    label: 'Website',
+    help: 'Web address including http(s)',
+    validation: {
+      required: 'Website is required',
+      minLength: {value: 6, message: 'Minimum length is 6'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
+      pattern: {
+        value: /^https?:\/\/.+\..+/,
+        message: 'Url should start with http(s):// and have at least one dot (.)'
+      }
+    }
+  }
+}
+
+
 export const testimonialInformation = {
   message: {
     label: 'Message',
@@ -181,7 +219,7 @@ export const testimonialInformation = {
   }
 }
 
-export type TestimonialInformationConfig = typeof softwareInformation
+export type TestimonialInformationConfig = typeof testimonialInformation
 
 export const mentionInformation = {
   sectionTitle: 'Mentions',

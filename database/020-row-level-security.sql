@@ -338,6 +338,9 @@ CREATE POLICY maintainer_can_update ON organisation FOR UPDATE TO rsd_user
 	USING (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'))
 	WITH CHECK (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
 
+CREATE POLICY maintainer_can_insert ON organisation FOR INSERT TO rsd_user
+	WITH CHECK (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+
 CREATE POLICY admin_all_rights ON organisation TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);

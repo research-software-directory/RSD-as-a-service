@@ -1,10 +1,50 @@
+CREATE TABLE logos (
+	id VARCHAR(64) PRIMARY KEY,
+	data VARCHAR NOT NULL,
+	mime_type VARCHAR(100) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+CREATE FUNCTION get_logo(id VARCHAR) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
+$$
+DECLARE headers TEXT;
+DECLARE blob BYTEA;
+
+BEGIN
+	SELECT format(
+		'[{"Content-Type": "%s"},'
+		'{"Content-Disposition": "inline; filename=\"%s\""},'
+		'{"Cache-Control": "max-age=259200"}]',
+		logos.mime_type,
+		logos.id)
+	FROM logos WHERE logos.id = get_logo.id INTO headers;
+
+	PERFORM set_config('response.headers', headers, TRUE);
+
+	SELECT decode(logos.data, 'base64') FROM logos WHERE logos.id = get_logo.id INTO blob;
+
+	IF FOUND
+		THEN RETURN(blob);
+	ELSE RAISE SQLSTATE 'PT404'
+		USING
+			message = 'NOT FOUND',
+			detail = 'File not found',
+			hint = format('%s seems to be an invalid file id', get_logo.id);
+	END IF;
+END
+$$;
+
+
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE NOT NULL,
+	slug VARCHAR(100) UNIQUE,
 	primary_maintainer UUID REFERENCES account (id),
-	name VARCHAR NOT NULL,
-	ror_id VARCHAR,
-	logo VARCHAR,
+	name VARCHAR UNIQUE NOT NULL,
+	ror_id VARCHAR UNIQUE,
+	logo_id VARCHAR(64) references logos(id),
+	website VARCHAR UNIQUE NOT NULL,
+	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
 );
