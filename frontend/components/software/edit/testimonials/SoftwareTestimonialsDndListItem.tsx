@@ -9,7 +9,7 @@ export type DraggableListItemProps = {
   secondaryAction: JSX.Element
 }
 
-export default function SoftwareTestimonialListDnd({item,index,secondaryAction}:DraggableListItemProps) {
+export default function SoftwareTestimonialDndListItem({item,index,secondaryAction}:DraggableListItemProps) {
   return (
     <Draggable draggableId={item?.id??''} index={index}>
       {(provided, snapshot) => (

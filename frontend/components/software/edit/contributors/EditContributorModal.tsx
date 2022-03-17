@@ -7,7 +7,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
-import snackbarContext from '../../../snackbar/PageSnackbarContext'
+import useSnackbar from '../../../snackbar/useSnackbar'
 import {Contributor} from '../../../../types/Contributor'
 import ControlledTextField from '../../../form/ControlledTextField'
 import ControlledSwitch from '../../../form/ControlledSwitch'
@@ -25,7 +25,7 @@ type EditContributorModalProps = {
 }
 
 export default function EditContributorModal({open, onCancel, onSubmit, contributor, pos}: EditContributorModalProps) {
-  const {options: snackbarOptions, setSnackbar} = useContext(snackbarContext)
+  const {showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [b64Image, setB64Image]=useState<string>()
   const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Contributor>({
@@ -62,13 +62,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
       // check file size
       if (file.size > 2097152) {
         // file is to large > 2MB
-        setSnackbar({
-          ...snackbarOptions,
-          open: true,
-          severity: 'error',
-          message: 'The file is too large. Please select image < 2MB.',
-          duration: undefined
-        })
+        showErrorMessage('The file is too large. Please select image < 2MB.')
         return
       }
       let reader = new FileReader()
