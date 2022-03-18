@@ -354,6 +354,18 @@ BEGIN
 END
 $$;
 
+
+ALTER TABLE logo_for_organisation ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY maintainer_all_rights ON logo_for_organisation TO rsd_user
+	USING (id IN (SELECT * FROM organisations_of_current_maintainer()))
+	WITH CHECK (id IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON logo_for_organisation TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 -- inter relations
 ALTER TABLE software_for_software ENABLE ROW LEVEL SECURITY;
 
