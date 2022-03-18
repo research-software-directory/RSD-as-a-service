@@ -1,4 +1,4 @@
-FROM maven:3.8.3-openjdk-17 AS builder
+FROM maven:3.8.4-openjdk-17 AS builder
 WORKDIR /usr/mymaven
 RUN mkdir --parents ./src/main
 COPY pom.xml .
@@ -6,7 +6,7 @@ RUN mvn dependency:go-offline
 COPY ./src/main ./src/main
 RUN mvn package --offline
 
-FROM openjdk:17.0-jdk-slim-bullseye
+FROM openjdk:17.0.2-jdk-slim-bullseye
 WORKDIR /usr/myjava
 RUN apt-get update && apt-get --yes install cron python pip nano
 COPY --from=builder /usr/mymaven/src/main/resources/requirements.txt requirements.txt
