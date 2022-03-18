@@ -194,6 +194,9 @@ export const organisationInformation = {
         message: 'Url should start with http(s):// and have at least one dot (.)'
       }
     }
+  },
+  ror_id: {
+    label: 'ROR id'
   }
 }
 

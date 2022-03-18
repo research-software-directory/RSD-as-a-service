@@ -5,6 +5,7 @@ import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import LockIcon from '@mui/icons-material/Lock'
 
 import {EditOrganisation} from '../../../../types/Organisation'
 import {getUrlFromLogoId} from '../../../../utils/editOrganisation'
@@ -38,6 +39,7 @@ export default function OrganisationsItem({organisation, pos, onEdit, onDelete}:
             onClick={() => {
               onDelete(pos)
             }}
+            sx={{marginRight: '0rem'}}
           >
             <DeleteIcon />
           </IconButton>
@@ -51,10 +53,31 @@ export default function OrganisationsItem({organisation, pos, onEdit, onDelete}:
         onClick={() => {
           onDelete(pos)
         }}
+        sx={{marginRight: '0rem'}}
       >
         <DeleteIcon />
       </IconButton>
     )
+  }
+
+  function getStatusIcon() {
+    if (organisation.status !== 'approved') {
+      return (
+        <div
+          title="Waiting on approval"
+          className="absolute flex items-center w-[2rem] h-[6rem] bg-primary"
+        >
+          <LockIcon
+            sx={{
+              width: '2rem',
+              height: '2rem',
+              color: 'white'
+            }}
+          />
+        </div>
+      )
+    }
+    return null
   }
 
   return (
@@ -63,12 +86,12 @@ export default function OrganisationsItem({organisation, pos, onEdit, onDelete}:
         secondaryAction={getSecondaryActions()}
         sx={{
           // this makes space for buttons
-          paddingRight:'6.5rem',
+          paddingRight:'7.5rem',
           '&:hover': {
             backgroundColor:'grey.100'
           }
         }}
-        >
+    >
       <ListItemAvatar>
         <Avatar
           alt={organisation.name ?? ''}
@@ -87,9 +110,16 @@ export default function OrganisationsItem({organisation, pos, onEdit, onDelete}:
           {organisation.name.slice(0,3)}
         </Avatar>
       </ListItemAvatar>
+      {getStatusIcon()}
       <ListItemText
         primary={organisation.name}
-        secondary={organisation.website}
+        secondary={
+          <>
+            <span>{organisation.website}</span>
+            <br/>
+            <span>{organisation.ror_id}</span>
+          </>
+        }
       />
     </ListItem>
   )

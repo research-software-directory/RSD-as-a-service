@@ -20,12 +20,13 @@ type EditOrganisationModalProps = {
   open: boolean,
   onCancel: () => void,
   onSubmit: ({data, pos}: { data: EditOrganisation, pos?: number }) => void,
+  onDeleteLogo: (logo_id:string) => void,
   organisation?: EditOrganisation,
   // item position in the array
   pos?: number
 }
 
-export default function EditOrganisationModal({open, onCancel, onSubmit, organisation, pos}: EditOrganisationModalProps) {
+export default function EditOrganisationModal({open, onCancel, onSubmit,onDeleteLogo,organisation, pos}: EditOrganisationModalProps) {
   const {showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<EditOrganisation>({
@@ -46,8 +47,6 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
   }, [organisation,reset])
 
   function handleCancel() {
-    // reset form
-    reset()
     // hide
     onCancel()
   }
@@ -74,6 +73,13 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
     } catch (e:any) {
       logger(`handleFileUpload: ${e.message}`,'error')
     }
+  }
+
+  function deleteLogoFromDb() {
+    if (formData.logo_id) {
+      onDeleteLogo(formData.logo_id)
+    }
+    setValue('logo_id', null)
   }
 
   return (
@@ -146,7 +152,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
                       setValue('logo_b64', null)
                     }
                     if (formData.logo_id) {
-                      setValue('logo_id', undefined)
+                      deleteLogoFromDb()
                     }
                     setValue('logo_mime_type',null,{shouldDirty: true})
                   }}
@@ -182,7 +188,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
                   helperTextCnt: `${formData?.website?.length || 0}/${config.website.validation.maxLength.value}`,
                 }}
                 rules={config.website.validation}
-                />
+              />
             </div>
           </section>
         </DialogContent>

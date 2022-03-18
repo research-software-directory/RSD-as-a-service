@@ -2,7 +2,8 @@ import isMaintainerOfOrganisation from '../auth/permissions/isMaintainerOfOrgani
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {
   EditOrganisation, Organisation,
-  OrganisationsForSoftware, SearchOrganisation, SoftwareForOrganisation
+  OrganisationsForSoftware,
+  SearchOrganisation, SoftwareForOrganisation
 } from '../types/Organisation'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import {getPropsFromObject} from './getPropsFromObject'
@@ -12,13 +13,13 @@ import logger from './logger'
 import {optionsNotInReferenceList} from './optionsNotInReferenceList'
 
 // organisation colums used in editOrganisation.getOrganisationsForSoftware
-const columsForSelect = 'id,slug,primary_maintainer,name,ror_id,logo_id,is_tenant,website'
+const columsForSelect = 'id,slug,primary_maintainer,name,ror_id,is_tenant,website,logo_for_organisation(id)'
 // organisation colums used in editOrganisation.createOrganisation
 const columsForCreate = [
-  'slug', 'primary_maintainer', 'name', 'ror_id', 'logo_id', 'is_tenant', 'website'
+  'slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website'
 ]
 // organisation colums used in editOrganisation.updateOrganisation
-const columsForUpdate = [
+export const columsForUpdate = [
   'id',
   ...columsForCreate
 ]
@@ -50,7 +51,7 @@ export async function searchForOrganisation({searchFor, token, frontend}:
 export async function findRSDOrganisation({searchFor, token, frontend}:
   { searchFor: string, token?: string, frontend?: boolean }){
   try {
-    let url = `${process.env.POSTGREST_URL}/organisation?name=ilike.*${searchFor}*&limit=20`
+    let url = `${process.env.POSTGREST_URL}/organisation?select=${columsForSelect}&name=ilike.*${searchFor}*&limit=20`
     if (frontend) {
       url = `/api/v1/organisation?name=ilike.*${searchFor}*&limit=50`
     }
@@ -88,8 +89,8 @@ export async function findRSDOrganisation({searchFor, token, frontend}:
 }
 
 export async function getOrganisationsForSoftware({software,token}:{software:string,token:string}){
+  const url = `/api/v1/software_for_organisation?select=software,status,organisation(${columsForSelect})&software=eq.${software}`
   try {
-    const url = `/api/v1/software_for_organisation?select=software,status,organisation(${columsForSelect})&software=eq.${software}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -97,7 +98,7 @@ export async function getOrganisationsForSoftware({software,token}:{software:str
       },
     })
     if (resp.status === 200) {
-      const json:OrganisationsForSoftware[] = await resp.json()
+      const json: OrganisationsForSoftware[] = await resp.json()
       return json
     }
     return []
@@ -107,37 +108,94 @@ export async function getOrganisationsForSoftware({software,token}:{software:str
   }
 }
 
-export async function addOrganisation({item, software, account, token}:
-  { item: EditOrganisation, software: string, account: string, token: string}) {
-  try {
-    // 1. if not RSD organisation we need to create it first
-    // and obtain organisation id for the next step
-    let organisation:string
-    let resp = await createOrganisation({item, token})
-    if (resp.status === 201) {
-      organisation = resp.message
-    } else {
-      throw new Error(resp.message)
-    }
-
-    // 2. add as participating organisation
-    resp = await addOrganisationToSoftware({
-      software,
-      organisation,
-      account,
-      token
+export async function saveExistingOrganisation({item, token, pos, setState}:
+  {item: EditOrganisation, token: string, pos:number, setState: (item:EditOrganisation,pos:number)=>void}) {
+  if (!item.id) return {
+    status: 400,
+    message: 'Organisation id missing.'
+  }
+  // update existing organisation
+  const resp = await updateOrganisation({
+    item,
+    token
+  })
+  if (resp.status === 200) {
+    const organisation = updateDataObjectAfterSave({
+      data: item,
+      id: item.id
     })
-
-    return resp
-  } catch (e: any) {
+    // update local list
+    setState(organisation, pos)
+    // return OK state
     return {
-      status: 500,
-      message: e?.message
+      status: 200,
+      message: 'OK'
     }
+  } else {
+    // showErrorMessage(resp.message)
+    return resp
   }
 }
 
-async function createOrganisation({item, token}:
+export async function saveNewOrganisation({item, token, software, account, setState}:
+  {item: EditOrganisation, token: string, software:string, account: string, setState: (item: EditOrganisation) => void }) {
+  // create new organisation
+  let resp = await createOrganisation({
+    item,
+    token
+  })
+  // only 201 and 206 accepted
+  if ([201, 206].includes(resp.status) === false) {
+    // on error we return message
+    return resp
+  }
+  // we receive id in message
+  const id = resp.message
+  if (resp.status === 201) {
+    // add this organisation to software
+    resp = await addOrganisationToSoftware({
+      software,
+      organisation: id,
+      account,
+      token
+    })
+    if (resp.status === 200) {
+      debugger
+      // we receive assigned status in message
+      item.status = resp.message
+      // update data, remove base64 string after upload
+      // and create logo_id to be used as image reference
+      const organisation = updateDataObjectAfterSave({
+        data: item,
+        id
+      })
+      // update local list
+      setState(organisation)
+      return {
+        status: 200,
+        message: 'OK'
+      }
+    } else {
+      return resp
+    }
+  } else if (resp.status === 206) {
+    // organisation is created but the image failed
+    const organisation = updateDataObjectAfterSave({
+      data: item,
+      id
+    })
+    setState(organisation)
+    // we show error about failure on logo
+    return {
+      status: 206,
+      message: 'Failed to upload organisation logo.'
+    }
+  } else {
+    return resp
+  }
+}
+
+export async function createOrganisation({item, token}:
   {item: EditOrganisation, token: string}) {
   try {
     // extract only required items
@@ -157,9 +215,32 @@ async function createOrganisation({item, token}:
       // we need to return id of created record
       // it can be extracted from header.location
       const id = resp.headers.get('location')?.split('.')[1]
-      return {
-        status: 201,
-        message: id
+      if (id &&
+        item?.logo_b64 &&
+        item?.logo_mime_type) {
+        const base64 = item?.logo_b64.split(',')[1]
+        const resp = await uploadOrganisationLogo({
+          id,
+          data: base64,
+          mime_type: item.logo_mime_type,
+          token
+        })
+        if (resp.status === 200) {
+          return {
+            status: 201,
+            message: id
+          }
+        } else {
+          return {
+            status: 206,
+            message: id
+          }
+        }
+      } else {
+        return {
+          status: 201,
+          message: id
+        }
       }
     } else {
       return extractReturnMessage(resp)
@@ -187,6 +268,63 @@ export async function updateOrganisation({item, token}:
       body: JSON.stringify(organisation)
     })
 
+    if ([200,204].includes(resp.status) &&
+      item?.logo_b64 &&
+      item?.logo_mime_type &&
+      item?.id) {
+      const base64 = item?.logo_b64.split(',')[1]
+      const resp = await uploadOrganisationLogo({
+        id: item.id,
+        data: base64,
+        mime_type: item.logo_mime_type,
+        token
+      })
+      return resp
+    }
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function uploadOrganisationLogo({id, data, mime_type, token}:
+  { id: string, data: string, mime_type: string, token: string }) {
+  try {
+    const url = '/api/v1/logo_for_organisation'
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createJsonHeaders(token),
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({
+        id,
+        data,
+        mime_type
+      })
+    })
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function deleteOrganisationLogo({id, token}:
+  { id: string, token: string }) {
+  try {
+    const url = `/api/v1/logo_for_organisation?id=eq.${id}`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
     return extractReturnMessage(resp)
   } catch (e: any) {
     return {
@@ -208,7 +346,6 @@ export async function addOrganisationToSoftware({software, organisation, account
   })
   // if maintainer we approve it automatically
   if (isMaintainer === true) status = 'approved'
-
   // 2b. register participating organisation for this software
   const data: SoftwareForOrganisation = {
     software,
@@ -224,6 +361,13 @@ export async function addOrganisationToSoftware({software, organisation, account
     },
     body: JSON.stringify(data)
   })
+  if ([200,201].includes(resp.status)) {
+    // return status assigned to organisation
+    return {
+      status: 200,
+      message: status
+    }
+  }
   return extractReturnMessage(resp)
 }
 
@@ -266,6 +410,7 @@ export function searchToEditOrganisation({item, account, position}:
     ...item,
     logo_b64: null,
     logo_mime_type: null,
+    logo_id: null,
     position
   }
 
@@ -289,6 +434,20 @@ export function searchToEditOrganisation({item, account, position}:
     addOrganisation.canEdit = item.primary_maintainer === account
   }
 
-
   return addOrganisation
+}
+
+export function updateDataObjectAfterSave({data, id}:
+  {data: EditOrganisation, id: string}) {
+  // update local data
+  if (id) data.id = id
+  // if base64 image was present
+  if (data.logo_b64) {
+    // it is uploaded and uses id
+    data.logo_id = id
+    // remove image strings after upload
+    data.logo_b64 = null
+    data.logo_mime_type = null
+  }
+  return data
 }

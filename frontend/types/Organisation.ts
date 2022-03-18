@@ -5,9 +5,13 @@ export type Organisation = {
   primary_maintainer?: string
   name: string
   ror_id?: string
-  logo_id?: string | null
   is_tenant: boolean,
   website: string | null
+  logo_for_organisation?: [
+    {
+      'id': string
+    }
+  ]
 }
 
 // adding source
@@ -20,6 +24,9 @@ type Status = 'requested_by_origin' | 'requested_by_relation' | 'approved'
 // extending with other props for software edit page
 export type EditOrganisation = Organisation & {
   position?: number
+  // indicates image already present
+  logo_id: string | null
+  // new image to upload
   logo_b64: string | null
   logo_mime_type: string | null
   source: 'RSD' | 'ROR' | 'MANUAL'
@@ -41,3 +48,4 @@ export type OrganisationsForSoftware={
   organisation: Organisation
   status: Status
 }
+

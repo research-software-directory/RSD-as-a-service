@@ -357,6 +357,10 @@ $$;
 
 ALTER TABLE logo_for_organisation ENABLE ROW LEVEL SECURITY;
 
+CREATE POLICY anyone_can_read ON logo_for_organisation FOR SELECT TO web_anon, rsd_user
+	USING (id IN (SELECT id FROM organisation));
+
+
 CREATE POLICY maintainer_all_rights ON logo_for_organisation TO rsd_user
 	USING (id IN (SELECT * FROM organisations_of_current_maintainer()))
 	WITH CHECK (id IN (SELECT * FROM organisations_of_current_maintainer()));

@@ -9,13 +9,13 @@ import {
   SearchOrganisation
 } from '../../../../types/Organisation'
 import {sortOnStrProp} from '../../../../utils/sortFn'
-import {uploadBase64Logo} from '../../../../utils/uploadImage'
 import {
-  addOrganisation,
   addOrganisationToSoftware,
   deleteOrganisationFromSoftware,
+  deleteOrganisationLogo,
+  saveExistingOrganisation,
+  saveNewOrganisation,
   searchToEditOrganisation,
-  updateOrganisation
 } from '../../../../utils/editOrganisation'
 import useParticipatingOrganisations from '../../../../utils/useParticipatingOrganisations'
 import {organisationInformation as config} from '../editSoftwareConfig'
@@ -97,6 +97,7 @@ export default function SoftwareOganisations({session}:{session:Session}) {
       position: organisations.length + 1,
       logo_b64: null,
       logo_mime_type: null,
+      logo_id: null,
       website: null,
       source: 'MANUAL' as 'MANUAL',
       primary_maintainer: session?.user?.account,
@@ -171,47 +172,79 @@ export default function SoftwareOganisations({session}:{session:Session}) {
   async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number }) {
     try {
       closeModals()
-      // upload new image
-      if (data?.logo_b64 && data?.logo_mime_type) {
-        const resp = await uploadBase64Logo({
-          b64image: data.logo_b64,
-          mime_type: data.logo_mime_type,
-          token: session.token
-        })
-        if (resp.status !== 201) {
-          throw new Error(`Failed to upload image. ${resp.message}`)
-        }
-        // image url is returned in message
-        data.logo_id = resp.message
-      }
-      if (typeof pos == 'undefined') {
-        const resp = await addOrganisation({
+      if (typeof pos != 'undefined' && data.id) {
+        // update existing organisation
+        const resp = await saveExistingOrganisation({
           item: data,
-          software: software?.id ?? '',
-          account: session?.user?.account ?? '',
-          token: session?.token
+          token: session?.token,
+          pos,
+          setState: updateOrganisationInList
         })
-        if (resp.status === 200) {
-          // update local list
-          addOrganisationToList(data)
-        } else {
+        if (resp.status !== 200) {
           showErrorMessage(resp.message)
         }
       } else {
-        const resp = await updateOrganisation({
+        // create new organisation
+        const resp = await saveNewOrganisation({
           item: data,
-          token: session?.token
+          software: software?.id ?? '',
+          account: session?.user?.account ?? '',
+          token: session?.token,
+          setState: addOrganisationToList
         })
-        if (resp.status === 200) {
-          // update local list
-          addOrganisationToList(data)
-        } else {
+        if (resp.status !== 200) {
           showErrorMessage(resp.message)
         }
       }
     } catch (e:any) {
       showErrorMessage(e.message)
     }
+  }
+
+  async function onDeleteOrganisationLogo(logo_id:string) {
+    const resp = await deleteOrganisationLogo({
+      id: logo_id,
+      token: session.token
+    })
+    if (resp.status !== 200) {
+      showErrorMessage(resp.message)
+    }
+  }
+
+  function closeModals() {
+    setModal({
+      edit: {
+        open:false
+      },
+      delete: {
+        open:false
+      }
+    })
+  }
+
+  function addOrganisationToList(newItem: EditOrganisation) {
+    const newList = [
+      ...organisations,
+      newItem
+    ].sort((a, b) => sortOnStrProp(a, b, 'name'))
+    setOrganisations(newList)
+  }
+
+  function updateOrganisationInList(newItem: EditOrganisation,pos:number) {
+    const newList = [
+      ...organisations.slice(0, pos),
+      ...organisations.slice(pos+1),
+      newItem
+    ].sort((a, b) => sortOnStrProp(a, b, 'name'))
+    setOrganisations(newList)
+  }
+
+  function deleteOrganisationFromList(pos: number) {
+    const newList = [
+      ...organisations.slice(0, pos),
+      ...organisations.slice(pos+1)
+    ]
+    setOrganisations(newList)
   }
 
   return (
@@ -245,6 +278,7 @@ export default function SoftwareOganisations({session}:{session:Session}) {
         organisation={modal.edit.organisation}
         onCancel={closeModals}
         onSubmit={saveOrganisation}
+        onDeleteLogo={onDeleteOrganisationLogo}
       />
       <ConfirmDeleteModal
         title="Remove organisation"
@@ -257,31 +291,4 @@ export default function SoftwareOganisations({session}:{session:Session}) {
       />
     </section>
   )
-
-  function closeModals() {
-    setModal({
-      edit: {
-        open:false
-      },
-      delete: {
-        open:false
-      }
-    })
-  }
-
-  function addOrganisationToList(newItem: EditOrganisation) {
-    const newList = [
-      ...organisations,
-      newItem
-    ].sort((a, b) => sortOnStrProp(a, b, 'name'))
-    setOrganisations(newList)
-  }
-
-  function deleteOrganisationFromList(pos: number) {
-    const newList = [
-      ...organisations.slice(0, pos),
-      ...organisations.slice(pos+1)
-    ]
-    setOrganisations(newList)
-  }
 }
