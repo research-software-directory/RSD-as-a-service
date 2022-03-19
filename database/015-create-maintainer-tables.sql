@@ -9,3 +9,9 @@ CREATE TABLE maintainer_for_project (
 	project UUID references project (id),
 	PRIMARY KEY (maintainer, project)
 );
+
+CREATE TABLE maintainer_for_organisation (
+	maintainer UUID references account (id),
+	organisation UUID references organisation (id),
+	PRIMARY KEY (maintainer, organisation)
+);

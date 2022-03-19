@@ -1,10 +1,11 @@
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE NOT NULL,
+	slug VARCHAR(100) UNIQUE,
 	primary_maintainer UUID REFERENCES account (id),
-	name VARCHAR NOT NULL,
-	ror_id VARCHAR,
-	logo VARCHAR,
+	name VARCHAR UNIQUE NOT NULL,
+	ror_id VARCHAR UNIQUE,
+	website VARCHAR UNIQUE NOT NULL,
+	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
 );
@@ -34,3 +35,40 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
+
+CREATE TABLE logo_for_organisation (
+	id UUID references organisation(id) PRIMARY KEY,
+	data VARCHAR NOT NULL,
+	mime_type VARCHAR(100) NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+CREATE FUNCTION get_logo(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
+$$
+DECLARE headers TEXT;
+DECLARE blob BYTEA;
+
+BEGIN
+	SELECT format(
+		'[{"Content-Type": "%s"},'
+		'{"Content-Disposition": "inline; filename=\"%s\""},'
+		'{"Cache-Control": "max-age=259200"}]',
+		logo_for_organisation.mime_type,
+		logo_for_organisation.id)
+	FROM logo_for_organisation WHERE logo_for_organisation.id = get_logo.id INTO headers;
+
+	PERFORM set_config('response.headers', headers, TRUE);
+
+	SELECT decode(logo_for_organisation.data, 'base64') FROM logo_for_organisation WHERE logo_for_organisation.id = get_logo.id INTO blob;
+
+	IF FOUND
+		THEN RETURN(blob);
+	ELSE RAISE SQLSTATE 'PT404'
+		USING
+			message = 'NOT FOUND',
+			detail = 'File not found',
+			hint = format('%s seems to be an invalid file id', get_logo.id);
+	END IF;
+END
+$$;

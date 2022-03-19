@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "frontend/**"
+      - "database/**"
+      - "backend-postgrest/**"
 
 jobs:
   unit-tests:

@@ -1,7 +1,10 @@
 import {useEffect, useState} from 'react'
 import {GetServerSidePropsContext} from 'next'
+import {ScriptProps} from 'next/script'
 
 import {app} from '../../../config/app'
+import {isMaintainerOfSoftware} from '../../../auth/permissions/isMaintainerOfSoftware'
+import {getAccountFromToken} from '../../../auth/jwtUtils'
 import PageMeta from '../../../components/seo/PageMeta'
 import OgMetaTags from '../../../components/seo/OgMetaTags'
 import CitationMeta from '../../../components/seo/CitationMeta'
@@ -18,6 +21,7 @@ import MentionsSection from '../../../components/software/MentionsSection'
 import ContributorsSection from '../../../components/software/ContributorsSection'
 import TestimonialSection from '../../../components/software/TestimonialsSection'
 import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
+import EditSoftwareButton from '../../../components/software/edit/EditSoftwareButton'
 import {
   getSoftwareItem,
   getRepostoryInfoForSoftware,
@@ -28,21 +32,17 @@ import {
   getRemoteMarkdown,
   ContributorMentionCount,
 } from '../../../utils/getSoftware'
-import {isMaintainerOfSoftware} from '../../../utils/editSoftware'
 import logger from '../../../utils/logger'
-import {License, RelatedTools, RepositoryInfo, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
-import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
-import {ScriptProps} from 'next/script'
-import {Contributor} from '../../../types/Contributor'
-import {Testimonial} from '../../../types/Testimonial'
 import {getDisplayName} from '../../../utils/getDisplayName'
-import {getAccountFromToken} from '../../../auth/jwtUtils'
-import EditSoftwareButton from '../../../components/software/edit/EditSoftwareButton'
 import {getContributorsForSoftware} from '../../../utils/editContributors'
 import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
 import {getRelatedToolsForSoftware} from '../../../utils/editRelatedSoftware'
-import {MentionForSoftware} from '../../../types/MentionType'
 import {getMentionsForSoftware} from '../../../utils/editMentions'
+import {License, RelatedTools, RepositoryInfo, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
+import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
+import {Contributor} from '../../../types/Contributor'
+import {Testimonial} from '../../../types/Testimonial'
+import {MentionForSoftware} from '../../../types/MentionType'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string

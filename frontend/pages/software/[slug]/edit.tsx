@@ -50,7 +50,7 @@ export default function EditSoftwareItem() {
 
   function renderStepComponent() {
     if (pageState.step) {
-      return pageState.step.component({slug,token})
+      return pageState.step.component({slug,token,session})
     }
     return <ContentLoader />
   }

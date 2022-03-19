@@ -3,8 +3,7 @@ import {useAuth} from '.'
 
 import PageErrorMessage from '../components/layout/PageErrorMessage'
 import ContentLoader from '../components/layout/ContentLoader'
-import {isMaintainerOfSoftware} from '../utils/editSoftware'
-import logger from '../utils/logger'
+import {isMaintainerOfSoftware} from './permissions/isMaintainerOfSoftware'
 
 /**
  * Wrap the content you want to protect in this component.
