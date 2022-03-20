@@ -43,6 +43,9 @@ import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {Contributor} from '../../../types/Contributor'
 import {Testimonial} from '../../../types/Testimonial'
 import {MentionForSoftware} from '../../../types/MentionType'
+import {ParticipatingOrganisationProps} from '../../../types/Organisation'
+import {getParticipatingOrganisations} from '../../../utils/editOrganisation'
+import OrganisationsSection from '../../../components/software/OrganisationsSection'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -56,7 +59,8 @@ interface SoftwareIndexData extends ScriptProps{
   testimonials: Testimonial[]
   contributors: Contributor[]
   relatedTools: RelatedTools[]
-  isMaintainer: boolean
+  isMaintainer: boolean,
+  organisations: ParticipatingOrganisationProps[]
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
@@ -67,7 +71,8 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     software, citationInfo, tagsInfo,
     licenseInfo, repositoryInfo, softwareIntroCounts,
     mentions, testimonials, contributors,
-    relatedTools, isMaintainer, slug
+    relatedTools, isMaintainer, slug,
+    organisations
   } = props
 
   useEffect(() => {
@@ -142,6 +147,13 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         repository={repositoryInfo?.url}
         languages={repositoryInfo?.languages}
       />
+      <OrganisationsSection
+        organisations={organisations}
+      />
+      {/* <section>
+        <h2>Participating organisations</h2>
+        {JSON.stringify(organisations,null,2)}
+      </section> */}
       <MentionsSection
         mentions={mentions}
       />
@@ -207,7 +219,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // relatedTools
       getRelatedToolsForSoftware({software:software.id,frontend:false,token}),
       // check if maintainer
-      isMaintainerOfSoftware({slug,account,token,frontend:false})
+      isMaintainerOfSoftware({slug, account, token, frontend: false}),
+      // get organisations
+      getParticipatingOrganisations({software:software.id,frontend:false,token})
     ]
     const [
       citationInfo,
@@ -219,7 +233,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       testimonials,
       contributors,
       relatedTools,
-      isMaintainer
+      isMaintainer,
+      organisations
     ] = await Promise.all(fetchData)
 
     // pass data to page component as props
@@ -236,6 +251,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         contributors,
         relatedTools,
         isMaintainer,
+        organisations,
         slug
       }
     }

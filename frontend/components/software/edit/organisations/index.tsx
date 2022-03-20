@@ -6,7 +6,8 @@ import ContentLoader from '../../../layout/ContentLoader'
 import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
 import {
   EditOrganisation,
-  SearchOrganisation
+  SearchOrganisation,
+  SoftwareForOrganisation
 } from '../../../../types/Organisation'
 import {sortOnStrProp} from '../../../../utils/sortFn'
 import {
@@ -81,6 +82,10 @@ export default function SoftwareOganisations({session}:{session:Session}) {
         token: session.token
       })
       if (resp.status === 200) {
+        // update status received in message
+        addOrganisation.status = resp.message as SoftwareForOrganisation['status']
+        // assume logo is uploaded?!?
+        addOrganisation.logo_id = item.id
         addOrganisationToList(addOrganisation)
       } else {
         showErrorMessage(resp.message)

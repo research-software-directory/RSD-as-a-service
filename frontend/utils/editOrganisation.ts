@@ -11,6 +11,7 @@ import {findInRORByName} from './getROR'
 import {getSlugFromString} from './getSlugFromString'
 import logger from './logger'
 import {optionsNotInReferenceList} from './optionsNotInReferenceList'
+import {sortOnStrProp} from './sortFn'
 
 // organisation colums used in editOrganisation.getOrganisationsForSoftware
 const columsForSelect = 'id,slug,primary_maintainer,name,ror_id,is_tenant,website,logo_for_organisation(id)'
@@ -88,8 +89,13 @@ export async function findRSDOrganisation({searchFor, token, frontend}:
   }
 }
 
-export async function getOrganisationsForSoftware({software,token}:{software:string,token:string}){
-  const url = `/api/v1/software_for_organisation?select=software,status,organisation(${columsForSelect})&software=eq.${software}`
+export async function getOrganisationsForSoftware({software, token, frontend = true}:
+  {software: string, token: string, frontend?: boolean}) {
+  // SSR request within docker network
+  let url = `${process.env.POSTGREST_URL}/software_for_organisation?select=software,status,organisation(${columsForSelect})&software=eq.${software}`
+  if (frontend) {
+    url = `/api/v1/software_for_organisation?select=software,status,organisation(${columsForSelect})&software=eq.${software}`
+  }
   try {
     const resp = await fetch(url, {
       method: 'GET',
@@ -106,6 +112,26 @@ export async function getOrganisationsForSoftware({software,token}:{software:str
     logger(`getOrganisationsForSoftware: ${e?.message}`, 'error')
     return []
   }
+}
+
+export async function getParticipatingOrganisations({software, token, frontend = true}:
+  {software: string, token: string, frontend?: boolean}) {
+  const resp = await getOrganisationsForSoftware({software, token, frontend})
+  // filter only approved organisations
+  // extract only properties used
+  // sort on name
+  const organisations = resp.filter(item => {
+    return item.status === 'approved'
+  })
+  .map(item => {
+    return {
+      name: item.organisation.name,
+      website: item.organisation.website ?? '',
+      logo_url: getLogoUrl(item.organisation)
+    }
+  })
+    .sort((a, b) => sortOnStrProp(a, b, 'name'))
+  return organisations
 }
 
 export async function saveExistingOrganisation({item, token, pos, setState}:
@@ -160,7 +186,6 @@ export async function saveNewOrganisation({item, token, software, account, setSt
       token
     })
     if (resp.status === 200) {
-      debugger
       // we receive assigned status in message
       item.status = resp.message
       // update data, remove base64 string after upload
@@ -394,6 +419,15 @@ export async function deleteOrganisationFromSoftware({software, organisation, to
       message: e?.message
     }
   }
+}
+
+export function getLogoUrl(organisation: Organisation) {
+  if (organisation.logo_for_organisation &&
+    organisation.logo_for_organisation?.length > 0) {
+    const logo_id = organisation.logo_for_organisation[0].id
+    return getUrlFromLogoId(logo_id)
+  }
+  return null
 }
 
 export function getUrlFromLogoId(logo_id: string|null|undefined) {
