@@ -1,0 +1,229 @@
+name: build and release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release_tag:
+    name: conventional changelog
+    runs-on: ubuntu-latest
+    outputs:
+      changelog: ${{steps.changelog.outputs.clean_changelog}}
+      tag: ${{steps.changelog.outputs.tag}}
+      skipped: ${{steps.changelog.outputs.skipped}}
+    steps:
+      - name: checkout all history
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v3
+        with:
+          # checkout whole history
+          fetch-depth: 0
+
+      - name: calculate new version and create changelog content
+        id: changelog
+        # https://github.com/TriPSs/conventional-changelog-action
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          # you can also create separate token to trace action
+          github-token: "${{secrets.GITHUB_TOKEN}}"
+          # do not create changelog file, the content is used at next step for relase body
+          output-file: false
+          # do not create additional commit, just tag current commit with the version
+          skip-commit: true
+          # do not pull - we already checked out the selection we want to use for versioning in previous step
+          skip-git-pull: true
+          # skip tag push - it will not push but it will tag
+          git-push: false
+
+  log_release_tag:
+    needs: release_tag
+    name: log version output
+    runs-on: ubuntu-latest
+    steps:
+      - name: info
+        run: |
+          echo skipped=${{needs.release_tag.outputs.skipped}}
+          echo tag=${{needs.release_tag.outputs.tag}}
+  auth:
+    # it needs to be check on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: release_tag
+    name: auth
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/auth
+      image_tag: ${{needs.release_tag.outputs.tag}}
+      dockerfile: authentication/dockerfile
+      docker_context: ./authentication
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  database:
+    # it needs to be check on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: release_tag
+    name: database
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/database
+      image_tag: ${{needs.release_tag.outputs.tag}}
+      dockerfile: database/dockerfile
+      docker_context: ./database
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  backend:
+    # it needs to be check on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: release_tag
+    name: backend api
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/backend
+      image_tag: ${{needs.release_tag.outputs.tag}}
+      dockerfile: backend-postgrest/dockerfile
+      docker_context: ./backend-postgrest
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  frontend:
+    # it needs to be check on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: release_tag
+    name: frontend
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/frontend
+      image_tag: ${{needs.release_tag.outputs.tag}}
+      dockerfile: frontend/Dockerfile
+      docker_context: ./frontend
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  nginx:
+    # it needs to be check on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: release_tag
+    name: nginx
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/nginx
+      image_tag: ${{needs.release_tag.outputs.tag}}
+      dockerfile: nginx/dockerfile
+      docker_context: ./nginx
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  scrapers:
+    # it needs to be check on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: release_tag
+    name: scrapers
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/scrapers
+      image_tag: ${{needs.release_tag.outputs.tag}}
+      dockerfile: scrapers/dockerfile
+      docker_context: ./scrapers
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  deployment_files:
+    # it needs to be check on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: [release_tag,auth,database,backend,frontend,nginx,scrapers]
+    name: create deployment.zip
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout branch
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v3
+
+      - name: update docker-compose.yml
+        run: |
+          echo replace :latest tag with ${{needs.release_tag.outputs.tag}}
+          sed -i -e 's/:latest/:${{needs.release_tag.outputs.tag}}/g' ./deployment/docker-compose.yml
+          cat ./deployment/docker-compose.yml
+
+      - name: update CITATION.cff
+        # use doublequotes in second replace "" to enable variable substitution with bash
+        run: |
+          echo replace version line
+          sed -i -e 's/^version:.*/version: ${{needs.release_tag.outputs.tag}}/' CITATION.cff
+          echo replace date
+          sed -i -e "s/^date-released:.*/date-released: '$(date +%F)'/" CITATION.cff
+          cat CITATION.cff
+
+      - name: zip deployment files
+        run: |
+          zip deployment.zip \
+            ./deployment/docker-compose.yml \
+            ./deployment/.env.example \
+            ./deployment/README.md \
+            CITATION.cff \
+            LICENSE
+
+      - name: Upload deployment.zip
+        # https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment
+          path: deployment.zip
+
+      - name: Upload CITATION.cff
+        # https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: citation
+          path: CITATION.cff
+
+  release_draft:
+    # it needs to be check on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: [release_tag, deployment_files]
+    name: create release draft
+    runs-on: ubuntu-latest
+    steps:
+      - name: get deployment.zip
+        uses: actions/download-artifact@v3
+        with:
+          name: deployment
+
+      - name: validate info
+        run: |
+          echo show files
+          ls -lha
+          echo tag_name=${{needs.release_tag.outputs.tag}}
+
+      - name: create release draft
+        # https://github.com/softprops/action-gh-release
+        uses: softprops/action-gh-release@v1
+        env:
+          # The token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{needs.release_tag.outputs.tag}}
+          name: ${{needs.release_tag.outputs.tag}}
+          body: ${{needs.release_tag.outputs.changelog}}
+          draft: true
+          prerelease: false
+          files: deployment.zip
+
+  citation:
+   # it needs to be check on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: [deployment_files, release_draft]
+    name: citations
+    uses: ./.github/workflows/_cff.yml
+    with:
+      artifact: citation
+      branch: main
+      commit_message: "chore(release): update citation file"
+
+

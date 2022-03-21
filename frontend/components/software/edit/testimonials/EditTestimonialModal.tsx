@@ -32,15 +32,6 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
   const {isValid, isDirty} = formState
   const formData = watch()
 
-  // console.group('EditTestimonialModal')
-  // console.log('open...', open)
-  // console.log('isDirty...', isDirty)
-  // console.log('isValid...', isValid)
-  // console.log('smallScreen...', smallScreen)
-  // console.log('testimonial...', testimonial)
-  // console.log('formData...', formData)
-  // console.groupEnd()
-
   useEffect(() => {
     if (testimonial) {
       reset(testimonial)

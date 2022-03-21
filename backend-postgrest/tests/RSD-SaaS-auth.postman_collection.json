@@ -1004,7 +1004,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\" : \"eScience Center\",\n\t\"slug\" : \"nlesc\",\n\t\"primary_maintainer\" : \"{{account_id}}\"\n}",
+					"raw": "{\n\t\"name\" : \"eScience Center\",\n\t\"slug\" : \"nlesc\",\n\t\"website\": \"https://www.esciencecenter.nl/\",\n\t\"primary_maintainer\" : \"{{account_id}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

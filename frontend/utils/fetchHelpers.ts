@@ -31,19 +31,27 @@ export function extractReturnMessage(resp: Response, dataId?: string) {
       status: resp.status,
       message: `
           ${resp.statusText}.
-          You might not have sufficient priveleges to edit this software.
+          You might not have sufficient priveleges to edit this item.
           Please contact site administrators.
         `
     }
-  } else {
+  }
+  if ([409].includes(resp.status)) {
     return {
       status: resp.status,
       message: `
-          Failed to save changes.
           ${resp.statusText}.
-          Please contact site administrators.
+          Duplicate key value violates unique constraint.
         `
     }
+  }
+  return {
+    status: resp.status,
+    message: `
+        Failed to save changes.
+        ${resp.statusText}.
+        Please contact site administrators.
+      `
   }
 }
 

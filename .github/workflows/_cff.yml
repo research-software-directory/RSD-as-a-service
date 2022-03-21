@@ -1,0 +1,40 @@
+name: reusable cff module
+
+on:
+  workflow_call:
+    inputs:
+      artifact:
+        required: true
+        description: Artifact to download and commit
+        type: string
+      branch:
+        required: true
+        description: Repo branch to use to commit
+        type: string
+      commit_message:
+        required: true
+        description: Commit message to use
+        type: string
+
+jobs:
+  commit_cff:
+    name: commit cff
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout ${{inputs.branch}}
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{inputs.branch}}
+
+      - name: download ${{inputs.artifact}}
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{inputs.artifact}}
+
+      - name: commit CITATION.cff
+        # https://github.com/stefanzweifel/git-auto-commit-action
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ${{inputs.commit_message}}
+          file_pattern: CITATION.cff
