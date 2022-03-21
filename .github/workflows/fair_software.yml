@@ -17,7 +17,7 @@ jobs:
     steps:
       # https://github.com/fair-software/howfairis-github-action
       - name: Measure compliance with fair-software.eu recommendations
-        uses: fair-software/howfairis-github-action@0.2.0
+        uses: fair-software/howfairis-github-action@0.2.1
         env:
           PYCHARM_HOSTED: "Trick colorama into displaying colored output"
         with:
