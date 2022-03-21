@@ -49,3 +49,9 @@ export type OrganisationsForSoftware={
   status: Status
 }
 
+export type ParticipatingOrganisationProps = {
+  name: string
+  website: string | null
+  logo_url: string | null
+}
+
