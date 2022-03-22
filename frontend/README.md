@@ -9,26 +9,15 @@ Based on the features in the legacy application and the current requirements we 
 ## Development
 
 - intall dependencies `yarn install`
-- create env.local and env.production.local file. Use env.local.example as template.
+- create env.local file. Use env.example from the project root as template.
 - run all app modules `docker-compose up`
-- open another terminal and run `yarn dev` to start application in development mode
+- open another terminal and run `yarn dev` to start frontend in development mode
 
 ### Environment variables
 
-For oAuth implementation we need env variables. Copy env.local.example file to `env.local` and provide values required for next-auth module. In addition we use few public env variables that exposed to the browser. These values are stored in .env file. See [next documentation page for more info](https://nextjs.org/docs/basic-features/environment-variables).
+For oAuth implementation we need env variables. Copy env.example file to `env.local` and provide the values See [next documentation page for more info](https://nextjs.org/docs/basic-features/environment-variables).
 
-- `env` file contains public env variables. If different values are required for production create env.production file
-- `env.development` development specific values, when running frontend using `yarn dev`.
 - `env.local` contains secrets when running frontend in local development (yarn dev). This file is not in the repo. You will need to create it and add secrets to it.
-- `env.local.example` this is example file. copy to env.local for local development and env.production.local
-- `env.production.local` file is used when running frontend with docker compose `docker-compose up`.
-
-## Docker compose frontend only
-
-Use `docker-compose up` to run solution in Docker container. The solution is avaliable at http://localhost:3000
-To rebuild the image run `docker-compose up --build`.
-
-The image version is defined in docker-compose.yml file. When you inrease version number in the docker-compose.yml file new build will triggered even if you run `docker-compose up` without build flag. Please keep the version numbers in `package.json` and in `docker-compose.yml` the same. At this point this requires manual change at both file, later we should look for the ways to automate it in the CI/CD pipelines.
 
 ## Folders
 
@@ -78,7 +67,7 @@ The integration is based on [this article](https://medium.com/@akarX23/a-full-se
 
 ## Authentication
 
-For authentication we use `next-auth`. For more information see [official documentation](https://next-auth.js.org/getting-started/example).
+For authentication we use custom module which integrates with our auth service. The frontend code is in `frontend/auth` folder and the auth service is in `authentication` folder.
 
 ## Unit testing
 
@@ -95,9 +84,8 @@ The setup is performed according to [official Next documentation](https://nextjs
 ```bash
 # install dependencies
 npm install --save-dev jest @testing-library/react @testing-library/jest-dom react-test-renderer
-# install jest-fetch-mock support fetch in Jest (node environment not browser)
-# and whatwg-fetch to address next-auth fetch requests on node js (node-fetch)
-npm i -D jest-fetch-mock whatwg-fetch
+# install whatwg-fetch to address next-auth fetch requests on node js (node-fetch)
+npm i -D whatwg-fetch
 
 ```
 
@@ -111,12 +99,6 @@ import "whatwg-fetch";
 // specific
 import "@testing-library/jest-dom/extend-expect";
 ```
-
-### Fetch mock
-
-I tried to use fetch mock. More [info about setup here](https://frontend-digest.com/testing-getserversideprops-in-nextjs-b339ebcf3401).
-
-**The fetch mock library does not integrate well with next-auth. When enabled it causes error in session provider of next-auth. Further investigation is required.**
 
 ## NextJS
 
