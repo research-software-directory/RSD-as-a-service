@@ -59,35 +59,47 @@ type QueryParams={
 }
 
 export function ssrSoftwareUrl(params:QueryParams){
-  const {search,filter,rows,page,query} = params
-  let url='/software?'
-  if (search){
-    url+=`search=${encodeURIComponent(search)}`
-  } else if (search===''){
+  const view = 'software'
+  const url = ssrUrl(params, view)
+  return url
+}
+
+export function ssrOrganisationUrl(params: QueryParams) {
+  const view = 'organisation'
+  const url = ssrUrl(params,view)
+  return url
+}
+
+function ssrUrl(params: QueryParams, view:string) {
+  const {search, filter, rows, page, query} = params
+  let url = `/${view}?`
+  if (search) {
+    url += `search=${encodeURIComponent(search)}`
+  } else if (search === '') {
     //remove search query
-  } else if (query?.search){
-    url+=`search=${encodeURIComponent(query.search.toString())}`
+  } else if (query?.search) {
+    url += `search=${encodeURIComponent(query.search.toString())}`
   }
-  if (filter){
-    url+=`&filter=${encodeURIComponent(filter)}`
-  } else if (filter===null){
+  if (filter) {
+    url += `&filter=${encodeURIComponent(filter)}`
+  } else if (filter === null) {
     // remove filter
-  } else if(query?.filter){
-    url+=`&filter=${encodeURIComponent(query?.filter.toString())}`
+  } else if (query?.filter) {
+    url += `&filter=${encodeURIComponent(query?.filter.toString())}`
   }
-  if (page || page===0){
-    url+=`&page=${page}`
-  } else if (query?.page){
-    url+=`&page=${query.page}`
+  if (page || page === 0) {
+    url += `&page=${page}`
+  } else if (query?.page) {
+    url += `&page=${query.page}`
   } else {
-    url+='&page=0'
+    url += '&page=0'
   }
-  if (rows){
-    url+=`&rows=${rows}`
-  } else if (query?.rows){
-    url+=`&rows=${query?.rows}`
+  if (rows) {
+    url += `&rows=${rows}`
+  } else if (query?.rows) {
+    url += `&rows=${query?.rows}`
   } else {
-    url+='&rows=12'
+    url += '&rows=12'
   }
   return url
 }

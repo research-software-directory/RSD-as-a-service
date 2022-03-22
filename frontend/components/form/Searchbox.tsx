@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import {useDebounce} from '../../utils/useDebouce'
 import ClearIcon from '@mui/icons-material/Clear'
 
-export default function Searchbox({onSearch,delay=400}:{onSearch:Function,delay?:number}) {
+export default function Searchbox({placeholder, onSearch, delay = 400}: { placeholder:string,onSearch:Function,delay?:number}) {
   const [state,setState]=useState({
     value:'',
     wait:true
@@ -27,7 +27,7 @@ export default function Searchbox({onSearch,delay=400}:{onSearch:Function,delay?
     <Input
       id="search-input"
       autoComplete='off'
-      placeholder='Search for software'
+      placeholder={placeholder}
       value={state.value}
       sx={{
         minWidth:['inherit','17.5rem','19.5rem']
