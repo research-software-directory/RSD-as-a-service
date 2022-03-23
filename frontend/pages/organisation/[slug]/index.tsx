@@ -4,12 +4,8 @@ import {useRouter} from 'next/router'
 import DefaultLayout from '../../../components/layout/DefaultLayout'
 import PageTitle from '../../../components/layout/PageTitle'
 import IconButton from '@mui/material/IconButton'
-import EditIcon from '@mui/icons-material/Edit'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import {useAuth} from '../../../auth'
-
-import {getProjectItem} from '../../../utils/getProjects'
-import {ProjectItem} from '../../../types/ProjectItem'
 
 export default function OrganisationPage({organisation, slug}:{organisation:any, slug:string}) {
   const router = useRouter()
@@ -51,11 +47,9 @@ export default function OrganisationPage({organisation, slug}:{organisation:any,
 export async function getServerSideProps(context:any) {
   try{
     const {params} = context
-    console.log('getServerSideProps...params...', params)
-
+    // console.log('getServerSideProps...params...', params)
     return {
-    // will be passed to the page component as props
-    // see params in SoftwareIndexPage
+      // passed to the page component as props
       props: {
         organisation: null,
         slug: params?.slug
