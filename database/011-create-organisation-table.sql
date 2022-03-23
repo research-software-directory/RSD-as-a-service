@@ -4,7 +4,7 @@ CREATE TABLE organisation (
 	primary_maintainer UUID REFERENCES account (id),
 	name VARCHAR UNIQUE NOT NULL,
 	ror_id VARCHAR UNIQUE,
-	website VARCHAR UNIQUE NOT NULL,
+	website VARCHAR UNIQUE,
 	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL

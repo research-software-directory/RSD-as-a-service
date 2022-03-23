@@ -35,7 +35,7 @@ public class Main {
 	public static final String LEGACY_RSD_ORGANISATION_URI = "https://research-software.nl/api/organization";
 	public static final String POSTGREST_URI = "http://localhost/api/v1";
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		String signingSecret = System.getenv("PGRST_JWT_SECRET");
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
 		jwtString = JWT.create()
@@ -88,6 +88,8 @@ public class Main {
 		JsonArray allReleasesFromLegacyRSD = JsonParser.parseString(allReleasesString).getAsJsonArray();
 		Map<String, String> conceptDoiToSoftwareId = conceptDoiToSoftwareId(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveReleases(allReleasesFromLegacyRSD, conceptDoiToSoftwareId);
+
+		saveOrganisations(allOrganisationsFromLegacyRSD);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -713,6 +715,53 @@ public class Main {
 			});
 		});
 		post(URI.create(POSTGREST_URI + "/release_content"), allReleaseContentsToSave.toString());
+	}
+
+	public static void saveOrganisations(JsonArray allOrganisationsFromLegacyRSD) {
+		JsonArray allOrganisationsToSave = new JsonArray();
+		Set<String> existingNames = new HashSet<>();
+		Set<String> existingSlugs = new HashSet<>();
+		Set<String> existingWebsites = new HashSet<>();
+		allOrganisationsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject organisationToSave = new JsonObject();
+			JsonObject organisationFromLegacyRSD = jsonElement.getAsJsonObject();
+
+			String name = organisationFromLegacyRSD.getAsJsonPrimitive("name").getAsString();
+			if (name.equals("FUGRO")) return;
+			if (name.equals("Koninklijk Nederlands Meteorologisch Instituut") && existingNames.contains(name)) return;
+			if (name.equals("Software for Chemicals & Materials") && existingNames.contains(name)) return;
+			if (existingNames.contains(name)) {
+				System.out.println("Warning, double name found (" + name + "), skipping");
+				return;
+			}
+			existingNames.add(name);
+
+			String slug = name.toLowerCase().replace(' ', '-');
+
+			if (existingSlugs.contains(slug)) {
+				System.out.println("Warning, double slug found (" + slug + "), skipping");
+				return;
+			}
+			existingSlugs.add(slug);
+
+			organisationToSave.addProperty("slug", slug);
+			organisationToSave.addProperty("name", name);
+
+			if (name.equals("ECMWF")) {
+				organisationToSave.addProperty("website", "https://www.ecmwf.int/");
+			} else {
+				String website = organisationFromLegacyRSD.getAsJsonPrimitive("url").getAsString();
+				if (existingWebsites.contains(website)) {
+					System.out.println("Warning, double website found (" + website + "), skipping");
+					return;
+				}
+				if (website.equals("https://FIXME")) website = null;
+				organisationToSave.addProperty("website", website);
+				if (website != null) existingWebsites.add(website);
+			}
+			allOrganisationsToSave.add(organisationToSave);
+		});
+		post(URI.create(POSTGREST_URI + "/organisation"), allOrganisationsToSave.toString());
 	}
 
 	public static String get(URI uri) {
