@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -736,7 +737,13 @@ public class Main {
 			}
 			existingNames.add(name);
 
-			String slug = name.toLowerCase().replace(' ', '-');
+			String slug = Normalizer.normalize(name, Normalizer.Form.NFD);
+			slug = slug
+					.strip()
+					.toLowerCase()
+					.replaceAll("[^a-z0-9 -]", "")
+					.replace(' ', '-')
+					.replaceAll("-+", "-");
 
 			if (existingSlugs.contains(slug)) {
 				System.out.println("Warning, double slug found (" + slug + "), skipping");
