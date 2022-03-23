@@ -4,7 +4,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.13
+    image: rsd/database:0.0.14
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -24,7 +24,7 @@ services:
   backend:
     container_name: backend
     build: ./backend-postgrest
-    image: rsd/backend-postgrest:0.0.2
+    image: rsd/backend-postgrest:0.0.3
     expose:
       - 3500
     environment:
@@ -66,7 +66,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.5.9
+    image: rsd/frontend:0.6.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL

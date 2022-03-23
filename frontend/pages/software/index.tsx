@@ -6,7 +6,7 @@ import TablePagination from '@mui/material/TablePagination'
 import {app} from '../../config/app'
 import DefaultLayout from '../../components/layout/DefaultLayout'
 import PageTitle from '../../components/layout/PageTitle'
-import Searchbox from '../../components/software/Searchbox'
+import Searchbox from '../../components/form/Searchbox'
 import FilterTechnologies from '../../components/software/FilterTechnologies'
 import SortSelection from '../../components/software/SortSelection'
 import SoftwareGrid from '../../components/software/SoftwareGrid'
@@ -88,7 +88,10 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
       <PageTitle title="Software">
         <div className="flex flex-wrap justify-end">
           <div className="flex items-center">
-            <Searchbox onSearch={handleSearch}></Searchbox>
+            <Searchbox
+              placeholder="Search for software"
+              onSearch={handleSearch}
+            />
             <FilterTechnologies
               items={tags}
               onSelect={handleFilters}
