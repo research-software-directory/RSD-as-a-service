@@ -35,7 +35,7 @@ authors:
     orcid: 'https://orcid.org/0000-0003-4803-7411'
 identifiers:
   - type: doi
-    value: 10.0000/FIXME
+    value: 10.5281/zenodo.6379973
     description: The archived releases for the sourcecode
 repository-code: >-
   https://github.com/research-software-directory/RSD-as-a-service
