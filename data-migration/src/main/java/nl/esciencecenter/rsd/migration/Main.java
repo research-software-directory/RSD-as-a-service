@@ -91,6 +91,8 @@ public class Main {
 		saveReleases(allReleasesFromLegacyRSD, conceptDoiToSoftwareId);
 
 		saveOrganisations(allOrganisationsFromLegacyRSD);
+		Map<String, String> orgNameToId = orgNameToId();
+		saveOrganisationLogos(allOrganisationsFromLegacyRSD, orgNameToId);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -769,6 +771,44 @@ public class Main {
 			allOrganisationsToSave.add(organisationToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/organisation"), allOrganisationsToSave.toString());
+	}
+
+	public static Map<String, String> orgNameToId() {
+		JsonArray savedOrganisations = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/organisation"))).getAsJsonArray();
+		Map<String, String> nameToId = new HashMap<>();
+		savedOrganisations.forEach(jsonElement -> {
+			String name = jsonElement.getAsJsonObject().get("name").getAsString();
+			String id = jsonElement.getAsJsonObject().get("id").getAsString();
+			nameToId.put(name, id);
+		});
+		return nameToId;
+	}
+
+	public static void saveOrganisationLogos(JsonArray allOrganisationsFromLegacyRSD, Map<String, String> orgNameToId) {
+		JsonArray allLogosToSave = new JsonArray();
+		Set<String> existingIds = new HashSet<>();
+		allOrganisationsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject logoToSave = new JsonObject();
+			JsonObject organisationFromLegacyRSD = jsonElement.getAsJsonObject();
+
+			JsonElement possibleLogo = organisationFromLegacyRSD.get("logo");
+			if (possibleLogo == null || possibleLogo.isJsonNull()) return;
+			JsonObject logo = possibleLogo.getAsJsonObject();
+			String name = organisationFromLegacyRSD.getAsJsonPrimitive("name").getAsString();
+			if (name.equals("FUGRO")) return;
+
+			String orgId = orgNameToId.get(name);
+			if (orgId == null) System.out.println(name);
+			if (existingIds.contains(orgId)) return;
+
+			logoToSave.addProperty("id", orgId);
+			logoToSave.add("data", logo.get("data"));
+			logoToSave.add("mime_type", logo.get("mimeType"));
+			existingIds.add(orgNameToId.get(name));
+
+			allLogosToSave.add(logoToSave);
+		});
+		post(URI.create(POSTGREST_URI + "/logo_for_organisation"), allLogosToSave.toString());
 	}
 
 	public static String get(URI uri) {
