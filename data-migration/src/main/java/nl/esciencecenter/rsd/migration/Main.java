@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
 
@@ -35,6 +36,8 @@ public class Main {
 	public static final String LEGACY_RSD_RELEASE_URI = "https://research-software.nl/api/release";
 	public static final String LEGACY_RSD_ORGANISATION_URI = "https://research-software.nl/api/organization";
 	public static final String POSTGREST_URI = "http://localhost/api/v1";
+
+	public static final String LEGACY_ID_NLESC = "nlesc";
 
 	public static void main(String[] args) {
 		String signingSecret = System.getenv("PGRST_JWT_SECRET");
@@ -828,36 +831,55 @@ public class Main {
 
 	public static void saveOrganisationsRelatedToSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware, Map<String, String> legacyOrgIdToId) {
 		JsonArray allRelationsToSave = new JsonArray();
+		String newIdNlesc = legacyOrgIdToId.get(LEGACY_ID_NLESC);
 		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
 			JsonObject legacySoftware = jsonSoftware.getAsJsonObject();
 			String slugSoftware = legacySoftware.getAsJsonPrimitive("slug").getAsString();
 			String idSoftwareNew = slugToIdSoftware.get(slugSoftware);
+			AtomicBoolean isNlescRelated = new AtomicBoolean(false);
 			legacySoftware.getAsJsonObject("related").getAsJsonArray("organizations").forEach(jsonOrganisation -> {
 				String idOrganisationLegacy = jsonOrganisation.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				if (idOrganisationLegacy.equals(LEGACY_ID_NLESC)) isNlescRelated.set(true);
 				String idOrganisationNew = legacyOrgIdToId.get(idOrganisationLegacy);
 				JsonObject relationToSave = new JsonObject();
 				relationToSave.addProperty("software", idSoftwareNew);
 				relationToSave.addProperty("organisation", idOrganisationNew);
 				allRelationsToSave.add(relationToSave);
 			});
+			if (!isNlescRelated.get()) {
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("software", idSoftwareNew);
+				relationToSave.addProperty("organisation", newIdNlesc);
+				allRelationsToSave.add(relationToSave);
+			}
 		});
+		System.out.println();
 		post(URI.create(POSTGREST_URI + "/software_for_organisation"), allRelationsToSave.toString());
 	}
 
 	public static void saveProjectsRelatedToSoftware(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToIdProject, Map<String, String> legacyOrgIdToId) {
 		JsonArray allRelationsToSave = new JsonArray();
+		String newIdNlesc = legacyOrgIdToId.get(LEGACY_ID_NLESC);
 		allProjectsFromLegacyRSD.forEach(jsonProject -> {
 			JsonObject legacyProject = jsonProject.getAsJsonObject();
 			String slugProject = legacyProject.getAsJsonPrimitive("slug").getAsString();
 			String idProjectNew = slugToIdProject.get(slugProject);
+			AtomicBoolean isNlescRelated = new AtomicBoolean(false);
 			legacyProject.getAsJsonObject("related").getAsJsonArray("organizations").forEach(jsonOrganisation -> {
 				String idOrganisationLegacy = jsonOrganisation.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				if (idOrganisationLegacy.equals(LEGACY_ID_NLESC)) isNlescRelated.set(true);
 				String idOrganisationNew = legacyOrgIdToId.get(idOrganisationLegacy);
 				JsonObject relationToSave = new JsonObject();
 				relationToSave.addProperty("project", idProjectNew);
 				relationToSave.addProperty("organisation", idOrganisationNew);
 				allRelationsToSave.add(relationToSave);
 			});
+			if (!isNlescRelated.get()) {
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("project", idProjectNew);
+				relationToSave.addProperty("organisation", newIdNlesc);
+				allRelationsToSave.add(relationToSave);
+			}
 		});
 		post(URI.create(POSTGREST_URI + "/project_for_organisation"), allRelationsToSave.toString());
 	}
