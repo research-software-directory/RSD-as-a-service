@@ -95,6 +95,7 @@ public class Main {
 		saveOrganisationLogos(allOrganisationsFromLegacyRSD, orgNameToId);
 		Map<String, String> legacyOrgIdToId = idToIdOrg(allOrganisationsFromLegacyRSD, orgNameToId);
 		saveOrganisationsRelatedToSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyOrgIdToId);
+		saveProjectsRelatedToSoftware(allProjectsFromLegacyRSD, slugToIdProject, legacyOrgIdToId);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -783,6 +784,7 @@ public class Main {
 			String id = jsonElement.getAsJsonObject().get("id").getAsString();
 			nameToId.put(name, id);
 		});
+		nameToId.put("FUGRO", nameToId.get("Fugro"));
 		return nameToId;
 	}
 
@@ -824,15 +826,15 @@ public class Main {
 		return idToId;
 	}
 
-	public static void saveOrganisationsRelatedToSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware, Map<String, String> orgIdToId) {
+	public static void saveOrganisationsRelatedToSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware, Map<String, String> legacyOrgIdToId) {
 		JsonArray allRelationsToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
 			JsonObject legacySoftware = jsonSoftware.getAsJsonObject();
 			String slugSoftware = legacySoftware.getAsJsonPrimitive("slug").getAsString();
 			String idSoftwareNew = slugToIdSoftware.get(slugSoftware);
-			legacySoftware.getAsJsonObject("related").getAsJsonArray("organizations").forEach(jsonRelated -> {
-				String idOrganisationLegacy = jsonRelated.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
-				String idOrganisationNew = orgIdToId.get(idOrganisationLegacy);
+			legacySoftware.getAsJsonObject("related").getAsJsonArray("organizations").forEach(jsonOrganisation -> {
+				String idOrganisationLegacy = jsonOrganisation.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				String idOrganisationNew = legacyOrgIdToId.get(idOrganisationLegacy);
 				JsonObject relationToSave = new JsonObject();
 				relationToSave.addProperty("software", idSoftwareNew);
 				relationToSave.addProperty("organisation", idOrganisationNew);
@@ -840,6 +842,24 @@ public class Main {
 			});
 		});
 		post(URI.create(POSTGREST_URI + "/software_for_organisation"), allRelationsToSave.toString());
+	}
+
+	public static void saveProjectsRelatedToSoftware(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToIdProject, Map<String, String> legacyOrgIdToId) {
+		JsonArray allRelationsToSave = new JsonArray();
+		allProjectsFromLegacyRSD.forEach(jsonProject -> {
+			JsonObject legacyProject = jsonProject.getAsJsonObject();
+			String slugProject = legacyProject.getAsJsonPrimitive("slug").getAsString();
+			String idProjectNew = slugToIdProject.get(slugProject);
+			legacyProject.getAsJsonObject("related").getAsJsonArray("organizations").forEach(jsonOrganisation -> {
+				String idOrganisationLegacy = jsonOrganisation.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				String idOrganisationNew = legacyOrgIdToId.get(idOrganisationLegacy);
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("project", idProjectNew);
+				relationToSave.addProperty("organisation", idOrganisationNew);
+				allRelationsToSave.add(relationToSave);
+			});
+		});
+		post(URI.create(POSTGREST_URI + "/project_for_organisation"), allRelationsToSave.toString());
 	}
 
 	public static String get(URI uri) {
