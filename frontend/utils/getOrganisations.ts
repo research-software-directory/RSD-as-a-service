@@ -6,7 +6,7 @@ import logger from './logger'
 export function organisationUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
   // by default order is on software count and name
-  let url = `${process.env.POSTGREST_URL}/organisations_overview?order=software_cnt.desc,name.asc`
+  let url = `${process.env.POSTGREST_URL}/organisations_overview?order=software_cnt.desc.nullslast,name.asc`
   if (search) {
     url+=`&or=(name.ilike.*${search}*,website.ilike.*${search}*)`
   }
@@ -14,7 +14,7 @@ export function organisationUrl({search, rows = 12, page = 0}:
     url +=`&limit=${rows}`
   }
   if (page) {
-    url +=`&offset=${page * rows}`
+    url += `&offset=${page * rows}`
   }
   return url
 }
@@ -22,7 +22,8 @@ export function organisationUrl({search, rows = 12, page = 0}:
 export async function getOrganisationsList({search,rows,page,token}:
   { search: string|undefined,rows:number,page:number,token: string|undefined}) {
   try {
-    const url = organisationUrl({search,rows,page})
+    const url = organisationUrl({search, rows, page})
+
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -33,7 +34,7 @@ export async function getOrganisationsList({search,rows,page,token}:
       },
     })
 
-    if (resp.status === 200) {
+    if ([200,206].includes(resp.status)) {
       const json = await resp.json()
       return {
         count: extractCountFromHeader(resp.headers),
