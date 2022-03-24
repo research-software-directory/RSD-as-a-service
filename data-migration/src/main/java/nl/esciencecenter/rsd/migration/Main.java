@@ -93,6 +93,8 @@ public class Main {
 		saveOrganisations(allOrganisationsFromLegacyRSD);
 		Map<String, String> orgNameToId = orgNameToId();
 		saveOrganisationLogos(allOrganisationsFromLegacyRSD, orgNameToId);
+		Map<String, String> legacyOrgIdToId = idToIdOrg(allOrganisationsFromLegacyRSD, orgNameToId);
+		saveOrganisationsRelatedToSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyOrgIdToId);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -809,6 +811,35 @@ public class Main {
 			allLogosToSave.add(logoToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/logo_for_organisation"), allLogosToSave.toString());
+	}
+
+	public static Map<String, String> idToIdOrg(JsonArray allOrganisationsFromLegacyRSD, Map<String, String> nameToId) {
+		Map<String, String> idToId = new HashMap<>();
+		allOrganisationsFromLegacyRSD.forEach(jsonElement -> {
+			String idLegacy = jsonElement.getAsJsonObject().getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
+			String name = jsonElement.getAsJsonObject().getAsJsonPrimitive("name").getAsString();
+			String idNew = nameToId.get(name);
+			idToId.put(idLegacy, idNew);
+		});
+		return idToId;
+	}
+
+	public static void saveOrganisationsRelatedToSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware, Map<String, String> orgIdToId) {
+		JsonArray allRelationsToSave = new JsonArray();
+		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
+			JsonObject legacySoftware = jsonSoftware.getAsJsonObject();
+			String slugSoftware = legacySoftware.getAsJsonPrimitive("slug").getAsString();
+			String idSoftwareNew = slugToIdSoftware.get(slugSoftware);
+			legacySoftware.getAsJsonObject("related").getAsJsonArray("organizations").forEach(jsonRelated -> {
+				String idOrganisationLegacy = jsonRelated.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				String idOrganisationNew = orgIdToId.get(idOrganisationLegacy);
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("software", idSoftwareNew);
+				relationToSave.addProperty("organisation", idOrganisationNew);
+				allRelationsToSave.add(relationToSave);
+			});
+		});
+		post(URI.create(POSTGREST_URI + "/software_for_organisation"), allRelationsToSave.toString());
 	}
 
 	public static String get(URI uri) {
