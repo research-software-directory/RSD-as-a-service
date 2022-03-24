@@ -1,7 +1,8 @@
 // object for organisation
+// based on organisation table
 export type Organisation = {
   id: string | null
-  slug?: string
+  slug?: string | null
   primary_maintainer?: string
   name: string
   ror_id?: string
@@ -43,10 +44,18 @@ export type SoftwareForOrganisation = {
 }
 
 // object returned from api
+// based on view organisations_for_software
 export type OrganisationsForSoftware={
-  software: string
-  organisation: Organisation
+  id: string
+  slug: string | null
+  primary_maintainer: string
+  name: string
+  ror_id: string
+  is_tenant: boolean
+  website: string | null
+  logo_id: string | null
   status: Status
+  software: string
 }
 
 export type ParticipatingOrganisationProps = {
@@ -55,3 +64,12 @@ export type ParticipatingOrganisationProps = {
   logo_url: string | null
 }
 
+export type OrganisationForOverview = {
+  id: string
+  slug: string | null
+  name: string
+  website: string
+  ror_id: string
+  logo_id: string
+  software_cnt: number | null
+}

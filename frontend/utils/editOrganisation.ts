@@ -11,10 +11,9 @@ import {findInRORByName} from './getROR'
 import {getSlugFromString} from './getSlugFromString'
 import logger from './logger'
 import {optionsNotInReferenceList} from './optionsNotInReferenceList'
-import {sortOnStrProp} from './sortFn'
 
 // organisation colums used in editOrganisation.getOrganisationsForSoftware
-const columsForSelect = 'id,slug,primary_maintainer,name,ror_id,is_tenant,website,logo_for_organisation(id)'
+const columsForSelect = 'id,slug,primary_maintainer,name,ror_id,is_tenant,website,logo_id'
 // organisation colums used in editOrganisation.createOrganisation
 const columsForCreate = [
   'slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website'
@@ -91,10 +90,10 @@ export async function findRSDOrganisation({searchFor, token, frontend}:
 
 export async function getOrganisationsForSoftware({software, token, frontend = true}:
   {software: string, token: string, frontend?: boolean}) {
+  let url = `${process.env.POSTGREST_URL}/organisations_for_software?software=eq.${software}&order=name.asc`
   // SSR request within docker network
-  let url = `${process.env.POSTGREST_URL}/software_for_organisation?select=software,status,organisation(${columsForSelect})&software=eq.${software}`
   if (frontend) {
-    url = `/api/v1/software_for_organisation?select=software,status,organisation(${columsForSelect})&software=eq.${software}`
+    url = `/api/v1/organisations_for_software?software=eq.${software}&order=name.asc`
   }
   try {
     const resp = await fetch(url, {
@@ -123,14 +122,13 @@ export async function getParticipatingOrganisations({software, token, frontend =
   const organisations = resp.filter(item => {
     return item.status === 'approved'
   })
-  .map(item => {
+    .map(item => {
     return {
-      name: item.organisation.name,
-      website: item.organisation.website ?? '',
-      logo_url: getLogoUrl(item.organisation)
+      name: item.name,
+      website: item.website ?? '',
+      logo_url: getUrlFromLogoId(item.logo_id)
     }
   })
-    .sort((a, b) => sortOnStrProp(a, b, 'name'))
   return organisations
 }
 
