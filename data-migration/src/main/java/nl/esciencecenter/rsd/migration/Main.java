@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
 
@@ -35,7 +37,9 @@ public class Main {
 	public static final String LEGACY_RSD_ORGANISATION_URI = "https://research-software.nl/api/organization";
 	public static final String POSTGREST_URI = "http://localhost/api/v1";
 
-	public static void main(String[] args) throws IOException {
+	public static final String LEGACY_ID_NLESC = "nlesc";
+
+	public static void main(String[] args) {
 		String signingSecret = System.getenv("PGRST_JWT_SECRET");
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
 		jwtString = JWT.create()
@@ -88,6 +92,13 @@ public class Main {
 		JsonArray allReleasesFromLegacyRSD = JsonParser.parseString(allReleasesString).getAsJsonArray();
 		Map<String, String> conceptDoiToSoftwareId = conceptDoiToSoftwareId(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveReleases(allReleasesFromLegacyRSD, conceptDoiToSoftwareId);
+
+		saveOrganisations(allOrganisationsFromLegacyRSD);
+		Map<String, String> orgNameToId = orgNameToId();
+		saveOrganisationLogos(allOrganisationsFromLegacyRSD, orgNameToId);
+		Map<String, String> legacyOrgIdToId = idToIdOrg(allOrganisationsFromLegacyRSD, orgNameToId);
+		saveOrganisationsRelatedToSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyOrgIdToId);
+		saveProjectsRelatedToSoftware(allProjectsFromLegacyRSD, slugToIdProject, legacyOrgIdToId);
 	}
 
 	public static void removeProblematicEntry(JsonArray softwareArray) {
@@ -713,6 +724,164 @@ public class Main {
 			});
 		});
 		post(URI.create(POSTGREST_URI + "/release_content"), allReleaseContentsToSave.toString());
+	}
+
+	public static void saveOrganisations(JsonArray allOrganisationsFromLegacyRSD) {
+		JsonArray allOrganisationsToSave = new JsonArray();
+		Set<String> existingNames = new HashSet<>();
+		Set<String> existingSlugs = new HashSet<>();
+		Set<String> existingWebsites = new HashSet<>();
+		allOrganisationsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject organisationToSave = new JsonObject();
+			JsonObject organisationFromLegacyRSD = jsonElement.getAsJsonObject();
+
+			String name = organisationFromLegacyRSD.getAsJsonPrimitive("name").getAsString();
+			if (name.equals("FUGRO")) return;
+			if (name.equals("Koninklijk Nederlands Meteorologisch Instituut") && existingNames.contains(name)) return;
+			if (name.equals("Software for Chemicals & Materials") && existingNames.contains(name)) return;
+			if (existingNames.contains(name)) {
+				System.out.println("Warning, double name found (" + name + "), skipping");
+				return;
+			}
+			existingNames.add(name);
+
+			String slug = Normalizer.normalize(name, Normalizer.Form.NFD);
+			slug = slug
+					.strip()
+					.toLowerCase()
+					.replaceAll("[^a-z0-9 -]", "")
+					.replace(' ', '-')
+					.replaceAll("-+", "-");
+
+			if (existingSlugs.contains(slug)) {
+				System.out.println("Warning, double slug found (" + slug + "), skipping");
+				return;
+			}
+			existingSlugs.add(slug);
+
+			organisationToSave.addProperty("slug", slug);
+			organisationToSave.addProperty("name", name);
+
+			if (name.equals("ECMWF")) {
+				organisationToSave.addProperty("website", "https://www.ecmwf.int/");
+			} else {
+				String website = organisationFromLegacyRSD.getAsJsonPrimitive("url").getAsString();
+				if (existingWebsites.contains(website)) {
+					System.out.println("Warning, double website found (" + website + "), skipping");
+					return;
+				}
+				if (website.equals("https://FIXME")) website = null;
+				organisationToSave.addProperty("website", website);
+				if (website != null) existingWebsites.add(website);
+			}
+			allOrganisationsToSave.add(organisationToSave);
+		});
+		post(URI.create(POSTGREST_URI + "/organisation"), allOrganisationsToSave.toString());
+	}
+
+	public static Map<String, String> orgNameToId() {
+		JsonArray savedOrganisations = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/organisation"))).getAsJsonArray();
+		Map<String, String> nameToId = new HashMap<>();
+		savedOrganisations.forEach(jsonElement -> {
+			String name = jsonElement.getAsJsonObject().get("name").getAsString();
+			String id = jsonElement.getAsJsonObject().get("id").getAsString();
+			nameToId.put(name, id);
+		});
+		nameToId.put("FUGRO", nameToId.get("Fugro"));
+		return nameToId;
+	}
+
+	public static void saveOrganisationLogos(JsonArray allOrganisationsFromLegacyRSD, Map<String, String> orgNameToId) {
+		JsonArray allLogosToSave = new JsonArray();
+		Set<String> existingIds = new HashSet<>();
+		allOrganisationsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject logoToSave = new JsonObject();
+			JsonObject organisationFromLegacyRSD = jsonElement.getAsJsonObject();
+
+			JsonElement possibleLogo = organisationFromLegacyRSD.get("logo");
+			if (possibleLogo == null || possibleLogo.isJsonNull()) return;
+			JsonObject logo = possibleLogo.getAsJsonObject();
+			String name = organisationFromLegacyRSD.getAsJsonPrimitive("name").getAsString();
+			if (name.equals("FUGRO")) return;
+
+			String orgId = orgNameToId.get(name);
+			if (orgId == null) System.out.println(name);
+			if (existingIds.contains(orgId)) return;
+
+			logoToSave.addProperty("id", orgId);
+			logoToSave.add("data", logo.get("data"));
+			logoToSave.add("mime_type", logo.get("mimeType"));
+			existingIds.add(orgNameToId.get(name));
+
+			allLogosToSave.add(logoToSave);
+		});
+		post(URI.create(POSTGREST_URI + "/logo_for_organisation"), allLogosToSave.toString());
+	}
+
+	public static Map<String, String> idToIdOrg(JsonArray allOrganisationsFromLegacyRSD, Map<String, String> nameToId) {
+		Map<String, String> idToId = new HashMap<>();
+		allOrganisationsFromLegacyRSD.forEach(jsonElement -> {
+			String idLegacy = jsonElement.getAsJsonObject().getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
+			String name = jsonElement.getAsJsonObject().getAsJsonPrimitive("name").getAsString();
+			String idNew = nameToId.get(name);
+			idToId.put(idLegacy, idNew);
+		});
+		return idToId;
+	}
+
+	public static void saveOrganisationsRelatedToSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware, Map<String, String> legacyOrgIdToId) {
+		JsonArray allRelationsToSave = new JsonArray();
+		String newIdNlesc = legacyOrgIdToId.get(LEGACY_ID_NLESC);
+		allSoftwareFromLegacyRSD.forEach(jsonSoftware -> {
+			JsonObject legacySoftware = jsonSoftware.getAsJsonObject();
+			String slugSoftware = legacySoftware.getAsJsonPrimitive("slug").getAsString();
+			String idSoftwareNew = slugToIdSoftware.get(slugSoftware);
+			AtomicBoolean isNlescRelated = new AtomicBoolean(false);
+			legacySoftware.getAsJsonObject("related").getAsJsonArray("organizations").forEach(jsonOrganisation -> {
+				String idOrganisationLegacy = jsonOrganisation.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				if (idOrganisationLegacy.equals(LEGACY_ID_NLESC)) isNlescRelated.set(true);
+				String idOrganisationNew = legacyOrgIdToId.get(idOrganisationLegacy);
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("software", idSoftwareNew);
+				relationToSave.addProperty("organisation", idOrganisationNew);
+				allRelationsToSave.add(relationToSave);
+			});
+			if (!isNlescRelated.get()) {
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("software", idSoftwareNew);
+				relationToSave.addProperty("organisation", newIdNlesc);
+				allRelationsToSave.add(relationToSave);
+			}
+		});
+		System.out.println();
+		post(URI.create(POSTGREST_URI + "/software_for_organisation"), allRelationsToSave.toString());
+	}
+
+	public static void saveProjectsRelatedToSoftware(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToIdProject, Map<String, String> legacyOrgIdToId) {
+		JsonArray allRelationsToSave = new JsonArray();
+		String newIdNlesc = legacyOrgIdToId.get(LEGACY_ID_NLESC);
+		allProjectsFromLegacyRSD.forEach(jsonProject -> {
+			JsonObject legacyProject = jsonProject.getAsJsonObject();
+			String slugProject = legacyProject.getAsJsonPrimitive("slug").getAsString();
+			String idProjectNew = slugToIdProject.get(slugProject);
+			AtomicBoolean isNlescRelated = new AtomicBoolean(false);
+			legacyProject.getAsJsonObject("related").getAsJsonArray("organizations").forEach(jsonOrganisation -> {
+				String idOrganisationLegacy = jsonOrganisation.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				if (idOrganisationLegacy.equals(LEGACY_ID_NLESC)) isNlescRelated.set(true);
+				String idOrganisationNew = legacyOrgIdToId.get(idOrganisationLegacy);
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("project", idProjectNew);
+				relationToSave.addProperty("organisation", idOrganisationNew);
+				allRelationsToSave.add(relationToSave);
+			});
+			if (!isNlescRelated.get()) {
+				JsonObject relationToSave = new JsonObject();
+				relationToSave.addProperty("project", idProjectNew);
+				relationToSave.addProperty("organisation", newIdNlesc);
+				allRelationsToSave.add(relationToSave);
+			}
+		});
+		post(URI.create(POSTGREST_URI + "/project_for_organisation"), allRelationsToSave.toString());
 	}
 
 	public static String get(URI uri) {
