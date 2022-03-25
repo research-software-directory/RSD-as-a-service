@@ -1,6 +1,6 @@
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE,
+	slug VARCHAR(100),
 	parent UUID REFERENCES organisation (id),
 	primary_maintainer UUID REFERENCES account (id),
 	name VARCHAR UNIQUE NOT NULL,
@@ -8,8 +8,11 @@ CREATE TABLE organisation (
 	website VARCHAR UNIQUE,
 	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	updated_at TIMESTAMP NOT NULL,
+	UNIQUE (slug, parent)
 );
+
+CREATE UNIQUE INDEX unique_slug_for_top_level_org_idx ON organisation (slug, (parent IS NULL)) WHERE parent IS NULL;
 
 CREATE FUNCTION sanitise_insert_organisation() RETURNS TRIGGER LANGUAGE plpgsql as
 $$
