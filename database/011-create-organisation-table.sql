@@ -1,6 +1,7 @@
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	slug VARCHAR(100) UNIQUE,
+	parent UUID REFERENCES organisation (id),
 	primary_maintainer UUID REFERENCES account (id),
 	name VARCHAR UNIQUE NOT NULL,
 	ror_id VARCHAR UNIQUE,
@@ -35,6 +36,21 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
+
+
+CREATE OR REPLACE FUNCTION list_parent_organisations(child_organisation UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
+$$
+DECLARE current_org UUID = child_organisation;
+BEGIN
+	WHILE current_org IS NOT NULL LOOP
+		RETURN QUERY SELECT organisation.slug, id FROM organisation WHERE id = current_org;
+		SELECT parent FROM organisation WHERE id = current_org INTO current_org;
+	END LOOP;
+	RETURN;
+END
+$$;
+
+
 
 CREATE TABLE logo_for_organisation (
 	id UUID references organisation(id) PRIMARY KEY,
