@@ -41,7 +41,7 @@ $$;
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
 
 
-CREATE OR REPLACE FUNCTION list_parent_organisations(child_organisation UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION list_parent_organisations(child_organisation UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
 $$
 DECLARE current_org UUID = child_organisation;
 BEGIN
@@ -53,6 +53,20 @@ BEGIN
 END
 $$;
 
+CREATE FUNCTION slug_to_organisation(full_slug VARCHAR) RETURNS UUID STABLE LANGUAGE plpgsql AS
+$$
+DECLARE current_org UUID;
+DECLARE slug_part VARCHAR;
+BEGIN
+	FOREACH slug_part IN ARRAY string_to_array(full_slug, '/') LOOP
+		SELECT id FROM organisation WHERE (parent = current_org OR (parent IS NULL AND current_org IS NULL)) AND slug = slug_part INTO current_org;
+			IF (current_org IS NULL) THEN
+				RETURN NULL;
+		END IF;
+	END LOOP;
+	RETURN current_org;
+END
+$$;
 
 
 CREATE TABLE logo_for_organisation (
