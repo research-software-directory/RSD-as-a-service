@@ -1,14 +1,18 @@
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE,
+	slug VARCHAR(100),
+	parent UUID REFERENCES organisation (id),
 	primary_maintainer UUID REFERENCES account (id),
 	name VARCHAR UNIQUE NOT NULL,
 	ror_id VARCHAR UNIQUE,
 	website VARCHAR UNIQUE,
 	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	updated_at TIMESTAMP NOT NULL,
+	UNIQUE (slug, parent)
 );
+
+CREATE UNIQUE INDEX unique_slug_for_top_level_org_idx ON organisation (slug, (parent IS NULL)) WHERE parent IS NULL;
 
 CREATE FUNCTION sanitise_insert_organisation() RETURNS TRIGGER LANGUAGE plpgsql as
 $$
@@ -35,6 +39,35 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
+
+
+CREATE FUNCTION list_parent_organisations(child_organisation UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
+$$
+DECLARE current_org UUID = child_organisation;
+BEGIN
+	WHILE current_org IS NOT NULL LOOP
+		RETURN QUERY SELECT organisation.slug, id FROM organisation WHERE id = current_org;
+		SELECT parent FROM organisation WHERE id = current_org INTO current_org;
+	END LOOP;
+	RETURN;
+END
+$$;
+
+CREATE FUNCTION slug_to_organisation(full_slug VARCHAR) RETURNS UUID STABLE LANGUAGE plpgsql AS
+$$
+DECLARE current_org UUID;
+DECLARE slug_part VARCHAR;
+BEGIN
+	FOREACH slug_part IN ARRAY string_to_array(full_slug, '/') LOOP
+		SELECT id FROM organisation WHERE (parent = current_org OR (parent IS NULL AND current_org IS NULL)) AND slug = slug_part INTO current_org;
+			IF (current_org IS NULL) THEN
+				RETURN NULL;
+		END IF;
+	END LOOP;
+	RETURN current_org;
+END
+$$;
+
 
 CREATE TABLE logo_for_organisation (
 	id UUID references organisation(id) PRIMARY KEY,
