@@ -54,7 +54,7 @@ jobs:
       ghcr_user: ${{github.actor}}
       base_image_name: ghcr.io/research-software-directory/rsd-saas/auth
       image_tag: ${{needs.release_tag.outputs.tag}}
-      dockerfile: authentication/dockerfile
+      dockerfile: authentication/Dockerfile
       docker_context: ./authentication
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
@@ -69,7 +69,7 @@ jobs:
       ghcr_user: ${{github.actor}}
       base_image_name: ghcr.io/research-software-directory/rsd-saas/database
       image_tag: ${{needs.release_tag.outputs.tag}}
-      dockerfile: database/dockerfile
+      dockerfile: database/Dockerfile
       docker_context: ./database
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
@@ -84,7 +84,7 @@ jobs:
       ghcr_user: ${{github.actor}}
       base_image_name: ghcr.io/research-software-directory/rsd-saas/backend
       image_tag: ${{needs.release_tag.outputs.tag}}
-      dockerfile: backend-postgrest/dockerfile
+      dockerfile: backend-postgrest/Dockerfile
       docker_context: ./backend-postgrest
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
@@ -114,7 +114,7 @@ jobs:
       ghcr_user: ${{github.actor}}
       base_image_name: ghcr.io/research-software-directory/rsd-saas/nginx
       image_tag: ${{needs.release_tag.outputs.tag}}
-      dockerfile: nginx/dockerfile
+      dockerfile: nginx/Dockerfile
       docker_context: ./nginx
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
@@ -129,7 +129,7 @@ jobs:
       ghcr_user: ${{github.actor}}
       base_image_name: ghcr.io/research-software-directory/rsd-saas/scrapers
       image_tag: ${{needs.release_tag.outputs.tag}}
-      dockerfile: scrapers/dockerfile
+      dockerfile: scrapers/Dockerfile
       docker_context: ./scrapers
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
