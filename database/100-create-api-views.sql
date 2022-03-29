@@ -15,36 +15,45 @@ END
 $$;
 
 -- COUNT contributors per software
-CREATE VIEW count_software_countributors AS
-SELECT
-	software, count(contributor.id) AS contributor_cnt
-FROM
-	contributor
-GROUP BY
-	software
-;
+CREATE FUNCTION count_software_countributors() RETURNS TABLE (software UUID, contributor_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT
+		contributor.software, COUNT(contributor.id) AS contributor_cnt
+	FROM
+		contributor
+	GROUP BY
+		contributor.software;
+END
+$$;
 
 -- COUNT mentions per software
-CREATE VIEW count_software_mentions AS
-SELECT
-	software, count(mention) AS mention_cnt
-FROM
-	mention_for_software
-GROUP BY
-	software
-;
+CREATE FUNCTION count_software_mentions() RETURNS TABLE (software UUID, mention_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT
+		mention_for_software.software, COUNT(mention) AS mention_cnt
+	FROM
+		mention_for_software
+	GROUP BY
+		mention_for_software.software;
+END
+$$;
 
 -- JOIN contributors and mentions counts per software
-CREATE VIEW count_software_contributors_mentions AS
-SELECT
-	software.id, contributor_cnt, mention_cnt FROM software
-LEFT JOIN
-	count_software_countributors ON software.id=count_software_countributors.software
-LEFT JOIN
-	count_software_mentions ON software.id=count_software_mentions.software
-WHERE
-	software.is_published
-;
+CREATE FUNCTION count_software_contributors_mentions() RETURNS TABLE (software UUID, contributor_cnt BIGINT, mention_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT
+		software.id, count_software_countributors.contributor_cnt, count_software_mentions.mention_cnt
+	FROM
+		software
+	LEFT JOIN
+		count_software_countributors() AS count_software_countributors ON software.id=count_software_countributors.software
+	LEFT JOIN
+		count_software_mentions() AS count_software_mentions ON software.id=count_software_mentions.software;
+END
+$$;
 
 -- Software maintainer by software slug
 CREATE VIEW maintainer_for_software_by_slug AS

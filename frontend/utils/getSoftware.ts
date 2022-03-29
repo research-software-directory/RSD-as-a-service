@@ -237,7 +237,7 @@ export async function getContributorMentionCount(uuid: string,token?: string){
   try{
     // this request is always perfomed from backend
     // the content is order by id ascending
-    const url = `${process.env.POSTGREST_URL}/count_software_contributors_mentions?id=eq.${uuid}`
+    const url = `${process.env.POSTGREST_URL}/rpc/count_software_contributors_mentions?id=eq.${uuid}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
