@@ -82,26 +82,30 @@ END
 $$;
 
 -- Participating organisations by software
-CREATE VIEW organisations_for_software AS
-SELECT
-	organisation.id AS id,
-	organisation.slug,
-	organisation.primary_maintainer,
-	organisation.name,
-	organisation.ror_id,
-	organisation.is_tenant,
-	organisation.website,
-	logo_for_organisation.id AS logo_id,
-	software_for_organisation.status,
-	software.id AS software
+CREATE FUNCTION organisations_of_software() RETURNS TABLE (id UUID, slug VARCHAR, primary_maintainer UUID, name VARCHAR, ror_id VARCHAR, is_tenant BOOLEAN, website VARCHAR, logo_id UUID, status relation_status, software UUID) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT
+		organisation.id AS id,
+		organisation.slug,
+		organisation.primary_maintainer,
+		organisation.name,
+		organisation.ror_id,
+		organisation.is_tenant,
+		organisation.website,
+		logo_for_organisation.id AS logo_id,
+		software_for_organisation.status,
+		software.id AS software
 FROM
 	software
 INNER JOIN
-	software_for_organisation ON software.id=software
+	software_for_organisation ON software.id = software_for_organisation.software
 INNER JOIN
 	organisation ON software_for_organisation.organisation = organisation.id
 LEFT JOIN
 	logo_for_organisation ON logo_for_organisation.id = organisation.id;
+END
+$$;
 
 -- Software count by organisation
 CREATE VIEW software_count_by_organisation AS

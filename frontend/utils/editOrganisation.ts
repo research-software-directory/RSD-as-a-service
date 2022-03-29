@@ -90,10 +90,10 @@ export async function findRSDOrganisation({searchFor, token, frontend}:
 
 export async function getOrganisationsForSoftware({software, token, frontend = true}:
   {software: string, token: string, frontend?: boolean}) {
-  let url = `${process.env.POSTGREST_URL}/organisations_for_software?software=eq.${software}&order=name.asc`
+  let url = `${process.env.POSTGREST_URL}/rpc/organisations_of_software?software=eq.${software}&order=name.asc`
   // SSR request within docker network
   if (frontend) {
-    url = `/api/v1/organisations_for_software?software=eq.${software}&order=name.asc`
+    url = `/api/v1/rpc/organisations_of_software?software=eq.${software}&order=name.asc`
   }
   try {
     const resp = await fetch(url, {
