@@ -4,7 +4,7 @@ import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {createJsonHeaders} from './fetchHelpers'
 
-/**
+/*
  * postgREST api uri to retreive software index data.
  * Note! url should contain all query params. Use softwareUrl helper fn to construct url.
  * @param url with all query params for search,filtering, order and pagination
@@ -110,7 +110,7 @@ export type TagItem={
 export async function getTagsWithCount(){
   try{
     // this request is always perfomed from backend
-    const url = `${process.env.POSTGREST_URL}/count_software_per_tag?order=tag.asc`
+    const url = `${process.env.POSTGREST_URL}/rpc/count_software_per_tag?order=tag.asc`
     const resp = await fetch(url,{method:'GET'})
     if (resp.status===200){
       const data:TagItem[] = await resp.json()

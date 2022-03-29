@@ -1,17 +1,18 @@
 -- count of software per tag
-CREATE VIEW count_software_per_tag AS
-SELECT
-	count(*),
-	tag
-FROM
-	tag_for_software
-JOIN software ON
-	tag_for_software.software = software.id
-WHERE
-	software.is_published
-GROUP BY
-	tag
-;
+CREATE FUNCTION count_software_per_tag() RETURNS TABLE (count BIGINT, tag tag) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT
+		COUNT(*),
+		tag_for_software.tag
+	FROM
+		tag_for_software
+	JOIN software ON
+		tag_for_software.software = software.id
+	GROUP BY
+		tag_for_software.tag;
+END
+$$;
 
 -- COUNT contributors per software
 CREATE VIEW count_software_countributors AS
