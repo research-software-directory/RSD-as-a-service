@@ -41,7 +41,7 @@ END
 $$;
 
 -- JOIN contributors and mentions counts per software
-CREATE FUNCTION count_software_contributors_mentions() RETURNS TABLE (software UUID, contributor_cnt BIGINT, mention_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+CREATE FUNCTION count_software_contributors_mentions() RETURNS TABLE (id UUID, contributor_cnt BIGINT, mention_cnt BIGINT) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	RETURN QUERY SELECT
