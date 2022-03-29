@@ -90,9 +90,9 @@ async function findRSDContributor({searchFor, token, frontend}:
   { searchFor: string, token?: string, frontend?: boolean }) {
   try {
 
-    let url = `${process.env.POSTGREST_URL}/unique_countributors?display_name=ilike.*${searchFor}*&limit=20`
+    let url = `${process.env.POSTGREST_URL}/rpc/unique_contributors?display_name=ilike.*${searchFor}*&limit=20`
     if (frontend) {
-      url = `/api/v1/unique_countributors?display_name=ilike.*${searchFor}*&limit=20`
+      url = `/api/v1/rpc/unique_contributors?display_name=ilike.*${searchFor}*&limit=20`
     }
     const resp = await fetch(url, {
       method: 'GET',

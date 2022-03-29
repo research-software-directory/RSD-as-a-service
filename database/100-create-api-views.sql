@@ -69,14 +69,17 @@ END
 $$;
 
 -- UNIQUE contributor display_names
-CREATE VIEW unique_countributors AS
-SELECT distinct
-	(CONCAT(given_names,' ',family_names)) AS display_name, affiliation, orcid, given_names, family_names, email_address, avatar_mime_type
-FROM
-	contributor
-ORDER BY
-	display_name asc
-;
+CREATE OR REPLACE FUNCTION unique_contributors() RETURNS TABLE (display_name TEXT, affiliation VARCHAR, orcid VARCHAR, given_names VARCHAR, family_names VARCHAR, email_address VARCHAR, avatar_mime_type VARCHAR) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT DISTINCT
+		(CONCAT(c.given_names,' ',c.family_names)) AS display_name, c.affiliation, c.orcid, c.given_names, c.family_names, c.email_address, c.avatar_mime_type
+	FROM
+		contributor c
+	ORDER BY
+		display_name ASC;
+END
+$$;
 
 -- Participating organisations by software
 CREATE VIEW organisations_for_software AS
