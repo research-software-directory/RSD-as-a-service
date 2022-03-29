@@ -7,9 +7,9 @@ export async function isMaintainerOfSoftware({slug, account, token, frontend = t
     // return false directly when missing info
     if (!slug || !account || !token) return false
     // build url
-    let url = `/api/v1/maintainer_for_software_by_slug?maintainer=eq.${account}&slug=eq.${slug}`
+    let url = `/api/v1/rpc/maintainer_for_software_by_slug?maintainer=eq.${account}&slug=eq.${slug}`
     if (frontend == false) {
-      url = `${process.env.POSTGREST_URL}/maintainer_for_software_by_slug?maintainer=eq.${account}&slug=eq.${slug}`
+      url = `${process.env.POSTGREST_URL}/rpc/maintainer_for_software_by_slug?maintainer=eq.${account}&slug=eq.${slug}`
     }
     const resp = await fetch(url, {
       method: 'GET',

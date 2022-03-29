@@ -56,12 +56,17 @@ END
 $$;
 
 -- Software maintainer by software slug
-CREATE VIEW maintainer_for_software_by_slug AS
-SELECT
-	maintainer,software,slug from maintainer_for_software
-LEFT JOIN
-	software ON software.id=maintainer_for_software.software
-;
+CREATE FUNCTION maintainer_for_software_by_slug() RETURNS TABLE (maintainer UUID, software UUID, slug VARCHAR) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT
+		maintainer_for_software.maintainer, maintainer_for_software.software, software.slug
+	FROM
+		maintainer_for_software
+	LEFT JOIN
+		software ON software.id = maintainer_for_software.software;
+END
+$$;
 
 -- UNIQUE contributor display_names
 CREATE VIEW unique_countributors AS
