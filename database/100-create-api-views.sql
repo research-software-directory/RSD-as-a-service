@@ -108,20 +108,28 @@ END
 $$;
 
 -- Software count by organisation
-CREATE VIEW software_count_by_organisation AS
-SELECT
-	organisation, count(organisation) AS software_cnt
-FROM
-	software_for_organisation
-GROUP BY organisation;
+CREATE FUNCTION software_count_by_organisation() RETURNS TABLE (organisation UUID, software_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT
+		software_for_organisation.organisation, count(software_for_organisation.organisation) AS software_cnt
+	FROM
+		software_for_organisation
+	GROUP BY software_for_organisation.organisation;
+END
+$$;
 
 -- Organisations overview
-CREATE VIEW organisations_overview AS
-SELECT
-	organisation.id AS id,slug,name,website,ror_id,logo_for_organisation.id AS logo_id,software_cnt
-FROM
-	organisation
-LEFT JOIN
-	software_count_by_organisation ON organisation = organisation.id
-LEFT JOIN
-	logo_for_organisation ON organisation.id = logo_for_organisation.id;
+CREATE FUNCTION organisations_overview() RETURNS TABLE (id UUID, slug VARCHAR, name VARCHAR, website VARCHAR, ror_id VARCHAR, logo_id UUID, software_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT
+		o.id AS id, o.slug, o.name, o.website, o.ror_id, logo_for_organisation.id AS logo_id, software_count_by_organisation.software_cnt
+	FROM
+		organisation o
+	LEFT JOIN
+		software_count_by_organisation() ON software_count_by_organisation.organisation = o.id
+	LEFT JOIN
+		logo_for_organisation ON o.id = logo_for_organisation.id;
+END
+$$

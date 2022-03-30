@@ -6,7 +6,7 @@ import logger from './logger'
 export function organisationUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
   // by default order is on software count and name
-  let url = `${process.env.POSTGREST_URL}/organisations_overview?order=software_cnt.desc.nullslast,name.asc`
+  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?order=software_cnt.desc.nullslast,name.asc`
   if (search) {
     url+=`&or=(name.ilike.*${search}*,website.ilike.*${search}*)`
   }
