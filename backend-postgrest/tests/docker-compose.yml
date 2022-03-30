@@ -43,7 +43,7 @@ services:
     build:
       context: .
       # dockerfile to use for build
-      dockerfile: ./dockerfile
+      dockerfile: ./Dockerfile
     image: rsd/auth-test:0.0.4
     environment:
       - PGRST_JWT_SECRET=normaly_this_is_a_secret_string_that_none_knows_BUT_this_is_just_a_test

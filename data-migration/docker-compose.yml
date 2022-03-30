@@ -5,7 +5,7 @@ services:
     container_name: data-migration
     build:
       context: ../
-      dockerfile: ./data-migration/dockerfile
+      dockerfile: ./data-migration/Dockerfile
     image: rsd/data-migration:0.0.11
     env_file:
       # use main env file
