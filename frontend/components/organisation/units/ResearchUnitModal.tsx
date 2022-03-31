@@ -1,20 +1,21 @@
 import {useEffect} from 'react'
-
 import {
   Avatar,
   Button, Dialog, DialogActions, DialogContent,
-  DialogTitle, useMediaQuery
+  DialogTitle, TextField, useMediaQuery
 } from '@mui/material'
 import SaveIcon from '@mui/icons-material/Save'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
-import useSnackbar from '../../../snackbar/useSnackbar'
-import ControlledTextField from '../../../form/ControlledTextField'
-import {EditOrganisation} from '../../../../types/Organisation'
-import {organisationInformation as config} from '../editSoftwareConfig'
-import logger from '../../../../utils/logger'
-import {getUrlFromLogoId} from '../../../../utils/editOrganisation'
+import useSnackbar from '../../snackbar/useSnackbar'
+import ControlledTextField from '../../form/ControlledTextField'
+import {EditOrganisation} from '../../../types/Organisation'
+import {organisationInformation as config} from '../organisationConfig'
+import {getUrlFromLogoId} from '../../../utils/editOrganisation'
+import logger from '../../../utils/logger'
+
+import {getSlugFromString, sanitizeSlugValue} from '../../../utils/getSlugFromString'
 
 type EditOrganisationModalProps = {
   open: boolean,
@@ -24,12 +25,15 @@ type EditOrganisationModalProps = {
   organisation?: EditOrganisation,
   // item position in the array
   pos?: number
+  title?: string
 }
 
-export default function EditOrganisationModal({open, onCancel, onSubmit,onDeleteLogo,organisation, pos}: EditOrganisationModalProps) {
+export default function EditOrganisationModal({
+  open, onCancel, onSubmit, onDeleteLogo, organisation, pos, title = 'Organisation'
+}: EditOrganisationModalProps) {
   const {showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<EditOrganisation>({
+  const {handleSubmit, watch, formState, reset, control, register, setValue, setError,clearErrors} = useForm<EditOrganisation>({
     mode: 'onChange',
     defaultValues: {
       ...organisation
@@ -37,14 +41,23 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
   })
 
   // extract
-  const {isValid, isDirty} = formState
+  const {isValid, isDirty, errors} = formState
   const formData = watch()
 
   useEffect(() => {
     if (organisation) {
       reset(organisation)
     }
-  }, [organisation,reset])
+  }, [organisation, reset])
+
+  useEffect(() => {
+    const organisationSlug = getSlugFromString(formData.name)
+    // clearErrors('slug')
+    // setSlugValue(softwareSlug)
+    // debugger
+    setValue('slug', organisationSlug)
+    // reset({slug:organisationSlug})
+  },[formData.name, setValue])
 
   function handleCancel() {
     // hide
@@ -82,6 +95,23 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
     setValue('logo_id', null)
   }
 
+  function onSlugChange(slug: string) {
+    // if nothing is changed
+    const newSlug = sanitizeSlugValue(slug)
+    if (newSlug === formData.slug) return
+    if (newSlug.length < config.slug.validation.minLength.value) {
+      setError('slug',{
+        type: 'invalid-slug',
+        message: config.slug.validation.minLength.message
+      })
+    } else {
+      // clear errors
+      if (errors?.slug) clearErrors('slug')
+    }
+    // save new value
+    setValue('slug', newSlug)
+  }
+
   return (
      <Dialog
       // use fullScreen modal for small screens (< 600px)
@@ -96,7 +126,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
         color: 'primary.main',
         fontWeight: 500
       }}>
-        Organisation
+        {title}
       </DialogTitle>
       <form onSubmit={handleSubmit((data: EditOrganisation) => onSubmit({data, pos}))}
         autoComplete="off"
@@ -107,9 +137,6 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
         />
         <input type="hidden"
           {...register('parent')}
-        />
-        <input type="hidden"
-          {...register('slug')}
         />
         <input type="hidden"
           {...register('position')}
@@ -182,21 +209,34 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
                 rules={config.name.validation}
               />
               <div className="py-4"></div>
-              <ControlledTextField
-                control={control}
-                options={{
-                  name: 'website',
-                  // variant: 'outlined',
-                  label: config.website.label,
-                  useNull: true,
-                  defaultValue: formData?.website,
-                  helperTextMessage: config.website.help,
-                  helperTextCnt: `${formData?.website?.length || 0}/${config.website.validation.maxLength.value}`,
+              <TextField
+                autoComplete='off'
+                placeholder={config.slug.label}
+                variant="standard"
+                value={formData.slug ?? ''}
+                error={false}
+                helperText={config.slug.help}
+                onChange={({target}) => onSlugChange(target.value)}
+                sx={{
+                  width:'100%'
                 }}
-                rules={config.website.validation}
               />
             </div>
           </section>
+          <div className="py-2"></div>
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'website',
+              // variant: 'outlined',
+              label: config.website.label,
+              useNull: true,
+              defaultValue: formData?.website,
+              helperTextMessage: config.website.help,
+              helperTextCnt: `${formData?.website?.length || 0}/${config.website.validation.maxLength.value}`,
+            }}
+            rules={config.website.validation}
+          />
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',

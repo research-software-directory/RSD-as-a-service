@@ -33,6 +33,9 @@ export async function isMaintainerOfOrganisation({organisation, account, token, 
 async function isPrimaryMaintainer({organisation, account, token, frontend}: IsMaintainerOfOrganisationProps) {
   try {
     let url = `/api/v1/organisation?select=primary_maintainer&id=eq.${organisation}`
+    if (frontend == false) {
+      url = `${process.env.POSTGREST_URL}/organisation?select=primary_maintainer&id=eq.${organisation}`
+    }
     const resp = await fetch(url,{
       method: 'GET',
       headers: createJsonHeaders(token)
@@ -60,6 +63,9 @@ async function isPrimaryMaintainer({organisation, account, token, frontend}: IsM
 async function isMaintainer({organisation,account,token,frontend}: IsMaintainerOfOrganisationProps) {
   try {
     let url = `/api/v1/maintainer_for_organisation?maintainer=eq.${account}&organisation=eq.${organisation}`
+    if (frontend == false) {
+      url = `${process.env.POSTGREST_URL}/maintainer_for_organisation?maintainer=eq.${account}&organisation=eq.${organisation}`
+    }
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)

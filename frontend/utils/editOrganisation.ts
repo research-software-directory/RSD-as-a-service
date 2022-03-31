@@ -13,10 +13,10 @@ import logger from './logger'
 import {optionsNotInReferenceList} from './optionsNotInReferenceList'
 
 // organisation colums used in editOrganisation.getOrganisationsForSoftware
-const columsForSelect = 'id,slug,primary_maintainer,name,ror_id,is_tenant,website,logo_id'
+const columsForSelect = 'id,parent,slug,primary_maintainer,name,ror_id,is_tenant,website,logo_id'
 // organisation colums used in editOrganisation.createOrganisation
 const columsForCreate = [
-  'slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website'
+  'parent','slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website'
 ]
 // organisation colums used in editOrganisation.updateOrganisation
 export const columsForUpdate = [
@@ -313,6 +313,40 @@ export async function updateOrganisation({item, token}:
   }
 }
 
+export async function deleteOrganisation({uuid,logo_id, token}:
+  { uuid: string, logo_id:string|null, token: string }) {
+  try {
+
+    // delete logo first
+    if (logo_id) {
+      const resp = await deleteOrganisationLogo({
+        id: logo_id,
+        token
+      })
+      debugger
+      if (resp.status !== 200) {
+        return resp
+      }
+    }
+
+    // delete organisation
+    const url = `/api/v1/organisation?id=eq.${uuid}`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    debugger
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
 export async function uploadOrganisationLogo({id, data, mime_type, token}:
   { id: string, data: string, mime_type: string, token: string }) {
   try {
@@ -482,4 +516,25 @@ export function updateDataObjectAfterSave({data, id}:
     data.logo_mime_type = null
   }
   return data
+}
+
+export function newOrganisationProps({name, position, primary_maintainer, is_tenant = false, parent=null}:
+  { name: string, position: number, primary_maintainer: string | null, is_tenant?: boolean, parent?:string|null}) {
+  const initOrg = {
+    id: null,
+    parent,
+    name,
+    is_tenant,
+    slug: null,
+    ror_id: null,
+    position,
+    logo_b64: null,
+    logo_mime_type: null,
+    logo_id: null,
+    website: null,
+    source: 'MANUAL' as 'MANUAL',
+    primary_maintainer,
+    canEdit: true
+  }
+  return initOrg
 }

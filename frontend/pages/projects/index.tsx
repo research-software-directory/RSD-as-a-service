@@ -1,45 +1,21 @@
 import {MouseEvent, ChangeEvent} from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import {useRouter} from 'next/router'
 
-import Alert from '@mui/material/Alert'
 import TablePagination from '@mui/material/TablePagination'
 
-import DefaultLayout from '../../components/layout/DefaultLayout'
-import ContentInTheMiddle from '../../components/layout/ContentInTheMiddle'
-import PageTitle from '../../components/layout/PageTitle'
-import CardGrid from '../../components/layout/CardGrid'
-import {ProjectItem} from '../../types/ProjectItem'
-import {getProjectList} from '../../utils/getProjects'
-import {extractQueryParam} from '../../utils/extractQueryParam'
 import {rowsPerPageOptions} from '../../config/pagination'
-
-function renderItems(projects:ProjectItem[]){
-  if (projects.length===0){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
-  }
-  return(
-    <CardGrid>
-      {projects.map(item=>{
-        return (
-          <div key={item.slug}>
-            <Link href={`/projects/${item.slug}/`}>
-              <a>{item.title}</a>
-            </Link>
-          </div>
-        )
-      })}
-    </CardGrid>
-  )
-}
+import {Project} from '../../types/Project'
+import {getProjectList} from '../../utils/getProjects'
+import {ssrProjectsParams} from '../../utils/extractQueryParam'
+import {ssrProjectsUrl} from '../../utils/postgrestUrl'
+import DefaultLayout from '../../components/layout/DefaultLayout'
+import PageTitle from '../../components/layout/PageTitle'
+import ProjectGrid from '../../components/projects/ProjectsGrid'
+import Searchbox from '../../components/form/Searchbox'
 
 export default function ProjectsIndexPage({count,page,rows,projects=[]}:
-  {count:number,page:number,rows:number,projects:ProjectItem[]
+  {count:number,page:number,rows:number,projects:Project[]
 }) {
   const router = useRouter()
 
@@ -56,24 +32,52 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
     router.push(`/projects?page=0&rows=${parseInt(event.target.value)}`)
   }
 
+  function handleSearch(searchFor:string){
+    const url = ssrProjectsUrl({
+      query: router.query,
+      search: searchFor,
+      // start from first page
+      page: 0
+    })
+    router.push(url)
+  }
+
   return (
     <DefaultLayout>
       <Head>
         <title>Projects | RSD</title>
       </Head>
       <PageTitle title="Projects">
-        <TablePagination
-          component="nav"
-          count={count}
-          page={page}
-          labelRowsPerPage="Per page"
-          onPageChange={handleChangePage}
-          rowsPerPage={rows}
-          rowsPerPageOptions={rowsPerPageOptions}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <div className="flex flex-wrap justify-end">
+          <div className="flex items-center lg:ml-4">
+            <Searchbox
+              placeholder="Search for project"
+              onSearch={handleSearch}
+              />
+          </div>
+          <TablePagination
+            component="nav"
+            count={count}
+            page={page}
+            labelRowsPerPage="Per page"
+            onPageChange={handleChangePage}
+            rowsPerPage={rows}
+            rowsPerPageOptions={rowsPerPageOptions}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{
+              paddingLeft:'1rem'
+            }}
+            />
+        </div>
       </PageTitle>
-      { renderItems(projects) }
+      <ProjectGrid
+        projects={projects}
+        minHeight='15rem'
+        maxHeight='1fr'
+        minWidth='26rem'
+        maxWidth='1fr'
+        className="gap-[0.125rem] pt-4 pb-12"
+      />
     </DefaultLayout>
   )
 }
@@ -82,22 +86,13 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:any) {
   // extract from page-query
-  const rows = extractQueryParam({
-    req: context,
-    param: 'rows',
-    defaultValue: 12,
-    castToType:'number'
-  })
-  const page = extractQueryParam({
-    req: context,
-    param: 'page',
-    defaultValue: 0,
-    castToType:'number'
-  })
+  const {search,rows,page} = ssrProjectsParams(context)
+
   // make api call
   const projects = await getProjectList({
-    limit: rows,
-    offset: rows * page,
+    searchFor: search,
+    rows,
+    page,
     //baseUrl within docker network
     baseUrl: process.env.POSTGREST_URL
   })

@@ -4,12 +4,12 @@ import Button from '@mui/material/Button'
 import SaveIcon from '@mui/icons-material/Save'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {useForm} from 'react-hook-form'
 
 import {useAuth} from '../../../auth'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
+import SlugTextField from '../../form/SlugTextField'
 import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import {NewSoftwareItem} from '../../../types/SoftwareTypes'
 import {getSlugFromString,sanitizeSlugValue} from '../../../utils/getSlugFromString'
@@ -17,7 +17,6 @@ import {validSoftwareItem} from '../../../utils/editSoftware'
 import {useDebounceValid} from '../../../utils/useDebouce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
-import SlugTextField from './SlugTextField'
 
 const initalState = {
   loading: false,
@@ -32,7 +31,6 @@ type AddSoftwareForm = {
 
 export default function AddSoftwareCard() {
   const {session} = useAuth()
-  const smallScreen = useMediaQuery('(max-width:600px)')
   const router = useRouter()
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')

@@ -1,7 +1,13 @@
-
 export type AuthHeader = {
   'Content-Type': string;
   Authorization?: string;
+}
+
+export type ApiErrorMsg = {
+  'hint': string | null
+  'details': string | null
+  'code': string
+  'message': string
 }
 
 export function createJsonHeaders(token?: string): AuthHeader {
@@ -16,7 +22,7 @@ export function createJsonHeaders(token?: string): AuthHeader {
   }
 }
 
-export function extractReturnMessage(resp: Response, dataId?: string) {
+export async function extractReturnMessage(resp: Response, dataId?: string) {
   // OK
   if ([200, 201, 204].includes(resp.status)) {
     // just return id
@@ -37,11 +43,12 @@ export function extractReturnMessage(resp: Response, dataId?: string) {
     }
   }
   if ([409].includes(resp.status)) {
+    const json: ApiErrorMsg = await resp.json()
     return {
       status: resp.status,
       message: `
-          ${resp.statusText}.
-          Duplicate key value violates unique constraint.
+          ${resp.statusText}:
+          ${json.message ?? 'duplicate key value violates unique constraint.'}
         `
     }
   }

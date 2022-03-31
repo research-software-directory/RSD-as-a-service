@@ -57,3 +57,28 @@ export function ssrSoftwareParams(context:NextApiRequest){
     page,
   }
 }
+
+export function ssrProjectsParams(context: NextApiRequest) {
+  const rows = extractQueryParam({
+    req: context,
+    param: 'rows',
+    defaultValue: 12,
+    castToType: 'number'
+  })
+  const page = extractQueryParam({
+    req: context,
+    param: 'page',
+    defaultValue: 0,
+    castToType: 'number'
+  })
+  const search = extractQueryParam({
+    req: context,
+    param: 'search',
+    defaultValue: null
+  })
+  return {
+    search,
+    rows,
+    page,
+  }
+}

@@ -6,14 +6,16 @@ export default function ImageAsBackground({src, alt, className, bgSize='cover', 
 
   if (!src) {
     return (
-      <div className="flex-1 h-full flex flex-col justify-center items-center text-grey-500 bg-grey-50 rounded-md">
+      <div
+        className={`${className} flex flex-col justify-center items-center text-grey-500 rounded-sm`}
+      >
         <PhotoSizeSelectActualOutlinedIcon
           sx={{
             width: '4rem',
             height: '4rem'
           }}
         />
-        <div className="uppercase">{noImgMsg}</div>
+        <div className="uppercase text-center">{noImgMsg}</div>
       </div>
     )
   }
@@ -28,7 +30,7 @@ export default function ImageAsBackground({src, alt, className, bgSize='cover', 
         backgroundRepeat: 'no-repeat',
       }}
       aria-label={alt}
-      className={className}
+      className={`${className} rounded-sm`}
     ></div>
   )
 }

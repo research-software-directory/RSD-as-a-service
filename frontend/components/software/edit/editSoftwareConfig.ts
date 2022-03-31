@@ -195,9 +195,18 @@ export const organisationInformation = {
       }
     }
   },
+  slug: {
+    label: 'RSD path',
+    help: 'Partial RSD url for this organisation (slug)',
+    validation: {
+      required: 'The rsd path is required',
+      minLength: {value: 2, message: 'Minimum length is 2'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
+    }
+  },
   ror_id: {
     label: 'ROR id'
-  }
+  },
 }
 
 

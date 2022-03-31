@@ -14,6 +14,7 @@ import {
   addOrganisationToSoftware,
   deleteOrganisationFromSoftware,
   deleteOrganisationLogo,
+  newOrganisationProps,
   saveExistingOrganisation,
   saveNewOrganisation,
   searchToEditOrganisation,
@@ -27,8 +28,9 @@ import EditSectionTitle from '../EditSectionTitle'
 import FindOrganisation from './FindOrganisation'
 import EditOrganisationModal from './EditOrganisationModal'
 import OrganisationsList from './OrganisationsList'
+import {getSlugFromString} from '../../../../utils/getSlugFromString'
 
-type EditOrganisationModal = ModalProps & {
+export type EditOrganisationModal = ModalProps & {
   organisation?: EditOrganisation
 }
 
@@ -95,19 +97,11 @@ export default function SoftwareOganisations({session}:{session:Session}) {
 
   function onCreateOrganisation(name:string) {
     // create new organisation object
-    const newOrganisation:EditOrganisation = {
-      id: null,
+    const newOrganisation: EditOrganisation = newOrganisationProps({
       name,
-      is_tenant: false,
       position: organisations.length + 1,
-      logo_b64: null,
-      logo_mime_type: null,
-      logo_id: null,
-      website: null,
-      source: 'MANUAL' as 'MANUAL',
-      primary_maintainer: session?.user?.account,
-      canEdit: true
-    }
+      primary_maintainer: session?.user?.account ?? null,
+    })
     // show modal
     setModal({
       edit: {
@@ -189,6 +183,8 @@ export default function SoftwareOganisations({session}:{session:Session}) {
           showErrorMessage(resp.message)
         }
       } else {
+        // create slug for new organisation based on name
+        data.slug = getSlugFromString(data.name)
         // create new organisation
         const resp = await saveNewOrganisation({
           item: data,

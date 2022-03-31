@@ -70,6 +70,12 @@ export function ssrOrganisationUrl(params: QueryParams) {
   return url
 }
 
+export function ssrProjectsUrl(params: QueryParams) {
+  const view = 'projects'
+  const url = ssrUrl(params, view)
+  return url
+}
+
 function ssrUrl(params: QueryParams, view:string) {
   const {search, filter, rows, page, query} = params
   let url = `/${view}?`
@@ -104,3 +110,18 @@ function ssrUrl(params: QueryParams, view:string) {
   return url
 }
 
+/**
+ * Provides url params for postgrest api pagination
+ */
+export function paginationUrlParams({rows=12, page=0}:
+  {rows:number,page:number}) {
+  let params = ''
+
+  if (rows) {
+    params += `&limit=${rows}`
+  }
+  if (page) {
+    params += `&offset=${page * rows}`
+  }
+  return params
+}
