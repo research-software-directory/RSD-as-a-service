@@ -24,7 +24,8 @@ export async function getRedirectUrl(provider: string) {
   const resp = await fetch(wellknown)
   if (resp.status===200){
     const data: any = await resp.json()
-    const redirectTo = `${data['authorization_endpoint']}?redirect_uri=${env?.NEXT_PUBLIC_SURFCONEXT_REDIRECT}&client_id=${env?.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID}&scope=openid&response_type=code&response_mode=form_post&prompt=login+consent`
+    const urlEncodedClaims = encodeURIComponent("{\"id_token\":{\"schac_home_organization\":null,\"name\":null,\"email\":null}}")
+    const redirectTo = `${data['authorization_endpoint']}?redirect_uri=${env?.NEXT_PUBLIC_SURFCONEXT_REDIRECT}&client_id=${env?.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID}&scope=openid&response_type=code&response_mode=form_post&prompt=login+consent&claims=` + urlEncodedClaims
     return redirectTo
   } else {
     logger(`getRedirectUrl.welknown failed: ${resp.statusText}`,'error')
