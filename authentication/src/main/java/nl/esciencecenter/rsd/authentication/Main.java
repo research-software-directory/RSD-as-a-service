@@ -1,41 +1,17 @@
 package nl.esciencecenter.rsd.authentication;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import java.io.IOException;
 import java.util.Base64;
-import java.util.Date;
 
 public class Main {
-	static final long ONE_HOUR_IN_MILLISECONDS = 3600_000L; // 60 * 60 * 1000
 	static final long ONE_HOUR_IN_SECONDS = 3600; // 60 * 60
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		Javalin app = Javalin.create().start(7000);
 		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
-
-		app.get("/login", ctx -> {
-			Algorithm signingAlgorithm = Algorithm.HMAC256(Config.jwtSigningSecret());
-			String token = JWT.create()
-					.withClaim("role", "rsd_user")
-					.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
-					.sign(signingAlgorithm);
-			ctx.result(token);
-		});
-
-		app.post("/login", ctx -> {
-			Algorithm signingAlgorithm = Algorithm.HMAC256(Config.jwtSigningSecret());
-			String token = ctx.body();
-			JWTVerifier verifier = JWT.require(signingAlgorithm).build();
-			DecodedJWT decodedJWT = verifier.verify(token);
-			ctx.result(decode(decodedJWT.getHeader()) + "\n" + decode(decodedJWT.getPayload()));
-		});
 
 		app.post("/login/surfconext", ctx -> {
 			try {
