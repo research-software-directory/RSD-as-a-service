@@ -24,7 +24,43 @@ public class Config {
 		return System.getenv("NEXT_PUBLIC_SURFCONEXT_CLIENT_ID");
 	}
 
+	public static String surfconextWellknown() {
+		return System.getenv("NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL");
+	}
+
 	public static String surfconextClientSecret() {
 		return System.getenv("AUTH_SURFCONEXT_CLIENT_SECRET");
+	}
+
+	public static String surfconextTokenUrl() {
+		return System.getenv("AUTH_SURFCONEXT_TOKEN_URL");
+	}
+
+	public static String surconextScopes() {
+		return System.getenv("NEXT_PUBLIC_SURFCONEXT_SCOPES");
+	}
+
+	public static String helmholtzAaiRedirect() {
+		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT");
+	}
+
+	public static String helmholtzAaiClientId() {
+		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID");
+	}
+
+	public static String helmholtzAaiWellknown() {
+		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL");
+	}
+
+	public static String helmholtzAaiClientSecret() {
+		return System.getenv("AUTH_HELMHOLTZAAI_CLIENT_SECRET");
+	}
+
+	public static String helmholtzAaiTokenUrl() {
+		return System.getenv("AUTH_HELMHOLTZAAI_TOKEN_URL");
+	}
+
+	public static String helmholtzAaiScopes() {
+		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_SCOPES");
 	}
 }
