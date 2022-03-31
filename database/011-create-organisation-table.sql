@@ -3,7 +3,7 @@ CREATE TABLE organisation (
 	slug VARCHAR(100),
 	parent UUID REFERENCES organisation (id),
 	primary_maintainer UUID REFERENCES account (id),
-	name VARCHAR UNIQUE NOT NULL,
+	name VARCHAR NOT NULL,
 	ror_id VARCHAR UNIQUE,
 	website VARCHAR UNIQUE,
 	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
@@ -13,6 +13,7 @@ CREATE TABLE organisation (
 );
 
 CREATE UNIQUE INDEX unique_slug_for_top_level_org_idx ON organisation (slug, (parent IS NULL)) WHERE parent IS NULL;
+CREATE UNIQUE INDEX unique_name_and_parent_idx ON organisation (name, parent);
 
 CREATE FUNCTION sanitise_insert_organisation() RETURNS TRIGGER LANGUAGE plpgsql as
 $$
