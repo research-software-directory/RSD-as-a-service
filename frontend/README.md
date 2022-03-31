@@ -17,7 +17,14 @@ Based on the features in the legacy application and the current requirements we 
 
 For oAuth implementation we need env variables. Copy env.example file to `env.local` and provide the values See [next documentation page for more info](https://nextjs.org/docs/basic-features/environment-variables).
 
-- `env.local` contains secrets when running frontend in local development (yarn dev). This file is not in the repo. You will need to create it and add secrets to it.
+- `env.local` contains secrets when running frontend in local development (yarn dev). This file is not in the repo. You will need to create it and add secrets to it. There is one difference from basic .env file.
+
+```env
+# postgREST api
+# cosumed by services: authentication,frontend,auth-tests
+# env.local: http://localhost/api/v1, env.production.local: http://backend:3500
+POSTGREST_URL=http://localhost/api/v1
+```
 
 ## Folders
 
