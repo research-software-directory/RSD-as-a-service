@@ -44,7 +44,18 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer,token}:
   console.log('name...', name)
   console.log('logo_id...', logo_id)
   console.log('isMaintainer...', isMaintainer)
+  console.log('logo...', logo)
   console.groupEnd()
+
+  useEffect(() => {
+    if (id) {
+      setLogo({
+        id: logo_id,
+        b64: null,
+        mime_type: null
+      })
+    }
+  },[id,logo_id])
 
 
   useEffect(() => {

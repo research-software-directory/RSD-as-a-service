@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
@@ -78,7 +79,8 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
         }}
     >
       <ListItemAvatar>
-        <a href={rsdUrl}>
+        {/* <a href={rsdUrl}> */}
+        <Link href={rsdUrl}>
           <Avatar
             alt={organisation.name ?? ''}
             src={getUrlFromLogoId(organisation.logo_id) ?? ''}
@@ -95,7 +97,8 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
           >
             {organisation.name.slice(0,3)}
           </Avatar>
-        </a>
+        </Link>
+        {/* </a> */}
       </ListItemAvatar>
       <ListItemText
         primary={

@@ -27,26 +27,26 @@ export function extractQueryParam({req,param,castToType='string',defaultValue}:{
     throw e
   }}
 
-export function ssrSoftwareParams(context:NextApiRequest){
+export function ssrSoftwareParams(req:NextApiRequest){
   const rows = extractQueryParam({
-    req: context,
+    req,
     param: 'rows',
     defaultValue: 12,
     castToType:'number'
   })
   const page = extractQueryParam({
-    req: context,
+    req,
     param: 'page',
     defaultValue: 0,
     castToType:'number'
   })
   const search = extractQueryParam({
-    req: context,
+    req,
     param: 'search',
     defaultValue: null
   })
   const filterStr = extractQueryParam({
-    req: context,
+    req,
     param: 'filter',
     defaultValue: null
   })

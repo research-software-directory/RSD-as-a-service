@@ -1,6 +1,6 @@
 /**
  * UnitsList component is adjusted OrganisationsList component
- * from the location (/components/software/organisations/)
+ * from (/components/software/organisations/)
  */
 import {useRouter} from 'next/router'
 import {Alert, AlertTitle} from '@mui/material'
