@@ -9,7 +9,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import {useAuth} from '../../../auth'
 
 import {getProjectItem} from '../../../utils/getProjects'
-import {ProjectItem} from '../../../types/ProjectItem'
+import {ProjectItem} from '../../../types/Project'
 
 export default function ProjectItemPage({project, slug}:{project:ProjectItem, slug:string}) {
   const router = useRouter()
@@ -24,20 +24,23 @@ export default function ProjectItemPage({project, slug}:{project:ProjectItem, sl
         <div>
           <IconButton
             title="Go back"
-            onClick={()=>router.back()}>
+            onClick={() => router.back()}
+            size="large"
+          >
             <ArrowBackIcon />
           </IconButton>
           <IconButton
             title="Edit"
             onClick={()=>router.push(`/projects/${slug}/edit`)}
-            disabled={status!=='authenticated'}
+            disabled={status !== 'authenticated'}
+            size="large"
           >
             <EditIcon />
           </IconButton>
         </div>
       </PageTitle>
-      <h2 className='my-4'>{ project.subtitle }</h2>
-      <p>{ project.description}</p>
+      <h2 className='my-4'>Under construction</h2>
+      {/* <p>{ project.description}</p> */}
     </DefaultLayout>
   )
 }

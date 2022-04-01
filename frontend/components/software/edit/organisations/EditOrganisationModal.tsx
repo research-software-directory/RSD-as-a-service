@@ -106,6 +106,12 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
           {...register('id')}
         />
         <input type="hidden"
+          {...register('parent')}
+        />
+        <input type="hidden"
+          {...register('slug')}
+        />
+        <input type="hidden"
           {...register('position')}
         />
         <DialogContent sx={{

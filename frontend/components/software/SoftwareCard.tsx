@@ -35,22 +35,24 @@ export default function SoftwareCard({href,brand_name,short_statement,is_feature
 
   return (
     <Link href={href} passHref>
-      <a className={`flex flex-col min-h-[15rem] ${colors} hover:bg-secondary hover:text-white`}>
-        <div className="flex min-h-[6rem]">
-          <h2 className="p-4 flex-1">{brand_name}</h2>
-          <div className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-gray-800 text-[1.5rem]">
-            {getInitals()}
+      <a>
+        <article className={`flex flex-col h-[17rem] ${colors} hover:bg-secondary hover:text-white xl:max-w-[40rem]`}>
+          <div className="flex min-h-[6rem]">
+            <h2 className="p-4 flex-1">{brand_name}</h2>
+            <div className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-gray-800 text-[1.5rem]">
+              {getInitals()}
+            </div>
           </div>
-        </div>
-        <p className="flex-1 p-4">
-          {short_statement}
-        </p>
-        <div className="flex justify-between p-4 text-sm">
-          <span className="last-update">
-            {getTimeAgoSince(today,updated_at)}
-          </span>
-          {renderFeatured()}
-        </div>
+          <p className="flex-1 p-4">
+            {short_statement}
+          </p>
+          <div className="flex justify-between p-4 text-sm">
+            <span className="last-update">
+              {getTimeAgoSince(today,updated_at)}
+            </span>
+            {renderFeatured()}
+          </div>
+        </article>
       </a>
     </Link>
   )
