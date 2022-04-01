@@ -1,2 +1,2 @@
 FROM postgres:14.2
-COPY *.sql /docker-entrypoint-initdb.d/
+COPY --chown=postgres:postgres *.sql /docker-entrypoint-initdb.d/
