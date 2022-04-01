@@ -8,6 +8,7 @@ export type SoftwareGridType = {
   short_statement: string,
   is_featured: boolean,
   updated_at: string | null,
+  is_published?: boolean
 }
 
 // render software cards
@@ -23,7 +24,7 @@ export default function SoftwareGrid({software}:{software:SoftwareGridType[]}){
   }
 
   return (
-    <section className='grid grid-cols-1 gap-[0.125rem] sm:grid-cols-2 lg:grid-cols-3 hd:grid-cols-4 py-4 px-[0.0625rem]'>
+    <section className="grid grid-cols-1 gap-[0.125rem] pt-4 pb-12 sm:grid-cols-2 lg:grid-cols-3 hd:grid-cols-4 px-[0.0625rem]">
       {software.map(item=>{
         return(
           <SoftwareCard

@@ -4,7 +4,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.16
+    image: rsd/database:0.0.17
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -66,7 +66,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.6.1
+    image: rsd/frontend:0.6.2
     environment:
       # it uses values from .env file
       - POSTGREST_URL

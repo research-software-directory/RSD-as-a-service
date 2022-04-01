@@ -1,8 +1,6 @@
 import {useEffect, useState} from 'react'
 import {EditOrganisation} from '../types/Organisation'
-import {columsForUpdate, getOrganisationsForSoftware} from './editOrganisation'
-import {getPropsFromObject} from './getPropsFromObject'
-import {sortOnStrProp} from './sortFn'
+import {getOrganisationsForSoftware} from './editOrganisation'
 
 type UseParticipatingOrganisationsProps = {
   software: string | undefined,

@@ -1,13 +1,20 @@
-// object for organisation
-// based on organisation table
-export type Organisation = {
+// shared organisation properies
+export type CoreOrganisationProps = {
   id: string | null
-  slug?: string | null
-  primary_maintainer?: string
+  slug: string | null
+  parent: string | null
+  primary_maintainer?: string | null
   name: string
-  ror_id?: string
-  is_tenant: boolean,
+  ror_id: string | null
   website: string | null
+  is_tenant: boolean,
+}
+
+// object for organisation
+// from organisation table
+export type Organisation = CoreOrganisationProps & {
+  id: string
+  // postgrest way of returning logo j
   logo_for_organisation?: [
     {
       'id': string
@@ -16,14 +23,14 @@ export type Organisation = {
 }
 
 // adding source
-export type SearchOrganisation = Organisation & {
+export type SearchOrganisation = CoreOrganisationProps & {
   source: 'RSD'|'ROR'|'MANUAL'
 }
 
 type Status = 'requested_by_origin' | 'requested_by_relation' | 'approved'
 
 // extending with other props for software edit page
-export type EditOrganisation = Organisation & {
+export type EditOrganisation = CoreOrganisationProps & {
   position?: number
   // indicates image already present
   logo_id: string | null
@@ -47,6 +54,7 @@ export type SoftwareForOrganisation = {
 // based on view organisations_for_software
 export type OrganisationsForSoftware={
   id: string
+  parent: string | null
   slug: string | null
   primary_maintainer: string
   name: string
@@ -64,12 +72,37 @@ export type ParticipatingOrganisationProps = {
   logo_url: string | null
 }
 
-export type OrganisationForOverview = {
+export type OrganisationForOverview = CoreOrganisationProps & {
   id: string
-  slug: string | null
-  name: string
-  website: string
-  ror_id: string
-  logo_id: string
+  logo_id: string | null
   software_cnt: number | null
+  project_cnt: number | null
+  children_cnt: number | null
+}
+
+export type SoftwareOfOrganisation = {
+  id: string
+  slug: string
+  brand_name: string
+  short_statement: string
+  is_published: boolean
+  is_featured: boolean
+  contributor_cnt: number | null
+  mention_cnt: number | null
+  updated_at: string
+  organisation: string
+}
+
+export type ProjectOfOrganisation = {
+  id: string
+  slug: string
+  title: string
+  subtitle: string
+  date_start: string
+  date_end: string
+  updated_at: string
+  is_published: boolean
+  image_id: string | null
+  organisation: string
+  status: Status
 }

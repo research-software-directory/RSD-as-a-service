@@ -20,15 +20,20 @@ export default function ProjectItemEdit() {
       <PageTitle title={`Edit ${slug}`}>
         <IconButton
           title="Go back"
-          onClick={()=>router.back()}>
+          onClick={() => router.back()}
+          size="large"
+        >
           <ArrowBackIcon />
         </IconButton>
-        <IconButton
+        {/* <IconButton
           title="Save"
           onClick={()=>router.replace(`/projects/${slug}`)}>
           <SaveIcon />
-        </IconButton>
+        </IconButton> */}
       </PageTitle>
+      <section>
+        <h2>Under construction</h2>
+      </section>
     </DefaultLayout>
   )
 }

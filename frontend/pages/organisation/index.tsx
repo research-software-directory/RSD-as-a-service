@@ -13,12 +13,15 @@ import {rowsPerPageOptions} from '../../config/pagination'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {getOrganisationsList} from '../../utils/getOrganisations'
 import OrganisationsGrid from '../../components/organisation/OrganisationGrid'
+import {GetServerSidePropsContext} from 'next'
 
 export default function OrganisationsIndexPage({count,page,rows,organisations=[]}:
   {count:number,page:number,rows:number,organisations:OrganisationForOverview[]
 }) {
   // use next router (hook is only for browser)
   const router = useRouter()
+
+  console.log('organisations...', organisations)
 
   // next/previous page button
   function handlePageChange(
@@ -90,15 +93,18 @@ export default function OrganisationsIndexPage({count,page,rows,organisations=[]
 
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract params from page-query
-  const {search, rows, page} = ssrSoftwareParams(context)
+  // extract rsd_token
+  const {req} = context
+  const {search, rows, page} = ssrSoftwareParams(req as any)
+  const token = req?.cookies['rsd_token']
 
   const {count, data} = await getOrganisationsList({
     search,
     rows,
     page,
-    token: undefined
+    token
   })
 
   // will be passed as props to page

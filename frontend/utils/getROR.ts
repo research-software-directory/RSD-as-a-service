@@ -1,6 +1,7 @@
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {SearchOrganisation} from '../types/Organisation'
 import {createJsonHeaders} from './fetchHelpers'
+import {getSlugFromString} from './getSlugFromString'
 import logger from './logger'
 
 export async function findInRORByName({searchFor}:{searchFor:string}) {
@@ -38,6 +39,8 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
       label: item.name,
       data: {
         id: null,
+        parent: null,
+        slug: getSlugFromString(item.name),
         name: item.name,
         ror_id: item.id,
         is_tenant: false,

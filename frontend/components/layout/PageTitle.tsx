@@ -1,9 +1,9 @@
 import {ReactNode} from 'react'
 import styled from '@mui/system/styled'
-import JavascriptSupportWarning from './JavascriptSupportWarning'
 
-const PageTitleStyled = styled('section')(({theme})=>({
+export const PageTitleSticky = styled('section')(({theme})=>({
   display: 'flex',
+  flexWrap: 'wrap',
   position: 'sticky',
   top: '0rem',
   padding: '1rem 0rem 1rem 0rem',
@@ -19,9 +19,9 @@ const PageTitleStyled = styled('section')(({theme})=>({
 
 export default function PageTitle({title,children}:{title:string,children?:ReactNode}) {
   return (
-    <PageTitleStyled>
+    <PageTitleSticky>
       <h1 className="flex-1 w-full mb-4 md:my-4">{title}</h1>
       {children}
-    </PageTitleStyled>
+    </PageTitleSticky>
   )
 }

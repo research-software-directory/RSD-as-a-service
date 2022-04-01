@@ -135,3 +135,29 @@ const project = {
 }
 
 export type ProjectItem = typeof project
+
+export type Project = {
+  id: string
+  slug: string
+  title: string
+  subtitle: string
+  date_start: string
+  date_end: string
+  updated_at: string
+  is_published: boolean
+  image_id: string | null
+}
+
+export type RawProject = {
+  id: string
+  slug: string
+  title: string
+  subtitle: string
+  date_start: string
+  date_end: string
+  updated_at: string
+  is_published: boolean
+  image_for_project: [
+    {project:string}
+  ]
+}

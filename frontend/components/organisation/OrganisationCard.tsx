@@ -22,10 +22,10 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
       href={`/organisation/${organisation.slug}`}
       passHref>
       <a>
-        <div className="flex flex-col border rounded-sm p-4 h-full min-h-[16rem]">
-          <h2 className='h-[4rem]'>{organisation.name}</h2>
-          <div className="flex-1 flex">
-            <div className="flex-1 flex items-center">
+        <article className="flex flex-col border rounded-sm p-4 h-full min-h-[16rem]">
+          <h2 className='h-[5rem]'>{organisation.name}</h2>
+          <div className="flex flex-1">
+            <div className="flex items-center flex-1">
               <Avatar
                 alt={organisation.name ?? ''}
                 src={getUrlFromLogoId(organisation.logo_id) ?? ''}
@@ -34,7 +34,8 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
                   height: '100%',
                   fontSize: '3rem',
                   '& img': {
-                    height:'auto'
+                    height: 'auto',
+                    maxHeight: '13rem'
                   }
                 }}
                 variant="square"
@@ -42,16 +43,16 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
                 {organisation.name.slice(0,3)}
               </Avatar>
             </div>
-             <div className="flex-1 flex flex-col px-8 py-4">
+             <div className="flex flex-col flex-1 px-8 py-4">
               <div className="flex-1 flex items-center justify-center text-[4rem] text-primary">
                 {count}
               </div>
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center text-center">
                 {label}
               </div>
             </div>
           </div>
-        </div>
+        </article>
       </a>
     </Link>
   )
