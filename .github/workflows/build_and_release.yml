@@ -162,7 +162,7 @@ jobs:
 
       - name: zip deployment files
         run: |
-          zip -j deployment.zip \
+          zip --junk-paths deployment.zip \
             ./deployment/docker-compose.yml \
             ./deployment/.env.example \
             ./deployment/README.md \
