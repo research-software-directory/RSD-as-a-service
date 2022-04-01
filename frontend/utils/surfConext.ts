@@ -1,6 +1,15 @@
 
 import logger from './logger'
 
+export const claims = {
+  id_token:
+  {
+    schac_home_organization: null,
+    name: null,
+    email: null
+  }
+}
+
 async function getEnvInfo(provider: string) {
   const url = `/api/fe/auth/${provider}`
   let resp = await fetch(url)
@@ -16,6 +25,10 @@ async function getEnvInfo(provider: string) {
   }
 }
 
+export function getEncodedClaims(claims:any) {
+  return encodeURIComponent(JSON.stringify(claims))
+}
+
 export async function getRedirectUrl(provider: string) {
   // get environment variables for this provider
   let env = await getEnvInfo(provider)
@@ -24,8 +37,8 @@ export async function getRedirectUrl(provider: string) {
   const resp = await fetch(wellknown)
   if (resp.status===200){
     const data: any = await resp.json()
-    const urlEncodedClaims = encodeURIComponent("{\"id_token\":{\"schac_home_organization\":null,\"name\":null,\"email\":null}}")
-    const redirectTo = `${data['authorization_endpoint']}?redirect_uri=${env?.NEXT_PUBLIC_SURFCONEXT_REDIRECT}&client_id=${env?.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID}&scope=openid&response_type=code&response_mode=form_post&prompt=login+consent&claims=` + urlEncodedClaims
+    const urlEncodedClaims = getEncodedClaims(claims)
+    const redirectTo = `${data['authorization_endpoint']}?redirect_uri=${env?.NEXT_PUBLIC_SURFCONEXT_REDIRECT}&client_id=${env?.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID}&scope=openid&response_type=code&response_mode=form_post&prompt=login+consent&claims=${urlEncodedClaims}`
     return redirectTo
   } else {
     logger(`getRedirectUrl.welknown failed: ${resp.statusText}`,'error')
