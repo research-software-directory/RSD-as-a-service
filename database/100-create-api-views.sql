@@ -134,7 +134,7 @@ BEGIN
 	RETURN QUERY
 	SELECT
 		project_for_organisation.organisation,
-		count(*) AS project_cnt
+		COUNT(*) AS project_cnt
 	FROM
 		project_for_organisation
 	GROUP BY project_for_organisation.organisation;
@@ -150,11 +150,11 @@ $$
 BEGIN
 	RETURN QUERY
 	SELECT
-		organisation.parent, count(*) as children_cnt
+		organisation.parent, COUNT(*) AS children_cnt
 	FROM
 		organisation
 	WHERE
-		organisation.parent is not null
+		organisation.parent IS NOT NULL
 	GROUP BY
 		organisation.parent
 	;
@@ -199,7 +199,7 @@ BEGIN
 	LEFT JOIN
 		project_count_by_organisation() ON project_count_by_organisation.organisation = o.id
 	LEFT JOIN
-		children_count_by_organisation() on o.id = children_count_by_organisation.parent
+		children_count_by_organisation() ON o.id = children_count_by_organisation.parent
 	LEFT JOIN
 		logo_for_organisation ON o.id = logo_for_organisation.id;
 END
