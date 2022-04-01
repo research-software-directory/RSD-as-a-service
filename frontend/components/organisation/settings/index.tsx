@@ -1,81 +1,35 @@
-import {useEffect, useState} from 'react'
+import {useEffect} from 'react'
 import Button from '@mui/material/Button'
 import SaveIcon from '@mui/icons-material/Save'
 
 import {useForm} from 'react-hook-form'
 
-import useSnackbar from '../../snackbar/useSnackbar'
-import {OrganisationForOverview} from '../../../types/Organisation'
-import ControlledTextField from '../../form/ControlledTextField'
-import {EditOrganisation} from '../../../types/Organisation'
-import {organisationInformation as config} from '../organisationConfig'
-
-import SlugTextField from '../../form/SlugTextField'
-import {sanitizeSlugValue} from '../../../utils/getSlugFromString'
-import {updateOrganisation} from '../../../utils/editOrganisation'
 import {Session} from '../../../auth'
+import useSnackbar from '../../snackbar/useSnackbar'
+import ControlledTextField from '../../form/ControlledTextField'
+import {OrganisationForOverview} from '../../../types/Organisation'
+import {EditOrganisation} from '../../../types/Organisation'
+import {updateOrganisation} from '../../../utils/editOrganisation'
+import {organisationInformation as config} from '../organisationConfig'
 
 export default function OrganisationSettings({organisation, session}:
   {organisation: OrganisationForOverview,session:Session}) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
-  const [baseUrl, setBaseUrl] = useState('')
-  const [slugValue, setSlugValue] = useState(organisation.slug)
-  const [validating, setValidating] = useState(false)
-  const {handleSubmit, watch, formState, reset, control, register, setValue, setError,clearErrors} = useForm<EditOrganisation>({
+  const {handleSubmit, watch, formState, reset, control, register} = useForm<EditOrganisation>({
     mode: 'onChange',
     defaultValues: {
       ...organisation
     }
   })
   // extract
-  const {isValid, isDirty, errors} = formState
+  const {isValid, isDirty} = formState
   const formData = watch()
-
-  useEffect(() => {
-    if (typeof location != 'undefined') {
-      // break into segments
-      const allSegments = location.href.split('/')
-      // take last segment
-      const lastSegment = allSegments.pop()
-      let baseUrl = location.href
-      if (lastSegment) {
-        // remove it from url
-        baseUrl = location.href.replace(lastSegment,'')
-      }
-      setBaseUrl(baseUrl)
-    }
-  }, [])
 
   useEffect(() => {
     if (organisation) {
       reset(organisation)
     }
   }, [organisation, reset])
-
-  // console.group('Settings')
-  // console.log('isValid...', isValid)
-  // console.log('isDirty...', isDirty)
-  // console.log('slug...', formData.slug)
-  // console.log('slugValue...', slugValue)
-  // console.groupEnd()
-
-  function onSlugChange(slug: string) {
-    // if nothing is changed
-    const newSlug = sanitizeSlugValue(slug)
-    if (newSlug === formData.slug) return
-    if (newSlug.length < config.slug.validation.minLength.value) {
-      setError('slug',{
-        type: 'invalid-slug',
-        message: config.slug.validation.minLength.message
-      })
-    } else {
-      // clear errors
-      if (errors?.slug) clearErrors('slug')
-    }
-    // save new value on both locations
-    setSlugValue(newSlug)
-    setValue('slug', newSlug,{shouldValidate:true,shouldDirty:true})
-  }
 
   function isSaveDisabled() {
     // if pos is undefined we are creating
@@ -137,16 +91,6 @@ export default function OrganisationSettings({organisation, session}:
           Save
         </Button>
       </section>
-      <div className="flex pt-8"></div>
-      <SlugTextField
-        label={config.slug.label}
-        baseUrl={baseUrl}
-        value={slugValue ?? ''}
-        error={errors.slug?.message !== undefined}
-        helperTextMessage={errors?.slug?.message ?? config.slug.help}
-        onSlugChange={onSlugChange}
-        loading={validating}
-      />
       <div className="flex pt-8"></div>
       <section className="grid grid-cols-[1fr,1fr] gap-8">
         <ControlledTextField

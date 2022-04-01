@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import {
   Avatar,
   Button, Dialog, DialogActions, DialogContent,
@@ -16,6 +16,7 @@ import {getUrlFromLogoId} from '../../../utils/editOrganisation'
 import logger from '../../../utils/logger'
 
 import {getSlugFromString, sanitizeSlugValue} from '../../../utils/getSlugFromString'
+import SlugTextField from '../../form/SlugTextField'
 
 type EditOrganisationModalProps = {
   open: boolean,
@@ -33,6 +34,9 @@ export default function EditOrganisationModal({
 }: EditOrganisationModalProps) {
   const {showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
+  const [baseUrl, setBaseUrl] = useState('')
+  const [slugValue, setSlugValue] = useState(organisation?.slug ?? '')
+  const [validating, setValidating] = useState(false)
   const {handleSubmit, watch, formState, reset, control, register, setValue, setError,clearErrors} = useForm<EditOrganisation>({
     mode: 'onChange',
     defaultValues: {
@@ -44,6 +48,13 @@ export default function EditOrganisationModal({
   const {isValid, isDirty, errors} = formState
   const formData = watch()
 
+    useEffect(() => {
+    if (typeof location != 'undefined') {
+      // baseUrl is current location
+      setBaseUrl(`${location.href}/`)
+    }
+  }, [])
+
   useEffect(() => {
     if (organisation) {
       reset(organisation)
@@ -52,10 +63,9 @@ export default function EditOrganisationModal({
 
   useEffect(() => {
     const organisationSlug = getSlugFromString(formData.name)
-    // clearErrors('slug')
-    // setSlugValue(softwareSlug)
     // debugger
-    setValue('slug', organisationSlug)
+    setSlugValue(organisationSlug)
+    setValue('slug', organisationSlug,{shouldValidate:true,shouldDirty:true})
     // reset({slug:organisationSlug})
   },[formData.name, setValue])
 
@@ -108,8 +118,10 @@ export default function EditOrganisationModal({
       // clear errors
       if (errors?.slug) clearErrors('slug')
     }
-    // save new value
-    setValue('slug', newSlug)
+    // save new value on both locations
+    // debugger
+    setSlugValue(newSlug)
+    setValue('slug', newSlug,{shouldValidate:true,shouldDirty:true})
   }
 
   return (
@@ -142,12 +154,12 @@ export default function EditOrganisationModal({
           {...register('position')}
         />
         <DialogContent sx={{
-          width: ['100%', '37rem'],
+          width: '100%',
           padding: '2rem 1.5rem 2.5rem'
         }}>
           <section className="grid grid-cols-[1fr,3fr] gap-8">
              <div>
-              <label htmlFor="upload-avatar-image"
+              <label htmlFor="upload-avatar-image-modal"
                   style={{cursor:'pointer'}}
                   title="Click to upload an image"
                 >
@@ -169,7 +181,7 @@ export default function EditOrganisationModal({
                 </Avatar>
               </label>
               <input
-                id="upload-avatar-image"
+                id="upload-avatar-image-modal"
                 type="file"
                 accept="image/*"
                 onChange={handleFileUpload}
@@ -208,7 +220,8 @@ export default function EditOrganisationModal({
                 }}
                 rules={config.name.validation}
               />
-              <div className="py-4"></div>
+              <div className="py-2"></div>
+              <div className="text-xs">{baseUrl}{formData.slug ?? ''}</div>
               <TextField
                 autoComplete='off'
                 placeholder={config.slug.label}
