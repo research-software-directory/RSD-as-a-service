@@ -20,7 +20,7 @@ describe('dateFn.daysDiff',()=>{
   })
 
   it('returns null if no date provided',()=>{
-    const diff = daysDiff()
+    const diff = daysDiff('')
     expect(diff).toBe(undefined)
   })
 
