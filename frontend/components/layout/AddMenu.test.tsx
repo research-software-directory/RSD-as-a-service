@@ -15,7 +15,7 @@ it('should have AddMenu options',async()=>{
   render(WrappedComponentWithProps(AddMenu))
   const menuButton = screen.queryByTestId('add-menu-button')
   // click on the button to display menu options
-  fireEvent.click(menuButton)
+  fireEvent.click(menuButton as HTMLElement)
   // select all menu options
   const menuOptions = screen.queryAllByTestId('add-menu-option')
   // assert same length as defined in config/userMenuItems

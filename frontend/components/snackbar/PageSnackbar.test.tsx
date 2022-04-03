@@ -1,11 +1,12 @@
 import {render, screen} from '@testing-library/react'
 
 import PageSnackbar from './PageSnackbar'
+import {SnackbarOptions} from './PageSnackbarContext'
 
 //mock snackbar action
 const setSnackbar = jest.fn()
 //mock options
-const mockOptions={
+const mockOptions:SnackbarOptions={
   severity: 'error',
   message: 'TEST_ERROR_MESSAGE',
   open: true,

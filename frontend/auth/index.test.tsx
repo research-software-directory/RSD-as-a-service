@@ -1,8 +1,8 @@
 import {render, screen, waitFor} from '@testing-library/react'
-import {AuthProvider, useAuth, REFRESH_MARGIN, getSessionSeverSide} from './index'
+import {AuthProvider, useAuth, REFRESH_MARGIN, getSessionSeverSide, Session} from './index'
 import * as refreshSession from './refreshSession'
 
-const session = {
+const session:Session = {
   user: null,
   token: 'TEST_TOKEN',
   status: 'loading'
@@ -26,7 +26,7 @@ function ChildComponent() {
   )
 }
 
-function WrappedComponent(session) {
+function WrappedComponent(session:Session) {
   // const {AuthProvider} = auth
   return (
     <AuthProvider session={session}>
@@ -50,7 +50,7 @@ it('schedules token refresh and calls refreshSession after timeout', async () =>
   // const {REFRESH_MARGIN} = auth
   // calculate token refresh time from now
   const expires = Math.round((Date.now() + REFRESH_MARGIN + 1000) / 1000)
-  const session = {
+  const session:Session = {
     'user': {
       'role': 'rsd_user',
       'iss': 'rsd_auth',
@@ -62,7 +62,7 @@ it('schedules token refresh and calls refreshSession after timeout', async () =>
   }
 
   jest.useFakeTimers()
-  jest.spyOn(global, 'setTimeout')
+  const setTimeout = jest.spyOn(global, 'setTimeout')
   setTimeout.mockClear()
 
   // spread session to pass props properly
@@ -83,15 +83,15 @@ it('schedules token refresh and calls refreshSession after timeout', async () =>
 
 it('getSessionSeverSide extracts token from headers', () => {
   const dummyToken ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoicnNkX3VzZXIiLCJpc3MiOiJyc2RfYXV0aCIsImV4cCI6MTY0NjMwNDk2NywiYWNjb3VudCI6IjQ1MjE1MTRkLTczM2EtNDcyYi1hMzRmLWFjZTQzYmMzMDhjMCJ9.LFXaALl8xxjoc24H-eDpZfm-0VL9MAfieuAIw8teSvs'
-  const req = {
+  const req:any = {
     headers: {
       cookie:`rsd_token=${dummyToken}; Secure; HttpOnly; Path=/; SameSite=Lax;`
     }
   }
-  const res = {
+  const res:any = {
     setHeader: jest.fn()
   }
-  const session = getSessionSeverSide(req, res)
+  const session:any = getSessionSeverSide(req, res)
   expect(session.token).toEqual(dummyToken)
   // it fails as we do not have jwt key provided
   expect(session.status).toEqual('jwtkey')

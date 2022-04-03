@@ -11,6 +11,6 @@ describe('pages/index.tsx', () => {
   it('renders heading with Home page title', () => {
     const heading = screen.getByRole('heading')
     expect(heading).toBeInTheDocument()
-    expect(heading.innerHTML).toEqual("Home page")
+    expect(heading.innerHTML).toEqual('Home page')
   })
 })

@@ -1,10 +1,11 @@
 
 import {render,screen} from '@testing-library/react'
+import {Session} from './index'
 import {WrappedComponentWithPropsAndSession} from '../utils/jest/WrappedComponents'
 
 import ProtectedContent from './ProtectedContent'
 
-const session = {
+const session:Session = {
   user: null,
   token: 'TEST_TOKEN',
   status: 'loading'
