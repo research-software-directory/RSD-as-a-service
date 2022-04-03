@@ -1,4 +1,4 @@
-import {MouseEvent, ChangeEvent} from 'react'
+import {MouseEvent, ChangeEvent, useContext, useEffect} from 'react'
 import {useState} from 'react'
 import TablePagination from '@mui/material/TablePagination'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -11,6 +11,8 @@ import useOrganisationProjects from '../../../utils/useOrganisationProjects'
 import ProjectsGrid from '../../projects/ProjectsGrid'
 import GridScrim from '../../layout/GridScrim'
 
+import SearchContext from '../../search/SearchContext'
+
 type SearchState = {
   searchFor?: string
   page: number
@@ -19,12 +21,13 @@ type SearchState = {
 
 export default function OrganisationProjects({organisation, session}:
   { organisation: OrganisationForOverview, session: Session }) {
+  const {setPlaceholder, searchFor, setSearchFor, setSearchInput} = useContext(SearchContext)
   const [searchState, setSearchStrate] = useState<SearchState>({
     searchFor: undefined,
     page: 0,
     rows: 6
   })
-  const {searchFor, page, rows} = searchState
+  const {page, rows} = searchState
   const {loading, projects, count} = useOrganisationProjects({
     organisation: organisation.id,
     searchFor,
@@ -32,6 +35,15 @@ export default function OrganisationProjects({organisation, session}:
     rows,
     token: session.token
   })
+
+  useEffect(() => {
+    setPlaceholder('Search for projects')
+    // clear input on leave
+    // return () => {
+    //   setSearchInput('')
+    //   setSearchFor('')
+    // }
+  },[setPlaceholder,setSearchFor,setSearchInput])
 
   // next/previous page button
   function handlePageChange(
@@ -97,10 +109,10 @@ export default function OrganisationProjects({organisation, session}:
       <div className="flex flex-wrap justify-end">
         {renderLoader()}
         <div className="flex items-center">
-          <Searchbox
+          {/* <Searchbox
             placeholder='Search for projects'
             onSearch={handleSearch}
-          />
+          /> */}
         </div>
         <TablePagination
           component="nav"

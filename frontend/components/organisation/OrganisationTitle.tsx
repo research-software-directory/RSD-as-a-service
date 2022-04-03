@@ -2,6 +2,8 @@
 import {PageTitleSticky} from '../layout/PageTitle'
 import Breadcrumbs, {SlugInfo} from './Breadcrumbs'
 
+import Searchbox from '../../components/search/Searchbox'
+
 function createSegments(slug: string[]) {
   const segments:SlugInfo[] = [{
     label: 'organisations',
@@ -32,12 +34,19 @@ export default function OrganisationTitle({title, slug}:
 
   return (
     <PageTitleSticky>
-      <h1 className="flex-1 w-full md:mt-4">{title}</h1>
-      <div className='w-full'>
-        <Breadcrumbs
-          segments={createSegments(slug)}
-        />
-      </div>
+      <section className="flex-1 flex items-center">
+        <div className="flex-1">
+          <h1 className="flex-1 w-full md:mt-4">{title}</h1>
+          <div className='w-full'>
+            <Breadcrumbs
+              segments={createSegments(slug)}
+            />
+          </div>
+        </div>
+        <div>
+          <Searchbox />
+        </div>
+      </section>
     </PageTitleSticky>
   )
 }
