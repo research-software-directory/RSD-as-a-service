@@ -20,7 +20,7 @@ export const FlexibleGridSection = styled('section', {
     // gridGap: '1rem',
     flexWrap: 'wrap',
     // padding: '1rem 0rem 1rem 0rem',
-    alignItems: 'stretch',
+    alignItems: 'flex-start',
     // borderBottom: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.paper
   }

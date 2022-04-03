@@ -6,7 +6,7 @@ export const PageTitleSticky = styled('section')(({theme})=>({
   flexWrap: 'wrap',
   position: 'sticky',
   top: '0rem',
-  padding: '1rem 0rem 1rem 0rem',
+  padding: '1rem 0rem',
   alignItems: 'center',
   // borderBottom: `1px solid ${theme.palette.divider}`,
   backgroundColor: theme.palette.background.paper,

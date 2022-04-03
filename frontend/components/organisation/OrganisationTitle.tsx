@@ -3,6 +3,7 @@ import {PageTitleSticky} from '../layout/PageTitle'
 import Breadcrumbs, {SlugInfo} from './Breadcrumbs'
 
 import Searchbox from '../../components/search/Searchbox'
+import Pagination from '../../components/pagination/Pagination'
 
 function createSegments(slug: string[]) {
   const segments:SlugInfo[] = [{
@@ -33,8 +34,10 @@ export default function OrganisationTitle({title, slug}:
   { title: string, slug: string[]}) {
 
   return (
-    <PageTitleSticky>
-      <section className="flex-1 flex items-center">
+    <PageTitleSticky
+      style={{padding:'1rem 0rem 2rem 0rem'}}
+    >
+      {/* <section className="flex-1 flex items-center"> */}
         <div className="flex-1">
           <h1 className="flex-1 w-full md:mt-4">{title}</h1>
           <div className='w-full'>
@@ -43,10 +46,11 @@ export default function OrganisationTitle({title, slug}:
             />
           </div>
         </div>
-        <div>
+        <div className="xl:flex xl:items-center text-center">
           <Searchbox />
+          <Pagination />
         </div>
-      </section>
+      {/* </section> */}
     </PageTitleSticky>
   )
 }

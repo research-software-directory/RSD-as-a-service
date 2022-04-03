@@ -45,12 +45,11 @@ export function SearchProvider(props:any) {
   }, [searchInput, search, setSearchFor])
 
   // debugger
-
-  console.group('SearchProvider')
-  console.log('searchInput...', searchInput)
-  console.log('searchFor...', searchFor)
-  console.log('placeholder...', placeholder)
-  console.groupEnd()
+  // console.group('SearchProvider')
+  // console.log('searchInput...', searchInput)
+  // console.log('searchFor...', searchFor)
+  // console.log('placeholder...', placeholder)
+  // console.groupEnd()
 
   return <SearchContext.Provider value={{
     searchInput,

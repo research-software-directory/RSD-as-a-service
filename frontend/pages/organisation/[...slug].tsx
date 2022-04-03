@@ -14,7 +14,7 @@ import OrganisationTitle from '../../components/organisation/OrganisationTitle'
 import {OrganisationForOverview} from '../../types/Organisation'
 
 import {SearchProvider} from '../../components/search/SearchContext'
-
+import {PaginationProvider} from '../../components/pagination/PaginationContext'
 
 type OrganisationPageProps = {
   organisation: OrganisationForOverview,
@@ -30,7 +30,6 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
     organisation: organisation.id,
     session
   })
-
 
   function onChangeStep({nextStep}: { nextStep: OrganisationMenuProps }) {
     setPageState(nextStep)
@@ -49,6 +48,7 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
         <title>{organisation.name} | RSD</title>
       </Head>
       <SearchProvider>
+      <PaginationProvider>
         <OrganisationTitle
           title={organisation.name}
           slug={slug}
@@ -68,7 +68,8 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
             />
           </div>
           {renderStepComponent()}
-        </section>
+          </section>
+      </PaginationProvider>
       </SearchProvider>
     </DefaultLayout>
   )

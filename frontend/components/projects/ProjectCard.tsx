@@ -28,9 +28,9 @@ export default function ProjectCard({slug,title,subtitle,image_id,updated_at,dat
 
   return (
     <Link href={projectUrl()} passHref>
-      <a className={'flex flex-col lg:max-w-[48rem] lg:max-h-[15rem] bg-grey-100 text-gray-800 hover:bg-secondary hover:text-white'}>
+      <a className={'flex flex-col h-full lg:max-w-[48rem] bg-grey-100 text-gray-800 hover:bg-secondary hover:text-white'}>
         <article className="flex-1 md:flex px-4">
-          <section className="py-4 h-[15rem] md:w-[13rem]">
+          <section className="py-4 h-full md:w-[13rem]">
             <ImageAsBackground
               alt={title}
               src={imageUrl()}
