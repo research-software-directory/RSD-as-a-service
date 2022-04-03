@@ -1,4 +1,4 @@
-import {MouseEvent, ChangeEvent} from 'react'
+import {MouseEvent, ChangeEvent, useContext, useEffect} from 'react'
 import {useState} from 'react'
 import TablePagination from '@mui/material/TablePagination'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -6,10 +6,11 @@ import CircularProgress from '@mui/material/CircularProgress'
 import {rowsPerPageOrganisation} from '../../../config/pagination'
 import {OrganisationForOverview} from '../../../types/Organisation'
 import {Session} from '../../../auth'
-import Searchbox from '../../form/Searchbox'
 import useOrganisationSoftware from '../../../utils/useOrganisationSoftware'
 import SoftwareGrid from './SoftwareGrid'
 import GridScrim from '../../layout/GridScrim'
+
+import SearchContext from '../../search/SearchContext'
 
 type SearchState = {
   searchFor?: string
@@ -19,12 +20,13 @@ type SearchState = {
 
 export default function OrganisationSoftware({organisation, session}:
   { organisation: OrganisationForOverview, session: Session }) {
+  const {setPlaceholder, searchFor, setSearchInput} = useContext(SearchContext)
   const [searchState, setSearchState] = useState<SearchState>({
     searchFor: undefined,
     page: 0,
     rows: 6
   })
-  const {searchFor, page, rows} = searchState
+  const {page, rows} = searchState
   const {loading, software, count} = useOrganisationSoftware({
     organisation: organisation.id,
     searchFor,
@@ -32,6 +34,11 @@ export default function OrganisationSoftware({organisation, session}:
     rows,
     token: session.token
   })
+
+  useEffect(() => {
+    setPlaceholder('Search for software')
+    // setSearchInput('')
+  },[setPlaceholder,setSearchInput])
 
   // next/previous page button
   function handlePageChange(
@@ -98,10 +105,10 @@ export default function OrganisationSoftware({organisation, session}:
       <div className="flex flex-wrap justify-end">
         {renderLoader()}
         <div className="flex items-center">
-          <Searchbox
+          {/* <Searchbox
             placeholder='Search for software'
             onSearch={handleSearch}
-          />
+          /> */}
         </div>
         <TablePagination
           component="nav"
