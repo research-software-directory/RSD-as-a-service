@@ -29,7 +29,14 @@ export function olderThanXDays(lastDate:Date, xDays=7):boolean{
 
 export function isoStrToDate(isoString:string):Date|null{
   try{
-    if (isoString){
+    if (isoString) {
+      if (isoString.endsWith('Z') === false) {
+        // quickfix for missing Z at the end of isoString
+        // TODO! investigate why api does not delivers Z
+        isoString += 'Z'
+        const newDate = new Date(isoString)
+        return newDate
+      }
       const newDate = new Date(isoString)
       return newDate
     }
@@ -77,7 +84,6 @@ export function getTimeAgoSince(since: Date, isoStringDate: string | null) {
     // convert to date
     const updated = isoStrToDate(isoStringDate)
     if (!updated) return null
-
     if (since > updated) {
       const msDiff = since.getTime() - updated.getTime()
       const hours = 1000 * 60 * 60
@@ -87,13 +93,15 @@ export function getTimeAgoSince(since: Date, isoStringDate: string | null) {
         if (daysDiff > 30) {
           const monthDiff = Math.floor(daysDiff / 30)
           return `${monthDiff} months ago`
-        }else if (daysDiff > 7) {
+        } else if (daysDiff > 7) {
           const weeksDiff = Math.floor(daysDiff / 7)
           return `${weeksDiff} weeks ago`
         } else if (daysDiff > 1) return `${daysDiff} days ago`
         return '1 day ago'
       } else if (hoursDiff === 1) {
         return '1 hour ago'
+      } else if (hoursDiff === 0) {
+        return 'right now'
       } else {
         return `${hoursDiff} hours ago`
       }

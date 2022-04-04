@@ -484,7 +484,9 @@ public class Main {
 			String slug = projectsFromLegacyRSD.get("slug").getAsString();
 			JsonObject imageToSave = new JsonObject();
 			imageToSave.addProperty("project", slugToId.get(slug));
-			imageToSave.add("data", imageFromLegacyRSD.get("data"));
+			JsonElement imageDataJson = imageFromLegacyRSD.get("data");
+			if (imageDataJson == null || imageDataJson.isJsonNull() || imageDataJson.getAsString().isBlank()) return;
+			imageToSave.add("data", imageDataJson);
 			imageToSave.add("mime_type", imageFromLegacyRSD.get("mimeType"));
 			allImagesToSave.add(imageToSave);
 		});
