@@ -1,6 +1,7 @@
 package nl.esciencecenter.rsd.authentication;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -66,10 +67,10 @@ public class SurfconextLogin implements Login {
 	private String accountFromIdToken(String idToken) {
 		DecodedJWT idJwt = JWT.decode(idToken);
 		String subject = idJwt.getSubject();
-		return accountFromSubject(subject);
+		return accountFromSubject(subject, idJwt);
 	}
 
-	private String accountFromSubject(String subject) {
+	private String accountFromSubject(String subject, DecodedJWT idToken) {
 		String backendUri = Config.backendBaseUrl();
 		URI queryUri = URI.create(backendUri + "/login_for_account?select=account,sub&sub=eq." + subject);
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
@@ -85,9 +86,13 @@ public class SurfconextLogin implements Login {
 			String newAccountId = JsonParser.parseString(postJsonAsAdmin(createAccountEndpoint, "{}", token)).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 
 //			create login for account
+			Map<String, Claim> claims = idToken.getClaims();
 			JsonObject loginForAccountData = new JsonObject();
 			loginForAccountData.addProperty("account", newAccountId);
 			loginForAccountData.addProperty("sub", subject);
+			loginForAccountData.addProperty("name", claims.get("name").asString());
+			loginForAccountData.addProperty("email", claims.get("email").asString());
+			loginForAccountData.addProperty("home_organisation", claims.get("schac_home_organization").asString());
 			URI createLoginUri = URI.create(backendUri + "/login_for_account");
 			postJsonAsAdmin(createLoginUri, loginForAccountData.toString(), token);
 

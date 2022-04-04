@@ -35,6 +35,9 @@ CREATE TABLE login_for_account (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	account UUID REFERENCES account (id) NOT NULL,
 	sub VARCHAR NOT NULL,
+	name VARCHAR,
+	email VARCHAR,
+	home_organisation VARCHAR,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
 );

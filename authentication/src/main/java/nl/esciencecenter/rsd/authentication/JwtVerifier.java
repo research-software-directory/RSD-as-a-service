@@ -5,18 +5,19 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
+import java.util.Objects;
+
 public class JwtVerifier {
 
-	final String SIGNING_SECRET;
+	private final String signingSecret;
 
 	public JwtVerifier(String signingSecret) {
-		if (signingSecret == null) throw new IllegalArgumentException("The signing secret should not be null");
-		this.SIGNING_SECRET = signingSecret;
+		this.signingSecret = Objects.requireNonNull(signingSecret);
 	}
 
 	void verify(String token) {
 		if (token == null) throw new JWTVerificationException("Token was null");
-		Algorithm signingAlgorithm = Algorithm.HMAC256(SIGNING_SECRET);
+		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
 		JWTVerifier verifier = JWT.require(signingAlgorithm).build();
 		verifier.verify(token);
 	}

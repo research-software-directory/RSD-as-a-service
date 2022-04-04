@@ -1,6 +1,7 @@
 import {MouseEvent, ChangeEvent} from 'react'
 import Head from 'next/head'
 import {useRouter} from 'next/router'
+import {GetServerSidePropsContext} from 'next/types'
 import TablePagination from '@mui/material/TablePagination'
 
 import {app} from '../../config/app'
@@ -16,6 +17,7 @@ import {getSoftwareList, getTagsWithCount, TagItem} from '../../utils/getSoftwar
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import logger from '../../utils/logger'
+
 
 export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareItem[]
@@ -122,7 +124,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
 
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps(context:any) {
+export async function getServerSideProps(context:GetServerSidePropsContext) {
   // extract params from page-query
   const {search,filterStr,rows,page} = ssrSoftwareParams(context)
 

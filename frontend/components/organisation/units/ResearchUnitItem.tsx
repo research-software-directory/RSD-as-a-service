@@ -80,7 +80,7 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
     >
       <ListItemAvatar>
         {/* <a href={rsdUrl}> */}
-        <Link href={rsdUrl}>
+        <Link href={rsdUrl} passHref>
           <Avatar
             alt={organisation.name ?? ''}
             src={getUrlFromLogoId(organisation.logo_id) ?? ''}

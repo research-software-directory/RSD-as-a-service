@@ -1,6 +1,6 @@
 
 import {mockResolvedValueOnce} from './jest/mockFetch'
-import {getRedirectUrl} from './surfConext'
+import {getRedirectUrl,getEncodedClaims, claims} from './surfConext'
 
 // based on return values from test surfconext endpoint
 const mockResp = {
@@ -41,6 +41,7 @@ it('returns authorization_endpoint from wellknown', async () => {
   // then mock return value from fetch
   mockResolvedValueOnce(mockResp)
 	const redirectUrl = await getRedirectUrl('surfconext')
-  const expected = `${mockResp['authorization_endpoint']}?redirect_uri=${process.env.NEXT_PUBLIC_SURFCONEXT_REDIRECT}&client_id=${process.env.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID}&scope=openid&response_type=code&response_mode=form_post&prompt=login+consent`
-  expect(redirectUrl).toEqual(expected)
+	const urlEncodedClaims = getEncodedClaims(claims)
+  const expected = `${mockResp['authorization_endpoint']}?redirect_uri=${process.env.NEXT_PUBLIC_SURFCONEXT_REDIRECT}&client_id=${process.env.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID}&scope=openid&response_type=code&response_mode=form_post&prompt=login+consent&claims=${urlEncodedClaims}`
+	expect(redirectUrl).toEqual(expected)
 })

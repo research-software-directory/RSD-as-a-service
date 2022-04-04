@@ -1,5 +1,6 @@
 import {MouseEvent, ChangeEvent} from 'react'
 import Head from 'next/head'
+import {GetServerSidePropsContext} from 'next/types'
 import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination'
 
@@ -10,18 +11,15 @@ import Searchbox from '../../components/form/Searchbox'
 import {ssrOrganisationUrl} from '../../utils/postgrestUrl'
 import {OrganisationForOverview} from '../../types/Organisation'
 import {rowsPerPageOptions} from '../../config/pagination'
-import {ssrSoftwareParams} from '../../utils/extractQueryParam'
+import {ssrOrganisationParams} from '../../utils/extractQueryParam'
 import {getOrganisationsList} from '../../utils/getOrganisations'
 import OrganisationsGrid from '../../components/organisation/OrganisationGrid'
-import {GetServerSidePropsContext} from 'next'
 
 export default function OrganisationsIndexPage({count,page,rows,organisations=[]}:
   {count:number,page:number,rows:number,organisations:OrganisationForOverview[]
 }) {
   // use next router (hook is only for browser)
   const router = useRouter()
-
-  console.log('organisations...', organisations)
 
   // next/previous page button
   function handlePageChange(
@@ -97,7 +95,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract params from page-query
   // extract rsd_token
   const {req} = context
-  const {search, rows, page} = ssrSoftwareParams(req as any)
+  const {search, rows, page} = ssrOrganisationParams(context)
   const token = req?.cookies['rsd_token']
 
   const {count, data} = await getOrganisationsList({

@@ -1,13 +1,14 @@
-import type {NextApiRequest} from 'next'
+import type {GetServerSidePropsContext, NextApiRequest} from 'next'
 import logger from './logger'
 
-export function extractQueryParam({req,param,castToType='string',defaultValue}:{
-  req:NextApiRequest, param:string, castToType?:('string'|'number'|'date'),
+export function extractQueryParam({ctx,param,castToType='string',defaultValue}:{
+  ctx: GetServerSidePropsContext, param:string, castToType?:('string'|'number'|'date'),
   defaultValue:any
 }){
   try{
-    if (req?.query && req.query.hasOwnProperty(param)){
-      const rawVal = req.query[param]
+    if (ctx?.query && ctx.query.hasOwnProperty(param)){
+      const rawVal = ctx.query[param]
+      if (typeof rawVal == 'undefined') return defaultValue
       switch (castToType){
       case 'number':
         return parseInt(rawVal?.toString())
@@ -27,26 +28,26 @@ export function extractQueryParam({req,param,castToType='string',defaultValue}:{
     throw e
   }}
 
-export function ssrSoftwareParams(req:NextApiRequest){
+export function ssrSoftwareParams(ctx: GetServerSidePropsContext){
   const rows = extractQueryParam({
-    req,
+    ctx,
     param: 'rows',
     defaultValue: 12,
     castToType:'number'
   })
   const page = extractQueryParam({
-    req,
+    ctx,
     param: 'page',
     defaultValue: 0,
     castToType:'number'
   })
   const search = extractQueryParam({
-    req,
+    ctx,
     param: 'search',
     defaultValue: null
   })
   const filterStr = extractQueryParam({
-    req,
+    ctx,
     param: 'filter',
     defaultValue: null
   })
@@ -58,21 +59,46 @@ export function ssrSoftwareParams(req:NextApiRequest){
   }
 }
 
-export function ssrProjectsParams(context: NextApiRequest) {
+export function ssrProjectsParams(ctx: GetServerSidePropsContext) {
   const rows = extractQueryParam({
-    req: context,
+    ctx,
     param: 'rows',
     defaultValue: 12,
     castToType: 'number'
   })
   const page = extractQueryParam({
-    req: context,
+    ctx,
     param: 'page',
     defaultValue: 0,
     castToType: 'number'
   })
   const search = extractQueryParam({
-    req: context,
+    ctx,
+    param: 'search',
+    defaultValue: null
+  })
+  return {
+    search,
+    rows,
+    page,
+  }
+}
+
+export function ssrOrganisationParams(ctx: GetServerSidePropsContext) {
+  const rows = extractQueryParam({
+    ctx,
+    param: 'rows',
+    defaultValue: 12,
+    castToType: 'number'
+  })
+  const page = extractQueryParam({
+    ctx,
+    param: 'page',
+    defaultValue: 0,
+    castToType: 'number'
+  })
+  const search = extractQueryParam({
+    ctx,
     param: 'search',
     defaultValue: null
   })

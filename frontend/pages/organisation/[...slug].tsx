@@ -40,11 +40,6 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
     }
   }
 
-  // console.group('OrganisationPage')
-  // console.log('slug...', slug)
-  // console.log('organisation...', organisation)
-  // console.groupEnd()
-
   return (
     <DefaultLayout>
       <Head>
