@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
-import java.util.UUID;
 
 public class SurfconextLogin implements Login {
 
@@ -32,7 +31,7 @@ public class SurfconextLogin implements Login {
 		String idToken = extractIdToken(tokenResponse);
 
 		DecodedJWT idJwt = JWT.decode(idToken);
-		UUID subject = UUID.fromString(idJwt.getSubject());
+		String subject = idJwt.getSubject();
 		String name = idJwt.getClaim("name").asString();
 		String email = idJwt.getClaim("email").asString();
 		String organisation = idJwt.getClaim("schac_home_organization").asString();
