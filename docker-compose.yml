@@ -87,7 +87,7 @@ services:
   scrapers:
     container_name: scrapers
     build: ./scrapers
-    image: rsd/scrapers:0.0.4
+    image: rsd/scrapers:0.0.5
     environment:
       # it uses values from .env file
       - POSTGREST_URL
