@@ -173,7 +173,7 @@ def get_mentions(since_version=None, keys_data=None):
 if __name__ == "__main__":
 	print("Start scraping mentions")
 	backend_url = os.environ.get('POSTGREST_URL')
-	number_mentions_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB')
+	number_mentions_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB', default='6')
 	jwt_secret = os.environ.get('PGRST_JWT_SECRET')
 	jwt_token = jwt.encode({"role": "rsd_admin", "exp": datetime.now() + timedelta(minutes = 10)}, jwt_secret, algorithm="HS256")
 	zotero_library = os.environ.get('ZOTERO_LIBRARY')
