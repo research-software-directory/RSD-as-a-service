@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class JwtCreator {
 
@@ -21,11 +22,12 @@ public class JwtCreator {
 		this.signingAlgorithm = Algorithm.HMAC256(this.signingSecret);
 	}
 
-	String createUserJwt(String account) {
+	String createUserJwt(UUID account, String name) {
 		return JWT.create()
 				.withClaim("iss", "rsd_auth")
 				.withClaim("role", "rsd_user")
-				.withClaim("account", account)
+				.withClaim("account", account.toString())
+				.withClaim("name", name)
 				.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 				.sign(signingAlgorithm);
 	}
