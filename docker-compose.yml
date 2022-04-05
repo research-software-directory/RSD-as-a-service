@@ -42,7 +42,7 @@ services:
   auth:
     container_name: auth
     build: ./authentication
-    image: rsd/auth:0.0.7
+    image: rsd/auth:0.0.8
     expose:
       - 7000
     environment:
