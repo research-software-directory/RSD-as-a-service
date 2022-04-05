@@ -7,15 +7,14 @@ import createEmotionCache from '../styles/createEmotionCache'
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en">
+      <Html lang="en" className='scroll-smooth' style={{scrollBehavior:'smooth'}}>
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={rsdMuiTheme.palette.primary.main} />
           {/* Roboto fonts */}
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:100,300,400&display=swap"
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400&display=swap"
           />
+          <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap" rel="stylesheet" />
         </Head>
         <body>
           <Main />
