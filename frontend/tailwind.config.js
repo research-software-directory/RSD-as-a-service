@@ -12,6 +12,7 @@ module.exports = {
   // corePlugins: {
   //   preflight: false,
   // },
+  darkMode: 'class',
   content: [
     './auth/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -55,6 +56,9 @@ module.exports = {
       // screens: {
       //   qhd:'2304px'
       // },
+      fontFamily: {
+        'rsd-titles': ['Work Sans']
+      },
       colors: {
         paper: colors.white,
         primary: colors.primary,

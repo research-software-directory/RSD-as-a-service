@@ -1,0 +1,6 @@
+.card{
+    @apply rounded-lg bg-[#474747] hover:bg-gradient-to-r p-[1px] from-[#7928ca] to-[#ff0080]
+}
+.cardInside{
+    @apply flex flex-col justify-between h-full bg-black rounded-lg p-10 bg-cover
+}
