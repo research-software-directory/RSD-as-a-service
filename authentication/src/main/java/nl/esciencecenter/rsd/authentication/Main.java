@@ -18,9 +18,10 @@ public class Main {
 				String returnPath = ctx.cookie("rsd_pathname");
 				String code = ctx.formParam("code");
 				String redirectUrl = Config.surfconextRedirect();
-				String account = new SurfconextLogin(code, redirectUrl).account();
+				OpenIdInfo surfconextInfo = new SurfconextLogin(code, redirectUrl).openidInfo();
+				AccountInfo accountInfo = new PostgrestAccount(surfconextInfo).account();
 				JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-				String token = jwtCreator.createUserJwt(account);
+				String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
 				setJwtCookie(ctx, token);
 				// redirect based on returnPath
 				if (returnPath != null && !returnPath.trim().isEmpty()) {
