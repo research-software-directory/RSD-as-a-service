@@ -15,6 +15,23 @@ CREATE TABLE organisation (
 CREATE UNIQUE INDEX unique_slug_for_top_level_org_idx ON organisation (slug, (parent IS NULL)) WHERE parent IS NULL;
 CREATE UNIQUE INDEX unique_name_and_parent_idx ON organisation (name, parent);
 
+CREATE FUNCTION check_cycle_organisations() RETURNS TRIGGER STABLE LANGUAGE plpgsql SECURITY DEFINER AS
+$$
+DECLARE initial_org UUID = NEW.id;
+DECLARE current_org UUID = NEW.parent;
+BEGIN
+	WHILE current_org IS NOT NULL LOOP
+		IF current_org = initial_org THEN
+			RAISE EXCEPTION USING MESSAGE = 'Cycle detected for organisation with id ' || NEW.id;
+		END IF;
+		SELECT parent FROM organisation WHERE id = current_org INTO current_org;
+	END LOOP;
+	RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER check_cycle_organisations BEFORE UPDATE OF parent ON organisation FOR EACH ROW EXECUTE PROCEDURE check_cycle_organisations();
+
 CREATE FUNCTION sanitise_insert_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
