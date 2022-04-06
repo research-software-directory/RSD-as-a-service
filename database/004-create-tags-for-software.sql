@@ -1,4 +1,4 @@
-CREATE TYPE tag as ENUM (
+CREATE TYPE tag AS ENUM (
 	'Big data',
 	'GPU',
 	'High performance computing',
