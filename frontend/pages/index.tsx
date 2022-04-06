@@ -1,9 +1,13 @@
-import {useContext, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
+import AOS from 'aos'
+
 import AppFooter from '~/components/layout/AppFooter'
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
-import LogoRSD from '~/components/svg/LogoRSD'
 import SimpleCircle from '~/components/svg/SimpleCircle'
 import Link from 'next/link'
+
+import LogoRSDHeader from '~/assets/LogoRSDHeader.svg'
+
 import LoginButton from '~/components/login/LoginButton'
 import styles from '~/components/home/home.module.css'
 // import LogoEscience from '~/components/home/logos/LogoEscience'
@@ -15,7 +19,7 @@ import LogoUU from '~/assets/logos/LogoUU.svg'
 import LogoLeiden from '~/assets/logos/LogoLeiden.svg'
 
 import Arc from '~/components/home/arc.svg'
-import AOS from 'aos'
+import Illustration from '~/components/home/illustration.svg'
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
 /*! purgecss end ignore */
@@ -46,26 +50,28 @@ export default function Home() {
 
         {/* Page  */}
         <header className="sticky top-0 z-10 backdrop-filter backdrop-blur-xl bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-60" >
-          <div className="container mx-auto flex p-6 items-center">
+          <div className="container mx-auto flex py-6 items-center">
             <Link href="/" passHref>
-              <a><LogoRSD className="text-black dark:text-white "></LogoRSD></a>
+              <a className="hover:text-yellow-600"><LogoRSDHeader/></a>
             </Link>
-            <div className="hidden sm:flex ml-10 flex-1 text-xl gap-3 text-center">
-              <a href="#whyrsd">Why RSD</a>
-              <Link href="/organisation">Organizations</Link>
-              <Link href="/about">About us</Link>
+            <div className="flex flex-1 ">
+
+              <div className="hidden sm:flex ml-28  gap-5 text-center opacity-70">
+                <a href="#whyrsd">Why RSD</a>
+                <Link href="/organisation">Organizations</Link>
+                <Link href="/about">About us</Link>
+              </div>
             </div>
 
-
-            {/* Search  */}
-            {/*<div className="border px-3 py-2 flex relative ml-auto rounded-sm">*/}
-            {/*  <svg className="absolute right-[10px] top-[10px]" width="22" viewBox="0 0 18 18"*/}
-            {/*       fill="none" xmlns="http://www.w3.org/2000/svg">*/}
-            {/*    <circle cx="8.98438" cy="9.10718" r="8.22705" stroke="currentColor"/>*/}
-            {/*  </svg>*/}
-            {/*  <input type="search" name="q" className=" bg-transparent focus:outline-none"*/}
-            {/*         placeholder="Search Software" autoComplete="off"/>*/}
-            {/*</div>*/}
+             {/*Search*/}
+            <div className="border px-3 py-2 flex relative ml-auto rounded-sm">
+              <svg className="absolute right-[10px] top-[10px]" width="22" viewBox="0 0 18 18"
+                   fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="8.98438" cy="9.10718" r="8.22705" stroke="currentColor"/>
+              </svg>
+              <input type="search" name="q" className=" bg-transparent focus:outline-none"
+                     placeholder="Search Software" autoComplete="off"/>
+            </div>
 
             <ThemeSwitcher className="mr-3"/>
 
@@ -76,13 +82,16 @@ export default function Home() {
 
         {/* Jumbo Banner  */}
         <div className="container mx-auto mt-20 flex relative">
-          <div className="w-1/3 flex flex-col justify-center" data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000">
-            <div className="text-5xl font-rsd-titles font-bold">Encouraging the <br/>re-use of research software
+          <div className="w-1/2 flex flex-col justify-center" data-aos="fade" data-aos-offset="200"
+               data-aos-delay="50" data-aos-duration="1000">
+            <div className="text-5xl font-rsd-titles font-bold">
+              Encouraging the <br/>re-use of research software
             </div>
             <div className="mt-8 text-lg">To promote the visibility, impact and reuse of research
-              software, <span
-                className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400">the Netherlands eScience Center </span> has
-              developed the Research Software Directory, a content management system tailored to
+              software,
+              <span
+                className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400"> the Netherlands eScience Center </span>
+              has developed the Research Software Directory, a content management system tailored to
               software.
             </div>
 
@@ -118,78 +127,13 @@ export default function Home() {
                     <span className="space-y-2 text-xl whitespace-nowrap ">
                       Sign up for the RSD
                     </span>
-                  {/*<svg width="30" viewBox="0 0 50 36" fill="none"*/}
-                  {/*     xmlns="http://www.w3.org/2000/svg">*/}
-                  {/*    <path*/}
-                  {/*      d="M0 0V36H50V0H0ZM2 2H48V34H2V2ZM4 6.91797V9.27734L25 21.1797L46 9.27734V6.91797L25 18.8203L4 6.91797Z"*/}
-                  {/*      fill="currentColor"/>*/}
-                  {/*  </svg>*/}
                 </a>
               </button>
             </div>
-
-
           </div>
           {/* Jumbo Image*/}
-          <div className="absolute -top-20 right-0">
+          <Illustration className="absolute -top-48 right-0 translate-x-48"/>
 
-            <svg height="700" viewBox="0 0 651 727" fill="none"
-                 xmlns="http://www.w3.org/2000/svg">
-              <g filter="url(#filter0_f_17_106)">
-                <circle cx="283.816" cy="251.979" r="83" fill="#FE53BB"/>
-              </g>
-              <g filter="url(#filter1_f_17_106)">
-                <circle cx="545.816" cy="426.979" r="100" fill="#09FBD3"/>
-              </g>
-              <g filter="url(#filter2_b_17_106)">
-                <circle cx="388.926" cy="357.479" r="169" fill="white" fillOpacity="0.15"
-                />
-                <circle cx="388.926" cy="357.479" r="167" stroke="url(#paint0_linear_17_106)"
-                        strokeWidth="4"/>
-              </g>
-              <mask id="mask0_17_106" maskUnits="userSpaceOnUse" x="224"
-                    y="193" width="329" height="329">
-                <circle cx="388.926" cy="357.479" r="164" fill="#C4C4C4"/>
-              </mask>
-              <g mask="url(#mask0_17_106)">
-              </g>
-              <defs>
-                <filter id="filter0_f_17_106" x="0.816162" y="-31.021" width="566" height="566"
-                        filterUnits="userSpaceOnUse"
-                        colorInterpolationFilters="sRGB">
-                  <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                  <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix"
-                           result="shape"/>
-                  <feGaussianBlur stdDeviation="100" result="effect1_foregroundBlur_17_106"/>
-                </filter>
-                <filter id="filter1_f_17_106" x="245.816" y="126.979" width="600" height="600"
-                        filterUnits="userSpaceOnUse"
-                        colorInterpolationFilters="sRGB">
-                  <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                  <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix"
-                           result="shape"/>
-                  <feGaussianBlur stdDeviation="100" result="effect1_foregroundBlur_17_106"/>
-                </filter>
-                <filter id="filter2_b_17_106" x="179.926" y="148.479" width="418" height="418"
-                        filterUnits="userSpaceOnUse"
-                        colorInterpolationFilters="sRGB">
-                  <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                  <feGaussianBlur in="BackgroundImage" stdDeviation="20"/>
-                  <feComposite in2="SourceAlpha" operator="in"
-                               result="effect1_backgroundBlur_17_106"/>
-                  <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_17_106"
-                           result="shape"/>
-                </filter>
-                <linearGradient id="paint0_linear_17_106" x1="301.926" y1="213.479" x2="519.926"
-                                y2="475.479" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#FE53BB"/>
-                  <stop offset="0.431255" stopColor="#9E95C4" stopOpacity="0"/>
-                  <stop offset="0.639367" stopColor="#6AB9CA" stopOpacity="0"/>
-                  <stop offset="1" stopColor="#09FBD3"/>
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
         </div>
 
         {/*  Divider  */}
