@@ -18,11 +18,13 @@ public class Utils {
 	}
 
 	public static String get(String uri, String... headers) {
-		HttpRequest request = HttpRequest.newBuilder()
+		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.GET()
-				.uri(URI.create(uri))
-				.headers(headers)
-				.build();
+				.uri(URI.create(uri));
+		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
+			httpRequestBuilder.headers(headers);
+		}
+		HttpRequest request = httpRequestBuilder.build();
 		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
 		HttpResponse<String> response;
 		try {

@@ -296,7 +296,7 @@ def get_citations(dois_data):
 if __name__ == "__main__":
 	print("Start scraping releases")
 	backend_url = os.environ.get('POSTGREST_URL')
-	number_releases_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB')
+	number_releases_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB', default='6')
 	jwt_secret = os.environ.get('PGRST_JWT_SECRET')
 	jwt_token = jwt.encode({"role": "rsd_admin", "exp": datetime.now() + timedelta(minutes = 10)}, jwt_secret, algorithm="HS256")
 	response_dois = requests.get('{}/software?select=id,slug,concept_doi,release(id)&concept_doi=not.is.null&order=releases_scraped_at.nullsfirst&limit={}'.format(backend_url, number_releases_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
