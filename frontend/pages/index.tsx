@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import AppFooter from '~/components/layout/AppFooter'
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
 import LogoRSD from '~/components/svg/LogoRSD'
@@ -8,6 +8,10 @@ import LoginButton from '~/components/login/LoginButton'
 import styles from '~/components/home/home.module.css'
 import LogoEscience from '~/components/home/logos/LogoEscience'
 import LogoSurf from '~/components/home/logos/LogoSurf'
+import AOS from 'aos'
+/*! purgecss start ignore */
+import 'aos/dist/aos.css'
+/*! purgecss end ignore */
 
 const whyrsd = [
   'Improves findability of software packages.',
@@ -25,6 +29,9 @@ const whyrsd = [
 
 export default function Home() {
   const [isDark, setDark] = useState(true)
+
+  // Initialize AOS library
+  useEffect(() => { AOS.init() }, [])
 
   return (
     <div className={` ${isDark && 'dark'} `}>
@@ -62,10 +69,8 @@ export default function Home() {
 
         {/* Jumbo Banner  */}
         <div className="container mx-auto mt-20 flex relative">
-          <div className="w-1/3 flex flex-col justify-center">
-            <div className="text-5xl font-rsd-titles font-bold">Encouraging the <br/>re-use of
-              research
-              software
+          <div className="w-1/3 flex flex-col justify-center" data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000">
+            <div className="text-5xl font-rsd-titles font-bold">Encouraging the <br/>re-use of research software
             </div>
             <div className="mt-8 text-lg">To promote the visibility, impact and reuse of research
               software, <span
@@ -95,7 +100,8 @@ export default function Home() {
 
             </div>*/}
 
-            <div className="mt-10 flex gap-4">
+            <div className="mt-10 flex gap-4"
+                 data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000">
               <button type="submit" className="relative group">
                 <div
                   className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
@@ -117,6 +123,7 @@ export default function Home() {
 
 
           </div>
+          {/* Jumbo Image*/}
           <div className="absolute -top-20 right-0">
 
             <svg height="700" viewBox="0 0 651 727" fill="none"
@@ -201,11 +208,11 @@ export default function Home() {
         <div className="bg-[#eee] dark:bg-[#111]">
           {/* separator  */}
           {isDark ?
-            <img width="100%" className="-translate-y-1"
+            <img width="100%" className="-translate-y-1" alt="theme image"
                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNSIgaGVpZ2h0PSI3NSIgdmlld0JveD0iMCAwIDEwMjUgNzUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2lfNTVfMTY5KSI+CjxwYXRoIGQ9Ik0wLjMyNjE3MiAwLjcyOTczNkgxMDI0LjMzVjc0LjAzNThDNjA1LjkwOSA0LjkyMDM2IDM4MS41OTUgNC42MTI0IDAuMzI2MTcyIDc0LjAzNThWMC43Mjk3MzZaIiBmaWxsPSJibGFjayIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2lfNTVfMTY5IiB4PSIwLjMyNjE3MiIgeT0iMC43Mjk3MzYiIHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjczLjMwNTkiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0ic2hhcGUiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeT0iLTEiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0iYXJpdGhtZXRpYyIgazI9Ii0xIiBrMz0iMSIvPgo8ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwLjU2NDcwNiAwIDAgMCAwIDAuNTY0NzA2IDAgMCAwIDAgMC41NjQ3MDYgMCAwIDAgMC4zNSAwIi8+CjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW4yPSJzaGFwZSIgcmVzdWx0PSJlZmZlY3QxX2lubmVyU2hhZG93XzU1XzE2OSIvPgo8L2ZpbHRlcj4KPC9kZWZzPgo8L3N2Zz4K"
             />
             :
-            <img width="100%" className="-translate-y-1 scale-100"
+            <img width="100%" className="-translate-y-1 scale-100" alt="theme image"
                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNSIgaGVpZ2h0PSI3NCIgdmlld0JveD0iMCAwIDEwMjUgNzQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2lfNTVfMTcwKSI+CjxwYXRoIGQ9Ik0wLjk0MjYyNyAwLjU3MTI4OUgxMDI0Ljk0VjczLjg3NzNDNjA2LjUyNSA0Ljc2MTkyIDM4Mi4yMTIgNC40NTM5NiAwLjk0MjYyNyA3My44NzczVjAuNTcxMjg5WiIgZmlsbD0id2hpdGUiLz4KPC9nPgo8ZGVmcz4KPGZpbHRlciBpZD0iZmlsdGVyMF9pXzU1XzE3MCIgeD0iMC45NDI2MjciIHk9IjAuNTcxMjg5IiB3aWR0aD0iMTAyNCIgaGVpZ2h0PSI3My4zMDYiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0ic2hhcGUiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeT0iLTEiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0iYXJpdGhtZXRpYyIgazI9Ii0xIiBrMz0iMSIvPgo8ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwLjU2NDcwNiAwIDAgMCAwIDAuNTY0NzA2IDAgMCAwIDAgMC41NjQ3MDYgMCAwIDAgMC4zNSAwIi8+CjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW4yPSJzaGFwZSIgcmVzdWx0PSJlZmZlY3QxX2lubmVyU2hhZG93XzU1XzE3MCIvPgo8L2ZpbHRlcj4KPC9kZWZzPgo8L3N2Zz4K"
             />
           }
@@ -221,7 +228,9 @@ export default function Home() {
           {/* cards  */}
 
           <div className="container mx-auto flex gap-3 mt-16">
-            <div className="w-1/3">
+            <div className="w-1/3"
+                 data-aos="fade-up" data-aos-offset="0" data-aos-delay="0" data-aos-duration="400" data-aos-easing="ease-in-out"
+            >
               <div className={`${styles.card} h-full`}>
                 <div className={styles.cardInside}
                      style={{backgroundImage: 'url("/images/find_bg.webp")'}}>
@@ -237,7 +246,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="w-1/3">
+            <div className="w-1/3"
+                 data-aos="fade-up" data-aos-offset="0" data-aos-delay="50" data-aos-duration="400" data-aos-easing="ease-in-out">
               <div className={`${styles.card} h-full`}>
                 <div className={styles.cardInside}
                      style={{backgroundImage: 'url("/images/recognition_bg.webp")'}}>
@@ -254,7 +264,8 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="w-1/3">
+            <div className="w-1/3"
+                 data-aos="fade-up" data-aos-offset="0" data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
               <div className={`${styles.card} h-full`}>
                 <div className={styles.cardInside}
                      style={{backgroundImage: 'url("/images/impact_bg.webp")'}}>
@@ -273,7 +284,8 @@ export default function Home() {
           </div>
           {/* software into context  */}
 
-          <div className={`${styles.card} container mx-auto mt-5`}>
+          <div className={`${styles.card} container mx-auto mt-5`}
+               data-aos="fade" data-aos-offset="0" data-aos-duration="400" data-aos-easing="ease-in-out">
             <div className={styles.cardInside}
                  style={{backgroundImage: 'url("/images/context_bg.webp")'}}>
               <div className="flex flex-col justify-center text-white">
@@ -291,7 +303,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="container mx-auto mt-20">
+          <div className="container mx-auto mt-20"
+               data-aos="fade" data-aos-offset="0" data-aos-duration="400" data-aos-easing="ease-in-out">
             <div id="whyrsd" className="text-3xl font-rsd-titles font-bold">Why the RSD?</div>
             <ul className="mt-10 ">
               {whyrsd.map((text, i) =>
