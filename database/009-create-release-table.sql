@@ -8,7 +8,7 @@ CREATE TABLE release (
 );
 
 
-CREATE FUNCTION sanitise_insert_release() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_insert_release() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -21,7 +21,7 @@ $$;
 CREATE TRIGGER sanitise_insert_release BEFORE INSERT ON release FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_release();
 
 
-CREATE FUNCTION sanitise_update_release() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_release() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;
@@ -35,7 +35,7 @@ CREATE TRIGGER sanitise_update_release BEFORE UPDATE ON release FOR EACH ROW EXE
 
 
 
-CREATE TYPE citability as ENUM (
+CREATE TYPE citability AS ENUM (
 	'doi-only',
 	'full'
 );
@@ -58,7 +58,7 @@ CREATE TABLE release_content (
 );
 
 
-CREATE FUNCTION sanitise_insert_release_content() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_insert_release_content() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -69,7 +69,7 @@ $$;
 CREATE TRIGGER sanitise_insert_release_content BEFORE INSERT ON release_content FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_release_content();
 
 
-CREATE FUNCTION sanitise_update_release_content() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_release_content() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;

@@ -24,7 +24,7 @@ CREATE TABLE image_for_project (
 	mime_type VARCHAR(100) NOT NULL
 );
 
-CREATE FUNCTION sanitise_insert_project() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_insert_project() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -37,7 +37,7 @@ $$;
 CREATE TRIGGER sanitise_insert_project BEFORE INSERT ON project FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_project();
 
 
-CREATE FUNCTION sanitise_update_project() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_project() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;
