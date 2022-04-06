@@ -60,7 +60,7 @@ CREATE POLICY maintainer_all_rights ON software TO rsd_user
 CREATE FUNCTION insert_maintainer_new_software() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
-	IF (SELECT current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
+	IF (SELECT current_setting('request.jwt.claims', TRUE)::json->>'account' IS NULL) THEN RETURN NULL;
 	END IF;
 	INSERT INTO maintainer_for_software VALUES (uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'), NEW.id);
 	RETURN NULL;
@@ -145,7 +145,7 @@ CREATE POLICY maintainer_all_rights ON project TO rsd_user
 CREATE FUNCTION insert_maintainer_new_project() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
-	IF (SELECT current_setting('request.jwt.claims', FALSE)::json->>'account' IS NULL) THEN RETURN NULL;
+	IF (SELECT current_setting('request.jwt.claims', TRUE)::json->>'account' IS NULL) THEN RETURN NULL;
 	END IF;
 	INSERT INTO maintainer_for_project VALUES (uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'), NEW.id);
 	RETURN NULL;

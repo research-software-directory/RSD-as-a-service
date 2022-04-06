@@ -1,6 +1,6 @@
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100),
+	slug VARCHAR(100) NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	parent UUID REFERENCES organisation (id),
 	primary_maintainer UUID REFERENCES account (id),
 	name VARCHAR NOT NULL,

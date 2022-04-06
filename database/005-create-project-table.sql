@@ -1,6 +1,6 @@
 CREATE TABLE project (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE NOT NULL,
+	slug VARCHAR(100) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	call_url VARCHAR,
 	code_url VARCHAR,
 	data_management_plan_url VARCHAR,
