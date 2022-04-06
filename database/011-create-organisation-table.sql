@@ -30,7 +30,8 @@ BEGIN
 END
 $$;
 
-CREATE TRIGGER check_cycle_organisations BEFORE UPDATE OF parent ON organisation FOR EACH ROW EXECUTE PROCEDURE check_cycle_organisations();
+-- z_ prefix so that if is executed after the sanitise_update_organisation trigger
+CREATE TRIGGER z_check_cycle_organisations BEFORE UPDATE OF parent ON organisation FOR EACH ROW EXECUTE PROCEDURE check_cycle_organisations();
 
 CREATE FUNCTION sanitise_insert_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
