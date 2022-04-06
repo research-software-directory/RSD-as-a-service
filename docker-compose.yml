@@ -4,7 +4,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.19
+    image: rsd/database:0.0.20
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
