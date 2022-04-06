@@ -1,17 +1,19 @@
 import {useEffect, useState} from 'react'
 import router from 'next/router'
-import App, {AppContext} from 'next/app'
+import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
-import {AppProps} from 'next/app'
 import {ThemeProvider} from '@mui/material/styles'
 import {CacheProvider, EmotionCache} from '@emotion/react'
-import {rsdMuiTheme} from '../styles/rsdMuiTheme'
+import {rsdDarkMuiTheme, rsdMuiTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
+import {ThemeContext} from '~/components/layout/ThemeSwitcher'
 // loading bar at the top of the screen
 import nprogress from 'nprogress'
+
 // authentication
-import {AuthProvider, Session, getSessionSeverSide} from '../auth'
+import {AuthProvider, getSessionSeverSide, Session} from '../auth'
 import {saveLocationCookie} from '../utils/locationCookie'
+
 // snackbar notifications
 import PageSnackbar from '../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
@@ -25,19 +27,20 @@ import 'nprogress/nprogress.css'
 const clientSideEmotionCache = createEmotionCache()
 
 // extend Next app props interface with emotion cache
-export interface MuiAppProps extends AppProps{
+export interface MuiAppProps extends AppProps {
   emotionCache: EmotionCache
   session: Session
 }
 
 // define npgrogres setup, no spinner
 // just a tiny bar at the top of the screen
-nprogress.configure({showSpinner:false})
+nprogress.configure({showSpinner: false})
 
-function RsdApp(props:MuiAppProps) {
+function RsdApp(props: MuiAppProps) {
   const {Component, emotionCache = clientSideEmotionCache, pageProps, session} = props
 
   const [options, setSnackbar] = useState(snackbarDefaults)
+  const [theme, toggleTheme] = useState('dark')
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -62,14 +65,19 @@ function RsdApp(props:MuiAppProps) {
         <title>Research Software Directory</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={rsdMuiTheme}>
         {/* CssBaseline from MUI-5*/}
+      <ThemeProvider theme={theme === 'dark' ? rsdDarkMuiTheme : rsdMuiTheme }>
         {/* <CssBaseline /> */}
         <AuthProvider session={session}>
           <PageSnackbarContext.Provider value={{options, setSnackbar}}>
-            <Component {...pageProps} />
+            <ThemeContext.Provider value={{theme, toggleTheme}}>
+              {/* TailwindCSS theme switcher*/}
+              <div className={theme}>
+                <Component {...pageProps} />
+              </div>
+            </ThemeContext.Provider>
           </PageSnackbarContext.Provider>
-          <PageSnackbar options={options} setOptions={setSnackbar} />
+          <PageSnackbar options={options} setOptions={setSnackbar}/>
         </AuthProvider>
       </ThemeProvider>
     </CacheProvider>

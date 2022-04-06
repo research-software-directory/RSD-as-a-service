@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import AppFooter from '~/components/layout/AppFooter'
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
 import LogoRSD from '~/components/svg/LogoRSD'
@@ -12,6 +12,7 @@ import AOS from 'aos'
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
 /*! purgecss end ignore */
+
 
 const whyrsd = [
   'Improves findability of software packages.',
@@ -34,11 +35,10 @@ export default function Home() {
   useEffect(() => { AOS.init() }, [])
 
   return (
-    <div className={` ${isDark && 'dark'} `}>
       <div className="bg-white dark:bg-black dark:text-white">
 
         {/* Page  */}
-        <header className="sticky top-0 z-10  backdrop-filter backdrop-blur-xl bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-60" >
+        <header className="sticky top-0 z-10 backdrop-filter backdrop-blur-xl bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-60" >
           <div className="container mx-auto flex p-6 items-center">
             <Link href="/" passHref>
               <a><LogoRSD className="text-black dark:text-white "></LogoRSD></a>
@@ -60,7 +60,7 @@ export default function Home() {
             {/*         placeholder="Search Software" autoComplete="off"/>*/}
             {/*</div>*/}
 
-            <ThemeSwitcher onClick={() => setDark(!isDark)}/>
+            <ThemeSwitcher className="mr-3"/>
 
             <LoginButton/>
           </div>
@@ -321,6 +321,5 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </div>
   )
 }

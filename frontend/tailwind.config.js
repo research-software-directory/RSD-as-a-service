@@ -56,6 +56,10 @@ module.exports = {
       // screens: {
       //   qhd:'2304px'
       // },
+      animation: {
+        wiggle: 'wiggle 1s ease-in-out infinite',
+        'spin-slow': 'spin 3s linear infinite',
+      },
       fontFamily: {
         'rsd-titles': ['Work Sans']
       },
