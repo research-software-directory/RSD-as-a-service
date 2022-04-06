@@ -1,6 +1,5 @@
-import {useEffect, useState} from 'react'
+import {useContext, useEffect, useState} from 'react'
 import AOS from 'aos'
-
 import AppFooter from '~/components/layout/AppFooter'
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
 import SimpleCircle from '~/components/svg/SimpleCircle'

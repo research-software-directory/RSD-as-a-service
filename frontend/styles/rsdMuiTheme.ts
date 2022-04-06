@@ -274,3 +274,5 @@ export {
   rsdMuiTheme,
   rsdDarkMuiTheme
 }
+// show all theme values
+// console.log("rsdTheme:", JSON.stringify(rsdTheme))
