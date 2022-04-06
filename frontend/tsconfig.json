@@ -19,6 +19,7 @@
       "~/components/*": ["components/*"],
       "~/icons/*": ["icons/*"],
       "~/lib/*": ["lib/*"],
+      "~/assets/*": ["assets/*"],
       "~/utils/*": ["utils/*"],
       "~/auth/*": ["auth/*"],
       "~/auth": ["auth"],

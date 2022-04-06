@@ -14,14 +14,14 @@ export default function ThemeSwitcher(
   return (
     <button type="button"
             onClick={() => toggleTheme(theme === 'dark' ? 'light' : 'dark')}
-            className={`${props.className}  shadow-sm dark:shadow-highlight/4 group focus:outline-none focus-visible:ring-2 rounded-md focus-visible:ring-yellow-500 dark:focus-visible:ring-2 dark:focus-visible:ring-gray-400 animate hover:animate-spin-slow`}>
+            className={`${props.className}   group focus:outline-none focus-visible:ring-2 rounded-md focus-visible:ring-yellow-700 dark:focus-visible:ring-2 dark:focus-visible:ring-gray-400 animate hover:animate-spin-slow`}>
                 <span className="sr-only">
                   <span className="dark:hidden">Switch to dark theme</span>
                   <span className="hidden dark:inline">Switch to light theme</span>
                 </span>
       <svg width="36" height="36" viewBox="-6 -6 36 36" strokeWidth="2"
            strokeLinecap="round" strokeLinejoin="round"
-           className="stroke-yellow-500 fill-yellow-100 group-hover:stroke-yellow-600 dark:stroke-gray-400 dark:fill-gray-400/20 dark:group-hover:stroke-gray-300">
+           className="stroke-yellow-600 fill-yellow-100 group-hover:stroke-yellow-600 dark:stroke-gray-400 dark:fill-gray-400/20 dark:group-hover:stroke-gray-300">
         <g className="dark:opacity-0">
           <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
           <path

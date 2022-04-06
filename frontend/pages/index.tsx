@@ -6,8 +6,15 @@ import SimpleCircle from '~/components/svg/SimpleCircle'
 import Link from 'next/link'
 import LoginButton from '~/components/login/LoginButton'
 import styles from '~/components/home/home.module.css'
-import LogoEscience from '~/components/home/logos/LogoEscience'
-import LogoSurf from '~/components/home/logos/LogoSurf'
+// import LogoEscience from '~/components/home/logos/LogoEscience'
+import LogoEscience from '~/assets/logos/LogoEscience.svg'
+import LogoSurf from '~/assets/logos/LogoSurf.svg'
+import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
+import LogoUMC from '~/assets/logos/LogoUMC.svg'
+import LogoUU from '~/assets/logos/LogoUU.svg'
+import LogoLeiden from '~/assets/logos/LogoLeiden.svg'
+
+import Arc from '~/components/home/arc.svg'
 import AOS from 'aos'
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
@@ -206,22 +213,18 @@ export default function Home() {
         </div>
 
         <div className="bg-[#eee] dark:bg-[#111]">
-          {/* separator  */}
-          {isDark ?
-            <img width="100%" className="-translate-y-1" alt="theme image"
-                 src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNSIgaGVpZ2h0PSI3NSIgdmlld0JveD0iMCAwIDEwMjUgNzUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2lfNTVfMTY5KSI+CjxwYXRoIGQ9Ik0wLjMyNjE3MiAwLjcyOTczNkgxMDI0LjMzVjc0LjAzNThDNjA1LjkwOSA0LjkyMDM2IDM4MS41OTUgNC42MTI0IDAuMzI2MTcyIDc0LjAzNThWMC43Mjk3MzZaIiBmaWxsPSJibGFjayIvPgo8L2c+CjxkZWZzPgo8ZmlsdGVyIGlkPSJmaWx0ZXIwX2lfNTVfMTY5IiB4PSIwLjMyNjE3MiIgeT0iMC43Mjk3MzYiIHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjczLjMwNTkiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0ic2hhcGUiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeT0iLTEiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0iYXJpdGhtZXRpYyIgazI9Ii0xIiBrMz0iMSIvPgo8ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwLjU2NDcwNiAwIDAgMCAwIDAuNTY0NzA2IDAgMCAwIDAgMC41NjQ3MDYgMCAwIDAgMC4zNSAwIi8+CjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW4yPSJzaGFwZSIgcmVzdWx0PSJlZmZlY3QxX2lubmVyU2hhZG93XzU1XzE2OSIvPgo8L2ZpbHRlcj4KPC9kZWZzPgo8L3N2Zz4K"
-            />
-            :
-            <img width="100%" className="-translate-y-1 scale-100" alt="theme image"
-                 src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNSIgaGVpZ2h0PSI3NCIgdmlld0JveD0iMCAwIDEwMjUgNzQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIwX2lfNTVfMTcwKSI+CjxwYXRoIGQ9Ik0wLjk0MjYyNyAwLjU3MTI4OUgxMDI0Ljk0VjczLjg3NzNDNjA2LjUyNSA0Ljc2MTkyIDM4Mi4yMTIgNC40NTM5NiAwLjk0MjYyNyA3My44NzczVjAuNTcxMjg5WiIgZmlsbD0id2hpdGUiLz4KPC9nPgo8ZGVmcz4KPGZpbHRlciBpZD0iZmlsdGVyMF9pXzU1XzE3MCIgeD0iMC45NDI2MjciIHk9IjAuNTcxMjg5IiB3aWR0aD0iMTAyNCIgaGVpZ2h0PSI3My4zMDYiIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj4KPGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz4KPGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0ic2hhcGUiLz4KPGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiIHJlc3VsdD0iaGFyZEFscGhhIi8+CjxmZU9mZnNldCBkeT0iLTEiLz4KPGZlQ29tcG9zaXRlIGluMj0iaGFyZEFscGhhIiBvcGVyYXRvcj0iYXJpdGhtZXRpYyIgazI9Ii0xIiBrMz0iMSIvPgo8ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwLjU2NDcwNiAwIDAgMCAwIDAuNTY0NzA2IDAgMCAwIDAgMC41NjQ3MDYgMCAwIDAgMC4zNSAwIi8+CjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW4yPSJzaGFwZSIgcmVzdWx0PSJlZmZlY3QxX2lubmVyU2hhZG93XzU1XzE3MCIvPgo8L2ZpbHRlcj4KPC9kZWZzPgo8L3N2Zz4K"
-            />
-          }
+          {/* Arc separator  */}
+          <Arc className="w-full text-white dark:text-black -translate-y-1"></Arc>
 
           {/* Logos  */}
           <div className="container mx-auto">
             <div className="flex gap-10 container flex-wrap mt-6 items-center opacity-30">
-              <LogoEscience className="max-w-[200px] max-h-[100px]"/>
-              <LogoSurf className="max-w-[200px] max-h-[100px]"/>
+              <LogoEscience className="max-w-[160px]"/>
+              <LogoSurf className="max-w-[75px]"/>
+              <LogoHelmholtz className="max-w-[130px]"/>
+              <LogoUMC className="max-w-[200px]"/>
+              <LogoUU className="max-w-[220px]"/>
+              <LogoLeiden className="max-w-[220px]"/>
             </div>
           </div>
 
