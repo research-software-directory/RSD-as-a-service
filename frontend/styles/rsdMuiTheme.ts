@@ -179,13 +179,13 @@ const rsdDarkMuiTheme = createTheme({
     },
     grey: colors.grey,
     text: {
-      primary: colors.white,
+      primary: colors.textPrimary,
       secondary: colors.textSecondary,
       disabled: colors.textDisabled,
     },
     divider: colors.divider,
     background: {
-      paper: colors.black,
+      paper: colors.white,
       default: colors.white,
     },
   },
