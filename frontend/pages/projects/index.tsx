@@ -72,8 +72,7 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
       </PageTitle>
       <ProjectGrid
         projects={projects}
-        minHeight='15rem'
-        maxHeight='1fr'
+        height='17rem'
         minWidth='26rem'
         maxWidth='1fr'
         className="gap-[0.125rem] pt-4 pb-12"

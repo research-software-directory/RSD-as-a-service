@@ -2,7 +2,7 @@ import Link from 'next/link'
 import StarIcon from '@mui/icons-material/Star'
 import {getTimeAgoSince} from '../../utils/dateFn'
 
-type SoftwareCardType = {
+export type SoftwareCardType = {
   href: string
   brand_name: string
   short_statement: string,

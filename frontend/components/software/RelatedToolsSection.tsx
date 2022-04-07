@@ -22,15 +22,21 @@ export default function RelatedToolsSection({relatedTools=[]}: {relatedTools: Re
     })
 
   return (
-    <section>
-      <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
-        <h2
-          data-testid="software-contributors-section-title"
-          className="pb-8 text-[2rem] text-primary">
-          Related tools
-        </h2>
-        <SoftwareGrid software={relatedSoftware} />
-      </PageContainer>
-    </section>
+    <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
+      <h2
+        data-testid="software-contributors-section-title"
+        className="pb-8 text-[2rem] text-primary">
+        Related tools
+      </h2>
+      <SoftwareGrid
+        className="gap-[0.125rem]"
+        software={relatedSoftware}
+        grid={{
+          height: '17rem',
+          minWidth:'26rem',
+          maxWidth:'1fr'
+        }}
+      />
+    </PageContainer>
   )
 }

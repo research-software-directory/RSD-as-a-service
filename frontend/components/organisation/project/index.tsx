@@ -1,18 +1,15 @@
-import {useContext, useEffect} from 'react'
+import {useEffect} from 'react'
 
-import SearchContext from '../../search/SearchContext'
-import PaginationContext from '../../pagination/PaginationContext'
 import {OrganisationForOverview} from '../../../types/Organisation'
 import {Session} from '../../../auth'
+import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
 import useOrganisationProjects from '../../../utils/useOrganisationProjects'
 import ProjectsGrid from '../../projects/ProjectsGrid'
 import GridScrim from '../../layout/GridScrim'
 
 export default function OrganisationProjects({organisation, session}:
   { organisation: OrganisationForOverview, session: Session }) {
-  const {setPlaceholder, searchFor, setSearchFor, setSearchInput} = useContext(SearchContext)
-  const {pagination, setPagination} = useContext(PaginationContext)
-  const {page, rows} = pagination
+  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search for projects')
   const {loading, projects, count} = useOrganisationProjects({
     organisation: organisation.id,
     searchFor,
@@ -22,32 +19,16 @@ export default function OrganisationProjects({organisation, session}:
   })
 
   useEffect(() => {
-    setPlaceholder('Search for projects')
-  },[setPlaceholder,setSearchFor,setSearchInput])
-
-  useEffect(() => {
-    if (pagination.count !== count) {
-      if (count === 0) {
-        setPagination({
-          ...pagination,
-          // reset page value
-          page:0,
-          count
-        })
-      } else {
-        setPagination({
-          ...pagination,
-          count
-        })
-      }
+    if (count && loading === false) {
+      setCount(count)
     }
-  },[pagination,count,setPagination])
+  },[count,loading,setCount])
 
   if (loading){
     return (
       <GridScrim
         rows={rows}
-        height='15rem'
+        height='17rem'
         minWidth='25rem'
         maxWidth='1fr'
         className="gap-[0.125rem] pt-2 pb-12"
@@ -58,6 +39,7 @@ export default function OrganisationProjects({organisation, session}:
   return (
     <ProjectsGrid
       projects={projects}
+      height='17rem'
       minWidth='25rem'
       maxWidth='1fr'
       className="gap-[0.125rem] pt-2 pb-12"

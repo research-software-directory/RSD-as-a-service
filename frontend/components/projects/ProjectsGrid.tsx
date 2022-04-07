@@ -1,12 +1,8 @@
 import ContentInTheMiddle from '../layout/ContentInTheMiddle'
-import FlexibleGridSection from '../layout/FlexibleGridSection'
+import FlexibleGridSection, {FlexGridProps} from '../layout/FlexibleGridSection'
 import ProjectCard, {ProjectCardProps} from './ProjectCard'
 
-type ProjectGridProps = {
-  minHeight?:string
-  maxHeight?:string
-  minWidth?:string
-  maxWidth?:string
+type ProjectGridProps = FlexGridProps & {
   className?:string
   projects: ProjectCardProps[]
 }
