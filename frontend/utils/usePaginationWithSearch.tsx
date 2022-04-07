@@ -3,7 +3,7 @@ import SearchContext from '../components/search/SearchContext'
 import PaginationContext from '../components/pagination/PaginationContext'
 
 export default function usePaginationWithSearch(placeholder:string) {
-  const {setPlaceholder, searchFor, setSearchInput,placeholder:currentPlaceholder} = useContext(SearchContext)
+  const {setPlaceholder, searchFor, setSearchInput, placeholder:currentPlaceholder} = useContext(SearchContext)
   const {pagination, setPagination} = useContext(PaginationContext)
   const [search, setSearch] = useState(searchFor)
 
@@ -26,22 +26,23 @@ export default function usePaginationWithSearch(placeholder:string) {
     }
   }, [searchFor, search, pagination, setPagination])
 
-  useEffect(() => {
-    if (placeholder !== currentPlaceholder) {
-      // switch of placeholer means we need to reset pagination
-      // as we moved to another section/page
-      // console.group('usePaginationWithSearch')
-      // console.log('placeholder...', placeholder)
-      // console.log('currentPlaceholder...', currentPlaceholder)
-      // console.log('pagination...', pagination)
-      // console.groupEnd()
-      setPagination({
-        ...pagination,
-        page: 0,
-        count:0
-      })
-    }
-  },[placeholder,currentPlaceholder, pagination,setPagination])
+  // TODO! reset page to 0 on firt request
+  // useEffect(() => {
+  //   if (placeholder !== currentPlaceholder) {
+  //     // switch of placeholer means we need to reset pagination
+  //     // as we moved to another section/page
+  //     console.group('usePaginationWithSearch')
+  //     console.log('placeholder...', placeholder)
+  //     console.log('currentPlaceholder...', currentPlaceholder)
+  //     console.log('pagination...', pagination)
+  //     console.groupEnd()
+  //     setPagination({
+  //       ...pagination,
+  //       page: 0,
+  //       count:0
+  //     })
+  //   }
+  // },[placeholder,currentPlaceholder, pagination,setPagination])
 
   function setCount(count: number) {
     // sync count from api and in the component
