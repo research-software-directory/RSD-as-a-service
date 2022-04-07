@@ -1,4 +1,4 @@
-CREATE TYPE topic as ENUM (
+CREATE TYPE topic AS ENUM (
 	'Astronomy',
 	'Chemistry',
 	'Climate and weather',

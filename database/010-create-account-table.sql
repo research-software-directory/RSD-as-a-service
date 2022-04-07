@@ -4,7 +4,7 @@ CREATE TABLE account (
 	updated_at TIMESTAMP NOT NULL
 );
 
-CREATE FUNCTION sanitise_insert_account() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_insert_account() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -17,7 +17,7 @@ $$;
 CREATE TRIGGER sanitise_insert_account BEFORE INSERT ON account FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_account();
 
 
-CREATE FUNCTION sanitise_update_account() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_account() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;
@@ -42,7 +42,7 @@ CREATE TABLE login_for_account (
 	updated_at TIMESTAMP NOT NULL
 );
 
-CREATE FUNCTION sanitise_insert_login_for_account() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_insert_login_for_account() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -55,7 +55,7 @@ $$;
 CREATE TRIGGER sanitise_insert_login_for_account BEFORE INSERT ON login_for_account FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_login_for_account();
 
 
-CREATE FUNCTION sanitise_update_login_for_account() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_login_for_account() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;

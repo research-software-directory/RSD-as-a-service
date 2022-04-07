@@ -1,4 +1,4 @@
-CREATE TYPE relation_status as ENUM (
+CREATE TYPE relation_status AS ENUM (
 	'requested_by_origin',
 	'requested_by_relation',
 	'approved'
@@ -10,7 +10,7 @@ CREATE TABLE software_for_software (
 	PRIMARY KEY (origin, relation)
 );
 
-CREATE FUNCTION sanitise_update_software_for_software() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_software_for_software() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.origin = OLD.origin;
@@ -29,7 +29,7 @@ CREATE TABLE software_for_project (
 	PRIMARY KEY (software, project)
 );
 
-CREATE FUNCTION sanitise_update_software_for_project() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_software_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.software = OLD.software;
@@ -48,7 +48,7 @@ CREATE TABLE project_for_project (
 	PRIMARY KEY (origin, relation)
 );
 
-CREATE FUNCTION sanitise_update_project_for_project() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_project_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.origin = OLD.origin;
@@ -67,7 +67,7 @@ CREATE TABLE software_for_organisation (
 	PRIMARY KEY (software, organisation)
 );
 
-CREATE FUNCTION sanitise_update_software_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_software_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.software = OLD.software;
@@ -86,7 +86,7 @@ CREATE TABLE project_for_organisation (
 	PRIMARY KEY (project, organisation)
 );
 
-CREATE FUNCTION sanitise_update_project_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_project_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.project = OLD.project;

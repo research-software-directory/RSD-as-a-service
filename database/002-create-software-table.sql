@@ -1,11 +1,11 @@
-CREATE TYPE description_type as ENUM (
+CREATE TYPE description_type AS ENUM (
 	'link',
 	'markdown'
 );
 
 CREATE TABLE software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE NOT NULL,
+	slug VARCHAR(100) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	brand_name VARCHAR(100) NOT NULL,
 	concept_doi VARCHAR,
 	description VARCHAR,
@@ -20,7 +20,7 @@ CREATE TABLE software (
 	updated_at TIMESTAMP NOT NULL
 );
 
-CREATE FUNCTION sanitise_insert_software() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_insert_software() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -33,7 +33,7 @@ $$;
 CREATE TRIGGER sanitise_insert_software BEFORE INSERT ON software FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_software();
 
 
-CREATE FUNCTION sanitise_update_software() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_software() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;

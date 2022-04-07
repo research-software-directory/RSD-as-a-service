@@ -1,4 +1,4 @@
-CREATE TYPE mention_type as ENUM (
+CREATE TYPE mention_type AS ENUM (
 	'attachment',
 	'blogPost',
 	'book',
@@ -36,7 +36,7 @@ CREATE TABLE mention (
 	updated_at TIMESTAMP NOT NULL
 );
 
-CREATE FUNCTION sanitise_insert_mention() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_insert_mention() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -49,7 +49,7 @@ $$;
 CREATE TRIGGER sanitise_insert_mention BEFORE INSERT ON mention FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_mention();
 
 
-CREATE FUNCTION sanitise_update_mention() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_mention() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;

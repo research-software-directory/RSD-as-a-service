@@ -1,6 +1,6 @@
 CREATE TABLE project (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE NOT NULL,
+	slug VARCHAR(100) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	call_url VARCHAR,
 	code_url VARCHAR,
 	data_management_plan_url VARCHAR,
@@ -24,7 +24,7 @@ CREATE TABLE image_for_project (
 	mime_type VARCHAR(100) NOT NULL
 );
 
-CREATE FUNCTION sanitise_insert_project() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_insert_project() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = gen_random_uuid();
@@ -37,7 +37,7 @@ $$;
 CREATE TRIGGER sanitise_insert_project BEFORE INSERT ON project FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_project();
 
 
-CREATE FUNCTION sanitise_update_project() RETURNS TRIGGER LANGUAGE plpgsql as
+CREATE FUNCTION sanitise_update_project() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;
