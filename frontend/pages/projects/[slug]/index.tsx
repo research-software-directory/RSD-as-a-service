@@ -49,8 +49,8 @@ export default function ProjectItemPage(props: ProjectIndexProps) {
       </ContentInTheMiddle>
     )
   }
-  console.log('ProjectItemPage...technologies...', technologies)
-  console.log('ProjectItemPage...topics...', topics)
+  // console.log('ProjectItemPage...technologies...', technologies)
+  // console.log('ProjectItemPage...topics...', topics)
   return (
     <>
       {/* Page Head meta tags */}

@@ -1,10 +1,18 @@
 import Link from 'next/link'
 import {getTimeAgoSince} from '../../utils/dateFn'
 import ImageAsBackground from '../layout/ImageAsBackground'
-import {Project} from '../../types/Project'
 import {getImageUrl} from '../../utils/getProjects'
 
-export default function ProjectCard({slug,title,subtitle,image_id,updated_at,date_end}:Project) {
+export type ProjectCardProps = {
+  slug: string
+  title: string
+  subtitle: string | null
+  image_id: string | null
+  updated_at: string
+  date_end: string
+}
+
+export default function ProjectCard({slug,title,subtitle,image_id,updated_at,date_end}:ProjectCardProps) {
   // get current date
   const today = new Date()
 
