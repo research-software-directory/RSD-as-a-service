@@ -70,6 +70,7 @@ export type ParticipatingOrganisationProps = {
   name: string
   website: string | null
   logo_url: string | null
+  slug?: string
 }
 
 export type OrganisationForOverview = CoreOrganisationProps & {

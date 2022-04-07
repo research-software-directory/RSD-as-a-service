@@ -151,6 +151,7 @@ export async function getParticipatingOrganisations({project, token, frontend = 
   })
     .map(item => {
       return {
+        slug: item.slug,
         name: item.name,
         website: item.website ?? '',
         logo_url: getUrlFromLogoId(item.logo_id)
