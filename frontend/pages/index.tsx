@@ -6,7 +6,8 @@ import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
 import SimpleCircle from '~/components/svg/SimpleCircle'
 import Link from 'next/link'
 
-import LogoRSDHeader from '~/assets/LogoRSDHeader.svg'
+import LogoApp from '~/assets/LogoApp.svg'
+import LogoAppSmall from '~/assets/LogoAppSmall.svg'
 
 import LoginButton from '~/components/login/LoginButton'
 import styles from '~/components/home/home.module.css'
@@ -52,7 +53,10 @@ export default function Home() {
         <header className="sticky top-0 z-10 backdrop-filter backdrop-blur-xl bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-60" >
           <div className="container mx-auto flex py-6 items-center">
             <Link href="/" passHref>
-              <a className="hover:text-yellow-600"><LogoRSDHeader/></a>
+              <a className="hover:text-yellow-600">
+                <LogoApp className="hidden sm:block"/>
+                <LogoAppSmall className="block sm:hidden"/>
+              </a>
             </Link>
             <div className="flex flex-1 ">
 
@@ -65,11 +69,10 @@ export default function Home() {
 
              {/*Search*/}
             <div className="border px-3 py-2 flex relative ml-auto rounded-sm">
-              <svg className="absolute right-[10px] top-[10px]" width="22" viewBox="0 0 18 18"
-                   fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg className="absolute right-[10px] top-[10px]" width="22" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="8.98438" cy="9.10718" r="8.22705" stroke="currentColor"/>
               </svg>
-              <input type="search" name="q" className=" bg-transparent focus:outline-none"
+              <input type="search" className="bg-transparent focus:outline-none"
                      placeholder="Search Software" autoComplete="off"/>
             </div>
 
