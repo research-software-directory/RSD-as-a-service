@@ -1,9 +1,10 @@
 
+import Link from 'next/link'
 import Avatar from '@mui/material/Avatar'
 import {ParticipatingOrganisationProps} from '../../types/Organisation'
 import ImageAsBackground from '../layout/ImageAsBackground'
 
-export default function OrganisationItem({name, website, logo_url}: ParticipatingOrganisationProps) {
+export default function OrganisationItem({slug, name, website, logo_url}: ParticipatingOrganisationProps) {
 
   function renderLogo() {
     if (logo_url) {
@@ -39,10 +40,26 @@ export default function OrganisationItem({name, website, logo_url}: Participatin
     )
   }
 
+  let url: string=''
+  if (slug) {
+    // internal RSD link to organisation
+    url = `/organisation/${slug}`
+    return (
+      <Link href={url} passHref>
+        <a
+          title={name}
+          className="flex items-center" rel="noreferrer">
+          {renderLogo()}
+        </a>
+      </Link>
+    )
+  }
 
   if (website) {
+    // organisation website
+    url = website
     return (
-      <a href={website} target="_blank"
+      <a href={url} target="_blank"
         title={name}
         className="flex items-center" rel="noreferrer">
         {renderLogo()}
@@ -50,6 +67,7 @@ export default function OrganisationItem({name, website, logo_url}: Participatin
     )
   }
 
+  // should never happen
   return (
     <div
       title={name}
