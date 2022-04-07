@@ -1,12 +1,13 @@
 import {OrganisationForOverview} from '../../types/Organisation'
 import ContentInTheMiddle from '../layout/ContentInTheMiddle'
 import OrganisationCard from './OrganisationCard'
+import FlexibleGridSection from '../layout/FlexibleGridSection'
 
-// render software cards
-export default function OrganisationsGrid({organisations}:{organisations:OrganisationForOverview[]}){
-  // console.log("renderItems...software...", software)
+// render organisation cards
+export default function OrganisationsGrid({organisations}:
+  {organisations: OrganisationForOverview[]}) {
 
-  if (organisations.length===0){
+  if (organisations.length === 0) {
     return (
       <ContentInTheMiddle>
         <h2>No content</h2>
@@ -15,15 +16,20 @@ export default function OrganisationsGrid({organisations}:{organisations:Organis
   }
 
   return (
-    <section className='grid grid-cols-1 gap-[0.125rem] pt-4 pb-12 sm:grid-cols-2 lg:grid-cols-3 hd:grid-cols-4'>
+    <FlexibleGridSection
+      className="gap-[0.125rem] pt-4 pb-12"
+      height='17rem'
+      minWidth='26rem'
+      maxWidth='1fr'
+    >
       {organisations.map(item=>{
         return(
           <OrganisationCard
-            key={item.id}
+            key={item.slug}
             {...item}
           />
         )
       })}
-    </section>
+    </FlexibleGridSection>
   )
 }

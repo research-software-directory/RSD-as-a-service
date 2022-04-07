@@ -116,7 +116,14 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
           />
         </div>
       </PageTitle>
-      <SoftwareGrid software={software} />
+      <SoftwareGrid
+        grid={{
+          height: '17rem',
+          minWidth:'26rem',
+          maxWidth:'1fr'
+        }}
+        software={software}
+      />
     </DefaultLayout>
   )
 }

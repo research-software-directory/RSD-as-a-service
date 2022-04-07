@@ -1,6 +1,6 @@
 import ContentInTheMiddle from '../layout/ContentInTheMiddle'
 import SoftwareCard from './SoftwareCard'
-
+import FlexibleGridSection, {FlexGridProps} from '../layout/FlexibleGridSection'
 
 export type SoftwareGridType = {
   slug: string,
@@ -12,7 +12,8 @@ export type SoftwareGridType = {
 }
 
 // render software cards
-export default function SoftwareGrid({software}:{software:SoftwareGridType[]}){
+export default function SoftwareGrid({software,grid,className='gap-[0.125rem] pt-4 pb-12'}:
+  {software: SoftwareGridType[], grid: FlexGridProps, className?:string }) {
   // console.log("renderItems...software...", software)
 
   if (software.length===0){
@@ -24,7 +25,10 @@ export default function SoftwareGrid({software}:{software:SoftwareGridType[]}){
   }
 
   return (
-    <section className="grid grid-cols-1 gap-[0.125rem] pt-4 pb-12 sm:grid-cols-2 lg:grid-cols-3 hd:grid-cols-4 px-[0.0625rem]">
+    <FlexibleGridSection
+      className={className}
+      {...grid}
+    >
       {software.map(item=>{
         return(
           <SoftwareCard
@@ -37,6 +41,6 @@ export default function SoftwareGrid({software}:{software:SoftwareGridType[]}){
           />
         )
       })}
-    </section>
+    </FlexibleGridSection>
   )
 }

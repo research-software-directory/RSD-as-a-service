@@ -1,18 +1,15 @@
-import {useContext, useEffect} from 'react'
+import {useEffect} from 'react'
 
-import SearchContext from '../../search/SearchContext'
-import PaginationContext from '../../pagination/PaginationContext'
-import {OrganisationForOverview} from '../../../types/Organisation'
 import {Session} from '../../../auth'
+import {OrganisationForOverview} from '../../../types/Organisation'
 import useOrganisationSoftware from '../../../utils/useOrganisationSoftware'
-import SoftwareGrid from './SoftwareGrid'
+import SoftwareGrid from '../../software/SoftwareGrid'
 import GridScrim from '../../layout/GridScrim'
+import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
 
 export default function OrganisationSoftware({organisation, session}:
   { organisation: OrganisationForOverview, session: Session }) {
-  const {setPlaceholder, searchFor, setSearchInput} = useContext(SearchContext)
-  const {pagination, setPagination} = useContext(PaginationContext)
-  const {page, rows} = pagination
+  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search for software')
   const {loading, software, count} = useOrganisationSoftware({
     organisation: organisation.id,
     searchFor,
@@ -22,27 +19,10 @@ export default function OrganisationSoftware({organisation, session}:
   })
 
   useEffect(() => {
-    setPlaceholder('Search for software')
-  }, [setPlaceholder, setSearchInput])
-
-  useEffect(() => {
-    if (pagination.count !== count) {
-      if (count === 0) {
-        setPagination({
-          ...pagination,
-          // reset page value
-          page:0,
-          count
-        })
-      } else {
-        setPagination({
-          ...pagination,
-          count
-        })
-      }
+    if (count && loading === false) {
+      setCount(count)
     }
-  },[pagination,count,setPagination])
-
+  },[count,loading,setCount])
 
   if (loading){
     return (
@@ -59,8 +39,11 @@ export default function OrganisationSoftware({organisation, session}:
   return (
     <SoftwareGrid
       software={software}
-      minWidth='25rem'
-      maxWidth='1fr'
+      grid={{
+        height:'17rem',
+        minWidth:'25rem',
+        maxWidth:'1fr'
+      }}
       className="gap-[0.125rem] pt-2 pb-12"
     />
   )

@@ -49,7 +49,7 @@ export default function useOrganisationProjects({organisation, searchFor, page, 
     }
 
     return ()=>{abort = true}
-  },[searchFor,page,rows,organisation,token])
+  },[searchFor,page,rows,organisation,token,])
 
   return {
     projects:state.data,
