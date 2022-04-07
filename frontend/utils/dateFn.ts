@@ -116,10 +116,14 @@ export function getTimeAgoSince(since: Date, isoStringDate: string | null) {
 
 
 export function getMonthYearDate(date: string, locale = 'en-us') {
-  const monthDate = isoStrToDate(date)
-  if (monthDate) {
-    // return only month and year in us
-    return monthDate.toLocaleDateString(locale, {year: 'numeric', month: 'short'})
+  try {
+    const monthDate = new Date(date)
+    if (monthDate) {
+      // return only month and year in us
+      return monthDate.toLocaleDateString(locale, {year: 'numeric', month: 'short'})
+    }
+    return null
+  } catch (e:any) {
+    return null
   }
-  return null
 }
