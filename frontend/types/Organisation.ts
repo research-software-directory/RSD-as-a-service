@@ -1,3 +1,5 @@
+export type Status = 'requested_by_origin' | 'requested_by_relation' | 'approved'
+
 // shared organisation properies
 export type CoreOrganisationProps = {
   id: string | null
@@ -26,8 +28,6 @@ export type Organisation = CoreOrganisationProps & {
 export type SearchOrganisation = CoreOrganisationProps & {
   source: 'RSD'|'ROR'|'MANUAL'
 }
-
-type Status = 'requested_by_origin' | 'requested_by_relation' | 'approved'
 
 // extending with other props for software edit page
 export type EditOrganisation = CoreOrganisationProps & {

@@ -21,7 +21,7 @@ import MentionsSection from '../../../components/software/MentionsSection'
 import ContributorsSection from '../../../components/software/ContributorsSection'
 import TestimonialSection from '../../../components/software/TestimonialsSection'
 import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
-import EditSoftwareButton from '../../../components/software/edit/EditSoftwareButton'
+import EditButton from '../../../components/layout/EditButton'
 import {
   getSoftwareItem,
   getRepostoryInfoForSoftware,
@@ -121,7 +121,9 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       />
       <AppHeader editButton={
         isMaintainer ?
-        <EditSoftwareButton slug={slug} />
+        <EditButton
+          title="Edit software"
+          url={`${slug}/edit`} />
         : undefined
       }/>
       <PageContainer>

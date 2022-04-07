@@ -24,7 +24,7 @@ describe('pages/software/[slug]/index.tsx', () => {
       SoftwareItemPage,
       softwareIndexData
     ))
-    const editBtn = screen.getByTestId('edit-software-button')
+    const editBtn = screen.getByTestId('edit-button')
     expect(editBtn).toBeInTheDocument()
     // screen.debug(editBtn)
   })
@@ -35,7 +35,7 @@ describe('pages/software/[slug]/index.tsx', () => {
       SoftwareItemPage,
       softwareIndexData
     ))
-    const editBtn = screen.queryByTestId('edit-software-button')
+    const editBtn = screen.queryByTestId('edit-button')
     expect(editBtn).not.toBeInTheDocument()
     // screen.debug(editBtn)
   })
