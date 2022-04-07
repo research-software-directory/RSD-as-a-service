@@ -1,18 +1,19 @@
 import styled from '@mui/system/styled'
 
-type GridProps = {
+export type FlexGridProps = {
   minWidth?: string,
   maxWidth?: string,
   minHeight?: string,
-  maxHeight?: string
+  maxHeight?: string,
+  height?: string
 }
 
 export const FlexibleGridSection = styled('section', {
   // do not forward this props to html element
   // there are for interal use
-  shouldForwardProp: (prop) => prop !== 'minWidth' && prop !== 'minHeight' && prop !== 'maxWidth' && prop !== 'maxHeight'
+  shouldForwardProp: (prop) => prop !== 'minWidth' && prop !== 'minHeight' && prop !== 'maxWidth' && prop !== 'maxHeight' && prop !== 'height'
 })
-  <GridProps>(({theme, minWidth, maxWidth, minHeight, maxHeight}) => {
+  <FlexGridProps>(({theme, minWidth, maxWidth, minHeight, maxHeight, height}) => {
   // basic definitions
   const props:any = {
     display: 'grid',
@@ -20,13 +21,16 @@ export const FlexibleGridSection = styled('section', {
     // gridGap: '1rem',
     flexWrap: 'wrap',
     // padding: '1rem 0rem 1rem 0rem',
-    alignItems: 'stretch',
+    alignItems: 'flex-start',
     // borderBottom: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.paper
   }
-  // dynamic grid-template-rows
-  if (minHeight && maxHeight) {
-    props['gridTemplateRows'] = `repeat(auto-fit, minmax(${minHeight ?? '5rem'}, ${maxHeight ?? '7rem'}))`
+  if (height) {
+    // dynamic grid-auto-rows
+    props['gridAutoRows'] = height
+  }else if (minHeight && maxHeight) {
+    // dynamic grid-auto-rows
+    props['gridTemplateRows'] = `repeat(auto-fit,minmax(${minHeight ?? '5rem'}, ${maxHeight ?? '7rem'}))`
   }
   // dynamic grid-template-columns
   if (minWidth && maxWidth) {

@@ -1,22 +1,24 @@
 import {render, screen} from '@testing-library/react'
 import SoftwareIndexPage, {getServerSideProps} from '../pages/software/index'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
+import {mockResolvedValue} from '../utils/jest/mockFetch'
 
 // mock fetch response
 import softwareItem from './__fixtures__/softwareItem.json'
 const mockedResponse=[softwareItem]
-global.fetch=jest.fn(()=>({
-  status:206,
-  headers:{
-    // mock getting Content-Range from the header
-    get:()=>'0-11/200'
-  },
-  statusText:'OK',
-  json: jest.fn(()=>Promise.resolve(mockedResponse))
-}))
 
 describe('pages/software/index.tsx', () => {
-  it('getServerSideProps returns mocked values in the props', async() => {
+  beforeEach(() => {
+    mockResolvedValue(mockedResponse, {
+      status:206,
+      headers:{
+        // mock getting Content-Range from the header
+        get:()=>'0-11/200'
+      },
+      statusText:'OK',
+    })
+  })
+  it('getServerSideProps returns mocked values in the props', async () => {
     const resp = await getServerSideProps({})
     expect(resp).toEqual({
       props:{

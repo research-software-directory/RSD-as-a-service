@@ -13,6 +13,9 @@ import {organisationMenu, OrganisationMenuProps} from '../../components/organisa
 import OrganisationTitle from '../../components/organisation/OrganisationTitle'
 import {OrganisationForOverview} from '../../types/Organisation'
 
+import {SearchProvider} from '../../components/search/SearchContext'
+import {PaginationProvider} from '../../components/pagination/PaginationContext'
+
 type OrganisationPageProps = {
   organisation: OrganisationForOverview,
   slug: string[],
@@ -27,7 +30,6 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
     organisation: organisation.id,
     session
   })
-
 
   function onChangeStep({nextStep}: { nextStep: OrganisationMenuProps }) {
     setPageState(nextStep)
@@ -45,26 +47,30 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
       <Head>
         <title>{organisation.name} | RSD</title>
       </Head>
-      <OrganisationTitle
-        title={organisation.name}
-        slug={slug}
-      />
-      <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
-        <div>
-          <OrganisationNav
-            onChangeStep={onChangeStep}
-            selected={pageState.id}
-            organisation={organisation}
-            isMaintainer={isMaintainer}
-          />
-          <OrganisationLogo
-            isMaintainer={isMaintainer}
-            token={session.token}
-            {...organisation}
-          />
-        </div>
-        {renderStepComponent()}
-      </section>
+      <SearchProvider>
+      <PaginationProvider>
+        <OrganisationTitle
+          title={organisation.name}
+          slug={slug}
+        />
+        <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
+          <div>
+            <OrganisationNav
+              onChangeStep={onChangeStep}
+              selected={pageState.id}
+              organisation={organisation}
+              isMaintainer={isMaintainer}
+            />
+            <OrganisationLogo
+              isMaintainer={isMaintainer}
+              token={session.token}
+              {...organisation}
+            />
+          </div>
+          {renderStepComponent()}
+          </section>
+      </PaginationProvider>
+      </SearchProvider>
     </DefaultLayout>
   )
 }

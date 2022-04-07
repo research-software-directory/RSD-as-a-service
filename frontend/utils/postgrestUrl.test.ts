@@ -1,5 +1,5 @@
 
-import {softwareUrl, ssrSoftwareUrl} from './postgrestUrl'
+import {PostgrestParams, softwareUrl, ssrSoftwareUrl} from './postgrestUrl'
 
 describe('softwareUrl', () => {
   it('returns softwareUrl when only baseUrl provided', () => {
@@ -7,7 +7,7 @@ describe('softwareUrl', () => {
     const expectUrl = `${baseUrl}/software?&is_published=eq.true&limit=12&offset=0`
     const url = softwareUrl({
       baseUrl
-    })
+    } as PostgrestParams)
     expect(url).toEqual(expectUrl)
   })
 
@@ -19,7 +19,7 @@ describe('softwareUrl', () => {
       baseUrl,
       // if you change filters in the array then change expectedUrl values too
       filters:['filter-1','filter-2']
-    })
+    } as PostgrestParams)
     expect(url).toEqual(expectUrl)
   })
 
@@ -31,7 +31,7 @@ describe('softwareUrl', () => {
       baseUrl,
       // if you change search value then change expectedUrl values too
       search:'test-search'
-    })
+    } as PostgrestParams)
     expect(url).toEqual(expectUrl)
   })
 })

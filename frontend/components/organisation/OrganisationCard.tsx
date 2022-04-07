@@ -21,7 +21,7 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
     <Link
       href={`/organisation/${organisation.slug}`}
       passHref>
-      <a>
+      <a className="h-full">
         <article className="flex flex-col border rounded-sm p-4 h-full min-h-[16rem]">
           <h2 className='h-[5rem]'>{organisation.name}</h2>
           <div className="flex flex-1">
@@ -43,7 +43,7 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
                 {organisation.name.slice(0,3)}
               </Avatar>
             </div>
-             <div className="flex flex-col flex-1 px-8 py-4">
+             <div className="flex flex-col flex-1 pl-8 py-4">
               <div className="flex-1 flex items-center justify-center text-[4rem] text-primary">
                 {count}
               </div>
