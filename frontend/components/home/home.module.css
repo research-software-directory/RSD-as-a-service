@@ -1,6 +1,11 @@
 .card{
-    @apply rounded-lg bg-[#474747] hover:bg-gradient-to-r p-[1px] from-[#7928ca] to-[#ff0080]
+    @apply rounded-lg bg-[#90909060] hover:bg-gradient-to-r p-[1px] from-[#7928ca] to-[#ff0080]
 }
 .cardInside{
-    @apply flex flex-col justify-between h-full bg-black rounded-lg p-10 bg-cover
+    @apply flex flex-col justify-between h-full rounded-lg p-10 bg-cover bg-white
+}
+
+/* Current limitation of css modules, can't apply directly higher level classes like :dark */
+:global(.dark) .cardInside  {
+    @apply  bg-black
 }
