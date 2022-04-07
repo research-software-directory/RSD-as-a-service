@@ -1,47 +1,105 @@
-import Head from 'next/head'
+import {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
+import {ScriptProps} from 'next/script'
 
-import DefaultLayout from '../../../components/layout/DefaultLayout'
-import PageTitle from '../../../components/layout/PageTitle'
-import IconButton from '@mui/material/IconButton'
-import EditIcon from '@mui/icons-material/Edit'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import {useAuth} from '../../../auth'
+import {app} from '../../../config/app'
+import logger from '../../../utils/logger'
+import AppHeader from '../../../components/layout/AppHeader'
+import EditButton from '../../../components/layout/EditButton'
+import ContentInTheMiddle from '../../../components/layout/ContentInTheMiddle'
+import PageContainer from '../../../components/layout/PageContainer'
+import ContentHeader from '../../../components/layout/ContentHeader'
+import AppFooter from '../../../components/layout/AppFooter'
+import PageMeta from '../../../components/seo/PageMeta'
+import OgMetaTags from '../../../components/seo/OgMetaTags'
+import CanoncialUrl from '../../../components/seo/CanonicalUrl'
+import {extractLinksFromProject, getOrganisationsOfProject, getParticipatingOrganisations, getProjectItem, getTagsForProject, getTopicsForProject} from '../../../utils/getProjects'
+import {Project, ProjectLink} from '../../../types/Project'
+import ProjectInfo from '../../../components/projects/ProjectInfo'
+import OrganisationsSection from '../../../components/software/OrganisationsSection'
+import {ParticipatingOrganisationProps} from '../../../types/Organisation'
 
-import {getProjectItem} from '../../../utils/getProjects'
-import {ProjectItem} from '../../../types/Project'
+interface ProjectIndexProps extends ScriptProps{
+  slug: string
+  project: Project
+  isMaintainer: boolean
+  organisations: ParticipatingOrganisationProps[],
+  technologies: string[],
+  topics: string[],
+  links: ProjectLink[]
+}
 
-export default function ProjectItemPage({project, slug}:{project:ProjectItem, slug:string}) {
+export default function ProjectItemPage(props: ProjectIndexProps) {
+  const [resolvedUrl, setResolvedUrl] = useState('')
   const router = useRouter()
   const {session: {status}} = useAuth()
-  // console.log("useSession.status...", status)
+  const {slug, project, isMaintainer, organisations, technologies, topics, links} = props
+
+  useEffect(() => {
+    if (typeof location != 'undefined') {
+      setResolvedUrl(location.href)
+    }
+  }, [])
+
+  if (!project?.title){
+    return (
+      <ContentInTheMiddle>
+        <h2>No content</h2>
+      </ContentInTheMiddle>
+    )
+  }
+  console.log('ProjectItemPage...technologies...', technologies)
+  console.log('ProjectItemPage...topics...', topics)
   return (
-    <DefaultLayout>
-      <Head>
-        <title>{project?.title} | RSD</title>
-      </Head>
-      <PageTitle title={project?.title}>
-        <div>
-          <IconButton
-            title="Go back"
-            onClick={() => router.back()}
-            size="large"
-          >
-            <ArrowBackIcon />
-          </IconButton>
-          <IconButton
-            title="Edit"
-            onClick={()=>router.push(`/projects/${slug}/edit`)}
-            disabled={status !== 'authenticated'}
-            size="large"
-          >
-            <EditIcon />
-          </IconButton>
-        </div>
-      </PageTitle>
-      <h2 className='my-4'>Under construction</h2>
-      {/* <p>{ project.description}</p> */}
-    </DefaultLayout>
+    <>
+      {/* Page Head meta tags */}
+      <PageMeta
+        title={`${project?.title} | ${app.title}`}
+        description={project?.description ?? ''}
+      />
+      {/* Page Head meta tags */}
+      <OgMetaTags
+        title={project?.title}
+        description={project?.description ?? ''}
+        url={resolvedUrl}
+      />
+      <CanoncialUrl
+        canonicalUrl={resolvedUrl}
+      />
+      <AppHeader editButton={
+        isMaintainer ?
+        <EditButton
+          title="Edit project"
+          url={`${slug}/edit`}
+        />
+        : undefined
+      } />
+      <PageContainer>
+        <ContentHeader
+          title={project.title}
+          subtitle={project.subtitle}
+        />
+        <ProjectInfo
+          date_start={project?.date_start}
+          date_end={project?.date_end}
+          description={project?.description ?? null}
+          image_id={project?.image_id}
+          image_caption={project?.image_caption ?? null}
+          grant_id={project.grant_id}
+          links={links}
+          technologies={technologies}
+          topics={topics}
+        />
+      </PageContainer>
+      {/* Participating organisations */}
+      <OrganisationsSection
+        organisations={organisations}
+      />
+      {/* bottom spacer */}
+      <section className="py-12"></section>
+      <AppFooter />
+    </>
   )
 }
 
@@ -49,26 +107,47 @@ export default function ProjectItemPage({project, slug}:{project:ProjectItem, sl
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:any) {
   try{
-    const {params} = context
+    const {params,req} = context
+    // extract rsd_token
+    const token = req?.cookies['rsd_token']
     // console.log("getServerSideProps...params...", params)
     const project = await getProjectItem(params?.slug)
-    if (!project || project?.length===0){
+    if (typeof project == 'undefined'){
     // returning this value
     // triggers 404 page on frontend
       return {
         notFound: true,
       }
     }
+    // fetch all info about software in parallel based on software.id
+    const fetchData = [
+      getParticipatingOrganisations({project: project.id, token, frontend: false}),
+      getTagsForProject({project: project.id, token, frontend: false}),
+      getTopicsForProject({project: project.id, token, frontend: false}),
+    ]
+
+    const [
+      organisations,
+      technologies,
+      topics
+    ] = await Promise.all(fetchData)
+
     // console.log("getServerSideProps...project...", project)
     return {
     // will be passed to the page component as props
     // see params in SoftwareIndexPage
       props: {
-        project: project[0],
-        slug: params?.slug
+        project: project,
+        slug: params?.slug,
+        isMaintainer: false,
+        organisations,
+        technologies,
+        topics,
+        links: extractLinksFromProject(project)
       },
     }
-  }catch(e){
+  } catch (e:any) {
+    logger(`ProjectIndexPage.getServerSideProps: ${e.message}`,'error')
     return {
       notFound: true,
     }

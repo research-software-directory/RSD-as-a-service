@@ -2,6 +2,7 @@ import Link from 'next/link'
 import {getTimeAgoSince} from '../../utils/dateFn'
 import ImageAsBackground from '../layout/ImageAsBackground'
 import {Project} from '../../types/Project'
+import {getImageUrl} from '../../utils/getProjects'
 
 export default function ProjectCard({slug,title,subtitle,image_id,updated_at,date_end}:Project) {
   // get current date
@@ -17,11 +18,6 @@ export default function ProjectCard({slug,title,subtitle,image_id,updated_at,dat
     }
   }
 
-  function imageUrl() {
-    if (image_id) return `/image/rpc/get_project_image?id=${image_id}`
-    return null
-  }
-
   function projectUrl() {
     return `/projects/${slug}/`
   }
@@ -33,7 +29,7 @@ export default function ProjectCard({slug,title,subtitle,image_id,updated_at,dat
           <section className="py-4 h-[15rem] md:w-[13rem]">
             <ImageAsBackground
               alt={title}
-              src={imageUrl()}
+              src={getImageUrl(image_id)}
               className="flex-1 h-full"
               noImgMsg='no image'
             />

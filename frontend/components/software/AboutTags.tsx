@@ -1,8 +1,8 @@
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import {Tag} from '../../types/SoftwareTypes'
+import TagListItem from '../layout/TagListItem'
 
-
-export default function Tags({tags = []}: { tags: Tag[] }) {
+export default function AboutTags({tags = []}: { tags: Tag[] }) {
 
   function renderTags() {
     if (tags.length === 0) {
@@ -13,7 +13,7 @@ export default function Tags({tags = []}: { tags: Tag[] }) {
     return (
       <ul className="flex flex-wrap py-1">
         {tags.map((item, pos) => {
-          return <li key={pos} className="m-[0.125rem] px-4 py-2 bg-grey-200">{ item.tag }</li>
+          return <TagListItem key={pos} label={item.tag}/>
         })}
       </ul>
     )

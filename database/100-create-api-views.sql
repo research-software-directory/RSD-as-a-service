@@ -282,3 +282,45 @@ BEGIN
 		project_for_organisation ON project.id = project_for_organisation.project;
 END
 $$;
+
+
+-- Participating organisations by project
+-- NOTE! organisation are shown multiple times (for each project)
+-- we filter this view by project UUID
+CREATE FUNCTION organisations_of_project() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	primary_maintainer UUID,
+	name VARCHAR,
+	ror_id VARCHAR,
+	is_tenant BOOLEAN,
+	website VARCHAR,
+	logo_id UUID,
+	status relation_status,
+	project UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+			organisation.id AS id,
+			organisation.slug,
+			organisation.primary_maintainer,
+			organisation.name,
+			organisation.ror_id,
+			organisation.is_tenant,
+			organisation.website,
+			logo_for_organisation.id AS logo_id,
+			project_for_organisation.status,
+			project.id AS project
+	FROM
+		project
+	INNER JOIN
+		project_for_organisation ON project.id = project_for_organisation.project
+	INNER JOIN
+		organisation ON project_for_organisation.organisation = organisation.id
+	LEFT JOIN
+		logo_for_organisation ON logo_for_organisation.id = organisation.id
+	;
+END
+$$;
