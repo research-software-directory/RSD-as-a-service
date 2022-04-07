@@ -11,7 +11,7 @@ import createEmotionCache from '../styles/createEmotionCache'
 import nprogress from 'nprogress'
 // authentication
 import {AuthProvider, Session, getSessionSeverSide} from '../auth'
-import {saveLocationCookie} from '../utils/locationCookie'
+import {saveLocationCookie} from '../auth/locationCookie'
 // snackbar notifications
 import PageSnackbar from '../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'

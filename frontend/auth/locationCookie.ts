@@ -3,9 +3,7 @@ export function saveLocationCookie() {
   // only in browser mode
   if (typeof document == 'undefined') return
   if (typeof location == 'undefined') return
-  // console.group('saveLocationCookie')
-  // console.log('path...', location.pathname)
-  // console.groupEnd()
+  // for specific routes
   switch (location.pathname.toLowerCase()) {
     // ingnore these paths
     case '/login':
@@ -15,6 +13,6 @@ export function saveLocationCookie() {
       // write simple browser cookie
       // auth module use this cookie to redirect
       // after succefull authentications
-      document.cookie = `rsd_pathname=${location.href};path=/;SameSite=None;Secure`
+      document.cookie = `rsd_pathname=${location.href};path=/auth;SameSite=None;Secure`
   }
 }
