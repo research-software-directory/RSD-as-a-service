@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 
-import {MentionEditType, MentionForSoftware} from '../../../../types/MentionType'
+import {MentionEditType, MentionForSoftware} from '../../../../types/Mention'
 import {getMentionsForSoftware} from '../../../../utils/editMentions'
 import {MentionByType} from '../../MentionsByType'
 import {initialCount,MentionCountByType} from './MentionCountContext'

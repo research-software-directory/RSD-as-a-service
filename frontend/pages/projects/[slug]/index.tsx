@@ -14,11 +14,13 @@ import AppFooter from '../../../components/layout/AppFooter'
 import PageMeta from '../../../components/seo/PageMeta'
 import OgMetaTags from '../../../components/seo/OgMetaTags'
 import CanoncialUrl from '../../../components/seo/CanonicalUrl'
-import {extractLinksFromProject, getOrganisationsOfProject, getParticipatingOrganisations, getProjectItem, getTagsForProject, getTopicsForProject} from '../../../utils/getProjects'
+import {extractLinksFromProject, getImpactForProject, getOrganisationsOfProject, getOutputForProject, getParticipatingOrganisations, getProjectItem, getTagsForProject, getTopicsForProject} from '../../../utils/getProjects'
 import {Project, ProjectLink} from '../../../types/Project'
 import ProjectInfo from '../../../components/projects/ProjectInfo'
 import OrganisationsSection from '../../../components/software/OrganisationsSection'
 import {ParticipatingOrganisationProps} from '../../../types/Organisation'
+import {MentionForProject} from '../../../types/Mention'
+import ProjectMentions from '../../../components/projects/ProjectMentions'
 
 interface ProjectIndexProps extends ScriptProps{
   slug: string
@@ -27,14 +29,18 @@ interface ProjectIndexProps extends ScriptProps{
   organisations: ParticipatingOrganisationProps[],
   technologies: string[],
   topics: string[],
-  links: ProjectLink[]
+  links: ProjectLink[],
+  output: MentionForProject[],
+  impact: MentionForProject[],
 }
 
-export default function ProjectItemPage(props: ProjectIndexProps) {
+export default function ProjectPage(props: ProjectIndexProps) {
   const [resolvedUrl, setResolvedUrl] = useState('')
   const router = useRouter()
   const {session: {status}} = useAuth()
-  const {slug, project, isMaintainer, organisations, technologies, topics, links} = props
+  const {slug, project, isMaintainer, organisations,
+    technologies, topics, links, output, impact
+  } = props
 
   useEffect(() => {
     if (typeof location != 'undefined') {
@@ -49,8 +55,8 @@ export default function ProjectItemPage(props: ProjectIndexProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...technologies...', technologies)
-  // console.log('ProjectItemPage...topics...', topics)
+  // console.log('ProjectItemPage...output...', output)
+  // console.log('ProjectItemPage...impact...', impact)
   return (
     <>
       {/* Page Head meta tags */}
@@ -96,6 +102,12 @@ export default function ProjectItemPage(props: ProjectIndexProps) {
       <OrganisationsSection
         organisations={organisations}
       />
+
+      {/* Project mentions */}
+      <ProjectMentions
+        impact={impact}
+        output={output}
+      />
       {/* bottom spacer */}
       <section className="py-12"></section>
       <AppFooter />
@@ -119,23 +131,27 @@ export async function getServerSideProps(context:any) {
         notFound: true,
       }
     }
-    // fetch all info about software in parallel based on software.id
+    // fetch all info about project in parallel based on project.id
     const fetchData = [
       getParticipatingOrganisations({project: project.id, token, frontend: false}),
       getTagsForProject({project: project.id, token, frontend: false}),
       getTopicsForProject({project: project.id, token, frontend: false}),
+      getOutputForProject({project: project.id, token, frontend: false}),
+      getImpactForProject({project: project.id, token, frontend: false})
     ]
 
     const [
       organisations,
       technologies,
-      topics
+      topics,
+      output,
+      impact
     ] = await Promise.all(fetchData)
 
     // console.log("getServerSideProps...project...", project)
     return {
     // will be passed to the page component as props
-    // see params in SoftwareIndexPage
+    // see params in ProjectPages
       props: {
         project: project,
         slug: params?.slug,
@@ -143,11 +159,13 @@ export async function getServerSideProps(context:any) {
         organisations,
         technologies,
         topics,
-        links: extractLinksFromProject(project)
+        links: extractLinksFromProject(project),
+        output,
+        impact
       },
     }
   } catch (e:any) {
-    logger(`ProjectIndexPage.getServerSideProps: ${e.message}`,'error')
+    logger(`ProjectPage.getServerSideProps: ${e.message}`,'error')
     return {
       notFound: true,
     }

@@ -1,7 +1,7 @@
 import {useContext, useState, useEffect} from 'react'
 
 import useSnackbar from '../../../snackbar/useSnackbar'
-import {MentionEditType, MentionForSoftware, MentionItem, mentionType} from '../../../../types/MentionType'
+import {MentionEditType, MentionForSoftware, MentionItem, mentionType} from '../../../../types/Mention'
 import {addMentionToSoftware} from '../../../../utils/editMentions'
 import logger from '../../../../utils/logger'
 import {getMentionsForSoftwareOfType} from '../../../../utils/editMentions'

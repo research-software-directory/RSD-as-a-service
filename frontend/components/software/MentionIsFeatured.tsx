@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import {isoStrToLocalDateStr} from '../../utils/dateFn'
 import ImageAsBackground from '../layout/ImageAsBackground'
-import {MentionForSoftware} from '../../types/MentionType'
+import {MentionForSoftware} from '../../types/Mention'
 
 export default function MentionIsFeatured({mention}: { mention: MentionForSoftware }) {
   // do not render if no data

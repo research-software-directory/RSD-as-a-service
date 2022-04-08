@@ -1,3 +1,4 @@
+import {MentionForProject} from '../types/Mention'
 import {OrganisationsOfProject, Project, ProjectLink, ProjectTag, ProjectTopic, RawProject} from '../types/Project'
 import {Tag} from '../types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
@@ -282,4 +283,62 @@ export function extractLinksFromProject(project: Project) {
     })
   }
   return links
+}
+
+export async function getOutputForProject({project, token, frontend}:
+  {project: string, token?: string, frontend?: boolean}) {
+  try {
+    // the content is order by type ascending
+    const cols = 'id,date,is_featured,title,type,url,image,author'
+    let url = `${process.env.POSTGREST_URL}/mention?select=${cols},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=type.asc`
+
+    if (frontend) {
+      url = `/api/v1/mention?select=${cols},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=type.asc`
+    }
+
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: MentionForProject[] = await resp.json()
+      return data
+    } else if (resp.status === 404) {
+      logger(`getOutputForProject: 404 [${url}]`, 'error')
+      // query not found
+      return undefined
+    }
+  } catch (e: any) {
+    logger(`getOutputForProject: ${e?.message}`, 'error')
+    return undefined
+  }
+}
+
+export async function getImpactForProject({project, token, frontend}:
+  { project: string, token?: string, frontend?: boolean }) {
+  try {
+    // the content is order by type ascending
+    const cols = 'id,date,is_featured,title,type,url,image,author'
+    let url = `${process.env.POSTGREST_URL}/mention?select=${cols},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=type.asc`
+
+    if (frontend) {
+      url = `/api/v1/mention?select=${cols},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=type.asc`
+    }
+
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: MentionForProject[] = await resp.json()
+      return data
+    } else if (resp.status === 404) {
+      logger(`getImpactForProject: 404 [${url}]`, 'error')
+      // query not found
+      return undefined
+    }
+  } catch (e: any) {
+    logger(`getImpactForProject: ${e?.message}`, 'error')
+    return undefined
+  }
 }

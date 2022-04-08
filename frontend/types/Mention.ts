@@ -81,3 +81,18 @@ export type MentionForSoftware = {
   author: string,
   mention_for_software?: any[]
 }
+
+// mention table joined with output_for_project OR impact_for_project
+export type MentionForProject = {
+  id: string,
+  date: string,
+  is_featured: boolean,
+  title: string,
+  type: MentionType,
+  url: string,
+  // url to external image
+  image: string,
+  author: string,
+  output_for_project?: any[]
+  impact_for_project?: any[]
+}

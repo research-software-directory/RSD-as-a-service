@@ -5,11 +5,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Badge from '@mui/material/Badge'
 
 import MentionItem from './MentionItem'
-import {mentionType,MentionType,MentionForSoftware} from '../../types/MentionType'
+import {mentionType,MentionType,MentionForSoftware, MentionForProject} from '../../types/Mention'
 import {sortOnDateProp} from '../../utils/sortFn'
 
 export type MentionByType={
-  [key:string]: MentionForSoftware[]
+  [key:string]: MentionForSoftware[] | MentionForProject[]
 }
 
 export default function MentionsByType({mentionByType}: { mentionByType: MentionByType }) {

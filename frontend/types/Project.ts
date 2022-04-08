@@ -1,3 +1,4 @@
+import {MentionType} from './Mention'
 import {Status} from './Organisation'
 
 export type BasicProject = {

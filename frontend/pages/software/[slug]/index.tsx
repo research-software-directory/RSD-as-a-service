@@ -42,7 +42,7 @@ import {License, RelatedTools, RepositoryInfo, SoftwareItem, Tag} from '../../..
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {Contributor} from '../../../types/Contributor'
 import {Testimonial} from '../../../types/Testimonial'
-import {MentionForSoftware} from '../../../types/MentionType'
+import {MentionForSoftware} from '../../../types/Mention'
 import {ParticipatingOrganisationProps} from '../../../types/Organisation'
 import {getParticipatingOrganisations} from '../../../utils/editOrganisation'
 import OrganisationsSection from '../../../components/software/OrganisationsSection'
