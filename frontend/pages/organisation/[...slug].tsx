@@ -52,6 +52,7 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
         <OrganisationTitle
           title={organisation.name}
           slug={slug}
+          showSearch={pageState.showSearch}
         />
         <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
           <div>

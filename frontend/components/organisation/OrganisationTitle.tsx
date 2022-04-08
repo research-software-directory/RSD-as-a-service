@@ -30,27 +30,36 @@ function createSegments(slug: string[]) {
   return segments
 }
 
-export default function OrganisationTitle({title, slug}:
-  { title: string, slug: string[]}) {
+export default function OrganisationTitle({title, slug, showSearch=false}:
+  { title: string, slug: string[],showSearch?:boolean}) {
+
+  function renderSearch() {
+    if (showSearch===true) {
+      return (
+        <>
+          <Searchbox />
+          <Pagination />
+        </>
+      )
+    }
+    return null
+  }
 
   return (
     <PageTitleSticky
       style={{padding:'1rem 0rem 2rem 0rem'}}
     >
-      {/* <section className="flex-1 flex items-center"> */}
-        <div className="flex-1">
-          <h1 className="flex-1 w-full md:mt-4">{title}</h1>
-          <div className='w-full'>
-            <Breadcrumbs
-              segments={createSegments(slug)}
-            />
-          </div>
+      <div className="flex-1">
+        <h1 className="flex-1 w-full md:mt-4">{title}</h1>
+        <div className='w-full'>
+          <Breadcrumbs
+            segments={createSegments(slug)}
+          />
         </div>
-        <div className="xl:flex xl:items-center text-center">
-          <Searchbox />
-          <Pagination />
-        </div>
-      {/* </section> */}
+      </div>
+      <div className="xl:flex xl:items-center text-center">
+        {renderSearch()}
+      </div>
     </PageTitleSticky>
   )
 }
