@@ -14,7 +14,11 @@ import AppFooter from '../../../components/layout/AppFooter'
 import PageMeta from '../../../components/seo/PageMeta'
 import OgMetaTags from '../../../components/seo/OgMetaTags'
 import CanoncialUrl from '../../../components/seo/CanonicalUrl'
-import {extractLinksFromProject, getImpactForProject, getOrganisationsOfProject, getOutputForProject, getParticipatingOrganisations, getProjectItem, getTagsForProject, getTopicsForProject} from '../../../utils/getProjects'
+import {
+  extractLinksFromProject, getImpactForProject,
+  getOutputForProject, getParticipatingOrganisations,
+  getProjectItem, getTagsForProject, getTopicsForProject
+} from '../../../utils/getProjects'
 import {Project, ProjectLink} from '../../../types/Project'
 import ProjectInfo from '../../../components/projects/ProjectInfo'
 import OrganisationsSection from '../../../components/software/OrganisationsSection'
@@ -22,7 +26,7 @@ import {ParticipatingOrganisationProps} from '../../../types/Organisation'
 import {MentionForProject} from '../../../types/Mention'
 import ProjectMentions from '../../../components/projects/ProjectMentions'
 
-interface ProjectIndexProps extends ScriptProps{
+export interface ProjectPageProps extends ScriptProps{
   slug: string
   project: Project
   isMaintainer: boolean
@@ -34,7 +38,7 @@ interface ProjectIndexProps extends ScriptProps{
   impact: MentionForProject[],
 }
 
-export default function ProjectPage(props: ProjectIndexProps) {
+export default function ProjectPage(props: ProjectPageProps) {
   const [resolvedUrl, setResolvedUrl] = useState('')
   const router = useRouter()
   const {session: {status}} = useAuth()

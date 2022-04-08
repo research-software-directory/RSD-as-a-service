@@ -1,0 +1,182 @@
+[
+  {
+    "id": "bab0af48-020a-4548-b165-d4ae01de61ce",
+    "slug": "covid-19-grand-challenge",
+    "title": "COVID-19 Grand Challenge",
+    "subtitle": "Assessing the suspicion and severity of COVID-19 in a CT scan",
+    "date_start": "2020-04-15",
+    "date_end": "2020-12-31",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "bab0af48-020a-4548-b165-d4ae01de61ce"
+      }
+    ]
+  },
+  {
+    "id": "8a40bfeb-23e8-404b-abee-f0d56b1fe940",
+    "slug": "fair-data-for-capacity",
+    "title": "FAIR Data for CAPACITY",
+    "subtitle": "Statistical analyses and machine learning models: Insights about the relation between...",
+    "date_start": "2020-04-15",
+    "date_end": "2021-06-01",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "8a40bfeb-23e8-404b-abee-f0d56b1fe940"
+      }
+    ]
+  },
+  {
+    "id": "25c7750e-9dc9-45a9-b3c5-5e5ae10a0892",
+    "slug": "retina-covid19",
+    "title": "Retina COVID19",
+    "subtitle": "Social distancing measures carry economic and social costs",
+    "date_start": "2020-04-15",
+    "date_end": "2021-09-01",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "25c7750e-9dc9-45a9-b3c5-5e5ae10a0892"
+      }
+    ]
+  },
+  {
+    "id": "3e577027-12df-4b79-87b7-07f4cf6a2bb3",
+    "slug": "glammap",
+    "title": "GlamMap",
+    "subtitle": "Visual analytics for the world’s library data",
+    "date_start": "2017-08-01",
+    "date_end": "2019-08-01",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "3e577027-12df-4b79-87b7-07f4cf6a2bb3"
+      }
+    ]
+  },
+  {
+    "id": "9d94b989-ebbc-40e4-b7e2-9df1aac63f60",
+    "slug": "magic",
+    "title": "MAGIC",
+    "subtitle": "Metrics and Access to Global Indices for Climate Projections",
+    "date_start": "2016-10-01",
+    "date_end": "2019-03-31",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "9d94b989-ebbc-40e4-b7e2-9df1aac63f60"
+      }
+    ]
+  },
+  {
+    "id": "975d4234-98b6-4d9c-80ba-235b7bdde548",
+    "slug": "stochastic-multiscale-climate-models",
+    "title": "Stochastic Multiscale Climate Models",
+    "subtitle": "Coupling an implicit low-resolution model to an explicit high-resolution ocean model",
+    "date_start": "2017-12-18",
+    "date_end": "2021-12-31",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "975d4234-98b6-4d9c-80ba-235b7bdde548"
+      }
+    ]
+  },
+  {
+    "id": "cf274cd3-b78c-4d4d-9dc7-05a0ff509cea",
+    "slug": "multixmas",
+    "title": "MULTIXMAS",
+    "subtitle": "Multiscale simulations of excitation dynamics in molecular materials for sustainable energy applications",
+    "date_start": "2017-12-18",
+    "date_end": "2022-02-28",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "cf274cd3-b78c-4d4d-9dc7-05a0ff509cea"
+      }
+    ]
+  },
+  {
+    "id": "d649d193-8b54-4e5e-9eea-df7cbd6a4f89",
+    "slug": "integrated-omics-analysis-for-small-molecule-mediated-host-microbiome-interactions",
+    "title": "Integrated omics analysis for small molecule-mediated host-microbiome interactions",
+    "subtitle": "Advancing our understanding of molecular mechanisms of health and disease",
+    "date_start": "2017-12-18",
+    "date_end": "2022-07-01",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "d649d193-8b54-4e5e-9eea-df7cbd6a4f89"
+      }
+    ]
+  },
+  {
+    "id": "f3cbad3e-d5ab-4845-9435-811dc71e45ea",
+    "slug": "large-scale-data-assimilation",
+    "title": "Large Scale Data Assimilation",
+    "subtitle": "Handling data assimilation on a large scale",
+    "date_start": "2014-12-18",
+    "date_end": "2017-11-30",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "f3cbad3e-d5ab-4845-9435-811dc71e45ea"
+      }
+    ]
+  },
+  {
+    "id": "b0cb0599-1d46-4f0a-ac2f-091e53da1703",
+    "slug": "a-phase-field-model-to-guide-the-development-and-design-of-next-generation-solid-state-batteries",
+    "title": "A phase field model to guide the development and design of next generation solid-state-batteries",
+    "subtitle": "Safer batteries with higher energy densities",
+    "date_start": "2017-12-18",
+    "date_end": "2021-12-31",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "b0cb0599-1d46-4f0a-ac2f-091e53da1703"
+      }
+    ]
+  },
+  {
+    "id": "3546bb00-ecb0-4f76-94ca-5c567ec0e6bb",
+    "slug": "passing-xsams",
+    "title": "Passing XSAMS",
+    "subtitle": "New tools for researchers in plasma, combustion and chemical reactor science",
+    "date_start": "2017-12-18",
+    "date_end": "2022-01-31",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "3546bb00-ecb0-4f76-94ca-5c567ec0e6bb"
+      }
+    ]
+  },
+  {
+    "id": "3cb6b203-85c0-4249-ba9f-53d23d9bc2ec",
+    "slug": "puregome",
+    "title": "PuReGoMe",
+    "subtitle": "Understanding Dutch public sentiment during the COVID-19 outbreak period by analyzing real-time...",
+    "date_start": "2020-04-15",
+    "date_end": "2020-10-31",
+    "updated_at": "2022-04-07T13:39:25.736194",
+    "is_published": true,
+    "image_for_project": [
+      {
+        "project": "3cb6b203-85c0-4249-ba9f-53d23d9bc2ec"
+      }
+    ]
+  }
+]

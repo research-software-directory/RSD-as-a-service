@@ -58,7 +58,7 @@ export async function getProjectList({rows=12,page=0,baseUrl='/api/v1',searchFor
   }
 }
 
-function prepareData(json:RawProject[]) {
+export function prepareData(json:RawProject[]) {
   const data:Project[] = json.map(item => {
     const project = getPropsFromObject(item, [
       'id', 'slug',

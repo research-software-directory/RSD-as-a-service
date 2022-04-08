@@ -20,9 +20,13 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
   return (
     <Link
       href={`/organisation/${organisation.slug}`}
-      passHref>
-      <a className="h-full">
-        <article className="flex flex-col border rounded-sm p-4 h-full min-h-[16rem]">
+      passHref
+    >
+      <a
+        className="h-full"
+      >
+        <article
+          className="flex flex-col border rounded-sm p-4 h-full min-h-[16rem]">
           <h2 className='h-[5rem]'>{organisation.name}</h2>
           <div className="flex flex-1">
             <div className="flex items-center flex-1">
