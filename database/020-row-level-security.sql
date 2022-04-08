@@ -159,6 +159,20 @@ CREATE POLICY admin_all_rights ON project TO rsd_admin
 	WITH CHECK (TRUE);
 
 
+ALTER TABLE url_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON url_for_project FOR SELECT TO web_anon, rsd_user
+	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY maintainer_all_rights ON url_for_project TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON url_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 ALTER TABLE image_for_project ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON image_for_project FOR SELECT TO web_anon, rsd_user

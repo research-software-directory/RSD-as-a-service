@@ -1,27 +1,16 @@
 CREATE TABLE project (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	slug VARCHAR(100) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
-	call_url VARCHAR,
-	code_url VARCHAR,
-	data_management_plan_url VARCHAR,
 	date_end DATE,
 	date_start DATE,
 	description VARCHAR,
 	grant_id VARCHAR,
-	home_url VARCHAR,
 	image_caption VARCHAR,
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
-	software_sustainability_plan_url VARCHAR,
 	subtitle VARCHAR,
 	title VARCHAR,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
-);
-
-CREATE TABLE image_for_project (
-	project UUID references project (id) PRIMARY KEY,
-	data VARCHAR NOT NULL,
-	mime_type VARCHAR(100) NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_project() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -49,6 +38,43 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_project BEFORE UPDATE ON project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_project();
+
+
+CREATE TABLE url_for_project (
+	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	project UUID REFERENCES project (id),
+	title VARCHAR NOT NULL,
+	url VARCHAR NOT NULL,
+	position INTEGER
+);
+
+CREATE FUNCTION sanitise_insert_url_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = gen_random_uuid();
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_url_for_project BEFORE INSERT ON url_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_url_for_project();
+
+
+CREATE FUNCTION sanitise_update_url_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = OLD.id;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_url_for_project BEFORE UPDATE ON url_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_url_for_project();
+
+
+CREATE TABLE image_for_project (
+	project UUID REFERENCES project (id) PRIMARY KEY,
+	data VARCHAR NOT NULL,
+	mime_type VARCHAR(100) NOT NULL
+);
 
 
 CREATE FUNCTION get_project_image(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
