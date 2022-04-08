@@ -123,7 +123,8 @@ export async function getParticipatingOrganisations({software, token, frontend =
     return item.status === 'approved'
   })
     .map(item => {
-    return {
+      return {
+      slug: item.slug,
       name: item.name,
       website: item.website ?? '',
       logo_url: getUrlFromLogoId(item.logo_id)
