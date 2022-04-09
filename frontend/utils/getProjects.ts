@@ -4,7 +4,7 @@ import {
   OrganisationsOfProject, Project,
   ProjectLink, ProjectTag, ProjectTopic, RawProject
 } from '../types/Project'
-import {Tag} from '../types/SoftwareTypes'
+import {RelatedTools, Tag} from '../types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
@@ -388,6 +388,61 @@ export async function getTeamForProject({project, token, frontend}:
     return []
   } catch (e: any) {
     logger(`getTeamForProject: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function getRelatedProjects({project, token, frontend}:
+  { project: string, token?: string, frontend?: boolean }) {
+  try {
+    // construct api url based on request source
+    const select = 'project,status,software(id,slug,brand_name,short_statement)'
+    let query = `software_for_project?select=${select}&status=eq.approved&project=eq.${project}`
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: RelatedTools[] = await resp.json()
+      return data
+    }
+    logger(`getRelatedToolsForProject: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    // query not found
+    return []
+  } catch (e: any) {
+    logger(`getRelatedToolsForProject: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+
+export async function getRelatedToolsForProject({project, token, frontend}:
+  {project: string, token?: string, frontend?: boolean}) {
+  try {
+    // construct api url based on request source
+    const select = 'project,status,software(id,slug,brand_name,short_statement)'
+    let query = `software_for_project?select=${select}&status=eq.approved&project=eq.${project}`
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: RelatedTools[] = await resp.json()
+      return data
+    }
+    logger(`getRelatedToolsForProject: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    // query not found
+    return []
+  } catch (e: any) {
+    logger(`getRelatedToolsForProject: ${e?.message}`, 'error')
     return []
   }
 }
