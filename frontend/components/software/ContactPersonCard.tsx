@@ -15,7 +15,9 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
     if (person?.email_address) {
       return (
         <a className="flex items-center md:items-start"
-          href={`mailto:${person?.email_address}`}>
+          href={`mailto:${person?.email_address}`}
+          target="_blank" rel="noreferrer"
+        >
             <EmailIcon sx={{
               mr: 1,
               '&:hover': {
