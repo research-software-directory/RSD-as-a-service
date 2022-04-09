@@ -1,5 +1,9 @@
+import {Contributor, ContributorProps} from '../types/Contributor'
 import {MentionForProject} from '../types/Mention'
-import {OrganisationsOfProject, Project, ProjectLink, ProjectTag, ProjectTopic, RawProject} from '../types/Project'
+import {
+  OrganisationsOfProject, Project,
+  ProjectLink, ProjectTag, ProjectTopic, RawProject
+} from '../types/Project'
 import {Tag} from '../types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
@@ -7,6 +11,7 @@ import {createJsonHeaders} from './fetchHelpers'
 import {getPropsFromObject} from './getPropsFromObject'
 import logger from './logger'
 import {paginationUrlParams} from './postgrestUrl'
+import {sortOnStrProp} from './sortFn'
 
 export async function getProjectList({rows=12,page=0,baseUrl='/api/v1',searchFor,token}:
   {rows: number, page: number, baseUrl?: string, searchFor?: string,token?:string}
@@ -340,5 +345,49 @@ export async function getImpactForProject({project, token, frontend}:
   } catch (e: any) {
     logger(`getImpactForProject: ${e?.message}`, 'error')
     return undefined
+  }
+}
+
+export function getAvatarUrl({id, avatar_mime_type}: { id?: string | null, avatar_mime_type?: string | null }) {
+  if (avatar_mime_type) {
+    // construct image path
+    // currently we use posgrest + nginx approach image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
+    return `/image/rpc/get_team_member_image?id=${id}`
+  }
+  return null
+}
+
+export async function getTeamForProject({project, token, frontend}:
+  {project: string, token?: string, frontend?: boolean}) {
+  try {
+    // use standardized list of columns - after team_member table is updated (as with contributors)
+    // for now the list is created here
+    const columns = 'id,project,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
+
+    let url = `${process.env.POSTGREST_URL}/team_member?select=${columns}&project=eq.${project}&order=given_names.asc`
+    if (frontend) {
+      url = `/api/v1/team_member?select=${columns}&project=eq.${project}&order=given_names.asc`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+      }
+    })
+
+    if (resp.status === 200) {
+      const data: Contributor[] = await resp.json()
+      return data.map(item => ({
+        ...item,
+        // add avatar url based on uuid
+        avatar_url: getAvatarUrl(item)
+      })).sort((a, b) => sortOnStrProp(a, b, 'given_names'))
+    }
+    logger(`getTeamForProject: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    // / query not found
+    return []
+  } catch (e: any) {
+    logger(`getTeamForProject: ${e?.message}`, 'error')
+    return []
   }
 }

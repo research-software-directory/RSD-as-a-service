@@ -17,7 +17,7 @@ import CanoncialUrl from '../../../components/seo/CanonicalUrl'
 import {
   extractLinksFromProject, getImpactForProject,
   getOutputForProject, getParticipatingOrganisations,
-  getProjectItem, getTagsForProject, getTopicsForProject
+  getProjectItem, getTagsForProject, getTeamForProject, getTopicsForProject
 } from '../../../utils/getProjects'
 import {Project, ProjectLink} from '../../../types/Project'
 import ProjectInfo from '../../../components/projects/ProjectInfo'
@@ -25,6 +25,8 @@ import OrganisationsSection from '../../../components/software/OrganisationsSect
 import {ParticipatingOrganisationProps} from '../../../types/Organisation'
 import {MentionForProject} from '../../../types/Mention'
 import ProjectMentions from '../../../components/projects/ProjectMentions'
+import {Contributor} from '../../../types/Contributor'
+import ContributorsSection from '../../../components/software/ContributorsSection'
 
 export interface ProjectPageProps extends ScriptProps{
   slug: string
@@ -36,6 +38,7 @@ export interface ProjectPageProps extends ScriptProps{
   links: ProjectLink[],
   output: MentionForProject[],
   impact: MentionForProject[],
+  team: Contributor[]
 }
 
 export default function ProjectPage(props: ProjectPageProps) {
@@ -43,7 +46,7 @@ export default function ProjectPage(props: ProjectPageProps) {
   const router = useRouter()
   const {session: {status}} = useAuth()
   const {slug, project, isMaintainer, organisations,
-    technologies, topics, links, output, impact
+    technologies, topics, links, output, impact, team
   } = props
 
   useEffect(() => {
@@ -59,7 +62,7 @@ export default function ProjectPage(props: ProjectPageProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...output...', output)
+  // console.log('ProjectItemPage...team...', team)
   // console.log('ProjectItemPage...impact...', impact)
   return (
     <>
@@ -112,6 +115,11 @@ export default function ProjectPage(props: ProjectPageProps) {
         impact={impact}
         output={output}
       />
+      {/* Team (use software components) */}
+      <ContributorsSection
+        title="Team"
+        contributors={team}
+      />
       {/* bottom spacer */}
       <section className="py-12"></section>
       <AppFooter />
@@ -141,7 +149,8 @@ export async function getServerSideProps(context:any) {
       getTagsForProject({project: project.id, token, frontend: false}),
       getTopicsForProject({project: project.id, token, frontend: false}),
       getOutputForProject({project: project.id, token, frontend: false}),
-      getImpactForProject({project: project.id, token, frontend: false})
+      getImpactForProject({project: project.id, token, frontend: false}),
+      getTeamForProject({project: project.id, token, frontend: false}),
     ]
 
     const [
@@ -149,7 +158,8 @@ export async function getServerSideProps(context:any) {
       technologies,
       topics,
       output,
-      impact
+      impact,
+      team
     ] = await Promise.all(fetchData)
 
     // console.log("getServerSideProps...project...", project)
@@ -165,7 +175,8 @@ export async function getServerSideProps(context:any) {
         topics,
         links: extractLinksFromProject(project),
         output,
-        impact
+        impact,
+        team
       },
     }
   } catch (e:any) {
