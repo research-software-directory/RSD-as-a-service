@@ -12,7 +12,7 @@ export type SoftwareCardType = {
 
 export default function SoftwareCard({href,brand_name,short_statement,is_featured,updated_at}:SoftwareCardType) {
 
-  const colors = is_featured ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'
+  const colors = is_featured ? 'bg-primary text-white' : 'bg-grey-100 text-gray-800'
   const today = new Date()
 
   function getInitals() {

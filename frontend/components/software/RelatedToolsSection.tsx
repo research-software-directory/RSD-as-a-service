@@ -17,7 +17,7 @@ export default function RelatedToolsSection({relatedTools=[]}: {relatedTools: Re
         brand_name: item.software?.brand_name,
         is_featured: false,
         short_statement: item.software?.short_statement || '',
-        updated_at: null,
+        updated_at: item.software?.updated_at ?? null,
       }
     })
 

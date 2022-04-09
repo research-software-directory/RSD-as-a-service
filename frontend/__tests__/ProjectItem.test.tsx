@@ -5,6 +5,9 @@ import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
 import projectsOverview from './__fixtures__/projectsOverview.json'
 import apiMentions from './__fixtures__/apiMentions.json'
+import apiRelatedProjects from './__fixtures__/apiRelatedProjects.json'
+import apiContributors from './__fixtures__/apiContributors.json'
+import apiRelatedSoftware from './__fixtures__/apiRelatedSoftware.json'
 
 import ProjectItemPage, {getServerSideProps, ProjectPageProps} from '../pages/projects/[slug]/index'
 import {prepareData} from '../utils/getProjects'
@@ -25,7 +28,10 @@ const mockedProps:ProjectPageProps = {
   topics: ['Topic 1', 'Topic 2'],
   links: [],
   output: apiMentions as MentionForProject[],
-  impact: apiMentions as MentionForProject[]
+  impact: apiMentions as MentionForProject[],
+  team: apiContributors,
+  relatedProjects: apiRelatedProjects,
+  relatedTools: apiRelatedSoftware
 }
 
 describe('pages/projects/index.tsx', () => {

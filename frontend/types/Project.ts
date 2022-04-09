@@ -1,4 +1,3 @@
-import {MentionType} from './Mention'
 import {Status} from './Organisation'
 
 export type BasicProject = {
@@ -20,13 +19,11 @@ export type BasicProject = {
   updated_at: string
 }
 
-
 export type RawProject = BasicProject & {
   image_for_project: [
     { project: string }
   ]
 }
-
 
 export type Project = BasicProject & {
   image_id: string | null
@@ -60,4 +57,15 @@ export type ProjectTopic = {
 export type ProjectLink = {
   label: string,
   url: string
+}
+
+export type RelatedProject = {
+  origin: string
+  id: string
+  slug: string
+  title: string
+  subtitle: string
+  updated_at: string
+  date_end: string
+  image_id: string | null
 }

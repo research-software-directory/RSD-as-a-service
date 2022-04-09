@@ -324,3 +324,73 @@ BEGIN
 	;
 END
 $$;
+
+-- RELATED PROJECTS of project (origin)
+-- filter by origin to get related project for the origin
+CREATE FUNCTION related_projects_for_project() RETURNS TABLE (
+	origin UUID,
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	date_end DATE,
+	updated_at TIMESTAMP,
+	image_id UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		project_for_project.origin,
+		project.id,
+		project.slug,
+		project.title,
+		project.subtitle,
+  	project.date_end,
+		project.updated_at,
+		image_for_project.project AS image_id
+	FROM
+		project
+	LEFT JOIN
+		image_for_project ON image_for_project.project = project.id
+	LEFT JOIN
+		project_for_project ON project.id = project_for_project.relation
+	;
+END
+$$;
+
+
+
+-- RELATED PROJECTS for software
+-- filter by software
+CREATE FUNCTION related_projects_for_software() RETURNS TABLE (
+	software UUID,
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	date_end DATE,
+	updated_at TIMESTAMP,
+	image_id UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		software_for_project.software,
+		project.id,
+		project.slug,
+		project.title,
+		project.subtitle,
+		project.date_end,
+		project.updated_at,
+		image_for_project.project AS image_id
+	FROM
+		project
+	LEFT JOIN
+		image_for_project ON image_for_project.project = project.id
+	LEFT JOIN
+		software_for_project ON project.id = software_for_project.project
+	;
+END
+$$;

@@ -27,7 +27,7 @@ function clasifyContributors(contributors: Contributor[]) {
 export default function ContributorsSection({contributors, title='Contributors'}:
   { contributors: Contributor[], title?:string }) {
   // do not show section if no content
-  if (contributors.length===0) return null
+  if (typeof contributors == 'undefined' || contributors?.length===0) return null
   // clasify
   const {contact, contributorList} = clasifyContributors(contributors)
   return (
