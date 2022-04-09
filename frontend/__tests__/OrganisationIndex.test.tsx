@@ -4,10 +4,10 @@ import {mockResolvedValue} from '../utils/jest/mockFetch'
 import organisationsOverview from './__fixtures__/organisationsOverview.json'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
-import OrganisationIndexPage,{getServerSideProps} from '../pages/organisation/index'
+import OrganisationIndexPage,{getServerSideProps} from '../pages/organisations/index'
 
 
-describe('pages/organisation/index.tsx', () => {
+describe('pages/organisations/index.tsx', () => {
   beforeEach(() => {
     mockResolvedValue(organisationsOverview, {
       status: 206,

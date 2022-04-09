@@ -8,9 +8,9 @@ import Pagination from '../../components/pagination/Pagination'
 function createSegments(slug: string[]) {
   const segments:SlugInfo[] = [{
     label: 'organisations',
-    path:'/organisation'
+    path:'/organisations'
   }]
-  let path='/organisation'
+  let path='/organisations'
   slug.forEach((item, pos) => {
     if (pos === slug.length - 1) {
       // last segment is current page

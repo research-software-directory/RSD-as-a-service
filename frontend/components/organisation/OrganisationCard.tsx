@@ -19,7 +19,7 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
 
   return (
     <Link
-      href={`/organisation/${organisation.slug}`}
+      href={`/organisations/${organisation.slug}`}
       passHref
     >
       <a
