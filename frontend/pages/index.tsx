@@ -50,9 +50,10 @@ export default function Home() {
 
         {/* Header  */}
         <header
+          data-testid="Landing Page"
           className="sticky top-0 px-5 md:px-10 z-10 backdrop-filter backdrop-blur-xl bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-60">
 
-          <div className=" w-full max-w-screen-xl mx-auto flex py-6 items-center">
+          <div className=" w-fudocker ll max-w-screen-xl mx-auto flex py-6 items-center">
             <Link href="/" passHref>
               <a className="hover:shadow-2xl">
                 <LogoApp className="hidden xl:block"/>
@@ -97,8 +98,8 @@ export default function Home() {
               opacity-50 md:opacity-100
                 "
             />
-
           </div>
+
           <div className="w-full max-w-screen-xl p-5 md:p-10 mx-auto">
             {/* Jumbo Text*/}
             <div className="w-full md:w-1/2 flex flex-col justify-center"

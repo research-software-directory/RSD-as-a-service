@@ -9,8 +9,7 @@ describe('pages/index.tsx', () => {
     render(WrappedComponentWithProps(Home))
   })
   it('renders heading with Home page title', () => {
-    const heading = screen.getByRole('heading')
+    const heading = screen.getByTestId('Landing Page')
     expect(heading).toBeInTheDocument()
-    expect(heading.innerHTML).toEqual('Home page')
   })
 })
