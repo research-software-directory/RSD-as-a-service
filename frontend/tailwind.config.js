@@ -12,6 +12,7 @@ module.exports = {
   // corePlugins: {
   //   preflight: false,
   // },
+  darkMode: 'class',
   content: [
     './auth/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -55,7 +56,15 @@ module.exports = {
       // screens: {
       //   qhd:'2304px'
       // },
+      animation: {
+        wiggle: 'wiggle 1s ease-in-out infinite',
+        'spin-slow': 'spin 3s linear infinite',
+      },
+      fontFamily: {
+        'rsd-titles': ['Work Sans']
+      },
       colors: {
+        neutral: colors.neutral,
         paper: colors.white,
         primary: colors.primary,
         secondary: colors.secondary,
@@ -64,6 +73,7 @@ module.exports = {
         info: colors.info,
         success: colors.success,
         grey: colors.grey
+
       },
       fontWeight:{
         regular: muiTypography.fontWeightRegular

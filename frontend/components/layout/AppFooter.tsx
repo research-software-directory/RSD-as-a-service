@@ -1,10 +1,10 @@
 import Link from 'next/link'
-import LogoEscience from './LogoEscience'
+import LogoEscience from '~/components/svg/LogoEscience'
 import Mail from '@mui/icons-material/Mail'
 
 export default function AppFooter () {
   return (
-    <footer className="flex flex-wrap bg-secondary text-white">
+    <footer className="flex flex-wrap bg-secondary text-white border-t border-neutral">
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[_2fr,1fr] lg:container lg:mx-auto">
 
         <div className="pt-10 sm:pb-10">
@@ -26,21 +26,21 @@ export default function AppFooter () {
         <div className="pb-10 sm:pt-10">
           <div className="text-lg">Questions or comments?</div>
           <a href="mailto:rsd@esciencecenter.nl"
-            className="mt-2 text-primary hover:text-white flex"
+             className="mt-2 text-primary hover:text-white flex"
           >
             <Mail className="mr-2"/> rsd@esciencecenter.nl
           </a>
 
-          <div className="mt-8 text-lg">Netherlands eScience Center</div>
+          <div className="mt-8 text-lg">Research Software Directory</div>
           <div className="flex flex-col">
             <Link href="/" passHref>
               <a className="footer-link">Home</a>
             </Link>
+            <Link href="/software" passHref>
+              <a className="footer-link">Software</a>
+            </Link>
             <Link href="/projects" passHref>
               <a className="footer-link">Projects</a>
-            </Link>
-            <Link href="/#" passHref>
-              <a className="footer-link">People</a>
             </Link>
           </div>
         </div>
