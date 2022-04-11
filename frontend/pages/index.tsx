@@ -4,6 +4,7 @@ import AppFooter from '~/components/layout/AppFooter'
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
 import SimpleCircle from '~/components/svg/SimpleCircle'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
@@ -19,7 +20,6 @@ import LogoUU from '~/assets/logos/LogoUU.svg'
 import LogoLeiden from '~/assets/logos/LogoLeiden.svg'
 
 import Arc from '~/components/home/arc.svg'
-import Illustration from '~/components/home/illustration.svg'
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
 /*! purgecss end ignore */
@@ -60,11 +60,12 @@ export default function Home() {
               </a>
             </Link>
             <div className="flex flex-1">
-
               <div className="hidden sm:flex w-full text-lg ml-28 gap-5 text-center opacity-80 ">
                 <a href="#whyrsd">Why RSD</a>
-                <Link href="/organisation">Organizations</Link>
-                <Link href="/about">About us</Link>
+                <Link href="/software">Software</Link>
+                <Link href="/projects">Projects</Link>
+                <Link href="/organisations">Organizations</Link>
+                {/*<Link href="/about">About us</Link>*/}
               </div>
             </div>
 
@@ -88,15 +89,19 @@ export default function Home() {
         <div className="mx-auto mt-20 relative overflow-x-clip">
 
           {/* Jumbo Image*/}
-          <div className="max-w-[1200px]  mx-auto bg-red-500 ">
-            <Illustration className="
+          <div className="max-w-[1200px] mx-auto ">
+            <div className="
+
               absolute
-              -top-[270px] md:-top-48
-              -left-[160px]
-              md:left-[50%]
+              w-full
+              h-full
+              -top-[170px] md:-top-48
+              -left-[60px] md:left-[50%]
               opacity-50 md:opacity-100
-                "
+                ">
+            <Image src="/images/illustration.webp" width="847" height="760"
             />
+            </div>
           </div>
 
           <div className="w-full max-w-screen-xl p-5 md:p-10 mx-auto">
