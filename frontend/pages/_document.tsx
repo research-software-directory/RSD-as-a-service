@@ -7,7 +7,7 @@ import createEmotionCache from '../styles/createEmotionCache'
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en" className='scroll-smooth' style={{scrollBehavior:'smooth'}}>
+      <Html lang="en">
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={rsdMuiTheme.palette.primary.main} />
