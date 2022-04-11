@@ -9,12 +9,14 @@ import {refreshSession} from './refreshSession'
 export const REFRESH_MARGIN = 5 * 60 * 1000
 
 export type RsdUser = {
-  iss: 'rsd_auth',
-  role: 'rsd_user' | 'rsd_admin',
+  iss: 'rsd_auth'
+  role: 'rsd_user' | 'rsd_admin'
   // expiration time
-  exp: number,
+  exp: number
   // uid
   account: string
+  // display name
+  name: string
 }
 
 export type Session = {

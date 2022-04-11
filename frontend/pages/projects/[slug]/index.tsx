@@ -14,27 +14,46 @@ import AppFooter from '../../../components/layout/AppFooter'
 import PageMeta from '../../../components/seo/PageMeta'
 import OgMetaTags from '../../../components/seo/OgMetaTags'
 import CanoncialUrl from '../../../components/seo/CanonicalUrl'
-import {extractLinksFromProject, getOrganisationsOfProject, getParticipatingOrganisations, getProjectItem, getTagsForProject, getTopicsForProject} from '../../../utils/getProjects'
-import {Project, ProjectLink} from '../../../types/Project'
+import {
+  extractLinksFromProject, getImpactForProject,
+  getOutputForProject, getParticipatingOrganisations,
+  getProjectItem, getRelatedProjects, getRelatedToolsForProject, getTagsForProject, getTeamForProject, getTopicsForProject
+} from '../../../utils/getProjects'
+import {Project, ProjectLink, RelatedProject} from '../../../types/Project'
 import ProjectInfo from '../../../components/projects/ProjectInfo'
 import OrganisationsSection from '../../../components/software/OrganisationsSection'
 import {ParticipatingOrganisationProps} from '../../../types/Organisation'
+import {MentionForProject} from '../../../types/Mention'
+import ProjectMentions from '../../../components/projects/ProjectMentions'
+import {Contributor} from '../../../types/Contributor'
+import ContributorsSection from '../../../components/software/ContributorsSection'
+import {RelatedTools} from '../../../types/SoftwareTypes'
+import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
+import RelatedProjectsSection from '../../../components/projects/RelatedProjectsSection'
 
-interface ProjectIndexProps extends ScriptProps{
+export interface ProjectPageProps extends ScriptProps{
   slug: string
   project: Project
   isMaintainer: boolean
   organisations: ParticipatingOrganisationProps[],
   technologies: string[],
   topics: string[],
-  links: ProjectLink[]
+  links: ProjectLink[],
+  output: MentionForProject[],
+  impact: MentionForProject[],
+  team: Contributor[],
+  relatedTools: RelatedTools[],
+  relatedProjects: RelatedProject[]
 }
 
-export default function ProjectItemPage(props: ProjectIndexProps) {
+export default function ProjectPage(props: ProjectPageProps) {
   const [resolvedUrl, setResolvedUrl] = useState('')
   const router = useRouter()
   const {session: {status}} = useAuth()
-  const {slug, project, isMaintainer, organisations, technologies, topics, links} = props
+  const {slug, project, isMaintainer, organisations,
+    technologies, topics, links, output, impact, team,
+    relatedTools, relatedProjects
+  } = props
 
   useEffect(() => {
     if (typeof location != 'undefined') {
@@ -49,8 +68,8 @@ export default function ProjectItemPage(props: ProjectIndexProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...technologies...', technologies)
-  // console.log('ProjectItemPage...topics...', topics)
+  // console.log('ProjectItemPage...relatedTools...', relatedTools)
+  // console.log('ProjectItemPage...impact...', impact)
   return (
     <>
       {/* Page Head meta tags */}
@@ -96,8 +115,27 @@ export default function ProjectItemPage(props: ProjectIndexProps) {
       <OrganisationsSection
         organisations={organisations}
       />
+
+      {/* Project mentions */}
+      <ProjectMentions
+        impact={impact}
+        output={output}
+      />
+      {/* Team (use software components) */}
+      <ContributorsSection
+        title="Team"
+        contributors={team}
+      />
+      {/* Related projects */}
+      <RelatedProjectsSection
+        relatedProjects={relatedProjects}
+      />
+      {/* Used software */}
+      <RelatedToolsSection
+        relatedTools={relatedTools}
+      />
       {/* bottom spacer */}
-      <section className="py-12"></section>
+      <section className="py-8"></section>
       <AppFooter />
     </>
   )
@@ -119,23 +157,33 @@ export async function getServerSideProps(context:any) {
         notFound: true,
       }
     }
-    // fetch all info about software in parallel based on software.id
+    // fetch all info about project in parallel based on project.id
     const fetchData = [
       getParticipatingOrganisations({project: project.id, token, frontend: false}),
       getTagsForProject({project: project.id, token, frontend: false}),
       getTopicsForProject({project: project.id, token, frontend: false}),
+      getOutputForProject({project: project.id, token, frontend: false}),
+      getImpactForProject({project: project.id, token, frontend: false}),
+      getTeamForProject({project: project.id, token, frontend: false}),
+      getRelatedToolsForProject({project: project.id, token, frontend: false}),
+      getRelatedProjects({project: project.id, token, frontend: false})
     ]
 
     const [
       organisations,
       technologies,
-      topics
+      topics,
+      output,
+      impact,
+      team,
+      relatedTools,
+      relatedProjects
     ] = await Promise.all(fetchData)
 
     // console.log("getServerSideProps...project...", project)
     return {
     // will be passed to the page component as props
-    // see params in SoftwareIndexPage
+    // see params in ProjectPages
       props: {
         project: project,
         slug: params?.slug,
@@ -143,11 +191,16 @@ export async function getServerSideProps(context:any) {
         organisations,
         technologies,
         topics,
-        links: extractLinksFromProject(project)
+        links: extractLinksFromProject(project),
+        output,
+        impact,
+        team,
+        relatedTools,
+        relatedProjects
       },
     }
   } catch (e:any) {
-    logger(`ProjectIndexPage.getServerSideProps: ${e.message}`,'error')
+    logger(`ProjectPage.getServerSideProps: ${e.message}`,'error')
     return {
       notFound: true,
     }

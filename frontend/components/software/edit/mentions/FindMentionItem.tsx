@@ -1,4 +1,4 @@
-import {mentionTypeSingular,MentionItem, MentionEditType} from '../../../../types/MentionType'
+import {mentionTypeSingular,MentionItem, MentionEditType} from '../../../../types/Mention'
 import {isoStrToLocalDateStr} from '../../../../utils/dateFn'
 
 export default function FindMentionItem({mention}: { mention: MentionItem }) {

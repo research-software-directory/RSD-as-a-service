@@ -9,7 +9,7 @@ type ProjectGridProps = FlexGridProps & {
 
 // render software cards
 export default function ProjectsGrid({projects,className='gap-[0.125rem] py-[2rem]',...props}:ProjectGridProps){
-  if (projects.length===0){
+  if (typeof projects == 'undefined' || projects.length===0){
     return (
       <ContentInTheMiddle>
         <h2>No content</h2>

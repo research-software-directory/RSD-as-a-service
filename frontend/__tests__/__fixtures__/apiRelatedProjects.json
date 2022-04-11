@@ -1,0 +1,42 @@
+[
+  {
+    "origin": "7a5ad15d-3639-49bf-9d8a-603708d511e4",
+    "id": "2184047a-af9e-4ef6-8bd5-c4ecc71f7380",
+    "slug": "enhance-your-research-alliance-eyra-benchmark-platform",
+    "title": "Enhance Your Research Alliance (EYRA) Benchmark Platform",
+    "subtitle": "Supporting researchers to easily set-up benchmarks",
+    "date_end": "2020-12-31",
+    "updated_at": "2022-04-08T15:17:11.24944",
+    "image_id": "2184047a-af9e-4ef6-8bd5-c4ecc71f7380"
+  },
+  {
+    "origin": "7a5ad15d-3639-49bf-9d8a-603708d511e4",
+    "id": "b516a562-a242-42e5-a738-807ea719cf9d",
+    "slug": "fair-data-for-capacity",
+    "title": "FAIR Data for CAPACITY",
+    "subtitle": "Statistical analyses and machine learning models: Insights about the relation between...",
+    "date_end": "2021-06-01",
+    "updated_at": "2022-04-08T15:17:11.24944",
+    "image_id": "b516a562-a242-42e5-a738-807ea719cf9d"
+  },
+  {
+    "origin": "7a5ad15d-3639-49bf-9d8a-603708d511e4",
+    "id": "811b7e42-3cf9-41be-8ea5-53c4c67ea98d",
+    "slug": "puregome",
+    "title": "PuReGoMe",
+    "subtitle": "Understanding Dutch public sentiment during the COVID-19 outbreak period by analyzing real-time...",
+    "date_end": "2020-10-31",
+    "updated_at": "2022-04-08T15:17:11.24944",
+    "image_id": "811b7e42-3cf9-41be-8ea5-53c4c67ea98d"
+  },
+  {
+    "origin": "7a5ad15d-3639-49bf-9d8a-603708d511e4",
+    "id": "18e7f22f-053a-47cd-9031-30cff5d55115",
+    "slug": "retina-covid19",
+    "title": "Retina COVID19",
+    "subtitle": "Social distancing measures carry economic and social costs",
+    "date_end": "2021-09-01",
+    "updated_at": "2022-04-08T15:17:11.24944",
+    "image_id": "18e7f22f-053a-47cd-9031-30cff5d55115"
+  }
+]

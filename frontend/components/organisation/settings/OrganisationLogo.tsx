@@ -7,11 +7,13 @@ import useSnackbar from '../../snackbar/useSnackbar'
 import {deleteOrganisationLogo, getUrlFromLogoId, uploadOrganisationLogo} from '../../../utils/editOrganisation'
 import logger from '../../../utils/logger'
 import Button from '@mui/material/Button'
+import Link from 'next/link'
 
 type OrganisationLogoProps = {
   id: string
   logo_id: string | null
   name: string
+  website: string | null
   isMaintainer: boolean
   token?: string
 }
@@ -22,7 +24,7 @@ type LogoProps = {
   mime_type: string | null
 }
 
-export default function OrganisationLogo({id,name,logo_id,isMaintainer,token}:
+export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,token}:
   OrganisationLogoProps) {
   const {showErrorMessage} = useSnackbar()
   // currently shown image
@@ -124,9 +126,10 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer,token}:
     }
   }
 
-  function renderLogo(){
+  function renderAvatar() {
     return (
       <Avatar
+        title={name}
         alt={name ?? ''}
         src={logo.b64 ?? getUrlFromLogoId(logo.id) ?? ''}
         sx={{
@@ -147,6 +150,20 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer,token}:
     )
   }
 
+  // for the users we add link to organisation website (if present)
+  // for the maintainers click on the logo opens the image upload
+  function renderLogo() {
+    if (website) {
+      return (
+        <Link href={website} passHref>
+          <a target="_blank">
+            {renderAvatar()}
+          </a>
+        </Link>
+      )
+    }
+    return renderAvatar()
+  }
   if (isMaintainer) {
     return (
       <div className="py-[3rem] relative">
@@ -154,7 +171,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer,token}:
           style={{cursor:'pointer'}}
           title="Click to upload an image"
         >
-          {renderLogo()}
+          {renderAvatar()}
           <input
             id="upload-avatar-image"
             type="file"

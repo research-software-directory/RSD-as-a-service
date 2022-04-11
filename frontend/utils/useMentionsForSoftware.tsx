@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {MentionForSoftware} from '../types/MentionType'
+import {MentionForSoftware} from '../types/Mention'
 
 import {getMentionsForSoftware} from './editMentions'
 

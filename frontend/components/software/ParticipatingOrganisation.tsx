@@ -43,7 +43,7 @@ export default function OrganisationItem({slug, name, website, logo_url}: Partic
   let url: string=''
   if (slug) {
     // internal RSD link to organisation
-    url = `/organisation/${slug}`
+    url = `/organisations/${slug}`
     return (
       <Link href={url} passHref>
         <a

@@ -8,8 +8,19 @@ export default function usePaginationWithSearch(placeholder:string) {
   const [search, setSearch] = useState(searchFor)
 
   useEffect(() => {
-    setPlaceholder(placeholder)
-  },[placeholder,setPlaceholder])
+    if (placeholder !== currentPlaceholder) {
+      // first reset page to 0
+      if (pagination.count !== 0) {
+        setPagination({
+          ...pagination,
+          page: 0,
+          count: 0
+        })
+      }
+      // change placeholder
+      setPlaceholder(placeholder)
+    }
+  },[placeholder,currentPlaceholder,setPlaceholder,pagination,setPagination])
 
   useEffect(() => {
     // sync search passed from Searchbox component
@@ -25,24 +36,6 @@ export default function usePaginationWithSearch(placeholder:string) {
       setSearch(searchFor)
     }
   }, [searchFor, search, pagination, setPagination])
-
-  // TODO! reset page to 0 on firt request
-  // useEffect(() => {
-  //   if (placeholder !== currentPlaceholder) {
-  //     // switch of placeholer means we need to reset pagination
-  //     // as we moved to another section/page
-  //     console.group('usePaginationWithSearch')
-  //     console.log('placeholder...', placeholder)
-  //     console.log('currentPlaceholder...', currentPlaceholder)
-  //     console.log('pagination...', pagination)
-  //     console.groupEnd()
-  //     setPagination({
-  //       ...pagination,
-  //       page: 0,
-  //       count:0
-  //     })
-  //   }
-  // },[placeholder,currentPlaceholder, pagination,setPagination])
 
   function setCount(count: number) {
     // sync count from api and in the component
@@ -65,7 +58,9 @@ export default function usePaginationWithSearch(placeholder:string) {
 
   return {
     searchFor: search,
-    page: pagination.page,
+    // when navigating between sections we need to reset page to 0
+    // assumption: placeholder change is result of switching between sections
+    page: placeholder !== currentPlaceholder ? 0 : pagination.page,
     rows: pagination.rows,
     setSearchInput,
     setPagination,

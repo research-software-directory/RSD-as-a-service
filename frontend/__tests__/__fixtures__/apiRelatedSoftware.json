@@ -1,0 +1,47 @@
+[
+  {
+    "origin": "e1a3cb3a-0c9d-4eec-b327-d36166b4f464",
+    "software": {
+      "id": "4bc53aa5-765d-4a3f-b33b-a4a2a66c5db5",
+      "slug": "pyxenon",
+      "brand_name": "PyXenon",
+      "short_statement": "Python wrapper for the Xenon programming interface to various compute and storage resources."
+    }
+  },
+  {
+    "origin": "e1a3cb3a-0c9d-4eec-b327-d36166b4f464",
+    "software": {
+      "id": "7fbab830-0c59-4a59-b505-7ca4f9bd0e10",
+      "slug": "xenon-cli",
+      "brand_name": "Xenon command line interface",
+      "short_statement": "A command line interface for the Xenon library that allows you to use remote machines to do your computations."
+    }
+  },
+  {
+    "origin": "e1a3cb3a-0c9d-4eec-b327-d36166b4f464",
+    "software": {
+      "id": "3d0beaed-d4e6-456c-9db8-de876c2547a6",
+      "slug": "xenon-grpc",
+      "brand_name": "Xenon gRPC server",
+      "short_statement": "Run applications remotely via a gRPC interface."
+    }
+  },
+  {
+    "origin": "e1a3cb3a-0c9d-4eec-b327-d36166b4f464",
+    "software": {
+      "id": "cb81fe3a-99df-4a73-92a6-0a961db185dd",
+      "slug": "sv-callers",
+      "brand_name": "sv-callers",
+      "short_statement": "Highly portable parallel workflow to detect structural variants in cancer genomes."
+    }
+  },
+  {
+    "origin": "e1a3cb3a-0c9d-4eec-b327-d36166b4f464",
+    "software": {
+      "id": "b8bb0e8d-f95d-4ace-a24e-69b58441df4a",
+      "slug": "sv-gen",
+      "brand_name": "sv-gen",
+      "short_statement": "Highly portable parallel workflow to generate artificial genomes with structural variants."
+    }
+  }
+]

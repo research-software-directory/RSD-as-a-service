@@ -1,6 +1,6 @@
 import {MentionByType} from '../components/software/MentionsByType'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
-import {MentionItem, MentionForSoftware} from '../types/MentionType'
+import {MentionItem, MentionForSoftware, MentionForProject} from '../types/Mention'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 
@@ -149,13 +149,13 @@ export function mentionsToAutocompleteOptions(mentions: MentionItem[]) {
   return options
 }
 
-export function clasifyMentionsByType(mentions: MentionForSoftware[]) {
+export function clasifyMentionsByType(mentions: MentionForSoftware[]|MentionForProject[]) {
   let mentionByType: MentionByType = {}
-  let featuredMentions: MentionForSoftware[] = []
+  let featuredMentions: MentionForSoftware[] | MentionForProject[] = []
 
   mentions.forEach(item => {
     // remove array with software uuid
-    delete item.mention_for_software
+    // delete item.mention_for_software
     // check if type prop exists
     let mType = item?.type as string ?? 'default'
     // extract featured mentions

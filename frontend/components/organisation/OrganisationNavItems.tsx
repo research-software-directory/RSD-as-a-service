@@ -18,6 +18,7 @@ export type OrganisationMenuProps = {
   icon: JSX.Element,
   component: (props: any) => JSX.Element
   isVisible: (props: any) => boolean
+  showSearch: boolean
 }
 
 export const organisationMenu:OrganisationMenuProps[] = [
@@ -27,7 +28,8 @@ export const organisationMenu:OrganisationMenuProps[] = [
     icon: <TerminalIcon />,
     component: (props?) => <OrganisationSoftware {...props} />,
     status: 'Participating organisation',
-    isVisible: (props)=>true
+    isVisible: (props) => true,
+    showSearch: true
   },
   {
     id:'projects',
@@ -35,7 +37,8 @@ export const organisationMenu:OrganisationMenuProps[] = [
     icon: <ListAltIcon />,
     component: (props?) => <OrganisationProjects {...props} />,
     status: 'Participating organisation',
-    isVisible: (props)=>true
+    isVisible: (props) => true,
+    showSearch: true
   },
   {
     id:'units',
@@ -48,7 +51,8 @@ export const organisationMenu:OrganisationMenuProps[] = [
       // and not a maintainer
       if (isMaintainer===false && (children_cnt === 0 || children_cnt===null)) return false
       return true
-    }
+    },
+    showSearch: false
   },
   {
     id:'maintainers',
@@ -57,7 +61,8 @@ export const organisationMenu:OrganisationMenuProps[] = [
     component: (props?) => <OrganisationMaintainers {...props} />,
     status: 'Maintainers of organisation',
     // we do not show this option if not a maintainer
-    isVisible: ({isMaintainer})=>isMaintainer
+    isVisible: ({isMaintainer}) => isMaintainer,
+    showSearch: false
   },
   {
     id:'settings',
@@ -66,6 +71,7 @@ export const organisationMenu:OrganisationMenuProps[] = [
     component: (props?) => <OrganisationSettings {...props} />,
     status: 'Organisation settings',
     // we do not show this option if not a maintainer
-    isVisible: ({isMaintainer})=>isMaintainer
+    isVisible: ({isMaintainer}) => isMaintainer,
+    showSearch: false
   }
 ]

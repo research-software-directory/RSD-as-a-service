@@ -2,7 +2,7 @@ import Link from 'next/link'
 import LinkIcon from '@mui/icons-material/Link'
 
 import {isoStrToLocalDateStr} from '../../utils/dateFn'
-import {MentionForSoftware} from '../../types/MentionType'
+import {MentionForSoftware} from '../../types/Mention'
 
 export default function MentionItem({item, pos}: {item: MentionForSoftware, pos:number}) {
 

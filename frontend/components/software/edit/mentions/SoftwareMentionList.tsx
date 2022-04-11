@@ -1,7 +1,7 @@
 import {useState, useContext} from 'react'
 import {Alert, AlertTitle} from '@mui/material'
 
-import {MentionEditType, MentionForSoftware} from '../../../../types/MentionType'
+import {MentionEditType, MentionForSoftware} from '../../../../types/Mention'
 import {removeMentionForSoftware} from '../../../../utils/editMentions'
 import useSnackbar from '../../../snackbar/useSnackbar'
 import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
