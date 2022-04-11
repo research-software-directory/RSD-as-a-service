@@ -1,5 +1,4 @@
 import {OrganisationsOfProject, Project, ProjectLink, ProjectTag, ProjectTopic, RawProject} from '../types/Project'
-import {Tag} from '../types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
@@ -235,51 +234,77 @@ export async function getTopicsForProject({project, token, frontend = false}:
 }
 
 
-export function extractLinksFromProject(project: Project) {
-  const links: ProjectLink[] = []
-
-  if (project?.call_url &&
-    // quickfix legacy data -> ignore TODO links
-    project?.call_url.toLowerCase().endsWith('/todo') === false) {
-    links.push({
-      label: 'Zenodo',
-      url: project?.call_url
+export async function getLinksForProject({project, token, frontend = false}:
+  { project: string, token: string, frontend?: boolean }) {
+  try {
+    // this request is always perfomed from backend
+    // the content is order by tag ascending
+    let query = `url_for_project?project=eq.${project}&order=position.asc`
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend === true) {
+      url = `/api/v1/${query}`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
     })
+    if (resp.status === 200) {
+      const data: ProjectLink[] = await resp.json()
+      return data
+    }
+    logger(`getLinksForProject: [${resp.status}] ${resp.statusText}`, 'warn')
+    return []
+  } catch (e: any) {
+    logger(`getLinksForProject: ${e?.message}`, 'error')
+    return []
   }
-
-  if (project?.home_url &&
-    // quickfix legacy data -> ignore TODO links
-    project?.home_url.toLowerCase().endsWith('/todo') === false) {
-    links.push({
-      label: 'Project website',
-      url: project?.home_url
-    })
-  }
-
-  if (project?.code_url &&
-    // quickfix legacy data -> ignore TODO links
-    project?.code_url.toLowerCase().endsWith('/todo') === false) {
-    links.push({
-      label: 'GitHub organisation',
-      url: project?.code_url
-    })
-  }
-
-  if (project?.software_sustainability_plan_url &&
-    // quickfix legacy data -> ignore TODO links
-    project?.software_sustainability_plan_url.toLowerCase().endsWith('/todo') === false) {
-    links.push({
-      label: 'Software sustainability plan',
-      url: project?.software_sustainability_plan_url
-    })
-  }
-
-  if (project?.data_management_plan_url &&
-    project?.data_management_plan_url.toLowerCase().endsWith('/todo') === false) {
-    links.push({
-      label: 'Data management plan',
-      url: project?.data_management_plan_url
-    })
-  }
-  return links
 }
+
+// export function extractLinksFromProject(project: Project) {
+//   const links: ProjectLink[] = []
+
+//   if (project?.call_url &&
+//     // quickfix legacy data -> ignore TODO links
+//     project?.call_url.toLowerCase().endsWith('/todo') === false) {
+//     links.push({
+//       label: 'Zenodo',
+//       url: project?.call_url
+//     })
+//   }
+
+//   if (project?.home_url &&
+//     // quickfix legacy data -> ignore TODO links
+//     project?.home_url.toLowerCase().endsWith('/todo') === false) {
+//     links.push({
+//       label: 'Project website',
+//       url: project?.home_url
+//     })
+//   }
+
+//   if (project?.code_url &&
+//     // quickfix legacy data -> ignore TODO links
+//     project?.code_url.toLowerCase().endsWith('/todo') === false) {
+//     links.push({
+//       label: 'GitHub organisation',
+//       url: project?.code_url
+//     })
+//   }
+
+//   if (project?.software_sustainability_plan_url &&
+//     // quickfix legacy data -> ignore TODO links
+//     project?.software_sustainability_plan_url.toLowerCase().endsWith('/todo') === false) {
+//     links.push({
+//       label: 'Software sustainability plan',
+//       url: project?.software_sustainability_plan_url
+//     })
+//   }
+
+//   if (project?.data_management_plan_url &&
+//     project?.data_management_plan_url.toLowerCase().endsWith('/todo') === false) {
+//     links.push({
+//       label: 'Data management plan',
+//       url: project?.data_management_plan_url
+//     })
+//   }
+//   return links
+// }

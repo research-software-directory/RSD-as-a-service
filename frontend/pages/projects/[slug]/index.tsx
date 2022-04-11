@@ -14,8 +14,11 @@ import AppFooter from '../../../components/layout/AppFooter'
 import PageMeta from '../../../components/seo/PageMeta'
 import OgMetaTags from '../../../components/seo/OgMetaTags'
 import CanoncialUrl from '../../../components/seo/CanonicalUrl'
-import {extractLinksFromProject, getOrganisationsOfProject, getParticipatingOrganisations, getProjectItem, getTagsForProject, getTopicsForProject} from '../../../utils/getProjects'
-import {Project, ProjectLink} from '../../../types/Project'
+import {
+  getLinksForProject, getParticipatingOrganisations,
+  getProjectItem, getTagsForProject, getTopicsForProject
+} from '../../../utils/getProjects'
+import {Project, ProjectLink, RawProject} from '../../../types/Project'
 import ProjectInfo from '../../../components/projects/ProjectInfo'
 import OrganisationsSection from '../../../components/software/OrganisationsSection'
 import {ParticipatingOrganisationProps} from '../../../types/Organisation'
@@ -49,7 +52,7 @@ export default function ProjectItemPage(props: ProjectIndexProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...technologies...', technologies)
+  // console.log('ProjectItemPage...links...', links)
   // console.log('ProjectItemPage...topics...', topics)
   return (
     <>
@@ -124,12 +127,14 @@ export async function getServerSideProps(context:any) {
       getParticipatingOrganisations({project: project.id, token, frontend: false}),
       getTagsForProject({project: project.id, token, frontend: false}),
       getTopicsForProject({project: project.id, token, frontend: false}),
+      getLinksForProject({project: project.id, token, frontend: false})
     ]
 
     const [
       organisations,
       technologies,
-      topics
+      topics,
+      links
     ] = await Promise.all(fetchData)
 
     // console.log("getServerSideProps...project...", project)
@@ -143,7 +148,7 @@ export async function getServerSideProps(context:any) {
         organisations,
         technologies,
         topics,
-        links: extractLinksFromProject(project)
+        links
       },
     }
   } catch (e:any) {

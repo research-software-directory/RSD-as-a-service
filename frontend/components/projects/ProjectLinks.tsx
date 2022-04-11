@@ -25,7 +25,7 @@ export default function ProjectLinks({links}: { links: ProjectLink[] }) {
             >
               <a target="_blank">
                 <li className="text-sm py-1">
-                  {link.label}
+                  {link.title}
                 </li>
               </a>
             </Link>
