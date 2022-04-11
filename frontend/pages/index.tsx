@@ -47,22 +47,6 @@ export default function Home() {
 
   return (
       <div className="bg-white dark:bg-black dark:text-white">
-
-          <head>
-
-
-              <noscript dangerouslySetInnerHTML={{__html: `
-                <style type="text/css">
-                  [data-aos] {
-                  opacity: 1 !important;
-                  transform: translate(0) scale(1) !important;
-                }
-                </style>
-
-              `}} />
-
-
-          </head>
         {/* Header  */}
         <header
           data-testid="Landing Page"
