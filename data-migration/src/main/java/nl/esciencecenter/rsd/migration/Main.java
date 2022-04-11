@@ -16,11 +16,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.text.Normalizer;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -38,6 +40,11 @@ public class Main {
 	public static final String POSTGREST_URI = "http://localhost/api/v1";
 
 	public static final String LEGACY_ID_NLESC = "nlesc";
+
+	public static final Collection<String> invalidUrls = Set.of("https://doi.org/FIXME", "https://FIXME", "https://.",
+			"https://TODO", "https://doi.org/.", "https://doi.org/TODO", "https://github.com/", "http://FIXME",
+			"https://doi.org/todo", "https://github.com/FIXME", "https://doi.org/PLACEHOLDER", "https://doi.org/",
+			"https://github.com/TODO");
 
 	public static void main(String[] args) {
 		String signingSecret = System.getenv("PGRST_JWT_SECRET");
@@ -73,6 +80,7 @@ public class Main {
 		JsonArray allProjectsFromLegacyRSD = JsonParser.parseString(allProjectsString).getAsJsonArray();
 		saveProjects(allProjectsFromLegacyRSD);
 		Map<String, String> slugToIdProject = slugToId("/project?select=id,slug");
+		saveUrlsForProjects(allProjectsFromLegacyRSD, slugToIdProject);
 		saveTagsForProjects(allProjectsFromLegacyRSD, slugToIdProject);
 		saveTopicsForProjects(allProjectsFromLegacyRSD, slugToIdProject);
 		Map<String, String> legacyIdToNewIdProject = idToId(allProjectsFromLegacyRSD, slugToIdProject);
@@ -415,22 +423,56 @@ public class Main {
 			JsonObject projectFromLegacyRSD = jsonElement.getAsJsonObject();
 
 			projectToSave.add("slug", projectFromLegacyRSD.get("slug"));
-			projectToSave.add("call_url", jsonNullIfEquals(projectFromLegacyRSD.get("callUrl"), "https://doi.org/FIXME"));
-			projectToSave.add("code_url", jsonNullIfEquals(projectFromLegacyRSD.get("codeUrl"), "https://github.com/FIXME"));
-			projectToSave.add("data_management_plan_url", jsonNullIfEquals(projectFromLegacyRSD.get("dataManagementPlanUrl"), "https://doi.org/FIXME"));
 			projectToSave.add("date_end", projectFromLegacyRSD.get("dateEnd"));
 			projectToSave.add("date_start", projectFromLegacyRSD.get("dateStart"));
 			projectToSave.add("description", projectFromLegacyRSD.get("description"));
 			projectToSave.add("grant_id", jsonNullIfEquals(projectFromLegacyRSD.get("grantId"), "FIXME", "https://doi.org/FIXME"));
-			projectToSave.add("home_url", jsonNullIfEquals(projectFromLegacyRSD.get("homeUrl"), "https://doi.org/FIXME"));
 			projectToSave.add("image_caption", jsonNullIfEquals(projectFromLegacyRSD.get("imageCaption"), "captionFIXME"));
 			projectToSave.add("is_published", projectFromLegacyRSD.get("isPublished"));
-			projectToSave.add("software_sustainability_plan_url", projectFromLegacyRSD.get("softwareSustainabilityPlanUrl"));
 			projectToSave.add("subtitle", projectFromLegacyRSD.get("subtitle"));
 			projectToSave.add("title", projectFromLegacyRSD.get("title"));
 			allProjectsToSave.add(projectToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/project"), allProjectsToSave.toString());
+	}
+
+	public static void saveUrlsForProjects(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToId) {
+		JsonArray allProjectUrlsToSave = new JsonArray();
+		allProjectsFromLegacyRSD.forEach(jsonElement -> {
+			JsonObject projectFromLegacyRSD = jsonElement.getAsJsonObject();
+			String slug = projectFromLegacyRSD.getAsJsonPrimitive("slug").getAsString();
+			String projectId = slugToId.get(slug);
+
+			JsonElement callUrl = projectFromLegacyRSD.get("callUrl");
+			validUrl(callUrl).ifPresent(url -> addUrlToArray(allProjectUrlsToSave, projectId, "Call document", url));
+
+			JsonElement codeUrl = projectFromLegacyRSD.get("codeUrl");
+			validUrl(codeUrl).ifPresent(url -> addUrlToArray(allProjectUrlsToSave, projectId, "Code repository", url));
+
+			JsonElement dataManagementPlanUrl = projectFromLegacyRSD.get("dataManagementPlanUrl");
+			validUrl(dataManagementPlanUrl).ifPresent(url -> addUrlToArray(allProjectUrlsToSave, projectId, "Data management plan", url));
+
+			JsonElement homeUrl = projectFromLegacyRSD.get("homeUrl");
+			validUrl(homeUrl).ifPresent(url -> addUrlToArray(allProjectUrlsToSave, projectId, "Project website", url));
+
+			JsonElement softwareSustainabilityPlanUrl = projectFromLegacyRSD.get("softwareSustainabilityPlanUrl");
+			validUrl(softwareSustainabilityPlanUrl).ifPresent(url -> addUrlToArray(allProjectUrlsToSave, projectId, "Software sustainability plan", url));
+		});
+		post(URI.create(POSTGREST_URI + "/url_for_project"), allProjectUrlsToSave.toString());
+	}
+
+	public static Optional<String> validUrl(JsonElement jsonUrl) {
+		if (jsonUrl == null || jsonUrl.isJsonNull()) return Optional.empty();
+		String url = jsonUrl.getAsJsonPrimitive().getAsString();
+		return invalidUrls.contains(url) ? Optional.empty() : Optional.of(url);
+	}
+
+	public static void addUrlToArray(JsonArray array, String projectId, String title, String url) {
+		JsonObject urlToAdd = new JsonObject();
+		urlToAdd.addProperty("project", projectId);
+		urlToAdd.addProperty("title", title);
+		urlToAdd.addProperty("url", url);
+		array.add(urlToAdd);
 	}
 
 	public static void saveTagsForProjects(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToId) {
