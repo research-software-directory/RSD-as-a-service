@@ -9,7 +9,7 @@ import AddMenu from './AddMenu'
 import LoginButton from '~/components/login/LoginButton'
 
 import JavascriptSupportWarning from './JavascriptSupportWarning'
-import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
+{/*// import ThemeSwitcher from '~/components/layout/ThemeSwitcher'*/}
 
 export default function AppHeader({editButton}:{editButton?:JSX.Element}){
   const [activePath, setActivePath] = useState('/')
@@ -50,7 +50,7 @@ export default function AppHeader({editButton}:{editButton?:JSX.Element}){
           <div className="flex-1 min-w-[8rem] text-right sm:flex-none">
             {editButton ? editButton : null}
             {status==='authenticated' ? <AddMenu/> : null}
-            <ThemeSwitcher/>
+            {/*<ThemeSwitcher/>*/}
             <LoginButton/>
           </div>
         </section>
