@@ -108,12 +108,12 @@ export default function Home() {
               <div className="text-5xl font-rsd-titles font-bold">
                 Encouraging the <br/>re-use of research software
               </div>
-              <div className="mt-8 text-lg">To promote the visibility, impact and reuse of research
-                software,
-                <span className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400">
+              <div className="mt-8 text-lg">
+                To promote the visibility, impact and reuse of research software,
+                <span className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400 px-1">
                   the Netherlands eScience Center
                 </span>
-                has developed the Research Software Directory, a content management system tailored to software.
+                 has developed the Research Software Directory, a content management system tailored to software.
               </div>
 
               {/* Email  */}
