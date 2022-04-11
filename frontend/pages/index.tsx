@@ -110,11 +110,10 @@ export default function Home() {
               </div>
               <div className="mt-8 text-lg">To promote the visibility, impact and reuse of research
                 software,
-                <span
-                  className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400"> the Netherlands eScience Center </span>
-                has developed the Research Software Directory, a content management system tailored
-                to
-                software.
+                <span className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400">
+                  the Netherlands eScience Center
+                </span>
+                has developed the Research Software Directory, a content management system tailored to software.
               </div>
 
               {/* Email  */}

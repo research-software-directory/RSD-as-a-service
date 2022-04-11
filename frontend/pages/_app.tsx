@@ -11,9 +11,8 @@ import {ThemeContext} from '~/components/layout/ThemeSwitcher'
 import nprogress from 'nprogress'
 
 // authentication
-import {AuthProvider, getSessionSeverSide, Session} from '../auth'
-import {saveLocationCookie} from '../utils/locationCookie'
-
+import {AuthProvider, Session, getSessionSeverSide} from '../auth'
+import {saveLocationCookie} from '../auth/locationCookie'
 // snackbar notifications
 import PageSnackbar from '../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
