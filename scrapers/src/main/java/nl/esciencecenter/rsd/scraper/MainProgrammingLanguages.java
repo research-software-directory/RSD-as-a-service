@@ -22,7 +22,7 @@ public class MainProgrammingLanguages {
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
-		int maxRequests = Config.maxRequestsGithub();
+		int maxRequests = Config.maxRequestsGitLab();
 		for (RepositoryUrlData programmingLanguageData : dataToScrape) {
 			try {
 				countRequests += 1;
@@ -41,7 +41,7 @@ public class MainProgrammingLanguages {
 
 				String scrapedLanguages = new GitLabSI(apiUrl, projectPath).languages();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						programmingLanguageData.software(), programmingLanguageData.url(), "github",
+						programmingLanguageData.software(), programmingLanguageData.url(), "gitlab",
 						programmingLanguageData.license(), programmingLanguageData.licenseScrapedAt(),
 						programmingLanguageData.commitHistory(), programmingLanguageData.commitHistoryScrapedAt(),
 						scrapedLanguages, scrapedAt);
@@ -51,7 +51,7 @@ public class MainProgrammingLanguages {
 				e.printStackTrace();
 			}
 		}
-		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.github).save(updatedDataAll);
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.gitlab).save(updatedDataAll);
 	}
 
 	private static void scrapeGithub() {

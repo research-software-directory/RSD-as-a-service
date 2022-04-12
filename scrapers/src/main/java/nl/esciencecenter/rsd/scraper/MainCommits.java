@@ -22,7 +22,7 @@ public class MainCommits {
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
-		int maxRequests = Config.maxRequestsGithub();
+		int maxRequests = Config.maxRequestsGitLab();
 		for (RepositoryUrlData commitData : dataToScrape) {
 			try {
 				countRequests += 1;
@@ -41,7 +41,7 @@ public class MainCommits {
 
 				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GitLabSI(apiUrl, projectPath)).contributionsGitLab();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						commitData.software(), commitData.url(), "github",
+						commitData.software(), commitData.url(), "gitlab",
 						commitData.license(), commitData.licenseScrapedAt(),
 						scrapedCommits, scrapedAt,
 						commitData.languages(), commitData.languagesScrapedAt());
@@ -51,7 +51,7 @@ public class MainCommits {
 				e.printStackTrace();
 			}
 		}
-		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.github).save(updatedDataAll);
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.gitlab).save(updatedDataAll);
 	}
 
 	private static void scrapeGitHub() {

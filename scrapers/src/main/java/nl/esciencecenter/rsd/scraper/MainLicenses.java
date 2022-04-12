@@ -40,7 +40,7 @@ public class MainLicenses {
 
 				String scrapedLicense = new GitLabSI(apiUrl, projectPath).license();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						licenseData.software(), licenseData.url(), "github",
+						licenseData.software(), licenseData.url(), "gitlab",
 						scrapedLicense, scrapedAt,
 						licenseData.commitHistory(), licenseData.commitHistoryScrapedAt(),
 						licenseData.languages(), licenseData.languagesScrapedAt());
@@ -50,7 +50,7 @@ public class MainLicenses {
 				e.printStackTrace();
 			}
 		}
-		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.github).save(updatedDataAll);
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.gitlab).save(updatedDataAll);
 	}
 
 	private static void scrapeGitHub() {
