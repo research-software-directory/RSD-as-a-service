@@ -5,6 +5,7 @@ import {mockResolvedValue} from '../utils/jest/mockFetch'
 
 // mock fetch response
 import softwareItem from './__fixtures__/softwareItem.json'
+import {RsdUser} from '../auth'
 const mockedResponse=[softwareItem]
 
 describe('pages/software/index.tsx', () => {
@@ -35,16 +36,19 @@ describe('pages/software/index.tsx', () => {
   })
   it('renders heading with the title Software', async() => {
     render(WrappedComponentWithProps(
-      SoftwareIndexPage,{
-        count:200,
-        page:0,
-        rows:12,
-        software:mockedResponse,
-        tags:[],
+      SoftwareIndexPage, {
+        props: {
+          count:200,
+          page:0,
+          rows:12,
+          software:mockedResponse,
+          tags:[],
+        },
         // user session
         session:{
-          expires: 'test',
-          user: {name:'Test user'}
+          status: 'missing',
+          token: 'test-token',
+          user: {name:'Test user'} as RsdUser
         }
       }
     ))
@@ -56,16 +60,19 @@ describe('pages/software/index.tsx', () => {
   })
   it('renders software card title',async()=>{
     render(WrappedComponentWithProps(
-      SoftwareIndexPage,{
-        count:200,
-        page:0,
-        rows:12,
-        software:mockedResponse,
-        tags:[],
+      SoftwareIndexPage, {
+        props: {
+          count:200,
+          page:0,
+          rows:12,
+          software:mockedResponse,
+          tags:[]
+        },
         // user session
         session:{
-          expires: 'test',
-          user: {name:'Test user'}
+          status: 'missing',
+          token: 'test-token',
+          user: {name:'Test user'} as RsdUser
         }
       }
     ))

@@ -15,7 +15,9 @@ it('should NOT render citation section when no data provided',()=>{
 describe('with dummy data',()=>{
   beforeEach(()=>{
     // render citation section with parent context and dummy data
-    render(WrappedComponentWithProps(CitationSection,{citationInfo}))
+    render(WrappedComponentWithProps(CitationSection, {
+      props: {citationInfo}
+    }))
   })
 
   it('should render citation section with title: Cite this software',()=>{
@@ -63,5 +65,3 @@ describe('with dummy data',()=>{
     expect(downloadButton).toHaveAttribute('disabled')
   })
 })
-
-
