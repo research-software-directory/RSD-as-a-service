@@ -26,4 +26,14 @@ public class Config {
 	public static Optional<String> apiCredentialsGithub() {
 		return Optional.ofNullable(System.getenv("API_CREDENTIALS_GITHUB"));
 	}
+
+	/**
+	 * The maximum requests rate for GitLab.
+	 * TODO: The request rate may vary per platform.
+	 * @return Maximum request rate (default 6).
+	 */
+	public static int maxRequestsGitLab() {
+		String valueAsString = System.getenv("MAX_REQUESTS_GITLAB");
+		return valueAsString == null ? 6 : Integer.parseInt(valueAsString);
+	}
 }
