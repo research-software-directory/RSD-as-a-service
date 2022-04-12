@@ -12,12 +12,19 @@ export default class MyDocument extends Document {
           {/* PWA primary color */}
           <meta name="theme-color" content={rsdMuiTheme.palette.primary.main} />
           {/* Roboto fonts */}
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:100,300,400&display=swap"
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400&display=swap"
           />
+          <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap" rel="stylesheet" />
+          <noscript dangerouslySetInnerHTML={{__html: `
+                <style type="text/css">
+                  [data-aos] {
+                  opacity: 1 !important;
+                  transform: translate(0) scale(1) !important;
+                }
+                </style>
+              `}} />
         </Head>
-        <body>
+        <body className="dark">
           <Main />
           <NextScript />
         </body>
