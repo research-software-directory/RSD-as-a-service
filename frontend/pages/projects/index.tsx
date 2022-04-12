@@ -1,5 +1,6 @@
 import {MouseEvent, ChangeEvent} from 'react'
 import Head from 'next/head'
+import {GetServerSidePropsContext} from 'next'
 import {useRouter} from 'next/router'
 
 import TablePagination from '@mui/material/TablePagination'
@@ -83,7 +84,7 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
 
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps(context:any) {
+export async function getServerSideProps(context:GetServerSidePropsContext) {
   // extract from page-query
   const {search,rows,page} = ssrProjectsParams(context)
 

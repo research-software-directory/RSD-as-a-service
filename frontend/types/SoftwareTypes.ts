@@ -110,6 +110,7 @@ export type RelatedSoftware = {
   slug: string,
   brand_name: string,
   short_statement?: string,
+  updated_at?: string
 }
 
 export type RelatedTools = {

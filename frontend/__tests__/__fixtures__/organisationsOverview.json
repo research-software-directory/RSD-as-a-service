@@ -1,0 +1,44 @@
+[
+  {
+    "id": "abcdc06e-cca7-444c-b97b-831ca3684ae8",
+    "slug": "leicheser-university",
+    "parent": "f8242850-bc07-48da-b010-baeee6a1a296",
+    "primary_maintainer": "52cc9cc7-b556-47da-85da-37ccf42e7f0c",
+    "name": "Leicheser University",
+    "ror_id": null,
+    "website": "https://google.com",
+    "is_tenant": false,
+    "logo_id": "abcdc06e-cca7-444c-b97b-831ca3684ae8",
+    "software_cnt": null,
+    "project_cnt": null,
+    "children_cnt": null
+  },
+  {
+    "id": "66f43b05-af8e-4ec0-a8a9-6d24ff78333e",
+    "slug": "university-of-glasgow",
+    "parent": null,
+    "primary_maintainer": null,
+    "name": "University of Glasgow",
+    "ror_id": null,
+    "website": "http://www.dcs.gla.ac.uk",
+    "is_tenant": false,
+    "logo_id": "66f43b05-af8e-4ec0-a8a9-6d24ff78333e",
+    "software_cnt": null,
+    "project_cnt": null,
+    "children_cnt": null
+  },
+  {
+    "id": "1d0b9859-7444-49aa-8bd4-b922f80bae0e",
+    "slug": "met-office",
+    "parent": null,
+    "primary_maintainer": null,
+    "name": "Met Office",
+    "ror_id": null,
+    "website": "https://www.metoffice.gov.uk",
+    "is_tenant": false,
+    "logo_id": "1d0b9859-7444-49aa-8bd4-b922f80bae0e",
+    "software_cnt": 3,
+    "project_cnt": 1,
+    "children_cnt": null
+  }
+]

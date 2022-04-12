@@ -1,10 +1,17 @@
-import {OrganisationsOfProject, Project, ProjectLink, ProjectTag, ProjectTopic, RawProject} from '../types/Project'
+import {Contributor} from '../types/Contributor'
+import {MentionForProject} from '../types/Mention'
+import {
+  OrganisationsOfProject, Project,
+  ProjectLink, ProjectTag, ProjectTopic, RawProject, RelatedProject
+} from '../types/Project'
+import {RelatedTools, Tag} from '../types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
 import {getPropsFromObject} from './getPropsFromObject'
 import logger from './logger'
 import {paginationUrlParams} from './postgrestUrl'
+import {sortOnStrProp} from './sortFn'
 
 export async function getProjectList({rows=12,page=0,baseUrl='/api/v1',searchFor,token}:
   {rows: number, page: number, baseUrl?: string, searchFor?: string,token?:string}
@@ -56,7 +63,7 @@ export async function getProjectList({rows=12,page=0,baseUrl='/api/v1',searchFor
   }
 }
 
-function prepareData(json:RawProject[]) {
+export function prepareData(json:RawProject[]) {
   const data:Project[] = json.map(item => {
     const project = getPropsFromObject(item, [
       'id', 'slug',
@@ -260,51 +267,158 @@ export async function getLinksForProject({project, token, frontend = false}:
   }
 }
 
-// export function extractLinksFromProject(project: Project) {
-//   const links: ProjectLink[] = []
+export async function getOutputForProject({project, token, frontend}:
+  {project: string, token?: string, frontend?: boolean}) {
+  try {
+    // the content is order by type ascending
+    const cols = 'id,date,is_featured,title,type,url,image,author'
+    let url = `${process.env.POSTGREST_URL}/mention?select=${cols},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=type.asc`
 
-//   if (project?.call_url &&
-//     // quickfix legacy data -> ignore TODO links
-//     project?.call_url.toLowerCase().endsWith('/todo') === false) {
-//     links.push({
-//       label: 'Zenodo',
-//       url: project?.call_url
-//     })
-//   }
+    if (frontend) {
+      url = `/api/v1/mention?select=${cols},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=type.asc`
+    }
 
-//   if (project?.home_url &&
-//     // quickfix legacy data -> ignore TODO links
-//     project?.home_url.toLowerCase().endsWith('/todo') === false) {
-//     links.push({
-//       label: 'Project website',
-//       url: project?.home_url
-//     })
-//   }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: MentionForProject[] = await resp.json()
+      return data
+    } else if (resp.status === 404) {
+      logger(`getOutputForProject: 404 [${url}]`, 'error')
+      // query not found
+      return undefined
+    }
+  } catch (e: any) {
+    logger(`getOutputForProject: ${e?.message}`, 'error')
+    return undefined
+  }
+}
 
-//   if (project?.code_url &&
-//     // quickfix legacy data -> ignore TODO links
-//     project?.code_url.toLowerCase().endsWith('/todo') === false) {
-//     links.push({
-//       label: 'GitHub organisation',
-//       url: project?.code_url
-//     })
-//   }
+export async function getImpactForProject({project, token, frontend}:
+  { project: string, token?: string, frontend?: boolean }) {
+  try {
+    // the content is order by type ascending
+    const cols = 'id,date,is_featured,title,type,url,image,author'
+    let url = `${process.env.POSTGREST_URL}/mention?select=${cols},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=type.asc`
 
-//   if (project?.software_sustainability_plan_url &&
-//     // quickfix legacy data -> ignore TODO links
-//     project?.software_sustainability_plan_url.toLowerCase().endsWith('/todo') === false) {
-//     links.push({
-//       label: 'Software sustainability plan',
-//       url: project?.software_sustainability_plan_url
-//     })
-//   }
+    if (frontend) {
+      url = `/api/v1/mention?select=${cols},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=type.asc`
+    }
 
-//   if (project?.data_management_plan_url &&
-//     project?.data_management_plan_url.toLowerCase().endsWith('/todo') === false) {
-//     links.push({
-//       label: 'Data management plan',
-//       url: project?.data_management_plan_url
-//     })
-//   }
-//   return links
-// }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: MentionForProject[] = await resp.json()
+      return data
+    } else if (resp.status === 404) {
+      logger(`getImpactForProject: 404 [${url}]`, 'error')
+      // query not found
+      return undefined
+    }
+  } catch (e: any) {
+    logger(`getImpactForProject: ${e?.message}`, 'error')
+    return undefined
+  }
+}
+
+export function getAvatarUrl({id, avatar_mime_type}: { id?: string | null, avatar_mime_type?: string | null }) {
+  if (avatar_mime_type) {
+    // construct image path
+    // currently we use posgrest + nginx approach image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
+    return `/image/rpc/get_team_member_image?id=${id}`
+  }
+  return null
+}
+
+export async function getTeamForProject({project, token, frontend}:
+  {project: string, token?: string, frontend?: boolean}) {
+  try {
+    // use standardized list of columns - after team_member table is updated (as with contributors)
+    // for now the list is created here
+    const columns = 'id,project,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
+
+    let url = `${process.env.POSTGREST_URL}/team_member?select=${columns}&project=eq.${project}&order=given_names.asc`
+    if (frontend) {
+      url = `/api/v1/team_member?select=${columns}&project=eq.${project}&order=given_names.asc`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+      }
+    })
+
+    if (resp.status === 200) {
+      const data: Contributor[] = await resp.json()
+      return data.map(item => ({
+        ...item,
+        // add avatar url based on uuid
+        avatar_url: getAvatarUrl(item)
+      })).sort((a, b) => sortOnStrProp(a, b, 'given_names'))
+    }
+    logger(`getTeamForProject: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    // / query not found
+    return []
+  } catch (e: any) {
+    logger(`getTeamForProject: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function getRelatedProjects({project, token, frontend}:
+  { project: string, token?: string, frontend?: boolean }) {
+  try {
+    // construct api url based on request source
+    let query = `rpc/related_projects_for_project?origin=eq.${project}&order=title.asc`
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: RelatedProject[] = await resp.json()
+      return data
+    }
+    logger(`getRelatedProjects: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    // query not found
+    return []
+  } catch (e: any) {
+    logger(`getRelatedProjects: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+
+export async function getRelatedToolsForProject({project, token, frontend}:
+  {project: string, token?: string, frontend?: boolean}) {
+  try {
+    // construct api url based on request source
+    const select = 'project,status,software(id,slug,brand_name,short_statement,updated_at)'
+    let query = `software_for_project?select=${select}&status=eq.approved&project=eq.${project}`
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: RelatedTools[] = await resp.json()
+      return data
+    }
+    logger(`getRelatedToolsForProject: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    // query not found
+    return []
+  } catch (e: any) {
+    logger(`getRelatedToolsForProject: ${e?.message}`, 'error')
+    return []
+  }
+}

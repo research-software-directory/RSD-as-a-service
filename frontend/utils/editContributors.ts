@@ -33,10 +33,10 @@ export async function getContributorsForSoftware({software, token, frontend}:
   try {
     // use standardized list of columns
     const columns = ContributorProps.join(',')
-
-    let url = `${process.env.POSTGREST_URL}/contributor?select=${columns},avatar_data&software=eq.${software}&order=family_names.asc`
+    // , avatar_data
+    let url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${software}&order=given_names.asc`
     if (frontend) {
-      url = `/api/v1/contributor?select=${columns}&software=eq.${software}&order=family_names.asc`
+      url = `/api/v1/contributor?select=${columns}&software=eq.${software}&order=given_names.asc`
     }
     const resp = await fetch(url, {
       method: 'GET',

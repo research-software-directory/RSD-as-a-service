@@ -1,11 +1,13 @@
+import router from 'next/router'
 import {useState} from 'react'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Avatar from '@mui/material/Avatar'
 
+import {useAuth} from '../../auth/index'
 import {MenuItemType} from '../../config/menuItems'
-import router from 'next/router'
+import {getDisplayInitials, splitName} from '../../utils/getDisplayName'
 
 type UserMenuType={
   name:string,
@@ -16,6 +18,7 @@ type UserMenuType={
 export default function UserMenu(props:UserMenuType) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
+  const {session} = useAuth()
   const {name, image, menuOptions} = props
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>){
@@ -60,9 +63,16 @@ export default function UserMenu(props:UserMenuType) {
         onClick={handleClick}
       >
         <Avatar
-          alt={name ?? 'Unknown'}
-          src={image}
-        />
+          alt={session?.user?.name ?? ''}
+          src={''}
+          sx={{
+            width: '3rem',
+            height: '3rem',
+            fontSize: '1rem'
+          }}
+        >
+          {getDisplayInitials(splitName(session?.user?.name ?? ''))}
+        </Avatar>
       </IconButton>
       <Menu
         anchorEl={anchorEl}

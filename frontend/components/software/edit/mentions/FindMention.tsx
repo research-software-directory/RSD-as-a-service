@@ -3,7 +3,7 @@ import {AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
 
 import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
 import AsyncAutocomplete from '../../../form/AsyncAutocomplete'
-import {MentionItem} from '../../../../types/MentionType'
+import {MentionItem} from '../../../../types/Mention'
 import {searchForAvailableMentions, mentionsToAutocompleteOptions} from '../../../../utils/editMentions'
 import logger from '../../../../utils/logger'
 import {mentionInformation as config} from '../editSoftwareConfig'

@@ -4,7 +4,7 @@ import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 
-import {mentionType,MentionEditType} from '../../../../types/MentionType'
+import {mentionType,MentionEditType} from '../../../../types/Mention'
 import mentionCountContext from './MentionCountContext'
 
 export default function SoftwareMentionCategories({category,onCategoryChange}:

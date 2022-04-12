@@ -4,7 +4,8 @@ import PageContainer from '../layout/PageContainer'
 import MentionIsFeatured from './MentionIsFeatured'
 import MentionsByType, {MentionByType} from './MentionsByType'
 import {sortOnDateProp} from '../../utils/sortFn'
-import {MentionForSoftware} from '../../types/MentionType'
+import {MentionForSoftware} from '../../types/Mention'
+import {clasifyMentionsByType} from '../../utils/editMentions'
 
 const darkTheme = createTheme({
   palette: {
@@ -12,40 +13,11 @@ const darkTheme = createTheme({
   },
 })
 
-export default function MentionsSection({mentions}: { mentions: MentionForSoftware[] }) {
+export default function SoftwareMentionsSection({mentions}: { mentions: MentionForSoftware[] }) {
   // do not render section if no data
   if (!mentions || mentions.length === 0) return null
   // split to featured and (not featured) mentions by type (different presentation)
-  const {mentionByType, featuredMentions} = clasifyMentions(mentions)
-
-  function clasifyMentions(mentions: MentionForSoftware[]) {
-    let mentionByType: MentionByType = {}
-    let featuredMentions:MentionForSoftware[]=[]
-
-    mentions.forEach(item => {
-      // remove array with software uuid
-      delete item.mention_for_software
-      // check if type prop exists
-      let mType = item?.type as string ?? 'default'
-      // extract featured mentions
-      if (item.is_featured === true) {
-        mType = 'featured'
-        featuredMentions.push(item)
-      } else if (mentionByType?.hasOwnProperty(item.type)) {
-        mentionByType[mType].push(item)
-      } else {
-        // create array for new type
-        mentionByType[mType] = []
-        // and add this item
-        mentionByType[mType].push(item)
-      }
-    })
-
-    return {
-      mentionByType,
-      featuredMentions
-    }
-  }
+  const {mentionByType, featuredMentions} = clasifyMentionsByType(mentions)
 
   return (
     <ThemeProvider theme={darkTheme}>

@@ -52,6 +52,7 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
         <OrganisationTitle
           title={organisation.name}
           slug={slug}
+          showSearch={pageState.showSearch}
         />
         <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
           <div>
@@ -79,7 +80,7 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
-    const {params,req,res} = context
+    const {params,req} = context
     // console.log('getServerSideProps...params...', params)
     const organisation = await getOrganisationBySlug({
       slug: params?.slug as string[],
@@ -96,9 +97,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // passed to the page component as props
       props: {
         organisation,
-        slug: params?.slug,
-        // session,
-        // isMaintainer
+        slug: params?.slug
       },
     }
   }catch(e){

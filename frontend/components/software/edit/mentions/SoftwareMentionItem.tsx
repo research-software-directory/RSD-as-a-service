@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import {isoStrToLocalDateStr} from '../../../../utils/dateFn'
-import {MentionForSoftware} from '../../../../types/MentionType'
+import {MentionForSoftware} from '../../../../types/Mention'
 
 export default function SoftwareMentionItem({item, pos, onDelete}:
   { item: MentionForSoftware, pos: number, onDelete:(pos:number)=>void }) {

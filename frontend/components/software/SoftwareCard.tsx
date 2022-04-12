@@ -12,7 +12,7 @@ export type SoftwareCardType = {
 
 export default function SoftwareCard({href,brand_name,short_statement,is_featured,updated_at}:SoftwareCardType) {
 
-  const colors = is_featured ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'
+  const colors = is_featured ? 'bg-primary text-white' : 'bg-grey-100 text-gray-800'
   const today = new Date()
 
   function getInitals() {
@@ -36,7 +36,7 @@ export default function SoftwareCard({href,brand_name,short_statement,is_feature
   return (
     <Link href={href} passHref>
       <a>
-        <article className={`flex flex-col h-[17rem] ${colors} hover:bg-secondary hover:text-white xl:max-w-[40rem]`}>
+        <article className={`flex flex-col h-[17rem] ${colors} hover:bg-secondary hover:text-white`}>
           <div className="flex min-h-[6rem]">
             <h2 className="p-4 flex-1">{brand_name}</h2>
             <div className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-gray-800 text-[1.5rem]">

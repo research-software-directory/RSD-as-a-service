@@ -10,7 +10,7 @@ import ControlledTextField from '../../../form/ControlledTextField'
 import ControlledDropdown from '../../../form/ControlledDropdown'
 import ControlledSwitch from '../../../form/ControlledSwitch'
 import {mentionInformation as config} from '../editSoftwareConfig'
-import {MentionItem, mentionType,MentionType} from '../../../../types/MentionType'
+import {MentionItem, mentionType,MentionType} from '../../../../types/Mention'
 
 type EditMentionModalProps = {
   open: boolean,

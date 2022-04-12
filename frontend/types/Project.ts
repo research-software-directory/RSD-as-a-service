@@ -19,7 +19,6 @@ export type BasicProject = {
   updated_at: string
 }
 
-
 export type RawProject = BasicProject & {
   image_for_project: [
     { project: string }
@@ -30,7 +29,6 @@ export type RawProject = BasicProject & {
     position: number | null
   }]
 }
-
 
 export type Project = BasicProject & {
   image_id: string | null
@@ -65,4 +63,15 @@ export type ProjectLink = {
   title: string,
   url: string,
   position: number | null
+}
+
+export type RelatedProject = {
+  origin: string
+  id: string
+  slug: string
+  title: string
+  subtitle: string
+  updated_at: string
+  date_end: string
+  image_id: string | null
 }
