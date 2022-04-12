@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -25,14 +24,8 @@ public class Utils {
 	 * @param value The string to be encoded
 	 * @return      The urlencoded string.
 	 */
-	public static String urlencode(String value) {
-		String encodedValue;
-		try {
-			encodedValue = URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-		return encodedValue;
+	public static String urlEncode(String value) {
+		return URLEncoder.encode(value, StandardCharsets.UTF_8);
 	}
 
 	public static String get(String uri, String... headers) {

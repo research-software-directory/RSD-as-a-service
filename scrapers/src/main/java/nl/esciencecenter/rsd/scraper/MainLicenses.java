@@ -1,11 +1,12 @@
 package nl.esciencecenter.rsd.scraper;
 
+import nl.esciencecenter.rsd.scraper.SoftwareInfoRepository.CodePlatformProvider;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import nl.esciencecenter.rsd.scraper.SoftwareInfoRepository.codePlatformProvider;
 
 public class MainLicenses {
 
@@ -17,7 +18,7 @@ public class MainLicenses {
 	}
 
 	private static void scrapeGitLab() {
-		Collection<RepositoryUrlData> dataToScrape = getExistingLixenseData(codePlatformProvider.gitlab);
+		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITLAB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
@@ -50,11 +51,11 @@ public class MainLicenses {
 				e.printStackTrace();
 			}
 		}
-		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.gitlab).save(updatedDataAll);
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).save(updatedDataAll);
 	}
 
 	private static void scrapeGitHub() {
-		Collection<RepositoryUrlData> dataToScrape = getExistingLixenseData(codePlatformProvider.github);
+		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITHUB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
@@ -79,7 +80,7 @@ public class MainLicenses {
 				e.printStackTrace();
 			}
 		}
-		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.github).save(updatedDataAll);
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).save(updatedDataAll);
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class MainLicenses {
 	 * @param codePlatform The code platform as defined by SoftwareInfoRepository.codePlatformProviders
 	 * @return             Sorted data
 	 */
-	private static Collection<RepositoryUrlData> getExistingLixenseData(codePlatformProvider codePlatform) {
+	private static Collection<RepositoryUrlData> getExistingLicenseData(CodePlatformProvider codePlatform) {
 		SoftwareInfoRepository existingLicensesSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), codePlatform));
 		return existingLicensesSorted.licenseData();
 	}

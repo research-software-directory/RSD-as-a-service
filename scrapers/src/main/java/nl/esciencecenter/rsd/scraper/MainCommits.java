@@ -1,11 +1,12 @@
 package nl.esciencecenter.rsd.scraper;
 
+import nl.esciencecenter.rsd.scraper.SoftwareInfoRepository.CodePlatformProvider;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import nl.esciencecenter.rsd.scraper.SoftwareInfoRepository.codePlatformProvider;
 
 public class MainCommits {
 
@@ -17,7 +18,7 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), codePlatformProvider.github));
+		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB));
 		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData();
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
@@ -51,11 +52,11 @@ public class MainCommits {
 				e.printStackTrace();
 			}
 		}
-		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.gitlab).save(updatedDataAll);
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).save(updatedDataAll);
 	}
 
 	private static void scrapeGitHub() {
-		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), codePlatformProvider.github));
+		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB));
 		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData();
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
@@ -81,6 +82,6 @@ public class MainCommits {
 				e.printStackTrace();
 			}
 		}
-		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", codePlatformProvider.github).save(updatedDataAll);
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).save(updatedDataAll);
 	}
 }

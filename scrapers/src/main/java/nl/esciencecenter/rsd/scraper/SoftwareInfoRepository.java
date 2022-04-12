@@ -4,8 +4,8 @@ import java.util.Collection;
 
 public interface SoftwareInfoRepository {
 
-	enum codePlatformProvider {
-		github, gitlab, bitbucket, other
+	enum CodePlatformProvider {
+		GITHUB, GITLAB, BITBUCKET, OTHER
 	}
 
 	Collection<RepositoryUrlData> languagesData();

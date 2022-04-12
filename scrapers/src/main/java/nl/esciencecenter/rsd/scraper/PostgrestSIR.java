@@ -15,22 +15,10 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	private final String backendUrl;
 	private final String codePlatform;
 
-	public PostgrestSIR(String backendUrl, codePlatformProvider codePlatform) {
+	public PostgrestSIR(String backendUrl, CodePlatformProvider codePlatform) {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
-		switch (codePlatform) {
-			case github:
-				this.codePlatform = "github";
-				break;
-			case gitlab:
-				this.codePlatform = "gitlab";
-				break;
-			case bitbucket:
-				this.codePlatform = "bitbucket";
-				break;
-			default:
-				this.codePlatform = "other";
-				break;
-		}
+		Objects.requireNonNull(codePlatform);
+		this.codePlatform = codePlatform.name().toLowerCase();
 	}
 
 	@Override

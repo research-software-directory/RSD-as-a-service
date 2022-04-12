@@ -1,5 +1,8 @@
 package nl.esciencecenter.rsd.scraper;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -7,9 +10,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 public class GitLabSI implements SoftwareInfo {
 	public String projectPath;
@@ -34,7 +34,7 @@ public class GitLabSI implements SoftwareInfo {
 	 */
 	@Override
 	public String languages() {
-		return Utils.get(apiUri + "/projects/" + Utils.urlencode(projectPath) + "/languages");
+		return Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/languages");
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class GitLabSI implements SoftwareInfo {
 	@Override
 	public String license() {
 		String repoInfo =
-				Utils.get(apiUri + "/projects/" + Utils.urlencode(projectPath) + "?license=True");
+				Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "?license=True");
 		JsonElement jsonLicense = JsonParser.parseString(repoInfo).getAsJsonObject().get("license");
 		return jsonLicense.isJsonNull() ? null
 				: jsonLicense.getAsJsonObject().get("name").getAsString();
@@ -71,9 +71,9 @@ public class GitLabSI implements SoftwareInfo {
 		JsonArray allCommits = new JsonArray();
 		String page = "1";
 		boolean done = false;
-		while (done == false) {
+		while (!done) {
 			HttpRequest request = HttpRequest.newBuilder().GET()
-					.uri(URI.create(apiUri + "/projects/" + Utils.urlencode(projectPath)
+					.uri(URI.create(apiUri + "/projects/" + Utils.urlEncode(projectPath)
 							+ "/repository/commits?per_page=5&order=default&page=" + page))
 					.build();
 			HttpClient client =
