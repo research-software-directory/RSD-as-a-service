@@ -10,10 +10,7 @@ export type MenuItemType = {
 // routes defined for nav/menu
 // used in components/AppHeader
 export const menuItems:MenuItemType[] = [
-  // {path:"/", label:"Home"},
   {path:'/software', label:'Software'},
   {path: '/projects', label: 'Projects'},
-  {path: '/organisations', label: 'Organisations'},
-  // will be done later
-  // {path:"/about", label:"About"},
+  {path: '/organisations', label: 'Organizations'}
 ]
