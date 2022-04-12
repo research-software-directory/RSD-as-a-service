@@ -1,8 +1,6 @@
 import {useEffect, useState} from 'react'
-import {useRouter} from 'next/router'
 import {ScriptProps} from 'next/script'
 
-import {useAuth} from '../../../auth'
 import {app} from '../../../config/app'
 import logger from '../../../utils/logger'
 import AppHeader from '../../../components/layout/AppHeader'
@@ -15,9 +13,10 @@ import PageMeta from '../../../components/seo/PageMeta'
 import OgMetaTags from '../../../components/seo/OgMetaTags'
 import CanoncialUrl from '../../../components/seo/CanonicalUrl'
 import {
-  extractLinksFromProject, getImpactForProject,
-  getOutputForProject, getParticipatingOrganisations,
-  getProjectItem, getRelatedProjects, getRelatedToolsForProject, getTagsForProject, getTeamForProject, getTopicsForProject
+  getLinksForProject, getParticipatingOrganisations,
+  getProjectItem, getTagsForProject, getTopicsForProject,
+  getImpactForProject, getOutputForProject, getRelatedProjects,
+  getRelatedToolsForProject, getTeamForProject,
 } from '../../../utils/getProjects'
 import {Project, ProjectLink, RelatedProject} from '../../../types/Project'
 import ProjectInfo from '../../../components/projects/ProjectInfo'
@@ -48,8 +47,6 @@ export interface ProjectPageProps extends ScriptProps{
 
 export default function ProjectPage(props: ProjectPageProps) {
   const [resolvedUrl, setResolvedUrl] = useState('')
-  const router = useRouter()
-  const {session: {status}} = useAuth()
   const {slug, project, isMaintainer, organisations,
     technologies, topics, links, output, impact, team,
     relatedTools, relatedProjects
@@ -68,8 +65,7 @@ export default function ProjectPage(props: ProjectPageProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...relatedTools...', relatedTools)
-  // console.log('ProjectItemPage...impact...', impact)
+  // console.log('ProjectItemPage...topics...', topics)
   return (
     <>
       {/* Page Head meta tags */}
@@ -166,7 +162,8 @@ export async function getServerSideProps(context:any) {
       getImpactForProject({project: project.id, token, frontend: false}),
       getTeamForProject({project: project.id, token, frontend: false}),
       getRelatedToolsForProject({project: project.id, token, frontend: false}),
-      getRelatedProjects({project: project.id, token, frontend: false})
+      getRelatedProjects({project: project.id, token, frontend: false}),
+      getLinksForProject({project: project.id, token, frontend: false}),
     ]
 
     const [
@@ -177,7 +174,8 @@ export async function getServerSideProps(context:any) {
       impact,
       team,
       relatedTools,
-      relatedProjects
+      relatedProjects,
+      links
     ] = await Promise.all(fetchData)
 
     // console.log("getServerSideProps...project...", project)
@@ -191,12 +189,12 @@ export async function getServerSideProps(context:any) {
         organisations,
         technologies,
         topics,
-        links: extractLinksFromProject(project),
         output,
         impact,
         team,
         relatedTools,
-        relatedProjects
+        relatedProjects,
+        links,
       },
     }
   } catch (e:any) {

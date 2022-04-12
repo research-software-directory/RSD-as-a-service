@@ -22,7 +22,12 @@ export type BasicProject = {
 export type RawProject = BasicProject & {
   image_for_project: [
     { project: string }
-  ]
+  ],
+  url_for_project: [{
+    title: string,
+    url: string,
+    position: number | null
+  }]
 }
 
 export type Project = BasicProject & {
@@ -55,8 +60,9 @@ export type ProjectTopic = {
 }
 
 export type ProjectLink = {
-  label: string,
-  url: string
+  title: string,
+  url: string,
+  position: number | null
 }
 
 export type RelatedProject = {
