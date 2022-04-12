@@ -13,10 +13,10 @@ import PageMeta from '../../../components/seo/PageMeta'
 import OgMetaTags from '../../../components/seo/OgMetaTags'
 import CanoncialUrl from '../../../components/seo/CanonicalUrl'
 import {
-  getLinksForProject, getParticipatingOrganisations,
-  getProjectItem, getTagsForProject, getTopicsForProject,
-  getImpactForProject, getOutputForProject, getRelatedProjects,
-  getRelatedToolsForProject, getTeamForProject,
+  getLinksForProject, getImpactForProject,
+  getOutputForProject, getParticipatingOrganisations,
+  getProjectItem, getRelatedProjects, getRelatedToolsForProject,
+  getTagsForProject, getTeamForProject, getTopicsForProject
 } from '../../../utils/getProjects'
 import {Project, ProjectLink, RelatedProject} from '../../../types/Project'
 import ProjectInfo from '../../../components/projects/ProjectInfo'
@@ -65,7 +65,8 @@ export default function ProjectPage(props: ProjectPageProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...topics...', topics)
+  // console.log('ProjectItemPage...relatedTools...', relatedTools)
+  // console.log('ProjectItemPage...impact...', impact)
   return (
     <>
       {/* Page Head meta tags */}
@@ -163,7 +164,7 @@ export async function getServerSideProps(context:any) {
       getTeamForProject({project: project.id, token, frontend: false}),
       getRelatedToolsForProject({project: project.id, token, frontend: false}),
       getRelatedProjects({project: project.id, token, frontend: false}),
-      getLinksForProject({project: project.id, token, frontend: false}),
+      getLinksForProject({project: project.id, token, frontend: false})
     ]
 
     const [
@@ -194,7 +195,7 @@ export async function getServerSideProps(context:any) {
         team,
         relatedTools,
         relatedProjects,
-        links,
+        links
       },
     }
   } catch (e:any) {

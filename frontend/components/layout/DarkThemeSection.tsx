@@ -1,12 +1,7 @@
-import {createTheme, ThemeProvider} from '@mui/material/styles'
+import {ThemeProvider} from '@mui/material/styles'
+import {loadMuiTheme} from '../../styles/rsdMuiTheme'
 
-import PageContainer from './PageContainer'
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-})
+const darkTheme = loadMuiTheme('dark')
 
 export default function DarkThemeSection(props:any) {
 

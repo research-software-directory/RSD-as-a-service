@@ -6,16 +6,22 @@ The global.css file is imported in page/\_document.tsx. It is applied to all pag
 
 ## CSS Baseline
 
-MUI provides baseline styles as CSSBaseline component. Tese are applied in page/\_document.tsx file.
-For more information [see documentation](https://mui.com/components/css-baseline/).
+MUI provides baseline styles as CSSBaseline component. These are applied in page/\_document.tsx file.
+For more information [see documentation](https://mui.com/components/css-baseline/). However in this project we currently apply tailwind base classes rather than MUI's.
 
 ## MUI theme and global styles
 
-You can change all theme values in the rsdTheme.ts file.
+Initially we defined two themes: default and dark theme. The definitions are stored in themeDark and themeDefault javascript files. The definition are loaded by getThemeConfig(theme) method in themeConfig.js file.
 
-For more information [see documentation](https://mui.com/customization/theming/)
-For default theme values [see this page](https://mui.com/customization/default-theme/)
-Tip: to see all theme values you can use (uncomment) the console.log() at the bottom of rsdTheme.ts.
+The same color definitions are loaded into tailwind configuration (tailwind.config.js)
+
+For more information see comments in these files:
+
+- themeConfig.js
+- themeDefault.js
+- tailwind.config.js
+
+For general information about MUI themes [see documentation](https://mui.com/customization/theming/)
 
 ## MUI Theme properties
 
@@ -282,7 +288,7 @@ const rsdTheme = {
 
 ## Tailwind theme
 
-Below you see the default theme configuration.
+Below you see default theme configuration of tailwind. We combine material-ui and tailwind and we need to keep color definitions in sync. For more info see themeConfig.js and tailwind.config.js
 
 ```javascript
 const colors = require("../colors");

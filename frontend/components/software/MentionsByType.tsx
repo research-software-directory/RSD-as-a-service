@@ -37,7 +37,7 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
         borderTop: '1px solid',
         borderColor: 'divider',
         // custom color from legacy RSD
-        backgroundColor: '#3a3e40',
+        backgroundColor: 'secondary.light',
         // remove line above the accordion
         '&:before': {
           height: '0px'
@@ -54,7 +54,7 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
         sx={{
           position: 'sticky',
           top: 0,
-          backgroundColor: '#222425',
+          backgroundColor: 'secondary.main',
           padding: '0rem',
           '&:hover': {
             opacity:0.95
