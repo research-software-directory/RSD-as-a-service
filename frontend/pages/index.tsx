@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import AOS from 'aos'
 import AppFooter from '~/components/layout/AppFooter'
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
@@ -52,7 +52,7 @@ export default function Home() {
           data-testid="Landing Page"
           className="sticky top-0 px-5 md:px-10 z-10 backdrop-filter backdrop-blur-xl bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-60">
 
-          <div className=" w-fudocker ll max-w-screen-xl mx-auto flex py-6 items-center">
+          <div className="w-full max-w-screen-xl mx-auto flex py-6 items-center">
             <Link href="/" passHref>
               <a className="hover:shadow-2xl">
                 <LogoApp className="hidden xl:block"/>
@@ -100,6 +100,7 @@ export default function Home() {
               opacity-50 md:opacity-100
                 ">
             <Image src="/images/illustration.webp" width="847" height="760"
+              alt="rsd-illustration"
             />
             </div>
           </div>
