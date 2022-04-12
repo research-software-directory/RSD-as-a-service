@@ -4,8 +4,8 @@
  */
 
 const colors = {
-  primary:'#00A3E3',
-  secondary:'#222425',
+  primary:'#60a5fa',
+  secondary:'#000',
   textPrimary:'rgba(34,36,37,1)',
   textSecondary:'rgba(34,36,37,0.87)',
   textDisabled:'rgba(34,36,37,0.45)',
@@ -33,6 +33,7 @@ const colors = {
     A400: '#bdbdbd',
     A700: '#616161',
   },
+  neutral: '#90909060',
 }
 
 /**
