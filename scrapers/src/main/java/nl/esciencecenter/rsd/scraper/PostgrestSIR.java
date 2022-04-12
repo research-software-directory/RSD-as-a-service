@@ -12,10 +12,25 @@ import java.util.Objects;
 
 public class PostgrestSIR implements SoftwareInfoRepository {
 
-	private final String baseUrl;
+	private final String backendUrl;
+	private final String codePlatform;
 
-	public PostgrestSIR(String baseUrl) {
-		this.baseUrl = Objects.requireNonNull(baseUrl);
+	public PostgrestSIR(String backendUrl, codePlatformProvider codePlatform) {
+		this.backendUrl = Objects.requireNonNull(backendUrl);
+		switch (codePlatform) {
+			case github:
+				this.codePlatform = "github";
+				break;
+			case gitlab:
+				this.codePlatform = "gitlab";
+				break;
+			case bitbucket:
+				this.codePlatform = "bitbucket";
+				break;
+			default:
+				this.codePlatform = "other";
+				break;
+		}
 	}
 
 	@Override
@@ -25,7 +40,8 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 
 	@Override
 	public Collection<RepositoryUrlData> licenseData() {
-		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(baseUrl + "/repository_url")).getAsJsonArray();
+		String filter = "code_platform=eq." + codePlatform;
+		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(backendUrl + "/repository_url?" + filter)).getAsJsonArray();
 		Collection<RepositoryUrlData> result = new ArrayList<>();
 		for (JsonElement element : data) {
 			JsonObject jsonObject = element.getAsJsonObject();
@@ -47,7 +63,7 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			JsonElement jsonLanguagesScrapedAt = jsonObject.get("languages_scraped_at");
 			LocalDateTime languagesScrapedAt = jsonLanguagesScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonLanguagesScrapedAt.getAsString());
 
-			result.add(new RepositoryUrlData(software, url, license, licensScrapedAt, commits, commitsScrapedAt, languages, languagesScrapedAt));
+			result.add(new RepositoryUrlData(software, url, codePlatform, license, licensScrapedAt, commits, commitsScrapedAt, languages, languagesScrapedAt));
 		}
 		return result;
 	}
@@ -65,6 +81,7 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 //			we have to add all existing columns, otherwise PostgREST will not do the UPSERT
 			newDataJson.addProperty("software", repositoryUrlData.software());
 			newDataJson.addProperty("url", repositoryUrlData.url());
+			newDataJson.addProperty("code_platform", repositoryUrlData.code_platform());
 
 			newDataJson.addProperty("license", repositoryUrlData.license());
 			newDataJson.addProperty("license_scraped_at", repositoryUrlData.licenseScrapedAt() == null ? null : repositoryUrlData.licenseScrapedAt().toString());
@@ -76,6 +93,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			newDataJson.addProperty("languages_scraped_at", repositoryUrlData.languagesScrapedAt() == null ? null : repositoryUrlData.languagesScrapedAt().toString());
 			dataAsJsonArray.add(newDataJson);
 		}
-		Utils.postAsAdmin(baseUrl, dataAsJsonArray.toString(), "Prefer", "resolution=merge-duplicates");
+		Utils.postAsAdmin(backendUrl, dataAsJsonArray.toString(), "Prefer", "resolution=merge-duplicates");
 	}
 }
