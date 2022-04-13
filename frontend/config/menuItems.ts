@@ -12,5 +12,5 @@ export type MenuItemType = {
 export const menuItems:MenuItemType[] = [
   {path:'/software', label:'Software'},
   {path: '/projects', label: 'Projects'},
-  {path: '/organisations', label: 'Organizations'}
+  {path: '/organisations', label: 'Organisations'}
 ]

@@ -64,7 +64,7 @@ export default function Home() {
                 <a href="#whyrsd">Why RSD</a>
                 <Link href="/software">Software</Link>
                 <Link href="/projects">Projects</Link>
-                <Link href="/organisations">Organizations</Link>
+                <Link href="/organisations">Organisations</Link>
                 {/*<Link href="/about">About us</Link>*/}
               </div>
             </div>
