@@ -47,7 +47,13 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
         }
       }}>
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={
+          <ExpandMoreIcon
+            sx={{
+              color: 'secondary.contrastText'
+            }}
+          />
+        }
         aria-controls={`panel1-content-${key}`}
         id={`panel1-header-${key}`}
         sx={{
@@ -69,7 +75,8 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
               top: '0.25rem',
               border: '1px solid',
               borderColor: 'secondary.contrastText',
-              color: 'secondary.contrastText'
+              color: 'secondary.contrastText',
+              fontWeight: 500
             },
           }}
         >
