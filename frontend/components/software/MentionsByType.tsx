@@ -36,7 +36,6 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
         boxShadow: 0,
         borderTop: '1px solid',
         borderColor: 'divider',
-        // custom color from legacy RSD
         backgroundColor: 'secondary.light',
         // remove line above the accordion
         '&:before': {
@@ -63,13 +62,14 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
       >
         <Badge
           badgeContent={items.length}
-          color="primary"
+          color="secondary"
           sx={{
             '& .MuiBadge-badge': {
               right: '-1rem',
               top: '0.25rem',
-              border: '2px solid',
-              borderColor: 'common.white'
+              border: '1px solid',
+              borderColor: 'secondary.contrastText',
+              color: 'secondary.contrastText'
             },
           }}
         >
@@ -81,7 +81,7 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
         maxHeight: '30rem',
         //avoid resizing when scrollbar appears
         overflow: 'overlay',
-        padding:'0rem 0rem'
+        padding: '0rem 0rem'
       }}>
         {renderMentionItemsForType(items)}
       </AccordionDetails>

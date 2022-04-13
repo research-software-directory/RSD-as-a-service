@@ -10,7 +10,7 @@ const colors = {
   textSecondary:'rgba(34,36,37,0.87)',
   textDisabled:'rgba(34,36,37,0.45)',
   divider:'#ddd',
-  contrastText:'#000',
+  contrastText:'#fff',
   error:'#e53935',
   warning:'#ed6c02',
   info:'#0288d1',
