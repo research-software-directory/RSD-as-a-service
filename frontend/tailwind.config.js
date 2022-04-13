@@ -64,16 +64,19 @@ module.exports = {
         'rsd-titles': ['Work Sans']
       },
       colors: {
-        neutral: colors.neutral,
-        paper: colors.white,
+        // in order to have optimal theme integration with material ui components
+        // please keep the color names (props) in sync with MUI definitions
+        // the list of all theme properties can be found in README.md
         primary: colors.primary,
         secondary: colors.secondary,
+        divider: colors.divider,
         error: colors.error,
         warning: colors.warning,
         info: colors.info,
         success: colors.success,
-        grey: colors.grey
-
+        background: colors.background,
+        paper: colors.paper,
+        grey: colors.grey,
       },
       fontWeight:{
         regular: muiTypography.fontWeightRegular

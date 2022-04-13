@@ -12,7 +12,9 @@ it('should render userMenu',()=>{
 })
 
 it('should have userMenu options',async()=>{
-  render(WrappedComponentWithProps(UserMenu, {menuOptions: userMenuItems}))
+  render(WrappedComponentWithProps(UserMenu, {
+    props: {menuOptions: userMenuItems}
+  }))
   const menuButton = screen.queryByTestId('user-menu-button')
   // click on the button to display menu options
   expect(menuButton).toBeInTheDocument()

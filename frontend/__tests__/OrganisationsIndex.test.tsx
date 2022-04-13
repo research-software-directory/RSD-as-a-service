@@ -5,6 +5,7 @@ import organisationsOverview from './__fixtures__/organisationsOverview.json'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
 import OrganisationIndexPage,{getServerSideProps} from '../pages/organisations/index'
+import {RsdUser} from '../auth'
 
 
 describe('pages/organisations/index.tsx', () => {
@@ -36,15 +37,18 @@ describe('pages/organisations/index.tsx', () => {
 
   it('renders heading with the title Organisations', async() => {
     render(WrappedComponentWithProps(
-      OrganisationIndexPage,{
-        count:200,
-        page:0,
-        rows:12,
-        organisations:organisationsOverview,
+      OrganisationIndexPage, {
+        props: {
+          count:200,
+          page:0,
+          rows:12,
+          organisations:organisationsOverview,
+        },
         // user session
         session:{
-          expires: 'test',
-          user: {name:'Test user'}
+          status: 'missing',
+          token: 'test-token',
+          user: {name:'Test user'} as RsdUser
         }
       }
     ))
@@ -56,15 +60,18 @@ describe('pages/organisations/index.tsx', () => {
 
   it('renders organisation name as card header h2', async() => {
     render(WrappedComponentWithProps(
-      OrganisationIndexPage,{
-        count:3,
-        page:0,
-        rows:12,
-        organisations:organisationsOverview,
+      OrganisationIndexPage, {
+        props:{
+          count:3,
+          page:0,
+          rows:12,
+          organisations: organisationsOverview,
+        },
         // user session
         session:{
-          expires: 'test',
-          user: {name:'Test user'}
+          status: 'missing',
+          token: 'test-token',
+          user: {name:'Test user'} as RsdUser
         }
       }
     ))

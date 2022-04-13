@@ -36,8 +36,7 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
         boxShadow: 0,
         borderTop: '1px solid',
         borderColor: 'divider',
-        // custom color from legacy RSD
-        backgroundColor: '#3a3e40',
+        backgroundColor: 'secondary.light',
         // remove line above the accordion
         '&:before': {
           height: '0px'
@@ -48,13 +47,19 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
         }
       }}>
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={
+          <ExpandMoreIcon
+            sx={{
+              color: 'secondary.contrastText'
+            }}
+          />
+        }
         aria-controls={`panel1-content-${key}`}
         id={`panel1-header-${key}`}
         sx={{
           position: 'sticky',
           top: 0,
-          backgroundColor: '#222425',
+          backgroundColor: 'secondary.main',
           padding: '0rem',
           '&:hover': {
             opacity:0.95
@@ -63,13 +68,15 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
       >
         <Badge
           badgeContent={items.length}
-          color="primary"
+          color="secondary"
           sx={{
             '& .MuiBadge-badge': {
               right: '-1rem',
               top: '0.25rem',
-              border: '2px solid',
-              borderColor: 'common.white'
+              border: '1px solid',
+              borderColor: 'secondary.contrastText',
+              color: 'secondary.contrastText',
+              fontWeight: 500
             },
           }}
         >
@@ -81,7 +88,7 @@ function renderMentionSectionForType(key: MentionType, items: MentionForSoftware
         maxHeight: '30rem',
         //avoid resizing when scrollbar appears
         overflow: 'overlay',
-        padding:'0rem 0rem'
+        padding: '0rem 0rem'
       }}>
         {renderMentionItemsForType(items)}
       </AccordionDetails>
