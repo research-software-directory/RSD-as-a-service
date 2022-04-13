@@ -41,16 +41,16 @@ export default function AppHeader({editButton}:{editButton?:JSX.Element}){
 
   return (
     <header className="px-4 lg:container lg:mx-auto">
-      <div className="flex flex-col pt-4 md:flex-row md:items-center">
+      <div className="flex flex-col pt-4 pb-6 md:flex-row md:items-center">
         <Link href="/" passHref>
           <a><LogoRSD className="cursor-pointer scale-90 sm:scale-100"/></a>
         </Link>
-        <section className='flex flex-1 py-4'>
+        <section className="flex flex-1 text-lg">
           <div className="flex flex-1 md:justify-center md:items-center">
             {getMenuItems()}
           </div>
           <JavascriptSupportWarning />
-          <div className="flex-1 min-w-[8rem] text-right sm:flex-none">
+          <div className="flex-1 flex justify-end items-center min-w-[8rem] text-right sm:flex-none">
             {editButton ? editButton : null}
             {status==='authenticated' ? <AddMenu/> : null}
             {/*<ThemeSwitcher/>*/}

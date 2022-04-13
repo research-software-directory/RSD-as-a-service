@@ -65,7 +65,7 @@ export function ssrSoftwareUrl(params:QueryParams){
 }
 
 export function ssrOrganisationUrl(params: QueryParams) {
-  const view = 'organisation'
+  const view = 'organisations'
   const url = ssrUrl(params,view)
   return url
 }

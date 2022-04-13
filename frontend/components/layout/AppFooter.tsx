@@ -4,7 +4,7 @@ import Mail from '@mui/icons-material/Mail'
 
 export default function AppFooter () {
   return (
-    <footer className="flex flex-wrap bg-secondary text-white border-t border-neutral">
+    <footer className="flex flex-wrap bg-secondary text-white border-t border-grey-A400">
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[_2fr,1fr] lg:container lg:mx-auto">
 
         <div className="pt-10 sm:pb-10">

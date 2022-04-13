@@ -1,7 +1,7 @@
 
 import {render,screen} from '@testing-library/react'
 import {Session} from './index'
-import {WrappedComponentWithPropsAndSession} from '../utils/jest/WrappedComponents'
+import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
 import ProtectedContent from './ProtectedContent'
 
@@ -13,8 +13,7 @@ const session:Session = {
 
 it('renders loader when status loader', () => {
   session.status = 'loading'
-  render(WrappedComponentWithPropsAndSession({
-    Component: ProtectedContent,
+  render(WrappedComponentWithProps(ProtectedContent,{
     session
   }))
   const loader = screen.getByRole('progressbar')
@@ -28,8 +27,7 @@ it('renders content when authenticated', async() => {
       <h1>Authenticated</h1>
     </ProtectedContent>
   )
-  render(WrappedComponentWithPropsAndSession({
-    Component: Content,
+  render(WrappedComponentWithProps(Content,{
     session
   }))
   const header = await screen.findByText('Authenticated')
@@ -43,12 +41,9 @@ it('renders 403 when no maintainer', async() => {
       <h1>Authenticated</h1>
     </ProtectedContent>
   )
-  render(WrappedComponentWithPropsAndSession({
-    Component: Content,
+  render(WrappedComponentWithProps(Content,{
     session
   }))
   const b403 = await screen.findByText('403')
   expect(b403).toBeInTheDocument()
 })
-
-

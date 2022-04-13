@@ -11,7 +11,7 @@ describe('pages/software/[slug]/index.tsx', () => {
   it('renders heading with software title', async() => {
     render(WrappedComponentWithProps(
       SoftwareItemPage,
-      softwareIndexData
+      {props: softwareIndexData}
     ))
     const title = await screen.findByText(softwareIndexData.software.brand_name)
     expect(title).toBeInTheDocument()
@@ -22,7 +22,7 @@ describe('pages/software/[slug]/index.tsx', () => {
     softwareIndexData.isMaintainer=true
     render(WrappedComponentWithProps(
       SoftwareItemPage,
-      softwareIndexData
+      {props: softwareIndexData}
     ))
     const editBtn = screen.getByTestId('edit-button')
     expect(editBtn).toBeInTheDocument()
@@ -33,7 +33,7 @@ describe('pages/software/[slug]/index.tsx', () => {
     softwareIndexData.isMaintainer=false
     render(WrappedComponentWithProps(
       SoftwareItemPage,
-      softwareIndexData
+      {props: softwareIndexData}
     ))
     const editBtn = screen.queryByTestId('edit-button')
     expect(editBtn).not.toBeInTheDocument()
@@ -42,7 +42,7 @@ describe('pages/software/[slug]/index.tsx', () => {
   it('render mentions count', () => {
     render(WrappedComponentWithProps(
       SoftwareItemPage,
-      softwareIndexData
+      {props: softwareIndexData}
     ))
     const expected = softwareIndexData.softwareIntroCounts.mention_cnt
     const mentions = screen.getByText(expected)
@@ -52,7 +52,7 @@ describe('pages/software/[slug]/index.tsx', () => {
   it('render contributor_cnt count', () => {
     render(WrappedComponentWithProps(
       SoftwareItemPage,
-      softwareIndexData
+      {props: softwareIndexData}
     ))
     const expected = softwareIndexData.softwareIntroCounts.contributor_cnt
     const contributor_cnt = screen.getByText(expected)

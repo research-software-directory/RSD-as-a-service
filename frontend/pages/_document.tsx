@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Document, {Html, Head, Main, NextScript} from 'next/document'
 import createEmotionServer from '@emotion/server/create-instance'
-import {rsdMuiTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
 
 export default class MyDocument extends Document {
@@ -9,20 +8,21 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          {/* PWA primary color */}
-          <meta name="theme-color" content={rsdMuiTheme.palette.primary.main} />
+          {/* Theme color for the browser, if it supports it, is REMOVED 2022-04-10 by Dusan */}
+          {/* <meta name="theme-color" content={rsdMuiTheme.palette.primary.main} /> */}
           {/* Roboto fonts */}
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400&display=swap"
           />
           <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap" rel="stylesheet" />
+          {/* add support for gracefull fallback for aos animations when js is disabled */}
           <noscript dangerouslySetInnerHTML={{__html: `
-                <style type="text/css">
-                  [data-aos] {
-                  opacity: 1 !important;
-                  transform: translate(0) scale(1) !important;
-                }
-                </style>
-              `}} />
+            <style type="text/css">
+              [data-aos] {
+              opacity: 1 !important;
+              transform: translate(0) scale(1) !important;
+            }
+            </style>
+          `}} />
         </Head>
         <body className="dark">
           <Main />
