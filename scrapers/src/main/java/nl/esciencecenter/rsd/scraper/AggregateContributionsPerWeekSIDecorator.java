@@ -11,6 +11,8 @@ import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import static nl.esciencecenter.rsd.scraper.Utils.collapseToWeekUTC;
+
 public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 
 	private final SoftwareInfo origin;
@@ -58,8 +60,8 @@ public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 		JsonArray allCommits = JsonParser.parseString(origin.contributions()).getAsJsonArray();
 		String oldestCommit = allCommits.get(allCommits.size() - 1).getAsJsonObject().get("committed_date").getAsString();
 		ZonedDateTime oldestCommitDate = ZonedDateTime.parse(oldestCommit).withZoneSameInstant(ZoneOffset.UTC);
-		ZonedDateTime firstAggregationWeek = oldestCommitDate.minusDays(oldestCommitDate.getDayOfWeek().getValue()).withHour(0).withMinute(0).withSecond(0).withNano(0);
-		ZonedDateTime lastAggregationWeek = ZonedDateTime.now(ZoneOffset.UTC).minusDays(ZonedDateTime.now().getDayOfWeek().getValue()).withHour(0).withMinute(0).withSecond(0).withNano(0);
+		ZonedDateTime firstAggregationWeek = collapseToWeekUTC(oldestCommitDate);
+		ZonedDateTime lastAggregationWeek = collapseToWeekUTC(ZonedDateTime.now(ZoneOffset.UTC));
 		long oneWeekInSeconds = 604800L; // 60*60*24*7
 		// create empty map
 		SortedMap<Long, Long> commitsPerWeek = new TreeMap<>();
@@ -72,7 +74,7 @@ public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 		for (int i = allCommits.size() - 1; i >= 0; i--) {
 			JsonObject currentCommit = allCommits.get(i).getAsJsonObject();
 			ZonedDateTime commitDateUTC = ZonedDateTime.parse(currentCommit.get("committed_date").getAsString()).withZoneSameInstant(ZoneOffset.UTC);
-			ZonedDateTime commitWeek = commitDateUTC.minusDays(commitDateUTC.getDayOfWeek().getValue()).withHour(0).withHour(0).withMinute(0).withSecond(0).withNano(0);
+			ZonedDateTime commitWeek = collapseToWeekUTC(commitDateUTC);
 			Long commitWeekSeconds = commitWeek.toEpochSecond();
 			Long newCommitsThisWeek;
 			newCommitsThisWeek = commitsPerWeek.get(commitWeekSeconds) + 1L;

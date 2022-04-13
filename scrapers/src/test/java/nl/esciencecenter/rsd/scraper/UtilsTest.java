@@ -1,6 +1,8 @@
 package nl.esciencecenter.rsd.scraper;
 
 import java.lang.RuntimeException;
+import java.time.ZonedDateTime;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -40,5 +42,13 @@ public class UtilsTest {
 		String table = "repository_url";
 		String value = Utils.getAsAdmin(dbUrl + "/" + table );
 		Assertions.assertTrue(value.startsWith("[{\"software\":"));
+	}
+
+	@Test
+	void collapseToWeekUTC() {
+		ZonedDateTime date = ZonedDateTime.parse("2022-04-13T11:50:22.001+02:00");
+		ZonedDateTime weekDate = Utils.collapseToWeekUTC(date);
+		ZonedDateTime expectedDate = ZonedDateTime.parse("2022-04-10T00:00:00.000+00:00");
+		Assertions.assertEquals(expectedDate, weekDate);
 	}
 }
