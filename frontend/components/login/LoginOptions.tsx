@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Button from '@mui/material/Button'
 
 import {getRedirectUrl} from '../../utils/surfConext'
-import LogoSURF from '../../assets/LogoSURFconext.png'
+import LogoSURF from '~/assets/logos/LogoSURFconext.png'
 
 export default function LoginOptions() {
   // redirect to SURFConext oAuth2 page

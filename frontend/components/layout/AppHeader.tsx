@@ -2,18 +2,15 @@
 import {useState, useEffect} from 'react'
 import Link from 'next/link'
 import {useAuth} from '../../auth'
-import Button from '@mui/material/Button'
-import LoginIcon from '@mui/icons-material/Login'
 // local dependencies (project components)
-import LogoEscience from './LogoEscience'
+import LogoRSD from '~/components/svg/LogoRSD'
 import AppMenuItem from './AppMenuItem'
 import {menuItems} from '../../config/menuItems'
-import {userMenuItems} from '../../config/userMenuItems'
-import UserMenu from './UserMenu'
 import AddMenu from './AddMenu'
+import LoginButton from '~/components/login/LoginButton'
 
-import {getRedirectUrl} from '../../utils/surfConext'
 import JavascriptSupportWarning from './JavascriptSupportWarning'
+{/*// import ThemeSwitcher from '~/components/layout/ThemeSwitcher'*/}
 
 export default function AppHeader({editButton}:{editButton?:JSX.Element}){
   const [activePath, setActivePath] = useState('/')
@@ -28,12 +25,6 @@ export default function AppHeader({editButton}:{editButton?:JSX.Element}){
     }
   }, [])
 
-  async function redirectToSurf(){
-    const url = await getRedirectUrl('surfconext')
-    if (url){
-      window.location.href = url
-    }
-  }
 
   function getMenuItems(){
     return menuItems.map(item=>{
@@ -48,43 +39,11 @@ export default function AppHeader({editButton}:{editButton?:JSX.Element}){
     })
   }
 
-  function getLoginButton(){
-    if (status==='loading'){
-      return null
-    }
-
-    if (status==='authenticated'){
-      // when user authenticated
-      // we show user menu with the avatar and user specific options
-      return (
-        <UserMenu
-          name='No Name'
-          menuOptions={userMenuItems}
-        />
-      )
-    }
-
-    return (
-      // <Link href="/login" passHref>
-        <Button
-          variant="text"
-          onClick={redirectToSurf}
-          sx= {{
-            textTransform:'inherit'
-          }}
-        >
-          <LoginIcon />
-          <span className="ml-4">Sign In</span>
-        </Button>
-      // </Link>
-    )
-  }
-
   return (
     <header className="px-4 lg:container lg:mx-auto">
       <div className="flex flex-col pt-4 md:flex-row md:items-center">
         <Link href="/" passHref>
-          <a><LogoEscience className="cursor-pointer scale-90 sm:scale-100"/></a>
+          <a><LogoRSD className="cursor-pointer scale-90 sm:scale-100"/></a>
         </Link>
         <section className='flex flex-1 py-4'>
           <div className="flex flex-1 md:justify-center md:items-center">
@@ -94,7 +53,8 @@ export default function AppHeader({editButton}:{editButton?:JSX.Element}){
           <div className="flex-1 min-w-[8rem] text-right sm:flex-none">
             {editButton ? editButton : null}
             {status==='authenticated' ? <AddMenu/> : null}
-            {getLoginButton()}
+            {/*<ThemeSwitcher/>*/}
+            <LoginButton/>
           </div>
         </section>
       </div>
