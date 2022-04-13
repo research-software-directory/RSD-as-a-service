@@ -1,12 +1,11 @@
 package nl.esciencecenter.rsd.scraper;
 
-import nl.esciencecenter.rsd.scraper.SoftwareInfoRepository.CodePlatformProvider;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import nl.esciencecenter.rsd.scraper.SoftwareInfoRepository.CodePlatformProvider;;
 
 public class MainLicenses {
 
@@ -18,7 +17,7 @@ public class MainLicenses {
 	}
 
 	private static void scrapeGitLab() {
-		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITLAB);
+		Collection<RepositoryUrlData> dataToScrape = getExistingLixenseData(CodePlatformProvider.GITLAB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
@@ -28,20 +27,14 @@ public class MainLicenses {
 				countRequests += 1;
 				if (countRequests > maxRequests) break;
 				String repoUrl = licenseData.url();
-				String hostname = "";
-				try {
-					hostname = new URI(repoUrl).getHost();
-				} catch (URISyntaxException e) {
-					System.out.println("Error obtaining hostname of repository with url: " + repoUrl);
-					e.printStackTrace();
-				}
+				String hostname = new URI(repoUrl).getHost();
 				String apiUrl = "https://" + hostname + "/api";
 				String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 				if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
 				String scrapedLicense = new GitLabSI(apiUrl, projectPath).license();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						licenseData.software(), licenseData.url(), "gitlab",
+						licenseData.software(), licenseData.url(), "github",
 						scrapedLicense, scrapedAt,
 						licenseData.commitHistory(), licenseData.commitHistoryScrapedAt(),
 						licenseData.languages(), licenseData.languagesScrapedAt());
@@ -49,13 +42,16 @@ public class MainLicenses {
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				System.out.println("Error obtaining hostname of repository with url: " + licenseData.url() + ":");
+				e.printStackTrace();
 			}
 		}
 		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).save(updatedDataAll);
 	}
 
 	private static void scrapeGitHub() {
-		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITHUB);
+		Collection<RepositoryUrlData> dataToScrape = getExistingLixenseData(CodePlatformProvider.GITHUB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
@@ -85,10 +81,10 @@ public class MainLicenses {
 
 	/**
 	 * Retrieve existing license data from database
-	 * @param codePlatform The code platform as defined by SoftwareInfoRepository.codePlatformProviders
+	 * @param codePlatform The code platform as defined by SoftwareInfoRepository.CodePlatformProviders
 	 * @return             Sorted data
 	 */
-	private static Collection<RepositoryUrlData> getExistingLicenseData(CodePlatformProvider codePlatform) {
+	private static Collection<RepositoryUrlData> getExistingLixenseData(CodePlatformProvider codePlatform) {
 		SoftwareInfoRepository existingLicensesSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), codePlatform));
 		return existingLicensesSorted.licenseData();
 	}

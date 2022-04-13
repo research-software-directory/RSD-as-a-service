@@ -29,13 +29,7 @@ public class MainCommits {
 				countRequests += 1;
 				if (countRequests > maxRequests) break;
 				String repoUrl = commitData.url();
-				String hostname = "";
-				try {
-					hostname = new URI(repoUrl).getHost();
-				} catch (URISyntaxException e) {
-					System.out.println("Error obtaining hostname of repository with url: " + repoUrl);
-					e.printStackTrace();
-				}
+				String hostname = new URI(repoUrl).getHost();
 				String apiUrl = "https://" + hostname + "/api";
 				String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 				if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
@@ -47,8 +41,11 @@ public class MainCommits {
 						scrapedCommits, scrapedAt,
 						commitData.languages(), commitData.languagesScrapedAt());
 				updatedDataAll.add(updatedData);
-			} catch (RuntimeException e) {
+			} catch (RuntimeException  e) {
 				System.out.println("Exception when handling data from url " + commitData.url() + ":");
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				System.out.println("Error obtaining hostname of repository with url: " + commitData.url() + ":");
 				e.printStackTrace();
 			}
 		}
