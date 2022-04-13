@@ -75,13 +75,8 @@ public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 			ZonedDateTime commitWeek = commitDateUTC.minusDays(commitDateUTC.getDayOfWeek().getValue()).withHour(0).withHour(0).withMinute(0).withSecond(0).withNano(0);
 			Long commitWeekSeconds = commitWeek.toEpochSecond();
 			Long newCommitsThisWeek;
-			try {
-				newCommitsThisWeek = commitsPerWeek.get(commitWeekSeconds) + 1L;
-				commitsPerWeek.put(commitWeekSeconds, newCommitsThisWeek);
-			} catch (Exception e) {
-				System.out.println("An error occurred assigning commits to a week.");
-				e.printStackTrace();
-			}
+			newCommitsThisWeek = commitsPerWeek.get(commitWeekSeconds) + 1L;
+			commitsPerWeek.put(commitWeekSeconds, newCommitsThisWeek);
 		}
 		return new Gson().toJson(commitsPerWeek);
 	}
