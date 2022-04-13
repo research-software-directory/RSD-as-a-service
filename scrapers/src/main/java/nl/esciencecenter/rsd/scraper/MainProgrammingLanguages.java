@@ -1,7 +1,5 @@
 package nl.esciencecenter.rsd.scraper;
 
-import nl.esciencecenter.rsd.scraper.SoftwareInfoRepository.CodePlatformProvider;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -36,7 +34,7 @@ public class MainProgrammingLanguages {
 
 				String scrapedLanguages = new GitLabSI(apiUrl, projectPath).languages();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						programmingLanguageData.software(), programmingLanguageData.url(), "gitlab",
+						programmingLanguageData.software(), programmingLanguageData.url(), CodePlatformProvider.GITLAB,
 						programmingLanguageData.license(), programmingLanguageData.licenseScrapedAt(),
 						programmingLanguageData.commitHistory(), programmingLanguageData.commitHistoryScrapedAt(),
 						scrapedLanguages, scrapedAt);
@@ -70,7 +68,7 @@ public class MainProgrammingLanguages {
 
 				String scrapedLanguages = new GithubSI("https://api.github.com", repo).languages();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						programmingLanguageData.software(), programmingLanguageData.url(), "github",
+						programmingLanguageData.software(), programmingLanguageData.url(), CodePlatformProvider.GITHUB,
 						programmingLanguageData.license(), programmingLanguageData.licenseScrapedAt(),
 						programmingLanguageData.commitHistory(), programmingLanguageData.commitHistoryScrapedAt(),
 						scrapedLanguages, scrapedAt);

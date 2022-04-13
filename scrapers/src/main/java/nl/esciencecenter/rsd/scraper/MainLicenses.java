@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import nl.esciencecenter.rsd.scraper.SoftwareInfoRepository.CodePlatformProvider;;
 
 public class MainLicenses {
 
@@ -34,7 +33,7 @@ public class MainLicenses {
 
 				String scrapedLicense = new GitLabSI(apiUrl, projectPath).license();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						licenseData.software(), licenseData.url(), "github",
+						licenseData.software(), licenseData.url(), CodePlatformProvider.GITLAB,
 						scrapedLicense, scrapedAt,
 						licenseData.commitHistory(), licenseData.commitHistoryScrapedAt(),
 						licenseData.languages(), licenseData.languagesScrapedAt());
@@ -66,7 +65,7 @@ public class MainLicenses {
 
 				String scrapedLicense = new GithubSI("https://api.github.com", repo).license();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						licenseData.software(), licenseData.url(), "github",
+						licenseData.software(), licenseData.url(), CodePlatformProvider.GITHUB,
 						scrapedLicense, scrapedAt,
 						licenseData.commitHistory(), licenseData.commitHistoryScrapedAt(),
 						licenseData.languages(), licenseData.languagesScrapedAt());

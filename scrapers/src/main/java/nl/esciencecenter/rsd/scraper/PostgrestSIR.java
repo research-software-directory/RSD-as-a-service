@@ -13,12 +13,12 @@ import java.util.Objects;
 public class PostgrestSIR implements SoftwareInfoRepository {
 
 	private final String backendUrl;
-	private final String codePlatform;
+	private final CodePlatformProvider codePlatform;
 
 	public PostgrestSIR(String backendUrl, CodePlatformProvider codePlatform) {
-		this.backendUrl = Objects.requireNonNull(backendUrl);
 		Objects.requireNonNull(codePlatform);
-		this.codePlatform = codePlatform.name().toLowerCase();
+		this.backendUrl = Objects.requireNonNull(backendUrl);
+		this.codePlatform = codePlatform;
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 
 	@Override
 	public Collection<RepositoryUrlData> licenseData() {
-		String filter = "code_platform=eq." + codePlatform;
+		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(backendUrl + "/repository_url?" + filter)).getAsJsonArray();
 		Collection<RepositoryUrlData> result = new ArrayList<>();
 		for (JsonElement element : data) {
@@ -69,7 +69,7 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 //			we have to add all existing columns, otherwise PostgREST will not do the UPSERT
 			newDataJson.addProperty("software", repositoryUrlData.software());
 			newDataJson.addProperty("url", repositoryUrlData.url());
-			newDataJson.addProperty("code_platform", repositoryUrlData.code_platform());
+			newDataJson.addProperty("code_platform", repositoryUrlData.code_platform().name().toLowerCase());
 
 			newDataJson.addProperty("license", repositoryUrlData.license());
 			newDataJson.addProperty("license_scraped_at", repositoryUrlData.licenseScrapedAt() == null ? null : repositoryUrlData.licenseScrapedAt().toString());

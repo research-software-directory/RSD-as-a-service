@@ -1,7 +1,5 @@
 package nl.esciencecenter.rsd.scraper;
 
-import nl.esciencecenter.rsd.scraper.SoftwareInfoRepository.CodePlatformProvider;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -18,13 +16,14 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB));
+		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB));
 		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData();
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
 		int maxRequests = Config.maxRequestsGitLab();
 		for (RepositoryUrlData commitData : dataToScrape) {
+			System.out.println("Scraping " + commitData.url());
 			try {
 				countRequests += 1;
 				if (countRequests > maxRequests) break;
@@ -36,7 +35,7 @@ public class MainCommits {
 
 				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GitLabSI(apiUrl, projectPath)).contributionsGitLab();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						commitData.software(), commitData.url(), "gitlab",
+						commitData.software(), commitData.url(), CodePlatformProvider.GITLAB,
 						commitData.license(), commitData.licenseScrapedAt(),
 						scrapedCommits, scrapedAt,
 						commitData.languages(), commitData.languagesScrapedAt());
@@ -69,7 +68,7 @@ public class MainCommits {
 
 				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GithubSI("https://api.github.com", repo)).contributions();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
-						commitData.software(), commitData.url(), "github",
+						commitData.software(), commitData.url(), CodePlatformProvider.GITHUB,
 						commitData.license(), commitData.licenseScrapedAt(),
 						scrapedCommits, scrapedAt,
 						commitData.languages(), commitData.languagesScrapedAt());
