@@ -1,4 +1,4 @@
-import {Tag,License, ProgramingLanguages} from '../../types/SoftwareTypes'
+import {Tag,License, ProgramingLanguages, CodePlatform} from '../../types/SoftwareTypes'
 import PageContainer from '../layout/PageContainer'
 import AboutStatement from './AboutStatement'
 import AboutTags from './AboutTags'
@@ -12,12 +12,14 @@ type AboutSectionType = {
   tags: Tag[]
   licenses: License[]
   repository: string | null
+  platform: CodePlatform
   languages: ProgramingLanguages
 }
 
 
-export default function AboutSection({brand_name = '', description = '', tags, licenses, repository, languages}:
-  AboutSectionType) {
+export default function AboutSection({
+  brand_name = '', description = '', tags, licenses, repository, languages, platform
+}:AboutSectionType) {
 
   if (brand_name==='') return null
 
@@ -36,7 +38,10 @@ export default function AboutSection({brand_name = '', description = '', tags, l
         <AboutTags tags={tags || []} />
         <AboutLanguages languages={languages} />
         <AboutLicense license={license || []} />
-        <AboutSourceCode repository={repository} />
+        <AboutSourceCode
+          repository={repository}
+          platform={platform}
+        />
       </div>
     </PageContainer>
   )
