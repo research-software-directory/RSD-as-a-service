@@ -26,4 +26,13 @@
   "tailwindCSS.includeLanguages":{
     "plaintext": "html"
   },
+  "[java]": {
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.useTabStops": true,
+    "editor.insertSpaces": false,
+  },
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.test.config": {
+    "envFile": "${workspaceFolder}/.env",
+  },
 }

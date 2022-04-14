@@ -1,12 +1,14 @@
 import {render,screen,fireEvent,waitFor,waitForElementToBeRemoved} from '@testing-library/react'
-import {WrappedComponentWithProps,WrappedComponentWithPropsAndSession} from '../../../utils/jest/WrappedComponents'
+import {WrappedComponentWithProps} from '../../../utils/jest/WrappedComponents'
 
+import {Session} from '../../../auth/'
 import AddSoftwareCard from './AddSoftwareCard'
 import {addConfig} from './addConfig'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 
 // mock addSoftware
 import * as editSoftware from '../../../utils/editSoftware'
+
 const mockAddSoftware = jest.spyOn(editSoftware, 'addSoftware')
   .mockImplementation((props) => Promise.resolve({status: 201, message: props}))
 // mock validSoftwareItem
@@ -34,7 +36,7 @@ it('render card with title', async () => {
 
 it('card has textbox with Name that can be entered', async() => {
   render(WrappedComponentWithProps(AddSoftwareCard))
-  const name = screen.getByRole('textbox', {name: 'Name'})
+  const name = screen.getByRole<HTMLInputElement>('textbox', {name: 'Name'})
   expect(name).toBeInTheDocument()
 
   // accepts test value
@@ -45,7 +47,7 @@ it('card has textbox with Name that can be entered', async() => {
 
 it('card has textbox with Short description that can be entered', async() => {
   render(WrappedComponentWithProps(AddSoftwareCard))
-  const desc = screen.getByRole('textbox', {name: 'Short description'})
+  const desc = screen.getByRole<HTMLInputElement>('textbox', {name: 'Short description'})
   expect(desc).toBeInTheDocument()
   // accepts test value
   const inputValue = 'Test software description'
@@ -78,21 +80,20 @@ it('validate, save and redirect', async () => {
   // test values
   const inputName = 'Test software name'
   const inputValue = 'Test software description'
-  const session = {
+  const session:Session = {
     user: null,
     token: 'TEST_TOKEN',
     status: 'authenticated'
   }
   // render
-  render(WrappedComponentWithPropsAndSession({
-    Component: AddSoftwareCard,
+  render(WrappedComponentWithProps(AddSoftwareCard,{
     session
   }))
 
-  const name = screen.getByRole('textbox', {name: 'Name'})
+  const name = screen.getByRole<HTMLInputElement>('textbox', {name: 'Name'})
   expect(name).toBeInTheDocument()
 
-  const desc = screen.getByRole('textbox', {name: 'Short description'})
+  const desc = screen.getByRole<HTMLInputElement>('textbox', {name: 'Short description'})
   expect(desc).toBeInTheDocument()
 
   fireEvent.change(name, {target: {value: inputName}})
@@ -144,4 +145,3 @@ it('validate, save and redirect', async () => {
     expect(mockReplace).toHaveBeenCalledWith(expected)
   })
 })
-

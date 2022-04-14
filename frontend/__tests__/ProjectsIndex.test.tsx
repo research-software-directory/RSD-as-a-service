@@ -8,6 +8,7 @@ import projectsOverview from './__fixtures__/projectsOverview.json'
 import ProjectsIndexPage, {getServerSideProps} from '../pages/projects/index'
 import {prepareData} from '../utils/getProjects'
 import {RawProject} from '../types/Project'
+import {RsdUser} from '../auth'
 
 
 describe('pages/projects/index.tsx', () => {
@@ -41,15 +42,18 @@ describe('pages/projects/index.tsx', () => {
 
   it('renders heading with the title Projects', async() => {
     render(WrappedComponentWithProps(
-      ProjectsIndexPage,{
-        count:200,
-        page:0,
-        rows:12,
-        projects:projectsOverview,
-        // user session
+      ProjectsIndexPage, {
+        props: {
+          count:200,
+          page:0,
+          rows:12,
+          projects:projectsOverview,
+        },
+       // user session
         session:{
-          expires: 'test',
-          user: {name:'Test user'}
+          status: 'missing',
+          token: 'test-token',
+          user: {name:'Test user'} as RsdUser
         }
       }
     ))
@@ -61,15 +65,18 @@ describe('pages/projects/index.tsx', () => {
 
   it('renders project as card (based on title)', async() => {
     render(WrappedComponentWithProps(
-      ProjectsIndexPage,{
-        count:3,
-        page:0,
-        rows:12,
-        projects:projectsOverview,
+      ProjectsIndexPage, {
+        props: {
+          count:3,
+          page:0,
+          rows:12,
+          projects:projectsOverview,
+        },
         // user session
         session:{
-          expires: 'test',
-          user: {name:'Test user'}
+          status: 'missing',
+          token: 'test-token',
+          user: {name:'Test user'} as RsdUser
         }
       }
     ))

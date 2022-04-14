@@ -60,7 +60,7 @@ describe('pages/projects/index.tsx', () => {
   it('renders Project title', async() => {
     render(WrappedComponentWithProps(
       ProjectItemPage,
-      mockedProps
+      {props: mockedProps}
     ))
     const heading = await screen.findByRole('heading',{
       name: mockedProps.project.title

@@ -4,7 +4,7 @@ import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
 import {ThemeProvider} from '@mui/material/styles'
 import {CacheProvider, EmotionCache} from '@emotion/react'
-import {rsdMuiTheme} from '../styles/rsdMuiTheme'
+import {loadMuiTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
 // loading bar at the top of the screen
 import nprogress from 'nprogress'
@@ -36,9 +36,9 @@ nprogress.configure({showSpinner: false})
 
 function RsdApp(props: MuiAppProps) {
   const {Component, emotionCache = clientSideEmotionCache, pageProps, session} = props
-
   const [options, setSnackbar] = useState(snackbarDefaults)
-
+  //currently we support only default (light) and dark RSD theme for MUI
+  const muiTheme = loadMuiTheme('default')
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -63,8 +63,8 @@ function RsdApp(props: MuiAppProps) {
         <title>Research Software Directory</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-        {/* CssBaseline from MUI-5*/}
-      <ThemeProvider theme={rsdMuiTheme}>
+      {/* MUI Theme provider */}
+      <ThemeProvider theme={muiTheme}>
         {/* CssBaseline from MUI-5*/}
         {/* <CssBaseline /> */}
         <AuthProvider session={session}>
