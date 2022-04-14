@@ -45,8 +45,8 @@ export const softwareInformation = {
     label: 'Platform',
     help: 'To scrape repository information',
     options: [
-      {label: 'Github', value: 'github'},
-      {label: 'Gitlab', value: 'gitlab'},
+      {label: 'GitHub', value: 'github'},
+      {label: 'GitLab', value: 'gitlab'},
       {label: 'Bitbucket', value: 'bitbucket'},
       {label: 'Other', value: 'other'},
     ]
