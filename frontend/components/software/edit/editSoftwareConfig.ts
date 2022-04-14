@@ -49,10 +49,7 @@ export const softwareInformation = {
       {label: 'Gitlab', value: 'gitlab'},
       {label: 'Bitbucket', value: 'bitbucket'},
       {label: 'Other', value: 'other'},
-    ],
-    validation: {
-      required: 'Short description is required',
-    }
+    ]
   },
   // field for markdown
   description: {

@@ -27,14 +27,14 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
   const [loading, setLoading] = useState(true)
 
   // destructure methods from react-hook-form
-  const {register, handleSubmit, watch, formState, reset, control} = useForm<EditSoftwareItem>({
+  const {register, handleSubmit, watch, formState, reset, control, setValue} = useForm<EditSoftwareItem>({
     mode: 'onChange',
     defaultValues: {
       ...editSoftware
     }
   })
   // destructure formState
-  const {isDirty, isValid} = formState
+  const {isDirty, isValid, errors} = formState
   // form data provided by react-hook-form
   const formData = watch()
   // watch for unsaved changes
@@ -79,7 +79,13 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
         }
       })
     }
-  },[isDirty,isValid,pageState,dispatchPageState])
+  }, [isDirty, isValid, pageState, dispatchPageState])
+
+  // console.group('SoftwareInformation')
+  // console.log('isDirty...', isDirty)
+  // console.log('isValid...', isValid)
+  // console.log('pageState...', pageState)
+  // console.groupEnd()
 
   // if loading show loader
   if (loading) return (
@@ -191,12 +197,12 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
               rules={config.repository_url.validation}
             />
             <RepositoryPlatform
-              name="repository_platform"
               label={config.repository_platform.label}
               control={control}
               options={config.repository_platform.options}
-              rules={config.repository_platform.validation}
               watch={watch}
+              setValue={setValue}
+              errors={errors}
               defaultValue={editSoftware?.repository_platform ?? null}
               sx={{
                 m:1,

@@ -103,7 +103,8 @@ export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repo
       } else if (
         software?.repository_url !== repositoryInDb ||
         software.repository_platform != repositoryPlatform
-        ) {
+      ) {
+        // debugger
         // if the repo values are not equal => the record should be updated
         promises.push(updateRepositoryTable({
           data: {
@@ -115,6 +116,7 @@ export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repo
         }))
       }
     } else if (software?.repository_url) {
+      // debugger
       // new entry to repository table
       promises.push(addToRepositoryTable({
         data: {
