@@ -41,6 +41,19 @@ export const softwareInformation = {
       }
     }
   },
+  repository_platform: {
+    label: 'Platform',
+    help: 'To scrape repository information',
+    options: [
+      {label: 'Github', value: 'github'},
+      {label: 'Gitlab', value: 'gitlab'},
+      {label: 'Bitbucket', value: 'bitbucket'},
+      {label: 'Other', value: 'other'},
+    ],
+    validation: {
+      required: 'Short description is required',
+    }
+  },
   // field for markdown
   description: {
     label: 'Description',

@@ -52,7 +52,7 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
   { slug: string, token: string, baseUrl?: string }) {
   try {
     // GET
-    const select = '*,repository_url!left(url)'
+    const select = '*,repository_url!left(url,code_platform)'
     const url = baseUrl
       ? `${baseUrl}/software?select=${select}&slug=eq.${slug}`
       : `/api/v1/software?select=${select}&slug=eq.${slug}`
@@ -67,8 +67,10 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
       // repository url should at least be http://a.b
       if (data[0]?.repository_url[0]?.url?.length > 9) {
         software.repository_url = data[0]?.repository_url[0]?.url
+        software.repository_platform = data[0]?.repository_url[0]?.code_platform
       } else {
         software.repository_url = null
+        software.repository_platform = null
       }
       return software
     }
@@ -83,9 +85,9 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
  * It returns status 200 only when update to all tables is successful.
  * On failure it returns the error status code of the first error.
  */
-export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repositoryInDb, token}:{
+export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repositoryInDb, repositoryPlatform, token}:{
   software: EditSoftwareItem, tagsInDb: AutocompleteOption<Tag>[], licensesInDb: AutocompleteOption<License>[],
-  repositoryInDb: string|null, token: string
+  repositoryInDb: string | null, repositoryPlatform:string | null, token: string
 }) {
   try {
     // NOTE! update SoftwarePropsToSave list if the data structure changes
@@ -98,12 +100,16 @@ export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repo
       if (!software?.repository_url) {
         // and now we have empty string or null => the record should be removed
         promises.push(deleteFromRepositoryTable({software:software.id,token}))
-      } else if (software?.repository_url !== repositoryInDb) {
+      } else if (
+        software?.repository_url !== repositoryInDb ||
+        software.repository_platform != repositoryPlatform
+        ) {
         // if the repo values are not equal => the record should be updated
         promises.push(updateRepositoryTable({
           data: {
             software: software.id,
-            url: software?.repository_url
+            url: software?.repository_url,
+            code_platform: software?.repository_platform ?? 'other',
           },
           token
         }))
@@ -113,7 +119,8 @@ export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repo
       promises.push(addToRepositoryTable({
         data: {
           software: software.id,
-          url: software?.repository_url
+          url: software?.repository_url,
+          code_platform: software?.repository_platform ?? 'other',
         },
         token
       }))

@@ -4,9 +4,14 @@
 
 import {AutocompleteOption} from './AutocompleteOptions'
 
+export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | 'other'
+
 export type RepositoryUrl = {
   software:string,
-  url:string
+  url: string,
+  // enum based on db enum defined as
+  // platform_type in 003-create-relations-for-software.sql
+  code_platform: CodePlatform
 }
 
 export type NewSoftwareItem = {
@@ -29,7 +34,8 @@ export type SoftwareTableItem = NewSoftwareItem & {
 }
 
 export type SoftwareItem = SoftwareTableItem & {
-  repository_url: string | null
+  repository_url: string | null,
+  repository_platform: CodePlatform | null
 }
 
 export type SoftwareItemFromDB = SoftwareTableItem & {
@@ -99,6 +105,7 @@ export type RepositoryInfo = {
   languages: ProgramingLanguages,
   license: string,
   commit_history: CommitHistory
+  code_platform: CodePlatform
 }
 
 /**

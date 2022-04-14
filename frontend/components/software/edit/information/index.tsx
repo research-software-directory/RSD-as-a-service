@@ -18,6 +18,7 @@ import SoftwareKeywords from './SoftwareKeywords'
 import SoftwareLicenses from './SoftwareLicenses'
 import SoftwarePageStatus from './SoftwarePageStatus'
 import {softwareInformation as config} from '../editSoftwareConfig'
+import RepositoryPlatform from './RepositoryPlatform'
 
 export default function SoftwareInformation({slug,token}:{slug:string,token: string}) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
@@ -91,6 +92,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       tagsInDb: editSoftware?.tags || [],
       licensesInDb: editSoftware?.licenses || [],
       repositoryInDb: editSoftware?.repository_url ?? null,
+      repositoryPlatform: editSoftware?.repository_platform ?? null,
       token
     })
     // if OK
@@ -175,19 +177,33 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
             rules={config.get_started_url.validation}
           />
           <div className="py-2"></div>
-          <ControlledTextField
-            options={{
-              name: 'repository_url',
-              label: config.repository_url.label,
-              useNull: true,
-              defaultValue: editSoftware?.repository_url,
-              helperTextMessage: config.repository_url.help,
-              helperTextCnt: `${formData?.repository_url?.length || 0}/${config.repository_url.validation.maxLength.value}`,
-            }}
-            control={control}
-            rules={config.repository_url.validation}
-          />
-
+          <div className="flex items-baseline">
+            <ControlledTextField
+              options={{
+                name: 'repository_url',
+                label: config.repository_url.label,
+                useNull: true,
+                defaultValue: editSoftware?.repository_url,
+                helperTextMessage: config.repository_url.help,
+                helperTextCnt: `${formData?.repository_url?.length || 0}/${config.repository_url.validation.maxLength.value}`,
+              }}
+              control={control}
+              rules={config.repository_url.validation}
+            />
+            <RepositoryPlatform
+              name="repository_platform"
+              label={config.repository_platform.label}
+              control={control}
+              options={config.repository_platform.options}
+              rules={config.repository_platform.validation}
+              watch={watch}
+              defaultValue={editSoftware?.repository_platform ?? null}
+              sx={{
+                m:1,
+                width:'7rem'
+              }}
+            />
+          </div>
           <div className="py-2"></div>
           <SoftwareMarkdown
             control={control}
