@@ -1,21 +1,19 @@
 import {Status} from './Organisation'
 
-export type BasicProject = {
-  id: string
+export type NewProject = {
   slug: string
   title: string
-  subtitle: string
-  description?: string
-  date_start: string
-  date_end: string
   is_published: boolean
-  image_caption?: string | null
-  call_url: string | null
-  code_url: string | null
-  home_url: string | null
-  software_sustainability_plan_url: string | null
-  data_management_plan_url: string | null
+  subtitle: string | null
+  description: string | null
+  date_start: string | null
+  date_end: string | null
+  image_caption: string | null
   grant_id: string | null
+}
+
+export type BasicProject = NewProject & {
+  id: string
   updated_at: string
 }
 

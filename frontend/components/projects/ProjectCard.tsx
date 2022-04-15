@@ -9,7 +9,7 @@ export type ProjectCardProps = {
   subtitle: string | null
   image_id: string | null
   updated_at: string
-  date_end: string
+  date_end: string | null
 }
 
 export default function ProjectCard({slug,title,subtitle,image_id,updated_at,date_end}:ProjectCardProps) {
@@ -18,9 +18,12 @@ export default function ProjectCard({slug,title,subtitle,image_id,updated_at,dat
 
   function renderStatus() {
     try {
-      const endDate = new Date(date_end)
-      if (today > endDate) return 'Finished'
-      return 'Running'
+      if (date_end) {
+        const endDate = new Date(date_end)
+        if (today > endDate) return 'Finished'
+        return 'Running'
+      }
+      return 'Starting'
     } catch (e) {
       return null
     }

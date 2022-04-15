@@ -915,7 +915,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"slug\": \"project-user-1\",\n\t\"is_published\": true\n}",
+					"raw": "{\n\t\"slug\": \"project-user-1\",\n\t\"is_published\": true,\n\t\"title\": \"Project 1\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
