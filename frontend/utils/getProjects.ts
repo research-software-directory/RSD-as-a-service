@@ -1,4 +1,4 @@
-import {Contributor} from '../types/Contributor'
+import {Contributor, TeamMemberProps} from '../types/Contributor'
 import {MentionForProject} from '../types/Mention'
 import {
   OrganisationsOfProject, Project,
@@ -338,8 +338,7 @@ export async function getTeamForProject({project, token, frontend}:
   {project: string, token?: string, frontend?: boolean}) {
   try {
     // use standardized list of columns - after team_member table is updated (as with contributors)
-    // for now the list is created here
-    const columns = 'id,project,is_contact_person,email_address,family_names,given_names,avatar_mime_type'
+    const columns = TeamMemberProps.join(',')
 
     let url = `${process.env.POSTGREST_URL}/team_member?select=${columns}&project=eq.${project}&order=given_names.asc`
     if (frontend) {
