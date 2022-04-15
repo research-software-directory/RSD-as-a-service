@@ -397,11 +397,12 @@ $$;
 
 
 -- Project maintainer by slug
+-- there are similar functions for software maintainers
 CREATE FUNCTION maintainer_for_project_by_slug() RETURNS TABLE (
 	maintainer UUID,
-	software UUID,
-	slug VARCHAR)
-	LANGUAGE plpgsql STABLE AS
+	project UUID,
+	slug VARCHAR
+) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	RETURN QUERY
