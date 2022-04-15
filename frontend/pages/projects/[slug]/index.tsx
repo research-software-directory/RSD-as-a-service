@@ -29,6 +29,8 @@ import ContributorsSection from '../../../components/software/ContributorsSectio
 import {RelatedTools} from '../../../types/SoftwareTypes'
 import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
 import RelatedProjectsSection from '../../../components/projects/RelatedProjectsSection'
+import {getAccountFromToken} from '~/auth/jwtUtils'
+import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
 
 export interface ProjectPageProps extends ScriptProps{
   slug: string
@@ -65,7 +67,7 @@ export default function ProjectPage(props: ProjectPageProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...relatedTools...', relatedTools)
+  // console.log('ProjectItemPage...isMaintainer...', isMaintainer)
   // console.log('ProjectItemPage...impact...', impact)
   return (
     <>
@@ -145,6 +147,8 @@ export async function getServerSideProps(context:any) {
     const {params,req} = context
     // extract rsd_token
     const token = req?.cookies['rsd_token']
+    const account = getAccountFromToken(token)
+    const slug = params?.slug?.toString()
     // console.log("getServerSideProps...params...", params)
     const project = await getProjectItem(params?.slug)
     if (typeof project == 'undefined'){
@@ -164,7 +168,8 @@ export async function getServerSideProps(context:any) {
       getTeamForProject({project: project.id, token, frontend: false}),
       getRelatedToolsForProject({project: project.id, token, frontend: false}),
       getRelatedProjects({project: project.id, token, frontend: false}),
-      getLinksForProject({project: project.id, token, frontend: false})
+      getLinksForProject({project: project.id, token, frontend: false}),
+      isMaintainerOfProject({slug, account, token, frontend: false}),
     ]
 
     const [
@@ -176,7 +181,8 @@ export async function getServerSideProps(context:any) {
       team,
       relatedTools,
       relatedProjects,
-      links
+      links,
+      isMaintainer
     ] = await Promise.all(fetchData)
 
     // console.log("getServerSideProps...project...", project)
@@ -186,7 +192,7 @@ export async function getServerSideProps(context:any) {
       props: {
         project: project,
         slug: params?.slug,
-        isMaintainer: false,
+        isMaintainer,
         organisations,
         technologies,
         topics,

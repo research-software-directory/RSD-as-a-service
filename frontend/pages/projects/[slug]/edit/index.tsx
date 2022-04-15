@@ -5,8 +5,8 @@ import {IconButton} from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SaveIcon from '@mui/icons-material/Save'
 
-import DefaultLayout from '../../../components/layout/DefaultLayout'
-import PageTitle from '../../../components/layout/PageTitle'
+import DefaultLayout from '../../../../components/layout/DefaultLayout'
+import PageTitle from '../../../../components/layout/PageTitle'
 
 
 export default function ProjectItemEdit() {
