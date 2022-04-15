@@ -233,6 +233,7 @@ public class Main {
 				JsonObject repoUrlToSave = new JsonObject();
 				repoUrlToSave.addProperty("software", slugToId.get(slug));
 				repoUrlToSave.add("url", jsonUrl);
+				repoUrlToSave.addProperty("code_platform", "github");
 				allRepoUrlsToSave.add(repoUrlToSave);
 			}
 		});

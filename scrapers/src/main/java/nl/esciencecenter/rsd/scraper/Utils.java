@@ -2,12 +2,15 @@ package nl.esciencecenter.rsd.scraper;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
 
@@ -17,6 +20,22 @@ public class Utils {
 		return Base64.getEncoder().encodeToString(s.getBytes());
 	}
 
+	/**
+	 * Urlencode a string.
+	 * @param value The string to be encoded
+	 * @return      The urlencoded string.
+	 */
+	public static String urlEncode(String value) {
+		return URLEncoder.encode(value, StandardCharsets.UTF_8);
+	}
+
+	/**
+	 * Performs a GET request with given headers and returns the response body
+	 * as a String.
+	 * @param uri     The encoded URI
+	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
+	 * @return        The response as a String.
+	 */
 	public static String get(String uri, String... headers) {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.GET()
@@ -38,6 +57,11 @@ public class Utils {
 		return response.body();
 	}
 
+	/**
+	 * Retrieve data from PostgREST as an admin user and retrieve the response body.
+	 * @param uri  The URI
+	 * @return     Returns the content of the HTTP response
+	 */
 	public static String getAsAdmin(String uri) {
 		String jwtString = adminJwt();
 		HttpRequest request = HttpRequest.newBuilder()
@@ -50,6 +74,7 @@ public class Utils {
 		try {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
+			System.out.println("An error occurred sending a request to " + uri + ":");
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
@@ -58,6 +83,13 @@ public class Utils {
 		return response.body();
 	}
 
+	/**
+	 * Post data to the database.
+	 * @param uri           The URI
+	 * @param json          JSON as a string containing the values
+	 * @param extraHeaders  Additional headers (amount must be multiple of two)
+	 * @return              ???
+	 */
 	public static String postAsAdmin(String uri, String json, String... extraHeaders) {
 		String jwtString = adminJwt();
 		HttpRequest request = HttpRequest.newBuilder()
@@ -89,4 +121,16 @@ public class Utils {
 				.sign(signingAlgorithm);
 		return jwtString;
 	}
+
+	/**
+	 * Collapses a zoned datetime to a week timestamp.
+	 * The week timestamp is the first Sunday at 00:00:00.000 UTC before the submitted date.
+	 * @param date The date to be converted
+	 * @return     Week timestamp in UTC
+	 */
+	public static ZonedDateTime collapseToWeekUTC(ZonedDateTime date) {
+		ZonedDateTime utcDate = date.withZoneSameInstant(ZoneOffset.UTC);
+		return utcDate.minusDays(utcDate.getDayOfWeek().getValue()).withHour(0).withMinute(0).withSecond(0).withNano(0);
+	}
+
 }

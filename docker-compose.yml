@@ -4,7 +4,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.21
+    image: rsd/database:0.0.22
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -66,7 +66,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.6.7
+    image: rsd/frontend:0.7.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -87,12 +87,13 @@ services:
   scrapers:
     container_name: scrapers
     build: ./scrapers
-    image: rsd/scrapers:0.0.5
+    image: rsd/scrapers:0.1.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
       - PGRST_JWT_SECRET
       - MAX_REQUESTS_GITHUB
+      - MAX_REQUESTS_GITLAB
       - API_CREDENTIALS_GITHUB
       - ZENODO_ACCESS_TOKEN
       - ZOTERO_LIBRARY

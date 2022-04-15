@@ -146,8 +146,9 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         description={software?.description ?? ''}
         tags={tagsInfo}
         licenses={licenseInfo}
-        repository={repositoryInfo?.url}
         languages={repositoryInfo?.languages}
+        repository={repositoryInfo?.url}
+        platform={repositoryInfo?.code_platform}
       />
       <OrganisationsSection
         organisations={organisations}
