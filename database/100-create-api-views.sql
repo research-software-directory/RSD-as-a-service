@@ -394,3 +394,24 @@ BEGIN
 	;
 END
 $$;
+
+
+-- Project maintainer by slug
+CREATE FUNCTION maintainer_for_project_by_slug() RETURNS TABLE (
+	maintainer UUID,
+	software UUID,
+	slug VARCHAR)
+	LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		maintainer_for_project.maintainer,
+		maintainer_for_project.project,
+		project.slug
+	FROM
+		maintainer_for_project
+	LEFT JOIN
+		project ON project.id = maintainer_for_project.project;
+END
+$$;

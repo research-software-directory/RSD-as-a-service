@@ -8,7 +8,7 @@ CREATE TABLE project (
 	image_caption VARCHAR,
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	subtitle VARCHAR,
-	title VARCHAR,
+	title VARCHAR NOT NULL,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
 );
