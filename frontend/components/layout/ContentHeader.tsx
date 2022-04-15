@@ -2,7 +2,7 @@
 
 type ContentHeaderProps = {
   title: string,
-  subtitle: string,
+  subtitle: string | null,
   children?: any
 }
 
