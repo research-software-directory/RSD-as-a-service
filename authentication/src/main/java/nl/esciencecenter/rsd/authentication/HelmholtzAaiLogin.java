@@ -54,8 +54,8 @@ public class HelmholtzAaiLogin implements Login {
 			String ent = element.toString();
 
 			if (
-				ent.matches("urn\\:geant\\:helmholtz\\.de\\:group.*")
-				&& !ent.matches("urn\\:geant\\:helmholtz\\.de\\:group\\:Helmholtz-member.*")
+				ent.matches("urn:geant:helmholtz\\.de:group:.*")
+				&& !ent.matches("urn:geant:helmholtz\\.de:group:Helmholtz-member.*")
 			) {
 				String[] splitHash = ent.split("#");
 
