@@ -1,13 +1,16 @@
 # Getting Started
 
 ## Dependencies
+
 To run the application locally you need to install the following dependencies:
-- Docker
+
+*   Docker
 
 ## Get Started
 
 ### Monorepo
-The RSD-as-a-Service project is a divided into different services included in the monorepo:
+
+The RSD-as-a-Service project is a divided into different services included in the mono repo:
 
 |-- authentication  
 |-- backend-postgrest  
@@ -17,22 +20,21 @@ The RSD-as-a-Service project is a divided into different services included in th
 |-- documentation  
 |-- frontend  
 |-- nginx  
-|-- scrapers  
-
+|-- scrapers
 
 ### Environment variables
 
-The environment variables should be stored in .env file, which is automatically loaded by docker-compose. To validate loading of env variables use `docker-compose config`. More info about use of enviroment variables in docker-compose is available at [official documentation](https://docs.docker.com/compose/environment-variables/)
+The environment variables should be stored in a .env file, which is automatically loaded by docker-compose. To validate loading of env variables use `docker-compose config`. More info about the use of environment variables in docker-compose is available at [official documentation](https://docs.docker.com/compose/environment-variables/)
 
-- copy the file `.env.example` to `.env` file at the root of the project
+*   copy the file `.env.example` to `.env` file at the root of the project
 
 ```bash
 # from project root dir
 cp .env.example .env
 ```
 
-- You need to modify the new .env file with the corresponding value secrets.
-- build local images
+*   You need to modify the new .env file with the corresponding value secrets.
+*   build local images
 
 ```bash
 # from project root dir
@@ -52,7 +54,7 @@ The application can be viewed on http://localhost
 
 ### Frontend with hot-module-replacement (HMR)
 
-To run frontend in the development mode with the hot-module-replacement (HMR) you should start additional instance of the frontend which will be available at http://localhost:3000
+To run the frontend in the development mode with the hot-module-replacement (HMR) you should start an additional instance of the frontend which will be available at http://localhost:3000
 
 ```bash
 # navigate to frontend folder
@@ -63,12 +65,14 @@ yarn install
 yarn dev
 ```
 
-More information about frontend setup is [available in the frontend readme file](/frontend/README.md).
+More information about the frontend setup is [available in the frontend readme file](/frontend/README.md).
 
 ### Documentation site
-The documentation site runs on GitHub Pages. Any changes inside this folder will trigger a github action to deploy the changes automatically when merging a Pull Request to the main branch. 
 
-To run locally the documentation site, you need `nodejs` installed on your machine. 
+The documentation site runs on GitHub Pages. Any changes inside this folder will trigger a GitHub action to deploy the changes automatically when merging a Pull Request to the main branch.
+
+To run locally the documentation site, you need `nodejs` installed on your machine.
+
 ```bash
 # navigate to frontend folder
 cd documentation
@@ -78,13 +82,11 @@ yarn install
 yarn dev
 ```
 
-All documentation files written in Markdown are places inside the `./documentation/docs/` folder.  
+All documentation files written in Markdown are placed inside the `./documentation/docs/` folder.
 
-You can edit the `navigation bar` and the `sidebar` from the `./doumentation/docs/.vuepress/config.js` file.  
+You can edit the `navigation bar` and the `sidebar` from the `./doumentation/docs/.vuepress/config.js` file.
 
-Any file `markdown file` added indie the `docs` folder will be available on built time.  
-
-
+Any file `markdown file` added indie the `docs` folder will be available on built time.
 
 ## Clear/remove data (reset)
 
@@ -98,8 +100,8 @@ docker-compose down --volumes
 
 A data migration script is available to migrate data from the legacy RSD to the new one:
 
-- run current RSD solution using `docker-compose up` from the root of the project
-- run the migration script using docker-compose file in the data-migration folder
+*   run current RSD solution using `docker-compose up` from the root of the project
+*   run the migration script using docker-compose file in the data-migration folder
 
 ```bash
 # navigate to data-migration folder
@@ -108,7 +110,7 @@ cd data-migration
 docker-compose up
 ```
 
-More information about [data migration is avaliable here](data-migration/README.md).
+More information about [data migration is available here](data-migration/README.md).
 
 ## Tech Stack
 
