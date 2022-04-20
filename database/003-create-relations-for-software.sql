@@ -1,6 +1,14 @@
+CREATE TYPE platform_type AS ENUM (
+	'github',
+	'gitlab',
+	'bitbucket',
+	'other'
+);
+
 CREATE TABLE repository_url (
 	software UUID references software (id) PRIMARY KEY,
 	url VARCHAR NOT NULL,
+	code_platform platform_type NOT NULL DEFAULT 'other',
 	languages JSONB,
 	languages_scraped_at TIMESTAMP,
 	license VARCHAR,

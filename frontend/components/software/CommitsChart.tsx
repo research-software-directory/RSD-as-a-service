@@ -3,7 +3,8 @@ import {getTimeAgoSince} from '../../utils/dateFn'
 import {prepareDataForSoftwarePage} from '../charts/d3LineChart/formatData'
 import SingleLineChart from '../charts/d3LineChart/SingleLineChart'
 
-export default function CommitsChart({commit_history}: { commit_history: CommitHistory }) {
+export default function CommitsChart({commit_history,className}:
+  {commit_history: CommitHistory,className?:string}) {
   // ignore if no commit histiry
   if (!commit_history) return null
   // format commits data for chart and calculate other stats
@@ -11,7 +12,7 @@ export default function CommitsChart({commit_history}: { commit_history: CommitH
 
   // render
   return (
-    <div className="flex-1 pl-0 lg:pl-24 w-full">
+    <div className={`flex-1 w-full ${className ?? ''}`}>
       <SingleLineChart data={lineData} />
       <div className="software_commitsStat pt-4" id="commitsStat">
         <b>{totalCountY} commits</b> | Last commit <b>&#x2248; {

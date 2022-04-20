@@ -1,5 +1,7 @@
 package nl.esciencecenter.rsd.scraper;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,7 +10,49 @@ public class MainProgrammingLanguages {
 
 	public static void main(String[] args) {
 		System.out.println("Start scraping programming languages");
-		SoftwareInfoRepository existingLanguagesSorted = new OrderByDateSIRDecorator(new FilterUrlOnlySIRDecorator(new PostgrestSIR(Config.backendBaseUrl()), "https://github.com"));
+		scrapeGithub();
+		scrapeGitLab();
+		System.out.println("Done scraping programming languages");
+	}
+
+	private static void scrapeGitLab() {
+		SoftwareInfoRepository existingLanguagesSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB));
+		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.languagesData();
+		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
+		LocalDateTime scrapedAt = LocalDateTime.now();
+		int countRequests = 0;
+		int maxRequests = Config.maxRequestsGitLab();
+		for (RepositoryUrlData programmingLanguageData : dataToScrape) {
+			try {
+				countRequests += 1;
+				if (countRequests > maxRequests) break;
+				String repoUrl = programmingLanguageData.url();
+				String hostname = new URI(repoUrl).getHost();
+				String apiUrl = "https://" + hostname + "/api";
+				String projectPath = repoUrl.replace("https://" + hostname + "/", "");
+				if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
+
+				String scrapedLanguages = new GitLabSI(apiUrl, projectPath).languages();
+				RepositoryUrlData updatedData = new RepositoryUrlData(
+						programmingLanguageData.software(), programmingLanguageData.url(), CodePlatformProvider.GITLAB,
+						programmingLanguageData.license(), programmingLanguageData.licenseScrapedAt(),
+						programmingLanguageData.commitHistory(), programmingLanguageData.commitHistoryScrapedAt(),
+						scrapedLanguages, scrapedAt);
+				updatedDataAll.add(updatedData);
+			} catch (RuntimeException e) {
+				System.out.println("Exception when handling data from url " + programmingLanguageData.url() + ":");
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				System.out.println("Error obtaining hostname of repository with url: " + programmingLanguageData.url() + ":");
+				e.printStackTrace();
+			}
+
+		}
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).save(updatedDataAll);
+	}
+
+	private static void scrapeGithub() {
+		SoftwareInfoRepository existingLanguagesSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB));
 		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.languagesData();
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
@@ -23,7 +67,8 @@ public class MainProgrammingLanguages {
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
 				String scrapedLanguages = new GithubSI("https://api.github.com", repo).languages();
-				RepositoryUrlData updatedData = new RepositoryUrlData(programmingLanguageData.software(), programmingLanguageData.url(),
+				RepositoryUrlData updatedData = new RepositoryUrlData(
+						programmingLanguageData.software(), programmingLanguageData.url(), CodePlatformProvider.GITHUB,
 						programmingLanguageData.license(), programmingLanguageData.licenseScrapedAt(),
 						programmingLanguageData.commitHistory(), programmingLanguageData.commitHistoryScrapedAt(),
 						scrapedLanguages, scrapedAt);
@@ -33,7 +78,6 @@ public class MainProgrammingLanguages {
 				e.printStackTrace();
 			}
 		}
-		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url").save(updatedDataAll);
-		System.out.println("Done scraping programming languages");
+		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).save(updatedDataAll);
 	}
 }

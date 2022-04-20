@@ -72,7 +72,7 @@ public class Main {
 		String allOrganisationsString = get(URI.create(LEGACY_RSD_ORGANISATION_URI));
 		JsonArray allOrganisationsFromLegacyRSD = JsonParser.parseString(allOrganisationsString).getAsJsonArray();
 		Map<String, String> organisationKeyToName = createOrganisationKeyToName(allOrganisationsFromLegacyRSD);
-		saveContributors(allPersonsFromLegacyRSD, allSoftwareFromLegacyRSD, slugToIdSoftware, organisationKeyToName, "contributors", "/contributor", "software");
+		savePeople(allPersonsFromLegacyRSD, allSoftwareFromLegacyRSD, slugToIdSoftware, organisationKeyToName, "contributors", "/contributor", "software");
 		saveSoftwareRelatedToSoftware(allSoftwareFromLegacyRSD, legacyIdToNewIdSoftware);
 		saveTestimonialsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware);
 
@@ -87,7 +87,7 @@ public class Main {
 		saveProjectImages(allProjectsFromLegacyRSD);
 		saveSoftwareRelatedToProjects(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyIdToNewIdProject);
 		saveProjectsRelatedToProjects(allProjectsFromLegacyRSD, legacyIdToNewIdProject);
-		saveContributors(allPersonsFromLegacyRSD, allProjectsFromLegacyRSD, slugToIdProject, null, "team", "/team_member", "project");
+		savePeople(allPersonsFromLegacyRSD, allProjectsFromLegacyRSD, slugToIdProject, organisationKeyToName, "team", "/team_member", "project");
 
 		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
 		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
@@ -233,6 +233,7 @@ public class Main {
 				JsonObject repoUrlToSave = new JsonObject();
 				repoUrlToSave.addProperty("software", slugToId.get(slug));
 				repoUrlToSave.add("url", jsonUrl);
+				repoUrlToSave.addProperty("code_platform", "github");
 				allRepoUrlsToSave.add(repoUrlToSave);
 			}
 		});
@@ -289,7 +290,7 @@ public class Main {
 		return result;
 	}
 
-	public static void saveContributors(JsonArray allPersonsFromLegacyRSD, JsonArray allEntitiesFromLegacyRSD, Map<String, String> slugToId, Map<String, String> organisationKeyToName, String personKey, String endpoint, String relationKey) {
+	public static void savePeople(JsonArray allPersonsFromLegacyRSD, JsonArray allEntitiesFromLegacyRSD, Map<String, String> slugToId, Map<String, String> organisationKeyToName, String personKey, String endpoint, String relationKey) {
 //		TODO: affiliations from contributors? YES, mapping to ROR possible?
 //		each person has an id, we need to find the person given this id since the software api only lists the id's
 		Map<String, JsonObject> personIdToObject = new HashMap<>();
@@ -299,7 +300,7 @@ public class Main {
 			personIdToObject.put(id, jsonPerson.getAsJsonObject());
 		});
 
-		JsonArray allContributorsToSave = new JsonArray();
+		JsonArray allPeopleToSave = new JsonArray();
 		allEntitiesFromLegacyRSD.forEach(jsonEntity -> {
 			JsonObject entityFromLegacyRSD = jsonEntity.getAsJsonObject();
 			String slug = entityFromLegacyRSD.getAsJsonPrimitive("slug").getAsString();
@@ -307,14 +308,14 @@ public class Main {
 
 			JsonArray contributorsForEntity = entityFromLegacyRSD.getAsJsonArray(personKey);
 			contributorsForEntity.forEach(jsonContributor -> {
-				JsonObject contributorFromLegacyRSD = jsonContributor.getAsJsonObject();
-				JsonObject contributorToSave = new JsonObject();
+				JsonObject personFromLegacyRSD = jsonContributor.getAsJsonObject();
+				JsonObject personToSave = new JsonObject();
 
-				contributorToSave.addProperty(relationKey, entityId);
-				contributorToSave.add("is_contact_person", contributorFromLegacyRSD.get("isContactPerson"));
-				String personId = contributorFromLegacyRSD.getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
+				personToSave.addProperty(relationKey, entityId);
+				personToSave.add("is_contact_person", personFromLegacyRSD.get("isContactPerson"));
+				String personId = personFromLegacyRSD.getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
 				JsonObject personData = personIdToObject.get(personId);
-				contributorToSave.add("email_address", nullIfBlank(personData.get("emailAddress")));
+				personToSave.add("email_address", nullIfBlank(personData.get("emailAddress")));
 				String familyNames = personData.getAsJsonPrimitive("familyNames").getAsString();
 				JsonElement nameParticleJson = personData.get("nameParticle");
 				if (!(nameParticleJson == null || nameParticleJson.isJsonNull())) {
@@ -323,41 +324,46 @@ public class Main {
 						familyNames = nameParticle + " " + familyNames;
 					}
 				}
-				contributorToSave.addProperty("family_names", familyNames);
-				contributorToSave.add("given_names", personData.get("givenNames"));
+				personToSave.addProperty("family_names", familyNames);
+				personToSave.add("given_names", personData.get("givenNames"));
 //				we skip the name suffix, as there are currently no valid entries in the legacy RSD
 //				contributorToSave.add("name_suffix", nullIfBlank(personData.get("nameSuffix")));
 
+				JsonElement roleJson = personFromLegacyRSD.get("role");
+				if (roleJson != null && !roleJson.isJsonNull()) {
+					personToSave.add("role", roleJson);
+				}
+
 				if (organisationKeyToName != null) {
-					JsonArray affiliations = contributorFromLegacyRSD.getAsJsonArray("affiliations");
+					JsonArray affiliations = personFromLegacyRSD.getAsJsonArray("affiliations");
 					Set<String> allAffiliations = new HashSet<>();
 					for (JsonElement affiliation : affiliations) {
 						String organisationKey = affiliation.getAsJsonObject().getAsJsonObject("foreignKey").getAsJsonPrimitive("id").getAsString();
 						String affiliationName = organisationKeyToName.get(organisationKey);
 						if (affiliationName == null) {
-							throw new RuntimeException("No organisation name found for key " + organisationKey + " for contributor " + contributorFromLegacyRSD);
+							throw new RuntimeException("No organisation name found for key " + organisationKey + " for person " + personFromLegacyRSD);
 						}
 						allAffiliations.add(affiliationName);
 					}
 					if (allAffiliations.isEmpty()) {
-						contributorToSave.add("affiliation", JsonNull.INSTANCE);
+						personToSave.add("affiliation", JsonNull.INSTANCE);
 					} else {
-						contributorToSave.addProperty("affiliation", String.join(", ", allAffiliations));
+						personToSave.addProperty("affiliation", String.join(", ", allAffiliations));
 					}
 				}
 
 				if (personData.has("avatar")) {
-					contributorToSave.add("avatar_data", personData.getAsJsonObject("avatar").get("data"));
-					contributorToSave.add("avatar_mime_type", personData.getAsJsonObject("avatar").get("mimeType"));
+					personToSave.add("avatar_data", personData.getAsJsonObject("avatar").get("data"));
+					personToSave.add("avatar_mime_type", personData.getAsJsonObject("avatar").get("mimeType"));
 				} else {
-					contributorToSave.add("avatar_data", JsonNull.INSTANCE);
-					contributorToSave.add("avatar_mime_type", JsonNull.INSTANCE);
+					personToSave.add("avatar_data", JsonNull.INSTANCE);
+					personToSave.add("avatar_mime_type", JsonNull.INSTANCE);
 				}
 
-				allContributorsToSave.add(contributorToSave);
+				allPeopleToSave.add(personToSave);
 			});
 		});
-		post(URI.create(POSTGREST_URI + endpoint), allContributorsToSave.toString());
+		post(URI.create(POSTGREST_URI + endpoint), allPeopleToSave.toString());
 	}
 
 	public static JsonElement nullIfBlank(JsonElement jsonString) {

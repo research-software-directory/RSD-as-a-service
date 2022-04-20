@@ -45,9 +45,8 @@ export type SearchContributor = {
 }
 
 
-export const ContributorProps = [
+export const TeamMemberProps = [
   'id',
-  'software',
   'is_contact_person',
   'email_address',
   'family_names',
@@ -56,4 +55,9 @@ export const ContributorProps = [
   'role',
   'orcid',
   'avatar_mime_type'
+]
+
+export const ContributorProps = [
+  ...TeamMemberProps,
+  'software'
 ]
