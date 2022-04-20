@@ -3,7 +3,8 @@ module.exports = {
   lang: 'en-US',
   title: 'RSD Documentation',
   description: 'RSD As a Service documentation',
-
+  base: '/RSD-as-a-service/'
+  
   themeConfig: {
     logo: '/images/circle.webp',
     // logoDark: '/images/heroDark.webp',
