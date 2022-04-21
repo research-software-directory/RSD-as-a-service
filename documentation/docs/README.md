@@ -11,7 +11,7 @@ actions:
     link: /getting-started.html
     type: primary
   - text: Introduction
-    link: /guide/
+    link: /introduction/
     type: secondary
 features:
   - title: Discover
