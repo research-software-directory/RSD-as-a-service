@@ -4,15 +4,15 @@ import Mail from '@mui/icons-material/Mail'
 
 export default function AppFooter () {
   return (
-    <footer className="flex flex-wrap bg-secondary text-white border-t border-grey-A400">
+    <footer className="flex flex-wrap text-white border-t bg-secondary border-grey-A400">
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[_2fr,1fr] lg:container lg:mx-auto">
 
         <div className="pt-10 sm:pb-10">
-          <div className="text-lg mb-4">
+          <div className="mb-4 text-lg">
             The Research Software Directory aims to promote the impact,
             the exchange and re-use of research software.
             {/* Please use our tools!&nbsp;<Link href="/about" passHref>
-              <a className="underline mr-2">Read more</a>
+              <a className="mr-2 underline">Read more</a>
             </Link> */}
           </div>
           <a target="_blank" href="https://esciencecenter.nl" rel="noreferrer"
@@ -20,13 +20,13 @@ export default function AppFooter () {
           >
             <LogoEscience />
           </a>
-          {/* <div className="text-sm mt-4">Copyright © {new Date().getFullYear()}</div> */}
+          {/* <div className="mt-4 text-sm">Copyright © {new Date().getFullYear()}</div> */}
         </div>
 
         <div className="pb-10 sm:pt-10">
           <div className="text-lg">Questions or comments?</div>
           <a href="mailto:rsd@esciencecenter.nl"
-             className="mt-2 text-primary hover:text-white flex"
+             className="flex mt-2 text-primary hover:text-white"
           >
             <Mail className="mr-2"/> rsd@esciencecenter.nl
           </a>
@@ -42,6 +42,12 @@ export default function AppFooter () {
             <Link href="/projects" passHref>
               <a className="footer-link">Projects</a>
             </Link>
+            <a href="https://research-software-directory.github.io/RSD-as-a-service"
+              target="_blank"
+              className="footer-link"
+              rel="noreferrer">
+              Technical Documention
+            </a>
           </div>
         </div>
       </div>
