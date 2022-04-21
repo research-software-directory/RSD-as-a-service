@@ -50,7 +50,7 @@ Run the command `docker-compose up`.
 docker-compose up
 ```
 
-The application can be viewed on http://localhost
+The application can be viewed at http://localhost
 
 ### Frontend with hot-module-replacement (HMR)
 
