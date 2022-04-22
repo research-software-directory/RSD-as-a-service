@@ -16,7 +16,7 @@ public class MainLicenses {
 	}
 
 	private static void scrapeGitLab() {
-		Collection<RepositoryUrlData> dataToScrape = getExistingLixenseData(CodePlatformProvider.GITLAB);
+		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITLAB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
@@ -50,7 +50,7 @@ public class MainLicenses {
 	}
 
 	private static void scrapeGitHub() {
-		Collection<RepositoryUrlData> dataToScrape = getExistingLixenseData(CodePlatformProvider.GITHUB);
+		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITHUB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
@@ -83,7 +83,7 @@ public class MainLicenses {
 	 * @param codePlatform The code platform as defined by SoftwareInfoRepository.CodePlatformProviders
 	 * @return             Sorted data
 	 */
-	private static Collection<RepositoryUrlData> getExistingLixenseData(CodePlatformProvider codePlatform) {
+	private static Collection<RepositoryUrlData> getExistingLicenseData(CodePlatformProvider codePlatform) {
 		SoftwareInfoRepository existingLicensesSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), codePlatform));
 		return existingLicensesSorted.licenseData();
 	}

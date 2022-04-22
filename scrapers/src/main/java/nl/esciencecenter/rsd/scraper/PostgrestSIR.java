@@ -16,9 +16,8 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	private final CodePlatformProvider codePlatform;
 
 	public PostgrestSIR(String backendUrl, CodePlatformProvider codePlatform) {
-		Objects.requireNonNull(codePlatform);
 		this.backendUrl = Objects.requireNonNull(backendUrl);
-		this.codePlatform = codePlatform;
+		this.codePlatform = Objects.requireNonNull(codePlatform);
 	}
 
 	@Override
