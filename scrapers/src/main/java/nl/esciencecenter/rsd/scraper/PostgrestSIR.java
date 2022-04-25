@@ -28,9 +28,19 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	@Override
 	public Collection<RepositoryUrlData> licenseData() {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(backendUrl + "/repository_url?" + filter)).getAsJsonArray();
+		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter);
+		return parseJsonData(data);
+	}
+
+	@Override
+	public Collection<RepositoryUrlData> commitData() {
+		return licenseData();
+	}
+
+	Collection<RepositoryUrlData> parseJsonData(String data) {
+		JsonArray dataInArray = JsonParser.parseString(data).getAsJsonArray();
 		Collection<RepositoryUrlData> result = new ArrayList<>();
-		for (JsonElement element : data) {
+		for (JsonElement element : dataInArray) {
 			JsonObject jsonObject = element.getAsJsonObject();
 			String software = jsonObject.getAsJsonPrimitive("software").getAsString();
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
@@ -53,11 +63,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			result.add(new RepositoryUrlData(software, url, codePlatform, license, licensScrapedAt, commits, commitsScrapedAt, languages, languagesScrapedAt));
 		}
 		return result;
-	}
-
-	@Override
-	public Collection<RepositoryUrlData> commitData() {
-		return licenseData();
 	}
 
 	@Override
