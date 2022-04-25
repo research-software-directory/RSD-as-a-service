@@ -198,7 +198,7 @@ export default function Home() {
                      style={{backgroundImage: 'url("/images/bg_card.svg")'}}>
                   <div className="flex flex-col justify-center">
                     <div className="text-3xl font-medium">
-                      Find quality Software
+                      Discover
                     </div>
                     <div className="text-lg mt-5">
                       Find and judge the relevance and quality of <span className="text-blue-400"> research software </span>
