@@ -37,6 +37,31 @@ public class Main {
 			}
 		});
 
+		app.get("/login/helmholtzaai", ctx -> {
+			try {
+				String returnPath = ctx.cookie("rsd_pathname");
+				String code = ctx.queryParam("code");
+				String redirectUrl = Config.helmholtzAaiRedirect();
+				OpenIdInfo helmholtzInfo = new HelmholtzAaiLogin(code, redirectUrl).openidInfo();
+				AccountInfo accountInfo = new PostgrestAccount(helmholtzInfo).account();
+				JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+				String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
+				setJwtCookie(ctx, token);
+
+				// redirect based on returnPath
+				if (returnPath != null && !returnPath.trim().isEmpty()) {
+					returnPath = returnPath.trim();
+					ctx.redirect(returnPath);
+				} else {
+					ctx.redirect("/");
+				}
+			} catch (RuntimeException ex) {
+				ex.printStackTrace();
+				ctx.status(400);
+				ctx.redirect("/login/failed");
+			}
+		});
+
 		app.get("/refresh", ctx -> {
 			try {
 				String tokenToVerify = ctx.cookie("rsd_token");

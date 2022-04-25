@@ -1,6 +1,6 @@
 import {useAuth} from '~/auth'
 import {userMenuItems} from '~/config/userMenuItems'
-import {getRedirectUrl} from '~/utils/surfConext'
+import {getRedirectUrl} from '~/utils/loginHelpers'
 import UserMenu from '~/components/layout/UserMenu'
 
 

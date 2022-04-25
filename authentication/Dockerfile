@@ -1,9 +1,9 @@
 FROM maven:3.8.4-openjdk-17 AS builder
 WORKDIR /usr/mymaven
-RUN mkdir --parents ./src/main
+RUN mkdir src
 COPY pom.xml .
 RUN mvn dependency:go-offline
-COPY ./src/main ./src/main
+COPY ./src ./src
 RUN mvn package --offline
 
 FROM openjdk:17.0.2-jdk-slim-bullseye
