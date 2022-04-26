@@ -4,7 +4,7 @@
  */
 
 const colors = {
-  primary:'#60a5fa',
+  primary:'#05A2E3',
   secondary:'#000',
   textPrimary:'rgba(34,36,37,1)',
   textSecondary:'rgba(34,36,37,0.87)',
