@@ -67,6 +67,11 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 
 	@Override
 	public void save(Collection<RepositoryUrlData> data) {
+		String json = repositoryUrlDataToJson(data);
+		Utils.postAsAdmin(backendUrl, json, "Prefer", "resolution=merge-duplicates");
+	}
+
+	static String repositoryUrlDataToJson(Collection<RepositoryUrlData> data) {
 		JsonArray dataAsJsonArray = new JsonArray();
 		for (RepositoryUrlData repositoryUrlData : data) {
 			JsonObject newDataJson = new JsonObject();
@@ -85,6 +90,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			newDataJson.addProperty("languages_scraped_at", repositoryUrlData.languagesScrapedAt() == null ? null : repositoryUrlData.languagesScrapedAt().toString());
 			dataAsJsonArray.add(newDataJson);
 		}
-		Utils.postAsAdmin(backendUrl, dataAsJsonArray.toString(), "Prefer", "resolution=merge-duplicates");
+		return dataAsJsonArray.toString();
 	}
 }
