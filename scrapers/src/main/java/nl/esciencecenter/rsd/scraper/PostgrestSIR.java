@@ -21,20 +21,24 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<RepositoryUrlData> languagesData() {
-		return licenseData();
-	}
-
-	@Override
-	public Collection<RepositoryUrlData> licenseData() {
+	public Collection<RepositoryUrlData> languagesData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter);
+		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&order=languages_scraped_at.asc.nullsfirst&limit=" + limit);
 		return parseJsonData(data);
 	}
 
 	@Override
-	public Collection<RepositoryUrlData> commitData() {
-		return licenseData();
+	public Collection<RepositoryUrlData> licenseData(int limit) {
+		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
+		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&order=license_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseJsonData(data);
+	}
+
+	@Override
+	public Collection<RepositoryUrlData> commitData(int limit) {
+		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
+		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseJsonData(data);
 	}
 
 	Collection<RepositoryUrlData> parseJsonData(String data) {

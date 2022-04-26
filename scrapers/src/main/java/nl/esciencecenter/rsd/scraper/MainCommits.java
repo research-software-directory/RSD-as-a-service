@@ -16,17 +16,13 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB));
-		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData();
+		SoftwareInfoRepository existingCommitsSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB);
+		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData(Config.maxRequestsGitLab());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
-		int countRequests = 0;
-		int maxRequests = Config.maxRequestsGitLab();
 		for (RepositoryUrlData commitData : dataToScrape) {
 			System.out.println("Scraping " + commitData.url());
 			try {
-				countRequests += 1;
-				if (countRequests > maxRequests) break;
 				String repoUrl = commitData.url();
 				String hostname = new URI(repoUrl).getHost();
 				String apiUrl = "https://" + hostname + "/api";
@@ -52,17 +48,13 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitHub() {
-		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB));
-		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData();
+		SoftwareInfoRepository existingCommitsSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB);
+		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData(Config.maxRequestsGithub());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
-		int countRequests = 0;
-		int maxRequests = Config.maxRequestsGithub();
 		for (RepositoryUrlData commitData : dataToScrape) {
 			try {
 				String repoUrl = commitData.url();
-				countRequests += 1;
-				if (countRequests > maxRequests) break;
 				String repo = repoUrl.replace("https://github.com/", "");
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
