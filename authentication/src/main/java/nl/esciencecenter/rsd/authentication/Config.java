@@ -63,4 +63,10 @@ public class Config {
 	public static String helmholtzAaiScopes() {
 		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_SCOPES");
 	}
+
+	public static boolean helmholtzAaiAllowExternalUsers() {
+		return Boolean.parseBoolean(
+			System.getenv("HELMHOLTZAAI_ALLOW_EXTERNAL_USERS")
+		);
+	}
 }

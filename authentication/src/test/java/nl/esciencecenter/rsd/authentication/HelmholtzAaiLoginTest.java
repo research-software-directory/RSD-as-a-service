@@ -1,6 +1,7 @@
 package nl.esciencecenter.rsd.authentication;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,41 @@ public class HelmholtzAaiLoginTest {
 
 		assertEquals(
 			"GFZ",
-			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr, false)
+		);
+
+		JSONArray nohash = new JSONArray();
+
+		nohash.add("urn:geant:helmholtz.de:group:Helmholtz-member");
+		nohash.add("urn:geant:helmholtz.de:group:GFZ");
+
+		assertEquals(
+			"GFZ",
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(nohash, false)
+		);
+	}
+
+	@Test
+	void testOrganisationFromEntitlementsExternalUsers() {
+		JSONArray arr = new JSONArray();
+
+		arr.add("urn:geant:helmholtz.de:group:Helmholtz-member#login-dev.helmholtz.de");
+		arr.add("urn:geant:helmholtz.de:group:GFZ#login-dev.helmholtz.de");
+		arr.add("urn:mace:dir:entitlement:common-lib-terms");
+
+		assertEquals(
+			"GFZ",
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr, true)
+		);
+
+		assertNull(
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(null, false)
+		);
+
+		JSONArray empty = new JSONArray();
+
+		assertNull(
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(empty, false)
 		);
 	}
 
@@ -34,7 +69,7 @@ public class HelmholtzAaiLoginTest {
 
 		assertEquals(
 			HelmholtzAaiLogin.DEFAULT_ORGANISATION,
-			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr, false)
 		);
 	}
 
@@ -44,7 +79,7 @@ public class HelmholtzAaiLoginTest {
 
 		assertEquals(
 			HelmholtzAaiLogin.DEFAULT_ORGANISATION,
-			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr, true)
 		);
 
 		arr.add("");
@@ -52,12 +87,19 @@ public class HelmholtzAaiLoginTest {
 
 		assertEquals(
 			HelmholtzAaiLogin.DEFAULT_ORGANISATION,
-			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr, true)
 		);
 
 		assertEquals(
 			HelmholtzAaiLogin.DEFAULT_ORGANISATION,
-			HelmholtzAaiLogin.getOrganisationFromEntitlements(null)
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(null, true)
+		);
+
+		arr.add("urn:geant:helmholtz.de:group:Helmholtz-member#login-dev.helmholtz.de");
+
+		assertEquals(
+			HelmholtzAaiLogin.DEFAULT_ORGANISATION,
+			HelmholtzAaiLogin.getOrganisationFromEntitlements(arr, false)
 		);
 	}
 }
