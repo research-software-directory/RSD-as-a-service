@@ -42,42 +42,63 @@ public class HelmholtzAaiLogin implements Login {
 		this.redirectUrl = Objects.requireNonNull(redirectUrl);
 	}
 
-	static String getOrganisationFromEntitlements(JSONArray entitlements) {
+	static String getOrganisationFromEntitlements(
+		JSONArray entitlements,
+		boolean allowExternal
+	) {
 		if (entitlements == null || entitlements.isEmpty()) {
-			return DEFAULT_ORGANISATION;
+			return allowExternal ? DEFAULT_ORGANISATION : null;
 		}
 
-		// we are looking for entries like:
-		// urn:geant:helmholtz.de:group:GFZ#login.helmholtz.de
+		String organisation = DEFAULT_ORGANISATION;
+		boolean helmholtzmemberFound = false;
 
 		for (Object element : entitlements.toArray()) {
 			String ent = element.toString();
 
-			if (
-				ent.matches("urn:geant:helmholtz\\.de:group:.*")
-				&& !ent.matches("urn:geant:helmholtz\\.de:group:Helmholtz-member.*")
-			) {
-				String[] splitHash = ent.split("#");
+			// we expect this for logins from Helmholtz centres
+			// see https://hifis.net/doc/helmholtz-aai/list-of-vos/#vos-representing-helmholtz-centres
+			if (ent.matches("urn:geant:helmholtz\\.de:group:Helmholtz-member.*")) {
+				helmholtzmemberFound = true;
+				continue;
+			}
 
-				if (splitHash.length != 2) {
-					// unknown format
-					continue;
+			// example: urn:geant:helmholtz.de:group:GFZ#login.helmholtz.de
+			if (ent.matches("urn:geant:helmholtz\\.de:group:.*")) {
+				String withoutHash = ent;
+
+				if (ent.contains("#")) {
+					String[] splitHash = ent.split("#");
+
+					if (splitHash.length != 2) {
+						// unknown format
+						continue;
+					}
+
+					withoutHash = splitHash[0];
 				}
 
 				// urn:geant:helmholtz.de:group:GFZ
-				String[] splitGroup = splitHash[0].split(":");
+				String[] splitGroup = withoutHash.split(":");
 
 				if (splitGroup.length != 5) {
 					// unknown format
 					continue;
 				}
 
-				// return last element
-				return splitGroup[splitGroup.length - 1];
+				// get organisation from last element
+				organisation = splitGroup[splitGroup.length - 1];
 			}
 		}
 
-		return DEFAULT_ORGANISATION;
+		if (!helmholtzmemberFound && !allowExternal) {
+			// deny login
+			return null;
+		}
+
+		// else: we either return the found the Helmholtz centre name
+		// or the default organisation
+		return organisation;
 	}
 
 	@Override
@@ -147,7 +168,16 @@ public class HelmholtzAaiLogin implements Login {
 		}
 
 		JSONArray entitlements = (JSONArray) userInfo.getClaim("eduperson_entitlement");
-		String organisation = getOrganisationFromEntitlements(entitlements);
+		String organisation = getOrganisationFromEntitlements(
+			entitlements,
+			Config.helmholtzAaiAllowExternalUsers()
+		);
+
+		if (organisation == null) {
+			// login denied by missing entitlements
+			// or external providers are not allowed
+			throw new RuntimeException("User is not allowed to login");
+		}
 
 		return new OpenIdInfo(
 			userInfo.getSubject().toString(),
