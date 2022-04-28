@@ -29,7 +29,7 @@ public class MainCommits {
 				String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 				if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GitLabSI(apiUrl, projectPath)).contributionsGitLab();
+				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GitLabSI(apiUrl, projectPath), CodePlatformProvider.GITLAB).contributions();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
 						commitData.software(), commitData.url(), CodePlatformProvider.GITLAB,
 						commitData.license(), commitData.licenseScrapedAt(),
@@ -58,7 +58,7 @@ public class MainCommits {
 				String repo = repoUrl.replace("https://github.com/", "");
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GithubSI("https://api.github.com", repo)).contributions();
+				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GithubSI("https://api.github.com", repo), CodePlatformProvider.GITHUB).contributions();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
 						commitData.software(), commitData.url(), CodePlatformProvider.GITHUB,
 						commitData.license(), commitData.licenseScrapedAt(),
