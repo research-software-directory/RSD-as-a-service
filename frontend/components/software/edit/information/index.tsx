@@ -55,7 +55,8 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           software: {
             slug,
             id: editSoftware?.id ?? '',
-            brand_name: editSoftware?.brand_name ?? ''
+            brand_name: editSoftware?.brand_name ?? '',
+            concept_doi: editSoftware?.concept_doi ?? '',
           },
           loading:false
         }

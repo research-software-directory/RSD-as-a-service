@@ -104,7 +104,8 @@ export const contributorInformation = {
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
-    }
+    },
+    autofill: 'Add contributors from DOI data',
   },
   is_contact_person: {
     label: 'Contact person',
