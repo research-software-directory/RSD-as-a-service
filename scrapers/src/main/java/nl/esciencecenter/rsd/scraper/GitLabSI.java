@@ -74,7 +74,7 @@ public class GitLabSI implements SoftwareInfo {
 		while (!done) {
 			HttpRequest request = HttpRequest.newBuilder().GET()
 					.uri(URI.create(apiUri + "/projects/" + Utils.urlEncode(projectPath)
-							+ "/repository/commits?per_page=5&order=default&page=" + page))
+							+ "/repository/commits?per_page=100&order=default&page=" + page))
 					.build();
 			HttpClient client =
 					HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
