@@ -16,24 +16,19 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB));
-		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData();
+		SoftwareInfoRepository existingCommitsSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB);
+		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData(Config.maxRequestsGitLab());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
-		int countRequests = 0;
-		int maxRequests = Config.maxRequestsGitLab();
 		for (RepositoryUrlData commitData : dataToScrape) {
-			System.out.println("Scraping " + commitData.url());
 			try {
-				countRequests += 1;
-				if (countRequests > maxRequests) break;
 				String repoUrl = commitData.url();
 				String hostname = new URI(repoUrl).getHost();
 				String apiUrl = "https://" + hostname + "/api";
 				String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 				if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GitLabSI(apiUrl, projectPath)).contributionsGitLab();
+				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GitLabSI(apiUrl, projectPath), CodePlatformProvider.GITLAB).contributions();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
 						commitData.software(), commitData.url(), CodePlatformProvider.GITLAB,
 						commitData.license(), commitData.licenseScrapedAt(),
@@ -52,21 +47,17 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitHub() {
-		SoftwareInfoRepository existingCommitsSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB));
-		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData();
+		SoftwareInfoRepository existingCommitsSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB);
+		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData(Config.maxRequestsGithub());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
-		int countRequests = 0;
-		int maxRequests = Config.maxRequestsGithub();
 		for (RepositoryUrlData commitData : dataToScrape) {
 			try {
 				String repoUrl = commitData.url();
-				countRequests += 1;
-				if (countRequests > maxRequests) break;
 				String repo = repoUrl.replace("https://github.com/", "");
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GithubSI("https://api.github.com", repo)).contributions();
+				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GithubSI("https://api.github.com", repo), CodePlatformProvider.GITHUB).contributions();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
 						commitData.software(), commitData.url(), CodePlatformProvider.GITHUB,
 						commitData.license(), commitData.licenseScrapedAt(),

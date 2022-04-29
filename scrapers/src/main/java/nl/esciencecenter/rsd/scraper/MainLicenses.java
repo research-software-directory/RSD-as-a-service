@@ -16,15 +16,11 @@ public class MainLicenses {
 	}
 
 	private static void scrapeGitLab() {
-		Collection<RepositoryUrlData> dataToScrape = getExistingLixenseData(CodePlatformProvider.GITLAB);
+		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITLAB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
-		int countRequests = 0;
-		int maxRequests = Config.maxRequestsGitLab();
 		for (RepositoryUrlData licenseData : dataToScrape) {
 			try {
-				countRequests += 1;
-				if (countRequests > maxRequests) break;
 				String repoUrl = licenseData.url();
 				String hostname = new URI(repoUrl).getHost();
 				String apiUrl = "https://" + hostname + "/api";
@@ -50,16 +46,12 @@ public class MainLicenses {
 	}
 
 	private static void scrapeGitHub() {
-		Collection<RepositoryUrlData> dataToScrape = getExistingLixenseData(CodePlatformProvider.GITHUB);
+		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITHUB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
-		int countRequests = 0;
-		int maxRequests = Config.maxRequestsGithub();
 		for (RepositoryUrlData licenseData : dataToScrape) {
 			try {
 				String repoUrl = licenseData.url();
-				countRequests += 1;
-				if (countRequests > maxRequests) break;
 				String repo = repoUrl.replace("https://github.com/", "");
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
@@ -83,8 +75,13 @@ public class MainLicenses {
 	 * @param codePlatform The code platform as defined by SoftwareInfoRepository.CodePlatformProviders
 	 * @return             Sorted data
 	 */
-	private static Collection<RepositoryUrlData> getExistingLixenseData(CodePlatformProvider codePlatform) {
-		SoftwareInfoRepository existingLicensesSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), codePlatform));
-		return existingLicensesSorted.licenseData();
+	private static Collection<RepositoryUrlData> getExistingLicenseData(CodePlatformProvider codePlatform) {
+		SoftwareInfoRepository existingLicensesSorted = new PostgrestSIR(Config.backendBaseUrl(), codePlatform);
+		int limit = switch (codePlatform) {
+			case GITHUB -> Config.maxRequestsGithub();
+			case GITLAB -> Config.maxRequestsGitLab();
+			default -> throw new IllegalStateException("Unexpected value: " + codePlatform);
+		};
+		return existingLicensesSorted.licenseData(limit);
 	}
 }

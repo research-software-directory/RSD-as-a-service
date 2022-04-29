@@ -16,9 +16,11 @@ import static nl.esciencecenter.rsd.scraper.Utils.collapseToWeekUTC;
 public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 
 	private final SoftwareInfo origin;
+	private final CodePlatformProvider codePlatform;
 
-	public AggregateContributionsPerWeekSIDecorator(SoftwareInfo origin) {
+	public AggregateContributionsPerWeekSIDecorator(SoftwareInfo origin, CodePlatformProvider codePlatform) {
 		this.origin = Objects.requireNonNull(origin);
+		this.codePlatform = Objects.requireNonNull(codePlatform);
 	}
 
 	@Override
@@ -33,7 +35,16 @@ public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 
 	@Override
 	public String contributions() {
-		JsonArray commitsPerContributor = JsonParser.parseString(origin.contributions()).getAsJsonArray();
+		String data = origin.contributions();
+		return switch (codePlatform) {
+			case GITHUB -> contributionsGitHub(data);
+			case GITLAB -> contributionsGitLab(data);
+			default -> throw new IllegalStateException("Unexpected value: " + codePlatform);
+		};
+	}
+
+	static String contributionsGitHub(String data) {
+		JsonArray commitsPerContributor = JsonParser.parseString(data).getAsJsonArray();
 		SortedMap<Long, Long> commitsPerWeek = new TreeMap<>();
 		for (JsonElement jsonElement : commitsPerContributor) {
 			JsonArray weeks = jsonElement.getAsJsonObject().getAsJsonArray("weeks");
@@ -56,8 +67,8 @@ public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 	 * The timestamp represents the beginning of the week (Sunday, 00:00:00 UTC).
 	 * @return A String representing JSON
 	 */
-	public String contributionsGitLab() {
-		JsonArray allCommits = JsonParser.parseString(origin.contributions()).getAsJsonArray();
+	static String contributionsGitLab(String data) {
+		JsonArray allCommits = JsonParser.parseString(data).getAsJsonArray();
 		String oldestCommit = allCommits.get(allCommits.size() - 1).getAsJsonObject().get("committed_date").getAsString();
 		ZonedDateTime oldestCommitDate = ZonedDateTime.parse(oldestCommit).withZoneSameInstant(ZoneOffset.UTC);
 		ZonedDateTime firstAggregationWeek = collapseToWeekUTC(oldestCommitDate);

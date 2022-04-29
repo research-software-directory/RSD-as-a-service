@@ -16,22 +16,50 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	private final CodePlatformProvider codePlatform;
 
 	public PostgrestSIR(String backendUrl, CodePlatformProvider codePlatform) {
-		Objects.requireNonNull(codePlatform);
 		this.backendUrl = Objects.requireNonNull(backendUrl);
-		this.codePlatform = codePlatform;
+		this.codePlatform = Objects.requireNonNull(codePlatform);
 	}
 
+	/**
+	 * Fetch programming languages data from PostgREST
+	 * @param limit The number of rows requested from PostgREST
+	 * @return      The data corresponding to the git repositories of which the programming languages data were scraped the longest time ago
+	 */
 	@Override
-	public Collection<RepositoryUrlData> languagesData() {
-		return licenseData();
-	}
-
-	@Override
-	public Collection<RepositoryUrlData> licenseData() {
+	public Collection<RepositoryUrlData> languagesData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		JsonArray data = JsonParser.parseString(Utils.getAsAdmin(backendUrl + "/repository_url?" + filter)).getAsJsonArray();
+		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&order=languages_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseJsonData(data);
+	}
+
+	/**
+	 * Fetch license data from PostgREST
+	 * @param limit The number of rows requested from PostgREST
+	 * @return      The data corresponding to the git repositories of which the license data were scraped the longest time ago
+	 */
+	@Override
+	public Collection<RepositoryUrlData> licenseData(int limit) {
+		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
+		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&order=license_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseJsonData(data);
+	}
+
+	/**
+	 * Fetch commit data from PostgREST
+	 * @param limit The number of rows requested from PostgREST
+	 * @return      The data corresponding to the git repositories of which the commit data were scraped the longest time ago
+	 */
+	@Override
+	public Collection<RepositoryUrlData> commitData(int limit) {
+		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
+		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseJsonData(data);
+	}
+
+	Collection<RepositoryUrlData> parseJsonData(String data) {
+		JsonArray dataInArray = JsonParser.parseString(data).getAsJsonArray();
 		Collection<RepositoryUrlData> result = new ArrayList<>();
-		for (JsonElement element : data) {
+		for (JsonElement element : dataInArray) {
 			JsonObject jsonObject = element.getAsJsonObject();
 			String software = jsonObject.getAsJsonPrimitive("software").getAsString();
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
@@ -57,12 +85,12 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public Collection<RepositoryUrlData> commitData() {
-		return licenseData();
+	public void save(Collection<RepositoryUrlData> data) {
+		String json = repositoryUrlDataToJson(data);
+		Utils.postAsAdmin(backendUrl, json, "Prefer", "resolution=merge-duplicates");
 	}
 
-	@Override
-	public void save(Collection<RepositoryUrlData> data) {
+	static String repositoryUrlDataToJson(Collection<RepositoryUrlData> data) {
 		JsonArray dataAsJsonArray = new JsonArray();
 		for (RepositoryUrlData repositoryUrlData : data) {
 			JsonObject newDataJson = new JsonObject();
@@ -81,6 +109,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			newDataJson.addProperty("languages_scraped_at", repositoryUrlData.languagesScrapedAt() == null ? null : repositoryUrlData.languagesScrapedAt().toString());
 			dataAsJsonArray.add(newDataJson);
 		}
-		Utils.postAsAdmin(backendUrl, dataAsJsonArray.toString(), "Prefer", "resolution=merge-duplicates");
+		return dataAsJsonArray.toString();
 	}
 }

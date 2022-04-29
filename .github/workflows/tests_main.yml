@@ -9,6 +9,7 @@ on:
       - "frontend/**"
       - "database/**"
       - "backend-postgrest/**"
+      - "scrapers/**"
 
 jobs:
   unit-tests:
@@ -38,3 +39,12 @@ jobs:
           docker-compose up \
             --abort-on-container-exit \
             --exit-code-from postgrest-tests
+
+  scrapers-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Maven JUnit tests"
+        working-directory: scrapers
+        run: |
+          JAVA_HOME=$JAVA_HOME_17_X64 mvn test

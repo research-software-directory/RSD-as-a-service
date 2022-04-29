@@ -16,16 +16,12 @@ public class MainProgrammingLanguages {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository existingLanguagesSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB));
-		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.languagesData();
+		SoftwareInfoRepository existingLanguagesSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB);
+		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.languagesData(Config.maxRequestsGitLab());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
-		int countRequests = 0;
-		int maxRequests = Config.maxRequestsGitLab();
 		for (RepositoryUrlData programmingLanguageData : dataToScrape) {
 			try {
-				countRequests += 1;
-				if (countRequests > maxRequests) break;
 				String repoUrl = programmingLanguageData.url();
 				String hostname = new URI(repoUrl).getHost();
 				String apiUrl = "https://" + hostname + "/api";
@@ -52,8 +48,8 @@ public class MainProgrammingLanguages {
 	}
 
 	private static void scrapeGithub() {
-		SoftwareInfoRepository existingLanguagesSorted = new OrderByDateSIRDecorator(new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB));
-		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.languagesData();
+		SoftwareInfoRepository existingLanguagesSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB);
+		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.languagesData(Config.maxRequestsGithub());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		int countRequests = 0;
