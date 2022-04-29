@@ -20,6 +20,11 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		this.codePlatform = Objects.requireNonNull(codePlatform);
 	}
 
+	/**
+	 * Fetch programming languages data from PostgREST
+	 * @param limit The number of rows requested from PostgREST
+	 * @return      The data corresponding to the git repositories of which the programming languages data were scraped the longest time ago
+	 */
 	@Override
 	public Collection<RepositoryUrlData> languagesData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
@@ -27,6 +32,11 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		return parseJsonData(data);
 	}
 
+	/**
+	 * Fetch license data from PostgREST
+	 * @param limit The number of rows requested from PostgREST
+	 * @return      The data corresponding to the git repositories of which the license data were scraped the longest time ago
+	 */
 	@Override
 	public Collection<RepositoryUrlData> licenseData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
@@ -34,6 +44,11 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		return parseJsonData(data);
 	}
 
+	/**
+	 * Fetch commit data from PostgREST
+	 * @param limit The number of rows requested from PostgREST
+	 * @return      The data corresponding to the git repositories of which the commit data were scraped the longest time ago
+	 */
 	@Override
 	public Collection<RepositoryUrlData> commitData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();

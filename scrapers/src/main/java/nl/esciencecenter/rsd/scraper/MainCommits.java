@@ -21,7 +21,6 @@ public class MainCommits {
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
 		LocalDateTime scrapedAt = LocalDateTime.now();
 		for (RepositoryUrlData commitData : dataToScrape) {
-			System.out.println("Scraping " + commitData.url());
 			try {
 				String repoUrl = commitData.url();
 				String hostname = new URI(repoUrl).getHost();
