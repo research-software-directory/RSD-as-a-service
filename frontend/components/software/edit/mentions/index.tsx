@@ -3,16 +3,16 @@ import {useContext, useState, useEffect} from 'react'
 import useSnackbar from '../../../snackbar/useSnackbar'
 import {MentionEditType, MentionForSoftware, MentionItem, mentionType} from '../../../../types/Mention'
 import {addMentionToSoftware} from '../../../../utils/editMentions'
-import logger from '../../../../utils/logger'
+// import logger from '../../../../utils/logger'
 import {getMentionsForSoftwareOfType} from '../../../../utils/editMentions'
 import {sortOnDateProp} from '../../../../utils/sortFn'
 import ContentLoader from '../../../layout/ContentLoader'
-import EditSoftwareSection from '../EditSoftwareSection'
+import EditSoftwareSection from '../../../layout/EditSection'
 import editSoftwareContext from '../editSoftwareContext'
 import {mentionInformation as config} from '../editSoftwareConfig'
-import NewMentionModal from './NewMentionModal'
+// import NewMentionModal from './NewMentionModal'
 import FindMention from './FindMention'
-import EditSectionTitle from '../EditSectionTitle'
+import EditSectionTitle from '../../../layout/EditSectionTitle'
 import useMentionCountByType from './useMentionCountByType'
 import MentionCountContext from './MentionCountContext'
 import SoftwareMentionCategories from './SoftwareMentionCategories'
@@ -31,9 +31,9 @@ export default function EditSoftwareMentions({token}:{token: string}) {
   const [mentions, setMentions] = useState<MentionByTypeState>()
   const {count, loading: loadCount} = useMentionCountByType({software: software?.id ?? '', token})
   const [mentionCount, setMentionCount] = useState(count)
-  const [modal, setModal] = useState<{open:boolean,mention?:MentionItem,pos?:number}>({
-    open: false
-  })
+  // const [modal, setModal] = useState<{open:boolean,mention?:MentionItem,pos?:number}>({
+  //   open: false
+  // })
 
   useEffect(() => {
     if (count) {
@@ -41,13 +41,13 @@ export default function EditSoftwareMentions({token}:{token: string}) {
     }
   },[count])
 
-  function closeModal() {
-    setModal({open:false})
-  }
+  // function closeModal() {
+  //   setModal({open:false})
+  // }
 
-  function onSubmitMention({data,pos}:{data:MentionItem,pos?:number}) {
-    logger('mentions.onSubmitMention...NOT IMPLEMENTED','warn')
-  }
+  // function onSubmitMention({data,pos}:{data:MentionItem,pos?:number}) {
+  //   logger('mentions.onSubmitMention...NOT IMPLEMENTED','warn')
+  // }
 
   async function onAddMention(mention:MentionItem) {
     if (software && software?.id) {
@@ -150,13 +150,13 @@ export default function EditSoftwareMentions({token}:{token: string}) {
           </div>
         </section>
       </EditSoftwareSection>
-      <NewMentionModal
+      {/* <NewMentionModal
         open={modal.open}
         pos={modal.pos}
         mention={modal.mention}
         onCancel={closeModal}
         onSubmit={onSubmitMention}
-      />
+      /> */}
     </MentionCountContext.Provider>
   )
 }

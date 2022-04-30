@@ -1,7 +1,12 @@
 
 import TagListItem from '../layout/TagListItem'
 
-export default function ProjectTags({title,tags}: {title:string, tags: string[] }) {
+type TagWithTitle = {
+  title: string
+  label: string
+}
+
+export default function ProjectTags({title,tags}:{title:string, tags: string[] | TagWithTitle[] }) {
 
   function renderTags() {
     if (tags.length === 0) {
@@ -10,8 +15,23 @@ export default function ProjectTags({title,tags}: {title:string, tags: string[] 
     return (
       <ul className="flex flex-wrap py-1">
         {
-          tags.map(item => {
-            return <TagListItem key={item} label={item} className="bg-grey-400" />
+          tags.map((item, pos) => {
+            let label
+            let title
+            if (typeof item != 'string') {
+              label = item?.label
+              title= item?.title
+            } else {
+              label = item
+            }
+            return (
+              <TagListItem
+                key={pos}
+                label={label}
+                title={title}
+                className="bg-grey-400"
+              />
+            )
           })
         }
       </ul>

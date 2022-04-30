@@ -122,7 +122,6 @@ export default function AddProjectCard() {
       project,
       token
     }).then(resp => {
-      debugger
       if (resp.status === 201) {
         // redirect to edit page
         // and remove software/add route from the history

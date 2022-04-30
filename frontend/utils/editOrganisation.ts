@@ -1,19 +1,18 @@
 import isMaintainerOfOrganisation from '../auth/permissions/isMaintainerOfOrganisation'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {
+  CoreOrganisationProps,
   EditOrganisation, Organisation,
   OrganisationsForSoftware,
   SearchOrganisation, SoftwareForOrganisation
 } from '../types/Organisation'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import {getPropsFromObject} from './getPropsFromObject'
-import {findInRORByName} from './getROR'
+import {findInROR} from './getROR'
 import {getSlugFromString} from './getSlugFromString'
+import {itemsNotInReferenceList} from './itemsNotInReferenceList'
 import logger from './logger'
-import {optionsNotInReferenceList} from './optionsNotInReferenceList'
 
-// organisation colums used in editOrganisation.getOrganisationsForSoftware
-const columsForSelect = 'id,parent,slug,primary_maintainer,name,ror_id,is_tenant,website,logo_id'
 // organisation colums used in editOrganisation.createOrganisation
 const columsForCreate = [
   'parent','slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website'
@@ -30,14 +29,15 @@ export async function searchForOrganisation({searchFor, token, frontend}:
     // make requests to RSD and ROR
     const [rsdOptions, rorOptions] = await Promise.all([
       findRSDOrganisation({searchFor, token, frontend}),
-      findInRORByName({searchFor})
+      findInROR({searchFor})
     ])
     // create options collection
     const options = [
       ...rsdOptions,
-      ...optionsNotInReferenceList({
+      ...itemsNotInReferenceList({
         list: rorOptions,
         referenceList: rsdOptions,
+        key: 'key'
       })
     ]
     // return all options
@@ -48,12 +48,13 @@ export async function searchForOrganisation({searchFor, token, frontend}:
   }
 }
 
-export async function findRSDOrganisation({searchFor, token, frontend}:
-  { searchFor: string, token?: string, frontend?: boolean }){
+export async function findRSDOrganisationByProperty({searchFor, property, token, frontend}:
+  { searchFor: string, property:string, token?: string, frontend?: boolean }) {
   try {
-    let url = `${process.env.POSTGREST_URL}/organisation?select=${columsForSelect}&name=ilike.*${searchFor}*&limit=20`
+    const query = `organisation?${property}=ilike.*${searchFor}*&limit=20`
+    let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
-      url = `/api/v1/organisation?name=ilike.*${searchFor}*&limit=50`
+      url = `/api/v1/${query}`
     }
     const resp = await fetch(url, {
       method: 'GET',
@@ -61,9 +62,8 @@ export async function findRSDOrganisation({searchFor, token, frontend}:
         ...createJsonHeaders(token),
       }
     })
-
     if (resp.status === 200) {
-      const data: Organisation[] = await resp.json()
+      const data: CoreOrganisationProps[] = await resp.json()
       const options: AutocompleteOption<SearchOrganisation>[] = data.map(item => {
         return {
           key: item?.ror_id ?? item.slug ?? item.name,
@@ -76,12 +76,39 @@ export async function findRSDOrganisation({searchFor, token, frontend}:
       })
       return options
     } else if (resp.status === 404) {
-      logger('findRSDOrganisation ERROR: 404 Not found', 'error')
+      logger('findRSDOrganisationByProperty ERROR: 404 Not found', 'error')
       // query not found
       return []
     }
-    logger(`findRSDOrganisation ERROR: ${resp?.status} ${resp?.statusText}`, 'error')
+    logger(`findRSDOrganisationByProperty ERROR: ${resp?.status} ${resp?.statusText}`, 'error')
     return []
+  } catch (e: any) {
+    logger(`findRSDOrganisationByProperty: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function findRSDOrganisation({searchFor, token, frontend}:
+  { searchFor: string, token?: string, frontend?: boolean }){
+  try {
+    // search for term in name and website
+    // because postgrest or does not return desired results we use 2 calls
+    const [byName, byWebsite] = await Promise.all([
+      findRSDOrganisationByProperty({searchFor, property: 'name', token, frontend}),
+      findRSDOrganisationByProperty({searchFor, property: 'website', token, frontend})
+    ])
+    // remove duplicate website entries
+    const websiteOnly = itemsNotInReferenceList<AutocompleteOption<SearchOrganisation>>({
+      list: byWebsite,
+      referenceList: byName,
+      key: 'key'
+    })
+    // return unique collection of both requests
+    const foundInRSD = [
+      ...byName,
+      ...websiteOnly
+    ]
+    return foundInRSD
   } catch (e:any) {
     logger(`findRSDOrganisation: ${e?.message}`, 'error')
     return []

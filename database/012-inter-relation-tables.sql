@@ -4,6 +4,12 @@ CREATE TYPE relation_status AS ENUM (
 	'approved'
 );
 
+CREATE TYPE organisation_role AS ENUM (
+	'funding',
+	'hosting',
+	'participating'
+);
+
 CREATE TABLE software_for_software (
 	origin UUID references software (id),
 	relation UUID references software (id),
@@ -83,6 +89,7 @@ CREATE TABLE project_for_organisation (
 	project UUID references project (id),
 	organisation UUID references organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
+	role organisation_role NOT NULL DEFAULT 'participating',
 	PRIMARY KEY (project, organisation)
 );
 

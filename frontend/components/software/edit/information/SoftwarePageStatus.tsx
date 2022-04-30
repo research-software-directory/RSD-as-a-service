@@ -1,4 +1,4 @@
-import EditSectionTitle from '../EditSectionTitle'
+import EditSectionTitle from '../../../layout/EditSectionTitle'
 import ControlledSwitch from '../../../form/ControlledSwitch'
 
 

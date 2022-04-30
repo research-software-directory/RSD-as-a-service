@@ -17,9 +17,9 @@ import ContentLoader from '../../../layout/ContentLoader'
 import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
 
 import EditTestimonialModal from './EditTestimonialModal'
-import EditSoftwareSection from '../EditSoftwareSection'
+import EditSoftwareSection from '../../../layout/EditSection'
 import editSoftwareContext, {EditSoftwareActionType} from '../editSoftwareContext'
-import EditSectionTitle from '../EditSectionTitle'
+import EditSectionTitle from '../../../layout/EditSectionTitle'
 import SoftwareTestimonialsDndList from './SoftwareTestimonialsDndList'
 import {ModalProps,ModalStates} from '../editSoftwareTypes'
 

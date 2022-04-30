@@ -1,25 +1,25 @@
-import {Project, ProjectLink} from '../../types/Project'
+import {KeywordForProject, ProjectLink, ResearchDomain} from '../../types/Project'
 
 import ProjectStatus from './ProjectStatus'
 import ProjectFunding from './ProjectFunding'
 import ProjectLinks from './ProjectLinks'
 import ProjectTags from './ProjectTags'
+import {ProjectOrganisationProps} from '~/types/Organisation'
 
 
 type ProjectSidebarProps = {
   date_start: string
   date_end: string
   grant_id: string | null
-  topics: string[]
-  technologies: string[]
+  researchDomains: ResearchDomain[],
+  keywords: KeywordForProject[],
   links: ProjectLink[]
+  fundingOrganisations: ProjectOrganisationProps[]
 }
 
 
-export default function ProjectSidebar({date_start,date_end,grant_id,links,topics,technologies}:ProjectSidebarProps) {
-
-  // if (typeof project == 'undefined') return null
-  // const {date_start,date_end, grant_id} = project
+export default function ProjectSidebar({date_start, date_end, grant_id, links, researchDomains,
+  keywords, fundingOrganisations}: ProjectSidebarProps) {
 
   return (
     <aside className="bg-grey-200 p-6">
@@ -31,6 +31,7 @@ export default function ProjectSidebar({date_start,date_end,grant_id,links,topic
 
       <ProjectFunding
         grant_id={grant_id}
+        fundingOrganisations={fundingOrganisations}
       />
 
       <ProjectLinks
@@ -38,14 +39,13 @@ export default function ProjectSidebar({date_start,date_end,grant_id,links,topic
       />
 
       <ProjectTags
-        title="Topics"
-        tags={topics}
-
+        title="Research domains"
+        tags={researchDomains.map(item => ({label: item.key, title: item.description}))}
       />
 
       <ProjectTags
-        title="Technologies"
-        tags={technologies}
+        title="Keywords"
+        tags={keywords.map(item=>item.keyword)}
       />
 
     </aside>

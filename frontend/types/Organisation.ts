@@ -1,4 +1,7 @@
+// based on ENUMS defined in 012-inter-relation-tables.sql
 export type Status = 'requested_by_origin' | 'requested_by_relation' | 'approved'
+export type OrganisationRole = 'participating' | 'funding' | 'hosting'
+export type OrganisationSource = 'RSD' | 'ROR' | 'MANUAL'
 
 // shared organisation properies
 export type CoreOrganisationProps = {
@@ -26,7 +29,7 @@ export type Organisation = CoreOrganisationProps & {
 
 // adding source
 export type SearchOrganisation = CoreOrganisationProps & {
-  source: 'RSD'|'ROR'|'MANUAL'
+  source: OrganisationSource
 }
 
 // extending with other props for software edit page
@@ -37,7 +40,7 @@ export type EditOrganisation = CoreOrganisationProps & {
   // new image to upload
   logo_b64: string | null
   logo_mime_type: string | null
-  source: 'RSD' | 'ROR' | 'MANUAL'
+  source?: OrganisationSource
   status?: Status
   // only maintainers can edit values
   canEdit?: boolean
@@ -71,6 +74,10 @@ export type ParticipatingOrganisationProps = {
   website: string | null
   logo_url: string | null
   slug?: string
+}
+
+export type ProjectOrganisationProps = ParticipatingOrganisationProps & {
+  role: OrganisationRole
 }
 
 export type OrganisationForOverview = CoreOrganisationProps & {
