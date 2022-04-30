@@ -141,14 +141,15 @@ export function getImageUrl(image_id:string|null) {
 
 export async function getOrganisationsOfProject({project, token, frontend = true, role}:
   { project: string, token: string, frontend?: boolean, role?: OrganisationRole }) {
-  // SSR request within docker network
-  let query = `/rpc/organisations_of_project?project=eq.${project}&order=name.asc`
-  if (role) query+=`&role=eq.${role}`
-  let url = `${process.env.POSTGREST_URL}/${query}`
-  if (frontend) {
-    url = `/api/v1/${query}`
-  }
   try {
+    let query = `rpc/organisations_of_project?project=eq.${project}&order=name.asc`
+    if (role) query += `&role=eq.${role}`
+    // SSR request within docker network
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    // console.log('getOrganisationsOfProject...url...',url)
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -159,6 +160,7 @@ export async function getOrganisationsOfProject({project, token, frontend = true
       const json: OrganisationsOfProject[] = await resp.json()
       return json
     }
+    logger(`getOrganisationsOfProject: ${resp.status} ${resp.statusText}`, 'warn')
     return []
   } catch (e: any) {
     logger(`getOrganisationsOfProject: ${e?.message}`, 'error')
@@ -183,6 +185,7 @@ export async function getOrganisations({project, token, frontend = true}:
         role: item.role
       }
     })
+  // console.log('getOrganisations...organisations...', organisations)
   return organisations
 }
 

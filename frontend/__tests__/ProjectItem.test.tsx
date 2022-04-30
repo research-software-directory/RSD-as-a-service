@@ -24,8 +24,8 @@ const mockedProps:ProjectPageProps = {
   slug: 'test-slug',
   isMaintainer: false,
   organisations:[],
-  technologies:['Tech 1', 'Tech 2'],
-  topics: ['Topic 1', 'Topic 2'],
+  researchDomains:[],
+  keywords: [],
   links: [],
   output: apiMentions as MentionForProject[],
   impact: apiMentions as MentionForProject[],
@@ -34,29 +34,7 @@ const mockedProps:ProjectPageProps = {
   relatedTools: apiRelatedSoftware
 }
 
-describe('pages/projects/index.tsx', () => {
-  // beforeEach(() => {
-  //   mockResolvedValueOnce(mockedResponse, {
-  //     status: 200,
-  //     headers: {
-  //       // mock getting Content-Range from the header
-  //       get: () => '0-11/200'
-  //     },
-  //     statusText: 'OK',
-  //   })
-  // })
-  // it('getServerSideProps returns mocked values in the props', async () => {
-  //   const resp = await getServerSideProps({req: {cookies: {}}})
-  //   // prepare raw data in the same way as getServerSideProps does it
-  //   const projects = prepareData(projectsOverview as RawProject[])
-  //   expect(resp).toEqual({
-  //     props:{
-  //       // mocked data
-  //       project: projects[0]
-  //     }
-  //   })
-  // })
-
+describe('pages/projects/[slug]/index', () => {
   it('renders Project title', async() => {
     render(WrappedComponentWithProps(
       ProjectItemPage,

@@ -92,12 +92,12 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
     reset
   ])
 
-  console.group('EditProjectInformation')
+  // console.group('EditProjectInformation')
   // console.log('loading...', loading)
   // console.log('project...', project)
-  console.log('projectState...', projectState)
-  console.log('formValues...', formValues)
-  console.groupEnd()
+  // console.log('projectState...', projectState)
+  // console.log('formValues...', formValues)
+  // console.groupEnd()
 
   if (loading || apiLoading) {
     return (

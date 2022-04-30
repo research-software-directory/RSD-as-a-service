@@ -10,7 +10,7 @@ CREATE TABLE keyword (
 
 CREATE TABLE keyword_for_project (
 	project UUID references project (id),
-	keyword UUID references keywords (id),
+	keyword UUID references keyword (id),
 	PRIMARY KEY (project, keyword)
 );
 

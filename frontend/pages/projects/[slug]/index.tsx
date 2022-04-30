@@ -67,8 +67,7 @@ export default function ProjectPage(props: ProjectPageProps) {
       </ContentInTheMiddle>
     )
   }
-  console.log('ProjectItemPage...organisations...', organisations)
-  // console.log('ProjectItemPage...impact...', impact)
+  // console.log('ProjectItemPage...organisations...', organisations)
   return (
     <>
       {/* Page Head meta tags */}
@@ -110,6 +109,7 @@ export default function ProjectPage(props: ProjectPageProps) {
           keywords={keywords}
           links={links}
         />
+        <div className="py-8"></div>
       </PageContainer>
       {/* Participating organisations */}
       <OrganisationsSection
