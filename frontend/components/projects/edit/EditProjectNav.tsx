@@ -22,6 +22,9 @@ export default function EditProjectNav() {
   })
 
   function onChangeStep(pos: number) {
+    const newStep = editProjectSteps[pos]
+    // ignore click on same step
+    if (newStep.label===step?.label) return
     // if unsaved changes in the form when changing step
     if (isDirty === true) {
       // notify user about unsaved changes
