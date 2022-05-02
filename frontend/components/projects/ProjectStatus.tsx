@@ -3,11 +3,13 @@ import {getMonthYearDate} from '../../utils/dateFn'
 import {getProjectStatus} from '../../utils/getProjects'
 
 type ProjectStatusProps = {
-  date_start: string,
-  date_end: string
+  date_start: string | null,
+  date_end: string | null
 }
 
 export default function ProjectStatus({date_start, date_end}: ProjectStatusProps) {
+
+  if (date_start === null || date_end === null) return null
 
   const status = getProjectStatus({
     date_start,
@@ -21,6 +23,7 @@ export default function ProjectStatus({date_start, date_end}: ProjectStatusProps
   }
 
   function getProgressValue({date_start, date_end}: ProjectStatusProps) {
+    if (date_start === null || date_end === null) return 0
     const start_date = new Date(date_start)
     const end_date = new Date(date_end)
     // define x scale as time scale
@@ -34,7 +37,7 @@ export default function ProjectStatus({date_start, date_end}: ProjectStatusProps
     return Math.floor(progress)
   }
 
-  if (status === 'Running') {
+  if (status === 'Running' && date_start && date_end) {
     progress = getProgressValue({
       date_start,
       date_end

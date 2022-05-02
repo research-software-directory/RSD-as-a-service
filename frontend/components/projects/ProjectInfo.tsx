@@ -28,8 +28,8 @@ export default function ProjectInfo({image_id, image_caption, description, date_
         description={description ?? ''}
       />
       <ProjectSidebar
-        date_start={date_start ?? new Date().toISOString()}
-        date_end={date_end ?? new Date().toISOString()}
+        date_start={date_start}
+        date_end={date_end}
         grant_id={grant_id}
         researchDomains={researchDomains}
         keywords={keywords}

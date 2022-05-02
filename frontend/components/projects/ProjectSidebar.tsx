@@ -8,8 +8,8 @@ import {ProjectOrganisationProps} from '~/types/Organisation'
 
 
 type ProjectSidebarProps = {
-  date_start: string
-  date_end: string
+  date_start: string | null
+  date_end: string | null
   grant_id: string | null
   researchDomains: ResearchDomain[],
   keywords: KeywordForProject[],
