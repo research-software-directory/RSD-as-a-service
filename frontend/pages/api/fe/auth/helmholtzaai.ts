@@ -1,29 +1,82 @@
+/**
+ * Helmholz AAI OpenID endpoint
+ * It provides frontend with redirect uri for the login button
+ */
+
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
+import {getAuthorisationEndpoint, RedirectToProps, claims, getRedirectUrl} from '~/auth/api/authHelpers'
+import logger from '~/utils/logger'
+import {Provider, ApiError} from '.'
 
-type Data = {
-  provider: string,
-  env: {
-    NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID?: string,
-    NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT?: string,
-    NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL?: string,
-    NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE?: string,
-    NEXT_PUBLIC_HELMHOLTZAAI_SCOPES?: string
+type Data = Provider | ApiError
+
+async function helmholtzRedirectProps() {
+  // extract wellknow url from env
+  const wellknownUrl = process.env.NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL ?? null
+  if (wellknownUrl) {
+    // extract authorisation endpoint from wellknow response
+    const authorization_endpoint = await getAuthorisationEndpoint(wellknownUrl)
+    if (authorization_endpoint) {
+      // construct all props needed for redirectUrl
+      // use default values if env not provided
+      const props: RedirectToProps = {
+        authorization_endpoint,
+        client_id: process.env.NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID || 'rsd-dev',
+        redirect_uri: process.env.NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT || 'http://localhost/auth/login/helmholtzaai',
+        scope: process.env.NEXT_PUBLIC_HELMHOLTZAAI_SCOPES || 'openid+profile+email+eduperson_principal_name',
+        response_mode: process.env.NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE || 'query',
+        claims
+      }
+      return props
+    } else {
+      const message = 'authorization_endpoint is missing'
+      logger(`api/fe/auth/helmholtzaai: ${message}`, 'error')
+      throw new Error(message)
+    }
+  } else {
+    const message = 'NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL is missing'
+    logger(`api/fe/auth/helmholtzaai: ${message}`, 'error')
+    throw new Error(message)
   }
 }
 
-export default function handler(
+export async function helmholtzInfo() {
+  // extract all props from env and wellknow endpoint
+  const redirectProps = await helmholtzRedirectProps()
+  if (redirectProps) {
+    // create return url and the name to use in login button
+    const redirectUrl = getRedirectUrl(redirectProps)
+    // provide redirectUrl and name/label
+    return {
+      name: 'Helmholtz AAI',
+      redirectUrl
+    }
+  }
+  return null
+}
+
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({
-    provider: 'helmholtzaai',
-    env: {
-      NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID: process.env.NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID,
-      NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT: process.env.NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT,
-      NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL: process.env.NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL,
-      NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE: process.env.NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE,
-      NEXT_PUBLIC_HELMHOLTZAAI_SCOPES: process.env.NEXT_PUBLIC_HELMHOLTZAAI_SCOPES
+  try {
+    // extract all props from env and wellknow endpoint
+    // and create return url and the name to use in login button
+    const loginInfo = await helmholtzInfo()
+    if (loginInfo) {
+      res.status(200).json(loginInfo)
+    } else {
+      res.status(400).json({
+        status: 400,
+        message: 'loginInfo missing'
+      })
     }
-  })
+  } catch (e: any) {
+    logger(`api/fe/auth/helmholtzaai: ${e?.message}`, 'error')
+    res.status(500).json({
+      status: 500,
+      message: e?.message
+    })
+  }
 }

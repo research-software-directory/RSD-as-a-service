@@ -79,8 +79,9 @@ services:
     environment:
       # it uses values from .env file
       - POSTGREST_URL
-      - RSD_AUTH_URL
       - PGRST_JWT_SECRET
+      - RSD_AUTH_URL
+      - RSD_AUTH_PROVIDERS
       - NEXT_PUBLIC_SURFCONEXT_CLIENT_ID
       - NEXT_PUBLIC_SURFCONEXT_REDIRECT
       - NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL
