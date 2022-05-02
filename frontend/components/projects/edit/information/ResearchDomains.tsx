@@ -200,6 +200,7 @@ export default function ResearchDomains() {
               level: 'l2'
             })
           }}
+          disabled={l1Selected ? false : true}
         >
           {l2Domains
             .sort((a,b)=>sortOnStrProp(a,b,'name'))
@@ -248,6 +249,7 @@ export default function ResearchDomains() {
             // nor here
             // maxWidth: '20rem',
           }}
+          disabled={l2Selected ? false : true}
         >
           {l3Domains
             .sort((a,b)=>sortOnStrProp(a,b,'name'))
