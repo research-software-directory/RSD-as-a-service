@@ -1,6 +1,7 @@
 import {AutocompleteOption, AutocompleteOptionWithLink} from '../types/AutocompleteOptions'
 import {RelatedSoftware, RelatedTools, SoftwareForSoftware} from '../types/SoftwareTypes'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from './fetchHelpers'
+import {itemsNotInReferenceList} from './itemsNotInReferenceList'
 import logger from './logger'
 
 export async function getRelatedToolsForSoftware({software, token, frontend, columns ='id,slug,brand_name,short_statement'}:
@@ -63,7 +64,9 @@ export async function saveRelatedSoftware({software, relatedSoftware, referenceL
   const requests = []
   // extract items to delete
   const toDelete = itemsNotInReferenceList({
-    list: referenceList, referenceList: relatedSoftware
+    list: referenceList,
+    referenceList: relatedSoftware,
+    key: 'key'
   })
   if (toDelete.length > 0) {
     requests.push(deleteRelatedSoftwareByIds({
@@ -74,7 +77,9 @@ export async function saveRelatedSoftware({software, relatedSoftware, referenceL
   }
   // extract items to add
   const toAdd = itemsNotInReferenceList({
-    list: relatedSoftware, referenceList
+    list: relatedSoftware,
+    referenceList,
+    key: 'key'
   })
   if (toAdd?.length > 0) {
     const addRelated = toAdd.map(item => {
@@ -191,19 +196,19 @@ export function relatedToolsToOptionsWithLink(software: RelatedTools[] | undefin
   return options
 }
 
-
-export function itemsNotInReferenceList({list, referenceList}:
-  { list: AutocompleteOption<RelatedSoftware>[], referenceList: AutocompleteOption<RelatedSoftware>[] }) {
-  if (list.length > 0) {
-    // list in initalList not present in saveList should be removed from db
-    const itemsNotInReferenceList = list.filter(({data: {id: lId}}) => {
-      // if item cannot be found in saveList
-      return !referenceList.some(({data: {id: rId}}) => {
-        // compare inital item with items in saveList
-        return lId === rId
-      })
-    })
-    return itemsNotInReferenceList
-  }
-  return []
-}
+// moved to utils fn ./itemsNotInReferenceList
+// export function itemsNotInReferenceList({list, referenceList}:
+//   { list: AutocompleteOption<RelatedSoftware>[], referenceList: AutocompleteOption<RelatedSoftware>[] }) {
+//   if (list.length > 0) {
+//     // list in initalList not present in saveList should be removed from db
+//     const itemsNotInReferenceList = list.filter(({data: {id: lId}}) => {
+//       // if item cannot be found in saveList
+//       return !referenceList.some(({data: {id: rId}}) => {
+//         // compare inital item with items in saveList
+//         return lId === rId
+//       })
+//     })
+//     return itemsNotInReferenceList
+//   }
+//   return []
+// }

@@ -1,4 +1,5 @@
-import {Status} from './Organisation'
+import {OrganisationRole, SearchOrganisation, Status} from './Organisation'
+import {AutocompleteOption} from './AutocompleteOptions'
 
 export type NewProject = {
   slug: string
@@ -18,14 +19,10 @@ export type BasicProject = NewProject & {
 }
 
 export type RawProject = BasicProject & {
-  image_for_project: [
+  image_for_project?: [
     { project: string }
   ],
-  url_for_project: [{
-    title: string,
-    url: string,
-    position: number | null
-  }]
+  url_for_project: ProjectLink[]
 }
 
 export type Project = BasicProject & {
@@ -37,13 +34,14 @@ export type Project = BasicProject & {
 export type OrganisationsOfProject = {
   id: string
   slug: string | null
-  primary_maintainer: string
+  primary_maintainer: string | null
   name: string
   ror_id: string
   is_tenant: boolean
   website: string | null
   logo_id: string | null
   status: Status
+  role: OrganisationRole
   project: string
 }
 
@@ -58,9 +56,22 @@ export type ProjectTopic = {
 }
 
 export type ProjectLink = {
-  title: string,
-  url: string,
+  // react-form unique id
+  id: string | null
+  title: string | null
+  url: string | null
   position: number | null
+  // project id
+  project: string | null
+}
+
+export type ProjectLinkInForm = ProjectLink & {
+  // id prop in database move
+  uuid: string | null
+}
+
+export type ProjectLinkWithStatus = ProjectLink & {
+  status?:'add'|'update'|'delete'
 }
 
 export type RelatedProject = {
@@ -73,3 +84,41 @@ export type RelatedProject = {
   date_end: string
   image_id: string | null
 }
+
+export type KeywordForProject = {
+  id: string | null
+  project: string
+  keyword: string
+  // passed to save function
+  action?: 'add' | 'create'
+  // passed to save function for updating form value with uuid
+  pos?: number
+}
+
+export type EditProject = Project & {
+  image_b64: string | null
+  image_mime_type: string | null
+  url_for_project: ProjectLinkInForm[]
+  funding_organisations: OrganisationsOfProject[] | SearchOrganisation[]
+  research_domains: ResearchDomain[] | null
+  keywords: KeywordForProject[]
+}
+
+export type ResearchDomain = {
+  id: string
+  key: string
+  name: string
+  description: string
+  parent: string | null
+}
+
+export type ResearchDomainForProject = {
+  project?: string,
+  research_domain: string
+}
+
+export const ProjectTableProps = [
+  'id', 'slug', 'title', 'subtitle', 'is_published',
+  'description', 'date_start', 'date_end', 'image_caption',
+  'grant_id'
+]

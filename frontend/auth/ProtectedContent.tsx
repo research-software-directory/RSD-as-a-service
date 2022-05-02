@@ -4,6 +4,7 @@ import {useAuth} from '.'
 import PageErrorMessage from '../components/layout/PageErrorMessage'
 import ContentLoader from '../components/layout/ContentLoader'
 import {isMaintainerOfSoftware} from './permissions/isMaintainerOfSoftware'
+import {isMaintainerOfProject} from './permissions/isMaintainerOfProject'
 
 /**
  * Wrap the content you want to protect in this component.
@@ -13,7 +14,8 @@ import {isMaintainerOfSoftware} from './permissions/isMaintainerOfSoftware'
  * based on page slug. NOTE! Slug is optional prop and if not provided the
  * maintainer validation is not performed.
  */
-export default function ProtectedContent({children, slug}: { children: any, slug?: string }) {
+export default function ProtectedContent({children, pageType='software', slug}:
+  { children: any, pageType?:'software'|'project', slug?: string }) {
   const {session} = useAuth()
   // keep maintainer flag
   const [isMaintainer, setIsMaintainer] = useState(false)
@@ -25,24 +27,40 @@ export default function ProtectedContent({children, slug}: { children: any, slug
     let abort = false
     if (slug && session.token) {
       setStatus('loading')
-      // validate if user is maintainer
-      // of this software
-      isMaintainerOfSoftware({
-        slug,
-        account: session?.user?.account ?? '',
-        token: session?.token
-      }).then(resp => {
-        // stop on abort
-        if (abort) return
-        // update states
-        setIsMaintainer(resp)
-        setStatus(session.status)
-      })
+      if (pageType === 'project') {
+        // validate if user is maintainer
+        // of this project
+        isMaintainerOfProject({
+          slug,
+          account: session?.user?.account ?? '',
+          token: session?.token
+        }).then(resp => {
+          // stop on abort
+          if (abort) return
+          // update states
+          setIsMaintainer(resp)
+          setStatus(session.status)
+        })
+      } else {
+        // validate if user is maintainer
+        // of this software
+        isMaintainerOfSoftware({
+          slug,
+          account: session?.user?.account ?? '',
+          token: session?.token
+        }).then(resp => {
+          // stop on abort
+          if (abort) return
+          // update states
+          setIsMaintainer(resp)
+          setStatus(session.status)
+        })
+      }
     } else if (session?.status) {
       setStatus(session.status)
     }
     return () => { abort = true }
-  }, [slug, session.token, session?.user?.account, session.status])
+  }, [slug, pageType, session.token, session?.user?.account, session.status])
 
   // return nothing
   if (status === 'loading') return <ContentLoader />

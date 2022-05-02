@@ -3,13 +3,18 @@ import logger from '../../utils/logger'
 
 type IsMaintainerOfOrganisationProps = {
   organisation: string
-  account: string
-  token: string
+  account?: string
+  token?: string
   frontend?: boolean
 }
 
 export async function isMaintainerOfOrganisation({organisation, account, token, frontend}: IsMaintainerOfOrganisationProps) {
   try {
+    if (typeof account == 'undefined' ||
+    typeof token == 'undefined') {
+      // if no account and token provided
+      return false
+    }
     const [primary, maintainer] = await Promise.all([
       isPrimaryMaintainer({
         organisation, account, token, frontend

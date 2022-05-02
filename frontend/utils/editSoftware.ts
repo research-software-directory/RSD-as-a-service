@@ -11,6 +11,7 @@ import {
 import {getPropsFromObject} from './getPropsFromObject'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from './fetchHelpers'
+import {itemsNotInReferenceList} from './itemsNotInReferenceList'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
@@ -129,9 +130,10 @@ export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repo
     }
     // check if tags need to be added
     if (software.tags?.length > 0) {
-      const tagsToAdd = tagsNotInReferenceList({
-        tagList: software.tags,
-        referenceList: tagsInDb
+      const tagsToAdd = itemsNotInReferenceList({
+        list: software.tags,
+        referenceList: tagsInDb,
+        key: 'key'
       }).map(item => {
         return {
           software: software.id,
@@ -146,9 +148,10 @@ export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repo
     // check if tags need to be deleted from db
     if (tagsInDb.length > 0){
       // delete tags from tags_for_software table
-      const tagsToDel = tagsNotInReferenceList({
-        tagList: tagsInDb,
-        referenceList: software.tags
+      const tagsToDel = itemsNotInReferenceList({
+        list: tagsInDb,
+        referenceList: software.tags,
+        key: 'key'
       }).map(item => item.data.tag)
       // add delete tags api call
       if (tagsToDel.length > 0) promises.push(deleteTagsForSoftware({
@@ -157,9 +160,10 @@ export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repo
     }
     // check if liceses need to be added
     if (software.licenses?.length > 0) {
-      const licensesToAdd = licensesNotInReferenceList({
+      const licensesToAdd = itemsNotInReferenceList({
         list: software.licenses,
-        referenceList: licensesInDb
+        referenceList: licensesInDb,
+        key: 'key'
       }).map((item)=>{
         return {
           software: software.id,
@@ -173,9 +177,10 @@ export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repo
     }
     // check if licenses need to be deleted
     if (licensesInDb.length > 0) {
-      const licenseToDel = licensesNotInReferenceList({
+      const licenseToDel = itemsNotInReferenceList({
         list: licensesInDb,
-        referenceList: software.licenses
+        referenceList: software.licenses,
+        key: 'key'
       }).map((item) => {
         return item?.data?.id ?? ''
       })
@@ -225,7 +230,7 @@ export async function updateSoftwareTable({software, token}:
     return extractReturnMessage(resp, software.id)
 
   } catch (e: any) {
-    logger(`updateSoftware: ${e?.message}`, 'error')
+    logger(`updateSoftwareTable: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -251,7 +256,7 @@ export async function addToRepositoryTable({data, token}:
     return extractReturnMessage(resp, data.software ?? '')
 
   } catch (e: any) {
-    logger(`updateSoftware: ${e?.message}`, 'error')
+    logger(`addToRepositoryTable: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -285,7 +290,7 @@ export async function updateRepositoryTable({data, token}:
     return extractReturnMessage(resp, data.software ?? '')
 
   } catch (e: any) {
-    logger(`updateSoftware: ${e?.message}`, 'error')
+    logger(`updateRepositoryTable: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -309,7 +314,7 @@ export async function deleteFromRepositoryTable({software, token}:
     return extractReturnMessage(resp, software ?? '')
 
   } catch (e: any) {
-    logger(`updateSoftware: ${e?.message}`, 'error')
+    logger(`deleteFromRepositoryTable: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -334,7 +339,7 @@ export async function addTagsForSoftware({software, data, token}:{software:strin
     return extractReturnMessage(resp, software ?? '')
 
   } catch (e: any) {
-    logger(`upsertTagsForSoftware: ${e?.message}`, 'error')
+    logger(`addTagsForSoftware: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -360,7 +365,7 @@ export async function deleteTagsForSoftware({software,tags,token}: { software: s
     return extractReturnMessage(resp, software ?? '')
 
   } catch (e: any) {
-    logger(`upsertTagsForSoftware: ${e?.message}`, 'error')
+    logger(`deleteTagsForSoftware: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -385,7 +390,7 @@ export async function addLicensesForSoftware({software, data, token}:
     return extractReturnMessage(resp, software ?? '')
 
   } catch (e: any) {
-    logger(`upsertLicensesForSoftware: ${e?.message}`, 'error')
+    logger(`addLicensesForSoftware: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -407,7 +412,7 @@ export async function deleteLicenses({ids, token}:
     return extractReturnMessage(resp, ids.toString())
 
   } catch (e: any) {
-    logger(`upsertLicensesForSoftware: ${e?.message}`, 'error')
+    logger(`deleteLicenses: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -415,39 +420,40 @@ export async function deleteLicenses({ids, token}:
   }
 }
 
-export function tagsNotInReferenceList({tagList, referenceList}:
-  { tagList: AutocompleteOption<Tag>[], referenceList: AutocompleteOption<Tag>[] }) {
-  if (tagList.length > 0) {
-    // tagList in initalList not present in saveList should be removed from db
-    const tagsNotInReferenceList = tagList.filter(({data: {tag: iTag}}) => {
-      // if item cannot be found in saveList
-      return !referenceList.some(({data: {tag: sTag}}) => {
-        // compare inital item with items in saveList
-        return iTag === sTag
-      })
-    })
+// refactored to use itemsNotInReferenceList
+// export function tagsNotInReferenceList({tagList, referenceList}:
+//   { tagList: AutocompleteOption<Tag>[], referenceList: AutocompleteOption<Tag>[] }) {
+//   if (tagList.length > 0) {
+//     // tagList in initalList not present in saveList should be removed from db
+//     const tagsNotInReferenceList = tagList.filter(({data: {tag: iTag}}) => {
+//       // if item cannot be found in saveList
+//       return !referenceList.some(({data: {tag: sTag}}) => {
+//         // compare inital item with items in saveList
+//         return iTag === sTag
+//       })
+//     })
 
-    return tagsNotInReferenceList
-  }
-  return []
-}
+//     return tagsNotInReferenceList
+//   }
+//   return []
+// }
 
-export function licensesNotInReferenceList({list, referenceList}:
-  { list: AutocompleteOption<License>[], referenceList: AutocompleteOption<License>[] }) {
-  if (list.length > 0) {
-    // list in initalList not present in saveList should be removed from db
-    const itemsNotInReferenceList = list.filter(({data: {license: lLicense}}) => {
-      // if item cannot be found in saveList
-      return !referenceList.some(({data: {license: rLicense}}) => {
-        // compare inital item with items in saveList
-        return lLicense === rLicense
-      })
-    })
+// export function licensesNotInReferenceList({list, referenceList}:
+//   { list: AutocompleteOption<License>[], referenceList: AutocompleteOption<License>[] }) {
+//   if (list.length > 0) {
+//     // list in initalList not present in saveList should be removed from db
+//     const itemsNotInReferenceList = list.filter(({data: {license: lLicense}}) => {
+//       // if item cannot be found in saveList
+//       return !referenceList.some(({data: {license: rLicense}}) => {
+//         // compare inital item with items in saveList
+//         return lLicense === rLicense
+//       })
+//     })
 
-    return itemsNotInReferenceList
-  }
-  return []
-}
+//     return itemsNotInReferenceList
+//   }
+//   return []
+// }
 
 
 // query for software item page based on slug

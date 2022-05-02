@@ -1,5 +1,6 @@
 
-import {ProjectLink} from '../../types/Project'
+import {ProjectOrganisationProps} from '~/types/Organisation'
+import {KeywordForProject, ProjectLink, ResearchDomain} from '../../types/Project'
 import ProjectDescription from './ProjectDescription'
 import ProjectSidebar from './ProjectSidebar'
 
@@ -11,14 +12,14 @@ type ProjectInfoProps = {
   image_caption: string | null
   grant_id: string | null
   links: ProjectLink[]
-  topics: string[],
-  technologies: string[]
+  researchDomains: ResearchDomain[],
+  keywords: KeywordForProject[],
+  fundingOrganisations: ProjectOrganisationProps[]
 }
 
 
-export default function ProjectInfo({
-  image_id, image_caption, description, date_start, date_end,
-  grant_id, links, topics, technologies}: ProjectInfoProps) {
+export default function ProjectInfo({image_id, image_caption, description, date_start, date_end,
+  grant_id, links, researchDomains, keywords, fundingOrganisations}: ProjectInfoProps) {
   return (
     <section className="px-4 grid gap-8 lg:grid-cols-[3fr,1fr] lg:gap-16">
       <ProjectDescription
@@ -27,12 +28,13 @@ export default function ProjectInfo({
         description={description ?? ''}
       />
       <ProjectSidebar
-        date_start={date_start ?? new Date().toISOString()}
-        date_end={date_end ?? new Date().toISOString()}
+        date_start={date_start}
+        date_end={date_end}
         grant_id={grant_id}
-        topics={topics}
-        technologies={technologies}
+        researchDomains={researchDomains}
+        keywords={keywords}
         links={links}
+        fundingOrganisations={fundingOrganisations}
       />
     </section>
   )

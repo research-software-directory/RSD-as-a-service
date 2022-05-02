@@ -297,6 +297,7 @@ CREATE FUNCTION organisations_of_project() RETURNS TABLE (
 	website VARCHAR,
 	logo_id UUID,
 	status relation_status,
+	role organisation_role,
 	project UUID
 ) LANGUAGE plpgsql STABLE AS
 $$
@@ -312,6 +313,7 @@ BEGIN
 			organisation.website,
 			logo_for_organisation.id AS logo_id,
 			project_for_organisation.status,
+			project_for_organisation.role,
 			project.id AS project
 	FROM
 		project
@@ -414,5 +416,83 @@ BEGIN
 		maintainer_for_project
 	LEFT JOIN
 		project ON project.id = maintainer_for_project.project;
+END
+$$;
+
+
+-- Keywords with the count used in projects
+-- used by search to show existing keywords with the count
+CREATE FUNCTION keyword_count_for_projects() RETURNS TABLE (
+	id UUID,
+	keyword CITEXT,
+	cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		keyword.id,
+		keyword.value AS keyword,
+		keyword_count.cnt
+	FROM
+		keyword
+	LEFT JOIN
+		(SELECT
+				keyword_for_project.keyword,
+				count(keyword_for_project.keyword) AS cnt
+			FROM
+				keyword_for_project
+			GROUP BY keyword_for_project.keyword
+		) AS keyword_count ON keyword.id = keyword_count.keyword
+	;
+END
+$$;
+
+-- Keywords by project
+-- for selecting keywords of specific project
+-- using filter ?project=eq.UUID
+CREATE FUNCTION keywords_by_project() RETURNS TABLE (
+	id UUID,
+	keyword CITEXT,
+	project UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+SELECT
+	keyword.id,
+	keyword.value AS keyword,
+	keyword_for_project.project
+FROM
+	keyword_for_project
+INNER JOIN
+	keyword ON keyword.id = keyword_for_project.keyword
+;
+END
+$$;
+
+
+-- Research domains by project
+CREATE FUNCTION research_domain_by_project() RETURNS TABLE (
+	id UUID,
+	"key" VARCHAR,
+	name VARCHAR,
+	description VARCHAR,
+	project UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+SELECT
+	research_domain.id,
+	research_domain.key,
+	research_domain.name,
+	research_domain.description,
+	research_domain_for_project.project
+FROM
+	research_domain_for_project
+INNER JOIN
+	research_domain ON research_domain.id=research_domain_for_project.research_domain
+;
 END
 $$;

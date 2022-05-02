@@ -168,13 +168,7 @@ export async function updateContributorInDb({data, token}: { data: Contributor, 
     // if we uploaded new image we remove
     // data and construct avatar_url
     const returned = removeBase64Data(data)
-    // if (data.avatar_b64 &&
-    //   data?.avatar_b64.length > 10) {
-    //   // clean it from memory data
-    //   data.avatar_b64 = null
-    //   // and we use avatar url instead
-    //   data.avatar_url = getAvatarUrl(data)
-    // }
+
     return {
       status: 200,
       message: returned

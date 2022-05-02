@@ -7,10 +7,10 @@ import {updateSoftwareInfo} from '../../../../utils/editSoftware'
 import useEditSoftwareData from '../../../../utils/useEditSoftwareData'
 import useOnUnsaveChange from '../../../../utils/useOnUnsavedChange'
 import ContentLoader from '../../../layout/ContentLoader'
+import EditSection from '~/components/layout/EditSection'
 import useSnackbar from '../../../snackbar/useSnackbar'
 import ControlledTextField from '../../../form/ControlledTextField'
-import EditSoftwareSection from '../EditSoftwareSection'
-import EditSectionTitle from '../EditSectionTitle'
+import EditSectionTitle from '../../../layout/EditSectionTitle'
 import editSoftwareContext from '../editSoftwareContext'
 import {EditSoftwareActionType} from '../editSoftwareContext'
 import SoftwareMarkdown from './SoftwareMarkdown'
@@ -132,7 +132,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       <input type="hidden"
         {...register('slug',{required:'slug is required'})}
       />
-      <EditSoftwareSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
+      <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
         <div className="py-4 xl:pl-[3rem]">
           <EditSectionTitle
             title="Software information"
@@ -260,7 +260,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           {/* add white space at the bottom */}
           <div className="py-4"></div>
         </div>
-      </EditSoftwareSection>
+      </EditSection>
     </form>
   )
 }

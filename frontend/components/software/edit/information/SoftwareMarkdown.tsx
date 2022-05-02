@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import ControlledRemoteMarkdown from '../../../form/ControlledRemoteMarkdown'
 import MarkdownInputWithPreview from '../../../form/MarkdownInputWithPreview'
 import {SoftwareItem} from '../../../../types/SoftwareTypes'
-import EditSectionTitle from '../EditSectionTitle'
+import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {SoftwareInformationConfig} from '../editSoftwareConfig'
 
 type SoftwareMarkdownProps = {

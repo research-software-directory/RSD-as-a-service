@@ -4,8 +4,9 @@ import {createJsonHeaders} from './fetchHelpers'
 import {getSlugFromString} from './getSlugFromString'
 import logger from './logger'
 
-export async function findInRORByName({searchFor}:{searchFor:string}) {
+export async function findInROR({searchFor}:{searchFor:string}) {
   try {
+    // this query will match organisation by name or website values
     const url = `https://api.ror.org/organizations?query=${searchFor}`
 
     // make request
@@ -21,11 +22,11 @@ export async function findInRORByName({searchFor}:{searchFor:string}) {
       const options = buildAutocompleteOptions(json['items'])
       return options
     }
-    logger(`findInRORByName FAILED: ${resp.status}: ${resp.statusText}`, 'warn')
+    logger(`findInROR FAILED: ${resp.status}: ${resp.statusText}`, 'warn')
     // we return nothing
     return []
   } catch (e:any) {
-    logger(`findInRORByName: ${e?.message}`, 'error')
+    logger(`findInROR: ${e?.message}`, 'error')
     return []
   }
 }

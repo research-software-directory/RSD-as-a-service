@@ -17,7 +17,7 @@ const TestimonialContent = styled('div')(({theme}) => ({
     top: '100%',
     borderTopWidth: 0,
     borderBottomWidth: '1.5rem',
-    borderRight: '16px solid #00A3E3'
+    borderRight: `16px solid ${theme.palette.primary.main}`
   }
 }))
 

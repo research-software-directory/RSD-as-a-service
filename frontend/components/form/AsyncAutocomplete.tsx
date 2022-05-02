@@ -6,6 +6,17 @@ import {CircularProgress, FilterOptionsState, TextField} from '@mui/material'
 import {AutocompleteOption} from '../../types/AutocompleteOptions'
 import {useDebounceWithAutocomplete} from '../../utils/useDebouce'
 
+export type AsyncAutocompleteConfig = {
+  // enables creation of new items
+  freeSolo: boolean
+  minLength: number,
+  label: string,
+  help: string,
+  reset?: boolean,
+  // makes help text red on true
+  error?: boolean
+}
+
 type AsyncAutocompleteProps<T> = {
   status: {
     loading: boolean,
@@ -20,14 +31,7 @@ type AsyncAutocompleteProps<T> = {
     option: AutocompleteOption<T>,
     state: AutocompleteRenderOptionState
   ) => ReactNode
-  config: {
-    // enables creation of new items
-    freeSolo: boolean
-    minLength: number,
-    label: string,
-    help: string,
-    reset?: boolean
-  },
+  config: AsyncAutocompleteConfig,
   defaultValue?: AutocompleteOption<T>
 }
 
@@ -157,9 +161,11 @@ export default function AsyncAutocomplete<T>({status,options,config,onSearch,onA
             variant="standard"
             label={config.label}
             helperText={config.help}
+            error={config?.error ? config.error : false}
             onKeyDown={(e) => {
               // dissable enter key because it crashes
               // the rest of autocomplete process
+              // investigate if select on enter can be implemented
               if (e.key === 'Enter') {
                 e.stopPropagation()
               }

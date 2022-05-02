@@ -1,8 +1,10 @@
+import {OrganisationRole} from '~/types/Organisation'
 import {Contributor, TeamMemberProps} from '../types/Contributor'
 import {MentionForProject} from '../types/Mention'
 import {
+  KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, ProjectTag, ProjectTopic, RawProject, RelatedProject
+  ProjectLink, ProjectTag, ProjectTopic, RawProject, RelatedProject, ResearchDomain
 } from '../types/Project'
 import {RelatedTools, Tag} from '../types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
@@ -88,20 +90,35 @@ function extractImageInfo(item: RawProject) {
   }
 }
 
-// TODO! update url to new db and setup variable endpoint based on environment
-export async function getProjectItem(slug:string){
+//used by view and edit pages
+export async function getProjectItem({slug,token,frontend = false}:
+  {slug: string, token: string, frontend: boolean}) {
   try{
     // get project by slug
-    const url = `${process.env.POSTGREST_URL}/project?select=*,image_for_project(project)&slug=eq.${slug}`
+    const query = `project?select=*,image_for_project(project)&slug=eq.${slug}`
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url=`/api/v1/${query}`
+    }
     const resp = await fetch(url, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      }
     })
     if (resp.status===200){
       const rawData: RawProject[] = await resp.json()
       if (rawData && rawData.length === 1) {
+        // extract if image is present
+        const image_id = extractImageInfo(rawData[0])
+        // remove raw property
+        const raw = rawData[0]
+        if (raw?.image_for_project) {
+          delete raw.image_for_project
+        }
         const data: Project = {
-          ...rawData[0],
-          image_id: extractImageInfo(rawData[0])
+          ...raw,
+          image_id
         }
         // delete data.image_for_project
         return data
@@ -122,14 +139,17 @@ export function getImageUrl(image_id:string|null) {
 }
 
 
-export async function getOrganisationsOfProject({project, token, frontend = true}:
-  { project: string, token: string, frontend?: boolean }) {
-  // SSR request within docker network
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_of_project?project=eq.${project}&order=name.asc`
-  if (frontend) {
-    url = `/api/v1/rpc/organisations_of_project?project=eq.${project}&order=name.asc`
-  }
+export async function getOrganisationsOfProject({project, token, frontend = true, role}:
+  { project: string, token: string, frontend?: boolean, role?: OrganisationRole }) {
   try {
+    let query = `rpc/organisations_of_project?project=eq.${project}&order=name.asc`
+    if (role) query += `&role=eq.${role}`
+    // SSR request within docker network
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    // console.log('getOrganisationsOfProject...url...',url)
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -140,6 +160,7 @@ export async function getOrganisationsOfProject({project, token, frontend = true
       const json: OrganisationsOfProject[] = await resp.json()
       return json
     }
+    logger(`getOrganisationsOfProject: ${resp.status} ${resp.statusText}`, 'warn')
     return []
   } catch (e: any) {
     logger(`getOrganisationsOfProject: ${e?.message}`, 'error')
@@ -147,7 +168,7 @@ export async function getOrganisationsOfProject({project, token, frontend = true
   }
 }
 
-export async function getParticipatingOrganisations({project, token, frontend = true}:
+export async function getOrganisations({project, token, frontend = true}:
   {project: string, token: string, frontend?: boolean }) {
   const resp = await getOrganisationsOfProject({project, token, frontend})
   // filter only approved organisations
@@ -160,9 +181,11 @@ export async function getParticipatingOrganisations({project, token, frontend = 
         slug: item.slug,
         name: item.name,
         website: item.website ?? '',
-        logo_url: getUrlFromLogoId(item.logo_id)
+        logo_url: getUrlFromLogoId(item.logo_id),
+        role: item.role
       }
     })
+  // console.log('getOrganisations...organisations...', organisations)
   return organisations
 }
 
@@ -186,56 +209,106 @@ export function getProjectStatus({date_start, date_end}:
   }
 }
 
+// PHAISED OUT - WE USE RESEARCH DOMAINS AND KEYWORDS
+// export async function getTagsForProject({project, token, frontend=false}:
+//   {project: string, token: string, frontend?: boolean }
+// ) {
+//   try {
+//     // this request is always perfomed from backend
+//     // the content is order by tag ascending
+//     let url = `${process.env.POSTGREST_URL}/tag_for_project?project=eq.${project}&order=tag.asc`
+//     if (frontend === true) {
+//       url = `/api/v1/tag_for_project?project=eq.${project}&order=tag.asc`
+//     }
+//     const resp = await fetch(url, {
+//       method: 'GET',
+//       headers: createJsonHeaders(token)
+//     })
+//     if (resp.status === 200) {
+//       const data: ProjectTag[] = await resp.json()
+//       return data.map(item=>item.tag)
+//     }
+//     logger(`getTopicForProject: [${resp.status}] ${resp.statusText}`, 'warn')
+//     return []
+//   } catch (e: any) {
+//     logger(`getTagsForProject: ${e?.message}`, 'error')
+//     return []
+//   }
+// }
 
-export async function getTagsForProject({project, token, frontend=false}:
-  {project: string, token: string, frontend?: boolean }
+// PHAISED OUT - WE USE RESEARCH DOMAINS AND KEYWORDS
+// export async function getTopicsForProject({project, token, frontend = false}:
+//   { project: string, token: string, frontend?: boolean }
+// ) {
+//   try {
+//     // this request is always perfomed from backend
+//     // the content is order by tag ascending
+//     let url = `${process.env.POSTGREST_URL}/topic_for_project?project=eq.${project}&order=topic.asc`
+//     if (frontend === true) {
+//       url = `/api/v1/topic_for_project?project=eq.${project}&order=topic.asc`
+//     }
+//     const resp = await fetch(url, {
+//       method: 'GET',
+//       headers: createJsonHeaders(token)
+//     })
+//     if (resp.status === 200) {
+//       const data: ProjectTopic[] = await resp.json()
+//       return data.map(item => item.topic)
+//     }
+//     logger(`getTopicsForProject: [${resp.status}] ${resp.statusText}`, 'warn')
+//     return []
+//   } catch (e: any) {
+//     logger(`getTopicsForProject: ${e?.message}`, 'error')
+//     return []
+//   }
+// }
+
+export async function getResearchDomainsForProject({project, token, frontend = false}:
+  { project: string, token: string, frontend?: boolean }
 ) {
   try {
-    // this request is always perfomed from backend
-    // the content is order by tag ascending
-    let url = `${process.env.POSTGREST_URL}/tag_for_project?project=eq.${project}&order=tag.asc`
+    const query = `rpc/research_domain_by_project?project=eq.${project}&order=key.asc`
+    let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend === true) {
-      url = `/api/v1/tag_for_project?project=eq.${project}&order=tag.asc`
+      url = `/api/v1/${query}`
     }
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data: ProjectTag[] = await resp.json()
-      return data.map(item=>item.tag)
+      const data: ResearchDomain[] = await resp.json()
+      return data
     }
-    logger(`getTopicForProject: [${resp.status}] ${resp.statusText}`, 'warn')
+    logger(`getKeywordsForProject: [${resp.status}] ${resp.statusText}`, 'warn')
     return []
   } catch (e: any) {
-    logger(`getTagsForProject: ${e?.message}`, 'error')
+    logger(`getKeywordsForProject: ${e?.message}`, 'error')
     return []
   }
 }
 
-
-export async function getTopicsForProject({project, token, frontend = false}:
+export async function getKeywordsForProject({project, token, frontend = false}:
   { project: string, token: string, frontend?: boolean }
 ) {
   try {
-    // this request is always perfomed from backend
-    // the content is order by tag ascending
-    let url = `${process.env.POSTGREST_URL}/topic_for_project?project=eq.${project}&order=topic.asc`
+    const query = `rpc/keywords_by_project?project=eq.${project}&order=keyword.asc`
+    let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend === true) {
-      url = `/api/v1/topic_for_project?project=eq.${project}&order=topic.asc`
+      url = `/api/v1/${query}`
     }
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data: ProjectTopic[] = await resp.json()
-      return data.map(item => item.topic)
+      const data: KeywordForProject[] = await resp.json()
+      return data
     }
-    logger(`getTopicsForProject: [${resp.status}] ${resp.statusText}`, 'warn')
+    logger(`getKeywordsForProject: [${resp.status}] ${resp.statusText}`, 'warn')
     return []
   } catch (e: any) {
-    logger(`getTopicsForProject: ${e?.message}`, 'error')
+    logger(`getKeywordsForProject: ${e?.message}`, 'error')
     return []
   }
 }
@@ -244,8 +317,6 @@ export async function getTopicsForProject({project, token, frontend = false}:
 export async function getLinksForProject({project, token, frontend = false}:
   { project: string, token: string, frontend?: boolean }) {
   try {
-    // this request is always perfomed from backend
-    // the content is order by tag ascending
     let query = `url_for_project?project=eq.${project}&order=position.asc`
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend === true) {
@@ -270,12 +341,14 @@ export async function getLinksForProject({project, token, frontend = false}:
 export async function getOutputForProject({project, token, frontend}:
   {project: string, token?: string, frontend?: boolean}) {
   try {
-    // the content is order by type ascending
+    // select only specific colums
     const cols = 'id,date,is_featured,title,type,url,image,author'
-    let url = `${process.env.POSTGREST_URL}/mention?select=${cols},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=type.asc`
-
+    // build query url
+    const query = `mention?select=${cols},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=type.asc`
+    // base url
+    let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
-      url = `/api/v1/mention?select=${cols},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=type.asc`
+      url = `/api/v1/${query}`
     }
 
     const resp = await fetch(url, {
@@ -299,12 +372,14 @@ export async function getOutputForProject({project, token, frontend}:
 export async function getImpactForProject({project, token, frontend}:
   { project: string, token?: string, frontend?: boolean }) {
   try {
-    // the content is order by type ascending
+    // select only specific colums
     const cols = 'id,date,is_featured,title,type,url,image,author'
-    let url = `${process.env.POSTGREST_URL}/mention?select=${cols},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=type.asc`
-
+    // build query url
+    const query = `mention?select=${cols},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=type.asc`
+    // base url
+    let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
-      url = `/api/v1/mention?select=${cols},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=type.asc`
+      url = `/api/v1/${query}`
     }
 
     const resp = await fetch(url, {
@@ -339,10 +414,10 @@ export async function getTeamForProject({project, token, frontend}:
   try {
     // use standardized list of columns - after team_member table is updated (as with contributors)
     const columns = TeamMemberProps.join(',')
-
-    let url = `${process.env.POSTGREST_URL}/team_member?select=${columns}&project=eq.${project}&order=given_names.asc`
+    const query = `team_member?select=${columns}&project=eq.${project}&order=given_names.asc`
+    let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
-      url = `/api/v1/team_member?select=${columns}&project=eq.${project}&order=given_names.asc`
+      url = `/api/v1/${query}`
     }
     const resp = await fetch(url, {
       method: 'GET',

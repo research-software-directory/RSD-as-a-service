@@ -14,14 +14,14 @@ import OgMetaTags from '../../../components/seo/OgMetaTags'
 import CanoncialUrl from '../../../components/seo/CanonicalUrl'
 import {
   getLinksForProject, getImpactForProject,
-  getOutputForProject, getParticipatingOrganisations,
+  getOutputForProject, getOrganisations,
   getProjectItem, getRelatedProjects, getRelatedToolsForProject,
-  getTagsForProject, getTeamForProject, getTopicsForProject
+  getTeamForProject, getResearchDomainsForProject, getKeywordsForProject
 } from '../../../utils/getProjects'
-import {Project, ProjectLink, RelatedProject} from '../../../types/Project'
+import {KeywordForProject, Project, ProjectLink, RelatedProject, ResearchDomain} from '../../../types/Project'
 import ProjectInfo from '../../../components/projects/ProjectInfo'
 import OrganisationsSection from '../../../components/software/OrganisationsSection'
-import {ParticipatingOrganisationProps} from '../../../types/Organisation'
+import {ProjectOrganisationProps} from '../../../types/Organisation'
 import {MentionForProject} from '../../../types/Mention'
 import ProjectMentions from '../../../components/projects/ProjectMentions'
 import {Contributor} from '../../../types/Contributor'
@@ -36,9 +36,9 @@ export interface ProjectPageProps extends ScriptProps{
   slug: string
   project: Project
   isMaintainer: boolean
-  organisations: ParticipatingOrganisationProps[],
-  technologies: string[],
-  topics: string[],
+  organisations: ProjectOrganisationProps[],
+  researchDomains: ResearchDomain[],
+  keywords: KeywordForProject[],
   links: ProjectLink[],
   output: MentionForProject[],
   impact: MentionForProject[],
@@ -50,7 +50,7 @@ export interface ProjectPageProps extends ScriptProps{
 export default function ProjectPage(props: ProjectPageProps) {
   const [resolvedUrl, setResolvedUrl] = useState('')
   const {slug, project, isMaintainer, organisations,
-    technologies, topics, links, output, impact, team,
+    researchDomains, keywords, links, output, impact, team,
     relatedTools, relatedProjects
   } = props
 
@@ -67,8 +67,7 @@ export default function ProjectPage(props: ProjectPageProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...isMaintainer...', isMaintainer)
-  // console.log('ProjectItemPage...impact...', impact)
+  // console.log('ProjectItemPage...organisations...', organisations)
   return (
     <>
       {/* Page Head meta tags */}
@@ -105,14 +104,16 @@ export default function ProjectPage(props: ProjectPageProps) {
           image_id={project?.image_id}
           image_caption={project?.image_caption ?? null}
           grant_id={project.grant_id}
+          fundingOrganisations={organisations.filter(item=>item.role==='funding')}
+          researchDomains={researchDomains}
+          keywords={keywords}
           links={links}
-          technologies={technologies}
-          topics={topics}
         />
+        <div className="py-8"></div>
       </PageContainer>
       {/* Participating organisations */}
       <OrganisationsSection
-        organisations={organisations}
+        organisations={organisations.filter(item=>item.role!=='funding')}
       />
 
       {/* Project mentions */}
@@ -150,7 +151,7 @@ export async function getServerSideProps(context:any) {
     const account = getAccountFromToken(token)
     const slug = params?.slug?.toString()
     // console.log("getServerSideProps...params...", params)
-    const project = await getProjectItem(params?.slug)
+    const project = await getProjectItem({slug: params?.slug, token, frontend: false})
     if (typeof project == 'undefined'){
     // returning this value
     // triggers 404 page on frontend
@@ -160,9 +161,9 @@ export async function getServerSideProps(context:any) {
     }
     // fetch all info about project in parallel based on project.id
     const fetchData = [
-      getParticipatingOrganisations({project: project.id, token, frontend: false}),
-      getTagsForProject({project: project.id, token, frontend: false}),
-      getTopicsForProject({project: project.id, token, frontend: false}),
+      getOrganisations({project: project.id, token, frontend: false}),
+      getResearchDomainsForProject({project: project.id, token, frontend: false}),
+      getKeywordsForProject({project: project.id, token, frontend: false}),
       getOutputForProject({project: project.id, token, frontend: false}),
       getImpactForProject({project: project.id, token, frontend: false}),
       getTeamForProject({project: project.id, token, frontend: false}),
@@ -174,8 +175,8 @@ export async function getServerSideProps(context:any) {
 
     const [
       organisations,
-      technologies,
-      topics,
+      researchDomains,
+      keywords,
       output,
       impact,
       team,
@@ -194,8 +195,8 @@ export async function getServerSideProps(context:any) {
         slug: params?.slug,
         isMaintainer,
         organisations,
-        technologies,
-        topics,
+        researchDomains,
+        keywords,
         output,
         impact,
         team,

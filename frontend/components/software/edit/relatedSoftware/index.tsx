@@ -11,9 +11,9 @@ import useRelatedSoftwareOptions from '../../../../utils/useRelatedSoftwareOptio
 import {saveRelatedSoftware} from '../../../../utils/editRelatedSoftware'
 import ContentLoader from '../../../layout/ContentLoader'
 import ControlledAutocompleteWithLink from '../../../form/ControlledAutocompleteWithLink'
-import EditSoftwareSection from '../EditSoftwareSection'
+import EditSoftwareSection from '../../../layout/EditSection'
 import editSoftwareContext, {EditSoftwareActionType} from '../editSoftwareContext'
-import EditSectionTitle from '../EditSectionTitle'
+import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {relatedSoftwareInformation as config} from '../editSoftwareConfig'
 
 type RelatedSoftwareForm = {
