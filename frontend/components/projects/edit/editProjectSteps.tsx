@@ -16,11 +16,6 @@ import ProjectOutput from './output'
 import RelatedTopics from './related'
 import ProjectMaintainers from './maintainers'
 
-type EditProjectStepProps = {
-  slug: string
-  session?: Session
-}
-
 export type EditProjectStep = {
   formId?:string,
   status: string,
@@ -38,14 +33,14 @@ export const editProjectSteps: EditProjectStep[] = [
     status: 'Required information'
   },
   {
-    formId: 'project-team',
+    // formId: 'project-team',
     label: 'Team',
     icon: <TeamsIcon />,
     component: (props?) => <ProjectTeam {...props} />,
     status: 'Required information'
   },
   {
-    formId: 'organisations',
+    // formId: 'organisations',
     label: 'Organisations',
     icon: <FactoryIcon />,
     component: (props?) => <ProjectOrganisations {...props} />,
@@ -70,7 +65,7 @@ export const editProjectSteps: EditProjectStep[] = [
     label: 'Related topics',
     icon: <ShareIcon />,
     component: (props?) => <RelatedTopics {...props} />,
-    status: 'Optional information'
+    status: 'Projects and software'
   },
   {
     // formId: 'output',

@@ -3,10 +3,10 @@ import {useEffect,useState} from 'react'
 import {useFieldArray, useFormContext} from 'react-hook-form'
 
 import {Session} from '~/auth'
-import useSnackbar from '../../../snackbar/useSnackbar'
 import {EditProject, ProjectTableProps} from '~/types/Project'
 import {updateProjectInfo} from '~/utils/editProject'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
@@ -56,6 +56,7 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
     control,
     name:'keywords'
   })
+
   // const researchFields = useResearchFieldOptions()
   // local state for keeping track what is deleted since last save
   const [projectState,setProjectState]=useState<EditProject>()
