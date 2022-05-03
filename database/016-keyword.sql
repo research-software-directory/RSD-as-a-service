@@ -41,5 +41,4 @@ VALUES
 	('Real time data analysis'),
 	('Text analysis & natural language processing'),
 	('Visualization'),
-	('Workflow technologies')
-;
+	('Workflow technologies');

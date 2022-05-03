@@ -202,31 +202,55 @@ CREATE POLICY admin_all_rights ON team_member TO rsd_admin
 	WITH CHECK (TRUE);
 
 
--- topics and tags for projects
-ALTER TABLE topic_for_project ENABLE ROW LEVEL SECURITY;
+-- research domain
+ALTER TABLE research_domain ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON topic_for_project FOR SELECT TO web_anon, rsd_user
-	USING (project IN (SELECT id FROM project));
+CREATE POLICY anyone_can_read ON research_domain FOR SELECT TO web_anon, rsd_user
+	USING (TRUE);
 
-CREATE POLICY maintainer_all_rights ON topic_for_project TO rsd_user
-	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
-	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
+CREATE POLICY admin_all_rights ON research_domain TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
 
-CREATE POLICY admin_all_rights ON topic_for_project TO rsd_admin
+-- keywords
+ALTER TABLE keyword ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON keyword FOR SELECT TO web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY maintainer_can_insert ON keyword FOR INSERT TO rsd_user
+	USING (TRUE);
+
+CREATE POLICY admin_all_rights ON keyword TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
 
-ALTER TABLE tag_for_project ENABLE ROW LEVEL SECURITY;
+-- keywords and research domains for projects
+ALTER TABLE keyword_for_project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON tag_for_project FOR SELECT TO web_anon, rsd_user
+CREATE POLICY anyone_can_read ON keyword_for_project FOR SELECT TO web_anon, rsd_user
 	USING (project IN (SELECT id FROM project));
 
-CREATE POLICY maintainer_all_rights ON tag_for_project TO rsd_user
+CREATE POLICY maintainer_all_rights ON keyword_for_project TO rsd_user
 	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
 	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
-CREATE POLICY admin_all_rights ON tag_for_project TO rsd_admin
+CREATE POLICY admin_all_rights ON keyword_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE research_domain_for_project ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON research_domain_for_project FOR SELECT TO web_anon, rsd_user
+	USING (project IN (SELECT id FROM project));
+
+CREATE POLICY maintainer_all_rights ON research_domain_for_project TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON research_domain_for_project TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
