@@ -117,17 +117,31 @@ CREATE POLICY admin_all_rights ON contributor TO rsd_admin
 	WITH CHECK (TRUE);
 
 
--- tags for software
-ALTER TABLE tag_for_software ENABLE ROW LEVEL SECURITY;
+-- keywords
+ALTER TABLE keyword ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON tag_for_software FOR SELECT TO web_anon, rsd_user
+CREATE POLICY anyone_can_read ON keyword FOR SELECT TO web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY maintainer_can_insert ON keyword FOR INSERT TO rsd_user
+	WITH CHECK (TRUE);
+
+CREATE POLICY admin_all_rights ON keyword TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+-- keywords for software
+ALTER TABLE keyword_for_software ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON keyword_for_software FOR SELECT TO web_anon, rsd_user
 	USING (software IN (SELECT id FROM software));
 
-CREATE POLICY maintainer_all_rights ON tag_for_software TO rsd_user
+CREATE POLICY maintainer_all_rights ON keyword_for_software TO rsd_user
 	USING (software IN (SELECT * FROM software_of_current_maintainer()))
 	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
 
-CREATE POLICY admin_all_rights ON tag_for_software TO rsd_admin
+CREATE POLICY admin_all_rights ON keyword_for_software TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
@@ -209,19 +223,6 @@ CREATE POLICY anyone_can_read ON research_domain FOR SELECT TO web_anon, rsd_use
 	USING (TRUE);
 
 CREATE POLICY admin_all_rights ON research_domain TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
--- keywords
-ALTER TABLE keyword ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON keyword FOR SELECT TO web_anon, rsd_user
-	USING (TRUE);
-
-CREATE POLICY maintainer_can_insert ON keyword FOR INSERT TO rsd_user
-	USING (TRUE);
-
-CREATE POLICY admin_all_rights ON keyword TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 

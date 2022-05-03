@@ -67,7 +67,8 @@ public class Main {
 		Map<String, String> legacyIdToNewIdSoftware = idToId(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveRepoUrls(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveLicenses(allSoftwareFromLegacyRSD, slugToIdSoftware);
-		saveTagsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware);
+		Map<String, String> keywordToId = keywordToId();
+		saveKeywordsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, keywordToId);
 		String allPersonsString = get(URI.create(LEGACY_RSD_PERSON_URI));
 		JsonArray allPersonsFromLegacyRSD = JsonParser.parseString(allPersonsString).getAsJsonArray();
 		String allOrganisationsString = get(URI.create(LEGACY_RSD_ORGANISATION_URI));
@@ -82,7 +83,6 @@ public class Main {
 		saveProjects(allProjectsFromLegacyRSD);
 		Map<String, String> slugToIdProject = slugToId("/project?select=id,slug");
 		saveUrlsForProjects(allProjectsFromLegacyRSD, slugToIdProject);
-		Map<String, String> keywordToId = keywordToId();
 		saveKeywordsForProjects(allProjectsFromLegacyRSD, slugToIdProject, keywordToId);
 		Map<String, String> researchDomainToId = researchDomainToId();
 		saveResearchDomainsForProjects(allProjectsFromLegacyRSD, slugToIdProject, researchDomainToId);
@@ -261,8 +261,8 @@ public class Main {
 		post(URI.create(POSTGREST_URI + "/license_for_software"), allLicensesToSave.toString());
 	}
 
-	public static void saveTagsForSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId) {
-		JsonArray allTagsToSave = new JsonArray();
+	public static void saveKeywordsForSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToIdSoftware, Map<String, String> keywordToId) {
+		JsonArray allKeywordsToSave = new JsonArray();
 		allSoftwareFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject softwareFromLegacyRSD = jsonElement.getAsJsonObject();
 
@@ -270,13 +270,15 @@ public class Main {
 			JsonArray tags = softwareFromLegacyRSD.get("tags").getAsJsonArray();
 			String slug = softwareFromLegacyRSD.get("slug").getAsString();
 			tags.forEach(jsonTag -> {
-				JsonObject tagToSave = new JsonObject();
-				tagToSave.addProperty("software", slugToId.get(slug));
-				tagToSave.add("tag", jsonTag);
-				allTagsToSave.add(tagToSave);
+				JsonObject keywordSoftwareRelationToSave = new JsonObject();
+				keywordSoftwareRelationToSave.addProperty("software", slugToIdSoftware.get(slug));
+				String keyword = jsonTag.getAsString();
+				String keywordId = Objects.requireNonNull(keywordToId.get(keyword), "Unknown keyword found: " + keyword);
+				keywordSoftwareRelationToSave.addProperty("keyword", keywordId);
+				allKeywordsToSave.add(keywordSoftwareRelationToSave);
 			});
 		});
-		post(URI.create(POSTGREST_URI + "/tag_for_software"), allTagsToSave.toString());
+		post(URI.create(POSTGREST_URI + "/keyword_for_software"), allKeywordsToSave.toString());
 	}
 
 	public static Map<String, String> createOrganisationKeyToName(JsonArray allOrganisationsFromLegacyRSD) {
@@ -513,15 +515,15 @@ public class Main {
 		allProjectsFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject projectFromLegacyRSD = jsonElement.getAsJsonObject();
 
-			JsonArray keywords = projectFromLegacyRSD.get("technologies").getAsJsonArray();
+			JsonArray technologies = projectFromLegacyRSD.get("technologies").getAsJsonArray();
 			String slug = projectFromLegacyRSD.get("slug").getAsString();
-			keywords.forEach(jsonKeyword -> {
-				JsonObject tagToSave = new JsonObject();
-				tagToSave.addProperty("project", slugToIdProject.get(slug));
-				String keyword = jsonKeyword.getAsString();
+			technologies.forEach(jsonTechnology -> {
+				JsonObject keywordProjectRelationToSave = new JsonObject();
+				keywordProjectRelationToSave.addProperty("project", slugToIdProject.get(slug));
+				String keyword = jsonTechnology.getAsString();
 				String keywordId = Objects.requireNonNull(keywordToId.get(keyword), "Unknown keyword found: " + keyword);
-				tagToSave.addProperty("keyword", keywordId);
-				allKeywordsToSave.add(tagToSave);
+				keywordProjectRelationToSave.addProperty("keyword", keywordId);
+				allKeywordsToSave.add(keywordProjectRelationToSave);
 			});
 		});
 		post(URI.create(POSTGREST_URI + "/keyword_for_project"), allKeywordsToSave.toString());
@@ -551,9 +553,9 @@ public class Main {
 		allProjectsFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject projectFromLegacyRSD = jsonElement.getAsJsonObject();
 
-			JsonArray tags = projectFromLegacyRSD.get("topics").getAsJsonArray();
+			JsonArray topics = projectFromLegacyRSD.get("topics").getAsJsonArray();
 			String slug = projectFromLegacyRSD.get("slug").getAsString();
-			tags.forEach(jsonResearchDomain -> {
+			topics.forEach(jsonResearchDomain -> {
 				String projectId = slugToIdProject.get(slug);
 				String oldResearchDomain = jsonResearchDomain.getAsString();
 				String newResearchDomain = Objects.requireNonNull(oldDomainToNew.get(oldResearchDomain), "Unknown old research domain found: " + oldResearchDomain);

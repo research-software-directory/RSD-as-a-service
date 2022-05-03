@@ -3,19 +3,19 @@
 
 -- NOTE2: After creating new function you might need to reload postgREST to be able to access the function
 
--- count of software per tag
-CREATE FUNCTION count_software_per_tag() RETURNS TABLE (count BIGINT, tag tag) LANGUAGE plpgsql STABLE AS
+-- count of software per keyword
+CREATE FUNCTION count_software_per_keyword() RETURNS TABLE (count BIGINT, keyword VARCHAR) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	RETURN QUERY SELECT
 		COUNT(*),
-		tag_for_software.tag
+		keyword_for_software.keyword
 	FROM
-		tag_for_software
+		keyword_for_software
 	JOIN software ON
-		tag_for_software.software = software.id
+		keyword_for_software.software = software.id
 	GROUP BY
-		tag_for_software.tag;
+		keyword_for_software.keyword;
 END
 $$;
 
