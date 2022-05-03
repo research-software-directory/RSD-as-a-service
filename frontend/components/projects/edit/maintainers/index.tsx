@@ -1,26 +1,47 @@
-import {useEffect} from 'react'
+import {useEffect,useState} from 'react'
 
+import {Session} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import useProjectContext from '../useProjectContext'
+import useProjectMaintainers, {MaintainerOfProject} from './useProjectMaintainer'
+import ProjectMaintainersList from './ProjectMaintainersList'
+import FindMaintainer from './FindMaintainer'
+import MaintainerInviteLink from './MaintainerInviteLink'
 
-export default function ProjectTeam() {
-  const {loading, setLoading} = useProjectContext()
+
+export default function ProjectMaintainers({slug, session}: {slug: string, session: Session }) {
+  const {loading:loadProject, setLoading, project} = useProjectContext()
+  const {loading:loadMaintainers,maintainers} = useProjectMaintainers({
+    slug,token:session.token
+  })
+  const [projectMaintainers, setProjectMaintaners] = useState<MaintainerOfProject[]>([])
+
+  console.group('ProjectMaintainers')
+  console.log('loadProject...', loadProject)
+  console.log('loadMaintainers...', loadMaintainers)
+  console.log('maintainers...', maintainers)
+  console.log('projectMaintainers...', projectMaintainers)
+  console.groupEnd()
 
   useEffect(() => {
     let abort = false
-    setTimeout(() => {
-      if (abort) return
-      if (loading) setLoading(false)
-    }, 1000)
+    if (loadMaintainers === false) {
+      setProjectMaintaners(maintainers)
+      setLoading(false)
+    }
     return ()=>{abort=true}
-  },[loading,setLoading])
+  },[maintainers,loadMaintainers])
 
-  if (loading) {
+  if (loadProject || loadMaintainers) {
     return (
       <ContentLoader />
     )
+  }
+
+  function addMaintainer(maintainer: MaintainerOfProject) {
+    console.log('add maintainer...', maintainer)
   }
 
   return (
@@ -29,15 +50,21 @@ export default function ProjectTeam() {
         <EditSectionTitle
           title="Maintainers"
         />
-        <h2>Under construction</h2>
+        <ProjectMaintainersList
+          maintainers={projectMaintainers}
+        />
       </div>
       <div className="py-4 min-w-[21rem] xl:my-0">
         <EditSectionTitle
           title="Find maintainer"
         />
-        <h2>Under construction</h2>
-        <EditSectionTitle
-          title="Invite maintainer"
+        <div className="py-2"></div>
+        <FindMaintainer onAdd={addMaintainer}/>
+        <div className="py-4"></div>
+        <MaintainerInviteLink
+          project={project.id}
+          account={session.user?.account ?? ''}
+          token={session.token}
         />
       </div>
     </EditSection>

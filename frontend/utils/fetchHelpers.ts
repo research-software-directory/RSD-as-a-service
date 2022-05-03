@@ -24,7 +24,7 @@ export function createJsonHeaders(token?: string): AuthHeader {
 
 export async function extractReturnMessage(resp: Response, dataId?: string) {
   // OK
-  if ([200, 201, 204].includes(resp.status)) {
+  if ([200, 201, 204, 206].includes(resp.status)) {
     // just return id
     return {
       status: 200,

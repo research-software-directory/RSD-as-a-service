@@ -813,3 +813,43 @@ export async function deleteImage({project,token}:{project:string,token:string})
     }
   }
 }
+
+
+export async function createMaintainerLink({project,account,token}:{project:string,account:string,token:string}) {
+  try {
+    // POST
+    const url = '/api/v1/invite_maintainer_for_project'
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createJsonHeaders(token),
+        'Prefer': 'return=headers-only'
+      },
+      body: JSON.stringify({
+        project,
+        created_by:account
+      })
+    })
+    if (resp.status === 201) {
+      const id = resp.headers.get('location')?.split('.')[1]
+      if (id) {
+        const link = `${location.origin}/invite/project/${id}`
+        return {
+          status: 201,
+          message: link
+        }
+      }
+      return {
+        status: 400,
+        message: 'Id is missing'
+      }
+    }
+    return extractReturnMessage(resp, project ?? '')
+  } catch (e: any) {
+    logger(`createMagicLink: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}

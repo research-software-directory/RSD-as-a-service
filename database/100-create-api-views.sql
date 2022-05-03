@@ -419,6 +419,35 @@ BEGIN
 END
 $$;
 
+-- Project maintainers list with basic personal info
+-- used in the project maintainer list
+CREATE FUNCTION maintainers_of_project() RETURNS TABLE (
+	maintainer UUID,
+	project UUID,
+	slug VARCHAR,
+	name VARCHAR,
+	email VARCHAR,
+	affiliation VARCHAR
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		maintainer_for_project.maintainer,
+		maintainer_for_project.project,
+		project.slug,
+		login_for_account.name,
+		login_for_account.email,
+		login_for_account.home_organisation AS affiliation
+	FROM
+		maintainer_for_project
+	LEFT JOIN
+		login_for_account ON maintainer_for_project.maintainer = login_for_account.account
+	LEFT JOIN
+			project ON project.id = maintainer_for_project.project
+	;
+END
+$$;
 
 -- Keywords with the count used in projects
 -- used by search to show existing keywords with the count

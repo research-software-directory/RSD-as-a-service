@@ -15,3 +15,14 @@ CREATE TABLE maintainer_for_organisation (
 	organisation UUID references organisation (id),
 	PRIMARY KEY (maintainer, organisation)
 );
+
+
+-- create table for maintainer's "magic link" invitations
+CREATE TABLE invite_maintainer_for_project (
+	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	project UUID references project (id),
+	created_by UUID references account(id),
+	claimed_by UUID references account(id),
+	claimed_at TIMESTAMP,
+	created_at TIMESTAMP NOT NULL DEFAULT LOCALTIMESTAMP
+);
