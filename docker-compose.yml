@@ -75,12 +75,13 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.7.2
+    image: rsd/frontend:0.7.3
     environment:
       # it uses values from .env file
       - POSTGREST_URL
-      - RSD_AUTH_URL
       - PGRST_JWT_SECRET
+      - RSD_AUTH_URL
+      - RSD_AUTH_PROVIDERS
       - NEXT_PUBLIC_SURFCONEXT_CLIENT_ID
       - NEXT_PUBLIC_SURFCONEXT_REDIRECT
       - NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL
