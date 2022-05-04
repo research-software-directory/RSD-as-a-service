@@ -62,19 +62,38 @@ export const SoftwarePropsToSave = [
   'short_statement'
 ]
 
+// export type EditSoftwareItem = SoftwareItem & {
+//   tags: AutocompleteOption<Tag>[]
+//   licenses: AutocompleteOption<License>[]
+// }
+
 export type EditSoftwareItem = SoftwareItem & {
-  tags: AutocompleteOption<Tag>[]
+  keywords: KeywordForSoftware[]
   licenses: AutocompleteOption<License>[]
 }
 
 /**
- * TAGS
+ * TAGS replaced with KEYWORDS
  */
 
-export type Tag = {
-  id?: string,
+// export type Tag = {
+//   id?: string,
+//   software: string
+//   tag: string
+// }
+
+/**
+ * Keywords
+ */
+
+export type KeywordForSoftware = {
+  id: string | null
   software: string
-  tag: string
+  keyword: string
+  // passed to save function
+  action?: 'add' | 'create'
+  // passed to save function for updating form value with uuid
+  pos?: number
 }
 
 /**

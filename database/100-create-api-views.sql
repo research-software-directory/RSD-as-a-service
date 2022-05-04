@@ -3,19 +3,54 @@
 
 -- NOTE2: After creating new function you might need to reload postgREST to be able to access the function
 
--- count of software per keyword
-CREATE FUNCTION count_software_per_keyword() RETURNS TABLE (count BIGINT, keyword VARCHAR) LANGUAGE plpgsql STABLE AS
+-- Keywords with the count used in software
+-- used by search to show existing keywords with the count
+CREATE FUNCTION keyword_count_for_software() RETURNS TABLE (
+	id UUID,
+	keyword CITEXT,
+	cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY SELECT
-		COUNT(*),
-		keyword_for_software.keyword
+	RETURN QUERY
+	SELECT
+		keyword.id,
+		keyword.value AS keyword,
+		keyword_count.cnt
 	FROM
-		keyword_for_software
-	JOIN software ON
-		keyword_for_software.software = software.id
-	GROUP BY
-		keyword_for_software.keyword;
+		keyword
+	LEFT JOIN
+		(SELECT
+				keyword_for_software.keyword,
+				count(keyword_for_software.keyword) AS cnt
+			FROM
+				keyword_for_software
+			GROUP BY keyword_for_software.keyword
+		) AS keyword_count ON keyword.id = keyword_count.keyword
+	;
+END
+$$;
+
+-- Keywords by software
+-- for selecting keywords of specific software
+-- using filter ?project=eq.UUID
+CREATE FUNCTION keywords_by_software() RETURNS TABLE (
+	id UUID,
+	keyword CITEXT,
+	software UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+SELECT
+	keyword.id,
+	keyword.value AS keyword,
+	keyword_for_software.software
+FROM
+	keyword_for_software
+INNER JOIN
+	keyword ON keyword.id = keyword_for_software.keyword
+;
 END
 $$;
 

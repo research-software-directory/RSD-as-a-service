@@ -21,11 +21,11 @@ import ProjectImage from './ProjectImage'
 import ProjectPeriod from './ProjectPeriod'
 import ProjectLinks from './ProjectLinks'
 import FundingOrganisations from './FundingOrganisations'
-import Keywords from './Keywords'
+import ProjectKeywords from './ProjectKeywords'
 import {getProjectLinkChanges, ProjectLinksForSave} from './projectLinkChanges'
 import {FundingOrganisationsForSave, getFundingOrganisationChanges} from './fundingOrganisationsChanges'
 import {getProjectImageChanges} from './projectImageChanges'
-import {getKeywordChanges, KeywordsForSave} from './keywordsChanges'
+import {getKeywordChanges, KeywordsForSave} from './projectKeywordsChanges'
 import ResearchDomain from './ResearchDomains'
 import {getResearchDomainChanges} from './researchDomainChanges'
 
@@ -302,7 +302,7 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
             title={config.keywords.title}
             subtitle={config.keywords.subtitle}
           />
-          <Keywords project={project?.id ?? ''} />
+          <ProjectKeywords project={project?.id ?? ''} />
           <div className="py-4"></div>
           {/* Project links */}
           <ProjectLinks project={project?.id ?? ''} />

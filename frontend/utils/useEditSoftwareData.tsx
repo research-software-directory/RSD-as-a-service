@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
-import {EditSoftwareItem, License, SoftwareItem, Tag} from '../types/SoftwareTypes'
+import {EditSoftwareItem, KeywordForSoftware, License, SoftwareItem} from '../types/SoftwareTypes'
 import {getSoftwareToEdit} from './editSoftware'
-import {getLicenseForSoftware, getTagsForSoftware} from './getSoftware'
+import {getKeywordsForSoftware, getLicenseForSoftware} from './getSoftware'
 
 export default function useEditSoftwareData({slug, token}: {slug: string, token: string}) {
   const [software, setSoftware] = useState<SoftwareItem>()
@@ -36,19 +36,11 @@ export default function useEditSoftwareData({slug, token}: {slug: string, token:
     if (software?.id) {
       // make all requests
       const requests = [
-        getTagsForSoftware(software.id, true, token),
+        getKeywordsForSoftware(software.id, true, token),
         getLicenseForSoftware(software.id, true, token)
       ]
       Promise.all(requests)
-        .then(([respTag, respLicense]) => {
-        // prepare tags
-        const tags:AutocompleteOption<Tag>[] = respTag?.map((item:any) => {
-          return {
-            key: item.tag,
-            label: item.tag,
-            data: item
-          }
-        })||[]
+        .then(([keywords, respLicense]) => {
         // prepare licenses
         const licenses:AutocompleteOption<License>[] = respLicense?.map((item:any) => {
           return {
@@ -62,10 +54,10 @@ export default function useEditSoftwareData({slug, token}: {slug: string, token:
         //send all data
         setEditSoftware({
           ...software,
-          tags,
+          keywords: keywords as KeywordForSoftware[] ?? [],
           licenses
         })
-          setLoading(false)
+        setLoading(false)
       })
     }
     return ()=>{abort=true}

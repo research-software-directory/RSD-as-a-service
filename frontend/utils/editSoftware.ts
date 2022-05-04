@@ -1,17 +1,21 @@
-import logger from './logger'
+import {UseFieldArrayUpdate} from 'react-hook-form'
 
+import logger from './logger'
 import {
   NewSoftwareItem, SoftwareTableItem,
   SoftwareItem, RepositoryUrl,
-  SoftwarePropsToSave, Tag,
+  SoftwarePropsToSave,
   EditSoftwareItem,
   License,
-  SoftwareItemFromDB
+  SoftwareItemFromDB,
+  KeywordForSoftware
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from './fetchHelpers'
 import {itemsNotInReferenceList} from './itemsNotInReferenceList'
+import {SoftwareKeywordsForSave} from '~/components/software/edit/information/softwareKeywordsChanges'
+import {addKeywordsToSoftware, createKeyword, deleteKeywordFromSoftware} from './editKeywords'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
@@ -82,14 +86,20 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
 
 /**
  * Entry function to update all software info from edit page
- * It updates data in software, repostory_url, tags_for_software and licenses_for_software.
+ * It updates data in software, repostory_url, keyword, keyword_for_software and licenses_for_software.
  * It returns status 200 only when update to all tables is successful.
  * On failure it returns the error status code of the first error.
  */
-export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repositoryInDb, repositoryPlatform, token}:{
-  software: EditSoftwareItem, tagsInDb: AutocompleteOption<Tag>[], licensesInDb: AutocompleteOption<License>[],
-  repositoryInDb: string | null, repositoryPlatform:string | null, token: string
-}) {
+export type SaveSoftwareInfoProps = {
+  software: EditSoftwareItem,
+  keywords: SoftwareKeywordsForSave,
+  licensesInDb: AutocompleteOption<License>[],
+  repositoryInDb: string | null,
+  repositoryPlatform: string | null,
+  token: string
+}
+export async function updateSoftwareInfo({software, keywords, licensesInDb,
+  repositoryInDb, repositoryPlatform, token}: SaveSoftwareInfoProps) {
   try {
     // NOTE! update SoftwarePropsToSave list if the data structure changes
     const softwareTable = getPropsFromObject(software, SoftwarePropsToSave)
@@ -128,53 +138,45 @@ export async function updateSoftwareInfo({software, tagsInDb, licensesInDb, repo
         token
       }))
     }
-    // check if tags need to be added
-    if (software.tags?.length > 0) {
-      const tagsToAdd = itemsNotInReferenceList({
-        list: software.tags,
-        referenceList: tagsInDb,
-        key: 'key'
-      }).map(item => {
-        return {
-          software: software.id,
-          tag: item.data.tag
-        }
-      })
-      // add tags to tags_for_software table
-      if (tagsToAdd.length > 0) promises.push(addTagsForSoftware({
-        software: software.id, data: tagsToAdd, token
-      }))
+    // -----------------------------
+    // Keywords
+    // -----------------------------
+    // create
+    keywords.create.forEach(item => {
+      promises.push(
+        createKeywordAndAddToSoftware({
+          data: item,
+          token,
+          // fn to update item in the form with uuid
+          updateKeyword: keywords.updateKeyword
+        })
+      )
+    })
+    // add
+    if (keywords.add.length > 0) {
+      promises.push(
+        addKeywordsToSoftware({
+          // extract only needed data
+          data: keywords.add.map(item => ({
+            software: item.software,
+            keyword: item.id ?? ''
+          })),
+          token
+        })
+      )
     }
-    // check if tags need to be deleted from db
-    if (tagsInDb.length > 0){
-      // delete tags from tags_for_software table
-      const tagsToDel = itemsNotInReferenceList({
-        list: tagsInDb,
-        referenceList: software.tags,
-        key: 'key'
-      }).map(item => item.data.tag)
-      // add delete tags api call
-      if (tagsToDel.length > 0) promises.push(deleteTagsForSoftware({
-        software: software.id, tags: tagsToDel, token
-      }))
-    }
-    // check if liceses need to be added
-    if (software.licenses?.length > 0) {
-      const licensesToAdd = itemsNotInReferenceList({
-        list: software.licenses,
-        referenceList: licensesInDb,
-        key: 'key'
-      }).map((item)=>{
-        return {
-          software: software.id,
-          license: item.key
-        }
-      })
-      // add tags update to list
-      if (licensesToAdd.length > 0) promises.push(addLicensesForSoftware({
-        software: software.id, data: licensesToAdd, token
-      }))
-    }
+    // delete
+    keywords.delete.forEach(item => {
+      promises.push(
+        deleteKeywordFromSoftware({
+          software: item.software,
+          keyword: item.keyword,
+          token
+        })
+      )
+    })
+    // --------------------------------
+    // LICESES
     // check if licenses need to be deleted
     if (licensesInDb.length > 0) {
       const licenseToDel = itemsNotInReferenceList({
@@ -321,57 +323,93 @@ export async function deleteFromRepositoryTable({software, token}:
     }
   }
 }
-
-export async function addTagsForSoftware({software, data, token}:{software:string, data:Tag[],token:string}) {
+export async function createKeywordAndAddToSoftware({data, token, updateKeyword}:
+  { data: KeywordForSoftware, token: string, updateKeyword: UseFieldArrayUpdate<EditSoftwareItem, 'keywords'> }) {
   try {
-    // POST
-    const url = `/api/v1/tag_for_software?software=eq.${software}`
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: {
-        ...createJsonHeaders(token),
-        // this will add new items and update existing
-        // 'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify(data)
+    const resp = await createKeyword({
+      keyword: data.keyword,
+      token
     })
-
-    return extractReturnMessage(resp, software ?? '')
-
-  } catch (e: any) {
-    logger(`addTagsForSoftware: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function deleteTagsForSoftware({software,tags,token}: { software: string,tags:string[],token: string }) {
-  try {
-    if (!software) return {
-      status: 400,
-      message: 'Missing software id'
-    }
-    // DELETE where software uuid and tag in list
-    const url = `/api/v1/tag_for_software?software=eq.${software}&tag=in.("${encodeURIComponent(tags.join('","'))}")`
-    const resp = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        ...createJsonHeaders(token),
+    if (resp.status === 201) {
+      // do update here?
+      if (data && data.pos) {
+        // debugger
+        updateKeyword(data.pos, {
+          id: resp.message,
+          software: data.software,
+          keyword: data.keyword
+        })
       }
-    })
-
-    return extractReturnMessage(resp, software ?? '')
-
+      return addKeywordsToSoftware({
+        data: [{
+          software: data.software,
+          // id of new keyword is in message
+          keyword: resp.message
+        }],
+        token
+      })
+    }
+    // debugger
+    return resp
   } catch (e: any) {
-    logger(`deleteTagsForSoftware: ${e?.message}`, 'error')
+    logger(`createKeywordAndAddToProject: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
     }
   }
 }
+// REPLACED BY KEYWORDS, 2022-05-04
+// export async function addTagsForSoftware({software, data, token}:{software:string, data:Tag[],token:string}) {
+//   try {
+//     // POST
+//     const url = `/api/v1/tag_for_software?software=eq.${software}`
+//     const resp = await fetch(url, {
+//       method: 'POST',
+//       headers: {
+//         ...createJsonHeaders(token),
+//         // this will add new items and update existing
+//         // 'Prefer': 'resolution=merge-duplicates'
+//       },
+//       body: JSON.stringify(data)
+//     })
+
+//     return extractReturnMessage(resp, software ?? '')
+
+//   } catch (e: any) {
+//     logger(`addTagsForSoftware: ${e?.message}`, 'error')
+//     return {
+//       status: 500,
+//       message: e?.message
+//     }
+//   }
+// }
+
+// export async function deleteTagsForSoftware({software,tags,token}: { software: string,tags:string[],token: string }) {
+//   try {
+//     if (!software) return {
+//       status: 400,
+//       message: 'Missing software id'
+//     }
+//     // DELETE where software uuid and tag in list
+//     const url = `/api/v1/tag_for_software?software=eq.${software}&tag=in.("${encodeURIComponent(tags.join('","'))}")`
+//     const resp = await fetch(url, {
+//       method: 'DELETE',
+//       headers: {
+//         ...createJsonHeaders(token),
+//       }
+//     })
+
+//     return extractReturnMessage(resp, software ?? '')
+
+//   } catch (e: any) {
+//     logger(`deleteTagsForSoftware: ${e?.message}`, 'error')
+//     return {
+//       status: 500,
+//       message: e?.message
+//     }
+//   }
+// }
 
 export async function addLicensesForSoftware({software, data, token}:
   {software: string, data: License[], token: string}) {
