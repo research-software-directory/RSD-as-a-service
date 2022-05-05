@@ -21,6 +21,11 @@ export type AsyncAutocompleteConfig = {
   reset?: boolean,
   // makes help text red on true
   error?: boolean
+  noOptions?: {
+    empty:string,
+    minLength: string,
+    notFound: string
+  }
 }
 
 type AsyncAutocompleteProps<T> = {
@@ -31,7 +36,7 @@ type AsyncAutocompleteProps<T> = {
   options: AutocompleteOption<T>[]
   onSearch: (searchFor:string) => void
   onAdd: (option: AutocompleteOption<T>) => void
-  onCreate: (inputValue: string) => void
+  onCreate?: (inputValue: string) => void
   onRenderOption: (
     props: HTMLAttributes<HTMLLIElement>,
     option: AutocompleteOption<T>,
@@ -78,11 +83,11 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
           // if we found item in available options
           // we use it
           onAdd(foundItems[0])
-        } else {
+        } else if (onCreate) {
           // otherwise we create item
           onCreate(value)
         }
-      } else {
+      } else if (onCreate) {
         onCreate(value)
       }
       if (config?.reset) {
@@ -139,12 +144,27 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
       }
     } else if (reason === 'createOption' &&
       typeof value === 'string') {
+      debugger
       // request creating
       requestCreate(value)
       // stop propagation of Enter key to save?
       e.stopPropagation()
     }
     // console.groupEnd()
+  }
+
+  // dynamic no options messaging
+  function noOptionsMessage() {
+    // debugger
+    if (!newInputValue ||
+      newInputValue.length === 0
+    ) {
+      return config?.noOptions?.empty ?? 'Type something'
+    } else if (newInputValue.length < config.minLength) {
+      return config?.noOptions?.minLength ?? 'Keep typing ...'
+    } else if (foundFor && loading===false) {
+      return config?.noOptions?.notFound ?? 'No options'
+    }
   }
 
   return (
@@ -162,6 +182,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
         onClose={() => {
           setOpen(false)
         }}
+        noOptionsText={noOptionsMessage()}
         // use to control/reset value
         value={selected}
         defaultValue={defaultValue}
@@ -183,7 +204,9 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
           // console.groupEnd()
           if (loading === false &&
             inputValue === foundFor &&
-            inputInOptions === false) {
+            inputInOptions === false &&
+            config.freeSolo === true
+          ) {
             // if we are not loading from api,
             // and the input value is equal to last seach (foundFor)
             // and the value is not found in the options...
@@ -245,7 +268,6 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
         )}
         renderOption={onRenderOption}
       />
-      {/* {renderActionButton()} */}
     </>
   )
 }
