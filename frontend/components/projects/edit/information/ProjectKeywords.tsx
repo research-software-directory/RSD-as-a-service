@@ -1,12 +1,12 @@
+import Chip from '@mui/material/Chip'
 import {useFieldArray, useFormContext} from 'react-hook-form'
 
 import {EditProject} from '~/types/Project'
-import FindKeyword from './FindKeyword'
+import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
 import {projectInformation as config} from './config'
-import Chip from '@mui/material/Chip'
-import {Keyword} from './searchForKeyword'
+import {searchForProjectKeyword} from './searchForKeyword'
 
-export default function Keywords({project}: { project: string }) {
+export default function ProjectKeywords({project}: { project: string }) {
   const {control} = useFormContext<EditProject>()
   const {fields, append, remove} = useFieldArray({
     control,
@@ -46,12 +46,12 @@ export default function Keywords({project}: { project: string }) {
 
   return (
     <>
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap py-2">
       {fields.map((field, pos) => {
         return(
           <div
             key={field.id}
-            className="py-2 pr-2"
+            className="py-1 pr-1"
           >
             <Chip
               title={field.keyword}
@@ -62,14 +62,15 @@ export default function Keywords({project}: { project: string }) {
         )
       })}
       </div>
-      <div className="py-1"></div>
       <FindKeyword
         config={{
           freeSolo: false,
           minLength: config.keywords.validation.minLength,
           label: config.keywords.label,
-          help: config.keywords.help
+          help: config.keywords.help,
+          reset: true
         }}
+        searchForKeyword={searchForProjectKeyword}
         onAdd={onAdd}
         onCreate={onCreate}
       />

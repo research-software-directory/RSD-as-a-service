@@ -26,11 +26,11 @@ import {
   getSoftwareItem,
   getRepostoryInfoForSoftware,
   getCitationsForSoftware,
-  getTagsForSoftware,
   getLicenseForSoftware,
   getContributorMentionCount,
   getRemoteMarkdown,
   ContributorMentionCount,
+  getKeywordsForSoftware,
 } from '../../../utils/getSoftware'
 import logger from '../../../utils/logger'
 import {getDisplayName} from '../../../utils/getDisplayName'
@@ -38,7 +38,7 @@ import {getContributorsForSoftware} from '../../../utils/editContributors'
 import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
 import {getRelatedToolsForSoftware} from '../../../utils/editRelatedSoftware'
 import {getMentionsForSoftware} from '../../../utils/editMentions'
-import {License, RelatedTools, RepositoryInfo, SoftwareItem, Tag} from '../../../types/SoftwareTypes'
+import {KeywordForSoftware, License, RelatedTools, RepositoryInfo, SoftwareItem} from '../../../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {Contributor} from '../../../types/Contributor'
 import {Testimonial} from '../../../types/Testimonial'
@@ -51,7 +51,7 @@ interface SoftwareIndexData extends ScriptProps{
   slug: string
   software: SoftwareItem
   citationInfo: SoftwareCitationInfo
-  tagsInfo: Tag[]
+  keywords: KeywordForSoftware[]
   licenseInfo: License[]
   repositoryInfo: RepositoryInfo
   softwareIntroCounts: ContributorMentionCount
@@ -68,7 +68,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   const [author, setAuthor] = useState('')
   // extract data from props
   const {
-    software, citationInfo, tagsInfo,
+    software, citationInfo, keywords,
     licenseInfo, repositoryInfo, softwareIntroCounts,
     mentions, testimonials, contributors,
     relatedTools, isMaintainer, slug,
@@ -95,7 +95,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       </ContentInTheMiddle>
     )
   }
-
+  // console.log('SoftwareIndexPage...keywords...', keywords)
   return (
     <>
       {/* Page Head meta tags */}
@@ -144,7 +144,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <AboutSection
         brand_name={software.brand_name}
         description={software?.description ?? ''}
-        tags={tagsInfo}
+        keywords={keywords}
         licenses={licenseInfo}
         languages={repositoryInfo?.languages}
         repository={repositoryInfo?.url}
@@ -205,8 +205,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const fetchData = [
       // citationInfo
       getCitationsForSoftware(software.id,token),
-      // tagsInfo
-      getTagsForSoftware(software.id,false,token),
+      // keywords
+      getKeywordsForSoftware(software.id,false,token),
       // licenseInfo
       getLicenseForSoftware(software.id, false, token),
       // repositoryInfo: url, languages and commits
@@ -228,7 +228,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     ]
     const [
       citationInfo,
-      tagsInfo,
+      keywords,
       licenseInfo,
       repositoryInfo,
       softwareIntroCounts,
@@ -245,7 +245,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       props: {
         software,
         citationInfo,
-        tagsInfo,
+        keywords,
         licenseInfo,
         repositoryInfo,
         softwareIntroCounts,

@@ -1,4 +1,4 @@
-import {RepositoryInfo, SoftwareItem,Tag} from '../types/SoftwareTypes'
+import {KeywordForSoftware, RepositoryInfo, SoftwareItem} from '../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
@@ -161,28 +161,29 @@ export async function getCitationsForSoftware(uuid:string,token?:string){
 }
 
 
-export async function getTagsForSoftware(uuid:string,frontend?:boolean,token?:string){
+export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token?:string){
   try{
     // this request is always perfomed from backend
     // the content is order by tag ascending
-    let url = `${process.env.POSTGREST_URL}/tag_for_software?software=eq.${uuid}&order=tag.asc`
+    const query = `rpc/keywords_by_software?software=eq.${uuid}&order=keyword.asc`
+    let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend === true) {
-      url = `/api/v1/tag_for_software?software=eq.${uuid}&order=tag.asc`
+      url = `/api/v1/${query}`
     }
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
     })
     if (resp.status===200){
-      const data:Tag[] = await resp.json()
+      const data:KeywordForSoftware[] = await resp.json()
       return data
     } else if (resp.status===404){
-      logger(`getTagsForSoftware: 404 [${url}]`,'error')
+      logger(`getKeywordsForSoftware: 404 [${url}]`,'error')
       // query not found
       return null
     }
   }catch(e:any){
-    logger(`getTagsForSoftware: ${e?.message}`,'error')
+    logger(`getKeywordsForSoftware: ${e?.message}`,'error')
     return null
   }
 }

@@ -8,6 +8,34 @@ CREATE TABLE keyword (
 	value CITEXT UNIQUE
 );
 
+CREATE FUNCTION sanitise_insert_keyword() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = gen_random_uuid();
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_keyword BEFORE INSERT ON keyword FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_keyword();
+
+
+CREATE FUNCTION sanitise_update_keyword() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = OLD.id;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_keyword BEFORE UPDATE ON keyword FOR EACH ROW EXECUTE PROCEDURE sanitise_update_keyword();
+
+
+CREATE TABLE keyword_for_software (
+	software UUID references software (id),
+	keyword UUID references keyword (id),
+	PRIMARY KEY (software, keyword)
+);
+
 CREATE TABLE keyword_for_project (
 	project UUID references project (id),
 	keyword UUID references keyword (id),
@@ -17,19 +45,6 @@ CREATE TABLE keyword_for_project (
 -- ADD basic keywords from topics and tags
 INSERT into keyword (value)
 VALUES
-	('Astronomy'),
-	('Chemistry'),
-	('Climate and weather'),
-	('Computer science'),
-	('Ecology'),
-	('Health'),
-	('Humanities'),
-	('Law'),
-	('Life science'),
-	('Material science'),
-	('Physics'),
-	('Psychology'),
-	('Social sciences'),
 	('Big data'),
 	('GPU'),
 	('High performance computing'),
@@ -41,5 +56,4 @@ VALUES
 	('Real time data analysis'),
 	('Text analysis & natural language processing'),
 	('Visualization'),
-	('Workflow technologies')
-;
+	('Workflow technologies');

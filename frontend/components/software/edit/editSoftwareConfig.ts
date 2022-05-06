@@ -83,9 +83,15 @@ export const softwareInformation = {
   is_featured: {
     label: 'Featured',
   },
-  tags: {
-    label: 'Keywords',
-    help:'Select keyword'
+  keywords: {
+    title: 'Keywords',
+    subtitle: 'How to find this software?',
+    label: 'Find or add keyword',
+    help: 'Start typing for the suggestions',
+    validation: {
+      //custom validation rule, not in used by react-hook-form
+      minLength: 1,
+    }
   },
   licenses:{
     label: 'Licenses',
