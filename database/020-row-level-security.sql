@@ -47,6 +47,20 @@ CREATE POLICY admin_all_rights ON maintainer_for_project TO rsd_admin
 	WITH CHECK (TRUE);
 
 
+-- invitations
+CREATE POLICY maintainer_select ON invite_maintainer_for_project FOR SELECT TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON invite_maintainer_for_project FOR DELETE TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON invite_maintainer_for_project FOR INSERT TO rsd_user
+	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()) AND created_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+
+CREATE POLICY admin_all_rights ON invite_maintainer_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
 -- software
 ALTER TABLE software ENABLE ROW LEVEL SECURITY;
 

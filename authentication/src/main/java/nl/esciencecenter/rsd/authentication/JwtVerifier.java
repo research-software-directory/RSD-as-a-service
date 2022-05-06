@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Objects;
 
@@ -15,10 +16,10 @@ public class JwtVerifier {
 		this.signingSecret = Objects.requireNonNull(signingSecret);
 	}
 
-	void verify(String token) {
+	DecodedJWT verify(String token) {
 		if (token == null) throw new JWTVerificationException("Token was null");
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
 		JWTVerifier verifier = JWT.require(signingAlgorithm).build();
-		verifier.verify(token);
+		return verifier.verify(token);
 	}
 }

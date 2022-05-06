@@ -348,7 +348,7 @@ BEGIN
 		project.slug,
 		project.title,
 		project.subtitle,
-  	project.date_end,
+		project.date_end,
 		project.updated_at,
 		image_for_project.project AS image_id
 	FROM
