@@ -108,8 +108,9 @@ export const contributorInformation = {
   },
   importContributors: {
     title: 'Import contributors',
-    subtitle: 'We use concept DOI and datacite.org api',
-    label: 'Get contributors from DOI',
+    subtitle: 'We use your concept DOI and datacite.org api',
+    label: 'Import contributors',
+    message: (doi: string) => `Import contributors from datacite.org using DOI ${doi}`
   },
   is_contact_person: {
     label: 'Contact person',

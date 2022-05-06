@@ -263,7 +263,7 @@ export default function SoftwareContributors({token}: {token: string }) {
 
     if (newContributors.length === 0) {
       showInfoMessage(
-        `No new contributors to add from DOI ${software?.concept_doi}`
+        `No new contributors to add from DOI ${software?.concept_doi} based on family_names.`
       )
       setLoading(false)
       return
@@ -327,6 +327,7 @@ export default function SoftwareContributors({token}: {token: string }) {
               />
               <GetContributorsFromDoi
                 onClick={onGetContributorsFromDoi}
+                title={config.importContributors.message(software?.concept_doi)}
               />
             </div>
           }
