@@ -359,57 +359,6 @@ export async function createKeywordAndAddToSoftware({data, token, updateKeyword}
     }
   }
 }
-// REPLACED BY KEYWORDS, 2022-05-04
-// export async function addTagsForSoftware({software, data, token}:{software:string, data:Tag[],token:string}) {
-//   try {
-//     // POST
-//     const url = `/api/v1/tag_for_software?software=eq.${software}`
-//     const resp = await fetch(url, {
-//       method: 'POST',
-//       headers: {
-//         ...createJsonHeaders(token),
-//         // this will add new items and update existing
-//         // 'Prefer': 'resolution=merge-duplicates'
-//       },
-//       body: JSON.stringify(data)
-//     })
-
-//     return extractReturnMessage(resp, software ?? '')
-
-//   } catch (e: any) {
-//     logger(`addTagsForSoftware: ${e?.message}`, 'error')
-//     return {
-//       status: 500,
-//       message: e?.message
-//     }
-//   }
-// }
-
-// export async function deleteTagsForSoftware({software,tags,token}: { software: string,tags:string[],token: string }) {
-//   try {
-//     if (!software) return {
-//       status: 400,
-//       message: 'Missing software id'
-//     }
-//     // DELETE where software uuid and tag in list
-//     const url = `/api/v1/tag_for_software?software=eq.${software}&tag=in.("${encodeURIComponent(tags.join('","'))}")`
-//     const resp = await fetch(url, {
-//       method: 'DELETE',
-//       headers: {
-//         ...createJsonHeaders(token),
-//       }
-//     })
-
-//     return extractReturnMessage(resp, software ?? '')
-
-//   } catch (e: any) {
-//     logger(`deleteTagsForSoftware: ${e?.message}`, 'error')
-//     return {
-//       status: 500,
-//       message: e?.message
-//     }
-//   }
-// }
 
 export async function addLicensesForSoftware({software, data, token}:
   {software: string, data: License[], token: string}) {
@@ -457,42 +406,6 @@ export async function deleteLicenses({ids, token}:
     }
   }
 }
-
-// refactored to use itemsNotInReferenceList
-// export function tagsNotInReferenceList({tagList, referenceList}:
-//   { tagList: AutocompleteOption<Tag>[], referenceList: AutocompleteOption<Tag>[] }) {
-//   if (tagList.length > 0) {
-//     // tagList in initalList not present in saveList should be removed from db
-//     const tagsNotInReferenceList = tagList.filter(({data: {tag: iTag}}) => {
-//       // if item cannot be found in saveList
-//       return !referenceList.some(({data: {tag: sTag}}) => {
-//         // compare inital item with items in saveList
-//         return iTag === sTag
-//       })
-//     })
-
-//     return tagsNotInReferenceList
-//   }
-//   return []
-// }
-
-// export function licensesNotInReferenceList({list, referenceList}:
-//   { list: AutocompleteOption<License>[], referenceList: AutocompleteOption<License>[] }) {
-//   if (list.length > 0) {
-//     // list in initalList not present in saveList should be removed from db
-//     const itemsNotInReferenceList = list.filter(({data: {license: lLicense}}) => {
-//       // if item cannot be found in saveList
-//       return !referenceList.some(({data: {license: rLicense}}) => {
-//         // compare inital item with items in saveList
-//         return lLicense === rLicense
-//       })
-//     })
-
-//     return itemsNotInReferenceList
-//   }
-//   return []
-// }
-
 
 // query for software item page based on slug
 export async function validSoftwareItem(slug: string | undefined, token?: string) {

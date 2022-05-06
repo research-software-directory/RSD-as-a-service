@@ -62,25 +62,10 @@ export const SoftwarePropsToSave = [
   'short_statement'
 ]
 
-// export type EditSoftwareItem = SoftwareItem & {
-//   tags: AutocompleteOption<Tag>[]
-//   licenses: AutocompleteOption<License>[]
-// }
-
 export type EditSoftwareItem = SoftwareItem & {
   keywords: KeywordForSoftware[]
   licenses: AutocompleteOption<License>[]
 }
-
-/**
- * TAGS replaced with KEYWORDS
- */
-
-// export type Tag = {
-//   id?: string,
-//   software: string
-//   tag: string
-// }
 
 /**
  * Keywords
