@@ -108,7 +108,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       getFieldState,
       projectState:editSoftware
     })
-    debugger
+    // debugger
     // save all changes
     const resp = await updateSoftwareInfo({
       software: formData,
