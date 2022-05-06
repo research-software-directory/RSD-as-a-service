@@ -252,8 +252,9 @@ export default function SoftwareContributors({token}: {token: string }) {
 
     // extract only new Contributors
     // for now using only family names as key
-    // maybe combination of props (first_name + last_name)
-    // or email, but email is not available at datacite
+    // TODO!
+    // extend itemsNotInReferenceList to use combination of props (first_name + last_name)
+    // and not to be case sensitive?
     const newContributors = itemsNotInReferenceList({
       list: contribDoi,
       referenceList: contributors,
