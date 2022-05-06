@@ -114,7 +114,7 @@ export async function getDoiInfo(doiId: string) {
     })
 
     if (resp.status === 200) {
-      const json: any = await resp.json()
+      const json: DataciteRecord[] = await resp.json()
       return json
     }
 

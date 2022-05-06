@@ -104,8 +104,12 @@ export const contributorInformation = {
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
-    },
-    autofill: 'Add contributors from DOI data',
+    }
+  },
+  importContributors: {
+    title: 'Import contributors',
+    subtitle: 'We use concept DOI and datacite.org api',
+    label: 'Get contributors from DOI',
   },
   is_contact_person: {
     label: 'Contact person',

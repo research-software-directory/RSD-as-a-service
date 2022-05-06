@@ -15,6 +15,7 @@ import {getDisplayName} from '~/utils/getDisplayName'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import {getContributorsFromDoi} from '~/utils/getContributorsFromDoi'
+import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 import EditContributorModal from './EditContributorModal'
 import FindContributor, {Name} from './FindContributor'
 import SoftwareContributorsList from './SoftwareContributorsList'
@@ -23,14 +24,14 @@ import editSoftwareContext from '../editSoftwareContext'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {ModalProps,ModalStates} from '../editSoftwareTypes'
-import AutoFillContributors from './AutoFillContributors'
+import GetContributorsFromDoi from './GetContributorsFromDoi'
 
 type EditContributorModal = ModalProps & {
   contributor?: Contributor
 }
 
 export default function SoftwareContributors({token}: {token: string }) {
-  const {showErrorMessage,showSuccessMessage} = useSnackbar()
+  const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {software} = pageState
   const [loading, setLoading] = useState(true)
@@ -55,7 +56,8 @@ export default function SoftwareContributors({token}: {token: string }) {
 
   useEffect(() => {
     let abort = false
-    const getContributors = async (software:string,token:string) => {
+    const getContributors = async (software: string, token: string) => {
+      setLoading(true)
       const resp = await getContributorsForSoftware({
         software,
         token,
@@ -233,7 +235,7 @@ export default function SoftwareContributors({token}: {token: string }) {
     setContributors(list)
   }
 
-  async function onAutoFillContributors() {
+  async function onGetContributorsFromDoi() {
     setLoading(true)
 
     const contribDoi: Contributor[] = await getContributorsFromDoi(
@@ -248,14 +250,34 @@ export default function SoftwareContributors({token}: {token: string }) {
       return
     }
 
-    for (const c of contribDoi) {
+    // extract only new Contributors
+    // for now using only family names as key
+    // maybe combination of props (first_name + last_name)
+    // or email, but email is not available at datacite
+    const newContributors = itemsNotInReferenceList({
+      list: contribDoi,
+      referenceList: contributors,
+      key: 'family_names'
+    })
+
+    if (newContributors.length === 0) {
+      showInfoMessage(
+        `No new contributors to add from DOI ${software?.concept_doi}`
+      )
+      setLoading(false)
+      return
+    }
+
+    for (const c of newContributors) {
       const contributor = prepareContributorData(c)
       const resp = await addContributorToDb({contributor, token})
 
       if (resp.status === 201) {
-        contributor.id = resp.message
-        contributor.avatar_data = null
-        contributor.avatar_url = getAvatarUrl(contributor)
+        // update item in newContributors
+        c.id = resp.message
+        // no image provided by datacite
+        c.avatar_data = null
+        c.avatar_url = null
       } else {
         showErrorMessage(
           `Failed to add ${getDisplayName(contributor)}. Error: ${resp.message}`
@@ -265,7 +287,7 @@ export default function SoftwareContributors({token}: {token: string }) {
 
     const list = [
       ...contributors,
-      ...contribDoi
+      ...newContributors
     ].sort((a, b) => sortOnStrProp(a, b, 'given_names'))
     setContributors(list)
 
@@ -291,16 +313,22 @@ export default function SoftwareContributors({token}: {token: string }) {
             title={config.findContributor.title}
             subtitle={config.findContributor.subtitle}
           />
-          {
-            software?.concept_doi &&
-            <AutoFillContributors
-              onClick={onAutoFillContributors}
-            />
-          }
           <FindContributor
             onAdd={onAddContributor}
             onCreate={onCreateNewContributor}
           />
+          {
+            software?.concept_doi &&
+            <div className="py-12">
+              <EditSectionTitle
+                title={config.importContributors.title}
+                subtitle={config.importContributors.subtitle}
+              />
+              <GetContributorsFromDoi
+                onClick={onGetContributorsFromDoi}
+              />
+            </div>
+          }
         </section>
       </EditSoftwareSection>
       <EditContributorModal
