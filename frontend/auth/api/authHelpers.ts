@@ -53,31 +53,61 @@ export function getRedirectUrl(props: RedirectToProps) {
 }
 
 // TEMP solution - should point to auth module route not postgrest
-export async function getProjectInvite({id, token, frontend = false}: { id: string, token: string, frontend?: boolean}) {
+// export async function getProjectInvite({id, token, frontend = false}: { id: string, token: string, frontend?: boolean}) {
+//   try {
+//     const query = `invite_maintainer_for_project?id=eq.${id}`
+//     let url = `${process.env.POSTGREST_URL}/${query}`
+//     if (frontend) {
+//       url = `/api/v1/${query}`
+//     }
+//     console.log('url...', url)
+//     const resp = await fetch(url, {
+//       method: 'GET',
+//       headers: {
+//         ...createJsonHeaders(token),
+//       'Accept':'application/vnd.pgrst.object + json',
+//       },
+//     })
+//     if (resp.status === 200) {
+//       const json = await resp.json()
+//       if (json && json.project) {
+//         return json.project
+//       }
+//       logger('getProjectInvite failed: project property missing', 'error')
+//     } else {
+//       logger(`getProjectInvite failed: ${resp?.status} ${resp.statusText}`, 'error')
+//     }
+//   } catch (e: any) {
+//     logger(`getProjectInvite failed: ${e?.message}`, 'error')
+//   }
+// }
+
+export async function claimProjectMaintainerInvite({id, token, frontend = false}:
+  {id: string, token: string, frontend?:boolean}) {
   try {
-    const query = `invite_maintainer_for_project?id=eq.${id}`
+    const query = 'rpc/accept_invitation_project'
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
       url = `/api/v1/${query}`
     }
-    console.log('url...', url)
+    // console.log('url...', url)
     const resp = await fetch(url, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         ...createJsonHeaders(token),
-      'Accept':'application/vnd.pgrst.object + json',
+        'Accept': 'application/vnd.pgrst.object + json',
       },
+      body: JSON.stringify({
+        'invitation': id
+      })
     })
     if (resp.status === 200) {
       const json = await resp.json()
-      if (json && json.project) {
-        return json.project
-      }
-      logger('getProjectInvite failed: project property missing', 'error')
+      return json
     } else {
-      logger(`getProjectInvite failed: ${resp?.status} ${resp.statusText}`, 'error')
+      logger(`claimProjectMaintainerInvite failed: ${resp?.status} ${resp.statusText}`, 'error')
     }
   } catch (e: any) {
-    logger(`getProjectInvite failed: ${e?.message}`, 'error')
+    logger(`claimProjectMaintainerInvite failed: ${e?.message}`, 'error')
   }
 }

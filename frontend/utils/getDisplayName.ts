@@ -36,6 +36,12 @@ export function getDisplayInitials({given_names, family_names}:
  * @returns
  */
 export function splitName(name: string) {
+  if (!name || name === null || name === '') {
+    return {
+      given_names: '',
+      family_names: ''
+    }
+  }
   const names = name.split(' ')
   return {
     given_names: names[0],
