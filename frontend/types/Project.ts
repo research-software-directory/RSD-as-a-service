@@ -117,6 +117,40 @@ export type ResearchDomainForProject = {
   research_domain: string
 }
 
+export type TeamMember = {
+  id: string | null,
+  project: string,
+  is_contact_person: boolean,
+  family_names: string,
+  given_names: string,
+  email_address: string | null,
+  affiliation?: string | null,
+  role: string | null,
+  orcid?: string | null,
+  // base64 image in table
+  avatar_data?: string | null
+  avatar_mime_type?: string | null
+  // image_url to use
+  avatar_url?: string | null
+  // uploaded raw image data
+  avatar_b64?: string | null
+}
+
+export type SearchTeamMember = {
+  given_names: string
+  family_names: string
+  email_address: string | null
+  affiliation?: string | null
+  display_name?: string | null,
+  orcid?: string
+  source: 'RSD' | 'ORCID'
+}
+
+export type EditTeamMembers = {
+  members: TeamMember[]
+  edit: TeamMember | null
+}
+
 export const ProjectTableProps = [
   'id', 'slug', 'title', 'subtitle', 'is_published',
   'description', 'date_start', 'date_end', 'image_caption',

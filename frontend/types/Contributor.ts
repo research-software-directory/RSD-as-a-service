@@ -44,8 +44,7 @@ export type SearchContributor = {
   source: 'RSD'|'ORCID'
 }
 
-
-export const TeamMemberProps = [
+export const Person = [
   'id',
   'is_contact_person',
   'email_address',
@@ -57,7 +56,13 @@ export const TeamMemberProps = [
   'avatar_mime_type'
 ]
 
+
+export const TeamMemberProps = [
+  ...Person,
+  'project'
+]
+
 export const ContributorProps = [
-  ...TeamMemberProps,
+  ...Person,
   'software'
 ]

@@ -42,3 +42,14 @@ export function splitName(name: string) {
     family_names: names.slice(1).join(' ')
   }
 }
+
+
+export function combineRoleAndAffiliation({role, affiliation}:
+  { role?: string | null, affiliation?: string | null }) {
+
+  if (role && affiliation) return `${role}, ${affiliation}`
+
+  if (role) return role
+
+  return affiliation ?? ''
+}
