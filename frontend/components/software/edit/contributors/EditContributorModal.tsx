@@ -15,6 +15,7 @@ import ContributorAvatar from '../../ContributorAvatar'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {getDisplayInitials, getDisplayName} from '../../../../utils/getDisplayName'
 import logger from '../../../../utils/logger'
+import ControlledAffiliation from '~/components/form/ControlledAffiliation'
 
 type EditContributorModalProps = {
   open: boolean,
@@ -232,20 +233,14 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
               }}
               rules={config.role.validation}
             />
-
-            <ControlledTextField
+            <ControlledAffiliation
+              name='affiliation'
+              label={config.affiliation.label}
+              affiliations={contributor?.affiliation ?? ''}
               control={control}
-              options={{
-                name: 'affiliation',
-                label: config.affiliation.label,
-                useNull: true,
-                defaultValue: contributor?.affiliation,
-                helperTextMessage: config.affiliation.help,
-                // helperTextCnt: `${formData?.affiliation?.length || 0}/${config.affiliation.validation.maxLength.value}`,
-              }}
               rules={config.affiliation.validation}
+              helperTextMessage={config.affiliation.help}
             />
-
           </section>
           <section>
             <ControlledSwitch

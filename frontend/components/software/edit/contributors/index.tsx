@@ -209,7 +209,7 @@ export default function SoftwareContributors({token}: {token: string }) {
         const resp = await deleteContributorsById({ids, token})
         if (resp.status === 200) {
           // show notification
-          showSuccessMessage(`Removed ${getDisplayName(contributor)} from ${pageState.software.brand_name}`)
+          // showSuccessMessage(`Removed ${getDisplayName(contributor)} from ${pageState.software.brand_name}`)
           removeFromContributorList(pos)
         } else {
           showErrorMessage(`Failed to remove ${getDisplayName(contributor)}. Error: ${resp.message}`)
