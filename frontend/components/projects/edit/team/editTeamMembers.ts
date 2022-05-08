@@ -29,8 +29,8 @@ export async function createTeamMember({data, token}:
   })
 
   if (resp.status === 201) {
+    data.id = resp.message
     const member = removeBase64Data(data)
-    member.id = resp.message
     return {
       status: 201,
       message: member
@@ -95,7 +95,7 @@ export async function postTeamMember({member, token}:
       },
       body: JSON.stringify(member)
     })
-    debugger
+
     if (resp.status === 201) {
       // we need to return id of created record
       // it can be extracted from header.location

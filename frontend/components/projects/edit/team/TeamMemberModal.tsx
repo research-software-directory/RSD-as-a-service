@@ -14,6 +14,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import ContributorAvatar from '~/components/software/ContributorAvatar'
+import ControlledAffiliation from '~/components/form/ControlledAffiliation'
 import {cfgTeamMembers as config} from './config'
 
 type TeamMemberModalProps = {
@@ -103,7 +104,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
         color: 'primary.main',
         fontWeight: 500
       }}>
-        Contributor
+        Team member
       </DialogTitle>
       <form
         id="team-member-modal"
@@ -234,20 +235,14 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
               }}
               rules={config.role.validation}
             />
-
-            <ControlledTextField
+            <ControlledAffiliation
+              name= 'affiliation'
+              label={config.affiliation.label}
+              affiliations={member?.affiliation ?? ''}
               control={control}
-              options={{
-                name: 'affiliation',
-                label: config.affiliation.label,
-                useNull: true,
-                defaultValue: member?.affiliation,
-                helperTextMessage: config.affiliation.help,
-                // helperTextCnt: `${formData?.affiliation?.length || 0}/${config.affiliation.validation.maxLength.value}`,
-              }}
               rules={config.affiliation.validation}
+              helperTextMessage={config.affiliation.help}
             />
-
           </section>
           <section>
             <ControlledSwitch
