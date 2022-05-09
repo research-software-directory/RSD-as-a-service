@@ -1,5 +1,5 @@
 import {OrganisationRole, SearchOrganisation, Status} from './Organisation'
-import {AutocompleteOption} from './AutocompleteOptions'
+import {SearchContributor} from './Contributor'
 
 export type NewProject = {
   slug: string
@@ -125,6 +125,9 @@ export type TeamMember = {
   given_names: string,
   email_address: string | null,
   affiliation?: string | null,
+  // ORCID delivers array of institutions
+  // selected one is moved to affiliation
+  institution?: string[] | null,
   role: string | null,
   orcid?: string | null,
   // base64 image in table
@@ -136,20 +139,7 @@ export type TeamMember = {
   avatar_b64?: string | null
 }
 
-export type SearchTeamMember = {
-  given_names: string
-  family_names: string
-  email_address: string | null
-  affiliation?: string | null
-  display_name?: string | null,
-  orcid?: string
-  source: 'RSD' | 'ORCID'
-}
-
-export type EditTeamMembers = {
-  members: TeamMember[]
-  edit: TeamMember | null
-}
+export type SearchTeamMember = SearchContributor
 
 export const ProjectTableProps = [
   'id', 'slug', 'title', 'subtitle', 'is_published',

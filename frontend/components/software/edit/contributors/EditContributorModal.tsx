@@ -236,7 +236,8 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
             <ControlledAffiliation
               name='affiliation'
               label={config.affiliation.label}
-              affiliations={contributor?.affiliation ?? ''}
+              affiliation={contributor?.affiliation ?? ''}
+              institution={contributor?.institution ?? null}
               control={control}
               rules={config.affiliation.validation}
               helperTextMessage={config.affiliation.help}

@@ -238,7 +238,8 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
             <ControlledAffiliation
               name= 'affiliation'
               label={config.affiliation.label}
-              affiliations={member?.affiliation ?? ''}
+              affiliation={member?.affiliation ?? ''}
+              institution={member?.institution ?? null}
               control={control}
               rules={config.affiliation.validation}
               helperTextMessage={config.affiliation.help}

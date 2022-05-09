@@ -21,7 +21,7 @@ import EditSoftwareSection from '../../../layout/EditSection'
 import editSoftwareContext from '../editSoftwareContext'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {contributorInformation as config} from '../editSoftwareConfig'
-import {ModalProps,ModalStates} from '../editSoftwareTypes'
+import {ModalProps, ModalStates} from '../editSoftwareTypes'
 
 type EditContributorModal = ModalProps & {
   contributor?: Contributor
@@ -110,9 +110,7 @@ export default function SoftwareContributors({token}: {token: string }) {
       software?.id !== '') {
       item.software = software?.id
     }
-    // extract props into new object
-    const contributor: Contributor = getPropsFromObject(item, ContributorProps)
-    loadContributorIntoModal(contributor)
+    loadContributorIntoModal(item)
   }
 
   function loadContributorIntoModal(contributor: Contributor,pos?:number) {

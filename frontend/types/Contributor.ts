@@ -10,6 +10,8 @@ export type NewContributor = {
   email_address: string | null
   // NOTE! added on 2022-02-11
   affiliation?: string | null
+  // ORCID delivers array of institutions
+  institution?: string[] | null
   // NOTE! added on 2022-02-11
   role?: string | null
   // NOTE! added on 2022-02-11
@@ -39,6 +41,8 @@ export type SearchContributor = {
   email_address: string | null
   // NOTE! added on 2022-02-11
   affiliation?: string | null
+  // ORCID delivers array of institutions
+  institution?: string[] | null
   display_name?: string | null,
   orcid?: string
   source: 'RSD'|'ORCID'

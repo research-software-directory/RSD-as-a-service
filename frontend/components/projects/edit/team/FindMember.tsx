@@ -108,7 +108,7 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
     }
 
     return (
-      <li {...props} key={option.key}>
+      <li {...props} key={Math.random().toString()}>
         <FindContributorItem option={option} />
       </li>
     )

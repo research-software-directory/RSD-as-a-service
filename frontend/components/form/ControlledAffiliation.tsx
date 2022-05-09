@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import {Controller} from 'react-hook-form'
 
 import {AutocompleteOption} from '~/types/AutocompleteOptions'
@@ -7,30 +8,44 @@ import TextField from '@mui/material/TextField'
 type ControlledFreeSoloProps = {
   name: string,
   label: string,
-  affiliations: string,
+  affiliation: string | null,
+  institution: string[] | null,
   control: any,
   rules: any,
   helperTextMessage: string
 }
 
 export default function ControlledAffiliation({
-  name, control, affiliations, label, rules, helperTextMessage
+  name, control, affiliation, institution, label, rules, helperTextMessage
 }: ControlledFreeSoloProps) {
+  const [open, setOpen] = useState(false)
+
   let allRules = {required: false}
   if (rules) {
     allRules=rules
   }
-  // ORCID api returns all affitiations as string (;) separated
-  // in that case we create dropdown with affiliation options
-  const options: AutocompleteOption<string>[] = affiliations.split(';').map(item => ({
-    key: item.trim(),
-    label: item.trim(),
-    data: item.trim()
-  }))
 
+  let defaultValue = ''
+
+  // ORCID api returns institution as string[]
+  // in that case we create dropdown with options
+  let options:AutocompleteOption<string>[]=[]
+  if (institution) {
+    options = institution.map(item => ({
+      key: item.trim(),
+      label: item.trim(),
+      data: item.trim()
+    }))
+    // select first item
+    defaultValue = options[0].label
+  }
+  // debugger
   // default is null or first option
-  let defaultValue = null
-  if (options.length > 1) defaultValue = options[0]
+
+  if (affiliation) {
+    // one string value
+    defaultValue = affiliation
+  }
 
   return (
     <Controller
@@ -46,7 +61,7 @@ export default function ControlledAffiliation({
             <TextField
               label={label}
               variant="standard"
-              value={value}
+              value={value ?? ''}
               onChange={({target}) => {
               // use null instead of empty string
                 if (target.value === '') {
@@ -72,6 +87,13 @@ export default function ControlledAffiliation({
               freeSolo={true}
               multiple={false}
               options={options}
+              open={open}
+              onOpen={() => {
+                setOpen(true)
+              }}
+              onClose={() => {
+                setOpen(false)
+              }}
               onInputChange={(e, value) => {
                 // debugger
                 onChange(value)
@@ -105,6 +127,7 @@ export default function ControlledAffiliation({
                     label={label}
                     variant="standard"
                     helperText={helperTextMessage}
+                    onFocus={()=>setOpen(true)}
                   />
                 )
               }}
