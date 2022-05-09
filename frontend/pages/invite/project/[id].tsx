@@ -22,12 +22,10 @@ type InviteProjectMaintainerProps = {
 
 export default function InviteProjectMaintainer({projectInfo, error}:
   InviteProjectMaintainerProps) {
-
   // console.group('InviteProjectMaintainer')
   // console.log('projectInfo..', projectInfo)
   // console.log('error..', error)
   // console.groupEnd()
-
   function renderContent() {
     if (error!==null) {
       return (
@@ -88,7 +86,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (id) {
     // claim the project maintainer invite
     const projectInfo = await claimProjectMaintainerInvite({id: id.toString(), token, frontend: false})
-    console.log(`invite ${id} ...projectInfo...`, projectInfo)
+    // console.log(`invite ${id} ...projectInfo...`, projectInfo)
     if (typeof projectInfo == 'undefined') {
       // request failed
       // multiple reasons possible: id is mailformed, invite already claimed etc
