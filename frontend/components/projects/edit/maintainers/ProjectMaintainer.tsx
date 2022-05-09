@@ -18,14 +18,14 @@ type ProjectMaintainerProps = {
 
 
 export default function ProjectMaintainer({pos, maintainer, onEdit, onDelete}: ProjectMaintainerProps) {
-  const {name, email, affiliation, avatar_url} = maintainer
+  const {name, email, affiliation} = maintainer
   const displayInitials = getDisplayInitials(splitName(name))
   return (
     <ListItem
       key={email}
       secondaryAction={
         <>
-          <IconButton
+          {/* <IconButton
             edge="end"
             aria-label="edit"
             sx={{marginRight: '1rem'}}
@@ -34,7 +34,7 @@ export default function ProjectMaintainer({pos, maintainer, onEdit, onDelete}: P
             }}
           >
             <EditIcon />
-          </IconButton>
+          </IconButton> */}
           <IconButton
             edge="end"
             aria-label="delete"
@@ -56,7 +56,7 @@ export default function ProjectMaintainer({pos, maintainer, onEdit, onDelete}: P
       >
         <ListItemAvatar>
           <ContributorAvatar
-            avatarUrl={avatar_url ?? ''}
+            avatarUrl={''}
             displayName={name ?? ''}
             displayInitials={displayInitials}
           />

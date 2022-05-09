@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import {claimProjectMaintainerInvite} from '~/auth/api/authHelpers'
 import {getAccountFromToken} from '~/auth/jwtUtils'
+import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import PageErrorMessage from '~/components/layout/PageErrorMessage'
 import PageTitle from '~/components/layout/PageTitle'
@@ -12,14 +13,21 @@ type InviteProjectMaintainerProps = {
   projectInfo: {
     slug: string,
     title: string,
-  },
+  }|null,
   error: {
     status: number,
     message: string
   }|null
 }
 
-export default function InviteProjectMaintainer({projectInfo, error}:InviteProjectMaintainerProps) {
+export default function InviteProjectMaintainer({projectInfo, error}:
+  InviteProjectMaintainerProps) {
+
+  // console.group('InviteProjectMaintainer')
+  // console.log('projectInfo..', projectInfo)
+  // console.log('error..', error)
+  // console.groupEnd()
+
   function renderContent() {
     if (error!==null) {
       return (
@@ -27,19 +35,18 @@ export default function InviteProjectMaintainer({projectInfo, error}:InviteProje
       )
     }
     return (
-      <section>
-        <h2>You are now maintainer of {projectInfo.title}</h2>
-        <pre>
-          {JSON.stringify(projectInfo)}
-        </pre>
-        <Link href={`/project/${projectInfo.slug}`}>
-          <a>
-            Open project
-          </a>
-        </Link>
-      </section>
+      <ContentInTheMiddle>
+        <h2>
+          You are maintainer of {projectInfo?.title ?? 'missing'}!
+          &nbsp;
+          <Link href={`/projects/${projectInfo?.slug ?? 'missing'}`}>
+            <a>
+              Open project
+            </a>
+          </Link>
+        </h2>
+      </ContentInTheMiddle>
     )
-
   }
 
   return (
@@ -47,8 +54,7 @@ export default function InviteProjectMaintainer({projectInfo, error}:InviteProje
       <Head>
         <title>Project Maintainer Invite | RSD</title>
       </Head>
-      <PageTitle title="Maintainer invite">
-      </PageTitle>
+      <PageTitle title="Project Maintainer Invite" />
       {renderContent()}
     </DefaultLayout>
   )
@@ -70,8 +76,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (typeof account == 'undefined') {
     return {
       props: {
-        id,
-        project: null,
+        projectInfo: null,
         error: {
           status: 401,
           message: 'You need to sign in to RSD first!'
@@ -83,13 +88,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (id) {
     // claim the project maintainer invite
     const projectInfo = await claimProjectMaintainerInvite({id: id.toString(), token, frontend: false})
+    console.log(`invite ${id} ...projectInfo...`, projectInfo)
     if (typeof projectInfo == 'undefined') {
       // request failed
       // multiple reasons possible: id is mailformed, invite already claimed etc
       return {
         props: {
-          id,
-          account: null,
+          projectInfo: null,
           error: {
             status: 400,
             message: 'This invite is invalid, expired or already claimed. Please ask the project mantainer to provide you a new link.'
@@ -100,18 +105,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     // pass project info to page component as props
     return {
       props: {
-        id,
-        projectInfo
+        projectInfo,
+        error: null
       }
     }
   } else {
     return {
       props: {
-        id,
-        account: null,
+        projectInfo:null,
         error: {
           status: 404,
-          message: 'This invite is invalid. It is missing invite id. Please ask the project mantainer to provide you a new link.'
+          message: 'This invite is invalid. It\'s missing invite id. Please ask the project mantainer to provide you a new link.'
         }
       }
     }

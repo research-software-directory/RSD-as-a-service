@@ -2,8 +2,6 @@ import {useState} from 'react'
 import Button from '@mui/material/Button'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
-
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {createMaintainerLink} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
@@ -25,10 +23,10 @@ export default function MaintainerInviteLink({project,account,token}: { project:
   }
   return (
     <>
-    <EditSectionTitle
+    {/* <EditSectionTitle
       title="Invite link"
       subtitle="In case you cannot find, try invite link"
-    />
+    /> */}
     <Button
       sx={{
         marginTop: '2rem',
@@ -45,7 +43,7 @@ export default function MaintainerInviteLink({project,account,token}: { project:
       magicLink ?
         <a
           target="_blank"
-          href={`mailto:?subject=Project maintainer invite&body=Please use this link to <a href="${magicLink}">become project maintainer</a>`} rel="noreferrer">
+          href={`mailto:?subject=Project maintainer invite&body=Please use the link to become project maintainer. \n ${magicLink}`} rel="noreferrer">
           {magicLink}
         </a>
       :

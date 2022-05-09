@@ -1,21 +1,27 @@
 import {useState,useEffect} from 'react'
-import {createJsonHeaders} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
+export type RawMaintainerOfProject = {
+  // unique maintainer id
+  maintainer: string
+  name: string[]
+  email: string[]
+  affiliation: string[],
+}
 
 export type MaintainerOfProject = {
-  slug: string
+  // unique maintainer id
+  account: string
   name: string
   email: string
   affiliation: string,
-  // NOTE! image not avaliable at the moment
-  avatar_url?:string
 }
 
-export async function getMaintainersOfProject({slug, token, frontend=true}:
-  {slug: string, token: string,frontend?:boolean}) {
+export async function getMaintainersOfProject({project, token, frontend=true}:
+  {project: string, token: string,frontend?:boolean}) {
   try {
-    let query = `rpc/maintainers_of_project?slug=eq.${slug}&order=name.asc`
+    let query = `rpc/maintainers_of_project?project_id=${project}`
     let url = `/api/v1/${query}`
     if (frontend === false) {
       url = `${process.env.POSTGREST_URL}/${query}`
@@ -27,11 +33,11 @@ export async function getMaintainersOfProject({slug, token, frontend=true}:
     })
 
     if (resp.status === 200) {
-      const json:MaintainerOfProject[] = await resp.json()
+      const json:RawMaintainerOfProject[] = await resp.json()
       return json
     }
     // ERRORS
-    logger(`getMaintainersOfSoftware: ${resp.status}:${resp.statusText} slug: ${slug}`, 'warn')
+    logger(`getMaintainersOfSoftware: ${resp.status}:${resp.statusText} project: ${project}`, 'warn')
     return []
   } catch (e: any) {
     logger(`getMaintainersOfSoftware: ${e?.message}`, 'error')
@@ -39,7 +45,8 @@ export async function getMaintainersOfProject({slug, token, frontend=true}:
   }
 }
 
-export default function useProjectMaintainers({slug, token}: { slug: string, token: string }) {
+export default function useProjectMaintainers({project, token}:
+  {project: string, token: string }) {
   const [maintainers, setMaintainers] = useState<MaintainerOfProject[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -47,11 +54,12 @@ export default function useProjectMaintainers({slug, token}: { slug: string, tok
     let abort = false
     async function getMaintainers() {
       setLoading(true)
-      const maintainers = await getMaintainersOfProject({
-        slug,
+      const raw_maintainers = await getMaintainersOfProject({
+        project,
         token,
         frontend:true
       })
+      const maintainers = rawMaintainersToMaintainers(raw_maintainers)
       if (abort) return null
       // update maintainers state
       setMaintainers(maintainers)
@@ -59,12 +67,60 @@ export default function useProjectMaintainers({slug, token}: { slug: string, tok
       setLoading(false)
     }
 
-    if (slug && token) {
+    if (project && token) {
       getMaintainers()
     }
 
     ()=>{abort=true}
-  },[slug,token])
+  },[project,token])
 
   return {maintainers, loading}
+}
+
+export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfProject[]) {
+  try {
+    const maintainers:MaintainerOfProject[] = []
+    raw_maintainers.forEach(item => {
+      // use name as second loop indicator
+      item.name.forEach((name, pos) => {
+        const maintainer = {
+          account: item.maintainer,
+          name,
+          email: item.email[pos] ? item.email[pos] : '',
+          affiliation: item.affiliation[pos] ? item.affiliation[pos] : ''
+        }
+        maintainers.push(maintainer)
+      })
+    })
+    return maintainers
+  } catch (e:any) {
+    logger(`rawMaintainersToMaintainers: ${e?.message}`,'error')
+    return []
+  }
+}
+
+
+export async function deleteMaintainerFromProject({maintainer,project,token,frontend=true}:
+  {maintainer:string,project:string,token:string,frontend?:boolean}) {
+  try {
+    let query = `maintainer_for_project?maintainer=eq.${maintainer}&project=eq.${project}`
+    let url = `/api/v1/${query}`
+    if (frontend === false) {
+      url = `${process.env.POSTGREST_URL}/${query}`
+    }
+
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: createJsonHeaders(token)
+    })
+
+    return extractReturnMessage(resp)
+
+  } catch (e: any) {
+    logger(`deleteMaintainerFromProject: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
 }
