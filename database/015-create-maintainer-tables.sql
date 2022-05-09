@@ -78,8 +78,11 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' is expired';
 	END IF;
 
-	UPDATE invite_maintainer_for_project SET claimed_by = account WHERE id = invitation;
-	INSERT INTO maintainer_for_project VALUES (account, invitation_row.project) ON CONFLICT DO NOTHING;
+-- Only use the invitation if not already a maintainer
+	IF NOT EXISTS(SELECT 1 FROM maintainer_for_project WHERE maintainer = account AND project = invitation_row.project) THEN
+		UPDATE invite_maintainer_for_project SET claimed_by = account, claimed_at = LOCALTIMESTAMP WHERE id = invitation;
+		INSERT INTO maintainer_for_project VALUES (account, invitation_row.project);
+	END IF;
 
 	RETURN QUERY
 		SELECT project.title, project.slug FROM project WHERE project.id = invitation_row.project;

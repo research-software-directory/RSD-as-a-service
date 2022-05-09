@@ -48,6 +48,8 @@ CREATE POLICY admin_all_rights ON maintainer_for_project TO rsd_admin
 
 
 -- invitations
+ALTER TABLE invite_maintainer_for_project ENABLE ROW LEVEL SECURITY;
+
 CREATE POLICY maintainer_select ON invite_maintainer_for_project FOR SELECT TO rsd_user
 	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
 
