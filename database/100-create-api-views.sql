@@ -421,31 +421,41 @@ $$;
 
 -- Project maintainers list with basic personal info
 -- used in the project maintainer list
-CREATE FUNCTION maintainers_of_project() RETURNS TABLE (
+CREATE FUNCTION maintainers_of_project(project_id UUID) RETURNS TABLE (
 	maintainer UUID,
-	project UUID,
-	slug VARCHAR,
-	name VARCHAR,
-	email VARCHAR,
-	affiliation VARCHAR
-) LANGUAGE plpgsql STABLE AS
+	name VARCHAR[],
+	email VARCHAR[],
+	affiliation VARCHAR[]
+) LANGUAGE plpgsql STABLE SECURITY DEFINER AS
 $$
+DECLARE account_authenticated UUID;
 BEGIN
+	account_authenticated = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	IF account_authenticated IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please login first';
+	END IF;
+
+	IF project_id IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please provide a project id';
+	END IF;
+
+	IF NOT project_id IN (SELECT * FROM projects_of_current_maintainer()) THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not a maintainer of this project';
+	END IF;
+
 	RETURN QUERY
 	SELECT
 		maintainer_for_project.maintainer,
-		maintainer_for_project.project,
-		project.slug,
-		login_for_account.name,
-		login_for_account.email,
-		login_for_account.home_organisation AS affiliation
+		ARRAY_AGG(login_for_account.name),
+		ARRAY_AGG(login_for_account.email),
+		ARRAY_AGG(login_for_account.home_organisation) AS affiliation
 	FROM
 		maintainer_for_project
-	LEFT JOIN
+	JOIN
 		login_for_account ON maintainer_for_project.maintainer = login_for_account.account
-	LEFT JOIN
-			project ON project.id = maintainer_for_project.project
-	;
+	WHERE maintainer_for_project.project = project_id
+	GROUP BY maintainer_for_project.maintainer;
+	RETURN;
 END
 $$;
 
