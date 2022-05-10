@@ -37,10 +37,10 @@ export default function ControlledAffiliation({
       data: item.trim()
     }))
     // select first item
-    defaultValue = options[0].label
+    if (options.length > 0) {
+      defaultValue = options[0].label
+    }
   }
-  // debugger
-  // default is null or first option
 
   if (affiliation) {
     // one string value
