@@ -127,7 +127,9 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
           freeSolo: true,
           minLength: cfgTeamMembers.find.validation.minLength,
           label: cfgTeamMembers.find.label,
-          help: cfgTeamMembers.find.help
+          help: cfgTeamMembers.find.help,
+          // clear selected item
+          reset: true
         }}
       />
     </section>

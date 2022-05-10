@@ -106,7 +106,9 @@ export default function FindContributor({onAdd, onCreate}:
           freeSolo: true,
           minLength: config.findContributor.validation.minLength,
           label: config.findContributor.label,
-          help: config.findContributor.help
+          help: config.findContributor.help,
+          // clear selected item
+          reset: true
         }}
       />
     </section>
