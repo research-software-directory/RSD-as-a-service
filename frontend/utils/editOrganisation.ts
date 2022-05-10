@@ -189,7 +189,7 @@ export async function saveExistingOrganisation({item, token, pos, setState}:
   }
 }
 
-export async function saveNewOrganisation({item, token, software, account, setState}:
+export async function saveNewOrganisationForSoftware({item, token, software, account, setState}:
   {item: EditOrganisation, token: string, software:string, account: string, setState: (item: EditOrganisation) => void }) {
   // create new organisation
   let resp = await createOrganisation({

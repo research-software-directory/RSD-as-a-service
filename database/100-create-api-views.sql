@@ -333,7 +333,8 @@ CREATE FUNCTION organisations_of_project() RETURNS TABLE (
 	logo_id UUID,
 	status relation_status,
 	role organisation_role,
-	project UUID
+	project UUID,
+	parent UUID
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -349,7 +350,8 @@ BEGIN
 			logo_for_organisation.id AS logo_id,
 			project_for_organisation.status,
 			project_for_organisation.role,
-			project.id AS project
+			project.id AS project,
+			organisation.parent
 	FROM
 		project
 	INNER JOIN
