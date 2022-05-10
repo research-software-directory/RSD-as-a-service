@@ -318,7 +318,7 @@ export default function SoftwareContributors({token}: {token: string }) {
           />
           {
             software?.concept_doi &&
-            <div className="py-8">
+            <div className="pt-8 pb-0">
               <EditSectionTitle
                 title={config.importContributors.title}
                 subtitle={config.importContributors.subtitle}
