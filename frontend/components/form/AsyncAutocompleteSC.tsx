@@ -144,7 +144,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
       }
     } else if (reason === 'createOption' &&
       typeof value === 'string') {
-      debugger
+      // debugger
       // request creating
       requestCreate(value)
       // stop propagation of Enter key to save?
