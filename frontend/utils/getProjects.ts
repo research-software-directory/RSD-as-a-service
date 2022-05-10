@@ -4,9 +4,9 @@ import {MentionForProject} from '../types/Mention'
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, ProjectTag, ProjectTopic, RawProject, RelatedProject, ResearchDomain
+  ProjectLink, RawProject, RelatedProject, ResearchDomain
 } from '../types/Project'
-import {RelatedTools, Tag} from '../types/SoftwareTypes'
+import {RelatedTools} from '../types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'

@@ -1,10 +1,11 @@
+import Chip from '@mui/material/Chip'
 import {useFieldArray, useFormContext} from 'react-hook-form'
 
 import {SearchOrganisation} from '~/types/Organisation'
 import {EditProject} from '~/types/Project'
+import {searchForOrganisation} from '~/utils/editOrganisation'
 import FindOrganisation from '../FindOrganisation'
 import {projectInformation as config} from './config'
-import Chip from '@mui/material/Chip'
 
 export default function FundingOrganisations() {
   const {control} = useFormContext<EditProject>()
@@ -28,11 +29,12 @@ export default function FundingOrganisations() {
   return (
     <>
       <h3 className="mb-2">{config.funding_organisations.subtitle}</h3>
+      <div className="flex flex-wrap py-2">
       {fields.map((field, pos) => {
         return(
           <div
             key={field.id}
-            className="py-2"
+            className="py-1 pr-1"
           >
             <Chip
               title={field.name}
@@ -42,15 +44,22 @@ export default function FundingOrganisations() {
           </div>
         )
       })}
-      <div className="py-1"></div>
+      </div>
       <FindOrganisation
         config={{
           freeSolo: false,
           minLength: config.funding_organisations.validation.minLength,
           label: config.funding_organisations.label,
-          help: config.funding_organisations.help
+          help: config.funding_organisations.help,
+          reset: true,
+          noOptions: {
+            empty: 'Type organisation name',
+            minLength: 'Keep typing, name is too short',
+            notFound: 'Nothing found, check spelling'
+          }
         }}
         onAdd={onAddOrganisation}
+        searchForOrganisation={searchForOrganisation}
         // onCreate={onCreateOrganisation}
       />
     </>

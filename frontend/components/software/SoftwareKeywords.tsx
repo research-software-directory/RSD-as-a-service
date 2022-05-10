@@ -1,19 +1,19 @@
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
-import {Tag} from '../../types/SoftwareTypes'
+import {KeywordForSoftware} from '../../types/SoftwareTypes'
 import TagListItem from '../layout/TagListItem'
 
-export default function AboutTags({tags = []}: { tags: Tag[] }) {
+export default function SoftwareKeywords({keywords = []}: { keywords: KeywordForSoftware[] }) {
 
   function renderTags() {
-    if (tags.length === 0) {
+    if (keywords.length === 0) {
       return (
-        <i>No tags avaliable</i>
+        <i>No keywords avaliable</i>
       )
     }
     return (
       <ul className="flex flex-wrap py-1">
-        {tags.map((item, pos) => {
-          return <TagListItem key={pos} label={item.tag}/>
+        {keywords.map((item, pos) => {
+          return <TagListItem key={pos} label={item.keyword}/>
         })}
       </ul>
     )
@@ -23,7 +23,7 @@ export default function AboutTags({tags = []}: { tags: Tag[] }) {
     <>
     <div className="pt-8 pb-2">
       <LocalOfferIcon color="primary" sx={{transform:'rotate(90deg)'}} />
-      <span className="text-primary pl-2">Tags</span>
+      <span className="text-primary pl-2">Keywords</span>
     </div>
     {renderTags()}
     </>

@@ -54,6 +54,7 @@ it('schedules token refresh and calls refreshSession after timeout', async () =>
     'user': {
       'role': 'rsd_user',
       'iss': 'rsd_auth',
+      'name': 'Test user',
       'exp': expires,
       'account': '4521514d-733a-472b-a34f-ace43bc308c0'
     },

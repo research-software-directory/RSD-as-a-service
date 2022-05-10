@@ -1,5 +1,5 @@
 import {useEffect, useState, useContext} from 'react'
-import {useForm} from 'react-hook-form'
+import {useFieldArray, useForm} from 'react-hook-form'
 
 import {app} from '../../../../config/app'
 import {EditSoftwareItem} from '../../../../types/SoftwareTypes'
@@ -14,11 +14,12 @@ import EditSectionTitle from '../../../layout/EditSectionTitle'
 import editSoftwareContext from '../editSoftwareContext'
 import {EditSoftwareActionType} from '../editSoftwareContext'
 import SoftwareMarkdown from './SoftwareMarkdown'
-import SoftwareKeywords from './SoftwareKeywords'
 import SoftwareLicenses from './SoftwareLicenses'
 import SoftwarePageStatus from './SoftwarePageStatus'
 import {softwareInformation as config} from '../editSoftwareConfig'
 import RepositoryPlatform from './RepositoryPlatform'
+import SoftwareKeywords from './SoftwareKeywords'
+import {getKeywordChanges} from './softwareKeywordsChanges'
 
 export default function SoftwareInformation({slug,token}:{slug:string,token: string}) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
@@ -27,11 +28,18 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
   const [loading, setLoading] = useState(true)
 
   // destructure methods from react-hook-form
-  const {register, handleSubmit, watch, formState, reset, control, setValue} = useForm<EditSoftwareItem>({
+  const {
+    register, handleSubmit, watch, formState, reset,
+    control, setValue, getFieldState, getValues
+  } = useForm<EditSoftwareItem>({
     mode: 'onChange',
     defaultValues: {
       ...editSoftware
     }
+  })
+  const {update:updateKeyword} = useFieldArray({
+    control,
+    name:'keywords'
   })
   // destructure formState
   const {isDirty, isValid, errors} = formState
@@ -93,9 +101,18 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
   )
 
   async function onSubmit(formData: EditSoftwareItem) {
+    // get all keyword changes (create,add,delete)
+    const keywords = getKeywordChanges({
+      updateKeyword,
+      formData,
+      getFieldState,
+      projectState:editSoftware
+    })
+    debugger
+    // save all changes
     const resp = await updateSoftwareInfo({
       software: formData,
-      tagsInDb: editSoftware?.tags || [],
+      keywords,
       licensesInDb: editSoftware?.licenses || [],
       repositoryInDb: editSoftware?.repository_url ?? null,
       repositoryPlatform: editSoftware?.repository_platform ?? null,
@@ -105,8 +122,10 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
     if (resp.status === 200) {
       showSuccessMessage(`${formData?.brand_name} saved`)
       // update software state
+      // reset form to remove dirty states with latest form data
+      const latestFormData = getValues()
       // to be equal to data in the form
-      setEditSoftware(formData)
+      setEditSoftware(latestFormData)
       dispatchPageState({
         type: EditSoftwareActionType.SET_SOFTWARE_INFO,
         payload: {
@@ -249,7 +268,10 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           <EditSectionTitle
             title="Keywords"
           />
-          <SoftwareKeywords control={control}/>
+          <SoftwareKeywords
+            software={formData.id}
+            control={control}
+          />
 
           <div className="py-4"></div>
           <EditSectionTitle
