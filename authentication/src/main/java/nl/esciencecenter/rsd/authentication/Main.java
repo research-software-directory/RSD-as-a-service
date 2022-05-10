@@ -1,12 +1,10 @@
 package nl.esciencecenter.rsd.authentication;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import java.util.Base64;
-import java.util.UUID;
 
 public class Main {
 	static final long ONE_HOUR_IN_SECONDS = 3600; // 60 * 60
@@ -85,31 +83,6 @@ public class Main {
 			ex.printStackTrace();
 			ctx.status(400);
 			ctx.json("{\"message\": \"invalid JWT\"}");
-		});
-
-		app.post("/invite/project/{invite-uuid}", ctx -> {
-			UUID inviteId;
-			try {
-				inviteId = UUID.fromString(ctx.pathParam("invite-uuid"));
-			} catch (IllegalArgumentException e) {
-				ctx.status(400);
-				ctx.json("{\"message\": \"invite code is not a valid UUID\"}");
-				return;
-			}
-
-			String token = ctx.cookie("rsd_token");
-			String signingSecret = Config.jwtSigningSecret();
-			JwtVerifier verifier = new JwtVerifier(signingSecret);
-			DecodedJWT decodedJWT;
-			try {
-				decodedJWT = verifier.verify(token);
-			} catch (JWTVerificationException e) {
-				ctx.status(401);
-				ctx.json("{\"message\": \"authentication token is not valid\"}");
-				return;
-			}
-
-			UUID accountId = UUID.fromString(decodedJWT.getSubject());
 		});
 	}
 
