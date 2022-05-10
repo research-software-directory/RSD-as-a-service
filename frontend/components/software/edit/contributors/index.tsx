@@ -23,7 +23,7 @@ import EditSoftwareSection from '../../../layout/EditSection'
 import editSoftwareContext from '../editSoftwareContext'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {contributorInformation as config} from '../editSoftwareConfig'
-import {ModalProps,ModalStates} from '../editSoftwareTypes'
+import {ModalProps, ModalStates} from '../editSoftwareTypes'
 import GetContributorsFromDoi from './GetContributorsFromDoi'
 
 type EditContributorModal = ModalProps & {
@@ -114,9 +114,7 @@ export default function SoftwareContributors({token}: {token: string }) {
       software?.id !== '') {
       item.software = software?.id
     }
-    // extract props into new object
-    const contributor: Contributor = getPropsFromObject(item, ContributorProps)
-    loadContributorIntoModal(contributor)
+    loadContributorIntoModal(item)
   }
 
   function loadContributorIntoModal(contributor: Contributor,pos?:number) {
@@ -214,7 +212,7 @@ export default function SoftwareContributors({token}: {token: string }) {
         const resp = await deleteContributorsById({ids, token})
         if (resp.status === 200) {
           // show notification
-          showSuccessMessage(`Removed ${getDisplayName(contributor)} from ${pageState.software.brand_name}`)
+          // showSuccessMessage(`Removed ${getDisplayName(contributor)} from ${pageState.software.brand_name}`)
           removeFromContributorList(pos)
         } else {
           showErrorMessage(`Failed to remove ${getDisplayName(contributor)}. Error: ${resp.message}`)

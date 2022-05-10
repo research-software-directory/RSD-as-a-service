@@ -30,7 +30,7 @@ export const editSoftwareMenu:EditSoftwarePageStep[] = [
     status: 'Required information'
   },
   {
-    formId: 'contributors',
+    // formId: 'contributors',
     label: 'Contributors',
     icon: <Filter2Icon />,
     component: (props?) => <SoftwareContributors {...props} />,

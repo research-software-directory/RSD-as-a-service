@@ -240,12 +240,3 @@ export async function deleteContributorsById({ids,token}:{ids:string[],token:str
     }
   }
 }
-
-
-export function combineRoleAndAffiliation(item:Contributor){
-  if (item?.role && item?.affiliation) return `${item?.role}, ${item?.affiliation}`
-
-  if (item?.role) return item?.role
-
-  return item?.affiliation ?? ''
-}

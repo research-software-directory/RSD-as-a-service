@@ -7,7 +7,6 @@ import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew'
 import ShareIcon from '@mui/icons-material/Share'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
-import {Session} from '~/auth'
 import ProjectInformation from './information'
 import ProjectTeam from './team'
 import ProjectOrganisations from './organisations'

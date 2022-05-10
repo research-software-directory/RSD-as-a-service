@@ -35,15 +35,23 @@ export default function SoftwareCard({href,brand_name,short_statement,is_feature
 
   return (
     <Link href={href} passHref>
-      <a>
-        <article className={`flex flex-col h-[17rem] ${colors} hover:bg-secondary hover:text-white`}>
-          <div className="flex min-h-[6rem]">
-            <h2 className="p-4 flex-1">{brand_name}</h2>
-            <div className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-gray-800 text-[1.5rem]">
+      <a className="flex flex-col h-full">
+        <article className={`flex-1 flex flex-col ${colors} hover:bg-secondary hover:text-white`}>
+          <div className="flex relative">
+            <h2
+              title={brand_name}
+              className="p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap"
+            >
+              {brand_name}
+            </h2>
+            <div
+              className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-gray-800 text-[1.5rem]"
+              style={{position:'absolute',right:0,top:0}}
+            >
               {getInitals()}
             </div>
           </div>
-          <p className="flex-1 p-4">
+          <p className="flex-1 p-4 overflow-auto max-h-[9.75rem]">
             {short_statement}
           </p>
           <div className="flex justify-between p-4 text-sm">

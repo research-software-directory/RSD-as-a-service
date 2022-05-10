@@ -531,3 +531,30 @@ INNER JOIN
 ;
 END
 $$;
+
+-- UNIQUE LIST OF TEAM MEMBERS
+-- used in Find
+CREATE OR REPLACE FUNCTION unique_team_members() RETURNS TABLE (
+	display_name TEXT,
+	affiliation VARCHAR,
+	orcid VARCHAR,
+	given_names VARCHAR,
+	family_names VARCHAR,
+	email_address VARCHAR
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+		SELECT DISTINCT
+			(CONCAT(c.given_names,' ',c.family_names)) AS display_name,
+			c.affiliation,
+			c.orcid,
+			c.given_names,
+			c.family_names,
+			c.email_address
+		FROM
+			team_member c
+		ORDER BY
+			display_name ASC;
+END
+$$;

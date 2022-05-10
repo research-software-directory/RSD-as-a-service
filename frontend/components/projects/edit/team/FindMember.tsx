@@ -1,20 +1,25 @@
 import {HTMLAttributes, useState} from 'react'
 
-import {Contributor, SearchContributor} from '../../../../types/Contributor'
-import {searchForContributor} from '../../../../utils/editContributors'
-import FindContributorItem from './FindContributorItem'
-import {splitName} from '../../../../utils/getDisplayName'
-import {contributorInformation as config} from '../editSoftwareConfig'
-import AsyncAutocompleteSC,{AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
+import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
+import FindContributorItem from '~/components/software/edit/contributors/FindContributorItem'
+import {SearchTeamMember, TeamMember} from '~/types/Project'
+import {splitName} from '~/utils/getDisplayName'
+import {cfgTeamMembers} from './config'
+import {searchForMember} from './searchForMember'
 
-export type Name = {
+type Name = {
   given_names: string
   family_names?: string
 }
 
-export default function FindContributor({onAdd, onCreate}:
-  { onAdd: (item: Contributor) => void, onCreate:(name:Name)=>void}) {
-  const [options, setOptions] = useState<AutocompleteOption<SearchContributor>[]>([])
+type FindMemberProps = {
+  project: string,
+  token: string,
+  onAdd: (item: TeamMember) => void
+}
+
+export default function FindMember({onAdd,project,token}:FindMemberProps) {
+  const [options, setOptions] = useState<AutocompleteOption<SearchTeamMember>[]>([])
   const [status, setStatus] = useState<{
     loading: boolean,
     foundFor: string | undefined
@@ -23,10 +28,11 @@ export default function FindContributor({onAdd, onCreate}:
     foundFor: undefined
   })
 
-  async function searchContributor(searchFor: string) {
+  async function searchMember(searchFor: string) {
     setStatus({loading:true,foundFor:undefined})
-    const resp = await searchForContributor({
+    const resp = await searchForMember({
       searchFor,
+      token,
       frontend:true
     })
     // set options
@@ -38,23 +44,38 @@ export default function FindContributor({onAdd, onCreate}:
     })
   }
 
-  function addContributor(selected:AutocompleteOption<SearchContributor>) {
+  function addMember(selected:AutocompleteOption<SearchTeamMember>) {
     if (selected && selected.data) {
       onAdd({
         ...selected.data,
+        id: null,
+        project,
         is_contact_person: false,
-        software: ''
+        role: null,
       })
     }
   }
 
-  function createNewContributor(newInputValue: string) {
+  function createMember(newInputValue: string) {
     const name = splitName(newInputValue)
-    onCreate(name)
+    // add new person
+    onAdd({
+      id: null,
+      project,
+      is_contact_person: false,
+      ...name,
+      email_address: null,
+      affiliation: null,
+      role: null,
+      orcid: null,
+      avatar_data: null,
+      avatar_mime_type: null,
+      avatar_b64: null
+    })
   }
 
   function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<SearchContributor>) {
+    option: AutocompleteOption<SearchTeamMember>) {
     // if more than one option we add border at the bottom
     // we assume that first option is Add "new item"
     if (options.length > 1) {
@@ -73,12 +94,12 @@ export default function FindContributor({onAdd, onCreate}:
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<SearchContributor>) {
+    option: AutocompleteOption<SearchTeamMember>) {
     // console.log('renderOption...', option)
     // when value is not not found option returns input prop
     if (option?.input) {
       // if input is over minLength
-      if (option?.input.length > config.findContributor.validation.minLength) {
+      if (option?.input.length > cfgTeamMembers.find.validation.minLength) {
         // we offer an option to create this entry
         return renderAddOption(props,option)
       } else {
@@ -98,15 +119,15 @@ export default function FindContributor({onAdd, onCreate}:
       <AsyncAutocompleteSC
         status={status}
         options={options}
-        onSearch={searchContributor}
-        onAdd={addContributor}
-        onCreate={createNewContributor}
+        onSearch={searchMember}
+        onAdd={addMember}
+        onCreate={createMember}
         onRenderOption={renderOption}
         config={{
           freeSolo: true,
-          minLength: config.findContributor.validation.minLength,
-          label: config.findContributor.label,
-          help: config.findContributor.help,
+          minLength: cfgTeamMembers.find.validation.minLength,
+          label: cfgTeamMembers.find.label,
+          help: cfgTeamMembers.find.help,
           // clear selected item
           reset: true
         }}
