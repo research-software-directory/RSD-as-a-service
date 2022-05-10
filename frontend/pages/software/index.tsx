@@ -94,15 +94,19 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
               placeholder="Search for software"
               onSearch={handleSearch}
             />
+            {/*
+            NOTE! tags are replaced with keywords
+            Sort is not yet implemented
             <FilterTechnologies
               items={tags}
               onSelect={handleFilters}
             />
             <SortSelection
-              items={['Last updated', 'Most updates', 'Most mentions']}
+              items={[]}
               defaultValue='Last updated'
               onSort={handleSort}
             />
+            */}
           </div>
           <TablePagination
             component="nav"
@@ -149,22 +153,24 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // get software list
   const software = await getSoftwareList(url)
 
+  // NOTE! tags are replaced with keywords
+  // TODO! use keyword_count_for_software
   // get tags
-  const tags = await getTagsWithCount()
+  // const tags = await getTagsWithCount()
   // enrich tags with status
-  if (filterStr){
-    const filters = JSON.parse(filterStr)
-    tags?.forEach(item=>{
-      if (filterStr.includes(item.tag)){
-        item.active = true
-      }else{
-        item.active = false
-      }
-    })
-  }else{
-    // all items are inactive (not pre-selected)
-    tags?.forEach(item=>item.active=false)
-  }
+  // if (filterStr){
+  //   const filters = JSON.parse(filterStr)
+  //   tags?.forEach(item=>{
+  //     if (filterStr.includes(item.tag)){
+  //       item.active = true
+  //     }else{
+  //       item.active = false
+  //     }
+  //   })
+  // }else{
+  //   // all items are inactive (not pre-selected)
+  //   tags?.forEach(item=>item.active=false)
+  // }
 
   // will be passed as props to page
   // see params of SoftwareIndexPage function
@@ -174,7 +180,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       page,
       rows,
       software: software.data,
-      tags
+      // tags
     },
   }
 }
