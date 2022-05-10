@@ -148,7 +148,7 @@ export const contributorInformation = {
   },
   affiliation: {
     label: 'Affiliation',
-    help: 'Where the contributor works currently?',
+    help: 'Select or type in the current affiliation?',
     validation: {
       minLength: {value: 2, message: 'Minimum length is 2'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
