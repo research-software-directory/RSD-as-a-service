@@ -93,6 +93,12 @@ export const softwareInformation = {
       minLength: 1,
     }
   },
+  importKeywords: {
+    title: 'Import keywords',
+    subtitle: 'We use your concept DOI and datacite.org API',
+    label: 'Import keywords',
+    message: (doi: string) => `Import keywords from datacite.org using DOI ${doi}`
+  },
   licenses:{
     label: 'Licenses',
     help:'Select license'
@@ -114,7 +120,7 @@ export const contributorInformation = {
   },
   importContributors: {
     title: 'Import contributors',
-    subtitle: 'We use your concept DOI and datacite.org api',
+    subtitle: 'We use your concept DOI and datacite.org API',
     label: 'Import contributors',
     message: (doi: string) => `Import contributors from datacite.org using DOI ${doi}`
   },

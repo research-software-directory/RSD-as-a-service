@@ -19,7 +19,10 @@ import SoftwarePageStatus from './SoftwarePageStatus'
 import {softwareInformation as config} from '../editSoftwareConfig'
 import RepositoryPlatform from './RepositoryPlatform'
 import SoftwareKeywords from './SoftwareKeywords'
+import GetKeywordsFromDoi from './GetKeywordsFromDoi'
 import {getKeywordChanges} from './softwareKeywordsChanges'
+import {getKeywordsFromDoi} from '~/utils/getInfoFromDatacite'
+import {searchForSoftwareKeywordExact} from './searchForSoftwareKeyword'
 
 export default function SoftwareInformation({slug,token}:{slug:string,token: string}) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
@@ -37,7 +40,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       ...editSoftware
     }
   })
-  const {update:updateKeyword} = useFieldArray({
+  const {update: updateKeyword, append, fields} = useFieldArray({
     control,
     name:'keywords'
   })
@@ -138,6 +141,61 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
     } else {
       showErrorMessage(`Failed to save. ${resp.message}`)
     }
+  }
+
+  async function onGetKeywordsFromDoi() {
+    let added = 0
+
+    setLoading(true)
+
+    const keywordsDoi: string[] = await getKeywordsFromDoi(
+      editSoftware?.id, formData?.concept_doi
+    )
+
+    if (keywordsDoi && keywordsDoi.length === 0) {
+      showErrorMessage(
+        `No Keywords could be found for DOI ${formData?.concept_doi}`
+      )
+      setLoading(false)
+      return
+    }
+
+    for (const kw of keywordsDoi) {
+      if (!kw || kw.length === 0) {
+        continue
+      }
+
+      const find = fields.filter(item => item.keyword === kw)
+
+      if (find.length > 0) {
+        continue
+      }
+
+      const findDb = await searchForSoftwareKeywordExact({searchFor: kw})
+      let id = null
+      let action: 'add' | 'create' = 'create'
+
+      if (findDb.length === 1) {
+        id = findDb[0].id
+        action = 'add'
+      }
+
+      append({
+        id: id,
+        pos: fields.length,
+        software: editSoftware?.id,
+        keyword: kw,
+        action: action
+      })
+
+      added += 1
+    }
+
+    if (added > 0) {
+      showSuccessMessage(`Keywords added from DOI ${editSoftware?.concept_doi}`)
+    }
+
+    setLoading(false)
   }
 
   return (
@@ -269,6 +327,21 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           <EditSectionTitle
             title="Keywords"
           />
+
+          {
+            formData?.concept_doi &&
+            <div className="pt-4 pb-0">
+              <EditSectionTitle
+                title={config.importKeywords.title}
+                subtitle={config.importKeywords.subtitle}
+                hlevel={3}
+              />
+              <GetKeywordsFromDoi
+                onClick={onGetKeywordsFromDoi}
+                title={config.importKeywords.message(formData?.concept_doi)}
+              />
+            </div>
+          }
 
           <SoftwareKeywords
             software={formData.id}
