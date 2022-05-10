@@ -10,6 +10,9 @@ export default function GetContributorsFromDoi(
       variant="outlined"
       onClick={onClick}
       title={title ?? ''}
+      sx={{
+        marginTop: '1rem'
+      }}
     >
       { config.importContributors.label }
     </Button>
