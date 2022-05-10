@@ -138,7 +138,7 @@ export default function RepositoryPlatform(props: RepositoryPlatformProps) {
               // always use value here to ensure sync with Controller
               value={value ?? ''}
               onChange={({target}: { target: any }) => {
-                debugger
+                // debugger
                 // change value in form
                 onChange(target.value)
                 // update local state

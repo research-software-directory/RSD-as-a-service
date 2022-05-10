@@ -112,6 +112,12 @@ export const contributorInformation = {
       minLength: 2,
     }
   },
+  importContributors: {
+    title: 'Import contributors',
+    subtitle: 'We use your concept DOI and datacite.org api',
+    label: 'Import contributors',
+    message: (doi: string) => `Import contributors from datacite.org using DOI ${doi}`
+  },
   is_contact_person: {
     label: 'Contact person',
     help:'Is this contributor main contact person'
@@ -167,7 +173,7 @@ export const contributorInformation = {
     help: '16 digits, pattern 0000-0000-0000-0000',
     validation: {
       pattern: {
-        value: /\d{4}-\d{4}-\d{4}-\d{4}/,
+        value: /\d{4}-\d{4}-\d{4}-\d{3}[0-9X]/,
         message: 'Invalid pattern, not a 0000-0000-0000-0000'
       }
     }

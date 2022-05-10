@@ -1,19 +1,21 @@
 import {useContext,useEffect,useState} from 'react'
 
-import {app} from '../../../../config/app'
-import useSnackbar from '../../../snackbar/useSnackbar'
-import ContentLoader from '../../../layout/ContentLoader'
-import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
-import {Contributor, ContributorProps} from '../../../../types/Contributor'
+import {app} from '~/config/app'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import ContentLoader from '~/components/layout/ContentLoader'
+import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
+import {Contributor, ContributorProps} from '~/types/Contributor'
 import {
   addContributorToDb, deleteContributorsById,
   getAvatarUrl, getContributorsForSoftware,
   prepareContributorData, updateContributorInDb
-} from '../../../../utils/editContributors'
-import useOnUnsaveChange from '../../../../utils/useOnUnsavedChange'
-import {getDisplayName} from '../../../../utils/getDisplayName'
-import {sortOnStrProp} from '../../../../utils/sortFn'
-import {getPropsFromObject} from '../../../../utils/getPropsFromObject'
+} from '~/utils/editContributors'
+import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
+import {getDisplayName} from '~/utils/getDisplayName'
+import {sortOnStrProp} from '~/utils/sortFn'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import {getContributorsFromDoi} from '~/utils/getContributorsFromDoi'
+import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 import EditContributorModal from './EditContributorModal'
 import FindContributor, {Name} from './FindContributor'
 import SoftwareContributorsList from './SoftwareContributorsList'
@@ -22,13 +24,14 @@ import editSoftwareContext from '../editSoftwareContext'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {ModalProps,ModalStates} from '../editSoftwareTypes'
+import GetContributorsFromDoi from './GetContributorsFromDoi'
 
 type EditContributorModal = ModalProps & {
   contributor?: Contributor
 }
 
 export default function SoftwareContributors({token}: {token: string }) {
-  const {showErrorMessage,showSuccessMessage} = useSnackbar()
+  const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {software} = pageState
   const [loading, setLoading] = useState(true)
@@ -53,7 +56,8 @@ export default function SoftwareContributors({token}: {token: string }) {
 
   useEffect(() => {
     let abort = false
-    const getContributors = async (software:string,token:string) => {
+    const getContributors = async (software: string, token: string) => {
+      setLoading(true)
       const resp = await getContributorsForSoftware({
         software,
         token,
@@ -125,7 +129,7 @@ export default function SoftwareContributors({token}: {token: string }) {
           contributor
         },
         delete: {
-          open:false
+          open: false
         }
       })
     }
@@ -140,17 +144,17 @@ export default function SoftwareContributors({token}: {token: string }) {
   async function onSubmitContributor({data, pos}:{data:Contributor,pos?: number}) {
     setModal({
       edit: {
-        open:false
+        open: false
       },
       delete: {
-        open:false
+        open: false
       }
     })
     // if id present we update
     if (data?.id) {
       const resp = await updateContributorInDb({data, token})
       if (resp.status === 200) {
-        updateContributorList({data:resp.message,pos})
+        updateContributorList({data: resp.message,pos})
         // show notification
         showSuccessMessage(`Updated ${getDisplayName(data)}`)
       } else {
@@ -160,6 +164,7 @@ export default function SoftwareContributors({token}: {token: string }) {
       // this is completely new contributor we need to add to DB
       const contributor = prepareContributorData(data)
       const resp = await addContributorToDb({contributor, token})
+
       if (resp.status === 201) {
         // id of created record is provided in returned in message
         contributor.id = resp.message
@@ -168,9 +173,9 @@ export default function SoftwareContributors({token}: {token: string }) {
         // construct url
         contributor.avatar_url = getAvatarUrl(contributor)
         // update contributors list
-        updateContributorList({data:contributor})
+        updateContributorList({data: contributor})
       } else {
-        showErrorMessage(`Failed to add ${getDisplayName(data)}. Error: ${resp.message}`)
+        showErrorMessage(`Failed to add ${getDisplayName(contributor)}. Error: ${resp.message}`)
       }
     }
   }
@@ -230,6 +235,66 @@ export default function SoftwareContributors({token}: {token: string }) {
     setContributors(list)
   }
 
+  async function onGetContributorsFromDoi() {
+    setLoading(true)
+
+    const contribDoi: Contributor[] = await getContributorsFromDoi(
+      software?.id, software?.concept_doi
+    )
+
+    if (!contribDoi || contribDoi.length === 0) {
+      showErrorMessage(
+        `Contributors could not be added from DOI ${software?.concept_doi}`
+      )
+      setLoading(false)
+      return
+    }
+
+    // extract only new Contributors
+    // for now using only family names as key
+    // TODO!
+    // extend itemsNotInReferenceList to use combination of props (first_name + last_name)
+    // and not to be case sensitive?
+    const newContributors = itemsNotInReferenceList({
+      list: contribDoi,
+      referenceList: contributors,
+      key: 'family_names'
+    })
+
+    if (newContributors.length === 0) {
+      showInfoMessage(
+        `No new contributors to add from DOI ${software?.concept_doi} based on family_names.`
+      )
+      setLoading(false)
+      return
+    }
+
+    for (const c of newContributors) {
+      const contributor = prepareContributorData(c)
+      const resp = await addContributorToDb({contributor, token})
+
+      if (resp.status === 201) {
+        // update item in newContributors
+        c.id = resp.message
+        // no image provided by datacite
+        c.avatar_data = null
+        c.avatar_url = null
+      } else {
+        showErrorMessage(
+          `Failed to add ${getDisplayName(contributor)}. Error: ${resp.message}`
+        )
+      }
+    }
+
+    const list = [
+      ...contributors,
+      ...newContributors
+    ].sort((a, b) => sortOnStrProp(a, b, 'given_names'))
+    setContributors(list)
+
+    setLoading(false)
+  }
+
   return (
     <>
       <EditSoftwareSection className='md:flex md:flex-col-reverse md:justify-end xl:pl-[3rem] xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
@@ -253,6 +318,19 @@ export default function SoftwareContributors({token}: {token: string }) {
             onAdd={onAddContributor}
             onCreate={onCreateNewContributor}
           />
+          {
+            software?.concept_doi &&
+            <div className="py-8">
+              <EditSectionTitle
+                title={config.importContributors.title}
+                subtitle={config.importContributors.subtitle}
+              />
+              <GetContributorsFromDoi
+                onClick={onGetContributorsFromDoi}
+                title={config.importContributors.message(software?.concept_doi)}
+              />
+            </div>
+          }
         </section>
       </EditSoftwareSection>
       <EditContributorModal
