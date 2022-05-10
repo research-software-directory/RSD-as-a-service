@@ -1,6 +1,10 @@
 
-export default function EditSectionTitle({title, subtitle = '', children}:
-  { title: string, subtitle?: string, children?: any }) {
+export default function EditSectionTitle(
+  {title, subtitle = '', children, hlevel = 2}:
+  { title: string, subtitle?: string, children?: any, hlevel?: number }
+) {
+
+  const HeadingTag: any = `h${hlevel}`
 
   function getSubtitle() {
     if (subtitle) {
@@ -16,7 +20,7 @@ export default function EditSectionTitle({title, subtitle = '', children}:
     return (
       <>
         <div className="flex">
-          <h2 className="flex-1">{title}</h2>
+          <HeadingTag className="flex-1">{title}</HeadingTag>
           {children}
         </div>
         {getSubtitle()}
@@ -26,7 +30,7 @@ export default function EditSectionTitle({title, subtitle = '', children}:
 
   return (
     <>
-      <h2>{title}</h2>
+      <HeadingTag>{title}</HeadingTag>
       {getSubtitle()}
     </>
   )
