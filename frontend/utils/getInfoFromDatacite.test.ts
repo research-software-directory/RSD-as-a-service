@@ -1,6 +1,9 @@
 
 import {mockResolvedValueOnce} from './jest/mockFetch'
-import {getContributorsFromDoi} from './getContributorsFromDoi'
+import {
+  getContributorsFromDoi,
+  getKeywordsFromDoi,
+} from './getInfoFromDatacite'
 
 const exampleCreator = {
   'name': 'Doe, John',
@@ -353,7 +356,7 @@ const exampleResponseInvalidPersons = {
     },
     {
       'name': 'Test',
-      'familyName': 'test',
+      'familyName': 'Test'
     },
     {
       'name': 'Test'
@@ -366,10 +369,36 @@ const exampleResponseInvalidPersons = {
     },
     {
       'name': 'Test',
-      'familyName': 'test',
+      'familyName': 'Test'
     },
     {
       'name': 'Test'
+    }
+  ]
+}
+
+const exampleResponseMissingSubjects = {
+  'id': 'https://doi.org/10.0000/zenodo.0000000',
+  'doi': '10.0000/ZENODO.0000000',
+  'url': 'https://zenodo.org/record/0000000'
+}
+
+const exampleResponseInvalidSubjects = {
+  'id': 'https://doi.org/10.0000/zenodo.0000000',
+  'doi': '10.0000/ZENODO.0000000',
+  'url': 'https://zenodo.org/record/0000000',
+  'subjects': [
+    {
+      'test': 'Test',
+      'invalid': 'Test'
+    },
+    {
+      'subjectScheme': 'Test',
+      'valueURI': 'Test'
+    },
+    {
+      'schemeURI': 'Test',
+      'lang': 'Test'
     }
   ]
 }
@@ -426,5 +455,29 @@ it('returns authors and contributors', async () => {
 it('should skip invalid persons', async () => {
   mockResolvedValueOnce(exampleResponseInvalidPersons)
   const resp = await getContributorsFromDoi('0', 'DOI')
+  expect(resp).toEqual([])
+})
+
+it('should return expected keywords', async () => {
+  mockResolvedValueOnce(dataciteFullExample)
+  const resp = await getKeywordsFromDoi('0', 'DOI')
+  expect(resp).toEqual(['000 computer science'])
+})
+
+it('should return no keywords if there are none', async () => {
+  mockResolvedValueOnce(exampleResponse)
+  const resp = await getKeywordsFromDoi('0', 'DOI')
+  expect(resp).toEqual([])
+})
+
+it('should not return keywords if subjects is missing', async () => {
+  mockResolvedValueOnce(exampleResponseMissingSubjects)
+  const resp = await getKeywordsFromDoi('0', 'DOI')
+  expect(resp).toEqual([])
+})
+
+it('should skip invalid keyword subjects', async () => {
+  mockResolvedValueOnce(exampleResponseInvalidSubjects)
+  const resp = await getKeywordsFromDoi('0', 'DOI')
   expect(resp).toEqual([])
 })
