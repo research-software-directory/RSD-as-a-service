@@ -2,7 +2,7 @@ import {useState, ReactNode, HTMLAttributes, SyntheticEvent, useEffect} from 're
 import Autocomplete, {AutocompleteChangeReason, AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
 import {CircularProgress, FilterOptionsState, TextField} from '@mui/material'
 
-import {useDebounceWithAutocomplete} from '../../utils/useDebouce'
+import {useDebounceWithAutocomplete} from '~/utils/useDebounce'
 
 export type AutocompleteOption<T> = {
   key: string

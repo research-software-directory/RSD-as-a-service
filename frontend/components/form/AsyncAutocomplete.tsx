@@ -4,7 +4,7 @@ import Button from '@mui/material/Button'
 import {CircularProgress, FilterOptionsState, TextField} from '@mui/material'
 
 import {AutocompleteOption} from '../../types/AutocompleteOptions'
-import {useDebounceWithAutocomplete} from '../../utils/useDebouce'
+import {useDebounceWithAutocomplete} from '~/utils/useDebounce'
 
 export type AsyncAutocompleteConfig = {
   // enables creation of new items
