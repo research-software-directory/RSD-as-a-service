@@ -1,6 +1,6 @@
 
-import {createJsonHeaders} from '~/utils/fetchHelpers'
-import logger from '../../utils/logger'
+import logger from '~/utils/logger'
+import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 
 export const claims = {
   id_token:
@@ -73,11 +73,70 @@ export async function claimProjectMaintainerInvite({id, token, frontend = false}
     })
     if (resp.status === 200) {
       const json = await resp.json()
-      return json
-    } else {
-      logger(`claimProjectMaintainerInvite failed: ${resp?.status} ${resp.statusText}`, 'error')
+      return {
+        projectInfo: json,
+        error: null
+      }
+    }
+    logger(`claimProjectMaintainerInvite failed: ${resp?.status} ${resp.statusText}`, 'error')
+    const error = await extractReturnMessage(resp)
+    return {
+      projectInfo: null,
+      error
     }
   } catch (e: any) {
     logger(`claimProjectMaintainerInvite failed: ${e?.message}`, 'error')
+    return {
+      projectInfo: null,
+      error: {
+        status: 500,
+        message: e?.message
+      }
+    }
+  }
+}
+
+
+export async function claimSoftwareMaintainerInvite({id, token, frontend = false}:
+  { id: string, token: string, frontend?: boolean }) {
+  try {
+    const query = 'rpc/accept_invitation_software'
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    // console.log('url...', url)
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createJsonHeaders(token),
+        'Accept': 'application/vnd.pgrst.object + json',
+      },
+      body: JSON.stringify({
+        'invitation': id
+      })
+    })
+    if (resp.status === 200) {
+      const json = await resp.json()
+      return {
+        softwareInfo: json,
+        error: null
+      }
+    }
+    logger(`claimSoftwareMaintainerInvite failed: ${resp?.status} ${resp.statusText}`, 'error')
+    const error = await extractReturnMessage(resp)
+    return {
+      softwareInfo: null,
+      error
+    }
+  } catch (e: any) {
+    logger(`claimSoftwareMaintainerInvite failed: ${e?.message}`, 'error')
+    return {
+      softwareInfo: null,
+      error: {
+        status: 500,
+        message: e?.message
+      }
+    }
   }
 }
