@@ -1,19 +1,19 @@
-import {ReactNode} from 'react'
-import {useRouter} from 'next/router'
+import {ReactNode,useContext} from 'react'
 import AppHeader from './AppHeader'
 import AppFooter from './AppFooter'
 
-export default function DefaultLayout({children}:{children:ReactNode}) {
-  const router = useRouter()
-  const {embed} = router.query
+import EmbedLayoutContext from './embedLayoutContext'
+
+export default function DefaultLayout({children}: { children: ReactNode }) {
+  const {embedMode} = useContext(EmbedLayoutContext)
+
   return (
     <>
-
-      { (typeof embed === 'undefined') && <AppHeader /> }
+      <AppHeader />
       <main className="flex flex-col flex-1 px-4 lg:container lg:mx-auto">
         {children}
       </main>
-      { (typeof embed === 'undefined') && <AppFooter /> }
+      <AppFooter />
     </>
   )
 }

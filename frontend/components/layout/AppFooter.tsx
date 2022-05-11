@@ -1,8 +1,12 @@
 import Link from 'next/link'
 import LogoEscience from '~/components/svg/LogoEscience'
 import Mail from '@mui/icons-material/Mail'
+import {useContext} from 'react'
+import EmbedLayoutContext from './embedLayoutContext'
 
-export default function AppFooter () {
+export default function AppFooter() {
+  const {embedMode} = useContext(EmbedLayoutContext)
+  if (embedMode === true) return null
   return (
     <footer className="flex flex-wrap text-white border-t bg-secondary border-grey-A400">
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[_2fr,1fr] lg:container lg:mx-auto">

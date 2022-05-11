@@ -1,5 +1,5 @@
 // external dependencies
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useContext} from 'react'
 import Link from 'next/link'
 import {useAuth} from '../../auth'
 // local dependencies (project components)
@@ -10,14 +10,16 @@ import AddMenu from './AddMenu'
 import LoginButton from '~/components/login/LoginButton'
 
 import JavascriptSupportWarning from './JavascriptSupportWarning'
+import EmbedLayoutContext from './embedLayoutContext'
 {/*// import ThemeSwitcher from '~/components/layout/ThemeSwitcher'*/}
 
 export default function AppHeader({editButton}:{editButton?:JSX.Element}){
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
+  const {embedMode} = useContext(EmbedLayoutContext)
 
-  useEffect(()=>{
+  useEffect(() => {
     // set activePath to currently loaded route/page
     if (typeof window !='undefined'){
       const paths = window.location.pathname.split('/')
@@ -25,6 +27,7 @@ export default function AppHeader({editButton}:{editButton?:JSX.Element}){
     }
   }, [])
 
+  if (embedMode === true) return null
 
   function getMenuItems(){
     return menuItems.map(item=>{
