@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import router from 'next/router'
+import {useRouter} from 'next/router'
 import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
 import {ThemeProvider} from '@mui/material/styles'
@@ -15,6 +15,8 @@ import {saveLocationCookie} from '../auth/locationCookie'
 // snackbar notifications
 import PageSnackbar from '../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
+
+import EmbedLayoutContext from '~/components/layout/embedLayoutContext'
 
 // global CSS and tailwind
 import '../styles/global.css'
@@ -39,6 +41,10 @@ function RsdApp(props: MuiAppProps) {
   const [options, setSnackbar] = useState(snackbarDefaults)
   //currently we support only default (light) and dark RSD theme for MUI
   const muiTheme = loadMuiTheme('default')
+  const router = useRouter()
+  // provide embed param to remove headers
+  const {embed} = router.query
+  const [embedMode, setEmbedMode] = useState(typeof embed !== 'undefined')
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -68,10 +74,12 @@ function RsdApp(props: MuiAppProps) {
         {/* CssBaseline from MUI-5*/}
         {/* <CssBaseline /> */}
         <AuthProvider session={session}>
+          <EmbedLayoutContext.Provider value={{embedMode,setEmbedMode}}>
           <PageSnackbarContext.Provider value={{options, setSnackbar}}>
             <Component {...pageProps} />
           </PageSnackbarContext.Provider>
-          <PageSnackbar options={options} setOptions={setSnackbar}/>
+          <PageSnackbar options={options} setOptions={setSnackbar} />
+          </EmbedLayoutContext.Provider>
         </AuthProvider>
       </ThemeProvider>
     </CacheProvider>
