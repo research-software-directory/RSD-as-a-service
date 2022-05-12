@@ -2,17 +2,17 @@ import {GetServerSidePropsContext} from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 
-import {claimProjectMaintainerInvite} from '~/auth/api/authHelpers'
+import {claimSoftwareMaintainerInvite} from '~/auth/api/authHelpers'
 import {getAccountFromToken} from '~/auth/jwtUtils'
 import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import PageErrorMessage from '~/components/layout/PageErrorMessage'
 import PageTitle from '~/components/layout/PageTitle'
 
-type InviteProjectMaintainerProps = {
-  projectInfo: {
+type InviteSoftwareMaintainerProps = {
+  softwareInfo: {
     slug: string,
-    title: string,
+    brand_name: string,
   }|null,
   error: {
     status: number,
@@ -20,10 +20,10 @@ type InviteProjectMaintainerProps = {
   }|null
 }
 
-export default function InviteProjectMaintainer({projectInfo, error}:
-  InviteProjectMaintainerProps) {
-  // console.group('InviteProjectMaintainer')
-  // console.log('projectInfo..', projectInfo)
+export default function InviteSoftwareMaintainer({softwareInfo, error}:
+  InviteSoftwareMaintainerProps) {
+  // console.group('InviteSoftwareMaintainer')
+  // console.log('softwareInfo..', softwareInfo)
   // console.log('error..', error)
   // console.groupEnd()
   function renderContent() {
@@ -35,11 +35,11 @@ export default function InviteProjectMaintainer({projectInfo, error}:
     return (
       <ContentInTheMiddle>
         <h2>
-          You are now a maintainer of {projectInfo?.title ?? 'missing'}!
+          You are now a maintainer of {softwareInfo?.brand_name ?? 'missing'}!
           &nbsp;
-          <Link href={`/projects/${projectInfo?.slug ?? 'missing'}`}>
+          <Link href={`/software/${softwareInfo?.slug ?? 'missing'}`}>
             <a>
-              Open project
+              Open software
             </a>
           </Link>
         </h2>
@@ -50,9 +50,9 @@ export default function InviteProjectMaintainer({projectInfo, error}:
   return (
      <DefaultLayout>
       <Head>
-        <title>Project Maintainer Invite | RSD</title>
+        <title>Software Maintainer Invite | RSD</title>
       </Head>
-      <PageTitle title="Project Maintainer Invite" />
+      <PageTitle title="Software Maintainer Invite" />
       {renderContent()}
     </DefaultLayout>
   )
@@ -84,19 +84,23 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   if (id) {
-    // claim the project maintainer invite
-    const claim:InviteProjectMaintainerProps = await claimProjectMaintainerInvite({id: id.toString(), token, frontend: false})
-    // pass claim info to page component as props
+    // claim the software maintainer invite
+    const resp:InviteSoftwareMaintainerProps = await claimSoftwareMaintainerInvite({
+      id: id.toString(),
+      token,
+      frontend: false
+    })
+    // pass software info to page component as props
     return {
-      props: claim
+      props: resp
     }
   } else {
     return {
       props: {
-        projectInfo:null,
+        softwareInfo:null,
         error: {
           status: 404,
-          message: 'This invite is invalid. It\'s missing invite id. Please ask the project mantainer to provide you a new link.'
+          message: 'This invite is invalid. It\'s missing invite id. Please ask the software mantainer to provide you a new link.'
         }
       }
     }

@@ -2,16 +2,16 @@ import {useState} from 'react'
 import Button from '@mui/material/Button'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 
-import {createMaintainerLink} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import {softwareMaintainerLink} from './useSoftwareMaintainer'
 
-export default function MaintainerInviteLink({project,account,token}: { project: string,account:string,token: string }) {
+export default function SoftwareMaintainerLink({software,account,token}: { software: string,account:string,token: string }) {
   const {showErrorMessage} = useSnackbar()
   const [magicLink, setMagicLink] = useState(null)
 
   async function createInviteLink() {
-    const resp = await createMaintainerLink({
-      project,
+    const resp = await softwareMaintainerLink({
+      software,
       account,
       token
     })
@@ -23,10 +23,6 @@ export default function MaintainerInviteLink({project,account,token}: { project:
   }
   return (
     <>
-    {/* <EditSectionTitle
-      title="Invite link"
-      subtitle="In case you cannot find, try invite link"
-    /> */}
     <Button
       sx={{
         marginTop: '2rem',
@@ -43,7 +39,7 @@ export default function MaintainerInviteLink({project,account,token}: { project:
       magicLink ?
         <a
           target="_blank"
-          href={`mailto:?subject=Project maintainer invite&body=Please use the link to become project maintainer. \n ${magicLink}`} rel="noreferrer">
+          href={`mailto:?subject=Software maintainer invite&body=Please use the link to become software maintainer. \n ${magicLink}`} rel="noreferrer">
           {magicLink}
         </a>
       :
