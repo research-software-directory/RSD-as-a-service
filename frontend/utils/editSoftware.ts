@@ -177,6 +177,23 @@ export async function updateSoftwareInfo({software, keywords, licensesInDb,
     })
     // --------------------------------
     // LICESES
+    // --------------------------------
+    // check if liceses need to be added
+    if (software.licenses?.length > 0) {
+      const licensesToAdd = itemsNotInReferenceList({
+        list: software.licenses,
+        referenceList: licensesInDb,
+        key: 'key'
+      }).map((item) => {
+        return {
+          software: software.id,
+          license: item.key
+        }
+      })
+      if (licensesToAdd.length > 0) promises.push(addLicensesForSoftware({
+        software: software.id, data: licensesToAdd, token
+      }))
+    }
     // check if licenses need to be deleted
     if (licensesInDb.length > 0) {
       const licenseToDel = itemsNotInReferenceList({
