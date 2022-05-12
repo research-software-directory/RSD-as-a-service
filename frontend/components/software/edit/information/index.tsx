@@ -63,7 +63,8 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           software: {
             slug,
             id: editSoftware?.id ?? '',
-            brand_name: editSoftware?.brand_name ?? ''
+            brand_name: editSoftware?.brand_name ?? '',
+            concept_doi: editSoftware?.concept_doi ?? '',
           },
           loading:false
         }
@@ -108,7 +109,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       getFieldState,
       projectState:editSoftware
     })
-    debugger
+    // debugger
     // save all changes
     const resp = await updateSoftwareInfo({
       software: formData,

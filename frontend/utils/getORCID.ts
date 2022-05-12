@@ -78,7 +78,7 @@ function buildAutocompleteOptions(data: OrcidRecord[]): AutocompleteOption<Searc
         given_names: item['given-names'],
         family_names: item['family-names'],
         email_address: item['email'][0] ?? null,
-        affiliation: item['institution-name'].join('; ') ?? null,
+        institution: item['institution-name'] ?? null,
         orcid: item['orcid-id'],
         display_name,
         source: 'ORCID' as 'ORCID'

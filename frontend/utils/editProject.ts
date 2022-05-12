@@ -12,7 +12,7 @@ import {ProjectImageInfo} from '~/components/projects/edit/information'
 import {ProjectLinksForSave} from '~/components/projects/edit/information/projectLinkChanges'
 import {getPropsFromObject} from './getPropsFromObject'
 import {EditOrganisation, OrganisationRole} from '~/types/Organisation'
-import {createOrganisation} from './editOrganisation'
+import {createOrganisation, updateDataObjectAfterSave} from './editOrganisation'
 import {getSlugFromString} from './getSlugFromString'
 import {CreateOrganisation, FundingOrganisationsForSave} from '~/components/projects/edit/information/fundingOrganisationsChanges'
 import {KeywordsForSave} from '~/components/projects/edit/information/projectKeywordsChanges'
@@ -139,7 +139,7 @@ export async function updateProjectInfo({project, projectLinks, projectImage, fu
   // create: request per organisation
   fundingOrganisations.create.forEach(item => {
     promises.push(
-      createOrganisationAndAddToProject({
+      createFundingOrganisationAndAddToProject({
         project: project.id,
         organisation: item,
         role: 'funding',
@@ -307,7 +307,7 @@ export async function updateProjectTable({project,token}:{project:Project,token:
   }
 }
 
-export async function createOrganisationAndAddToProject({project,organisation,role,updateOrganisation, session}: {
+export async function createFundingOrganisationAndAddToProject({project,organisation,role,updateOrganisation, session}: {
   project: string, organisation: CreateOrganisation, role: OrganisationRole,
   updateOrganisation: UseFieldArrayUpdate<EditProject, 'funding_organisations'>,
   session: Session
@@ -363,7 +363,7 @@ export async function createOrganisationAndAddToProject({project,organisation,ro
         session
       })
     } else {
-      debugger
+      // debugger
       return resp
     }
   } catch(e:any) {
@@ -372,6 +372,63 @@ export async function createOrganisationAndAddToProject({project,organisation,ro
       status: 500,
       message: e?.message
     }
+  }
+}
+
+export async function createOrganisationAndAddToProject({project, item, session, setState, role='participating'}:
+  { item: EditOrganisation, project: string, session: Session, setState: (item: EditOrganisation) => void, role?: OrganisationRole}) {
+  // create new organisation
+  let resp = await createOrganisation({
+    item,
+    token: session.token
+  })
+  // only 201 and 206 accepted
+  if ([201, 206].includes(resp.status) === false) {
+    // on error we return message
+    return resp
+  }
+  // we receive id in message
+  const id = resp.message
+  if (resp.status === 201) {
+    // add this organisation to software
+    resp = await addOrganisationToProject({
+      project,
+      organisation: id,
+      role: 'participating',
+      session
+    })
+    if (resp.status === 200) {
+      // we receive assigned status in message
+      item.status = resp.message
+      // update data, remove base64 string after upload
+      // and create logo_id to be used as image reference
+      const organisation = updateDataObjectAfterSave({
+        data: item,
+        id
+      })
+      // update local list
+      setState(organisation)
+      return {
+        status: 200,
+        message: 'OK'
+      }
+    } else {
+      return resp
+    }
+  } else if (resp.status === 206) {
+    // organisation is created but the image failed
+    const organisation = updateDataObjectAfterSave({
+      data: item,
+      id
+    })
+    setState(organisation)
+    // we show error about failure on logo
+    return {
+      status: 206,
+      message: 'Failed to upload organisation logo.'
+    }
+  } else {
+    return resp
   }
 }
 
@@ -384,6 +441,8 @@ export async function addOrganisationToProject({project, organisation, role, ses
       account: session.user?.account,
       token: session.token
     })
+    // determine status
+    const status = isMaintainer ? 'approved' : 'requested_by_origin'
     // POST
     const url = '/api/v1/project_for_organisation'
     const resp = await fetch(url, {
@@ -396,10 +455,17 @@ export async function addOrganisationToProject({project, organisation, role, ses
       body: JSON.stringify({
         project,
         organisation,
-        status: isMaintainer ? 'approved' : 'requested_by_origin',
+        status,
         role
       })
     })
+    if ([200, 201].includes(resp.status)) {
+      // return status assigned to organisation
+      return {
+        status: 200,
+        message: status
+      }
+    }
     // debugger
     return extractReturnMessage(resp, project ?? '')
   } catch (e: any) {

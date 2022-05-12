@@ -1,29 +1,30 @@
 import {useEffect, useState} from 'react'
-
 import isMaintainerOfOrganisation from '~/auth/permissions/isMaintainerOfOrganisation'
-import {EditOrganisation} from '../types/Organisation'
-import {getOrganisationsForSoftware} from './editOrganisation'
+import {EditOrganisation} from '~/types/Organisation'
+import {getOrganisationsOfProject} from '~/utils/getProjects'
 
 type UseParticipatingOrganisationsProps = {
-  software: string | undefined,
+  project: string | undefined,
   token: string | undefined,
   account: string | undefined
 }
 
-export function useParticipatingOrganisations({software, token, account}: UseParticipatingOrganisationsProps) {
+export function useParticipatingOrganisations({project, token, account}: UseParticipatingOrganisationsProps) {
   const [organisations, setOrganisations] = useState<EditOrganisation[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let abort = false
-    async function getOrganisations({software, token, account}:
-      { software: string, token: string, account: string}) {
-      const resp = await getOrganisationsForSoftware({
-        software,
-        token
+    async function getOrganisations({project, token, account}:
+      { project: string, token: string, account: string }) {
+      const resp = await getOrganisationsOfProject({
+        project,
+        token,
+        frontend: true,
+        role:'participating'
       })
       // collect isMaintainerRequests
-      const promises: Promise<boolean>[] = []
+      const promises:Promise<boolean>[] = []
       // prepare organisation list
       const orgList = resp.map((item, pos) => {
         // save isMaintainer request
@@ -37,11 +38,11 @@ export function useParticipatingOrganisations({software, token, account}: UsePar
         const organisation: EditOrganisation = {
           ...item,
           // additional props for edit type
-          position:pos + 1,
-          logo_b64:null,
-          logo_mime_type:null,
-          source:'RSD' as 'RSD',
-          status:item.status,
+          position: pos + 1,
+          logo_b64: null,
+          logo_mime_type: null,
+          source: 'RSD' as 'RSD',
+          status: item.status,
           // false by default
           canEdit: false
         }
@@ -60,15 +61,15 @@ export function useParticipatingOrganisations({software, token, account}: UsePar
       // upadate loading state
       setLoading(false)
     }
-    if (software && token && account) {
+    if (project && token && account) {
       getOrganisations({
-        software,
+        project,
         token,
         account
       })
     }
     () => { abort = true }
-  }, [software, token, account])
+  }, [project, token, account])
 
   return {
     loading,

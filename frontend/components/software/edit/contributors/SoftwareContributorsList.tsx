@@ -6,12 +6,11 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
+import {Alert, AlertTitle} from '@mui/material'
 
 import {Contributor} from '../../../../types/Contributor'
 import ContributorAvatar from '../../ContributorAvatar'
-import {getDisplayInitials, getDisplayName} from '../../../../utils/getDisplayName'
-import {Alert, AlertTitle} from '@mui/material'
-import {combineRoleAndAffiliation} from '../../../../utils/editContributors'
+import {combineRoleAndAffiliation, getDisplayInitials, getDisplayName} from '../../../../utils/getDisplayName'
 
 
 export default function SoftwareContributorsList({contributors, onEdit, onDelete}:

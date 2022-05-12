@@ -333,7 +333,8 @@ CREATE FUNCTION organisations_of_project() RETURNS TABLE (
 	logo_id UUID,
 	status relation_status,
 	role organisation_role,
-	project UUID
+	project UUID,
+	parent UUID
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -349,7 +350,8 @@ BEGIN
 			logo_for_organisation.id AS logo_id,
 			project_for_organisation.status,
 			project_for_organisation.role,
-			project.id AS project
+			project.id AS project,
+			organisation.parent
 	FROM
 		project
 	INNER JOIN
@@ -571,7 +573,6 @@ INNER JOIN
 END
 $$;
 
-
 -- Software maintainers list with basic personal info
 -- used in the software maintainer list
 CREATE FUNCTION maintainers_of_software(software_id UUID) RETURNS TABLE (
@@ -609,5 +610,31 @@ BEGIN
 	WHERE maintainer_for_software.software = software_id
 	GROUP BY maintainer_for_software.maintainer;
 	RETURN;
+
+
+-- UNIQUE LIST OF TEAM MEMBERS
+-- used in Find
+CREATE OR REPLACE FUNCTION unique_team_members() RETURNS TABLE (
+	display_name TEXT,
+	affiliation VARCHAR,
+	orcid VARCHAR,
+	given_names VARCHAR,
+	family_names VARCHAR,
+	email_address VARCHAR
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+		SELECT DISTINCT
+			(CONCAT(c.given_names,' ',c.family_names)) AS display_name,
+			c.affiliation,
+			c.orcid,
+			c.given_names,
+			c.family_names,
+			c.email_address
+		FROM
+			team_member c
+		ORDER BY
+			display_name ASC;
 END
 $$;

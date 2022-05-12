@@ -1,8 +1,7 @@
 
 import {Contributor} from '../../types/Contributor'
 import ContributorAvatar from './ContributorAvatar'
-import {getDisplayName, getDisplayInitials} from '../../utils/getDisplayName'
-import {combineRoleAndAffiliation} from '../../utils/editContributors'
+import {getDisplayName, getDisplayInitials,combineRoleAndAffiliation} from '../../utils/getDisplayName'
 
 export default function ContributorsList({contributors}: { contributors: Contributor[] }) {
   // do not render component if no data

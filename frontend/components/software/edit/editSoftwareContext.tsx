@@ -6,6 +6,7 @@ export type SoftwareInfo = {
   id?: string,
   slug?: string,
   brand_name?: string,
+  concept_doi?: string,
 }
 
 export type EditSoftwareState = {
@@ -26,7 +27,8 @@ export const initialState = {
   software: {
     id: '',
     slug: '',
-    brand_name:''
+    brand_name:'',
+    concept_doi: '',
   },
   isDirty: false,
   isValid: true,
@@ -87,7 +89,8 @@ const EditSoftwareContext = createContext<{ pageState: EditSoftwareState, dispat
     software: {
       id: '',
       slug: '',
-      brand_name: ''
+      brand_name: '',
+      concept_doi: '',
     },
     isDirty: false,
     isValid: true,

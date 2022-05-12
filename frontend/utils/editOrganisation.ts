@@ -189,7 +189,7 @@ export async function saveExistingOrganisation({item, token, pos, setState}:
   }
 }
 
-export async function saveNewOrganisation({item, token, software, account, setState}:
+export async function saveNewOrganisationForSoftware({item, token, software, account, setState}:
   {item: EditOrganisation, token: string, software:string, account: string, setState: (item: EditOrganisation) => void }) {
   // create new organisation
   let resp = await createOrganisation({
@@ -351,7 +351,7 @@ export async function deleteOrganisation({uuid,logo_id, token}:
         id: logo_id,
         token
       })
-      debugger
+      // debugger
       if (resp.status !== 200) {
         return resp
       }
@@ -365,7 +365,7 @@ export async function deleteOrganisation({uuid,logo_id, token}:
         ...createJsonHeaders(token)
       }
     })
-    debugger
+    // debugger
     return extractReturnMessage(resp)
   } catch (e: any) {
     return {

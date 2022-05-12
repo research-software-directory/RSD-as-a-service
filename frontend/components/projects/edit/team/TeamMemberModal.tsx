@@ -1,4 +1,4 @@
-import {useEffect,useState, useContext} from 'react'
+import {useEffect,useState} from 'react'
 import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
@@ -7,32 +7,32 @@ import SaveIcon from '@mui/icons-material/Save'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
-import useSnackbar from '../../../snackbar/useSnackbar'
-import {Contributor} from '../../../../types/Contributor'
-import ControlledTextField from '../../../form/ControlledTextField'
-import ControlledSwitch from '../../../form/ControlledSwitch'
-import ContributorAvatar from '../../ContributorAvatar'
-import {contributorInformation as config} from '../editSoftwareConfig'
-import {getDisplayInitials, getDisplayName} from '../../../../utils/getDisplayName'
-import logger from '../../../../utils/logger'
+import logger from '~/utils/logger'
+import {getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
+import {TeamMember} from '~/types/Project'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import ControlledTextField from '~/components/form/ControlledTextField'
+import ControlledSwitch from '~/components/form/ControlledSwitch'
+import ContributorAvatar from '~/components/software/ContributorAvatar'
 import ControlledAffiliation from '~/components/form/ControlledAffiliation'
+import {cfgTeamMembers as config} from './config'
 
-type EditContributorModalProps = {
+type TeamMemberModalProps = {
   open: boolean,
   onCancel: () => void,
-  onSubmit: ({data, pos}: { data: Contributor, pos?: number }) => void,
-  contributor?: Contributor,
+  onSubmit: ({data, pos}: { data: TeamMember, pos?: number }) => void,
+  member?: TeamMember,
   pos?: number
 }
 
-export default function EditContributorModal({open, onCancel, onSubmit, contributor, pos}: EditContributorModalProps) {
+export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}: TeamMemberModalProps) {
   const {showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [b64Image, setB64Image]=useState<string>()
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Contributor>({
+  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<TeamMember>({
     mode: 'onChange',
     defaultValues: {
-      ...contributor,
+      ...member,
       avatar_b64:null
     }
   })
@@ -42,10 +42,10 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   const formData = watch()
 
   useEffect(() => {
-    if (contributor) {
-      reset(contributor)
+    if (member) {
+      reset(member)
     }
-  }, [contributor,reset])
+  }, [member,reset])
 
   function handleCancel() {
     // reset form
@@ -104,9 +104,11 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
         color: 'primary.main',
         fontWeight: 500
       }}>
-        Contributor
+        Team member
       </DialogTitle>
-      <form onSubmit={handleSubmit((data: Contributor) => onSubmit({data, pos}))}
+      <form
+        id="team-member-modal"
+        onSubmit={handleSubmit((data: TeamMember) => onSubmit({data, pos}))}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -114,7 +116,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
           {...register('id')}
         />
         <input type="hidden"
-          {...register('software')}
+          {...register('project')}
         />
         <input type="hidden"
           {...register('avatar_mime_type')}
@@ -134,8 +136,8 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                 <ContributorAvatar
                   size={8}
                   avatarUrl={getAvatarUrl()}
-                  displayName={getDisplayName(contributor ?? {}) ?? ''}
-                  displayInitials={getDisplayInitials(contributor ?? {}) ?? ''}
+                  displayName={getDisplayName(member ?? {}) ?? ''}
+                  displayInitials={getDisplayInitials(member ?? {}) ?? ''}
                 />
               </label>
               <input
@@ -171,7 +173,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                   name: 'given_names',
                   label: config.given_names.label,
                   useNull: true,
-                  defaultValue: contributor?.given_names,
+                  defaultValue: member?.given_names,
                   helperTextMessage: config.given_names.help,
                   // helperTextCnt: `${formData?.given_names?.length || 0}/${config.given_names.validation.maxLength.value}`,
                 }}
@@ -184,7 +186,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                   name: 'family_names',
                   label: config.family_names.label,
                   useNull: true,
-                  defaultValue: contributor?.family_names,
+                  defaultValue: member?.family_names,
                   helperTextMessage: config.family_names.help,
                   // helperTextCnt: `${formData?.family_names?.length || 0}/${config.family_names.validation.maxLength.value}`,
                 }}
@@ -201,7 +203,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                 label: config.email_address.label,
                 type: 'email',
                 useNull: true,
-                defaultValue: contributor?.email_address,
+                defaultValue: member?.email_address,
                 helperTextMessage: config.email_address.help,
                 // helperTextCnt: `${formData?.email_address?.length || 0}/${config.email_address.validation.maxLength.value}`,
               }}
@@ -213,7 +215,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                   name: 'orcid',
                   label: config.orcid.label,
                   useNull: true,
-                  defaultValue: contributor?.orcid,
+                  defaultValue: member?.orcid,
                   helperTextMessage: config.orcid.help,
                   // helperTextCnt: `${formData?.orcid?.length || 0}/${config.orcid.validation.maxLength.value}`,
                 }}
@@ -227,17 +229,17 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                 name: 'role',
                 label: config.role.label,
                 useNull: true,
-                defaultValue: contributor?.role,
+                defaultValue: member?.role,
                 helperTextMessage: config.role.help,
                 // helperTextCnt: `${formData?.role?.length || 0}/${config.role.validation.maxLength.value}`,
               }}
               rules={config.role.validation}
             />
             <ControlledAffiliation
-              name='affiliation'
+              name= 'affiliation'
               label={config.affiliation.label}
-              affiliation={contributor?.affiliation ?? ''}
-              institution={contributor?.institution ?? null}
+              affiliation={member?.affiliation ?? ''}
+              institution={member?.institution ?? null}
               control={control}
               rules={config.affiliation.validation}
               helperTextMessage={config.affiliation.help}
@@ -248,7 +250,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
               name="is_contact_person"
               label="Contact person"
               control={control}
-              defaultValue={contributor?.is_contact_person ?? false}
+              defaultValue={member?.is_contact_person ?? false}
             />
           </section>
         </DialogContent>

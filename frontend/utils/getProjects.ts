@@ -4,7 +4,7 @@ import {MentionForProject} from '../types/Mention'
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, RawProject, RelatedProject, ResearchDomain
+  ProjectLink, RawProject, RelatedProject, ResearchDomain, TeamMember
 } from '../types/Project'
 import {RelatedTools} from '../types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
@@ -427,7 +427,7 @@ export async function getTeamForProject({project, token, frontend}:
     })
 
     if (resp.status === 200) {
-      const data: Contributor[] = await resp.json()
+      const data: TeamMember[] = await resp.json()
       return data.map(item => ({
         ...item,
         // add avatar url based on uuid
