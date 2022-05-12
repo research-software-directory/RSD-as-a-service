@@ -108,18 +108,21 @@ export type TagItem={
   active:boolean
 }
 export async function getTagsWithCount(){
-  try{
+  try {
+    // TODO! tags are replaced with keywords
+    const tags:TagItem[]=[]
     // this request is always perfomed from backend
-    const url = `${process.env.POSTGREST_URL}/rpc/count_software_per_tag?order=tag.asc`
-    const resp = await fetch(url,{method:'GET'})
-    if (resp.status===200){
-      const data:TagItem[] = await resp.json()
-      return data
-    } else if (resp.status===404){
-      logger(`getTagsWithCount: 404 [${url}]`,'error')
-      // query not found
-      return []
-    }
+    // const url = `${process.env.POSTGREST_URL}/rpc/keyword_count_for_software?order=keyword.asc`
+    // const resp = await fetch(url,{method:'GET'})
+    // if (resp.status===200){
+    //   const data:TagItem[] = await resp.json()
+    //   return data
+    // } else if (resp.status===404){
+    //   logger(`getTagsWithCount: 404 [${url}]`,'error')
+    //   // query not found
+    //   return []
+    // }
+    return tags
   }catch(e:any){
     logger(`getTagsWithCount: ${e?.message}`,'error')
     return []

@@ -16,7 +16,7 @@ import {
   deleteOrganisationLogo,
   newOrganisationProps,
   saveExistingOrganisation,
-  saveNewOrganisation,
+  saveNewOrganisationForSoftware,
   searchToEditOrganisation,
 } from '../../../../utils/editOrganisation'
 import useParticipatingOrganisations from '../../../../utils/useParticipatingOrganisations'
@@ -30,7 +30,7 @@ import EditOrganisationModal from './EditOrganisationModal'
 import OrganisationsList from './OrganisationsList'
 import {getSlugFromString} from '../../../../utils/getSlugFromString'
 
-export type EditOrganisationModal = ModalProps & {
+export type EditOrganisationModalProps = ModalProps & {
   organisation?: EditOrganisation
 }
 
@@ -43,7 +43,7 @@ export default function SoftwareOganisations({session}:{session:Session}) {
     token: session?.token,
     account: session.user?.account
   })
-  const [modal, setModal] = useState<ModalStates<EditOrganisationModal>>({
+  const [modal, setModal] = useState<ModalStates<EditOrganisationModalProps>>({
     edit: {
       open: false,
     },
@@ -186,7 +186,7 @@ export default function SoftwareOganisations({session}:{session:Session}) {
         // create slug for new organisation based on name
         data.slug = getSlugFromString(data.name)
         // create new organisation
-        const resp = await saveNewOrganisation({
+        const resp = await saveNewOrganisationForSoftware({
           item: data,
           software: software?.id ?? '',
           account: session?.user?.account ?? '',
@@ -249,8 +249,8 @@ export default function SoftwareOganisations({session}:{session:Session}) {
   }
 
   return (
-    <section className="flex-1">
-      <EditSoftwareSection className="md:flex md:flex-col-reverse md:justify-end xl:pl-[3rem] xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]">
+    <>
+      <EditSoftwareSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:pl-[3rem] xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]">
         <section className="py-4">
           <h2 className="flex pr-4 pb-4 justify-between">
             <span>{config.title}</span>
@@ -290,6 +290,6 @@ export default function SoftwareOganisations({session}:{session:Session}) {
         onCancel={closeModals}
         onDelete={()=>deleteOrganisation(modal.delete.pos)}
       />
-    </section>
+    </>
   )
 }

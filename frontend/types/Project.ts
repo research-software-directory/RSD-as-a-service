@@ -43,6 +43,7 @@ export type OrganisationsOfProject = {
   status: Status
   role: OrganisationRole
   project: string
+  parent: string | null
 }
 
 export type ProjectTag = {

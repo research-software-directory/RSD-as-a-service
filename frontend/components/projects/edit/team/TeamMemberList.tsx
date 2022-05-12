@@ -3,10 +3,10 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
-
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
+import {Alert, AlertTitle} from '@mui/material'
 
 import {TeamMember} from '~/types/Project'
 import ContributorAvatar from '~/components/software/ContributorAvatar'
@@ -25,10 +25,18 @@ type TeamMemberListProps = {
   onDelete: (pos:number) => void
 }
 
-export default function TeamMemberList({members,onEdit,onDelete}: TeamMemberListProps) {
-  // console.group('TeamMemberList')
-  // console.log('members...', members)
-  // console.groupEnd()
+export default function TeamMemberList({members, onEdit, onDelete}: TeamMemberListProps) {
+
+  // show message when no members
+  if (members.length === 0) {
+    return (
+      <Alert severity="warning" sx={{marginTop:'0.5rem'}}>
+        <AlertTitle sx={{fontWeight:500}}>No team members</AlertTitle>
+        Add team member using <strong>search form!</strong>
+      </Alert>
+    )
+  }
+
   return (
     <List sx={{
       width: '100%',
