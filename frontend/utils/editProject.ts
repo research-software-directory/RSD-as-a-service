@@ -6,7 +6,7 @@ import logger from './logger'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from './fetchHelpers'
 import {
   EditProject, KeywordForProject, NewProject,
-  OrganisationsOfProject, Project, ProjectLink, ProjectTableProps, ResearchDomainForProject
+  OrganisationsOfProject, Project, ProjectLink, ProjectTableProps, RelatedProject, ResearchDomainForProject
 } from '~/types/Project'
 import {ProjectImageInfo} from '~/components/projects/edit/information'
 import {ProjectLinksForSave} from '~/components/projects/edit/information/projectLinkChanges'
@@ -836,4 +836,76 @@ export async function createMaintainerLink({project,account,token}:{project:stri
       message: e?.message
     }
   }
+}
+
+export async function addRelatedSoftware({project,software, token}: {
+  project:string,software:string,token: string
+}) {
+  const url = '/api/v1/software_for_project'
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      ...createJsonHeaders(token),
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify({
+      software,
+      project
+    })
+  })
+
+  return extractReturnMessage(resp)
+}
+
+export async function deleteRelatedSoftware({project, software, token}: {
+  project: string, software: string, token: string
+}) {
+
+  const url = `/api/v1/software_for_project?software=eq.${software}&project=eq.${project}`
+
+  const resp = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      ...createJsonHeaders(token)
+    }
+  })
+
+  return extractReturnMessage(resp)
+}
+
+export async function addRelatedProjects({origin, relation, token}: {
+  origin: string, relation: string, token: string
+}) {
+  const url = '/api/v1/project_for_project'
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      ...createJsonHeaders(token),
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify({
+      origin,
+      relation
+    })
+  })
+
+  return extractReturnMessage(resp)
+}
+
+export async function deleteRelatedProject({origin, relation, token}: {
+  origin: string, relation: string, token: string
+}) {
+
+  const url = `/api/v1/project_for_project?origin=eq.${origin}&relation=eq.${relation}`
+
+  const resp = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      ...createJsonHeaders(token)
+    }
+  })
+
+  return extractReturnMessage(resp)
 }

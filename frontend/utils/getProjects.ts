@@ -496,3 +496,30 @@ export async function getRelatedToolsForProject({project, token, frontend}:
     return []
   }
 }
+
+export async function searchForRelatedProjectByTitle({project, searchFor, token}: {
+  project: string, searchFor: string, token?: string
+}) {
+  try {
+    let query = `&title=ilike.*${searchFor}*&order=title.asc&limit=50`
+    // software item to exclude
+    if (project) {
+      query += `&id=neq.${project}`
+    }
+    const url = `/api/v1/project?select=id,slug,title,subtitle${query}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+
+    if (resp.status === 200) {
+      const json: RelatedProject[] = await resp.json()
+      return json
+    } else {
+      return []
+    }
+  } catch (e: any) {
+    logger(`searchForRelatedProjectByTitle: ${e?.message}`, 'error')
+    return []
+  }
+}

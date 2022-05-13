@@ -53,6 +53,34 @@ export async function getRelatedSoftwareList({software, token}:{
   }
 }
 
+export async function searchForRelatedSoftware({software, searchFor, token}: {
+  software: string, searchFor:string, token?: string
+}) {
+  try {
+    let query = `&brand_name=ilike.*${searchFor}*&order=brand_name.asc&limit=50`
+    // software item to exclude
+    if (software) {
+      query += `&id=neq.${software}`
+    }
+    const url = `/api/v1/software?select=id,slug,brand_name,short_statement${query}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+
+    if (resp.status === 200) {
+      const json: RelatedSoftware[] = await resp.json()
+      return json
+    } else {
+      return []
+    }
+  } catch (e: any) {
+    logger(`searchForRelatedSoftware: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+
 type SaveRelatedSoftware = {
   software: string
   relatedSoftware: AutocompleteOption<RelatedSoftware>[]
@@ -195,20 +223,3 @@ export function relatedToolsToOptionsWithLink(software: RelatedTools[] | undefin
   })
   return options
 }
-
-// moved to utils fn ./itemsNotInReferenceList
-// export function itemsNotInReferenceList({list, referenceList}:
-//   { list: AutocompleteOption<RelatedSoftware>[], referenceList: AutocompleteOption<RelatedSoftware>[] }) {
-//   if (list.length > 0) {
-//     // list in initalList not present in saveList should be removed from db
-//     const itemsNotInReferenceList = list.filter(({data: {id: lId}}) => {
-//       // if item cannot be found in saveList
-//       return !referenceList.some(({data: {id: rId}}) => {
-//         // compare inital item with items in saveList
-//         return lId === rId
-//       })
-//     })
-//     return itemsNotInReferenceList
-//   }
-//   return []
-// }

@@ -104,29 +104,27 @@ export default function RelatedSoftwareEdit({token}: { token: string }) {
   }
 
   return (
-    <section className="flex-1">
-      <EditSoftwareSection className="pl-8">
-        <div className="py-4">
-          <EditSectionTitle
-            title={config.title}
-            subtitle={config.subtitle(software.brand_name ?? 'this software')}
+    <EditSoftwareSection>
+      <div className="py-4">
+        <EditSectionTitle
+          title={config.title}
+          subtitle={config.subtitle(software.brand_name ?? 'this software')}
+        >
+        </EditSectionTitle>
+        <section className="py-4 max-w-[40rem]">
+          <form
+            id={pageState.step?.formId}
+            onSubmit={handleSubmit(onSubmit)}
           >
-          </EditSectionTitle>
-          <section className="py-4 max-w-[40rem]">
-            <form
-              id={pageState.step?.formId}
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <ControlledAutocompleteWithLink
-                name="relatedSoftware"
-                control={control}
-                options={options}
-                label={config.help}
-              />
-            </form>
-          </section>
-        </div>
-      </EditSoftwareSection>
-    </section>
+            <ControlledAutocompleteWithLink
+              name="relatedSoftware"
+              control={control}
+              options={options}
+              label={config.help}
+            />
+          </form>
+        </section>
+      </div>
+    </EditSoftwareSection>
   )
 }
