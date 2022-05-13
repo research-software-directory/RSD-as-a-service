@@ -35,6 +35,8 @@ export default function ProjectMaintainersList({maintainers,onDelete}:ProjectMai
           maintainer={item}
           onEdit={onEdit}
           onDelete={onDelete}
+          // disable delete when last maintainer
+          disableDelete={maintainers?.length < 2}
         />
       )
     })
