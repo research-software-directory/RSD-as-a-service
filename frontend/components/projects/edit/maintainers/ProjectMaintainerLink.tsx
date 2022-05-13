@@ -58,12 +58,11 @@ export default function ProjectMaintainerLink({project,account,token}: { project
 
             <Button
               startIcon={<EmailIcon />}
-              onClick={createInviteLink}
             >
             <a
               target="_blank"
               href={`mailto:?subject=Project maintainer invite&body=Please use the link to become project maintainer. \n ${magicLink}`} rel="noreferrer">
-              Create invite
+              Email this invite
             </a>
             </Button>
           </div>

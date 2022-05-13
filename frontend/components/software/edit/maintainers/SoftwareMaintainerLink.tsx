@@ -58,12 +58,11 @@ export default function SoftwareMaintainerLink({software,account,token}: { softw
 
             <Button
               startIcon={<EmailIcon />}
-              onClick={createInviteLink}
             >
             <a
               target="_blank"
               href={`mailto:?subject=Software maintainer invite&body=Please use the link to become software maintainer. \n ${magicLink}`} rel="noreferrer">
-              Create invite
+              Email this invite
             </a>
             </Button>
           </div>
