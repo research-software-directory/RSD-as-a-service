@@ -176,7 +176,7 @@ export async function updateSoftwareInfo({software, keywords, licensesInDb,
       )
     })
     // --------------------------------
-    // LICESES
+    // LICENSES
     // --------------------------------
     // check if liceses need to be added
     if (software.licenses?.length > 0) {

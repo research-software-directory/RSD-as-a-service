@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button'
+import DownloadIcon from '@mui/icons-material/Download'
 
 import {contributorInformation as config} from '../editSoftwareConfig'
 
@@ -7,7 +8,7 @@ export default function GetContributorsFromDoi(
 ) {
   return (
     <Button
-      variant="outlined"
+      startIcon={<DownloadIcon />}
       onClick={onClick}
       title={title ?? ''}
       sx={{
