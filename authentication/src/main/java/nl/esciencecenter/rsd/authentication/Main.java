@@ -82,7 +82,7 @@ public class Main {
 		app.exception(JWTVerificationException.class, (ex, ctx) -> {
 			ex.printStackTrace();
 			ctx.status(400);
-			ctx.json("{\"Message\": \"invalid JWT\"}");
+			ctx.json("{\"message\": \"invalid JWT\"}");
 		});
 	}
 

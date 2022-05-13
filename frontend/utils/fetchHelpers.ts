@@ -24,7 +24,7 @@ export function createJsonHeaders(token?: string): AuthHeader {
 
 export async function extractReturnMessage(resp: Response, dataId?: string) {
   // OK
-  if ([200, 201, 204].includes(resp.status)) {
+  if ([200, 201, 204, 206].includes(resp.status)) {
     // just return id
     return {
       status: 200,
@@ -42,14 +42,21 @@ export async function extractReturnMessage(resp: Response, dataId?: string) {
         `
     }
   }
+  // extract error message
+  const json: ApiErrorMsg = await resp.json()
   if ([409].includes(resp.status)) {
-    const json: ApiErrorMsg = await resp.json()
     return {
       status: resp.status,
       message: `
           ${resp.statusText}:
           ${json.message ?? 'duplicate key value violates unique constraint.'}
         `
+    }
+  }
+  if (json.message) {
+    return {
+      status: resp.status,
+      message: json.message
     }
   }
   return {

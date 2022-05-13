@@ -5,6 +5,8 @@ import Filter3Icon from '@mui/icons-material/Filter3'
 import Filter4Icon from '@mui/icons-material/Filter4'
 import Filter5Icon from '@mui/icons-material/Filter5'
 import Filter6Icon from '@mui/icons-material/Filter6'
+import Filter7Icon from '@mui/icons-material/Filter7'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import SoftwareInformation from './information'
 import SoftwareContributors from './contributors'
@@ -12,6 +14,7 @@ import SoftwareOgranisations from './organisations'
 import SoftwareMentions from './mentions'
 import SoftwareTestimonials from './testimonials'
 import RelatedSoftware from './relatedSoftware'
+import SoftwareMaintainers from './maintainers'
 
 export type EditSoftwarePageStep = {
   formId?:string,
@@ -60,6 +63,13 @@ export const editSoftwareMenu:EditSoftwarePageStep[] = [
     label: 'Related software',
     icon: <Filter6Icon />,
     component: (props?) => <RelatedSoftware {...props} />,
+    status: 'Optional information'
+  },
+  {
+    // formId: 'output',
+    label: 'Maintainers',
+    icon: <Filter7Icon />,
+    component: (props?) => <SoftwareMaintainers {...props} />,
     status: 'Optional information'
   }
 ]

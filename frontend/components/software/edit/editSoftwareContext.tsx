@@ -2,7 +2,7 @@ import {createContext} from 'react'
 import {EditSoftwarePageStep} from './editSoftwareSteps'
 import logger from '../../../utils/logger'
 
-type SoftwareInfo = {
+export type SoftwareInfo = {
   id?: string,
   slug?: string,
   brand_name?: string,

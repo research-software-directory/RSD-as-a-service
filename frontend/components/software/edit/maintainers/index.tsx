@@ -4,13 +4,15 @@ import {Session} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import useProjectContext from '../useProjectContext'
-import useProjectMaintainers, {deleteMaintainerFromProject, MaintainerOfProject} from './useProjectMaintainer'
-import ProjectMaintainersList from './ProjectMaintainersList'
-import ProjectMaintainerLink from './ProjectMaintainerLink'
-import {maintainers as config} from './config'
+import ProjectMaintainersList from '~/components/projects/edit/maintainers/ProjectMaintainersList'
+import {maintainers as config} from '~/components/projects/edit/maintainers/config'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareMaintainers, {
+  deleteMaintainerFromSoftware, MaintainerOfSoftware
+} from './useSoftwareMaintainer'
+import SoftwareMaintainerLink from './SoftwareMaintainerLink'
 
 type DeleteModal = {
   open: boolean,
@@ -19,29 +21,29 @@ type DeleteModal = {
 }
 
 
-export default function ProjectMaintainers({session}: { session: Session }) {
+export default function SoftwareMaintainers({session}: { session: Session }) {
   const {showErrorMessage} = useSnackbar()
-  const {loading:loadProject, setLoading, project} = useProjectContext()
-  const {loading:loadMaintainers,maintainers} = useProjectMaintainers({
-    project: project.id,token:session.token
+  const {software} = useSoftwareContext()
+  const {loading,maintainers} = useSoftwareMaintainers({
+    software: software.id ?? '',
+    token: session.token
   })
-  const [projectMaintainers, setProjectMaintaners] = useState<MaintainerOfProject[]>([])
+  const [projectMaintainers, setProjectMaintaners] = useState<MaintainerOfSoftware[]>([])
   const [modal, setModal] = useState<DeleteModal>({
     open: false
   })
 
   useEffect(() => {
     let abort = false
-    if (loadMaintainers === false &&
+    if (loading === false &&
       abort === false) {
       setProjectMaintaners(maintainers)
-      setLoading(false)
+      // setLoading(false)
     }
     return () => { abort = true }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[maintainers,loadMaintainers])
+  },[maintainers,loading])
 
-  if (loadProject || loadMaintainers) {
+  if (loading) {
     return (
       <ContentLoader />
     )
@@ -69,9 +71,9 @@ export default function ProjectMaintainers({session}: { session: Session }) {
     closeModal()
     const admin = maintainers[pos]
     if (admin) {
-      const resp = await deleteMaintainerFromProject({
+      const resp = await deleteMaintainerFromSoftware({
         maintainer: admin.account,
-        project: project.id,
+        software: software.id ?? '',
         token: session.token,
         frontend: true
       })
@@ -104,8 +106,8 @@ export default function ProjectMaintainers({session}: { session: Session }) {
             title={config.inviteLink.title}
             subtitle={config.inviteLink.subtitle}
           />
-          <ProjectMaintainerLink
-            project={project.id}
+          <SoftwareMaintainerLink
+            software={software.id ?? ''}
             account={session.user?.account ?? ''}
             token={session.token}
           />
