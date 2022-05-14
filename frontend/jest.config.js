@@ -23,15 +23,15 @@ const customJestConfig = {
     './utils/**/*.{js,jsx,ts,tsx}',
     '!./utils/jest/**'
   ],
-    moduleNameMapper: {
+  moduleNameMapper: {
     // need to map d3 to avoid SyntaxError: Unexpected token 'export'
-      'd3': '<rootDir>/node_modules/d3/dist/d3.min.js',
-
-      // Wildcard module name mapper MUST BE at the botton of this list
-      // need to map d3 to avoid SyntaxError: Unexpected token 'export'
-      '~/(.*)$': '<rootDir>/$1',
-  }
+    'd3': '<rootDir>/node_modules/d3/dist/d3.min.js',
+    // Wildcard module name mapper MUST BE at the botton of this list
+    '~/(.*)$': '<rootDir>/$1',
+  },
   // modulePathIgnorePatterns: ['__mocks__', '__fixtures__','utils/jest'],
+  // d3 solution that does not work
+  // transformIgnorePatterns: ['/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)'],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
