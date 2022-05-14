@@ -4,7 +4,7 @@ import {MentionForProject} from '../types/Mention'
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, RawProject, RelatedProject, ResearchDomain, TeamMember
+  ProjectLink, RawProject, RelatedProject, RelatedProjectForProject, ResearchDomain, TeamMember
 } from '../types/Project'
 import {RelatedTools} from '../types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
@@ -457,7 +457,7 @@ export async function getRelatedProjects({project, token, frontend}:
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data: RelatedProject[] = await resp.json()
+      const data: RelatedProjectForProject[] = await resp.json()
       return data
     }
     logger(`getRelatedProjects: ${resp.status} ${resp.statusText} [${url}]`, 'warn')

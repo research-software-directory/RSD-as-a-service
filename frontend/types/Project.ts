@@ -76,7 +76,6 @@ export type ProjectLinkWithStatus = ProjectLink & {
 }
 
 export type RelatedProject = {
-  origin: string
   id: string
   slug: string
   title: string
@@ -84,6 +83,14 @@ export type RelatedProject = {
   updated_at: string
   date_end: string
   image_id: string | null
+}
+
+export type RelatedProjectForProject = RelatedProject & {
+  origin: string
+}
+
+export type RelatedProjectForSoftware = RelatedProject & {
+  software: string
 }
 
 export type KeywordForProject = {
