@@ -4,7 +4,7 @@ import Chip from '@mui/material/Chip'
 
 import {useAuth} from '~/auth'
 import {cfgRelatedItems as config} from './config'
-import {getRelatedProjects} from '~/utils/getSoftware'
+import {getRelatedProjectsForSoftware} from '~/utils/getSoftware'
 import {addRelatedSoftware, deleteRelatedSoftware} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
@@ -21,9 +21,9 @@ export default function RelatedProjectsForSoftware() {
 
   useEffect(() => {
     let abort = false
-    async function getRelatedProjectsForProject() {
+    async function getRelatedProjects() {
       setLoading(true)
-      const resp = await getRelatedProjects({
+      const resp = await getRelatedProjectsForSoftware({
         software: software.id ?? '',
         token: session.token,
         frontend: true
@@ -36,7 +36,7 @@ export default function RelatedProjectsForSoftware() {
       setLoading(false)
     }
     if (software.id && session.token) {
-      getRelatedProjectsForProject()
+      getRelatedProjects()
     }
 
     ()=>{abort=true}

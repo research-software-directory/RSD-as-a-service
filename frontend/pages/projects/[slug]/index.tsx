@@ -15,8 +15,9 @@ import CanoncialUrl from '../../../components/seo/CanonicalUrl'
 import {
   getLinksForProject, getImpactForProject,
   getOutputForProject, getOrganisations,
-  getProjectItem, getRelatedProjects, getRelatedToolsForProject,
-  getTeamForProject, getResearchDomainsForProject, getKeywordsForProject
+  getProjectItem, getRelatedToolsForProject,
+  getTeamForProject, getResearchDomainsForProject,
+  getKeywordsForProject, getRelatedProjectsForProject
 } from '../../../utils/getProjects'
 import {KeywordForProject, Project, ProjectLink, RelatedProject, ResearchDomain} from '../../../types/Project'
 import ProjectInfo from '../../../components/projects/ProjectInfo'
@@ -115,13 +116,12 @@ export default function ProjectPage(props: ProjectPageProps) {
       <OrganisationsSection
         organisations={organisations.filter(item=>item.role!=='funding')}
       />
-
       {/* Project mentions */}
       <ProjectMentions
         impact={impact}
         output={output}
       />
-      {/* Team (use software components) */}
+      {/* Team (uses software components) */}
       <ContributorsSection
         title="Team"
         contributors={team}
@@ -168,7 +168,7 @@ export async function getServerSideProps(context:any) {
       getImpactForProject({project: project.id, token, frontend: false}),
       getTeamForProject({project: project.id, token, frontend: false}),
       getRelatedToolsForProject({project: project.id, token, frontend: false}),
-      getRelatedProjects({project: project.id, token, frontend: false}),
+      getRelatedProjectsForProject({project: project.id, token, frontend: false}),
       getLinksForProject({project: project.id, token, frontend: false}),
       isMaintainerOfProject({slug, account, token, frontend: false}),
     ]

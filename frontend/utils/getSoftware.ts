@@ -298,7 +298,7 @@ export async function getRemoteMarkdown(url: string) {
 
 // RELATED PROJECTS FOR SORFTWARE
 
-export async function getRelatedProjects({software, token, frontend}:
+export async function getRelatedProjectsForSoftware({software, token, frontend}:
   { software: string, token?: string, frontend?: boolean }) {
   try {
     // construct api url based on request source

@@ -31,6 +31,7 @@ import {
   getRemoteMarkdown,
   ContributorMentionCount,
   getKeywordsForSoftware,
+  getRelatedProjectsForSoftware,
 } from '../../../utils/getSoftware'
 import logger from '../../../utils/logger'
 import {getDisplayName} from '../../../utils/getDisplayName'
@@ -38,14 +39,19 @@ import {getContributorsForSoftware} from '../../../utils/editContributors'
 import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
 import {getRelatedToolsForSoftware} from '../../../utils/editRelatedSoftware'
 import {getMentionsForSoftware} from '../../../utils/editMentions'
-import {KeywordForSoftware, License, RelatedTools, RepositoryInfo, SoftwareItem} from '../../../types/SoftwareTypes'
+import {getParticipatingOrganisations} from '../../../utils/editOrganisation'
+import {
+  KeywordForSoftware, License, RelatedTools,
+  RepositoryInfo, SoftwareItem
+} from '../../../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
 import {Contributor} from '../../../types/Contributor'
 import {Testimonial} from '../../../types/Testimonial'
 import {MentionForSoftware} from '../../../types/Mention'
 import {ParticipatingOrganisationProps} from '../../../types/Organisation'
-import {getParticipatingOrganisations} from '../../../utils/editOrganisation'
+import {RelatedProject} from '~/types/Project'
 import OrganisationsSection from '../../../components/software/OrganisationsSection'
+import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -59,8 +65,9 @@ interface SoftwareIndexData extends ScriptProps{
   testimonials: Testimonial[]
   contributors: Contributor[]
   relatedTools: RelatedTools[]
+  relatedProjects: RelatedProject[]
   isMaintainer: boolean,
-  organisations: ParticipatingOrganisationProps[]
+  organisations: ParticipatingOrganisationProps[],
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
@@ -71,8 +78,8 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     software, citationInfo, keywords,
     licenseInfo, repositoryInfo, softwareIntroCounts,
     mentions, testimonials, contributors,
-    relatedTools, isMaintainer, slug,
-    organisations
+    relatedTools, relatedProjects, isMaintainer,
+    slug, organisations
   } = props
 
   useEffect(() => {
@@ -95,7 +102,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('SoftwareIndexPage...keywords...', keywords)
+  // console.log('SoftwareIndexPage...relatedProjects...', relatedProjects)
   return (
     <>
       {/* Page Head meta tags */}
@@ -150,22 +157,27 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         repository={repositoryInfo?.url}
         platform={repositoryInfo?.code_platform}
       />
+      {/* Participating organisations */}
       <OrganisationsSection
         organisations={organisations}
       />
-      {/* <section>
-        <h2>Participating organisations</h2>
-        {JSON.stringify(organisations,null,2)}
-      </section> */}
+      {/* Mentions */}
       <MentionsSection
         mentions={mentions}
       />
+      {/* Testimonials */}
       <TestimonialSection
         testimonials={testimonials}
       />
+      {/* Contributors */}
       <ContributorsSection
         contributors={contributors}
       />
+      {/* Related projects (uses project components) */}
+      <RelatedProjectsSection
+        relatedProjects={relatedProjects}
+      />
+      {/* Related software */}
       <RelatedToolsSection
         relatedTools={relatedTools}
       />
@@ -220,7 +232,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // contributors
       getContributorsForSoftware({software:software.id,frontend:false,token}),
       // relatedTools
-      getRelatedToolsForSoftware({software:software.id,frontend:false,token}),
+      getRelatedToolsForSoftware({software: software.id, frontend: false, token}),
+      // relatedProjects
+      getRelatedProjectsForSoftware({software: software.id, token, frontend: false}),
       // check if maintainer
       isMaintainerOfSoftware({slug, account, token, frontend: false}),
       // get organisations
@@ -236,6 +250,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       testimonials,
       contributors,
       relatedTools,
+      relatedProjects,
       isMaintainer,
       organisations
     ] = await Promise.all(fetchData)
@@ -253,6 +268,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         testimonials,
         contributors,
         relatedTools,
+        relatedProjects,
         isMaintainer,
         organisations,
         slug

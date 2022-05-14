@@ -443,7 +443,7 @@ export async function getTeamForProject({project, token, frontend}:
   }
 }
 
-export async function getRelatedProjects({project, token, frontend}:
+export async function getRelatedProjectsForProject({project, token, frontend}:
   { project: string, token?: string, frontend?: boolean }) {
   try {
     // construct api url based on request source
