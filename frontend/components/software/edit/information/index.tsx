@@ -143,61 +143,6 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
     }
   }
 
-  async function onGetKeywordsFromDoi() {
-    let added = 0
-
-    setLoading(true)
-
-    const keywordsDoi: string[] = await getKeywordsFromDoi(
-      editSoftware?.id, formData?.concept_doi
-    )
-
-    if (keywordsDoi && keywordsDoi.length === 0) {
-      showErrorMessage(
-        `No Keywords could be found for DOI ${formData?.concept_doi}`
-      )
-      setLoading(false)
-      return
-    }
-
-    for (const kw of keywordsDoi) {
-      if (!kw || kw.length === 0) {
-        continue
-      }
-
-      const find = fields.filter(item => item.keyword === kw)
-
-      if (find.length > 0) {
-        continue
-      }
-
-      const findDb = await searchForSoftwareKeywordExact({searchFor: kw})
-      let id = null
-      let action: 'add' | 'create' = 'create'
-
-      if (findDb.length === 1) {
-        id = findDb[0].id
-        action = 'add'
-      }
-
-      append({
-        id: id,
-        pos: fields.length,
-        software: editSoftware?.id,
-        keyword: kw,
-        action: action
-      })
-
-      added += 1
-    }
-
-    if (added > 0) {
-      showSuccessMessage(`Keywords added from DOI ${editSoftware?.concept_doi}`)
-    }
-
-    setLoading(false)
-  }
-
   return (
     <form
       id={pageState.step?.formId}
@@ -325,27 +270,14 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
 
           <div className="py-4"></div>
           <EditSectionTitle
-            title="Keywords"
+            title={config.keywords.title}
+            subtitle={config.keywords.subtitle}
           />
-
-          {
-            formData?.concept_doi &&
-            <div className="pt-4 pb-0">
-              <EditSectionTitle
-                title={config.importKeywords.title}
-                subtitle={config.importKeywords.subtitle}
-                hlevel={3}
-              />
-              <GetKeywordsFromDoi
-                onClick={onGetKeywordsFromDoi}
-                title={config.importKeywords.message(formData?.concept_doi)}
-              />
-            </div>
-          }
 
           <SoftwareKeywords
             software={formData.id}
             control={control}
+            concept_doi={formData.concept_doi ?? undefined}
           />
 
           <div className="py-4"></div>

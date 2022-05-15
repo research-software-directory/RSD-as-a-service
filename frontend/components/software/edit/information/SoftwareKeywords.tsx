@@ -1,17 +1,82 @@
+import {useState} from 'react'
 import {Control, useFieldArray} from 'react-hook-form'
 
 import Chip from '@mui/material/Chip'
 
 import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
 import {softwareInformation as config} from '../editSoftwareConfig'
-import {searchForSoftwareKeyword} from './searchForSoftwareKeyword'
+import {searchForSoftwareKeyword, searchForSoftwareKeywordExact} from './searchForSoftwareKeyword'
 import {EditSoftwareItem} from '~/types/SoftwareTypes'
+import {getKeywordsFromDoi} from '~/utils/getInfoFromDatacite'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import GetKeywordsFromDoi from './GetKeywordsFromDoi'
 
-export default function SoftwareKeywords({software,control}: {software: string,control:Control<EditSoftwareItem,any>}) {
+
+export default function SoftwareKeywords({software, control,concept_doi}:
+  { software: string, control: Control<EditSoftwareItem, any>, concept_doi?: string }) {
+  const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
+  const [loading,setLoading]=useState(false)
   const {fields, append, remove} = useFieldArray({
     control,
     name:'keywords'
   })
+
+  async function onGetKeywordsFromDoi() {
+    let added = 0
+
+    setLoading(true)
+
+    const keywordsDoi: string[] = await getKeywordsFromDoi(
+      software, concept_doi
+    )
+
+    if (keywordsDoi && keywordsDoi.length === 0) {
+      showErrorMessage(
+        `No Keywords could be found for DOI ${concept_doi}`
+      )
+      setLoading(false)
+      return
+    }
+
+    for (const kw of keywordsDoi) {
+      if (!kw || kw.length === 0) {
+        continue
+      }
+
+      const find = fields.filter(item => item.keyword === kw)
+
+      if (find.length > 0) {
+        continue
+      }
+
+      const findDb = await searchForSoftwareKeywordExact({searchFor: kw})
+      let id = null
+      let action: 'add' | 'create' = 'create'
+
+      if (findDb.length === 1) {
+        id = findDb[0].id
+        action = 'add'
+      }
+
+      append({
+        id: id,
+        pos: fields.length,
+        software,
+        keyword: kw,
+        action: action
+      })
+
+      added += 1
+    }
+
+    if (added > 0) {
+      showSuccessMessage(`${added} keywords imported from DOI ${concept_doi}`)
+    } else {
+      showInfoMessage(`No (additional) keywords to import from DOI ${concept_doi}`)
+    }
+
+    setLoading(false)
+  }
 
   function onAdd(selected: Keyword) {
     // check if already added
@@ -74,6 +139,16 @@ export default function SoftwareKeywords({software,control}: {software: string,c
         onAdd={onAdd}
         onCreate={onCreate}
       />
+      {
+        concept_doi &&
+        <div className="pt-4 pb-0">
+          <GetKeywordsFromDoi
+            onClick={onGetKeywordsFromDoi}
+            title={config.importKeywords.message(concept_doi)}
+            loading={loading}
+          />
+        </div>
+      }
     </>
   )
 }

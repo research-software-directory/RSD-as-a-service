@@ -85,7 +85,7 @@ export const softwareInformation = {
   },
   keywords: {
     title: 'Keywords',
-    subtitle: 'How to find this software?',
+    subtitle: 'Find, add or import using concept DOI',
     label: 'Find or add keyword',
     help: 'Start typing for the suggestions',
     validation: {
@@ -94,8 +94,8 @@ export const softwareInformation = {
     }
   },
   importKeywords: {
-    title: 'Import keywords',
-    subtitle: 'We use your concept DOI and datacite.org API',
+    // title: 'Import keywords',
+    // subtitle: 'We use your concept DOI and datacite.org API',
     label: 'Import keywords',
     message: (doi: string) => `Import keywords from datacite.org using DOI ${doi}`
   },
