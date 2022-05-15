@@ -11,13 +11,15 @@ import {addRelatedSoftware, deleteRelatedSoftware} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
 import useProjectContext from '../useProjectContext'
+import RelatedSoftwareList from './RelatedSoftwareList'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
 
 
 export default function RelatedSoftwareForProject() {
   const {session} = useAuth()
   const {showErrorMessage} = useSnackbar()
   const {setLoading, project} = useProjectContext()
-  const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftware[]>([])
+  const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftware[]>()
 
   useEffect(() => {
     let abort = false
@@ -45,6 +47,7 @@ export default function RelatedSoftwareForProject() {
   },[project.id,session.token])
 
   async function onAdd(selected: RelatedSoftware) {
+    if (typeof relatedSoftware == 'undefined') return
     // check if already exists
     const find = relatedSoftware.filter(item => item.slug === selected.slug)
     // debugger
@@ -67,7 +70,8 @@ export default function RelatedSoftwareForProject() {
     }
   }
 
-  async function onRemove(pos:number) {
+  async function onRemove(pos: number) {
+    if (typeof relatedSoftware == 'undefined') return
     // remove(pos)
     const software = relatedSoftware[pos]
     if (software) {
@@ -90,6 +94,16 @@ export default function RelatedSoftwareForProject() {
 
   return (
     <>
+      <EditSectionTitle
+        title={config.relatedSoftware.title}
+        subtitle={config.relatedSoftware.subtitle}
+      >
+        {/* add count to title */}
+        {relatedSoftware && relatedSoftware.length > 0 ?
+          <div className="pl-4 text-2xl">{relatedSoftware.length}</div>
+          : null
+        }
+      </EditSectionTitle>
       <FindRelatedSoftware
         software={''}
         token={session.token}
@@ -102,24 +116,11 @@ export default function RelatedSoftwareForProject() {
         }}
         onAdd={onAdd}
       />
-      <div className="flex flex-wrap py-8">
-      {relatedSoftware.map((software, pos) => {
-        return(
-          <div
-            key={software.id}
-            className="py-1 pr-1"
-          >
-            <Chip
-              clickable
-              title={software.short_statement}
-              label={
-                <a href={`/software/${software.slug}`} target="_blank" rel="noreferrer">{software.brand_name}</a>
-              }
-              onDelete={() => onRemove(pos)}
-            />
-          </div>
-        )
-      })}
+      <div className="py-8">
+        <RelatedSoftwareList
+          software={relatedSoftware}
+          onRemove={onRemove}
+        />
       </div>
     </>
   )

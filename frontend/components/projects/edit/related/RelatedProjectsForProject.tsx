@@ -11,13 +11,14 @@ import {sortOnStrProp} from '~/utils/sortFn'
 import {RelatedProject} from '~/types/Project'
 import FindRelatedProject from './FindRelatedProject'
 import useProjectContext from '../useProjectContext'
-
+import RelatedProjectList from './RelatedProjectList'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
 
 export default function RelatedProjectsForProject() {
   const {session} = useAuth()
   const {showErrorMessage} = useSnackbar()
   const {setLoading,project} = useProjectContext()
-  const [relatedProject, setRelatedProject] = useState<RelatedProject[]>([])
+  const [relatedProject, setRelatedProject] = useState<RelatedProject[]>()
 
   useEffect(() => {
     let abort = false
@@ -44,6 +45,7 @@ export default function RelatedProjectsForProject() {
   },[project.id,session.token])
 
   async function onAdd(selected: RelatedProject) {
+    if (typeof relatedProject=='undefined') return
     // check if already exists
     const find = relatedProject.filter(item => item.slug === selected.slug)
     // debugger
@@ -66,7 +68,8 @@ export default function RelatedProjectsForProject() {
     }
   }
 
-  async function onRemove(pos:number) {
+  async function onRemove(pos: number) {
+    if (typeof relatedProject=='undefined') return
     // remove(pos)
     const related = relatedProject[pos]
     if (related) {
@@ -89,6 +92,16 @@ export default function RelatedProjectsForProject() {
 
   return (
     <>
+      <EditSectionTitle
+        title={config.relatedProject.title}
+        subtitle={config.relatedProject.subtitle}
+      >
+        {/* add count to title */}
+        {relatedProject && relatedProject.length > 0 ?
+          <div className="pl-4 text-2xl">{relatedProject.length}</div>
+          : null
+        }
+      </EditSectionTitle>
       <FindRelatedProject
         project={project.id}
         token={session.token}
@@ -101,24 +114,11 @@ export default function RelatedProjectsForProject() {
         }}
         onAdd={onAdd}
       />
-      <div className="flex flex-wrap py-8">
-      {relatedProject.map((project, pos) => {
-        return(
-          <div
-            key={project.id}
-            className="py-1 pr-1"
-          >
-            <Chip
-              clickable
-              title={project.subtitle}
-              label={
-                <a href={`/projects/${project.slug}`} target="_blank" rel="noreferrer">{project.title}</a>
-              }
-              onDelete={() => onRemove(pos)}
-            />
-          </div>
-        )
-      })}
+      <div className="py-8">
+        <RelatedProjectList
+          projects={relatedProject}
+          onRemove={onRemove}
+        />
       </div>
     </>
   )

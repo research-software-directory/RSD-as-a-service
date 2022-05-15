@@ -1,7 +1,5 @@
 import {useEffect, useState} from 'react'
 
-import Chip from '@mui/material/Chip'
-
 import {useAuth} from '~/auth'
 import {RelatedSoftware} from '~/types/SoftwareTypes'
 
@@ -12,17 +10,20 @@ import useSoftwareContext from '../useSoftwareContext'
 import FindRelatedSoftware from '~/components/projects/edit/related/FindRelatedSoftware'
 import {addRelatedSoftware, deleteRelatedSoftware, getRelatedToolsForSoftware} from '~/utils/editRelatedSoftware'
 
+import RelatedSoftwareList from '../../../projects/edit/related/RelatedSoftwareList'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+
 
 export default function RelatedSoftwareForSoftware() {
   const {session} = useAuth()
   const {showErrorMessage} = useSnackbar()
-  const {setLoading, software} = useSoftwareContext()
-  const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftware[]>([])
+  const {software} = useSoftwareContext()
+  const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftware[]>()
 
   useEffect(() => {
     let abort = false
     async function getRelatedSoftware() {
-      setLoading(true)
+      // setLoading(true)
       const resp = await getRelatedToolsForSoftware({
         software: software.id ?? '',
         token: session.token,
@@ -32,8 +33,9 @@ export default function RelatedSoftwareForSoftware() {
         .map(item => item.software)
         .sort((a, b) => sortOnStrProp(a, b, 'brand_name'))
       if (abort) return null
+      // debugger
       setRelatedSoftware(softwareList)
-      setLoading(false)
+      // setLoading(false)
     }
     if (software.id && session.token) {
       getRelatedSoftware()
@@ -44,6 +46,7 @@ export default function RelatedSoftwareForSoftware() {
   },[software.id,session.token])
 
   async function onAdd(selected: RelatedSoftware) {
+    if (typeof relatedSoftware == 'undefined') return
     // check if already exists
     const find = relatedSoftware.filter(item => item.slug === selected.slug)
     // debugger
@@ -66,7 +69,8 @@ export default function RelatedSoftwareForSoftware() {
     }
   }
 
-  async function onRemove(pos:number) {
+  async function onRemove(pos: number) {
+    if (typeof relatedSoftware == 'undefined') return
     // remove(pos)
     const related = relatedSoftware[pos]
     if (software && related) {
@@ -89,6 +93,16 @@ export default function RelatedSoftwareForSoftware() {
 
   return (
     <>
+      <EditSectionTitle
+        title={config.relatedSoftware.title}
+        subtitle={config.relatedSoftware.subtitle}
+      >
+        {/* add count to title */}
+        {relatedSoftware && relatedSoftware.length > 0 ?
+          <div className="pl-4 text-2xl">{relatedSoftware.length}</div>
+          : null
+        }
+      </EditSectionTitle>
       <FindRelatedSoftware
         software={software.id ?? ''}
         token={session.token}
@@ -101,24 +115,11 @@ export default function RelatedSoftwareForSoftware() {
         }}
         onAdd={onAdd}
       />
-      <div className="flex flex-wrap py-8">
-      {relatedSoftware.map((software, pos) => {
-        return(
-          <div
-            key={software.id}
-            className="py-1 pr-1"
-          >
-            <Chip
-              clickable
-              title={software.short_statement}
-              label={
-                <a href={`/software/${software.slug}`} target="_blank" rel="noreferrer">{software.brand_name}</a>
-              }
-              onDelete={() => onRemove(pos)}
-            />
-          </div>
-        )
-      })}
+      <div className="py-8">
+        <RelatedSoftwareList
+          software={relatedSoftware}
+          onRemove={onRemove}
+        />
       </div>
     </>
   )

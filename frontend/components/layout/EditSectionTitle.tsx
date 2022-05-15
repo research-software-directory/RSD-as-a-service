@@ -1,6 +1,6 @@
 
-export default function EditSectionTitle({title, subtitle = '', children}:
-  { title: string, subtitle?: string, children?: any }) {
+export default function EditSectionTitle({title, subtitle = '', children, count}:
+  { title: string, subtitle?: string, children?: any, count?:number }) {
 
   function getSubtitle() {
     if (subtitle) {
