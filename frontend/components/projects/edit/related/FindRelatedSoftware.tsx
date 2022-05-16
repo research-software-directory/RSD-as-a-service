@@ -1,7 +1,7 @@
 import {HTMLAttributes, useState} from 'react'
 
 import AsyncAutocompleteSC, {AsyncAutocompleteConfig, AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
-import {RelatedSoftware} from '~/types/SoftwareTypes'
+import {SearchSoftware} from '~/types/SoftwareTypes'
 import {searchForRelatedSoftware} from '~/utils/editRelatedSoftware'
 
 type FindRelatedSoftwareProps = {
@@ -9,13 +9,12 @@ type FindRelatedSoftwareProps = {
   software: string,
   token: string,
   config: AsyncAutocompleteConfig
-  // searchForKeyword: ({searchFor}:{searchFor:string}) => Promise<Keyword[]>
-  onAdd: (item: RelatedSoftware) => void
+  onAdd: (item: SearchSoftware) => void
   onCreate?: (keyword: string) => void
 }
 
 export default function FindRelatedSoftware({software,config,token,onAdd, onCreate}: FindRelatedSoftwareProps) {
-  const [options, setOptions] = useState<AutocompleteOption<RelatedSoftware>[]>([])
+  const [options, setOptions] = useState<AutocompleteOption<SearchSoftware>[]>([])
   const [status, setStatus] = useState<{
     loading: boolean,
     foundFor: string | undefined
@@ -51,7 +50,7 @@ export default function FindRelatedSoftware({software,config,token,onAdd, onCrea
     })
   }
 
-  function onAddSelected(selected:AutocompleteOption<RelatedSoftware>) {
+  function onAddSelected(selected:AutocompleteOption<SearchSoftware>) {
     if (selected && selected.data) {
       onAdd(selected.data)
     }
@@ -62,7 +61,7 @@ export default function FindRelatedSoftware({software,config,token,onAdd, onCrea
   }
 
   function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<RelatedSoftware>) {
+    option: AutocompleteOption<SearchSoftware>) {
     // if more than one option we add border at the bottom
     // we assume that first option is Add "new item"
     if (options.length > 1 && onCreate) {
@@ -81,7 +80,7 @@ export default function FindRelatedSoftware({software,config,token,onAdd, onCrea
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<RelatedSoftware>,
+    option: AutocompleteOption<SearchSoftware>,
     state: object) {
     // console.log('renderOption...', option)
     // when value is not not found option returns input prop

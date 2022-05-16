@@ -1,18 +1,18 @@
 import {useEffect, useState} from 'react'
 
-import Chip from '@mui/material/Chip'
-
 import {useAuth} from '~/auth'
 import {cfgRelatedItems as config} from './config'
 import {getRelatedProjectsForProject} from '~/utils/getProjects'
-import {addRelatedProjects, deleteRelatedProject} from '~/utils/editProject'
+import {addRelatedProject, deleteRelatedProject} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
-import {RelatedProject} from '~/types/Project'
+import {RelatedProject, SearchProject} from '~/types/Project'
 import FindRelatedProject from './FindRelatedProject'
 import useProjectContext from '../useProjectContext'
 import RelatedProjectList from './RelatedProjectList'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
+import {Status} from '~/types/Organisation'
 
 export default function RelatedProjectsForProject() {
   const {session} = useAuth()
@@ -24,15 +24,15 @@ export default function RelatedProjectsForProject() {
     let abort = false
     async function getRelatedProjects() {
       setLoading(true)
-      const resp = await getRelatedProjectsForProject({
+      const projects = await getRelatedProjectsForProject({
         project: project.id,
         token: session.token,
-        frontend: true
+        frontend: true,
+        approved: false
       })
-      // extract software object
-      const projects = resp
-        .sort((a, b) => sortOnStrProp(a, b, 'title'))
+      // check abort
       if (abort) return null
+      // set local state
       setRelatedProject(projects)
       setLoading(false)
     }
@@ -44,16 +44,25 @@ export default function RelatedProjectsForProject() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[project.id,session.token])
 
-  async function onAdd(selected: RelatedProject) {
+  async function onAdd(selected: SearchProject) {
     if (typeof relatedProject=='undefined') return
     // check if already exists
     const find = relatedProject.filter(item => item.slug === selected.slug)
     // debugger
     if (find.length === 0) {
+      // determine status of relation between projects 'ownership'
+      const isMaintainer = await isMaintainerOfProject({
+        slug: selected.slug,
+        account: session.user?.account,
+        token: session.token,
+        frontend: true
+      })
+      const status:Status = isMaintainer ? 'approved' : 'requested_by_origin'
       // append(selected)
-      const resp = await addRelatedProjects({
+      const resp = await addRelatedProject({
         origin: project.id,
         relation: selected.id,
+        status,
         token: session.token
       })
       if (resp.status !== 200) {
@@ -61,7 +70,13 @@ export default function RelatedProjectsForProject() {
       } else {
         const newList = [
           ...relatedProject,
-          selected
+          {
+            ...selected,
+            image_id: null,
+            updated_at: null,
+            date_end: null,
+            status
+          }
         ].sort((a, b) => sortOnStrProp(a, b, 'title'))
         setRelatedProject(newList)
       }

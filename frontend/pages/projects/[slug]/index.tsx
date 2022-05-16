@@ -1,37 +1,40 @@
 import {useEffect, useState} from 'react'
 import {ScriptProps} from 'next/script'
 
-import {app} from '../../../config/app'
-import logger from '../../../utils/logger'
-import AppHeader from '../../../components/layout/AppHeader'
-import EditButton from '../../../components/layout/EditButton'
-import ContentInTheMiddle from '../../../components/layout/ContentInTheMiddle'
-import PageContainer from '../../../components/layout/PageContainer'
-import ContentHeader from '../../../components/layout/ContentHeader'
-import AppFooter from '../../../components/layout/AppFooter'
-import PageMeta from '../../../components/seo/PageMeta'
-import OgMetaTags from '../../../components/seo/OgMetaTags'
-import CanoncialUrl from '../../../components/seo/CanonicalUrl'
+import {app} from '~/config/app'
+import {getAccountFromToken} from '~/auth/jwtUtils'
+import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
+import logger from '~/utils/logger'
 import {
   getLinksForProject, getImpactForProject,
   getOutputForProject, getOrganisations,
-  getProjectItem, getRelatedToolsForProject,
+  getProjectItem, getRelatedSoftwareForProject,
   getTeamForProject, getResearchDomainsForProject,
   getKeywordsForProject, getRelatedProjectsForProject
-} from '../../../utils/getProjects'
-import {KeywordForProject, Project, ProjectLink, RelatedProject, ResearchDomain} from '../../../types/Project'
-import ProjectInfo from '../../../components/projects/ProjectInfo'
-import OrganisationsSection from '../../../components/software/OrganisationsSection'
-import {ProjectOrganisationProps} from '../../../types/Organisation'
-import {MentionForProject} from '../../../types/Mention'
-import ProjectMentions from '../../../components/projects/ProjectMentions'
-import {Contributor} from '../../../types/Contributor'
-import ContributorsSection from '../../../components/software/ContributorsSection'
-import {RelatedTools} from '../../../types/SoftwareTypes'
-import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
-import RelatedProjectsSection from '../../../components/projects/RelatedProjectsSection'
-import {getAccountFromToken} from '~/auth/jwtUtils'
-import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
+} from '~/utils/getProjects'
+import {
+  KeywordForProject, Project, ProjectLink,
+  RelatedProject, ResearchDomain
+} from '~/types/Project'
+import {MentionForProject} from '~/types/Mention'
+import {Contributor} from '~/types/Contributor'
+import {ProjectOrganisationProps} from '~/types/Organisation'
+import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
+import AppHeader from '~/components/layout/AppHeader'
+import EditButton from '~/components/layout/EditButton'
+import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
+import PageContainer from '~/components/layout/PageContainer'
+import ContentHeader from '~/components/layout/ContentHeader'
+import AppFooter from '~/components/layout/AppFooter'
+import PageMeta from '~/components/seo/PageMeta'
+import OgMetaTags from '~/components/seo/OgMetaTags'
+import CanoncialUrl from '~/components/seo/CanonicalUrl'
+import ProjectInfo from '~/components/projects/ProjectInfo'
+import OrganisationsSection from '~/components/software/OrganisationsSection'
+import ProjectMentions from '~/components/projects/ProjectMentions'
+import ContributorsSection from '~/components/software/ContributorsSection'
+import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
+import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
 
 export interface ProjectPageProps extends ScriptProps{
   slug: string
@@ -44,7 +47,7 @@ export interface ProjectPageProps extends ScriptProps{
   output: MentionForProject[],
   impact: MentionForProject[],
   team: Contributor[],
-  relatedTools: RelatedTools[],
+  relatedSoftware: RelatedSoftwareOfProject[],
   relatedProjects: RelatedProject[]
 }
 
@@ -52,7 +55,7 @@ export default function ProjectPage(props: ProjectPageProps) {
   const [resolvedUrl, setResolvedUrl] = useState('')
   const {slug, project, isMaintainer, organisations,
     researchDomains, keywords, links, output, impact, team,
-    relatedTools, relatedProjects
+    relatedSoftware, relatedProjects
   } = props
 
   useEffect(() => {
@@ -68,7 +71,7 @@ export default function ProjectPage(props: ProjectPageProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...organisations...', organisations)
+  // console.log('ProjectItemPage...relatedSoftware...', relatedSoftware)
   return (
     <>
       {/* Page Head meta tags */}
@@ -131,8 +134,8 @@ export default function ProjectPage(props: ProjectPageProps) {
         relatedProjects={relatedProjects}
       />
       {/* Used software */}
-      <RelatedToolsSection
-        relatedTools={relatedTools}
+      <RelatedSoftwareSection
+        relatedSoftware={relatedSoftware}
       />
       {/* bottom spacer */}
       <section className="py-8"></section>
@@ -167,7 +170,7 @@ export async function getServerSideProps(context:any) {
       getOutputForProject({project: project.id, token, frontend: false}),
       getImpactForProject({project: project.id, token, frontend: false}),
       getTeamForProject({project: project.id, token, frontend: false}),
-      getRelatedToolsForProject({project: project.id, token, frontend: false}),
+      getRelatedSoftwareForProject({project: project.id, token, frontend: false}),
       getRelatedProjectsForProject({project: project.id, token, frontend: false}),
       getLinksForProject({project: project.id, token, frontend: false}),
       isMaintainerOfProject({slug, account, token, frontend: false}),
@@ -180,7 +183,7 @@ export async function getServerSideProps(context:any) {
       output,
       impact,
       team,
-      relatedTools,
+      relatedSoftware,
       relatedProjects,
       links,
       isMaintainer
@@ -200,7 +203,7 @@ export async function getServerSideProps(context:any) {
         output,
         impact,
         team,
-        relatedTools,
+        relatedSoftware,
         relatedProjects,
         links
       },

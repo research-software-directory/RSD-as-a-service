@@ -374,6 +374,7 @@ CREATE FUNCTION related_projects_for_project() RETURNS TABLE (
 	subtitle VARCHAR,
 	date_end DATE,
 	updated_at TIMESTAMP,
+	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
 $$
@@ -387,18 +388,17 @@ BEGIN
 		project.subtitle,
 		project.date_end,
 		project.updated_at,
+		project_for_project.status,
 		image_for_project.project AS image_id
 	FROM
 		project
 	LEFT JOIN
 		image_for_project ON image_for_project.project = project.id
-	LEFT JOIN
+	INNER JOIN
 		project_for_project ON project.id = project_for_project.relation
 	;
 END
 $$;
-
-
 
 -- RELATED PROJECTS for software
 -- filter by software
@@ -410,6 +410,7 @@ CREATE FUNCTION related_projects_for_software() RETURNS TABLE (
 	subtitle VARCHAR,
 	date_end DATE,
 	updated_at TIMESTAMP,
+	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
 $$
@@ -423,17 +424,49 @@ BEGIN
 		project.subtitle,
 		project.date_end,
 		project.updated_at,
+		software_for_project.status,
 		image_for_project.project AS image_id
 	FROM
 		project
 	LEFT JOIN
 		image_for_project ON image_for_project.project = project.id
-	LEFT JOIN
+	INNER JOIN
 		software_for_project ON project.id = software_for_project.project
 	;
 END
 $$;
 
+-- RELATED SOFTWARE for PROJECT
+-- filter by software
+CREATE FUNCTION related_software_for_project() RETURNS TABLE (
+	project UUID,
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	is_featured BOOLEAN,
+	updated_at TIMESTAMP,
+	status relation_status
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		software_for_project.project,
+		software.id,
+		software.slug,
+		software.brand_name,
+		software.short_statement,
+		software.is_featured,
+		software.updated_at,
+		software_for_project.status
+	FROM
+		software
+	INNER JOIN
+		software_for_project ON software.id = software_for_project.software
+	;
+END
+$$;
 
 -- Project maintainer by slug
 -- there are similar functions for software maintainers

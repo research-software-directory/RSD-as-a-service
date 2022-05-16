@@ -297,12 +297,15 @@ export async function getRemoteMarkdown(url: string) {
 }
 
 // RELATED PROJECTS FOR SORFTWARE
-
-export async function getRelatedProjectsForSoftware({software, token, frontend}:
-  { software: string, token?: string, frontend?: boolean }) {
+export async function getRelatedProjectsForSoftware({software, token, frontend, approved=true}:
+  { software: string, token?: string, frontend?: boolean, approved?:boolean }) {
   try {
     // construct api url based on request source
     let query = `rpc/related_projects_for_software?software=eq.${software}&order=title.asc`
+    if (approved) {
+      // select only approved relations
+      query+='&status=eq.approved'
+    }
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
       url = `/api/v1/${query}`

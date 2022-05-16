@@ -5,9 +5,9 @@ import FlexibleGridSection, {FlexGridProps} from '../layout/FlexibleGridSection'
 export type SoftwareGridType = {
   slug: string,
   brand_name: string,
-  short_statement: string,
-  is_featured: boolean,
-  updated_at: string | null,
+  short_statement?: string,
+  is_featured?: boolean,
+  updated_at?: string | null,
   is_published?: boolean
 }
 
@@ -35,9 +35,9 @@ export default function SoftwareGrid({software,grid,className='gap-[0.125rem] pt
             key={`/software/${item.slug}/`}
             href={`/software/${item.slug}/`}
             brand_name={item.brand_name}
-            short_statement={item.short_statement}
-            is_featured={item.is_featured}
-            updated_at={item.updated_at}
+            short_statement={item.short_statement ?? ''}
+            is_featured={item.is_featured ?? false}
+            updated_at={item.updated_at ?? null}
           />
         )
       })}

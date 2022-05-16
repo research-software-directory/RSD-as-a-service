@@ -6,6 +6,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
+import LockIcon from '@mui/icons-material/Lock'
 
 import {RelatedProject} from '~/types/Project'
 import {maxText} from '~/utils/maxText'
@@ -59,7 +60,25 @@ export default function RelatedProjectList({projects,onRemove}:ProjectListProps)
 }
 
 export function RelatedProjectItem({project,onDelete}:ProjectItemProps) {
-
+  function getStatusIcon() {
+    if (project.status !== 'approved') {
+      return (
+        <div
+          title="Waiting on approval"
+          className="absolute flex items-center w-[2rem] h-[4rem] bg-primary"
+        >
+          <LockIcon
+            sx={{
+              width: '2rem',
+              height: '2rem',
+              color: 'white'
+            }}
+          />
+        </div>
+      )
+    }
+    return null
+  }
   return (
      <ListItem
         secondaryAction={
@@ -101,6 +120,7 @@ export function RelatedProjectItem({project,onDelete}:ProjectItemProps) {
           {project?.title.slice(0,2).toUpperCase()}
         </Avatar>
       </ListItemAvatar>
+      {getStatusIcon()}
       <ListItemText
         primary={
           <a href={`/projects/${project.slug}`} target="_blank" rel="noreferrer">

@@ -6,17 +6,26 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
+import LockIcon from '@mui/icons-material/Lock'
 
-import {RelatedSoftware} from '~/types/SoftwareTypes'
 import {maxText} from '~/utils/maxText'
+import {Status} from '~/types/Organisation'
+
+type SoftwareItem = {
+  id: string
+  slug: string
+  brand_name: string
+  short_statement: string
+  status: Status
+}
 
 type SoftwareListProps = {
-  software: RelatedSoftware[] | undefined
+  software: SoftwareItem[] | undefined
   onRemove:(pos:number)=>void
 }
 
 type SoftwareItemProps = {
-  software: RelatedSoftware
+  software: SoftwareItem
   onDelete:()=>void
 }
 
@@ -57,7 +66,25 @@ export default function RelatedSoftwareList({software,onRemove}:SoftwareListProp
 }
 
 export function RelatedSoftwareItem({software,onDelete}:SoftwareItemProps) {
-
+  function getStatusIcon() {
+    if (software.status !== 'approved') {
+      return (
+        <div
+          title="Waiting on approval"
+          className="absolute flex items-center w-[2rem] h-[4rem] bg-primary"
+        >
+          <LockIcon
+            sx={{
+              width: '2rem',
+              height: '2rem',
+              color: 'white'
+            }}
+          />
+        </div>
+      )
+    }
+    return null
+  }
   return (
      <ListItem
         secondaryAction={
@@ -98,6 +125,7 @@ export function RelatedSoftwareItem({software,onDelete}:SoftwareItemProps) {
           {software?.brand_name.slice(0,2).toUpperCase()}
         </Avatar>
       </ListItemAvatar>
+      {getStatusIcon()}
       <ListItemText
         primary={
           <a href={`/software/${software.slug}`} target="_blank" rel="noreferrer">

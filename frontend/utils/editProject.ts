@@ -11,7 +11,7 @@ import {
 import {ProjectImageInfo} from '~/components/projects/edit/information'
 import {ProjectLinksForSave} from '~/components/projects/edit/information/projectLinkChanges'
 import {getPropsFromObject} from './getPropsFromObject'
-import {EditOrganisation, OrganisationRole} from '~/types/Organisation'
+import {EditOrganisation, OrganisationRole, Status} from '~/types/Organisation'
 import {createOrganisation, updateDataObjectAfterSave} from './editOrganisation'
 import {getSlugFromString} from './getSlugFromString'
 import {CreateOrganisation, FundingOrganisationsForSave} from '~/components/projects/edit/information/fundingOrganisationsChanges'
@@ -838,8 +838,8 @@ export async function createMaintainerLink({project,account,token}:{project:stri
   }
 }
 
-export async function addRelatedSoftware({project,software, token}: {
-  project:string,software:string,token: string
+export async function addRelatedSoftware({project,software,status,token}: {
+  project: string, software: string, status: Status, token: string
 }) {
   const url = '/api/v1/software_for_project'
 
@@ -851,7 +851,8 @@ export async function addRelatedSoftware({project,software, token}: {
     },
     body: JSON.stringify({
       software,
-      project
+      project,
+      status
     })
   })
 
@@ -874,8 +875,8 @@ export async function deleteRelatedSoftware({project, software, token}: {
   return extractReturnMessage(resp)
 }
 
-export async function addRelatedProjects({origin, relation, token}: {
-  origin: string, relation: string, token: string
+export async function addRelatedProject({origin, relation, status, token}: {
+  origin: string, relation: string, status: Status, token: string
 }) {
   const url = '/api/v1/project_for_project'
 
@@ -887,7 +888,8 @@ export async function addRelatedProjects({origin, relation, token}: {
     },
     body: JSON.stringify({
       origin,
-      relation
+      relation,
+      status
     })
   })
 

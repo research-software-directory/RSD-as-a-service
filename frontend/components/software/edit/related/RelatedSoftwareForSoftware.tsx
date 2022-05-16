@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 
 import {useAuth} from '~/auth'
-import {RelatedSoftware} from '~/types/SoftwareTypes'
+import {RelatedSoftwareOfSoftware, SearchSoftware} from '~/types/SoftwareTypes'
 
 import {cfgRelatedItems as config} from './config'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -12,13 +12,14 @@ import {addRelatedSoftware, deleteRelatedSoftware, getRelatedToolsForSoftware} f
 
 import RelatedSoftwareList from '../../../projects/edit/related/RelatedSoftwareList'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {Status} from '~/types/Organisation'
 
 
 export default function RelatedSoftwareForSoftware() {
   const {session} = useAuth()
   const {showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()
-  const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftware[]>()
+  const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftwareOfSoftware[]>()
 
   useEffect(() => {
     let abort = false
@@ -30,7 +31,6 @@ export default function RelatedSoftwareForSoftware() {
         frontend: true
       })
       const softwareList = resp
-        .map(item => item.software)
         .sort((a, b) => sortOnStrProp(a, b, 'brand_name'))
       if (abort) return null
       // debugger
@@ -45,7 +45,7 @@ export default function RelatedSoftwareForSoftware() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[software.id,session.token])
 
-  async function onAdd(selected: RelatedSoftware) {
+  async function onAdd(selected: SearchSoftware) {
     if (typeof relatedSoftware == 'undefined') return
     // check if already exists
     const find = relatedSoftware.filter(item => item.slug === selected.slug)
@@ -61,8 +61,11 @@ export default function RelatedSoftwareForSoftware() {
         showErrorMessage(`Failed to add related software. ${resp.message}`)
       } else {
         const newList = [
-          ...relatedSoftware,
-          selected
+          ...relatedSoftware, {
+            ...selected,
+            status: 'approved' as Status
+          }
+
         ].sort((a, b) => sortOnStrProp(a, b, 'brand_name'))
         setRelatedSoftware(newList)
       }

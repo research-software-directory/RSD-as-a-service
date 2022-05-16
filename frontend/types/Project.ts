@@ -75,14 +75,18 @@ export type ProjectLinkWithStatus = ProjectLink & {
   status?:'add'|'update'|'delete'
 }
 
-export type RelatedProject = {
+export type SearchProject = {
   id: string
   slug: string
   title: string
   subtitle: string
-  updated_at: string
-  date_end: string
+}
+
+export type RelatedProject = SearchProject & {
+  updated_at: string | null
+  date_end: string | null
   image_id: string | null
+  status: Status
 }
 
 export type RelatedProjectForProject = RelatedProject & {

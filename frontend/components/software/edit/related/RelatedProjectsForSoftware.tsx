@@ -6,11 +6,13 @@ import {getRelatedProjectsForSoftware} from '~/utils/getSoftware'
 import {addRelatedSoftware, deleteRelatedSoftware} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
-import {RelatedProject} from '~/types/Project'
+import {RelatedProject, SearchProject} from '~/types/Project'
 import useSoftwareContext from '../useSoftwareContext'
 import FindRelatedProject from '~/components/projects/edit/related/FindRelatedProject'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import RelatedProjectList from '~/components/projects/edit/related/RelatedProjectList'
+import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
+import {Status} from '~/types/Organisation'
 
 export default function RelatedProjectsForSoftware() {
   const {session} = useAuth()
@@ -25,7 +27,8 @@ export default function RelatedProjectsForSoftware() {
       const resp = await getRelatedProjectsForSoftware({
         software: software.id ?? '',
         token: session.token,
-        frontend: true
+        frontend: true,
+        approved: false
       })
       // extract software object
       const projects = resp
@@ -43,24 +46,38 @@ export default function RelatedProjectsForSoftware() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[software.id,session.token])
 
-  async function onAdd(selected: RelatedProject) {
+  async function onAdd(selected: SearchProject) {
     if (typeof relatedProject=='undefined') return
     // check if already exists
     const find = relatedProject.filter(item => item.slug === selected.slug)
     // debugger
     if (find.length === 0) {
+      // determine status of relation between software and project 'ownership'
+      const isMaintainer = await isMaintainerOfProject({
+        slug: selected.slug,
+        account: session.user?.account,
+        token: session.token,
+        frontend: true
+      })
+      const status:Status = isMaintainer ? 'approved' : 'requested_by_origin'
       // append(selected)
       const resp = await addRelatedSoftware({
         software: software.id ?? '',
         project: selected.id,
+        status,
         token: session.token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to add related project. ${resp.message}`)
       } else {
         const newList = [
-          ...relatedProject,
-          selected
+          ...relatedProject, {
+            ...selected,
+            image_id: null,
+            updated_at: null,
+            date_end: null,
+            status
+          }
         ].sort((a, b) => sortOnStrProp(a, b, 'title'))
         setRelatedProject(newList)
       }

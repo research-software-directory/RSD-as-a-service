@@ -1,40 +1,36 @@
 import {useEffect, useState} from 'react'
 
-import Chip from '@mui/material/Chip'
-
 import {useAuth} from '~/auth'
-import {RelatedSoftware} from '~/types/SoftwareTypes'
+import {RelatedSoftwareOfProject, SearchSoftware} from '~/types/SoftwareTypes'
 import FindRelatedSoftware from './FindRelatedSoftware'
 import {cfgRelatedItems as config} from './config'
-import {getRelatedToolsForProject} from '~/utils/getProjects'
+import {getRelatedSoftwareForProject} from '~/utils/getProjects'
 import {addRelatedSoftware, deleteRelatedSoftware} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
 import useProjectContext from '../useProjectContext'
 import RelatedSoftwareList from './RelatedSoftwareList'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {Status} from '~/types/Organisation'
+import isMaintainerOfSoftware from '~/auth/permissions/isMaintainerOfSoftware'
 
 
 export default function RelatedSoftwareForProject() {
   const {session} = useAuth()
   const {showErrorMessage} = useSnackbar()
   const {setLoading, project} = useProjectContext()
-  const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftware[]>()
+  const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftwareOfProject[]>()
 
   useEffect(() => {
     let abort = false
     async function getRelatedSoftware() {
       setLoading(true)
-      const resp = await getRelatedToolsForProject({
+      const software = await getRelatedSoftwareForProject({
         project: project.id,
         token: session.token,
-        frontend: true
+        frontend: true,
+        approved: false
       })
-      // extract software object
-      const software = resp
-        .map(item => item.software)
-        .sort((a, b) => sortOnStrProp(a, b, 'brand_name'))
-      if (abort) return null
       setRelatedSoftware(software)
       setLoading(false)
     }
@@ -46,24 +42,40 @@ export default function RelatedSoftwareForProject() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[project.id,session.token])
 
-  async function onAdd(selected: RelatedSoftware) {
+  async function onAdd(selected: SearchSoftware) {
     if (typeof relatedSoftware == 'undefined') return
     // check if already exists
     const find = relatedSoftware.filter(item => item.slug === selected.slug)
     // debugger
     if (find.length === 0) {
-      // append(selected)
+      // determine status of relation between software and project 'ownership'
+      const isMaintainer = await isMaintainerOfSoftware({
+        slug: selected.slug,
+        account: session.user?.account,
+        token: session.token,
+        frontend: true
+      })
+      const status:Status = isMaintainer ? 'approved' : 'requested_by_relation'
+      // add selected item to related software
       const resp = await addRelatedSoftware({
         project: project.id,
         software: selected.id,
+        status,
         token: session.token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to add related software. ${resp.message}`)
       } else {
+        // update local state
         const newList = [
           ...relatedSoftware,
-          selected
+          {
+            ...selected,
+            // add status
+            status,
+            project: project.id,
+            is_featured: false
+          }
         ].sort((a, b) => sortOnStrProp(a, b, 'brand_name'))
         setRelatedSoftware(newList)
       }

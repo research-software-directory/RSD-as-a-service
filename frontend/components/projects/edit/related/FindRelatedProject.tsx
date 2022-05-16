@@ -4,7 +4,7 @@ import AsyncAutocompleteSC, {
   AsyncAutocompleteConfig,
   AutocompleteOption
 } from '~/components/form/AsyncAutocompleteSC'
-import {RelatedProject} from '~/types/Project'
+import {SearchProject} from '~/types/Project'
 import {searchForRelatedProjectByTitle} from '~/utils/getProjects'
 
 type FindRelatedProjectProps = {
@@ -13,12 +13,12 @@ type FindRelatedProjectProps = {
   token: string,
   config: AsyncAutocompleteConfig
   // searchForKeyword: ({searchFor}:{searchFor:string}) => Promise<Keyword[]>
-  onAdd: (item: RelatedProject) => void
+  onAdd: (item: SearchProject) => void
   onCreate?: (keyword: string) => void
 }
 
 export default function FindRelatedProject({project,config,token,onAdd, onCreate}: FindRelatedProjectProps) {
-  const [options, setOptions] = useState<AutocompleteOption<RelatedProject>[]>([])
+  const [options, setOptions] = useState<AutocompleteOption<SearchProject>[]>([])
   const [status, setStatus] = useState<{
     loading: boolean,
     foundFor: string | undefined
@@ -54,7 +54,7 @@ export default function FindRelatedProject({project,config,token,onAdd, onCreate
     })
   }
 
-  function onAddSelected(selected:AutocompleteOption<RelatedProject>) {
+  function onAddSelected(selected:AutocompleteOption<SearchProject>) {
     if (selected && selected.data) {
       onAdd(selected.data)
     }
@@ -65,7 +65,7 @@ export default function FindRelatedProject({project,config,token,onAdd, onCreate
   }
 
   function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<RelatedProject>) {
+    option: AutocompleteOption<SearchProject>) {
     // if more than one option we add border at the bottom
     // we assume that first option is Add "new item"
     if (options.length > 1 && onCreate) {
@@ -84,7 +84,7 @@ export default function FindRelatedProject({project,config,token,onAdd, onCreate
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<RelatedProject>,
+    option: AutocompleteOption<SearchProject>,
     state: object) {
     // console.log('renderOption...', option)
     // when value is not not found option returns input prop
