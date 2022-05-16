@@ -236,7 +236,11 @@ public class Main {
 				JsonObject repoUrlToSave = new JsonObject();
 				repoUrlToSave.addProperty("software", slugToId.get(slug));
 				repoUrlToSave.add("url", jsonUrl);
-				repoUrlToSave.addProperty("code_platform", "github");
+				String url = jsonUrl.getAsString();
+				if (url.startsWith("https://github.com")) repoUrlToSave.addProperty("code_platform", "github");
+				else if (url.contains("gitlab")) repoUrlToSave.addProperty("code_platform", "gitlab");
+				else if (url.contains("bitbucket")) repoUrlToSave.addProperty("code_platform", "bitbucket");
+				else repoUrlToSave.addProperty("code_platform", "other");
 				allRepoUrlsToSave.add(repoUrlToSave);
 			}
 		});
