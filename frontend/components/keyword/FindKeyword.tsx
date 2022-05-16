@@ -10,7 +10,7 @@ export type Keyword = {
 
 type FindKeywordProps = {
   config: AsyncAutocompleteConfig
-  searchForKeyword: ({searchFor}:{searchFor:string}) => Promise<Keyword[]>
+  searchForKeyword: ({searchFor}: {searchFor: string}) => Promise<Keyword[]>
   onAdd: (item: Keyword) => void
   onCreate?: (keyword: string) => void
 }

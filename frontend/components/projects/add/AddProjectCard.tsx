@@ -13,7 +13,7 @@ import SlugTextField from '../../form/SlugTextField'
 import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import {NewProject} from '../../../types/Project'
 import {getSlugFromString,sanitizeSlugValue} from '../../../utils/getSlugFromString'
-import {useDebounceValid} from '../../../utils/useDebouce'
+import {useDebounceValid} from '~/utils/useDebounce'
 import {addProject, validProjectItem} from '../../../utils/editProject'
 import {addConfig as config} from './addProjectConfig'
 

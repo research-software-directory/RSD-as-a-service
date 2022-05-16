@@ -1,5 +1,5 @@
 import {createContext, useState, useEffect} from 'react'
-import {useDebounce} from '../../utils/useDebouce'
+import {useDebounce} from '~/utils/useDebounce'
 
 export type SearchContextProps = {
   placeholder: string,

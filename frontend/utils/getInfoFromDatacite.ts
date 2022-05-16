@@ -21,6 +21,14 @@ const exampleCreator = {
   ]
 }
 
+const exampleSubject = {
+  'subject': '000 computer science',
+  'subjectScheme': 'dewey',
+  'valueURI': 'https://cern.ch',
+  'schemeURI': 'http://dewey.info/',
+  'lang': 'en-us'
+}
+
 const exampleResponse = {
   'id': 'https://doi.org/10.0000/zenodo.0000000',
   'doi': '10.0000/ZENODO.0000000',
@@ -42,7 +50,6 @@ const exampleResponse = {
   ],
   'publisher': 'Zenodo',
   'container': {},
-  'subjects': [],
   'contributors': [],
   'dates': [
     {
@@ -51,6 +58,9 @@ const exampleResponse = {
     }
   ],
   'publicationYear': 2021,
+  'subjects': [
+    exampleSubject
+  ],
   'identifiers': [
     {
       'identifier': 'https://zenodo.org/record/0000000',
@@ -96,6 +106,7 @@ const exampleResponse = {
 
 export type DataciteRecord = typeof exampleResponse
 export type DatacitePerson = typeof exampleCreator
+export type DataciteSubject = typeof exampleSubject
 
 const baseUrl = 'https://api.datacite.org/application/vnd.datacite.datacite+json/'
 const orcidPattern = /^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$/
@@ -203,4 +214,29 @@ export async function getContributorsFromDoi(
   }
 
   return contributors
+}
+
+export async function getKeywordsFromDoi(
+  softwareId: string | undefined, doiId: string | null | undefined
+) {
+  if (!doiId || !softwareId) {
+    return []
+  }
+
+  const doiData = await getDoiInfo(doiId)
+
+  if (!doiData || !('subjects' in doiData)) {
+    return []
+  }
+
+  const allSubjects: DataciteSubject[] = doiData['subjects']
+  const keywords = []
+
+  for (const subject of allSubjects) {
+    if ('subject' in subject && subject.subject.length > 0) {
+      keywords.push(subject.subject)
+    }
+  }
+
+  return keywords
 }
