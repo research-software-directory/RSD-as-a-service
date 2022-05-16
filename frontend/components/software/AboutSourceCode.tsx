@@ -9,6 +9,7 @@ export default function AboutSourceCode({repository,platform}: { repository: str
   const code = '</>'
 
   function getIcon() {
+    if (repository===null) return (<i>Not specified</i>)
     // abort if no info
     switch (platform) {
       case 'github':
