@@ -14,7 +14,7 @@ import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
-import {getContributorsFromDoi} from '~/utils/getContributorsFromDoi'
+import {getContributorsFromDoi} from '~/utils/getInfoFromDatacite'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 import EditContributorModal from './EditContributorModal'
 import FindContributor, {Name} from './FindContributor'
@@ -318,7 +318,7 @@ export default function SoftwareContributors({token}: {token: string }) {
           />
           {
             software?.concept_doi &&
-            <div className="py-8">
+            <div className="pt-8 pb-0">
               <EditSectionTitle
                 title={config.importContributors.title}
                 subtitle={config.importContributors.subtitle}

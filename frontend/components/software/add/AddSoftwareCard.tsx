@@ -14,7 +14,7 @@ import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import {NewSoftwareItem} from '../../../types/SoftwareTypes'
 import {getSlugFromString,sanitizeSlugValue} from '../../../utils/getSlugFromString'
 import {validSoftwareItem} from '../../../utils/editSoftware'
-import {useDebounceValid} from '../../../utils/useDebouce'
+import {useDebounceValid} from '~/utils/useDebounce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
 

@@ -5,7 +5,7 @@ import ReactMarkdownWithSettings from '../layout/ReactMarkdownWithSettings'
 import PageErrorMessage from '../layout/PageErrorMessage'
 import {getRemoteMarkdown} from '../../utils/getSoftware'
 import ContentLoader from '../layout/ContentLoader'
-import {useDebounceValid} from '../../utils/useDebouce'
+import {useDebounceValid} from '~/utils/useDebounce'
 
 type ControlledRemoteMarkdownProps = {
   control: any,
@@ -126,5 +126,3 @@ export default function ControlledRemoteMarkdown({control, rules, options}: Cont
     </div>
   )
 }
-
-

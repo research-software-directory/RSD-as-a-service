@@ -19,7 +19,10 @@ import SoftwarePageStatus from './SoftwarePageStatus'
 import {softwareInformation as config} from '../editSoftwareConfig'
 import RepositoryPlatform from './RepositoryPlatform'
 import SoftwareKeywords from './SoftwareKeywords'
+import GetKeywordsFromDoi from './GetKeywordsFromDoi'
 import {getKeywordChanges} from './softwareKeywordsChanges'
+import {getKeywordsFromDoi} from '~/utils/getInfoFromDatacite'
+import {searchForSoftwareKeywordExact} from './searchForSoftwareKeyword'
 
 export default function SoftwareInformation({slug,token}:{slug:string,token: string}) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
@@ -37,7 +40,7 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       ...editSoftware
     }
   })
-  const {update:updateKeyword} = useFieldArray({
+  const {update: updateKeyword, append, fields} = useFieldArray({
     control,
     name:'keywords'
   })
@@ -267,11 +270,14 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
 
           <div className="py-4"></div>
           <EditSectionTitle
-            title="Keywords"
+            title={config.keywords.title}
+            subtitle={config.keywords.subtitle}
           />
+
           <SoftwareKeywords
             software={formData.id}
             control={control}
+            concept_doi={formData.concept_doi ?? undefined}
           />
 
           <div className="py-4"></div>
