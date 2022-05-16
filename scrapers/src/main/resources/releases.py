@@ -197,7 +197,10 @@ class ReleaseScraper:
 				elif type(e).__name__ == "ScannerError":
 					continue
 				else:
-					raise e
+					print("Something went wrong while generating a file for a release:")
+					print(e)
+					print("Continuing")
+					continue
 		return self
 
 	def is_concept_doi(self):
