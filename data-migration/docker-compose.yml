@@ -6,7 +6,7 @@ services:
     build:
       context: ../
       dockerfile: ./data-migration/Dockerfile
-    image: rsd/data-migration:0.0.12
+    image: rsd/data-migration:0.0.13
     env_file:
       # use main env file
       - ../.env
