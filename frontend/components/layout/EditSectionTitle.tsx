@@ -1,7 +1,7 @@
 
 export default function EditSectionTitle(
   {title, subtitle = '', children, hlevel = 2}:
-  { title: string, subtitle?: string, children?: any, hlevel?: number }
+  {title: string, subtitle?: string, children?: any, hlevel?: number}
 ) {
 
   const HeadingTag: any = `h${hlevel}`

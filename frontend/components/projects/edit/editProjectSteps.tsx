@@ -60,7 +60,7 @@ export const editProjectSteps: EditProjectStep[] = [
     status: 'Optional information'
   },
   {
-    // formId: 'output',
+    // formId: 'related-topics',
     label: 'Related topics',
     icon: <ShareIcon />,
     component: (props?) => <RelatedTopics {...props} />,

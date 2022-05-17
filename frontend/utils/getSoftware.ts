@@ -3,6 +3,7 @@ import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {createJsonHeaders} from './fetchHelpers'
+import {RelatedProjectForSoftware} from '~/types/Project'
 
 /*
  * postgREST api uri to retreive software index data.
@@ -292,5 +293,36 @@ export async function getRemoteMarkdown(url: string) {
       status: 404,
       message: e?.message
     }
+  }
+}
+
+// RELATED PROJECTS FOR SORFTWARE
+export async function getRelatedProjectsForSoftware({software, token, frontend, approved=true}:
+  { software: string, token?: string, frontend?: boolean, approved?:boolean }) {
+  try {
+    // construct api url based on request source
+    let query = `rpc/related_projects_for_software?software=eq.${software}&order=title.asc`
+    if (approved) {
+      // select only approved relations
+      query+='&status=eq.approved'
+    }
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: RelatedProjectForSoftware[] = await resp.json()
+      return data
+    }
+    logger(`getRelatedProjects: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    // query not found
+    return []
+  } catch (e: any) {
+    logger(`getRelatedProjects: ${e?.message}`, 'error')
+    return []
   }
 }

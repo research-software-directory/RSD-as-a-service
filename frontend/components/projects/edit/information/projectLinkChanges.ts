@@ -1,5 +1,5 @@
 import {UseFieldArrayUpdate, UseFormGetFieldState, UseFormGetValues} from 'react-hook-form'
-import {EditProject, ProjectLink, ProjectLinkInForm} from '~/types/Project'
+import {EditProject, ProjectLink} from '~/types/Project'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 
 export type ProjectLinksForSave = {
@@ -29,8 +29,9 @@ export function getProjectLinkChanges(props: ProjectLinkChangesProps) {
   }
   // set status to existing items
   formData.url_for_project.forEach((item, pos) => {
+    debugger
     // get the latest value of uuid (this is id prop from database)
-    const uuid = getValues(`url_for_project.${pos}.uuid`)
+    const id = getValues(`url_for_project.${pos}.id`)
     const title = getFieldState(`url_for_project.${pos}.title`)
     const url = getFieldState(`url_for_project.${pos}.url`)
     // debugger
@@ -41,7 +42,7 @@ export function getProjectLinkChanges(props: ProjectLinkChangesProps) {
     }
     // we need first to check if uuid=null
     // new items, without id, have also dirty state
-    if (uuid === null) {
+    if (id === null) {
       // provide item in ProjectLink format
       // id is null for new items
       projectLinks.add.push({
@@ -55,7 +56,7 @@ export function getProjectLinkChanges(props: ProjectLinkChangesProps) {
       // provide item in ProjectLink format
       // uuid is mapped back to id for api
       projectLinks.update.push({
-        id: item.uuid,
+        id: item.id,
         project: item.project ?? projectState?.id ?? '',
         title: item.title,
         url: item.url,
@@ -66,15 +67,15 @@ export function getProjectLinkChanges(props: ProjectLinkChangesProps) {
   // check if any link items were deleted
   if (projectState?.url_for_project && projectState?.url_for_project.length > 0) {
     // extract items to delete
-    const toDelete: ProjectLinkInForm[] = itemsNotInReferenceList({
+    const toDelete: ProjectLink[] = itemsNotInReferenceList({
       list: projectState?.url_for_project,
       referenceList: formData.url_for_project,
-      key: 'uuid'
+      key: 'id'
     })
     // add delete items to links collection
     // for deletion we only need id's stored in uuid prop
     toDelete.forEach(item => {
-      if (item.uuid) projectLinks.delete.push(item.uuid)
+      if (item.id) projectLinks.delete.push(item.id)
     })
   }
 

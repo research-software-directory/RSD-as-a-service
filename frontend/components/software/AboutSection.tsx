@@ -39,7 +39,7 @@ export default function AboutSection({
         <AboutLanguages languages={languages} />
         <AboutLicense license={license || []} />
         <AboutSourceCode
-          repository={repository}
+          repository={repository ?? null}
           platform={platform}
         />
       </div>

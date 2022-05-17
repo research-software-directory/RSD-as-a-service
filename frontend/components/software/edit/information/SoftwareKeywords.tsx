@@ -18,8 +18,15 @@ export default function SoftwareKeywords({software, control,concept_doi}:
   const [loading,setLoading]=useState(false)
   const {fields, append, remove} = useFieldArray({
     control,
-    name:'keywords'
+    name: 'keywords',
+    // change internal key name from id to fid
+    // to avoid conflict with id prop in data
+    keyName: 'fid'
   })
+
+  // console.group('SoftwareKeywords')
+  // console.log('fields...', fields)
+  // console.groupEnd()
 
   async function onGetKeywordsFromDoi() {
     let added = 0
@@ -31,7 +38,7 @@ export default function SoftwareKeywords({software, control,concept_doi}:
     )
 
     if (keywordsDoi && keywordsDoi.length === 0) {
-      showErrorMessage(
+      showInfoMessage(
         `No Keywords could be found for DOI ${concept_doi}`
       )
       setLoading(false)
@@ -115,7 +122,7 @@ export default function SoftwareKeywords({software, control,concept_doi}:
       {fields.map((field, pos) => {
         return(
           <div
-            key={field.id}
+            key={field.fid}
             className="py-1 pr-1"
           >
             <Chip

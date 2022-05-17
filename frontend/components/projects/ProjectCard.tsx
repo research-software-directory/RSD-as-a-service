@@ -8,7 +8,7 @@ export type ProjectCardProps = {
   title: string
   subtitle: string | null
   image_id: string | null
-  updated_at: string
+  updated_at: string | null
   date_end: string | null
 }
 

@@ -15,7 +15,7 @@ export type ResearchDomainsForSave = {
 }
 
 export function getResearchDomainChanges(props: ResearchDomainChanges) {
-  const {formData, getFieldState, projectState, project} = props
+  const {formData, projectState, project} = props
   const research_domains: ResearchDomainsForSave = {
     add: [],
     delete: []

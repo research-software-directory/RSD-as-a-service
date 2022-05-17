@@ -1,12 +1,13 @@
 import {OrganisationRole} from '~/types/Organisation'
-import {Contributor, TeamMemberProps} from '../types/Contributor'
-import {MentionForProject} from '../types/Mention'
+import {TeamMemberProps} from '~/types/Contributor'
+import {MentionForProject} from '~/types/Mention'
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, RawProject, RelatedProject, ResearchDomain, TeamMember
-} from '../types/Project'
-import {RelatedTools} from '../types/SoftwareTypes'
+  ProjectLink, RawProject, RelatedProjectForProject,
+  ResearchDomain, SearchProject, TeamMember
+} from '~/types/Project'
+import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
@@ -443,11 +444,15 @@ export async function getTeamForProject({project, token, frontend}:
   }
 }
 
-export async function getRelatedProjects({project, token, frontend}:
-  { project: string, token?: string, frontend?: boolean }) {
+export async function getRelatedProjectsForProject({project, token, frontend, approved = true}:
+  { project: string, token?: string, frontend?: boolean, approved?: boolean }) {
   try {
     // construct api url based on request source
     let query = `rpc/related_projects_for_project?origin=eq.${project}&order=title.asc`
+    if (approved) {
+      // select only approved relations
+      query += '&status=eq.approved'
+    }
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
       url = `/api/v1/${query}`
@@ -457,7 +462,7 @@ export async function getRelatedProjects({project, token, frontend}:
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data: RelatedProject[] = await resp.json()
+      const data: RelatedProjectForProject[] = await resp.json()
       return data
     }
     logger(`getRelatedProjects: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
@@ -470,12 +475,14 @@ export async function getRelatedProjects({project, token, frontend}:
 }
 
 
-export async function getRelatedToolsForProject({project, token, frontend}:
-  {project: string, token?: string, frontend?: boolean}) {
+export async function getRelatedSoftwareForProject({project, token, frontend, approved = true}:
+  { project: string, token?: string, frontend?: boolean, approved?: boolean}) {
   try {
-    // construct api url based on request source
-    const select = 'project,status,software(id,slug,brand_name,short_statement,updated_at)'
-    let query = `software_for_project?select=${select}&status=eq.approved&project=eq.${project}`
+    let query = `rpc/related_software_for_project?project=eq.${project}&order=brand_name.asc`
+    if (approved) {
+      // select only approved relations
+      query += '&status=eq.approved'
+    }
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
       url = `/api/v1/${query}`
@@ -485,14 +492,41 @@ export async function getRelatedToolsForProject({project, token, frontend}:
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data: RelatedTools[] = await resp.json()
+      const data: RelatedSoftwareOfProject[] = await resp.json()
       return data
     }
-    logger(`getRelatedToolsForProject: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    logger(`getRelatedSoftwareForProject: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
     // query not found
     return []
   } catch (e: any) {
-    logger(`getRelatedToolsForProject: ${e?.message}`, 'error')
+    logger(`getRelatedSoftwareForProject: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function searchForRelatedProjectByTitle({project, searchFor, token}: {
+  project: string, searchFor: string, token?: string
+}) {
+  try {
+    let query = `&title=ilike.*${searchFor}*&order=title.asc&limit=50`
+    // software item to exclude
+    if (project) {
+      query += `&id=neq.${project}`
+    }
+    const url = `/api/v1/project?select=id,slug,title,subtitle${query}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+
+    if (resp.status === 200) {
+      const json: SearchProject[] = await resp.json()
+      return json
+    } else {
+      return []
+    }
+  } catch (e: any) {
+    logger(`searchForRelatedProjectByTitle: ${e?.message}`, 'error')
     return []
   }
 }

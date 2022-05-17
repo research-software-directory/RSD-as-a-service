@@ -448,3 +448,40 @@ export async function validSoftwareItem(slug: string | undefined, token?: string
     return false
   }
 }
+
+
+export async function addRelatedProjects({origin, relation, token}: {
+  origin: string, relation: string, token: string
+}) {
+  const url = '/api/v1/project_for_project'
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      ...createJsonHeaders(token),
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify({
+      origin,
+      relation
+    })
+  })
+
+  return extractReturnMessage(resp)
+}
+
+export async function deleteRelatedProject({origin, relation, token}: {
+  origin: string, relation: string, token: string
+}) {
+
+  const url = `/api/v1/project_for_project?origin=eq.${origin}&relation=eq.${relation}`
+
+  const resp = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      ...createJsonHeaders(token)
+    }
+  })
+
+  return extractReturnMessage(resp)
+}

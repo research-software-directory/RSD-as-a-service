@@ -66,24 +66,26 @@ export type ProjectLink = {
   project: string | null
 }
 
-export type ProjectLinkInForm = ProjectLink & {
-  // id prop in database move
-  uuid: string | null
-}
-
-export type ProjectLinkWithStatus = ProjectLink & {
-  status?:'add'|'update'|'delete'
-}
-
-export type RelatedProject = {
-  origin: string
+export type SearchProject = {
   id: string
   slug: string
   title: string
   subtitle: string
-  updated_at: string
-  date_end: string
+}
+
+export type RelatedProject = SearchProject & {
+  updated_at: string | null
+  date_end: string | null
   image_id: string | null
+  status: Status
+}
+
+export type RelatedProjectForProject = RelatedProject & {
+  origin: string
+}
+
+export type RelatedProjectForSoftware = RelatedProject & {
+  software: string
 }
 
 export type KeywordForProject = {
@@ -99,7 +101,7 @@ export type KeywordForProject = {
 export type EditProject = Project & {
   image_b64: string | null
   image_mime_type: string | null
-  url_for_project: ProjectLinkInForm[]
+  url_for_project: ProjectLink[]
   funding_organisations: OrganisationsOfProject[] | SearchOrganisation[]
   research_domains: ResearchDomain[] | null
   keywords: KeywordForProject[]

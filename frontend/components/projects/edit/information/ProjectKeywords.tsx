@@ -10,8 +10,15 @@ export default function ProjectKeywords({project}: { project: string }) {
   const {control} = useFormContext<EditProject>()
   const {fields, append, remove} = useFieldArray({
     control,
-    name:'keywords'
+    name: 'keywords',
+    // change internal key name from id to fid
+    // to avoid conflict with id prop in data
+    keyName: 'fid'
   })
+
+  // console.group('ProjectKeywords')
+  // console.log('fields...', fields)
+  // console.groupEnd()
 
   function onAdd(selected: Keyword) {
     // check if already exists
@@ -50,7 +57,7 @@ export default function ProjectKeywords({project}: { project: string }) {
       {fields.map((field, pos) => {
         return(
           <div
-            key={field.id}
+            key={field.fid}
             className="py-1 pr-1"
           >
             <Chip

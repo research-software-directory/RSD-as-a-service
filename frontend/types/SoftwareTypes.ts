@@ -3,6 +3,7 @@
  */
 
 import {AutocompleteOption} from './AutocompleteOptions'
+import {Status} from './Organisation'
 
 export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | 'other'
 
@@ -116,17 +117,27 @@ export type RepositoryInfo = {
  * RELATED TOOLS / SOFTWARE
  */
 
-export type RelatedSoftware = {
-  id: string,
-  slug: string,
-  brand_name: string,
-  short_statement?: string,
+export type SearchSoftware = {
+  id: string
+  slug: string
+  brand_name: string
+  short_statement: string
+}
+
+export type RelatedSoftwareOfSoftware = SearchSoftware & {
+  is_featured?: boolean
   updated_at?: string
+  status: Status
+}
+
+export type RelatedSoftwareOfProject = SearchSoftware & {
+  project: string
+  status: Status
 }
 
 export type RelatedTools = {
   origin: string,
-  software: RelatedSoftware
+  software: RelatedSoftwareOfSoftware
 }
 
 export type SoftwareForSoftware = {
