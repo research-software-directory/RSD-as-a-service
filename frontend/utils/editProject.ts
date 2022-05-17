@@ -615,7 +615,6 @@ export async function addProjectLinksAndUpdateForm({project, links, token, updat
         if (link.id && link.position!==null) {
           updateUrl(link.position, {
             id: link.id,
-            uuid: link.id,
             title: link.title,
             url: link.url,
             project: link.project,
