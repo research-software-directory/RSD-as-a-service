@@ -478,7 +478,7 @@ export async function getRelatedProjectsForProject({project, token, frontend, ap
 export async function getRelatedSoftwareForProject({project, token, frontend, approved = true}:
   { project: string, token?: string, frontend?: boolean, approved?: boolean}) {
   try {
-    let query = `rpc/related_software_for_project?&project=eq.${project}&order=brand_name.asc`
+    let query = `rpc/related_software_for_project?project=eq.${project}&order=brand_name.asc`
     if (approved) {
       // select only approved relations
       query += '&status=eq.approved'
