@@ -15,81 +15,87 @@ public class Main {
 		Javalin app = Javalin.create().start(7000);
 		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
-		app.post("/login/local", ctx -> {
-			try {
-				String returnPath = ctx.cookie("rsd_pathname");
-				JsonObject body = JsonParser.parseString(ctx.body()).getAsJsonObject();
-				String sub = Utils.jsonElementToString(body.get("sub"));
-				String name = Utils.jsonElementToString(body.get("name"));
-				String email = Utils.jsonElementToString(body.get("email"));
-				String organisation = Utils.jsonElementToString(body.get("organisation"));
-				OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation);
-				AccountInfo accountInfo = new PostgrestAccount(localInfo, "local").account();
-				JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-				String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
-				setJwtCookie(ctx, token);
-				// redirect based on returnPath
-				if (returnPath != null && !returnPath.trim().isEmpty()) {
-					returnPath = returnPath.trim();
-					ctx.redirect(returnPath);
-				} else {
-					ctx.redirect("/");
+		if (Config.isLocalEnabled()) {
+			app.post("/login/local", ctx -> {
+				try {
+					String returnPath = ctx.cookie("rsd_pathname");
+					JsonObject body = JsonParser.parseString(ctx.body()).getAsJsonObject();
+					String sub = Utils.jsonElementToString(body.get("sub"));
+					String name = Utils.jsonElementToString(body.get("name"));
+					String email = Utils.jsonElementToString(body.get("email"));
+					String organisation = Utils.jsonElementToString(body.get("organisation"));
+					OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation);
+					AccountInfo accountInfo = new PostgrestAccount(localInfo, "local").account();
+					JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+					String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
+					setJwtCookie(ctx, token);
+					// redirect based on returnPath
+					if (returnPath != null && !returnPath.trim().isEmpty()) {
+						returnPath = returnPath.trim();
+						ctx.redirect(returnPath);
+					} else {
+						ctx.redirect("/");
+					}
+				} catch (RuntimeException ex) {
+					ex.printStackTrace();
+					ctx.status(400);
+					ctx.redirect("/login/failed");
 				}
-			} catch (RuntimeException ex) {
-				ex.printStackTrace();
-				ctx.status(400);
-				ctx.redirect("/login/failed");
-			}
-		});
+			});
+		}
 
-		app.post("/login/surfconext", ctx -> {
-			try {
-				String returnPath = ctx.cookie("rsd_pathname");
-				String code = ctx.formParam("code");
-				String redirectUrl = Config.surfconextRedirect();
-				OpenIdInfo surfconextInfo = new SurfconextLogin(code, redirectUrl).openidInfo();
-				AccountInfo accountInfo = new PostgrestAccount(surfconextInfo, "surfconext").account();
-				JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-				String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
-				setJwtCookie(ctx, token);
-				// redirect based on returnPath
-				if (returnPath != null && !returnPath.trim().isEmpty()) {
-					returnPath = returnPath.trim();
-					ctx.redirect(returnPath);
-				} else {
-					ctx.redirect("/");
+		if (Config.isSurfConextEnabled()) {
+			app.post("/login/surfconext", ctx -> {
+				try {
+					String returnPath = ctx.cookie("rsd_pathname");
+					String code = ctx.formParam("code");
+					String redirectUrl = Config.surfconextRedirect();
+					OpenIdInfo surfconextInfo = new SurfconextLogin(code, redirectUrl).openidInfo();
+					AccountInfo accountInfo = new PostgrestAccount(surfconextInfo, "surfconext").account();
+					JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+					String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
+					setJwtCookie(ctx, token);
+					// redirect based on returnPath
+					if (returnPath != null && !returnPath.trim().isEmpty()) {
+						returnPath = returnPath.trim();
+						ctx.redirect(returnPath);
+					} else {
+						ctx.redirect("/");
+					}
+				} catch (RuntimeException ex) {
+					ex.printStackTrace();
+					ctx.status(400);
+					ctx.redirect("/login/failed");
 				}
-			} catch (RuntimeException ex) {
-				ex.printStackTrace();
-				ctx.status(400);
-				ctx.redirect("/login/failed");
-			}
-		});
+			});
+		}
 
-		app.get("/login/helmholtzaai", ctx -> {
-			try {
-				String returnPath = ctx.cookie("rsd_pathname");
-				String code = ctx.queryParam("code");
-				String redirectUrl = Config.helmholtzAaiRedirect();
-				OpenIdInfo helmholtzInfo = new HelmholtzAaiLogin(code, redirectUrl).openidInfo();
-				AccountInfo accountInfo = new PostgrestAccount(helmholtzInfo, "helmholtz").account();
-				JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-				String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
-				setJwtCookie(ctx, token);
+		if (Config.isHelmholtzEnabled()) {
+			app.get("/login/helmholtzaai", ctx -> {
+				try {
+					String returnPath = ctx.cookie("rsd_pathname");
+					String code = ctx.queryParam("code");
+					String redirectUrl = Config.helmholtzAaiRedirect();
+					OpenIdInfo helmholtzInfo = new HelmholtzAaiLogin(code, redirectUrl).openidInfo();
+					AccountInfo accountInfo = new PostgrestAccount(helmholtzInfo, "helmholtz").account();
+					JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+					String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
+					setJwtCookie(ctx, token);
 
-				// redirect based on returnPath
-				if (returnPath != null && !returnPath.trim().isEmpty()) {
-					returnPath = returnPath.trim();
-					ctx.redirect(returnPath);
-				} else {
-					ctx.redirect("/");
+					// redirect based on returnPath
+					if (returnPath != null && !returnPath.trim().isEmpty()) {
+						returnPath = returnPath.trim();
+						ctx.redirect(returnPath);
+					} else {
+						ctx.redirect("/");
+					}
+				} catch (RuntimeException ex) {
+					ex.printStackTrace();
+					ctx.status(400);
+					ctx.redirect("/login/failed");
 				}
-			} catch (RuntimeException ex) {
-				ex.printStackTrace();
-				ctx.status(400);
-				ctx.redirect("/login/failed");
-			}
-		});
+			});
+		}
 
 		app.get("/refresh", ctx -> {
 			try {
