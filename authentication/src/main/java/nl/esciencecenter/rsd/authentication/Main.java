@@ -1,8 +1,6 @@
 package nl.esciencecenter.rsd.authentication;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -18,8 +16,8 @@ public class Main {
 		if (Config.isLocalEnabled()) {
 			app.post("/login/local", ctx -> {
 				try {
-					JsonObject body = JsonParser.parseString(ctx.body()).getAsJsonObject();
-					String sub = Utils.jsonElementToString(body.get("sub"));
+					String sub = ctx.formParam("sub");
+					if (sub == null || sub.isBlank()) throw new RuntimeException("Please provide a username");
 					String name = sub;
 					String email = sub + "@example.com";
 					String organisation = "Example organisation";

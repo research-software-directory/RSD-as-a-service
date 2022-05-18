@@ -38,7 +38,7 @@ export default function LoginButton() {
     )
   }
   // when there is only 1 provider we
-  // link redirect directly yo Sign in button
+  // link redirect directly to Sign in button
   if (providers && providers.length === 1) {
     return (
       <Link

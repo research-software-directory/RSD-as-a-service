@@ -10,6 +10,7 @@ import type {NextApiRequest, NextApiResponse} from 'next'
 // import providers methods
 import {surfconextInfo} from './surfconext'
 import {helmholtzInfo} from './helmholtzaai'
+import {localInfo} from './local'
 import logger from '~/utils/logger'
 
 export type ApiError = {
@@ -32,6 +33,8 @@ async function getRedirectInfo(provider: string) {
       return surfconextInfo()
     case 'helmholtzaai':
       return helmholtzInfo()
+    case 'local':
+      return localInfo()
     default:
       const message = `${provider} NOT SUPPORTED, check your spelling`
       logger(`api/fe/auth/providers: ${message}`, 'error')

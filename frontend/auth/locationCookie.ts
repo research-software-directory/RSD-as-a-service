@@ -8,6 +8,7 @@ export function saveLocationCookie() {
     // ingnore these paths
     case '/login':
     case '/logout':
+    case '/login/local':
       break
     default:
       // write simple browser cookie
