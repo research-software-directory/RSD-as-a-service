@@ -20,9 +20,9 @@ public class Main {
 				try {
 					JsonObject body = JsonParser.parseString(ctx.body()).getAsJsonObject();
 					String sub = Utils.jsonElementToString(body.get("sub"));
-					String name = Utils.jsonElementToString(body.get("name"));
-					String email = Utils.jsonElementToString(body.get("email"));
-					String organisation = Utils.jsonElementToString(body.get("organisation"));
+					String name = sub;
+					String email = sub + "@example.com";
+					String organisation = "Example organisation";
 					OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation);
 
 					AccountInfo accountInfo = new PostgrestAccount(localInfo, "local").account();
