@@ -6,7 +6,7 @@ import ListItemText from '@mui/material/ListItemText'
 
 import {userMenu} from './UserNavItems'
 
-export default function OrganisationNav({selected,isMaintainer}:
+export default function UserNav({selected,isMaintainer}:
   {selected:string, isMaintainer:boolean}) {
   const router = useRouter()
   const menuItems = Object.keys(userMenu)
@@ -32,7 +32,7 @@ export default function OrganisationNav({selected,isMaintainer}:
                 <ListItemIcon>
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={item.label(isMaintainer)} secondary={item.status} />
+                <ListItemText primary={item.label(100)} secondary={item.status} />
               </ListItemButton>
             )
           }

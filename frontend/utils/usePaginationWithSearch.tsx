@@ -62,6 +62,7 @@ export default function usePaginationWithSearch(placeholder:string) {
     // assumption: placeholder change is result of switching between sections
     page: placeholder !== currentPlaceholder ? 0 : pagination.page,
     rows: pagination.rows,
+    count: pagination.count,
     setSearchInput,
     setPagination,
     setCount

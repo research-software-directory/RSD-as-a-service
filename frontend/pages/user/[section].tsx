@@ -15,7 +15,7 @@ export default function UserPages({section}:{section:string}) {
   const {session} = useAuth()
   const [pageSection, setPageSection] = useState<UserMenuProps>(userMenu[section])
 
-  console.log('section...', section)
+  // console.log('section...', section)
 
   useEffect(() => {
     let abort:boolean=false

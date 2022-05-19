@@ -1,5 +1,6 @@
 import {useState,useEffect} from 'react'
 import {Session} from '~/auth'
+import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import ContentLoader from '~/components/layout/ContentLoader'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
@@ -23,11 +24,11 @@ export default function UserOrganisations({session}: { session: Session }) {
   console.groupEnd()
 
   return (
-    <div>
-      <h1>User organisations</h1>
-      {/* <pre className="w-[60rem]">
-        {JSON.stringify(session,null,2)}
-      </pre> */}
+    <div className="flex-1 flex flex-col">
+      <h1>User organisarion</h1>
+      <ContentInTheMiddle>
+        <h2>Under construction</h2>
+      </ContentInTheMiddle>
     </div>
   )
 }

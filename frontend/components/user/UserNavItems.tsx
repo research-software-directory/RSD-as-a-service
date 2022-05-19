@@ -34,7 +34,7 @@ export const userMenu:UserMenuItems = {
   },
   software:{
     id:'software',
-    label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
+    label:({count})=>`Software (${count ?? 0})`,
     icon: <TerminalIcon />,
     component: (props?) => <UserSoftware {...props} />,
     status: 'You are maintainer of software',
@@ -43,7 +43,7 @@ export const userMenu:UserMenuItems = {
   },
   projects:{
     id:'projects',
-    label: ({project_cnt})=>`Projects (${project_cnt ?? 0})`,
+    label: ({count})=>`Projects (${count ?? 0})`,
     icon: <ListAltIcon />,
     component: (props?) => <UserProjects {...props} />,
     status: 'You are maintainer of projects',
@@ -52,7 +52,7 @@ export const userMenu:UserMenuItems = {
   },
   organisations:{
     id:'organisations',
-    label: ({organisation_cnt})=>`Organisations (${organisation_cnt ?? 0})`,
+    label: ({count})=>`Organisations (${count ?? 0})`,
     icon: <BusinessIcon />,
     component: (props?) => <Organisations {...props} />,
     status: 'Departments or institutions',

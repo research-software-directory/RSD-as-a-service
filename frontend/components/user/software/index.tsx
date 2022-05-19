@@ -1,20 +1,59 @@
-import {useEffect, useState} from 'react'
+import {useEffect} from 'react'
 
+import {Session} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
+import GridScrim from '~/components/layout/GridScrim'
+import SoftwareGrid from '~/components/software/SoftwareGrid'
+import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
+import useUserSoftware from './useUserSoftware'
 
-export default function UserSoftware() {
-  const [loading, setLoading] = useState(true)
+export default function UserSoftware({session}:{session:Session}) {
+  const {searchFor,page,rows, setCount} = usePaginationWithSearch('Search for software')
+  const {loading, software, count} = useUserSoftware({
+    searchFor,
+    page,
+    rows,
+    session
+  })
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    },1000)
-  },[])
+    if (count && loading === false) {
+      setCount(count)
+    }
+  },[count,loading,setCount])
 
-  if (loading) return <ContentLoader />
+  if (loading) {
+    return (
+      <ContentLoader />
+    )
+    // return (
+    //   <GridScrim
+    //     rows={rows}
+    //     height='17rem'
+    //     minWidth='25rem'
+    //     maxWidth='1fr'
+    //     className="gap-[0.125rem] pt-2 pb-12"
+    //   />
+    // )
+  }
+
+  // console.group('UserSoftware')
+  // console.log('searchFor...', searchFor)
+  // console.log('page...', page)
+  // console.log('rows...', rows)
+  // console.log('session...', session)
+  // console.groupEnd()
+
   return (
-    <div>
-      <h1>User software</h1>
-    </div>
+    <SoftwareGrid
+      software={software}
+      grid={{
+        height:'17rem',
+        minWidth:'25rem',
+        maxWidth:'1fr'
+      }}
+      className="gap-[0.125rem] pt-2 pb-12"
+    />
   )
+
 }

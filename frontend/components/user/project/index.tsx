@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react'
 
+import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import ContentLoader from '~/components/layout/ContentLoader'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
@@ -15,8 +16,11 @@ export default function UserProjects() {
 
   if (loading) return <ContentLoader />
   return (
-    <div>
+    <div className="flex-1 flex flex-col">
       <h1>User projects</h1>
+      <ContentInTheMiddle>
+        <h2>Under construction</h2>
+      </ContentInTheMiddle>
     </div>
   )
 }

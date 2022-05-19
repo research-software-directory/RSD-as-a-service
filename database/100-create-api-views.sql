@@ -672,3 +672,37 @@ BEGIN
 	RETURN;
 END
 $$;
+
+
+-- Software info by maintainer/user
+-- NOTE! one software is shown multiple times in this view
+-- we filter this view at least by organisation uuid
+CREATE FUNCTION software_by_maintainer() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	is_published BOOLEAN,
+	is_featured BOOLEAN,
+	updated_at TIMESTAMP,
+	maintainer UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		software.id,
+		software.slug,
+		software.brand_name,
+		software.short_statement,
+		software.is_published,
+		software.is_featured,
+		software.updated_at,
+		maintainer_for_software.maintainer
+	FROM
+		software
+	LEFT JOIN
+		maintainer_for_software ON software.id = maintainer_for_software.software
+;
+END
+$$;
