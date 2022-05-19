@@ -27,6 +27,11 @@ export default function ContributorsList({contributors}: { contributors: Contrib
                 <div>
                   {combineRoleAndAffiliation(item)}
                 </div>
+                { item.orcid &&
+                  <div>
+                    ORCID: <a href={'https://orcid.org/' + item.orcid} target="_blank" rel="noreferrer">{item.orcid}</a>
+                  </div>
+                }
               </div>
             </div>
           )
