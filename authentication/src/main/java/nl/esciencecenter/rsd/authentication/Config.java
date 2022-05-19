@@ -1,5 +1,10 @@
 package nl.esciencecenter.rsd.authentication;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
 public class Config {
 
 	private static final long TEN_MINUTES_IN_MILLISECONDS = 600_000L; // 10 * 60 * 1000
@@ -10,6 +15,26 @@ public class Config {
 
 	public static long jwtExpirationTime() {
 		return TEN_MINUTES_IN_MILLISECONDS;
+	}
+
+	private static Collection<String> rsdAuthProviders() {
+		return Optional.ofNullable(System.getenv("RSD_AUTH_PROVIDERS"))
+				.map(s -> s.split(";"))
+				.map(strings -> Set.of(strings))
+				.orElse(Collections.EMPTY_SET);
+	}
+
+	public static boolean isLocalEnabled() {
+		return rsdAuthProviders().contains("LOCAL");
+	}
+
+	public static boolean isSurfConextEnabled() {
+		Collection<String> enabledProviders =  rsdAuthProviders();
+		return enabledProviders.isEmpty() || enabledProviders.contains("SURFCONEXT");
+	}
+
+	public static boolean isHelmholtzEnabled() {
+		return rsdAuthProviders().contains("HELMHOLTZAAI");
 	}
 
 	public static String backendBaseUrl() {
