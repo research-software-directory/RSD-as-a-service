@@ -44,6 +44,7 @@ export default function SoftwareInformation(
     control,
     name: 'keywords'
   })
+
   const {update: updateLicense} = useFieldArray({
     control,
     name: 'licenses'
