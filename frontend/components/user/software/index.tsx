@@ -22,20 +22,23 @@ export default function UserSoftware({session}:{session:Session}) {
     }
   },[count,loading,setCount])
 
-  if (loading) {
-    return (
-      <ContentLoader />
-    )
-    // return (
-    //   <GridScrim
-    //     rows={rows}
-    //     height='17rem'
-    //     minWidth='25rem'
-    //     maxWidth='1fr'
-    //     className="gap-[0.125rem] pt-2 pb-12"
-    //   />
-    // )
-  }
+  // do not use loader for now
+  // because the layout jumps up-and-down
+  // on pagination
+  // if (loading) {
+  //   return (
+  //     <ContentLoader />
+  //   )
+  //   // return (
+  //   //   <GridScrim
+  //   //     rows={rows}
+  //   //     height='17rem'
+  //   //     minWidth='25rem'
+  //   //     maxWidth='1fr'
+  //   //     className="gap-[0.125rem] pt-2 pb-12"
+  //   //   />
+  //   // )
+  // }
 
   // console.group('UserSoftware')
   // console.log('searchFor...', searchFor)

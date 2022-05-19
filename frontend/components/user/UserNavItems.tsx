@@ -14,7 +14,6 @@ export type UserMenuProps = {
   label: (props:any)=>string,
   icon: JSX.Element,
   component: (props: any) => JSX.Element
-  isVisible: (props: any) => boolean
   showSearch: boolean
 }
 
@@ -29,34 +28,30 @@ export const userMenu:UserMenuItems = {
     icon: <PersonIcon />,
     component: (props?) => <UserProfile {...props} />,
     status: 'User profile info',
-    isVisible: (props) => true,
     showSearch: false
   },
   software:{
     id:'software',
-    label:({count})=>`Software (${count ?? 0})`,
+    label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
     icon: <TerminalIcon />,
     component: (props?) => <UserSoftware {...props} />,
     status: 'You are maintainer of software',
-    isVisible: (props) => true,
     showSearch: true
   },
   projects:{
     id:'projects',
-    label: ({count})=>`Projects (${count ?? 0})`,
+    label: ({project_cnt})=>`Projects (${project_cnt ?? 0})`,
     icon: <ListAltIcon />,
     component: (props?) => <UserProjects {...props} />,
     status: 'You are maintainer of projects',
-    isVisible: (props) => true,
     showSearch: true
   },
   organisations:{
     id:'organisations',
-    label: ({count})=>`Organisations (${count ?? 0})`,
+    label: ({organisation_cnt})=>`Organisations (${organisation_cnt ?? 0})`,
     icon: <BusinessIcon />,
     component: (props?) => <Organisations {...props} />,
     status: 'Departments or institutions',
-    isVisible: (props) => true,
     showSearch: true
   },
 }

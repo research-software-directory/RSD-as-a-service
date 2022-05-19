@@ -16,12 +16,12 @@ export default function UserOrganisations({session}: { session: Session }) {
 
   if (loading) return <ContentLoader />
 
-  console.group('UserOrganisations')
-  console.log('searchFor...', searchFor)
-  console.log('page...', page)
-  console.log('rows...', rows)
-  console.log('session...', session)
-  console.groupEnd()
+  // console.group('UserOrganisations')
+  // console.log('searchFor...', searchFor)
+  // console.log('page...', page)
+  // console.log('rows...', rows)
+  // console.log('session...', session)
+  // console.groupEnd()
 
   return (
     <div className="flex-1 flex flex-col">

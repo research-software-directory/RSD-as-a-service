@@ -9,9 +9,16 @@ import {userMenu, UserMenuProps} from '~/components/user/UserNavItems'
 import {PaginationProvider} from '~/components/pagination/PaginationContext'
 import {SearchProvider} from '~/components/search/SearchContext'
 import UserTitle from '~/components/user/UserTitle'
-import UserNav from '../../components/user/UserNav'
+import UserNav, {UserCounts} from '../../components/user/UserNav'
+import {decodeJwt} from '~/auth/jwtUtils'
+import {getUserCounts} from '~/components/user/getUserCounts'
 
-export default function UserPages({section}:{section:string}) {
+type UserPagesProps = {
+  section: string,
+  counts: UserCounts
+}
+
+export default function UserPages({section,counts}:UserPagesProps) {
   const {session} = useAuth()
   const [pageSection, setPageSection] = useState<UserMenuProps>(userMenu[section])
 
@@ -31,6 +38,7 @@ export default function UserPages({section}:{section:string}) {
       return pageSection.component({session})
     }
   }
+
   return (
     <DefaultLayout>
       <Head>
@@ -47,7 +55,7 @@ export default function UserPages({section}:{section:string}) {
           <div>
             <UserNav
               selected={section}
-              isMaintainer={true}
+              counts={counts}
             />
           </div>
           {renderStepComponent()}
@@ -63,10 +71,17 @@ export default function UserPages({section}:{section:string}) {
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
-    const {params} = context
-    // console.log('getServerSideProps...params...', params)
+    const {params, req} = context
 
     const section = params?.section
+    const token = req?.cookies['rsd_token']
+    // extract user info from token
+    const user = decodeJwt(token)
+
+    // console.log('getServerSideProps...params...', params)
+    // console.log('getServerSideProps...token...', token)
+    // console.log('getServerSideProps...user...', user)
+
     if (typeof section == 'undefined') {
       // 404 if no section parameter
       return {
@@ -81,10 +96,18 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         notFound: true,
       }
     }
+
+    // load counts for user
+    const counts = await getUserCounts({
+      token,
+      frontend: false
+    })
+
     return {
       // passed to the page component as props
       props: {
-        section
+        section,
+        counts
       },
     }
   }catch(e){
