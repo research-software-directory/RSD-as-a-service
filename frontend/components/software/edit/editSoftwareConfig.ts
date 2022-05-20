@@ -179,7 +179,7 @@ export const contributorInformation = {
     help: '16 digits, pattern 0000-0000-0000-0000',
     validation: {
       pattern: {
-        value: /\d{4}-\d{4}-\d{4}-\d{3}[0-9X]/,
+        value: /^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$/,
         message: 'Invalid pattern, not a 0000-0000-0000-0000'
       }
     }
