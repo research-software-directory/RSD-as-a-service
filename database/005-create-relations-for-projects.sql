@@ -7,7 +7,7 @@ CREATE TABLE team_member (
 	given_names VARCHAR NOT NULL,
 	affiliation VARCHAR,
 	role VARCHAR,
-	orcid VARCHAR,
+	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
 	avatar_data VARCHAR,
 	avatar_mime_type VARCHAR(100),
 	created_at TIMESTAMP NOT NULL,

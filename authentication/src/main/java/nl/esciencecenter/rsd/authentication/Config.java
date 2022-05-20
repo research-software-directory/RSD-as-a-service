@@ -19,6 +19,7 @@ public class Config {
 
 	private static Collection<String> rsdAuthProviders() {
 		return Optional.ofNullable(System.getenv("RSD_AUTH_PROVIDERS"))
+				.map(s -> s.toUpperCase())
 				.map(s -> s.split(";"))
 				.map(strings -> Set.of(strings))
 				.orElse(Collections.EMPTY_SET);
