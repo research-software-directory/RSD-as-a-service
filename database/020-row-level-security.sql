@@ -418,10 +418,11 @@ CREATE POLICY admin_all_rights ON organisation TO rsd_admin
 	WITH CHECK (TRUE);
 
 
-CREATE FUNCTION organisations_of_current_maintainer() RETURNS SETOF UUID LANGUAGE plpgsql SECURITY DEFINER AS
+CREATE FUNCTION organisations_of_current_maintainer() RETURNS SETOF UUID STABLE LANGUAGE plpgsql SECURITY DEFINER AS
 $$
 BEGIN
 	RETURN QUERY SELECT id FROM organisation WHERE primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN QUERY SELECT organisation FROM maintainer_for_organisation WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
 	RETURN;
 END
 $$;

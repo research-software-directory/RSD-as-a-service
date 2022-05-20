@@ -788,46 +788,11 @@ $$;
 -- COUNTS by maintainer
 -- software_cnt, project_cnt, organisation_cnt
 -- counts for user profile pages
-CREATE FUNCTION counts_by_maintainer() RETURNS TABLE (
-	id UUID,
-	software_cnt BIGINT,
-	project_cnt BIGINT,
-	organisation_cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
+CREATE FUNCTION counts_by_maintainer(OUT software_cnt BIGINT, OUT project_cnt BIGINT, OUT organisation_cnt BIGINT) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY
-	SELECT
-		account.id,
-		software.cnt AS software_cnt,
-		project.cnt AS project_cnt,
-		organisation.cnt AS organisation_cnt
-	FROM
-		account
-	LEFT JOIN
-		(SELECT
-				maintainer,
-				count(*) AS cnt
-			FROM
-				software_by_maintainer()
-			GROUP BY maintainer
-		) AS software ON account.id = software.maintainer
-	LEFT JOIN
-		(SELECT
-				maintainer,
-				count(*) AS cnt
-			FROM
-				projects_by_maintainer()
-			GROUP BY maintainer
-		) AS project ON account.id = project.maintainer
-	LEFT JOIN
-		(SELECT
-				maintainer,
-				count(*) AS cnt
-			FROM
-				organisations_by_maintainer()
-			GROUP BY maintainer
-		) AS organisation ON account.id = organisation.maintainer
-	;
+	SELECT COUNT(*) FROM software_of_current_maintainer() INTO software_cnt;
+	SELECT COUNT(*) FROM projects_of_current_maintainer() INTO project_cnt;
+	SELECT COUNT(DISTINCT organisations_of_current_maintainer) FROM organisations_of_current_maintainer() INTO organisation_cnt;
 END
 $$;
