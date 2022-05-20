@@ -672,3 +672,127 @@ BEGIN
 	RETURN;
 END
 $$;
+
+
+-- SOFTWARE BY MAINTAINER
+-- NOTE! one software is shown multiple times in this view
+-- we filter this view at least by organisation uuid
+CREATE FUNCTION software_by_maintainer() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	is_published BOOLEAN,
+	is_featured BOOLEAN,
+	updated_at TIMESTAMP,
+	maintainer UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		software.id,
+		software.slug,
+		software.brand_name,
+		software.short_statement,
+		software.is_published,
+		software.is_featured,
+		software.updated_at,
+		maintainer_for_software.maintainer
+	FROM
+		software
+	INNER JOIN
+		maintainer_for_software ON software.id = maintainer_for_software.software
+;
+END
+$$;
+
+
+-- PROJECTS BY MAINTAINER
+-- NOTE! single project is shown multiple times in this view
+-- we filter this view at least by user acount (uuid)
+CREATE FUNCTION projects_by_maintainer() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	date_start DATE,
+	date_end DATE,
+	updated_at TIMESTAMP,
+	is_published BOOLEAN,
+	image_id UUID,
+	maintainer UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		project.id,
+		project.slug,
+		project.title,
+		project.subtitle,
+		project.date_start,
+		project.date_end,
+		project.updated_at,
+		project.is_published,
+		image_for_project.project AS image_id,
+		maintainer_for_project.maintainer
+	FROM
+		project
+	LEFT JOIN
+		image_for_project ON project.id = image_for_project.project
+	INNER JOIN
+		maintainer_for_project ON project.id = maintainer_for_project.project;
+END
+$$;
+
+
+-- ORGANISATIONS BY MAINTAINER
+-- NOTE! each organisation is shown multiple times in this view
+-- we filter this view at least by user acount (uuid) on primary_maintainer or maintainer
+CREATE FUNCTION organisations_by_maintainer() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	parent UUID,
+	primary_maintainer UUID,
+	name VARCHAR,
+	ror_id VARCHAR,
+	website VARCHAR,
+	is_tenant BOOLEAN,
+	logo_id UUID,
+	maintainer UUID
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		organisation.id,
+		organisation.slug,
+		organisation.parent,
+		organisation.primary_maintainer,
+		organisation.name,
+		organisation.ror_id,
+		organisation.website,
+		organisation.is_tenant,
+		logo_for_organisation.id AS logo_id,
+		maintainer_for_organisation.maintainer
+	FROM
+		organisation
+	LEFT JOIN
+		logo_for_organisation ON organisation.id = logo_for_organisation.id
+	INNER JOIN
+		maintainer_for_organisation ON organisation.id = maintainer_for_organisation.organisation;
+END
+$$;
+
+-- COUNTS by maintainer
+-- software_cnt, project_cnt, organisation_cnt
+-- counts for user profile pages
+CREATE FUNCTION counts_by_maintainer(OUT software_cnt BIGINT, OUT project_cnt BIGINT, OUT organisation_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	SELECT COUNT(*) FROM software_of_current_maintainer() INTO software_cnt;
+	SELECT COUNT(*) FROM projects_of_current_maintainer() INTO project_cnt;
+	SELECT COUNT(DISTINCT organisations_of_current_maintainer) FROM organisations_of_current_maintainer() INTO organisation_cnt;
+END
+$$;
