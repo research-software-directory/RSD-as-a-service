@@ -2,12 +2,7 @@ import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {UserCounts} from './UserNav'
 
-type MaintainerCounts = UserCounts & {
-  id: string
-}
-
 const defaultResponse = {
-  id: undefined,
   software_cnt: undefined,
   project_cnt: undefined,
   organisation_cnt: undefined,
@@ -31,11 +26,8 @@ export async function getUserCounts({token,frontend=false}:
     })
 
     if (resp.status === 200) {
-      const json: MaintainerCounts[] = await resp.json()
-      if (json.length === 1) {
-        return json[0]
-      }
-      return defaultResponse
+      const counts: UserCounts = await resp.json()
+      return counts
     }
     // ERRORS
     logger(`getUserCounts: ${resp.status}:${resp.statusText}`, 'warn')

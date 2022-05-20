@@ -701,7 +701,7 @@ BEGIN
 		maintainer_for_software.maintainer
 	FROM
 		software
-	LEFT JOIN
+	INNER JOIN
 		maintainer_for_software ON software.id = maintainer_for_software.software
 ;
 END
@@ -741,7 +741,7 @@ BEGIN
 		project
 	LEFT JOIN
 		image_for_project ON project.id = image_for_project.project
-	LEFT JOIN
+	INNER JOIN
 		maintainer_for_project ON project.id = maintainer_for_project.project;
 END
 $$;
@@ -780,7 +780,7 @@ BEGIN
 		organisation
 	LEFT JOIN
 		logo_for_organisation ON organisation.id = logo_for_organisation.id
-	LEFT JOIN
+	INNER JOIN
 		maintainer_for_organisation ON organisation.id = maintainer_for_organisation.organisation;
 END
 $$;
