@@ -3,6 +3,7 @@ CREATE TABLE release (
 	software UUID REFERENCES software (id) UNIQUE NOT NULL,
 	is_citable BOOLEAN,
 	latest_schema_dot_org VARCHAR,
+	releases_scraped_at TIMESTAMP,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
 );
@@ -33,6 +34,20 @@ $$;
 
 CREATE TRIGGER sanitise_update_release BEFORE UPDATE ON release FOR EACH ROW EXECUTE PROCEDURE sanitise_update_release();
 
+
+CREATE FUNCTION software_join_release() RETURNS TABLE (
+	software_id UUID,
+	slug VARCHAR,
+	concept_doi VARCHAR,
+	release_id UUID,
+	releases_scraped_at TIMESTAMP
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT software.id AS software_id, software.slug, software.concept_doi, release.id AS release_id, release.releases_scraped_at FROM software LEFT JOIN RELEASE ON software.id = RELEASE.software;
+	RETURN;
+END
+$$;
 
 
 CREATE TYPE citability AS ENUM (

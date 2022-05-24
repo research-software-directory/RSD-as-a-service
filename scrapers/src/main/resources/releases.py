@@ -221,15 +221,16 @@ def get_citations(dois_data):
 	for i_dois, data in enumerate(dois_data):
 		try:
 			doi = data["concept_doi"]
-			release_id = data["release"][0]["id"] if len(data["release"]) > 0 else None
+			release_id = data["release_id"]
 			release = ReleaseScraper(doi)
 			if release.is_citable:
 				document = {
 					"is_citable": release.is_citable,
-					"latest_schema_dot_org": "" if release.latest_schema_dot_org is None else release.latest_schema_dot_org
+					"latest_schema_dot_org": "" if release.latest_schema_dot_org is None else release.latest_schema_dot_org,
+					"releases_scraped_at": datetime.now()
 				}
 				if release_id is None:
-					document["software"] = data["id"]
+					document["software"] = data["software_id"]
 					backend_release_response = requests.post('{}/release'.format(backend_url), document, headers={'Authorization': 'Bearer ' + jwt_token, 'Prefer': 'return=representation'})
 				else:
 					document["id"] = release_id
@@ -277,13 +278,6 @@ def get_citations(dois_data):
 					print(e.response.text)
 					raise e
 
-			scraped_at_response = requests.patch('{}/software?id=eq.{}'.format(backend_url, data["id"]), '{{"releases_scraped_at": "{}"}}'.format(datetime.now()), headers={'Authorization': 'Bearer ' + jwt_token})
-			try:
-				scraped_at_response.raise_for_status()
-			except requests.HTTPError as e:
-				print(e.response.text)
-				raise e
-
 			if release.message == "OK":
 				print("{0}/{1} \"{2}\" ({3}): {4}".format(i_dois + 1, n_dois, doi,
 																release.title, release.message))
@@ -302,7 +296,7 @@ if __name__ == "__main__":
 	number_releases_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB', default='6')
 	jwt_secret = os.environ.get('PGRST_JWT_SECRET')
 	jwt_token = jwt.encode({"role": "rsd_admin", "exp": datetime.now() + timedelta(minutes = 10)}, jwt_secret, algorithm="HS256")
-	response_dois = requests.get('{}/software?select=id,slug,concept_doi,release(id)&concept_doi=not.is.null&order=releases_scraped_at.nullsfirst&limit={}'.format(backend_url, number_releases_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
+	response_dois = requests.get('{}/rpc/software_join_release?concept_doi=not.is.null&order=releases_scraped_at.nullsfirst&limit={}'.format(backend_url, number_releases_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
 	dois_data = response_dois.json()
 	github_api_token = os.environ.get('API_CREDENTIALS_GITHUB')
 	get_citations(dois_data)
