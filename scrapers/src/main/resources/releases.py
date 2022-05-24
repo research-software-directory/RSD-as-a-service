@@ -220,21 +220,23 @@ def get_citations(dois_data):
 
 	for i_dois, data in enumerate(dois_data):
 		try:
-			doi = data["concept_doi"]
 			release_id = data["release_id"]
+			#first create the entry in the mention table if it doesn't exist yet:
+			if release_id is None:
+				backend_release_response = requests.post('{}/release'.format(backend_url), '{{"software": "{}"}}'.format(data["software_id"]), headers={'Authorization': 'Bearer ' + jwt_token, 'Prefer': 'return=representation'})
+				release_id = backend_release_response.json()[0]["id"]
+
+			#now set the releases_scraped_at so the release gets pushed back in the scraping order
+			requests.patch('{}/release?id=eq.{}'.format(backend_url,release_id), '{{"releases_scraped_at": "{}"}}'.format(datetime.now()), headers={'Authorization': 'Bearer ' + jwt_token})
+
+			doi = data["concept_doi"]
 			release = ReleaseScraper(doi)
 			if release.is_citable:
 				document = {
 					"is_citable": release.is_citable,
-					"latest_schema_dot_org": "" if release.latest_schema_dot_org is None else release.latest_schema_dot_org,
-					"releases_scraped_at": datetime.now()
+					"latest_schema_dot_org": release.latest_schema_dot_org
 				}
-				if release_id is None:
-					document["software"] = data["software_id"]
-					backend_release_response = requests.post('{}/release'.format(backend_url), document, headers={'Authorization': 'Bearer ' + jwt_token, 'Prefer': 'return=representation'})
-				else:
-					document["id"] = release_id
-					backend_release_response = requests.patch('{}/release'.format(backend_url), document, headers={'Authorization': 'Bearer ' + jwt_token})
+				backend_release_response = requests.patch('{}/release?id=eq.{}'.format(backend_url,release_id), document, headers={'Authorization': 'Bearer ' + jwt_token})
 				try:
 					backend_release_response.raise_for_status()
 				except requests.HTTPError as e:
