@@ -92,7 +92,6 @@ const colors = {
 //   xl: 1920
 // }
 
-
 module.exports={
   colors
 }

@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -59,29 +59,6 @@ const colors = {
 //   xl: 1920
 // }
 
-const fonts={
-  // Note! If you're using custom (local or remote) font faces, those fonts must
-  // be loaded within styles/global.css
-  default: [
-    'Helmholtz Halvar Mittel Rg',
-    'Helvetica',
-    'arial',
-    'sans-serif'
-  ]
-}
-
-const muiTypography={
-  fontFamily: fonts.default.join(','),
-  // set default fontsize to 1rem for MUI-5
-  // fontSize:14,
-  fontWeightLight: 100,
-  fontWeightRegular: 300,
-  fontWeightMedium: 300,
-  fontWeightBold: 400,
-}
-
 module.exports={
-  colors,
-  fonts,
-  muiTypography
+  colors
 }

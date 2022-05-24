@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,13 +18,12 @@
  * You can use multiple theme providers/overwrite current theme,
  * the last assigned theme is applied to its children.
  */
-const defaultTheme = require('./themeDefault')
-const darkTheme = require('./themeDark')
+const defaultTheme = require('./themeHelmholtz')
+const darkTheme = require('./themeHelmholtzDark')
 // example eScience theme loading
 // const escienceTheme = require('./themeEscience')
 
 function getThemeConfig(theme) {
-  // console.log('themeConfig.getThemeConfig...', theme)
   switch (theme) {
     // example escience theme type
     // case 'escience':
@@ -37,14 +38,13 @@ function getThemeConfig(theme) {
       }
     default:
       return {
-        colors: defaultTheme.colors,
-        muiTypography: defaultTheme.muiTypography
+        colors: helmholtzTheme.colors,
+        muiTypography: helmholtzTheme.muiTypography
       }
   }
 }
 
 module.exports={
-  colors: defaultTheme.colors,
-  muiTypography: defaultTheme.muiTypography,
+  ...getThemeConfig(),
   getThemeConfig
 }

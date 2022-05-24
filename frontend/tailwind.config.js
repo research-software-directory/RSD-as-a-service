@@ -31,18 +31,7 @@ module.exports = {
       // sans is default font used
       // we set Roboto as first font-type
       // and then the defaults from tailwind
-      sans: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"'
-      ],
+      sans: muiTypography.fontFamily.split(','),
       mono: [
         'ui-monospace',
         'SFMono-Regular',
@@ -65,7 +54,7 @@ module.exports = {
         'spin-slow': 'spin 3s linear infinite',
       },
       fontFamily: {
-        'rsd-titles': ['Work Sans']
+        'rsd-titles': fonts.default
       },
       //
       // THEME COLORS

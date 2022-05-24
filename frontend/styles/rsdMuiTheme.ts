@@ -36,7 +36,7 @@ export type ThemeConfig = {
   muiTypography: MuiTypography
 }
 
-export type RsdThemes = 'dark' | 'default'
+export type RsdThemes = 'dark' | 'default' | 'helmholtz'
 
 /**
  * Call this method to switch MuiTheme
