@@ -15,7 +15,6 @@ CREATE TABLE software (
 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	short_statement VARCHAR(300),
-	releases_scraped_at TIMESTAMP,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
 );
