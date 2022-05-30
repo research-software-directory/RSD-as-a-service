@@ -1,98 +1,45 @@
-/**
- * Based on database enum type from
- * database/008-create-mention-table.sql
- */
-export const mentionType = {
-  attachment:'Attachments',
-  blogPost:'Blogposts',
-  book:'Books',
-  bookSection:'Book section',
-  computerProgram:'Computer programs',
-  conferencePaper:'Conference papers',
-  document:'Documents',
-  interview:'Interviews',
-  journalArticle:'Journal articles',
-  magazineArticle:'Magazine articles',
-  manuscript:'Manuscripts',
-  newspaperArticle:'Newspaper articles',
-  note:'Notes',
-  presentation:'Presentations',
-  radioBroadcast:'Radio broadcasts',
-  report:'Reports',
-  thesis:'Thesis',
-  videoRecording:'Video recordings',
-  webpage : 'Webpages',
-  // additional type for featured mentions
-  featured : 'Featured mentions'
-}
+import {mentionType} from '~/components/mention/config'
 
-export const mentionTypeSingular = {
-  attachment: 'Attachment',
-  blogPost: 'Blogpost',
-  book: 'Book',
-  bookSection: 'Book section',
-  computerProgram: 'Computer program',
-  conferencePaper: 'Conference paper',
-  document: 'Document',
-  interview: 'Interview',
-  journalArticle: 'Journal article',
-  magazineArticle: 'Magazine article',
-  manuscript: 'Manuscript',
-  newspaperArticle: 'Newspaper article',
-  note: 'Note',
-  presentation: 'Presentation',
-  radioBroadcast: 'Radio broadcast',
-  report: 'Report',
-  thesis: 'Thesis',
-  videoRecording: 'Video recording',
-  webpage: 'Webpage',
-  // additional type for featured mentions
-  // featured: 'Featured mentions'
+// export type MentionEditType = keyof typeof mentionTypeSingular
+export type MentionTypeKeys = keyof typeof mentionType
+export type MentionType = {
+  [key in MentionTypeKeys]?: {
+    key: string
+    plural: string
+    singular: string
+  }
 }
-
-export type MentionEditType = keyof typeof mentionTypeSingular
-export type MentionType = keyof typeof mentionType
 
 // as in mention table
-export type MentionItem = {
-  id: string
-  author?: string
-  date?: string
+export type MentionItemProps = {
+  id: string | null
+  doi: string | null
+  url: string | null
+  title: string | null
+  authors: string | null
+  publisher: string | null
+  publication_year: number | null
+  page: string | null
   // url to external image
-  image?: string
+  image_url: string | null
   is_featured: boolean
-  title: string
-  type?: MentionType
-  url?: string
-  version?: number
-  zotero_key?: string
+  mention_type: MentionTypeKeys | null
+  source: string
+}
+
+export type MentionByType = {
+  [key in MentionTypeKeys]?: MentionItemProps[]
 }
 
 // mention table joined with mention_for_software
-export type MentionForSoftware = {
-  id: string,
-  date: string,
-  is_featured: boolean,
-  title: string,
-  type: MentionType,
-  url: string,
-  // url to external image
-  image: string,
-  author: string,
+export type MentionForSoftware = MentionItemProps & {
   mention_for_software?: any[]
 }
 
 // mention table joined with output_for_project OR impact_for_project
-export type MentionForProject = {
-  id: string,
-  date: string,
-  is_featured: boolean,
-  title: string,
-  type: MentionType,
-  url: string,
-  // url to external image
-  image: string,
-  author: string,
+export type MentionForProject = MentionItemProps & {
   output_for_project?: any[]
   impact_for_project?: any[]
 }
+
+export const mentionColumns ='id,doi,url,title,authors,publisher,publication_year,page,image_url,is_featured,mention_type,source'

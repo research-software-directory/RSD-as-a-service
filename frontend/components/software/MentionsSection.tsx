@@ -1,18 +1,23 @@
 import DarkThemeSection from '../layout/DarkThemeSection'
 
 import PageContainer from '../layout/PageContainer'
-import MentionIsFeatured from './MentionIsFeatured'
-import MentionsByType from './MentionsByType'
 import {sortOnDateProp} from '../../utils/sortFn'
-import {MentionForSoftware} from '../../types/Mention'
+import {MentionForSoftware, MentionItemProps, MentionTypeKeys} from '../../types/Mention'
 import {clasifyMentionsByType} from '../../utils/editMentions'
+import MentionItemFeatured from '../mention/MentionItemFeatured'
+import {getMentionType, getMentionTypeOrder} from '../mention/config'
+import MentionViewList from '../mention/MentionViewList'
 
 export default function SoftwareMentionsSection({mentions}: { mentions: MentionForSoftware[] }) {
   // do not render section if no data
   if (!mentions || mentions.length === 0) return null
   // split to featured and (not featured) mentions by type (different presentation)
   const {mentionByType, featuredMentions} = clasifyMentionsByType(mentions)
-
+  const mentionTypes = getMentionTypeOrder(mentionByType)
+  // console.group('SoftwareMentionsSection')
+  // console.log('mentionByType...', mentionByType)
+  // console.log('featuredMentions...', featuredMentions)
+  // console.groupEnd()
   return (
     <DarkThemeSection>
       <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
@@ -23,13 +28,29 @@ export default function SoftwareMentionsSection({mentions}: { mentions: MentionF
         </h2>
         <section>
           {featuredMentions
-            .sort((a,b)=>sortOnDateProp(a,b,'date','desc'))
+            .sort((a,b)=>sortOnDateProp(a,b,'publication_year','desc'))
             .map(item => {
             return (
-              <MentionIsFeatured key={item.url} mention={item} />
+              <MentionItemFeatured key={item.url} mention={item} />
             )
           })}
-          <MentionsByType mentionByType={mentionByType} />
+          {/* render output by type */}
+          {mentionTypes.map((key) => {
+            const type = key as MentionTypeKeys
+            const items = mentionByType[type]?.sort((a, b) => {
+              // sort mentions on date, newest at the top
+              return sortOnDateProp(a,b,'publication_year','desc')
+            })
+            const title = getMentionType(type,'plural')
+            return (
+              <MentionViewList
+                key={key}
+                title={title}
+                type={type}
+                items={items as MentionItemProps[]}
+              />
+            )
+          })}
         </section>
       </PageContainer>
     </DarkThemeSection>

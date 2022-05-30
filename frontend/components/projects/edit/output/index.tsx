@@ -1,39 +1,30 @@
-import {useEffect} from 'react'
-
-import ContentLoader from '~/components/layout/ContentLoader'
+import {Session} from '~/auth'
 import EditSection from '~/components/layout/EditSection'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import OutputByType from './OutputByType'
+import FindOutput from './FindOutput'
+import AddOutput from './AddOutput'
+import EditOutputProvider from './EditOutputProvider'
 import useProjectContext from '../useProjectContext'
 
-export default function ProjectTeam() {
-  const {loading, setLoading} = useProjectContext()
+export default function ProjectOutput({session}: { session: Session }) {
+  const {project} = useProjectContext()
 
-  useEffect(() => {
-    let abort = false
-    setTimeout(() => {
-      if (abort) return
-      if (loading) setLoading(false)
-    }, 1000)
-    return ()=>{abort=true}
-  },[loading,setLoading])
-
-  if (loading) {
-    return (
-      <ContentLoader />
-    )
-  }
+  // console.group('ProjectOutput')
+  // console.log('session...', session)
+  // console.groupEnd()
 
   return (
-    <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
-      <div className="py-4 xl:pl-[3rem]">
-        <EditSectionTitle
-          title="Output"
-        />
-        <h2>Under construction</h2>
-      </div>
-      <div className="py-4 min-w-[21rem] xl:my-0">
-
-      </div>
-    </EditSection>
+    <EditOutputProvider token={session.token} project={project.id}>
+      <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]'>
+        <div className="py-4 xl:pl-[3rem]">
+          <OutputByType session={session}/>
+        </div>
+        <div className="py-4 min-w-[21rem] xl:my-0">
+          <FindOutput />
+          <div className="py-4"></div>
+          <AddOutput />
+        </div>
+      </EditSection>
+    </EditOutputProvider>
   )
 }

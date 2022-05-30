@@ -1,128 +1,1522 @@
 [
   {
-    "date": "2018-12-20T00:00:00",
+    "id": "4390646f-64a8-49b2-ab17-560940605f78",
+    "doi": null,
+    "url": "https://blogs.egu.eu/divisions/cl/2022/03/09/dont-miss-out-on-these-awesome-egu22-activities/",
+    "title": "Don’t miss out on these awesome #EGU22 activities!",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "blogPost",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "85cdfe19-f1e8-4e0d-8af4-b337bac33f57",
+    "doi": null,
+    "url": "https://blog.esciencecenter.nl/the-new-ipcc-assessment-report-stakes-have-been-raised-60ca4ce2b31d",
+    "title": "The new IPCC assessment report: stakes have been raised",
+    "authors": "Gijs van den Oord",
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": "https://miro.medium.com/max/1200/1*h00gFHI4ttZdwEnNcww_Ig.jpeg",
     "is_featured": true,
-    "title": "Portable HPC workflows with Snakemake, Conda, and Xenon",
-    "type": "blogPost",
-    "url": "https://blog.esciencecenter.nl/portable-hpc-workflows-with-snakemake-and-xenon-e971e5127391",
-    "image": "https://miro.medium.com/max/1200/1*Dkns3eBVvWMJHsR08BZaCQ.jpeg",
-    "author": "Jurriaan H. Spaaks"
+    "mention_type": "book",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2017-11-07T00:00:00",
+    "id": "bdfd8efc-72d1-4692-8108-7dc322dd14c5",
+    "doi": "10.5194/gmd-13-2945-2020",
+    "url": "https://doi.org/10.5194/gmd-13-2945-2020",
+    "title": "Observations for Model Intercomparison Project (Obs4MIPs): status for CMIP6",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "NLeSC/xenon-cli: v2.0.0",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.597603",
-    "image": null,
-    "author": null
+    "mention_type": "bookSection",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2018-04-15T09:29:07",
+    "id": "5e9f9f1c-8e05-49c6-ad44-0fccadbb17f9",
+    "doi": "10.1029/2019MS001916",
+    "url": "https://doi.org/10.1029/2019MS001916",
+    "title": "The Community Earth System Model Version 2 (CESM2)",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "sv-callers",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1217112",
-    "image": null,
-    "author": null
+    "mention_type": "computerProgram",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2018-04-11T00:00:00",
+    "id": "42a880e9-2919-4d16-8f19-a2bd493322c1",
+    "doi": "10.1103/RevModPhys.92.035002",
+    "url": "https://doi.org/10.1103/RevModPhys.92.035002",
+    "title": "The physics of climate variability and climate change",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "sv-callers workflow",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1217112",
-    "image": null,
-    "author": null
+    "mention_type": "conferencePaper",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2017-11-13T00:00:00",
+    "id": "3ed436a5-c602-488e-9ab5-1aa84ef99d6a",
+    "doi": "10.1175/JCLI-D-20-0832.1",
+    "url": "https://doi.org/10.1175/JCLI-D-20-0832.1",
+    "title": "Benchmarking Performance Changes in the Simulation of Extratropical Modes of Variability across CMIP Generations",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "PyXenon 2.2.0: Python interface to Xenon 2.2",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1045888",
-    "image": null,
-    "author": null
+    "mention_type": "dataset",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2017-11-07T00:00:00",
+    "id": "75a7bf86-c939-468e-8958-7a8d1fc6dd87",
+    "doi": "10.1002/met.2065",
+    "url": "https://doi.org/10.1002/met.2065",
+    "title": "An open workflow to gain insights about low‐likelihood high‐impact weather events from initialized predictions",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "NLeSC/xenon-grpc: v2.0.0",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1043481",
-    "image": null,
-    "author": null
+    "mention_type": "interview",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2018-10-29T00:00:00",
+    "id": "0b36ee5f-023b-4b40-9fb1-349f4baf9d4f",
+    "doi": "10.12688/openreseurope.13633.2",
+    "url": "https://doi.org/10.12688/openreseurope.13633.2",
+    "title": "pyam: Analysis and visualisation of integrated assessment and macro-energy scenarios",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "A portable and scalable workflow for detecting  structural variants in whole-genome sequencing data.",
-    "type": "conferencePaper",
-    "url": "https://doi.org/10.1109/eScience.2018.00064",
-    "image": null,
-    "author": null
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2016-12-30T00:00:00",
+    "id": "a540ce5f-629a-468b-ba33-b28f03faeb89",
+    "doi": "10.5334/dsj-2022-010",
+    "url": "https://doi.org/10.5334/dsj-2022-010",
+    "title": "Quality Management Framework for Climate Datasets",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "Using modular 3D digital earth applications based on point clouds for the study of complex sites",
-    "type": "journalArticle",
-    "url": "https://doi.org/10.1080/17538947.2016.1205673",
-    "image": null,
-    "author": null
+    "mention_type": "magazineArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2020-01-25T00:00:00",
+    "id": "698baa46-d7bc-4925-83a2-bc5d56b1dc67",
+    "doi": "10.1080/02626667.2021.2009839",
+    "url": "https://doi.org/10.1080/02626667.2021.2009839",
+    "title": "Implementation of the Standardized Precipitation Index in semi-arid North African areas: reply to the discussion of “Drought assessment in a south Mediterranean transboundary catchment”",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "sv-callers: a highly portable parallel workflow for structural variant detection in whole-genome sequence data",
-    "type": "journalArticle",
-    "url": "https://doi.org/10.7717/peerj.8214",
-    "image": null,
-    "author": null
+    "mention_type": "newspaperArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2019-09-13T00:00:00",
+    "id": "84dca99d-9ccc-4329-86eb-fb8f2d310141",
+    "doi": "10.1175/JCLI-D-21-0636.1",
+    "url": "https://doi.org/10.1175/JCLI-D-21-0636.1",
+    "title": "The Effect of Wind Stress on Seasonal Sea-Level Change on the Northwestern European Shelf",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "Xenon introduction & highly portable parallel [genomics] workflows based on Snakemake/Xenon.",
-    "type": "presentation",
-    "url": "https://www.dtls.nl/community/meetings/programmers-meetings/",
-    "image": null,
-    "author": null
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2019-06-19T00:00:00",
+    "id": "8517a0df-9f87-41ad-b59a-e84dbcd7a9cc",
+    "doi": "10.1016/j.wace.2022.100441",
+    "url": "https://doi.org/10.1016/j.wace.2022.100441",
+    "title": "Human influence on the 2021 British Columbia floods",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "Portable HPC workflows and software re-use",
-    "type": "presentation",
-    "url": "https://betterscientificsoftware.github.io/swe-cse-bof/2019-06-isc19-bof/",
-    "image": null,
-    "author": null
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2016-02-01T00:00:00",
+    "id": "b7d5c59c-0f25-43a0-98e2-3318763e2589",
+    "doi": "10.5194/esd-2021-65",
+    "url": "https://doi.org/10.5194/esd-2021-65",
+    "title": "The Mediterranean climate change hotspot in the CMIP5 and CMIP6 projections",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "Tutorial Distributed Computing With Xenon 1.1.0",
-    "type": "report",
-    "url": "https://doi.org/10.5281/zenodo.1064100",
-    "image": null,
-    "author": null
+    "mention_type": "report",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2017-10-16T00:00:00",
+    "id": "0289507e-9b92-442d-9ee1-70dca2bcf8ff",
+    "doi": "10.1175/BAMS-D-21-0305.1",
+    "url": "https://doi.org/10.1175/BAMS-D-21-0305.1",
+    "title": "Understanding Climate Risk in Future Energy Systems: An Energy–Climate Data Hackathon",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "Xenon - A Uniform Interface To Distributed Storage And Compute Resources",
-    "type": "report",
-    "url": "https://doi.org/10.5281/zenodo.1064695",
-    "image": null,
-    "author": null
+    "mention_type": "thesis",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   },
   {
-    "date": "2017-10-03T00:00:00",
+    "id": "51e13bbd-7169-459b-a78f-8dc4f5ec63e5",
+    "doi": "10.5194/gmd-13-1179-2020",
+    "url": "https://doi.org/10.5194/gmd-13-1179-2020",
+    "title": "Earth System Model Evaluation Tool (ESMValTool) v2.0 – technical overview",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
     "is_featured": false,
-    "title": "Xenon tutorial on readthedocs.io",
-    "type": "webpage",
-    "url": "https://xenonrse2017.readthedocs.io/en/latest/",
-    "image": null,
-    "author": null
+    "mention_type": "videoRecording",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "f71e48e4-3128-42e1-aae8-e86f8625e677",
+    "doi": "10.1126/sciadv.aba1981",
+    "url": "https://doi.org/10.1126/sciadv.aba1981",
+    "title": "Context for interpreting equilibrium climate sensitivity and transient climate response from the CMIP6 Earth system models",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "webpage",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "2f977842-b7df-4d6d-b9cb-fe5d49f051c8",
+    "doi": "10.1029/2020GL090963",
+    "url": "https://doi.org/10.1029/2020GL090963",
+    "title": "Tropical Cyclone Integrated Kinetic Energy in an Ensemble of HighResMIP Simulations",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "other",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "b99c8d97-9369-4e78-881a-02653b249b89",
+    "doi": "10.5194/gmd-15-269-2022",
+    "url": "https://doi.org/10.5194/gmd-15-269-2022",
+    "title": "Impact of increased resolution on long-standing biases in HighResMIP-PRIMAVERA climate models",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "75865dd1-0f60-4b4e-a9f0-0f5f65ab0b11",
+    "doi": "10.5194/esd-13-321-2022",
+    "url": "https://doi.org/10.5194/esd-13-321-2022",
+    "title": "The Mediterranean climate change hotspot in the CMIP5 and CMIP6 projections",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "bd4d76ba-09e2-43d0-a42b-43fc9db4fd23",
+    "doi": "10.1002/cli2.30",
+    "url": "https://doi.org/10.1002/cli2.30",
+    "title": "The climate science for service partnership Brazil",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "ed495b5d-5dbe-4f01-8796-4b2699b117b8",
+    "doi": "10.1175/JCLI-D-21-0234.1",
+    "url": "https://doi.org/10.1175/JCLI-D-21-0234.1",
+    "title": "The Physical Climate at Global Warming Thresholds as Seen in the U.K. Earth System Model",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "1d6cfd44-7593-4db9-84e3-6f84c5606558",
+    "doi": "10.1175/JCLI-D-21-0148.1",
+    "url": "https://doi.org/10.1175/JCLI-D-21-0148.1",
+    "title": "Robustness of Competing Climatic States",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "ea62db10-0f96-4d80-a753-1c100e6ed19f",
+    "doi": "10.1029/2019JD032321",
+    "url": "https://doi.org/10.1029/2019JD032321",
+    "title": "Quantifying Progress Across Different CMIP Phases With the ESMValTool",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "c736147c-d054-4075-84fb-f6a4cfacc333",
+    "doi": "10.48550/ARXIV.2205.00743",
+    "url": "https://doi.org/10.48550/ARXIV.2205.00743",
+    "title": "Machine-learned cloud classes from satellite data for process-oriented climate model evaluation",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "7e7c791b-4e03-4ef1-b937-31c41d77a633",
+    "doi": "10.1088/1748-9326/ac5cf4",
+    "url": "https://doi.org/10.1088/1748-9326/ac5cf4",
+    "title": "Interpreting extreme climate impacts from large ensemble simulations—are they unseen or unrealistic?",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "eb736d20-dccd-4c6a-9b91-81aeafbb310d",
+    "doi": "10.1029/2019JG005619",
+    "url": "https://doi.org/10.1029/2019JG005619",
+    "title": "Constraining Uncertainty in Projected Gross Primary Production With Machine Learning",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "8daacb6f-c4b1-44a2-b871-58fe4385c19c",
+    "doi": "10.1175/BAMS-D-20-0073.1",
+    "url": "https://doi.org/10.1175/BAMS-D-20-0073.1",
+    "title": "The Future of Sea Ice Modeling: Where Do We Go from Here?",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "46f3071f-a013-490e-9c99-f0ce34c63210",
+    "doi": "10.1029/2020MS002120",
+    "url": "https://doi.org/10.1029/2020MS002120",
+    "title": "CO2 Increase Experiments Using the CESM: Relationship to Climate Sensitivity and Comparison of CESM1 to CESM2",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "9f993db5-248a-4a67-bac0-ff71fedfe15b",
+    "doi": "10.1175/BAMS-D-19-0337.1",
+    "url": "https://doi.org/10.1175/BAMS-D-19-0337.1",
+    "title": "Evaluating Climate Models with the CLIVAR 2020 ENSO Metrics Package",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "d2133728-c507-4bb2-a2f7-e21a17bbac7f",
+    "doi": "10.1109/MCG.2020.3042587",
+    "url": "https://doi.org/10.1109/MCG.2020.3042587",
+    "title": "Dynamic 3-D Visualization of Climate Model Development and Results",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "41830b64-082e-4665-a437-71c02fc4c7c3",
+    "doi": "10.1088/1748-9326/abf28a",
+    "url": "https://doi.org/10.1088/1748-9326/abf28a",
+    "title": "Can we trust CMIP5/6 future projections of European winter precipitation?",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "eb44cb32-4b00-4b23-9e4d-e4131b074665",
+    "doi": "10.5194/gmd-13-3383-2020",
+    "url": "https://doi.org/10.5194/gmd-13-3383-2020",
+    "title": "Earth System Model Evaluation Tool (ESMValTool) v2.0 - an extended set of large-scale diagnostics for quasi-operational and comprehensive evaluation of Earth system models in CMIP",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "bf635b3c-d70a-42ad-980c-5b632a721633",
+    "doi": "10.5194/gmd-13-4205-2020",
+    "url": "https://doi.org/10.5194/gmd-13-4205-2020",
+    "title": "Earth System Model Evaluation Tool (ESMValTool) v2.0 - diagnostics for emergent constraints and future projections from Earth system models in CMIP",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "a4695fdf-93f7-4359-862d-b9535d03bd94",
+    "doi": "10.1007/s00382-021-05941-3",
+    "url": "https://doi.org/10.1007/s00382-021-05941-3",
+    "title": "Evaluation of a new 12 km regional perturbed parameter ensemble over Europe",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "3049f10e-2050-47a0-a195-20ded67612ca",
+    "doi": "10.5194/bg-17-6115-2020",
+    "url": "https://doi.org/10.5194/bg-17-6115-2020",
+    "title": "Spatially resolved evaluation of Earth system models with satellite column-averaged CO2",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "1f9cb173-b7b2-4145-aa57-045f6083e2f3",
+    "doi": "10.5194/esd-11-1233-2020",
+    "url": "https://doi.org/10.5194/esd-11-1233-2020",
+    "title": "Emergent constraints on equilibrium climate sensitivity in CMIP5: do they hold for CMIP6?",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "24f00db0-bc51-4626-be09-ea6969fc9452",
+    "doi": "10.5194/esd-12-253-2021",
+    "url": "https://doi.org/10.5194/esd-12-253-2021",
+    "title": "Climate model projections from the Scenario Model Intercomparison Project (ScenarioMIP) of CMIP6",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "72b2ab61-ada4-4624-a19f-3bc428ad7dee",
+    "doi": "10.5194/acp-21-5015-2021",
+    "url": "https://doi.org/10.5194/acp-21-5015-2021",
+    "title": "Evaluating stratospheric ozone and water vapour changes in CMIP6 models from 1850 to 2100",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "b933af7f-bc98-4a29-9176-486fd001e6a5",
+    "doi": "10.5194/esd-11-751-2020",
+    "url": "https://doi.org/10.5194/esd-11-751-2020",
+    "title": "ESD Ideas: Global climate response scenarios for IPCC assessments",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "9ceebcfc-a3c4-4f50-b6e6-0186edfa0ad5",
+    "doi": "10.5194/gmd-2020-244",
+    "url": "https://doi.org/10.5194/gmd-2020-244",
+    "title": "Earth System Model Evaluation Tool (ESMValTool) v2.0 - diagnostics for extreme events, regional and impact evaluation and analysis of Earth system models in CMIP",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "2e1a8fc0-e06a-45cb-8678-db997ed05fad",
+    "doi": "10.5194/gmd-15-1803-2022",
+    "url": "https://doi.org/10.5194/gmd-15-1803-2022",
+    "title": "Variability and extremes: statistical validation of the Alfred Wegener Institute Earth System Model (AWI-ESM)",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "0408c005-a92a-4d2b-8ed1-dcaae0278665",
+    "doi": "10.1016/j.rse.2017.01.007",
+    "url": "https://doi.org/10.1016/j.rse.2017.01.007",
+    "title": "Benchmarking CMIP5 models with a subset of ESA CCI Phase 2 data using the ESMValTool",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "d9c8748e-0700-4d23-944b-03fa1f884e9a",
+    "doi": "10.5194/gmd-9-1747-2016",
+    "url": "https://doi.org/10.5194/gmd-9-1747-2016",
+    "title": "ESMValTool (v1.0) – a community diagnostic and performance metrics tool for routine evaluation of Earth system models in CMIP",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "ef1d6ec9-7f39-4a75-878e-cb9391588979",
+    "doi": "10.5194/esd-7-813-2016",
+    "url": "https://doi.org/10.5194/esd-7-813-2016",
+    "title": "Towards improved and more routine Earth system model evaluation in CMIP",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "journalArticle",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "8e744866-df6c-41ec-b58d-ad7ce5423225",
+    "doi": "10.5194/egusphere-egu22-7715",
+    "url": "https://doi.org/10.5194/egusphere-egu22-7715",
+    "title": "Introducing the eWaterCycle Python package for open and FAIR hydrological modelling",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "9297b546-d9c8-4694-90b3-fbc392b3e854",
+    "doi": "10.5194/egusphere-egu2020-17472",
+    "url": "https://doi.org/10.5194/egusphere-egu2020-17472",
+    "title": "ESMValCore: analyzing CMIP data made easy",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "8693508b-c493-414b-9ae9-acbe7c4bc143",
+    "doi": null,
+    "url": "https://github.com/ESMValGroup/ESMValTool/issues/1866",
+    "title": "Testing ESMValTool (with ESMValBot)",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "a922dada-f10d-4044-8eca-a187390906a7",
+    "doi": null,
+    "url": "https://github.com/ESMValGroup/ESMValTool/issues/1866",
+    "title": "Introduction to the ESMValTool Tutorial",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "62f08054-60a9-4b26-a68e-d97e7dbf20ba",
+    "doi": "10.1002/essoar.10501325.1",
+    "url": "https://doi.org/10.1002/essoar.10501325.1",
+    "title": "Climate Data Analysis: Enhancing Usage of Research Data with Climate4impact, EUDAT and DARE",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2019,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "8e488e2d-e7ae-4ccc-9ea6-c2fbccf854e4",
+    "doi": "10.5194/egusphere-egu2020-19181",
+    "url": "https://doi.org/10.5194/egusphere-egu2020-19181",
+    "title": "ESMValTool - introducing a powerful model evaluation tool",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "bae013cd-482f-4d5c-82e8-cfcd3fe8e80c",
+    "doi": "10.5194/egusphere-egu2020-13306",
+    "url": "https://doi.org/10.5194/egusphere-egu2020-13306",
+    "title": "CMIP model evaluation with the ESMValTool v2.0",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "741d9793-c426-45ac-bc11-c747333f9df6",
+    "doi": "10.5194/egusphere-egu21-3476",
+    "url": "https://doi.org/10.5194/egusphere-egu21-3476",
+    "title": "Recent developments on the Earth System Model Evaluation Tool",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "b9ab678f-a1e4-48b4-83ab-a9bbf53fe475",
+    "doi": "10.5194/egusphere-egu21-4805",
+    "url": "https://doi.org/10.5194/egusphere-egu21-4805",
+    "title": "Bringing ESMValTool to the Jupyter Lab",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "7dae9097-7fb1-481e-aa06-079deec20683",
+    "doi": "10.5194/egusphere-egu21-6051",
+    "url": "https://doi.org/10.5194/egusphere-egu21-6051",
+    "title": "Preprocessing of hydrological models: input in eWaterCycle with ESMValTool",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "dec4089e-58b0-43c9-b365-eb176ba8b99b",
+    "doi": "10.5194/egusphere-egu21-9387",
+    "url": "https://doi.org/10.5194/egusphere-egu21-9387",
+    "title": "A multi-model ensemble weighting method (ClimWIP) in ESMValTool",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "11883c2f-cef0-46f3-80f0-e0ad93310175",
+    "doi": "10.5194/ems2021-338",
+    "url": "https://doi.org/10.5194/ems2021-338",
+    "title": "The evolution of shared infrastructure for climate analytics",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "05fae3af-f31b-4260-8533-bc7d4845c0cb",
+    "doi": "10.5194/egusphere-egu21-7724",
+    "url": "https://doi.org/10.5194/egusphere-egu21-7724",
+    "title": "New scientific diagnostics in the ESMValTool - an overview",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "6b933dac-aa46-4c5c-8476-f262dd13ab09",
+    "doi": null,
+    "url": "https://ui.adsabs.harvard.edu/abs/2020AGUFMIN032..01H",
+    "title": "ESMValCore and ESMValTool: analyzing CMIP data made easy",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "32a9f21e-514e-49e6-b664-eb5a4c2ccceb",
+    "doi": null,
+    "url": "https://ui.adsabs.harvard.edu/abs/2018EGUGA..2016953Z",
+    "title": "Contributions to Ocean Diagnostics in ESMValTool",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2018,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "d92e587a-d7b6-4c40-a512-eb9df2216118",
+    "doi": null,
+    "url": "https://ui.adsabs.harvard.edu/abs/2019EGUGA..2119045L",
+    "title": "CMIP6 Evaluation with the ESMValTool",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2019,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "607e675a-6a68-43ac-b3dc-da2e69fce2b8",
+    "doi": "10.5194/egusphere-egu2020-14745",
+    "url": "https://doi.org/10.5194/egusphere-egu2020-14745",
+    "title": "ESMValTool pre-processing functions for eWaterCycle",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "6aaecc88-11be-41a2-b646-57a6f953ef9b",
+    "doi": null,
+    "url": "https://ui.adsabs.harvard.edu/abs/2018EGUGA..2010407D",
+    "title": "Flexible development and deployment of large scale data processing in MAGIC",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2018,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "18401f8a-8bcb-4445-8ec1-5fb64f9b2428",
+    "doi": "10.5194/egusphere-egu21-15681",
+    "url": "https://doi.org/10.5194/egusphere-egu21-15681",
+    "title": "Model evaluation expectations of European ESM communities: results from a survey",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "8c59496d-af16-4db5-8d1e-0a83584bba6a",
+    "doi": "10.5194/egusphere-egu21-7797",
+    "url": "https://doi.org/10.5194/egusphere-egu21-7797",
+    "title": "Towards Open and FAIR Hydrological Modelling with eWaterCycle",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "764fb033-ac6d-4bd3-b49a-186194be2cdf",
+    "doi": null,
+    "url": "https://ui.adsabs.harvard.edu/abs/2018EGUGA..20.5935S",
+    "title": "Towards a powerful tool to manage large amount of data and analysis",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2018,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "679bf70c-7296-4dac-aee4-ac6a1adbdb9c",
+    "doi": null,
+    "url": "https://ui.adsabs.harvard.edu/abs/2019EGUGA..2114315Z",
+    "title": "Assessing the impact of resolution and forcings on bottom potential temperature and sea ice in the Southern Ocean using ESMValTool",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2019,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "c0845b65-fe19-47fc-98cf-0cb2bcf4e433",
+    "doi": "10.5194/egusphere-egu21-3686",
+    "url": "https://doi.org/10.5194/egusphere-egu21-3686",
+    "title": "Climate variability following large volcanic eruption: CMIP6 model investigation",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "e2e65438-c83b-4fc7-a684-e58b6c0a3381",
+    "doi": null,
+    "url": "https://ui.adsabs.harvard.edu/abs/2018EGUGA..20.6491E",
+    "title": "Web Processing Services for Copernicus Climate Change Service",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2018,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "4f581dbd-823d-47cd-9dde-7d4f49e45e35",
+    "doi": null,
+    "url": "https://meetingorganizer.copernicus.org/EGU22/session/43187",
+    "title": "EGU22 Short Course: Earth System Model Evaluation with ESMValTool in the Jupyter notebook",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "93bf1938-2e25-469f-93ea-034ac7f09482",
+    "doi": "10.5194/egusphere-egu22-7274",
+    "url": "https://doi.org/10.5194/egusphere-egu22-7274",
+    "title": "The eWaterCycle platform for open and FAIR computational hydrological research",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "a93ce83a-bca2-4045-abb4-f43235a31beb",
+    "doi": "10.5194/egusphere-egu22-6372",
+    "url": "https://doi.org/10.5194/egusphere-egu22-6372",
+    "title": "Better Tailoring of Climate Information for End Users using Targeted Interfaces and Tools",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "presentation",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "91b16add-eed3-4b19-9cfb-f856491f5e07",
+    "doi": null,
+    "url": "https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_Full_Report.pdf",
+    "title": "IPCC, 2021: Climate Change 2021: The Physical Science Basis. Contribution of Working Group I to the Sixth \nAssessment Report of the Intergovernmental Panel on Climate Change",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2021,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "report",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "b88ccf92-4aaa-4b33-aca5-951561e6974d",
+    "doi": null,
+    "url": "https://docs.esmvaltool.org/en/latest/introduction.html",
+    "title": "ESMValTool documentation",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2018,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "webpage",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "219d5fe0-633b-4cbd-80f8-b7f84acaa661",
+    "doi": null,
+    "url": "https://cmip-esmvaltool.dkrz.de/",
+    "title": "ESMValTool CMIP5 and CMIP6 results",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "webpage",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "daddb509-fa5d-46af-9e34-08dbd7fafd86",
+    "doi": null,
+    "url": "https://www.esmvaltool.org/",
+    "title": "ESMValTool Project",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "webpage",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "c435f416-856d-4f88-9585-014bea9d8a57",
+    "doi": null,
+    "url": "https://twitter.com/esmvaltool",
+    "title": "ESMValTool on twitter",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "webpage",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "3bf1f88a-2cd0-4aef-ae95-8a36efe6b72b",
+    "doi": null,
+    "url": "https://www.esciencecenter.nl/news/new-version-of-esmvaltool-released/",
+    "title": "New version of ESMValTool released",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "webpage",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "c04d2528-8b2a-402b-bc1d-c20170fd11b5",
+    "doi": null,
+    "url": "https://help.jasmin.ac.uk/article/4955-community-software-esmvaltool",
+    "title": "Community Software: ESMValTool - JASMIN help docs",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "webpage",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "99932b1c-81ad-4611-b6c6-58d2e7ad5926",
+    "doi": null,
+    "url": "https://esmvalgroup.github.io/ESMValTool_Tutorial/",
+    "title": "ESMValTool Tutorial",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "webpage",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
+  },
+  {
+    "id": "108e1d98-c444-454d-a4a8-7970dd88f53c",
+    "doi": null,
+    "url": "https://climate.esa.int/en/projects/cmug/case-studies/esa-cci-data-for-model-evaluation-using-esmvaltool-to-validate-cmip6-models/",
+    "title": "ESA CCI data for model evaluation: using ESMValTool to validate CMIP6 models",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2022,
+    "page": null,
+    "image_url": null,
+    "is_featured": false,
+    "mention_type": "webpage",
+    "source": "manual",
+    "mention_for_software": [
+      {
+        "software": "86229dbc-a4ff-4c7d-88dd-f5e6e2c83626"
+      }
+    ]
   }
 ]

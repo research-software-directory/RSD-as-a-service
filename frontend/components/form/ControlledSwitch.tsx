@@ -2,14 +2,21 @@ import {Controller} from 'react-hook-form'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 
-export default function ControlledSwitch({label, name, defaultValue = false, rules, control}:
-  { label: string, name: string, control: any, rules?: any, defaultValue?: boolean }) {
+type ControlledSwitchProps = {
+  label: string,
+  name: string,
+  control: any,
+  defaultValue?: boolean
+  disabled?: boolean
+}
+
+
+export default function ControlledSwitch({label, name, defaultValue = false, control, disabled=false}:ControlledSwitchProps) {
   // console.log('ControlledSwitch.defaultValue...', defaultValue)
   return (
     <Controller
       name={name}
       defaultValue={defaultValue}
-      // rules={rules}
       control={control}
       render={({field}) => {
         const {onChange, value} = field
@@ -22,6 +29,7 @@ export default function ControlledSwitch({label, name, defaultValue = false, rul
                 onChange={({target}) => {
                   onChange(target.checked)
                 }}
+                disabled={disabled ?? false}
               />
             }
             label={label}
