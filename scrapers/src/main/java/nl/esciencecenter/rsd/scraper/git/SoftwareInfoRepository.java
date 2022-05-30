@@ -1,4 +1,4 @@
-package nl.esciencecenter.rsd.scraper;
+package nl.esciencecenter.rsd.scraper.git;
 
 import java.util.Collection;
 

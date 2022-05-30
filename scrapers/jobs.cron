@@ -1,5 +1,5 @@
-*/6 * * * * /usr/local/openjdk-17/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.MainProgrammingLanguages > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
-2-59/6 * * * * /usr/local/openjdk-17/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.MainLicenses > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
-4-59/6 * * * * /usr/local/openjdk-17/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.MainCommits > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
+*/6 * * * * /usr/local/openjdk-17/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.git.MainProgrammingLanguages > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
+2-59/6 * * * * /usr/local/openjdk-17/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.git.MainLicenses > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
+4-59/6 * * * * /usr/local/openjdk-17/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.git.MainCommits > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
 1-59/6 * * * * /usr/bin/python3 -u /usr/myjava/releases.py > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
 3-59/6 * * * * /usr/bin/python3 -u /usr/myjava/zotero.py > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1

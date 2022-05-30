@@ -1,4 +1,4 @@
-package nl.esciencecenter.rsd.scraper;
+package nl.esciencecenter.rsd.scraper.git;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

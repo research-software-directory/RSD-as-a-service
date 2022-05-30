@@ -2,6 +2,7 @@ package nl.esciencecenter.rsd.scraper;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
