@@ -257,12 +257,11 @@ export async function getLicensesFromDoi(doiId: string | null | undefined) {
   const spdxLicenses = []
 
   for (const license of allLicenses) {
-    if (
-      'rightsIdentifierScheme' in license
-      && 'rightsIdentifier' in license
-      && license.rightsIdentifierScheme === 'SPDX'
-    ) {
+    if (license.rightsIdentifier) {
       spdxLicenses.push(license.rightsIdentifier)
+    }
+    if (license.rights) {
+      spdxLicenses.push(license.rights)
     }
   }
 

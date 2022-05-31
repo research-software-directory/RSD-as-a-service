@@ -1,9 +1,10 @@
 import {useEffect,useState} from 'react'
 
+import logger from './logger'
 import {SpdxLicense} from '../types/SpdxLicense'
 import {sortOnStrProp} from './sortFn'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
-import logger from './logger'
+import {License} from '~/types/SoftwareTypes'
 
 export type SpdxLicenseResponse = {
   licenseListVersion: string,
@@ -13,33 +14,40 @@ export type SpdxLicenseResponse = {
 
 const url = 'https://raw.githubusercontent.com/spdx/license-list-data/master/json/licenses.json'
 
-export default function useSpdxLicenses() {
-  const [options, setOptions] = useState<AutocompleteOption<SpdxLicense>[]>([])
+export default function useSpdxLicenses({software}:{software:string}) {
+  const [options, setOptions] = useState<AutocompleteOption<License>[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let abort=false
     async function getData() {
       const resp = await fetch(url)
       if (resp.status === 200) {
+        setLoading(true)
         const json:SpdxLicenseResponse = await resp.json()
-        // exit on abort
-        if (abort === true) return
         // if licenses
         if (json?.licenses) {
           const options = json.licenses
             // only valid liceses
-            .filter(item => item.isDeprecatedLicenseId === false)
+            // .filter(item => item.isDeprecatedLicenseId === false)
             // ordered on licenseId
             .sort((a,b)=>sortOnStrProp(a,b,'licenseId'))
             .map(item => {
               return {
                 key: item.licenseId,
                 label: item.licenseId,
-                data: item
+                data: {
+                  id: undefined,
+                  software,
+                  license: item.licenseId
+                }
               }
             })
+          // exit on abort
+          if (abort === true) return
           // update state
           setOptions(options)
+          setLoading(false)
         }
       } else {
         logger(`useSpdxLicenses: ${resp.status}: ${resp.statusText}`, 'error')
@@ -48,7 +56,10 @@ export default function useSpdxLicenses() {
     }
     getData()
     return ()=>{abort=true}
-  }, [])
+  }, [software])
 
-  return options
+  return {
+    loading,
+    options
+  }
 }
