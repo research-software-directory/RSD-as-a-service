@@ -54,7 +54,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
     }
   }, [item,reset])
 
-  function handleCancel(event: any, reason: 'backdropClick' | 'escapeKeyDown') {
+  function handleCancel(reason:any) {
     if (reason === 'backdropClick') {
       // we do not cancel on backdrop click
       // only on escape or using cancel button
@@ -71,7 +71,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}
-      onClose={handleCancel}
+      onClose={(e,reason)=>handleCancel(reason)}
       maxWidth="md"
     >
       <DialogTitle sx={{
@@ -207,20 +207,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               defaultValue={formData?.is_featured ?? false}
               disabled={isFeaturedDisabled()}
             />
-            {/* not practical to show quite small image?!?
-            <div className="px-2"></div>
-            {
-              formData?.is_featured ?
-                <Avatar
-                  alt={formData?.title ?? 'Image'}
-                  src={formData?.image_url ?? ''}
-                  variant="square"
-                  sx={{
-                    height:'4rem'
-                  }}
-                />
-                : null
-            } */}
           </section>
         </DialogContent>
         <DialogActions sx={{
