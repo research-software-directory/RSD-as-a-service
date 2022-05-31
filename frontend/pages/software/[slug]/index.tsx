@@ -102,7 +102,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('SoftwareIndexPage...relatedSoftware...', relatedSoftware)
+  // console.log('SoftwareIndexPage...mentions...', mentions)
   return (
     <>
       {/* Page Head meta tags */}

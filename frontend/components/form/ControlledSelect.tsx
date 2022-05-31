@@ -3,6 +3,7 @@ import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import {Controller} from 'react-hook-form'
+import FormHelperText from '@mui/material/FormHelperText'
 
 export type Option = {
   label: string,
@@ -18,16 +19,18 @@ export type ControlledSelectProps = {
   control: any
   rules: any
   sx?: any
+  helperTextMessage:string
 }
 
-export default function ControlledSelect({name, label, options, control, rules, defaultValue, disabled, sx}: ControlledSelectProps) {
+export default function ControlledSelect({name, label, options, control,
+  rules, defaultValue, disabled, sx, helperTextMessage}: ControlledSelectProps) {
   // do not render if no options provided
   if (!options || options?.length === 0) return null
 
   return (
     <Controller
       name={name}
-      defaultValue={defaultValue}
+      defaultValue={defaultValue ?? null}
       rules={rules}
       control={control}
       render={({field}) => {
@@ -57,6 +60,7 @@ export default function ControlledSelect({name, label, options, control, rules, 
                 )
               })}
             </Select>
+            <FormHelperText>{helperTextMessage ?? ''}</FormHelperText>
           </FormControl>
         )
       }}

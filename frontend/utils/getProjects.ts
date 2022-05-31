@@ -1,6 +1,6 @@
 import {OrganisationRole} from '~/types/Organisation'
 import {TeamMemberProps} from '~/types/Contributor'
-import {MentionForProject} from '~/types/Mention'
+import {mentionColumns, MentionForProject} from '~/types/Mention'
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
@@ -342,10 +342,8 @@ export async function getLinksForProject({project, token, frontend = false}:
 export async function getOutputForProject({project, token, frontend}:
   {project: string, token?: string, frontend?: boolean}) {
   try {
-    // select only specific colums
-    const cols = 'id,date,is_featured,title,type,url,image,author'
     // build query url
-    const query = `mention?select=${cols},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=type.asc`
+    const query = `mention?select=${mentionColumns},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=mention_type.asc`
     // base url
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
@@ -359,24 +357,21 @@ export async function getOutputForProject({project, token, frontend}:
     if (resp.status === 200) {
       const data: MentionForProject[] = await resp.json()
       return data
-    } else if (resp.status === 404) {
-      logger(`getOutputForProject: 404 [${url}]`, 'error')
-      // query not found
-      return undefined
     }
+    logger(`getOutputForProject: [${resp.status}] [${url}]`, 'error')
+    // query not found
+    return []
   } catch (e: any) {
     logger(`getOutputForProject: ${e?.message}`, 'error')
-    return undefined
+    return []
   }
 }
 
 export async function getImpactForProject({project, token, frontend}:
   { project: string, token?: string, frontend?: boolean }) {
   try {
-    // select only specific colums
-    const cols = 'id,date,is_featured,title,type,url,image,author'
     // build query url
-    const query = `mention?select=${cols},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=type.asc`
+    const query = `mention?select=${mentionColumns},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=mention_type.asc`
     // base url
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
@@ -390,14 +385,13 @@ export async function getImpactForProject({project, token, frontend}:
     if (resp.status === 200) {
       const data: MentionForProject[] = await resp.json()
       return data
-    } else if (resp.status === 404) {
-      logger(`getImpactForProject: 404 [${url}]`, 'error')
-      // query not found
-      return undefined
     }
+    logger(`getImpactForProject: [${resp.status}] [${url}]`, 'error')
+    // query not found
+    return []
   } catch (e: any) {
     logger(`getImpactForProject: ${e?.message}`, 'error')
-    return undefined
+    return []
   }
 }
 
