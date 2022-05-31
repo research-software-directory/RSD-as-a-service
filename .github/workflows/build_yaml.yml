@@ -1,0 +1,80 @@
+name: build images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  auth:
+    name: auth
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/auth
+      image_tag: $GITHUB_SHA
+      dockerfile: authentication/Dockerfile
+      docker_context: ./authentication
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  database:
+    name: database
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/database
+      image_tag: $GITHUB_SHA
+      dockerfile: database/Dockerfile
+      docker_context: ./database
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  backend:
+    name: backend api
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/backend
+      image_tag: $GITHUB_SHA
+      dockerfile: backend-postgrest/Dockerfile
+      docker_context: ./backend-postgrest
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  frontend:
+    name: frontend
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/frontend
+      image_tag: $GITHUB_SHA
+      dockerfile: frontend/Dockerfile
+      docker_context: ./frontend
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  nginx:
+    name: nginx
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/nginx
+      image_tag: $GITHUB_SHA
+      dockerfile: nginx/Dockerfile
+      docker_context: ./nginx
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
+  scrapers:
+    name: scrapers
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/scrapers
+      image_tag: $GITHUB_SHA
+      dockerfile: scrapers/Dockerfile
+      docker_context: ./scrapers
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
