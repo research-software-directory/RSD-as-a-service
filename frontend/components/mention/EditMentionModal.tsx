@@ -54,7 +54,12 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
     }
   }, [item,reset])
 
-  function handleCancel() {
+  function handleCancel(event: any, reason: 'backdropClick' | 'escapeKeyDown') {
+    if (reason === 'backdropClick') {
+      // we do not cancel on backdrop click
+      // only on escape or using cancel button
+      return false
+    }
     // reset form to empty
     reset()
     // hide
@@ -88,10 +93,11 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
         <input type="hidden"
           {...register('source')}
         />
-        <DialogContent sx={{
-          width: ['100%'],
-          padding: '1rem 1.5rem 2.5rem'
-        }}>
+        <DialogContent
+          sx={{
+            width: ['100%'],
+            padding: '1rem 1.5rem 2.5rem'
+          }}>
           <ControlledTextField
             control={control}
             options={{
