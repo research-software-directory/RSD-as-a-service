@@ -5,7 +5,7 @@ export const cfgImpact = {
     title: 'Find publication',
     subtitle: 'We search in Crossref, DataCite and RSD databases',
     label: 'DOI or publication title',
-    help: 'Provide valid DOI or title of the publication',
+    help: 'Provide a valid DOI or the title of the publication',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
@@ -13,6 +13,6 @@ export const cfgImpact = {
   },
   newItem: {
     title: 'New item',
-    subtitle: 'Use add button to create new item'
+    subtitle: 'Use the add button to create a new item'
   }
 }
