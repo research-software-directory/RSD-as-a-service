@@ -25,7 +25,7 @@ export default function UserOrganisations({session}: { session: Session }) {
 
   return (
     <div className="flex-1 flex flex-col">
-      <h1>User organisarion</h1>
+      <h1>User organisation</h1>
       <ContentInTheMiddle>
         <h2>Under construction</h2>
       </ContentInTheMiddle>
