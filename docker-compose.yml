@@ -115,8 +115,8 @@ services:
       - MAX_REQUESTS_GITLAB
       - API_CREDENTIALS_GITHUB
       - ZENODO_ACCESS_TOKEN
-      - ZOTERO_LIBRARY
-      - ZOTERO_API_TOKEN
+      - MAX_REQUESTS_DOI
+      - CROSSREF_CONTACT_EMAIL
     depends_on:
       - database
       - backend
