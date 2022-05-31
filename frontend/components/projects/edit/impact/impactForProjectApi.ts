@@ -12,6 +12,7 @@ import {
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {MentionItemProps} from '~/types/Mention'
 import {addMentionItem} from '~/utils/editMentions'
+import {sortBySearchFor} from '~/utils/sortFn'
 
 export async function findPublicationByTitle({project, searchFor, token}:
   { project: string, searchFor: string, token: string }) {
@@ -40,12 +41,13 @@ export async function findPublicationByTitle({project, searchFor, token}:
     source: 'RSD'
   }))
   // return results
-  return [
+  const sorted = [
     // RSD items at the top
     ...rsdItems,
     ...crosrefItems,
     ...dataciteItems
-  ]
+  ].sort((a, b) => sortBySearchFor(a, b, 'title', searchFor))
+  return sorted
 }
 
 /**

@@ -40,3 +40,27 @@ function sortItems(valA: any, valB: any, sortDir: 'asc' | 'desc' = 'asc'){
   // values are equal
   return 0
 }
+
+
+export function sortBySearchFor(itemA: any, itemB: any, prop: string, searchFor:string) {
+  const valA:string = itemA[prop]
+  const valB:string = itemB[prop]
+
+  if (
+    valA.toLowerCase().includes(searchFor.toLowerCase()) === true &&
+    valB.toLowerCase().includes(searchFor.toLowerCase()) === false
+  ) {
+    return -1
+  }
+
+  if (
+    valA.toLowerCase().includes(searchFor.toLowerCase()) === false &&
+    valB.toLowerCase().includes(searchFor.toLowerCase()) === true
+  ) {
+    return 1
+  }
+
+  // values are equal
+  return 0
+}
+
