@@ -84,7 +84,3 @@ docker-compose up
 ```
 
 More information about [data migration is avaliable here](data-migration/README.md).
-
-## Tech Stack
-
-![image](/docs/rsd-stack-220304.png)

@@ -3,6 +3,7 @@ import {mockResolvedValueOnce} from './jest/mockFetch'
 import {
   getContributorsFromDoi,
   getKeywordsFromDoi,
+  getLicensesFromDoi,
 } from './getInfoFromDatacite'
 
 const exampleCreator = {
@@ -377,7 +378,7 @@ const exampleResponseInvalidPersons = {
   ]
 }
 
-const exampleResponseMissingSubjects = {
+const exampleResponseNoInfo = {
   'id': 'https://doi.org/10.0000/zenodo.0000000',
   'doi': '10.0000/ZENODO.0000000',
   'url': 'https://zenodo.org/record/0000000'
@@ -399,6 +400,51 @@ const exampleResponseInvalidSubjects = {
     {
       'schemeURI': 'Test',
       'lang': 'Test'
+    }
+  ]
+}
+
+const exampleResponseRightsList = {
+  'id': 'https://doi.org/10.0000/zenodo.0000000',
+  'doi': '10.0000/ZENODO.0000000',
+  'url': 'https://zenodo.org/record/0000000',
+  'rightsList': [
+    {
+      'rights': 'Open Access',
+      'rightsUri': 'info:eu-repo/semantics/openAccess',
+      'schemeUri': 'https://spdx.org/licenses/',
+      'rightsIdentifier': 'cc-by-4.0',
+      'rightsIdentifierScheme': 'SPDX'
+    },
+    {
+      'rights': 'Open Access',
+      'rightsUri': 'info:eu-repo/semantics/openAccess'
+    },
+    {
+      'rights': 'Open Access',
+      'rightsUri': 'info:eu-repo/semantics/openAccess',
+      'schemeUri': 'https://spdx.org/licenses/',
+      'rightsIdentifier': 'EUPL-1.2',
+      'rightsIdentifierScheme': 'SPDX'
+    },
+  ]
+}
+
+const exampleResponseRightsListEmpty = {
+  'id': 'https://doi.org/10.0000/zenodo.0000000',
+  'doi': '10.0000/ZENODO.0000000',
+  'url': 'https://zenodo.org/record/0000000',
+  'rightsList': []
+}
+
+const exampleResponseRightsListNoSpdx = {
+  'id': 'https://doi.org/10.0000/zenodo.0000000',
+  'doi': '10.0000/ZENODO.0000000',
+  'url': 'https://zenodo.org/record/0000000',
+  'rightsList': [
+    {
+      'rights': 'Open Access',
+      'rightsUri': 'info:eu-repo/semantics/openAccess'
     }
   ]
 }
@@ -452,32 +498,57 @@ it('returns authors and contributors', async () => {
   )
 })
 
-it('should skip invalid persons', async () => {
+it('skips invalid persons', async () => {
   mockResolvedValueOnce(exampleResponseInvalidPersons)
   const resp = await getContributorsFromDoi('0', 'DOI')
   expect(resp).toEqual([])
 })
 
-it('should return expected keywords', async () => {
+it('returns expected keywords', async () => {
   mockResolvedValueOnce(dataciteFullExample)
-  const resp = await getKeywordsFromDoi('0', 'DOI')
+  const resp = await getKeywordsFromDoi('0')
   expect(resp).toEqual(['000 computer science'])
 })
 
-it('should return no keywords if there are none', async () => {
+it('returns no keywords if there are none', async () => {
   mockResolvedValueOnce(exampleResponse)
-  const resp = await getKeywordsFromDoi('0', 'DOI')
+  const resp = await getKeywordsFromDoi('0')
   expect(resp).toEqual([])
 })
 
-it('should not return keywords if subjects is missing', async () => {
-  mockResolvedValueOnce(exampleResponseMissingSubjects)
-  const resp = await getKeywordsFromDoi('0', 'DOI')
+it('returns no keywords if subjects is missing', async () => {
+  mockResolvedValueOnce(exampleResponseNoInfo)
+  const resp = await getKeywordsFromDoi('0')
   expect(resp).toEqual([])
 })
 
-it('should skip invalid keyword subjects', async () => {
+it('skips invalid keyword subjects', async () => {
   mockResolvedValueOnce(exampleResponseInvalidSubjects)
-  const resp = await getKeywordsFromDoi('0', 'DOI')
+  const resp = await getKeywordsFromDoi('0')
   expect(resp).toEqual([])
 })
+
+it('returns all licenses from rightsList', async () => {
+  mockResolvedValueOnce(exampleResponseRightsList)
+  const resp = await getLicensesFromDoi('0')
+  expect(resp).toEqual(['cc-by-4.0', 'EUPL-1.2'])
+})
+
+it('returns no licenses if rightsList is missing', async () => {
+  mockResolvedValueOnce(exampleResponseNoInfo)
+  const resp = await getLicensesFromDoi('0')
+  expect(resp).toEqual([])
+})
+
+it('returns no licenses if rightsList is empty', async () => {
+  mockResolvedValueOnce(exampleResponseRightsListEmpty)
+  const resp = await getLicensesFromDoi('0')
+  expect(resp).toEqual([])
+})
+
+// we want to return any type of licenses registered in DOI
+// it('returns only SPDX licenses', async () => {
+//   mockResolvedValueOnce(exampleResponseRightsListNoSpdx)
+//   const resp = await getLicensesFromDoi('0')
+//   expect(resp).toEqual([])
+// })
