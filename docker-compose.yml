@@ -76,7 +76,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.9.0
+    image: rsd/frontend:0.9.1
     environment:
       # it uses values from .env file
       - POSTGREST_URL
