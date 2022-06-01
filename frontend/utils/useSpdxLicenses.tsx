@@ -14,13 +14,13 @@ export type SpdxLicenseResponse = {
 
 const url = 'https://raw.githubusercontent.com/spdx/license-list-data/master/json/licenses.json'
 
-export default function useSpdxLicenses({software}:{software:string}) {
+export default function useSpdxLicenses({software}:{software?:string}) {
   const [options, setOptions] = useState<AutocompleteOption<License>[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let abort=false
-    async function getData() {
+    async function getData(software:string) {
       const resp = await fetch(url)
       if (resp.status === 200) {
         setLoading(true)
@@ -54,7 +54,9 @@ export default function useSpdxLicenses({software}:{software:string}) {
         return []
       }
     }
-    getData()
+    if (software) {
+      getData(software)
+    }
     return ()=>{abort=true}
   }, [software])
 

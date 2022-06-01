@@ -41,8 +41,6 @@ export default function SoftwareLicenses(
     keyName: 'fid'
   })
 
-  // const savedLicenses = getValues('licenses')
-
   // console.group('SoftwareLicenses')
   // console.log('licenses...', licenses)
   // console.log('fields...', fields)
@@ -55,7 +53,6 @@ export default function SoftwareLicenses(
     const toAddLicenses: AutocompleteOption<License>[] = []
     // fetch licenses from DOI
     const licenses = await getLicensesFromDoi(concept_doi)
-    debugger
     // find licenses SPDX keys that match items in the options
     for (const license of licenses) {
       // exlude if already in fields

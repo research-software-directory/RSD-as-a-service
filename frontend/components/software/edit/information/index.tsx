@@ -294,6 +294,7 @@ export default function SoftwareInformation(
 
           <SoftwareLicenses
             control={control}
+            software={pageState.software.id ?? ''}
             concept_doi={formData.concept_doi ?? undefined}
           />
 

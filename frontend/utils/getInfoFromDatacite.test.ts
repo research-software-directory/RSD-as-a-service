@@ -528,10 +528,10 @@ it('skips invalid keyword subjects', async () => {
   expect(resp).toEqual([])
 })
 
-it('returns expected licenses from rightsList', async () => {
+it('returns all licenses from rightsList', async () => {
   mockResolvedValueOnce(exampleResponseRightsList)
   const resp = await getLicensesFromDoi('0')
-  expect(resp).toEqual(['cc-by-4.0', 'EUPL-1.2'])
+  expect(resp).toEqual(['cc-by-4.0', 'Open Access','EUPL-1.2'])
 })
 
 it('returns no licenses if rightsList is missing', async () => {
@@ -546,8 +546,9 @@ it('returns no licenses if rightsList is empty', async () => {
   expect(resp).toEqual([])
 })
 
-it('returns only SPDX licenses', async () => {
-  mockResolvedValueOnce(exampleResponseRightsListNoSpdx)
-  const resp = await getLicensesFromDoi('0')
-  expect(resp).toEqual([])
-})
+// we want to return any type of licenses registered in DOI
+// it('returns only SPDX licenses', async () => {
+//   mockResolvedValueOnce(exampleResponseRightsListNoSpdx)
+//   const resp = await getLicensesFromDoi('0')
+//   expect(resp).toEqual([])
+// })
