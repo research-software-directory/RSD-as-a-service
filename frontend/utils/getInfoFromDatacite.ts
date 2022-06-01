@@ -257,11 +257,9 @@ export async function getLicensesFromDoi(doiId: string | null | undefined) {
   const spdxLicenses = []
 
   for (const license of allLicenses) {
-    // extract all licenses
+    // extract all licenses with an identifier
     if (license.rightsIdentifier) {
       spdxLicenses.push(license.rightsIdentifier)
-    }else if (license.rights) {
-      spdxLicenses.push(license.rights)
     }
   }
 

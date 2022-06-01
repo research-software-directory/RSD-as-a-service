@@ -11,6 +11,7 @@ import AsyncAutocompleteSC, {
 } from '~/components/form/AsyncAutocompleteSC'
 import Chip from '@mui/material/Chip'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import {sortBySearchFor} from '~/utils/sortFn'
 
 type SoftwareLicensesProps = {
   control: Control<EditSoftwareItem, AutocompleteOption<License>[]>,
@@ -56,19 +57,21 @@ export default function SoftwareLicenses(
     // find licenses SPDX keys that match items in the options
     for (const license of licenses) {
       // exlude if already in fields
-      const find = fields.filter(item => item.label === license)
+      const find = fields.filter(item => item.key.toLowerCase() === license.toLowerCase())
       if (find.length > 0) {
         continue
       }
       added++
+      // improve identifier
+      const spdx = allOptions.find(item=>item.key.toLocaleLowerCase()===license.toLowerCase())
       // add to fields collection
       append({
-        key: license,
-        label: license,
+        key: spdx?.key ?? license,
+        label: spdx?.key ?? license,
         data: {
           id: undefined,
           software,
-          license
+          license: spdx?.key ?? license
         }
       })
     }
@@ -95,10 +98,13 @@ export default function SoftwareLicenses(
         data: {
           id: undefined,
           software,
-          license: item.label
+          license: item.label,
+          deprecated: item.data.deprecated
         }
       }
     })
+    const sorted = found.sort((a, b) => sortBySearchFor(a, b, 'label', searchFor))
+    debugger
     // set options
     setOptions(found)
     // debugger
@@ -111,7 +117,7 @@ export default function SoftwareLicenses(
 
   function onAddLicense(selected: AutocompleteOption<License>) {
     // check if already added
-    const find = fields.filter(item => item.label === selected.label)
+    const find = fields.filter(item => item.label.toLocaleLowerCase() === selected.label.toLocaleLowerCase())
     // otherwise add it
     if (find.length === 0) {
       append(selected)
@@ -119,7 +125,7 @@ export default function SoftwareLicenses(
   }
 
   function createLicense(newInputValue: string) {
-    const find = fields.filter(item => item.label === newInputValue)
+    const find = fields.filter(item => item.label.toLowerCase() === newInputValue.toLowerCase())
     // otherwise add it
     if (find.length === 0) {
       append({
@@ -170,7 +176,10 @@ export default function SoftwareLicenses(
     return (
       <li {...props} key={option.key}>
         {/* if new option (has input) show label and count  */}
-        {option.label}
+        {option.data?.deprecated ?
+          <span className="text-grey-500">{option.label} (DEPRECATED)</span>
+          : <span>{option.label}</span>
+        }
       </li>
     )
   }
@@ -222,7 +231,7 @@ export default function SoftwareLicenses(
           <GetLicensesFromDoi
             onClick={onGetLicensesFromDoi}
             title={config.importLicenses.message(concept_doi)}
-            loading={status.loading}
+            loading={doiLoad}
           />
         </div>
       }

@@ -531,7 +531,7 @@ it('skips invalid keyword subjects', async () => {
 it('returns all licenses from rightsList', async () => {
   mockResolvedValueOnce(exampleResponseRightsList)
   const resp = await getLicensesFromDoi('0')
-  expect(resp).toEqual(['cc-by-4.0', 'Open Access','EUPL-1.2'])
+  expect(resp).toEqual(['cc-by-4.0', 'EUPL-1.2'])
 })
 
 it('returns no licenses if rightsList is missing', async () => {

@@ -39,7 +39,8 @@ export default function useSpdxLicenses({software}:{software?:string}) {
                 data: {
                   id: undefined,
                   software,
-                  license: item.licenseId
+                  license: item.licenseId,
+                  deprecated: item.isDeprecatedLicenseId
                 }
               }
             })

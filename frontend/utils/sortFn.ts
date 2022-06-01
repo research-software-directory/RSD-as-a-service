@@ -47,6 +47,20 @@ export function sortBySearchFor(itemA: any, itemB: any, prop: string, searchFor:
   const valB:string = itemB[prop]
 
   if (
+    valA.toLowerCase().startsWith(searchFor.toLowerCase()) === true &&
+    valB.toLowerCase().startsWith(searchFor.toLowerCase()) === false
+  ) {
+    return -1
+  }
+
+  if (
+    valA.toLowerCase().startsWith(searchFor.toLowerCase()) === false &&
+    valB.toLowerCase().startsWith(searchFor.toLowerCase()) === true
+  ) {
+    return 1
+  }
+
+  if (
     valA.toLowerCase().includes(searchFor.toLowerCase()) === true &&
     valB.toLowerCase().includes(searchFor.toLowerCase()) === false
   ) {

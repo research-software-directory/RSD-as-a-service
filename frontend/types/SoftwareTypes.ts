@@ -90,6 +90,7 @@ export type License = {
   id?: string,
   software: string
   license: string
+  deprecated?: boolean
 }
 
 
