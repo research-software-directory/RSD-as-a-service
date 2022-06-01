@@ -1,12 +1,12 @@
 import {useEffect,useState} from 'react'
 import {Session} from '~/auth'
-import {SoftwareOfOrganisation} from '~/types/Organisation'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
+import {ProjectOfOrganisation} from '~/types/Organisation'
 
-type UserSoftwareProp = {
+type UserProjectsProp = {
   searchFor?: string
   page: number,
   rows: number,
@@ -15,20 +15,24 @@ type UserSoftwareProp = {
 
 type State = {
   count: number,
-  data: SoftwareOfOrganisation[]
+  data: ProjectOfOrganisation[]
 }
 
-export async function getSoftwareForMaintainer({searchFor, page, rows, session}:
-  UserSoftwareProp) {
+export async function getProjectsForMaintainer(
+  {searchFor, page, rows, session}: UserProjectsProp
+) {
   try {
     // baseUrl
-    let url =`/api/v1/rpc/software_by_maintainer?maintainer=eq.${session?.user?.account}&order=is_featured.desc,brand_name`
+    let url = `/api/v1/rpc/projects_by_maintainer?maintainer=eq.${session?.user?.account}&order=is_published.desc,title`
+
     // search
     if (searchFor) {
-      url+=`&or=(brand_name.ilike.*${searchFor}*, short_statement.ilike.*${searchFor}*))`
+      url += `&or=(title.ilike.*${searchFor}*, subtitle.ilike.*${searchFor}*))`
     }
+
     // pagination
     url += paginationUrlParams({rows, page})
+
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -38,24 +42,27 @@ export async function getSoftwareForMaintainer({searchFor, page, rows, session}:
         'Prefer': 'count=exact'
       }
     })
-    if ([200,206].includes(resp.status)) {
-      const json: SoftwareOfOrganisation[] = await resp.json()
+
+    if ([200, 206].includes(resp.status)) {
+      const json: ProjectOfOrganisation[] = await resp.json()
       return {
         count: extractCountFromHeader(resp.headers) ?? 0,
         data: json
       }
     }
+
     // otherwise request failed
-    logger(`getSoftwareForMaintainer: ${resp.status} ${resp.statusText}`, 'warn')
+    logger(`getProjectsForMaintainer: ${resp.status} ${resp.statusText}`, 'warn')
+
     // we log and return zero
     return {
       count: 0,
-      data:[]
+      data: []
     }
-
-  } catch (e:any) {
+  } catch (e: any) {
     // otherwise request failed
-    logger(`getSoftwareForMaintainer: ${e.message}`, 'error')
+    logger(`getProjectsForMaintainer: ${e.message}`, 'error')
+
     // we log and return zero
     return {
       count: 0,
@@ -65,8 +72,9 @@ export async function getSoftwareForMaintainer({searchFor, page, rows, session}:
 }
 
 
-export default function useUserSoftware({searchFor, page, rows, session}:
-  UserSoftwareProp) {
+export default function useUserProjects(
+  {searchFor, page, rows, session}: UserProjectsProp
+) {
   const [state, setState] = useState<State>({
     count: 0,
     data: []
@@ -76,33 +84,38 @@ export default function useUserSoftware({searchFor, page, rows, session}:
   useEffect(() => {
     let abort = false
 
-    async function getSoftware() {
+    async function getProjects() {
       // set loding done
       setLoading(true)
-      const software:State = await getSoftwareForMaintainer({
+
+      const projects: State = await getProjectsForMaintainer({
         searchFor,
         page,
         rows,
         session
       })
-      // abort
-      if (abort) return
+
+      if (abort) {
+        return
+      }
+
       // set state
-      setState(software)
+      setState(projects)
+
       // set loding done
       setLoading(false)
     }
 
     if (session.token && session.user?.account) {
-      getSoftware()
+      getProjects()
     }
 
-    return ()=>{abort = true}
-  },[searchFor,page,rows,session])
+    return () => {abort = true}
+  }, [searchFor, page, rows, session])
 
   return {
-    software:state.data,
-    count:state.count,
+    projects: state.data,
+    count: state.count,
     loading
   }
 }

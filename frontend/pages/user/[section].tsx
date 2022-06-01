@@ -45,23 +45,23 @@ export default function UserPages({section,counts}:UserPagesProps) {
         <title>{session.user?.name} | RSD</title>
       </Head>
       <ProtectedContent>
-      <SearchProvider>
-      <PaginationProvider>
-        <UserTitle
-          title={session.user?.name ?? 'John Doe'}
-          showSearch={pageSection?.showSearch ?? false}
-        />
-        <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
-          <div>
-            <UserNav
-              selected={section}
-              counts={counts}
+        <SearchProvider>
+          <PaginationProvider>
+            <UserTitle
+              title={session.user?.name ?? 'John Doe'}
+              showSearch={pageSection?.showSearch ?? false}
             />
-          </div>
-          {renderStepComponent()}
-          </section>
-      </PaginationProvider>
-      </SearchProvider>
+            <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
+              <div>
+                <UserNav
+                  selected={section}
+                  counts={counts}
+                />
+              </div>
+              {renderStepComponent()}
+            </section>
+          </PaginationProvider>
+        </SearchProvider>
       </ProtectedContent>
     </DefaultLayout>
   )
