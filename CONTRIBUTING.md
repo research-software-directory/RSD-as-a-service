@@ -102,7 +102,7 @@ chmod +x pre-commit
 Now, copy-paste this template and configure it as required:
 
 ```bash
-#!/bin/sh
+#!/bin/bash
 #
 # SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
