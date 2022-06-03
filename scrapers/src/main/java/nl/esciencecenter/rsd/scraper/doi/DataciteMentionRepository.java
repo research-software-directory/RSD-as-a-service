@@ -105,7 +105,7 @@ public class DataciteMentionRepository implements MentionRepository {
 
 		result.publisher = Utils.stringOrNull(work.get("publisher"));
 		result.publicationYear = Utils.integerOrNull(work.get("publicationYear"));
-		result.mentionType = dataciteTypeMap.getOrDefault(Utils.stringOrNull(work.get("resourceTypeGeneral")), MentionType.other);
+		result.mentionType = dataciteTypeMap.getOrDefault(Utils.stringOrNull(work.getAsJsonObject("types").get("resourceTypeGeneral")), MentionType.other);
 		result.source = "DataCite";
 		result.scrapedAt = Instant.now();
 		return result;
