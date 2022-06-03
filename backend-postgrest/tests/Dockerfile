@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+#
+# SPDX-License-Identifier: Apache-2.0
+
 FROM node:17.7.1-alpine3.14
 WORKDIR /usr/app
 RUN npm install newman@5.3.2 wait-on@6.0.1

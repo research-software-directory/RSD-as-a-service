@@ -1,3 +1,10 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2021 - 2022 dv4all
+-- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 -- NOTE1: Moved views to (stable) functions because views do not allow for RLS (row-level-security)
 -- SEE issue https://github.com/research-software-directory/RSD-as-a-service/issues/170
 

@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {ProjectKeyword} from '~/components/projects/edit/information/projectKeywordsChanges'
 import {SoftwareKeyword} from '~/components/software/edit/information/softwareKeywordsChanges'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'

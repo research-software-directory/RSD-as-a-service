@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // Obtain refresh token from RSD auth service
 import type {NextApiRequest, NextApiResponse} from 'next'
 import cookie from 'cookie'

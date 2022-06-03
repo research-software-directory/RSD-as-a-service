@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import logger from '~/utils/logger'
 import {CrossrefSelectItem} from '~/types/Crossref'
 import {WorkResponse} from '~/types/Datacite'

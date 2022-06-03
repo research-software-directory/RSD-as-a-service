@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import Filter1Icon from '@mui/icons-material/Filter1'
 import Filter2Icon from '@mui/icons-material/Filter2'

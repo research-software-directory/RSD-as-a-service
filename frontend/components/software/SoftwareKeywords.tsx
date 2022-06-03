@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import {KeywordForSoftware} from '../../types/SoftwareTypes'
 import TagListItem from '../layout/TagListItem'

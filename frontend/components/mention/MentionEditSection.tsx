@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import MentionEditList from './MentionEditList'
 import {mentionsByType} from '~/utils/editMentions'

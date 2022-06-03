@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2021 - 2022 dv4all
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Research Software Directory (RSD) - Frontend
 
 Based on the features in the legacy application and the current requirements we selected [NextJS](https://nextjs.org/docs) and MUI-5 (https://mui.com/getting-started/usage/) frameworks for:

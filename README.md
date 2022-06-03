@@ -1,3 +1,14 @@
+<!--
+SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2021 - 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+SPDX-FileCopyrightText: 2021 - 2022 dv4all
+SPDX-FileCopyrightText: 2021 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # RSD-as-a-service
 
 ![image](https://user-images.githubusercontent.com/4195550/136156498-736f915f-7623-43d2-8678-f30b06563a38.png)

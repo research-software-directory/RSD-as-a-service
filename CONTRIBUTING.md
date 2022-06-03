@@ -1,3 +1,12 @@
+<!--
+SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+SPDX-FileCopyrightText: 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Contributing to the Research Software Directory (as a Service)
 
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:

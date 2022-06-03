@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {MentionItemProps} from '~/types/Mention'
 import logger from '~/utils/logger'
 import {sortOnDateProp} from '~/utils/sortFn'

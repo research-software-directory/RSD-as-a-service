@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2022 dv4all
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Deployment of RSD
 
 This readme describes RSD deployment with provided docker-compose.yml and .env file.

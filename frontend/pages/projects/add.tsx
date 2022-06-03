@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import ProtectedContent from '../../auth/ProtectedContent'
 import AppHeader from '../../components/layout/AppHeader'
 import PageContainer from '../../components/layout/PageContainer'

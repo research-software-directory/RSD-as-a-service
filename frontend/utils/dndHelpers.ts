@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // functions and DND implementation
 // copied from this example
 // https://codesandbox.io/s/draggable-material-ui-oj3wz?file=/src/helpers.ts:87-325

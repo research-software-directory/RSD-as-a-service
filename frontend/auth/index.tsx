@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {createContext, Dispatch, SetStateAction, useState, useContext, useEffect} from 'react'
 import verifyJwt, {decodeJwt} from './jwtUtils'
 import {IncomingMessage, OutgoingMessage} from 'http'
