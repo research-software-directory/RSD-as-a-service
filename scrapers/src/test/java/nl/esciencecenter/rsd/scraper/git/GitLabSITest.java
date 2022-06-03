@@ -1,4 +1,4 @@
-package nl.esciencecenter.rsd.scraper;
+package nl.esciencecenter.rsd.scraper.git;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;

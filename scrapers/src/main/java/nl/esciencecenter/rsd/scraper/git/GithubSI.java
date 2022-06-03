@@ -1,7 +1,9 @@
-package nl.esciencecenter.rsd.scraper;
+package nl.esciencecenter.rsd.scraper.git;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.util.Objects;
 

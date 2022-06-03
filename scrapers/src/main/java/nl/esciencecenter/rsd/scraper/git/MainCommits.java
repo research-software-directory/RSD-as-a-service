@@ -1,4 +1,6 @@
-package nl.esciencecenter.rsd.scraper;
+package nl.esciencecenter.rsd.scraper.git;
+
+import nl.esciencecenter.rsd.scraper.Config;
 
 import java.net.URI;
 import java.net.URISyntaxException;

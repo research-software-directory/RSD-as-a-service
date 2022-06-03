@@ -56,15 +56,12 @@ export async function findPublicationByTitle({software, searchFor, token}:
  */
 export async function searchForAvailableMentions({software, searchFor, token}:
   { software: string, searchFor: string, token: string }) {
-  const url = '/api/v1/rpc/search_mentions_for_software'
+  const limit=10
+  const url = `/api/v1/rpc/search_mentions_for_software?software_id=${software}&search_text=${searchFor}&limit=${limit}`
   try {
     const resp = await fetch(url, {
-      method: 'POST',
-      headers: createJsonHeaders(token),
-      body: JSON.stringify({
-        software_id: software,
-        search_text: searchFor
-      })
+      method: 'GET',
+      headers: createJsonHeaders(token)
     })
     // debugger
     if (resp.status === 200) {

@@ -61,7 +61,7 @@ function gqlConceptDoiQuery(doi: string) {
 
 function gqlWorksByTitleQuery(title: string) {
   const gql = `{
-    works(query:"titles.title:${title}",first:30){
+    works(query:"titles.title:${title}",first:10){
       nodes{
         doi,
         type,

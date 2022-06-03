@@ -43,7 +43,7 @@ CREATE TYPE mention_type AS ENUM (
 
 CREATE TABLE mention (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	doi VARCHAR(255) CHECK (doi ~ '^10(\.\d+)+/.+'),
+	doi VARCHAR(255) UNIQUE CHECK (doi ~ '^10(\.\d+)+/.+'),
 	url VARCHAR(500),
 	title VARCHAR(500) NOT NULL,
 	authors VARCHAR(1000),
