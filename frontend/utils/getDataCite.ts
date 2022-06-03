@@ -176,7 +176,7 @@ export async function getDataciteItemsByTitleGraphQL(title: string) {
     })
     if (resp.status === 200) {
       const json: DataciteWorksGraphQLResponse = await resp.json()
-      if (json.data.works.nodes) return json.data.works.nodes
+      if (json.data.works && json.data.works.nodes) return json.data.works.nodes
       return []
     }
     logger(`getDataciteItemsByTitleGraphQL: ${resp.status}: ${resp?.statusText}`, 'warn')

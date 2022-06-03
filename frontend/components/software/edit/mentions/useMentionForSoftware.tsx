@@ -24,11 +24,6 @@ export default function useMentionForSoftware({software, token}: MentionForSoftw
         frontend: true
       })
       if (mentionsForProject && abort === false) {
-        // const mentions: MentionItemProps[] = mentionsForProject.
-        //   sort((a, b) => {
-        //     // sort mentions on publication year, newest at the top
-        //     return sortOnDateProp(a,b,'publication_year','desc')
-        //   })
         // debugger
         setMentions(mentionsForProject)
         setLoading(false)

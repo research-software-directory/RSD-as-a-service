@@ -149,39 +149,6 @@ export async function addMentionToSoftware({mention, software, token}:
   }
 }
 
-// export async function updateSoftwareMention({item, software, token}:
-//   { item: MentionItemProps, software: string, token: string }) {
-//   // make both request
-//   const promises = [
-//     updateMentionItem({
-//       mention: mentionItemToTable(item),
-//       token
-//     }),
-//     updateMentionForSoftware({
-//       mention: item.id ?? '',
-//       software,
-//       is_featured: item.is_featured,
-//       token
-//     })
-//   ]
-//   // we just need to update it
-//   const responses = await Promise.all(promises)
-//   const errors = extractErrorMessages(responses)
-//   // return result
-//   if (errors.length > 0) {
-//     // return first error for now
-//     return {
-//       status: errors[0].status,
-//       message: errors[0].message
-//     }
-//   }
-//   return {
-//     status: 200,
-//     message: item
-//   }
-// }
-
-
 export async function updateMentionForSoftware({mention, software, is_featured = false, token}:
   { mention: string, software: string, is_featured: boolean, token: string }) {
   const url = `/api/v1/mention_for_software?software=eq.${software}&mention=eq.${mention}`

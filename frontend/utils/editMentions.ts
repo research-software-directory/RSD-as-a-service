@@ -4,7 +4,7 @@ import {
   MentionForProject, mentionColumns, MentionTypeKeys
 } from '../types/Mention'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
-import {extractMentionFromDoi} from './getDOI'
+import {getMentionByDoi} from './getDOI'
 import logger from './logger'
 
 export async function getMentionsForSoftware({software,token,frontend}:{software: string, token?: string,frontend?:boolean}) {
@@ -42,6 +42,34 @@ export async function getMentionsForSoftware({software,token,frontend}:{software
     return []
   }
 }
+
+
+export async function getMentionByDoiFromRsd({doi,token}:{doi: string, token: string}) {
+  try {
+    const url = `/api/v1/mention?select=${mentionColumns}&doi=eq.${doi}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      },
+    })
+    if (resp.status === 200) {
+      const json = await resp.json()
+      return {
+        status: 200,
+        message: json
+      }
+    }
+    return extractReturnMessage(resp)
+  } catch (e:any) {
+    logger(`getDoiFromRsd: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
 
 export function clasifyMentionsByType(mentions: MentionForSoftware[]|MentionForProject[]) {
   let mentionByType: MentionByType = {}
@@ -178,7 +206,7 @@ export async function updateDoiItem({rsdItem, token}:
   // extract doi
   const doi = rsdItem.doi
   if (doi) {
-    let resp = await extractMentionFromDoi(doi)
+    let resp = await getMentionByDoi(doi)
     // if error return it
     if (resp.status !== 200) return resp
     // extract item from message
@@ -221,15 +249,6 @@ export function newMentionItem(title?: string) {
   }
   return newItem
 }
-
-// export function mentionItemToTable(item: MentionItemProps):MentionTableProps{
-//   const mention: any = {
-//     ...item
-//   }
-//   // remove is_featured
-//   delete mention.is_featured
-//   return mention
-// }
 
 export function apiMentionTypeToRSDTypeKey(type: string): MentionTypeKeys {
   switch (type.toLowerCase()) {
