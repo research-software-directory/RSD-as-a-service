@@ -155,6 +155,9 @@ declare -a STAGED_FILES=( $(git diff --name-only --cached) )
 for file in ${STAGED_FILES[@]}; do
     file_extension="${file##*.}"
     case ${file_extension} in
+        license)
+            continue
+            ;;
         md | webp | png | jpg | jpeg | svg)
             LICENSE="CC-BY-4.0"
             ;;
