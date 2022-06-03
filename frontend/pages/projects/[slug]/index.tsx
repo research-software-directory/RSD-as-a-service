@@ -71,7 +71,7 @@ export default function ProjectPage(props: ProjectPageProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...relatedSoftware...', relatedSoftware)
+  // console.log('ProjectItemPage...output...', output)
   return (
     <>
       {/* Page Head meta tags */}

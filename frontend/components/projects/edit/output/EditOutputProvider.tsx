@@ -4,7 +4,7 @@ import {
   EditMentionAction, EditMentionActionType, editMentionReducer,
   EditMentionState
 } from '~/components/mention/editMentionReducer'
-import EditMentionContext, {EditMentionDispatch} from '~/components/mention/editMentionContext'
+import EditMentionContext from '~/components/mention/editMentionContext'
 import {MentionItemProps} from '~/types/Mention'
 import {updateDoiItem, updateMentionItem} from '~/utils/editMentions'
 import useSnackbar from '~/components/snackbar/useSnackbar'

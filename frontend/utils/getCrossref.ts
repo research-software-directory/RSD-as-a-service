@@ -43,7 +43,6 @@ export function crossrefItemToMentionItem(item: CrossrefSelectItem) {
     publication_year: extractYearPublished(item),
     page: item.page ?? null,
     image_url: null,
-    is_featured: false,
     mention_type: apiMentionTypeToRSDTypeKey(item.type),
     source: 'Crossref'
   }

@@ -41,7 +41,6 @@ export default function MentionItemBase({item,pos,nav,type,role='find'}:MentionI
           pos={pos}
           title={item?.title ?? ''}
           url={item?.url}
-          is_featured={item?.is_featured}
           role={role}
           className="flex-1 font-medium"
         />
@@ -74,18 +73,10 @@ type MentionTitleProps = {
   url?: string | null
   role?: MentionItemRole
   pos?: number
-  is_featured?: boolean
   className?: string
 }
 
-export function MentionTitle({title, url, role, pos, is_featured, className}: MentionTitleProps) {
-
-  function isFeatured() {
-    if (is_featured) {
-      return <span className="lowercase pl-2">[featured]</span>
-    }
-    return null
-  }
+export function MentionTitle({title, url, role, pos, className}: MentionTitleProps) {
 
   if (url && role === 'list') {
     return (
@@ -93,7 +84,6 @@ export function MentionTitle({title, url, role, pos, is_featured, className}: Me
         <a href={url} target="_blank" rel="noreferrer">
           {/* show pos if provided */}
           {pos ? `${pos}.` : null}{title}
-          {isFeatured()}
         </a>
       </div>
     )

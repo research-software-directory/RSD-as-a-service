@@ -51,7 +51,7 @@ export default function EditMentionsProvider(props: any) {
   // console.groupEnd()
 
   async function processOnSubmit(action: EditMentionAction) {
-    const item = action.payload
+    const item:MentionItemProps = action.payload
     // new item created manually
     if (item.id === null || item.id === '') {
       item.id = null
@@ -72,9 +72,8 @@ export default function EditMentionsProvider(props: any) {
       }
     } else {
       // this is existing item
-      // we just need to update it
       const resp = await updateMentionItem({
-        mention:item,
+        mention: item,
         token
       })
       if (resp.status === 200) {
@@ -90,7 +89,7 @@ export default function EditMentionsProvider(props: any) {
   }
 
   async function processOnAdd(action: EditMentionAction) {
-    const item = action.payload
+    const item:MentionItemProps = action.payload
     if (item.id && item.source === 'RSD') {
       // existing RSD mention item to be added to project
       const resp = await addMentionToSoftware({

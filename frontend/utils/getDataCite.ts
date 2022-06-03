@@ -121,7 +121,6 @@ export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
     publication_year: item.publicationYear,
     page: null,
     image_url: null,
-    is_featured: false,
     mention_type: apiMentionTypeToRSDTypeKey(item.type),
     source: 'DataCite'
   }

@@ -654,7 +654,7 @@ public class Main {
 			JsonObject mentionFromLegacyRSD = jsonElement.getAsJsonObject();
 			mentionToSave.add("authors", mentionFromLegacyRSD.get("author"));
 			mentionToSave.add("image_url", mentionFromLegacyRSD.get("image"));
-			mentionToSave.add("is_featured", mentionFromLegacyRSD.get("isCorporateBlog"));
+			// mentionToSave.add("is_featured", mentionFromLegacyRSD.get("isCorporateBlog"));
 			ZonedDateTime oldDate = ZonedDateTime.parse(mentionFromLegacyRSD.get("date").getAsString());
 			int year = oldDate.getYear();
 			mentionToSave.addProperty("publication_year", year);
@@ -676,7 +676,7 @@ public class Main {
 				mentionToSave.add("doi", JsonNull.INSTANCE);
 			}
 			mentionToSave.addProperty("url", oldUrl);
-			mentionToSave.add("version", mentionFromLegacyRSD.get("version"));
+			// mentionToSave.add("version", mentionFromLegacyRSD.get("version"));
 			mentionToSave.add("zotero_key", mentionFromLegacyRSD.get("zoteroKey"));
 
 			allMentionsToSave.add(mentionToSave);

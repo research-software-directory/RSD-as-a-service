@@ -1,4 +1,3 @@
-import {Session} from '~/auth'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import MentionEditSection from '~/components/mention/MentionEditSection'
 import ContentLoader from '~/components/layout/ContentLoader'

@@ -7,7 +7,6 @@ import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
 
 import ControlledTextField from '../form/ControlledTextField'
-import ControlledSwitch from '../form/ControlledSwitch'
 import {mentionModal as config, mentionType} from './config'
 import {MentionItemProps, MentionTypeKeys} from '../../types/Mention'
 import ControlledSelect from '~/components/form/ControlledSelect'
@@ -196,18 +195,11 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               defaultValue: formData?.image_url,
               helperTextMessage: config.image_url.help,
               helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`,
+              disabled: formData.mention_type !== 'highlight'
             }}
-            rules={config.image_url.validation}
+            rules={formData.mention_type === 'highlight' ? config.image_url.validation : undefined}
           />
-          <section className="flex pt-4 justify-between">
-            <ControlledSwitch
-              name="is_featured"
-              label={config.is_featured.label}
-              control={control}
-              defaultValue={formData?.is_featured ?? false}
-              disabled={isFeaturedDisabled()}
-            />
-          </section>
+
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',
@@ -248,11 +240,5 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
     if (isValid === false) return true
     if (isDirty === false) return true
     return false
-  }
-
-  function isFeaturedDisabled() {
-    if (errors?.image_url || errors?.url) return true
-    if (formData.url && formData.image_url) return false
-    return true
   }
 }

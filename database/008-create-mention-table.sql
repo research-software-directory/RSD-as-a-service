@@ -1,5 +1,6 @@
 CREATE TYPE mention_type AS ENUM (
 	-- 'attachment', removed 2022-05-23
+	'highlight',
 	'blogPost',
 	'book',
 	'bookSection',
@@ -51,12 +52,12 @@ CREATE TABLE mention (
 	publication_year SMALLINT,
 	page VARCHAR(50),
 	image_url VARCHAR(500),
-	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
+	-- is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	mention_type mention_type NOT NULL,
 	source VARCHAR(50) NOT NULL,
-	version INTEGER,
+	-- version INTEGER,
 	zotero_key VARCHAR UNIQUE,
-	scraped_at TIMESTAMP,
+	-- scraped_at TIMESTAMP,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
 );
@@ -85,7 +86,6 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_mention BEFORE UPDATE ON mention FOR EACH ROW EXECUTE PROCEDURE sanitise_update_mention();
-
 
 
 CREATE TABLE mention_for_software (

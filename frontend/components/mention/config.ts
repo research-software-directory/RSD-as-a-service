@@ -71,9 +71,10 @@ export const mentionModal = {
     }
   },
   image_url: {
-    label: 'Image url',
-    help: 'Provide valid url to image on internet',
+    label: 'Image url*',
+    help: 'Valid url to image is required for featured mention',
     validation: {
+      required: 'Image url is required for featured mention',
       maxLength: {
         value: 500,
         message: 'Maximum length is 500'
@@ -90,6 +91,33 @@ export const mentionModal = {
       required: false
     }
   }
+}
+
+export function getMentionType(type: MentionTypeKeys | null, option: 'plural' | 'singular') {
+  let item
+  if (type === null) {
+    // default is other type
+    item = mentionType['other']
+  } else {
+    item = mentionType[type]
+  }
+  if (option) {
+    return item[option]
+  }
+  // default is singular
+  return item.singular
+}
+
+export function getMentionTypeOrder(mentionByType: MentionByType) {
+  const allTypesInObjectOrder = Object.keys(mentionType)
+  const mentionTypes = Object.keys(mentionByType)
+  const orderedTypes: MentionTypeKeys[] = []
+  allTypesInObjectOrder.forEach(key => {
+    if (mentionTypes.includes(key) === true) {
+      orderedTypes.push(key as MentionTypeKeys)
+    }
+  })
+  return orderedTypes
 }
 
 
@@ -127,6 +155,11 @@ export const mentionType = {
     key: 'dataset',
     plural: 'Dataset',
     singular: 'Dataset'
+  },
+  highlight: {
+    key: 'highlight',
+    plural: 'Highlights',
+    singular: 'Highlight'
   },
   interview: {
     key: 'interview',
@@ -178,31 +211,4 @@ export const mentionType = {
     plural: 'Other',
     singular: 'Other'
   }
-}
-
-export function getMentionType(type: MentionTypeKeys | null, option: 'plural' | 'singular') {
-  let item
-  if (type === null) {
-    // default is other type
-    item = mentionType['other']
-  } else {
-    item = mentionType[type]
-  }
-  if (option) {
-    return item[option]
-  }
-  // default is singular
-  return item.singular
-}
-
-export function getMentionTypeOrder(mentionByType: MentionByType) {
-  const allTypesInObjectOrder = Object.keys(mentionType)
-  const mentionTypes = Object.keys(mentionByType)
-  const orderedTypes: MentionTypeKeys[] = []
-  allTypesInObjectOrder.forEach(key => {
-    if (mentionTypes.includes(key) === true) {
-      orderedTypes.push(key as MentionTypeKeys)
-    }
-  })
-  return orderedTypes
 }
