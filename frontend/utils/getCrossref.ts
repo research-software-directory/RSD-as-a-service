@@ -55,8 +55,8 @@ export async function getCrossrefItemByDoi(doi: string) {
   try {
     const filter = `filter=doi:${doi}`
     const select = `select=${crossrefSelectProps.join(',')}`
-    const ettiquete = 'mailto=mijatovic1970@gmail.com'
-    const url = `https://api.crossref.org/works?${filter}&${select}&${ettiquete}`
+    // const ettiquete = 'mailto=mijatovic1970@gmail.com'
+    const url = `https://api.crossref.org/works?${filter}&${select}`
 
     const resp = await fetch(url)
 
@@ -89,7 +89,7 @@ export async function getCrossrefItemsByTitle(title: string) {
     const select = `select=${crossrefSelectProps.join(',')}`
     const ettiquete = 'mailto=mijatovic1970@gmail.com'
     const order = 'sort=score&order=desc'
-    const rows = 'rows=30'
+    const rows = 'rows=10'
     // get top 30 items
     const url = `https://api.crossref.org/works?${filter}&${select}&${ettiquete}&${order}&${rows}`
 
@@ -114,8 +114,8 @@ export async function getCrossrefItemsByQuery(query: string) {
     const select = `select=${crossrefSelectProps.join(',')}`
     const ettiquete = 'mailto=mijatovic1970@gmail.com'
     const order = 'sort=published&order=desc'
-    const rows = 'rows=30'
-    // get top 30 items
+    const rows = 'rows=10'
+    // get top 10 items
     const url = `https://api.crossref.org/works?${filter}&${select}&${ettiquete}&${order}&${rows}`
 
     const resp = await fetch(url)
