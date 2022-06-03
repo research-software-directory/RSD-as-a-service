@@ -2,7 +2,6 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.git.AggregateContributionsPerWeekSIDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

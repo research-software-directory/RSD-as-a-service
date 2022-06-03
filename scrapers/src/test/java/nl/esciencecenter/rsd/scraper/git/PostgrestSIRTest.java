@@ -3,9 +3,6 @@ package nl.esciencecenter.rsd.scraper.git;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import nl.esciencecenter.rsd.scraper.git.CodePlatformProvider;
-import nl.esciencecenter.rsd.scraper.git.PostgrestSIR;
-import nl.esciencecenter.rsd.scraper.git.RepositoryUrlData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

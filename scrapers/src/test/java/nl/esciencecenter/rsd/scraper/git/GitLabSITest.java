@@ -1,6 +1,5 @@
 package nl.esciencecenter.rsd.scraper.git;
 
-import nl.esciencecenter.rsd.scraper.git.GitLabSI;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
