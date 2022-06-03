@@ -9,7 +9,7 @@ install:
 	docker-compose up --scale scrapers=0 -d
 	cd frontend && yarn -d
 	cd documentation && yarn -d
-	# Sleep 15 seconds to be sure that that docker-compose up is running
+	# Sleep 15 seconds to be sure that docker-compose up is running
 	sleep 15
 	cd data-migration && docker-compose build && docker-compose up
 	docker-compose down
