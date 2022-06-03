@@ -1,11 +1,10 @@
 package nl.esciencecenter.rsd.scraper;
 
-import java.lang.RuntimeException;
-import java.time.ZonedDateTime;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import java.time.ZonedDateTime;
 
 public class UtilsTest {
 	private final String gitHubApiUrl = "https://api.github.com";

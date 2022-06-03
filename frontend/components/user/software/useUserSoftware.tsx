@@ -29,7 +29,6 @@ export async function getSoftwareForMaintainer({searchFor, page, rows, session}:
     }
     // pagination
     url += paginationUrlParams({rows, page})
-    // console.log('getSoftwareForOrganisation...url...',url)
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -47,7 +46,7 @@ export async function getSoftwareForMaintainer({searchFor, page, rows, session}:
       }
     }
     // otherwise request failed
-    logger(`getSoftwareForOrganisation: ${resp.status} ${resp.statusText}`, 'warn')
+    logger(`getSoftwareForMaintainer: ${resp.status} ${resp.statusText}`, 'warn')
     // we log and return zero
     return {
       count: 0,
@@ -56,7 +55,7 @@ export async function getSoftwareForMaintainer({searchFor, page, rows, session}:
 
   } catch (e:any) {
     // otherwise request failed
-    logger(`getSoftwareForOrganisation: ${e.message}`, 'error')
+    logger(`getSoftwareForMaintainer: ${e.message}`, 'error')
     // we log and return zero
     return {
       count: 0,

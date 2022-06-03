@@ -1,26 +1,73 @@
 import {useEffect, useState} from 'react'
+import {GetServerSidePropsContext} from 'next'
 
+import {Session} from '~/auth'
 import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import ContentLoader from '~/components/layout/ContentLoader'
+import ProjectsGrid from '~/components/projects/ProjectsGrid'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
-export default function UserProjects() {
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search for project')
-  const [loading, setLoading] = useState(true)
+import {getProjectList} from '~/utils/getProjects'
+import {ssrProjectsParams} from '~/utils/extractQueryParam'
+
+import useUserProjects from './useUserProjects'
+
+export default function UserProjects({session}: {session: Session}) {
+  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Search for project')
+  const {loading, projects, count} = useUserProjects({
+    searchFor,
+    page,
+    rows,
+    session
+  })
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    },1000)
-  },[])
+    if (count && loading === false) {
+      setCount(count)
+    }
+  }, [count, loading, setCount])
 
-  if (loading) return <ContentLoader />
+  // do not use loader for now
+  // because the layout jumps up-and-down
+  // on pagination
+  // if (loading) {
+  //   return (
+  //     <ContentLoader />
+  //   )
+  // }
+
   return (
-    <div className="flex-1 flex flex-col">
-      <h1>User projects</h1>
-      <ContentInTheMiddle>
-        <h2>Under construction</h2>
-      </ContentInTheMiddle>
-    </div>
+    <ProjectsGrid
+      projects={projects}
+      height='17rem'
+      minWidth='26rem'
+      maxWidth='1fr'
+      className="gap-[0.125rem] pt-4 pb-12"
+    />
   )
+}
+
+// fetching data server side
+// see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // extract from page-query
+  const {search, rows, page} = ssrProjectsParams(context)
+
+  // make api call
+  const projects = await getProjectList({
+    searchFor: search,
+    rows: rows,
+    page: page,
+    baseUrl: process.env.POSTGREST_URL
+  })
+
+  return {
+    // pass this to page component as props
+    props: {
+      count: projects.count,
+      rows: rows,
+      page: page,
+      projects: projects.data
+    },
+  }
 }

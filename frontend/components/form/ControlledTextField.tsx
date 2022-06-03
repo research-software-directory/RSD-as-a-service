@@ -15,7 +15,7 @@ export type ControlledTextFieldOptions = {
   fullWidth?: boolean
   variant?: 'outlined'|'standard'
   useNull?: boolean,
-  defaultValue?: string | null
+  defaultValue?: string | number | null
   helperTextMessage?: string
   helperTextCnt?: string
   disabled?: boolean

@@ -12,10 +12,12 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import GetKeywordsFromDoi from './GetKeywordsFromDoi'
 
 
-export default function SoftwareKeywords({software, control,concept_doi}:
-  { software: string, control: Control<EditSoftwareItem, any>, concept_doi?: string }) {
-  const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
-  const [loading,setLoading]=useState(false)
+export default function SoftwareKeywords(
+  {software, control, concept_doi}:
+  { software: string, control: Control<EditSoftwareItem, any>, concept_doi?: string }
+) {
+  const {showErrorMessage, showSuccessMessage, showInfoMessage} = useSnackbar()
+  const [loading, setLoading] = useState(false)
   const {fields, append, remove} = useFieldArray({
     control,
     name: 'keywords',
@@ -33,9 +35,7 @@ export default function SoftwareKeywords({software, control,concept_doi}:
 
     setLoading(true)
 
-    const keywordsDoi: string[] = await getKeywordsFromDoi(
-      software, concept_doi
-    )
+    const keywordsDoi: string[] = await getKeywordsFromDoi(concept_doi)
 
     if (keywordsDoi && keywordsDoi.length === 0) {
       showInfoMessage(

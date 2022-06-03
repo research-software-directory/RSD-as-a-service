@@ -29,11 +29,20 @@ public class Config {
 
 	/**
 	 * The maximum requests rate for GitLab.
-	 * TODO: The request rate may vary per platform.
 	 * @return Maximum request rate (default 6).
 	 */
 	public static int maxRequestsGitLab() {
 		String valueAsString = System.getenv("MAX_REQUESTS_GITLAB");
 		return valueAsString == null ? 6 : Integer.parseInt(valueAsString);
+	}
+
+	public static int maxRequestsDoi() {
+		String valueAsString = System.getenv("MAX_REQUESTS_DOI");
+		return valueAsString == null ? 6 : Integer.parseInt(valueAsString);
+	}
+
+	public static Optional<String> crossrefContactEmail() {
+		String possibleEMail = System.getenv("CROSSREF_CONTACT_EMAIL");
+		return possibleEMail == null || possibleEMail.isBlank() ? Optional.empty() : Optional.of(possibleEMail.strip());
 	}
 }
