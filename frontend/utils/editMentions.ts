@@ -71,9 +71,9 @@ export async function getMentionByDoiFromRsd({doi,token}:{doi: string, token: st
 }
 
 
-export function clasifyMentionsByType(mentions: MentionForSoftware[]|MentionForProject[]) {
+export function clasifyMentionsByType(mentions: MentionItemProps[]) {
   let mentionByType: MentionByType = {}
-  let featuredMentions: MentionForSoftware[] | MentionForProject[] = []
+  let featuredMentions: MentionItemProps[] = []
 
   mentions.forEach(item => {
     // remove array with software uuid
@@ -97,27 +97,6 @@ export function clasifyMentionsByType(mentions: MentionForSoftware[]|MentionForP
     mentionByType,
     featuredMentions
   }
-}
-
-export function mentionsByType(mentions: MentionItemProps[]) {
-  let mentionByType: MentionByType = {}
-  mentions.forEach(item => {
-    // remove array with software uuid
-    // delete item.mention_for_software
-    // check if type prop exists
-    let mType = item?.mention_type as MentionTypeKeys ?? 'other'
-
-    // extract featured mentions
-    if (mentionByType.hasOwnProperty(mType)) {
-      mentionByType[mType]?.push(item)
-    } else {
-      // create array for new type
-      mentionByType[mType] = []
-      // and add this item
-      mentionByType[mType]?.push(item)
-    }
-  })
-  return mentionByType
 }
 
 /**

@@ -30,17 +30,17 @@ it('should render featured mention items (based on dummy data)',()=>{
   // screen.debug()
 })
 
-// TODO! fix failing test
-it.skip('should render 15 mention type sections (based on dummy data)',()=>{
+it('should render 16 mention type sections (all except mention_type===highlight)',()=>{
   render(WrappedComponentWithProps(MentionsSection, {
     props: {mentions: mentionsData}
   }))
+  const highlight = mentionsData.filter(item => item.mention_type === 'highlight')
+  const expectedCount = mentionsData.length - highlight.length
   const mentions = screen.queryAllByTestId('mentions-section-for-type')
-  expect(mentions.length).toEqual(15)
+  expect(mentions.length).toEqual(expectedCount)
   // screen.debug()
 })
 
-// TODO! fix failing test
 it('should render all not featured mention items (based on dummy data)',()=>{
   render(WrappedComponentWithProps(MentionsSection, {
     props: {mentions: mentionsData}

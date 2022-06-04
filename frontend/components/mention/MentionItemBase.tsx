@@ -5,7 +5,7 @@ import MentionAuthors from './MentionAuthors'
 import MentionDoi from './MentionDoi'
 import MentionPublisherItem from './MentionPublisherItem'
 
-type MentionItemRole = 'list'|'find'|'view'
+export type MentionItemRole = 'list'|'find'|'view'
 
 type MentionItemCardProps = {
   item: MentionItemProps,
@@ -62,6 +62,7 @@ export default function MentionItemBase({item,pos,nav,type,role='find'}:MentionI
         url={item?.url}
         doi={item?.doi}
         className="text-sm"
+        role={role}
       />
     </article>
   )

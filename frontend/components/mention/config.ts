@@ -129,86 +129,103 @@ export const mentionType = {
   blogPost: {
     key: 'blogPost',
     plural: 'Blogposts',
-    singular: 'Blogpost'
+    singular: 'Blogpost',
+    manual: true
   },
   book: {
     key: 'book',
     plural: 'Books',
-    singular: 'Book'
+    singular: 'Book',
+    manual: false
   },
   bookSection: {
     key: 'bookSection',
     plural: 'Book section',
-    singular: 'Book section'
+    singular: 'Book section',
+    manual: false
   },
   computerProgram: {
     key: 'computerProgram',
     plural: 'Computer programs',
-    singular: 'Computer program'
+    singular: 'Computer program',
+    manual: false
   },
   conferencePaper: {
     key: 'conferencePaper',
     plural: 'Conference papers',
-    singular: 'Conference paper'
+    singular: 'Conference paper',
+    manual: false
   },
   dataset: {
     key: 'dataset',
     plural: 'Dataset',
-    singular: 'Dataset'
+    singular: 'Dataset',
+    manual: false
   },
   highlight: {
     key: 'highlight',
     plural: 'Highlights',
-    singular: 'Highlight'
+    singular: 'Highlight',
+    manual: true
   },
   interview: {
     key: 'interview',
     plural: 'Interviews',
-    singular: 'Interviews'
+    singular: 'Interviews',
+    manual: true
   },
   journalArticle: {
     key: 'journalArticle',
     plural: 'Journal articles',
-    singular: 'Journal article'
+    singular: 'Journal article',
+    manual: false
   },
   magazineArticle: {
     key: 'magazineArticle',
     plural: 'Magazine articles',
-    singular: 'Magazine article'
+    singular: 'Magazine article',
+    manual: true
   },
   newspaperArticle: {
     key: 'newspaperArticle',
     plural: 'Newspaper articles',
-    singular: 'Newspaper article'
+    singular: 'Newspaper article',
+    manual: true
   },
   presentation: {
     key: 'presentation',
     plural: 'Presentations',
-    singular: 'Presentation'
+    singular: 'Presentation',
+    manual: false
   },
   report: {
     key: 'report',
     plural: 'Reports',
-    singular: 'Reports'
+    singular: 'Reports',
+    manual: false
   },
   thesis: {
     key: 'thesis',
     plural: 'Thesis',
-    singular: 'Thesis'
+    singular: 'Thesis',
+    manual: false
   },
   videoRecording: {
     key: 'videoRecording',
     plural: 'Video recordings',
-    singular: 'Video recording'
+    singular: 'Video recording',
+    manual: true
   },
   webpage: {
     key: 'webpage',
     plural: 'Webpages',
-    singular: 'Webpage'
+    singular: 'Webpage',
+    manual: true
   },
   other: {
     key: 'other',
     plural: 'Other',
-    singular: 'Other'
+    singular: 'Other',
+    manual: true
   }
 }

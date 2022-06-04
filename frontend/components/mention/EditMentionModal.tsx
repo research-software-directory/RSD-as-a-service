@@ -21,7 +21,11 @@ export type EditMentionModalProps = {
   title?: string
 }
 
-const mentionTypeOptions = Object.keys(mentionType).map(key => {
+// manual/editable mention type options
+const manualOptions = Object.keys(mentionType).filter(key => {
+  return mentionType[key as MentionTypeKeys]?.manual
+})
+const mentionTypeOptions = manualOptions.map(key => {
   const type = mentionType[key as MentionTypeKeys].singular
   return {
     value: key,
