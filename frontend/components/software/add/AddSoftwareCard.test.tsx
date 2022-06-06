@@ -131,7 +131,6 @@ it('validate, save and redirect', async () => {
         'description_type': 'markdown',
         'description_url': null,
         'get_started_url': null,
-        'is_featured': false,
         'is_published': false,
         'short_statement': inputValue,
         'slug': slug,

@@ -160,7 +160,7 @@ export async function getSoftwareForOrganisation({organisation, searchFor, page,
   SoftwareForOrganisationProps) {
   try {
     // baseUrl
-    let url =`/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,brand_name`
+    let url = `/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,mention_cnt.desc.nullslast,brand_name`
     // search
     if (searchFor) {
       url+=`&or=(brand_name.ilike.*${searchFor}*, short_statement.ilike.*${searchFor}*))`

@@ -39,12 +39,12 @@ import logger from '~/utils/logger'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {getContributorsForSoftware} from '~/utils/editContributors'
 import {getTestimonialsForSoftware} from '~/utils/editTestimonial'
-import {getRelatedToolsForSoftware} from '~/utils/editRelatedSoftware'
+import {getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
 import {getMentionsForSoftware} from '~/utils/editMentions'
 import {getParticipatingOrganisations} from '~/utils/editOrganisation'
 import {
-  KeywordForSoftware, License, RelatedSoftwareOfSoftware,
-  RepositoryInfo, SoftwareItem
+  KeywordForSoftware, License, RepositoryInfo,
+  SoftwareItem, SoftwareListItem
 } from '~/types/SoftwareTypes'
 import {SoftwareCitationInfo} from '~/types/SoftwareCitation'
 import {Contributor} from '~/types/Contributor'
@@ -64,7 +64,7 @@ interface SoftwareIndexData extends ScriptProps{
   mentions: MentionItemProps[]
   testimonials: Testimonial[]
   contributors: Contributor[]
-  relatedSoftware: RelatedSoftwareOfSoftware[]
+  relatedSoftware: SoftwareListItem[]
   relatedProjects: RelatedProject[]
   isMaintainer: boolean,
   organisations: ParticipatingOrganisationProps[],
@@ -232,7 +232,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // contributors
       getContributorsForSoftware({software:software.id,frontend:false,token}),
       // relatedTools
-      getRelatedToolsForSoftware({software: software.id, frontend: false, token}),
+      getRelatedSoftwareForSoftware({software: software.id, frontend: false, token}),
       // relatedProjects
       getRelatedProjectsForSoftware({software: software.id, token, frontend: false}),
       // check if maintainer

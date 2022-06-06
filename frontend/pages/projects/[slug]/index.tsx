@@ -19,7 +19,7 @@ import {
 import {MentionItemProps} from '~/types/Mention'
 import {Contributor} from '~/types/Contributor'
 import {ProjectOrganisationProps} from '~/types/Organisation'
-import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
+import {RelatedSoftwareOfProject, SoftwareListItem} from '~/types/SoftwareTypes'
 import AppHeader from '~/components/layout/AppHeader'
 import EditButton from '~/components/layout/EditButton'
 import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
@@ -47,7 +47,7 @@ export interface ProjectPageProps extends ScriptProps{
   output: MentionItemProps[],
   impact: MentionItemProps[],
   team: Contributor[],
-  relatedSoftware: RelatedSoftwareOfProject[],
+  relatedSoftware: SoftwareListItem[],
   relatedProjects: RelatedProject[]
 }
 

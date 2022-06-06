@@ -166,7 +166,7 @@ public class Main {
 			softwareToSave.add("concept_doi", jsonNullIfEquals(softwareFromLegacyRSD.get("conceptDOI"), "10.0000/FIXME"));
 			softwareToSave.add("description", mergeBulletsReadMore(softwareFromLegacyRSD.get("bullets"), softwareFromLegacyRSD.get("readMore")));
 			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
-			softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
+			// softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
 			softwareToSave.add("short_statement", softwareFromLegacyRSD.get("shortStatement"));
 

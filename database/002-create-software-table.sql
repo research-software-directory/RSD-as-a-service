@@ -12,7 +12,8 @@ CREATE TABLE software (
 	description_url VARCHAR(200),
 	description_type description_type DEFAULT 'markdown' NOT NULL,
 	get_started_url VARCHAR,
-	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
+	-- Moved to organisation related table
+	-- is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	short_statement VARCHAR(300),
 	created_at TIMESTAMP NOT NULL,

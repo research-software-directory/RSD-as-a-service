@@ -77,12 +77,16 @@ export const softwareInformation = {
       maxLength: {value: 100, message: 'Maximum length is 100'},
     }
   },
+  pageStatus: {
+    title: 'Page status',
+    subtitle: 'Only published software is visible to others'
+  },
   is_published: {
     label: 'Published',
   },
-  is_featured: {
-    label: 'Featured',
-  },
+  // is_featured: {
+  //   label: 'Featured',
+  // },
   keywords: {
     title: 'Keywords',
     subtitle: 'Find, add or import using concept DOI.',
