@@ -49,7 +49,7 @@ import {
 import {SoftwareCitationInfo} from '~/types/SoftwareCitation'
 import {Contributor} from '~/types/Contributor'
 import {Testimonial} from '~/types/Testimonial'
-import {MentionForSoftware} from '~/types/Mention'
+import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
 
@@ -61,7 +61,7 @@ interface SoftwareIndexData extends ScriptProps{
   licenseInfo: License[]
   repositoryInfo: RepositoryInfo
   softwareIntroCounts: ContributorMentionCount
-  mentions: MentionForSoftware[]
+  mentions: MentionItemProps[]
   testimonials: Testimonial[]
   contributors: Contributor[]
   relatedSoftware: RelatedSoftwareOfSoftware[]

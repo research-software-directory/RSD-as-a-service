@@ -4,7 +4,8 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import FindMention from '~/components/mention/FindMention'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {MentionItemProps} from '~/types/Mention'
-import {extractMentionFromDoi} from '~/utils/getDOI'
+import {getMentionByDoiFromRsd} from '~/utils/editMentions'
+import {getMentionByDoi} from '~/utils/getDOI'
 import editSoftwareContext from '../editSoftwareContext'
 import {cfgImpact as config} from './config'
 import {findPublicationByTitle} from './mentionForSoftwareApi'
@@ -17,8 +18,19 @@ export default function FindSoftwareMention() {
   async function findPublication(searchFor: string) {
     // regex validation if DOI string
     if (searchFor.match(/^10(\.\d+)+\/.+/) !== null) {
-      // find by DOI
-      const resp = await extractMentionFromDoi(searchFor)
+      // look first at RSD
+      const rsd = await getMentionByDoiFromRsd({
+        doi: searchFor,
+        token
+      })
+      if (rsd?.status === 200 && rsd.message?.length === 1) {
+        // return first found item in RSD
+        const item:MentionItemProps = rsd.message[0]
+        item.source = 'RSD'
+        return [item]
+      }
+      // else find by DOI
+      const resp = await getMentionByDoi(searchFor)
       if (resp?.status === 200) {
         return [resp.message as MentionItemProps]
       }

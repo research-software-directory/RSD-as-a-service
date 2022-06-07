@@ -12,7 +12,7 @@ export const cfgImpact = {
     }
   },
   newItem: {
-    title: 'New item',
-    subtitle: 'Use the add button to create a new item'
+    title: 'New item without DOI',
+    subtitle: 'Use add button to create new item without DOI'
   }
 }
