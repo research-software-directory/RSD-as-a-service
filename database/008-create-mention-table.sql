@@ -1,46 +1,22 @@
 CREATE TYPE mention_type AS ENUM (
-	-- 'attachment', removed 2022-05-23
-	'highlight',
 	'blogPost',
 	'book',
 	'bookSection',
 	'computerProgram',
 	'conferencePaper',
-	-- 'document', moved to other
-	-- added 2022-05-023
 	'dataset',
 	'interview',
+	'highlight',
 	'journalArticle',
 	'magazineArticle',
-	-- 'manuscript', moved to other
 	'newspaperArticle',
-	-- 'note', removed 2022-05-23
 	'presentation',
-	-- 'radioBroadcast', moved to other
 	'report',
 	'thesis',
 	'videoRecording',
 	'webpage',
-	-- added 2022-05-23
 	'other'
 );
-
--- changed 2022-05-23
--- CREATE TABLE mention (
--- 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
--- 	author VARCHAR,
--- 	date TIMESTAMP,
--- 	image VARCHAR,
--- 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
--- 	title VARCHAR NOT NULL,
--- 	type mention_type NOT NULL,
--- 	url VARCHAR,
--- 	version INTEGER,
--- 	zotero_key VARCHAR UNIQUE NOT NULL,
--- 	scraped_at TIMESTAMP,
--- 	created_at TIMESTAMP NOT NULL,
--- 	updated_at TIMESTAMP NOT NULL
--- );
 
 CREATE TABLE mention (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -52,12 +28,8 @@ CREATE TABLE mention (
 	publication_year SMALLINT,
 	page VARCHAR(50),
 	image_url VARCHAR(500),
-	-- is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	mention_type mention_type NOT NULL,
 	source VARCHAR(50) NOT NULL,
-	-- version INTEGER,
-	--	zotero_key VARCHAR UNIQUE,
-	-- scraped_at TIMESTAMP,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
 );
