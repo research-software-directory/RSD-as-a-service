@@ -95,6 +95,7 @@ public class Main {
 
 		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
 		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
+		sanitiseMentions(allMentionsFromLegacyRSD);
 		saveMentions(allMentionsFromLegacyRSD);
 		Map<String, String> legacyMentionIdToId = legacyMentionIdToId(allMentionsFromLegacyRSD);
 		saveMentionsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyMentionIdToId);
@@ -646,6 +647,20 @@ public class Main {
 				jsonElement.getAsString();
 	}
 
+	public static void sanitiseMentions(JsonArray legacyMentions) {
+		Iterable<JsonObject> legacyMentionsAsObjects = (Iterable) legacyMentions;
+		for (JsonObject legacyMention : legacyMentionsAsObjects) {
+			String oldType = legacyMention.get("type").getAsString();
+			String newType = replaceType(oldType);
+			if (legacyMention.get("isCorporateBlog").getAsBoolean()) newType = "highlight";
+			legacyMention.addProperty("type", newType);
+
+			String oldUrl = nullOrValue(legacyMention.get("url"));
+			String newUrl = fixDoi(oldUrl);
+			legacyMention.addProperty("url", newUrl);
+		}
+	}
+
 	public static void saveMentions(JsonArray allMentionsFromLegacyRSD) {
 		JsonArray allMentionsToSave = new JsonArray();
 		Set<String> usedDois = new HashSet<>();
@@ -660,21 +675,17 @@ public class Main {
 			mentionToSave.addProperty("publication_year", year);
 			mentionToSave.addProperty("source", "manual");
 			mentionToSave.add("title", mentionFromLegacyRSD.get("title"));
-			String oldType = mentionFromLegacyRSD.get("type").getAsString();
-			String newType = replaceType(oldType);
-			mentionToSave.addProperty("mention_type", newType);
-			String oldUrl = nullOrValue(mentionFromLegacyRSD.get("url"));
-			//fix broken dois:
-			oldUrl = fixDoi(oldUrl);
-			if (oldUrl != null && oldUrl.startsWith("https://doi.org/")) {
-				String doi = oldUrl.replaceFirst("https://doi\\.org/", "");
+			mentionToSave.add("mention_type", mentionFromLegacyRSD.get("type"));
+			String url = nullOrValue(mentionFromLegacyRSD.get("url"));
+			if (url != null && url.startsWith("https://doi.org/")) {
+				String doi = url.replaceFirst("https://doi\\.org/", "");
 				if (usedDois.contains(doi)) return;
 				usedDois.add(doi);
 				mentionToSave.addProperty("doi", doi);
 			} else {
 				mentionToSave.add("doi", JsonNull.INSTANCE);
 			}
-			mentionToSave.addProperty("url", oldUrl);
+			mentionToSave.addProperty("url", url);
 			// mentionToSave.add("version", mentionFromLegacyRSD.get("version"));
 //			mentionToSave.add("zotero_key", mentionFromLegacyRSD.get("zoteroKey"));
 
@@ -726,11 +737,10 @@ public class Main {
 			JsonObject legacyMentionObject = legacyMention.getAsJsonObject();
 			String legacyId = legacyMentionObject.getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
 			String legacyTitle = legacyMentionObject.getAsJsonPrimitive("title").getAsString();
-			String legacyAuthor = stringOrNull(legacyMentionObject.getAsJsonPrimitive("author"));
-			String legacyImageUrl = stringOrNull(legacyMentionObject.getAsJsonPrimitive("image"));
-			String legacyMentionType = replaceType(legacyMentionObject.getAsJsonPrimitive("type").getAsString());
-			String legacyUrl = stringOrNull(legacyMentionObject.getAsJsonPrimitive("url"));
-			legacyUrl = fixDoi(legacyUrl);
+			String legacyAuthor = stringOrNull(legacyMentionObject.get("author"));
+			String legacyImageUrl = stringOrNull(legacyMentionObject.get("image"));
+			String legacyMentionType = legacyMentionObject.getAsJsonPrimitive("type").getAsString();
+			String legacyUrl = stringOrNull(legacyMentionObject.get("url"));
 			if (legacyUrl != null && legacyUrl.startsWith("https://doi.org/")) {
 				String doi = legacyUrl.replaceFirst("https://doi\\.org/", "");
 				if (!doiToId.containsKey(doi)) throw new RuntimeException("We couldn't map legacy mention with id " + legacyId + " to a new id");
