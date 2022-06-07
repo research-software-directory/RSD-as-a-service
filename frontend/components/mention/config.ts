@@ -4,7 +4,7 @@ export const mentionModal = {
   sectionTitle: 'Mentions',
   title: {
     label: 'Title *',
-    help: 'Publication title',
+    help: 'Publication title is required',
     validation: {
       required: 'Publication title is required',
       minLength: {
@@ -44,7 +44,7 @@ export const mentionModal = {
   },
   mentionType: {
     label: 'Type *',
-    help: 'Select publication type',
+    help: 'Publication type is required',
     validation: {
       required: 'Publication type is required'
     }
@@ -58,7 +58,7 @@ export const mentionModal = {
   },
   url: {
     label: 'Url *',
-    help: 'Provide url to publication',
+    help: 'Url to publication webpage is required',
     validation: {
       required: 'Url is required',
       maxLength: {
@@ -73,7 +73,7 @@ export const mentionModal = {
   },
   image_url: {
     label: 'Image url*',
-    help: 'Valid url to image is required for highlighted mention',
+    help: 'Url to publication image is required for highlighted mention',
     validation: {
       required: 'Image url is required for highlighted mention',
       maxLength: {
