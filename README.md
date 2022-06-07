@@ -12,75 +12,20 @@
 
 This repo contains the new RSD-as-a-service implementation
 
-## Building
 
-The program can easily be built with `docker-compose`. Each service builds the image using specific version (see docker-compose.yml file). Ensure that the version number is increased in the `docker-compose.yml` file when the source code of that service is changed.
+## Running development version locally in 3 steps. 
+1. Before installing the dependencies you need to set the environment variables in place:
+Copy the file `.env.example` to `.env` file at the root of the project
+and fill the secrets in `./frontend/.end.local`. Check if the secrets are correct. 
+2. Running once `make install` will install all dependencies, build the docker images and run the **data migration** script.
+3. Finally, run `make dev` to start the frontend and documentation servers.
 
-### Environment variables
 
-The environment variables should be stored in .env file, which is automatically loaded by docker-compose. To validate loading of env variables use `docker-compose config`. More info about use of enviroment variables in docker-compose is available at [official documentation](https://docs.docker.com/compose/environment-variables/)
-
-- copy the file `.env.example` to `.env` file at the root of the project
-
-```bash
-# from project root dir
-cp .env.example .env
+List of commands
+```shell
+make install   # it will build and install all dependencies and will run the **data migration** script. 
+make dev       # it will run the frontend and the documentation locally on localhost:3000 and localhost:3030 respectively
+make down      # Stop all services with `docker-compose down`
 ```
 
-- `provide missing values in .env file (secrets)`
-- build local images
-
-```bash
-# from project root dir
-docker-compose build
-```
-
-## Running locally
-
-Run the command `docker-compose up`.
-
-```bash
-# from project root dir
-docker-compose up
-```
-
-The application can be viewed on http://localhost
-
-### Frontend with hot-module-replacement (HMR)
-
-To run frontend in the development mode with the hot-module-replacement (HMR) you should start additional instance of the frontend which will be available at http://localhost:3000
-
-```bash
-# navigate to frontend folder
-cd frontend
-# install dependencies
-yarn install
-# start fe in dev mode
-yarn dev
-```
-
-More information about frontend setup is [available in the frontend readme file](/frontend/README.md).
-
-## Clear/remove data (reset)
-
-To clear the database, if the database structure has changed or you need to run data migration again, run the command:
-
-```bash
-docker-compose down --volumes
-```
-
-## Data migration
-
-A data migration script is available to migrate data from the legacy RSD to the new one:
-
-- run current RSD solution using `docker-compose up` from the root of the project
-- run the migration script using docker-compose file in the data-migration folder
-
-```bash
-# navigate to data-migration folder
-cd data-migration
-# run data migration docker-compose file
-docker-compose up
-```
-
-More information about [data migration is avaliable here](data-migration/README.md).
+More information about building and data migration can be found in [Getting started](https://research-software-directory.github.io/RSD-as-a-service/getting-started.html) documentation.
