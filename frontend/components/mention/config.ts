@@ -57,9 +57,10 @@ export const mentionModal = {
     }
   },
   url: {
-    label: 'Url',
+    label: 'Url *',
     help: 'Provide url to publication',
     validation: {
+      required: 'Url is required',
       maxLength: {
         value: 500,
         message: 'Maximum length is 500'
@@ -136,31 +137,31 @@ export const mentionType = {
     key: 'book',
     plural: 'Books',
     singular: 'Book',
-    manual: false
+    manual: true
   },
   bookSection: {
     key: 'bookSection',
     plural: 'Book section',
     singular: 'Book section',
-    manual: false
+    manual: true
   },
   computerProgram: {
     key: 'computerProgram',
     plural: 'Computer programs',
     singular: 'Computer program',
-    manual: false
+    manual: true
   },
   conferencePaper: {
     key: 'conferencePaper',
     plural: 'Conference papers',
     singular: 'Conference paper',
-    manual: false
+    manual: true
   },
   dataset: {
     key: 'dataset',
     plural: 'Dataset',
     singular: 'Dataset',
-    manual: false
+    manual: true
   },
   highlight: {
     key: 'highlight',
@@ -178,7 +179,7 @@ export const mentionType = {
     key: 'journalArticle',
     plural: 'Journal articles',
     singular: 'Journal article',
-    manual: false
+    manual: true
   },
   magazineArticle: {
     key: 'magazineArticle',
@@ -208,7 +209,7 @@ export const mentionType = {
     key: 'thesis',
     plural: 'Thesis',
     singular: 'Thesis',
-    manual: false
+    manual: true
   },
   videoRecording: {
     key: 'videoRecording',
