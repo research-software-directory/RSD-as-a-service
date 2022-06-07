@@ -56,7 +56,7 @@ CREATE TABLE mention (
 	mention_type mention_type NOT NULL,
 	source VARCHAR(50) NOT NULL,
 	-- version INTEGER,
-	zotero_key VARCHAR UNIQUE,
+	--	zotero_key VARCHAR UNIQUE,
 	-- scraped_at TIMESTAMP,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL

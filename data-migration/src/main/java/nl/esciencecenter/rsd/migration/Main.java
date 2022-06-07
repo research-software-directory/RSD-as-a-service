@@ -661,8 +661,7 @@ public class Main {
 			mentionToSave.addProperty("source", "manual");
 			mentionToSave.add("title", mentionFromLegacyRSD.get("title"));
 			String oldType = mentionFromLegacyRSD.get("type").getAsString();
-			Set<String> typesThatShouldBeOther = Set.of("attachment", "document", "manuscript", "note", "radioBroadcast");
-			String newType = typesThatShouldBeOther.contains(oldType) ? "other" : oldType;
+			String newType = replaceType(oldType);
 			mentionToSave.addProperty("mention_type", newType);
 			String oldUrl = nullOrValue(mentionFromLegacyRSD.get("url"));
 			//fix broken dois:
@@ -677,11 +676,16 @@ public class Main {
 			}
 			mentionToSave.addProperty("url", oldUrl);
 			// mentionToSave.add("version", mentionFromLegacyRSD.get("version"));
-			mentionToSave.add("zotero_key", mentionFromLegacyRSD.get("zoteroKey"));
+//			mentionToSave.add("zotero_key", mentionFromLegacyRSD.get("zoteroKey"));
 
 			allMentionsToSave.add(mentionToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/mention"), allMentionsToSave.toString());
+	}
+
+	public static String replaceType(String type) {
+		Set<String> typesThatShouldBeOther = Set.of("attachment", "document", "manuscript", "note", "radioBroadcast");
+		return typesThatShouldBeOther.contains(type) ? "other" : type;
 	}
 
 	public static String fixDoi(String url) {
@@ -702,14 +706,17 @@ public class Main {
 //		We throw an exception if this is not the case in the future.
 //		Now that doi's have to be unique, we also need the doiToId map,
 //		so that if an entry cannot be found in mentionToId, we can use that map instead.
-		JsonArray savedMentions = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/mention?select=id,title,zotero_key,doi"))).getAsJsonArray();
+		JsonArray savedMentions = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/mention?select=id,authors,image_url,mention_type,url,title,doi"))).getAsJsonArray();
 		Map<MentionRecord, String> mentionToId = new HashMap<>();
 		Map<String, String> doiToId = new HashMap<>();
 		savedMentions.forEach(jsonMention -> {
 			String id = jsonMention.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 			String title = jsonMention.getAsJsonObject().getAsJsonPrimitive("title").getAsString();
-			String zoteroKey = jsonMention.getAsJsonObject().getAsJsonPrimitive("zotero_key").getAsString();
-			mentionToId.put(new MentionRecord(title, zoteroKey), id);
+			String author = stringOrNull(jsonMention.getAsJsonObject().get("authors"));
+			String image_url = stringOrNull(jsonMention.getAsJsonObject().get("image_url"));
+			String mention_type = jsonMention.getAsJsonObject().get("mention_type").getAsString();
+			String url = stringOrNull(jsonMention.getAsJsonObject().get("url"));
+			mentionToId.put(new MentionRecord(title, author, image_url, mention_type, url), id);
 			JsonElement possibleDoi = jsonMention.getAsJsonObject().get("doi");
 			if (possibleDoi.isJsonPrimitive()) doiToId.put(possibleDoi.getAsString(), id);
 		});
@@ -719,17 +726,20 @@ public class Main {
 			JsonObject legacyMentionObject = legacyMention.getAsJsonObject();
 			String legacyId = legacyMentionObject.getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
 			String legacyTitle = legacyMentionObject.getAsJsonPrimitive("title").getAsString();
-			String legacyZoteroKey = legacyMentionObject.getAsJsonPrimitive("zoteroKey").getAsString();
-			MentionRecord legacyMentionRecord = new MentionRecord(legacyTitle, legacyZoteroKey);
-			if (mentionToId.containsKey(legacyMentionRecord)) {
-				result.put(legacyId, mentionToId.get(legacyMentionRecord));
-			}
-			else {
-				String legacyUrl = legacyMentionObject.getAsJsonPrimitive("url").getAsString();
-				legacyUrl = fixDoi(legacyUrl);
+			String legacyAuthor = stringOrNull(legacyMentionObject.getAsJsonPrimitive("author"));
+			String legacyImageUrl = stringOrNull(legacyMentionObject.getAsJsonPrimitive("image"));
+			String legacyMentionType = replaceType(legacyMentionObject.getAsJsonPrimitive("type").getAsString());
+			String legacyUrl = stringOrNull(legacyMentionObject.getAsJsonPrimitive("url"));
+			legacyUrl = fixDoi(legacyUrl);
+			if (legacyUrl != null && legacyUrl.startsWith("https://doi.org/")) {
 				String doi = legacyUrl.replaceFirst("https://doi\\.org/", "");
 				if (!doiToId.containsKey(doi)) throw new RuntimeException("We couldn't map legacy mention with id " + legacyId + " to a new id");
 				result.put(legacyId, doiToId.get(doi));
+			}
+			else {
+				MentionRecord legacyMentionRecord = new MentionRecord(legacyTitle, legacyAuthor, legacyImageUrl, legacyMentionType, legacyUrl);
+				if (!mentionToId.containsKey(legacyMentionRecord)) throw new RuntimeException("We couldn't map legacy mention with id " + legacyId + " to a new id");
+				result.put(legacyId, mentionToId.get(legacyMentionRecord));
 			}
 		}
 		return result;
@@ -1107,5 +1117,11 @@ public class Main {
 			throw new RuntimeException("Error fetching data from the endpoint: " + response.body());
 		}
 		return response.body();
+	}
+
+	public static String stringOrNull(JsonElement element) {
+		if (element == null || element.isJsonNull()) return null;
+		if (element.isJsonPrimitive()) return element.getAsString();
+		throw new RuntimeException("Element is of unexpected type, its contents is: " + element);
 	}
 }
