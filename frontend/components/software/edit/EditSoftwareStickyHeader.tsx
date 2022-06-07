@@ -6,6 +6,7 @@ import SaveIcon from '@mui/icons-material/Save'
 import StickyHeader from '../../layout/StickyHeader'
 import useStickyHeaderBorder from '~/components/layout/useStickyHeaderBorder'
 import editSoftwareContext from './editSoftwareContext'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 export default function StickyHeaderEditSoftware() {
   const {pageState} = useContext(editSoftwareContext)
@@ -48,24 +49,28 @@ export default function StickyHeaderEditSoftware() {
           VIEW
         </Button>
         {pageState?.step?.formId ?
-          <Button
-            tabIndex={0}
-            type="submit"
-            variant="contained"
-            form={pageState?.step?.formId}
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
+          <SubmitButtonWithListener
+            formId={pageState?.step?.formId}
             disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
+          />
+          // <Button
+          //   tabIndex={0}
+          //   type="submit"
+          //   variant="contained"
+          //   form={pageState?.step?.formId}
+          //   sx={{
+          //     // overwrite tailwind preflight.css for submit type
+          //     '&[type="submit"]:not(.Mui-disabled)': {
+          //       backgroundColor:'primary.main'
+          //     }
+          //   }}
+          //   endIcon={
+          //     <SaveIcon />
+          //   }
+          //   disabled={isSaveDisabled()}
+          // >
+          //   Save
+          // </Button>
         : null
         }
       </div>

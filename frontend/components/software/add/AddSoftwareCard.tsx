@@ -37,6 +37,8 @@ type AddSoftwareForm = {
   short_statement: string,
 }
 
+const formId='add-software-form'
+
 export default function AddSoftwareCard() {
   const {session} = useAuth()
   const router = useRouter()
@@ -182,9 +184,21 @@ export default function AddSoftwareCard() {
     setSlugValue(newSlug)
   }
 
+  function isSaveDisabled() {
+    if (state.loading == true) return true
+    // when manually setting errors, like with brand_name async validation
+    // we also need to ensure these errors are handled here
+    if (errors && errors?.slug) return true
+    if (isValid === false) return true
+    return false
+  }
+
   return (
     <ContentInTheMiddle>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full md:w-[42rem]">
+      <form
+        id={formId}
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full md:w-[42rem]">
         <section className="min-h-[6rem]">
           <h1 className="text-primary text-2xl mb-4">{config.title}</h1>
           {renderDialogText()}
@@ -236,10 +250,8 @@ export default function AddSoftwareCard() {
             Cancel
           </Button>
           <SubmitButtonWithListener
-            loading={state.loading}
-            error={state.error}
-            formErrors={formState.errors}
-            isValid={formState.isValid}
+            formId={formId}
+            disabled={isSaveDisabled()}
           />
         </section>
       </form>
