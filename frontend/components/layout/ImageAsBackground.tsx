@@ -26,7 +26,7 @@ export default function ImageAsBackground({src, alt, className, bgSize='cover', 
         flex: 1,
         backgroundImage: `url('${src}')`,
         backgroundSize: bgSize,
-        backgroundPosition: 'center center',
+        backgroundPosition: 'top center',
         backgroundRepeat: 'no-repeat',
       }}
       aria-label={alt}
