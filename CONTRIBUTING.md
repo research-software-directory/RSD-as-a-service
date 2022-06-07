@@ -133,6 +133,7 @@ function check_program_exists () {
 
 check_program_exists reuse
 check_program_exists date
+check_program_exists dirname
 
 YEAR=$(date +"%Y")
 AUTHOR_STRING=$AUTHOR
@@ -153,6 +154,11 @@ IFS=$'\n'
 declare -a STAGED_FILES=( $(git diff --name-only --cached) )
 
 for file in ${STAGED_FILES[@]}; do
+    file_path=$(dirname ${file})
+    if [[ ${file_path} == "LICENSES" ]]; then
+        echo "Info: did not auto-assign a license to ${file}, because it is located in the LICENSES directory."
+        continue
+    fi
     file_extension="${file##*.}"
     case ${file_extension} in
         license)
@@ -172,16 +178,20 @@ for file in ${STAGED_FILES[@]}; do
     eval "reuse addheader $ARGS $file 1> /tmp/reuse_out 2> /tmp/reuse_error"
     case $? in
         0)
+            if ! git diff --quiet $file; then
+                git add $file
+                echo "Info: Added changes by \"${AUTHOR}\" to ${file} under license ${LICENSE}."
+            fi
             continue
             ;;
         2)
-            echo "Could not recognise the file type of: ${file}. Aborting commit."
+            >&2 echo "Warning: Could not recognise the file type of: ${file}. Aborting commit."
             echo "Error message:"
             cat /tmp/reuse_error
             exit 2
             ;;
         *)
-            echo "An unhandled error code $? occurred:"
+            >&2 echo "Warning: An unhandled error code $? occurred:"
             cat /tmp/reuse_error
             exit 999
             ;;
