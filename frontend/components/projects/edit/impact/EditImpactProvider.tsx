@@ -43,7 +43,7 @@ function createSuccessMessage(item:MentionItemProps) {
 }
 
 export default function EditImpactProvider(props: any) {
-  const {showErrorMessage,showSuccessMessage} = useSnackbar()
+  const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   // extract needed info from props
   const {token, project} = props
   const [state, dispatch] = useReducer(
@@ -99,6 +99,14 @@ export default function EditImpactProvider(props: any) {
     const item = action.payload
 
     if (item.id && item.source === 'RSD') {
+      // check if already in collection
+      if (item.doi) {
+        const found = state.mentions.find(mention=>mention.doi===item.doi)
+        if (found) {
+          showInfoMessage(`Impact item with DOI ${item.doi} is already in ${getMentionType(item.mention_type,'plural')}.`)
+          return true
+        }
+      }
       // existing RSD mention item to be added to project
       const resp = await addImpactToProject({
         project,

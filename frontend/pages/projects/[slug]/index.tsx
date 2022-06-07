@@ -21,7 +21,7 @@ import {
   KeywordForProject, Project, ProjectLink,
   RelatedProject, ResearchDomain
 } from '~/types/Project'
-import {MentionForProject} from '~/types/Mention'
+import {MentionItemProps} from '~/types/Mention'
 import {Contributor} from '~/types/Contributor'
 import {ProjectOrganisationProps} from '~/types/Organisation'
 import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
@@ -49,8 +49,8 @@ export interface ProjectPageProps extends ScriptProps{
   researchDomains: ResearchDomain[],
   keywords: KeywordForProject[],
   links: ProjectLink[],
-  output: MentionForProject[],
-  impact: MentionForProject[],
+  output: MentionItemProps[],
+  impact: MentionItemProps[],
   team: Contributor[],
   relatedSoftware: RelatedSoftwareOfProject[],
   relatedProjects: RelatedProject[]
@@ -76,7 +76,7 @@ export default function ProjectPage(props: ProjectPageProps) {
       </ContentInTheMiddle>
     )
   }
-  // console.log('ProjectItemPage...relatedSoftware...', relatedSoftware)
+  // console.log('ProjectItemPage...output...', output)
   return (
     <>
       {/* Page Head meta tags */}

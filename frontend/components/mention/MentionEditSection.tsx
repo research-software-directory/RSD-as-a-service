@@ -3,14 +3,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
+import {MentionByType, MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import MentionEditList from './MentionEditList'
-import {mentionsByType} from '~/utils/editMentions'
+import {clasifyMentionsByType} from '~/utils/editMentions'
 import EditMentionModal from './EditMentionModal'
 import {getMentionTypeOrder, mentionType} from './config'
 import ConfirmDeleteModal from '../layout/ConfirmDeleteModal'
 import ContentLoader from '../layout/ContentLoader'
 import useEditMentionReducer from './useEditMentionReducer'
+import MentionEditFeatured from './MentionEditFeatured'
+import {sortOnNumProp} from '~/utils/sortFn'
 
 type ModalState = {
   open: boolean,
@@ -32,13 +34,32 @@ export default function MentionEditSection() {
     setEditModal()
   }
 
-  function renderMentionList() {
+  function renderHighlights(higlightedMentions:MentionItemProps[]) {
+    if (higlightedMentions.length === 0) return null
+    return (
+      <>
+      <h3 className="pb-4 text-xl">{mentionType['highlight'].plural}</h3>
+      {
+        higlightedMentions
+        .sort((a, b) => sortOnNumProp(a, b, 'publication_year', 'desc'))
+          .map((item, pos) => {
+
+            return (
+              <MentionEditFeatured
+                key={item.id}
+                pos={pos}
+                item={item}
+              />
+            )
+          })
+      }
+      </>
+    )
+  }
+
+  function renderMentionList(mentionByType:MentionByType) {
     // if no items show no items component (message)
-    if (!mentions || mentions.length === 0) return settings.noItemsComponent() ?? null
-    // classify mention on state update
-    const mentionByType = mentionsByType(mentions)
-    // if no items show no items component (message)
-    if (typeof mentionByType == 'undefined') return settings.noItemsComponent() ?? null
+    if (typeof mentionByType == 'undefined') return null
     // sort keys to keep same order during editing
     const mentionTypes = getMentionTypeOrder(mentionByType)
     // render edit list by type
@@ -58,9 +79,9 @@ export default function MentionEditSection() {
       })
   }
 
-  return (
-    <>
-      {renderMentionList()}
+  function renderModals() {
+    return (
+      <>
       {/* modal as external part of the section */}
       <EditMentionModal
         title={settings.editModalTitle}
@@ -86,6 +107,28 @@ export default function MentionEditSection() {
           confirmDelete()
         }}
       />
+      </>
+    )
+  }
+
+  // if no items show no items component (message) AND modals
+  if (!mentions || mentions.length === 0) {
+    return (
+      <>
+        {settings.noItemsComponent() ?? null}
+        {renderModals()}
+      </>
+    )
+  }
+  // extract mention items by types
+  // highl
+  const {mentionByType,featuredMentions} = clasifyMentionsByType(mentions)
+
+  return (
+    <>
+      {renderHighlights(featuredMentions)}
+      {renderMentionList(mentionByType)}
+      {renderModals()}
     </>
   )
 }

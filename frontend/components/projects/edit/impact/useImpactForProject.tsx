@@ -6,7 +6,7 @@
 import {useEffect} from 'react'
 import {getImpactForProject} from '~/utils/getProjects'
 
-import {sortOnDateProp} from '~/utils/sortFn'
+import {sortOnNumProp} from '~/utils/sortFn'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {MentionItemProps} from '~/types/Mention'
 
@@ -29,14 +29,9 @@ export default function useImpactForProject({project, token}: ImpactForProjectPr
         frontend: true
       })
       if (mentionsForProject && abort === false) {
-        const mentions:MentionItemProps[] = mentionsForProject.map(item => {
-          // remove prop we do not need
-          // PATCH request fails when additional props send
-          delete item.impact_for_project
-          return item
-        }).sort((a, b) => {
+        const mentions:MentionItemProps[] = mentionsForProject.sort((a, b) => {
           // sort mentions on publication year, newest at the top
-          return sortOnDateProp(a,b,'publication_year','desc')
+          return sortOnNumProp(a,b,'publication_year','desc')
         })
         // debugger
         setMentions(mentions)

@@ -43,7 +43,7 @@ function createSuccessMessage(item:MentionItemProps) {
 }
 
 export default function EditMentionsProvider(props: any) {
-  const {showErrorMessage,showSuccessMessage} = useSnackbar()
+  const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   // extract needed info from props
   const {token, software} = props
   const [state, dispatch] = useReducer(
@@ -56,7 +56,7 @@ export default function EditMentionsProvider(props: any) {
   // console.groupEnd()
 
   async function processOnSubmit(action: EditMentionAction) {
-    const item = action.payload
+    const item:MentionItemProps = action.payload
     // new item created manually
     if (item.id === null || item.id === '') {
       item.id = null
@@ -77,9 +77,8 @@ export default function EditMentionsProvider(props: any) {
       }
     } else {
       // this is existing item
-      // we just need to update it
       const resp = await updateMentionItem({
-        mention:item,
+        mention: item,
         token
       })
       if (resp.status === 200) {
@@ -95,8 +94,16 @@ export default function EditMentionsProvider(props: any) {
   }
 
   async function processOnAdd(action: EditMentionAction) {
-    const item = action.payload
+    const item:MentionItemProps = action.payload
     if (item.id && item.source === 'RSD') {
+      // check if already in collection
+      if (item.doi) {
+        const found = state.mentions.find(mention=>mention.doi===item.doi)
+        if (found) {
+          showInfoMessage(`Mention with DOI ${item.doi} is already in ${getMentionType(item.mention_type,'plural')}.`)
+          return true
+        }
+      }
       // existing RSD mention item to be added to project
       const resp = await addMentionToSoftware({
         software,

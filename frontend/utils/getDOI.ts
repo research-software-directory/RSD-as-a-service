@@ -80,7 +80,7 @@ async function getItemFromDatacite(doi: string) {
   return resp
 }
 
-export async function extractMentionFromDoi(doi: string) {
+export async function getMentionByDoi(doi: string) {
   // get RA first
   const doiRA = await getDoiRA(doi)
   // debugger

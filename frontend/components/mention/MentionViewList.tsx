@@ -35,7 +35,7 @@ export default function MentionViewList({title, type, items}: MentionSectionList
         },
         '&:last-child': {
           borderBottom: '1px solid',
-          borderColor: 'divider',
+          borderColor: 'divider'
         }
       }}>
       <AccordionSummary

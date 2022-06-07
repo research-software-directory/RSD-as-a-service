@@ -10,6 +10,7 @@ import FindOutput from './FindOutput'
 import AddOutput from './AddOutput'
 import EditOutputProvider from './EditOutputProvider'
 import useProjectContext from '../useProjectContext'
+import EditMentionsInfo from '~/components/software/edit/mentions/EditMentionsInfo'
 
 export default function ProjectOutput({session}: { session: Session }) {
   const {project} = useProjectContext()
@@ -21,13 +22,17 @@ export default function ProjectOutput({session}: { session: Session }) {
   return (
     <EditOutputProvider token={session.token} project={project.id}>
       <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4 xl:pl-[3rem]">
+        <div className="pt-4 pb-8 xl:pl-[3rem]">
           <OutputByType session={session}/>
         </div>
-        <div className="py-4 min-w-[21rem] xl:my-0">
+        <div className="pt-4 pb-8">
           <FindOutput />
           <div className="py-4"></div>
           <AddOutput />
+          <div className="py-4"></div>
+          <EditMentionsInfo
+            title="Edit output items"
+          />
         </div>
       </EditSection>
     </EditOutputProvider>

@@ -29,18 +29,20 @@ it('should render featured mention items (based on dummy data)',()=>{
   render(WrappedComponentWithProps(MentionsSection, {
     props: {mentions: mentionsData}
   }))
-  const expectedItems = mentionsData.filter(item=>item.is_featured)
+  const expectedItems = mentionsData.filter(item=>item.mention_type==='highlight')
   const featured = screen.queryAllByTestId('mention-is-featured')
   expect(featured.length).toEqual(expectedItems.length)
   // screen.debug()
 })
 
-it('should render 15 mention type sections (based on dummy data)',()=>{
+it('should render 16 mention type sections (all except mention_type===highlight)',()=>{
   render(WrappedComponentWithProps(MentionsSection, {
     props: {mentions: mentionsData}
   }))
+  const highlight = mentionsData.filter(item => item.mention_type === 'highlight')
+  const expectedCount = mentionsData.length - highlight.length
   const mentions = screen.queryAllByTestId('mentions-section-for-type')
-  expect(mentions.length).toEqual(15)
+  expect(mentions.length).toEqual(expectedCount)
   // screen.debug()
 })
 
@@ -48,7 +50,7 @@ it('should render all not featured mention items (based on dummy data)',()=>{
   render(WrappedComponentWithProps(MentionsSection, {
     props: {mentions: mentionsData}
   }))
-  const expectedItems = mentionsData.filter(item=>!item.is_featured)
+  const expectedItems = mentionsData.filter(item=>item.mention_type!=='highlight')
   const mentionItems = screen.queryAllByTestId('mention-view-item-body')
   expect(mentionItems.length).toEqual(expectedItems.length)
   // screen.debug()

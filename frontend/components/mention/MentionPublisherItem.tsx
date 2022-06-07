@@ -27,10 +27,24 @@ export default function MentionPublisherItem(
       </div>
     )
   }
+  if (publisher && page) {
+    return (
+      <div className={className}>
+        Published by {publisher}, page: {page}
+      </div>
+    )
+  }
   if (publisher) {
     return (
       <div className={className}>
         Published by {publisher}
+      </div>
+    )
+  }
+  if (publication_year) {
+    return (
+      <div className={className}>
+        Published in {publication_year}
       </div>
     )
   }

@@ -104,6 +104,7 @@ public class Main {
 
 		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
 		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
+		sanitiseMentions(allMentionsFromLegacyRSD);
 		saveMentions(allMentionsFromLegacyRSD);
 		Map<String, String> legacyMentionIdToId = legacyMentionIdToId(allMentionsFromLegacyRSD);
 		saveMentionsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyMentionIdToId);
@@ -655,6 +656,20 @@ public class Main {
 				jsonElement.getAsString();
 	}
 
+	public static void sanitiseMentions(JsonArray legacyMentions) {
+		Iterable<JsonObject> legacyMentionsAsObjects = (Iterable) legacyMentions;
+		for (JsonObject legacyMention : legacyMentionsAsObjects) {
+			String oldType = legacyMention.get("type").getAsString();
+			String newType = replaceType(oldType);
+			if (legacyMention.get("isCorporateBlog").getAsBoolean()) newType = "highlight";
+			legacyMention.addProperty("type", newType);
+
+			String oldUrl = nullOrValue(legacyMention.get("url"));
+			String newUrl = fixDoi(oldUrl);
+			legacyMention.addProperty("url", newUrl);
+		}
+	}
+
 	public static void saveMentions(JsonArray allMentionsFromLegacyRSD) {
 		JsonArray allMentionsToSave = new JsonArray();
 		Set<String> usedDois = new HashSet<>();
@@ -663,34 +678,31 @@ public class Main {
 			JsonObject mentionFromLegacyRSD = jsonElement.getAsJsonObject();
 			mentionToSave.add("authors", mentionFromLegacyRSD.get("author"));
 			mentionToSave.add("image_url", mentionFromLegacyRSD.get("image"));
-			mentionToSave.add("is_featured", mentionFromLegacyRSD.get("isCorporateBlog"));
 			ZonedDateTime oldDate = ZonedDateTime.parse(mentionFromLegacyRSD.get("date").getAsString());
 			int year = oldDate.getYear();
 			mentionToSave.addProperty("publication_year", year);
 			mentionToSave.addProperty("source", "manual");
 			mentionToSave.add("title", mentionFromLegacyRSD.get("title"));
-			String oldType = mentionFromLegacyRSD.get("type").getAsString();
-			Set<String> typesThatShouldBeOther = Set.of("attachment", "document", "manuscript", "note", "radioBroadcast");
-			String newType = typesThatShouldBeOther.contains(oldType) ? "other" : oldType;
-			mentionToSave.addProperty("mention_type", newType);
-			String oldUrl = nullOrValue(mentionFromLegacyRSD.get("url"));
-			//fix broken dois:
-			oldUrl = fixDoi(oldUrl);
-			if (oldUrl != null && oldUrl.startsWith("https://doi.org/")) {
-				String doi = oldUrl.replaceFirst("https://doi\\.org/", "");
+			mentionToSave.add("mention_type", mentionFromLegacyRSD.get("type"));
+			String url = nullOrValue(mentionFromLegacyRSD.get("url"));
+			if (url != null && url.startsWith("https://doi.org/")) {
+				String doi = url.replaceFirst("https://doi\\.org/", "");
 				if (usedDois.contains(doi)) return;
 				usedDois.add(doi);
 				mentionToSave.addProperty("doi", doi);
 			} else {
 				mentionToSave.add("doi", JsonNull.INSTANCE);
 			}
-			mentionToSave.addProperty("url", oldUrl);
-			mentionToSave.add("version", mentionFromLegacyRSD.get("version"));
-			mentionToSave.add("zotero_key", mentionFromLegacyRSD.get("zoteroKey"));
+			mentionToSave.addProperty("url", url);
 
 			allMentionsToSave.add(mentionToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/mention"), allMentionsToSave.toString());
+	}
+
+	public static String replaceType(String type) {
+		Set<String> typesThatShouldBeOther = Set.of("attachment", "document", "manuscript", "note", "radioBroadcast");
+		return typesThatShouldBeOther.contains(type) ? "other" : type;
 	}
 
 	public static String fixDoi(String url) {
@@ -706,19 +718,20 @@ public class Main {
 	public static Map<String, String> legacyMentionIdToId(JsonArray allMentionsFromLegacyRSD) {
 //		So we have a problem here: how to uniquely identify a mention?
 //		This is needed to retrieve the primary key for a mention after it is saved in Postgres.
-//		Unfortunately, title is not unique, zotero_key can be null.
-//		Luckily, the combination of title and zotero_key is unique at the time of writing.
-//		We throw an exception if this is not the case in the future.
-//		Now that doi's have to be unique, we also need the doiToId map,
-//		so that if an entry cannot be found in mentionToId, we can use that map instead.
-		JsonArray savedMentions = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/mention?select=id,title,zotero_key,doi"))).getAsJsonArray();
+//		We first see if there is a matching DOI to obtain the new id, since DOIs have to be unique.
+//		Otherwise, we use the fields authors,image_url,mention_type,url,title.
+//		If we cannot map an old id to a new id, we throw an exception.
+		JsonArray savedMentions = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/mention?select=id,authors,image_url,mention_type,url,title,doi"))).getAsJsonArray();
 		Map<MentionRecord, String> mentionToId = new HashMap<>();
 		Map<String, String> doiToId = new HashMap<>();
 		savedMentions.forEach(jsonMention -> {
 			String id = jsonMention.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 			String title = jsonMention.getAsJsonObject().getAsJsonPrimitive("title").getAsString();
-			String zoteroKey = jsonMention.getAsJsonObject().getAsJsonPrimitive("zotero_key").getAsString();
-			mentionToId.put(new MentionRecord(title, zoteroKey), id);
+			String author = stringOrNull(jsonMention.getAsJsonObject().get("authors"));
+			String image_url = stringOrNull(jsonMention.getAsJsonObject().get("image_url"));
+			String mention_type = jsonMention.getAsJsonObject().get("mention_type").getAsString();
+			String url = stringOrNull(jsonMention.getAsJsonObject().get("url"));
+			mentionToId.put(new MentionRecord(title, author, image_url, mention_type, url), id);
 			JsonElement possibleDoi = jsonMention.getAsJsonObject().get("doi");
 			if (possibleDoi.isJsonPrimitive()) doiToId.put(possibleDoi.getAsString(), id);
 		});
@@ -728,17 +741,19 @@ public class Main {
 			JsonObject legacyMentionObject = legacyMention.getAsJsonObject();
 			String legacyId = legacyMentionObject.getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
 			String legacyTitle = legacyMentionObject.getAsJsonPrimitive("title").getAsString();
-			String legacyZoteroKey = legacyMentionObject.getAsJsonPrimitive("zoteroKey").getAsString();
-			MentionRecord legacyMentionRecord = new MentionRecord(legacyTitle, legacyZoteroKey);
-			if (mentionToId.containsKey(legacyMentionRecord)) {
-				result.put(legacyId, mentionToId.get(legacyMentionRecord));
-			}
-			else {
-				String legacyUrl = legacyMentionObject.getAsJsonPrimitive("url").getAsString();
-				legacyUrl = fixDoi(legacyUrl);
+			String legacyAuthor = stringOrNull(legacyMentionObject.get("author"));
+			String legacyImageUrl = stringOrNull(legacyMentionObject.get("image"));
+			String legacyMentionType = legacyMentionObject.getAsJsonPrimitive("type").getAsString();
+			String legacyUrl = stringOrNull(legacyMentionObject.get("url"));
+			if (legacyUrl != null && legacyUrl.startsWith("https://doi.org/")) {
 				String doi = legacyUrl.replaceFirst("https://doi\\.org/", "");
 				if (!doiToId.containsKey(doi)) throw new RuntimeException("We couldn't map legacy mention with id " + legacyId + " to a new id");
 				result.put(legacyId, doiToId.get(doi));
+			}
+			else {
+				MentionRecord legacyMentionRecord = new MentionRecord(legacyTitle, legacyAuthor, legacyImageUrl, legacyMentionType, legacyUrl);
+				if (!mentionToId.containsKey(legacyMentionRecord)) throw new RuntimeException("We couldn't map legacy mention with id " + legacyId + " to a new id");
+				result.put(legacyId, mentionToId.get(legacyMentionRecord));
 			}
 		}
 		return result;
@@ -1116,5 +1131,11 @@ public class Main {
 			throw new RuntimeException("Error fetching data from the endpoint: " + response.body());
 		}
 		return response.body();
+	}
+
+	public static String stringOrNull(JsonElement element) {
+		if (element == null || element.isJsonNull()) return null;
+		if (element.isJsonPrimitive()) return element.getAsString();
+		throw new RuntimeException("Element is of unexpected type, its contents is: " + element);
 	}
 }

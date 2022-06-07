@@ -55,7 +55,7 @@ export default function AddMenu() {
       // adding new software should be disabled
       // during process of adding/editing an item
       case '/software/add':
-      case '/software/[slug]/edit':
+      case '/projects/add':
         return true
       default:
         return false

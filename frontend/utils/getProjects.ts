@@ -5,7 +5,7 @@
 
 import {OrganisationRole} from '~/types/Organisation'
 import {TeamMemberProps} from '~/types/Contributor'
-import {mentionColumns, MentionForProject} from '~/types/Mention'
+import {mentionColumns, MentionForProject, MentionItemProps} from '~/types/Mention'
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
@@ -361,7 +361,14 @@ export async function getOutputForProject({project, token, frontend}:
     })
     if (resp.status === 200) {
       const data: MentionForProject[] = await resp.json()
-      return data
+      // cover to plain mention
+      const mentions: MentionItemProps[] = data.map(item => {
+        if (item?.output_for_project) {
+          delete item.output_for_project
+        }
+        return item
+      })
+      return mentions
     }
     logger(`getOutputForProject: [${resp.status}] [${url}]`, 'error')
     // query not found
@@ -389,7 +396,14 @@ export async function getImpactForProject({project, token, frontend}:
     })
     if (resp.status === 200) {
       const data: MentionForProject[] = await resp.json()
-      return data
+      // cover to plain mention
+      const mentions: MentionItemProps[] = data.map(item => {
+        if (item?.impact_for_project) {
+          delete item.impact_for_project
+        }
+        return item
+      })
+      return mentions
     }
     logger(`getImpactForProject: [${resp.status}] [${url}]`, 'error')
     // query not found
