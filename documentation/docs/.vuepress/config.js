@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
@@ -9,14 +10,15 @@ module.exports = {
   title: 'RSD Documentation',
   description: 'RSD As a Service documentation',
   base: '/RSD-as-a-service/',
-  
+  port: '3030',
+
   themeConfig: {
     logo: '/images/circle.webp',
     // logoDark: '/images/heroDark.webp',
     repo: 'research-software-directory/RSD-as-a-service',
     // docsDir: 'docs',
     displayAllHeaders: true, // Default: false
-    
+
     navbar: [
       {
         text: 'Documentation',
@@ -58,5 +60,5 @@ module.exports = {
     ],
   ],
 
-   
+
 }

@@ -1,6 +1,7 @@
 -- SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2022 dv4all
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -803,3 +804,69 @@ BEGIN
 	SELECT COUNT(DISTINCT organisations_of_current_maintainer) FROM organisations_of_current_maintainer() INTO organisation_cnt;
 END
 $$;
+
+
+-- ORGANISATION maintainers list with basic personal info
+-- used in the organisation maintainers page
+CREATE FUNCTION maintainers_of_organisation(organisation_id UUID) RETURNS TABLE (
+	maintainer UUID,
+	name VARCHAR[],
+	email VARCHAR[],
+	affiliation VARCHAR[],
+	is_primary BOOLEAN
+) LANGUAGE plpgsql STABLE SECURITY DEFINER AS
+$$
+DECLARE account_authenticated UUID;
+BEGIN
+	account_authenticated = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	IF account_authenticated IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please login first';
+	END IF;
+
+	IF organisation_id IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please provide a organisation id';
+	END IF;
+
+	IF NOT organisation_id IN (SELECT * FROM organisations_of_current_maintainer()) THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not a maintainer of this organisation';
+	END IF;
+
+	RETURN QUERY
+	-- primary maintainer of organisation
+	SELECT
+		organisation.primary_maintainer AS maintainer,
+		ARRAY_AGG(login_for_account."name") AS name,
+		ARRAY_AGG(login_for_account.email) AS email,
+		ARRAY_AGG(login_for_account.home_organisation) AS affiliation,
+		TRUE AS is_primary
+	FROM
+		organisation
+	INNER JOIN
+		login_for_account ON organisation.primary_maintainer = login_for_account.account
+	WHERE
+		organisation.id  = organisation_id
+	GROUP BY
+		organisation.id,organisation.primary_maintainer
+	-- append second selection
+	UNION
+	-- other maintainers of organisation
+	SELECT
+		maintainer_for_organisation.maintainer,
+		ARRAY_AGG(login_for_account."name") AS name,
+		ARRAY_AGG(login_for_account.email) AS email,
+		ARRAY_AGG(login_for_account.home_organisation) AS affiliation,
+		FALSE AS is_primary
+	FROM
+		maintainer_for_organisation
+	INNER JOIN
+		login_for_account ON maintainer_for_organisation.maintainer = login_for_account.account
+	WHERE
+		maintainer_for_organisation.organisation = organisation_id
+	GROUP BY
+		maintainer_for_organisation.organisation, maintainer_for_organisation.maintainer
+	-- primary as first record
+	ORDER BY is_primary DESC;
+	RETURN;
+END
+$$;
+
