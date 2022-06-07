@@ -1,7 +1,14 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
-import SaveIcon from '@mui/icons-material/Save'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 
@@ -17,6 +24,7 @@ import {validSoftwareItem} from '../../../utils/editSoftware'
 import {useDebounceValid} from '~/utils/useDebounce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 const initalState = {
   loading: false,
@@ -157,15 +165,6 @@ export default function AddSoftwareCard() {
     return config.addInfo
   }
 
-  function isSaveDisabled() {
-    if (state.loading == true) return true
-    // when manually setting errors, like with brand_name async validation
-    // we also need to ensure these errors are handled here
-    if (errors && errors?.slug) return true
-    if (isValid === false) return true
-    return false
-  }
-
   function onSlugChange(slug: string) {
     // if nothing is changed
     const newSlug = sanitizeSlugValue(slug)
@@ -236,22 +235,12 @@ export default function AddSoftwareCard() {
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
-            disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
+          <SubmitButtonWithListener
+            loading={state.loading}
+            error={state.error}
+            formErrors={formState.errors}
+            isValid={formState.isValid}
+          />
         </section>
       </form>
     </ContentInTheMiddle>
