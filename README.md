@@ -5,6 +5,8 @@ SPDX-FileCopyrightText: 2021 - 2022 Jason Maassen (Netherlands eScience Center) 
 SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
 SPDX-FileCopyrightText: 2021 - 2022 dv4all
 SPDX-FileCopyrightText: 2021 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -95,3 +97,13 @@ docker-compose up
 ```
 
 More information about [data migration is avaliable here](data-migration/README.md).
+
+## License
+
+The content of this repository is licensed under several licenses. We follow the [REUSE specification](https://reuse.software/) to indicate which license applies to the files specifically. Here are some general hints:
+
+- Source code is licensed under `Apache-2.0`
+- Documentation and most images are licensed under `CC BY-4.0`
+- Some files with trivial content, e.g. configuration files, are licensed under `CC0-1.0`
+
+For more details on the licenses, please have a look at the file headers or associated `*.license` files. The terms of all used licenses are located in the [LICENSES](./LICENSES/) directory.
