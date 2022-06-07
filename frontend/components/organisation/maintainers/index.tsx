@@ -1,13 +1,8 @@
-<<<<<<< HEAD
-
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-=======
 import {useEffect,useState} from 'react'
 
 import {Session} from '~/auth'
@@ -97,7 +92,6 @@ export default function OrganisationMaintainers({session, organisation}:
       }
     }
   }
->>>>>>> main
 
   return (
     <>
