@@ -72,9 +72,9 @@ export const mentionModal = {
   },
   image_url: {
     label: 'Image url*',
-    help: 'Valid url to image is required for featured mention',
+    help: 'Valid url to image is required for highlighted mention',
     validation: {
-      required: 'Image url is required for featured mention',
+      required: 'Image url is required for highlighted mention',
       maxLength: {
         value: 500,
         message: 'Maximum length is 500'
@@ -196,13 +196,13 @@ export const mentionType = {
     key: 'presentation',
     plural: 'Presentations',
     singular: 'Presentation',
-    manual: false
+    manual: true
   },
   report: {
     key: 'report',
     plural: 'Reports',
     singular: 'Reports',
-    manual: false
+    manual: true
   },
   thesis: {
     key: 'thesis',

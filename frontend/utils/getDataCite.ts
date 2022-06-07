@@ -98,12 +98,19 @@ function gqlWorksByTitleQuery(title: string) {
 }
 
 function extractAuthors(item: WorkResponse) {
-  const authors = item.creators.map(author => {
-    return `${author.givenName} ${author.familyName}`
-  })
-  item.contributors.forEach(author => {
-    authors.push(`${author.givenName} ${author.familyName}`)
-  })
+  let authors: string[] = []
+  // extract info from creators
+  if (item.creators) {
+    authors = item.creators.map(author => {
+      return `${author.givenName} ${author.familyName}`
+    })
+  }
+  // extract info from contributors
+  if (item.contributors) {
+    item.contributors.forEach(author => {
+      authors.push(`${author.givenName} ${author.familyName}`)
+    })
+  }
   if (authors.length > 0) {
     return authors.join(', ')
   }
