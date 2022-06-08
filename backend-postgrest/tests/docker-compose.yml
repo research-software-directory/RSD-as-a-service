@@ -4,7 +4,7 @@ services:
   database:
     container_name: database-test
     build: ../../database
-    image: rsd/database-test:0.0.4
+    image: rsd/database-test:0.0.5
     ports:
       # enable connection from outside
       - "5432:5432"
@@ -44,7 +44,7 @@ services:
       context: .
       # dockerfile to use for build
       dockerfile: ./Dockerfile
-    image: rsd/auth-test:0.0.4
+    image: rsd/auth-test:0.0.5
     environment:
       - PGRST_JWT_SECRET=normaly_this_is_a_secret_string_that_none_knows_BUT_this_is_just_a_test
       - POSTGREST_URL=http://backend:3500
