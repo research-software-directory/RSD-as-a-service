@@ -66,7 +66,7 @@ Contributions to the code base are very welcome. Keep in mind, however, that thi
 
 1. (**important**) announce your plan to the rest of the community _before you start working_. This announcement should be in the form of a (new) issue;
 1. (**important**) wait until some kind of concensus is reached about your idea being a good idea;
-1. (**important**) we are applying the [REUSE specification](https://reuse.software/) in order to keep track of authorships, copyright and licenses in this repository. Before commiting to your branch, consider using our [pre-commit hook template](#automatically-updating-headers-using-a-pre-commit-hook) that will help you adding the SDPX headers automatically upon each commit.
+1. (**important**) we are applying the [REUSE specification](https://reuse.software/) in order to keep track of copyright and licenses in this repository. See the [section below](#license-and-copyright-information-according-to-the-reuse-specification) for an example. We run a REUSE linter job upon every pull request to make sure all files have at least license information attached. To automate the task of adding REUSE compliant headers you can optionally use our [pre-commit hook template](#automatically-updating-headers-using-a-pre-commit-hook).
 1. if needed, fork the repository to your own Github profile and create your own feature branch off of the latest master commit. While working on your feature branch, make sure to stay up to date with the master branch by pulling in changes, possibly from the 'upstream' repository (follow the instructions [here](https://help.github.com/articles/configuring-a-remote-for-a-fork/) and [here](https://help.github.com/articles/syncing-a-fork/));
 1. make sure the existing unit tests still work;
 1. make sure that the existing integration tests still work;
@@ -81,25 +81,69 @@ In case you feel like you've made a valuable contribution, but you don't know ho
 
 Contributions to the code are by no means the only way to contribute to the Research Software Directory. If you wish to contribute in some other way, please contact us at rsd@esciencecenter.nl.
 
-## Automatically updating headers using a pre-commit hook.
+## License and copyright information according to the REUSE specification
 
-Git provides a way to automatically perform things using [Git Hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks).
-If you want to automatically add license and copyright headers, you may follow these instructions and set up a pre-commit hook on your local computer.
-The script detects the file type and automatically assigns the correct license for this repository.
+REUSE specifies a human and machine readable format for license and copyright information. REUSE allows us to specify individual licenses to individual files, and to clearly communicate the copyright claims on each file. Here, we give you a little starter on how to comply with the REUSE specification. For more details, please have a look at the [official website](https://reuse.software/).
 
-### Prerequisites
+### License and copyright format
 
-To be able to use this script, your need to have the [REUSE helper tool](https://reuse.readthedocs.io/en/stable/) installed and available in your path.
+To comply with the REUSE specification, we add information about copyright and the appropriate license of a file at the very beginning of the file. Here is an example for a bash script:
 
-### Setting up the git hook
+```bash
+#!/bin/bash
+#
+# SPDX-FileCopyrightText: 2022 Some Name
+#
+# SPDX-License-Identifier: Apache-2.0
+```
 
-Create a new file called `pre-commit` in the directory `RSD-as-a-service/.git/hooks`. Make sure the file is executable by running
+If you contribute, please add a license header such as above. You may also choose to be mentioned as copyright holder, either by full name, pseudonymously or anonymously. Below is a table of file types and licenses we generally use:
+
+| File type                               | License      |
+|-----------------------------------------|--------------|
+| (Vector) graphics                       | `CC-BY-4.0`  |
+| Documentation                           | `CC-BY-4.0`  |
+| Trivial files (e.g. configuration etc.) | `CC0-1.0`    |
+| Source code                             | `Apache-2.0` |
+
+Some file types do not allow to have license information added as a string at the beginning of the file, for example images or JSON files. In that case, you may supply this information in a `<filename>.<extension>.license` file. For example, `company_logo.png` may have license and copyright information available in `company_logo.png.license`.
+
+**Please note that some files, for example company logos, already come with an existing license and copyright that should also be mentioned accordingly.**
+
+If you want to automate the task of adding this information for your contributions, please have a look at the next section.
+
+#### Checking REUSE compliance
+
+We are checking REUSE compliance upon every pull request. However, you may also check compliance locally. This requires the installation of the [REUSE helper tool](https://reuse.readthedocs.io/en/stable/). Please refer to the [Install section](https://reuse.readthedocs.io/en/stable/readme.html#install) of the official documentation for installation instructions.
+
+To locally perform a REUSE compliance check, open a terminal and navigate to the root folder of this repository. Now run
+
+```bash
+reuse lint
+```
+
+The output will tell you whether there is something amiss.
+
+### Automatically updating headers using a pre-commit hook
+
+Git provides a way to automatically perform tasks using [Git Hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks).
+If you want to automatically add license and/or copyright headers to files you edit or create, you may follow these instructions and set up a pre-commit hook on your local computer.
+The script detects the file type and automatically assigns the correct licenses for files inside this repository.
+If an error occurs, the commit will still perform, but the file will not be updated.
+
+#### Prerequisites
+
+To be able to use this script, you need to have the [REUSE helper tool](https://reuse.readthedocs.io/en/stable/) installed and available in your path.
+
+#### Setting up the git hook
+
+Create a new file called `pre-commit` in the directory `RSD-as-a-service/.git/hooks/`. Make sure the file is executable by running
 
 ```bash
 chmod +x pre-commit
 ```
 
-Now, copy-paste this template and configure it as required:
+Now, copy-paste this template into `pre-commit` and configure it as required:
 
 ```bash
 #!/bin/bash
@@ -121,8 +165,6 @@ AUTHOR=""
 EMAIL=""
 ORGANISATION=""
 # End of configuration
-
-# Please do not modify anything below
 
 function check_program_exists () {
     if ! command -v $1 &> /dev/null; then
@@ -156,7 +198,7 @@ declare -a STAGED_FILES=( $(git diff --name-only --cached) )
 for file in ${STAGED_FILES[@]}; do
     file_path=$(dirname ${file})
     if [[ ${file_path} == "LICENSES" ]]; then
-        echo "Info: did not auto-assign a license to ${file}, because it is located in the LICENSES directory."
+        >&2 echo "Info: did not auto-assign a license to ${file}, because it is located in the LICENSES directory."
         continue
     fi
     file_extension="${file##*.}"
@@ -185,27 +227,24 @@ for file in ${STAGED_FILES[@]}; do
             continue
             ;;
         2)
-            >&2 echo "Warning: Could not recognise the file type of: ${file}. Aborting commit."
-            echo "Error message:"
-            cat /tmp/reuse_error
-            exit 2
+            echo "Warning: Did not update ${file}, because file type could not be recognised."
+            continue
             ;;
         *)
-            >&2 echo "Warning: An unhandled error code $? occurred:"
-            cat /tmp/reuse_error
-            exit 999
+            echo "Warning: An unhandled error code occurred for file ${file}."
+            continue
             ;;
     esac
 done
 ```
 
-Save the file and the pre-commit hook is in place.
+Save the file and the pre-commit hook is in place every time you perform a commit.
 
-### Using the pre-commit hook
+#### Using the pre-commit hook
 
 To use the hook, work on your code and commit as usual. After committing, you will notice that the REUSE tool has automatically updated the headers.
 
-### Skipping the pre-commit hook
+#### Skipping the pre-commit hook
 
 If you do not want to run the pre-commit hook for a certain commit, use
 
