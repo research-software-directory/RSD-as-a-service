@@ -70,6 +70,7 @@ CREATE TABLE software_for_organisation (
 	software UUID references software (id),
 	organisation UUID references organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
+	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	PRIMARY KEY (software, organisation)
 );
 
@@ -90,6 +91,7 @@ CREATE TABLE project_for_organisation (
 	organisation UUID references organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
 	role organisation_role NOT NULL DEFAULT 'participating',
+	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	PRIMARY KEY (project, organisation)
 );
 

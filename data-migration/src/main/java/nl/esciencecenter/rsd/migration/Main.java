@@ -48,6 +48,8 @@ public class Main {
 			"https://doi.org/todo", "https://github.com/FIXME", "https://doi.org/PLACEHOLDER", "https://doi.org/",
 			"https://github.com/TODO");
 
+	public static final Collection<String> softwareSlugsToFeature = new HashSet<>();
+
 	public static void main(String[] args) {
 		String signingSecret = System.getenv("PGRST_JWT_SECRET");
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
@@ -166,7 +168,7 @@ public class Main {
 			softwareToSave.add("concept_doi", jsonNullIfEquals(softwareFromLegacyRSD.get("conceptDOI"), "10.0000/FIXME"));
 			softwareToSave.add("description", mergeBulletsReadMore(softwareFromLegacyRSD.get("bullets"), softwareFromLegacyRSD.get("readMore")));
 			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
-			softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
+			if (softwareFromLegacyRSD.get("isFeatured").getAsBoolean()) softwareSlugsToFeature.add(softwareFromLegacyRSD.get("slug").getAsString());
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
 			softwareToSave.add("short_statement", softwareFromLegacyRSD.get("shortStatement"));
 
@@ -1027,12 +1029,14 @@ public class Main {
 				JsonObject relationToSave = new JsonObject();
 				relationToSave.addProperty("software", idSoftwareNew);
 				relationToSave.addProperty("organisation", idOrganisationNew);
+				relationToSave.addProperty("is_featured", idOrganisationLegacy.equals(LEGACY_ID_NLESC) && softwareSlugsToFeature.contains(slugSoftware));
 				allRelationsToSave.add(relationToSave);
 			});
 			if (!isNlescRelated.get()) {
 				JsonObject relationToSave = new JsonObject();
 				relationToSave.addProperty("software", idSoftwareNew);
 				relationToSave.addProperty("organisation", newIdNlesc);
+				relationToSave.addProperty("is_featured", softwareSlugsToFeature.contains(slugSoftware));
 				allRelationsToSave.add(relationToSave);
 			}
 		});

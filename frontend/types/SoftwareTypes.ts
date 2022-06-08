@@ -23,7 +23,6 @@ export type NewSoftwareItem = {
   description_url: string | null,
   description_type: 'markdown'|'link',
   get_started_url: string | null,
-  is_featured: boolean,
   is_published: boolean,
   short_statement: string,
 }
@@ -43,6 +42,18 @@ export type SoftwareItemFromDB = SoftwareTableItem & {
   repository_url: RepositoryUrl[]
 }
 
+export type SoftwareListItem = {
+  id:string
+  slug:string
+  brand_name: string
+  short_statement: string
+  updated_at: string | null
+  contributor_cnt: number | null
+  mention_cnt: number | null
+  is_published: boolean
+  is_featured?: boolean
+}
+
 
 // used in editSoftware.updateSoftwareInfo function
 // to extract the properties needed for PATCH method
@@ -58,7 +69,6 @@ export const SoftwarePropsToSave = [
   'description_type',
   'description_url',
   'get_started_url',
-  'is_featured',
   'is_published',
   'short_statement'
 ]

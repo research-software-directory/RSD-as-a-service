@@ -1,24 +1,12 @@
 
-import {PostgrestParams, softwareUrl, ssrSoftwareUrl} from './postgrestUrl'
+import {PostgrestParams, softwareListUrl, ssrSoftwareUrl} from './postgrestUrl'
 
-describe('softwareUrl', () => {
-  it('returns softwareUrl when only baseUrl provided', () => {
+describe('softwareListUrl', () => {
+  it('returns softwareListUrl when only baseUrl provided', () => {
     const baseUrl='http://test-base-url'
-    const expectUrl = `${baseUrl}/software?&is_published=eq.true&limit=12&offset=0`
-    const url = softwareUrl({
+    const expectUrl = `${baseUrl}/rpc/software_list?is_published=eq.true&limit=12&offset=0`
+    const url = softwareListUrl({
       baseUrl
-    } as PostgrestParams)
-    expect(url).toEqual(expectUrl)
-  })
-
-  it('returns softwareUrl with filters', () => {
-    const baseUrl = 'http://test-base-url'
-    // if you change filters in the array then change expectedUrl values too
-    const expectUrl = `${baseUrl}/software?,tag_for_software!inner(tag)&tag_for_software.tag=in.(\"filter-1\",\"filter-2\")&is_published=eq.true&limit=12&offset=0`
-    const url = softwareUrl({
-      baseUrl,
-      // if you change filters in the array then change expectedUrl values too
-      filters:['filter-1','filter-2']
     } as PostgrestParams)
     expect(url).toEqual(expectUrl)
   })
@@ -26,8 +14,8 @@ describe('softwareUrl', () => {
   it('returns softwareUrl with search', () => {
     const baseUrl = 'http://test-base-url'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/software?&is_published=eq.true&or=(brand_name.ilike.*test-search*, short_statement.ilike.*test-search*))&limit=12&offset=0`
-    const url = softwareUrl({
+    const expectUrl = `${baseUrl}/rpc/software_list?is_published=eq.true&or=(brand_name.ilike.*test-search*, short_statement.ilike.*test-search*))&limit=12&offset=0`
+    const url = softwareListUrl({
       baseUrl,
       // if you change search value then change expectedUrl values too
       search:'test-search'

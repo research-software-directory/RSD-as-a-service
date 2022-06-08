@@ -11,16 +11,16 @@ import Searchbox from '../../components/form/Searchbox'
 import FilterTechnologies from '../../components/software/FilterTechnologies'
 import SortSelection from '../../components/software/SortSelection'
 import SoftwareGrid from '../../components/software/SoftwareGrid'
-import {SoftwareItem} from '../../types/SoftwareTypes'
+import {SoftwareListItem} from '../../types/SoftwareTypes'
 import {rowsPerPageOptions} from '../../config/pagination'
 import {getSoftwareList, getTagsWithCount, TagItem} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
-import {softwareUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
+import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import logger from '../../utils/logger'
 
 
 export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
-  {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareItem[]
+  {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareListItem[]
 }){
   // use next router (hook is only for browser)
   const router = useRouter()
@@ -140,37 +140,18 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   const {search,filterStr,rows,page} = ssrSoftwareParams(context)
 
   // construct postgREST api url with query params
-  const url = softwareUrl({
+  const url = softwareListUrl({
     baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
     search,
-    columns:['id','slug','brand_name','short_statement','is_featured','updated_at'],
     filters: JSON.parse(filterStr),
-    order:'is_featured.desc,updated_at.desc',
+    order:'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast',
     limit: rows,
     offset: rows * page,
   })
+  // console.log('Software.getServerSideProps...url...',url)
 
   // get software list
   const software = await getSoftwareList(url)
-
-  // NOTE! tags are replaced with keywords
-  // TODO! use keyword_count_for_software
-  // get tags
-  // const tags = await getTagsWithCount()
-  // enrich tags with status
-  // if (filterStr){
-  //   const filters = JSON.parse(filterStr)
-  //   tags?.forEach(item=>{
-  //     if (filterStr.includes(item.tag)){
-  //       item.active = true
-  //     }else{
-  //       item.active = false
-  //     }
-  //   })
-  // }else{
-  //   // all items are inactive (not pre-selected)
-  //   tags?.forEach(item=>item.active=false)
-  // }
 
   // will be passed as props to page
   // see params of SoftwareIndexPage function
@@ -180,7 +161,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       page,
       rows,
       software: software.data,
-      // tags
     },
   }
 }
