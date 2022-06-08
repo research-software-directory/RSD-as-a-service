@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect} from 'react'
 
 import {
@@ -5,7 +10,6 @@ import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
 } from '@mui/material'
-import SaveIcon from '@mui/icons-material/Save'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
@@ -15,6 +19,7 @@ import {EditOrganisation} from '../../../../types/Organisation'
 import {organisationInformation as config} from '../editSoftwareConfig'
 import logger from '../../../../utils/logger'
 import {getUrlFromLogoId} from '../../../../utils/editOrganisation'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 type EditOrganisationModalProps = {
   open: boolean,
@@ -25,6 +30,8 @@ type EditOrganisationModalProps = {
   // item position in the array
   pos?: number
 }
+
+const formId='edit-organisation-modal'
 
 export default function EditOrganisationModal({open, onCancel, onSubmit,onDeleteLogo,organisation, pos}: EditOrganisationModalProps) {
   const {showErrorMessage} = useSnackbar()
@@ -98,7 +105,9 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
       }}>
         Organisation
       </DialogTitle>
-      <form onSubmit={handleSubmit((data: EditOrganisation) => onSubmit({data, pos}))}
+      <form
+        id={formId}
+        onSubmit={handleSubmit((data: EditOrganisation) => onSubmit({data, pos}))}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -211,23 +220,10 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
           >
             Cancel
           </Button>
-          <Button
-            tabIndex={0}
-            type="submit"
-            variant="contained"
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
+          <SubmitButtonWithListener
+            formId={formId}
             disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
+          />
         </DialogActions>
       </form>
     </Dialog>

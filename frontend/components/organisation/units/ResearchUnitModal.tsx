@@ -1,10 +1,14 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 import {
   Avatar,
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, TextField, useMediaQuery
 } from '@mui/material'
-import SaveIcon from '@mui/icons-material/Save'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
@@ -16,7 +20,7 @@ import {getUrlFromLogoId} from '../../../utils/editOrganisation'
 import logger from '../../../utils/logger'
 
 import {getSlugFromString, sanitizeSlugValue} from '../../../utils/getSlugFromString'
-import SlugTextField from '../../form/SlugTextField'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 type EditOrganisationModalProps = {
   open: boolean,
@@ -28,6 +32,8 @@ type EditOrganisationModalProps = {
   pos?: number
   title?: string
 }
+
+const formId='research-unit-modal'
 
 export default function EditOrganisationModal({
   open, onCancel, onSubmit, onDeleteLogo, organisation, pos, title = 'Organisation'
@@ -140,7 +146,9 @@ export default function EditOrganisationModal({
       }}>
         {title}
       </DialogTitle>
-      <form onSubmit={handleSubmit((data: EditOrganisation) => onSubmit({data, pos}))}
+      <form
+        id={formId}
+        onSubmit={handleSubmit((data: EditOrganisation) => onSubmit({data, pos}))}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -264,23 +272,10 @@ export default function EditOrganisationModal({
           >
             Cancel
           </Button>
-          <Button
-            tabIndex={0}
-            type="submit"
-            variant="contained"
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
+          <SubmitButtonWithListener
             disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
+            formId={formId}
+          />
         </DialogActions>
       </form>
     </Dialog>

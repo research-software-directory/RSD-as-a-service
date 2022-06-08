@@ -15,7 +15,7 @@ type SubmitButtonProps = {
   disabled: boolean
 };
 
-export default function SubmitButtonWithListener<T>({disabled,formId}: SubmitButtonProps) {
+export default function SubmitButtonWithListener({disabled,formId}: SubmitButtonProps) {
   const btnRef = useRef<any>()
 
   const handleCtrlEnter = useCallback((event: KeyboardEvent) => {
@@ -42,6 +42,7 @@ export default function SubmitButtonWithListener<T>({disabled,formId}: SubmitBut
       type="submit"
       id="save-button"
       variant="contained"
+      tabIndex={0}
       form={formId}
       sx={{
         // overwrite tailwind preflight.css for submit type
