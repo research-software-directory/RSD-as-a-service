@@ -7,6 +7,7 @@ public enum MentionType {
 	computerProgram,
 	conferencePaper,
 	dataset,
+	highlight,
 	interview,
 	journalArticle,
 	magazineArticle,

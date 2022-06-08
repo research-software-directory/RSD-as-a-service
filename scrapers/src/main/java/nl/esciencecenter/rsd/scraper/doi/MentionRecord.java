@@ -14,10 +14,7 @@ public class MentionRecord {
 	Integer publicationYear;
 	String page;
 	URI imageUrl;
-	boolean isFeatured;
 	MentionType mentionType;
 	String source;
-	Integer version;
-	String zoteroKey;
 	Instant scrapedAt;
 }
