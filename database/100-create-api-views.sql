@@ -760,14 +760,15 @@ $$;
 -- SOFTWARE BY MAINTAINER
 -- NOTE! one software is shown multiple times in this view
 -- we filter this view at least by organisation uuid
-CREATE FUNCTION software_by_maintainer() RETURNS TABLE (
+CREATE FUNCTION software_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	brand_name VARCHAR,
 	short_statement VARCHAR,
 	is_published BOOLEAN,
 	updated_at TIMESTAMP,
-	maintainer UUID
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -779,11 +780,18 @@ BEGIN
 		software.short_statement,
 		software.is_published,
 		software.updated_at,
-		maintainer_for_software.maintainer
+		count_software_countributors.contributor_cnt,
+		count_software_mentions.mention_cnt
 	FROM
 		software
+	LEFT JOIN
+		count_software_countributors() ON software.id=count_software_countributors.software
+	LEFT JOIN
+		count_software_mentions() ON software.id=count_software_mentions.software
 	INNER JOIN
-		maintainer_for_software ON software.id = maintainer_for_software.software
+		maintainer_for_software ON software.id=maintainer_for_software.software
+	WHERE
+		maintainer_for_software.maintainer=maintainer_id
 ;
 END
 $$;

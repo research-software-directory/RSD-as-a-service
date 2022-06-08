@@ -22,7 +22,7 @@ export async function getSoftwareForMaintainer({searchFor, page, rows, session}:
   UserSoftwareProp) {
   try {
     // baseUrl
-    let url =`/api/v1/rpc/software_by_maintainer?maintainer=eq.${session?.user?.account}&order=is_featured.desc,brand_name`
+    let url =`/api/v1/rpc/software_by_maintainer?maintainer_id=${session?.user?.account}&order=brand_name`
     // search
     if (searchFor) {
       url+=`&or=(brand_name.ilike.*${searchFor}*, short_statement.ilike.*${searchFor}*))`

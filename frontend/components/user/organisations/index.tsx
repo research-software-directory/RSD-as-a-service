@@ -9,10 +9,14 @@ export default function UserOrganisations({session}: { session: Session }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let abort=false
     setTimeout(() => {
+      if (abort) return
       setLoading(false)
-    },1000)
+    }, 1000)
+    return()=>{abort=true}
   },[])
+
 
   if (loading) return <ContentLoader />
 
