@@ -20,18 +20,13 @@ export default function SubmitButtonWithListener({disabled,formId}: SubmitButton
 
   const handleCtrlEnter = useCallback((event: KeyboardEvent) => {
     if (event.key == 'Enter' && event.ctrlKey && disabled===false) {
-      // debugger
-      // document.getElementById('save-button')?.click()
-      console.log('should save it...')
       btnRef.current.click()
     }
   },[disabled])
 
   useEffect(() => {
-    console.log('attaching event listener...')
     window.addEventListener('keydown', handleCtrlEnter)
     return () => {
-      console.log('detaching event listener...')
       window.removeEventListener('keydown', handleCtrlEnter)
     }
   },[handleCtrlEnter])
