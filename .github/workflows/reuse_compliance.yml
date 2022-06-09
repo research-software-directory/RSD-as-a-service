@@ -6,9 +6,6 @@ name: "REUSE Compliance Check"
 
 on:
   pull_request:
-  push:
-    branches:
-      - "main"
 jobs:
   test:
     runs-on: "ubuntu-latest"
