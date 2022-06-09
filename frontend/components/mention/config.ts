@@ -1,10 +1,15 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {MentionByType, MentionTypeKeys} from '~/types/Mention'
 
 export const mentionModal = {
   sectionTitle: 'Mentions',
   title: {
     label: 'Title *',
-    help: 'Publication title',
+    help: 'Publication title is required',
     validation: {
       required: 'Publication title is required',
       minLength: {
@@ -44,7 +49,7 @@ export const mentionModal = {
   },
   mentionType: {
     label: 'Type *',
-    help: 'Select publication type',
+    help: 'Publication type is required',
     validation: {
       required: 'Publication type is required'
     }
@@ -57,9 +62,10 @@ export const mentionModal = {
     }
   },
   url: {
-    label: 'Url',
-    help: 'Provide url to publication',
+    label: 'Url *',
+    help: 'Url to publication webpage is required',
     validation: {
+      required: 'Url is required',
       maxLength: {
         value: 500,
         message: 'Maximum length is 500'
@@ -71,9 +77,10 @@ export const mentionModal = {
     }
   },
   image_url: {
-    label: 'Image url',
-    help: 'Provide valid url to image on internet',
+    label: 'Image url*',
+    help: 'Url to publication image is required for highlighted mention',
     validation: {
+      required: 'Image url is required for highlighted mention',
       maxLength: {
         value: 500,
         message: 'Maximum length is 500'
@@ -89,94 +96,6 @@ export const mentionModal = {
     validation: {
       required: false
     }
-  }
-}
-
-
-/**
- * Based on database enum type from
- * database/008-create-mention-table.sql
- */
-export const mentionType = {
-  blogPost: {
-    key: 'blogPost',
-    plural: 'Blogposts',
-    singular: 'Blogpost'
-  },
-  book: {
-    key: 'book',
-    plural: 'Books',
-    singular: 'Book'
-  },
-  bookSection: {
-    key: 'bookSection',
-    plural: 'Book section',
-    singular: 'Book section'
-  },
-  computerProgram: {
-    key: 'computerProgram',
-    plural: 'Computer programs',
-    singular: 'Computer program'
-  },
-  conferencePaper: {
-    key: 'conferencePaper',
-    plural: 'Conference papers',
-    singular: 'Conference paper'
-  },
-  dataset: {
-    key: 'dataset',
-    plural: 'Dataset',
-    singular: 'Dataset'
-  },
-  interview: {
-    key: 'interview',
-    plural: 'Interviews',
-    singular: 'Interviews'
-  },
-  journalArticle: {
-    key: 'journalArticle',
-    plural: 'Journal articles',
-    singular: 'Journal article'
-  },
-  magazineArticle: {
-    key: 'magazineArticle',
-    plural: 'Magazine articles',
-    singular: 'Magazine article'
-  },
-  newspaperArticle: {
-    key: 'newspaperArticle',
-    plural: 'Newspaper articles',
-    singular: 'Newspaper article'
-  },
-  presentation: {
-    key: 'presentation',
-    plural: 'Presentations',
-    singular: 'Presentation'
-  },
-  report: {
-    key: 'report',
-    plural: 'Reports',
-    singular: 'Reports'
-  },
-  thesis: {
-    key: 'thesis',
-    plural: 'Thesis',
-    singular: 'Thesis'
-  },
-  videoRecording: {
-    key: 'videoRecording',
-    plural: 'Video recordings',
-    singular: 'Video recording'
-  },
-  webpage: {
-    key: 'webpage',
-    plural: 'Webpages',
-    singular: 'Webpage'
-  },
-  other: {
-    key: 'other',
-    plural: 'Other',
-    singular: 'Other'
   }
 }
 
@@ -205,4 +124,114 @@ export function getMentionTypeOrder(mentionByType: MentionByType) {
     }
   })
   return orderedTypes
+}
+
+
+/**
+ * Based on database enum type from
+ * database/008-create-mention-table.sql
+ */
+export const mentionType = {
+  blogPost: {
+    key: 'blogPost',
+    plural: 'Blogposts',
+    singular: 'Blogpost',
+    manual: true
+  },
+  book: {
+    key: 'book',
+    plural: 'Books',
+    singular: 'Book',
+    manual: true
+  },
+  bookSection: {
+    key: 'bookSection',
+    plural: 'Book section',
+    singular: 'Book section',
+    manual: true
+  },
+  computerProgram: {
+    key: 'computerProgram',
+    plural: 'Computer programs',
+    singular: 'Computer program',
+    manual: true
+  },
+  conferencePaper: {
+    key: 'conferencePaper',
+    plural: 'Conference papers',
+    singular: 'Conference paper',
+    manual: true
+  },
+  dataset: {
+    key: 'dataset',
+    plural: 'Dataset',
+    singular: 'Dataset',
+    manual: true
+  },
+  highlight: {
+    key: 'highlight',
+    plural: 'Highlights',
+    singular: 'Highlight',
+    manual: true
+  },
+  interview: {
+    key: 'interview',
+    plural: 'Interviews',
+    singular: 'Interviews',
+    manual: true
+  },
+  journalArticle: {
+    key: 'journalArticle',
+    plural: 'Journal articles',
+    singular: 'Journal article',
+    manual: true
+  },
+  magazineArticle: {
+    key: 'magazineArticle',
+    plural: 'Magazine articles',
+    singular: 'Magazine article',
+    manual: true
+  },
+  newspaperArticle: {
+    key: 'newspaperArticle',
+    plural: 'Newspaper articles',
+    singular: 'Newspaper article',
+    manual: true
+  },
+  presentation: {
+    key: 'presentation',
+    plural: 'Presentations',
+    singular: 'Presentation',
+    manual: true
+  },
+  report: {
+    key: 'report',
+    plural: 'Reports',
+    singular: 'Reports',
+    manual: true
+  },
+  thesis: {
+    key: 'thesis',
+    plural: 'Thesis',
+    singular: 'Thesis',
+    manual: true
+  },
+  videoRecording: {
+    key: 'videoRecording',
+    plural: 'Video recordings',
+    singular: 'Video recording',
+    manual: true
+  },
+  webpage: {
+    key: 'webpage',
+    plural: 'Webpages',
+    singular: 'Webpage',
+    manual: true
+  },
+  other: {
+    key: 'other',
+    plural: 'Other',
+    singular: 'Other',
+    manual: true
+  }
 }

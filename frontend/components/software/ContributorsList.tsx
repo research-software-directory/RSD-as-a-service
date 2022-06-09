@@ -1,3 +1,9 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import {Contributor} from '../../types/Contributor'
 import ContributorAvatar from './ContributorAvatar'
@@ -21,7 +27,7 @@ export default function ContributorsList({contributors}: { contributors: Contrib
                 displayName={displayName}
                 displayInitials={getDisplayInitials(item)}
               />
-              <div>
+              <div className='flex-1'>
                 <div className="text-xl text-primary">
                   {displayName}
                 </div>
@@ -29,11 +35,10 @@ export default function ContributorsList({contributors}: { contributors: Contrib
                   {combineRoleAndAffiliation(item)}
                 </div>
                 { item.orcid &&
-                  <div>
-                    <a href={'https://orcid.org/' + item.orcid} target="_blank" rel="noreferrer">
-                      <LogoOrcid className="inline max-w-[1.125rem] mr-1"/><span>{item.orcid}</span>
-                    </a>
-                  </div>
+                  <a href={'https://orcid.org/' + item.orcid} target="_blank" rel="noreferrer">
+                    <LogoOrcid className="inline max-w-[1.125rem] mr-1" />
+                    <span className="text-sm align-bottom">{item.orcid}</span>
+                  </a>
                 }
               </div>
             </div>

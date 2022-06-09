@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """
 https://pyzotero.readthedocs.io/en/latest/#retrieving-version-information
 
@@ -171,7 +176,7 @@ def get_mentions(since_version=None, keys_data=None):
 		)
 
 if __name__ == "__main__":
-	print("Start scraping mentions")
+	print("Start scraping from Zotero")
 	backend_url = os.environ.get('POSTGREST_URL')
 	number_mentions_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB', default='6')
 	jwt_secret = os.environ.get('PGRST_JWT_SECRET')
@@ -179,4 +184,4 @@ if __name__ == "__main__":
 	zotero_library = os.environ.get('ZOTERO_LIBRARY')
 	zotero_api_token = os.environ.get('ZOTERO_API_TOKEN')
 	get_mentions()
-	print("Done scraping mentions")
+	print("Done scraping from Zotero")

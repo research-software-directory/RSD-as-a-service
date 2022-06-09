@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 import {GetServerSidePropsContext} from 'next'
 import {ScriptProps} from 'next/script'
@@ -39,17 +44,17 @@ import logger from '~/utils/logger'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {getContributorsForSoftware} from '~/utils/editContributors'
 import {getTestimonialsForSoftware} from '~/utils/editTestimonial'
-import {getRelatedToolsForSoftware} from '~/utils/editRelatedSoftware'
+import {getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
 import {getMentionsForSoftware} from '~/utils/editMentions'
 import {getParticipatingOrganisations} from '~/utils/editOrganisation'
 import {
-  KeywordForSoftware, License, RelatedSoftwareOfSoftware,
-  RepositoryInfo, SoftwareItem
+  KeywordForSoftware, License, RepositoryInfo,
+  SoftwareItem, SoftwareListItem
 } from '~/types/SoftwareTypes'
 import {SoftwareCitationInfo} from '~/types/SoftwareCitation'
 import {Contributor} from '~/types/Contributor'
 import {Testimonial} from '~/types/Testimonial'
-import {MentionForSoftware} from '~/types/Mention'
+import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
 
@@ -61,10 +66,10 @@ interface SoftwareIndexData extends ScriptProps{
   licenseInfo: License[]
   repositoryInfo: RepositoryInfo
   softwareIntroCounts: ContributorMentionCount
-  mentions: MentionForSoftware[]
+  mentions: MentionItemProps[]
   testimonials: Testimonial[]
   contributors: Contributor[]
-  relatedSoftware: RelatedSoftwareOfSoftware[]
+  relatedSoftware: SoftwareListItem[]
   relatedProjects: RelatedProject[]
   isMaintainer: boolean,
   organisations: ParticipatingOrganisationProps[],
@@ -232,7 +237,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // contributors
       getContributorsForSoftware({software:software.id,frontend:false,token}),
       // relatedTools
-      getRelatedToolsForSoftware({software: software.id, frontend: false, token}),
+      getRelatedSoftwareForSoftware({software: software.id, frontend: false, token}),
       // relatedProjects
       getRelatedProjectsForSoftware({software: software.id, token, frontend: false}),
       // check if maintainer

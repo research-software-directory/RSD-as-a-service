@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -31,7 +35,7 @@ export default function MentionViewList({title, type, items}: MentionSectionList
         },
         '&:last-child': {
           borderBottom: '1px solid',
-          borderColor: 'divider',
+          borderColor: 'divider'
         }
       }}>
       <AccordionSummary

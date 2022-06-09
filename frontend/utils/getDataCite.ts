@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {DataciteWorkGraphQLResponse, DataciteWorksGraphQLResponse, WorkResponse} from '~/types/Datacite'
 import {MentionItemProps} from '~/types/Mention'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
@@ -98,12 +103,19 @@ function gqlWorksByTitleQuery(title: string) {
 }
 
 function extractAuthors(item: WorkResponse) {
-  const authors = item.creators.map(author => {
-    return `${author.givenName} ${author.familyName}`
-  })
-  item.contributors.forEach(author => {
-    authors.push(`${author.givenName} ${author.familyName}`)
-  })
+  let authors: string[] = []
+  // extract info from creators
+  if (item.creators) {
+    authors = item.creators.map(author => {
+      return `${author.givenName} ${author.familyName}`
+    })
+  }
+  // extract info from contributors
+  if (item.contributors) {
+    item.contributors.forEach(author => {
+      authors.push(`${author.givenName} ${author.familyName}`)
+    })
+  }
   if (authors.length > 0) {
     return authors.join(', ')
   }
@@ -121,7 +133,6 @@ export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
     publication_year: item.publicationYear,
     page: null,
     image_url: null,
-    is_featured: false,
     mention_type: apiMentionTypeToRSDTypeKey(item.type),
     source: 'DataCite'
   }
@@ -177,7 +188,7 @@ export async function getDataciteItemsByTitleGraphQL(title: string) {
     })
     if (resp.status === 200) {
       const json: DataciteWorksGraphQLResponse = await resp.json()
-      if (json.data.works.nodes) return json.data.works.nodes
+      if (json.data.works && json.data.works.nodes) return json.data.works.nodes
       return []
     }
     logger(`getDataciteItemsByTitleGraphQL: ${resp.status}: ${resp?.statusText}`, 'warn')

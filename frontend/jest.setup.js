@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // used to support fetch with Jest and next-auth
 import 'whatwg-fetch'
 // specific

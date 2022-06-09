@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {MentionItemProps} from '~/types/Mention'
 import logger from '~/utils/logger'
 import {sortOnDateProp} from '~/utils/sortFn'
@@ -47,7 +52,7 @@ export function editMentionReducer(state: EditMentionState, action: EditMentionA
     case EditMentionActionType.SET_MENTIONS:
       return {
         ...state,
-        mentions: action.payload,
+        mentions: action.payload as MentionItemProps[],
         // set loading to false
         loading: false,
       }
@@ -67,7 +72,7 @@ export function editMentionReducer(state: EditMentionState, action: EditMentionA
         processing: false,
         mentions: [
           ...state.mentions,
-          action.payload
+          action.payload as MentionItemProps
         ]
       }
     case EditMentionActionType.ON_SUBMIT:
@@ -98,7 +103,7 @@ export function editMentionReducer(state: EditMentionState, action: EditMentionA
         ...state,
         // set processing state
         processing: false,
-        mentions: updatedList
+        mentions: updatedList as MentionItemProps[]
       }
     case EditMentionActionType.DELETE_ITEM:
       // remove item to delete from impact state

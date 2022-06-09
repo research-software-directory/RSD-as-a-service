@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2021 - 2022 dv4all
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Styles
 
 ## Global styles

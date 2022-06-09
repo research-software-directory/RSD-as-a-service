@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {scaleTime} from 'd3'
 import {getMonthYearDate} from '../../utils/dateFn'
 import {getProjectStatus} from '../../utils/getProjects'

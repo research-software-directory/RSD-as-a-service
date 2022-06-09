@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -6,7 +10,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Badge from '@mui/material/Badge'
 import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import MentionEditItem from './MentionEditItem'
-import useEditMentionReducer from './useEditMentionReducer'
 
 type MentionSectionListProps = {
   title: string
@@ -32,7 +35,7 @@ export default function MentionEditList({title, type, items}: MentionSectionList
         },
         '&:last-child': {
           borderBottom: '1px solid',
-          borderColor: 'divider',
+          borderColor: 'divider'
         }
       }}>
       <AccordionSummary
@@ -82,7 +85,6 @@ export default function MentionEditList({title, type, items}: MentionSectionList
               <li key={item.id ?? pos} className="p-4 hover:bg-grey-200 hover:text-black">
                 <MentionEditItem
                   pos={pos + 1}
-                  type={type}
                   item={item}
                 />
               </li>

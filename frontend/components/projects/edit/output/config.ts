@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {EditMentionState} from '~/components/mention/editMentionReducer'
 
 export const cfgOutput = {
@@ -13,7 +18,7 @@ export const cfgOutput = {
     }
   },
   newItem: {
-    title: 'New item',
-    subtitle: 'Use the add button to create a new item'
+    title: 'New item without DOI',
+    subtitle: 'Use add button to create new item without DOI'
   }
 }

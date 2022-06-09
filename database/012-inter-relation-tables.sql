@@ -1,3 +1,10 @@
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TYPE relation_status AS ENUM (
 	'requested_by_origin',
 	'requested_by_relation',
@@ -70,6 +77,7 @@ CREATE TABLE software_for_organisation (
 	software UUID references software (id),
 	organisation UUID references organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
+	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	PRIMARY KEY (software, organisation)
 );
 
@@ -90,6 +98,7 @@ CREATE TABLE project_for_organisation (
 	organisation UUID references organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
 	role organisation_role NOT NULL DEFAULT 'participating',
+	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	PRIMARY KEY (project, organisation)
 );
 

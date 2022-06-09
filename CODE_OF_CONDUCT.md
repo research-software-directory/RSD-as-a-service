@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
 
 # Contributor Covenant Code of Conduct
 

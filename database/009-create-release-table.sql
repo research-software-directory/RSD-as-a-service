@@ -1,3 +1,8 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TABLE release (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID REFERENCES software (id) UNIQUE NOT NULL,

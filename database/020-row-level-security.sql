@@ -1,3 +1,10 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 -- maintainer tables
 ALTER TABLE maintainer_for_software ENABLE ROW LEVEL SECURITY;
 
@@ -554,6 +561,10 @@ CREATE POLICY maintainer_origin_upgrade_status ON software_for_organisation FOR 
 	USING (software IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_relation')
 	WITH CHECK (status = 'approved');
 
+-- TODO: this policy negates some of the other policies, we will fix this when we change the approval system
+CREATE POLICY maintainer_organisation_update_featured ON software_for_organisation FOR UPDATE TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
 CREATE POLICY maintainer_delete ON software_for_organisation FOR DELETE TO rsd_user
 	USING (software IN (SELECT * FROM software_of_current_maintainer()) OR organisation IN (SELECT * FROM organisations_of_current_maintainer()));
 
@@ -586,6 +597,10 @@ CREATE POLICY maintainer_relation_upgrade_status ON project_for_organisation FOR
 CREATE POLICY maintainer_origin_upgrade_status ON project_for_organisation FOR UPDATE TO rsd_user
 	USING (project IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_relation')
 	WITH CHECK (status = 'approved');
+
+-- TODO: this policy negates some of the other policies, we will fix this when we change the approval system
+CREATE POLICY maintainer_organisation_update_featured ON project_for_organisation FOR UPDATE TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
 
 CREATE POLICY maintainer_delete ON project_for_organisation FOR DELETE TO rsd_user
 	USING (project IN (SELECT * FROM projects_of_current_maintainer()) OR organisation IN (SELECT * FROM organisations_of_current_maintainer()));

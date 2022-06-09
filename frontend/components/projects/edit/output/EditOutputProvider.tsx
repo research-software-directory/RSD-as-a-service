@@ -1,10 +1,15 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useReducer} from 'react'
 
 import {
   EditMentionAction, EditMentionActionType, editMentionReducer,
   EditMentionState
 } from '~/components/mention/editMentionReducer'
-import EditMentionContext, {EditMentionDispatch} from '~/components/mention/editMentionContext'
+import EditMentionContext from '~/components/mention/editMentionContext'
 import {MentionItemProps} from '~/types/Mention'
 import {updateDoiItem, updateMentionItem} from '~/utils/editMentions'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -38,7 +43,7 @@ function createSuccessMessage(item:MentionItemProps) {
 }
 
 export default function EditOutputProvider(props: any) {
-  const {showErrorMessage,showSuccessMessage} = useSnackbar()
+  const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   // extract needed info from props
   const {token, project} = props
   // setup Reducer for this provider
@@ -95,6 +100,14 @@ export default function EditOutputProvider(props: any) {
     const item = action.payload
 
     if (item.id && item.source === 'RSD') {
+      // check if already in collection
+      if (item.doi) {
+        const found = state.mentions.find(mention=>mention.doi===item.doi)
+        if (found) {
+          showInfoMessage(`Output item with DOI ${item.doi} is already in ${getMentionType(item.mention_type,'plural')}.`)
+          return true
+        }
+      }
       // existing RSD mention item to be added to project
       const resp = await addOutputToProject({
         project,

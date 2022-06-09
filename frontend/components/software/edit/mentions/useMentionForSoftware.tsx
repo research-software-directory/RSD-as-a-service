@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect} from 'react'
 
 import {sortOnDateProp} from '~/utils/sortFn'
@@ -24,17 +29,8 @@ export default function useMentionForSoftware({software, token}: MentionForSoftw
         frontend: true
       })
       if (mentionsForProject && abort === false) {
-        const mentions:MentionItemProps[] = mentionsForProject.map(item => {
-          // remove prop we do not need
-          // PATCH request fails when additional props send
-          delete item.mention_for_software
-          return item
-        }).sort((a, b) => {
-          // sort mentions on publication year, newest at the top
-          return sortOnDateProp(a,b,'publication_year','desc')
-        })
         // debugger
-        setMentions(mentions)
+        setMentions(mentionsForProject)
         setLoading(false)
       }
     }

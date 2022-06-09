@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 type MentionPublisherItemProps = {
   publisher: string | null
   page: string | null
@@ -22,10 +27,24 @@ export default function MentionPublisherItem(
       </div>
     )
   }
+  if (publisher && page) {
+    return (
+      <div className={className}>
+        Published by {publisher}, page: {page}
+      </div>
+    )
+  }
   if (publisher) {
     return (
       <div className={className}>
         Published by {publisher}
+      </div>
+    )
+  }
+  if (publication_year) {
+    return (
+      <div className={className}>
+        Published in {publication_year}
       </div>
     )
   }

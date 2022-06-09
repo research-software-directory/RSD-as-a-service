@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import Link from 'next/link'
 import StarIcon from '@mui/icons-material/Star'
 import {getTimeAgoSince} from '../../utils/dateFn'
@@ -8,9 +13,12 @@ export type SoftwareCardType = {
   short_statement: string,
   is_featured: boolean,
   updated_at: string | null
+  mention_cnt?: number | null
+  contributor_cnt: number | null
 }
 
-export default function SoftwareCard({href,brand_name,short_statement,is_featured,updated_at}:SoftwareCardType) {
+export default function SoftwareCard({href, brand_name, short_statement, is_featured,
+  updated_at, mention_cnt, contributor_cnt}: SoftwareCardType) {
 
   const colors = is_featured ? 'bg-primary text-white' : 'bg-grey-100 text-gray-800'
   const today = new Date()
@@ -22,15 +30,42 @@ export default function SoftwareCard({href,brand_name,short_statement,is_feature
     return ''
   }
 
-  function renderFeatured(){
-    if (is_featured){
+  function mentionCntMessage() {
+    if (mention_cnt && mention_cnt > 1) {
+      return `${mention_cnt} mentions`
+    }
+    if (mention_cnt && mention_cnt === 1) {
+      return `${mention_cnt} mention`
+    }
+    return ''
+  }
+
+  function contributorsMessage() {
+    if (contributor_cnt && contributor_cnt > 1) {
+      return `${contributor_cnt} contributors`
+    }
+    if (contributor_cnt && contributor_cnt === 1) {
+      return `${contributor_cnt} contributor`
+    }
+    return ''
+  }
+
+  function renderCounts() {
+    let message = mentionCntMessage()
+    if (message) {
+      message+=`, ${contributorsMessage()}`
+    } else {
+      message=contributorsMessage()
+    }
+    if (message) {
       return (
         <div className="flex items-start justify-center">
-          <StarIcon sx={{height:'1rem'}} />
-          Featured
+          {/* <StarIcon sx={{height:'1rem'}} /> */}
+          {message}
         </div>
       )
     }
+    return null
   }
 
   return (
@@ -56,9 +91,9 @@ export default function SoftwareCard({href,brand_name,short_statement,is_feature
           </p>
           <div className="flex justify-between p-4 text-sm">
             <span className="last-update">
-              {getTimeAgoSince(today,updated_at)}
+              Updated {getTimeAgoSince(today,updated_at)}
             </span>
-            {renderFeatured()}
+            {renderCounts()}
           </div>
         </article>
       </a>

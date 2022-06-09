@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import {CrossrefResponse, CrossrefSelectItem, crossrefSelectProps, crossrefType} from '~/types/Crossref'
 import {MentionItemProps} from '~/types/Mention'
@@ -43,7 +47,6 @@ export function crossrefItemToMentionItem(item: CrossrefSelectItem) {
     publication_year: extractYearPublished(item),
     page: item.page ?? null,
     image_url: null,
-    is_featured: false,
     mention_type: apiMentionTypeToRSDTypeKey(item.type),
     source: 'Crossref'
   }

@@ -1,61 +1,42 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TYPE mention_type AS ENUM (
-	-- 'attachment', removed 2022-05-23
 	'blogPost',
 	'book',
 	'bookSection',
 	'computerProgram',
 	'conferencePaper',
-	-- 'document', moved to other
-	-- added 2022-05-023
 	'dataset',
 	'interview',
+	'highlight',
 	'journalArticle',
 	'magazineArticle',
-	-- 'manuscript', moved to other
 	'newspaperArticle',
-	-- 'note', removed 2022-05-23
 	'presentation',
-	-- 'radioBroadcast', moved to other
 	'report',
 	'thesis',
 	'videoRecording',
 	'webpage',
-	-- added 2022-05-23
 	'other'
 );
-
--- changed 2022-05-23
--- CREATE TABLE mention (
--- 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
--- 	author VARCHAR,
--- 	date TIMESTAMP,
--- 	image VARCHAR,
--- 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
--- 	title VARCHAR NOT NULL,
--- 	type mention_type NOT NULL,
--- 	url VARCHAR,
--- 	version INTEGER,
--- 	zotero_key VARCHAR UNIQUE NOT NULL,
--- 	scraped_at TIMESTAMP,
--- 	created_at TIMESTAMP NOT NULL,
--- 	updated_at TIMESTAMP NOT NULL
--- );
 
 CREATE TABLE mention (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	doi VARCHAR(255) UNIQUE CHECK (doi ~ '^10(\.\d+)+/.+'),
 	url VARCHAR(500),
 	title VARCHAR(500) NOT NULL,
-	authors VARCHAR(1000),
+	authors VARCHAR(15000),
 	publisher VARCHAR(255),
 	publication_year SMALLINT,
 	page VARCHAR(50),
 	image_url VARCHAR(500),
-	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	mention_type mention_type NOT NULL,
 	source VARCHAR(50) NOT NULL,
-	version INTEGER,
-	zotero_key VARCHAR UNIQUE,
 	scraped_at TIMESTAMP,
 	created_at TIMESTAMP NOT NULL,
 	updated_at TIMESTAMP NOT NULL
@@ -85,7 +66,6 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_mention BEFORE UPDATE ON mention FOR EACH ROW EXECUTE PROCEDURE sanitise_update_mention();
-
 
 
 CREATE TABLE mention_for_software (

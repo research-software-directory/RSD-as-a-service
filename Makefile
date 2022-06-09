@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # PHONY makes possible to call `make commands` from inside the Makefile
 .PHONY: dev-docs dev-frontend
 

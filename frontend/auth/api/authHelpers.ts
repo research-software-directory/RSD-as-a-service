@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
@@ -133,6 +137,50 @@ export async function claimSoftwareMaintainerInvite({id, token, frontend = false
     logger(`claimSoftwareMaintainerInvite failed: ${e?.message}`, 'error')
     return {
       softwareInfo: null,
+      error: {
+        status: 500,
+        message: e?.message
+      }
+    }
+  }
+}
+
+export async function claimOrganisationMaintainerInvite({id, token, frontend = false}:
+  { id: string, token: string, frontend?: boolean }) {
+  try {
+    const query = 'rpc/accept_invitation_organisation'
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    // console.log('url...', url)
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createJsonHeaders(token),
+        'Accept': 'application/vnd.pgrst.object + json',
+      },
+      body: JSON.stringify({
+        'invitation': id
+      })
+    })
+    if (resp.status === 200) {
+      const json = await resp.json()
+      return {
+        organisationInfo: json,
+        error: null
+      }
+    }
+    logger(`claimOrganisationMaintainerInvite failed: ${resp?.status} ${resp.statusText}`, 'error')
+    const error = await extractReturnMessage(resp)
+    return {
+      organisationInfo: null,
+      error
+    }
+  } catch (e: any) {
+    logger(`claimOrganisationMaintainerInvite failed: ${e?.message}`, 'error')
+    return {
+      organisationInfo: null,
       error: {
         status: 500,
         message: e?.message

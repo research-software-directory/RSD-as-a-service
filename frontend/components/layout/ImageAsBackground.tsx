@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /* eslint-disable @next/next/no-img-element */
 import PhotoSizeSelectActualOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActualOutlined'
 
@@ -26,7 +31,7 @@ export default function ImageAsBackground({src, alt, className, bgSize='cover', 
         flex: 1,
         backgroundImage: `url('${src}')`,
         backgroundSize: bgSize,
-        backgroundPosition: 'center center',
+        backgroundPosition: 'top center',
         backgroundRepeat: 'no-repeat',
       }}
       aria-label={alt}

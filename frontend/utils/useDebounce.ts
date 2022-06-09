@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState,useEffect} from 'react'
 
 export function useDebounce(value:string, delay:number) {

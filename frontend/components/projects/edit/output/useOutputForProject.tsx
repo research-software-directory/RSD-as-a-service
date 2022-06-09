@@ -1,8 +1,13 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect} from 'react'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {MentionItemProps} from '~/types/Mention'
 import {getOutputForProject} from '~/utils/getProjects'
-import {sortOnDateProp} from '~/utils/sortFn'
+import {sortOnNumProp} from '~/utils/sortFn'
 
 type OutputForProjectProps = {
   project: string,
@@ -21,14 +26,9 @@ export default function useOutputForProject({project, token}: OutputForProjectPr
         token,
         frontend: true
       })
-      const output:MentionItemProps[] = mentions.map(item => {
-        // remove prop we do not need
-        // PATCH request fails when additional props send
-        delete item.output_for_project
-        return item
-      }).sort((a, b) => {
+      const output:MentionItemProps[] = mentions.sort((a, b) => {
         // sort mentions on publication year, newest at the top
-        return sortOnDateProp(a,b,'publication_year','desc')
+        return sortOnNumProp(a,b,'publication_year','desc')
       })
       // debugger
       if (mentions && abort === false) {

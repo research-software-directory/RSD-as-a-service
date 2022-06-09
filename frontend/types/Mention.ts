@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {mentionType} from '~/components/mention/config'
 
 // export type MentionEditType = keyof typeof mentionTypeSingular
@@ -22,7 +27,7 @@ export type MentionItemProps = {
   page: string | null
   // url to external image
   image_url: string | null
-  is_featured: boolean
+  // is_featured?: boolean
   mention_type: MentionTypeKeys | null
   source: string
 }
@@ -42,4 +47,4 @@ export type MentionForProject = MentionItemProps & {
   impact_for_project?: any[]
 }
 
-export const mentionColumns ='id,doi,url,title,authors,publisher,publication_year,page,image_url,is_featured,mention_type,source'
+export const mentionColumns ='id,doi,url,title,authors,publisher,publication_year,page,image_url,mention_type,source'

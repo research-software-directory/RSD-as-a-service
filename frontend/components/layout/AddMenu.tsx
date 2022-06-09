@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState} from 'react'
 import {useRouter} from 'next/router'
 import IconButton from '@mui/material/IconButton'
@@ -50,7 +55,7 @@ export default function AddMenu() {
       // adding new software should be disabled
       // during process of adding/editing an item
       case '/software/add':
-      case '/software/[slug]/edit':
+      case '/projects/add':
         return true
       default:
         return false

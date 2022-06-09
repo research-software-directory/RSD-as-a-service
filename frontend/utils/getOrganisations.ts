@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {OrganisationForOverview, ProjectOfOrganisation, SoftwareOfOrganisation} from '../types/Organisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
@@ -160,7 +167,7 @@ export async function getSoftwareForOrganisation({organisation, searchFor, page,
   SoftwareForOrganisationProps) {
   try {
     // baseUrl
-    let url =`/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,brand_name`
+    let url = `/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,mention_cnt.desc.nullslast,brand_name`
     // search
     if (searchFor) {
       url+=`&or=(brand_name.ilike.*${searchFor}*, short_statement.ilike.*${searchFor}*))`
