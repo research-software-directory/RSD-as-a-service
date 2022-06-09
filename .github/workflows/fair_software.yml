@@ -20,10 +20,11 @@ jobs:
     name: "fair-software"
     runs-on: ubuntu-latest
     steps:
+      - name: Setup howfairis configuration file
+        run: echo 'skip_license_checks_reason: "We are following the REUSE specification for licenses"' > /fair.conf
       # https://github.com/fair-software/howfairis-github-action
       - name: Measure compliance with fair-software.eu recommendations
         uses: fair-software/howfairis-github-action@0.2.1
         env:
           PYCHARM_HOSTED: "Trick colorama into displaying colored output"
-        with:
-          MY_REPO_URL: "https://github.com/${{github.repository}}"
+        run: howfairis "https://github.com/${{github.repository}}" --user-config-filename /fair.conf
