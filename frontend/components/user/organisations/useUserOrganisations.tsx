@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect,useState} from 'react'
 import {Session} from '~/auth'
 import {OrganisationForOverview} from '~/types/Organisation'
@@ -23,7 +28,7 @@ export async function getOrganisationsForMaintainer(
 ) {
   try {
     // baseUrl
-    let url =`/api/v1/rpc/organisations_by_maintainer?maintainer_id=${session?.user?.account}&order=name`
+    let url =`/api/v1/rpc/organisations_by_maintainer?maintainer_id=${session?.user?.account}&order=software_cnt.desc.nullslast,name`
 
     // search
     if (searchFor) {
