@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 // export function getDisplayName(contributor: Contributor | undefined) {
 export function getDisplayName({given_names, family_names}:
   {given_names?: string, family_names?: string}) {

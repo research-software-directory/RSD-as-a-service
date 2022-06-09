@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {UseFieldArrayUpdate, UseFormGetFieldState} from 'react-hook-form'
 import {SearchOrganisation} from '~/types/Organisation'
 import {EditProject, OrganisationsOfProject} from '~/types/Project'

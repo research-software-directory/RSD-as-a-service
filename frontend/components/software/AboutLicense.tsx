@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 
 export default function AboutLicense({license}:{license:string[]}) {

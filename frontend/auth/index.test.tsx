@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {render, screen, waitFor} from '@testing-library/react'
 import {AuthProvider, useAuth, REFRESH_MARGIN, getSessionSeverSide, Session} from './index'
 import * as refreshSession from './refreshSession'

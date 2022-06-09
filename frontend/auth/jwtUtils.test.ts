@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import verifyJwt, {getAccountFromToken, decodeJwt} from './jwtUtils'
 const testToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoicnNkX3VzZXIiLCJpc3MiOiJyc2RfYXV0aCIsImV4cCI6MTY0NDM0MDY3OSwiYWNjb3VudCI6ImY0ZjMwNWE0LWIxZDUtNGE2MC1hYTI4LWIzMDgwNTQxOWYyYSJ9.zurie5a18eXgjY41oKbizj_e8XQWWMIrIAd3Y---SS0'
 

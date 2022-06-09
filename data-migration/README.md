@@ -1,3 +1,12 @@
+<!--
+SPDX-FileCopyrightText: 2021 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2021 Netherlands eScience Center
+SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2022 dv4all
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Data migration
 
 This directory contains a `java` program that migrates data from the existing RSD to the new RSD. It is currently under construction. After the data has been migrated and the new RSD is in production, this script will be deprecated.

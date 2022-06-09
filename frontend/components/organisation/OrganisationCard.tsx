@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {Avatar} from '@mui/material'
 import Link from 'next/link'
 import {OrganisationForOverview} from '../../types/Organisation'

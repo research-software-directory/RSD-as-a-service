@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useContext, useEffect, useState, useRef} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
