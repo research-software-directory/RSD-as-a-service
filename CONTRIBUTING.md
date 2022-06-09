@@ -175,6 +175,13 @@ function check_program_exists () {
     fi
 }
 
+# Check whether we are in a merge commit
+merge_check=$(git rev-parse -q --verify MERGE_HEAD)
+if [[ ${merge_check} ]]; then
+    # We are in a merge commit and do not want to alter this
+    exit 0
+fi
+
 check_program_exists reusee
 check_program_exists date
 check_program_exists dirname
