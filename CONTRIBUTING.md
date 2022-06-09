@@ -150,6 +150,8 @@ Now, copy-paste this template into `pre-commit` and configure it as required:
 #
 # SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+# SPDX-FileCopyrightText: 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -168,12 +170,12 @@ ORGANISATION=""
 
 function check_program_exists () {
     if ! command -v $1 &> /dev/null; then
-        echo "ERROR: $1 not found."
-        exit 1
+        echo -e "\nWARNING: pre-commit could not find the program $1. The commit was performed nonetheless.\n"
+        exit 0
     fi
 }
 
-check_program_exists reuse
+check_program_exists reusee
 check_program_exists date
 check_program_exists dirname
 
@@ -198,7 +200,7 @@ declare -a STAGED_FILES=( $(git diff --name-only --cached) )
 for file in ${STAGED_FILES[@]}; do
     file_path=$(dirname ${file})
     if [[ ${file_path} == "LICENSES" ]]; then
-        >&2 echo "Info: did not auto-assign a license to ${file}, because it is located in the LICENSES directory."
+        echo "Info: did not auto-assign a license to ${file}, because it is located in the LICENSES directory."
         continue
     fi
     file_extension="${file##*.}"
@@ -222,16 +224,16 @@ for file in ${STAGED_FILES[@]}; do
         0)
             if ! git diff --quiet $file; then
                 git add $file
-                echo "Info: Added changes by \"${AUTHOR}\" to ${file} under license ${LICENSE}."
+                echo "INFO: Added changes by \"${AUTHOR}\" to ${file} under license ${LICENSE}."
             fi
             continue
             ;;
         2)
-            echo "Warning: Did not update ${file}, because file type could not be recognised."
+            echo -e "\nWARNING: Did not update ${file}, because file type could not be recognised.\n"
             continue
             ;;
         *)
-            echo "Warning: An unhandled error code occurred for file ${file}."
+            echo "\nWARNING: An unhandled error code occurred for file ${file}.\n"
             continue
             ;;
     esac
