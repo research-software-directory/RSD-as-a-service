@@ -3,39 +3,31 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Status} from '~/types/Organisation'
-import {RelatedSoftwareOfSoftware, RelatedTools, SearchSoftware} from '../types/SoftwareTypes'
+import {SearchSoftware, SoftwareListItem} from '../types/SoftwareTypes'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 
-export async function getRelatedToolsForSoftware({software, token, frontend}:
+export async function getRelatedSoftwareForSoftware({software, token, frontend}:
   { software: string, token?: string, frontend?: boolean}) {
   try {
-    // limited colums selection of software table
-    const columns = 'id,slug,brand_name,short_statement,is_featured,updated_at'
-    // join with software_for_software table
-    const select = `origin,relation,software!software_for_software_relation_fkey(${columns})`
-    let url = `${process.env.POSTGREST_URL}/software_for_software?select=${select}&origin=eq.${software}`
+    const query = `rpc/related_software_for_software?software_id=${software}`
+    const order ='order=brand_name.asc'
+    let url = `${process.env.POSTGREST_URL}/${query}&${order}`
     if (frontend) {
-      url = `/api/v1/software_for_software?select=${select}&origin=eq.${software}`
+      url = `/api/v1/${query}&${order}`
     }
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const json: RelatedTools[] = await resp.json()
-      const data: RelatedSoftwareOfSoftware[] = json.map(item => ({
-        ...item.software,
-        // status defaults to approved
-        status: 'approved' as Status
-      }))
+      const data: SoftwareListItem[] = await resp.json()
       return data
     } else if (resp.status === 404) {
       // no items found
       return []
     }
-    logger(`getRelatedToolsForSoftware: ${resp.status} ${resp.statusText}`, 'error')
+    logger(`getRelatedToolsForSoftware: ${resp.status} ${resp.statusText} [${url}]`, 'error')
     // query not found
     return []
   } catch (e: any) {

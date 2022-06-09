@@ -102,6 +102,76 @@ BEGIN
 END
 $$;
 
+-- SOFTWARE OVERVIEW LIST WITH COUNTS
+CREATE FUNCTION software_list() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	updated_at TIMESTAMP,
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT,
+	is_published BOOLEAN
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		software.id,
+		software.slug,
+		software.brand_name,
+		software.short_statement,
+		software.updated_at,
+		count_software_countributors.contributor_cnt,
+		count_software_mentions.mention_cnt,
+		software.is_published
+	FROM
+		software
+	LEFT JOIN
+		count_software_countributors() ON software.id=count_software_countributors.software
+	LEFT JOIN
+		count_software_mentions() ON software.id=count_software_mentions.software
+	;
+END
+$$;
+
+-- RELATED SOFTWARE LIST WITH COUNTS
+CREATE FUNCTION related_software_for_software(software_id UUID) RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	updated_at TIMESTAMP,
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT,
+	is_published BOOLEAN
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		software.id,
+		software.slug,
+		software.brand_name,
+		software.short_statement,
+		software.updated_at,
+		count_software_countributors.contributor_cnt,
+		count_software_mentions.mention_cnt,
+		software.is_published
+	FROM
+		software
+	LEFT JOIN
+		count_software_countributors() ON software.id=count_software_countributors.software
+	LEFT JOIN
+		count_software_mentions() ON software.id=count_software_mentions.software
+	INNER JOIN
+		software_for_software ON software.id=software_for_software.relation
+	WHERE
+		software_for_software.origin = software_id
+	;
+END
+$$;
+
 -- Software maintainer by software slug
 CREATE FUNCTION maintainer_for_software_by_slug() RETURNS TABLE (maintainer UUID, software UUID, slug VARCHAR) LANGUAGE plpgsql STABLE AS
 $$
@@ -271,17 +341,20 @@ BEGIN
 		software.brand_name,
 		software.short_statement,
 		software.is_published,
-		software.is_featured,
-		count_software_contributors_mentions.contributor_cnt,
-		count_software_contributors_mentions.mention_cnt,
+		software_for_organisation.is_featured,
+		count_software_countributors.contributor_cnt,
+		count_software_mentions.mention_cnt,
 		software.updated_at,
 		software_for_organisation.organisation
 	FROM
 		software
 	LEFT JOIN
-		software_for_organisation ON software.id = software_for_organisation.software
+		software_for_organisation ON software.id=software_for_organisation.software
 	LEFT JOIN
-		count_software_contributors_mentions() on software.id = count_software_contributors_mentions.id;
+		count_software_countributors() ON software.id=count_software_countributors.software
+	LEFT JOIN
+		count_software_mentions() ON software.id=count_software_mentions.software
+	;
 END
 $$;
 
@@ -297,6 +370,7 @@ CREATE FUNCTION projects_by_organisation() RETURNS TABLE (
 	date_end DATE,
 	updated_at TIMESTAMP,
 	is_published BOOLEAN,
+	is_featured BOOLEAN,
 	image_id UUID,
 	organisation UUID,
 	status relation_status
@@ -313,6 +387,7 @@ BEGIN
 		project.date_end,
 		project.updated_at,
 		project.is_published,
+		project_for_organisation.is_featured,
 		image_for_project.project AS image_id,
 		project_for_organisation.organisation,
 		project_for_organisation.status
@@ -444,33 +519,41 @@ END
 $$;
 
 -- RELATED SOFTWARE for PROJECT
--- filter by software
-CREATE FUNCTION related_software_for_project() RETURNS TABLE (
-	project UUID,
+-- filter by project_id
+CREATE FUNCTION related_software_for_project(project_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	brand_name VARCHAR,
 	short_statement VARCHAR,
-	is_featured BOOLEAN,
 	updated_at TIMESTAMP,
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT,
+	is_published BOOLEAN,
 	status relation_status
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	RETURN QUERY
 	SELECT
-		software_for_project.project,
 		software.id,
 		software.slug,
 		software.brand_name,
 		software.short_statement,
-		software.is_featured,
 		software.updated_at,
+		count_software_countributors.contributor_cnt,
+		count_software_mentions.mention_cnt,
+		software.is_published,
 		software_for_project.status
 	FROM
 		software
+	LEFT JOIN
+		count_software_countributors() ON software.id=count_software_countributors.software
+	LEFT JOIN
+		count_software_mentions() ON software.id=count_software_mentions.software
 	INNER JOIN
-		software_for_project ON software.id = software_for_project.software
+		software_for_project ON software.id=software_for_project.software
+	WHERE
+		software_for_project.project=project_id
 	;
 END
 $$;
@@ -684,15 +767,15 @@ $$;
 -- SOFTWARE BY MAINTAINER
 -- NOTE! one software is shown multiple times in this view
 -- we filter this view at least by organisation uuid
-CREATE FUNCTION software_by_maintainer() RETURNS TABLE (
+CREATE FUNCTION software_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	brand_name VARCHAR,
 	short_statement VARCHAR,
 	is_published BOOLEAN,
-	is_featured BOOLEAN,
 	updated_at TIMESTAMP,
-	maintainer UUID
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -703,13 +786,19 @@ BEGIN
 		software.brand_name,
 		software.short_statement,
 		software.is_published,
-		software.is_featured,
 		software.updated_at,
-		maintainer_for_software.maintainer
+		count_software_countributors.contributor_cnt,
+		count_software_mentions.mention_cnt
 	FROM
 		software
+	LEFT JOIN
+		count_software_countributors() ON software.id=count_software_countributors.software
+	LEFT JOIN
+		count_software_mentions() ON software.id=count_software_mentions.software
 	INNER JOIN
-		maintainer_for_software ON software.id = maintainer_for_software.software
+		maintainer_for_software ON software.id=maintainer_for_software.software
+	WHERE
+		maintainer_for_software.maintainer=maintainer_id
 ;
 END
 $$;
@@ -795,12 +884,18 @@ $$;
 -- COUNTS by maintainer
 -- software_cnt, project_cnt, organisation_cnt
 -- counts for user profile pages
-CREATE FUNCTION counts_by_maintainer(OUT software_cnt BIGINT, OUT project_cnt BIGINT, OUT organisation_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+-- this rpc returns json object instead of array
+CREATE FUNCTION counts_by_maintainer(
+	OUT software_cnt BIGINT,
+	OUT project_cnt BIGINT,
+	OUT organisation_cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	SELECT COUNT(*) FROM software_of_current_maintainer() INTO software_cnt;
 	SELECT COUNT(*) FROM projects_of_current_maintainer() INTO project_cnt;
-	SELECT COUNT(DISTINCT organisations_of_current_maintainer) FROM organisations_of_current_maintainer() INTO organisation_cnt;
+	SELECT COUNT(DISTINCT organisations_of_current_maintainer)
+		FROM organisations_of_current_maintainer() INTO organisation_cnt;
 END
 $$;
 

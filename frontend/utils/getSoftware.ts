@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {KeywordForSoftware, RepositoryInfo, SoftwareItem} from '../types/SoftwareTypes'
+import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
@@ -13,26 +13,30 @@ import {createJsonHeaders} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
 
 /*
- * postgREST api uri to retreive software index data.
+ * Software list for the software overview page
  * Note! url should contain all query params. Use softwareUrl helper fn to construct url.
- * @param url with all query params for search,filtering, order and pagination
- * @returns {
-  * count:number,
-  * data:[]
- * }
+ * is_featured flag is set for all items having mention_cnt > 4
  */
 export async function getSoftwareList(url:string){
   try{
-    const headers = new Headers()
-    // request count for pagination
-    headers.append('Prefer','count=exact')
-    const resp = await fetch(url,{method:'GET', headers})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(undefined),
+        'Prefer':'count=exact'
+      },
+    })
 
     if ([200,206].includes(resp.status)){
-      const data:SoftwareItem[] = await resp.json()
+      const json: SoftwareListItem[] = await resp.json()
+      // set
       return {
         count: extractCountFromHeader(resp.headers),
-        data
+        data: json.map(item => ({
+          ...item,
+          // set featured flag for software items with mentions
+          is_featured: item.mention_cnt && item.mention_cnt > 0 ? true : false
+        }))
       }
     } else{
       logger(`getSoftwareList failed: ${resp.status} ${resp.statusText}`, 'warn')

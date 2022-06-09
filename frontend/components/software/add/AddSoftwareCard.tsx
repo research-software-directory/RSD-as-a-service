@@ -117,7 +117,6 @@ export default function AddSoftwareCard() {
       brand_name: data.brand_name,
       short_statement: data.short_statement,
       slug: data.slug,
-      is_featured: false,
       is_published: false,
       description: null,
       description_type: 'markdown',
