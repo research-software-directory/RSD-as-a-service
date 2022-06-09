@@ -23,7 +23,7 @@ CREATE TABLE mention (
 	doi VARCHAR(255) UNIQUE CHECK (doi ~ '^10(\.\d+)+/.+'),
 	url VARCHAR(500),
 	title VARCHAR(500) NOT NULL,
-	authors VARCHAR(1000),
+	authors VARCHAR(15000),
 	publisher VARCHAR(255),
 	publication_year SMALLINT,
 	page VARCHAR(50),
