@@ -20,7 +20,7 @@ export const userMenuItems: MenuItemType[] = [
     path: '/user/organisations'
   }, {
     type: 'divider',
-    label: '',
+    label: 'divider1',
   },{
     type: 'function',
     label: 'Logout',

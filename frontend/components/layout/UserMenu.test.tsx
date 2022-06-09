@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {render,screen, fireEvent} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
 
@@ -22,6 +27,7 @@ it('should have userMenu options',async()=>{
   // select all menu options
   const menuOptions = screen.queryAllByTestId('user-menu-option')
   // assert same length as defined in config/userMenuItems
-  expect(menuOptions.length).toEqual(userMenuItems.length)
+  const menuItems = userMenuItems.filter(item=>item?.type!=='divider')
+  expect(menuOptions.length).toEqual(menuItems.length)
   // screen.debug()
 })

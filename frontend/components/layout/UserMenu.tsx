@@ -47,7 +47,7 @@ export default function UserMenu(props:UserMenuType) {
       return (
         menuOptions.map(item => {
           if (item?.type === 'divider') {
-            return <Divider />
+            return <Divider key={item.label} />
           }
           return (
             <MenuItem
