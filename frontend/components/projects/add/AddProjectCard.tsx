@@ -1,7 +1,14 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
-import SaveIcon from '@mui/icons-material/Save'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 
@@ -16,6 +23,7 @@ import {getSlugFromString,sanitizeSlugValue} from '../../../utils/getSlugFromStr
 import {useDebounceValid} from '~/utils/useDebounce'
 import {addProject, validProjectItem} from '../../../utils/editProject'
 import {addConfig as config} from './addProjectConfig'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 const initalState = {
   loading: false,
@@ -27,6 +35,8 @@ type AddProjectForm = {
   project_title: string,
   project_subtitle: string,
 }
+
+const formId='add-project-card-form'
 
 export default function AddProjectCard() {
   const {session} = useAuth()
@@ -184,7 +194,11 @@ export default function AddProjectCard() {
 
   return (
     <ContentInTheMiddle>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full md:w-[42rem]">
+      <form
+        id={formId}
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full md:w-[42rem]"
+      >
         <section className="min-h-[6rem]">
           <h1 className="text-primary text-2xl mb-4">{config.title}</h1>
           {renderDialogText()}
@@ -235,22 +249,10 @@ export default function AddProjectCard() {
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
+          <SubmitButtonWithListener
             disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
+            formId={formId}
+          />
         </section>
       </form>
     </ContentInTheMiddle>

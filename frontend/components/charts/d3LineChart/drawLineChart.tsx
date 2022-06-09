@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import * as d3 from 'd3'
 import {SizeType} from './useResizeObserver'
 import logger from '../../../utils/logger'

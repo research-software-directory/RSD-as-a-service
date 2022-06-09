@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useRef} from 'react'
 import TextField from '@mui/material/TextField'
 import HelperTextWithCounter from './HelperTextWithCounter'

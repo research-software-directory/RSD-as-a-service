@@ -1,3 +1,12 @@
+<!--
+SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2021 - 2022 dv4all
+SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Research Software Directory (RSD) - Frontend
 
 Based on the features in the legacy application and the current requirements we selected [NextJS](https://nextjs.org/docs) and MUI-5 (https://mui.com/getting-started/usage/) frameworks for:
@@ -15,9 +24,9 @@ Based on the features in the legacy application and the current requirements we 
 
 ### Environment variables
 
-For oAuth implementation we need env variables. Copy env.example file to `env.local` and provide the values See [next documentation page for more info](https://nextjs.org/docs/basic-features/environment-variables).
+For oAuth implementation we need env variables. From the project root directory, copy `.env.example` file to `frontend/.env.local` and provide the values See [next documentation page for more info](https://nextjs.org/docs/basic-features/environment-variables).
 
-- `env.local` contains secrets when running frontend in local development (yarn dev). This file is not in the repo. You will need to create it and add secrets to it. There is one difference from basic .env file.
+- `.env.local` contains secrets when running frontend in local development (yarn dev). This file is not in the repo. You will need to create it and add secrets to it. There is one difference from basic .env file.
 
 ```env
 # postgREST api

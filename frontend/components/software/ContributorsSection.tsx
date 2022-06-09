@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {Contributor} from '../../types/Contributor'
 import PageContainer from '../layout/PageContainer'
 import ContributorsList from './ContributorsList'

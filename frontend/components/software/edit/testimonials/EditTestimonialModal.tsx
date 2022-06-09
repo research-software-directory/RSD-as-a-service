@@ -1,14 +1,21 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect} from 'react'
 import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
 } from '@mui/material'
-import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
 
 import ControlledTextField from '../../../form/ControlledTextField'
 import {testimonialInformation as config} from '../editSoftwareConfig'
 import {Testimonial} from '../../../../types/Testimonial'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 type EditTestimonialModalProps = {
   open: boolean,
@@ -18,6 +25,8 @@ type EditTestimonialModalProps = {
   // item position in the array
   pos?: number
 }
+
+const formId='edit-testimonial-modal'
 
 export default function EditTestimonialModal({open, onCancel, onSubmit, testimonial, pos}: EditTestimonialModalProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
@@ -61,7 +70,9 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
       }}>
         Testimonial
       </DialogTitle>
-      <form onSubmit={handleSubmit((data: Testimonial) => onSubmit({data, pos}))}
+      <form
+        id={formId}
+        onSubmit={handleSubmit((data: Testimonial) => onSubmit({data, pos}))}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -121,23 +132,10 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
           >
             Cancel
           </Button>
-          <Button
-            tabIndex={0}
-            type="submit"
-            variant="contained"
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
+          <SubmitButtonWithListener
+            formId={formId}
             disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
+          />
         </DialogActions>
       </form>
     </Dialog>

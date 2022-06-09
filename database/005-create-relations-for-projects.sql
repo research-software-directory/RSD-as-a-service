@@ -1,3 +1,8 @@
+-- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TABLE team_member (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	project UUID references project (id) NOT NULL,

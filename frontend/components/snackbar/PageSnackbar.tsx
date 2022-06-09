@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
 import Slide from '@mui/material/Slide'

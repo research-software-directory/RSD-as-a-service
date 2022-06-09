@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2022 dv4all
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Authentication module
 
 This modules handles authentication from third parties using oAuth2 and OpenID.
