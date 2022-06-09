@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -8,13 +10,13 @@ import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
 } from '@mui/material'
-import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
 
 import ControlledTextField from '../form/ControlledTextField'
 import {mentionModal as config, mentionType} from './config'
 import {MentionItemProps, MentionTypeKeys} from '../../types/Mention'
 import ControlledSelect from '~/components/form/ControlledSelect'
+import SubmitButtonWithListener from '../form/SubmitButtonWithListener'
 
 export type EditMentionModalProps = {
   open: boolean,
@@ -37,6 +39,8 @@ const mentionTypeOptions = manualOptions.map(key => {
     label: type
   }
 })
+
+const formId='edit-mention-form'
 
 export default function EditMentionModal({open, onCancel, onSubmit, item, pos, title}: EditMentionModalProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
@@ -91,7 +95,9 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
       }}>
         {title ? title : 'Mention'}
       </DialogTitle>
-      <form onSubmit={handleSubmit((data: MentionItemProps) => onSubmit({data, pos}))}
+      <form
+        id={formId}
+        onSubmit={handleSubmit((data: MentionItemProps) => onSubmit({data, pos}))}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -223,23 +229,10 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
           >
             Cancel
           </Button>
-          <Button
-            tabIndex={0}
-            type="submit"
-            variant="contained"
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
+          <SubmitButtonWithListener
             disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
+            formId={formId}
+          />
         </DialogActions>
       </form>
     </Dialog>

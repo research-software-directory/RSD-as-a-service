@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -6,13 +8,13 @@
 import {useContext, useEffect, useState, useRef} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
-import SaveIcon from '@mui/icons-material/Save'
 
 import {useFormContext} from 'react-hook-form'
 
 import StickyHeader from '../../layout/StickyHeader'
 import useStickyHeaderBorder from '~/components/layout/useStickyHeaderBorder'
 import useProjectContext from './useProjectContext'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 export default function EditProjectStickyHeader() {
   const {project, step} = useProjectContext()
@@ -62,25 +64,11 @@ export default function EditProjectStickyHeader() {
           VIEW
         </Button>
         {step?.formId ?
-          <Button
-            tabIndex={0}
-            type="submit"
-            variant="contained"
-            form={step?.formId}
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
-            disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
-        : null
+          <SubmitButtonWithListener
+          formId={step?.formId}
+          disabled={isSaveDisabled()}
+        />
+      : null
         }
       </div>
     </StickyHeader>

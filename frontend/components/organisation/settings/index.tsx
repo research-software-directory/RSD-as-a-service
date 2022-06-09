@@ -1,11 +1,11 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect} from 'react'
-import Button from '@mui/material/Button'
-import SaveIcon from '@mui/icons-material/Save'
 
 import {useForm} from 'react-hook-form'
 
@@ -16,6 +16,9 @@ import {OrganisationForOverview} from '../../../types/Organisation'
 import {EditOrganisation} from '../../../types/Organisation'
 import {updateOrganisation} from '../../../utils/editOrganisation'
 import {organisationInformation as config} from '../organisationConfig'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+
+const formId='organisation-settings-form'
 
 export default function OrganisationSettings({organisation, session}:
   {organisation: OrganisationForOverview,session:Session}) {
@@ -67,7 +70,9 @@ export default function OrganisationSettings({organisation, session}:
 
   return (
     // <section>
-    <form onSubmit={handleSubmit(onSubmit)}
+    <form
+      id={formId}
+      onSubmit={handleSubmit(onSubmit)}
       autoComplete="off"
     >
       {/* hidden inputs */}
@@ -79,22 +84,10 @@ export default function OrganisationSettings({organisation, session}:
       />
       <section className="flex justify-between align-center">
         <h2>Settings</h2>
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{
-            // overwrite tailwind preflight.css for submit type
-            '&[type="submit"]:not(.Mui-disabled)': {
-              backgroundColor:'primary.main'
-            }
-          }}
-          endIcon={
-            <SaveIcon />
-          }
+        <SubmitButtonWithListener
+          formId={formId}
           disabled={isSaveDisabled()}
-        >
-          Save
-        </Button>
+        />
       </section>
       <div className="flex pt-8"></div>
       <section className="grid grid-cols-[1fr,1fr] gap-8">
