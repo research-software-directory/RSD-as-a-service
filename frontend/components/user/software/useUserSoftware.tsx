@@ -25,7 +25,7 @@ export async function getSoftwareForMaintainer({searchFor, page, rows, session}:
     let url =`/api/v1/rpc/software_by_maintainer?maintainer_id=${session?.user?.account}&order=brand_name`
     // search
     if (searchFor) {
-      url+=`&or=(brand_name.ilike.*${searchFor}*, short_statement.ilike.*${searchFor}*))`
+      url+=`&or=(brand_name.ilike.*${searchFor}*, short_statement.ilike.*${searchFor}*)`
     }
     // pagination
     url += paginationUrlParams({rows, page})

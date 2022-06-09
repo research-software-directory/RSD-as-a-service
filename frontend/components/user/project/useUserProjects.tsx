@@ -27,7 +27,7 @@ export async function getProjectsForMaintainer(
 
     // search
     if (searchFor) {
-      url += `&or=(title.ilike.*${searchFor}*, subtitle.ilike.*${searchFor}*))`
+      url += `&or=(title.ilike.*${searchFor}*, subtitle.ilike.*${searchFor}*)`
     }
 
     // pagination
