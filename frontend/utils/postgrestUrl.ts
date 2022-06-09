@@ -15,31 +15,32 @@ export type PostgrestParams={
   offset:number
 }
 
-export function softwareUrl(props:PostgrestParams){
+export function softwareListUrl(props:PostgrestParams){
   const {baseUrl,search,columns,filters,order,limit,offset} = props
-  let url = `${baseUrl}/software?`
+  let url = `${baseUrl}/rpc/software_list?`
+
+  // always filter for only published software!
+  url += 'is_published=eq.true'
 
   if (columns){
-    url+=`select=${columns.join(',')}`
+    url+=`&select=${columns.join(',')}`
   }
 
+  // TODO! update to keywords
   // filters need to be after select to
   // add tag colum from tag table and
   // define join
-  if(typeof filters !=='undefined'
-    && filters?.length > 0){
-    // add tag inner join
-    url+=',tag_for_software!inner(tag)'
-    // convert tags array to comma separated string
-    const tagsIn = filters?.map((item:string)=>`"${encodeURIComponent(item)}"`).join(',')
-    // add tag values to in statement
-    url+=`&tag_for_software.tag=in.(${tagsIn})`
-  }
+  // if(typeof filters !=='undefined'
+  //   && filters?.length > 0){
+  //   // add tag inner join
+  //   url+=',tag_for_software!inner(tag)'
+  //   // convert tags array to comma separated string
+  //   const tagsIn = filters?.map((item:string)=>`"${encodeURIComponent(item)}"`).join(',')
+  //   // add tag values to in statement
+  //   url+=`&tag_for_software.tag=in.(${tagsIn})`
+  // }
 
-  // always filter for only published software!
-  url+='&is_published=eq.true'
-
-  if (search){
+  if (search) {
     // search for term in brand_name and short_statement
     // we use ilike (case INsensitive) and * to indicate partial string match
     url+=`&or=(brand_name.ilike.*${search}*, short_statement.ilike.*${search}*))`

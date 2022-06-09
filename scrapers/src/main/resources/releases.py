@@ -298,7 +298,7 @@ def get_citations(dois_data):
 
 
 if __name__ == "__main__":
-	print("Start scraping from Zotero")
+	print("Start scraping releases")
 	backend_url = os.environ.get('POSTGREST_URL')
 	number_releases_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB', default='6')
 	jwt_secret = os.environ.get('PGRST_JWT_SECRET')
@@ -307,4 +307,4 @@ if __name__ == "__main__":
 	dois_data = response_dois.json()
 	github_api_token = os.environ.get('API_CREDENTIALS_GITHUB')
 	get_citations(dois_data)
-	print("Done scraping from Zotero")
+	print("Done scraping releases")

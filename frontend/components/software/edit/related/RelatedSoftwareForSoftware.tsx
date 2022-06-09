@@ -13,7 +13,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
 import useSoftwareContext from '../useSoftwareContext'
 import FindRelatedSoftware from '~/components/projects/edit/related/FindRelatedSoftware'
-import {addRelatedSoftware, deleteRelatedSoftware, getRelatedToolsForSoftware} from '~/utils/editRelatedSoftware'
+import {addRelatedSoftware, deleteRelatedSoftware, getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
 
 import RelatedSoftwareList from '../../../projects/edit/related/RelatedSoftwareList'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
@@ -30,13 +30,23 @@ export default function RelatedSoftwareForSoftware() {
     let abort = false
     async function getRelatedSoftware() {
       // setLoading(true)
-      const resp = await getRelatedToolsForSoftware({
+      const resp = await getRelatedSoftwareForSoftware({
         software: software.id ?? '',
         token: session.token,
         frontend: true
       })
       const softwareList = resp
-        .sort((a, b) => sortOnStrProp(a, b, 'brand_name'))
+        .map(item => {
+          return {
+            id: item.id,
+            slug: item.slug,
+            brand_name: item.brand_name,
+            short_statement: item.short_statement,
+            updated_at: item.updated_at ?? undefined,
+            status: 'approved' as Status
+          }
+        }).sort((a, b) => sortOnStrProp(a, b, 'brand_name'))
+
       if (abort) return null
       // debugger
       setRelatedSoftware(softwareList)

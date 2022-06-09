@@ -12,7 +12,7 @@ import {
   ProjectLink, RawProject, RelatedProjectForProject,
   ResearchDomain, SearchProject, TeamMember
 } from '~/types/Project'
-import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
+import {RelatedSoftwareOfProject, SoftwareListItem} from '~/types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
@@ -491,7 +491,7 @@ export async function getRelatedProjectsForProject({project, token, frontend, ap
 export async function getRelatedSoftwareForProject({project, token, frontend, approved = true}:
   { project: string, token?: string, frontend?: boolean, approved?: boolean}) {
   try {
-    let query = `rpc/related_software_for_project?project=eq.${project}&order=brand_name.asc`
+    let query = `rpc/related_software_for_project?project_id=${project}&order=brand_name.asc`
     if (approved) {
       // select only approved relations
       query += '&status=eq.approved'
@@ -535,9 +535,9 @@ export async function searchForRelatedProjectByTitle({project, searchFor, token}
     if (resp.status === 200) {
       const json: SearchProject[] = await resp.json()
       return json
-    } else {
-      return []
     }
+    logger(`searchForRelatedProjectByTitle: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    return []
   } catch (e: any) {
     logger(`searchForRelatedProjectByTitle: ${e?.message}`, 'error')
     return []
