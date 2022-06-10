@@ -54,6 +54,31 @@ CREATE POLICY admin_all_rights ON maintainer_for_project TO rsd_admin
 	WITH CHECK (TRUE);
 
 
+ALTER TABLE maintainer_for_organisation ENABLE ROW LEVEL SECURITY;
+
+CREATE FUNCTION organisations_of_current_maintainer() RETURNS SETOF UUID STABLE LANGUAGE plpgsql SECURITY DEFINER AS
+$$
+BEGIN
+	RETURN QUERY SELECT id FROM organisation WHERE primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN QUERY SELECT organisation FROM maintainer_for_organisation WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN;
+END
+$$;
+
+CREATE POLICY maintainer_select ON maintainer_for_organisation FOR SELECT TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON maintainer_for_organisation FOR DELETE TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON maintainer_for_organisation FOR INSERT TO rsd_user
+	WITH CHECK (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON maintainer_for_organisation TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 -- invitations PROJECT
 ALTER TABLE invite_maintainer_for_project ENABLE ROW LEVEL SECURITY;
 
@@ -83,6 +108,22 @@ CREATE POLICY maintainer_insert ON invite_maintainer_for_software FOR INSERT TO 
 	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND created_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
 
 CREATE POLICY admin_all_rights ON invite_maintainer_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+-- invitations ORGANISATION
+ALTER TABLE invite_maintainer_for_organisation ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY maintainer_select ON invite_maintainer_for_organisation FOR SELECT TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON invite_maintainer_for_organisation FOR DELETE TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON invite_maintainer_for_organisation FOR INSERT TO rsd_user
+	WITH CHECK (organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND created_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+
+CREATE POLICY admin_all_rights ON invite_maintainer_for_organisation TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
@@ -414,25 +455,15 @@ CREATE POLICY anyone_can_read ON organisation FOR SELECT TO web_anon, rsd_user
 	USING (TRUE);
 
 CREATE POLICY maintainer_can_update ON organisation FOR UPDATE TO rsd_user
-	USING (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'))
-	WITH CHECK (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+	USING (id IN (SELECT * FROM organisations_of_current_maintainer()))
+	WITH CHECK (id IN (SELECT * FROM organisations_of_current_maintainer()));
 
 CREATE POLICY maintainer_can_insert ON organisation FOR INSERT TO rsd_user
-	WITH CHECK (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+	WITH CHECK (primary_maintainer IS NULL AND NOT is_tenant);
 
 CREATE POLICY admin_all_rights ON organisation TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
-
-
-CREATE FUNCTION organisations_of_current_maintainer() RETURNS SETOF UUID STABLE LANGUAGE plpgsql SECURITY DEFINER AS
-$$
-BEGIN
-	RETURN QUERY SELECT id FROM organisation WHERE primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
-	RETURN QUERY SELECT organisation FROM maintainer_for_organisation WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
-	RETURN;
-END
-$$;
 
 
 ALTER TABLE logo_for_organisation ENABLE ROW LEVEL SECURITY;

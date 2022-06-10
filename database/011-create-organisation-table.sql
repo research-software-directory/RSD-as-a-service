@@ -60,7 +60,14 @@ BEGIN
 	NEW.slug = OLD.slug;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
-	return NEW;
+
+	IF CURRENT_USER <> 'rsd_admin' OR NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+		IF NEW.is_tenant IS DISTINCT FROM OLD.is_tenant OR NEW.primary_maintainer IS DISTINCT FROM OLD.primary_maintainer THEN
+			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the tenant status or primary maintainer for organisation ' || OLD.name;
+		END IF;
+	END IF;
+
+	RETURN NEW;
 END
 $$;
 

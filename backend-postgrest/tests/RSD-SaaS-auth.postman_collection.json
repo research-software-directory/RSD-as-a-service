@@ -1024,6 +1024,55 @@
 			"response": []
 		},
 		{
+			"name": "post maintainer of organisation wrong",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {",
+							"\tpm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user_2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"maintainer\" : \"{{account_id_2}}\",\n\t\"organisation\" : \"{{organisation_id_1}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/maintainer_for_organisation",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"maintainer_for_organisation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "post software organisation non maintainer wrong",
 			"event": [
 				{
