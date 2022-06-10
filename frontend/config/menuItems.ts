@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export type MenuItemType = {
+  type?: 'link' | 'function' |'divider'
   label: string,
   path?: string,
   active?: boolean

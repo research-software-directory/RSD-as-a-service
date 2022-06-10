@@ -807,7 +807,7 @@ $$;
 -- PROJECTS BY MAINTAINER
 -- NOTE! single project is shown multiple times in this view
 -- we filter this view at least by user acount (uuid)
-CREATE FUNCTION projects_by_maintainer() RETURNS TABLE (
+CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	title VARCHAR,
@@ -816,8 +816,7 @@ CREATE FUNCTION projects_by_maintainer() RETURNS TABLE (
 	date_end DATE,
 	updated_at TIMESTAMP,
 	is_published BOOLEAN,
-	image_id UUID,
-	maintainer UUID
+	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -831,22 +830,22 @@ BEGIN
 		project.date_end,
 		project.updated_at,
 		project.is_published,
-		image_for_project.project AS image_id,
-		maintainer_for_project.maintainer
+		image_for_project.project AS image_id
 	FROM
 		project
 	LEFT JOIN
 		image_for_project ON project.id = image_for_project.project
 	INNER JOIN
-		maintainer_for_project ON project.id = maintainer_for_project.project;
+		maintainer_for_project ON project.id = maintainer_for_project.project
+	WHERE
+		maintainer_for_project.maintainer = maintainer_id;
 END
 $$;
 
-
 -- ORGANISATIONS BY MAINTAINER
 -- NOTE! each organisation is shown multiple times in this view
--- we filter this view at least by user acount (uuid) on primary_maintainer or maintainer
-CREATE FUNCTION organisations_by_maintainer() RETURNS TABLE (
+-- we filter this view at least by user acount (maintainer_id uuid) on primary_maintainer or maintainer
+CREATE FUNCTION organisations_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	parent UUID,
@@ -856,30 +855,43 @@ CREATE FUNCTION organisations_by_maintainer() RETURNS TABLE (
 	website VARCHAR,
 	is_tenant BOOLEAN,
 	logo_id UUID,
-	maintainer UUID
+	software_cnt BIGINT,
+	project_cnt BIGINT,
+	children_cnt BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	RETURN QUERY
 	SELECT
-		organisation.id,
-		organisation.slug,
-		organisation.parent,
-		organisation.primary_maintainer,
-		organisation.name,
-		organisation.ror_id,
-		organisation.website,
-		organisation.is_tenant,
+		o.id,
+		o.slug,
+		o.parent,
+		o.primary_maintainer,
+		o.name,
+		o.ror_id,
+		o.website,
+		o.is_tenant,
 		logo_for_organisation.id AS logo_id,
-		maintainer_for_organisation.maintainer
+		software_count_by_organisation.software_cnt,
+		project_count_by_organisation.project_cnt,
+		children_count_by_organisation.children_cnt
 	FROM
-		organisation
+		organisation AS o
 	LEFT JOIN
-		logo_for_organisation ON organisation.id = logo_for_organisation.id
-	INNER JOIN
-		maintainer_for_organisation ON organisation.id = maintainer_for_organisation.organisation;
+		logo_for_organisation ON o.id = logo_for_organisation.id
+	LEFT JOIN
+		software_count_by_organisation() ON software_count_by_organisation.organisation = o.id
+	LEFT JOIN
+		project_count_by_organisation() ON project_count_by_organisation.organisation = o.id
+	LEFT JOIN
+		children_count_by_organisation() ON o.id = children_count_by_organisation.parent
+	LEFT JOIN
+		maintainer_for_organisation ON o.id = maintainer_for_organisation.organisation
+	WHERE
+		maintainer_for_organisation.maintainer = maintainer_id OR o.primary_maintainer = maintainer_id;
 END
 $$;
+
 
 -- COUNTS by maintainer
 -- software_cnt, project_cnt, organisation_cnt
@@ -963,4 +975,3 @@ BEGIN
 	RETURN;
 END
 $$;
-

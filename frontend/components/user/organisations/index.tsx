@@ -5,41 +5,44 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState,useEffect} from 'react'
+import {useEffect} from 'react'
 import {Session} from '~/auth'
-import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
-import ContentLoader from '~/components/layout/ContentLoader'
+import OrganisationGrid from '~/components/organisation/OrganisationGrid'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
+import useUserOrganisations from './useUserOrganisations'
 
 export default function UserOrganisations({session}: { session: Session }) {
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search for organisation')
-  const [loading, setLoading] = useState(true)
+  const {
+    searchFor,
+    page,
+    rows,
+    setCount
+  } = usePaginationWithSearch('Search for organisation')
+  const {loading, organisations, count} = useUserOrganisations({
+    searchFor,
+    page,
+    rows,
+    session
+  })
 
   useEffect(() => {
-    let abort=false
-    setTimeout(() => {
-      if (abort) return
-      setLoading(false)
-    }, 1000)
-    return()=>{abort=true}
-  },[])
+    if (count && loading === false) {
+      setCount(count)
+    }
+  }, [count, loading, setCount])
 
-
-  if (loading) return <ContentLoader />
-
-  // console.group('UserOrganisations')
-  // console.log('searchFor...', searchFor)
-  // console.log('page...', page)
-  // console.log('rows...', rows)
-  // console.log('session...', session)
-  // console.groupEnd()
+  // do not use loader for now
+  // because the layout jumps up-and-down
+  // on pagination
+  // if (loading) {
+  //   return (
+  //     <ContentLoader />
+  //   )
+  // }
 
   return (
-    <div className="flex-1 flex flex-col">
-      <h1>User organisation</h1>
-      <ContentInTheMiddle>
-        <h2>Under construction</h2>
-      </ContentInTheMiddle>
-    </div>
+    <OrganisationGrid
+      organisations={organisations}
+    />
   )
 }

@@ -29,7 +29,7 @@ This repo contains the new RSD-as-a-service implementation
 ## Running development version locally in 3 steps. 
 1. Before installing the dependencies you need to set the environment variables in place:
 Copy the file `.env.example` to `.env` file at the root of the project
-and fill the secrets in `./frontend/.end.local`. Check if the secrets are correct. 
+and fill the secrets in `./frontend/.env.local`. Check if the secrets are correct.
 2. Running once `make install` will install all dependencies, build the docker images and run the **data migration** script.
 3. Finally, run `make dev` to start the frontend and documentation servers.
 
