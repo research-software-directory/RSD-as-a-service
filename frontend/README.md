@@ -18,7 +18,7 @@ Based on the features in the legacy application and the current requirements we 
 ## Development
 
 - intall dependencies `yarn install`
-- create env.local file. Use env.example from the project root as template.
+- create `.env.local` file. Use `.env.example` from the project root as template.
 - run all app modules `docker-compose up`
 - open another terminal and run `yarn dev` to start frontend in development mode
 
@@ -31,7 +31,7 @@ For oAuth implementation we need env variables. From the project root directory,
 ```env
 # postgREST api
 # cosumed by services: authentication,frontend,auth-tests
-# env.local: http://localhost/api/v1, env.production.local: http://backend:3500
+# .env.local: http://localhost/api/v1, .env.production.local: http://backend:3500
 POSTGREST_URL=http://localhost/api/v1
 ```
 
