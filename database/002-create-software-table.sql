@@ -13,13 +13,13 @@ CREATE TYPE description_type AS ENUM (
 
 CREATE TABLE software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
-	brand_name VARCHAR(100) NOT NULL,
-	concept_doi VARCHAR,
-	description VARCHAR,
+	slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+	brand_name VARCHAR(200) NOT NULL,
+	concept_doi VARCHAR(100),
+	description VARCHAR(10000),
 	description_url VARCHAR(200),
 	description_type description_type DEFAULT 'markdown' NOT NULL,
-	get_started_url VARCHAR,
+	get_started_url VARCHAR(200),
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	short_statement VARCHAR(300),
 	created_at TIMESTAMPTZ NOT NULL,

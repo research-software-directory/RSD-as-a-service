@@ -8,12 +8,12 @@
 
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	parent UUID REFERENCES organisation (id),
 	primary_maintainer UUID REFERENCES account (id),
-	name VARCHAR NOT NULL,
-	ror_id VARCHAR UNIQUE,
-	website VARCHAR UNIQUE,
+	slug VARCHAR(200) NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+	name VARCHAR(200) NOT NULL,
+	ror_id VARCHAR(100) UNIQUE,
+	website VARCHAR(200) UNIQUE,
 	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL,
@@ -105,7 +105,7 @@ $$;
 
 CREATE TABLE logo_for_organisation (
 	organisation UUID references organisation(id) PRIMARY KEY,
-	data VARCHAR NOT NULL,
+	data VARCHAR(2750000) NOT NULL,
 	mime_type VARCHAR(100) NOT NULL,
 	created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
