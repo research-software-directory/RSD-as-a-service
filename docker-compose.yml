@@ -53,7 +53,7 @@ services:
   auth:
     container_name: auth
     build: ./authentication
-    image: rsd/auth:0.0.10
+    image: rsd/auth:0.0.11
     expose:
       - 7000
     environment:
@@ -117,7 +117,7 @@ services:
   scrapers:
     container_name: scrapers
     build: ./scrapers
-    image: rsd/scrapers:0.1.4
+    image: rsd/scrapers:0.1.5
     environment:
       # it uses values from .env file
       - POSTGREST_URL

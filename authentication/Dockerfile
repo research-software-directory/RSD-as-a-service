@@ -7,7 +7,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM maven:3.8.4-openjdk-17 AS builder
+FROM maven:3.8.5-openjdk-18 AS builder
 WORKDIR /usr/mymaven
 RUN mkdir src
 COPY pom.xml .
@@ -15,7 +15,7 @@ RUN mvn dependency:go-offline
 COPY ./src ./src
 RUN mvn package --offline
 
-FROM openjdk:17.0.2-jdk-slim-bullseye
+FROM openjdk:18.0.1.1-jdk-slim-bullseye
 WORKDIR /usr/myjava
 COPY --from=builder /usr/mymaven/target/*-jar-with-dependencies.jar auth.jar
 CMD java -cp auth.jar nl.esciencecenter.rsd.authentication.Main

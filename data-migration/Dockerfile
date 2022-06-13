@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM maven:3.8.4-openjdk-17
+FROM maven:3.8.5-openjdk-18
 WORKDIR /usr/mymaven
 RUN mkdir --parents ./src/main
 COPY data-migration/pom.xml .
