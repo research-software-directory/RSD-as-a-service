@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -28,7 +29,7 @@ export default function MentionEditList({title, type, items}: MentionSectionList
         boxShadow: 0,
         borderTop: '1px solid',
         borderColor: 'divider',
-        // backgroundColor: 'primary.light',
+        backgroundColor: 'background.paper',
         // remove line above the accordion
         '&:before': {
           height: '0px'
