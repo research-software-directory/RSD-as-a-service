@@ -1,5 +1,7 @@
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -14,8 +16,8 @@ CREATE TABLE project (
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	subtitle VARCHAR,
 	title VARCHAR NOT NULL,
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_project() RETURNS TRIGGER LANGUAGE plpgsql AS

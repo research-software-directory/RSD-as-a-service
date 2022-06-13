@@ -15,8 +15,8 @@ CREATE TABLE organisation (
 	ror_id VARCHAR UNIQUE,
 	website VARCHAR UNIQUE,
 	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL,
 	UNIQUE (slug, parent)
 );
 
@@ -107,7 +107,7 @@ CREATE TABLE logo_for_organisation (
 	organisation UUID references organisation(id) PRIMARY KEY,
 	data VARCHAR NOT NULL,
 	mime_type VARCHAR(100) NOT NULL,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 

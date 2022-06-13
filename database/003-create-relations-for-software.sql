@@ -1,6 +1,7 @@
 -- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 dv4all
@@ -19,11 +20,11 @@ CREATE TABLE repository_url (
 	url VARCHAR NOT NULL,
 	code_platform platform_type NOT NULL DEFAULT 'other',
 	languages JSONB,
-	languages_scraped_at TIMESTAMP,
+	languages_scraped_at TIMESTAMPTZ,
 	license VARCHAR,
-	license_scraped_at TIMESTAMP,
+	license_scraped_at TIMESTAMPTZ,
 	commit_history JSONB,
-	commit_history_scraped_at TIMESTAMP
+	commit_history_scraped_at TIMESTAMPTZ
 );
 
 
@@ -33,8 +34,8 @@ CREATE TABLE license_for_software (
 	software UUID references software (id) NOT NULL,
 	license VARCHAR(100) NOT NULL,
 	UNIQUE(software, license),
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_license_for_software() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -76,8 +77,8 @@ CREATE TABLE contributor (
 	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
 	avatar_data VARCHAR,
 	avatar_mime_type VARCHAR(100),
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_contributor() RETURNS TRIGGER LANGUAGE plpgsql AS
