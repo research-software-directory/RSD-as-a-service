@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -1002,7 +1003,7 @@ public class Main {
 			if (orgId == null) System.out.println(name);
 			if (existingIds.contains(orgId)) return;
 
-			logoToSave.addProperty("id", orgId);
+			logoToSave.addProperty("organisation", orgId);
 			logoToSave.add("data", logo.get("data"));
 			logoToSave.add("mime_type", logo.get("mimeType"));
 			existingIds.add(orgNameToId.get(name));

@@ -1,5 +1,6 @@
 -- SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2022 dv4all
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 --
@@ -327,6 +328,7 @@ CREATE FUNCTION software_by_organisation() RETURNS TABLE (
 	short_statement VARCHAR,
 	is_published BOOLEAN,
 	is_featured BOOLEAN,
+	status relation_status,
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT,
 	updated_at TIMESTAMP,
@@ -342,6 +344,7 @@ BEGIN
 		software.short_statement,
 		software.is_published,
 		software_for_organisation.is_featured,
+		software_for_organisation.status,
 		count_software_countributors.contributor_cnt,
 		count_software_mentions.mention_cnt,
 		software.updated_at,

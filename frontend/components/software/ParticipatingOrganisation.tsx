@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -18,6 +19,7 @@ export default function OrganisationItem({slug, name, website, logo_url}: Partic
           src={logo_url}
           alt={name}
           bgSize="contain"
+          bgPosition='center center'
         />
       )
     }

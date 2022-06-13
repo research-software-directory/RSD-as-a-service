@@ -1,3 +1,4 @@
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
@@ -48,7 +49,7 @@ BEGIN
 	NEW.software = OLD.software;
 	NEW.project = OLD.project;
 
-	IF CURRENT_USER <> 'rsd_admin' OR NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
 		IF NEW.status <> OLD.status AND (
 			(OLD.status = 'rejected_by_origin' AND (NEW.status <> 'approved' OR OLD.software NOT IN (SELECT * FROM software_of_current_maintainer()))) OR
 			(OLD.status = 'rejected_by_relation' AND (NEW.status <> 'approved' OR OLD.project NOT IN (SELECT * FROM projects_of_current_maintainer()))) OR
@@ -79,7 +80,7 @@ BEGIN
 	NEW.origin = OLD.origin;
 	NEW.relation = OLD.relation;
 
-	IF CURRENT_USER <> 'rsd_admin' OR NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
 		IF NEW.status <> OLD.status AND (
 			(OLD.status = 'rejected_by_origin' AND (NEW.status <> 'approved' OR OLD.origin NOT IN (SELECT * FROM projects_of_current_maintainer()))) OR
 			(OLD.status = 'rejected_by_relation' AND (NEW.status <> 'approved' OR OLD.relation NOT IN (SELECT * FROM projects_of_current_maintainer()))) OR
@@ -111,7 +112,7 @@ BEGIN
 	NEW.software = OLD.software;
 	NEW.organisation = OLD.organisation;
 
-	IF CURRENT_USER <> 'rsd_admin' OR NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
 		IF NEW.is_featured <> OLD.is_featured AND OLD.organisation NOT IN (SELECT * FROM organisations_of_current_maintainer()) THEN
 			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the is_featured value for software ' || OLD.software || 'and organisation ' || OLD.organisation;
 		END IF;
@@ -147,7 +148,7 @@ BEGIN
 	NEW.project = OLD.project;
 	NEW.organisation = OLD.organisation;
 
-	IF CURRENT_USER <> 'rsd_admin' OR NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
 		IF NEW.is_featured <> OLD.is_featured AND OLD.organisation NOT IN (SELECT * FROM organisations_of_current_maintainer()) THEN
 			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the is_featured value for project ' || OLD.project || 'and organisation ' || OLD.organisation;
 		END IF;

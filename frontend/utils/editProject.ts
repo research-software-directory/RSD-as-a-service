@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -326,7 +327,8 @@ export async function createFundingOrganisationAndAddToProject({project,organisa
       id: null,
       parent: null,
       slug: getSlugFromString(organisation.name),
-      primary_maintainer: organisation.primary_maintainer ?? session.user?.account ?? null,
+      // funding organisation without primary maintainer
+      primary_maintainer: null,
       name: organisation.name,
       ror_id: organisation.ror_id,
       is_tenant: false,
@@ -444,14 +446,8 @@ export async function createOrganisationAndAddToProject({project, item, session,
 export async function addOrganisationToProject({project, organisation, role, session}:
   { project: string, organisation: string, role: OrganisationRole, session:Session }) {
   try {
-    // validate if user is maintainer of organisation
-    const isMaintainer = await isMaintainerOfOrganisation({
-      organisation,
-      account: session.user?.account,
-      token: session.token
-    })
-    // determine status
-    const status = isMaintainer ? 'approved' : 'requested_by_origin'
+    // by default request status is approved
+    const status = 'approved'
     // POST
     const url = '/api/v1/project_for_organisation'
     const resp = await fetch(url, {

@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -40,13 +41,15 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
   if (rorItems.length === 0) return []
 
   const options = rorItems.map(item => {
+    const slug = getSlugFromString(item.name)
     return {
-      key: item.id,
+      // we use slug as primary key and ROR id as alternative
+      key: slug ?? item.id,
       label: item.name,
       data: {
         id: null,
         parent: null,
-        slug: getSlugFromString(item.name),
+        slug,
         name: item.name,
         ror_id: item.id,
         is_tenant: false,

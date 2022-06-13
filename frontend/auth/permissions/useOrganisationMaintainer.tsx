@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -5,7 +6,7 @@
 
 import {useEffect,useState} from 'react'
 import {Session} from '..'
-import isMaintainerOfOrganisation from './isMaintainerOfOrganisation'
+import isMaintainerOfOrganisation, {getMaintainerOrganisations} from './isMaintainerOfOrganisation'
 
 type UseOrganisationMaintainerProps = {
   organisation: string
@@ -46,5 +47,33 @@ export default function useOrganisationMaintainer({organisation,session}:UseOrga
   return {
     loading,
     isMaintainer
+  }
+}
+
+// returns a list of organisation ids (uuid) that this token is maintainer of
+export function useMaintainerOfOrganisations({token}: { token: string }) {
+  const [organisations, setOrganisations] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let abort = false
+    async function maintainerOfOrganisations() {
+      const resp = await getMaintainerOrganisations({
+        token,
+        frontend:true
+      })
+      if (abort) return
+      setOrganisations(resp)
+      setLoading(false)
+    }
+    if (token) {
+      maintainerOfOrganisations()
+    }
+    return ()=>{abort=true}
+  }, [token])
+
+  return {
+    loading,
+    organisations
   }
 }

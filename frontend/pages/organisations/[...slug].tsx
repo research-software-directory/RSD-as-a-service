@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -21,7 +22,7 @@ import {OrganisationForOverview} from '../../types/Organisation'
 import {SearchProvider} from '../../components/search/SearchContext'
 import {PaginationProvider} from '../../components/pagination/PaginationContext'
 
-type OrganisationPageProps = {
+export type OrganisationPageProps = {
   organisation: OrganisationForOverview,
   slug: string[],
   session: Session,
