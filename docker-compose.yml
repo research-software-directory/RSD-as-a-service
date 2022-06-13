@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2021 - 2022 dv4all
 # SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 #
@@ -14,7 +15,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.33
+    image: rsd/database:0.0.34
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -86,7 +87,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.9.5
+    image: rsd/frontend:0.9.6
     environment:
       # it uses values from .env file
       - POSTGREST_URL

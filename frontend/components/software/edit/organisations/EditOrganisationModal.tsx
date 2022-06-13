@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -189,6 +190,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
                   defaultValue: formData?.name,
                   helperTextMessage: config.name.help,
                   helperTextCnt: `${formData?.name?.length || 0}/${config.name.validation.maxLength.value}`,
+                  disabled: organisation?.source==='ROR' ? true : false
                 }}
                 rules={config.name.validation}
               />
@@ -203,6 +205,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit,onDelete
                   defaultValue: formData?.website,
                   helperTextMessage: config.website.help,
                   helperTextCnt: `${formData?.website?.length || 0}/${config.website.validation.maxLength.value}`,
+                  disabled: organisation?.source==='ROR' ? true : false
                 }}
                 rules={config.website.validation}
               />

@@ -1,5 +1,6 @@
 -- SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2022 dv4all
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 --
@@ -210,7 +211,7 @@ BEGIN
 		organisation.ror_id,
 		organisation.is_tenant,
 		organisation.website,
-		logo_for_organisation.id AS logo_id,
+		logo_for_organisation.organisation AS logo_id,
 		software_for_organisation.status,
 		software.id AS software
 FROM
@@ -220,7 +221,7 @@ INNER JOIN
 INNER JOIN
 	organisation ON software_for_organisation.organisation = organisation.id
 LEFT JOIN
-	logo_for_organisation ON logo_for_organisation.id = organisation.id;
+	logo_for_organisation ON logo_for_organisation.organisation = organisation.id;
 END
 $$;
 
@@ -300,7 +301,7 @@ BEGIN
 		o.ror_id,
 		o.website,
 		o.is_tenant,
-		logo_for_organisation.id AS logo_id,
+		logo_for_organisation.organisation AS logo_id,
 		software_count_by_organisation.software_cnt,
 		project_count_by_organisation.project_cnt,
 		children_count_by_organisation.children_cnt
@@ -313,7 +314,7 @@ BEGIN
 	LEFT JOIN
 		children_count_by_organisation() ON o.id = children_count_by_organisation.parent
 	LEFT JOIN
-		logo_for_organisation ON o.id = logo_for_organisation.id;
+		logo_for_organisation ON o.id = logo_for_organisation.organisation;
 END
 $$;
 
@@ -327,6 +328,7 @@ CREATE FUNCTION software_by_organisation() RETURNS TABLE (
 	short_statement VARCHAR,
 	is_published BOOLEAN,
 	is_featured BOOLEAN,
+	status relation_status,
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT,
 	updated_at TIMESTAMP,
@@ -342,6 +344,7 @@ BEGIN
 		software.short_statement,
 		software.is_published,
 		software_for_organisation.is_featured,
+		software_for_organisation.status,
 		count_software_countributors.contributor_cnt,
 		count_software_mentions.mention_cnt,
 		software.updated_at,
@@ -429,7 +432,7 @@ BEGIN
 			organisation.ror_id,
 			organisation.is_tenant,
 			organisation.website,
-			logo_for_organisation.id AS logo_id,
+			logo_for_organisation.organisation AS logo_id,
 			project_for_organisation.status,
 			project_for_organisation.role,
 			project.id AS project,
@@ -441,7 +444,7 @@ BEGIN
 	INNER JOIN
 		organisation ON project_for_organisation.organisation = organisation.id
 	LEFT JOIN
-		logo_for_organisation ON logo_for_organisation.id = organisation.id
+		logo_for_organisation ON logo_for_organisation.organisation = organisation.id
 	;
 END
 $$;
@@ -871,14 +874,14 @@ BEGIN
 		o.ror_id,
 		o.website,
 		o.is_tenant,
-		logo_for_organisation.id AS logo_id,
+		logo_for_organisation.organisation AS logo_id,
 		software_count_by_organisation.software_cnt,
 		project_count_by_organisation.project_cnt,
 		children_count_by_organisation.children_cnt
 	FROM
 		organisation AS o
 	LEFT JOIN
-		logo_for_organisation ON o.id = logo_for_organisation.id
+		logo_for_organisation ON o.id = logo_for_organisation.organisation
 	LEFT JOIN
 		software_count_by_organisation() ON software_count_by_organisation.organisation = o.id
 	LEFT JOIN

@@ -1,10 +1,11 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 // based on ENUMS defined in 012-inter-relation-tables.sql
-export type Status = 'requested_by_origin' | 'requested_by_relation' | 'approved'
+export type Status = 'rejected_by_origin' | 'rejected_by_relation' | 'approved'
 export type OrganisationRole = 'participating' | 'funding' | 'hosting'
 export type OrganisationSource = 'RSD' | 'ROR' | 'MANUAL'
 
@@ -100,6 +101,7 @@ export type SoftwareOfOrganisation = {
   short_statement: string
   is_published: boolean
   is_featured: boolean
+  status: Status
   contributor_cnt: number | null
   mention_cnt: number | null
   updated_at: string
