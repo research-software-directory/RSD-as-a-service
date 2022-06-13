@@ -103,7 +103,7 @@ $$;
 
 
 CREATE TABLE logo_for_organisation (
-	id UUID references organisation(id) PRIMARY KEY,
+	organisation UUID references organisation(id) PRIMARY KEY,
 	data VARCHAR NOT NULL,
 	mime_type VARCHAR(100) NOT NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -121,12 +121,12 @@ BEGIN
 		'{"Content-Disposition": "inline; filename=\"%s\""},'
 		'{"Cache-Control": "max-age=259200"}]',
 		logo_for_organisation.mime_type,
-		logo_for_organisation.id)
-	FROM logo_for_organisation WHERE logo_for_organisation.id = get_logo.id INTO headers;
+		logo_for_organisation.organisation)
+	FROM logo_for_organisation WHERE logo_for_organisation.organisation = get_logo.id INTO headers;
 
 	PERFORM set_config('response.headers', headers, TRUE);
 
-	SELECT decode(logo_for_organisation.data, 'base64') FROM logo_for_organisation WHERE logo_for_organisation.id = get_logo.id INTO blob;
+	SELECT decode(logo_for_organisation.data, 'base64') FROM logo_for_organisation WHERE logo_for_organisation.organisation = get_logo.id INTO blob;
 
 	IF FOUND
 		THEN RETURN(blob);
