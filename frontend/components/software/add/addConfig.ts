@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -14,7 +15,7 @@ export const addConfig = {
     validation: {
       required: 'Name is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   },
   short_statement: {

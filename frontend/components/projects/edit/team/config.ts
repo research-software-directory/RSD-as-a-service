@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
@@ -44,7 +45,7 @@ export const cfgTeamMembers = {
     help: 'Contact person should have an email',
     validation: {
       minLength: {value: 5, message: 'Minimum length is 5'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         message: 'Invalid email address'

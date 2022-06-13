@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -15,7 +16,7 @@ export const softwareInformation = {
     validation: {
       required: 'Name is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   },
   short_statement: {
@@ -92,9 +93,6 @@ export const softwareInformation = {
   is_published: {
     label: 'Published',
   },
-  // is_featured: {
-  //   label: 'Featured',
-  // },
   keywords: {
     title: 'Keywords',
     subtitle: 'Find, add or import using concept DOI.',
@@ -112,7 +110,12 @@ export const softwareInformation = {
   licenses: {
     title: 'Licenses',
     subtitle: 'What licenses do apply to your software? You can also import licenses using concept DOI.',
-    help: 'Select license'
+    label: 'Find or add license',
+    help: 'Start typing for the suggestions',
+    validation: {
+      //custom validation rule, not in used by react-hook-form
+      minLength: 1,
+    }
   },
   importLicenses: {
     label: 'Import licenses',
@@ -166,7 +169,7 @@ export const contributorInformation = {
     help: 'Contact person should have an email',
     validation: {
       minLength: {value: 5, message: 'Minimum length is 5'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         message: 'Invalid email address'

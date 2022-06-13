@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -21,7 +22,7 @@ export const projectInformation = {
     validation: {
       // required: 'Subtitle is optional',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 200, message: 'Maximum length is 200'},
+      maxLength: {value: 300, message: 'Maximum length is 300'},
     }
   },
   description: {
