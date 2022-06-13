@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -15,7 +16,7 @@ services:
     build:
       context: ../
       dockerfile: ./data-migration/Dockerfile
-    image: rsd/data-migration:0.0.17
+    image: rsd/data-migration:0.0.18
     env_file:
       # use main env file
       - ../.env
