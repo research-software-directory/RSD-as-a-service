@@ -167,6 +167,10 @@ Now, copy-paste this template into `pre-commit` and configure it as required:
 AUTHOR=""
 EMAIL=""
 ORGANISATION=""
+# If your organisation's name is very long, put an abbreviation here, otherwise fill in the same value as for ORGANISATION
+# e.g. "Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences" could become "GFZ".
+# This is the value that will be displayed after your name, whereas ORGANISATION will be displayed on a separate line
+ORGANISATION_SHORT=""
 # End of configuration
 
 function check_program_exists () {
@@ -189,8 +193,8 @@ check_program_exists dirname
 
 YEAR=$(date +"%Y")
 AUTHOR_STRING=$AUTHOR
-if [[ "$ORGANISATION" != "" ]]; then
-    AUTHOR_STRING="${AUTHOR_STRING} (${ORGANISATION})"
+if [[ "ORGANISATION_SHORT" != "" ]]; then
+    AUTHOR_STRING="${AUTHOR_STRING} (${ORGANISATION_SHORT})"
 fi
 if [[ "$EMAIL" != "" ]]; then
     AUTHOR_STRING="${AUTHOR_STRING} <${EMAIL}>"
