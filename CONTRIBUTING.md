@@ -162,7 +162,7 @@ Now, copy-paste this template into `pre-commit` and configure it as required:
 #
 # Configuration
 # -------------
-# Any of those variables is optional. The email and organisation is only used if an author is defined.
+# Any of those variables is optional. The email and organisation_short is only used if an author is defined.
 # If none of these variables is defined, only the license will be added.
 AUTHOR=""
 EMAIL=""
