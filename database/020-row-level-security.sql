@@ -416,9 +416,8 @@ ALTER TABLE release ENABLE ROW LEVEL SECURITY;
 CREATE POLICY anyone_can_read ON release FOR SELECT TO web_anon, rsd_user
 	USING (software IN (SELECT id FROM software));
 
-CREATE POLICY maintainer_all_rights ON release TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()))
-	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+CREATE POLICY maintainer_select ON release FOR SELECT TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON release TO rsd_admin
 	USING (TRUE)
@@ -430,9 +429,8 @@ ALTER TABLE release_content ENABLE ROW LEVEL SECURITY;
 CREATE POLICY anyone_can_read ON release_content FOR SELECT TO web_anon, rsd_user
 	USING (release_id IN (SELECT id FROM release));
 
-CREATE POLICY maintainer_all_rights ON release_content TO rsd_user
-	USING (release_id IN (SELECT id FROM release WHERE software IN (SELECT * FROM software_of_current_maintainer())))
-	WITH CHECK (release_id IN (SELECT id FROM release WHERE software IN (SELECT * FROM software_of_current_maintainer())));
+CREATE POLICY maintainer_select ON release_content FOR SELECT TO rsd_user
+	USING (release_id IN (SELECT id FROM release));
 
 CREATE POLICY admin_all_rights ON release_content TO rsd_admin
 	USING (TRUE)

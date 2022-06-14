@@ -9,7 +9,7 @@ CREATE TABLE release (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID REFERENCES software (id) UNIQUE NOT NULL,
 	is_citable BOOLEAN,
-	latest_schema_dot_org VARCHAR(30000),
+	latest_schema_dot_org VARCHAR,
 	releases_scraped_at TIMESTAMPTZ,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
@@ -67,15 +67,15 @@ CREATE TABLE release_content (
 	release_id UUID REFERENCES release (id) NOT NULL,
 	citability citability NOT NULL,
 	date_published DATE NOT NULL,
-	doi VARCHAR(100) NOT NULL UNIQUE,
-	tag VARCHAR(200) NOT NULL,
-	url VARCHAR(200) NOT NULL,
-	bibtex VARCHAR(10000),
-	cff VARCHAR(20000),
-	codemeta VARCHAR(50000),
-	endnote VARCHAR(5000),
-	ris VARCHAR(5000),
-	schema_dot_org VARCHAR(30000)
+	doi VARCHAR NOT NULL UNIQUE,
+	tag VARCHAR NOT NULL,
+	url VARCHAR NOT NULL,
+	bibtex VARCHAR,
+	cff VARCHAR,
+	codemeta VARCHAR,
+	endnote VARCHAR,
+	ris VARCHAR,
+	schema_dot_org VARCHAR
 );
 
 
