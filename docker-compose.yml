@@ -15,7 +15,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.34
+    image: rsd/database:0.0.35
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -24,6 +24,7 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - POSTGRES_AUTHENTICATOR_PASSWORD
     volumes:
       # persist data in named docker volume
       # to remove use: docker-compose down --volumes
@@ -40,7 +41,7 @@ services:
       - 3500
     environment:
       # it needs to be here to use values from .env file
-      - PGRST_DB_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/rsd-db
+      - PGRST_DB_URI=postgres://authenticator:${POSTGRES_AUTHENTICATOR_PASSWORD}@database:5432/${POSTGRES_DB}
       - PGRST_DB_ANON_ROLE
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT
