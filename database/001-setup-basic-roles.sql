@@ -1,9 +1,9 @@
--- SPDX-FileCopyrightText: 2021 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
-CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'simplepassword';
+CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD 'POSTGRES_AUTHENTICATOR_PASSWORD';
 
 CREATE ROLE web_anon NOLOGIN;
 
