@@ -134,7 +134,7 @@ export const contributorInformation = {
     title: 'Add contributor',
     subtitle: 'We search by name in RSD and ORCID databases',
     label: 'Find or add contributor',
-    help: 'At least 3 letters, use pattern {First name} {Last name}',
+    help: 'At least 2 letters, use pattern {First name} {Last name}',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
@@ -217,7 +217,7 @@ export const organisationInformation = {
     title: 'Add organisation',
     subtitle: 'We search organisation name in RSD and ROR databases',
     label: 'Find or add organisation',
-    help: 'At least fist 3 letters of organisation name',
+    help: 'At least fist 2 letters of organisation name',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
