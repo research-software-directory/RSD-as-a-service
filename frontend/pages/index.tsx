@@ -7,16 +7,12 @@
 
 import {useEffect, useState} from 'react'
 import AOS from 'aos'
+import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/layout/AppFooter'
-import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
+// import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
 import SimpleCircle from '~/components/svg/SimpleCircle'
-import Link from 'next/link'
 import Image from 'next/image'
 
-import LogoApp from '~/assets/LogoApp.svg'
-import LogoAppSmall from '~/assets/LogoAppSmall.svg'
-
-import LoginButton from '~/components/login/LoginButton'
 import styles from '~/components/home/home.module.css'
 
 import LogoEscience from '~/assets/logos/LogoEscience.svg'
@@ -25,8 +21,8 @@ import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
 import LogoUMC from '~/assets/logos/LogoUMC.svg'
 import LogoUU from '~/assets/logos/LogoUU.svg'
 import LogoLeiden from '~/assets/logos/LogoLeiden.svg'
-
 import Arc from '~/components/home/arc.svg'
+
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
 /*! purgecss end ignore */
@@ -55,60 +51,15 @@ export default function Home() {
   return (
       <div className="bg-white dark:bg-black dark:text-white">
         {/* Header  */}
-        <header
-          data-testid="Landing Page"
-          className="sticky top-0 px-5 md:px-10 z-10 backdrop-filter backdrop-blur-xl bg-white dark:bg-black bg-opacity-60 dark:bg-opacity-60">
-
-          <div className="w-full max-w-screen-xl mx-auto flex py-6 items-center">
-            <Link href="/" passHref>
-              <a className="hover:shadow-2xl">
-                <LogoApp className="hidden xl:block"/>
-                <LogoAppSmall className="block xl:hidden"/>
-              </a>
-            </Link>
-            <div className="flex flex-1">
-              <div className="hidden sm:flex w-full text-lg ml-28 gap-5 text-center opacity-80 ">
-                <a href="#whyrsd">Why RSD</a>
-                <Link href="/software">Software</Link>
-                <Link href="/projects">Projects</Link>
-                <Link href="/organisations">Organisations</Link>
-                {/*<Link href="/about">About us</Link>*/}
-              </div>
-            </div>
-
-            {/*Search*/}
-            {/*<div className="border px-3 py-2 flex relative ml-auto rounded-sm">*/}
-            {/*  <svg className="absolute right-[10px] top-[10px]" width="22" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">*/}
-            {/*    <circle cx="8.98438" cy="9.10718" r="8.22705" stroke="currentColor"/>*/}
-            {/*  </svg>*/}
-            {/*  <input type="search" className="bg-transparent focus:outline-none"*/}
-            {/*         placeholder="Search Software" autoComplete="off"/>*/}
-            {/*</div>*/}
-
-            <ThemeSwitcher className="mr-3"/>
-
-            <LoginButton/>
-          </div>
-
-        </header>
+        <AppHeader/>
 
         {/* Jumbo Banner  */}
         <div className="mx-auto mt-20 relative overflow-x-clip">
 
           {/* Jumbo Image*/}
           <div className="max-w-[1200px] mx-auto ">
-            <div className="
-
-              absolute
-              w-full
-              h-full
-              -top-[170px] md:-top-48
-              -left-[60px] md:left-[50%]
-              opacity-50 md:opacity-100
-                ">
-            <Image src="/images/illustration.webp" width="847" height="760"
-              alt="rsd-illustration"
-            />
+            <div className="pointer-events-none absolute w-full h-full -top-[170px] md:-top-48 -left-[60px] md:left-[50%] opacity-50 md:opacity-100">
+            <Image src="/images/illustration.webp" width="847" height="760" alt="rsd-illustration" />
             </div>
           </div>
 

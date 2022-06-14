@@ -6,7 +6,7 @@
 import {render,screen, fireEvent} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
 
-import AddMenu from './AddMenu'
+import AddMenu from '../AppHeader/AddMenu'
 import {addMenuItems} from '../../config/addMenuItems'
 
 it('should render AddMenu',()=>{

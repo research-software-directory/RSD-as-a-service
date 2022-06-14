@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {ReactNode} from 'react'
-import AppHeader from './AppHeader'
+import AppHeader from '~/components/AppHeader'
 import AppFooter from './AppFooter'
 
 export default function DefaultLayout({children}:{children:ReactNode}) {

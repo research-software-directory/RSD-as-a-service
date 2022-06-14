@@ -47,7 +47,7 @@ RangeError: Maximum call stack size exceeded
   h3 {
     @apply text-xl;
   }
-  a {   
+  a {
     @apply cursor-pointer no-underline transition duration-100 hover:text-primary
   }
 
@@ -140,4 +140,8 @@ Tailwind remove max-width for markdown
 
 #markdown-textarea:disabled{
   cursor: not-allowed;
+}
+
+.nav-active{
+    @apply border-b border-white cursor-pointer
 }
