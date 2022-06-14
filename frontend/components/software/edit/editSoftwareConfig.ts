@@ -63,7 +63,11 @@ export const softwareInformation = {
   // field for markdown
   description: {
     label: 'Description',
-    help: (brand_name: string) => `What ${brand_name} can do for you`
+    help: (brand_name: string) => `What ${brand_name} can do for you`,
+    validation: {
+      // we do not show error message for this one, we use only maxLength value
+      maxLength: {value: 10000, message: 'Maximum length is 10000'},
+    }
   },
   // field for markdown url
   description_url: {
