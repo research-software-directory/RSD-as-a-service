@@ -1,3 +1,11 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 -- maintainer tables
 ALTER TABLE maintainer_for_software ENABLE ROW LEVEL SECURITY;
 
@@ -47,6 +55,31 @@ CREATE POLICY admin_all_rights ON maintainer_for_project TO rsd_admin
 	WITH CHECK (TRUE);
 
 
+ALTER TABLE maintainer_for_organisation ENABLE ROW LEVEL SECURITY;
+
+CREATE FUNCTION organisations_of_current_maintainer() RETURNS SETOF UUID STABLE LANGUAGE plpgsql SECURITY DEFINER AS
+$$
+BEGIN
+	RETURN QUERY SELECT id FROM organisation WHERE primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN QUERY SELECT organisation FROM maintainer_for_organisation WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN;
+END
+$$;
+
+CREATE POLICY maintainer_select ON maintainer_for_organisation FOR SELECT TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON maintainer_for_organisation FOR DELETE TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON maintainer_for_organisation FOR INSERT TO rsd_user
+	WITH CHECK (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON maintainer_for_organisation TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 -- invitations PROJECT
 ALTER TABLE invite_maintainer_for_project ENABLE ROW LEVEL SECURITY;
 
@@ -76,6 +109,22 @@ CREATE POLICY maintainer_insert ON invite_maintainer_for_software FOR INSERT TO 
 	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND created_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
 
 CREATE POLICY admin_all_rights ON invite_maintainer_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+-- invitations ORGANISATION
+ALTER TABLE invite_maintainer_for_organisation ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY maintainer_select ON invite_maintainer_for_organisation FOR SELECT TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON invite_maintainer_for_organisation FOR DELETE TO rsd_user
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON invite_maintainer_for_organisation FOR INSERT TO rsd_user
+	WITH CHECK (organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND created_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+
+CREATE POLICY admin_all_rights ON invite_maintainer_for_organisation TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
@@ -149,6 +198,19 @@ CREATE POLICY admin_all_rights ON contributor TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
+
+ALTER TABLE testimonial ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON testimonial FOR SELECT TO web_anon, rsd_user
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON testimonial TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON testimonial TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
 
 -- keywords
 ALTER TABLE keyword ENABLE ROW LEVEL SECURITY;
@@ -407,36 +469,28 @@ CREATE POLICY anyone_can_read ON organisation FOR SELECT TO web_anon, rsd_user
 	USING (TRUE);
 
 CREATE POLICY maintainer_can_update ON organisation FOR UPDATE TO rsd_user
-	USING (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'))
-	WITH CHECK (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+	USING (id IN (SELECT * FROM organisations_of_current_maintainer()))
+	WITH CHECK (id IN (SELECT * FROM organisations_of_current_maintainer()));
 
 CREATE POLICY maintainer_can_insert ON organisation FOR INSERT TO rsd_user
-	WITH CHECK (primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+	WITH CHECK (primary_maintainer IS NULL AND NOT is_tenant);
 
 CREATE POLICY admin_all_rights ON organisation TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
 
-CREATE FUNCTION organisations_of_current_maintainer() RETURNS SETOF UUID STABLE LANGUAGE plpgsql SECURITY DEFINER AS
-$$
-BEGIN
-	RETURN QUERY SELECT id FROM organisation WHERE primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
-	RETURN QUERY SELECT organisation FROM maintainer_for_organisation WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
-	RETURN;
-END
-$$;
-
-
 ALTER TABLE logo_for_organisation ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON logo_for_organisation FOR SELECT TO web_anon, rsd_user
-	USING (id IN (SELECT id FROM organisation));
+	USING (organisation IN (SELECT id FROM organisation));
 
+CREATE POLICY maintainer_insert_non_tenant ON logo_for_organisation FOR INSERT TO rsd_user
+	WITH CHECK (NOT (SELECT is_tenant FROM organisation o WHERE o.id = logo_for_organisation.organisation));
 
 CREATE POLICY maintainer_all_rights ON logo_for_organisation TO rsd_user
-	USING (id IN (SELECT * FROM organisations_of_current_maintainer()))
-	WITH CHECK (id IN (SELECT * FROM organisations_of_current_maintainer()));
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()))
+	WITH CHECK (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON logo_for_organisation TO rsd_admin
 	USING (TRUE)
@@ -453,7 +507,7 @@ CREATE POLICY maintainer_origin_can_read ON software_for_software FOR SELECT TO 
 	USING (origin IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY maintainer_origin_insert ON software_for_software FOR INSERT TO rsd_user
-	WITH CHECK (origin IN (SELECT * FROM software_of_current_maintainer()) AND relation IN (SELECT id FROM software));
+	WITH CHECK (origin IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY maintainer_origin_delete ON software_for_software FOR DELETE TO rsd_user
 	USING (origin IN (SELECT * FROM software_of_current_maintainer()));
@@ -471,25 +525,14 @@ CREATE POLICY anyone_can_read ON software_for_project FOR SELECT TO web_anon, rs
 CREATE POLICY maintainer_can_read ON software_for_project FOR SELECT TO rsd_user
 	USING (software IN (SELECT * FROM software_of_current_maintainer()) OR project IN (SELECT * FROM projects_of_current_maintainer()));
 
-CREATE POLICY maintainer_origin_insert ON software_for_project FOR INSERT TO rsd_user
-	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_origin');
+CREATE POLICY maintainer_insert ON software_for_project FOR INSERT TO rsd_user
+	WITH CHECK (status = 'approved' AND (software IN (SELECT * FROM software_of_current_maintainer()) OR project IN (SELECT * FROM projects_of_current_maintainer())));
 
-CREATE POLICY maintainer_relation_insert ON software_for_project FOR INSERT TO rsd_user
-	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_relation');
-
-CREATE POLICY maintainer_both_insert ON software_for_project FOR INSERT TO rsd_user
-	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND project IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'approved');
-
-CREATE POLICY maintainer_relation_upgrade_status ON software_for_project FOR UPDATE TO rsd_user
-	USING (project IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_origin')
-	WITH CHECK (status = 'approved');
-
-CREATE POLICY maintainer_origin_upgrade_status ON software_for_project FOR UPDATE TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_relation')
-	WITH CHECK (status = 'approved');
+CREATE POLICY maintainer_update ON software_for_project FOR UPDATE TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()) OR project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY maintainer_delete ON software_for_project FOR DELETE TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()) OR project IN (SELECT * FROM projects_of_current_maintainer()));
+	USING (status = 'approved' AND (software IN (SELECT * FROM software_of_current_maintainer()) OR project IN (SELECT * FROM projects_of_current_maintainer())));
 
 CREATE POLICY admin_all_rights ON software_for_project TO rsd_admin
 	USING (TRUE)
@@ -504,25 +547,14 @@ CREATE POLICY anyone_can_read ON project_for_project FOR SELECT TO web_anon, rsd
 CREATE POLICY maintainer_can_read ON project_for_project FOR SELECT TO rsd_user
 	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM projects_of_current_maintainer()));
 
-CREATE POLICY maintainer_origin_insert ON project_for_project FOR INSERT TO rsd_user
-	WITH CHECK (origin IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_origin');
+CREATE POLICY maintainer_insert ON project_for_project FOR INSERT TO rsd_user
+	WITH CHECK (status = 'approved' AND (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM organisations_of_current_maintainer())));
 
-CREATE POLICY maintainer_relation_insert ON project_for_project FOR INSERT TO rsd_user
-	WITH CHECK (relation IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_relation');
-
-CREATE POLICY maintainer_both_insert ON project_for_project FOR INSERT TO rsd_user
-	WITH CHECK (origin IN (SELECT * FROM projects_of_current_maintainer()) AND relation IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'approved');
-
-CREATE POLICY maintainer_relation_upgrade_status ON project_for_project FOR UPDATE TO rsd_user
-	USING (relation IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_origin')
-	WITH CHECK (status = 'approved');
-
-CREATE POLICY maintainer_origin_upgrade_status ON project_for_project FOR UPDATE TO rsd_user
-	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_relation')
-	WITH CHECK (status = 'approved');
+CREATE POLICY maintainer_update ON project_for_project FOR UPDATE TO rsd_user
+	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM organisations_of_current_maintainer()));
 
 CREATE POLICY maintainer_delete ON project_for_project FOR DELETE TO rsd_user
-	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM projects_of_current_maintainer()));
+	USING (status = 'approved' AND (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM organisations_of_current_maintainer())));
 
 CREATE POLICY admin_all_rights ON project_for_project TO rsd_admin
 	USING (TRUE)
@@ -535,27 +567,16 @@ CREATE POLICY anyone_can_read ON software_for_organisation FOR SELECT TO web_ano
 	USING (software IN (SELECT id FROM software));
 
 CREATE POLICY maintainer_can_read ON software_for_organisation FOR SELECT TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()));
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
 
-CREATE POLICY maintainer_origin_insert ON software_for_organisation FOR INSERT TO rsd_user
-	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_origin');
+CREATE POLICY maintainer_insert ON software_for_organisation FOR INSERT TO rsd_user
+	WITH CHECK (status = 'approved' AND ((NOT is_featured AND software IN (SELECT * FROM software_of_current_maintainer())) OR organisation IN (SELECT * FROM organisations_of_current_maintainer())));
 
-CREATE POLICY maintainer_relation_insert ON software_for_organisation FOR INSERT TO rsd_user
-	WITH CHECK (organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'requested_by_relation');
-
-CREATE POLICY maintainer_both_insert ON software_for_organisation FOR INSERT TO rsd_user
-	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()) AND organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'approved');
-
-CREATE POLICY maintainer_relation_upgrade_status ON software_for_organisation FOR UPDATE TO rsd_user
-	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'requested_by_origin')
-	WITH CHECK (status = 'approved');
-
-CREATE POLICY maintainer_origin_upgrade_status ON software_for_organisation FOR UPDATE TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()) AND status = 'requested_by_relation')
-	WITH CHECK (status = 'approved');
+CREATE POLICY maintainer_update ON software_for_organisation FOR UPDATE TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()) OR organisation IN (SELECT * FROM organisations_of_current_maintainer()));
 
 CREATE POLICY maintainer_delete ON software_for_organisation FOR DELETE TO rsd_user
-	USING (software IN (SELECT * FROM software_of_current_maintainer()) OR organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+	USING (status = 'approved' AND (software IN (SELECT * FROM software_of_current_maintainer()) OR organisation IN (SELECT * FROM organisations_of_current_maintainer())));
 
 CREATE POLICY admin_all_rights ON software_for_organisation TO rsd_admin
 	USING (TRUE)
@@ -568,27 +589,16 @@ CREATE POLICY anyone_can_read ON project_for_organisation FOR SELECT TO web_anon
 	USING (project IN (SELECT id FROM project));
 
 CREATE POLICY maintainer_can_read ON project_for_organisation FOR SELECT TO rsd_user
-	USING (project IN (SELECT * FROM projects_of_current_maintainer()));
+	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
 
-CREATE POLICY maintainer_origin_insert ON project_for_organisation FOR INSERT TO rsd_user
-	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_origin');
+CREATE POLICY maintainer_insert ON project_for_organisation FOR INSERT TO rsd_user
+	WITH CHECK (status = 'approved' AND ((NOT is_featured AND project IN (SELECT * FROM projects_of_current_maintainer())) OR organisation IN (SELECT * FROM organisations_of_current_maintainer())));
 
-CREATE POLICY maintainer_relation_insert ON project_for_organisation FOR INSERT TO rsd_user
-	WITH CHECK (organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'requested_by_relation');
-
-CREATE POLICY maintainer_both_insert ON project_for_organisation FOR INSERT TO rsd_user
-	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()) AND organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'approved');
-
-CREATE POLICY maintainer_relation_upgrade_status ON project_for_organisation FOR UPDATE TO rsd_user
-	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()) AND status = 'requested_by_origin')
-	WITH CHECK (status = 'approved');
-
-CREATE POLICY maintainer_origin_upgrade_status ON project_for_organisation FOR UPDATE TO rsd_user
-	USING (project IN (SELECT * FROM projects_of_current_maintainer()) AND status = 'requested_by_relation')
-	WITH CHECK (status = 'approved');
+CREATE POLICY maintainer_update ON project_for_organisation FOR UPDATE TO rsd_user
+	USING (project IN (SELECT * FROM projects_of_current_maintainer()) OR organisation IN (SELECT * FROM organisations_of_current_maintainer()));
 
 CREATE POLICY maintainer_delete ON project_for_organisation FOR DELETE TO rsd_user
-	USING (project IN (SELECT * FROM projects_of_current_maintainer()) OR organisation IN (SELECT * FROM organisations_of_current_maintainer()));
+	USING (status = 'approved' AND (project IN (SELECT * FROM projects_of_current_maintainer()) OR organisation IN (SELECT * FROM organisations_of_current_maintainer())));
 
 CREATE POLICY admin_all_rights ON project_for_organisation TO rsd_admin
 	USING (TRUE)

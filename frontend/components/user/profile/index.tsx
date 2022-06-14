@@ -1,24 +1,30 @@
-import {useState,useEffect} from 'react'
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {Session} from '~/auth'
-import ContentLoader from '~/components/layout/ContentLoader'
 
 export default function UserProfile({session}: { session: Session }) {
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    },1000)
-  },[])
-
-  if (loading) return <ContentLoader />
 
   return (
     <div>
-      <h1>User profile</h1>
-      <pre className="w-[60rem]">
+      {/* <h1>Your profile</h1> */}
+      <div className="py-4">
+        <div>Account id</div>
+        {session?.user?.account ?? ''}
+      </div>
+      <div className="py-4">
+        <div>Name</div>
+        {session?.user?.name ?? ''}
+      </div>
+      <div className="py-4">
+        <div>Role</div>
+        {session?.user?.role ?? ''}
+      </div>
+      {/* <pre className="w-[60rem]">
         {JSON.stringify(session,null,2)}
-      </pre>
+      </pre> */}
     </div>
   )
 }

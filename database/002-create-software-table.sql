@@ -1,3 +1,10 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TYPE description_type AS ENUM (
 	'link',
 	'markdown'
@@ -12,7 +19,6 @@ CREATE TABLE software (
 	description_url VARCHAR(200),
 	description_type description_type DEFAULT 'markdown' NOT NULL,
 	get_started_url VARCHAR,
-	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	short_statement VARCHAR(300),
 	created_at TIMESTAMP NOT NULL,

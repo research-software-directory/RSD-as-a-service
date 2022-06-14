@@ -1,3 +1,11 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 export const softwareInformation = {
   brand_name: {
@@ -77,12 +85,16 @@ export const softwareInformation = {
       maxLength: {value: 100, message: 'Maximum length is 100'},
     }
   },
+  pageStatus: {
+    title: 'Page status',
+    subtitle: 'Only published software is visible to others'
+  },
   is_published: {
     label: 'Published',
   },
-  is_featured: {
-    label: 'Featured',
-  },
+  // is_featured: {
+  //   label: 'Featured',
+  // },
   keywords: {
     title: 'Keywords',
     subtitle: 'Find, add or import using concept DOI.',

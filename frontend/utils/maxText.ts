@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 export function maxText({text, maxLen = 100, dots=true}:
   { text: string, maxLen?: number, dots?: boolean}) {

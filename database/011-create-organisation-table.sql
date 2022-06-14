@@ -1,3 +1,11 @@
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TABLE organisation (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	slug VARCHAR(100) NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
@@ -53,7 +61,14 @@ BEGIN
 	NEW.slug = OLD.slug;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
-	return NEW;
+
+	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+		IF NEW.is_tenant IS DISTINCT FROM OLD.is_tenant OR NEW.primary_maintainer IS DISTINCT FROM OLD.primary_maintainer THEN
+			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the tenant status or primary maintainer for organisation ' || OLD.name;
+		END IF;
+	END IF;
+
+	RETURN NEW;
 END
 $$;
 
@@ -89,7 +104,7 @@ $$;
 
 
 CREATE TABLE logo_for_organisation (
-	id UUID references organisation(id) PRIMARY KEY,
+	organisation UUID references organisation(id) PRIMARY KEY,
 	data VARCHAR NOT NULL,
 	mime_type VARCHAR(100) NOT NULL,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -107,12 +122,12 @@ BEGIN
 		'{"Content-Disposition": "inline; filename=\"%s\""},'
 		'{"Cache-Control": "max-age=259200"}]',
 		logo_for_organisation.mime_type,
-		logo_for_organisation.id)
-	FROM logo_for_organisation WHERE logo_for_organisation.id = get_logo.id INTO headers;
+		logo_for_organisation.organisation)
+	FROM logo_for_organisation WHERE logo_for_organisation.organisation = get_logo.id INTO headers;
 
 	PERFORM set_config('response.headers', headers, TRUE);
 
-	SELECT decode(logo_for_organisation.data, 'base64') FROM logo_for_organisation WHERE logo_for_organisation.id = get_logo.id INTO blob;
+	SELECT decode(logo_for_organisation.data, 'base64') FROM logo_for_organisation WHERE logo_for_organisation.organisation = get_logo.id INTO blob;
 
 	IF FOUND
 		THEN RETURN(blob);

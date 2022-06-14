@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+ * SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 .card{
     @apply rounded-lg bg-[#90909060] hover:bg-gradient-to-r p-[1px] from-[#7928ca] to-[#ff0080]
 }

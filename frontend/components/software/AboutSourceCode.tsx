@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import GitHubIcon from '@mui/icons-material/GitHub'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'

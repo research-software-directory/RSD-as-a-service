@@ -1,3 +1,13 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package nl.esciencecenter.rsd.migration;
 
 import com.auth0.jwt.JWT;
@@ -48,6 +58,8 @@ public class Main {
 			"https://doi.org/todo", "https://github.com/FIXME", "https://doi.org/PLACEHOLDER", "https://doi.org/",
 			"https://github.com/TODO");
 
+	public static final Collection<String> softwareSlugsToFeature = new HashSet<>();
+
 	public static void main(String[] args) {
 		String signingSecret = System.getenv("PGRST_JWT_SECRET");
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
@@ -95,6 +107,7 @@ public class Main {
 
 		String allMentionsString = get(URI.create(LEGACY_RSD_MENTION_URI));
 		JsonArray allMentionsFromLegacyRSD = JsonParser.parseString(allMentionsString).getAsJsonArray();
+		sanitiseMentions(allMentionsFromLegacyRSD);
 		saveMentions(allMentionsFromLegacyRSD);
 		Map<String, String> legacyMentionIdToId = legacyMentionIdToId(allMentionsFromLegacyRSD);
 		saveMentionsForSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyMentionIdToId);
@@ -165,7 +178,7 @@ public class Main {
 			softwareToSave.add("concept_doi", jsonNullIfEquals(softwareFromLegacyRSD.get("conceptDOI"), "10.0000/FIXME"));
 			softwareToSave.add("description", mergeBulletsReadMore(softwareFromLegacyRSD.get("bullets"), softwareFromLegacyRSD.get("readMore")));
 			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
-			softwareToSave.add("is_featured", softwareFromLegacyRSD.get("isFeatured"));
+			if (softwareFromLegacyRSD.get("isFeatured").getAsBoolean()) softwareSlugsToFeature.add(softwareFromLegacyRSD.get("slug").getAsString());
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
 			softwareToSave.add("short_statement", softwareFromLegacyRSD.get("shortStatement"));
 
@@ -646,78 +659,112 @@ public class Main {
 				jsonElement.getAsString();
 	}
 
+	public static void sanitiseMentions(JsonArray legacyMentions) {
+		Iterable<JsonObject> legacyMentionsAsObjects = (Iterable) legacyMentions;
+		for (JsonObject legacyMention : legacyMentionsAsObjects) {
+			String oldType = legacyMention.get("type").getAsString();
+			String newType = replaceType(oldType);
+			if (legacyMention.get("isCorporateBlog").getAsBoolean()) newType = "highlight";
+			legacyMention.addProperty("type", newType);
+
+			String oldUrl = nullOrValue(legacyMention.get("url"));
+			String newUrl = fixDoi(oldUrl);
+			legacyMention.addProperty("url", newUrl);
+		}
+	}
+
 	public static void saveMentions(JsonArray allMentionsFromLegacyRSD) {
 		JsonArray allMentionsToSave = new JsonArray();
+		Set<String> usedDois = new HashSet<>();
 		allMentionsFromLegacyRSD.forEach(jsonElement -> {
 			JsonObject mentionToSave = new JsonObject();
 			JsonObject mentionFromLegacyRSD = jsonElement.getAsJsonObject();
 			mentionToSave.add("authors", mentionFromLegacyRSD.get("author"));
 			mentionToSave.add("image_url", mentionFromLegacyRSD.get("image"));
-			mentionToSave.add("is_featured", mentionFromLegacyRSD.get("isCorporateBlog"));
 			ZonedDateTime oldDate = ZonedDateTime.parse(mentionFromLegacyRSD.get("date").getAsString());
 			int year = oldDate.getYear();
 			mentionToSave.addProperty("publication_year", year);
 			mentionToSave.addProperty("source", "manual");
 			mentionToSave.add("title", mentionFromLegacyRSD.get("title"));
-			String oldType = mentionFromLegacyRSD.get("type").getAsString();
-			Set<String> typesThatShouldBeOther = Set.of("attachment", "document", "manuscript", "note", "radioBroadcast");
-			String newType = typesThatShouldBeOther.contains(oldType) ? "other" : oldType;
-			mentionToSave.addProperty("mention_type", newType);
-			String oldUrl = nullOrValue(mentionFromLegacyRSD.get("url"));
-			//fix broken dois:
-			if (oldUrl != null && oldUrl.startsWith("https://doi.org/0")) {
-				oldUrl = oldUrl.replaceFirst("https://doi\\.org/0", "https://doi.org/10");
-			}
-			if (oldUrl != null && oldUrl.startsWith("https://doi.org/ ")) {
-				oldUrl = oldUrl.replaceFirst("https://doi\\.org/ ", "https://doi.org/");
-			}
-			if (oldUrl != null && oldUrl.startsWith("https://doi.org/")) {
-				mentionToSave.addProperty("doi", oldUrl.replaceFirst("https://doi\\.org/", ""));
+			mentionToSave.add("mention_type", mentionFromLegacyRSD.get("type"));
+			String url = nullOrValue(mentionFromLegacyRSD.get("url"));
+			if (url != null && url.startsWith("https://doi.org/")) {
+				String doi = url.replaceFirst("https://doi\\.org/", "");
+				if (usedDois.contains(doi)) return;
+				usedDois.add(doi);
+				mentionToSave.addProperty("doi", doi);
 			} else {
 				mentionToSave.add("doi", JsonNull.INSTANCE);
 			}
-			mentionToSave.addProperty("url", oldUrl);
-			mentionToSave.add("version", mentionFromLegacyRSD.get("version"));
-			mentionToSave.add("zotero_key", mentionFromLegacyRSD.get("zoteroKey"));
+			mentionToSave.addProperty("url", url);
 
 			allMentionsToSave.add(mentionToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/mention"), allMentionsToSave.toString());
 	}
 
+	public static String replaceType(String type) {
+		Set<String> typesThatShouldBeOther = Set.of("attachment", "document", "manuscript", "note", "radioBroadcast");
+		return typesThatShouldBeOther.contains(type) ? "other" : type;
+	}
+
+	public static String fixDoi(String url) {
+		if (url != null && url.startsWith("https://doi.org/0")) {
+			url = url.replaceFirst("https://doi\\.org/0", "https://doi.org/10");
+		}
+		if (url != null && url.startsWith("https://doi.org/ ")) {
+			url = url.replaceFirst("https://doi\\.org/ ", "https://doi.org/");
+		}
+		return url;
+	}
+
 	public static Map<String, String> legacyMentionIdToId(JsonArray allMentionsFromLegacyRSD) {
 //		So we have a problem here: how to uniquely identify a mention?
 //		This is needed to retrieve the primary key for a mention after it is saved in Postgres.
-//		Unfortunately, title is not unique, zotero_key can be null.
-//		Luckily, the combination of title and zotero_key is unique at the time of writing.
-//		We throw an exception if this is not the case in the future.
-		JsonArray savedMentions = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/mention?select=id,title,zotero_key"))).getAsJsonArray();
+//		We first see if there is a matching DOI to obtain the new id, since DOIs have to be unique.
+//		Otherwise, we use the fields authors,image_url,mention_type,url,title.
+//		If we cannot map an old id to a new id, we throw an exception.
+		JsonArray savedMentions = JsonParser.parseString(getPostgREST(URI.create(POSTGREST_URI + "/mention?select=id,authors,image_url,mention_type,url,title,doi"))).getAsJsonArray();
 		Map<MentionRecord, String> mentionToId = new HashMap<>();
+		Map<String, String> doiToId = new HashMap<>();
 		savedMentions.forEach(jsonMention -> {
 			String id = jsonMention.getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 			String title = jsonMention.getAsJsonObject().getAsJsonPrimitive("title").getAsString();
-			String zoteroKey = jsonMention.getAsJsonObject().getAsJsonPrimitive("zotero_key").getAsString();
-			mentionToId.put(new MentionRecord(title, zoteroKey), id);
-		});
-		if (mentionToId.size() != allMentionsFromLegacyRSD.size())
-			throw new RuntimeException("Mention sizes not equal, is " + mentionToId.size() + " but should be " + allMentionsFromLegacyRSD.size());
-
-		Map<String, MentionRecord> legacyIdToRecord = new HashMap<>();
-		allMentionsFromLegacyRSD.forEach(legacyMention -> {
-			JsonObject legacyMentionObject = legacyMention.getAsJsonObject();
-			String legacyId = legacyMentionObject.getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
-			String legacyTitle = legacyMentionObject.getAsJsonPrimitive("title").getAsString();
-			String legacyZoteroKey = legacyMentionObject.getAsJsonPrimitive("zoteroKey").getAsString();
-			legacyIdToRecord.put(legacyId, new MentionRecord(legacyTitle, legacyZoteroKey));
+			String author = stringOrNull(jsonMention.getAsJsonObject().get("authors"));
+			String image_url = stringOrNull(jsonMention.getAsJsonObject().get("image_url"));
+			String mention_type = jsonMention.getAsJsonObject().get("mention_type").getAsString();
+			String url = stringOrNull(jsonMention.getAsJsonObject().get("url"));
+			mentionToId.put(new MentionRecord(title, author, image_url, mention_type, url), id);
+			JsonElement possibleDoi = jsonMention.getAsJsonObject().get("doi");
+			if (possibleDoi.isJsonPrimitive()) doiToId.put(possibleDoi.getAsString(), id);
 		});
 
 		Map<String, String> result = new HashMap<>();
-		legacyIdToRecord.forEach((legacyId, mentionRecord) -> result.put(legacyId, mentionToId.get(mentionRecord)));
+		for (JsonElement legacyMention : allMentionsFromLegacyRSD) {
+			JsonObject legacyMentionObject = legacyMention.getAsJsonObject();
+			String legacyId = legacyMentionObject.getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
+			String legacyTitle = legacyMentionObject.getAsJsonPrimitive("title").getAsString();
+			String legacyAuthor = stringOrNull(legacyMentionObject.get("author"));
+			String legacyImageUrl = stringOrNull(legacyMentionObject.get("image"));
+			String legacyMentionType = legacyMentionObject.getAsJsonPrimitive("type").getAsString();
+			String legacyUrl = stringOrNull(legacyMentionObject.get("url"));
+			if (legacyUrl != null && legacyUrl.startsWith("https://doi.org/")) {
+				String doi = legacyUrl.replaceFirst("https://doi\\.org/", "");
+				if (!doiToId.containsKey(doi)) throw new RuntimeException("We couldn't map legacy mention with id " + legacyId + " to a new id");
+				result.put(legacyId, doiToId.get(doi));
+			}
+			else {
+				MentionRecord legacyMentionRecord = new MentionRecord(legacyTitle, legacyAuthor, legacyImageUrl, legacyMentionType, legacyUrl);
+				if (!mentionToId.containsKey(legacyMentionRecord)) throw new RuntimeException("We couldn't map legacy mention with id " + legacyId + " to a new id");
+				result.put(legacyId, mentionToId.get(legacyMentionRecord));
+			}
+		}
 		return result;
 	}
 
 	public static void saveMentionsForSoftware(JsonArray allSoftwareFromLegacyRSD, Map<String, String> slugToId, Map<String, String> legacyMentionIdToId) {
 		JsonArray allMentionsForSoftwareToSave = new JsonArray();
+		Set<MentionRelationRecord> usedRelations = new HashSet<>();
 		allSoftwareFromLegacyRSD.forEach(legacySoftware -> {
 			String slug = legacySoftware.getAsJsonObject().getAsJsonPrimitive("slug").getAsString();
 			legacySoftware.getAsJsonObject().getAsJsonObject("related").getAsJsonArray("mentions").forEach(legacyMention -> {
@@ -726,6 +773,9 @@ public class Main {
 				JsonObject mentionForSoftwareToSave = new JsonObject();
 				mentionForSoftwareToSave.addProperty("mention", newId);
 				mentionForSoftwareToSave.addProperty("software", slugToId.get(slug));
+				MentionRelationRecord mentionRelationRecord = new MentionRelationRecord(newId, slugToId.get(slug));
+				if (usedRelations.contains(mentionRelationRecord)) return;
+				usedRelations.add(mentionRelationRecord);
 				allMentionsForSoftwareToSave.add(mentionForSoftwareToSave);
 			});
 		});
@@ -734,7 +784,9 @@ public class Main {
 
 	public static void saveImpactAndOutputForProjects(JsonArray allProjectsFromLegacyRSD, Map<String, String> slugToId, Map<String, String> legacyMentionIdToId) {
 		JsonArray outputForProjectsToSave = new JsonArray();
+		Set<MentionRelationRecord> usedOutputRelations = new HashSet<>();
 		JsonArray impactForProjectsToSave = new JsonArray();
+		Set<MentionRelationRecord> usedImpactRelations = new HashSet<>();
 		allProjectsFromLegacyRSD.forEach(jsonProject -> {
 			JsonObject projectObject = jsonProject.getAsJsonObject();
 			String id = slugToId.get(projectObject.getAsJsonPrimitive("slug").getAsString());
@@ -746,6 +798,9 @@ public class Main {
 				JsonObject outputToSave = new JsonObject();
 				outputToSave.addProperty("mention", newId);
 				outputToSave.addProperty("project", id);
+				MentionRelationRecord mentionRelationRecord = new MentionRelationRecord(newId, id);
+				if (usedOutputRelations.contains(mentionRelationRecord)) return;
+				usedOutputRelations.add(mentionRelationRecord);
 				outputForProjectsToSave.add(outputToSave);
 			});
 
@@ -756,6 +811,9 @@ public class Main {
 				JsonObject impactToSave = new JsonObject();
 				impactToSave.addProperty("mention", newId);
 				impactToSave.addProperty("project", id);
+				MentionRelationRecord mentionRelationRecord = new MentionRelationRecord(newId, id);
+				if (usedImpactRelations.contains(mentionRelationRecord)) return;
+				usedImpactRelations.add(mentionRelationRecord);
 				impactForProjectsToSave.add(impactToSave);
 			});
 		});
@@ -945,7 +1003,7 @@ public class Main {
 			if (orgId == null) System.out.println(name);
 			if (existingIds.contains(orgId)) return;
 
-			logoToSave.addProperty("id", orgId);
+			logoToSave.addProperty("organisation", orgId);
 			logoToSave.add("data", logo.get("data"));
 			logoToSave.add("mime_type", logo.get("mimeType"));
 			existingIds.add(orgNameToId.get(name));
@@ -981,12 +1039,14 @@ public class Main {
 				JsonObject relationToSave = new JsonObject();
 				relationToSave.addProperty("software", idSoftwareNew);
 				relationToSave.addProperty("organisation", idOrganisationNew);
+				relationToSave.addProperty("is_featured", idOrganisationLegacy.equals(LEGACY_ID_NLESC) && softwareSlugsToFeature.contains(slugSoftware));
 				allRelationsToSave.add(relationToSave);
 			});
 			if (!isNlescRelated.get()) {
 				JsonObject relationToSave = new JsonObject();
 				relationToSave.addProperty("software", idSoftwareNew);
 				relationToSave.addProperty("organisation", newIdNlesc);
+				relationToSave.addProperty("is_featured", softwareSlugsToFeature.contains(slugSoftware));
 				allRelationsToSave.add(relationToSave);
 			}
 		});
@@ -1076,5 +1136,11 @@ public class Main {
 			throw new RuntimeException("Error fetching data from the endpoint: " + response.body());
 		}
 		return response.body();
+	}
+
+	public static String stringOrNull(JsonElement element) {
+		if (element == null || element.isJsonNull()) return null;
+		if (element.isJsonPrimitive()) return element.getAsString();
+		throw new RuntimeException("Element is of unexpected type, its contents is: " + element);
 	}
 }

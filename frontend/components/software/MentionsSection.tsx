@@ -1,7 +1,12 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import DarkThemeSection from '../layout/DarkThemeSection'
 
 import PageContainer from '../layout/PageContainer'
-import {sortOnDateProp} from '../../utils/sortFn'
+import {sortOnNumProp} from '../../utils/sortFn'
 import {MentionForSoftware, MentionItemProps, MentionTypeKeys} from '../../types/Mention'
 import {clasifyMentionsByType} from '../../utils/editMentions'
 import MentionItemFeatured from '../mention/MentionItemFeatured'
@@ -28,7 +33,7 @@ export default function SoftwareMentionsSection({mentions}: { mentions: MentionF
         </h2>
         <section>
           {featuredMentions
-            .sort((a,b)=>sortOnDateProp(a,b,'publication_year','desc'))
+            .sort((a,b)=>sortOnNumProp(a,b,'publication_year','desc'))
             .map(item => {
             return (
               <MentionItemFeatured key={item.url} mention={item} />
@@ -39,7 +44,7 @@ export default function SoftwareMentionsSection({mentions}: { mentions: MentionF
             const type = key as MentionTypeKeys
             const items = mentionByType[type]?.sort((a, b) => {
               // sort mentions on date, newest at the top
-              return sortOnDateProp(a,b,'publication_year','desc')
+              return sortOnNumProp(a,b,'publication_year','desc')
             })
             const title = getMentionType(type,'plural')
             return (

@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 dv4all
+#
+# SPDX-License-Identifier: Apache-2.0
 
 name: frontend unit tests
 
@@ -12,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: "install node v16 and cash yarn"
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: 'yarn'

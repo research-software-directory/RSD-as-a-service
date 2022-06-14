@@ -1,3 +1,9 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 
 import {useAuth} from '~/auth'
@@ -50,14 +56,8 @@ export default function RelatedProjectsForProject() {
     const find = relatedProject.filter(item => item.slug === selected.slug)
     // debugger
     if (find.length === 0) {
-      // determine status of relation between projects 'ownership'
-      const isMaintainer = await isMaintainerOfProject({
-        slug: selected.slug,
-        account: session.user?.account,
-        token: session.token,
-        frontend: true
-      })
-      const status:Status = isMaintainer ? 'approved' : 'requested_by_origin'
+      // default status is set to approved without validation
+      const status:Status = 'approved'
       // append(selected)
       const resp = await addRelatedProject({
         origin: project.id,
@@ -66,7 +66,7 @@ export default function RelatedProjectsForProject() {
         token: session.token
       })
       if (resp.status !== 200) {
-        showErrorMessage(`Failed to add related software. ${resp.message}`)
+        showErrorMessage(`Failed to add related project. ${resp.message}`)
       } else {
         const newList = [
           ...relatedProject,
@@ -94,7 +94,7 @@ export default function RelatedProjectsForProject() {
         token: session.token
       })
       if (resp.status !== 200) {
-        showErrorMessage(`Failed to add related software. ${resp.message}`)
+        showErrorMessage(`Failed to remove related project. ${resp.message}`)
       } else {
         const newList = [
           ...relatedProject.slice(0, pos),

@@ -1,3 +1,9 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {HTMLAttributes, useState} from 'react'
 
 // import AsyncAutocomplete from '../../../form/AsyncAutocomplete'
@@ -50,7 +56,7 @@ export default function FindOrganisation({onAdd, onCreate}:
     option: AutocompleteOption<SearchOrganisation>) {
     // if more than one option we add border at the bottom
     // we assume that first option is Add "new item"
-    if (options.length > 1 && onCreate) {
+    if (options.length > 1) {
       if (props?.className) {
         props.className+=' mb-2 border-b'
       } else {
@@ -69,7 +75,7 @@ export default function FindOrganisation({onAdd, onCreate}:
     option: AutocompleteOption<SearchOrganisation>,
     state: object) {
     // when value is not not found option returns input prop
-    if (option?.input && onCreate) {
+    if (option?.input) {
       // if input is over minLength
       if (option?.input.length > config.findOrganisation.validation.minLength) {
         // we offer an option to create this entry

@@ -1,16 +1,22 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect} from 'react'
 import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
 } from '@mui/material'
-import SaveIcon from '@mui/icons-material/Save'
 import {useForm} from 'react-hook-form'
 
 import ControlledTextField from '../form/ControlledTextField'
-import ControlledSwitch from '../form/ControlledSwitch'
 import {mentionModal as config, mentionType} from './config'
 import {MentionItemProps, MentionTypeKeys} from '../../types/Mention'
 import ControlledSelect from '~/components/form/ControlledSelect'
+import SubmitButtonWithListener from '../form/SubmitButtonWithListener'
 
 export type EditMentionModalProps = {
   open: boolean,
@@ -22,13 +28,19 @@ export type EditMentionModalProps = {
   title?: string
 }
 
-const mentionTypeOptions = Object.keys(mentionType).map(key => {
+// manual/editable mention type options
+const manualOptions = Object.keys(mentionType).filter(key => {
+  return mentionType[key as MentionTypeKeys]?.manual
+})
+const mentionTypeOptions = manualOptions.map(key => {
   const type = mentionType[key as MentionTypeKeys].singular
   return {
     value: key,
     label: type
   }
 })
+
+const formId='edit-mention-form'
 
 export default function EditMentionModal({open, onCancel, onSubmit, item, pos, title}: EditMentionModalProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
@@ -83,7 +95,9 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
       }}>
         {title ? title : 'Mention'}
       </DialogTitle>
-      <form onSubmit={handleSubmit((data: MentionItemProps) => onSubmit({data, pos}))}
+      <form
+        id={formId}
+        onSubmit={handleSubmit((data: MentionItemProps) => onSubmit({data, pos}))}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -196,18 +210,11 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               defaultValue: formData?.image_url,
               helperTextMessage: config.image_url.help,
               helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`,
+              disabled: formData.mention_type !== 'highlight'
             }}
-            rules={config.image_url.validation}
+            rules={formData.mention_type === 'highlight' ? config.image_url.validation : undefined}
           />
-          <section className="flex pt-4 justify-between">
-            <ControlledSwitch
-              name="is_featured"
-              label={config.is_featured.label}
-              control={control}
-              defaultValue={formData?.is_featured ?? false}
-              disabled={isFeaturedDisabled()}
-            />
-          </section>
+
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',
@@ -222,23 +229,10 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
           >
             Cancel
           </Button>
-          <Button
-            tabIndex={0}
-            type="submit"
-            variant="contained"
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
+          <SubmitButtonWithListener
             disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
+            formId={formId}
+          />
         </DialogActions>
       </form>
     </Dialog>
@@ -248,11 +242,5 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
     if (isValid === false) return true
     if (isDirty === false) return true
     return false
-  }
-
-  function isFeaturedDisabled() {
-    if (errors?.image_url || errors?.url) return true
-    if (formData.url && formData.image_url) return false
-    return true
   }
 }

@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2022 dv4all
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Research Software Directory (RSD) - PostgREST tests
 
 This service can automatically be build and started with `docker-compose`. It does not work in conjunction with the `data-migration` service. It also assumes that the database is empty at the start.

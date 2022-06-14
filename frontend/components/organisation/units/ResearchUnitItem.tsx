@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import Link from 'next/link'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'

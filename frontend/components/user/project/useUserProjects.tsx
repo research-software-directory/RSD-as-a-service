@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect,useState} from 'react'
 import {Session} from '~/auth'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
@@ -23,11 +28,11 @@ export async function getProjectsForMaintainer(
 ) {
   try {
     // baseUrl
-    let url = `/api/v1/rpc/projects_by_maintainer?maintainer=eq.${session?.user?.account}&order=is_published.desc,title`
+    let url = `/api/v1/rpc/projects_by_maintainer?maintainer_id=${session?.user?.account}&order=is_published.desc,title`
 
     // search
     if (searchFor) {
-      url += `&or=(title.ilike.*${searchFor}*, subtitle.ilike.*${searchFor}*))`
+      url += `&or=(title.ilike.*${searchFor}*, subtitle.ilike.*${searchFor}*)`
     }
 
     // pagination

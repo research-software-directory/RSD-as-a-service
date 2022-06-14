@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect,useState} from 'react'
 import {EditProject, ProjectLink} from '~/types/Project'
 import {getKeywordsForProject, getLinksForProject, getOrganisationsOfProject, getProjectItem, getResearchDomainsForProject} from '~/utils/getProjects'

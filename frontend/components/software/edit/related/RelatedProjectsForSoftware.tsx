@@ -1,3 +1,9 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 
 import {useAuth} from '~/auth'
@@ -52,14 +58,8 @@ export default function RelatedProjectsForSoftware() {
     const find = relatedProject.filter(item => item.slug === selected.slug)
     // debugger
     if (find.length === 0) {
-      // determine status of relation between software and project 'ownership'
-      const isMaintainer = await isMaintainerOfProject({
-        slug: selected.slug,
-        account: session.user?.account,
-        token: session.token,
-        frontend: true
-      })
-      const status:Status = isMaintainer ? 'approved' : 'requested_by_origin'
+      // default status of relation between software and project is approved
+      const status:Status = 'approved'
       // append(selected)
       const resp = await addRelatedSoftware({
         software: software.id ?? '',

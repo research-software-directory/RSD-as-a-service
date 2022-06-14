@@ -1,3 +1,10 @@
+<!--
+SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Making a release
 
 To make a new release we use github action release_manual.yml to manually release all modules at once.

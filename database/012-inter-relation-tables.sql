@@ -1,6 +1,14 @@
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TYPE relation_status AS ENUM (
-	'requested_by_origin',
-	'requested_by_relation',
+	'rejected_by_origin',
+	'rejected_by_relation',
 	'approved'
 );
 
@@ -40,6 +48,18 @@ $$
 BEGIN
 	NEW.software = OLD.software;
 	NEW.project = OLD.project;
+
+	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+		IF NEW.status <> OLD.status AND (
+			(OLD.status = 'rejected_by_origin' AND (NEW.status <> 'approved' OR OLD.software NOT IN (SELECT * FROM software_of_current_maintainer()))) OR
+			(OLD.status = 'rejected_by_relation' AND (NEW.status <> 'approved' OR OLD.project NOT IN (SELECT * FROM projects_of_current_maintainer()))) OR
+			(OLD.status = 'approved' AND NEW.status = 'rejected_by_origin' AND OLD.software NOT IN (SELECT * FROM projects_of_current_maintainer())) OR
+			(OLD.status = 'approved' AND NEW.status = 'rejected_by_relation' AND OLD.project NOT IN (SELECT * FROM software_of_current_maintainer()))
+		) THEN
+			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to make this change to the status value for software ' || OLD.software || ' and project ' || OLD.project;
+		END IF;
+	END IF;
+
 	return NEW;
 END
 $$;
@@ -59,6 +79,18 @@ $$
 BEGIN
 	NEW.origin = OLD.origin;
 	NEW.relation = OLD.relation;
+
+	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+		IF NEW.status <> OLD.status AND (
+			(OLD.status = 'rejected_by_origin' AND (NEW.status <> 'approved' OR OLD.origin NOT IN (SELECT * FROM projects_of_current_maintainer()))) OR
+			(OLD.status = 'rejected_by_relation' AND (NEW.status <> 'approved' OR OLD.relation NOT IN (SELECT * FROM projects_of_current_maintainer()))) OR
+			(OLD.status = 'approved' AND NEW.status = 'rejected_by_origin' AND OLD.origin NOT IN (SELECT * FROM projects_of_current_maintainer())) OR
+			(OLD.status = 'approved' AND NEW.status = 'rejected_by_relation' AND OLD.relation NOT IN (SELECT * FROM projects_of_current_maintainer()))
+		) THEN
+			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to make this change to the status value for origin ' || OLD.origin || ' and relation ' || OLD.relation;
+		END IF;
+	END IF;
+
 	return NEW;
 END
 $$;
@@ -70,6 +102,7 @@ CREATE TABLE software_for_organisation (
 	software UUID references software (id),
 	organisation UUID references organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
+	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	PRIMARY KEY (software, organisation)
 );
 
@@ -78,6 +111,21 @@ $$
 BEGIN
 	NEW.software = OLD.software;
 	NEW.organisation = OLD.organisation;
+
+	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+		IF NEW.is_featured <> OLD.is_featured AND OLD.organisation NOT IN (SELECT * FROM organisations_of_current_maintainer()) THEN
+			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the is_featured value for software ' || OLD.software || 'and organisation ' || OLD.organisation;
+		END IF;
+		IF NEW.status <> OLD.status AND (
+			(OLD.status = 'rejected_by_origin' AND (NEW.status <> 'approved' OR OLD.software NOT IN (SELECT * FROM software_of_current_maintainer()))) OR
+			(OLD.status = 'rejected_by_relation' AND (NEW.status <> 'approved' OR OLD.organisation NOT IN (SELECT * FROM organisations_of_current_maintainer()))) OR
+			(OLD.status = 'approved' AND NEW.status = 'rejected_by_origin' AND OLD.software NOT IN (SELECT * FROM software_of_current_maintainer())) OR
+			(OLD.status = 'approved' AND NEW.status = 'rejected_by_relation' AND OLD.organisation NOT IN (SELECT * FROM organisations_of_current_maintainer()))
+		) THEN
+			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to make this change to the status value for software ' || OLD.software || ' and organisation ' || OLD.organisation;
+		END IF;
+	END IF;
+
 	return NEW;
 END
 $$;
@@ -90,6 +138,7 @@ CREATE TABLE project_for_organisation (
 	organisation UUID references organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
 	role organisation_role NOT NULL DEFAULT 'participating',
+	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	PRIMARY KEY (project, organisation)
 );
 
@@ -98,6 +147,21 @@ $$
 BEGIN
 	NEW.project = OLD.project;
 	NEW.organisation = OLD.organisation;
+
+	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+		IF NEW.is_featured <> OLD.is_featured AND OLD.organisation NOT IN (SELECT * FROM organisations_of_current_maintainer()) THEN
+			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the is_featured value for project ' || OLD.project || 'and organisation ' || OLD.organisation;
+		END IF;
+		IF NEW.status <> OLD.status AND (
+			(OLD.status = 'rejected_by_origin' AND (NEW.status <> 'approved' OR OLD.project NOT IN (SELECT * FROM projects_of_current_maintainer()))) OR
+			(OLD.status = 'rejected_by_relation' AND (NEW.status <> 'approved' OR OLD.organisation NOT IN (SELECT * FROM organisations_of_current_maintainer()))) OR
+			(OLD.status = 'approved' AND NEW.status = 'rejected_by_origin' AND OLD.project NOT IN (SELECT * FROM projects_of_current_maintainer())) OR
+			(OLD.status = 'approved' AND NEW.status = 'rejected_by_relation' AND OLD.organisation NOT IN (SELECT * FROM organisations_of_current_maintainer()))
+		) THEN
+			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to make this change to the status value for project ' || OLD.project || ' and organisation ' || OLD.organisation;
+		END IF;
+	END IF;
+
 	return NEW;
 END
 $$;

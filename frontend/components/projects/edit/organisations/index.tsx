@@ -1,3 +1,9 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 
 import {Session} from '~/auth'
@@ -85,7 +91,8 @@ export default function ProjectOrganisations({session}: { session: Session }) {
     const newOrganisation: EditOrganisation = newOrganisationProps({
       name,
       position: organisations.length + 1,
-      primary_maintainer: session?.user?.account ?? null,
+      // new organisations without primary_maintainer
+      primary_maintainer: null,
     })
     // show modal
     setModal({

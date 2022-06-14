@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 export const cfgImpact = {
   title: 'Impact',
@@ -12,7 +16,7 @@ export const cfgImpact = {
     }
   },
   newItem: {
-    title: 'New item',
-    subtitle: 'Use the add button to create a new item'
+    title: 'New item without DOI',
+    subtitle: 'Use add button to create new item without DOI'
   }
 }
