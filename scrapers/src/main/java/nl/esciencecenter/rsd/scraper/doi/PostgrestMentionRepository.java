@@ -29,7 +29,7 @@ public class PostgrestMentionRepository implements MentionRepository {
 	static Collection<MentionRecord> parseJson(String data) {
 		return new GsonBuilder()
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-				.registerTypeAdapter(Instant.class, (JsonDeserializer) (json, typeOfT, context) -> Instant.parse(json.getAsString() + "Z"))
+				.registerTypeAdapter(Instant.class, (JsonDeserializer) (json, typeOfT, context) -> Instant.parse(json.getAsString()))
 				.create()
 				.fromJson(data, new TypeToken<Collection<MentionRecord>>() {
 				}.getType());
