@@ -19,6 +19,7 @@ import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
 // import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
 import {useRouter} from 'next/router'
+import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
 
 export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   const [activePath, setActivePath] = useState('/')
@@ -57,6 +58,9 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
         </div>
 
         <JavascriptSupportWarning/>
+
+        <GlobalSearchAutocomplete/>
+
         <div
           className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right sm:flex-none">
           {editButton ? editButton : null}
