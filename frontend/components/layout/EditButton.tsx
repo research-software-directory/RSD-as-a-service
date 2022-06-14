@@ -25,7 +25,7 @@ export default function EditButton({title,url}:EditButtonProps) {
         router.push(url)
       }}
     >
-      <EditIcon />
+      <EditIcon className="text-white"/>
     </IconButton>
   )
 }

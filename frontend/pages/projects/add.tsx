@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import ProtectedContent from '../../auth/ProtectedContent'
-import AppHeader from '../../components/layout/AppHeader'
+import AppHeader from '~/components/AppHeader'
 import PageContainer from '../../components/layout/PageContainer'
 import AppFooter from '../../components/layout/AppFooter'
 
