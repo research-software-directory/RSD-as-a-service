@@ -112,11 +112,11 @@ const exampleWork = {
     'familyName': 'Barsacchi',
     'affiliation': []
   },
-    {
-      'givenName': 'Marc',
-      'familyName': 'Bickle',
-      'affiliation': []
-    }]
+  {
+    'givenName': 'Marc',
+    'familyName': 'Bickle',
+    'affiliation': []
+  }]
 }
 
 const conceptDoiResp = {

@@ -40,7 +40,7 @@ export default function ConceptDoi({control}: ConceptDoiProps) {
         name: 'concept_doi',
         label: config.concept_doi.label,
         useNull: true,
-        // defaultValue: editSoftware?.concept_doi,
+        defaultValue: concept_doi,
         helperTextMessage: config.concept_doi.help,
         helperTextCnt: `${concept_doi?.length || 0}/${config.concept_doi.validation.maxLength.value}`,
       }}
