@@ -83,12 +83,21 @@ export const softwareInformation = {
     }
   },
   concept_doi: {
+    title: 'Citation',
+    subtitle: 'We generate citation files using concept DOI',
     label: 'Concept DOI',
     help: 'Initial DOI of your software',
     validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
+      pattern: {
+        value: /^10(\.\d+)+\/.+/,
+        message: 'Invalid DOI pattern. Maybe you used complete url?'
+      }
     }
+  },
+  validateConceptDoi: {
+    label:'Validate DOI'
   },
   pageStatus: {
     title: 'Page status',
