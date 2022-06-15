@@ -21,7 +21,9 @@ export default function MentionByType({software,token}: {software:string,token:s
 
   if (loading) {
     return (
-      <ContentLoader />
+      <div className="h-full flex items-center">
+        <ContentLoader />
+      </div>
     )
   }
 

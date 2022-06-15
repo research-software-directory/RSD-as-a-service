@@ -9,7 +9,7 @@ import nl.esciencecenter.rsd.scraper.Config;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -26,7 +26,7 @@ public class MainCommits {
 		SoftwareInfoRepository existingCommitsSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB);
 		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData(Config.maxRequestsGitLab());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
-		LocalDateTime scrapedAt = LocalDateTime.now();
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		for (RepositoryUrlData commitData : dataToScrape) {
 			try {
 				String repoUrl = commitData.url();
@@ -57,7 +57,7 @@ public class MainCommits {
 		SoftwareInfoRepository existingCommitsSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB);
 		Collection<RepositoryUrlData> dataToScrape = existingCommitsSorted.commitData(Config.maxRequestsGithub());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
-		LocalDateTime scrapedAt = LocalDateTime.now();
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		for (RepositoryUrlData commitData : dataToScrape) {
 			try {
 				String repoUrl = commitData.url();

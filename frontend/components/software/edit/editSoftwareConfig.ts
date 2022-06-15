@@ -15,7 +15,7 @@ export const softwareInformation = {
     validation: {
       required: 'Name is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   },
   short_statement: {
@@ -62,7 +62,11 @@ export const softwareInformation = {
   // field for markdown
   description: {
     label: 'Description',
-    help: (brand_name: string) => `What ${brand_name} can do for you`
+    help: (brand_name: string) => `What ${brand_name} can do for you`,
+    validation: {
+      // we do not show error message for this one, we use only maxLength value
+      maxLength: {value: 10000, message: 'Maximum length is 10000'},
+    }
   },
   // field for markdown url
   description_url: {
@@ -78,12 +82,21 @@ export const softwareInformation = {
     }
   },
   concept_doi: {
+    title: 'Citation',
+    subtitle: 'We generate citation files using concept DOI',
     label: 'Concept DOI',
     help: 'Initial DOI of your software',
     validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
+      pattern: {
+        value: /^10(\.\d+)+\/.+/,
+        message: 'Invalid DOI pattern. Maybe you used complete url?'
+      }
     }
+  },
+  validateConceptDoi: {
+    label:'Validate DOI'
   },
   pageStatus: {
     title: 'Page status',
@@ -92,9 +105,6 @@ export const softwareInformation = {
   is_published: {
     label: 'Published',
   },
-  // is_featured: {
-  //   label: 'Featured',
-  // },
   keywords: {
     title: 'Keywords',
     subtitle: 'Find, add or import using concept DOI.',
@@ -112,7 +122,12 @@ export const softwareInformation = {
   licenses: {
     title: 'Licenses',
     subtitle: 'What licenses do apply to your software? You can also import licenses using concept DOI.',
-    help: 'Select license'
+    label: 'Find or add a license',
+    help: 'Start typing for the suggestions',
+    validation: {
+      //custom validation rule, not in used by react-hook-form
+      minLength: 1,
+    }
   },
   importLicenses: {
     label: 'Import licenses',
@@ -125,9 +140,9 @@ export type SoftwareInformationConfig = typeof softwareInformation
 export const contributorInformation = {
   findContributor: {
     title: 'Add contributor',
-    subtitle: 'We search by name in RSD and ORCID databases',
+    subtitle: 'We search by name in the RSD and the ORCID databases',
     label: 'Find or add contributor',
-    help: 'At least 3 letters, use pattern {First name} {Last name}',
+    help: 'At least 2 letters, use pattern {First name} {Last name}',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
@@ -166,7 +181,7 @@ export const contributorInformation = {
     help: 'Contact person should have an email',
     validation: {
       minLength: {value: 5, message: 'Minimum length is 5'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         message: 'Invalid email address'
@@ -208,9 +223,9 @@ export const organisationInformation = {
   title: 'Participating organisations',
   findOrganisation: {
     title: 'Add organisation',
-    subtitle: 'We search organisation name in RSD and ROR databases',
+    subtitle: 'We search by name in the RSD and the ROR databases',
     label: 'Find or add organisation',
-    help: 'At least fist 3 letters of organisation name',
+    help: 'At least the fist 2 letters of the organisation name',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,

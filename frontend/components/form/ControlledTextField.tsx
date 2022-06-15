@@ -46,12 +46,12 @@ export default function ControlledTextField({options, control, rules}: {
       rules={rules}
       control={control}
       render={({field,fieldState}) => {
-        const {onChange} = field
+        const {onChange,value} = field
         const {error} = fieldState
-        //   console.group(`ControlledTextField...${options.name}`)
-        //   console.log('error...',error)
-        //   console.log('options...', options)
-        //   console.groupEnd()
+          // console.group(`ControlledTextField...${options.name}`)
+          // console.log('error...',error)
+          // console.log('value...', value)
+          // console.groupEnd()
         return (
           <TextField
             id={options.name ?? `input-${Math.floor(Math.random()*10000)}`}
@@ -67,6 +67,7 @@ export default function ControlledTextField({options, control, rules}: {
             fullWidth={options?.fullWidth ?? true }
             variant={options?.variant ?? 'standard'}
             defaultValue={options?.defaultValue}
+            value={value}
             FormHelperTextProps={{
               sx:{
                 display: 'flex',

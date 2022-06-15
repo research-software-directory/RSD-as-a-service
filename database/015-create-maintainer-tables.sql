@@ -30,8 +30,8 @@ CREATE TABLE invite_maintainer_for_project (
 	project UUID REFERENCES project (id) NOT NULL,
 	created_by UUID REFERENCES account (id),
 	claimed_by UUID REFERENCES account (id),
-	claimed_at TIMESTAMP,
-	created_at TIMESTAMP NOT NULL DEFAULT LOCALTIMESTAMP
+	claimed_at TIMESTAMPTZ,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -104,8 +104,8 @@ CREATE TABLE invite_maintainer_for_software (
 	software UUID REFERENCES software (id) NOT NULL,
 	created_by UUID REFERENCES account (id),
 	claimed_by UUID REFERENCES account (id),
-	claimed_at TIMESTAMP,
-	created_at TIMESTAMP NOT NULL DEFAULT LOCALTIMESTAMP
+	claimed_at TIMESTAMPTZ,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_software() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -181,8 +181,8 @@ CREATE TABLE invite_maintainer_for_organisation (
 	organisation UUID REFERENCES organisation (id) NOT NULL,
 	created_by UUID REFERENCES account (id),
 	claimed_by UUID REFERENCES account (id),
-	claimed_at TIMESTAMP,
-	created_at TIMESTAMP NOT NULL DEFAULT LOCALTIMESTAMP
+	claimed_at TIMESTAMPTZ,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS

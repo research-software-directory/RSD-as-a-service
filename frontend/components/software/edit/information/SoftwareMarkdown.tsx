@@ -48,8 +48,14 @@ export default function SoftwareMarkdown({register, control, config,
         <div className="py-4"></div>
         <MarkdownInputWithPreview
           markdown={formData?.description || ''}
-          register={register('description')}
+          register={register('description', {
+            maxLength: config.description.validation.maxLength.value
+          })}
           disabled={formData?.description_type !== 'markdown'}
+          helperInfo={{
+            length: formData?.description?.length ?? 0,
+            maxLength: config.description.validation.maxLength.value
+          }}
         />
       </>
     )

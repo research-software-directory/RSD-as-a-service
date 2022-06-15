@@ -27,6 +27,7 @@ import {softwareInformation as config} from '../editSoftwareConfig'
 import RepositoryPlatform from './RepositoryPlatform'
 import SoftwareKeywords from './SoftwareKeywords'
 import {getKeywordChanges} from './softwareKeywordsChanges'
+import ConceptDoi from './ConceptDoi'
 
 export default function SoftwareInformation(
   {slug, token}: {slug: string, token: string}
@@ -50,11 +51,6 @@ export default function SoftwareInformation(
   const {update: updateKeyword} = useFieldArray({
     control,
     name: 'keywords'
-  })
-
-  const {update: updateLicense} = useFieldArray({
-    control,
-    name: 'licenses'
   })
 
   // destructure formState
@@ -266,9 +262,10 @@ export default function SoftwareInformation(
           />
           <div className="py-4"></div>
           <EditSectionTitle
-            title="Citation"
+            title={config.concept_doi.title}
+            subtitle={config.concept_doi.subtitle}
           />
-          <ControlledTextField
+          {/* <ControlledTextField
             options={{
               name: 'concept_doi',
               label: config.concept_doi.label,
@@ -279,6 +276,10 @@ export default function SoftwareInformation(
             }}
             control={control}
             rules={config.concept_doi.validation}
+          /> */}
+          <ConceptDoi
+            control={control}
+            setValue={setValue}
           />
 
           <div className="py-4"></div>

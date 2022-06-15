@@ -78,7 +78,7 @@ export default function ProjectImage() {
           src={imageUrl()}
           alt={formData.image_caption ?? 'image'}
           className="w-full h-[23rem]"
-          noImgMsg="Click here to upload"
+          noImgMsg="Click to upload image < 2MB"
         />
       </label>
       <input
