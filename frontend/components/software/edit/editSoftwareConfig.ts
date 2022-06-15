@@ -122,7 +122,7 @@ export const softwareInformation = {
   licenses: {
     title: 'Licenses',
     subtitle: 'What licenses do apply to your software? You can also import licenses using concept DOI.',
-    label: 'Find or add license',
+    label: 'Find or add a license',
     help: 'Start typing for the suggestions',
     validation: {
       //custom validation rule, not in used by react-hook-form
@@ -140,7 +140,7 @@ export type SoftwareInformationConfig = typeof softwareInformation
 export const contributorInformation = {
   findContributor: {
     title: 'Add contributor',
-    subtitle: 'We search by name in RSD and ORCID databases',
+    subtitle: 'We search by name in the RSD and the ORCID databases',
     label: 'Find or add contributor',
     help: 'At least 2 letters, use pattern {First name} {Last name}',
     validation: {
@@ -223,9 +223,9 @@ export const organisationInformation = {
   title: 'Participating organisations',
   findOrganisation: {
     title: 'Add organisation',
-    subtitle: 'We search organisation name in RSD and ROR databases',
+    subtitle: 'We search by name in the RSD and the ROR databases',
     label: 'Find or add organisation',
-    help: 'At least fist 2 letters of organisation name',
+    help: 'At least the fist 2 letters of the organisation name',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
