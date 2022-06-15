@@ -3,18 +3,23 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Control, useFormState, useWatch} from 'react-hook-form'
+import Button from '@mui/material/Button'
+import {useState} from 'react'
+import {Control, UseFormSetValue, useFormState, useWatch} from 'react-hook-form'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import {softwareInformation as config} from '../editSoftwareConfig'
 
 import ValidateConceptDoi from './ValidateConceptDoi'
+import UpdateIcon from '@mui/icons-material/Sync'
 
 type ConceptDoiProps = {
-  control: Control<EditSoftwareItem,'concept_doi'>
+  control: Control<EditSoftwareItem, 'concept_doi'>
+  setValue: UseFormSetValue<EditSoftwareItem>
 }
 
-export default function ConceptDoi({control}: ConceptDoiProps) {
+export default function ConceptDoi({control, setValue}: ConceptDoiProps) {
+  const [updateDoi, setUpdateDoi] = useState<string>()
   const {errors} = useFormState({
     control,
     name: 'concept_doi'
@@ -24,11 +29,43 @@ export default function ConceptDoi({control}: ConceptDoiProps) {
     name: 'concept_doi',
   })
 
+  // console.group('ConceptDoi')
+  // console.log('concept_doi...', concept_doi)
+  // console.log('errors...', errors)
+  // console.groupEnd()
+
+  function updateConceptDoi() {
+    if (updateDoi) {
+      setValue('concept_doi', updateDoi, {shouldValidate: true, shouldDirty: true})
+      // remove value to hide update button
+      setUpdateDoi(undefined)
+    }
+  }
+
   function renderValidation() {
-    // concept doi value present and no validation errors
-    if (concept_doi && errors.hasOwnProperty('concept_doi') === false) {
+    // we have concept doi to update
+    if (updateDoi) {
       return (
-        <ValidateConceptDoi doi={concept_doi} />
+        <Button
+          startIcon={<UpdateIcon />}
+          onClick={updateConceptDoi}
+          title={'Update Concept DOI'}
+          sx={{
+            marginTop:'1rem'
+          }}
+        >
+          update concept doi
+        </Button>
+      )
+    }
+    // concept doi value present and no validation errors
+    if (concept_doi &&
+      errors.hasOwnProperty('concept_doi') === false) {
+      return (
+        <ValidateConceptDoi
+          doi={concept_doi}
+          onUpdate={setUpdateDoi}
+        />
       )
     }
   }

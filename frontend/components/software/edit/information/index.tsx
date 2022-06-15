@@ -279,6 +279,7 @@ export default function SoftwareInformation(
           /> */}
           <ConceptDoi
             control={control}
+            setValue={setValue}
           />
 
           <div className="py-4"></div>

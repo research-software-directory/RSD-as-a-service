@@ -12,22 +12,30 @@ import {softwareInformation as config} from '../editSoftwareConfig'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {getSoftwareVersionInfoForDoi} from '~/utils/getDataCite'
 
-export default function ValidateConceptDoi({doi}: { doi: string }) {
-  const {showErrorMessage,showSuccessMessage, showInfoMessage} = useSnackbar()
-  const [loading,setLoading]=useState(false)
+type ValidateConceptDoiProps = {
+  doi: string,
+  onUpdate:(doi:string)=>void
+}
+
+export default function ValidateConceptDoi({doi, onUpdate}: ValidateConceptDoiProps) {
+  const {showErrorMessage,showSuccessMessage, showWarningMessage} = useSnackbar()
+  const [loading, setLoading] = useState(false)
 
   async function validateDoi() {
     setLoading(true)
     const info = await getSoftwareVersionInfoForDoi(doi)
     if (info) {
       if (info.versionOfCount === 0) {
-        showSuccessMessage(`Valid concept DOI: ${doi}`)
+        showSuccessMessage(`The DOI ${doi} is a valid Concept DOI`)
       } else if (info.versionOfCount === 1) {
-        const conceptDoi = info.versionOf.nodes[0].doi
-        showErrorMessage(`This is version DOI. The concept DOI is ${conceptDoi}`)
+        const concept = info.versionOf.nodes[0].doi
+        if (concept) {
+          onUpdate(concept)
+        }
+        showWarningMessage(`This is a version DOI. The Concept DOI is ${concept}`)
       }
     } else {
-      showErrorMessage(`Failed to retereive version info for DOI: ${doi}. This is high likely not concept DOI.`)
+      showErrorMessage(`Failed to retrieve info for DOI: ${doi}. It looks like this is not a Concept DOI.`)
     }
     setLoading(false)
   }
