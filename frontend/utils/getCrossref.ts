@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CrossrefResponse, CrossrefSelectItem, crossrefSelectProps, crossrefType} from '~/types/Crossref'
+import {CrossrefResponse, CrossrefSelectItem} from '~/types/Crossref'
 import {MentionItemProps} from '~/types/Mention'
 import {apiMentionTypeToRSDTypeKey} from './editMentions'
 import {extractReturnMessage} from './fetchHelpers'
@@ -57,9 +57,7 @@ export function crossrefItemToMentionItem(item: CrossrefSelectItem) {
 export async function getCrossrefItemByDoi(doi: string) {
   try {
     const filter = `filter=doi:${doi}`
-    const select = `select=${crossrefSelectProps.join(',')}`
-    // const ettiquete = 'mailto=mijatovic1970@gmail.com'
-    const url = `https://api.crossref.org/works?${filter}&${select}`
+    const url = `https://api.crossref.org/works?${filter}`
 
     const resp = await fetch(url)
 
@@ -89,12 +87,10 @@ export async function getCrossrefItemByDoi(doi: string) {
 export async function getCrossrefItemsByTitle(title: string) {
   try {
     const filter = `query.title=${title}`
-    const select = `select=${crossrefSelectProps.join(',')}`
-    const ettiquete = 'mailto=mijatovic1970@gmail.com'
     const order = 'sort=score&order=desc'
     const rows = 'rows=10'
-    // get top 30 items
-    const url = `https://api.crossref.org/works?${filter}&${select}&${ettiquete}&${order}&${rows}`
+    // get top 10 items
+    const url = `https://api.crossref.org/works?${filter}&${order}&${rows}`
 
     const resp = await fetch(url)
 
@@ -114,12 +110,10 @@ export async function getCrossrefItemsByTitle(title: string) {
 export async function getCrossrefItemsByQuery(query: string) {
   try {
     const filter = `query=${query}`
-    const select = `select=${crossrefSelectProps.join(',')}`
-    const ettiquete = 'mailto=mijatovic1970@gmail.com'
-    const order = 'sort=published&order=desc'
+    const order = 'sort=score&order=desc'
     const rows = 'rows=10'
     // get top 10 items
-    const url = `https://api.crossref.org/works?${filter}&${select}&${ettiquete}&${order}&${rows}`
+    const url = `https://api.crossref.org/works?${filter}&${order}&${rows}`
 
     const resp = await fetch(url)
 
