@@ -3,18 +3,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 
 import useOrganisationSoftware from '../../../utils/useOrganisationSoftware'
-import GridScrim from '../../layout/GridScrim'
 import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
 import {OrganisationPageProps} from 'pages/organisations/[...slug]'
-import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import FlexibleGridSection from '~/components/layout/FlexibleGridSection'
 import SoftwareCardWithMenu from './SoftwareCardWithMenu'
 import SoftwareCard from '~/components/software/SoftwareCard'
+import NoContent from '~/components/layout/NoContent'
+import GridScrim from '../../layout/GridScrim'
 
-export default function OrganisationSoftware({organisation, session, isMaintainer}:OrganisationPageProps) {
+export default function OrganisationSoftware({organisation, session, isMaintainer}: OrganisationPageProps) {
+  const [init,setInit]=useState(true)
   const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search for software')
   const {loading, software, count} = useOrganisationSoftware({
     organisation: organisation.id,
@@ -25,12 +26,17 @@ export default function OrganisationSoftware({organisation, session, isMaintaine
   })
 
   useEffect(() => {
+    setInit(false)
+  },[])
+
+  useEffect(() => {
     if (count && loading === false) {
       setCount(count)
     }
   },[count,loading,setCount])
 
-  if (loading){
+  if (init) {
+    // show scrim only on initial load
     return (
       <GridScrim
         rows={rows}
@@ -42,12 +48,11 @@ export default function OrganisationSoftware({organisation, session, isMaintaine
     )
   }
 
-  if (software.length===0){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
+  if (software.length === 0
+    && loading === false) {
+    // show nothing to show message
+    // if no items and loading is completed
+    return <NoContent/>
   }
 
   return (

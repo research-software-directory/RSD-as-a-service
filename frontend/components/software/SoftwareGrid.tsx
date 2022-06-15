@@ -6,6 +6,7 @@
 import ContentInTheMiddle from '../layout/ContentInTheMiddle'
 import SoftwareCard from './SoftwareCard'
 import FlexibleGridSection, {FlexGridProps} from '../layout/FlexibleGridSection'
+import NoContent from '../layout/NoContent'
 
 export type SoftwareGridType = {
   slug: string
@@ -24,11 +25,7 @@ export default function SoftwareGrid({software,grid,className='gap-[0.125rem] pt
   // console.log("renderItems...software...", software)
 
   if (software.length===0){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
+    return <NoContent />
   }
 
   return (

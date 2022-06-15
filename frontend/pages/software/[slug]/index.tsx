@@ -17,7 +17,6 @@ import CanoncialUrl from '~/components/seo/CanonicalUrl'
 import AppHeader from '~/components/layout/AppHeader'
 import AppFooter from '~/components/layout/AppFooter'
 import PageContainer from '~/components/layout/PageContainer'
-import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import SoftwareIntroSection from '~/components/software/SoftwareIntroSection'
 import GetStartedSection from '~/components/software/GetStartedSection'
 import CitationSection from '~/components/software/CitationSection'
@@ -57,6 +56,7 @@ import {Testimonial} from '~/types/Testimonial'
 import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
+import NoContent from '~/components/layout/NoContent'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -101,11 +101,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   },[contributors])
 
   if (!software?.brand_name){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
+    return <NoContent />
   }
   // console.log('SoftwareIndexPage...mentions...', mentions)
   return (
