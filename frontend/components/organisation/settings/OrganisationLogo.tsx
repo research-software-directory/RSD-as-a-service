@@ -31,7 +31,7 @@ type LogoProps = {
 
 export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,token}:
   OrganisationLogoProps) {
-  const {showErrorMessage} = useSnackbar()
+  const {showWarningMessage,showErrorMessage} = useSnackbar()
   // currently shown image
   // after new upload uses b64 prop
   const [logo, setLogo] = useState<LogoProps>({
@@ -93,7 +93,7 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,t
       // check file size
       if (file.size > 2097152) {
         // file is to large > 2MB
-        showErrorMessage('The file is too large. Please select image < 2MB.')
+        showWarningMessage('The file is too large. Please select image < 2MB.')
         return
       }
       let reader = new FileReader()

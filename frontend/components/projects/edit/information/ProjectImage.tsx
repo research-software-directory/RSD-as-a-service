@@ -16,7 +16,7 @@ import {getImageUrl} from '~/utils/getProjects'
 import logger from '~/utils/logger'
 
 export default function ProjectImage() {
-  const {showErrorMessage} = useSnackbar()
+  const {showWarningMessage} = useSnackbar()
   const {control, watch, setValue} = useFormContext<EditProject>()
 
   const formData = watch()
@@ -28,7 +28,7 @@ export default function ProjectImage() {
       // check file size
       if (file.size > 2097152) {
         // file is to large > 2MB
-        showErrorMessage('The file is too large. Please select image < 2MB.')
+        showWarningMessage('The file is too large. Please select image < 2MB.')
         return
       }
       let reader = new FileReader()

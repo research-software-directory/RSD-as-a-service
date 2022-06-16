@@ -35,7 +35,7 @@ type TeamMemberModalProps = {
 const formId='edit-team-member-modal'
 
 export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}: TeamMemberModalProps) {
-  const {showErrorMessage} = useSnackbar()
+  const {showWarningMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [b64Image, setB64Image]=useState<string>()
   const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<TeamMember>({
@@ -72,7 +72,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
       // check file size
       if (file.size > 2097152) {
         // file is to large > 2MB
-        showErrorMessage('The file is too large. Please select image < 2MB.')
+        showWarningMessage('The file is too large. Please select image < 2MB.')
         return
       }
       let reader = new FileReader()
