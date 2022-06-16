@@ -24,18 +24,19 @@ export default function ValidateConceptDoi({doi, onUpdate}: ValidateConceptDoiPr
   async function validateDoi() {
     setLoading(true)
     const info = await getSoftwareVersionInfoForDoi(doi)
-    if (info) {
-      if (info.versionOfCount === 0) {
+    if (info?.status === 200) {
+      const {software} = info.data
+      if (software.versionOfCount === 0) {
         showSuccessMessage(`The DOI ${doi} is a valid Concept DOI`)
-      } else if (info.versionOfCount === 1) {
-        const concept = info.versionOf.nodes[0].doi
+      } else if (software.versionOfCount === 1) {
+        const concept = software.versionOf.nodes[0].doi
         if (concept) {
           onUpdate(concept)
         }
         showWarningMessage(`This is a version DOI. The Concept DOI is ${concept}`)
       }
     } else {
-      showErrorMessage(`Failed to retrieve info for DOI: ${doi}. It looks like this is not a Concept DOI.`)
+      showErrorMessage(`Failed to retrieve info for DOI: ${doi}. ${info?.message ?? ''}`)
     }
     setLoading(false)
   }
