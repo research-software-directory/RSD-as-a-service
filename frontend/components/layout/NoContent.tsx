@@ -10,12 +10,20 @@ import {Box, Theme} from '@mui/material'
 import Slide from '@mui/material/Slide'
 
 const NoContentText = styled('h2')(({theme}:{theme?:Theme}) => ({
-  fontSize: '2.5rem',
   fontWeight: 500,
   letterSpacing: '0.25rem',
   textTransform: 'uppercase',
-  padding: '0.5rem 0rem 0rem 1rem',
-  color: theme?.palette.grey[500]
+  padding: '1rem 0rem',
+  // color: theme?.palette.grey[500]
+}))
+
+const NoContentBody = styled('div')(({theme}:{theme?:Theme}) => ({
+  margin:'2rem 0rem 0rem 0rem',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  opacity: 0.25
 }))
 
 export default function NoContent({message='nothing to show'}:{message?:string}) {
@@ -38,18 +46,19 @@ export default function NoContent({message='nothing to show'}:{message?:string})
         flex:1,
         overflow: 'hidden'
       }}
+      component="section"
     >
       <Slide direction="up" in={show} container={containerRef.current}>
-        <div className="mt-12 flex justify-center">
+        <NoContentBody>
           <DoDisturbIcon
             sx={{
-              width: '3rem',
-              height: '3rem',
-              color: 'grey.500'
+              width: '5rem',
+              height: '5rem',
+              // color: 'grey.500'
             }}
           />
           <NoContentText>{message}</NoContentText>
-        </div>
+        </NoContentBody>
       </Slide>
     </Box>
   )
