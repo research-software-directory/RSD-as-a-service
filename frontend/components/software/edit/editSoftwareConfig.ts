@@ -90,7 +90,7 @@ export const softwareInformation = {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
       pattern: {
-        value: /^10(\.\d+)+\/.+/,
+        value: /^10(\.\w+)+\/\S+$/,
         message: 'Invalid DOI pattern. Maybe you used complete url?'
       }
     }

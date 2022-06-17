@@ -14,7 +14,7 @@ CREATE TABLE software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	brand_name VARCHAR(200) NOT NULL,
-	concept_doi VARCHAR(100),
+	concept_doi VARCHAR(100) CHECK (concept_doi ~ '^10(\.\w+)+/\S+$'),
 	description VARCHAR(10000),
 	description_url VARCHAR(200),
 	description_type description_type DEFAULT 'markdown' NOT NULL,
