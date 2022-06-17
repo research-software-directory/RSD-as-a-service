@@ -131,8 +131,12 @@ CREATE POLICY admin_all_rights ON invite_maintainer_for_organisation TO rsd_admi
 -- software
 ALTER TABLE software ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON software FOR SELECT TO web_anon, rsd_user
+CREATE POLICY anyone_can_read ON software FOR SELECT TO web_anon
 	USING (is_published);
+
+-- RSD user can read all software incl. not published ones
+CREATE POLICY rsd_user_can_read ON software FOR SELECT TO rsd_user
+	USING (TRUE);
 
 CREATE POLICY maintainer_all_rights ON software TO rsd_user
 	USING (id IN (SELECT * FROM software_of_current_maintainer()))
