@@ -140,6 +140,7 @@ Tailwind prose correction for markdown
 .prose{
   overflow: hidden;
   word-break: break-word;
+  @apply text-secondary
 }
 
 /* ---------------------
