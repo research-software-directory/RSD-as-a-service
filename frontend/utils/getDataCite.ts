@@ -3,9 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {DataCiteConceptDoiQlResp, DataciteWorkGraphQLResponse, DataciteWorksGraphQLResponse, WorkResponse} from '~/types/Datacite'
+import {DataciteWorkGraphQLResponse, DataciteWorksGraphQLResponse, WorkResponse} from '~/types/Datacite'
 import {MentionItemProps} from '~/types/Mention'
-import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
+import {createJsonHeaders, extractRespFromGraphQL, extractReturnMessage} from './fetchHelpers'
 import {apiMentionTypeToRSDTypeKey} from './editMentions'
 import logger from './logger'
 import {makeDoiRedirectUrl} from './getDOI'
@@ -210,13 +210,9 @@ export async function getSoftwareVersionInfoForDoi(doi: string) {
         query
       })
     })
-    if (resp.status === 200) {
-      const json: DataCiteConceptDoiQlResp = await resp.json()
-      if (json.data.software) return json.data.software
-      return undefined
-    }
-    logger(`getConceptDoiByDoi: ${resp.status}: ${resp?.statusText}`, 'warn')
-    return undefined
+
+    const json = await extractRespFromGraphQL(resp)
+    return json
   } catch (e: any) {
     logger(`getConceptDoiByDoi: ${e?.message}`, 'error')
     return undefined

@@ -20,7 +20,8 @@ export const FlexibleGridSection = styled('section', {
 })
   <FlexGridProps>(({theme, minWidth, maxWidth, minHeight, maxHeight, height}) => {
   // basic definitions
-  const props:any = {
+  const props: any = {
+    flex: 1,
     display: 'grid',
     width: '100%',
     // gridGap: '1rem',

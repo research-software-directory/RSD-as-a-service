@@ -35,7 +35,7 @@ type EditContributorModalProps = {
 const formId='edit-contributor-modal'
 
 export default function EditContributorModal({open, onCancel, onSubmit, contributor, pos}: EditContributorModalProps) {
-  const {showErrorMessage} = useSnackbar()
+  const {showWarningMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [b64Image, setB64Image]=useState<string>()
   const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Contributor>({
@@ -72,7 +72,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
       // check file size
       if (file.size > 2097152) {
         // file is to large > 2MB
-        showErrorMessage('The file is too large. Please select image < 2MB.')
+        showWarningMessage('The file is too large. Please select image < 2MB.')
         return
       }
       let reader = new FileReader()

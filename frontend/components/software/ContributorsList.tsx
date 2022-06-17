@@ -8,7 +8,7 @@
 import {Contributor} from '../../types/Contributor'
 import ContributorAvatar from './ContributorAvatar'
 import {getDisplayName, getDisplayInitials,combineRoleAndAffiliation} from '../../utils/getDisplayName'
-import LogoOrcid from '~/assets/logos/logo-orcid.svg'
+import PersonalInfo from './PersonalInfo'
 
 export default function ContributorsList({contributors}: { contributors: Contributor[] }) {
   // do not render component if no data
@@ -31,15 +31,7 @@ export default function ContributorsList({contributors}: { contributors: Contrib
                 <div className="text-xl text-primary">
                   {displayName}
                 </div>
-                <div>
-                  {combineRoleAndAffiliation(item)}
-                </div>
-                { item.orcid &&
-                  <a href={'https://orcid.org/' + item.orcid} target="_blank" rel="noreferrer">
-                    <LogoOrcid className="inline max-w-[1.125rem] mr-1" />
-                    <span className="text-sm align-bottom">{item.orcid}</span>
-                  </a>
-                }
+                <PersonalInfo {...item} />
               </div>
             </div>
           )
