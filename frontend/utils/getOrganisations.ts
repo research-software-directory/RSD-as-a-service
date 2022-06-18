@@ -15,9 +15,7 @@ import {paginationUrlParams} from './postgrestUrl'
 export function organisationUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
   // by default order is on software count and name
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&order=software_cnt.desc.nullslast,name.asc`
-  // moved to rpc
-  // let url = `${process.env.POSTGREST_URL}/organisations_overview?parent=is.null&order=software_cnt.desc.nullslast,name.asc`
+  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&order=score.desc.nullslast,name.asc`
   // add search params
   if (search) {
     url += `&or=(name.ilike.*${search}*, website.ilike.*${search}*)`

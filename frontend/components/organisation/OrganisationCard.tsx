@@ -7,6 +7,9 @@ import {Avatar} from '@mui/material'
 import Link from 'next/link'
 import {OrganisationForOverview} from '../../types/Organisation'
 import {getUrlFromLogoId} from '../../utils/editOrganisation'
+import StatCounter from '../layout/StatCounter'
+import VerifiedIcon from '@mui/icons-material/Verified'
+import SingleLineTitle from '../layout/SingleLineTitle'
 
 export default function OrganisationCard(organisation: OrganisationForOverview) {
 
@@ -28,37 +31,66 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
       passHref
     >
       <a
-        className="h-full"
+        className="h-full relative"
       >
         <article
-          className="flex flex-col border rounded-sm p-4 h-full min-h-[16rem]">
-          <h2 className='h-[5rem]'>{organisation.name}</h2>
-          <div className="flex flex-1">
-            <div className="flex items-center flex-1">
-              <Avatar
-                alt={organisation.name ?? ''}
-                src={getUrlFromLogoId(organisation.logo_id) ?? ''}
+          className="flex flex-col border h-full min-h-[16rem] overflow-hidden">
+          {/* <h2 className='h-[5rem]'>{organisation.name}</h2> */}
+          <div className="pl-8 flex">
+            <SingleLineTitle
+              title={organisation.name}
+              sx={{
+                padding: '1.5rem 0rem',
+                // place for verified
+                margin: organisation.is_tenant ? '0rem 6rem 0rem 0rem' : '0rem 2rem 0rem 0rem',
+              }}
+            >
+              {organisation.name}
+            </SingleLineTitle>
+            {
+              organisation.is_tenant && <VerifiedIcon
                 sx={{
-                  width: '100%',
-                  height: '100%',
-                  fontSize: '3rem',
-                  '& img': {
-                    height: 'auto',
-                    maxHeight: '13rem'
-                  }
+                  position: 'absolute',
+                  right: '0.75rem',
+                  top: '0.75rem',
+                  width: '4rem',
+                  height: '4rem',
+                  opacity: 0.4,
+                  color: 'primary.main'
                 }}
-                variant="square"
-              >
-                {organisation.name.slice(0,3)}
-              </Avatar>
-            </div>
-             <div className="flex flex-col flex-1 pl-8 py-4">
-              <div className="flex-1 flex items-center justify-center text-[4rem] text-primary">
-                {count}
-              </div>
-              <div className="flex items-center justify-center text-center">
-                {label}
-              </div>
+              />
+            }
+          </div>
+          <div className="flex-1 grid grid-cols-[3fr,2fr] px-8 pb-4 overflow-hidden">
+            <Avatar
+              alt={organisation.name ?? ''}
+              src={getUrlFromLogoId(organisation.logo_id) ?? ''}
+              sx={{
+                width: '100%',
+                height: '100%',
+                fontSize: '3rem',
+                '& img': {
+                  height: 'auto',
+                  maxHeight: '100%',
+                  width: 'auto',
+                  maxWidth: '100%'
+                }
+              }}
+              variant="square"
+              title={organisation.name}
+            >
+              {organisation.name.slice(0,3)}
+            </Avatar>
+
+            <div className="flex flex-1 items-start justify-end pl-4">
+              <StatCounter
+                label={label}
+                value={count}
+              />
+              <StatCounter
+                label={'research projects'}
+                value={organisation.project_cnt ?? 0}
+              />
             </div>
           </div>
         </article>
