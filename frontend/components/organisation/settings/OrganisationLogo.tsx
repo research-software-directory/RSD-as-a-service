@@ -6,7 +6,6 @@
 import {useEffect, useState} from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
-import UploadIcon from '@mui/icons-material/Upload'
 import EditIcon from '@mui/icons-material/Edit'
 
 import useSnackbar from '../../snackbar/useSnackbar'
@@ -158,9 +157,9 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,t
   }
   if (isMaintainer) {
     return (
-      <div className="py-[3rem] relative">
+      <div className="py-[4rem] flex relative">
         {renderAvatar()}
-        <div className="py-8 text-center">
+        <div className="absolute flex justify-start left-2 bottom-1">
           <label htmlFor="upload-avatar-image"
             // style={{cursor:'pointer'}}
             title="Click to upload an image"
@@ -176,7 +175,7 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,t
               title="Change logo"
               component="span"
               sx={{
-                marginRight:'1rem'
+                marginRight:'0.25rem'
               }}
               >
               <EditIcon />
