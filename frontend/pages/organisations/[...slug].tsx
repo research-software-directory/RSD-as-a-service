@@ -73,8 +73,10 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
               {...organisation}
             />
           </div>
-          {renderStepComponent()}
-          </section>
+          <div className="min-h-[55rem]">
+            {renderStepComponent()}
+          </div>
+        </section>
       </PaginationProvider>
       </SearchProvider>
     </DefaultLayout>

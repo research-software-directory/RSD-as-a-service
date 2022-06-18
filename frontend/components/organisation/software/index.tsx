@@ -12,7 +12,6 @@ import FlexibleGridSection from '~/components/layout/FlexibleGridSection'
 import SoftwareCardWithMenu from './SoftwareCardWithMenu'
 import SoftwareCard from '~/components/software/SoftwareCard'
 import NoContent from '~/components/layout/NoContent'
-import GridScrim from '../../layout/GridScrim'
 
 export default function OrganisationSoftware({organisation, session, isMaintainer}: OrganisationPageProps) {
   const [init,setInit]=useState(true)
@@ -35,24 +34,11 @@ export default function OrganisationSoftware({organisation, session, isMaintaine
     }
   },[count,loading,setCount])
 
-  if (init) {
-    // show scrim only on initial load
-    return (
-      <GridScrim
-        rows={rows}
-        height='17rem'
-        minWidth='25rem'
-        maxWidth='1fr'
-        className="gap-[0.125rem] pt-2 pb-12"
-      />
-    )
-  }
-
   if (software.length === 0
     && loading === false) {
     // show nothing to show message
     // if no items and loading is completed
-    return <NoContent/>
+    return <NoContent />
   }
 
   return (
