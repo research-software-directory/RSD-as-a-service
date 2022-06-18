@@ -10,6 +10,7 @@ import {getUrlFromLogoId} from '../../utils/editOrganisation'
 import StatCounter from '../layout/StatCounter'
 import VerifiedIcon from '@mui/icons-material/Verified'
 import SingleLineTitle from '../layout/SingleLineTitle'
+import LogoAvatar from '../layout/LogoAvatar'
 
 export default function OrganisationCard(organisation: OrganisationForOverview) {
 
@@ -62,25 +63,10 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
             }
           </div>
           <div className="flex-1 grid grid-cols-[3fr,2fr] px-8 pb-4 overflow-hidden">
-            <Avatar
-              alt={organisation.name ?? ''}
-              src={getUrlFromLogoId(organisation.logo_id) ?? ''}
-              sx={{
-                width: '100%',
-                height: '100%',
-                fontSize: '3rem',
-                '& img': {
-                  height: 'auto',
-                  maxHeight: '100%',
-                  width: 'auto',
-                  maxWidth: '100%'
-                }
-              }}
-              variant="square"
-              title={organisation.name}
-            >
-              {organisation.name.slice(0,3)}
-            </Avatar>
+            <LogoAvatar
+              name={organisation.name ?? ''}
+              src={getUrlFromLogoId(organisation.logo_id) ?? undefined}
+            />
 
             <div className="flex flex-1 items-start justify-end pl-4">
               <StatCounter

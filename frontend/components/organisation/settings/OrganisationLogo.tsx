@@ -4,15 +4,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import Avatar from '@mui/material/Avatar'
+
 import DeleteIcon from '@mui/icons-material/Delete'
 import UploadIcon from '@mui/icons-material/Upload'
+import EditIcon from '@mui/icons-material/Edit'
 
 import useSnackbar from '../../snackbar/useSnackbar'
 import {deleteOrganisationLogo, getUrlFromLogoId, uploadOrganisationLogo} from '../../../utils/editOrganisation'
 import logger from '../../../utils/logger'
-import Button from '@mui/material/Button'
 import Link from 'next/link'
+import LogoAvatar from '~/components/layout/LogoAvatar'
+import IconButton from '@mui/material/IconButton'
 
 type OrganisationLogoProps = {
   id: string
@@ -133,25 +135,10 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,t
 
   function renderAvatar() {
     return (
-      <Avatar
-        title={name}
-        alt={name ?? ''}
-        src={logo.b64 ?? getUrlFromLogoId(logo.id) ?? ''}
-        sx={{
-          width: '100%',
-          maxWidth: '20rem',
-          height: 'auto',
-          minHeight: '10rem',
-          fontSize: '3rem',
-          marginRight: '0rem',
-          '& img': {
-            height:'auto'
-          }
-        }}
-        variant="square"
-      >
-        {name ? name.slice(0,3) : ''}
-      </Avatar>
+      <LogoAvatar
+        name={name}
+        src={logo.b64 ?? getUrlFromLogoId(logo.id) ?? undefined}
+      />
     )
   }
 
@@ -172,39 +159,38 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,t
   if (isMaintainer) {
     return (
       <div className="py-[3rem] relative">
-        <label htmlFor="upload-avatar-image"
-          style={{cursor:'pointer'}}
-          title="Click to upload an image"
-        >
-          {renderAvatar()}
-          <input
-            id="upload-avatar-image"
-            type="file"
-            accept="image/*"
-            onChange={handleFileUpload}
-            style={{display:'none'}}
-          />
-          <Button
-            title="Upload image"
-            component="span"
-            sx={{
-              margin:'2rem 1rem 0rem 0rem'
-            }}
-            >
-            upload <UploadIcon/>
-          </Button>
-        </label>
-        <Button
-          title="Remove image"
-          // color='primary'
-          disabled={!logo.b64 && !logo.id}
-          onClick={removeLogo}
-          sx={{
-            margin:'2rem 0rem 0rem 0rem'
-          }}
-        >
-          remove <DeleteIcon/>
-        </Button>
+        {renderAvatar()}
+        <div className="py-8 text-center">
+          <label htmlFor="upload-avatar-image"
+            // style={{cursor:'pointer'}}
+            title="Click to upload an image"
+          >
+            <input
+              id="upload-avatar-image"
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              style={{display:'none'}}
+            />
+            <IconButton
+              title="Change logo"
+              component="span"
+              sx={{
+                marginRight:'1rem'
+              }}
+              >
+              <EditIcon />
+            </IconButton>
+          </label>
+          <IconButton
+            title="Remove logo"
+            // color='primary'
+            disabled={!logo.b64 && !logo.id}
+            onClick={removeLogo}
+          >
+            <DeleteIcon/>
+          </IconButton>
+        </div>
       </div>
     )
   }

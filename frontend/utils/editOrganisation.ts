@@ -413,7 +413,7 @@ export async function uploadOrganisationLogo({id, data, mime_type, token}:
 export async function deleteOrganisationLogo({id, token}:
   { id: string, token: string }) {
   try {
-    const url = `/api/v1/logo_for_organisation?id=eq.${id}`
+    const url = `/api/v1/logo_for_organisation?organisation=eq.${id}`
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
