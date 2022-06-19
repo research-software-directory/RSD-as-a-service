@@ -116,6 +116,7 @@ export type ProjectOfOrganisation = {
   date_end: string
   updated_at: string
   is_published: boolean
+  is_featured: boolean
   image_id: string | null
   organisation: string
   status: Status

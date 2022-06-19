@@ -247,8 +247,11 @@ CREATE POLICY admin_all_rights ON keyword_for_software TO rsd_admin
 -- projects
 ALTER TABLE project ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON project FOR SELECT TO web_anon, rsd_user
+CREATE POLICY anyone_read_published ON project FOR SELECT TO web_anon
 	USING (is_published);
+
+CREATE POLICY rsd_user_read_all ON project FOR SELECT TO rsd_user
+	USING (TRUE);
 
 CREATE POLICY maintainer_all_rights ON project TO rsd_user
 	USING (id IN (SELECT * FROM projects_of_current_maintainer()))

@@ -218,7 +218,7 @@ export async function getProjectsForOrganisation({organisation, searchFor, page,
   SoftwareForOrganisationProps) {
   try {
     // baseUrl
-    let url = `/api/v1/rpc/projects_by_organisation?organisation=eq.${organisation}&order=title.asc`
+    let url = `/api/v1/rpc/projects_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,is_published.desc,title.asc`
     // search
     if (searchFor) {
       url += `&or=(title.ilike.*${searchFor}*,subtitle.ilike.*${searchFor}*))`

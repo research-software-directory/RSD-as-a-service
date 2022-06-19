@@ -481,6 +481,29 @@ export async function addOrganisationToProject({project, organisation, role, ses
   }
 }
 
+export async function patchProjectForOrganisation({project, organisation, data, token}:
+  { project: string, organisation: string, data: any, token: string }) {
+  try {
+    const query = `project=eq.${project}&organisation=eq.${organisation}`
+    const url = `/api/v1/project_for_organisation?${query}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createJsonHeaders(token),
+        'Prefer': 'return=headers-only'
+      },
+      body: JSON.stringify(data)
+    })
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    debugger
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
 export async function deleteOrganisationFromProject({project,organisation,token}:
   { project: string, organisation:string, token:string }) {
   try {
