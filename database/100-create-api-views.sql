@@ -286,7 +286,8 @@ CREATE FUNCTION organisations_overview() RETURNS TABLE (
 	logo_id UUID,
 	software_cnt BIGINT,
 	project_cnt BIGINT,
-	children_cnt BIGINT
+	children_cnt BIGINT,
+	score BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -303,7 +304,11 @@ BEGIN
 		logo_for_organisation.organisation AS logo_id,
 		software_count_by_organisation.software_cnt,
 		project_count_by_organisation.project_cnt,
-		children_count_by_organisation.children_cnt
+		children_count_by_organisation.children_cnt,
+		(
+			COALESCE(software_count_by_organisation.software_cnt,0) +
+			COALESCE(project_count_by_organisation.project_cnt,0)
+		) as score
 	FROM
 		organisation o
 	LEFT JOIN

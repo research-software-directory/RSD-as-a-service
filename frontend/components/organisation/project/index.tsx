@@ -11,7 +11,6 @@ import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
 import useOrganisationProjects from '../../../utils/useOrganisationProjects'
 import ProjectsGrid from '../../projects/ProjectsGrid'
 import NoContent from '~/components/layout/NoContent'
-import GridScrim from '~/components/layout/GridScrim'
 
 export default function OrganisationProjects({organisation, session}:
   { organisation: OrganisationForOverview, session: Session }) {
@@ -34,20 +33,6 @@ export default function OrganisationProjects({organisation, session}:
       setCount(count)
     }
   },[count,loading,setCount])
-
-
-  if (init) {
-    // show scrim only on initial load
-    return (
-      <GridScrim
-        rows={rows}
-        height='17rem'
-        minWidth='25rem'
-        maxWidth='1fr'
-        className="gap-[0.125rem] pt-2 pb-12"
-      />
-    )
-  }
 
   if (projects.length === 0
     && loading === false) {

@@ -15,9 +15,7 @@ import {paginationUrlParams} from './postgrestUrl'
 export function organisationUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
   // by default order is on software count and name
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&order=software_cnt.desc.nullslast,name.asc`
-  // moved to rpc
-  // let url = `${process.env.POSTGREST_URL}/organisations_overview?parent=is.null&order=software_cnt.desc.nullslast,name.asc`
+  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&order=score.desc.nullslast,name.asc`
   // add search params
   if (search) {
     url += `&or=(name.ilike.*${search}*, website.ilike.*${search}*)`
@@ -71,11 +69,11 @@ export async function getOrganisationsList({search, rows, page, token}:
 export async function getOrganisationBySlug({slug, token}:
   {slug: string[], token: string}) {
   try {
-    const uuid = await getOrganisationsIdForSlug({slug, token})
+    const uuid = await getOrganisationIdForSlug({slug, token})
     // if not found return
     if (typeof uuid == 'undefined') return undefined
 
-    const organisation = await getOrganisationsById({
+    const organisation = await getOrganisationById({
       uuid,
       token
     })
@@ -89,11 +87,14 @@ export async function getOrganisationBySlug({slug, token}:
 }
 
 
-async function getOrganisationsIdForSlug({slug, token}:
-  { slug: string[], token: string }) {
+export async function getOrganisationIdForSlug({slug, token, frontend=false}:
+  { slug: string[], token: string, frontend?:boolean }) {
 
   const path = slug.join('/')
   let url = `${process.env.POSTGREST_URL}/rpc/slug_to_organisation`
+  if (frontend) {
+    url = '/api/v1/rpc/slug_to_organisation'
+  }
 
   let resp = await fetch(url, {
     method: 'POST',
@@ -111,15 +112,18 @@ async function getOrganisationsIdForSlug({slug, token}:
 }
 
 
-async function getOrganisationsById({uuid, token}:
-  {uuid: string, token: string}) {
-  const url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?id=eq.${uuid}`
+export async function getOrganisationById({uuid, token, frontend=false}:
+  { uuid: string, token: string, frontend?: boolean }) {
+  const query = `rpc/organisations_overview?id=eq.${uuid}`
+  let url = `${process.env.POSTGREST_URL}/${query}`
+  if (frontend) {
+    url = `/api/v1/${query}`
+  }
   const resp = await fetch(url, {
     method: 'GET',
     headers: {
       ...createJsonHeaders(token),
-      // request record count to be returned
-      // note: it's returned in the header
+      // request single object item
       'Accept': 'application/vnd.pgrst.object+json'
     },
   })

@@ -46,7 +46,7 @@ export default function NoContent({message='nothing to show'}:{message?:string})
         flex:1,
         overflow: 'hidden'
       }}
-      component="section"
+      component="div"
     >
       <Slide direction="up" in={show} container={containerRef.current}>
         <NoContentBody>
