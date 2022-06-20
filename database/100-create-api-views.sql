@@ -307,8 +307,7 @@ BEGIN
 		children_count_by_organisation.children_cnt,
 		(
 			COALESCE(software_count_by_organisation.software_cnt,0) +
-			COALESCE(project_count_by_organisation.project_cnt,0) +
-			COALESCE(children_count_by_organisation.children_cnt,0)
+			COALESCE(project_count_by_organisation.project_cnt,0)
 		) as score
 	FROM
 		organisation o
