@@ -112,9 +112,28 @@ const exampleWork = {
     'familyName': 'Barsacchi',
     'affiliation': []
   },
-    {
-      'givenName': 'Marc',
-      'familyName': 'Bickle',
-      'affiliation': []
-    }]
+  {
+    'givenName': 'Marc',
+    'familyName': 'Bickle',
+    'affiliation': []
+  }]
 }
+
+const conceptDoiResp = {
+  'data': {
+    'software': {
+      'doi': '10.5281/zenodo.800648',
+      'versionCount': 0,
+      'versionOfCount': 1,
+      'versionOf': {
+        'nodes': [
+          {
+            'doi': '10.5281/zenodo.705645'
+          }
+        ]
+      }
+    }
+  }
+}
+
+export type DataCiteConceptDoiQlResp = typeof conceptDoiResp

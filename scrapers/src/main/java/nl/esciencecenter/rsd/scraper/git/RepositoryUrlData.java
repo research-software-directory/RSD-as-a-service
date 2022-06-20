@@ -5,10 +5,10 @@
 
 package nl.esciencecenter.rsd.scraper.git;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public record RepositoryUrlData(String software, String url, CodePlatformProvider code_platform,
-								String license, LocalDateTime licenseScrapedAt,
-								String commitHistory, LocalDateTime commitHistoryScrapedAt,
-								String languages, LocalDateTime languagesScrapedAt) {
+								String license, ZonedDateTime licenseScrapedAt,
+								String commitHistory, ZonedDateTime commitHistoryScrapedAt,
+								String languages, ZonedDateTime languagesScrapedAt) {
 }

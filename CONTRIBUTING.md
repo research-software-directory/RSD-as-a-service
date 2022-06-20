@@ -1,5 +1,6 @@
 <!--
 SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 SPDX-FileCopyrightText: 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 Netherlands eScience Center
@@ -161,11 +162,15 @@ Now, copy-paste this template into `pre-commit` and configure it as required:
 #
 # Configuration
 # -------------
-# Any of those variables is optional. The email is only used if an author is defined.
+# Any of those variables is optional. The email and organisation_short is only used if an author is defined.
 # If none of these variables is defined, only the license will be added.
 AUTHOR=""
 EMAIL=""
 ORGANISATION=""
+# If your organisation's name is very long, put an abbreviation here, otherwise fill in the same value as for ORGANISATION
+# e.g. "Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences" could become "GFZ".
+# This is the value that will be displayed after your name, whereas ORGANISATION will be displayed on a separate line
+ORGANISATION_SHORT=""
 # End of configuration
 
 function check_program_exists () {
@@ -182,12 +187,15 @@ if [[ ${merge_check} ]]; then
     exit 0
 fi
 
-check_program_exists reusee
+check_program_exists reuse
 check_program_exists date
 check_program_exists dirname
 
 YEAR=$(date +"%Y")
 AUTHOR_STRING=$AUTHOR
+if [[ "ORGANISATION_SHORT" != "" ]]; then
+    AUTHOR_STRING="${AUTHOR_STRING} (${ORGANISATION_SHORT})"
+fi
 if [[ "$EMAIL" != "" ]]; then
     AUTHOR_STRING="${AUTHOR_STRING} <${EMAIL}>"
 fi

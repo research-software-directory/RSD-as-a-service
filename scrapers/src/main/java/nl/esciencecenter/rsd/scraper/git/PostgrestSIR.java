@@ -11,7 +11,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -73,17 +74,17 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			JsonElement jsonLicence = jsonObject.get("license");
 			String license = jsonLicence.isJsonNull() ? null : jsonLicence.getAsString();
 			JsonElement jsonLicenseScrapedAt = jsonObject.get("license_scraped_at");
-			LocalDateTime licensScrapedAt = jsonLicenseScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonLicenseScrapedAt.getAsString());
+			ZonedDateTime licensScrapedAt = jsonLicenseScrapedAt.isJsonNull() ? null : ZonedDateTime.parse(jsonLicenseScrapedAt.getAsString());
 
 			JsonElement jsonCommits = jsonObject.get("commit_history");
 			String commits = jsonCommits.isJsonNull() ? null : jsonCommits.getAsString();
 			JsonElement jsonCommitsScrapedAt = jsonObject.get("commit_history_scraped_at");
-			LocalDateTime commitsScrapedAt = jsonCommitsScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonCommitsScrapedAt.getAsString());
+			ZonedDateTime commitsScrapedAt = jsonCommitsScrapedAt.isJsonNull() ? null : ZonedDateTime.parse(jsonCommitsScrapedAt.getAsString());
 
 			JsonElement jsonLanguages = jsonObject.get("languages");
 			String languages = jsonLanguages.isJsonNull() ? null : jsonLanguages.getAsString();
 			JsonElement jsonLanguagesScrapedAt = jsonObject.get("languages_scraped_at");
-			LocalDateTime languagesScrapedAt = jsonLanguagesScrapedAt.isJsonNull() ? null : LocalDateTime.parse(jsonLanguagesScrapedAt.getAsString());
+			ZonedDateTime languagesScrapedAt = jsonLanguagesScrapedAt.isJsonNull() ? null : ZonedDateTime.parse(jsonLanguagesScrapedAt.getAsString());
 
 			result.add(new RepositoryUrlData(software, url, codePlatform, license, licensScrapedAt, commits, commitsScrapedAt, languages, languagesScrapedAt));
 		}
@@ -106,13 +107,13 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			newDataJson.addProperty("code_platform", repositoryUrlData.code_platform().name().toLowerCase());
 
 			newDataJson.addProperty("license", repositoryUrlData.license());
-			newDataJson.addProperty("license_scraped_at", repositoryUrlData.licenseScrapedAt() == null ? null : repositoryUrlData.licenseScrapedAt().toString());
+			newDataJson.addProperty("license_scraped_at", repositoryUrlData.licenseScrapedAt() == null ? null : repositoryUrlData.licenseScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 
 			newDataJson.addProperty("commit_history", repositoryUrlData.commitHistory());
-			newDataJson.addProperty("commit_history_scraped_at", repositoryUrlData.commitHistoryScrapedAt() == null ? null : repositoryUrlData.commitHistoryScrapedAt().toString());
+			newDataJson.addProperty("commit_history_scraped_at", repositoryUrlData.commitHistoryScrapedAt() == null ? null : repositoryUrlData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 
 			newDataJson.addProperty("languages", repositoryUrlData.languages());
-			newDataJson.addProperty("languages_scraped_at", repositoryUrlData.languagesScrapedAt() == null ? null : repositoryUrlData.languagesScrapedAt().toString());
+			newDataJson.addProperty("languages_scraped_at", repositoryUrlData.languagesScrapedAt() == null ? null : repositoryUrlData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 			dataAsJsonArray.add(newDataJson);
 		}
 		return dataAsJsonArray.toString();

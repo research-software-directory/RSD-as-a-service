@@ -40,6 +40,7 @@ import ProjectMentions from '~/components/projects/ProjectMentions'
 import ContributorsSection from '~/components/software/ContributorsSection'
 import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
 import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
+import NoContent from '~/components/layout/NoContent'
 
 export interface ProjectPageProps extends ScriptProps{
   slug: string
@@ -70,11 +71,7 @@ export default function ProjectPage(props: ProjectPageProps) {
   }, [])
 
   if (!project?.title){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
+    return <NoContent />
   }
   // console.log('ProjectItemPage...output...', output)
   return (

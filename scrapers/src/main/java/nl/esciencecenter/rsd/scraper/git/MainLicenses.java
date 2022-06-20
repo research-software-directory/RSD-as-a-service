@@ -9,7 +9,7 @@ import nl.esciencecenter.rsd.scraper.Config;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -25,7 +25,7 @@ public class MainLicenses {
 	private static void scrapeGitLab() {
 		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITLAB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
-		LocalDateTime scrapedAt = LocalDateTime.now();
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		for (RepositoryUrlData licenseData : dataToScrape) {
 			try {
 				String repoUrl = licenseData.url();
@@ -55,7 +55,7 @@ public class MainLicenses {
 	private static void scrapeGitHub() {
 		Collection<RepositoryUrlData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITHUB);
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
-		LocalDateTime scrapedAt = LocalDateTime.now();
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		for (RepositoryUrlData licenseData : dataToScrape) {
 			try {
 				String repoUrl = licenseData.url();
