@@ -1,5 +1,7 @@
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -9,8 +11,8 @@
 CREATE TABLE research_domain (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	key VARCHAR(50) UNIQUE NOT NULL,
-	name VARCHAR,
-	description VARCHAR,
+	name VARCHAR(200),
+	description VARCHAR(500),
 	parent UUID REFERENCES research_domain (id)
 );
 

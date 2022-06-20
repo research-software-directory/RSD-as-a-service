@@ -1,6 +1,5 @@
 -- SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2022 dv4all
--- SPDX-FileCopyrightText: 2022 Dusan Mijatovic
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 --
@@ -109,7 +108,7 @@ CREATE FUNCTION software_list() RETURNS TABLE (
 	slug VARCHAR,
 	brand_name VARCHAR,
 	short_statement VARCHAR,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMPTZ,
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT,
 	is_published BOOLEAN
@@ -142,7 +141,7 @@ CREATE FUNCTION related_software_for_software(software_id UUID) RETURNS TABLE (
 	slug VARCHAR,
 	brand_name VARCHAR,
 	short_statement VARCHAR,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMPTZ,
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT,
 	is_published BOOLEAN
@@ -331,7 +330,7 @@ CREATE FUNCTION software_by_organisation() RETURNS TABLE (
 	status relation_status,
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMPTZ,
 	organisation UUID
 ) LANGUAGE plpgsql STABLE AS
 $$
@@ -371,7 +370,7 @@ CREATE FUNCTION projects_by_organisation() RETURNS TABLE (
 	subtitle VARCHAR,
 	date_start DATE,
 	date_end DATE,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	is_featured BOOLEAN,
 	image_id UUID,
@@ -458,7 +457,7 @@ CREATE FUNCTION related_projects_for_project() RETURNS TABLE (
 	title VARCHAR,
 	subtitle VARCHAR,
 	date_end DATE,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMPTZ,
 	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
@@ -494,7 +493,7 @@ CREATE FUNCTION related_projects_for_software() RETURNS TABLE (
 	title VARCHAR,
 	subtitle VARCHAR,
 	date_end DATE,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMPTZ,
 	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
@@ -528,7 +527,7 @@ CREATE FUNCTION related_software_for_project(project_id UUID) RETURNS TABLE (
 	slug VARCHAR,
 	brand_name VARCHAR,
 	short_statement VARCHAR,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMPTZ,
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT,
 	is_published BOOLEAN,
@@ -776,7 +775,7 @@ CREATE FUNCTION software_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	brand_name VARCHAR,
 	short_statement VARCHAR,
 	is_published BOOLEAN,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMPTZ,
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT
 ) LANGUAGE plpgsql STABLE AS
@@ -817,7 +816,7 @@ CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	subtitle VARCHAR,
 	date_start DATE,
 	date_end DATE,
-	updated_at TIMESTAMP,
+	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS

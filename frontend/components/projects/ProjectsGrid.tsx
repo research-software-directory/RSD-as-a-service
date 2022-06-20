@@ -3,8 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ContentInTheMiddle from '../layout/ContentInTheMiddle'
 import FlexibleGridSection, {FlexGridProps} from '../layout/FlexibleGridSection'
+import NoContent from '../layout/NoContent'
 import ProjectCard, {ProjectCardProps} from './ProjectCard'
 
 type ProjectGridProps = FlexGridProps & {
@@ -15,11 +15,7 @@ type ProjectGridProps = FlexGridProps & {
 // render software cards
 export default function ProjectsGrid({projects,className='gap-[0.125rem] py-[2rem]',...props}:ProjectGridProps){
   if (typeof projects == 'undefined' || projects.length===0){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
+    return <NoContent />
   }
 
   return (

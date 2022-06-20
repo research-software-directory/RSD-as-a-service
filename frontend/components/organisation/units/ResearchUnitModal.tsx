@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -40,7 +40,7 @@ const formId='research-unit-modal'
 export default function EditOrganisationModal({
   open, onCancel, onSubmit, onDeleteLogo, organisation, pos, title = 'Organisation'
 }: EditOrganisationModalProps) {
-  const {showErrorMessage} = useSnackbar()
+  const {showWarningMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState(organisation?.slug ?? '')
@@ -89,7 +89,7 @@ export default function EditOrganisationModal({
       // check file size
       if (file.size > 2097152) {
         // file is to large > 2MB
-        showErrorMessage('The file is too large. Please select image < 2MB.')
+        showWarningMessage('The file is too large. Please select image < 2MB.')
         return
       }
       let reader = new FileReader()

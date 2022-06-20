@@ -9,7 +9,7 @@ import nl.esciencecenter.rsd.scraper.Config;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -26,7 +26,7 @@ public class MainProgrammingLanguages {
 		SoftwareInfoRepository existingLanguagesSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB);
 		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.languagesData(Config.maxRequestsGitLab());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
-		LocalDateTime scrapedAt = LocalDateTime.now();
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		for (RepositoryUrlData programmingLanguageData : dataToScrape) {
 			try {
 				String repoUrl = programmingLanguageData.url();
@@ -58,7 +58,7 @@ public class MainProgrammingLanguages {
 		SoftwareInfoRepository existingLanguagesSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB);
 		Collection<RepositoryUrlData> dataToScrape = existingLanguagesSorted.languagesData(Config.maxRequestsGithub());
 		Collection<RepositoryUrlData> updatedDataAll = new ArrayList<>();
-		LocalDateTime scrapedAt = LocalDateTime.now();
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int countRequests = 0;
 		int maxRequests = Config.maxRequestsGithub();
 		for (RepositoryUrlData programmingLanguageData : dataToScrape) {

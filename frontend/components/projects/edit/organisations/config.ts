@@ -7,9 +7,9 @@ export const cfgOrganisations = {
   title: 'Participating organisations',
   findOrganisation: {
     title: 'Add organisation',
-    subtitle: 'We search organisation name in RSD and ROR databases',
+    subtitle: 'We search by name in the RSD and the ROR databases',
     label: 'Find or add organisation',
-    help: 'At least fist 3 letters of organisation name',
+    help: 'At least the fist 2 letters of the organisation name',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,

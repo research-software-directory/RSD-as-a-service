@@ -23,7 +23,7 @@ export const addConfig = {
     validation: {
       // required: 'Name is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 200, message: 'Maximum length is 200'},
+      maxLength: {value: 300, message: 'Maximum length is 300'},
     }
   },
   slug: {

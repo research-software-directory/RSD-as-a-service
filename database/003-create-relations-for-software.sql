@@ -16,14 +16,14 @@ CREATE TYPE platform_type AS ENUM (
 
 CREATE TABLE repository_url (
 	software UUID references software (id) PRIMARY KEY,
-	url VARCHAR NOT NULL,
+	url VARCHAR(200) NOT NULL,
 	code_platform platform_type NOT NULL DEFAULT 'other',
 	languages JSONB,
-	languages_scraped_at TIMESTAMP,
-	license VARCHAR,
-	license_scraped_at TIMESTAMP,
+	languages_scraped_at TIMESTAMPTZ,
+	license VARCHAR(200),
+	license_scraped_at TIMESTAMPTZ,
 	commit_history JSONB,
-	commit_history_scraped_at TIMESTAMP
+	commit_history_scraped_at TIMESTAMPTZ
 );
 
 
@@ -33,8 +33,8 @@ CREATE TABLE license_for_software (
 	software UUID references software (id) NOT NULL,
 	license VARCHAR(100) NOT NULL,
 	UNIQUE(software, license),
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_license_for_software() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -68,16 +68,16 @@ CREATE TABLE contributor (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID references software (id) NOT NULL,
 	is_contact_person BOOLEAN NOT NULL DEFAULT FALSE,
-	email_address VARCHAR,
-	family_names VARCHAR NOT NULL,
-	given_names VARCHAR NOT NULL,
-	affiliation VARCHAR,
-	role VARCHAR,
+	email_address VARCHAR(200),
+	family_names VARCHAR(200) NOT NULL,
+	given_names VARCHAR(200) NOT NULL,
+	affiliation VARCHAR(200),
+	role VARCHAR(200),
 	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
-	avatar_data VARCHAR,
+	avatar_data VARCHAR(2750000),
 	avatar_mime_type VARCHAR(100),
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_contributor() RETURNS TRIGGER LANGUAGE plpgsql AS

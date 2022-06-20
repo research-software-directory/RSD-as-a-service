@@ -5,7 +5,7 @@
 
 import {DataciteWorkGraphQLResponse, DataciteWorksGraphQLResponse, WorkResponse} from '~/types/Datacite'
 import {MentionItemProps} from '~/types/Mention'
-import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
+import {createJsonHeaders, extractRespFromGraphQL, extractReturnMessage} from './fetchHelpers'
 import {apiMentionTypeToRSDTypeKey} from './editMentions'
 import logger from './logger'
 import {makeDoiRedirectUrl} from './getDOI'
@@ -46,12 +46,8 @@ function graphQLDoiQuery(doi:string) {
 
 function gqlConceptDoiQuery(doi: string) {
   const gql =`{
-    work(id:"${doi}"){
+    software(id:"${doi}"){
       doi,
-      type,
-      titles(first:1){
-        title
-      },
       versionCount,
       versionOfCount,
       versionOf{
@@ -196,5 +192,29 @@ export async function getDataciteItemsByTitleGraphQL(title: string) {
   } catch (e: any) {
     logger(`getDataciteItemsByTitleGraphQL: ${e?.message}`, 'error')
     return []
+  }
+}
+
+
+export async function getSoftwareVersionInfoForDoi(doi: string) {
+  try {
+    const query = gqlConceptDoiQuery(doi)
+    const url = 'https://api.datacite.org/graphql'
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: createJsonHeaders(),
+      body: JSON.stringify({
+        operationName: null,
+        variables: {},
+        query
+      })
+    })
+
+    const json = await extractRespFromGraphQL(resp)
+    return json
+  } catch (e: any) {
+    logger(`getConceptDoiByDoi: ${e?.message}`, 'error')
+    return undefined
   }
 }

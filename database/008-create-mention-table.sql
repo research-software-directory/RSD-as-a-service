@@ -37,9 +37,9 @@ CREATE TABLE mention (
 	image_url VARCHAR(500),
 	mention_type mention_type NOT NULL,
 	source VARCHAR(50) NOT NULL,
-	scraped_at TIMESTAMP,
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	scraped_at TIMESTAMPTZ,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_mention() RETURNS TRIGGER LANGUAGE plpgsql AS

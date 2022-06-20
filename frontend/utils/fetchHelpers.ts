@@ -83,3 +83,23 @@ export function extractErrorMessages(responses: { status: number, message: strin
   })
   return errors
 }
+
+
+type GrapQLResponse = {
+  data?: any,
+  errors?:any
+}
+
+export async function extractRespFromGraphQL(resp: Response) {
+  const json: GrapQLResponse = await resp.json()
+  if (json?.errors && json.errors.length > 0) {
+    return {
+      status: 500,
+      message: json.errors[0]?.message ?? 'Unknown error'
+    }
+  }
+  return {
+    status: 200,
+    data: json?.data ?? undefined
+  }
+}

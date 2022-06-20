@@ -39,7 +39,6 @@ export default function SoftwareLicenses(
     foundFor: undefined
   })
   const [options, setOptions] = useState<AutocompleteOption<License>[]>(allOptions)
-  const {getValues} = useForm<EditSoftwareItem>()
   const [doiLoad, setDoiLoad]=useState(false)
   const {fields, append, remove} = useFieldArray({
     control,
@@ -226,9 +225,9 @@ export default function SoftwareLicenses(
           // we do not allow free solo text
           // eg. only selection of found items
           freeSolo: true,
-          minLength: config.keywords.validation.minLength,
-          label: config.keywords.label,
-          help: config.keywords.help,
+          minLength: config.licenses.validation.minLength,
+          label: config.licenses.label,
+          help: config.licenses.help,
           reset: true
         }}
       />

@@ -209,7 +209,7 @@ export default function AddSoftwareCard() {
               error: errors.brand_name?.message !== undefined,
               label: config.brand_name.label,
               helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help,
-              helperTextCnt: `${data?.brand_name?.length || 0}/100`,
+              helperTextCnt: `${data?.brand_name?.length || 0}/${config.brand_name.validation.maxLength.value}`,
               variant:'outlined'
             }}
             register={register('brand_name', {
@@ -224,7 +224,7 @@ export default function AddSoftwareCard() {
               error: errors?.short_statement?.message !== undefined,
               label: config.short_statement.label,
               helperTextMessage: errors?.short_statement?.message ?? config.short_statement.help,
-              helperTextCnt: `${data?.short_statement?.length || 0}/300`,
+              helperTextCnt: `${data?.short_statement?.length || 0}/${config.short_statement.validation.maxLength.value}`,
               variant:'outlined'
             }}
             register={register('short_statement', config.short_statement.validation)}
