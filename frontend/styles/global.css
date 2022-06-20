@@ -143,5 +143,5 @@ Tailwind remove max-width for markdown
 }
 
 .nav-active{
-    @apply border-b border-white cursor-pointer
+    @apply border-b border-primary cursor-pointer
 }
