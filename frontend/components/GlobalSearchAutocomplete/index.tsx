@@ -1,7 +1,5 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {ClickAwayListener} from '@mui/base'
-import {TextField} from '@mui/material'
-import {count} from 'd3-array'
 import {useRouter} from 'next/router'
 
 const data = [
@@ -55,27 +53,28 @@ export default function GlobalSearchAutocomplete() {
   }
 
   // Handle keyup
-  const handleKeyDown = ({keyCode}) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     setOpen(true)
     // Handle arrow up and down
-    switch (keyCode) {
+    switch (e.keyCode) {
       // Backspace
       case 8:
         // Remove selection
         setSelected(-1)
         break
-      // Down arrow
-      case 40:
-        data.length - 1 > selected && setSelected(selected + 1)
-        break
       // Up arrow
       case 38:
-        selected >= 0 && setSelected(selected - 1)
+        e.preventDefault() // Disallows the cursor to move to the end of the input
+        selected > 0 && setSelected(selected - 1)
+        break
+      // Down arrow
+      case 40:
+        e.preventDefault() // Disallows the cursor to move to the end of the input
+        data.length - 1 > selected && setSelected(selected + 1)
         break
       // Enter
       case 13:
         handleClick()
-
         break
       // Escape key
       case 27:
@@ -84,8 +83,8 @@ export default function GlobalSearchAutocomplete() {
     }
   }
 
-  const handleChange = (e) => {
-    setValue(e.target.value)
+  const handleChange = (e:React.FormEvent<HTMLInputElement>) => {
+    setValue(e.currentTarget.value)
     // Todo refresh API call
   }
   return (

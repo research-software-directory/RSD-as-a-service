@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // external dependencies
-import {useState, useEffect, ReactChildren} from 'react'
+import {useState, useEffect} from 'react'
 import Link from 'next/link'
 import {useAuth} from '../../auth'
 // local dependencies (project components)
@@ -26,7 +26,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
-  const router = useRouter()
+
   useEffect(() => {
     // set activePath to currently loaded route/page
     if (typeof window != 'undefined') {
@@ -51,7 +51,6 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
       className="z-10 px-5 md:px-10 min-h-[88px] bg-secondary text-white flex items-center flex-wrap"
     >
       <div className="w-full lg:container mx-auto flex py-3 items-center">
-
 
         <Link href="/" passHref>
           <a className="hover:shadow-2xl">
@@ -81,43 +80,44 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
         <div
           className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right sm:flex-none">
 
-        {/* Responsive menu items*/}
-        <div className="block sm:hidden ml-6 ">
-          <Button
-            color="inherit"
-            id="basic-button"
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}
+          {/* Responsive menu items*/}
+          <div className="block sm:hidden ml-6 ">
+            <Button
+              color="inherit"
+              id="basic-button"
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}
 
-          >
-            Pages ▾
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button',
-            }}
-          >
-            {menuItems.map(item =>
-              <MenuItem onClick={handleClose} key={item.path}>
-                <Link href={item.path || ''}>
-                  <a className={`${activePath === item.path && 'nav-active'}`}>
-                    {item.label}
-                  </a>
-                </Link>
-              </MenuItem>)}
-          </Menu>
-        </div>
-        <div className="flex flex-nowrap">
-          {editButton ? editButton : null}
-          {status === 'authenticated' ? <AddMenu/> : null}
-          {/*<ThemeSwitcher/>*/}
-          <LoginButton/>
+            >
+              Pages ▾
+            </Button>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              {menuItems.map(item =>
+                <MenuItem onClick={handleClose} key={item.path}>
+                  <Link href={item.path || ''}>
+                    <a className={`${activePath === item.path && 'nav-active'}`}>
+                      {item.label}
+                    </a>
+                  </Link>
+                </MenuItem>)}
+            </Menu>
+          </div>
+          <div className="flex flex-nowrap">
+            {editButton ? editButton : null}
+            {status === 'authenticated' ? <AddMenu/> : null}
+            {/*<ThemeSwitcher/>*/}
+            <LoginButton/>
+          </div>
         </div>
       </div>
     </header>
