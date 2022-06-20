@@ -18,8 +18,8 @@ export type ProjectCardProps = {
   image_id: string | null
   updated_at: string | null
   date_end: string | null
-  is_featured: boolean
-  is_published: boolean
+  is_featured?: boolean
+  is_published?: boolean
 }
 
 export default function ProjectCard({slug,title,subtitle,image_id,updated_at,date_end,is_featured,is_published}:ProjectCardProps) {
