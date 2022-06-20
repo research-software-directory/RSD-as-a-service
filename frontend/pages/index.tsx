@@ -143,7 +143,7 @@ export default function Home() {
 
             </div>*/}
             <div className="flex gap-10 mt-10 items-center">
-              <Link href="/software">
+              <Link href="/software" passHref>
                 <div className="flex gap-4 cursor-pointer"
                      data-aos="fade" data-aos-offset="200" data-aos-delay="50"
                      data-aos-duration="1000">
