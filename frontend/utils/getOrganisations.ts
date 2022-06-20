@@ -172,6 +172,10 @@ export async function getSoftwareForOrganisation({organisation, searchFor, page,
   try {
     // baseUrl
     let url = `/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,is_published.desc,mention_cnt.desc.nullslast,brand_name.asc`
+    // filter for public on approved only
+    if (!token) {
+      url+='&status=eq.approved'
+    }
     // search
     if (searchFor) {
       url+=`&or=(brand_name.ilike.*${searchFor}*, short_statement.ilike.*${searchFor}*))`
@@ -219,6 +223,10 @@ export async function getProjectsForOrganisation({organisation, searchFor, page,
   try {
     // baseUrl
     let url = `/api/v1/rpc/projects_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,is_published.desc,title.asc`
+    // filter for public on approved only
+    if (!token) {
+      url += '&status=eq.approved'
+    }
     // search
     if (searchFor) {
       url += `&or=(title.ilike.*${searchFor}*,subtitle.ilike.*${searchFor}*))`
