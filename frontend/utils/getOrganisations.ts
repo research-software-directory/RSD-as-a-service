@@ -51,7 +51,7 @@ export async function getOrganisationsList({search, rows, page, token}:
       }
     }
     // otherwise request failed
-    logger(`getSoftwareList failed: ${resp.status} ${resp.statusText}`, 'warn')
+    logger(`getOrganisationsList failed: ${resp.status} ${resp.statusText}`, 'warn')
     // we log and return zero
     return {
       count: 0,
