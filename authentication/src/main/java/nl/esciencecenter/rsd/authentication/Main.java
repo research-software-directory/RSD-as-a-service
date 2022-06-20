@@ -18,6 +18,31 @@ import java.util.Base64;
 public class Main {
 	static final long ONE_HOUR_IN_SECONDS = 3600; // 60 * 60
 
+	public static boolean userIsAllowed (OpenIdInfo info) {
+		String whitelist = Config.userMailWhitelist();
+
+		if (whitelist == null || whitelist.length() == 0) {
+			// allow any user
+			return true;
+		}
+
+		if (
+			info == null || info.email() == null || info.email().length() == 0
+		) {
+			throw new Error("Unexpected parameters for 'userIsAllowed'");
+		}
+
+		String[] allowed = whitelist.split(";");
+
+		for (String s: allowed) {
+			if (s.equalsIgnoreCase(info.email())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public static void main(String[] args) {
 		Javalin app = Javalin.create().start(7000);
 		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
@@ -51,8 +76,12 @@ public class Main {
 					String code = ctx.formParam("code");
 					String redirectUrl = Config.surfconextRedirect();
 					OpenIdInfo surfconextInfo = new SurfconextLogin(code, redirectUrl).openidInfo();
-					AccountInfo accountInfo = new PostgrestAccount(surfconextInfo, "surfconext").account();
 
+					if (!userIsAllowed(surfconextInfo)) {
+						throw new RuntimeException("User is not whitelisted");
+					}
+
+					AccountInfo accountInfo = new PostgrestAccount(surfconextInfo, "surfconext").account();
 					JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 					String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
 					setJwtCookie(ctx, token);
@@ -71,6 +100,10 @@ public class Main {
 					String code = ctx.queryParam("code");
 					String redirectUrl = Config.helmholtzAaiRedirect();
 					OpenIdInfo helmholtzInfo = new HelmholtzAaiLogin(code, redirectUrl).openidInfo();
+
+					if (!userIsAllowed(helmholtzInfo)) {
+						throw new RuntimeException("User is not whitelisted");
+					}
 
 					AccountInfo accountInfo = new PostgrestAccount(helmholtzInfo, "helmholtz").account();
 					JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());

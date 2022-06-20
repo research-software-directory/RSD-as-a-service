@@ -25,3 +25,13 @@ AUTH_SURFCONEXT_CLIENT_SECRET=
 # JWT secret for postgREST
 PGRST_JWT_SECRET=
 ```
+
+## Running the tests
+
+You can run the tests by executing the docker build in this directory:
+
+```bash
+docker build -t removeme .
+# resulting image can be deleted afterwards:
+# docker image rm removeme
+```
