@@ -10,7 +10,7 @@
 # ----------------------------------------------------------------
 start:
 	docker-compose down --volumes #cleanup phase
-	docker-compose build database backend auth scrapers nginx   # exclude frontend and wait for the build to finish
+	docker-compose build # build all services
 	docker-compose up  --scale scrapers=0 -d
 	# Sleep 30 seconds to be sure that docker-compose up is running
 	sleep 30
