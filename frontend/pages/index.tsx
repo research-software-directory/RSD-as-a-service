@@ -23,9 +23,11 @@ import LogoUMC from '~/assets/logos/LogoUMC.svg'
 import LogoUU from '~/assets/logos/LogoUU.svg'
 import LogoLeiden from '~/assets/logos/LogoLeiden.svg'
 import Arc from '~/components/home/arc.svg'
+import {getHomepageCounts} from '~/components/home/getHomepageCounts'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
+
 /*! purgecss end ignore */
 
 const whyrsd = [
@@ -41,7 +43,14 @@ const whyrsd = [
   'The Research Software Directory is a content management system that is tailored to software.'
 ]
 
-export default function Home() {
+type HomeProps = {
+  software: number,
+  projects: number,
+  organisations: number
+}
+
+
+export default function Home({software,projects,organisations}:HomeProps) {
   const [isDark, setDark] = useState(true)
 
   // Initialize AOS library
@@ -137,18 +146,18 @@ export default function Home() {
       {/* stats  */}
       <div className="w-full max-w-screen-xl mx-auto flex flex-wrap gap-10 md:gap-16 p-5 md:p-10 ">
         <div>
-          <div className="text-lg"> 30+ thousands</div>
-          <div className="opacity-40">Researchers</div>
-        </div>
-
-        <div>
-          <div className="text-lg">20 Research Centers</div>
-          <div className="opacity-40">Organizations</div>
-        </div>
-
-        <div>
-          <div className="text-lg"> 500+ Software</div>
+          <div className="text-lg"> {software} Software</div>
           <div className="opacity-40">Packages</div>
+        </div>
+
+        <div>
+          <div className="text-lg">{projects} Research</div>
+          <div className="opacity-40">Projects</div>
+        </div>
+
+        <div>
+          <div className="text-lg"> {organisations} Research</div>
+          <div className="opacity-40">Organisations</div>
         </div>
       </div>
 
@@ -276,4 +285,20 @@ export default function Home() {
       </div>
     </div>
   )
+}
+
+// fetching data server side
+// see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
+export async function getServerSideProps() {
+  // extract params from page-query
+  const counts = await getHomepageCounts()
+  // will be passed as props to page
+  // see params of SoftwareIndexPage function
+  return {
+    props: {
+      software: counts.software_cnt ?? null,
+      projects: counts.project_cnt ?? null,
+      organisations: counts.organisation_cnt ?? null
+    },
+  }
 }

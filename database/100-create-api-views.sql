@@ -982,3 +982,19 @@ BEGIN
 	RETURN;
 END
 $$;
+
+-- TOTAL COUNTS FOR HOMEPAGE
+-- software_cnt, project_cnt, organisation_cnt
+-- this rpc returns json object instead of array
+CREATE FUNCTION homepage_counts(
+	OUT software_cnt BIGINT,
+	OUT project_cnt BIGINT,
+	OUT organisation_cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	SELECT count(id) FROM software INTO software_cnt;
+	SELECT count(id) FROM project INTO project_cnt;
+	SELECT count(id) FROM organisation WHERE parent IS NULL INTO organisation_cnt;
+END
+$$;
