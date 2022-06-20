@@ -162,6 +162,8 @@ export default function Home() {
 
               <a data-aos="fade" data-aos-offset="200" data-aos-delay="150" data-aos-duration="1000"
                  className="text-xl leading-6 text-transparent bg-clip-text bg-gradient-to-br from-[#FD54BB] to-[#1BECCB] "
+                 target="_blank"
+                 rel="noreferrer"
                  href="mailto:rsd@esciencecenter.nl?subject=More information about the RSD&body=Hi,
                   I would like to get in contact to start my organization within the Research
                   Software Directory"
