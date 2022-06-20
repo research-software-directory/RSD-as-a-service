@@ -26,18 +26,33 @@ SPDX-License-Identifier: CC-BY-4.0
 This repo contains the new RSD-as-a-service implementation
 
 
-## Running development version locally in 3 steps. 
-1. Before installing the dependencies you need to set the environment variables in place:
+## Running a local version in 2 steps. 
+1. Before installing the dependencies be sure you have ruuning Docker locally. You need to set the environment variables in place:
 Copy the file `.env.example` to `.env` file at the root of the project
 and fill the secrets in `./frontend/.env.local`. Check if the secrets are correct.
-2. Running once `make install` will install all dependencies, build the docker images and run the **data migration** script.
-3. Finally, run `make dev` to start the frontend and documentation servers.
+2. Running once `make local` will install all dependencies, build the docker images and run the **data migration** script.
 
 
-List of commands
+**Requirements:** 
+- Docker installed locally
+#### List of commands
 ```shell
-make install   # it will build and install all dependencies and will run the **data migration** script. 
-make dev       # it will run the frontend and the documentation locally on localhost:3000 and localhost:3030 respectively
+make up     # Run the complete solution locally.
+make down      # Stop all services with `docker-compose down`
+```
+
+### Developing the Frontend
+**Requirements:**
+- Docker
+- NodeJs ^16 or major 
+
+```shell
+# Developing the frontend
+# One time
+make install   # Build and install all dependencies and will run the **data migration** script. 
+
+# Run the Development version 
+make dev       # Run the frontend and the documentation locally on localhost:3000 and localhost:3030 respectively
 make down      # Stop all services with `docker-compose down`
 ```
 
