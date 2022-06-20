@@ -49,7 +49,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
       data-testid="Landing Page"
       className="z-10 px-5 md:px-10 min-h-[88px] bg-secondary text-white flex items-center flex-wrap"
     >
-      <div className="w-full max-w-screen-2xl mx-auto flex py-3 items-center">
+      <div className="w-full lg:container mx-auto flex py-3 items-center">
 
 
         <Link href="/" passHref>
