@@ -15,14 +15,13 @@ import {RelatedProjectForSoftware} from '~/types/Project'
 /*
  * Software list for the software overview page
  * Note! url should contain all query params. Use softwareUrl helper fn to construct url.
- * is_featured flag is set for all items having mention_cnt > 4
  */
-export async function getSoftwareList(url:string){
+export async function getSoftwareList({url,token}:{url:string,token:string }){
   try{
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
-        ...createJsonHeaders(undefined),
+        ...createJsonHeaders(token),
         'Prefer':'count=exact'
       },
     })
