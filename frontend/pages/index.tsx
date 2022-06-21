@@ -146,18 +146,18 @@ export default function Home({software,projects,organisations}:HomeProps) {
       {/* stats  */}
       <div className="w-full max-w-screen-xl mx-auto flex flex-wrap gap-10 md:gap-16 p-5 md:p-10 ">
         <div>
-          <div className="text-lg"> {software} Software</div>
-          <div className="opacity-40">Packages</div>
+          <div className="text-lg">{software} Software</div>
+          <div className="opacity-40">packages</div>
         </div>
 
         <div>
-          <div className="text-lg">{projects} Research</div>
-          <div className="opacity-40">Projects</div>
+          <div className="text-lg">{projects} Projects</div>
+          <div className="opacity-40">registered</div>
         </div>
 
         <div>
-          <div className="text-lg"> {organisations} Research</div>
-          <div className="opacity-40">Organisations</div>
+          <div className="text-lg">{organisations} Organisations</div>
+          <div className="opacity-40">involved</div>
         </div>
       </div>
 
