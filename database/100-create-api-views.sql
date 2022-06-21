@@ -225,31 +225,64 @@ END
 $$;
 
 -- Software count by organisation
-CREATE FUNCTION software_count_by_organisation() RETURNS TABLE (organisation UUID, software_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+-- BY DEFAULT we return count of approved software
+-- IF public is FALSE we return total count (as far as RLS allows)
+CREATE FUNCTION software_count_by_organisation(public BOOLEAN DEFAULT TRUE) RETURNS TABLE (
+	organisation UUID,
+	software_cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY SELECT
-		software_for_organisation.organisation, count(software_for_organisation.organisation) AS software_cnt
-	FROM
-		software_for_organisation
-	GROUP BY software_for_organisation.organisation;
+	IF (public) THEN
+		RETURN QUERY
+		SELECT
+			software_for_organisation.organisation,
+			count(software_for_organisation.organisation) AS software_cnt
+		FROM
+			software_for_organisation
+		WHERE
+			status = 'approved'
+		GROUP BY software_for_organisation.organisation;
+	ELSE
+		RETURN QUERY
+		SELECT
+			software_for_organisation.organisation,
+			count(software_for_organisation.organisation) AS software_cnt
+		FROM
+			software_for_organisation
+		GROUP BY software_for_organisation.organisation;
+	END IF;
 END
 $$;
 
 -- Project count by organisation
-CREATE FUNCTION project_count_by_organisation() RETURNS TABLE (
+-- BY DEFAULT we return count of approved projects
+-- IF public is FALSE we return total count (as far as RLS allows)
+CREATE FUNCTION project_count_by_organisation(public BOOLEAN DEFAULT TRUE) RETURNS TABLE (
 	organisation UUID,
 	project_cnt BIGINT
 )LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY
-	SELECT
-		project_for_organisation.organisation,
-		COUNT(*) AS project_cnt
-	FROM
-		project_for_organisation
-	GROUP BY project_for_organisation.organisation;
+	IF (public) THEN
+		RETURN QUERY
+		SELECT
+			project_for_organisation.organisation,
+			COUNT(*) AS project_cnt
+		FROM
+			project_for_organisation
+		WHERE
+			status = 'approved'
+		GROUP BY project_for_organisation.organisation;
+	ELSE
+		RETURN QUERY
+		SELECT
+			project_for_organisation.organisation,
+			COUNT(*) AS project_cnt
+		FROM
+			project_for_organisation
+		GROUP BY project_for_organisation.organisation;
+	END IF;
 END
 $$;
 
@@ -274,7 +307,10 @@ END
 $$;
 
 -- Organisations overview
-CREATE FUNCTION organisations_overview() RETURNS TABLE (
+-- we pass public param to count functions to get public/private count
+-- public count is default,
+-- note! the RLS will limit row selection in any case
+CREATE FUNCTION organisations_overview(public BOOLEAN DEFAULT TRUE) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	parent UUID,
@@ -312,9 +348,9 @@ BEGIN
 	FROM
 		organisation o
 	LEFT JOIN
-		software_count_by_organisation() ON software_count_by_organisation.organisation = o.id
+		software_count_by_organisation(public) ON software_count_by_organisation.organisation = o.id
 	LEFT JOIN
-		project_count_by_organisation() ON project_count_by_organisation.organisation = o.id
+		project_count_by_organisation(public) ON project_count_by_organisation.organisation = o.id
 	LEFT JOIN
 		children_count_by_organisation() ON o.id = children_count_by_organisation.parent
 	LEFT JOIN
