@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useEffect} from 'react'
 
 import {OrganisationPageProps} from 'pages/organisations/[...slug]'
 import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
