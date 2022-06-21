@@ -60,10 +60,12 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
         </Link>
 
 
+        <GlobalSearchAutocomplete/>
+
         {/* Large menu*/}
         <div className="flex flex-1">
           <div
-            className="hidden sm:flex text-lg ml-6 md:ml-28 gap-5 text-center opacity-90 font-normal">
+            className="hidden sm:flex text-lg ml-2 md:ml-28 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''}>
                 <a className={`${activePath === item.path && 'nav-active'}`}>
@@ -74,8 +76,6 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
         </div>
 
         <JavascriptSupportWarning/>
-
-        <GlobalSearchAutocomplete/>
 
         <div
           className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right sm:flex-none">

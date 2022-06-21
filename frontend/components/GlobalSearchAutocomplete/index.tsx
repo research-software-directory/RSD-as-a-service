@@ -1,38 +1,17 @@
 import React, {useEffect, useState} from 'react'
 import {ClickAwayListener} from '@mui/base'
 import {useRouter} from 'next/router'
+import {getGlobalSearch} from '~/components/GlobalSearchAutocomplete/getGlobalSearch.api'
+import {useAuth} from '~/auth'
 
-const data = [
-  {
-    type: 'software',
-    title: 'my software',
-    description: 'short description about the software',
-    slug: ''
-  },
-  {
-    type: 'software',
-    title: 'my software 2',
-    description: 'short description about the software 2',
-    slug: ''
-  },
-  {
-    type: 'projects',
-    title: 'my project',
-    description: 'short description about the project',
-    slug: ''
-  },
-  {
-    type: 'organisations',
-    title: 'my organization',
-    description: 'short description about the organisation',
-    slug: ''
-  },
-]
 export default function GlobalSearchAutocomplete() {
   const router = useRouter()
   const [isOpen, setOpen] = useState(false)
   const [value, setValue] = useState('')
   const [selected, setSelected] = useState(0)
+  const [searchResults, setSearchResults] = useState([])
+
+  const {session} = useAuth()
 
   useEffect(() => {
     // when value changes, request autocomplete
@@ -45,8 +24,7 @@ export default function GlobalSearchAutocomplete() {
   }, [value])
 
   function handleClick() {
-    console.log('🎹 GOTO TO PATH', data[selected])
-    router.push(data[selected].type + '/' + data[selected].slug)
+    router.push('/'+ searchResults[selected].source + '/' + searchResults[selected].slug)
     setSelected(0)
     setOpen(false)
     setValue('')
@@ -70,7 +48,7 @@ export default function GlobalSearchAutocomplete() {
       // Down arrow
       case 40:
         e.preventDefault() // Disallows the cursor to move to the end of the input
-        data.length - 1 > selected && setSelected(selected + 1)
+        searchResults.length - 1 > selected && setSelected(selected + 1)
         break
       // Enter
       case 13:
@@ -83,50 +61,65 @@ export default function GlobalSearchAutocomplete() {
     }
   }
 
-  const handleChange = (e:React.FormEvent<HTMLInputElement>) => {
-    setValue(e.currentTarget.value)
-    // Todo refresh API call
+  const handleChange = async (e: React.FormEvent<HTMLInputElement>) => {
+    const search = e.currentTarget.value
+    // Update state
+    setValue(search)
+    // Fetch api
+    const data = await getGlobalSearch(search, session.token) || []
+    setSearchResults([...data])
   }
   return (
-    <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div className="z-10 border px-3 py-2 flex relative ml-auto rounded-sm">
-        <input className="bg-transparent focus:outline-none"
-               placeholder="Search or jump to" autoComplete="off"
+    <ClickAwayListener onClickAway={() => {
+      setOpen(false)
+    }}>
+
+      <div
+        className="ml-24 peer group z-10 flex relative ml-auto max-w-24  transition-all duration-700">
+        <input className="px-5 py-3 bg-transparent rounded-sm border focus:outline-0
+                          text-white
+                          w-36 focus:w-full focus:bg-white focus:text-black
+                          duration-500
+                          "
+               placeholder="Search or jump to"
+               autoComplete="off"
                value={value}
                onChange={handleChange}
                onKeyDown={handleKeyDown}
-               type="search"/>
+               type="search"
+        />
+
 
         {isOpen &&
           <div
-            className="shadow-xl absolute top-[50px] left-0 min-w-max bg-white text-black py-2 rounded">
-            {data.map((item, index) =>
+            className="shadow-xl absolute top-[50px] w-full left-0 min-w-max bg-white text-black py-2 rounded">
+            {searchResults.map((item, index) =>
               <div key={index}
                    className={`${selected === index && 'bg-[#09A1E3]'} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
                    onClick={handleClick}
                    onMouseEnter={() => setSelected(index)}
               >
                 <div className="flex gap-3">
-
-                  {item.type === 'software' &&
+                  {/*<pre>{JSON.stringify(searchResults, null, 2)}</pre>*/}
+                  {item.source === 'software' &&
                     <svg className="" width="22" viewBox="0 0 18 18" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                       <circle cx="8.98438" cy="9.10718" r="8.22705" stroke="currentColor"/>
                     </svg>
                   }
-                  {item.type === 'projects' &&
+                  {item.source === 'projects' &&
                     <svg width="18" height="18" viewBox="0 0 28 28" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                       <rect x="0.5" y="0.5" width="27" height="27" stroke="black"/>
                     </svg>
                   }
-                  {item.type === 'organisations' &&
+                  {item.source === 'organisations' &&
                     <svg width="21" height="18" viewBox="0 0 21 18" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                       <path d="M1.40673 16.75L10.5 1L19.5933 16.75H1.40673Z" stroke="black"/>
                     </svg>
                   }
-                  {item.type} - {item.title}
+                  {item.source} - {item.name}
                 </div>
 
                 {selected === index &&
@@ -142,6 +135,8 @@ export default function GlobalSearchAutocomplete() {
           </div>
         }
       </div>
+
+
     </ClickAwayListener>
   )
 }
