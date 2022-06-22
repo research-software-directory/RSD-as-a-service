@@ -8,6 +8,7 @@ import ProjectsIcon from '~/components/icons/projects.svg'
 import SoftwareIcon from '~/components/icons/software.svg'
 import OrganisationIcon from '~/components/icons/organisation.svg'
 import EnterkeyIcon from '~/components/icons/enterkey.svg'
+import {useDebounce} from '~/utils/useDebounce'
 
 type Props = {
   className?: string
@@ -21,14 +22,41 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const [hasResults, setHasResults] = useState(true)
   const [searchResults, setSearchResults] = useState<GlobalSearchResults[]>([])
 
+  const lastValue = useDebounce(inputValue, 150)
   const {session} = useAuth()
-
   useEffect(() => {
     if (inputValue === '') {
       setOpen(false)
       setSelected(0)
+      setSearchResults([])
     }
   }, [inputValue])
+
+  useEffect(() => {
+    if (lastValue.length > 0) {
+      setOpen(true)
+      fetchData(lastValue)
+    }
+  }, [lastValue])
+
+  async function fetchData(search: string) {
+    // Fetch api
+    const data = await getGlobalSearch(search, session.token) || []
+
+    if (data?.length === 0) {
+      setHasResults(false)
+      setSearchResults(
+        [
+          {name: 'Go to Software page', slug: 'software', source: 'software'},
+          {name: 'Go to Projects page', slug: 'projects', source: 'projects'},
+          {name: 'Go to Organisations page', slug: 'organisations', source: 'organisations'},
+        ]
+      )
+    } else {
+      setHasResults(true)
+      setSearchResults(data)
+    }
+  }
 
   function handleClick() {
     router.push('/' + searchResults[selected]?.source + '/' + searchResults[selected]?.slug)
@@ -39,7 +67,6 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
   // Handle keyup
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    setOpen(true)
     // Handle arrow up and down
     switch (e.keyCode) {
       // Backspace - Remove selection
@@ -71,22 +98,6 @@ export default function GlobalSearchAutocomplete(props: Props) {
     const search = e.currentTarget.value
     // Update state
     setInputValue(search)
-    // Fetch api
-    const data = await getGlobalSearch(search, session.token) || []
-
-    if (data?.length === 0) {
-      setHasResults(false)
-      setSearchResults(
-        [
-          {name: 'Go to Software page', slug: 'software', source: 'software'},
-          {name: 'Go to Projects page', slug: 'projects', source: 'projects'},
-          {name: 'Go to Organisations page', slug: 'organisations', source: 'organisations'},
-        ]
-      )
-    } else {
-      setHasResults(true)
-      setSearchResults(data)
-    }
   }
 
   return (
@@ -110,7 +121,8 @@ export default function GlobalSearchAutocomplete(props: Props) {
         {isOpen &&
           <div
             className="shadow-xl absolute top-[50px] w-full left-0  bg-white text-black py-2 rounded">
-            {!hasResults && <div className="px-4 py-3 font-normal bg-gray-200 mb-2 "><span className="animate-pulse">No results...</span></div>}
+            {!hasResults && <div className="px-4 py-3 font-normal bg-gray-200 mb-2 "><span
+              className="animate-pulse">No results...</span></div>}
             {searchResults.map((item, index) =>
               <div key={index}
                    className={`${selected === index && 'bg-[#09A1E3] text-white'} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
