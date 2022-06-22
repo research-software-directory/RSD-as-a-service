@@ -59,13 +59,11 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
           </a>
         </Link>
 
-
-        <GlobalSearchAutocomplete/>
+        <GlobalSearchAutocomplete className="ml-8"/>
 
         {/* Large menu*/}
         <div className="flex flex-1">
-          <div
-            className="hidden sm:flex text-lg ml-2 md:ml-28 gap-5 text-center opacity-90 font-normal">
+          <div className="hidden sm:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''}>
                 <a className={`${activePath === item.path && 'nav-active'}`}>
