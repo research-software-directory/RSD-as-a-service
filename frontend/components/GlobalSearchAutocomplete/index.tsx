@@ -51,9 +51,9 @@ export default function GlobalSearchAutocomplete(props: Props) {
       setHasResults(false)
       setSearchResults(
         [
-          {name: 'Go to Software page', slug: 'software', source: 'software'},
-          {name: 'Go to Projects page', slug: 'projects', source: 'projects'},
-          {name: 'Go to Organisations page', slug: 'organisations', source: 'organisations'},
+          {name: 'Go to Software page', slug: '', source: 'software'},
+          {name: 'Go to Projects page', slug: '', source: 'projects'},
+          {name: 'Go to Organisations page', slug: '', source: 'organisations'},
         ]
       )
     } else {
@@ -63,7 +63,9 @@ export default function GlobalSearchAutocomplete(props: Props) {
   }
 
   function handleClick() {
-    router.push('/' + searchResults[selected]?.source + '/' + searchResults[selected]?.slug)
+
+    const slug = searchResults[selected]?.slug !== '' ? ('/' + searchResults[selected]?.slug) : ''
+    router.push(`/${searchResults[selected]?.source}${slug}`)
     setSelected(0)
     setOpen(false)
     setInputValue('')
@@ -135,7 +137,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
               >
                 <div className="flex gap-3 w-full">
                   {/*icon*/}
-                  <div className={selected === index ? 'text-white':'text-gray-500'}>
+                  <div className={selected === index ? 'text-white' : 'text-gray-500'}>
                     {item?.source === 'software' && <TerminalIcon/>}
                     {item?.source === 'projects' && <ListAltIcon/>}
                     {item?.source === 'organisations' && <BusinessIcon/>}
