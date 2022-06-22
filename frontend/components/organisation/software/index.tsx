@@ -63,12 +63,7 @@ export default function OrganisationSoftware({organisation, session, isMaintaine
           <SoftwareCard
             key={`/software/${item.slug}/`}
             href={`/software/${item.slug}/`}
-            brand_name={item.brand_name}
-            short_statement={item.short_statement ?? ''}
-            is_featured={item?.is_featured ?? false}
-            updated_at={item.updated_at ?? null}
-            mention_cnt={item?.mention_cnt ?? null}
-            contributor_cnt={item?.contributor_cnt ?? null}
+            {...item}
           />
         )
       })}
