@@ -10,6 +10,10 @@ import OrganisationIcon from '~/components/icons/organisation.svg'
 import EnterkeyIcon from '~/components/icons/enterkey.svg'
 import {useDebounce} from '~/utils/useDebounce'
 
+import TerminalIcon from '@mui/icons-material/Terminal'
+import ListAltIcon from '@mui/icons-material/ListAlt'
+import BusinessIcon from '@mui/icons-material/Business'
+
 type Props = {
   className?: string
 }
@@ -131,10 +135,10 @@ export default function GlobalSearchAutocomplete(props: Props) {
               >
                 <div className="flex gap-3 w-full">
                   {/*icon*/}
-                  <div>
-                    {item?.source === 'software' && <SoftwareIcon/>}
-                    {item?.source === 'projects' && <ProjectsIcon/>}
-                    {item?.source === 'organisations' && <OrganisationIcon/>}
+                  <div className={selected === index ? 'text-white':'text-gray-500'}>
+                    {item?.source === 'software' && <TerminalIcon/>}
+                    {item?.source === 'projects' && <ListAltIcon/>}
+                    {item?.source === 'organisations' && <BusinessIcon/>}
                   </div>
 
                   <div className="flex-grow ">
