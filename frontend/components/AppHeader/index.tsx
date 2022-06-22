@@ -59,11 +59,11 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
           </a>
         </Link>
 
-        <GlobalSearchAutocomplete className="ml-8"/>
+        <GlobalSearchAutocomplete className="hidden sm:block ml-8 "/>
 
         {/* Large menu*/}
         <div className="flex flex-1">
-          <div className="hidden sm:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
+          <div className="hidden md:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''}>
                 <a className={`${activePath === item.path && 'nav-active'}`}>
@@ -76,10 +76,9 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
         <JavascriptSupportWarning/>
 
         <div
-          className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right sm:flex-none">
-
+          className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right md:flex-none">
           {/* Responsive menu items*/}
-          <div className="block sm:hidden ml-6 ">
+          <div className="block md:hidden ml-6 mr-2">
             <Button
               color="inherit"
               id="basic-button"
@@ -87,7 +86,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
-
+              className="whitespace-nowrap"
             >
               Pages ▾
             </Button>
@@ -118,6 +117,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
           </div>
         </div>
       </div>
+      <GlobalSearchAutocomplete className="sm:hidden float-right w-full mb-2"/>
     </header>
   )
 }
