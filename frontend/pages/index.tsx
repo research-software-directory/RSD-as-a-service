@@ -157,7 +157,7 @@ export default function Home({software,projects,organisations}:HomeProps) {
 
         <div>
           <div className="text-lg">{organisations} Organisations</div>
-          <div className="opacity-40">involved</div>
+          <div className="opacity-40">contributed</div>
         </div>
       </div>
 
