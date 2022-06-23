@@ -4,15 +4,15 @@ import {useRouter} from 'next/router'
 import {getGlobalSearch} from '~/components/GlobalSearchAutocomplete/globalSearchAutocomplete.api'
 import {useAuth} from '~/auth'
 
-import ProjectsIcon from '~/components/icons/projects.svg'
-import SoftwareIcon from '~/components/icons/software.svg'
-import OrganisationIcon from '~/components/icons/organisation.svg'
 import EnterkeyIcon from '~/components/icons/enterkey.svg'
 import {useDebounce} from '~/utils/useDebounce'
 
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
+// import ProjectsIcon from '~/components/icons/projects.svg'
+// import SoftwareIcon from '~/components/icons/software.svg'
+// import OrganisationIcon from '~/components/icons/organisation.svg'
 
 type Props = {
   className?: string
@@ -41,6 +41,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
       setOpen(true)
       fetchData(lastValue)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastValue])
 
   async function fetchData(search: string) {
