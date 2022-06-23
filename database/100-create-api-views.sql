@@ -989,9 +989,9 @@ CREATE FUNCTION global_search() RETURNS TABLE(
     $$
 BEGIN
 RETURN QUERY
-    SELECT software.brand_name as name, software.slug AS slug, 'software' as source FROM software
+    SELECT software.brand_name as name, software.slug AS slug, 'software' as source FROM software WHERE is_published=TRUE
     UNION
-    SELECT project.title as name, project.slug AS slug, 'projects' as source FROM project
+    SELECT project.title as name, project.slug AS slug, 'projects' as source FROM project WHERE is_published=TRUE
     UNION
     SELECT organisation.name, organisation.slug AS slug, 'organisations' as source FROM organisation;
 END
