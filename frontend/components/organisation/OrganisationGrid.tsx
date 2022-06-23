@@ -1,18 +1,19 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {OrganisationForOverview} from '../../types/Organisation'
-import ContentInTheMiddle from '../layout/ContentInTheMiddle'
 import OrganisationCard from './OrganisationCard'
 import FlexibleGridSection from '../layout/FlexibleGridSection'
+import NoContent from '../layout/NoContent'
 
 // render organisation cards
 export default function OrganisationsGrid({organisations}:
   {organisations: OrganisationForOverview[]}) {
 
   if (organisations.length === 0) {
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
+    return <NoContent />
   }
 
   return (

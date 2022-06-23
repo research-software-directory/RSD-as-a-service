@@ -1,3 +1,12 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import isMaintainerOfOrganisation from '../auth/permissions/isMaintainerOfOrganisation'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {
@@ -66,7 +75,8 @@ export async function findRSDOrganisationByProperty({searchFor, property, token,
       const data: CoreOrganisationProps[] = await resp.json()
       const options: AutocompleteOption<SearchOrganisation>[] = data.map(item => {
         return {
-          key: item?.ror_id ?? item.slug ?? item.name,
+          // we use slug as primary key and ROR id as alternative
+          key: item.slug ?? item?.ror_id ?? item.name,
           label: item.name ?? '',
           data: {
             ...item,
@@ -189,7 +199,7 @@ export async function saveExistingOrganisation({item, token, pos, setState}:
   }
 }
 
-export async function saveNewOrganisation({item, token, software, account, setState}:
+export async function saveNewOrganisationForSoftware({item, token, software, account, setState}:
   {item: EditOrganisation, token: string, software:string, account: string, setState: (item: EditOrganisation) => void }) {
   // create new organisation
   let resp = await createOrganisation({
@@ -351,7 +361,7 @@ export async function deleteOrganisation({uuid,logo_id, token}:
         id: logo_id,
         token
       })
-      debugger
+      // debugger
       if (resp.status !== 200) {
         return resp
       }
@@ -365,7 +375,7 @@ export async function deleteOrganisation({uuid,logo_id, token}:
         ...createJsonHeaders(token)
       }
     })
-    debugger
+    // debugger
     return extractReturnMessage(resp)
   } catch (e: any) {
     return {
@@ -386,7 +396,7 @@ export async function uploadOrganisationLogo({id, data, mime_type, token}:
         'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify({
-        id,
+        organisation:id,
         data,
         mime_type
       })
@@ -403,7 +413,7 @@ export async function uploadOrganisationLogo({id, data, mime_type, token}:
 export async function deleteOrganisationLogo({id, token}:
   { id: string, token: string }) {
   try {
-    const url = `/api/v1/logo_for_organisation?id=eq.${id}`
+    const url = `/api/v1/logo_for_organisation?organisation=eq.${id}`
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -421,16 +431,8 @@ export async function deleteOrganisationLogo({id, token}:
 
 export async function addOrganisationToSoftware({software, organisation, account, token}:
   { software: string, organisation: string, account: string, token:string }) {
-  // 2a. determine status
-  let status: SoftwareForOrganisation['status'] = 'requested_by_origin'
-  // check if this is organisation maintainer
-  const isMaintainer = await isMaintainerOfOrganisation({
-    organisation,
-    account,
-    token
-  })
-  // if maintainer we approve it automatically
-  if (isMaintainer === true) status = 'approved'
+  // 2a. determine status - default is approved
+  let status: SoftwareForOrganisation['status'] = 'approved'
   // 2b. register participating organisation for this software
   const data: SoftwareForOrganisation = {
     software,
@@ -454,6 +456,29 @@ export async function addOrganisationToSoftware({software, organisation, account
     }
   }
   return extractReturnMessage(resp)
+}
+
+export async function patchSoftwareForOrganisation({software, organisation, data, token}:
+  { software: string, organisation: string, data: any, token: string }) {
+  try {
+    const query = `software=eq.${software}&organisation=eq.${organisation}`
+    const url = `/api/v1/software_for_organisation?${query}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createJsonHeaders(token),
+        'Prefer': 'return=headers-only'
+      },
+      body: JSON.stringify(data)
+    })
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    debugger
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
 }
 
 export async function deleteOrganisationFromSoftware({software, organisation, token}:
@@ -513,14 +538,12 @@ export function searchToEditOrganisation({item, account, position}:
     addOrganisation.id = null
     // cannot be created as tenant from this page/location
     addOrganisation.is_tenant = false
-    // creator is assigned as primary maintainer
-    if (account) {
-      addOrganisation.primary_maintainer = account
-      // it can be edited by this account
-      addOrganisation.canEdit = true
-      // slug is constructed
-      addOrganisation.slug = getSlugFromString(item.name)
-    }
+    // created without primary maintainer
+    addOrganisation.primary_maintainer = null
+    // it cannot be edited
+    addOrganisation.canEdit = false
+    // slug is constructed
+    addOrganisation.slug = getSlugFromString(item.name)
   }
 
   if (item.source === 'RSD') {
@@ -562,7 +585,7 @@ export function newOrganisationProps({name, position, primary_maintainer, is_ten
     website: null,
     source: 'MANUAL' as 'MANUAL',
     primary_maintainer,
-    canEdit: true
+    canEdit: false
   }
   return initOrg
 }

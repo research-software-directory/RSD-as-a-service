@@ -1,8 +1,22 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /* eslint-disable @next/next/no-img-element */
 import PhotoSizeSelectActualOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActualOutlined'
 
-export default function ImageAsBackground({src, alt, className, bgSize='cover', noImgMsg='no image avaliable'}:
-  {src: string | null | undefined, alt: string, className: string, bgSize?:string, noImgMsg?:string }) {
+type ImpageAsBackgroundProps = {
+  src: string | null | undefined
+  alt: string,
+  className: string,
+  bgSize?: string,
+  bgPosition?: string
+  noImgMsg?: string
+}
+
+export default function ImageAsBackground({src, alt, className, bgSize = 'cover',
+  bgPosition = 'top center', noImgMsg = 'no image avaliable'}:ImpageAsBackgroundProps) {
 
   if (!src) {
     return (
@@ -26,7 +40,7 @@ export default function ImageAsBackground({src, alt, className, bgSize='cover', 
         flex: 1,
         backgroundImage: `url('${src}')`,
         backgroundSize: bgSize,
-        backgroundPosition: 'center center',
+        backgroundPosition: bgPosition,
         backgroundRepeat: 'no-repeat',
       }}
       aria-label={alt}

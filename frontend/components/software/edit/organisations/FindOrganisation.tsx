@@ -1,7 +1,13 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {HTMLAttributes, useState} from 'react'
 
-import AsyncAutocomplete from '../../../form/AsyncAutocomplete'
-import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
+// import AsyncAutocomplete from '../../../form/AsyncAutocomplete'
+// import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
+import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 import FindOrganisationItem from './FindOrganisationItem'
 import {organisationInformation as config} from '../editSoftwareConfig'
 import {SearchOrganisation} from '../../../../types/Organisation'
@@ -45,9 +51,38 @@ export default function FindOrganisation({onAdd, onCreate}:
     onCreate(newInputValue)
   }
 
+  function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
+    option: AutocompleteOption<SearchOrganisation>) {
+    // if more than one option we add border at the bottom
+    // we assume that first option is Add "new item"
+    if (options.length > 1) {
+      if (props?.className) {
+        props.className+=' mb-2 border-b'
+      } else {
+        props.className='mb-2 border-b'
+      }
+    }
+    return (
+      <li {...props} key={option.key}>
+        {/* if new option (has input) show label and count  */}
+        <strong>{`Add "${option.label}"`}</strong>
+      </li>
+    )
+  }
+
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
     option: AutocompleteOption<SearchOrganisation>,
     state: object) {
+    // when value is not not found option returns input prop
+    if (option?.input) {
+      // if input is over minLength
+      if (option?.input.length > config.findOrganisation.validation.minLength) {
+        // we offer an option to create this entry
+        return renderAddOption(props,option)
+      } else {
+        return null
+      }
+    }
     return (
       <li {...props} key={option.key}>
         <FindOrganisationItem option={option} />
@@ -57,7 +92,7 @@ export default function FindOrganisation({onAdd, onCreate}:
 
   return (
     <section className="flex items-center">
-      <AsyncAutocomplete
+      <AsyncAutocompleteSC
         status={status}
         options={options}
         onSearch={searchOrganisation}
@@ -68,7 +103,8 @@ export default function FindOrganisation({onAdd, onCreate}:
           freeSolo: true,
           minLength: config.findOrganisation.validation.minLength,
           label: config.findOrganisation.label,
-          help: config.findOrganisation.help
+          help: config.findOrganisation.help,
+          reset: true
         }}
       />
     </section>

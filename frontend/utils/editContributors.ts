@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * CONTRIBUTORS
  */
@@ -239,13 +246,4 @@ export async function deleteContributorsById({ids,token}:{ids:string[],token:str
       message: e?.message
     }
   }
-}
-
-
-export function combineRoleAndAffiliation(item:Contributor){
-  if (item?.role && item?.affiliation) return `${item?.role}, ${item?.affiliation}`
-
-  if (item?.role) return item?.role
-
-  return item?.affiliation ?? ''
 }

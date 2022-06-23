@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {UseFormGetFieldState} from 'react-hook-form'
 import {EditProject, ResearchDomainForProject} from '~/types/Project'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
@@ -15,7 +20,7 @@ export type ResearchDomainsForSave = {
 }
 
 export function getResearchDomainChanges(props: ResearchDomainChanges) {
-  const {formData, getFieldState, projectState, project} = props
+  const {formData, projectState, project} = props
   const research_domains: ResearchDomainsForSave = {
     add: [],
     delete: []

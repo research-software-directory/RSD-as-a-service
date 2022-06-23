@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package nl.esciencecenter.rsd.authentication;
 
 import com.google.gson.JsonArray;
@@ -6,26 +11,32 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.UUID;
 
 public class PostgrestAccount implements Account {
 
 	private final OpenIdInfo openIdInfo;
+	private final String provider;
 
-	public PostgrestAccount(OpenIdInfo openIdInfo) {
+	public PostgrestAccount(OpenIdInfo openIdInfo, String provider) {
 		this.openIdInfo = Objects.requireNonNull(openIdInfo);
 		Objects.requireNonNull(openIdInfo.sub());
+		this.provider = Objects.requireNonNull(provider);
 	}
 
 	@Override
 	public AccountInfo account() {
 		String backendUri = Config.backendBaseUrl();
-		String subject = openIdInfo.sub().toString();
-		URI queryUri = URI.create(backendUri + "/login_for_account?select=account,name&sub=eq." + subject);
+		String subject = openIdInfo.sub();
+		String subjectUrlEncoded = URLEncoder.encode(subject, StandardCharsets.UTF_8);
+		String providerUrlEncoded = URLEncoder.encode(provider, StandardCharsets.UTF_8);
+		URI queryUri = URI.create(backendUri + "/login_for_account?select=account,name&sub=eq." + subjectUrlEncoded + "&provider=eq." + providerUrlEncoded);
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String token = jwtCreator.createAdminJwt();
 		String responseLogin = getAsAdmin(queryUri, token);
@@ -35,7 +46,7 @@ public class PostgrestAccount implements Account {
 		else if (accountsWithSub.size() == 1) {
 			JsonObject accountInfo = accountsWithSub.get(0).getAsJsonObject();
 			UUID account = UUID.fromString(accountInfo.getAsJsonPrimitive("account").getAsString());
-			String name = accountInfo.getAsJsonPrimitive("name").getAsString();
+			String name = Utils.jsonElementToString(accountInfo.get("name"));
 			return new AccountInfo(account, name);
 		}
 		else { // create account
@@ -49,6 +60,7 @@ public class PostgrestAccount implements Account {
 			loginForAccountData.addProperty("name", openIdInfo.name());
 			loginForAccountData.addProperty("email", openIdInfo.email());
 			loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
+			loginForAccountData.addProperty("provider", provider);
 			URI createLoginUri = URI.create(backendUri + "/login_for_account");
 			postJsonAsAdmin(createLoginUri, loginForAccountData.toString(), token);
 

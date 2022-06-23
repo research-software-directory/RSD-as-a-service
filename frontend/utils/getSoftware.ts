@@ -1,30 +1,42 @@
-import {KeywordForSoftware, RepositoryInfo, SoftwareItem} from '../types/SoftwareTypes'
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
 import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {createJsonHeaders} from './fetchHelpers'
+import {RelatedProjectForSoftware} from '~/types/Project'
 
 /*
- * postgREST api uri to retreive software index data.
+ * Software list for the software overview page
  * Note! url should contain all query params. Use softwareUrl helper fn to construct url.
- * @param url with all query params for search,filtering, order and pagination
- * @returns {
-  * count:number,
-  * data:[]
- * }
+ * is_featured flag is set for all items having mention_cnt > 4
  */
 export async function getSoftwareList(url:string){
   try{
-    const headers = new Headers()
-    // request count for pagination
-    headers.append('Prefer','count=exact')
-    const resp = await fetch(url,{method:'GET', headers})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(undefined),
+        'Prefer':'count=exact'
+      },
+    })
 
     if ([200,206].includes(resp.status)){
-      const data:SoftwareItem[] = await resp.json()
+      const json: SoftwareListItem[] = await resp.json()
+      // set
       return {
         count: extractCountFromHeader(resp.headers),
-        data
+        data: json.map(item => ({
+          ...item,
+          // set featured flag for software items with mentions
+          is_featured: item.mention_cnt && item.mention_cnt > 0 ? true : false
+        }))
       }
     } else{
       logger(`getSoftwareList failed: ${resp.status} ${resp.statusText}`, 'warn')
@@ -108,18 +120,21 @@ export type TagItem={
   active:boolean
 }
 export async function getTagsWithCount(){
-  try{
+  try {
+    // TODO! tags are replaced with keywords
+    const tags:TagItem[]=[]
     // this request is always perfomed from backend
-    const url = `${process.env.POSTGREST_URL}/rpc/count_software_per_tag?order=tag.asc`
-    const resp = await fetch(url,{method:'GET'})
-    if (resp.status===200){
-      const data:TagItem[] = await resp.json()
-      return data
-    } else if (resp.status===404){
-      logger(`getTagsWithCount: 404 [${url}]`,'error')
-      // query not found
-      return []
-    }
+    // const url = `${process.env.POSTGREST_URL}/rpc/keyword_count_for_software?order=keyword.asc`
+    // const resp = await fetch(url,{method:'GET'})
+    // if (resp.status===200){
+    //   const data:TagItem[] = await resp.json()
+    //   return data
+    // } else if (resp.status===404){
+    //   logger(`getTagsWithCount: 404 [${url}]`,'error')
+    //   // query not found
+    //   return []
+    // }
+    return tags
   }catch(e:any){
     logger(`getTagsWithCount: ${e?.message}`,'error')
     return []
@@ -289,5 +304,36 @@ export async function getRemoteMarkdown(url: string) {
       status: 404,
       message: e?.message
     }
+  }
+}
+
+// RELATED PROJECTS FOR SORFTWARE
+export async function getRelatedProjectsForSoftware({software, token, frontend, approved=true}:
+  { software: string, token?: string, frontend?: boolean, approved?:boolean }) {
+  try {
+    // construct api url based on request source
+    let query = `rpc/related_projects_for_software?software=eq.${software}&order=title.asc`
+    if (approved) {
+      // select only approved relations
+      query+='&status=eq.approved'
+    }
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url = `/api/v1/${query}`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data: RelatedProjectForSoftware[] = await resp.json()
+      return data
+    }
+    logger(`getRelatedProjects: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
+    // query not found
+    return []
+  } catch (e: any) {
+    logger(`getRelatedProjects: ${e?.message}`, 'error')
+    return []
   }
 }

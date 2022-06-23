@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 export const projectInformation = {
   title: {
@@ -17,12 +21,15 @@ export const projectInformation = {
     validation: {
       // required: 'Subtitle is optional',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 200, message: 'Maximum length is 200'},
+      maxLength: {value: 300, message: 'Maximum length is 300'},
     }
   },
   description: {
     title: 'Project description',
-    subtitle: 'The image will apear above the description'
+    subtitle: 'The image will apear above the description',
+    validation: {
+      maxLength: {value: 10000},
+    }
   },
   is_published: {
     label: 'Published',

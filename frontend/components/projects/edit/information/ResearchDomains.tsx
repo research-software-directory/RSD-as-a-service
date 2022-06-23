@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 import Select from '@mui/material/Select'
 
@@ -20,7 +25,10 @@ export default function ResearchDomains() {
   const {control} = useFormContext<EditProject>()
   const {fields, remove, replace} = useFieldArray({
     control,
-    name:'research_domains'
+    name: 'research_domains',
+    // change internal key name from id to fid
+    // to avoid conflict with id prop in data
+    keyName: 'fid'
   })
   // save current filter selection
   const [l1Selected, setL1Selected] = useState<ResearchDomain | null>(null)
@@ -34,7 +42,6 @@ export default function ResearchDomains() {
   // console.log('l1Domains...', l1Domains)
   // console.log('l2Domains...', l2Domains)
   // console.log('l3Domains...', l3Domains)
-  // console.log('selected...', selected)
   // console.log('fields...', fields)
   // console.groupEnd()
 

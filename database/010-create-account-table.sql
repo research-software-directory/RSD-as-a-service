@@ -1,7 +1,14 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TABLE account (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_account() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -34,12 +41,14 @@ CREATE TRIGGER sanitise_update_account BEFORE UPDATE ON account FOR EACH ROW EXE
 CREATE TABLE login_for_account (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	account UUID REFERENCES account (id) NOT NULL,
-	sub VARCHAR NOT NULL,
-	name VARCHAR,
-	email VARCHAR,
-	home_organisation VARCHAR,
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	provider VARCHAR(100) NOT NULL,
+	sub VARCHAR(50) NOT NULL,
+	name VARCHAR(200),
+	email VARCHAR(200),
+	home_organisation VARCHAR(200),
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL,
+	UNIQUE(provider, sub)
 );
 
 CREATE FUNCTION sanitise_insert_login_for_account() RETURNS TRIGGER LANGUAGE plpgsql AS

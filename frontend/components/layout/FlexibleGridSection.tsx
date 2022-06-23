@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import styled from '@mui/system/styled'
 
 export type FlexGridProps = {
@@ -15,7 +20,8 @@ export const FlexibleGridSection = styled('section', {
 })
   <FlexGridProps>(({theme, minWidth, maxWidth, minHeight, maxHeight, height}) => {
   // basic definitions
-  const props:any = {
+  const props: any = {
+    flex: 1,
     display: 'grid',
     width: '100%',
     // gridGap: '1rem',

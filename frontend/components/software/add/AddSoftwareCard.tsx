@@ -1,7 +1,14 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
-import SaveIcon from '@mui/icons-material/Save'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 
@@ -14,9 +21,10 @@ import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import {NewSoftwareItem} from '../../../types/SoftwareTypes'
 import {getSlugFromString,sanitizeSlugValue} from '../../../utils/getSlugFromString'
 import {validSoftwareItem} from '../../../utils/editSoftware'
-import {useDebounceValid} from '../../../utils/useDebouce'
+import {useDebounceValid} from '~/utils/useDebounce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 const initalState = {
   loading: false,
@@ -28,6 +36,8 @@ type AddSoftwareForm = {
   brand_name: string,
   short_statement: string,
 }
+
+const formId='add-software-form'
 
 export default function AddSoftwareCard() {
   const {session} = useAuth()
@@ -110,7 +120,6 @@ export default function AddSoftwareCard() {
       brand_name: data.brand_name,
       short_statement: data.short_statement,
       slug: data.slug,
-      is_featured: false,
       is_published: false,
       description: null,
       description_type: 'markdown',
@@ -157,15 +166,6 @@ export default function AddSoftwareCard() {
     return config.addInfo
   }
 
-  function isSaveDisabled() {
-    if (state.loading == true) return true
-    // when manually setting errors, like with brand_name async validation
-    // we also need to ensure these errors are handled here
-    if (errors && errors?.slug) return true
-    if (isValid === false) return true
-    return false
-  }
-
   function onSlugChange(slug: string) {
     // if nothing is changed
     const newSlug = sanitizeSlugValue(slug)
@@ -183,9 +183,21 @@ export default function AddSoftwareCard() {
     setSlugValue(newSlug)
   }
 
+  function isSaveDisabled() {
+    if (state.loading == true) return true
+    // when manually setting errors, like with brand_name async validation
+    // we also need to ensure these errors are handled here
+    if (errors && errors?.slug) return true
+    if (isValid === false) return true
+    return false
+  }
+
   return (
     <ContentInTheMiddle>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full md:w-[42rem]">
+      <form
+        id={formId}
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full md:w-[42rem]">
         <section className="min-h-[6rem]">
           <h1 className="text-primary text-2xl mb-4">{config.title}</h1>
           {renderDialogText()}
@@ -197,7 +209,7 @@ export default function AddSoftwareCard() {
               error: errors.brand_name?.message !== undefined,
               label: config.brand_name.label,
               helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help,
-              helperTextCnt: `${data?.brand_name?.length || 0}/100`,
+              helperTextCnt: `${data?.brand_name?.length || 0}/${config.brand_name.validation.maxLength.value}`,
               variant:'outlined'
             }}
             register={register('brand_name', {
@@ -212,7 +224,7 @@ export default function AddSoftwareCard() {
               error: errors?.short_statement?.message !== undefined,
               label: config.short_statement.label,
               helperTextMessage: errors?.short_statement?.message ?? config.short_statement.help,
-              helperTextCnt: `${data?.short_statement?.length || 0}/300`,
+              helperTextCnt: `${data?.short_statement?.length || 0}/${config.short_statement.validation.maxLength.value}`,
               variant:'outlined'
             }}
             register={register('short_statement', config.short_statement.validation)}
@@ -236,22 +248,10 @@ export default function AddSoftwareCard() {
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              // overwrite tailwind preflight.css for submit type
-              '&[type="submit"]:not(.Mui-disabled)': {
-                backgroundColor:'primary.main'
-              }
-            }}
-            endIcon={
-              <SaveIcon />
-            }
+          <SubmitButtonWithListener
+            formId={formId}
             disabled={isSaveDisabled()}
-          >
-            Save
-          </Button>
+          />
         </section>
       </form>
     </ContentInTheMiddle>

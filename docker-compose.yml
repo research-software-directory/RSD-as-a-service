@@ -1,10 +1,20 @@
+# SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2021 - 2022 dv4all
+# SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+# SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+#
+# SPDX-License-Identifier: Apache-2.0
+
 version: "3.0"
 
 services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.0.25
+    image: rsd/database:0.0.36
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -13,6 +23,7 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - POSTGRES_AUTHENTICATOR_PASSWORD
     volumes:
       # persist data in named docker volume
       # to remove use: docker-compose down --volumes
@@ -29,7 +40,7 @@ services:
       - 3500
     environment:
       # it needs to be here to use values from .env file
-      - PGRST_DB_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/rsd-db
+      - PGRST_DB_URI=postgres://authenticator:${POSTGRES_AUTHENTICATOR_PASSWORD}@database:5432/${POSTGRES_DB}
       - PGRST_DB_ANON_ROLE
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT
@@ -42,12 +53,14 @@ services:
   auth:
     container_name: auth
     build: ./authentication
-    image: rsd/auth:0.0.8
+    image: rsd/auth:0.0.11
     expose:
       - 7000
     environment:
       # it uses values from .env file
       - POSTGREST_URL
+      - RSD_AUTH_PROVIDERS
+      - RSD_AUTH_USER_MAIL_WHITELIST
       - NEXT_PUBLIC_SURFCONEXT_CLIENT_ID
       - NEXT_PUBLIC_SURFCONEXT_REDIRECT
       - NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL
@@ -75,13 +88,14 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.7.3
+    image: rsd/frontend:0.9.9
     environment:
       # it uses values from .env file
       - POSTGREST_URL
       - PGRST_JWT_SECRET
       - RSD_AUTH_URL
       - RSD_AUTH_PROVIDERS
+      - HOTJAR_ID
       - NEXT_PUBLIC_SURFCONEXT_CLIENT_ID
       - NEXT_PUBLIC_SURFCONEXT_REDIRECT
       - NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL
@@ -104,7 +118,7 @@ services:
   scrapers:
     container_name: scrapers
     build: ./scrapers
-    image: rsd/scrapers:0.1.1
+    image: rsd/scrapers:0.1.6
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -113,8 +127,8 @@ services:
       - MAX_REQUESTS_GITLAB
       - API_CREDENTIALS_GITHUB
       - ZENODO_ACCESS_TOKEN
-      - ZOTERO_LIBRARY
-      - ZOTERO_API_TOKEN
+      - MAX_REQUESTS_DOI
+      - CROSSREF_CONTACT_EMAIL
     depends_on:
       - database
       - backend

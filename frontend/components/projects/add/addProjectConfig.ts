@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 export const addConfig = {
   title:'Add project',
@@ -19,7 +23,7 @@ export const addConfig = {
     validation: {
       // required: 'Name is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 200, message: 'Maximum length is 200'},
+      maxLength: {value: 300, message: 'Maximum length is 300'},
     }
   },
   slug: {

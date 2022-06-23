@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect,useState} from 'react'
 
 import {useFieldArray, useFormContext} from 'react-hook-form'
@@ -235,6 +240,8 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
             options={{
               name: 'subtitle',
               label: config.subtitle.label,
+              multiline: true,
+              maxRows: 5,
               useNull: true,
               defaultValue: project?.subtitle,
               helperTextMessage: config.subtitle.help,
@@ -251,8 +258,14 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
           <ProjectImage />
           <MarkdownInputWithPreview
             markdown={formValues?.description || ''}
-            register={register('description')}
+            register={register('description', {
+              maxLength: config.description.validation.maxLength.value
+            })}
             disabled={false}
+            helperInfo={{
+              length: formValues?.description?.length ?? 0,
+              maxLength: config.description.validation.maxLength.value
+            }}
           />
           <div className="xl:py-4"></div>
         </div>

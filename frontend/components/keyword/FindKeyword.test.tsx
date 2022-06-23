@@ -1,4 +1,9 @@
-import {render, screen, fireEvent, waitFor, waitForElementToBeRemoved} from '@testing-library/react'
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import {render, screen, fireEvent, waitFor, waitForElementToBeRemoved, act} from '@testing-library/react'
 import FindKeyword, {Keyword} from './FindKeyword'
 
 /**
@@ -43,7 +48,10 @@ it('calls seach Fn and renders the loader', async () => {
   fireEvent.change(searchInput, {target: {value: searchFor}})
 
   // need to advance all timers for debounce etc...
-  jest.runAllTimers()
+  // Note! it needs to be wrapped in act
+  act(() => {
+    jest.runAllTimers()
+  })
 
   await waitFor(() => {
     // validate that searchFn is called once
@@ -83,7 +91,11 @@ it('offer Add option when search has no results', async() => {
   fireEvent.change(searchInput, {target: {value: searchFor}})
 
   // need to advance all timers for debounce etc...
-  jest.runAllTimers()
+  // Note! it needs to be wrapped in act
+  act(() => {
+    jest.runAllTimers()
+  })
+
   // then wait for loader to be removed
   await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
   // wait for listbox and add option
@@ -115,7 +127,11 @@ it('DOES NOT offer Add option when search return result that match', async () =>
   fireEvent.change(searchInput, {target: {value: searchFor}})
 
   // need to advance all timers for debounce etc...
-  jest.runAllTimers()
+  // Note! it needs to be wrapped in act
+  act(() => {
+    jest.runAllTimers()
+  })
+
   // then wait for loader to be removed
   await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
   // wait for listbox and add option
@@ -146,7 +162,11 @@ it('calls onCreate method with string value to add new option', async() => {
   fireEvent.change(searchInput, {target: {value: searchFor}})
 
   // need to advance all timers for debounce etc...
-  jest.runAllTimers()
+  // Note! it needs to be wrapped in act
+  act(() => {
+    jest.runAllTimers()
+  })
+
   // then wait for loader to be removed
   await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
   // wait for listbox and add option
@@ -181,7 +201,11 @@ it('calls onAdd method to add option to selection', async() => {
   fireEvent.change(searchInput, {target: {value: searchFor}})
 
   // need to advance all timers for debounce etc...
-  jest.runAllTimers()
+  // Note! it needs to be wrapped in act
+  act(() => {
+    jest.runAllTimers()
+  })
+
   // then wait for loader to be removed
   await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
   // wait for listbox and add option

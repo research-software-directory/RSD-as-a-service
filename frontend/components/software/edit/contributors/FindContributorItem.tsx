@@ -1,28 +1,51 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
 import {SearchContributor} from '../../../../types/Contributor'
 
 export default function FindContributorItem({option}: { option: AutocompleteOption<SearchContributor> }) {
 
   function renderSecondRow() {
-    if (option.data?.affiliation && option.data?.orcid) {
+    const {affiliation,orcid,institution} = option.data
+    // debugger
+    if (affiliation && orcid) {
       return (
-        <div className="grid grid-cols-[4fr,3fr] gap-2">
-          <div>{option.data?.affiliation}</div>
+        <div className="grid grid-cols-[3fr,2fr] gap-2">
+          <div>{affiliation}</div>
+          <div className="pl-4 text-right">{orcid}</div>
+        </div>
+      )
+    }
+    if (institution && institution.length > 0 && orcid) {
+      return (
+        <div className="grid grid-cols-[3fr,2fr] gap-2">
+          {institution.join('; ')}
+          <div className="pl-4 text-right">{orcid}</div>
+        </div>
+      )
+    }
+    if (orcid) {
+      return (
+        <div className="grid grid-cols-[3fr,2fr] gap-2">
+          <div className="flex-1"></div>
           <div className="pl-4 text-right">{option.data?.orcid}</div>
         </div>
       )
     }
-    if (option.data?.affiliation) {
+    if (affiliation) {
       return (
         <div className="flex-1">
           {option.data?.affiliation}
         </div>
       )
     }
-    if (option.data?.orcid) {
+    if (institution) {
       return (
-        <div className="flex-1 text-right">
-          {option.data?.orcid}
+        <div className="flex-1">
+          {institution.join('; ')}
         </div>
       )
     }

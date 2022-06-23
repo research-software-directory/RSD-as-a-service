@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import InfoIcon from '@mui/icons-material/Info'
 import TeamsIcon from '@mui/icons-material/Groups'
@@ -7,7 +11,6 @@ import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew'
 import ShareIcon from '@mui/icons-material/Share'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
-import {Session} from '~/auth'
 import ProjectInformation from './information'
 import ProjectTeam from './team'
 import ProjectOrganisations from './organisations'
@@ -61,7 +64,7 @@ export const editProjectSteps: EditProjectStep[] = [
     status: 'Optional information'
   },
   {
-    // formId: 'output',
+    // formId: 'related-topics',
     label: 'Related topics',
     icon: <ShareIcon />,
     component: (props?) => <RelatedTopics {...props} />,

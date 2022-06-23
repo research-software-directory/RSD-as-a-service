@@ -1,10 +1,17 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState, ReactNode, HTMLAttributes, SyntheticEvent, useEffect} from 'react'
 import Autocomplete, {AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
 import Button from '@mui/material/Button'
 import {CircularProgress, FilterOptionsState, TextField} from '@mui/material'
 
 import {AutocompleteOption} from '../../types/AutocompleteOptions'
-import {useDebounceWithAutocomplete} from '../../utils/useDebouce'
+import {useDebounceWithAutocomplete} from '~/utils/useDebounce'
 
 export type AsyncAutocompleteConfig = {
   // enables creation of new items

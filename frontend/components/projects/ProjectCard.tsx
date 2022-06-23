@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import Link from 'next/link'
 import {getTimeAgoSince} from '../../utils/dateFn'
 import ImageAsBackground from '../layout/ImageAsBackground'
@@ -8,7 +13,7 @@ export type ProjectCardProps = {
   title: string
   subtitle: string | null
   image_id: string | null
-  updated_at: string
+  updated_at: string | null
   date_end: string | null
 }
 
@@ -36,7 +41,7 @@ export default function ProjectCard({slug,title,subtitle,image_id,updated_at,dat
   return (
     <Link href={projectUrl()} passHref>
       <a className={'flex flex-col h-full bg-grey-100 text-gray-800 hover:bg-secondary hover:text-white'}>
-        <article className="flex-1 flex px-4">
+        <article className="flex-1 flex px-4 h-full overflow-hidden">
           <section
             title={subtitle ?? title}
             className="py-4 h-full md:w-[13rem]"
@@ -55,7 +60,7 @@ export default function ProjectCard({slug,title,subtitle,image_id,updated_at,dat
               {title}
             </h2>
 
-            <p className="flex-1 py-4">
+            <p className="flex-1 py-4 overflow-auto">
               {subtitle}
             </p>
             <div className="flex justify-between text-sm">

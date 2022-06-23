@@ -1,3 +1,11 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 export const softwareInformation = {
   brand_name: {
@@ -7,7 +15,7 @@ export const softwareInformation = {
     validation: {
       required: 'Name is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
     }
   },
   short_statement: {
@@ -54,7 +62,11 @@ export const softwareInformation = {
   // field for markdown
   description: {
     label: 'Description',
-    help: (brand_name: string) => `What ${brand_name} can do for you`
+    help: (brand_name: string) => `What ${brand_name} can do for you`,
+    validation: {
+      // we do not show error message for this one, we use only maxLength value
+      maxLength: {value: 10000, message: 'Maximum length is 10000'},
+    }
   },
   // field for markdown url
   description_url: {
@@ -70,22 +82,32 @@ export const softwareInformation = {
     }
   },
   concept_doi: {
+    title: 'Citation',
+    subtitle: 'We generate citation files using concept DOI',
     label: 'Concept DOI',
     help: 'Initial DOI of your software',
     validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
+      pattern: {
+        value: /^10(\.\d+)+\/.+/,
+        message: 'Invalid DOI pattern. Maybe you used complete url?'
+      }
     }
+  },
+  validateConceptDoi: {
+    label:'Validate DOI'
+  },
+  pageStatus: {
+    title: 'Page status',
+    subtitle: 'Only published software is visible to others'
   },
   is_published: {
     label: 'Published',
   },
-  is_featured: {
-    label: 'Featured',
-  },
   keywords: {
     title: 'Keywords',
-    subtitle: 'How to find this software?',
+    subtitle: 'Find, add or import using concept DOI.',
     label: 'Find or add keyword',
     help: 'Start typing for the suggestions',
     validation: {
@@ -93,9 +115,23 @@ export const softwareInformation = {
       minLength: 1,
     }
   },
-  licenses:{
-    label: 'Licenses',
-    help:'Select license'
+  importKeywords: {
+    label: 'Import keywords',
+    message: (doi: string) => `Import keywords from datacite.org using DOI ${doi}`
+  },
+  licenses: {
+    title: 'Licenses',
+    subtitle: 'What licenses do apply to your software? You can also import licenses using concept DOI.',
+    label: 'Find or add a license',
+    help: 'Start typing for the suggestions',
+    validation: {
+      //custom validation rule, not in used by react-hook-form
+      minLength: 1,
+    }
+  },
+  importLicenses: {
+    label: 'Import licenses',
+    message: (doi: string) => `Import licenses from datacite.org using DOI ${doi}`
   }
 }
 
@@ -104,13 +140,19 @@ export type SoftwareInformationConfig = typeof softwareInformation
 export const contributorInformation = {
   findContributor: {
     title: 'Add contributor',
-    subtitle: 'We search by name in RSD and ORCID databases',
+    subtitle: 'We search by name in the RSD and the ORCID databases',
     label: 'Find or add contributor',
-    help: 'At least 3 letters, use pattern {First name} {Last name}',
+    help: 'At least 2 letters, use pattern {First name} {Last name}',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
     }
+  },
+  importContributors: {
+    title: 'Import contributors',
+    subtitle: 'We use your concept DOI and datacite.org API',
+    label: 'Import contributors',
+    message: (doi: string) => `Import contributors from datacite.org using DOI ${doi}`
   },
   is_contact_person: {
     label: 'Contact person',
@@ -139,7 +181,7 @@ export const contributorInformation = {
     help: 'Contact person should have an email',
     validation: {
       minLength: {value: 5, message: 'Minimum length is 5'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         message: 'Invalid email address'
@@ -148,7 +190,7 @@ export const contributorInformation = {
   },
   affiliation: {
     label: 'Affiliation',
-    help: 'Where the contributor works currently?',
+    help: 'Select or type in the current affiliation?',
     validation: {
       minLength: {value: 2, message: 'Minimum length is 2'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
@@ -167,7 +209,7 @@ export const contributorInformation = {
     help: '16 digits, pattern 0000-0000-0000-0000',
     validation: {
       pattern: {
-        value: /\d{4}-\d{4}-\d{4}-\d{4}/,
+        value: /^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$/,
         message: 'Invalid pattern, not a 0000-0000-0000-0000'
       }
     }
@@ -181,9 +223,9 @@ export const organisationInformation = {
   title: 'Participating organisations',
   findOrganisation: {
     title: 'Add organisation',
-    subtitle: 'We search organisation name in RSD and ROR databases',
+    subtitle: 'We search by name in the RSD and the ROR databases',
     label: 'Find or add organisation',
-    help: 'At least fist 3 letters of organisation name',
+    help: 'At least the fist 2 letters of the organisation name',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,

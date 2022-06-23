@@ -1,27 +1,33 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 import {GetServerSidePropsContext} from 'next'
 import {ScriptProps} from 'next/script'
 
-import {app} from '../../../config/app'
-import {isMaintainerOfSoftware} from '../../../auth/permissions/isMaintainerOfSoftware'
-import {getAccountFromToken} from '../../../auth/jwtUtils'
-import PageMeta from '../../../components/seo/PageMeta'
-import OgMetaTags from '../../../components/seo/OgMetaTags'
-import CitationMeta from '../../../components/seo/CitationMeta'
-import CanoncialUrl from '../../../components/seo/CanonicalUrl'
-import AppHeader from '../../../components/layout/AppHeader'
-import AppFooter from '../../../components/layout/AppFooter'
-import PageContainer from '../../../components/layout/PageContainer'
-import ContentInTheMiddle from '../../../components/layout/ContentInTheMiddle'
-import SoftwareIntroSection from '../../../components/software/SoftwareIntroSection'
-import GetStartedSection from '../../../components/software/GetStartedSection'
-import CitationSection from '../../../components/software/CitationSection'
-import AboutSection from '../../../components/software/AboutSection'
-import MentionsSection from '../../../components/software/MentionsSection'
-import ContributorsSection from '../../../components/software/ContributorsSection'
-import TestimonialSection from '../../../components/software/TestimonialsSection'
-import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
-import EditButton from '../../../components/layout/EditButton'
+import {app} from '~/config/app'
+import {isMaintainerOfSoftware} from '~/auth/permissions/isMaintainerOfSoftware'
+import {getAccountFromToken} from '~/auth/jwtUtils'
+import PageMeta from '~/components/seo/PageMeta'
+import OgMetaTags from '~/components/seo/OgMetaTags'
+import CitationMeta from '~/components/seo/CitationMeta'
+import CanoncialUrl from '~/components/seo/CanonicalUrl'
+import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/layout/AppFooter'
+import PageContainer from '~/components/layout/PageContainer'
+import SoftwareIntroSection from '~/components/software/SoftwareIntroSection'
+import GetStartedSection from '~/components/software/GetStartedSection'
+import CitationSection from '~/components/software/CitationSection'
+import AboutSection from '~/components/software/AboutSection'
+import MentionsSection from '~/components/software/MentionsSection'
+import ContributorsSection from '~/components/software/ContributorsSection'
+import TestimonialSection from '~/components/software/TestimonialsSection'
+import EditButton from '~/components/layout/EditButton'
+import OrganisationsSection from '~/components/software/OrganisationsSection'
+import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
+import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
 import {
   getSoftwareItem,
   getRepostoryInfoForSoftware,
@@ -31,21 +37,26 @@ import {
   getRemoteMarkdown,
   ContributorMentionCount,
   getKeywordsForSoftware,
-} from '../../../utils/getSoftware'
-import logger from '../../../utils/logger'
-import {getDisplayName} from '../../../utils/getDisplayName'
-import {getContributorsForSoftware} from '../../../utils/editContributors'
-import {getTestimonialsForSoftware} from '../../../utils/editTestimonial'
-import {getRelatedToolsForSoftware} from '../../../utils/editRelatedSoftware'
-import {getMentionsForSoftware} from '../../../utils/editMentions'
-import {KeywordForSoftware, License, RelatedTools, RepositoryInfo, SoftwareItem} from '../../../types/SoftwareTypes'
-import {SoftwareCitationInfo} from '../../../types/SoftwareCitation'
-import {Contributor} from '../../../types/Contributor'
-import {Testimonial} from '../../../types/Testimonial'
-import {MentionForSoftware} from '../../../types/Mention'
-import {ParticipatingOrganisationProps} from '../../../types/Organisation'
-import {getParticipatingOrganisations} from '../../../utils/editOrganisation'
-import OrganisationsSection from '../../../components/software/OrganisationsSection'
+  getRelatedProjectsForSoftware,
+} from '~/utils/getSoftware'
+import logger from '~/utils/logger'
+import {getDisplayName} from '~/utils/getDisplayName'
+import {getContributorsForSoftware} from '~/utils/editContributors'
+import {getTestimonialsForSoftware} from '~/utils/editTestimonial'
+import {getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
+import {getMentionsForSoftware} from '~/utils/editMentions'
+import {getParticipatingOrganisations} from '~/utils/editOrganisation'
+import {
+  KeywordForSoftware, License, RepositoryInfo,
+  SoftwareItem, SoftwareListItem
+} from '~/types/SoftwareTypes'
+import {SoftwareCitationInfo} from '~/types/SoftwareCitation'
+import {Contributor} from '~/types/Contributor'
+import {Testimonial} from '~/types/Testimonial'
+import {MentionItemProps} from '~/types/Mention'
+import {ParticipatingOrganisationProps} from '~/types/Organisation'
+import {RelatedProject} from '~/types/Project'
+import NoContent from '~/components/layout/NoContent'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -55,12 +66,13 @@ interface SoftwareIndexData extends ScriptProps{
   licenseInfo: License[]
   repositoryInfo: RepositoryInfo
   softwareIntroCounts: ContributorMentionCount
-  mentions: MentionForSoftware[]
+  mentions: MentionItemProps[]
   testimonials: Testimonial[]
   contributors: Contributor[]
-  relatedTools: RelatedTools[]
+  relatedSoftware: SoftwareListItem[]
+  relatedProjects: RelatedProject[]
   isMaintainer: boolean,
-  organisations: ParticipatingOrganisationProps[]
+  organisations: ParticipatingOrganisationProps[],
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
@@ -71,8 +83,8 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     software, citationInfo, keywords,
     licenseInfo, repositoryInfo, softwareIntroCounts,
     mentions, testimonials, contributors,
-    relatedTools, isMaintainer, slug,
-    organisations
+    relatedSoftware, relatedProjects, isMaintainer,
+    slug, organisations
   } = props
 
   useEffect(() => {
@@ -89,13 +101,9 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   },[contributors])
 
   if (!software?.brand_name){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
+    return <NoContent />
   }
-  // console.log('SoftwareIndexPage...keywords...', keywords)
+  // console.log('SoftwareIndexPage...mentions...', mentions)
   return (
     <>
       {/* Page Head meta tags */}
@@ -150,24 +158,29 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         repository={repositoryInfo?.url}
         platform={repositoryInfo?.code_platform}
       />
+      {/* Participating organisations */}
       <OrganisationsSection
         organisations={organisations}
       />
-      {/* <section>
-        <h2>Participating organisations</h2>
-        {JSON.stringify(organisations,null,2)}
-      </section> */}
+      {/* Mentions */}
       <MentionsSection
         mentions={mentions}
       />
+      {/* Testimonials */}
       <TestimonialSection
         testimonials={testimonials}
       />
+      {/* Contributors */}
       <ContributorsSection
         contributors={contributors}
       />
-      <RelatedToolsSection
-        relatedTools={relatedTools}
+      {/* Related projects (uses project components) */}
+      <RelatedProjectsSection
+        relatedProjects={relatedProjects}
+      />
+      {/* Related software */}
+      <RelatedSoftwareSection
+        relatedSoftware={relatedSoftware}
       />
       {/* bottom spacer */}
       <section className="py-12"></section>
@@ -220,7 +233,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // contributors
       getContributorsForSoftware({software:software.id,frontend:false,token}),
       // relatedTools
-      getRelatedToolsForSoftware({software:software.id,frontend:false,token}),
+      getRelatedSoftwareForSoftware({software: software.id, frontend: false, token}),
+      // relatedProjects
+      getRelatedProjectsForSoftware({software: software.id, token, frontend: false}),
       // check if maintainer
       isMaintainerOfSoftware({slug, account, token, frontend: false}),
       // get organisations
@@ -235,7 +250,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       mentions,
       testimonials,
       contributors,
-      relatedTools,
+      relatedSoftware,
+      relatedProjects,
       isMaintainer,
       organisations
     ] = await Promise.all(fetchData)
@@ -252,7 +268,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         mentions,
         testimonials,
         contributors,
-        relatedTools,
+        relatedSoftware,
+        relatedProjects,
         isMaintainer,
         organisations,
         slug

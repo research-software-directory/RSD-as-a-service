@@ -1,3 +1,13 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState} from 'react'
 import Link from 'next/link'
 import Dialog from '@mui/material/Dialog'
@@ -38,7 +48,7 @@ export default function LoginButton() {
     )
   }
   // when there is only 1 provider we
-  // link redirect directly yo Sign in button
+  // link redirect directly to Sign in button
   if (providers && providers.length === 1) {
     return (
       <Link

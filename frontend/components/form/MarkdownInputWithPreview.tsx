@@ -1,11 +1,28 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState, useEffect} from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 
 import ReactMarkdownWithSettings from '../layout/ReactMarkdownWithSettings'
 
-export default function MarkdownInputWithPreview({markdown,register,disabled=true,autofocus=false}:
-  { markdown:string, register: any, disabled?:boolean,autofocus?:boolean }) {
+type MarkdownInputWithPreviewProps = {
+  markdown: string,
+  register: any,
+  disabled?: boolean,
+  autofocus?: boolean,
+  helperInfo?: {
+    length: number
+    maxLength: number
+  }
+}
+
+
+export default function MarkdownInputWithPreview({markdown, register, disabled = true,
+  autofocus = false, helperInfo}:MarkdownInputWithPreviewProps) {
   const [tab, setTab] = useState(0)
 
   useEffect(() => {
@@ -40,27 +57,48 @@ export default function MarkdownInputWithPreview({markdown,register,disabled=tru
     setTab(newValue)
   }
 
+  function getHelperTextMsg() {
+    if (helperInfo)
+      if (helperInfo?.length > helperInfo.maxLength) {
+      return (
+        <div className="py-[1rem] px-[2rem] text-xs text-error">
+          {helperInfo?.length || 0}/{helperInfo?.maxLength}
+        </div>
+      )
+    } else {
+      return (
+        <div className="py-[1rem] px-[2rem] text-xs opacity-70">
+          {helperInfo?.length || 0}/{helperInfo.maxLength}
+        </div>
+      )
+      }
+    return null
+  }
+
   return (
     <article className="border rounded-sm min-h-[33rem]">
-      <Tabs
-        value={tab}
-        onChange={handleChange}
-        aria-label="Tabs"
-        sx={{
-          padding:'1rem 2rem'
-        }}
-      >
-        <Tab
-          id={`tab-${tab}`}
-          label="Markdown"
-          aria-controls={`markdown-tabpanel-${tab}`}
-        />
-        <Tab
-          id={`tab-${tab}`}
-          label="Preview"
-          aria-controls={`markdown-tabpanel-${tab}`}
-        />
-      </Tabs>
+      <div className="flex justify-between items-center">
+        <Tabs
+          value={tab}
+          onChange={handleChange}
+          aria-label="Tabs"
+          sx={{
+            padding:'1rem 2rem'
+          }}
+        >
+          <Tab
+            id={`tab-${tab}`}
+            label="Markdown"
+            aria-controls={`markdown-tabpanel-${tab}`}
+          />
+          <Tab
+            id={`tab-${tab}`}
+            label="Preview"
+            aria-controls={`markdown-tabpanel-${tab}`}
+          />
+        </Tabs>
+        {getHelperTextMsg()}
+      </div>
       <div
         id={`markdown-tabpanel-${tab}`}
         role="tabpanel"

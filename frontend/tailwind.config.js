@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * Tailwind integration with MUI in next.js
  * based on the article but extended with MUI properties

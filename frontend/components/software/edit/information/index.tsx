@@ -1,16 +1,23 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState, useContext} from 'react'
 import {useFieldArray, useForm} from 'react-hook-form'
 
-import {app} from '../../../../config/app'
-import {EditSoftwareItem} from '../../../../types/SoftwareTypes'
-import {updateSoftwareInfo} from '../../../../utils/editSoftware'
-import useEditSoftwareData from '../../../../utils/useEditSoftwareData'
-import useOnUnsaveChange from '../../../../utils/useOnUnsavedChange'
-import ContentLoader from '../../../layout/ContentLoader'
+import {app} from '~/config/app'
+import {EditSoftwareItem} from '~/types/SoftwareTypes'
+import {updateSoftwareInfo} from '~/utils/editSoftware'
+import useEditSoftwareData from '~/utils/useEditSoftwareData'
+import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
+import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
-import useSnackbar from '../../../snackbar/useSnackbar'
-import ControlledTextField from '../../../form/ControlledTextField'
-import EditSectionTitle from '../../../layout/EditSectionTitle'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import ControlledTextField from '~/components/form/ControlledTextField'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import editSoftwareContext from '../editSoftwareContext'
 import {EditSoftwareActionType} from '../editSoftwareContext'
 import SoftwareMarkdown from './SoftwareMarkdown'
@@ -20,11 +27,14 @@ import {softwareInformation as config} from '../editSoftwareConfig'
 import RepositoryPlatform from './RepositoryPlatform'
 import SoftwareKeywords from './SoftwareKeywords'
 import {getKeywordChanges} from './softwareKeywordsChanges'
+import ConceptDoi from './ConceptDoi'
 
-export default function SoftwareInformation({slug,token}:{slug:string,token: string}) {
+export default function SoftwareInformation(
+  {slug, token}: {slug: string, token: string}
+) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
-  const {loading:apiLoading, editSoftware, setEditSoftware} = useEditSoftwareData({slug,token})
+  const {loading: apiLoading, editSoftware, setEditSoftware} = useEditSoftwareData({slug, token})
   const [loading, setLoading] = useState(true)
 
   // destructure methods from react-hook-form
@@ -37,10 +47,12 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       ...editSoftware
     }
   })
-  const {update:updateKeyword} = useFieldArray({
+
+  const {update: updateKeyword} = useFieldArray({
     control,
-    name:'keywords'
+    name: 'keywords'
   })
+
   // destructure formState
   const {isDirty, isValid, errors} = formState
   // form data provided by react-hook-form
@@ -63,14 +75,15 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           software: {
             slug,
             id: editSoftware?.id ?? '',
-            brand_name: editSoftware?.brand_name ?? ''
+            brand_name: editSoftware?.brand_name ?? '',
+            concept_doi: editSoftware?.concept_doi ?? '',
           },
-          loading:false
+          loading: false
         }
       })
       setLoading(false)
     }
-  },[reset,editSoftware,apiLoading,slug,dispatchPageState])
+  }, [reset, editSoftware, apiLoading, slug, dispatchPageState])
 
   useEffect(() => {
     // update form state
@@ -106,9 +119,9 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       updateKeyword,
       formData,
       getFieldState,
-      projectState:editSoftware
+      projectState: editSoftware
     })
-    debugger
+    // debugger
     // save all changes
     const resp = await updateSoftwareInfo({
       software: formData,
@@ -146,10 +159,10 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
       className='flex-1'>
       {/* hidden inputs */}
       <input type="hidden"
-        {...register('id',{required:'id is required'})}
+        {...register('id', {required:'id is required'})}
       />
       <input type="hidden"
-        {...register('slug',{required:'slug is required'})}
+        {...register('slug', {required:'slug is required'})}
       />
       <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
         <div className="py-4 xl:pl-[3rem]">
@@ -173,8 +186,8 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
             options={{
               name: 'short_statement',
               label: config.short_statement.label,
-              multiline:true,
-              maxRows:5,
+              multiline: true,
+              maxRows: 5,
               useNull: true,
               defaultValue: editSoftware?.short_statement,
               helperTextMessage: config.short_statement.help,
@@ -224,8 +237,8 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
               errors={errors}
               defaultValue={editSoftware?.repository_platform ?? null}
               sx={{
-                m:1,
-                width:'7rem'
+                m: 1,
+                width: '7rem'
               }}
             />
           </div>
@@ -249,9 +262,10 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
           />
           <div className="py-4"></div>
           <EditSectionTitle
-            title="Citation"
+            title={config.concept_doi.title}
+            subtitle={config.concept_doi.subtitle}
           />
-          <ControlledTextField
+          {/* <ControlledTextField
             options={{
               name: 'concept_doi',
               label: config.concept_doi.label,
@@ -262,23 +276,36 @@ export default function SoftwareInformation({slug,token}:{slug:string,token: str
             }}
             control={control}
             rules={config.concept_doi.validation}
+          /> */}
+          <ConceptDoi
+            control={control}
+            setValue={setValue}
           />
 
           <div className="py-4"></div>
           <EditSectionTitle
-            title="Keywords"
+            title={config.keywords.title}
+            subtitle={config.keywords.subtitle}
           />
+
           <SoftwareKeywords
             software={formData.id}
             control={control}
+            concept_doi={formData.concept_doi ?? undefined}
           />
 
           <div className="py-4"></div>
           <EditSectionTitle
-            title="Licenses"
-            subtitle="What licenses do apply to your software?"
+            title={config.licenses.title}
+            subtitle={config.licenses.subtitle}
           />
-          <SoftwareLicenses control={control} />
+
+          <SoftwareLicenses
+            control={control}
+            software={pageState.software.id ?? ''}
+            concept_doi={formData.concept_doi ?? undefined}
+          />
+
           {/* add white space at the bottom */}
           <div className="py-4"></div>
         </div>

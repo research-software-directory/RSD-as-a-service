@@ -1,8 +1,14 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * Types used in software pages (view/add/edit)
  */
 
 import {AutocompleteOption} from './AutocompleteOptions'
+import {Status} from './Organisation'
 
 export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | 'other'
 
@@ -22,7 +28,6 @@ export type NewSoftwareItem = {
   description_url: string | null,
   description_type: 'markdown'|'link',
   get_started_url: string | null,
-  is_featured: boolean,
   is_published: boolean,
   short_statement: string,
 }
@@ -42,6 +47,18 @@ export type SoftwareItemFromDB = SoftwareTableItem & {
   repository_url: RepositoryUrl[]
 }
 
+export type SoftwareListItem = {
+  id:string
+  slug:string
+  brand_name: string
+  short_statement: string
+  updated_at: string | null
+  contributor_cnt: number | null
+  mention_cnt: number | null
+  is_published: boolean
+  is_featured?: boolean
+}
+
 
 // used in editSoftware.updateSoftwareInfo function
 // to extract the properties needed for PATCH method
@@ -57,7 +74,6 @@ export const SoftwarePropsToSave = [
   'description_type',
   'description_url',
   'get_started_url',
-  'is_featured',
   'is_published',
   'short_statement'
 ]
@@ -89,6 +105,7 @@ export type License = {
   id?: string,
   software: string
   license: string
+  deprecated?: boolean
 }
 
 
@@ -116,17 +133,27 @@ export type RepositoryInfo = {
  * RELATED TOOLS / SOFTWARE
  */
 
-export type RelatedSoftware = {
-  id: string,
-  slug: string,
-  brand_name: string,
-  short_statement?: string,
+export type SearchSoftware = {
+  id: string
+  slug: string
+  brand_name: string
+  short_statement: string
+}
+
+export type RelatedSoftwareOfSoftware = SearchSoftware & {
+  is_featured?: boolean
   updated_at?: string
+  status: Status
+}
+
+export type RelatedSoftwareOfProject = SearchSoftware & {
+  project: string
+  status: Status
 }
 
 export type RelatedTools = {
   origin: string,
-  software: RelatedSoftware
+  software: RelatedSoftwareOfSoftware
 }
 
 export type SoftwareForSoftware = {

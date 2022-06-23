@@ -1,7 +1,18 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package nl.esciencecenter.rsd.scraper;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.google.gson.JsonElement;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -84,6 +95,35 @@ public class Utils {
 	}
 
 	/**
+	 * Performs a POST request with given headers and returns the response body
+	 * as a String.
+	 * @param uri           The URI
+	 * @param body          the request body as a string
+	 * @param extraHeaders  Additional headers (amount must be multiple of two)
+	 * @return              The response body as a string
+	 */
+	public static String post(String uri, String body, String... extraHeaders) {
+		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
+				.POST(HttpRequest.BodyPublishers.ofString(body))
+				.uri(URI.create(uri));
+		if (extraHeaders != null && extraHeaders.length > 0 && extraHeaders.length % 2 == 0) {
+			httpRequestBuilder.headers(extraHeaders);
+		}
+		HttpRequest request = httpRequestBuilder.build();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<String> response;
+		try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+		}
+		return response.body();
+	}
+
+	/**
 	 * Post data to the database.
 	 * @param uri           The URI
 	 * @param json          JSON as a string containing the values
@@ -133,4 +173,11 @@ public class Utils {
 		return utcDate.minusDays(utcDate.getDayOfWeek().getValue()).withHour(0).withMinute(0).withSecond(0).withNano(0);
 	}
 
+	public static String stringOrNull(JsonElement e) {
+		return e == null || !e.isJsonPrimitive() ? null : e.getAsString();
+	}
+
+	public static Integer integerOrNull(JsonElement e) {
+		return e == null || !e.isJsonPrimitive() ? null : e.getAsInt();
+	}
 }

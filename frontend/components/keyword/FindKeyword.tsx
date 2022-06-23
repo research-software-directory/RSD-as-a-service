@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {HTMLAttributes, useState} from 'react'
 
 import AsyncAutocompleteSC, {AsyncAutocompleteConfig, AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
@@ -10,7 +17,7 @@ export type Keyword = {
 
 type FindKeywordProps = {
   config: AsyncAutocompleteConfig
-  searchForKeyword: ({searchFor}:{searchFor:string}) => Promise<Keyword[]>
+  searchForKeyword: ({searchFor}: {searchFor: string}) => Promise<Keyword[]>
   onAdd: (item: Keyword) => void
   onCreate?: (keyword: string) => void
 }

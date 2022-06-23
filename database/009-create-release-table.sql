@@ -1,10 +1,18 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TABLE release (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID REFERENCES software (id) UNIQUE NOT NULL,
 	is_citable BOOLEAN,
 	latest_schema_dot_org VARCHAR,
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	releases_scraped_at TIMESTAMPTZ,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 
@@ -34,6 +42,20 @@ $$;
 CREATE TRIGGER sanitise_update_release BEFORE UPDATE ON release FOR EACH ROW EXECUTE PROCEDURE sanitise_update_release();
 
 
+CREATE FUNCTION software_join_release() RETURNS TABLE (
+	software_id UUID,
+	slug VARCHAR,
+	concept_doi VARCHAR,
+	release_id UUID,
+	releases_scraped_at TIMESTAMPTZ
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY SELECT software.id AS software_id, software.slug, software.concept_doi, release.id AS release_id, release.releases_scraped_at FROM software LEFT JOIN RELEASE ON software.id = RELEASE.software;
+	RETURN;
+END
+$$;
+
 
 CREATE TYPE citability AS ENUM (
 	'doi-only',
@@ -48,7 +70,6 @@ CREATE TABLE release_content (
 	doi VARCHAR NOT NULL UNIQUE,
 	tag VARCHAR NOT NULL,
 	url VARCHAR NOT NULL,
-
 	bibtex VARCHAR,
 	cff VARCHAR,
 	codemeta VARCHAR,

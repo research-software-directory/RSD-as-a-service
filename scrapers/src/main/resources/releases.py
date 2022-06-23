@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
 from datetime import datetime
 import re
 import os
@@ -197,7 +202,10 @@ class ReleaseScraper:
 				elif type(e).__name__ == "ScannerError":
 					continue
 				else:
-					raise e
+					print("Something went wrong while generating a file for a release:")
+					print(e)
+					print("Continuing")
+					continue
 		return self
 
 	def is_concept_doi(self):
@@ -217,20 +225,23 @@ def get_citations(dois_data):
 
 	for i_dois, data in enumerate(dois_data):
 		try:
+			release_id = data["release_id"]
+			#first create the entry in the mention table if it doesn't exist yet:
+			if release_id is None:
+				backend_release_response = requests.post('{}/release'.format(backend_url), '{{"software": "{}"}}'.format(data["software_id"]), headers={'Authorization': 'Bearer ' + jwt_token, 'Prefer': 'return=representation'})
+				release_id = backend_release_response.json()[0]["id"]
+
+			#now set the releases_scraped_at so the release gets pushed back in the scraping order
+			requests.patch('{}/release?id=eq.{}'.format(backend_url,release_id), '{{"releases_scraped_at": "{}"}}'.format(datetime.now()), headers={'Authorization': 'Bearer ' + jwt_token})
+
 			doi = data["concept_doi"]
-			release_id = data["release"][0]["id"] if len(data["release"]) > 0 else None
 			release = ReleaseScraper(doi)
 			if release.is_citable:
 				document = {
 					"is_citable": release.is_citable,
-					"latest_schema_dot_org": "" if release.latest_schema_dot_org is None else release.latest_schema_dot_org
+					"latest_schema_dot_org": release.latest_schema_dot_org
 				}
-				if release_id is None:
-					document["software"] = data["id"]
-					backend_release_response = requests.post('{}/release'.format(backend_url), document, headers={'Authorization': 'Bearer ' + jwt_token, 'Prefer': 'return=representation'})
-				else:
-					document["id"] = release_id
-					backend_release_response = requests.patch('{}/release'.format(backend_url), document, headers={'Authorization': 'Bearer ' + jwt_token})
+				backend_release_response = requests.patch('{}/release?id=eq.{}'.format(backend_url,release_id), document, headers={'Authorization': 'Bearer ' + jwt_token})
 				try:
 					backend_release_response.raise_for_status()
 				except requests.HTTPError as e:
@@ -274,13 +285,6 @@ def get_citations(dois_data):
 					print(e.response.text)
 					raise e
 
-			scraped_at_response = requests.patch('{}/software?id=eq.{}'.format(backend_url, data["id"]), '{{"releases_scraped_at": "{}"}}'.format(datetime.now()), headers={'Authorization': 'Bearer ' + jwt_token})
-			try:
-				scraped_at_response.raise_for_status()
-			except requests.HTTPError as e:
-				print(e.response.text)
-				raise e
-
 			if release.message == "OK":
 				print("{0}/{1} \"{2}\" ({3}): {4}".format(i_dois + 1, n_dois, doi,
 																release.title, release.message))
@@ -299,7 +303,7 @@ if __name__ == "__main__":
 	number_releases_to_scrape = os.environ.get('MAX_REQUESTS_GITHUB', default='6')
 	jwt_secret = os.environ.get('PGRST_JWT_SECRET')
 	jwt_token = jwt.encode({"role": "rsd_admin", "exp": datetime.now() + timedelta(minutes = 10)}, jwt_secret, algorithm="HS256")
-	response_dois = requests.get('{}/software?select=id,slug,concept_doi,release(id)&concept_doi=not.is.null&order=releases_scraped_at.nullsfirst&limit={}'.format(backend_url, number_releases_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
+	response_dois = requests.get('{}/rpc/software_join_release?concept_doi=not.is.null&order=releases_scraped_at.nullsfirst&limit={}'.format(backend_url, number_releases_to_scrape), headers={'Authorization': 'Bearer ' + jwt_token})
 	dois_data = response_dois.json()
 	github_api_token = os.environ.get('API_CREDENTIALS_GITHUB')
 	get_citations(dois_data)

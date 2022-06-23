@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState,useEffect} from 'react'
 import {useWatch,useFormState, FieldError} from 'react-hook-form'
 import ControlledTextField, {ControlledTextFieldOptions} from './ControlledTextField'
@@ -5,7 +12,7 @@ import ReactMarkdownWithSettings from '../layout/ReactMarkdownWithSettings'
 import PageErrorMessage from '../layout/PageErrorMessage'
 import {getRemoteMarkdown} from '../../utils/getSoftware'
 import ContentLoader from '../layout/ContentLoader'
-import {useDebounceValid} from '../../utils/useDebouce'
+import {useDebounceValid} from '~/utils/useDebounce'
 
 type ControlledRemoteMarkdownProps = {
   control: any,
@@ -126,5 +133,3 @@ export default function ControlledRemoteMarkdown({control, rules, options}: Cont
     </div>
   )
 }
-
-

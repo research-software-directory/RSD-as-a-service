@@ -1,8 +1,14 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import {Contributor} from '../../types/Contributor'
 import ContributorAvatar from './ContributorAvatar'
-import {getDisplayName, getDisplayInitials} from '../../utils/getDisplayName'
-import {combineRoleAndAffiliation} from '../../utils/editContributors'
+import {getDisplayName, getDisplayInitials,combineRoleAndAffiliation} from '../../utils/getDisplayName'
+import PersonalInfo from './PersonalInfo'
 
 export default function ContributorsList({contributors}: { contributors: Contributor[] }) {
   // do not render component if no data
@@ -21,13 +27,11 @@ export default function ContributorsList({contributors}: { contributors: Contrib
                 displayName={displayName}
                 displayInitials={getDisplayInitials(item)}
               />
-              <div>
+              <div className='flex-1'>
                 <div className="text-xl text-primary">
                   {displayName}
                 </div>
-                <div>
-                  {combineRoleAndAffiliation(item)}
-                </div>
+                <PersonalInfo {...item} />
               </div>
             </div>
           )

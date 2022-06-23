@@ -1,8 +1,15 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState, useEffect, useContext} from 'react'
 import Input from '@mui/material/Input'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
-import {useDebounce} from '../../utils/useDebouce'
+import {useDebounce} from '~/utils/useDebounce'
 import ClearIcon from '@mui/icons-material/Clear'
 
 import SearchContext from './SearchContext'

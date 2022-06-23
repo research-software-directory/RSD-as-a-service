@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import logger from './logger'
 
 export function daysDiff(date:Date):number|undefined{
@@ -28,15 +33,8 @@ export function olderThanXDays(lastDate:Date, xDays=7):boolean{
 }
 
 export function isoStrToDate(isoString:string):Date|null{
-  try{
+  try {
     if (isoString) {
-      if (isoString.endsWith('Z') === false) {
-        // quickfix for missing Z at the end of isoString
-        // TODO! investigate why api does not delivers Z
-        isoString += 'Z'
-        const newDate = new Date(isoString)
-        return newDate
-      }
       const newDate = new Date(isoString)
       return newDate
     }

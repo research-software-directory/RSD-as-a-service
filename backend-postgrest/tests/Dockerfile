@@ -1,3 +1,10 @@
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2022 dv4all
+#
+# SPDX-License-Identifier: Apache-2.0
+
 FROM node:17.7.1-alpine3.14
 WORKDIR /usr/app
 RUN npm install newman@5.3.2 wait-on@6.0.1

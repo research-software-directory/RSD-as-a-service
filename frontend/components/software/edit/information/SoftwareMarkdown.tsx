@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -43,8 +48,14 @@ export default function SoftwareMarkdown({register, control, config,
         <div className="py-4"></div>
         <MarkdownInputWithPreview
           markdown={formData?.description || ''}
-          register={register('description')}
+          register={register('description', {
+            maxLength: config.description.validation.maxLength.value
+          })}
           disabled={formData?.description_type !== 'markdown'}
+          helperInfo={{
+            length: formData?.description?.length ?? 0,
+            maxLength: config.description.validation.maxLength.value
+          }}
         />
       </>
     )

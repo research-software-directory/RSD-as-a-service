@@ -1,17 +1,24 @@
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TABLE team_member (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	project UUID references project (id) NOT NULL,
 	is_contact_person BOOLEAN NOT NULL DEFAULT FALSE,
-	email_address VARCHAR,
-	family_names VARCHAR NOT NULL,
-	given_names VARCHAR NOT NULL,
-	affiliation VARCHAR,
-	role VARCHAR,
-	orcid VARCHAR,
-	avatar_data VARCHAR,
+	email_address VARCHAR(200),
+	family_names VARCHAR(200) NOT NULL,
+	given_names VARCHAR(200) NOT NULL,
+	affiliation VARCHAR(200),
+	role VARCHAR(200),
+	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
+	avatar_data VARCHAR(2750000),
 	avatar_mime_type VARCHAR(100),
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_team_member() RETURNS TRIGGER LANGUAGE plpgsql AS

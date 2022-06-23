@@ -1,36 +1,46 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
 import {ScriptProps} from 'next/script'
 
-import {app} from '../../../config/app'
-import logger from '../../../utils/logger'
-import AppHeader from '../../../components/layout/AppHeader'
-import EditButton from '../../../components/layout/EditButton'
-import ContentInTheMiddle from '../../../components/layout/ContentInTheMiddle'
-import PageContainer from '../../../components/layout/PageContainer'
-import ContentHeader from '../../../components/layout/ContentHeader'
-import AppFooter from '../../../components/layout/AppFooter'
-import PageMeta from '../../../components/seo/PageMeta'
-import OgMetaTags from '../../../components/seo/OgMetaTags'
-import CanoncialUrl from '../../../components/seo/CanonicalUrl'
+import {app} from '~/config/app'
+import {getAccountFromToken} from '~/auth/jwtUtils'
+import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
+import logger from '~/utils/logger'
 import {
   getLinksForProject, getImpactForProject,
   getOutputForProject, getOrganisations,
-  getProjectItem, getRelatedProjects, getRelatedToolsForProject,
-  getTeamForProject, getResearchDomainsForProject, getKeywordsForProject
-} from '../../../utils/getProjects'
-import {KeywordForProject, Project, ProjectLink, RelatedProject, ResearchDomain} from '../../../types/Project'
-import ProjectInfo from '../../../components/projects/ProjectInfo'
-import OrganisationsSection from '../../../components/software/OrganisationsSection'
-import {ProjectOrganisationProps} from '../../../types/Organisation'
-import {MentionForProject} from '../../../types/Mention'
-import ProjectMentions from '../../../components/projects/ProjectMentions'
-import {Contributor} from '../../../types/Contributor'
-import ContributorsSection from '../../../components/software/ContributorsSection'
-import {RelatedTools} from '../../../types/SoftwareTypes'
-import RelatedToolsSection from '../../../components/software/RelatedToolsSection'
-import RelatedProjectsSection from '../../../components/projects/RelatedProjectsSection'
-import {getAccountFromToken} from '~/auth/jwtUtils'
-import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
+  getProjectItem, getRelatedSoftwareForProject,
+  getTeamForProject, getResearchDomainsForProject,
+  getKeywordsForProject, getRelatedProjectsForProject
+} from '~/utils/getProjects'
+import {
+  KeywordForProject, Project, ProjectLink,
+  RelatedProject, ResearchDomain
+} from '~/types/Project'
+import {MentionItemProps} from '~/types/Mention'
+import {Contributor} from '~/types/Contributor'
+import {ProjectOrganisationProps} from '~/types/Organisation'
+import {RelatedSoftwareOfProject, SoftwareListItem} from '~/types/SoftwareTypes'
+import AppHeader from '~/components/AppHeader'
+import EditButton from '~/components/layout/EditButton'
+import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
+import PageContainer from '~/components/layout/PageContainer'
+import ContentHeader from '~/components/layout/ContentHeader'
+import AppFooter from '~/components/layout/AppFooter'
+import PageMeta from '~/components/seo/PageMeta'
+import OgMetaTags from '~/components/seo/OgMetaTags'
+import CanoncialUrl from '~/components/seo/CanonicalUrl'
+import ProjectInfo from '~/components/projects/ProjectInfo'
+import OrganisationsSection from '~/components/software/OrganisationsSection'
+import ProjectMentions from '~/components/projects/ProjectMentions'
+import ContributorsSection from '~/components/software/ContributorsSection'
+import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
+import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
+import NoContent from '~/components/layout/NoContent'
 
 export interface ProjectPageProps extends ScriptProps{
   slug: string
@@ -40,10 +50,10 @@ export interface ProjectPageProps extends ScriptProps{
   researchDomains: ResearchDomain[],
   keywords: KeywordForProject[],
   links: ProjectLink[],
-  output: MentionForProject[],
-  impact: MentionForProject[],
+  output: MentionItemProps[],
+  impact: MentionItemProps[],
   team: Contributor[],
-  relatedTools: RelatedTools[],
+  relatedSoftware: SoftwareListItem[],
   relatedProjects: RelatedProject[]
 }
 
@@ -51,7 +61,7 @@ export default function ProjectPage(props: ProjectPageProps) {
   const [resolvedUrl, setResolvedUrl] = useState('')
   const {slug, project, isMaintainer, organisations,
     researchDomains, keywords, links, output, impact, team,
-    relatedTools, relatedProjects
+    relatedSoftware, relatedProjects
   } = props
 
   useEffect(() => {
@@ -61,13 +71,9 @@ export default function ProjectPage(props: ProjectPageProps) {
   }, [])
 
   if (!project?.title){
-    return (
-      <ContentInTheMiddle>
-        <h2>No content</h2>
-      </ContentInTheMiddle>
-    )
+    return <NoContent />
   }
-  // console.log('ProjectItemPage...organisations...', organisations)
+  // console.log('ProjectItemPage...output...', output)
   return (
     <>
       {/* Page Head meta tags */}
@@ -115,13 +121,12 @@ export default function ProjectPage(props: ProjectPageProps) {
       <OrganisationsSection
         organisations={organisations.filter(item=>item.role!=='funding')}
       />
-
       {/* Project mentions */}
       <ProjectMentions
         impact={impact}
         output={output}
       />
-      {/* Team (use software components) */}
+      {/* Team (uses software components) */}
       <ContributorsSection
         title="Team"
         contributors={team}
@@ -131,8 +136,8 @@ export default function ProjectPage(props: ProjectPageProps) {
         relatedProjects={relatedProjects}
       />
       {/* Used software */}
-      <RelatedToolsSection
-        relatedTools={relatedTools}
+      <RelatedSoftwareSection
+        relatedSoftware={relatedSoftware}
       />
       {/* bottom spacer */}
       <section className="py-8"></section>
@@ -167,8 +172,8 @@ export async function getServerSideProps(context:any) {
       getOutputForProject({project: project.id, token, frontend: false}),
       getImpactForProject({project: project.id, token, frontend: false}),
       getTeamForProject({project: project.id, token, frontend: false}),
-      getRelatedToolsForProject({project: project.id, token, frontend: false}),
-      getRelatedProjects({project: project.id, token, frontend: false}),
+      getRelatedSoftwareForProject({project: project.id, token, frontend: false}),
+      getRelatedProjectsForProject({project: project.id, token, frontend: false}),
       getLinksForProject({project: project.id, token, frontend: false}),
       isMaintainerOfProject({slug, account, token, frontend: false}),
     ]
@@ -180,7 +185,7 @@ export async function getServerSideProps(context:any) {
       output,
       impact,
       team,
-      relatedTools,
+      relatedSoftware,
       relatedProjects,
       links,
       isMaintainer
@@ -200,7 +205,7 @@ export async function getServerSideProps(context:any) {
         output,
         impact,
         team,
-        relatedTools,
+        relatedSoftware,
         relatedProjects,
         links
       },

@@ -1,12 +1,22 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import Link from 'next/link'
 import LogoEscience from '~/components/svg/LogoEscience'
 import Mail from '@mui/icons-material/Mail'
 import {useContext} from 'react'
 import EmbedLayoutContext from './embedLayoutContext'
 
-export default function AppFooter() {
+export default function AppFooter () {
+  const isDev = process.env.NODE_ENV === 'development'
+
   const {embedMode} = useContext(EmbedLayoutContext)
   if (embedMode === true) return null
+
   return (
     <footer className="flex flex-wrap text-white border-t bg-secondary border-grey-A400">
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[_2fr,1fr] lg:container lg:mx-auto">
@@ -46,7 +56,7 @@ export default function AppFooter() {
             <Link href="/projects" passHref>
               <a className="footer-link">Projects</a>
             </Link>
-            <a href="https://research-software-directory.github.io/RSD-as-a-service"
+              <a href={isDev ? 'http://localhost:3030' : 'https://research-software-directory.github.io/RSD-as-a-service'}
               target="_blank"
               className="footer-link"
               rel="noreferrer">

@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState} from 'react'
 import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
@@ -16,7 +21,7 @@ import {OrganisationForOverview} from '../../types/Organisation'
 import {SearchProvider} from '../../components/search/SearchContext'
 import {PaginationProvider} from '../../components/pagination/PaginationContext'
 
-type OrganisationPageProps = {
+export type OrganisationPageProps = {
   organisation: OrganisationForOverview,
   slug: string[],
   session: Session,
@@ -68,8 +73,10 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
               {...organisation}
             />
           </div>
-          {renderStepComponent()}
-          </section>
+          <div className="min-h-[55rem]">
+            {renderStepComponent()}
+          </div>
+        </section>
       </PaginationProvider>
       </SearchProvider>
     </DefaultLayout>

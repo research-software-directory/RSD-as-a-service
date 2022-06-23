@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
@@ -5,10 +10,11 @@ import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-import LockIcon from '@mui/icons-material/Lock'
+import BlockIcon from '@mui/icons-material/Block'
 
 import {EditOrganisation} from '../../../../types/Organisation'
 import {getUrlFromLogoId} from '../../../../utils/editOrganisation'
+import IconOverlay from '~/components/layout/IconOverlay'
 
 type OrganisationsListItemProps = {
   organisation: EditOrganisation
@@ -20,6 +26,22 @@ type OrganisationsListItemProps = {
 export default function OrganisationsItem({organisation, pos, onEdit, onDelete}: OrganisationsListItemProps) {
 
   function getSecondaryActions() {
+    if (organisation.status !== 'approved') {
+      return (
+        <div
+          title={`Affiliation rejected by ${organisation.name}`}
+        >
+          <BlockIcon
+            sx={{
+              width: '4rem',
+              height: '4rem',
+              color: 'error.main',
+              opacity:0.5
+            }}
+          />
+        </div>
+      )
+    }
     if (organisation.canEdit) {
       return (
         <>
@@ -63,18 +85,18 @@ export default function OrganisationsItem({organisation, pos, onEdit, onDelete}:
   function getStatusIcon() {
     if (organisation.status !== 'approved') {
       return (
-        <div
-          title="Waiting on approval"
-          className="absolute flex items-center w-[2rem] h-[6rem] bg-primary"
+        <IconOverlay
+          title="Affiliation denied by organisation"
+          // className="absolute flex items-center w-[2rem] h-[6rem] bg-error"
         >
-          <LockIcon
+          <BlockIcon
             sx={{
-              width: '2rem',
-              height: '2rem',
-              color: 'white'
+              width: '100%',
+              height: '100%',
+              color: 'error.main'
             }}
           />
-        </div>
+        </IconOverlay>
       )
     }
     return null
@@ -84,7 +106,8 @@ export default function OrganisationsItem({organisation, pos, onEdit, onDelete}:
      <ListItem
         key={JSON.stringify(organisation)}
         secondaryAction={getSecondaryActions()}
-        sx={{
+      sx={{
+          // position:'relative',
           // this makes space for buttons
           paddingRight:'7.5rem',
           '&:hover': {
@@ -110,7 +133,7 @@ export default function OrganisationsItem({organisation, pos, onEdit, onDelete}:
           {organisation.name.slice(0,3)}
         </Avatar>
       </ListItemAvatar>
-      {getStatusIcon()}
+      {/* {getStatusIcon()} */}
       <ListItemText
         primary={organisation.name}
         secondary={

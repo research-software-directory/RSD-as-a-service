@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import {Controller} from 'react-hook-form'
@@ -9,17 +16,26 @@ type ControlledAutocompleteType<T>={
   options: AutocompleteOption<T>[],
   label: string,
   rules?: any,
-  defaultValue?: AutocompleteOption<T>[]
+  defaultValue?: AutocompleteOption<T>[],
+  onChange?: any
 }
 
-export default function ControlledAutocomplete<T>({
-  name, control, options, label, rules, defaultValue = []
-}:ControlledAutocompleteType<T>) {
-
+export default function ControlledAutocomplete<T>(
+  {
+    name, control, options, label, rules, defaultValue = [], onChange
+  }: ControlledAutocompleteType<T>
+) {
+  let overrideOnChange: any = undefined
   let allRules = {required: false}
+
   if (rules) {
-    allRules=rules
+    allRules = rules
   }
+
+  if (onChange) {
+    overrideOnChange = onChange
+  }
+
   return (
     <Controller
       name={name}
@@ -32,11 +48,15 @@ export default function ControlledAutocomplete<T>({
           <Autocomplete
             multiple={true}
             options={options}
-            onChange={(e, items, reason) => {
-              // here we pass items react-hook-form controller
-              // and mui autocompletes
-              onChange(items)
-            }}
+            onChange={
+              overrideOnChange
+                ? overrideOnChange
+                : (e, items, reason) => {
+                  // here we pass items react-hook-form controller
+                  // and mui autocompletes
+                  onChange(items)
+                }
+            }
             value={value}
             isOptionEqualToValue={(
               option: AutocompleteOption<T>,

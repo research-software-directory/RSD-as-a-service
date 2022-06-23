@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useRef} from 'react'
 import {Controller} from 'react-hook-form'
 import TextField from '@mui/material/TextField'
@@ -15,7 +20,7 @@ export type ControlledTextFieldOptions = {
   fullWidth?: boolean
   variant?: 'outlined'|'standard'
   useNull?: boolean,
-  defaultValue?: string | null
+  defaultValue?: string | number | null
   helperTextMessage?: string
   helperTextCnt?: string
   disabled?: boolean
@@ -41,12 +46,12 @@ export default function ControlledTextField({options, control, rules}: {
       rules={rules}
       control={control}
       render={({field,fieldState}) => {
-        const {onChange} = field
+        const {onChange,value} = field
         const {error} = fieldState
-        //   console.group(`ControlledTextField...${options.name}`)
-        //   console.log('error...',error)
-        //   console.log('options...', options)
-        //   console.groupEnd()
+          // console.group(`ControlledTextField...${options.name}`)
+          // console.log('error...',error)
+          // console.log('value...', value)
+          // console.groupEnd()
         return (
           <TextField
             id={options.name ?? `input-${Math.floor(Math.random()*10000)}`}
@@ -61,7 +66,9 @@ export default function ControlledTextField({options, control, rules}: {
             type={options?.type ?? 'text'}
             fullWidth={options?.fullWidth ?? true }
             variant={options?.variant ?? 'standard'}
-            defaultValue={options?.defaultValue}
+            // controlled mui input requires "" instead of null
+            // but the value in controller of react-hook-form is null (can be null)
+            value={value ?? options?.defaultValue ?? ''}
             FormHelperTextProps={{
               sx:{
                 display: 'flex',

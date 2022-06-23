@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * Return a list of valid OpenID providers
  * based on provided env. RSD_AUTH_PROVIDERS string, semicolon separated values
@@ -10,6 +17,7 @@ import type {NextApiRequest, NextApiResponse} from 'next'
 // import providers methods
 import {surfconextInfo} from './surfconext'
 import {helmholtzInfo} from './helmholtzaai'
+import {localInfo} from './local'
 import logger from '~/utils/logger'
 
 export type ApiError = {
@@ -32,6 +40,8 @@ async function getRedirectInfo(provider: string) {
       return surfconextInfo()
     case 'helmholtzaai':
       return helmholtzInfo()
+    case 'local':
+      return localInfo()
     default:
       const message = `${provider} NOT SUPPORTED, check your spelling`
       logger(`api/fe/auth/providers: ${message}`, 'error')

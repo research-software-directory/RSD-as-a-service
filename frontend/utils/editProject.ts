@@ -1,3 +1,12 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {UseFieldArrayUpdate} from 'react-hook-form'
 
 import {Session} from '~/auth'
@@ -6,13 +15,13 @@ import logger from './logger'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from './fetchHelpers'
 import {
   EditProject, KeywordForProject, NewProject,
-  OrganisationsOfProject, Project, ProjectLink, ProjectTableProps, ResearchDomainForProject
+  OrganisationsOfProject, Project, ProjectLink, ProjectTableProps, RelatedProject, ResearchDomainForProject
 } from '~/types/Project'
 import {ProjectImageInfo} from '~/components/projects/edit/information'
 import {ProjectLinksForSave} from '~/components/projects/edit/information/projectLinkChanges'
 import {getPropsFromObject} from './getPropsFromObject'
-import {EditOrganisation, OrganisationRole} from '~/types/Organisation'
-import {createOrganisation} from './editOrganisation'
+import {EditOrganisation, OrganisationRole, Status} from '~/types/Organisation'
+import {createOrganisation, updateDataObjectAfterSave} from './editOrganisation'
 import {getSlugFromString} from './getSlugFromString'
 import {CreateOrganisation, FundingOrganisationsForSave} from '~/components/projects/edit/information/fundingOrganisationsChanges'
 import {KeywordsForSave} from '~/components/projects/edit/information/projectKeywordsChanges'
@@ -139,7 +148,7 @@ export async function updateProjectInfo({project, projectLinks, projectImage, fu
   // create: request per organisation
   fundingOrganisations.create.forEach(item => {
     promises.push(
-      createOrganisationAndAddToProject({
+      createFundingOrganisationAndAddToProject({
         project: project.id,
         organisation: item,
         role: 'funding',
@@ -307,7 +316,7 @@ export async function updateProjectTable({project,token}:{project:Project,token:
   }
 }
 
-export async function createOrganisationAndAddToProject({project,organisation,role,updateOrganisation, session}: {
+export async function createFundingOrganisationAndAddToProject({project,organisation,role,updateOrganisation, session}: {
   project: string, organisation: CreateOrganisation, role: OrganisationRole,
   updateOrganisation: UseFieldArrayUpdate<EditProject, 'funding_organisations'>,
   session: Session
@@ -317,7 +326,8 @@ export async function createOrganisationAndAddToProject({project,organisation,ro
       id: null,
       parent: null,
       slug: getSlugFromString(organisation.name),
-      primary_maintainer: organisation.primary_maintainer ?? session.user?.account ?? null,
+      // funding organisation without primary maintainer
+      primary_maintainer: null,
       name: organisation.name,
       ror_id: organisation.ror_id,
       is_tenant: false,
@@ -363,7 +373,7 @@ export async function createOrganisationAndAddToProject({project,organisation,ro
         session
       })
     } else {
-      debugger
+      // debugger
       return resp
     }
   } catch(e:any) {
@@ -375,15 +385,68 @@ export async function createOrganisationAndAddToProject({project,organisation,ro
   }
 }
 
+export async function createOrganisationAndAddToProject({project, item, session, setState, role='participating'}:
+  { item: EditOrganisation, project: string, session: Session, setState: (item: EditOrganisation) => void, role?: OrganisationRole}) {
+  // create new organisation
+  let resp = await createOrganisation({
+    item,
+    token: session.token
+  })
+  // only 201 and 206 accepted
+  if ([201, 206].includes(resp.status) === false) {
+    // on error we return message
+    return resp
+  }
+  // we receive id in message
+  const id = resp.message
+  if (resp.status === 201) {
+    // add this organisation to software
+    resp = await addOrganisationToProject({
+      project,
+      organisation: id,
+      role: 'participating',
+      session
+    })
+    if (resp.status === 200) {
+      // we receive assigned status in message
+      item.status = resp.message
+      // update data, remove base64 string after upload
+      // and create logo_id to be used as image reference
+      const organisation = updateDataObjectAfterSave({
+        data: item,
+        id
+      })
+      // update local list
+      setState(organisation)
+      return {
+        status: 200,
+        message: 'OK'
+      }
+    } else {
+      return resp
+    }
+  } else if (resp.status === 206) {
+    // organisation is created but the image failed
+    const organisation = updateDataObjectAfterSave({
+      data: item,
+      id
+    })
+    setState(organisation)
+    // we show error about failure on logo
+    return {
+      status: 206,
+      message: 'Failed to upload organisation logo.'
+    }
+  } else {
+    return resp
+  }
+}
+
 export async function addOrganisationToProject({project, organisation, role, session}:
   { project: string, organisation: string, role: OrganisationRole, session:Session }) {
   try {
-    // validate if user is maintainer of organisation
-    const isMaintainer = await isMaintainerOfOrganisation({
-      organisation,
-      account: session.user?.account,
-      token: session.token
-    })
+    // by default request status is approved
+    const status = 'approved'
     // POST
     const url = '/api/v1/project_for_organisation'
     const resp = await fetch(url, {
@@ -396,10 +459,17 @@ export async function addOrganisationToProject({project, organisation, role, ses
       body: JSON.stringify({
         project,
         organisation,
-        status: isMaintainer ? 'approved' : 'requested_by_origin',
+        status,
         role
       })
     })
+    if ([200, 201].includes(resp.status)) {
+      // return status assigned to organisation
+      return {
+        status: 200,
+        message: status
+      }
+    }
     // debugger
     return extractReturnMessage(resp, project ?? '')
   } catch (e: any) {
@@ -549,7 +619,6 @@ export async function addProjectLinksAndUpdateForm({project, links, token, updat
         if (link.id && link.position!==null) {
           updateUrl(link.position, {
             id: link.id,
-            uuid: link.id,
             title: link.title,
             url: link.url,
             project: link.project,
@@ -730,4 +799,118 @@ export async function deleteImage({project,token}:{project:string,token:string})
       message: e?.message
     }
   }
+}
+
+
+export async function createMaintainerLink({project,account,token}:{project:string,account:string,token:string}) {
+  try {
+    // POST
+    const url = '/api/v1/invite_maintainer_for_project'
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createJsonHeaders(token),
+        'Prefer': 'return=headers-only'
+      },
+      body: JSON.stringify({
+        project,
+        created_by:account
+      })
+    })
+    if (resp.status === 201) {
+      const id = resp.headers.get('location')?.split('.')[1]
+      if (id) {
+        const link = `${location.origin}/invite/project/${id}`
+        return {
+          status: 201,
+          message: link
+        }
+      }
+      return {
+        status: 400,
+        message: 'Id is missing'
+      }
+    }
+    return extractReturnMessage(resp, project ?? '')
+  } catch (e: any) {
+    logger(`createMagicLink: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function addRelatedSoftware({project,software,status,token}: {
+  project: string, software: string, status: Status, token: string
+}) {
+  const url = '/api/v1/software_for_project'
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      ...createJsonHeaders(token),
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify({
+      software,
+      project,
+      status
+    })
+  })
+
+  return extractReturnMessage(resp)
+}
+
+export async function deleteRelatedSoftware({project, software, token}: {
+  project: string, software: string, token: string
+}) {
+
+  const url = `/api/v1/software_for_project?software=eq.${software}&project=eq.${project}`
+
+  const resp = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      ...createJsonHeaders(token)
+    }
+  })
+
+  return extractReturnMessage(resp)
+}
+
+export async function addRelatedProject({origin, relation, status, token}: {
+  origin: string, relation: string, status: Status, token: string
+}) {
+  const url = '/api/v1/project_for_project'
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      ...createJsonHeaders(token),
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify({
+      origin,
+      relation,
+      status
+    })
+  })
+
+  return extractReturnMessage(resp)
+}
+
+export async function deleteRelatedProject({origin, relation, token}: {
+  origin: string, relation: string, token: string
+}) {
+
+  const url = `/api/v1/project_for_project?origin=eq.${origin}&relation=eq.${relation}`
+
+  const resp = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      ...createJsonHeaders(token)
+    }
+  })
+
+  return extractReturnMessage(resp)
 }

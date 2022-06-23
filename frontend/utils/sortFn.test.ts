@@ -1,5 +1,9 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
-import {sortOnStrProp, sortOnDateProp, sortOnNumProp} from './sortFn'
+import {sortOnStrProp, sortOnDateProp, sortOnNumProp, sortBySearchFor} from './sortFn'
 
 const toOrder=[
   {id:1,name:'K',amount:100},
@@ -17,6 +21,15 @@ const orderAsc=[
   {id:1,name:'d',amount:96.5, datum: '2020-12-15'},
   {id:1,name:'e',amount:94, datum: '2020-12-7'},
   {id:1,name:'f',amount:89, datum: '2018-11-1'},
+]
+
+const orderSearchFor = [
+  {id: 1, name: 'abcd', amount: 100, datum: '2020-12-1'},
+  {id: 1, name: 'bcde', amount: 99, datum: '2019-12-1'},
+  {id: 1, name: 'cdef', amount: 98, datum: '2019-12-26'},
+  {id: 1, name: 'defg', amount: 96.5, datum: '2020-12-15'},
+  {id: 1, name: 'efgh', amount: 94, datum: '2020-12-7'},
+  {id: 1, name: 'fghi', amount: 89, datum: '2018-11-1'},
 ]
 
 describe('sortFn',()=>{
@@ -56,4 +69,18 @@ describe('sortFn',()=>{
     expect(first.datum).toEqual('2020-12-15')
     expect(last.datum).toEqual('2018-11-1')
   })
+
+  it('order by searchFor', () => {
+    const resp = orderSearchFor.sort((a, b) => sortBySearchFor(a, b, 'name', 'c'))
+    const first = resp[0]
+    const second = resp[1]
+    const third = resp[2]
+    // first if starts with
+    expect(first.name).toEqual('cdef')
+    // second and third contain it
+    expect(second.name).toEqual('abcd')
+    expect(third.name).toEqual('bcde')
+  })
+
 })
+

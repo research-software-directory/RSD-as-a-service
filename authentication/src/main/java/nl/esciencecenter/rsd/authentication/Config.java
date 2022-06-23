@@ -1,4 +1,18 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 package nl.esciencecenter.rsd.authentication;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 
 public class Config {
 
@@ -10,6 +24,31 @@ public class Config {
 
 	public static long jwtExpirationTime() {
 		return TEN_MINUTES_IN_MILLISECONDS;
+	}
+
+	private static Collection<String> rsdAuthProviders() {
+		return Optional.ofNullable(System.getenv("RSD_AUTH_PROVIDERS"))
+				.map(s -> s.toUpperCase())
+				.map(s -> s.split(";"))
+				.map(strings -> Set.of(strings))
+				.orElse(Collections.EMPTY_SET);
+	}
+
+	public static boolean isLocalEnabled() {
+		return rsdAuthProviders().contains("LOCAL");
+	}
+
+	public static boolean isSurfConextEnabled() {
+		Collection<String> enabledProviders =  rsdAuthProviders();
+		return enabledProviders.isEmpty() || enabledProviders.contains("SURFCONEXT");
+	}
+
+	public static boolean isHelmholtzEnabled() {
+		return rsdAuthProviders().contains("HELMHOLTZAAI");
+	}
+
+	public static String userMailWhitelist() {
+		return System.getenv("RSD_AUTH_USER_MAIL_WHITELIST");
 	}
 
 	public static String backendBaseUrl() {

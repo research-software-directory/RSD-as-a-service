@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState, useEffect} from 'react'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
@@ -138,7 +145,7 @@ export default function RepositoryPlatform(props: RepositoryPlatformProps) {
               // always use value here to ensure sync with Controller
               value={value ?? ''}
               onChange={({target}: { target: any }) => {
-                debugger
+                // debugger
                 // change value in form
                 onChange(target.value)
                 // update local state

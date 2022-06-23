@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * Table definitions in 003-create-relations-for-software.sql
  */
@@ -10,6 +15,8 @@ export type NewContributor = {
   email_address: string | null
   // NOTE! added on 2022-02-11
   affiliation?: string | null
+  // ORCID delivers array of institutions
+  institution?: string[] | null
   // NOTE! added on 2022-02-11
   role?: string | null
   // NOTE! added on 2022-02-11
@@ -39,13 +46,14 @@ export type SearchContributor = {
   email_address: string | null
   // NOTE! added on 2022-02-11
   affiliation?: string | null
+  // ORCID delivers array of institutions
+  institution?: string[] | null
   display_name?: string | null,
   orcid?: string
   source: 'RSD'|'ORCID'
 }
 
-
-export const TeamMemberProps = [
+export const Person = [
   'id',
   'is_contact_person',
   'email_address',
@@ -57,7 +65,13 @@ export const TeamMemberProps = [
   'avatar_mime_type'
 ]
 
+
+export const TeamMemberProps = [
+  ...Person,
+  'project'
+]
+
 export const ContributorProps = [
-  ...TeamMemberProps,
+  ...Person,
   'software'
 ]

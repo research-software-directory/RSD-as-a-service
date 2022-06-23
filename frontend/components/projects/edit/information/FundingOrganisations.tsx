@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import Chip from '@mui/material/Chip'
 import {useFieldArray, useFormContext} from 'react-hook-form'
 
@@ -11,7 +16,10 @@ export default function FundingOrganisations() {
   const {control} = useFormContext<EditProject>()
   const {fields, append, remove} = useFieldArray({
     control,
-    name:'funding_organisations'
+    name: 'funding_organisations',
+    // change internal key name from id to fid
+    // to avoid conflict with id prop in data
+    keyName: 'fid'
   })
 
   function onAddOrganisation(selected: SearchOrganisation) {
@@ -33,7 +41,7 @@ export default function FundingOrganisations() {
       {fields.map((field, pos) => {
         return(
           <div
-            key={field.id}
+            key={field.fid}
             className="py-1 pr-1"
           >
             <Chip

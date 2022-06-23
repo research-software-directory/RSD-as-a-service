@@ -1,39 +1,45 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TYPE mention_type AS ENUM (
-	'attachment',
 	'blogPost',
 	'book',
 	'bookSection',
 	'computerProgram',
 	'conferencePaper',
-	'document',
+	'dataset',
 	'interview',
+	'highlight',
 	'journalArticle',
 	'magazineArticle',
-	'manuscript',
 	'newspaperArticle',
-	'note',
 	'presentation',
-	'radioBroadcast',
 	'report',
 	'thesis',
 	'videoRecording',
-	'webpage'
+	'webpage',
+	'other'
 );
 
 CREATE TABLE mention (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	author VARCHAR,
-	date TIMESTAMP,
-	image VARCHAR,
-	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
-	title VARCHAR NOT NULL,
-	type mention_type NOT NULL,
-	url VARCHAR,
-	version INTEGER,
-	zotero_key VARCHAR UNIQUE NOT NULL,
-	scraped_at TIMESTAMP,
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	doi VARCHAR(255) UNIQUE CHECK (doi ~ '^10(\.\d+)+/.+'),
+	url VARCHAR(500),
+	title VARCHAR(500) NOT NULL,
+	authors VARCHAR(15000),
+	publisher VARCHAR(255),
+	publication_year SMALLINT,
+	page VARCHAR(50),
+	image_url VARCHAR(500),
+	mention_type mention_type NOT NULL,
+	source VARCHAR(50) NOT NULL,
+	scraped_at TIMESTAMPTZ,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_mention() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -60,7 +66,6 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_mention BEFORE UPDATE ON mention FOR EACH ROW EXECUTE PROCEDURE sanitise_update_mention();
-
 
 
 CREATE TABLE mention_for_software (
@@ -99,3 +104,33 @@ CREATE TABLE impact_for_project (
 	project UUID REFERENCES project (id),
 	PRIMARY KEY (mention, project)
 );
+
+
+CREATE OR REPLACE FUNCTION search_impact_for_project(project_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
+$$
+BEGIN
+	RETURN QUERY SELECT * FROM mention
+	WHERE id NOT IN (
+		SELECT mention FROM impact_for_project WHERE impact_for_project.project = project_id
+	)
+	AND (
+		url ILIKE CONCAT('%', search_text, '%') OR title ILIKE CONCAT('%', search_text, '%')
+	);
+	RETURN;
+END
+$$;
+
+
+CREATE OR REPLACE FUNCTION search_output_for_project(project_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
+$$
+BEGIN
+	RETURN QUERY SELECT * FROM mention
+	WHERE id NOT IN (
+		SELECT mention FROM output_for_project WHERE output_for_project.project = project_id
+	)
+	AND (
+		url ILIKE CONCAT('%', search_text, '%') OR title ILIKE CONCAT('%', search_text, '%')
+	);
+	RETURN;
+END
+$$;

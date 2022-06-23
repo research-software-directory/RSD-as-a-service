@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
 import Avatar from '@mui/material/Avatar'
@@ -14,6 +19,7 @@ export default function OrganisationItem({slug, name, website, logo_url}: Partic
           src={logo_url}
           alt={name}
           bgSize="contain"
+          bgPosition='center center'
         />
       )
     }

@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {SearchContributor} from '../types/Contributor'
 import {createJsonHeaders} from './fetchHelpers'
@@ -78,7 +83,7 @@ function buildAutocompleteOptions(data: OrcidRecord[]): AutocompleteOption<Searc
         given_names: item['given-names'],
         family_names: item['family-names'],
         email_address: item['email'][0] ?? null,
-        affiliation: item['institution-name'].join('; ') ?? null,
+        institution: item['institution-name'] ?? null,
         orcid: item['orcid-id'],
         display_name,
         source: 'ORCID' as 'ORCID'

@@ -1,19 +1,20 @@
-import {ReactNode,useContext} from 'react'
-import AppHeader from './AppHeader'
+// SPDX-FileCopyrightText: 2021 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import {ReactNode} from 'react'
+import AppHeader from '~/components/AppHeader'
 import AppFooter from './AppFooter'
 
-import EmbedLayoutContext from './embedLayoutContext'
-
-export default function DefaultLayout({children}: { children: ReactNode }) {
-  const {embedMode} = useContext(EmbedLayoutContext)
-
+export default function DefaultLayout({children}:{children:ReactNode}) {
   return (
     <>
-      <AppHeader />
+      <AppHeader/>
       <main className="flex flex-col flex-1 px-4 lg:container lg:mx-auto">
         {children}
       </main>
-      <AppFooter />
+      <AppFooter/>
     </>
   )
 }

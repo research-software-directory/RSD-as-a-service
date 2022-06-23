@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+ * SPDX-FileCopyrightText: 2021 - 2022 dv4all
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -40,7 +47,7 @@ RangeError: Maximum call stack size exceeded
   h3 {
     @apply text-xl;
   }
-  a {   
+  a {
     @apply cursor-pointer no-underline transition duration-100 hover:text-primary
   }
 
@@ -133,4 +140,8 @@ Tailwind remove max-width for markdown
 
 #markdown-textarea:disabled{
   cursor: not-allowed;
+}
+
+.nav-active{
+    @apply border-b border-primary cursor-pointer
 }

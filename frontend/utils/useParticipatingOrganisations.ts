@@ -1,4 +1,11 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useEffect, useState} from 'react'
+
+import isMaintainerOfOrganisation from '~/auth/permissions/isMaintainerOfOrganisation'
 import {EditOrganisation} from '../types/Organisation'
 import {getOrganisationsForSoftware} from './editOrganisation'
 
@@ -20,10 +27,17 @@ export function useParticipatingOrganisations({software, token, account}: UsePar
         software,
         token
       })
-      if (abort === true) return
+      // collect isMaintainerRequests
+      const promises: Promise<boolean>[] = []
       // prepare organisation list
-      // and sort! items on name
       const orgList = resp.map((item, pos) => {
+        // save isMaintainer request
+        promises.push(isMaintainerOfOrganisation({
+          organisation: item.id,
+          account,
+          token,
+          frontend: true
+        }))
         // extract only needed props
         const organisation: EditOrganisation = {
           ...item,
@@ -33,12 +47,21 @@ export function useParticipatingOrganisations({software, token, account}: UsePar
           logo_mime_type:null,
           source:'RSD' as 'RSD',
           status:item.status,
-          canEdit:item.primary_maintainer === account
+          // false by default
+          canEdit: false
         }
         return organisation
       })
+      // run all isMaintainer requests in parallel
+      const isMaintainer = await Promise.all(promises)
+      const organisations = orgList.map((item, pos) => {
+        // update canEdit based on isMaintainer requests
+        if (isMaintainer[pos]) item.canEdit = isMaintainer[pos]
+        return item
+      })
+      if (abort === true) return
       // update organisation list
-      setOrganisations(orgList)
+      setOrganisations(organisations)
       // upadate loading state
       setLoading(false)
     }

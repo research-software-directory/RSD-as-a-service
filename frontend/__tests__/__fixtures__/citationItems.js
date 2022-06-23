@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 const rsdCitationItemContent=[{
   'id': '176988a3-28d0-4cac-b657-8a9a506c8e69',

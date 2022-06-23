@@ -1,3 +1,10 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {OrganisationForOverview, ProjectOfOrganisation, SoftwareOfOrganisation} from '../types/Organisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
@@ -8,9 +15,7 @@ import {paginationUrlParams} from './postgrestUrl'
 export function organisationUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
   // by default order is on software count and name
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&order=software_cnt.desc.nullslast,name.asc`
-  // moved to rpc
-  // let url = `${process.env.POSTGREST_URL}/organisations_overview?parent=is.null&order=software_cnt.desc.nullslast,name.asc`
+  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&order=score.desc.nullslast,name.asc`
   // add search params
   if (search) {
     url += `&or=(name.ilike.*${search}*, website.ilike.*${search}*)`
@@ -46,7 +51,7 @@ export async function getOrganisationsList({search, rows, page, token}:
       }
     }
     // otherwise request failed
-    logger(`getSoftwareList failed: ${resp.status} ${resp.statusText}`, 'warn')
+    logger(`getOrganisationsList failed: ${resp.status} ${resp.statusText}`, 'warn')
     // we log and return zero
     return {
       count: 0,
@@ -64,11 +69,11 @@ export async function getOrganisationsList({search, rows, page, token}:
 export async function getOrganisationBySlug({slug, token}:
   {slug: string[], token: string}) {
   try {
-    const uuid = await getOrganisationsIdForSlug({slug, token})
+    const uuid = await getOrganisationIdForSlug({slug, token})
     // if not found return
     if (typeof uuid == 'undefined') return undefined
 
-    const organisation = await getOrganisationsById({
+    const organisation = await getOrganisationById({
       uuid,
       token
     })
@@ -82,11 +87,14 @@ export async function getOrganisationBySlug({slug, token}:
 }
 
 
-async function getOrganisationsIdForSlug({slug, token}:
-  { slug: string[], token: string }) {
+export async function getOrganisationIdForSlug({slug, token, frontend=false}:
+  { slug: string[], token: string, frontend?:boolean }) {
 
   const path = slug.join('/')
   let url = `${process.env.POSTGREST_URL}/rpc/slug_to_organisation`
+  if (frontend) {
+    url = '/api/v1/rpc/slug_to_organisation'
+  }
 
   let resp = await fetch(url, {
     method: 'POST',
@@ -104,15 +112,18 @@ async function getOrganisationsIdForSlug({slug, token}:
 }
 
 
-async function getOrganisationsById({uuid, token}:
-  {uuid: string, token: string}) {
-  const url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?id=eq.${uuid}`
+export async function getOrganisationById({uuid, token, frontend=false}:
+  { uuid: string, token: string, frontend?: boolean }) {
+  const query = `rpc/organisations_overview?id=eq.${uuid}`
+  let url = `${process.env.POSTGREST_URL}/${query}`
+  if (frontend) {
+    url = `/api/v1/${query}`
+  }
   const resp = await fetch(url, {
     method: 'GET',
     headers: {
       ...createJsonHeaders(token),
-      // request record count to be returned
-      // note: it's returned in the header
+      // request single object item
       'Accept': 'application/vnd.pgrst.object+json'
     },
   })
@@ -160,7 +171,7 @@ export async function getSoftwareForOrganisation({organisation, searchFor, page,
   SoftwareForOrganisationProps) {
   try {
     // baseUrl
-    let url =`/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,brand_name`
+    let url = `/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,is_published.desc,mention_cnt.desc.nullslast,brand_name.asc`
     // search
     if (searchFor) {
       url+=`&or=(brand_name.ilike.*${searchFor}*, short_statement.ilike.*${searchFor}*))`

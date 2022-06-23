@@ -1,3 +1,10 @@
+-- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TYPE description_type AS ENUM (
 	'link',
 	'markdown'
@@ -5,19 +12,17 @@ CREATE TYPE description_type AS ENUM (
 
 CREATE TABLE software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
-	brand_name VARCHAR(100) NOT NULL,
-	concept_doi VARCHAR,
-	description VARCHAR,
+	slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+	brand_name VARCHAR(200) NOT NULL,
+	concept_doi VARCHAR(100),
+	description VARCHAR(10000),
 	description_url VARCHAR(200),
 	description_type description_type DEFAULT 'markdown' NOT NULL,
-	get_started_url VARCHAR,
-	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
+	get_started_url VARCHAR(200),
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	short_statement VARCHAR(300),
-	releases_scraped_at TIMESTAMP,
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_software() RETURNS TRIGGER LANGUAGE plpgsql AS

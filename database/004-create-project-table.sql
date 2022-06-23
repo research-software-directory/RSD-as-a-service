@@ -1,16 +1,23 @@
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 dv4all
+--
+-- SPDX-License-Identifier: Apache-2.0
+
 CREATE TABLE project (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	slug VARCHAR(100) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+	slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+	title VARCHAR(200) NOT NULL,
+	subtitle VARCHAR(300),
 	date_end DATE,
 	date_start DATE,
-	description VARCHAR,
-	grant_id VARCHAR,
-	image_caption VARCHAR,
+	description VARCHAR(10000),
+	grant_id VARCHAR(50),
+	image_caption VARCHAR(500),
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
-	subtitle VARCHAR,
-	title VARCHAR NOT NULL,
-	created_at TIMESTAMP NOT NULL,
-	updated_at TIMESTAMP NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
 );
 
 CREATE FUNCTION sanitise_insert_project() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -43,8 +50,8 @@ CREATE TRIGGER sanitise_update_project BEFORE UPDATE ON project FOR EACH ROW EXE
 CREATE TABLE url_for_project (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	project UUID REFERENCES project (id),
-	title VARCHAR NOT NULL,
-	url VARCHAR NOT NULL,
+	title VARCHAR(100) NOT NULL,
+	url VARCHAR(200) NOT NULL,
 	position INTEGER
 );
 
@@ -72,7 +79,7 @@ CREATE TRIGGER sanitise_update_url_for_project BEFORE UPDATE ON url_for_project 
 
 CREATE TABLE image_for_project (
 	project UUID REFERENCES project (id) PRIMARY KEY,
-	data VARCHAR NOT NULL,
+	data VARCHAR(2750000) NOT NULL,
 	mime_type VARCHAR(100) NOT NULL
 );
 

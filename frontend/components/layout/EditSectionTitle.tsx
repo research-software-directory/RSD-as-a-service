@@ -1,6 +1,16 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
-export default function EditSectionTitle({title, subtitle = '', children}:
-  { title: string, subtitle?: string, children?: any }) {
+export default function EditSectionTitle(
+  {title, subtitle = '', children, hlevel = 2}:
+  {title: string, subtitle?: string, children?: any, hlevel?: number}
+) {
+
+  const HeadingTag: any = `h${hlevel}`
 
   function getSubtitle() {
     if (subtitle) {
@@ -16,7 +26,7 @@ export default function EditSectionTitle({title, subtitle = '', children}:
     return (
       <>
         <div className="flex">
-          <h2 className="flex-1">{title}</h2>
+          <HeadingTag className="flex-1">{title}</HeadingTag>
           {children}
         </div>
         {getSubtitle()}
@@ -26,7 +36,7 @@ export default function EditSectionTitle({title, subtitle = '', children}:
 
   return (
     <>
-      <h2>{title}</h2>
+      <HeadingTag>{title}</HeadingTag>
       {getSubtitle()}
     </>
   )

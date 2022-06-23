@@ -1,9 +1,20 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import * as React from 'react'
 import Document, {Html, Head, Main, NextScript} from 'next/document'
 import createEmotionServer from '@emotion/server/create-instance'
 import createEmotionCache from '../styles/createEmotionCache'
 
 export default class MyDocument extends Document {
+  readonly hotjarId = process.env.HOTJAR_ID
+
   render() {
     return (
       <Html lang="en">
@@ -24,20 +35,23 @@ export default class MyDocument extends Document {
             </style>
           `}} />
 
-          {/*  Hotjar Tracking Code for https://research-software.dev/ */}
-          <script
-            dangerouslySetInnerHTML={{__html: `
-             (function(h,o,t,j,a,r){
-                  h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-                  h._hjSettings={hjid:2950244,hjsv:6};
-                  a=o.getElementsByTagName('head')[0];
-                  r=o.createElement('script');r.async=1;
-                  r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-                  a.appendChild(r);
-              })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-            `,
-            }}
-          />
+          {
+            /* Hotjar Tracking Code */
+            this.hotjarId !== undefined && this.hotjarId.length !== 0 &&
+            <script
+              dangerouslySetInnerHTML={{__html: `
+              (function(h,o,t,j,a,r){
+                    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                    h._hjSettings={hjid:${parseInt(this.hotjarId)},hjsv:6};
+                    a=o.getElementsByTagName('head')[0];
+                    r=o.createElement('script');r.async=1;
+                    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                    a.appendChild(r);
+                })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+              `,
+              }}
+            />
+          }
         </Head>
         <body className="dark">
           <Main />

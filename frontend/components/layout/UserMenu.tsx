@@ -1,9 +1,15 @@
+// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import router from 'next/router'
 import {useState} from 'react'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Avatar from '@mui/material/Avatar'
+import {Divider} from '@mui/material'
 
 import {useAuth} from '../../auth/index'
 import {MenuItemType} from '../../config/menuItems'
@@ -39,7 +45,10 @@ export default function UserMenu(props:UserMenuType) {
   function renderMenuOptions(){
     if (menuOptions){
       return (
-        menuOptions.map(item=>{
+        menuOptions.map(item => {
+          if (item?.type === 'divider') {
+            return <Divider key={item.label} />
+          }
           return (
             <MenuItem
               data-testid="user-menu-option"

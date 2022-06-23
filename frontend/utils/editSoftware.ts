@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {UseFieldArrayUpdate} from 'react-hook-form'
 
 import logger from './logger'
@@ -176,7 +181,24 @@ export async function updateSoftwareInfo({software, keywords, licensesInDb,
       )
     })
     // --------------------------------
-    // LICESES
+    // LICENSES
+    // --------------------------------
+    // check if liceses need to be added
+    if (software.licenses?.length > 0) {
+      const licensesToAdd = itemsNotInReferenceList({
+        list: software.licenses,
+        referenceList: licensesInDb,
+        key: 'key'
+      }).map((item) => {
+        return {
+          software: software.id,
+          license: item.key
+        }
+      })
+      if (licensesToAdd.length > 0) promises.push(addLicensesForSoftware({
+        software: software.id, data: licensesToAdd, token
+      }))
+    }
     // check if licenses need to be deleted
     if (licensesInDb.length > 0) {
       const licenseToDel = itemsNotInReferenceList({
@@ -430,4 +452,41 @@ export async function validSoftwareItem(slug: string | undefined, token?: string
     logger(`validSoftwareItem: ${e?.message}`, 'error')
     return false
   }
+}
+
+
+export async function addRelatedProjects({origin, relation, token}: {
+  origin: string, relation: string, token: string
+}) {
+  const url = '/api/v1/project_for_project'
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      ...createJsonHeaders(token),
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify({
+      origin,
+      relation
+    })
+  })
+
+  return extractReturnMessage(resp)
+}
+
+export async function deleteRelatedProject({origin, relation, token}: {
+  origin: string, relation: string, token: string
+}) {
+
+  const url = `/api/v1/project_for_project?origin=eq.${origin}&relation=eq.${relation}`
+
+  const resp = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      ...createJsonHeaders(token)
+    }
+  })
+
+  return extractReturnMessage(resp)
 }

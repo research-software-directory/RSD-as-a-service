@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Link from 'next/link'

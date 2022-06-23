@@ -1,11 +1,19 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {createContext} from 'react'
 import {EditSoftwarePageStep} from './editSoftwareSteps'
 import logger from '../../../utils/logger'
 
-type SoftwareInfo = {
+export type SoftwareInfo = {
   id?: string,
   slug?: string,
   brand_name?: string,
+  concept_doi?: string,
 }
 
 export type EditSoftwareState = {
@@ -26,7 +34,8 @@ export const initialState = {
   software: {
     id: '',
     slug: '',
-    brand_name:''
+    brand_name:'',
+    concept_doi: '',
   },
   isDirty: false,
   isValid: true,
@@ -87,7 +96,8 @@ const EditSoftwareContext = createContext<{ pageState: EditSoftwareState, dispat
     software: {
       id: '',
       slug: '',
-      brand_name: ''
+      brand_name: '',
+      concept_doi: '',
     },
     isDirty: false,
     isValid: true,

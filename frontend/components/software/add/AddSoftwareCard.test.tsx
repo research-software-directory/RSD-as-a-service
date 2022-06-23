@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {render,screen,fireEvent,waitFor,waitForElementToBeRemoved} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../../utils/jest/WrappedComponents'
 
@@ -131,7 +136,6 @@ it('validate, save and redirect', async () => {
         'description_type': 'markdown',
         'description_url': null,
         'get_started_url': null,
-        'is_featured': false,
         'is_published': false,
         'short_statement': inputValue,
         'slug': slug,

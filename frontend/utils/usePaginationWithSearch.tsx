@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useState, useContext, useEffect} from 'react'
 import SearchContext from '../components/search/SearchContext'
 import PaginationContext from '../components/pagination/PaginationContext'
@@ -62,6 +67,7 @@ export default function usePaginationWithSearch(placeholder:string) {
     // assumption: placeholder change is result of switching between sections
     page: placeholder !== currentPlaceholder ? 0 : pagination.page,
     rows: pagination.rows,
+    count: pagination.count,
     setSearchInput,
     setPagination,
     setCount
