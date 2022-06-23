@@ -138,12 +138,8 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
-  const {req: {cookies}} = context
   // extract params from page-query
   const {search,filterStr,rows,page} = ssrSoftwareParams(context)
-  // extract rsd_token
-  const token = cookies['rsd_token']
-
   // construct postgREST api url with query params
   const url = softwareListUrl({
     baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
@@ -154,9 +150,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     offset: rows * page
   })
 
-  // get software list, we pass token
-  // when token is present it returns not published items too
-  const software = await getSoftwareList({url, token})
+  // get software list, we do not pass the token
+  // when token is passed it will return not published items too
+  const software = await getSoftwareList({url})
 
   // will be passed as props to page
   // see params of SoftwareIndexPage function

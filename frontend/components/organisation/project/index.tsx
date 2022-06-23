@@ -20,7 +20,8 @@ export default function OrganisationProjects({organisation, session, isMaintaine
     searchFor,
     page,
     rows,
-    token: session.token
+    token: session.token,
+    isMaintainer
   })
 
   useEffect(() => {

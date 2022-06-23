@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {getMaintainerOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {OrganisationForOverview, ProjectOfOrganisation, SoftwareOfOrganisation} from '../types/Organisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
@@ -69,13 +70,25 @@ export async function getOrganisationsList({search, rows, page, token}:
 export async function getOrganisationBySlug({slug, token}:
   {slug: string[], token: string}) {
   try {
-    const uuid = await getOrganisationIdForSlug({slug, token})
-    // if not found return
+    // resolve slug to id and
+    // get list of organisation uuid's this user is mantainer of
+    const [uuid, maintainerOf] = await Promise.all([
+      getOrganisationIdForSlug({slug, token}),
+      getMaintainerOrganisations({
+        token,
+        frontend: false
+      })
+    ])
+    // if no uuid return
     if (typeof uuid == 'undefined') return undefined
-
+    // is this user maintainer of this organisation
+    const isMaintainer = maintainerOf.includes(uuid)
+    // get organisation info incl. counts
     const organisation = await getOrganisationById({
       uuid,
-      token
+      token,
+      frontend: false,
+      isMaintainer
     })
 
     return organisation
@@ -112,9 +125,14 @@ export async function getOrganisationIdForSlug({slug, token, frontend=false}:
 }
 
 
-export async function getOrganisationById({uuid, token, frontend=false}:
-  { uuid: string, token: string, frontend?: boolean }) {
-  const query = `rpc/organisations_overview?id=eq.${uuid}`
+export async function getOrganisationById({uuid, token,frontend=false,isMaintainer=false}:
+  { uuid: string, token: string, frontend?: boolean, isMaintainer?:boolean}) {
+  let query = `rpc/organisations_overview?id=eq.${uuid}`
+  if (isMaintainer) {
+    //if user is maintainer of this organisation
+    //we request the counts of all items incl. denied and not published
+    query +='&public=false'
+  }
   let url = `${process.env.POSTGREST_URL}/${query}`
   if (frontend) {
     url = `/api/v1/${query}`
@@ -159,23 +177,24 @@ export async function getOrganisationChildren({uuid, token,frontend=false}:
   return []
 }
 
-export type SoftwareForOrganisationProps = {
+export type OrganisationApiParams = {
   organisation: string,
   searchFor: string | undefined
   page: number,
   rows: number,
-  token: string
+  token: string,
+  isMaintainer: boolean
 }
 
-export async function getSoftwareForOrganisation({organisation, searchFor, page, rows, token}:
-  SoftwareForOrganisationProps) {
+export async function getSoftwareForOrganisation({organisation, searchFor, page, rows, token, isMaintainer}:
+  OrganisationApiParams) {
   try {
     // baseUrl
     const order ='order=is_published.desc,is_featured.desc,mention_cnt.desc.nullslast,brand_name.asc'
     let url = `/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&${order}`
-    // filter for public on approved only
-    if (!token) {
-      url+='&status=eq.approved'
+    // filter for approved, only published if filtered by RLS
+    if (!isMaintainer) {
+      url+='&status=eq.approved&is_published=eq.true'
     }
     // search
     if (searchFor) {
@@ -219,15 +238,15 @@ export async function getSoftwareForOrganisation({organisation, searchFor, page,
   }
 }
 
-export async function getProjectsForOrganisation({organisation, searchFor, page, rows, token}:
-  SoftwareForOrganisationProps) {
+export async function getProjectsForOrganisation({organisation, searchFor, page, rows, token, isMaintainer}:
+  OrganisationApiParams) {
   try {
     // baseUrl
     const order ='order=is_published.desc,is_featured.desc,title.asc'
     let url = `/api/v1/rpc/projects_by_organisation?organisation=eq.${organisation}&${order}`
-    // filter for public on approved only
-    if (!token) {
-      url += '&status=eq.approved'
+    // filter for approved only if not maintainer
+    if (!isMaintainer) {
+      url += '&status=eq.approved&is_published=eq.true'
     }
     // search
     if (searchFor) {

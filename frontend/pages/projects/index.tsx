@@ -90,19 +90,17 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const {req: {cookies}} = context
   // extract from page-query
-  const {search,rows,page} = ssrProjectsParams(context)
-  // extract rsd_token
-  const token = cookies['rsd_token']
-  // make api call
+  const {search, rows, page} = ssrProjectsParams(context)
+
+  // make api call, we do not pass the token
+  // when token is passed it will return not published items too
   const projects = await getProjectList({
     searchFor: search,
     rows,
     page,
     //baseUrl within docker network
-    baseUrl: process.env.POSTGREST_URL,
-    token
+    baseUrl: process.env.POSTGREST_URL
   })
 
   return {
