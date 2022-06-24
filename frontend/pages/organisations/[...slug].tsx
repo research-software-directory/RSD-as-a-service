@@ -73,7 +73,7 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
               {...organisation}
             />
           </div>
-          <div className="min-h-[55rem]">
+          <div className="flex flex-col min-h-[55rem]">
             {renderStepComponent()}
           </div>
         </section>

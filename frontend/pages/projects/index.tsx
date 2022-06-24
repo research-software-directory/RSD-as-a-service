@@ -89,11 +89,12 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
 
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps(context:GetServerSidePropsContext) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract from page-query
-  const {search,rows,page} = ssrProjectsParams(context)
+  const {search, rows, page} = ssrProjectsParams(context)
 
-  // make api call
+  // make api call, we do not pass the token
+  // when token is passed it will return not published items too
   const projects = await getProjectList({
     searchFor: search,
     rows,

@@ -13,12 +13,10 @@ import {app} from '../../config/app'
 import DefaultLayout from '../../components/layout/DefaultLayout'
 import PageTitle from '../../components/layout/PageTitle'
 import Searchbox from '../../components/form/Searchbox'
-import FilterTechnologies from '../../components/software/FilterTechnologies'
-import SortSelection from '../../components/software/SortSelection'
 import SoftwareGrid from '../../components/software/SoftwareGrid'
 import {SoftwareListItem} from '../../types/SoftwareTypes'
 import {rowsPerPageOptions} from '../../config/pagination'
-import {getSoftwareList, getTagsWithCount, TagItem} from '../../utils/getSoftware'
+import {getSoftwareList, TagItem} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import logger from '../../utils/logger'
@@ -137,13 +135,11 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   )
 }
 
-
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   // extract params from page-query
   const {search,filterStr,rows,page} = ssrSoftwareParams(context)
-
   // construct postgREST api url with query params
   const url = softwareListUrl({
     baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
@@ -151,12 +147,12 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     filters: JSON.parse(filterStr),
     order:'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast',
     limit: rows,
-    offset: rows * page,
+    offset: rows * page
   })
-  // console.log('Software.getServerSideProps...url...',url)
 
-  // get software list
-  const software = await getSoftwareList(url)
+  // get software list, we do not pass the token
+  // when token is passed it will return not published items too
+  const software = await getSoftwareList({url})
 
   // will be passed as props to page
   // see params of SoftwareIndexPage function

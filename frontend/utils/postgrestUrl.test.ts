@@ -8,7 +8,7 @@ import {PostgrestParams, softwareListUrl, ssrSoftwareUrl} from './postgrestUrl'
 describe('softwareListUrl', () => {
   it('returns softwareListUrl when only baseUrl provided', () => {
     const baseUrl='http://test-base-url'
-    const expectUrl = `${baseUrl}/rpc/software_list?is_published=eq.true&limit=12&offset=0`
+    const expectUrl = `${baseUrl}/rpc/software_list?&limit=12&offset=0`
     const url = softwareListUrl({
       baseUrl
     } as PostgrestParams)
@@ -18,7 +18,7 @@ describe('softwareListUrl', () => {
   it('returns softwareUrl with search', () => {
     const baseUrl = 'http://test-base-url'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/software_list?is_published=eq.true&or=(brand_name.ilike.*test-search*, short_statement.ilike.*test-search*))&limit=12&offset=0`
+    const expectUrl = `${baseUrl}/rpc/software_list?&or=(brand_name.ilike.*test-search*, short_statement.ilike.*test-search*))&limit=12&offset=0`
     const url = softwareListUrl({
       baseUrl,
       // if you change search value then change expectedUrl values too
