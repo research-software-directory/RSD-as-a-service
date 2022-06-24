@@ -46,11 +46,46 @@ BEGIN
 	NEW.id = gen_random_uuid();
 	NEW.created_at = LOCALTIMESTAMP;
 	NEW.updated_at = NEW.created_at;
-	return NEW;
+
+	IF CURRENT_USER = 'rsd_admin' OR (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+		RETURN NEW;
+	END IF;
+
+	IF NOT NEW.is_tenant AND NEW.parent IS NULL AND NEW.primary_maintainer IS NULL THEN
+		RETURN NEW;
+	END IF;
+
+	IF NEW.parent IN (SELECT * FROM organisations_of_current_maintainer())
+	AND
+	NEW.primary_maintainer = (SELECT primary_maintainer FROM organisation o WHERE o.id = NEW.parent)
+	THEN
+		RETURN NEW;
+	END IF;
+
+	RAISE EXCEPTION USING MESSAGE = 'You are not allowed to add this organisation';
 END
 $$;
 
 CREATE TRIGGER sanitise_insert_organisation BEFORE INSERT ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_organisation();
+
+
+CREATE FUNCTION make_maintainer_after_insert_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	IF NEW.parent IS NULL OR CURRENT_USER = 'rsd_admin' OR (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+		RETURN NULL;
+	END IF;
+
+	IF NEW.primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account') THEN
+		RETURN NULL;
+	END IF;
+
+	INSERT INTO maintainer_for_organisation VALUES (uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'), NEW.id);
+	RETURN NULL;
+END
+$$;
+
+CREATE TRIGGER make_maintainer_after_insert_organisation AFTER INSERT ON organisation FOR EACH ROW EXECUTE PROCEDURE make_maintainer_after_insert_organisation();
 
 
 CREATE FUNCTION sanitise_update_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
