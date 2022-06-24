@@ -7,7 +7,9 @@
 
 import {useEffect} from 'react'
 import {Session} from '~/auth'
-import OrganisationGrid from '~/components/organisation/OrganisationGrid'
+import FlexibleGridSection from '~/components/layout/FlexibleGridSection'
+import NoContent from '~/components/layout/NoContent'
+import OrganisationCard from '~/components/organisation/OrganisationCard'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import useUserOrganisations from './useUserOrganisations'
 
@@ -31,18 +33,25 @@ export default function UserOrganisations({session}: { session: Session }) {
     }
   }, [count, loading, setCount])
 
-  // do not use loader for now
-  // because the layout jumps up-and-down
-  // on pagination
-  // if (loading) {
-  //   return (
-  //     <ContentLoader />
-  //   )
-  // }
+  if (organisations.length === 0) {
+    return <NoContent />
+  }
 
   return (
-    <OrganisationGrid
-      organisations={organisations}
-    />
+    <FlexibleGridSection
+      className="gap-[0.125rem] pt-4 pb-12"
+      height='17rem'
+      minWidth='26rem'
+      maxWidth='1fr'
+    >
+      {organisations.map(item=>{
+        return(
+          <OrganisationCard
+            key={item.slug}
+            {...item}
+          />
+        )
+      })}
+    </FlexibleGridSection>
   )
 }

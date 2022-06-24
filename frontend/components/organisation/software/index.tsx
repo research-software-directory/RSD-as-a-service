@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useEffect} from 'react'
 
 import useOrganisationSoftware from '../../../utils/useOrganisationSoftware'
 import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
@@ -14,19 +14,15 @@ import SoftwareCard from '~/components/software/SoftwareCard'
 import NoContent from '~/components/layout/NoContent'
 
 export default function OrganisationSoftware({organisation, session, isMaintainer}: OrganisationPageProps) {
-  const [init,setInit]=useState(true)
   const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search for software')
   const {loading, software, count} = useOrganisationSoftware({
     organisation: organisation.id,
     searchFor,
     page,
     rows,
+    isMaintainer,
     token: session.token
   })
-
-  useEffect(() => {
-    setInit(false)
-  },[])
 
   useEffect(() => {
     if (count && loading === false) {

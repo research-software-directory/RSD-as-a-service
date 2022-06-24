@@ -12,7 +12,7 @@ import {
   ProjectLink, RawProject, RelatedProjectForProject,
   ResearchDomain, SearchProject, TeamMember
 } from '~/types/Project'
-import {RelatedSoftwareOfProject, SoftwareListItem} from '~/types/SoftwareTypes'
+import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
 import {getUrlFromLogoId} from './editOrganisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
@@ -463,8 +463,8 @@ export async function getRelatedProjectsForProject({project, token, frontend, ap
     // construct api url based on request source
     let query = `rpc/related_projects_for_project?origin=eq.${project}&order=title.asc`
     if (approved) {
-      // select only approved relations
-      query += '&status=eq.approved'
+      // select only approved and published relations
+      query += '&status=eq.approved&is_published=eq.true'
     }
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
@@ -493,8 +493,8 @@ export async function getRelatedSoftwareForProject({project, token, frontend, ap
   try {
     let query = `rpc/related_software_for_project?project_id=${project}&order=brand_name.asc`
     if (approved) {
-      // select only approved relations
-      query += '&status=eq.approved'
+      // select only approved and published relations
+      query += '&status=eq.approved&is_published=eq.true'
     }
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {

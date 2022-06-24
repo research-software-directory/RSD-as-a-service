@@ -241,7 +241,10 @@ BEGIN
 		FROM
 			software_for_organisation
 		WHERE
-			status = 'approved'
+			software_for_organisation.status = 'approved' AND
+			software IN (
+				SELECT id FROM software WHERE is_published=TRUE
+			)
 		GROUP BY software_for_organisation.organisation;
 	ELSE
 		RETURN QUERY
@@ -272,7 +275,10 @@ BEGIN
 		FROM
 			project_for_organisation
 		WHERE
-			status = 'approved'
+			status = 'approved' AND
+			project IN (
+				SELECT id FROM project WHERE is_published=TRUE
+			)
 		GROUP BY project_for_organisation.organisation;
 	ELSE
 		RETURN QUERY
@@ -499,6 +505,7 @@ CREATE FUNCTION related_projects_for_project() RETURNS TABLE (
 	subtitle VARCHAR,
 	date_end DATE,
 	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
 	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
@@ -513,6 +520,7 @@ BEGIN
 		project.subtitle,
 		project.date_end,
 		project.updated_at,
+		project.is_published,
 		project_for_project.status,
 		image_for_project.project AS image_id
 	FROM
@@ -535,6 +543,7 @@ CREATE FUNCTION related_projects_for_software() RETURNS TABLE (
 	subtitle VARCHAR,
 	date_end DATE,
 	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
 	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
@@ -549,6 +558,7 @@ BEGIN
 		project.subtitle,
 		project.date_end,
 		project.updated_at,
+		project.is_published,
 		software_for_project.status,
 		image_for_project.project AS image_id
 	FROM

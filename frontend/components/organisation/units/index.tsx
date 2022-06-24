@@ -136,7 +136,7 @@ export default function ResearchUnits({organisation, session, isMaintainer}:
               token: session.token,
               frontend: true
             })
-            debugger
+            // debugger
             if (resp.status !== 200) {
               showErrorMessage(`Failed to assign you as maintainer. ${resp.message}`)
             }

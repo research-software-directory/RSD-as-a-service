@@ -473,7 +473,7 @@ export async function patchSoftwareForOrganisation({software, organisation, data
     })
     return extractReturnMessage(resp)
   } catch (e: any) {
-    debugger
+    // debugger
     return {
       status: 500,
       message: e?.message
