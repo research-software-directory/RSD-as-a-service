@@ -24,18 +24,27 @@ const StyledNav = styled('nav', {
     return propName!=='is_featured' && propName!=='in_focus'
   },
 })<StyledNavProps>(({theme, is_featured, in_focus}) => {
-  let color
+  let color, hovercolor
   if (is_featured) {
     color = theme.palette.primary.contrastText
+    hovercolor = theme.palette.primary.contrastText
   } else if (in_focus) {
-    color= theme.palette.primary.contrastText
+    color = theme.palette.primary.contrastText
+    hovercolor = theme.palette.secondary.main
   } else {
     color = theme.palette.secondary.main
+    hovercolor = theme.palette.secondary.main
   }
+  // console.group('StyledNav')
+  // console.log('is_featured...', is_featured)
+  // console.log('in_focus...', in_focus)
+  // console.log('color...', color)
+  // console.log('hovercolor...', hovercolor)
+  // console.groupEnd()
   return {
     position: 'absolute',
-    right: 0,
-    top: 0,
+    right: '0.5rem',
+    top: '0.5rem',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -44,7 +53,7 @@ const StyledNav = styled('nav', {
     color,
     zIndex: 9,
     '&:hover': {
-      color: in_focus ? theme.palette.secondary.main : theme.palette.primary.contrastText
+      color: hovercolor
     }
   }
 })

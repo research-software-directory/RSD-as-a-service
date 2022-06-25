@@ -173,3 +173,36 @@ BEGIN
 	END IF;
 END
 $$;
+
+-- ORGANISATION route / path for all organisations
+-- we combine slugs of all parent organisation into route
+CREATE FUNCTION organisation_route(
+	IN id UUID,
+	OUT organisation UUID,
+	OUT rsd_path VARCHAR
+)
+--RETURNS VARCHAR
+STABLE LANGUAGE plpgsql AS
+$$
+DECLARE
+	current_org UUID := id;
+	route varchar := '';
+	slug varchar;
+BEGIN
+	WHILE current_org IS NOT NULL LOOP
+		SELECT
+			organisation.slug,
+			organisation.parent
+		FROM
+			organisation
+		WHERE
+			organisation.id = current_org
+		INTO slug, current_org;
+--	combine paths in reverse order
+		route := CONCAT(slug,'/',route);
+	END LOOP;
+--	RAISE NOTICE 'route: %', route;
+	SELECT id, route INTO organisation,rsd_path;
+	RETURN;
+END
+$$;

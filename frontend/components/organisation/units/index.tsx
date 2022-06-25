@@ -53,7 +53,7 @@ export default function ResearchUnits({organisation, session, isMaintainer}:
   },[organisation.primary_maintainer,session.user?.account])
 
   function renderAddBtn() {
-    if (isPrimary) {
+    if (isMaintainer) {
       return (
         <Button
           startIcon={<AddIcon />}
@@ -210,7 +210,7 @@ export default function ResearchUnits({organisation, session, isMaintainer}:
     return (
       <UnitsList
         organisations={units}
-        isMaintainer={isPrimary}
+        isMaintainer={isMaintainer}
         onEdit={onEditUnit}
         onDelete={onDeleteUnit}
       />

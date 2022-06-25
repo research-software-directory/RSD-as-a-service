@@ -84,6 +84,7 @@ export type OrganisationForOverview = CoreOrganisationProps & {
   software_cnt: number | null
   project_cnt: number | null
   children_cnt: number | null
+  rsd_path: string
 }
 
 export type SoftwareOfOrganisation = {

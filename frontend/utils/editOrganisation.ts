@@ -507,10 +507,10 @@ export async function deleteOrganisationFromSoftware({software, organisation, to
 export async function getRsdPathForOrganisation({uuid,token,frontend = false}:
   {uuid: string, token: string, frontend?: boolean}) {
   try {
-    const query = `rpc/list_parent_organisations?id=${uuid}`
+    const query = `rpc/organisation_route?id=${uuid}`
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
-      url =`api/v1/${query}`
+      url =`/api/v1/${query}`
     }
     const resp = await fetch(url, {
       method: 'GET',
@@ -519,20 +519,10 @@ export async function getRsdPathForOrganisation({uuid,token,frontend = false}:
       }
     })
     if (resp.status === 200) {
-      const json: { slug: string, organisation_id: string }[] = await resp.json()
-      // console.log('getRsdPathForOrganisation...json...', json)
-      const path = json
-        // extract slug
-        .map(item => item.slug)
-        // paste individual slugs together
-        .reduce((slug, total) => {
-          total += `/${slug}`
-          return total
-        },'')
-      // console.log('getRsdPathForOrganisation...path...', path)
+      const json: {organisation: string, rsd_path: string} = await resp.json()
       return {
         status: 200,
-        message: path
+        message: json.rsd_path
       }
     }
     return extractReturnMessage(resp)
