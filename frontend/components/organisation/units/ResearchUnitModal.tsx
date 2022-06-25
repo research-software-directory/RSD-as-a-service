@@ -240,6 +240,7 @@ export default function EditOrganisationModal({
                 error={false}
                 helperText={config.slug.help}
                 onChange={({target}) => onSlugChange(target.value)}
+                disabled={formData.id!==null}
                 sx={{
                   width:'100%'
                 }}

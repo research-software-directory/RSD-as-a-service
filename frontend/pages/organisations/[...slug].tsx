@@ -36,6 +36,8 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
     session
   })
 
+  // console.log('OrganisationPage...organisation...',organisation)
+
   function onChangeStep({nextStep}: { nextStep: OrganisationMenuProps }) {
     setPageState(nextStep)
   }

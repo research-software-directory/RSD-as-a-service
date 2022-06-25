@@ -36,7 +36,7 @@ export const organisationInformation = {
   },
   slug: {
     label: 'RSD path',
-    help: 'You can change the slug. Use letters, numbers and dash "-". Other characters are not allowed.',
+    help: 'You can change the slug when creating new unit. After creation the slug cannot be changed.',
     validation: {
       required: 'Rsd path is required',
       minLength: {value: 2, message: 'Minimum length is 2'},
