@@ -506,6 +506,46 @@ export async function deleteOrganisationFromSoftware({software, organisation, to
   }
 }
 
+export async function getRsdPathForOrganisation({uuid,token,frontend = false}:
+  {uuid: string, token: string, frontend?: boolean}) {
+  try {
+    const query = `rpc/list_parent_organisations?id=${uuid}`
+    let url = `${process.env.POSTGREST_URL}/${query}`
+    if (frontend) {
+      url =`api/v1/${query}`
+    }
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    if (resp.status === 200) {
+      const json: { slug: string, organisation_id: string }[] = await resp.json()
+      // console.log('getRsdPathForOrganisation...json...', json)
+      const path = json
+        // extract slug
+        .map(item => item.slug)
+        // paste individual slugs together
+        .reduce((slug, total) => {
+          total += `/${slug}`
+          return total
+        },'')
+      // console.log('getRsdPathForOrganisation...path...', path)
+      return {
+        status: 200,
+        message: path
+      }
+    }
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
 export function getLogoUrl(organisation: Organisation) {
   if (organisation.logo_for_organisation &&
     organisation.logo_for_organisation?.length > 0) {

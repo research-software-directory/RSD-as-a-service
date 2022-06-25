@@ -214,8 +214,8 @@ CREATE TRIGGER sanitise_update_invite_maintainer_for_organisation BEFORE UPDATE 
 
 
 CREATE FUNCTION accept_invitation_organisation(invitation UUID) RETURNS TABLE(
-	name VARCHAR,
-	slug VARCHAR
+	id UUID,
+	name VARCHAR
 ) LANGUAGE plpgsql VOLATILE SECURITY DEFINER AS
 $$
 DECLARE invitation_row invite_maintainer_for_organisation%ROWTYPE;
@@ -230,7 +230,7 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Please provide an invitation id';
 	END IF;
 
-	SELECT * FROM invite_maintainer_for_organisation WHERE id = invitation INTO invitation_row;
+	SELECT * FROM invite_maintainer_for_organisation WHERE invite_maintainer_for_organisation.id = invitation INTO invitation_row;
 	IF invitation_row.id IS NULL THEN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' does not exist';
 	END IF;
@@ -242,26 +242,32 @@ BEGIN
 -- Only use the invitation if not already a maintainer
 	IF NOT EXISTS(
 		SELECT
-			maintainer
+			maintainer_for_organisation.maintainer
 		FROM
 			maintainer_for_organisation
 		WHERE
-			maintainer=account AND maintainer_for_organisation.organisation=invitation_row.organisation
+			maintainer_for_organisation.maintainer=account AND maintainer_for_organisation.organisation=invitation_row.organisation
 		UNION
 		SELECT
-			primary_maintainer AS maintainer
+			organisation.primary_maintainer AS maintainer
 		FROM
 			organisation
 		WHERE
-			primary_maintainer=account AND organisation.id=invitation_row.organisation
+			organisation.primary_maintainer=account AND organisation.id=invitation_row.organisation
 		LIMIT 1
 	) THEN
-		UPDATE invite_maintainer_for_organisation SET claimed_by = account, claimed_at = LOCALTIMESTAMP WHERE id = invitation;
+		UPDATE invite_maintainer_for_organisation SET claimed_by = account, claimed_at = LOCALTIMESTAMP WHERE invite_maintainer_for_organisation.id = invitation;
 		INSERT INTO maintainer_for_organisation VALUES (account, invitation_row.organisation);
 	END IF;
 
 	RETURN QUERY
-		SELECT organisation.name, organisation.slug FROM organisation WHERE organisation.id = invitation_row.organisation;
+		SELECT
+			organisation.id,
+			organisation.name
+		FROM
+			organisation
+		WHERE
+			organisation.id = invitation_row.organisation;
 	RETURN;
 END
 $$;

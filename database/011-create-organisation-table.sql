@@ -109,13 +109,13 @@ $$;
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
 
 
-CREATE FUNCTION list_parent_organisations(child_organisation UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION list_parent_organisations(id UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
 $$
-DECLARE current_org UUID = child_organisation;
+DECLARE current_org UUID = id;
 BEGIN
 	WHILE current_org IS NOT NULL LOOP
-		RETURN QUERY SELECT organisation.slug, id FROM organisation WHERE id = current_org;
-		SELECT parent FROM organisation WHERE id = current_org INTO current_org;
+		RETURN QUERY SELECT organisation.slug, organisation.id FROM organisation WHERE organisation.id = current_org;
+		SELECT organisation.parent FROM organisation WHERE organisation.id = current_org INTO current_org;
 	END LOOP;
 	RETURN;
 END
