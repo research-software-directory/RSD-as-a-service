@@ -10,7 +10,6 @@
 import {UseFieldArrayUpdate} from 'react-hook-form'
 
 import {Session} from '~/auth'
-import isMaintainerOfOrganisation from '~/auth/permissions/isMaintainerOfOrganisation'
 import logger from './logger'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from './fetchHelpers'
 import {
@@ -337,6 +336,8 @@ export async function createFundingOrganisationAndAddToProject({project,organisa
       // new image to upload
       logo_b64: null,
       logo_mime_type: null,
+      // funding organisation come from ROR
+      source: 'ROR'
     }
     // create organisation in RSD
     let resp = await createOrganisation({

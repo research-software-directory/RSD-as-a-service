@@ -76,7 +76,6 @@ export default function ResearchUnits({organisation, session, isMaintainer}:
         primary_maintainer: organisation.primary_maintainer ?? '',
         parent: organisation.id
       })
-      debugger
       // show modal
       setModal({
         open: true,

@@ -7,10 +7,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import isMaintainerOfOrganisation from '../auth/permissions/isMaintainerOfOrganisation'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {
-  CoreOrganisationProps,
   EditOrganisation, Organisation,
   OrganisationsForSoftware,
   SearchOrganisation, SoftwareForOrganisation
@@ -60,7 +58,7 @@ export async function searchForOrganisation({searchFor, token, frontend}:
 export async function findRSDOrganisationByProperty({searchFor, property, token, frontend}:
   { searchFor: string, property:string, token?: string, frontend?: boolean }) {
   try {
-    const query = `organisation?${property}=ilike.*${searchFor}*&limit=20`
+    const query = `rpc/organisations_overview?${property}=ilike.*${searchFor}*&limit=20`
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
       url = `/api/v1/${query}`
@@ -72,7 +70,7 @@ export async function findRSDOrganisationByProperty({searchFor, property, token,
       }
     })
     if (resp.status === 200) {
-      const data: CoreOrganisationProps[] = await resp.json()
+      const data: Organisation[] = await resp.json()
       const options: AutocompleteOption<SearchOrganisation>[] = data.map(item => {
         return {
           // we use slug as primary key and ROR id as alternative
@@ -546,15 +544,6 @@ export async function getRsdPathForOrganisation({uuid,token,frontend = false}:
   }
 }
 
-export function getLogoUrl(organisation: Organisation) {
-  if (organisation.logo_for_organisation &&
-    organisation.logo_for_organisation?.length > 0) {
-    const logo_id = organisation.logo_for_organisation[0].id
-    return getUrlFromLogoId(logo_id)
-  }
-  return null
-}
-
 export function getUrlFromLogoId(logo_id: string|null|undefined) {
   if (logo_id) {
     return `/image/rpc/get_logo?id=${logo_id}`
@@ -569,7 +558,6 @@ export function searchToEditOrganisation({item, account, position}:
     ...item,
     logo_b64: null,
     logo_mime_type: null,
-    logo_id: null,
     position
   }
 
@@ -598,7 +586,7 @@ export function updateDataObjectAfterSave({data, id}:
   {data: EditOrganisation, id: string}) {
   // update local data
   if (id) data.id = id
-  // if base64 image was present
+  // if base64 image is present
   if (data.logo_b64) {
     // it is uploaded and uses id
     data.logo_id = id

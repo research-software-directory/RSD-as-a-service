@@ -34,7 +34,6 @@ export function getProjectLinkChanges(props: ProjectLinkChangesProps) {
   }
   // set status to existing items
   formData.url_for_project.forEach((item, pos) => {
-    debugger
     // get the latest value of uuid (this is id prop from database)
     const id = getValues(`url_for_project.${pos}.id`)
     const title = getFieldState(`url_for_project.${pos}.title`)

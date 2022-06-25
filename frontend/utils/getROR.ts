@@ -50,10 +50,12 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
         id: null,
         parent: null,
         slug,
+        primary_maintainer: null,
         name: item.name,
         ror_id: item.id,
         is_tenant: false,
         website: item.links[0] ?? '',
+        logo_id: null,
         source: 'ROR' as 'ROR',
       }
     }
