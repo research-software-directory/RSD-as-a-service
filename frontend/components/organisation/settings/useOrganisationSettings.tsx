@@ -25,6 +25,7 @@ export default function useOrganisationSettings({uuid, token}:UseOrganisationSet
         token,
         frontend:true
       })
+      if (abort) return
       setOrganisation(organisation)
       setLoading(false)
     }
