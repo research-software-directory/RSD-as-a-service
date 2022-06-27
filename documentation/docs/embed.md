@@ -10,8 +10,8 @@ Html test page: Test: https://www.research-software.dev/embed_example.html
 ### Embedding: 
 ```html
 <h2>Check our Software - Demo Embed pages</h2>
-<iframe src="http://localhost:3000/software?embed" title="RSD Software" width="100%" height="500" frameBorder="0"></iframe>
+<iframe src="http://localhost/software?embed" title="RSD Software" width="100%" height="500" frameBorder="0"></iframe>
 
 <h2>Check our Projects - Demo Embed pages</h2>
-<iframe src="http://localhost:3000/projects?embed" title="RSD Software" width="100%" height="500" frameBorder="0"></iframe>
+<iframe src="http://localhost/projects?embed" title="RSD Software" width="100%" height="500" frameBorder="0"></iframe>
 ```
