@@ -162,7 +162,6 @@ CREATE FUNCTION organisation_route(
 	OUT organisation UUID,
 	OUT rsd_path VARCHAR
 )
---RETURNS VARCHAR
 STABLE LANGUAGE plpgsql AS
 $$
 DECLARE
@@ -182,7 +181,6 @@ BEGIN
 --	combine paths in reverse order
 		route := CONCAT(slug,'/',route);
 	END LOOP;
---	RAISE NOTICE 'route: %', route;
 	SELECT id, route INTO organisation,rsd_path;
 	RETURN;
 END
