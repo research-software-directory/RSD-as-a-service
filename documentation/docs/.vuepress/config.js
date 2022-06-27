@@ -37,6 +37,7 @@ module.exports = {
       'api',
       'release',
       'contributors',
+      'embed',
       // 'code-of-conduct',
     ],
   },
