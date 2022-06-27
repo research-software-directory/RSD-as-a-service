@@ -63,7 +63,11 @@ function RsdApp(props: MuiAppProps) {
     router.events.on('routeChangeError', ()=>{
       nprogress.done()
     })
-  }, [])
+    return () => {
+      // on effect teardown
+      nprogress.done()
+    }
+  })
 
   // save location cookie
   if (typeof document != 'undefined') {
