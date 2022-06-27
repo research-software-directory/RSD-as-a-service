@@ -127,13 +127,11 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <CanoncialUrl
         canonicalUrl={resolvedUrl}
       />
-      <AppHeader editButton={
-        isMaintainer ?
-        <EditButton
-          title="Edit software"
-          url={`${slug}/edit`} />
+      <AppHeader editButton={ isMaintainer
+        ? <EditButton title="Edit software" url={`${slug}/edit`} />
         : undefined
       }/>
+
       <PageContainer>
         <SoftwareIntroSection
           brand_name={software.brand_name}
@@ -141,6 +139,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
           counts={softwareIntroCounts}
         />
       </PageContainer>
+
       <GetStartedSection
         get_started_url={software.get_started_url}
         commit_history={repositoryInfo?.commit_history}
