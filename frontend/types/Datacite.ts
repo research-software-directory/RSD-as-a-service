@@ -83,8 +83,7 @@ const exampleWork = {
   'doi': '10.1007/978-1-4939-9145-7_4',
   'type': 'BookChapter',
   'types': {
-    'resourceType': 'BookChapter',
-    'resourceTypeGeneral': 'BookChapter'
+    'resourceType': 'BookChapter'
   },
   'sizes': [],
   'version': null,
