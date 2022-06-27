@@ -137,7 +137,7 @@ export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
     publication_year: item.publicationYear,
     page: null,
     image_url: null,
-    mention_type: convertToRsdType(item),
+    mention_type: dataciteToRsdType(item),
     source: 'DataCite'
   }
   return mention
@@ -227,7 +227,7 @@ export async function getSoftwareVersionInfoForDoi(doi: string) {
   }
 }
 
-function convertToRsdType(item: WorkResponse): MentionTypeKeys {
+function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
   switch (item.type.trim().toLowerCase()) {
     case 'audiovisual':
       // additional validation using resourceType
