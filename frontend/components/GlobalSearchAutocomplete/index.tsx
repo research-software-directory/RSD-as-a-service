@@ -44,19 +44,19 @@ export default function GlobalSearchAutocomplete(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastValue])
 
+  const defaultValues = [
+    {name: 'Go to Software page', slug: '', source: 'software'},
+    {name: 'Go to Projects page', slug: '', source: 'projects'},
+    {name: 'Go to Organisations page', slug: '', source: 'organisations'},
+  ]
+
   async function fetchData(search: string) {
     // Fetch api
     const data = await getGlobalSearch(search, session.token) || []
 
     if (data?.length === 0) {
       setHasResults(false)
-      setSearchResults(
-        [
-          {name: 'Go to Software page', slug: '', source: 'software'},
-          {name: 'Go to Projects page', slug: '', source: 'projects'},
-          {name: 'Go to Organisations page', slug: '', source: 'organisations'},
-        ]
-      )
+      setSearchResults(defaultValues)
     } else {
       setHasResults(true)
       setSearchResults(data)
@@ -123,6 +123,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
                onChange={handleChange}
                onKeyDown={handleKeyDown}
                type="search"
+               onClick={()=> {setOpen(true), setSearchResults(defaultValues)}}
         />
 
         {isOpen &&
