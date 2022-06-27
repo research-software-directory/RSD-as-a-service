@@ -73,9 +73,12 @@ CREATE FUNCTION sanitise_update_organisation() RETURNS TRIGGER LANGUAGE plpgsql 
 $$
 BEGIN
 	NEW.id = OLD.id;
-	NEW.slug = OLD.slug;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
+
+	IF NEW.slug IS DISTINCT FROM OLD.slug AND CURRENT_USER IS DISTINCT FROM 'rsd_admin' AND (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) IS DISTINCT FROM TRUE THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the slug';
+	END IF;
 
 	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
 		IF NEW.is_tenant IS DISTINCT FROM OLD.is_tenant OR NEW.primary_maintainer IS DISTINCT FROM OLD.primary_maintainer THEN
