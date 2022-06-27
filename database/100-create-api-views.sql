@@ -979,20 +979,19 @@ END
 $$;
 
 
---     Global search
---     Create
+--	Global search
 CREATE FUNCTION global_search() RETURNS TABLE(
-    name VARCHAR,
-    slug VARCHAR,
-    source TEXT
-    ) LANGUAGE plpgsql STABLE SECURITY DEFINER AS
-    $$
+	name VARCHAR,
+	slug VARCHAR,
+	source TEXT
+	) LANGUAGE plpgsql STABLE SECURITY DEFINER AS
+	$$
 BEGIN
 RETURN QUERY
-    SELECT software.brand_name as name, software.slug AS slug, 'software' as source FROM software WHERE is_published=TRUE
-    UNION
-    SELECT project.title as name, project.slug AS slug, 'projects' as source FROM project WHERE is_published=TRUE
-    UNION
-    SELECT organisation.name, organisation.slug AS slug, 'organisations' as source FROM organisation;
+	SELECT software.brand_name as name, software.slug AS slug, 'software' as source FROM software WHERE is_published=TRUE
+	UNION
+	SELECT project.title as name, project.slug AS slug, 'projects' as source FROM project WHERE is_published=TRUE
+	UNION
+	SELECT organisation.name, organisation.slug AS slug, 'organisations' as source FROM organisation;
 END
 $$;
