@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,7 +15,8 @@ const IconOverlay = styled('div')(({theme})=>({
   display: 'flex',
   justifyContent: 'center',
   // alignItems: 'center',
-  opacity: 0.5
+  opacity: 0.5,
+  pointerEvents: 'none'
 }))
 
 export default IconOverlay

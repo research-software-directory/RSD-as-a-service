@@ -12,7 +12,7 @@ import logger from './logger'
 export async function findInROR({searchFor}:{searchFor:string}) {
   try {
     // this query will match organisation by name or website values
-    const url = `https://api.ror.org/organizations?query=${searchFor}`
+    const url = `https://api.ror.org/organizations?query=${encodeURIComponent(searchFor)}`
 
     // make request
     const resp = await fetch(url, {
@@ -37,6 +37,7 @@ export async function findInROR({searchFor}:{searchFor:string}) {
 }
 
 function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<SearchOrganisation>[] {
+  if (typeof rorItems === 'undefined') return []
   if (rorItems.length === 0) return []
 
   const options = rorItems.map(item => {

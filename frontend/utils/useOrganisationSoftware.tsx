@@ -5,23 +5,15 @@
 
 import {useEffect,useState} from 'react'
 import {SoftwareOfOrganisation} from '../types/Organisation'
-import {getSoftwareForOrganisation} from './getOrganisations'
-
-type UseOrganisationSoftwareProp = {
-  searchFor?: string
-  page: number,
-  rows: number,
-  organisation: string,
-  token:string
-}
+import {getSoftwareForOrganisation, OrganisationApiParams} from './getOrganisations'
 
 type State = {
   count: number,
   data: SoftwareOfOrganisation[]
 }
 
-export default function useOrganisationSoftware({organisation, searchFor, page, rows,token}:
-  UseOrganisationSoftwareProp) {
+export default function useOrganisationSoftware({organisation, searchFor, page, rows,isMaintainer,token}:
+  OrganisationApiParams) {
   const [state, setState] = useState<State>({
     count: 0,
     data: []
@@ -39,6 +31,7 @@ export default function useOrganisationSoftware({organisation, searchFor, page, 
         searchFor,
         page,
         rows,
+        isMaintainer,
         token
       })
       // abort
@@ -54,7 +47,7 @@ export default function useOrganisationSoftware({organisation, searchFor, page, 
     }
 
     return ()=>{abort = true}
-  },[searchFor,page,rows,organisation,token])
+  },[searchFor,page,rows,organisation,token,isMaintainer])
 
   return {
     software:state.data,

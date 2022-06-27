@@ -16,6 +16,15 @@ BEGIN
 END
 $$;
 
+CREATE FUNCTION related_software() RETURNS SETOF UUID STABLE LANGUAGE plpgsql SECURITY DEFINER AS
+$$
+BEGIN
+	RETURN QUERY SELECT software FROM software_for_organisation WHERE organisation IN (SELECT * FROM organisations_of_current_maintainer());
+	RETURN QUERY SELECT software FROM software_for_project WHERE project IN (SELECT * FROM projects_of_current_maintainer());
+	RETURN;
+END
+$$;
+
 CREATE POLICY maintainer_select ON maintainer_for_software FOR SELECT TO rsd_user
 	USING (software IN (SELECT * FROM software_of_current_maintainer()));
 
@@ -36,6 +45,15 @@ CREATE FUNCTION projects_of_current_maintainer() RETURNS SETOF UUID STABLE LANGU
 $$
 BEGIN
 	RETURN QUERY SELECT project FROM maintainer_for_project WHERE maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN;
+END
+$$;
+
+CREATE FUNCTION related_projects() RETURNS SETOF UUID STABLE LANGUAGE plpgsql SECURITY DEFINER AS
+$$
+BEGIN
+	RETURN QUERY SELECT project FROM project_for_organisation WHERE organisation IN (SELECT * FROM organisations_of_current_maintainer());
+	RETURN QUERY SELECT project FROM software_for_project WHERE software IN (SELECT * FROM software_of_current_maintainer());
 	RETURN;
 END
 $$;
@@ -133,6 +151,9 @@ ALTER TABLE software ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON software FOR SELECT TO web_anon, rsd_user
 	USING (is_published);
+
+CREATE POLICY maintainer_select_related ON software FOR SELECT TO rsd_user
+	USING (id IN (SELECT * FROM related_software()));
 
 CREATE POLICY maintainer_all_rights ON software TO rsd_user
 	USING (id IN (SELECT * FROM software_of_current_maintainer()))
@@ -245,6 +266,9 @@ ALTER TABLE project ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON project FOR SELECT TO web_anon, rsd_user
 	USING (is_published);
+
+CREATE POLICY maintainer_select_related ON project FOR SELECT TO rsd_user
+	USING (id IN (SELECT * FROM related_projects()));
 
 CREATE POLICY maintainer_all_rights ON project TO rsd_user
 	USING (id IN (SELECT * FROM projects_of_current_maintainer()))

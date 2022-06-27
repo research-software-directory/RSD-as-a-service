@@ -22,6 +22,7 @@ import {sortOnStrProp} from '../../../utils/sortFn'
 import logger from '../../../utils/logger'
 import UnitsList from './ResearchUnitList'
 import ResearchUnitModal from './ResearchUnitModal'
+import {addMaintainerToOrganisation} from '~/auth/permissions/addMaintainerToOrganisation'
 
 type EditOrganisationModal = {
   open: boolean,
@@ -59,7 +60,7 @@ export default function ResearchUnits({organisation, session, isMaintainer}:
       const newOrganisation:EditOrganisation = newOrganisationProps({
         name:'',
         position: 1,
-        primary_maintainer: session?.user?.account ?? null,
+        primary_maintainer: null,
         parent: organisation.id
       })
       // show modal
@@ -127,6 +128,19 @@ export default function ResearchUnits({organisation, session, isMaintainer}:
             id: resp.message
           })
           addUnitToCollection(newUnit)
+          if (newUnit.id && session.user?.account) {
+            // add maintainer to org
+            const resp = await addMaintainerToOrganisation({
+              organisation: newUnit.id,
+              account: session.user?.account,
+              token: session.token,
+              frontend: true
+            })
+            // debugger
+            if (resp.status !== 200) {
+              showErrorMessage(`Failed to assign you as maintainer. ${resp.message}`)
+            }
+          }
         } else {
           showErrorMessage(resp.message)
         }

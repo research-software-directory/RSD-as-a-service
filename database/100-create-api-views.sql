@@ -225,31 +225,70 @@ END
 $$;
 
 -- Software count by organisation
-CREATE FUNCTION software_count_by_organisation() RETURNS TABLE (organisation UUID, software_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+-- BY DEFAULT we return count of approved software
+-- IF public is FALSE we return total count (as far as RLS allows)
+CREATE FUNCTION software_count_by_organisation(public BOOLEAN DEFAULT TRUE) RETURNS TABLE (
+	organisation UUID,
+	software_cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY SELECT
-		software_for_organisation.organisation, count(software_for_organisation.organisation) AS software_cnt
-	FROM
-		software_for_organisation
-	GROUP BY software_for_organisation.organisation;
+	IF (public) THEN
+		RETURN QUERY
+		SELECT
+			software_for_organisation.organisation,
+			count(software_for_organisation.organisation) AS software_cnt
+		FROM
+			software_for_organisation
+		WHERE
+			software_for_organisation.status = 'approved' AND
+			software IN (
+				SELECT id FROM software WHERE is_published=TRUE
+			)
+		GROUP BY software_for_organisation.organisation;
+	ELSE
+		RETURN QUERY
+		SELECT
+			software_for_organisation.organisation,
+			count(software_for_organisation.organisation) AS software_cnt
+		FROM
+			software_for_organisation
+		GROUP BY software_for_organisation.organisation;
+	END IF;
 END
 $$;
 
 -- Project count by organisation
-CREATE FUNCTION project_count_by_organisation() RETURNS TABLE (
+-- BY DEFAULT we return count of approved projects
+-- IF public is FALSE we return total count (as far as RLS allows)
+CREATE FUNCTION project_count_by_organisation(public BOOLEAN DEFAULT TRUE) RETURNS TABLE (
 	organisation UUID,
 	project_cnt BIGINT
 )LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY
-	SELECT
-		project_for_organisation.organisation,
-		COUNT(*) AS project_cnt
-	FROM
-		project_for_organisation
-	GROUP BY project_for_organisation.organisation;
+	IF (public) THEN
+		RETURN QUERY
+		SELECT
+			project_for_organisation.organisation,
+			COUNT(*) AS project_cnt
+		FROM
+			project_for_organisation
+		WHERE
+			status = 'approved' AND
+			project IN (
+				SELECT id FROM project WHERE is_published=TRUE
+			)
+		GROUP BY project_for_organisation.organisation;
+	ELSE
+		RETURN QUERY
+		SELECT
+			project_for_organisation.organisation,
+			COUNT(*) AS project_cnt
+		FROM
+			project_for_organisation
+		GROUP BY project_for_organisation.organisation;
+	END IF;
 END
 $$;
 
@@ -274,7 +313,10 @@ END
 $$;
 
 -- Organisations overview
-CREATE FUNCTION organisations_overview() RETURNS TABLE (
+-- we pass public param to count functions to get public/private count
+-- public count is default,
+-- note! the RLS will limit row selection in any case
+CREATE FUNCTION organisations_overview(public BOOLEAN DEFAULT TRUE) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	parent UUID,
@@ -286,7 +328,8 @@ CREATE FUNCTION organisations_overview() RETURNS TABLE (
 	logo_id UUID,
 	software_cnt BIGINT,
 	project_cnt BIGINT,
-	children_cnt BIGINT
+	children_cnt BIGINT,
+	score BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -303,13 +346,17 @@ BEGIN
 		logo_for_organisation.organisation AS logo_id,
 		software_count_by_organisation.software_cnt,
 		project_count_by_organisation.project_cnt,
-		children_count_by_organisation.children_cnt
+		children_count_by_organisation.children_cnt,
+		(
+			COALESCE(software_count_by_organisation.software_cnt,0) +
+			COALESCE(project_count_by_organisation.project_cnt,0)
+		) as score
 	FROM
 		organisation o
 	LEFT JOIN
-		software_count_by_organisation() ON software_count_by_organisation.organisation = o.id
+		software_count_by_organisation(public) ON software_count_by_organisation.organisation = o.id
 	LEFT JOIN
-		project_count_by_organisation() ON project_count_by_organisation.organisation = o.id
+		project_count_by_organisation(public) ON project_count_by_organisation.organisation = o.id
 	LEFT JOIN
 		children_count_by_organisation() ON o.id = children_count_by_organisation.parent
 	LEFT JOIN
@@ -458,6 +505,7 @@ CREATE FUNCTION related_projects_for_project() RETURNS TABLE (
 	subtitle VARCHAR,
 	date_end DATE,
 	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
 	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
@@ -472,6 +520,7 @@ BEGIN
 		project.subtitle,
 		project.date_end,
 		project.updated_at,
+		project.is_published,
 		project_for_project.status,
 		image_for_project.project AS image_id
 	FROM
@@ -494,6 +543,7 @@ CREATE FUNCTION related_projects_for_software() RETURNS TABLE (
 	subtitle VARCHAR,
 	date_end DATE,
 	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
 	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
@@ -508,6 +558,7 @@ BEGIN
 		project.subtitle,
 		project.date_end,
 		project.updated_at,
+		project.is_published,
 		software_for_project.status,
 		image_for_project.project AS image_id
 	FROM
@@ -995,7 +1046,24 @@ BEGIN
 		SELECT project.title as name, project.slug AS slug, 'projects' as source, project.is_published
 		FROM project
 		UNION
-		SELECT organisation.name, organisation.slug AS slug, 'organisations'   as source, is_published
+		SELECT organisation.name, organisation.slug AS slug, 'organisations' as source, is_published
 		FROM organisation;
+END
+$$;
+
+
+-- TOTAL COUNTS FOR HOMEPAGE
+-- software_cnt, project_cnt, organisation_cnt
+-- this rpc returns json object instead of array
+CREATE FUNCTION homepage_counts(
+    OUT software_cnt BIGINT,
+    OUT project_cnt BIGINT,
+    OUT organisation_cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+    SELECT count(id) FROM software INTO software_cnt;
+    SELECT count(id) FROM project INTO project_cnt;
+    SELECT count(id) FROM organisation WHERE parent IS NULL INTO organisation_cnt;
 END
 $$;

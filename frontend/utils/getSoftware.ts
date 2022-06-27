@@ -15,14 +15,13 @@ import {RelatedProjectForSoftware} from '~/types/Project'
 /*
  * Software list for the software overview page
  * Note! url should contain all query params. Use softwareUrl helper fn to construct url.
- * is_featured flag is set for all items having mention_cnt > 4
  */
-export async function getSoftwareList(url:string){
+export async function getSoftwareList({url,token}:{url:string,token?:string }){
   try{
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
-        ...createJsonHeaders(undefined),
+        ...createJsonHeaders(token),
         'Prefer':'count=exact'
       },
     })
@@ -315,7 +314,7 @@ export async function getRelatedProjectsForSoftware({software, token, frontend, 
     let query = `rpc/related_projects_for_software?software=eq.${software}&order=title.asc`
     if (approved) {
       // select only approved relations
-      query+='&status=eq.approved'
+      query +='&status=eq.approved&is_published=eq.true'
     }
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {

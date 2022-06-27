@@ -16,11 +16,8 @@ export type PostgrestParams={
 }
 
 export function softwareListUrl(props:PostgrestParams){
-  const {baseUrl,search,columns,filters,order,limit,offset} = props
+  const {baseUrl, search, columns, filters, order, limit, offset} = props
   let url = `${baseUrl}/rpc/software_list?`
-
-  // always filter for only published software!
-  url += 'is_published=eq.true'
 
   if (columns){
     url+=`&select=${columns.join(',')}`

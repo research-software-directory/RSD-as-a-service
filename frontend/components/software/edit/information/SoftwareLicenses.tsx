@@ -110,7 +110,7 @@ export default function SoftwareLicenses(
       }
     })
     const sorted = found.sort((a, b) => sortBySearchFor(a, b, 'label', searchFor))
-    debugger
+    // debugger
     // set options
     setOptions(found)
     // debugger

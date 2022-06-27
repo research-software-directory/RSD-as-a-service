@@ -37,8 +37,12 @@ export async function isMaintainerOfOrganisation({organisation, account, token, 
   }
 }
 
-export async function getMaintainerOrganisations({token, frontend = true}: { token: string, frontend?: boolean }) {
+export async function getMaintainerOrganisations({token, frontend = true}:
+  {token: string, frontend?: boolean}) {
   try {
+    // without token api request is not needed
+    if (!token) return []
+    // build url
     const query = 'rpc/organisations_of_current_maintainer'
     let url = `/api/v1/${query}`
     if (frontend===false) {

@@ -5,23 +5,15 @@
 
 import {useEffect,useState} from 'react'
 import {ProjectOfOrganisation} from '../types/Organisation'
-import {getProjectsForOrganisation} from './getOrganisations'
-
-type UseOrganisationProjectProp = {
-  searchFor?: string
-  page: number,
-  rows: number,
-  organisation: string,
-  token:string
-}
+import {getProjectsForOrganisation, OrganisationApiParams} from './getOrganisations'
 
 type State = {
   count: number,
   data: ProjectOfOrganisation[]
 }
 
-export default function useOrganisationProjects({organisation, searchFor, page, rows,token}:
-  UseOrganisationProjectProp) {
+export default function useOrganisationProjects({organisation, searchFor, page, rows,isMaintainer,token}:
+  OrganisationApiParams) {
   const [state, setState] = useState<State>({
     count: 0,
     data: []
@@ -39,6 +31,7 @@ export default function useOrganisationProjects({organisation, searchFor, page, 
         searchFor,
         page,
         rows,
+        isMaintainer,
         token
       })
       // abort
@@ -54,7 +47,7 @@ export default function useOrganisationProjects({organisation, searchFor, page, 
     }
 
     return ()=>{abort = true}
-  },[searchFor,page,rows,organisation,token,])
+  },[searchFor,page,rows,organisation,token,isMaintainer])
 
   return {
     projects:state.data,

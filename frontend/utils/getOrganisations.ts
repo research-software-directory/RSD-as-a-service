@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {getMaintainerOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {OrganisationForOverview, ProjectOfOrganisation, SoftwareOfOrganisation} from '../types/Organisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
@@ -15,9 +16,7 @@ import {paginationUrlParams} from './postgrestUrl'
 export function organisationUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
   // by default order is on software count and name
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&order=software_cnt.desc.nullslast,name.asc`
-  // moved to rpc
-  // let url = `${process.env.POSTGREST_URL}/organisations_overview?parent=is.null&order=software_cnt.desc.nullslast,name.asc`
+  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&order=score.desc.nullslast,name.asc`
   // add search params
   if (search) {
     url += `&or=(name.ilike.*${search}*, website.ilike.*${search}*)`
@@ -53,7 +52,7 @@ export async function getOrganisationsList({search, rows, page, token}:
       }
     }
     // otherwise request failed
-    logger(`getSoftwareList failed: ${resp.status} ${resp.statusText}`, 'warn')
+    logger(`getOrganisationsList failed: ${resp.status} ${resp.statusText}`, 'warn')
     // we log and return zero
     return {
       count: 0,
@@ -71,13 +70,25 @@ export async function getOrganisationsList({search, rows, page, token}:
 export async function getOrganisationBySlug({slug, token}:
   {slug: string[], token: string}) {
   try {
-    const uuid = await getOrganisationsIdForSlug({slug, token})
-    // if not found return
+    // resolve slug to id and
+    // get list of organisation uuid's this user is mantainer of
+    const [uuid, maintainerOf] = await Promise.all([
+      getOrganisationIdForSlug({slug, token}),
+      getMaintainerOrganisations({
+        token,
+        frontend: false
+      })
+    ])
+    // if no uuid return
     if (typeof uuid == 'undefined') return undefined
-
-    const organisation = await getOrganisationsById({
+    // is this user maintainer of this organisation
+    const isMaintainer = maintainerOf.includes(uuid)
+    // get organisation info incl. counts
+    const organisation = await getOrganisationById({
       uuid,
-      token
+      token,
+      frontend: false,
+      isMaintainer
     })
 
     return organisation
@@ -89,11 +100,14 @@ export async function getOrganisationBySlug({slug, token}:
 }
 
 
-async function getOrganisationsIdForSlug({slug, token}:
-  { slug: string[], token: string }) {
+export async function getOrganisationIdForSlug({slug, token, frontend=false}:
+  { slug: string[], token: string, frontend?:boolean }) {
 
   const path = slug.join('/')
   let url = `${process.env.POSTGREST_URL}/rpc/slug_to_organisation`
+  if (frontend) {
+    url = '/api/v1/rpc/slug_to_organisation'
+  }
 
   let resp = await fetch(url, {
     method: 'POST',
@@ -111,15 +125,23 @@ async function getOrganisationsIdForSlug({slug, token}:
 }
 
 
-async function getOrganisationsById({uuid, token}:
-  {uuid: string, token: string}) {
-  const url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?id=eq.${uuid}`
+export async function getOrganisationById({uuid, token,frontend=false,isMaintainer=false}:
+  { uuid: string, token: string, frontend?: boolean, isMaintainer?:boolean}) {
+  let query = `rpc/organisations_overview?id=eq.${uuid}`
+  if (isMaintainer) {
+    //if user is maintainer of this organisation
+    //we request the counts of all items incl. denied and not published
+    query +='&public=false'
+  }
+  let url = `${process.env.POSTGREST_URL}/${query}`
+  if (frontend) {
+    url = `/api/v1/${query}`
+  }
   const resp = await fetch(url, {
     method: 'GET',
     headers: {
       ...createJsonHeaders(token),
-      // request record count to be returned
-      // note: it's returned in the header
+      // request single object item
       'Accept': 'application/vnd.pgrst.object+json'
     },
   })
@@ -155,19 +177,25 @@ export async function getOrganisationChildren({uuid, token,frontend=false}:
   return []
 }
 
-export type SoftwareForOrganisationProps = {
+export type OrganisationApiParams = {
   organisation: string,
   searchFor: string | undefined
   page: number,
   rows: number,
-  token: string
+  token: string,
+  isMaintainer: boolean
 }
 
-export async function getSoftwareForOrganisation({organisation, searchFor, page, rows, token}:
-  SoftwareForOrganisationProps) {
+export async function getSoftwareForOrganisation({organisation, searchFor, page, rows, token, isMaintainer}:
+  OrganisationApiParams) {
   try {
     // baseUrl
-    let url = `/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&order=is_featured.desc,is_published.desc,mention_cnt.desc.nullslast,brand_name.asc`
+    const order ='order=is_published.desc,is_featured.desc,mention_cnt.desc.nullslast,brand_name.asc'
+    let url = `/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&${order}`
+    // filter for approved, only published if filtered by RLS
+    if (!isMaintainer) {
+      url+='&status=eq.approved&is_published=eq.true'
+    }
     // search
     if (searchFor) {
       url+=`&or=(brand_name.ilike.*${searchFor}*, short_statement.ilike.*${searchFor}*))`
@@ -210,11 +238,16 @@ export async function getSoftwareForOrganisation({organisation, searchFor, page,
   }
 }
 
-export async function getProjectsForOrganisation({organisation, searchFor, page, rows, token}:
-  SoftwareForOrganisationProps) {
+export async function getProjectsForOrganisation({organisation, searchFor, page, rows, token, isMaintainer}:
+  OrganisationApiParams) {
   try {
     // baseUrl
-    let url = `/api/v1/rpc/projects_by_organisation?organisation=eq.${organisation}&order=title.asc`
+    const order ='order=is_published.desc,is_featured.desc,title.asc'
+    let url = `/api/v1/rpc/projects_by_organisation?organisation=eq.${organisation}&${order}`
+    // filter for approved only if not maintainer
+    if (!isMaintainer) {
+      url += '&status=eq.approved&is_published=eq.true'
+    }
     // search
     if (searchFor) {
       url += `&or=(title.ilike.*${searchFor}*,subtitle.ilike.*${searchFor}*))`
