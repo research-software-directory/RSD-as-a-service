@@ -43,7 +43,7 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
             <EditIcon />
           </IconButton>
           {/* DELETE requires cleaning multiple tables */}
-          <IconButton
+          {/* <IconButton
             edge="end"
             aria-label="delete"
             onClick={() => {
@@ -52,7 +52,7 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
             sx={{marginRight: '0rem'}}
           >
             <DeleteIcon />
-          </IconButton>
+          </IconButton> */}
         </>
       )
     }
