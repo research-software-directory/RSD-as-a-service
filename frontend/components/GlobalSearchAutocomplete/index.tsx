@@ -127,7 +127,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
         {isOpen &&
           <div
-            className="shadow-xl absolute top-[50px] w-full left-0  bg-white text-black py-2 rounded">
+            className="shadow-xl absolute top-[50px] w-full left-0 bg-white text-black py-2 rounded">
             {!hasResults && <div className="px-4 py-3 font-normal bg-gray-200 mb-2 "><span
               className="animate-pulse">No results...</span></div>}
             {searchResults.map((item, index) =>
