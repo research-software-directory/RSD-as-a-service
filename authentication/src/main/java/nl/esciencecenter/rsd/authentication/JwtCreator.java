@@ -29,10 +29,10 @@ public class JwtCreator {
 		this.signingAlgorithm = Algorithm.HMAC256(this.signingSecret);
 	}
 
-	String createUserJwt(UUID account, String name) {
+	String createUserJwt(UUID account, String name, boolean isAdmin) {
 		return JWT.create()
 				.withClaim("iss", "rsd_auth")
-				.withClaim("role", "rsd_user")
+				.withClaim("role", isAdmin ? "rsd_admin" : "rsd_user")
 				.withClaim("account", account.toString())
 				.withClaim("name", name)
 				.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))

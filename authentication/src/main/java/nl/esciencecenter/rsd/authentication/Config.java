@@ -16,14 +16,16 @@ import java.util.Set;
 
 public class Config {
 
-	private static final long TEN_MINUTES_IN_MILLISECONDS = 600_000L; // 10 * 60 * 1000
+	private static final Collection<String> rsdAdmins;
+
+	static {
+		String adminList = System.getenv("RSD_ADMIN_EMAIL_LIST");
+		rsdAdmins = adminList == null || adminList.isBlank() ? Collections.EMPTY_SET :
+				Set.of(adminList.split(";"));
+	}
 
 	public static String jwtSigningSecret() {
 		return System.getenv("PGRST_JWT_SECRET");
-	}
-
-	public static long jwtExpirationTime() {
-		return TEN_MINUTES_IN_MILLISECONDS;
 	}
 
 	private static Collection<String> rsdAuthProviders() {
@@ -32,6 +34,10 @@ public class Config {
 				.map(s -> s.split(";"))
 				.map(strings -> Set.of(strings))
 				.orElse(Collections.EMPTY_SET);
+	}
+
+	public static Collection<String> rsdAdmins() {
+		return rsdAdmins;
 	}
 
 	public static boolean isLocalEnabled() {
