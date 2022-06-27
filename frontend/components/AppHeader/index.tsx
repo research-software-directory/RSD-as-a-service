@@ -5,7 +5,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// external dependencies
 import {useState, useEffect, ReactChildren, useContext} from 'react'
 import Link from 'next/link'
 import {useAuth} from '../../auth'
@@ -19,6 +18,7 @@ import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
 // import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
 import {useRouter} from 'next/router'
+import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
 import {Button, Menu, MenuItem} from '@mui/material'
 import EmbedLayoutContext from '~/components/layout/embedLayoutContext'
 
@@ -57,7 +57,6 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
     >
       <div className="w-full lg:container mx-auto flex py-3 items-center">
 
-
         <Link href="/" passHref>
           <a className="hover:shadow-2xl">
             <LogoApp className="hidden xl:block"/>
@@ -65,11 +64,11 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
           </a>
         </Link>
 
+        <GlobalSearchAutocomplete className="hidden sm:block ml-8 "/>
 
         {/* Large menu*/}
         <div className="flex flex-1">
-          <div
-            className="hidden sm:flex text-lg ml-6 md:ml-28 gap-5 text-center opacity-90 font-normal">
+          <div className="hidden md:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''}>
                 <a className={`${activePath === item.path && 'nav-active'}`}>
@@ -81,45 +80,49 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
 
         <JavascriptSupportWarning/>
 
-        {/* Responsive menu items*/}
-        <div className="block sm:hidden ml-6 ">
-          <Button
-            color="inherit"
-            id="basic-button"
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}
-
-          >
-            Pages ▾
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button',
-            }}
-          >
-            {menuItems.map(item =>
-              <MenuItem onClick={handleClose} key={item.path}>
-                <Link href={item.path || ''}>
-                  <a className={`${activePath === item.path && 'nav-active'}`}>
-                    {item.label}
-                  </a>
-                </Link>
-              </MenuItem>)}
-          </Menu>
-        </div>
-        <div className="flex flex-nowrap">
-          {editButton ? editButton : null}
-          {status === 'authenticated' ? <AddMenu/> : null}
-          {/*<ThemeSwitcher/>*/}
-          <LoginButton/>
+        <div
+          className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right md:flex-none">
+          {/* Responsive menu items*/}
+          <div className="block md:hidden ml-6 mr-2">
+            <Button
+              color="inherit"
+              id="basic-button"
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}
+              className="whitespace-nowrap"
+            >
+              Pages ▾
+            </Button>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              {menuItems.map(item =>
+                <MenuItem onClick={handleClose} key={item.path}>
+                  <Link href={item.path || ''}>
+                    <a className={`${activePath === item.path && 'nav-active'}`}>
+                      {item.label}
+                    </a>
+                  </Link>
+                </MenuItem>)}
+            </Menu>
+          </div>
+          <div className="flex flex-nowrap">
+            {editButton ? editButton : null}
+            {status === 'authenticated' ? <AddMenu/> : null}
+            {/*<ThemeSwitcher/>*/}
+            <LoginButton/>
+          </div>
         </div>
       </div>
+      <GlobalSearchAutocomplete className="sm:hidden float-right w-full mb-2"/>
     </header>
   )
 }
