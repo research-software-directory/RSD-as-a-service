@@ -5,8 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// external dependencies
-import {useState, useEffect} from 'react'
+import {useState, useEffect, ReactChildren, useContext} from 'react'
 import Link from 'next/link'
 import {useAuth} from '../../auth'
 // local dependencies (project components)
@@ -21,11 +20,16 @@ import LogoAppSmall from '~/assets/LogoAppSmall.svg'
 import {useRouter} from 'next/router'
 import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
 import {Button, Menu, MenuItem} from '@mui/material'
+import EmbedLayoutContext from '~/components/layout/embedLayoutContext'
 
 export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
+  const router = useRouter()
+  const {embedMode} = useContext(EmbedLayoutContext)
+  // Responsive menu
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   useEffect(() => {
     // set activePath to currently loaded route/page
@@ -35,8 +39,9 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
     }
   }, [])
 
-  // Responsive menu
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  // Doesn't show the header in embed mode
+  if (embedMode) return null
+
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)

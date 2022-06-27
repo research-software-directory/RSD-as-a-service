@@ -102,10 +102,7 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
             >
               {renderPublished()} {brand_name}
             </h2>
-            <div
-              className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-gray-800 text-[1.5rem]"
-              style={{position:'absolute',right:0,top:0}}
-            >
+            <div className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-gray-800 text-[1.5rem] absolute top-0 right-0">
               {getInitals()}
             </div>
           </div>
