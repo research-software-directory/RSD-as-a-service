@@ -148,7 +148,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
                     <div className="font-normal line-clamp-1">{item?.name}</div>
 
                     <div className="text-xs text-current text-opacity-40">
-                      {item?.source}{!item?.is_published === false && <span className="flex-nowrap border px-1 py-[2px] rounded bg-warning ml-3 text-xs text-white">unpublished</span>}
+                      {item?.source}{item?.is_published === false && <span className="flex-nowrap border px-1 py-[2px] rounded bg-warning ml-3 text-xs text-white">unpublished</span>}
                     </div>
 
                   </div>
