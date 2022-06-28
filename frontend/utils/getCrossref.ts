@@ -133,18 +133,18 @@ function crossrefToRsdType(type: string): MentionTypeKeys {
     case 'book-series':
     case 'book-track':
     case 'edited-book':
+    case 'reference-book':
       return 'book'
     case 'book-part':
     case 'book-chapter':
     case 'book-section':
-    case 'book chapter':
       return 'bookSection'
     case 'conference-paper':
     case 'proceedings-series':
     case 'proceedings-article':
+    case 'proceedings':
       return 'conferencePaper'
     case 'dissertation':
-    case 'thesis':
       return 'thesis'
     case 'dataset':
       return 'dataset'

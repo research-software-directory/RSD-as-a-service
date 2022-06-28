@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,7 +30,7 @@ public class CrossrefMention implements Mention {
 //		https://api.crossref.org/types
 		crossrefTypeMap = new HashMap<>();
 
-		crossrefTypeMap.put("book-section", MentionType.book);
+		crossrefTypeMap.put("book-section", MentionType.bookSection);
 		crossrefTypeMap.put("monograph", MentionType.other);
 		crossrefTypeMap.put("report", MentionType.report);
 		crossrefTypeMap.put("peer-review", MentionType.other);
@@ -37,20 +39,20 @@ public class CrossrefMention implements Mention {
 		crossrefTypeMap.put("book-part", MentionType.bookSection);
 		crossrefTypeMap.put("other", MentionType.other);
 		crossrefTypeMap.put("book", MentionType.book);
-		crossrefTypeMap.put("journal-volume", MentionType.other);
+		crossrefTypeMap.put("journal-volume", MentionType.journalArticle);
 		crossrefTypeMap.put("book-set", MentionType.book);
 		crossrefTypeMap.put("reference-entry", MentionType.other);
 		crossrefTypeMap.put("proceedings-article", MentionType.conferencePaper);
-		crossrefTypeMap.put("journal", MentionType.other);
+		crossrefTypeMap.put("journal", MentionType.journalArticle);
 		crossrefTypeMap.put("component", MentionType.other);
 		crossrefTypeMap.put("book-chapter", MentionType.bookSection);
 		crossrefTypeMap.put("proceedings-series", MentionType.conferencePaper);
-		crossrefTypeMap.put("report-series", MentionType.other);
+		crossrefTypeMap.put("report-series", MentionType.report);
 		crossrefTypeMap.put("proceedings", MentionType.conferencePaper);
 		crossrefTypeMap.put("standard", MentionType.other);
 		crossrefTypeMap.put("reference-book", MentionType.book);
 		crossrefTypeMap.put("posted-content", MentionType.other);
-		crossrefTypeMap.put("journal-issue", MentionType.other);
+		crossrefTypeMap.put("journal-issue", MentionType.journalArticle);
 		crossrefTypeMap.put("dissertation", MentionType.thesis);
 		crossrefTypeMap.put("grant", MentionType.other);
 		crossrefTypeMap.put("dataset", MentionType.dataset);
