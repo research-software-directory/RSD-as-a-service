@@ -78,7 +78,7 @@ export default function useOrganisationMaintainers({organisation, token}:
       getMaintainers()
     }
 
-    ()=>{abort=true}
+    return ()=>{abort=true}
   },[organisation,token])
 
   return {maintainers, loading}

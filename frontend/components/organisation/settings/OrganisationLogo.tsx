@@ -69,6 +69,7 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,t
         mime_type,
         token
       })
+      if (abort) return
       // update local state
       setLogo({
         id,

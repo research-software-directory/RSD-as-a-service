@@ -46,7 +46,23 @@ BEGIN
 	NEW.id = gen_random_uuid();
 	NEW.created_at = LOCALTIMESTAMP;
 	NEW.updated_at = NEW.created_at;
-	return NEW;
+
+	IF CURRENT_USER = 'rsd_admin' OR (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
+		RETURN NEW;
+	END IF;
+
+	IF NOT NEW.is_tenant AND NEW.parent IS NULL AND NEW.primary_maintainer IS NULL THEN
+		RETURN NEW;
+	END IF;
+
+	IF (SELECT primary_maintainer FROM organisation o WHERE o.id = NEW.parent) = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')
+	AND
+	NEW.primary_maintainer = (SELECT primary_maintainer FROM organisation o WHERE o.id = NEW.parent)
+	THEN
+		RETURN NEW;
+	END IF;
+
+	RAISE EXCEPTION USING MESSAGE = 'You are not allowed to add this organisation';
 END
 $$;
 
@@ -74,13 +90,13 @@ $$;
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
 
 
-CREATE FUNCTION list_parent_organisations(child_organisation UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION list_parent_organisations(id UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
 $$
-DECLARE current_org UUID = child_organisation;
+DECLARE current_org UUID = id;
 BEGIN
 	WHILE current_org IS NOT NULL LOOP
-		RETURN QUERY SELECT organisation.slug, id FROM organisation WHERE id = current_org;
-		SELECT parent FROM organisation WHERE id = current_org INTO current_org;
+		RETURN QUERY SELECT organisation.slug, organisation.id FROM organisation WHERE organisation.id = current_org;
+		SELECT organisation.parent FROM organisation WHERE organisation.id = current_org INTO current_org;
 	END LOOP;
 	RETURN;
 END
@@ -136,5 +152,36 @@ BEGIN
 			detail = 'File not found',
 			hint = format('%s seems to be an invalid file id', get_logo.id);
 	END IF;
+END
+$$;
+
+-- ORGANISATION route / path for all organisations
+-- we combine slugs of all parent organisation into route
+CREATE FUNCTION organisation_route(
+	IN id UUID,
+	OUT organisation UUID,
+	OUT rsd_path VARCHAR
+)
+STABLE LANGUAGE plpgsql AS
+$$
+DECLARE
+	current_org UUID := id;
+	route varchar := '';
+	slug varchar;
+BEGIN
+	WHILE current_org IS NOT NULL LOOP
+		SELECT
+			organisation.slug,
+			organisation.parent
+		FROM
+			organisation
+		WHERE
+			organisation.id = current_org
+		INTO slug, current_org;
+--	combine paths in reverse order
+		route := CONCAT(slug,'/',route);
+	END LOOP;
+	SELECT id, route INTO organisation,rsd_path;
+	RETURN;
 END
 $$;

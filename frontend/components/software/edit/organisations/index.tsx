@@ -91,8 +91,6 @@ export default function SoftwareOganisations({session}:{session:Session}) {
       if (resp.status === 200) {
         // update status received in message
         addOrganisation.status = resp.message as SoftwareForOrganisation['status']
-        // assume logo is uploaded?!?
-        addOrganisation.logo_id = item.id
         addOrganisationToList(addOrganisation)
       } else {
         showErrorMessage(resp.message)

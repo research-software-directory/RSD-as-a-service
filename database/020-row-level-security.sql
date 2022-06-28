@@ -493,8 +493,9 @@ CREATE POLICY maintainer_can_update ON organisation FOR UPDATE TO rsd_user
 	USING (id IN (SELECT * FROM organisations_of_current_maintainer()))
 	WITH CHECK (id IN (SELECT * FROM organisations_of_current_maintainer()));
 
+-- see the trigger sanitise_insert_organisation
 CREATE POLICY maintainer_can_insert ON organisation FOR INSERT TO rsd_user
-	WITH CHECK (primary_maintainer IS NULL AND NOT is_tenant);
+	WITH CHECK (TRUE);
 
 CREATE POLICY admin_all_rights ON organisation TO rsd_admin
 	USING (TRUE)

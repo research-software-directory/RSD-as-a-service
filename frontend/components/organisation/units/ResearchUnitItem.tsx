@@ -10,6 +10,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import {OrganisationForOverview} from '../../../types/Organisation'
 import {getUrlFromLogoId} from '../../../utils/editOrganisation'
@@ -41,9 +42,8 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
           >
             <EditIcon />
           </IconButton>
-          {/*
-          DELETE requires cleaning multiple tables
-          <IconButton
+          {/* DELETE requires cleaning multiple tables */}
+          {/* <IconButton
             edge="end"
             aria-label="delete"
             onClick={() => {

@@ -325,6 +325,7 @@ CREATE FUNCTION organisations_overview(public BOOLEAN DEFAULT TRUE) RETURNS TABL
 	ror_id VARCHAR,
 	website VARCHAR,
 	is_tenant BOOLEAN,
+	rsd_path VARCHAR,
 	logo_id UUID,
 	software_cnt BIGINT,
 	project_cnt BIGINT,
@@ -335,14 +336,15 @@ $$
 BEGIN
 	RETURN QUERY
 	SELECT
-		o.id AS id,
-		o.slug,
-		o.parent,
-		o.primary_maintainer,
-		o.name,
-		o.ror_id,
-		o.website,
-		o.is_tenant,
+		organisation.id,
+		organisation.slug,
+		organisation.parent,
+		organisation.primary_maintainer,
+		organisation.name,
+		organisation.ror_id,
+		organisation.website,
+		organisation.is_tenant,
+		organisation_route.rsd_path,
 		logo_for_organisation.organisation AS logo_id,
 		software_count_by_organisation.software_cnt,
 		project_count_by_organisation.project_cnt,
@@ -352,15 +354,17 @@ BEGIN
 			COALESCE(project_count_by_organisation.project_cnt,0)
 		) as score
 	FROM
-		organisation o
+		organisation
 	LEFT JOIN
-		software_count_by_organisation(public) ON software_count_by_organisation.organisation = o.id
+		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
 	LEFT JOIN
-		project_count_by_organisation(public) ON project_count_by_organisation.organisation = o.id
+		software_count_by_organisation(public) ON software_count_by_organisation.organisation = organisation.id
 	LEFT JOIN
-		children_count_by_organisation() ON o.id = children_count_by_organisation.parent
+		project_count_by_organisation(public) ON project_count_by_organisation.organisation = organisation.id
 	LEFT JOIN
-		logo_for_organisation ON o.id = logo_for_organisation.organisation;
+		children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
+	LEFT JOIN
+		logo_for_organisation ON logo_for_organisation.organisation = organisation.id;
 END
 $$;
 
@@ -910,41 +914,44 @@ CREATE FUNCTION organisations_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	logo_id UUID,
 	software_cnt BIGINT,
 	project_cnt BIGINT,
-	children_cnt BIGINT
+	children_cnt BIGINT,
+	rsd_path VARCHAR
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	RETURN QUERY
 	SELECT
-		o.id,
-		o.slug,
-		o.parent,
-		o.primary_maintainer,
-		o.name,
-		o.ror_id,
-		o.website,
-		o.is_tenant,
+		organisation.id,
+		organisation.slug,
+		organisation.parent,
+		organisation.primary_maintainer,
+		organisation.name,
+		organisation.ror_id,
+		organisation.website,
+		organisation.is_tenant,
 		logo_for_organisation.organisation AS logo_id,
 		software_count_by_organisation.software_cnt,
 		project_count_by_organisation.project_cnt,
-		children_count_by_organisation.children_cnt
+		children_count_by_organisation.children_cnt,
+		organisation_route.rsd_path
 	FROM
-		organisation AS o
+		organisation
 	LEFT JOIN
-		logo_for_organisation ON o.id = logo_for_organisation.organisation
+		logo_for_organisation ON logo_for_organisation.organisation = organisation.id
 	LEFT JOIN
-		software_count_by_organisation() ON software_count_by_organisation.organisation = o.id
+		software_count_by_organisation() ON software_count_by_organisation.organisation = organisation.id
 	LEFT JOIN
-		project_count_by_organisation() ON project_count_by_organisation.organisation = o.id
+		project_count_by_organisation() ON project_count_by_organisation.organisation = organisation.id
 	LEFT JOIN
-		children_count_by_organisation() ON o.id = children_count_by_organisation.parent
+		children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
 	LEFT JOIN
-		maintainer_for_organisation ON o.id = maintainer_for_organisation.organisation
+		maintainer_for_organisation ON maintainer_for_organisation.organisation = organisation.id
+	LEFT JOIN
+		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
 	WHERE
-		maintainer_for_organisation.maintainer = maintainer_id OR o.primary_maintainer = maintainer_id;
+		maintainer_for_organisation.maintainer = maintainer_id OR organisation.primary_maintainer = maintainer_id;
 END
 $$;
-
 
 -- COUNTS by maintainer
 -- software_cnt, project_cnt, organisation_cnt

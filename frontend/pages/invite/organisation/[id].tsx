@@ -13,11 +13,13 @@ import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import PageErrorMessage from '~/components/layout/PageErrorMessage'
 import PageTitle from '~/components/layout/PageTitle'
+import {getRsdPathForOrganisation} from '~/utils/editOrganisation'
 
 type InviteOrganisationMaintainerProps = {
   organisationInfo: {
-    slug: string,
+    id: string,
     name: string,
+    slug: string
   }|null,
   error: {
     status: number,
@@ -32,23 +34,23 @@ export default function InviteOrganisationMaintainer({organisationInfo, error}:
   // console.log('error..', error)
   // console.groupEnd()
   function renderContent() {
-    if (error!==null) {
+    if (typeof error == 'undefined' || error === null) {
       return (
-        <PageErrorMessage {...error}/>
+        <ContentInTheMiddle>
+          <h2>
+            You are now a maintainer of {organisationInfo?.name ?? 'missing'}!
+            &nbsp;
+            <Link href={`/organisations/${organisationInfo?.slug ?? 'missing'}`}>
+              <a>
+                Open organisation page
+              </a>
+            </Link>
+          </h2>
+        </ContentInTheMiddle>
       )
     }
     return (
-      <ContentInTheMiddle>
-        <h2>
-          You are now a maintainer of {organisationInfo?.name ?? 'missing'}!
-          &nbsp;
-          <Link href={`/organisations/${organisationInfo?.slug ?? 'missing'}`}>
-            <a>
-              Open organisation page
-            </a>
-          </Link>
-        </h2>
-      </ContentInTheMiddle>
+      <PageErrorMessage {...error}/>
     )
   }
 
@@ -95,18 +97,45 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       token,
       frontend: false
     })
-    // pass software info to page component as props
+    // returns id of organisation
+    if (resp.organisationInfo?.id) {
+      // get organisation path to link to in the message
+      const slug = await getRsdPathForOrganisation({
+        uuid: resp.organisationInfo?.id,
+        token,
+        frontend:false
+      })
+
+      if (slug.status === 200) {
+        // pass software info to page component as props
+        return {
+          props: {
+            organisationInfo: {
+              ...resp.organisationInfo,
+              slug: slug.message
+            }
+          }
+        }
+      }
+      // error from second request
+      return {
+        props: {
+          error: slug
+        }
+      }
+    }
+    // error from first request
     return {
       props: resp
     }
-  } else {
-    return {
-      props: {
-        softwareInfo:null,
-        error: {
-          status: 404,
-          message: 'This invite is invalid. It\'s missing invite id. Please ask the organisation mantainer to provide you a new link.'
-        }
+  }
+
+  return {
+    props: {
+      organisationInfo:null,
+      error: {
+        status: 404,
+        message: 'This invite is invalid. It\'s missing invite id. Please ask the organisation mantainer to provide you a new link.'
       }
     }
   }

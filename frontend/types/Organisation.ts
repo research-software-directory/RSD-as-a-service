@@ -11,41 +11,34 @@ export type OrganisationSource = 'RSD' | 'ROR' | 'MANUAL'
 // shared organisation properies
 export type CoreOrganisationProps = {
   id: string | null
-  slug: string | null
   parent: string | null
+  slug: string | null
   primary_maintainer?: string | null
   name: string
   ror_id: string | null
+  is_tenant: boolean
   website: string | null
-  is_tenant: boolean,
 }
 
 // object for organisation
 // from organisation table
 export type Organisation = CoreOrganisationProps & {
-  id: string
-  // postgrest way of returning logo j
-  logo_for_organisation?: [
-    {
-      'id': string
-    }
-  ]
+  // indicates image is uploaded
+  logo_id: string | null
 }
 
 // adding source
-export type SearchOrganisation = CoreOrganisationProps & {
+export type SearchOrganisation = Organisation & {
   source: OrganisationSource
 }
 
 // extending with other props for software edit page
-export type EditOrganisation = CoreOrganisationProps & {
+export type EditOrganisation = SearchOrganisation & {
   position?: number
-  // indicates image already present
-  logo_id: string | null
   // new image to upload
   logo_b64: string | null
   logo_mime_type: string | null
-  source?: OrganisationSource
+  // source?: OrganisationSource
   status?: Status
   // only maintainers can edit values
   canEdit?: boolean
@@ -91,6 +84,7 @@ export type OrganisationForOverview = CoreOrganisationProps & {
   software_cnt: number | null
   project_cnt: number | null
   children_cnt: number | null
+  rsd_path: string
 }
 
 export type SoftwareOfOrganisation = {

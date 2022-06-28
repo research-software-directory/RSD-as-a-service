@@ -19,15 +19,18 @@ export default function Searchbox({placeholder, onSearch, delay = 400}: { placeh
   })
   const searchFor=useDebounce(state.value,delay)
 
-  useEffect(()=>{
+  useEffect(() => {
+    let abort = false
     const {wait,value} = state
-    if (wait===false && value===searchFor){
+    if (wait === false && value === searchFor) {
+      if (abort) return
       setState({
         wait:true,
         value
       })
       onSearch(searchFor)
     }
+    return () => { abort = true }
   },[state,searchFor,onSearch])
 
   return (

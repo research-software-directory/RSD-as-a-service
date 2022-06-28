@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -27,8 +28,10 @@ export async function getOrganisationsForMaintainer(
   {searchFor, page, rows, session}: UserOrganisationProp
 ) {
   try {
+    // all top level organisations of maintainer
+    const query=`maintainer_id=${session?.user?.account}&order=software_cnt.desc.nullslast,name`
     // baseUrl
-    let url =`/api/v1/rpc/organisations_by_maintainer?maintainer_id=${session?.user?.account}&order=software_cnt.desc.nullslast,name`
+    let url =`/api/v1/rpc/organisations_by_maintainer?${query}`
 
     // search
     if (searchFor) {
@@ -49,10 +52,11 @@ export async function getOrganisationsForMaintainer(
     })
 
     if ([200, 206].includes(resp.status)) {
-      const json: OrganisationForOverview[] = await resp.json()
+      const data: OrganisationForOverview[] = await resp.json()
+      const count = extractCountFromHeader(resp.headers) ?? 0
       return {
-        count: extractCountFromHeader(resp.headers) ?? 0,
-        data: json
+        count,
+        data
       }
     }
 
