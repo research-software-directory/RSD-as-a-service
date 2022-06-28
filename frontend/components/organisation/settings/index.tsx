@@ -18,6 +18,8 @@ import {organisationInformation as config} from '../organisationConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import RorIdWithUpdate from './RorIdWithUpdate'
 import useOrganisationSettings from './useOrganisationSettings'
+import RsdAdminSection from './RsdAdminSection'
+
 
 const formId='organisation-settings-form'
 
@@ -129,6 +131,12 @@ export default function OrganisationSettings({organisation, session}:
         }}
         rules={config.website.validation}
       />
+      <div className="py-4"></div>
+      {/* RSD admin section */}
+      {session.user?.role === 'rsd_admin' ?
+        <RsdAdminSection control={control} />
+        : null
+      }
     </form>
   )
 }

@@ -24,10 +24,9 @@ import {
 import {MentionItemProps} from '~/types/Mention'
 import {Contributor} from '~/types/Contributor'
 import {ProjectOrganisationProps} from '~/types/Organisation'
-import {RelatedSoftwareOfProject, SoftwareListItem} from '~/types/SoftwareTypes'
+import {SoftwareListItem} from '~/types/SoftwareTypes'
 import AppHeader from '~/components/AppHeader'
 import EditButton from '~/components/layout/EditButton'
-import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import PageContainer from '~/components/layout/PageContainer'
 import ContentHeader from '~/components/layout/ContentHeader'
 import AppFooter from '~/components/layout/AppFooter'
@@ -73,7 +72,7 @@ export default function ProjectPage(props: ProjectPageProps) {
   if (!project?.title){
     return <NoContent />
   }
-  // console.log('ProjectItemPage...output...', output)
+  // console.log('ProjectItemPage...isMaintainer...', isMaintainer)
   return (
     <>
       {/* Page Head meta tags */}
@@ -153,9 +152,9 @@ export async function getServerSideProps(context:any) {
     const {params,req} = context
     // extract rsd_token
     const token = req?.cookies['rsd_token']
-    const account = getAccountFromToken(token)
+    const userInfo = getAccountFromToken(token)
     const slug = params?.slug?.toString()
-    // console.log("getServerSideProps...params...", params)
+    // console.log('getServerSideProps...userInfo...', userInfo)
     const project = await getProjectItem({slug: params?.slug, token, frontend: false})
     if (typeof project == 'undefined'){
     // returning this value
@@ -175,7 +174,7 @@ export async function getServerSideProps(context:any) {
       getRelatedSoftwareForProject({project: project.id, token, frontend: false}),
       getRelatedProjectsForProject({project: project.id, token, frontend: false}),
       getLinksForProject({project: project.id, token, frontend: false}),
-      isMaintainerOfProject({slug, account, token, frontend: false}),
+      isMaintainerOfProject({slug, account:userInfo?.account, token, frontend: false}),
     ]
 
     const [
@@ -198,7 +197,7 @@ export async function getServerSideProps(context:any) {
       props: {
         project: project,
         slug: params?.slug,
-        isMaintainer,
+        isMaintainer: isMaintainer ? isMaintainer : userInfo?.role==='rsd_admin',
         organisations,
         researchDomains,
         keywords,

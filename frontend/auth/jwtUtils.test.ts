@@ -7,8 +7,9 @@ import verifyJwt, {getAccountFromToken, decodeJwt} from './jwtUtils'
 const testToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoicnNkX3VzZXIiLCJpc3MiOiJyc2RfYXV0aCIsImV4cCI6MTY0NDM0MDY3OSwiYWNjb3VudCI6ImY0ZjMwNWE0LWIxZDUtNGE2MC1hYTI4LWIzMDgwNTQxOWYyYSJ9.zurie5a18eXgjY41oKbizj_e8XQWWMIrIAd3Y---SS0'
 
 it('returns account from token', () => {
-  const account = getAccountFromToken(testToken)
-  expect(account).toEqual('f4f305a4-b1d5-4a60-aa28-b30805419f2a')
+  const info = getAccountFromToken(testToken)
+  expect(info?.account).toEqual('f4f305a4-b1d5-4a60-aa28-b30805419f2a')
+  expect(info?.role).toEqual('rsd_user')
 })
 
 it('decodes token', () => {

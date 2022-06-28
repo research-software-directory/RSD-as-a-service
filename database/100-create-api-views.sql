@@ -656,7 +656,10 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Please provide a project id';
 	END IF;
 
-	IF NOT project_id IN (SELECT * FROM projects_of_current_maintainer()) THEN
+	IF NOT project_id IN (SELECT * FROM projects_of_current_maintainer()) AND
+		CURRENT_USER IS DISTINCT FROM 'rsd_admin' AND (
+			SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER
+		) IS DISTINCT FROM TRUE THEN
 		RAISE EXCEPTION USING MESSAGE = 'You are not a maintainer of this project';
 	END IF;
 
@@ -800,7 +803,10 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Please provide a software id';
 	END IF;
 
-	IF NOT software_id IN (SELECT * FROM software_of_current_maintainer()) THEN
+	IF NOT software_id IN (SELECT * FROM software_of_current_maintainer()) AND
+		CURRENT_USER IS DISTINCT FROM 'rsd_admin' AND (
+			SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER
+		) IS DISTINCT FROM TRUE THEN
 		RAISE EXCEPTION USING MESSAGE = 'You are not a maintainer of this software';
 	END IF;
 
@@ -993,7 +999,10 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Please provide a organisation id';
 	END IF;
 
-	IF NOT organisation_id IN (SELECT * FROM organisations_of_current_maintainer()) THEN
+	IF NOT organisation_id IN (SELECT * FROM organisations_of_current_maintainer()) AND
+		CURRENT_USER IS DISTINCT FROM 'rsd_admin' AND (
+			SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER
+		) IS DISTINCT FROM TRUE THEN
 		RAISE EXCEPTION USING MESSAGE = 'You are not a maintainer of this organisation';
 	END IF;
 
