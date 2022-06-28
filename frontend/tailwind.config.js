@@ -12,14 +12,14 @@
  */
 const defaultTheme = require('tailwindcss/defaultTheme')
 // custom theme variables to be used in both themes
-const {colors,muiTypography} = require('./styles/themeConfig')
+const {colors, muiTypography} = require('./styles/themeConfig')
 
 module.exports = {
-  // disable preflight = normalize by tailwind
-  // corePlugins: {
-  //   preflight: false,
-  // },
   darkMode: 'class',
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/line-clamp'),
+  ],
   content: [
     './auth/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -85,7 +85,7 @@ module.exports = {
         paper: colors.paper,
         grey: colors.grey,
       },
-      fontWeight:{
+      fontWeight: {
         regular: muiTypography.fontWeightRegular
       }
     },
@@ -93,7 +93,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
+
 }

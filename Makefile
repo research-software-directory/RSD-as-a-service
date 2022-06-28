@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 #
@@ -40,5 +42,11 @@ down:
 dev-docs:
 	cd documentation && yarn dev
 
-dev-frontend:
+frontend/.env.local: .env
+	@echo "Creating frontend/.env.local"
+	cp .env frontend/.env.local
+	sed -i 's/POSTGREST_URL=http:\/\/backend:3500/POSTGREST_URL=http:\/\/localhost\/api\/v1/g' frontend/.env.local
+	sed -i 's/RSD_AUTH_URL=http:\/\/auth:7000/RSD_AUTH_URL=http:\/\/localhost\/auth/g' frontend/.env.local
+
+dev-frontend: frontend/.env.local
 	cd frontend && yarn dev

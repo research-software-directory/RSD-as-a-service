@@ -51,7 +51,7 @@ CREATE TABLE url_for_project (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	project UUID REFERENCES project (id),
 	title VARCHAR(100) NOT NULL,
-	url VARCHAR(200) NOT NULL,
+	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
 	position INTEGER
 );
 

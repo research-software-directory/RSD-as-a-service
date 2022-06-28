@@ -16,7 +16,7 @@ CREATE TYPE platform_type AS ENUM (
 
 CREATE TABLE repository_url (
 	software UUID references software (id) PRIMARY KEY,
-	url VARCHAR(200) NOT NULL,
+	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
 	code_platform platform_type NOT NULL DEFAULT 'other',
 	languages JSONB,
 	languages_scraped_at TIMESTAMPTZ,

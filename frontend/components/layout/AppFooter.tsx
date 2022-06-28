@@ -8,9 +8,14 @@
 import Link from 'next/link'
 import LogoEscience from '~/components/svg/LogoEscience'
 import Mail from '@mui/icons-material/Mail'
+import {useContext} from 'react'
+import EmbedLayoutContext from './embedLayoutContext'
 
 export default function AppFooter () {
   const isDev = process.env.NODE_ENV === 'development'
+
+  const {embedMode} = useContext(EmbedLayoutContext)
+  if (embedMode === true) return null
 
   return (
     <footer className="flex flex-wrap text-white border-t bg-secondary border-grey-A400">

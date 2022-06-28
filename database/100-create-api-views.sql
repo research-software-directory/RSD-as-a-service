@@ -1036,6 +1036,29 @@ BEGIN
 END
 $$;
 
+
+--	Global search
+CREATE FUNCTION global_search()
+	RETURNS TABLE
+		(name VARCHAR, slug VARCHAR, source TEXT, is_published BOOLEAN )
+	LANGUAGE plpgsql
+	STABLE
+	AS
+	$$
+BEGIN
+	RETURN QUERY
+		SELECT software.brand_name as name, software.slug AS slug, 'software' as source, software.is_published
+		FROM software
+		UNION
+		SELECT project.title as name, project.slug AS slug, 'projects' as source, project.is_published
+		FROM project
+		UNION
+		SELECT organisation.name, organisation.slug AS slug, 'organisations' as source, is_published
+		FROM organisation;
+END
+$$;
+
+
 -- TOTAL COUNTS FOR HOMEPAGE
 -- software_cnt, project_cnt, organisation_cnt
 -- this rpc returns json object instead of array

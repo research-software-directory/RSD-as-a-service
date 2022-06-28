@@ -166,7 +166,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n\t{\n\t\t\"slug\": \"test-slug1\",\n\t\t\"brand_name\": \"Test software 1\",\n\t\t\"get_started_url\": \"\",\n\t\t\"is_published\": true,\n\t\t\"short_statement\": \"Test software for testing\"\n\t},\n\t{\n\t\t\"slug\": \"test-slug2\",\n\t\t\"brand_name\": \"Test software 2\",\n\t\t\"get_started_url\": \"\",\n\t\t\"is_published\": true,\n\t\t\"short_statement\": \"Test software for testing\"\n\t},\n\t{\n\t\t\"slug\": \"test-slug3\",\n\t\t\"brand_name\": \"Test software 3\",\n\t\t\"get_started_url\": \"\",\n\t\t\"is_published\": true,\n\t\t\"short_statement\": \"Test software for testing\"\n\t},\n\t{\n\t\t\"slug\": \"test-slug-unpublished\",\n\t\t\"brand_name\": \"Test software unpublished\",\n\t\t\"get_started_url\": \"\",\n\t\t\"is_published\": false,\n\t\t\"short_statement\": \"Test software for testing\"\n\t}\n]",
+					"raw": "[\n\t{\n\t\t\"slug\": \"test-slug1\",\n\t\t\"brand_name\": \"Test software 1\",\n\t\t\"get_started_url\": \"https://www.example.com\",\n\t\t\"is_published\": true,\n\t\t\"short_statement\": \"Test software for testing\"\n\t},\n\t{\n\t\t\"slug\": \"test-slug2\",\n\t\t\"brand_name\": \"Test software 2\",\n\t\t\"get_started_url\": null,\n\t\t\"is_published\": true,\n\t\t\"short_statement\": \"Test software for testing\"\n\t},\n\t{\n\t\t\"slug\": \"test-slug3\",\n\t\t\"brand_name\": \"Test software 3\",\n\t\t\"get_started_url\": null,\n\t\t\"is_published\": true,\n\t\t\"short_statement\": \"Test software for testing\"\n\t},\n\t{\n\t\t\"slug\": \"test-slug-unpublished\",\n\t\t\"brand_name\": \"Test software unpublished\",\n\t\t\"get_started_url\": null,\n\t\t\"is_published\": false,\n\t\t\"short_statement\": \"Test software for testing\"\n\t}\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -220,7 +220,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"slug\": \"test-slug-user\",\n\t\"brand_name\": \"Test software user\",\n\t\"get_started_url\": \"\",\n\t\"is_published\": true,\n\t\"short_statement\": \"Test software for testing\"\n}",
+					"raw": "{\n\t\"slug\": \"test-slug-user\",\n\t\"brand_name\": \"Test software user\",\n\t\"is_published\": true,\n\t\"short_statement\": \"Test software for testing\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -274,7 +274,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"slug\": \"test-slug-user-2\",\n\t\"brand_name\": \"Test software user\",\n\t\"get_started_url\": \"\",\n\t\"is_published\": true,\n\t\"short_statement\": \"Test software for testing\"\n}",
+					"raw": "{\n\t\"slug\": \"test-slug-user-2\",\n\t\"brand_name\": \"Test software user\",\n\t\"is_published\": true,\n\t\"short_statement\": \"Test software for testing\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
