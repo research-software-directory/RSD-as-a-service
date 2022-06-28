@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,7 +24,7 @@ export default function FindSoftwareMention() {
 
   async function findPublication(searchFor: string) {
     // regex validation if DOI string
-    if (searchFor.match(/^10(\.\d+)+\/.+/) !== null) {
+    if (searchFor.match(/^10(\.\w+)+\/\S+$/) !== null) {
       // look first at RSD
       const rsd = await getMentionByDoiFromRsd({
         doi: searchFor,

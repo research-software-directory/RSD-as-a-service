@@ -176,7 +176,13 @@ public class Main {
 			softwareToSave.add("brand_name", softwareFromLegacyRSD.get("brandName"));
 			softwareToSave.add("concept_doi", jsonNullIfEquals(softwareFromLegacyRSD.get("conceptDOI"), "10.0000/FIXME"));
 			softwareToSave.add("description", mergeBulletsReadMore(softwareFromLegacyRSD.get("bullets"), softwareFromLegacyRSD.get("readMore")));
-			softwareToSave.add("get_started_url", softwareFromLegacyRSD.get("getStartedURL"));
+			JsonElement possibleGetStartedUrl = softwareFromLegacyRSD.get("getStartedURL");
+			if (possibleGetStartedUrl.isJsonPrimitive() && possibleGetStartedUrl.getAsString().equals("url://pyzacros.readthedocs.io/en/latest/")) {
+				possibleGetStartedUrl = new JsonPrimitive("https://pyzacros.readthedocs.io/en/latest/");
+			} else if (possibleGetStartedUrl.isJsonPrimitive() && possibleGetStartedUrl.getAsString().isBlank()) {
+				possibleGetStartedUrl = JsonNull.INSTANCE;
+			}
+			softwareToSave.add("get_started_url", possibleGetStartedUrl);
 			if (softwareFromLegacyRSD.get("isFeatured").getAsBoolean()) softwareSlugsToFeature.add(softwareFromLegacyRSD.get("slug").getAsString());
 			softwareToSave.add("is_published", softwareFromLegacyRSD.get("isPublished"));
 			softwareToSave.add("short_statement", softwareFromLegacyRSD.get("shortStatement"));
@@ -668,6 +674,14 @@ public class Main {
 
 			String oldUrl = nullOrValue(legacyMention.get("url"));
 			String newUrl = fixDoi(oldUrl);
+			if (newUrl != null) {
+				if (newUrl.equals("Histoinformatics")) newUrl = null;
+				else if (newUrl.equals("viz.icaci.org/vcma2016/")) {
+					newUrl = "https://" + newUrl;
+				} else if (newUrl.equals("www.digitalhumanities.org/dhq/vol/8/1/000176/000176.html")) {
+					newUrl = "http://" + newUrl;
+				}
+			}
 			legacyMention.addProperty("url", newUrl);
 		}
 	}
