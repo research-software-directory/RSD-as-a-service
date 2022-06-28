@@ -229,9 +229,19 @@ export async function getSoftwareVersionInfoForDoi(doi: string) {
 
 function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
   switch (item.type.trim().toLowerCase()) {
+    // additional validation using resourceType
     case 'audiovisual':
-      // additional validation using resourceType
       return rsdTypeFromResourceType(item.types.resourceType)
+    case 'text':
+      return rsdTypeFromResourceType(item.types.resourceType)
+    default:
+      // by default using type value
+      return rsdTypeFromResourceType(item.type)
+  }
+}
+
+function rsdTypeFromResourceType(resourceType: string) {
+  switch (resourceType.trim().toLowerCase()) {
     case 'book set':
     case 'book series':
     case 'book track':
@@ -242,19 +252,22 @@ function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
     case 'book section':
       return 'bookSection'
     case 'conference paper':
+    case 'proceedings series':
+    case 'proceedings article':
       return 'conferencePaper'
+    case 'dissertation':
+    case 'thesis':
+      return 'thesis'
     case 'dataset':
       return 'dataset'
     case 'interview':
       return 'interview'
     case 'journal':
-    case 'journalarticle':
     case 'journal volume':
     case 'journal issue':
     case 'journal article':
       return 'journalArticle'
     case 'magazine-article':
-    case 'magazinearticle':
     case 'magazine article':
       return 'magazineArticle'
     case 'newspaper-article':
@@ -262,48 +275,16 @@ function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
       return 'newspaperArticle'
     case 'presentation':
       return 'presentation'
-    case 'report-series':
     case 'report series':
     case 'report':
       return 'report'
     case 'software':
-    case 'computer-program':
+    case 'computer program':
       return 'computerProgram'
-    case 'dissertation':
-    case 'thesis':
-      return 'thesis'
-    case 'text':
-      return rsdTypeFromResourceType(item.types.resourceType)
-    case 'video-recording':
     case 'video recording':
       return 'videoRecording'
     case 'webpage':
       return 'webpage'
-    default:
-      return 'other'
-  }
-}
-
-function rsdTypeFromResourceType(resourceType: string) {
-  switch (resourceType.trim().toLowerCase()) {
-    case 'conference paper':
-      return 'conferencePaper'
-    case 'journal':
-    case 'journalarticle':
-    case 'journal volume':
-    case 'journal issue':
-    case 'journal article':
-      return 'journalArticle'
-    case 'poster':
-    case 'presentation':
-      return 'presentation'
-    case 'report-series':
-    case 'report series':
-    case 'report':
-      return 'report'
-    case 'thesis':
-    case 'dissertation':
-      return 'thesis'
     default:
       return 'other'
   }

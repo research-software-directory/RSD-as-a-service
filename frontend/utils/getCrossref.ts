@@ -128,12 +128,11 @@ export async function getCrossrefItemsByQuery(query: string) {
 
 function crossrefToRsdType(type: string): MentionTypeKeys {
   switch (type.trim().toLowerCase()) {
-    case 'blog-post':
-      return 'blogPost'
+    case 'book':
     case 'book-set':
     case 'book-series':
     case 'book-track':
-    case 'book':
+    case 'edited-book':
       return 'book'
     case 'book-part':
     case 'book-chapter':
@@ -141,24 +140,28 @@ function crossrefToRsdType(type: string): MentionTypeKeys {
     case 'book chapter':
       return 'bookSection'
     case 'conference-paper':
+    case 'proceedings-series':
+    case 'proceedings-article':
       return 'conferencePaper'
     case 'dissertation':
     case 'thesis':
       return 'thesis'
     case 'dataset':
       return 'dataset'
-    case 'interview':
-      return 'interview'
+    // n/a
+    // case 'interview':
+    //   return 'interview'
     case 'journal':
     case 'journal-article':
     case 'journal-volume':
     case 'journal-issue':
     case 'journal article':
       return 'journalArticle'
-    case 'magazine-article':
-      return 'magazineArticle'
-    case 'newspaper-article':
-      return 'newspaperArticle'
+    // n/a
+    // case 'magazine-article':
+    //   return 'magazineArticle'
+    // case 'newspaper-article':
+    //   return 'newspaperArticle'
     case 'presentation':
       return 'presentation'
     case 'report-series':
@@ -167,12 +170,11 @@ function crossrefToRsdType(type: string): MentionTypeKeys {
     case 'software':
     case 'computer-program':
       return 'computerProgram'
-    case 'thesis':
-      return 'thesis'
-    case 'video-recording':
-      return 'videoRecording'
-    case 'webpage':
-      return 'webpage'
+    // n/a
+    // case 'video-recording':
+    //   return 'videoRecording'
+    // case 'webpage':
+    //   return 'webpage'
     default:
       return 'other'
   }
