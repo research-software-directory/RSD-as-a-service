@@ -46,6 +46,7 @@ frontend/.env.local: .env
 	@echo "Creating frontend/.env.local"
 	cp .env frontend/.env.local
 	sed -i 's/POSTGREST_URL=http:\/\/backend:3500/POSTGREST_URL=http:\/\/localhost\/api\/v1/g' frontend/.env.local
+	sed -i 's/RSD_AUTH_URL=http:\/\/auth:7000/RSD_AUTH_URL=http:\/\/localhost\/auth/g' frontend/.env.local
 
 dev-frontend: frontend/.env.local
 	cd frontend && yarn dev
