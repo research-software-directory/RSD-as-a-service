@@ -4,9 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {DataciteWorkGraphQLResponse, DataciteWorksGraphQLResponse, WorkResponse} from '~/types/Datacite'
-import {MentionItemProps} from '~/types/Mention'
+import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import {createJsonHeaders, extractRespFromGraphQL, extractReturnMessage} from './fetchHelpers'
-import {apiMentionTypeToRSDTypeKey} from './editMentions'
 import logger from './logger'
 import {makeDoiRedirectUrl} from './getDOI'
 
@@ -15,6 +14,9 @@ function graphQLDoiQuery(doi:string) {
     work(id: "${doi}"){
       doi,
       type,
+      types{
+        resourceType
+      },
       sizes,
     	version,
       titles(first: 1){
@@ -66,7 +68,9 @@ function gqlWorksByTitleQuery(title: string) {
       nodes{
         doi,
         type,
-        type,
+        types{
+          resourceType
+        },
         sizes,
     	  version,
         titles(first: 1){
@@ -102,14 +106,18 @@ function extractAuthors(item: WorkResponse) {
   let authors: string[] = []
   // extract info from creators
   if (item.creators) {
-    authors = item.creators.map(author => {
-      return `${author.givenName} ${author.familyName}`
+    item.creators.forEach(author => {
+      if (author.givenName && author.familyName) {
+        authors.push(`${author.givenName} ${author.familyName}`)
+      }
     })
   }
   // extract info from contributors
   if (item.contributors) {
     item.contributors.forEach(author => {
-      authors.push(`${author.givenName} ${author.familyName}`)
+      if (author.givenName && author.familyName) {
+        authors.push(`${author.givenName} ${author.familyName}`)
+      }
     })
   }
   if (authors.length > 0) {
@@ -129,7 +137,7 @@ export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
     publication_year: item.publicationYear,
     page: null,
     image_url: null,
-    mention_type: apiMentionTypeToRSDTypeKey(item.type),
+    mention_type: dataciteToRsdType(item),
     source: 'DataCite'
   }
   return mention
@@ -216,5 +224,68 @@ export async function getSoftwareVersionInfoForDoi(doi: string) {
   } catch (e: any) {
     logger(`getConceptDoiByDoi: ${e?.message}`, 'error')
     return undefined
+  }
+}
+
+function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
+  switch (item.type.trim().toLowerCase()) {
+    // additional validation using resourceType
+    case 'audiovisual':
+      return rsdTypeFromResourceType(item.types.resourceType)
+    case 'text':
+      return rsdTypeFromResourceType(item.types.resourceType)
+    default:
+      // by default using type value
+      return rsdTypeFromResourceType(item.type)
+  }
+}
+
+function rsdTypeFromResourceType(resourceType: string) {
+  switch (resourceType.trim().toLowerCase()) {
+    case 'book set':
+    case 'book series':
+    case 'book track':
+    case 'book':
+      return 'book'
+    case 'book part':
+    case 'book chapter':
+    case 'book section':
+      return 'bookSection'
+    case 'conference paper':
+    case 'proceedings series':
+    case 'proceedings article':
+      return 'conferencePaper'
+    case 'dissertation':
+    case 'thesis':
+      return 'thesis'
+    case 'dataset':
+      return 'dataset'
+    case 'interview':
+      return 'interview'
+    case 'journal':
+    case 'journal volume':
+    case 'journal issue':
+    case 'journal article':
+      return 'journalArticle'
+    case 'magazine-article':
+    case 'magazine article':
+      return 'magazineArticle'
+    case 'newspaper-article':
+    case 'newspaper article':
+      return 'newspaperArticle'
+    case 'presentation':
+      return 'presentation'
+    case 'report series':
+    case 'report':
+      return 'report'
+    case 'software':
+    case 'computer program':
+      return 'computerProgram'
+    case 'video recording':
+      return 'videoRecording'
+    case 'webpage':
+      return 'webpage'
+    default:
+      return 'other'
   }
 }

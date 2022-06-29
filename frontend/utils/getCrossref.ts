@@ -4,8 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {CrossrefResponse, CrossrefSelectItem} from '~/types/Crossref'
-import {MentionItemProps} from '~/types/Mention'
-import {apiMentionTypeToRSDTypeKey} from './editMentions'
+import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import {extractReturnMessage} from './fetchHelpers'
 import {makeDoiRedirectUrl} from './getDOI'
 import logger from './logger'
@@ -47,7 +46,7 @@ export function crossrefItemToMentionItem(item: CrossrefSelectItem) {
     publication_year: extractYearPublished(item),
     page: item.page ?? null,
     image_url: null,
-    mention_type: apiMentionTypeToRSDTypeKey(item.type),
+    mention_type: crossrefToRsdType(item.type),
     source: 'Crossref'
   }
   // debugger
@@ -127,3 +126,56 @@ export async function getCrossrefItemsByQuery(query: string) {
   }
 }
 
+function crossrefToRsdType(type: string): MentionTypeKeys {
+  switch (type.trim().toLowerCase()) {
+    case 'book':
+    case 'book-set':
+    case 'book-series':
+    case 'book-track':
+    case 'edited-book':
+    case 'reference-book':
+      return 'book'
+    case 'book-part':
+    case 'book-chapter':
+    case 'book-section':
+      return 'bookSection'
+    case 'conference-paper':
+    case 'proceedings-series':
+    case 'proceedings-article':
+    case 'proceedings':
+      return 'conferencePaper'
+    case 'dissertation':
+      return 'thesis'
+    case 'dataset':
+      return 'dataset'
+    // n/a
+    // case 'interview':
+    //   return 'interview'
+    case 'journal':
+    case 'journal-article':
+    case 'journal-volume':
+    case 'journal-issue':
+    case 'journal article':
+      return 'journalArticle'
+    // n/a
+    // case 'magazine-article':
+    //   return 'magazineArticle'
+    // case 'newspaper-article':
+    //   return 'newspaperArticle'
+    case 'presentation':
+      return 'presentation'
+    case 'report-series':
+    case 'report':
+      return 'report'
+    case 'software':
+    case 'computer-program':
+      return 'computerProgram'
+    // n/a
+    // case 'video-recording':
+    //   return 'videoRecording'
+    // case 'webpage':
+    //   return 'webpage'
+    default:
+      return 'other'
+  }
+}

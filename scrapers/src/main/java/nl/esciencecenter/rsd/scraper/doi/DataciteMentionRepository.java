@@ -27,6 +27,7 @@ public class DataciteMentionRepository implements MentionRepository {
 			    nodes {
 			      doi
 			      types {
+			        resourceType
 			        resourceTypeGeneral
 			      }
 			      version
@@ -48,12 +49,12 @@ public class DataciteMentionRepository implements MentionRepository {
 			}""";
 
 	private static final Map<String, MentionType> dataciteTypeMap;
+	private static final Map<String, MentionType> dataciteTextTypeMap;
 
 	static {
 //		https://schema.datacite.org/meta/kernel-4.3/
 		dataciteTypeMap = new HashMap<>();
-
-		dataciteTypeMap.put("Audiovisual", MentionType.other);
+		dataciteTypeMap.put("Audiovisual", MentionType.presentation);
 		dataciteTypeMap.put("Collection", MentionType.other);
 		dataciteTypeMap.put("DataPaper", MentionType.other);
 		dataciteTypeMap.put("Dataset", MentionType.dataset);
@@ -65,9 +66,17 @@ public class DataciteMentionRepository implements MentionRepository {
 		dataciteTypeMap.put("Service", MentionType.other);
 		dataciteTypeMap.put("Software", MentionType.computerProgram);
 		dataciteTypeMap.put("Sound", MentionType.other);
-		dataciteTypeMap.put("Text", MentionType.other);
+//		dataciteTypeMap.put("Text", MentionType.other);
 		dataciteTypeMap.put("Workflow", MentionType.other);
 		dataciteTypeMap.put("Other", MentionType.other);
+
+		dataciteTextTypeMap = new HashMap<>();
+		dataciteTextTypeMap.put("Conference paper", MentionType.conferencePaper);
+		dataciteTextTypeMap.put("Dissertation", MentionType.thesis);
+		dataciteTextTypeMap.put("Journal article", MentionType.journalArticle);
+		dataciteTextTypeMap.put("Poster", MentionType.presentation);
+		dataciteTextTypeMap.put("Presentation", MentionType.presentation);
+		dataciteTextTypeMap.put("Report", MentionType.report);
 	}
 
 	//	"10.5281/zenodo.1408128","10.1186/s12859-018-2165-7"
@@ -110,7 +119,14 @@ public class DataciteMentionRepository implements MentionRepository {
 
 		result.publisher = Utils.stringOrNull(work.get("publisher"));
 		result.publicationYear = Utils.integerOrNull(work.get("publicationYear"));
-		result.mentionType = dataciteTypeMap.getOrDefault(Utils.stringOrNull(work.getAsJsonObject("types").get("resourceTypeGeneral")), MentionType.other);
+		String dataciteResourceTypeGeneral = Utils.stringOrNull(work.getAsJsonObject("types").get("resourceTypeGeneral"));
+		if (dataciteResourceTypeGeneral != null && dataciteResourceTypeGeneral.equals("Text")) {
+			String dataciteResourceType = Utils.stringOrNull(work.getAsJsonObject("types").get("resourceType"));
+			if (dataciteResourceType != null) dataciteResourceType = dataciteResourceType.strip();
+			result.mentionType = dataciteTextTypeMap.getOrDefault(dataciteResourceType, MentionType.other);
+		} else {
+			result.mentionType = dataciteTypeMap.getOrDefault(dataciteResourceTypeGeneral, MentionType.other);
+		}
 		result.source = "DataCite";
 		result.scrapedAt = Instant.now();
 		return result;
