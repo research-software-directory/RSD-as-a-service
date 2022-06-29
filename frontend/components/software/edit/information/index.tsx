@@ -8,6 +8,7 @@
 import {useEffect, useState, useContext} from 'react'
 import {useFieldArray, useForm} from 'react-hook-form'
 
+import {useAuth} from '~/auth'
 import {app} from '~/config/app'
 import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import {updateSoftwareInfo} from '~/utils/editSoftware'
@@ -32,6 +33,7 @@ import ConceptDoi from './ConceptDoi'
 export default function SoftwareInformation(
   {slug, token}: {slug: string, token: string}
 ) {
+  const {session} = useAuth()
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {pageState, dispatchPageState} = useContext(editSoftwareContext)
   const {loading: apiLoading, editSoftware, setEditSoftware} = useEditSoftwareData({slug, token})
@@ -169,6 +171,25 @@ export default function SoftwareInformation(
           <EditSectionTitle
             title="Software information"
           />
+          {session?.user?.role === 'rsd_admin' ?
+            <>
+              <div className="py-2"></div>
+              <ControlledTextField
+                options={{
+                  name: 'slug',
+                  label: config.slug.label,
+                  useNull: true,
+                  defaultValue: editSoftware?.slug,
+                  helperTextMessage: config.slug.help,
+                  helperTextCnt: `${formData?.slug?.length || 0}/${config.slug.validation.maxLength.value}`,
+                }}
+                control={control}
+                rules={config.slug.validation}
+              />
+            </>
+            :null
+          }
+          <div className="py-2"></div>
           <ControlledTextField
             options={{
               name: 'brand_name',
@@ -196,7 +217,6 @@ export default function SoftwareInformation(
             control={control}
             rules={config.short_statement.validation}
           />
-
           <div className="py-2"></div>
           <EditSectionTitle
             title='Project URL'

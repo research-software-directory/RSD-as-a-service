@@ -4,6 +4,20 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export const projectInformation = {
+  slug: {
+    label: 'RSD path',
+    help: 'Use letters, numbers and dash "-". Other characters are not allowed.',
+    // react-hook-form validation rules
+    validation: {
+      required: 'Slug is required',
+      minLength: {value: 3, message: 'Minimum length is 3'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
+      pattern: {
+        value: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+        message: 'Use letters, numbers and dash "-". Other characters are not allowed.'
+      }
+    }
+  },
   title: {
     label: 'Title',
     help: 'Project title used as a title of your page.',
