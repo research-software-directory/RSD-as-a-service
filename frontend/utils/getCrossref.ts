@@ -127,6 +127,7 @@ export async function getCrossrefItemsByQuery(query: string) {
 }
 
 function crossrefToRsdType(type: string): MentionTypeKeys {
+  if (!type) return 'other'
   switch (type.trim().toLowerCase()) {
     case 'book':
     case 'book-set':
