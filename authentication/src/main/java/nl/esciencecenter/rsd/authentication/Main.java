@@ -58,10 +58,8 @@ public class Main {
 					OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation);
 
 					AccountInfo accountInfo = new PostgrestAccount(localInfo, "local").account();
-					JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-					String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
-					setJwtCookie(ctx, token);
-					setRedirectFromCookie(ctx);
+					boolean isAdmin = isAdmin(email);
+					createAndSetToken(ctx, accountInfo, isAdmin);
 				} catch (RuntimeException ex) {
 					ex.printStackTrace();
 					ctx.status(400);
@@ -82,10 +80,9 @@ public class Main {
 					}
 
 					AccountInfo accountInfo = new PostgrestAccount(surfconextInfo, "surfconext").account();
-					JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-					String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
-					setJwtCookie(ctx, token);
-					setRedirectFromCookie(ctx);
+					String email = surfconextInfo.email();
+					boolean isAdmin = isAdmin(email);
+					createAndSetToken(ctx, accountInfo, isAdmin);
 				} catch (RuntimeException ex) {
 					ex.printStackTrace();
 					ctx.status(400);
@@ -106,10 +103,9 @@ public class Main {
 					}
 
 					AccountInfo accountInfo = new PostgrestAccount(helmholtzInfo, "helmholtz").account();
-					JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-					String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name());
-					setJwtCookie(ctx, token);
-					setRedirectFromCookie(ctx);
+					String email = helmholtzInfo.email();
+					boolean isAdmin = isAdmin(email);
+					createAndSetToken(ctx, accountInfo, isAdmin);
 				} catch (RuntimeException ex) {
 					ex.printStackTrace();
 					ctx.status(400);
@@ -140,6 +136,17 @@ public class Main {
 			ctx.status(400);
 			ctx.json("{\"message\": \"invalid JWT\"}");
 		});
+	}
+
+	static boolean isAdmin(String email) {
+		return email != null && !email.isBlank() && Config.rsdAdmins().contains(email);
+	}
+
+	static void createAndSetToken(Context ctx, AccountInfo accountInfo, boolean isAdmin) {
+		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+		String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name(), isAdmin);
+		setJwtCookie(ctx, token);
+		setRedirectFromCookie(ctx);
 	}
 
 	static void setJwtCookie(Context ctx, String token) {

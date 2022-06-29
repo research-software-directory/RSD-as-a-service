@@ -196,7 +196,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     // extract rsd_token
     const token = cookies['rsd_token']
     const slug = params?.slug?.toString()
-    const account = getAccountFromToken(token)
+    const userInfo = getAccountFromToken(token)
     const software = await getSoftwareItem(slug,token)
     // console.log('getServerSideProps...software...', software)
     if (typeof software == 'undefined'){
@@ -236,7 +236,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // relatedProjects
       getRelatedProjectsForSoftware({software: software.id, token, frontend: false}),
       // check if maintainer
-      isMaintainerOfSoftware({slug, account, token, frontend: false}),
+      isMaintainerOfSoftware({slug, account:userInfo?.account, token, frontend: false}),
       // get organisations
       getParticipatingOrganisations({software:software.id,frontend:false,token})
     ]
@@ -269,7 +269,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         contributors,
         relatedSoftware,
         relatedProjects,
-        isMaintainer,
+        isMaintainer: isMaintainer ? isMaintainer : userInfo?.role==='rsd_admin',
         organisations,
         slug
       }

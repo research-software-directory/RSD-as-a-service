@@ -65,7 +65,7 @@ export default function ProtectedContent({children, pageType='software', slug}:
       setStatus(session.status)
     }
     return () => { abort = true }
-  }, [slug, pageType, session.token, session?.user?.account, session.status])
+  }, [slug, pageType, session.token, session?.user?.account, session?.user?.role, session.status])
 
   // return nothing
   if (status === 'loading') return <ContentLoader />
@@ -76,7 +76,13 @@ export default function ProtectedContent({children, pageType='software', slug}:
     return children
   }
 
-  // isMaintainer of software and is authenticated
+  // rsd_admin has full access
+  if (status === 'authenticated' && session.user?.role==='rsd_admin') {
+    // logger(`ProtectedContent...authenticated user...maintainer of ${slug}`, 'info')
+    return children
+  }
+
+  // isMaintainer and is authenticated
   if (status === 'authenticated' && slug && isMaintainer) {
     // logger(`ProtectedContent...authenticated user...maintainer of ${slug}`, 'info')
     return children

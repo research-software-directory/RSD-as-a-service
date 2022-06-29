@@ -30,7 +30,10 @@ export function decodeJwt(token: string) {
 export function getAccountFromToken(token?: string) {
   if (token) {
     const user = jwt.decode(token) as any
-    return user?.account
+    return {
+      account: user?.account as string,
+      role: user?.role as string
+    }
   }
   return undefined
 }

@@ -33,7 +33,13 @@ export default function useOrganisationMaintainer({organisation,session}:UseOrga
     if (organisation &&
       session &&
       session.status === 'authenticated') {
-      organisationMaintainer()
+      if (session.user?.role === 'rsd_admin') {
+        if (abort) return
+        setIsMaintainer(true)
+        setLoading(false)
+      } else {
+        organisationMaintainer()
+      }
     } else if (isMaintainer===true) {
       // set to false if flag is true without
       setIsMaintainer(false)

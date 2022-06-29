@@ -20,10 +20,8 @@ import {
 } from '../../../utils/editOrganisation'
 import useOrganisationUnits from '../../../utils/useOrganisationUnits'
 import {sortOnStrProp} from '../../../utils/sortFn'
-import logger from '../../../utils/logger'
 import UnitsList from './ResearchUnitList'
 import ResearchUnitModal from './ResearchUnitModal'
-import {addMaintainerToOrganisation} from '~/auth/permissions/addMaintainerToOrganisation'
 
 type EditOrganisationModal = {
   open: boolean,
@@ -31,8 +29,8 @@ type EditOrganisationModal = {
   organisation?: EditOrganisation
 }
 
-export default function ResearchUnits({organisation, session, isMaintainer}:
-  {organisation: OrganisationForOverview, session: Session, isMaintainer: boolean }) {
+export default function ResearchUnits({organisation, session}:
+  {organisation: OrganisationForOverview, session: Session}) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {units, setUnits,loading} = useOrganisationUnits({
     organisation: organisation.id,
@@ -45,12 +43,13 @@ export default function ResearchUnits({organisation, session, isMaintainer}:
 
   useEffect(() => {
     let abort = false
-    if (organisation.primary_maintainer === session.user?.account) {
+    if (organisation.primary_maintainer === session.user?.account ||
+      session?.user?.role === 'rsd_admin') {
       if (abort) return
       setPrimary(true)
     }
     return ()=>{abort=true}
-  },[organisation.primary_maintainer,session.user?.account])
+  },[organisation.primary_maintainer,session.user?.account,session.user?.role])
 
   function renderAddBtn() {
     if (isPrimary) {

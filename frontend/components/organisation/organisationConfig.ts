@@ -36,11 +36,15 @@ export const organisationInformation = {
   },
   slug: {
     label: 'RSD path',
-    help: 'You can change the slug when creating new unit. After creation the slug cannot be changed.',
+    help: 'Use letters, numbers and dash "-". Other characters are not allowed.',
     validation: {
       required: 'Rsd path is required',
       minLength: {value: 2, message: 'Minimum length is 2'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
+      pattern: {
+        value: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+        message: 'Use letters, numbers and dash "-". Other characters are not allowed.'
+      }
     }
   },
   ror_id: {
@@ -55,4 +59,16 @@ export const organisationInformation = {
       }
     }
   },
+  primary_maintainer: {
+    label: 'Primary maintainer',
+    help: 'Provide account id of the primary maintainer.',
+    validation: {
+      minLength: {value: 36, message: 'Minimum length is 36'},
+      maxLength: {value: 36, message: 'Maximum length is 36'}
+    }
+  },
+  is_tenant: {
+    label: 'Official member',
+    help: 'Set to active if organisation is participating in RSD.',
+  }
 }

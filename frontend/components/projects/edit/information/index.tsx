@@ -223,6 +223,25 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
           <EditSectionTitle
             title="Project information"
           />
+          {session?.user?.role === 'rsd_admin' ?
+            <>
+              <div className="py-2"></div>
+              <ControlledTextField
+                options={{
+                  name: 'slug',
+                  label: config.slug.label,
+                  useNull: true,
+                  defaultValue: project?.slug,
+                  helperTextMessage: config.slug.help,
+                  helperTextCnt: `${formValues?.slug?.length || 0}/${config.slug.validation.maxLength.value}`,
+                }}
+                control={control}
+                rules={config.slug.validation}
+              />
+            </>
+            :null
+          }
+          <div className="py-2"></div>
           <ControlledTextField
             options={{
               name: 'title',

@@ -42,9 +42,13 @@ CREATE FUNCTION sanitise_update_software() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;
-	NEW.slug = OLD.slug;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
+
+	IF NEW.slug IS DISTINCT FROM OLD.slug AND CURRENT_USER IS DISTINCT FROM 'rsd_admin' AND (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) IS DISTINCT FROM TRUE THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the slug';
+	END IF;
+
 	return NEW;
 END
 $$;
