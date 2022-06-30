@@ -5,7 +5,6 @@
 
 import {useState} from 'react'
 import {useRouter} from 'next/router'
-import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import AddIcon from '@mui/icons-material/Add'
@@ -36,7 +35,7 @@ export default function AddMenu() {
   return (
     <div>
       <button
-        id="demo-positioned-button"
+        data-testid="add-menu-button"
         aria-controls={open ? 'demo-positioned-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
