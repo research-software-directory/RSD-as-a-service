@@ -34,7 +34,7 @@ export default function AddMenu() {
   }
 
   return (
-    <>
+    <button className="group flex flex-nowrap rounded-full h-12 mt-2">
       <IconButton
         size="large"
         data-testid="add-menu-button"
@@ -43,7 +43,7 @@ export default function AddMenu() {
         aria-expanded={open ? 'true' : 'false'}
         onClick={handleClick}
       >
-        <AddIcon className="text-white"/>
+        <AddIcon className="text-white group-hover:text-primary"/>
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -62,6 +62,6 @@ export default function AddMenu() {
           </MenuItem>
         )}
       </Menu>
-    </>
+    </button>
   )
 }
