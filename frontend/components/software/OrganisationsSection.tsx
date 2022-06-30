@@ -3,9 +3,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import styled from '@mui/system/styled'
 import {ParticipatingOrganisationProps} from '../../types/Organisation'
 import PageContainer from '../layout/PageContainer'
 import ParticipatingOrganisation from './ParticipatingOrganisation'
+
+const OrganisationGridSection = styled('section')(({theme}) => ({
+  flex: 1,
+  display: 'grid',
+  gridGap: '2rem',
+  gridAutoRows: 'minmax(3rem,5rem)',
+  gridTemplateColumns: 'repeat(auto-fit,minmax(5rem,13rem))'
+}))
 
 export default function OrganisationsSection({organisations = []}: { organisations: ParticipatingOrganisationProps[] }) {
   // do not render section if no data
@@ -19,7 +28,7 @@ export default function OrganisationsSection({organisations = []}: { organisatio
           className="pb-8 text-[2rem] text-primary leading-10">
           Participating organisations
         </h2>
-        <section className="grid gap-8 auto-rows-[minmax(3rem,5rem)] md:grid-cols-4 xl:grid-cols-5">
+        <OrganisationGridSection>
           {organisations.map((item, pos) => {
             return (
               <ParticipatingOrganisation
@@ -28,7 +37,7 @@ export default function OrganisationsSection({organisations = []}: { organisatio
               />
             )
           })}
-        </section>
+        </OrganisationGridSection>
       </PageContainer>
     </section>
   )
