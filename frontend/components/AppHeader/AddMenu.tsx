@@ -34,17 +34,17 @@ export default function AddMenu() {
   }
 
   return (
-    <button className="group flex flex-nowrap rounded-full h-12 mt-2">
-      <IconButton
-        size="large"
-        data-testid="add-menu-button"
-        aria-controls="add-menu"
+    <div>
+      <button
+        id="demo-positioned-button"
+        aria-controls={open ? 'demo-positioned-menu' : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : 'false'}
+        aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
+        className="group flex flex-nowrap items-center justify-center rounded-full w-12 h-12 mt-2"
       >
         <AddIcon className="text-white group-hover:text-primary"/>
-      </IconButton>
+      </button>
       <Menu
         anchorEl={anchorEl}
         open={open}
@@ -62,6 +62,6 @@ export default function AddMenu() {
           </MenuItem>
         )}
       </Menu>
-    </button>
+    </div>
   )
 }
