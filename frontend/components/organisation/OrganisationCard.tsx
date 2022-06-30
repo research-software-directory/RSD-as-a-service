@@ -3,7 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Avatar} from '@mui/material'
 import Link from 'next/link'
 import {OrganisationForOverview} from '../../types/Organisation'
 import {getUrlFromLogoId} from '../../utils/editOrganisation'

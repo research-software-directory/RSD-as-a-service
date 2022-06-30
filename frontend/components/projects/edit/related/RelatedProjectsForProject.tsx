@@ -16,7 +16,6 @@ import FindRelatedProject from './FindRelatedProject'
 import useProjectContext from '../useProjectContext'
 import RelatedProjectList from './RelatedProjectList'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
 import {Status} from '~/types/Organisation'
 
 export default function RelatedProjectsForProject() {

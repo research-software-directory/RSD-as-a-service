@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 
 import {Session} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'

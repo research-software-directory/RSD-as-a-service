@@ -5,41 +5,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, useEffect, useContext} from 'react'
+import {useContext} from 'react'
 import Input from '@mui/material/Input'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
-import {useDebounce} from '~/utils/useDebounce'
 import ClearIcon from '@mui/icons-material/Clear'
 
 import SearchContext from './SearchContext'
 
 export default function Searchbox() {
   const {searchInput,setSearchInput,placeholder,setSearchFor} = useContext(SearchContext)
-  // const [state,setState]=useState({
-  //   value: searchInput,
-  //   wait: true
-  // })
-  // const searchFor=useDebounce(state.value, delay ?? 400)
-
-  // useEffect(()=>{
-  //   const {wait,value} = state
-  //   if (wait===false && value===searchFor){
-  //     setState({
-  //       wait:true,
-  //       value
-  //     })
-  //     setSearchFor(searchFor)
-  //   }
-  // }, [state, searchFor, setSearchFor])
-
-  // useEffect(() => {
-  //   debugger
-  //   setState({
-  //     value: searchInput,
-  //     wait: true
-  //   })
-  // },[searchInput])
 
   return (
     <Input

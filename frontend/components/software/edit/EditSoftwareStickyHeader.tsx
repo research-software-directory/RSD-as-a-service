@@ -6,7 +6,6 @@
 import {useContext, useState, useRef} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
-import SaveIcon from '@mui/icons-material/Save'
 
 import StickyHeader from '../../layout/StickyHeader'
 import useStickyHeaderBorder from '~/components/layout/useStickyHeaderBorder'
@@ -58,24 +57,6 @@ export default function StickyHeaderEditSoftware() {
             formId={pageState?.step?.formId}
             disabled={isSaveDisabled()}
           />
-          // <Button
-          //   tabIndex={0}
-          //   type="submit"
-          //   variant="contained"
-          //   form={pageState?.step?.formId}
-          //   sx={{
-          //     // overwrite tailwind preflight.css for submit type
-          //     '&[type="submit"]:not(.Mui-disabled)': {
-          //       backgroundColor:'primary.main'
-          //     }
-          //   }}
-          //   endIcon={
-          //     <SaveIcon />
-          //   }
-          //   disabled={isSaveDisabled()}
-          // >
-          //   Save
-          // </Button>
         : null
         }
       </div>

@@ -6,7 +6,6 @@
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 import {useRouter} from 'next/router'
-import {getSlugFromString} from '../../utils/getSlugFromString'
 
 type EditButtonProps = {
   title: string,

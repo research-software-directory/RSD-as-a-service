@@ -47,7 +47,6 @@ export default function MentionEditSection() {
             return (
               <MentionEditFeatured
                 key={item.id}
-                pos={pos}
                 item={item}
               />
             )

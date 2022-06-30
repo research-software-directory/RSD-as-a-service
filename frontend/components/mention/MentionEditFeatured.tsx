@@ -7,19 +7,18 @@ import {IconButton} from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import UpdateIcon from '@mui/icons-material/Update'
-import MentionItemBase, {MentionTitle} from './MentionItemBase'
-import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
+import {MentionTitle} from './MentionItemBase'
+import {MentionItemProps} from '~/types/Mention'
 import useEditMentionReducer from './useEditMentionReducer'
 import ImageAsBackground from '../layout/ImageAsBackground'
 import MentionAuthors from './MentionAuthors'
 import MentionPublisherItem from './MentionPublisherItem'
 
 type MentionListItem = {
-  pos: number
   item: MentionItemProps
 }
 
-export default function MentionEditFeatured({item, pos}: MentionListItem) {
+export default function MentionEditFeatured({item}: MentionListItem) {
   // use context methods to pass btn action
   // const {onUpdate, confirmDelete, setEditModal} = useContext(EditMentionContext)
   const {setEditModal,onUpdate,confirmDelete} = useEditMentionReducer()

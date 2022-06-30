@@ -5,7 +5,6 @@
 
 import Link from 'next/link'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import PushPinIcon from '@mui/icons-material/PushPin'
 
 import {getTimeAgoSince} from '../../utils/dateFn'
 import ImageAsBackground from '../layout/ImageAsBackground'

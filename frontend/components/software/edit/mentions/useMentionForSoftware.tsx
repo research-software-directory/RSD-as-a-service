@@ -5,9 +5,7 @@
 
 import {useEffect} from 'react'
 
-import {sortOnDateProp} from '~/utils/sortFn'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
-import {MentionItemProps} from '~/types/Mention'
 import {getMentionsForSoftware} from '~/utils/editMentions'
 
 type MentionForSoftwareProps = {

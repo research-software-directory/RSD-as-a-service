@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useState, useContext} from 'react'
+import {useEffect,useState} from 'react'
 import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery

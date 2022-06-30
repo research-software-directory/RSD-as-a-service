@@ -7,7 +7,7 @@
 
 import {Contributor} from '../../types/Contributor'
 import ContributorAvatar from './ContributorAvatar'
-import {getDisplayName, getDisplayInitials,combineRoleAndAffiliation} from '../../utils/getDisplayName'
+import {getDisplayName, getDisplayInitials} from '../../utils/getDisplayName'
 import PersonalInfo from './PersonalInfo'
 
 export default function ContributorsList({contributors}: { contributors: Contributor[] }) {

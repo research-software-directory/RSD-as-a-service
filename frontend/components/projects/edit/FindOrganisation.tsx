@@ -8,10 +8,7 @@ import {HTMLAttributes, useState} from 'react'
 import AsyncAutocompleteSC, {
   AsyncAutocompleteConfig, AutocompleteOption
 } from '~/components/form/AsyncAutocompleteSC'
-// import AsyncAutocomplete, {AsyncAutocompleteConfig} from '../../form/AsyncAutocomplete'
-// import {AutocompleteOption} from '../../../types/AutocompleteOptions'
 import {SearchOrganisation} from '../../../types/Organisation'
-// import {searchForOrganisation} from '../../../utils/editOrganisation'
 import FindOrganisationItem from '../../software/edit/organisations/FindOrganisationItem'
 
 type SearchForOrganisationProps = {
