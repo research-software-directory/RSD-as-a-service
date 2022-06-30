@@ -107,22 +107,23 @@ export default function Home({software,projects,organisations}:HomeProps) {
               </button>
 
             </div>*/}
-            <div className="flex gap-10 mt-10 items-center">
+            <div className="flex gap-10 mt-10 items-center" >
               <Link href="/software" passHref>
-                <div className="flex gap-4 cursor-pointer"
+                <a className="flex gap-4 cursor-pointer"
                      data-aos="fade" data-aos-offset="200" data-aos-delay="50"
-                     data-aos-duration="1000">
+                     data-aos-duration="1000"
+                     tabIndex={0}>
                   <div className="relative group">
                     <div
                       className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
                     <div
                       className="flex gap-3 text-black relative px-8 py-3 bg-white ring-1 ring-gray-900/5 rounded leading-none flex items-center space-x-2 ">
-                    <span className="space-y-2 text-xl font-medium  whitespace-nowrap ">
+                    <span className="space-y-2 text-xl font-medium  whitespace-nowrap " >
                       Discover Software
                     </span>
                     </div>
                   </div>
-                </div>
+                </a>
               </Link>
 
               <a data-aos="fade" data-aos-offset="200" data-aos-delay="150" data-aos-duration="1000"

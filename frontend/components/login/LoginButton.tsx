@@ -55,7 +55,7 @@ export default function LoginButton() {
         href={providers[0].redirectUrl}
         passHref
       >
-        <a className="whitespace-nowrap">
+        <a className="whitespace-nowrap" tabIndex={0}>
           Sign in
         </a>
       </Link>
@@ -66,9 +66,9 @@ export default function LoginButton() {
   if (providers && providers.length > 1) {
     return (
        <div className="whitespace-nowrap">
-        <a onClick={handleClickOpen}>
+        <button onClick={handleClickOpen} tabIndex={0}>
           Sign in
-        </a>
+        </button>
         <Dialog
           fullScreen={fullScreen}
           open={open}
