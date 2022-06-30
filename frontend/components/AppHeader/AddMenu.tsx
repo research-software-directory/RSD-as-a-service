@@ -8,9 +8,10 @@ import {useRouter} from 'next/router'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import AddIcon from '@mui/icons-material/Add'
-
-import {MenuItemType} from '~/config/menuItems'
-import {addMenuItems} from '~/config/addMenuItems'
+import TerminalIcon from '@mui/icons-material/Terminal'
+import ListAltIcon from '@mui/icons-material/ListAlt'
+import MenuList from '@mui/material/MenuList'
+import {IconButton, ListItemIcon} from '@mui/material'
 
 export default function AddMenu() {
   const router = useRouter()
@@ -21,46 +22,63 @@ export default function AddMenu() {
     setAnchorEl(event.currentTarget)
   }
 
-  function handleClose(item: MenuItemType) {
-    if (item?.fn) {
-      // call function if provided
-      item.fn(item)
-    } else if (item?.path) {
-      // push to route if provided
-      router.push(item.path)
+  function handleClose(path?: string) {
+    // push to route if provided
+    if (path) {
+      router.push(path)
     }
     setAnchorEl(null)
   }
 
   return (
-    <div>
-      <button
+    <>
+      <IconButton
+        className="group"
+        size="large"
         data-testid="add-menu-button"
-        aria-controls={open ? 'demo-positioned-menu' : undefined}
+        aria-controls="add-menu"
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
+        aria-expanded={open ? 'true' : 'false'}
         onClick={handleClick}
-        className="group flex flex-nowrap items-center justify-center rounded-full w-12 h-12 mt-2"
+        sx={{
+          'color': 'primary.contrastText',
+          '&:hover': {
+            color: 'primary.main'
+          },
+          alignSelf: 'center',
+          '&:focus-visible': {
+            outline: 'auto 1px'
+          }
+        }}
       >
-        <AddIcon className="text-white group-hover:text-primary"/>
-      </button>
+        <AddIcon className="text-current"/>
+      </IconButton>
+
       <Menu
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={() => handleClose()}
         MenuListProps={{'aria-labelledby': 'menu-button'}}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
       >
-        {addMenuItems.map(item =>
-          <MenuItem
-            data-testid="add-menu-option"
-            key={item.label}
-            onClick={() => handleClose(item)}>
-            {item.label}
+        <MenuList>
+          <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/software/add')}>
+            <ListItemIcon>
+              <TerminalIcon/>
+            </ListItemIcon>
+            New Software
           </MenuItem>
-        )}
+
+          <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/projects/add')}>
+            <ListItemIcon>
+              <ListAltIcon/>
+            </ListItemIcon>
+            New Project
+          </MenuItem>
+
+        </MenuList>
       </Menu>
-    </div>
+    </>
   )
 }

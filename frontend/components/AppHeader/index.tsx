@@ -71,7 +71,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
           <div className="hidden md:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''}>
-                <a className={`${activePath === item.path && 'nav-active'}`}>
+                <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
                   {item.label}
                 </a>
               </Link>)}

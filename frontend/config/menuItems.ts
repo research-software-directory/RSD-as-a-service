@@ -3,11 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+
 export type MenuItemType = {
   type?: 'link' | 'function' |'divider'
   label: string,
   path?: string,
   active?: boolean
+  icon?: JSX.Element,
   // optional, but fn is provided it will have higher priority
   // than path
   fn?: Function,
