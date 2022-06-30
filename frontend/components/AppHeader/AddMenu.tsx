@@ -10,7 +10,6 @@ import MenuItem from '@mui/material/MenuItem'
 import AddIcon from '@mui/icons-material/Add'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
-import MenuList from '@mui/material/MenuList'
 import {IconButton, ListItemIcon} from '@mui/material'
 
 export default function AddMenu() {
@@ -47,11 +46,11 @@ export default function AddMenu() {
           },
           alignSelf: 'center',
           '&:focus-visible': {
-            outline: 'auto 1px'
+            outline: 'auto'
           }
         }}
       >
-        <AddIcon className="text-current"/>
+        <AddIcon />
       </IconButton>
 
       <Menu
@@ -62,22 +61,19 @@ export default function AddMenu() {
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
       >
-        <MenuList>
-          <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/software/add')}>
-            <ListItemIcon>
-              <TerminalIcon/>
-            </ListItemIcon>
-            New Software
-          </MenuItem>
+        <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/software/add')}>
+          <ListItemIcon>
+            <TerminalIcon/>
+          </ListItemIcon>
+          New Software
+        </MenuItem>
 
-          <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/projects/add')}>
-            <ListItemIcon>
-              <ListAltIcon/>
-            </ListItemIcon>
-            New Project
-          </MenuItem>
-
-        </MenuList>
+        <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/projects/add')}>
+          <ListItemIcon>
+            <ListAltIcon/>
+          </ListItemIcon>
+          New Project
+        </MenuItem>
       </Menu>
     </>
   )

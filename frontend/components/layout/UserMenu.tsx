@@ -10,12 +10,10 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Avatar from '@mui/material/Avatar'
 import {Divider, ListItemIcon} from '@mui/material'
-import MenuList from '@mui/material/MenuList'
 
 import {useAuth} from '../../auth/index'
 import {MenuItemType} from '../../config/menuItems'
 import {getDisplayInitials, splitName} from '../../utils/getDisplayName'
-import {ContentCut} from '@mui/icons-material'
 
 type UserMenuType = {
   name: string,
@@ -27,7 +25,7 @@ export default function UserMenu(props: UserMenuType) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const {session} = useAuth()
-  const {name, image, menuOptions} = props
+  const {menuOptions} = props
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget)
@@ -60,7 +58,6 @@ export default function UserMenu(props: UserMenuType) {
                 {item.icon}
               </ListItemIcon>
               {item.label}
-
             </MenuItem>
           )
         })
@@ -78,7 +75,7 @@ export default function UserMenu(props: UserMenuType) {
         onClick={handleClick}
         sx={{
           '&:focus-visible': {
-            outline: 'auto 1px'
+            outline: 'auto'
           }
         }}
       >
@@ -104,9 +101,7 @@ export default function UserMenu(props: UserMenuType) {
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
       >
-        <MenuList>
-          {renderMenuOptions()}
-        </MenuList>
+        {renderMenuOptions()}
       </Menu>
     </>
   )

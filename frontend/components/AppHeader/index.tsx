@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, useEffect, ReactChildren, useContext} from 'react'
+import {useState, useEffect, useContext} from 'react'
 import Link from 'next/link'
 import {useAuth} from '../../auth'
 // local dependencies (project components)
@@ -16,8 +16,6 @@ import LoginButton from '~/components/login/LoginButton'
 import JavascriptSupportWarning from './JavascriptSupportWarning'
 import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
-// import ThemeSwitcher from '~/components/layout/ThemeSwitcher'
-import {useRouter} from 'next/router'
 import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
 import {Button, Menu, MenuItem} from '@mui/material'
 import EmbedLayoutContext from '~/components/layout/embedLayoutContext'
@@ -26,7 +24,6 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
-  const router = useRouter()
   const {embedMode} = useContext(EmbedLayoutContext)
   // Responsive menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
