@@ -3,8 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {MentionItemProps} from '~/types/Mention'
-import {updateMentionItem} from './editMentions'
 import {crossrefItemToMentionItem, getCrossrefItemByDoi} from './getCrossref'
 import {dataCiteGraphQLItemToMentionItem, getDataciteItemsByDoiGraphQL} from './getDataCite'
 import logger from './logger'

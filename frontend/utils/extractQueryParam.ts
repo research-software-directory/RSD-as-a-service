@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import type {GetServerSidePropsContext, NextApiRequest} from 'next'
+import type {GetServerSidePropsContext} from 'next'
 import logger from './logger'
 
 export function extractQueryParam({ctx,param,castToType='string',defaultValue}:{

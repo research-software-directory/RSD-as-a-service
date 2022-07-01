@@ -1,4 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react'
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import React, {useEffect, useState} from 'react'
 import {ClickAwayListener} from '@mui/base'
 import {useRouter} from 'next/router'
 import {getGlobalSearch} from '~/components/GlobalSearchAutocomplete/globalSearchAutocomplete.api'
@@ -10,9 +15,6 @@ import {useDebounce} from '~/utils/useDebounce'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
-// import ProjectsIcon from '~/components/icons/projects.svg'
-// import SoftwareIcon from '~/components/icons/software.svg'
-// import OrganisationIcon from '~/components/icons/organisation.svg'
 
 type Props = {
   className?: string
@@ -64,7 +66,6 @@ export default function GlobalSearchAutocomplete(props: Props) {
   }
 
   function handleClick() {
-
     const slug = searchResults[selected]?.slug !== '' ? ('/' + searchResults[selected]?.slug) : ''
     router.push(`/${searchResults[selected]?.source}${slug}`)
     setSelected(0)
@@ -73,9 +74,13 @@ export default function GlobalSearchAutocomplete(props: Props) {
   }
 
   // Handle keyup
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     // Handle arrow up and down
     switch (e.keyCode) {
+      // Close menu on lost focus with tab key
+      case 9:
+        setOpen(false)
+        break
       // Backspace - Remove selection
       case 8:
         setSelected(0)
@@ -101,10 +106,17 @@ export default function GlobalSearchAutocomplete(props: Props) {
     }
   }
 
-  const handleChange = async (e: React.FormEvent<HTMLInputElement>) => {
+  function handleChange(e: React.FormEvent<HTMLInputElement>) {
     const search = e.currentTarget.value
     // Update state
     setInputValue(search)
+  }
+
+  function focusSearch() {
+    setOpen(true)
+    if (inputValue === '') {
+      setSearchResults(defaultValues)
+    }
   }
 
   return (
@@ -123,7 +135,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
                onChange={handleChange}
                onKeyDown={handleKeyDown}
                type="search"
-               onClick={()=> {setOpen(true), setSearchResults(defaultValues)}}
+               onFocus={focusSearch}
         />
 
         {isOpen &&
@@ -133,7 +145,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
               className="animate-pulse">No results...</span></div>}
             {searchResults.map((item, index) =>
               <div key={index}
-                   className={`${selected === index ? 'bg-[#09A1E3] text-white':''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
+                   className={`${selected === index ? 'bg-[#09A1E3] text-white' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
                    onClick={handleClick}
                    onMouseEnter={() => setSelected(index)}
               >
@@ -149,7 +161,8 @@ export default function GlobalSearchAutocomplete(props: Props) {
                     <div className="font-normal line-clamp-1">{item?.name}</div>
 
                     <div className="text-xs text-current text-opacity-40">
-                      {item?.source}{item?.is_published === false && <span className="flex-nowrap border px-1 py-[2px] rounded bg-warning ml-3 text-xs text-white">unpublished</span>}
+                      {item?.source}{item?.is_published === false && <span
+                      className="flex-nowrap border px-1 py-[2px] rounded bg-warning ml-3 text-xs text-white">unpublished</span>}
                     </div>
 
                   </div>

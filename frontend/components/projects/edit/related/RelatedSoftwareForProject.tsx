@@ -17,8 +17,6 @@ import useProjectContext from '../useProjectContext'
 import RelatedSoftwareList from './RelatedSoftwareList'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {Status} from '~/types/Organisation'
-import isMaintainerOfSoftware from '~/auth/permissions/isMaintainerOfSoftware'
-
 
 export default function RelatedSoftwareForProject() {
   const {session} = useAuth()

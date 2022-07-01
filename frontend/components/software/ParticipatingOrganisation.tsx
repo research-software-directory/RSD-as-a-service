@@ -5,44 +5,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
-import Avatar from '@mui/material/Avatar'
 import {ParticipatingOrganisationProps} from '../../types/Organisation'
-import ImageAsBackground from '../layout/ImageAsBackground'
+import LogoAvatar from '~/components/layout/LogoAvatar'
 
 export default function OrganisationItem({slug, name, website, logo_url}: ParticipatingOrganisationProps) {
 
   function renderLogo() {
-    if (logo_url) {
-      return (
-        <ImageAsBackground
-          className="h-min-[3rem] h-max-[5rem] h-full"
-          src={logo_url}
-          alt={name}
-          bgSize="contain"
-          bgPosition='center center'
-        />
-      )
-    }
     return (
-      <>
-      <Avatar
-        alt={name ?? ''}
-        src={logo_url ?? ''}
-        sx={{
-          width: '4rem',
-          height: '4rem',
-          fontSize: '2rem',
-          marginRight: '0.5rem',
-          '& img': {
-            height:'auto'
-          }
-        }}
-        variant="square"
-      >
-        {name.slice(0,3)}
-      </Avatar>
-      <span>{name}</span>
-      </>
+      <LogoAvatar
+        name={name}
+        src={logo_url ?? undefined}
+      />
     )
   }
 

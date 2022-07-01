@@ -4,35 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {PageTitleSticky} from '~/components/layout/PageTitle'
-// import {SlugInfo} from './Breadcrumbs'
-
 import Searchbox from '../../components/search/Searchbox'
 import Pagination from '../../components/pagination/Pagination'
-
-// function createSegments(slug: string[]) {
-//   const segments:SlugInfo[] = [{
-//     label: 'organisations',
-//     path:'/organisations'
-//   }]
-//   let path='/organisations'
-//   slug.forEach((item, pos) => {
-//     if (pos === slug.length - 1) {
-//       // last segment is current page
-//       // so we do not place link/path
-//       segments.push({
-//         label: item,
-//         path: null
-//       })
-//     } else {
-//       path += `/${item}`
-//       segments.push({
-//         label: item,
-//         path
-//       })
-//     }
-//   })
-//   return segments
-// }
 
 export default function UserTitle({title, showSearch=false}:
   { title: string, showSearch?:boolean}) {

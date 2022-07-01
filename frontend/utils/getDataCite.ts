@@ -241,6 +241,7 @@ function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
 }
 
 function rsdTypeFromResourceType(resourceType: string) {
+  if (!resourceType) return 'other'
   switch (resourceType.trim().toLowerCase()) {
     case 'book set':
     case 'book series':

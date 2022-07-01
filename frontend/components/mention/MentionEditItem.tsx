@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import UpdateIcon from '@mui/icons-material/Update'
 import MentionItemBase from './MentionItemBase'
-import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
+import {MentionItemProps} from '~/types/Mention'
 import useEditMentionReducer from './useEditMentionReducer'
 
 type MentionListItem = {

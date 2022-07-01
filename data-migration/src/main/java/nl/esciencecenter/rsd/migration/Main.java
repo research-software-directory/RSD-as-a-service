@@ -1017,7 +1017,9 @@ public class Main {
 			if (existingIds.contains(orgId)) return;
 
 			logoToSave.addProperty("organisation", orgId);
-			logoToSave.add("data", logo.get("data"));
+			String possibleImageData = stringOrNull(logo.get("data"));
+			if (possibleImageData == null || possibleImageData.isBlank()) return;
+			logoToSave.addProperty("data", possibleImageData);
 			logoToSave.add("mime_type", logo.get("mimeType"));
 			existingIds.add(orgNameToId.get(name));
 

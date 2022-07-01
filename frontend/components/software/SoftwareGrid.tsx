@@ -3,7 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ContentInTheMiddle from '../layout/ContentInTheMiddle'
 import SoftwareCard from './SoftwareCard'
 import FlexibleGridSection, {FlexGridProps} from '../layout/FlexibleGridSection'
 import NoContent from '../layout/NoContent'

@@ -7,7 +7,7 @@ import {render,screen, fireEvent} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
 
 import UserMenu from './UserMenu'
-import {userMenuItems} from '../../config/userMenuItems'
+import {userMenuItems} from '~/config/userMenuItems'
 
 it('should render userMenu',()=>{
   render(WrappedComponentWithProps(UserMenu))

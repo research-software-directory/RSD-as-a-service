@@ -3,7 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
 import {GoBackLink} from '~/components/GoBackButton'
 import EmbedLayoutContext from '~/components/layout/embedLayoutContext'
 import {useContext} from 'react'

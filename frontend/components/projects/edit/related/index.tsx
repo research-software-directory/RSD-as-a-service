@@ -3,12 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import useProjectContext from '../useProjectContext'
 import RelatedSoftwareForProject from './RelatedSoftwareForProject'
-import {cfgRelatedItems as config} from './config'
 import RelatedProjectsForProject from './RelatedProjectsForProject'
 
 export default function RelatedItems() {

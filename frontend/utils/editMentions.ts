@@ -7,7 +7,7 @@
 import {
   MentionByType,
   MentionItemProps, MentionForSoftware,
-  MentionForProject, mentionColumns, MentionTypeKeys
+  mentionColumns, MentionTypeKeys
 } from '../types/Mention'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import {getMentionByDoi} from './getDOI'

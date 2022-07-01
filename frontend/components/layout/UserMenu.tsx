@@ -9,51 +9,54 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Avatar from '@mui/material/Avatar'
-import {Divider} from '@mui/material'
+import {Divider, ListItemIcon} from '@mui/material'
 
 import {useAuth} from '../../auth/index'
 import {MenuItemType} from '../../config/menuItems'
 import {getDisplayInitials, splitName} from '../../utils/getDisplayName'
 
-type UserMenuType={
-  name:string,
-  image?:string
-  menuOptions?:MenuItemType[]
+type UserMenuType = {
+  name: string,
+  image?: string
+  menuOptions?: MenuItemType[]
 }
 
-export default function UserMenu(props:UserMenuType) {
+export default function UserMenu(props: UserMenuType) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const {session} = useAuth()
-  const {name, image, menuOptions} = props
+  const {menuOptions} = props
 
-  function handleClick(event: React.MouseEvent<HTMLButtonElement>){
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget)
   }
 
-  function handleClose(item:MenuItemType){
-    if (item?.fn){
+  function handleClose(item: MenuItemType) {
+    if (item?.fn) {
       // call function if provided
       item.fn(item)
-    } else if (item?.path){
+    } else if (item?.path) {
       // push to route if provided
       router.push(item.path)
     }
     setAnchorEl(null)
   }
 
-  function renderMenuOptions(){
-    if (menuOptions){
+  function renderMenuOptions() {
+    if (menuOptions) {
       return (
         menuOptions.map(item => {
           if (item?.type === 'divider') {
-            return <Divider key={item.label} />
+            return <Divider key={item.label}/>
           }
           return (
             <MenuItem
               data-testid="user-menu-option"
               key={item.label}
-              onClick={()=>handleClose(item)}>
+              onClick={() => handleClose(item)}>
+              <ListItemIcon>
+                {item.icon}
+              </ListItemIcon>
               {item.label}
             </MenuItem>
           )
@@ -70,6 +73,11 @@ export default function UserMenu(props:UserMenuType) {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : 'false'}
         onClick={handleClick}
+        sx={{
+          '&:focus-visible': {
+            outline: 'auto'
+          }
+        }}
       >
         <Avatar
           alt={session?.user?.name ?? ''}

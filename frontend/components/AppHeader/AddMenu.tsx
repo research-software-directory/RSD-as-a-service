@@ -5,13 +5,12 @@
 
 import {useState} from 'react'
 import {useRouter} from 'next/router'
-import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import AddIcon from '@mui/icons-material/Add'
-
-import {MenuItemType} from '~/config/menuItems'
-import {addMenuItems} from '~/config/addMenuItems'
+import TerminalIcon from '@mui/icons-material/Terminal'
+import ListAltIcon from '@mui/icons-material/ListAlt'
+import {IconButton, ListItemIcon} from '@mui/material'
 
 export default function AddMenu() {
   const router = useRouter()
@@ -22,13 +21,10 @@ export default function AddMenu() {
     setAnchorEl(event.currentTarget)
   }
 
-  function handleClose(item: MenuItemType) {
-    if (item?.fn) {
-      // call function if provided
-      item.fn(item)
-    } else if (item?.path) {
-      // push to route if provided
-      router.push(item.path)
+  function handleClose(path?: string) {
+    // push to route if provided
+    if (path) {
+      router.push(path)
     }
     setAnchorEl(null)
   }
@@ -36,31 +32,48 @@ export default function AddMenu() {
   return (
     <>
       <IconButton
+        className="group"
         size="large"
         data-testid="add-menu-button"
         aria-controls="add-menu"
         aria-haspopup="true"
         aria-expanded={open ? 'true' : 'false'}
         onClick={handleClick}
+        sx={{
+          'color': 'primary.contrastText',
+          '&:hover': {
+            color: 'primary.main'
+          },
+          alignSelf: 'center',
+          '&:focus-visible': {
+            outline: 'auto'
+          }
+        }}
       >
-        <AddIcon className="text-white"/>
+        <AddIcon />
       </IconButton>
+
       <Menu
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={() => handleClose()}
         MenuListProps={{'aria-labelledby': 'menu-button'}}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
       >
-        {addMenuItems.map(item =>
-          <MenuItem
-            data-testid="add-menu-option"
-            key={item.label}
-            onClick={() => handleClose(item)}>
-            {item.label}
-          </MenuItem>
-        )}
+        <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/software/add')}>
+          <ListItemIcon>
+            <TerminalIcon/>
+          </ListItemIcon>
+          New Software
+        </MenuItem>
+
+        <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/projects/add')}>
+          <ListItemIcon>
+            <ListAltIcon/>
+          </ListItemIcon>
+          New Project
+        </MenuItem>
       </Menu>
     </>
   )
