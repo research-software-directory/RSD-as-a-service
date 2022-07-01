@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: build and release
+name: release
 
 on:
   workflow_dispatch:
@@ -171,10 +171,10 @@ jobs:
         run: |
           zip --junk-paths deployment.zip \
             ./deployment/docker-compose.yml \
-            ./deployment/.env.example \
+            ./nginx/nginx.conf \
+            .env.example \
             ./deployment/README.md \
-            CITATION.cff \
-            LICENSE
+            CITATION.cff
 
       - name: Upload deployment.zip
         # https://github.com/actions/upload-artifact
