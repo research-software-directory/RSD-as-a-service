@@ -27,6 +27,7 @@ services:
       - pgdb:/var/lib/postgresql/data/
     networks:
       - net
+    restart: always
 
   backend:
     container_name: backend
@@ -44,6 +45,7 @@ services:
       - database
     networks:
       - net
+    restart: always
 
   auth:
     container_name: auth
@@ -75,6 +77,7 @@ services:
       - backend
     networks:
       - net
+    restart: always
 
   frontend:
     container_name: frontend
@@ -104,7 +107,7 @@ services:
       - auth
     networks:
       - net
-
+    restart: always
   scrapers:
     container_name: scrapers
     image: ghcr.io/research-software-directory/rsd-saas/scrapers:latest
@@ -123,12 +126,15 @@ services:
       - backend
     networks:
       - net
+    restart: always
   nginx:
     container_name: nginx
     image: ghcr.io/research-software-directory/rsd-saas/nginx:latest
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - database
       - backend
@@ -136,6 +142,7 @@ services:
       - frontend
     networks:
       - net
+    restart: always
 
 # define name for docker network
 # it should have name: rsd-as-a-service_net
