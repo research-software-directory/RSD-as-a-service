@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 dv4all
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -27,7 +29,7 @@ services:
       - pgdb:/var/lib/postgresql/data/
     networks:
       - net
-    restart: always
+    restart: unless-stopped
 
   backend:
     container_name: backend
@@ -45,7 +47,7 @@ services:
       - database
     networks:
       - net
-    restart: always
+    restart: unless-stopped
 
   auth:
     container_name: auth
@@ -77,7 +79,7 @@ services:
       - backend
     networks:
       - net
-    restart: always
+    restart: unless-stopped
 
   frontend:
     container_name: frontend
@@ -107,7 +109,7 @@ services:
       - auth
     networks:
       - net
-    restart: always
+    restart: unless-stopped
   scrapers:
     container_name: scrapers
     image: ghcr.io/research-software-directory/rsd-saas/scrapers:latest
@@ -126,7 +128,7 @@ services:
       - backend
     networks:
       - net
-    restart: always
+    restart: unless-stopped
   nginx:
     container_name: nginx
     image: ghcr.io/research-software-directory/rsd-saas/nginx:latest
@@ -142,7 +144,7 @@ services:
       - frontend
     networks:
       - net
-    restart: always
+    restart: unless-stopped
 
 # define name for docker network
 # it should have name: rsd-as-a-service_net
