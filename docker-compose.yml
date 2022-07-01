@@ -14,7 +14,7 @@ services:
   database:
     container_name: database
     build: ./database
-    image: rsd/database:0.1.0
+    image: rsd/database:1.0.0
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -35,7 +35,7 @@ services:
   backend:
     container_name: backend
     build: ./backend-postgrest
-    image: rsd/backend-postgrest:0.0.3
+    image: rsd/backend-postgrest:1.0.0
     expose:
       - 3500
     environment:
@@ -53,7 +53,7 @@ services:
   auth:
     container_name: auth
     build: ./authentication
-    image: rsd/auth:0.1.0
+    image: rsd/auth:1.0.0
     expose:
       - 7000
     environment:
@@ -89,7 +89,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to corespond to frontend/package.json
-    image: rsd/frontend:0.12.0
+    image: rsd/frontend:1.0.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -119,7 +119,7 @@ services:
   scrapers:
     container_name: scrapers
     build: ./scrapers
-    image: rsd/scrapers:0.1.6
+    image: rsd/scrapers:1.0.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -140,7 +140,7 @@ services:
     container_name: nginx
     build:
       context: ./nginx
-    image: rsd/nginx:0.0.2
+    image: rsd/nginx:1.0.0
     ports:
       - "80:80"
       - "443:443"
