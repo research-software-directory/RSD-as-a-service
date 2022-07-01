@@ -29,7 +29,8 @@ export const FlexibleGridSection = styled('section', {
     // padding: '1rem 0rem 1rem 0rem',
     alignItems: 'flex-start',
     // borderBottom: `1px solid ${theme.palette.divider}`,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
+    overflow: 'auto'
   }
   if (height) {
     // dynamic grid-auto-rows

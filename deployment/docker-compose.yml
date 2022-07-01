@@ -15,9 +15,11 @@ services:
     expose:
       - 5432
     environment:
+      # it uses values from .env file
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - POSTGRES_AUTHENTICATOR_PASSWORD
     volumes:
       # persist data in named docker volume
       # to remove use: docker-compose down --volumes
@@ -33,7 +35,7 @@ services:
       - 3500
     environment:
       # it needs to be here to use values from .env file
-      - PGRST_DB_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/rsd-db
+      - PGRST_DB_URI=postgres://authenticator:${POSTGRES_AUTHENTICATOR_PASSWORD}@database:5432/${POSTGRES_DB}
       - PGRST_DB_ANON_ROLE
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT
@@ -51,10 +53,22 @@ services:
     environment:
       # it uses values from .env file
       - POSTGREST_URL
+      - RSD_AUTH_PROVIDERS
+      - RSD_ADMIN_EMAIL_LIST
+      - RSD_AUTH_USER_MAIL_WHITELIST
       - NEXT_PUBLIC_SURFCONEXT_CLIENT_ID
       - NEXT_PUBLIC_SURFCONEXT_REDIRECT
       - NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL
+      - NEXT_PUBLIC_SURFCONEXT_SCOPES
+      - NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID
+      - NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT
+      - NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL
+      - NEXT_PUBLIC_HELMHOLTZAAI_SCOPES
+      - HELMHOLTZAAI_ALLOW_EXTERNAL_USERS
       - AUTH_SURFCONEXT_CLIENT_SECRET
+      - AUTH_SURFCONEXT_TOKEN_URL
+      - AUTH_HELMHOLTZAAI_CLIENT_SECRET
+      - AUTH_HELMHOLTZAAI_TOKEN_URL
       - PGRST_JWT_SECRET
     depends_on:
       - database
@@ -66,12 +80,22 @@ services:
     container_name: frontend
     image: ghcr.io/research-software-directory/rsd-saas/frontend:latest
     environment:
+      # it uses values from .env file
       - POSTGREST_URL
-      - RSD_AUTH_URL
       - PGRST_JWT_SECRET
+      - RSD_AUTH_URL
+      - RSD_AUTH_PROVIDERS
+      - HOTJAR_ID
       - NEXT_PUBLIC_SURFCONEXT_CLIENT_ID
       - NEXT_PUBLIC_SURFCONEXT_REDIRECT
       - NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL
+      - NEXT_PUBLIC_SURFCONEXT_SCOPES
+      - NEXT_PUBLIC_SURFCONEXT_RESPONSE_MODE
+      - NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID
+      - NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT
+      - NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL
+      - NEXT_PUBLIC_HELMHOLTZAAI_SCOPES
+      - NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE
     expose:
       - 3000
     depends_on:
@@ -92,6 +116,8 @@ services:
       - MAX_REQUESTS_GITLAB
       - API_CREDENTIALS_GITHUB
       - ZENODO_ACCESS_TOKEN
+      - MAX_REQUESTS_DOI
+      - CROSSREF_CONTACT_EMAIL
     depends_on:
       - database
       - backend
