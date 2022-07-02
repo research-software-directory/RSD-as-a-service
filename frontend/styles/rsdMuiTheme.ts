@@ -52,6 +52,9 @@ export function loadMuiTheme(theme:RsdThemes) {
   if (theme === 'dark') {
     muiTheme.palette.mode = 'dark'
   }
+  // console.group('loadMuiTheme')
+  // console.log('muiTheme...', muiTheme)
+  // console.groupEnd()
   return muiTheme
 }
 
@@ -97,6 +100,7 @@ function applyThemeConfig({colors,muiTypography}:ThemeConfig) {
         paper: colors.paper,
         default: colors.background,
       },
+      action: colors.action
     },
     shape: {
       borderRadius: 2
