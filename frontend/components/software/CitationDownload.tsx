@@ -75,7 +75,7 @@ export default function CitationFormat({citation}: { citation: SoftwareCitationC
         sx={{
           display:'flex',
           justifyContent:'flex-start',
-          minWidth:['14rem'],
+          minWidth:['15rem'],
           ml:[null,2],
           p:2,
         }}
