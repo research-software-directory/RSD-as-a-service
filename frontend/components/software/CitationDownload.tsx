@@ -62,7 +62,7 @@ export default function CitationFormat({citation}: { citation: SoftwareCitationC
   }
 
   return (
-    <div className='flex flex-col md:flex-row'>
+    <div className='flex flex-col md:flex-row items-center'>
       <CiteDropdown
         label="Choose a reference manager format:"
         options={options}
@@ -70,21 +70,18 @@ export default function CitationFormat({citation}: { citation: SoftwareCitationC
         onChange={onFormatChange}
       />
       <Button
-        disabled={format.v===''}
+        disabled={format.v === ''}
+        startIcon={<DownloadIcon />}
         sx={{
           display:'flex',
           justifyContent:'flex-start',
-          minWidth:['100%','13rem'],
+          minWidth:['14rem'],
           ml:[null,2],
           p:2,
         }}
+        href={`/api/fe/cite/${citation.id}?f=${format.f}&t=${format.t}&n=${format.n}`}
       >
-        <DownloadIcon sx={{mr:1}}/>
-        <a href={`/api/fe/cite/${citation.id}?f=${format.f}&t=${format.t}&n=${format.n}`}
-          download={format.n}
-        >
-          Download file
-        </a>
+        Download file
       </Button>
     </div>
   )
