@@ -55,7 +55,7 @@ export default function LoginButton() {
         href={providers[0].redirectUrl}
         passHref
       >
-        <a className="whitespace-nowrap" tabIndex={0}>
+        <a className="whitespace-nowrap rsd-login-button" tabIndex={0}>
           Sign in
         </a>
       </Link>
@@ -66,7 +66,7 @@ export default function LoginButton() {
   if (providers && providers.length > 1) {
     return (
        <div className="whitespace-nowrap">
-        <button onClick={handleClickOpen} tabIndex={0}>
+        <button onClick={handleClickOpen} tabIndex={0} className="rsd-login-button">
           Sign in
         </button>
         <Dialog

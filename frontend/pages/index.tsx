@@ -60,6 +60,16 @@ export default function Home({software, projects, organisations}: HomeProps) {
     }
   }
 
+  const handleClickOpen = () => {
+    const loginButton = document.querySelector('.rsd-login-button')
+    if (loginButton) {
+      const evt = new MouseEvent('click', {
+        bubbles: true
+      })
+      loginButton.dispatchEvent(evt)
+    }
+  }
+
   return (
      <div className="bg-white text-white bg-secondary">
 
