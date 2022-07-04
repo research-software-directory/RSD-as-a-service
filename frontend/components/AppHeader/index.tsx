@@ -119,7 +119,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
           </div>
         </div>
       </div>
-      <GlobalSearchAutocomplete className="sm:hidden float-right w-full mb-2"/>
+      <GlobalSearchAutocomplete className="sm:hidden float-right w-full mb-4"/>
     </header>
   )
 }

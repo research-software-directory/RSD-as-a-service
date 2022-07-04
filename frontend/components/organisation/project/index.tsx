@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect} from 'react'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {OrganisationPageProps} from 'pages/organisations/[...slug]'
 import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
@@ -23,6 +24,10 @@ export default function OrganisationProjects({organisation, session, isMaintaine
     token: session.token,
     isMaintainer
   })
+  // use media query hook for small screen logic
+  const smallScreen = useMediaQuery('(max-width:600px)')
+  // adjust grid min width for mobile to 18rem
+  const minWidth = smallScreen ? '18rem' : '26rem'
 
   useEffect(() => {
     if (count && loading === false) {
@@ -40,7 +45,7 @@ export default function OrganisationProjects({organisation, session, isMaintaine
   return (
     <FlexibleGridSection
       height='17rem'
-      minWidth='25rem'
+      minWidth={minWidth}
       maxWidth='1fr'
       className="gap-[0.125rem] pt-2 pb-12"
     >

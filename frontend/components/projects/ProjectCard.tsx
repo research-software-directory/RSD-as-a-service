@@ -85,7 +85,7 @@ export default function ProjectCard({slug, title, subtitle, image_id, updated_at
               noImgMsg='no image'
             />
           </section>
-          <section className="flex-1 flex flex-col py-4 pl-6">
+          <section className="flex-1 flex flex-col py-4 md:pl-6">
             <h2
               title={title}
               className={`max-h-[6rem] overflow-clip ${titleMargin}`}>

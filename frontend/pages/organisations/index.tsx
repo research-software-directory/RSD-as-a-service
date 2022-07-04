@@ -67,8 +67,8 @@ export default function OrganisationsIndexPage({count,page,rows,organisations=[]
         <title>Organisations | {app.title}</title>
       </Head>
       <PageTitle title="Organisations">
-        <div className="flex flex-wrap justify-end">
-          <div className="flex items-center">
+        <div className="md:flex flex-wrap justify-end">
+          <div className="flex items-center lg:ml-4">
             <Searchbox
               placeholder='Search for organisation'
               onSearch={handleSearch}

@@ -3,13 +3,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import useMediaQuery from '@mui/material/useMediaQuery'
+
 import {RelatedProject} from '../../types/Project'
 import PageContainer from '../layout/PageContainer'
-
 import ProjectsGrid from './ProjectsGrid'
 
 export default function RelatedProjectsSection({relatedProjects}:
-  {relatedProjects: RelatedProject[]}) {
+  { relatedProjects: RelatedProject[] }) {
+  // use media query hook for small screen logic
+  const smallScreen = useMediaQuery('(max-width:600px)')
+  // adjust grid min width for mobile
+  const minWidth = smallScreen ? '18rem' : '26rem'
   // do not show section if no data
   if (typeof relatedProjects == 'undefined' || relatedProjects.length === 0) return null
 
@@ -22,7 +27,7 @@ export default function RelatedProjectsSection({relatedProjects}:
       </h2>
       <ProjectsGrid
         className='gap-[0.125rem]'
-        minWidth='26rem'
+        minWidth={minWidth}
         maxWidth='1fr'
         height='17rem'
         projects={relatedProjects}
