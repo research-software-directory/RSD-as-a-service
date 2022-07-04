@@ -40,11 +40,11 @@ dutch-techcentre-for-life-sciences,Dutch Techcentre for Life Sciences,,https://r
 ec-earth,EC-Earth,https://github.com/EC-Earth,,project
 ecmwf,ECMWF,https://www.ecmwf.int/,https://ror.org/014w0fd65,
 eindhoven-university-of-technology,Eindhoven University of Technology,https://www.tue.nl/en/,https://ror.org/02c2kyt77,
-eneco,Eneco,,,company
+eneco,Eneco,https://www.eneco.nl/,,company
 erasmus-mc,Erasmus MC,,https://ror.org/018906e22,
 erasmus-university-medical-center,Erasmus University Medical Center,https://www.erasmusmc.nl/,https://ror.org/018906e22,
 erasmus-university-rotterdam,Erasmus University Rotterdam,,https://ror.org/057w15z03,
-esiwace,ESiWACE,,,project
+esiwace,ESiWACE,https://www.esiwace.eu/,,project
 eth-zurich,ETH Zurich,https://ethz.ch,https://ror.org/05a28rw58,
 eu-horizon-2020,EU Horizon 2020,,https://ror.org/019w4f821,
 european-network-for-cyber-security,European Network for Cyber Security,https://encs.eu/,https://ror.org/0584wbt59,
@@ -81,7 +81,7 @@ leiden-university-medical-center,Leiden University Medical Center,https://www.lu
 lifewatch-eric,LifeWatch ERIC,https://www.lifewatch.eu/,,project
 ludwig-maximilians-universitat-munchen,Ludwig-Maximilians-Universität München,,https://ror.org/05591te55,
 ludwig-maximilian-university-of-munich,Ludwig Maximilian University of Munich,https://www.en.uni-muenchen.de/index.html,https://ror.org/05591te55,
-lufthansa-systems,Lufthansa Systems,,,company
+lufthansa-systems,Lufthansa Systems,https://www.lhsystems.com/,,company
 maastricht-university,Maastricht University,https://www.maastrichtuniversity.nl,https://ror.org/02jz4aj89,
 maastricht-university-medical-center,Maastricht University Medical Center+,,https://ror.org/02d9ce178,
 maastro,Maastro,,https://ror.org/059wkzj26,
@@ -112,19 +112,19 @@ nizo,NIZO,,https://ror.org/05ddg7v64,
 nunhems,Nunhems,https://www.nunhems.com/nl/nl.html,,company
 odissei,ODISSEI,https://odissei-data.nl/en/,https://ror.org/03m8v6t10,
 openda,OpenDA,http://www.openda.org/,,association
-open-universiteit,Open Universiteit,,,
+open-universiteit,Open Universiteit,,https://ror.org/018dfmf50,
 oracle,Oracle,https://www.oracle.com/database/index.html,https://ror.org/018dfmf50,
 philips,Philips,,https://ror.org/02p2bgp27,
 phortos,Phortos,https://www.phortosconsultants.com/,,company
 plymouth-marine-laboratory,Plymouth Marine Laboratory,https://www.plymouth.ac.uk/research/institutes/marine-institute,https://ror.org/05av9mn02,
 politecnico-milano,Politecnico Milano,,https://ror.org/01nffqt88,
 potree,Potree,http://potree.org,,project
-process,PROCESS,,,project
+process,PROCESS,https://www.process-project.eu/,,project
 radboud-university,Radboud University,,https://ror.org/016xsfp80,
 radboud-university-medical-center,Radboud University Medical Center,,https://ror.org/05wg1m734,
 radboud-university-nijmegen,Radboud University Nijmegen,http://www.ru.nl/,https://ror.org/016xsfp80,
 rijkswaterstaat,Rijkswaterstaat,http://www.rijkswaterstaat.nl/,,governmental
-rijk-zwaan,Rijk Zwaan,,,
+rijk-zwaan,Rijk Zwaan,https://www.rijkzwaan.nl/,https://ror.org/00dzkep57,
 royal-haskoningdhv,Royal HaskoningDHV,,https://ror.org/020v32r42,
 royal-netherlands-academy-of-arts-and-sciences,Royal Netherlands Academy of Arts and Sciences,,https://ror.org/043c0p156,
 royal-netherlands-institute-for-sea-research,Royal Netherlands Institute for Sea Research,,https://ror.org/01gntjh03,
@@ -137,7 +137,7 @@ software-for-chemicals-materials,Software for Chemicals & Materials,,https://ror
 sorbonne-universite,Sorbonne Université,https://www.sorbonne-universite.fr/,https://ror.org/02en5vm52,
 spinlab,SPINlab,https://spinlab.vu.nl,,department of VU
 surf,SURF,https://www.surf.nl/,https://ror.org/009vhk114,
-surfnet,SURFnet,,,"no longer exists, now SURF"
+surfnet,SURFnet,https://www.surf.nl/ict-voorzieningen/netwerkinfrastructuur,,"no longer exists, now SURF"
 surfsara,SURFsara,https://www.surf.nl/en/about-surf/subsidiaries/surfsara/,https://ror.org/01k0v6g02,
 swedish-meteorological-and-hydrological-institute,Swedish Meteorological and Hydrological Institute,https://www.smhi.se/en,https://ror.org/00hgzve81,
 tata-memorial-centre,Tata Memorial Centre,,https://ror.org/010842375,
