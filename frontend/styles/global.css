@@ -127,7 +127,9 @@ pre {
 Tailwind remove max-width for markdown
 */
 .prose{
-  max-width: none;
+  max-width: inherit;
+  overflow: hidden;
+  word-break: break-word;
 }
 
 /* ---------------------
