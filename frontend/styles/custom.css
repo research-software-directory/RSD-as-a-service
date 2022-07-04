@@ -1,3 +1,14 @@
+/*
+ * SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
+ * SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 .bg-landing-page {
   background: linear-gradient(rgb(0, 40, 100), 35%, transparent) repeat scroll 0% 0%, rgba(0, 0, 0, 0) url("/images/bg_hifis_rsd.jpg") repeat scroll 0% 0%;
+}
+header input {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: none !important;
 }
