@@ -61,16 +61,28 @@ export default function CitationFormat({citation}: { citation: SoftwareCitationC
     }
   }
 
-  return (
-    <div className='flex flex-col md:flex-row items-center'>
-      <CiteDropdown
-        label="Choose a reference manager format:"
-        options={options}
-        value={format.v}
-        onChange={onFormatChange}
-      />
+  function renderDownloadBtn(){
+    if (format.v === ''){
+      // return disabled button
+      return(
+        <Button
+          disabled={true}
+          startIcon={<DownloadIcon />}
+          sx={{
+            display:'flex',
+            justifyContent:'flex-start',
+            minWidth:['15rem'],
+            ml:[null,2],
+            p:2,
+          }}
+        >
+          Download file
+        </Button>
+      )
+    }
+    // return download link
+    return (
       <Button
-        disabled={format.v === ''}
         startIcon={<DownloadIcon />}
         sx={{
           display:'flex',
@@ -83,6 +95,18 @@ export default function CitationFormat({citation}: { citation: SoftwareCitationC
       >
         Download file
       </Button>
+    )
+  }
+
+  return (
+    <div className='flex flex-col items-center md:flex-row'>
+      <CiteDropdown
+        label="Choose a reference manager format:"
+        options={options}
+        value={format.v}
+        onChange={onFormatChange}
+      />
+      {renderDownloadBtn()}
     </div>
   )
 }
