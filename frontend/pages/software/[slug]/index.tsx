@@ -132,13 +132,13 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         : undefined
       }/>
 
-      <PageContainer>
+      {/* <PageContainer> */}
         <SoftwareIntroSection
           brand_name={software.brand_name}
           short_statement={software.short_statement}
           counts={softwareIntroCounts}
         />
-      </PageContainer>
+      {/* </PageContainer> */}
 
       <GetStartedSection
         get_started_url={software.get_started_url}

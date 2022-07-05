@@ -55,7 +55,7 @@ export default function OrganisationTitle({title, slug, showSearch=false}:
     >
       <div className="flex-1">
         <h1 className="flex-1 w-full md:mt-4">{title}</h1>
-        <div className='w-full'>
+        <div className="w-full mb-4 md:mb-0">
           <Breadcrumbs
             segments={createSegments(slug)}
           />

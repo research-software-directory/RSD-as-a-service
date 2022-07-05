@@ -3,10 +3,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import useMediaQuery from '@mui/material/useMediaQuery'
+
 import PageContainer from '../layout/PageContainer'
 import SoftwareGrid, {SoftwareGridType} from './SoftwareGrid'
 
-export default function RelatedSoftwareSection({relatedSoftware=[]}: {relatedSoftware: SoftwareGridType[]}) {
+export default function RelatedSoftwareSection({relatedSoftware = []}: { relatedSoftware: SoftwareGridType[] }) {
+  // use media query hook for small screen logic
+  const smallScreen = useMediaQuery('(max-width:600px)')
+  // adjust grid min width for mobile
+  const minWidth = smallScreen ? '18rem' : '26rem'
   // do not render if no data
   if (relatedSoftware?.length === 0) return null
 
@@ -22,7 +28,7 @@ export default function RelatedSoftwareSection({relatedSoftware=[]}: {relatedSof
         software={relatedSoftware}
         grid={{
           height: '17rem',
-          minWidth:'26rem',
+          minWidth,
           maxWidth:'1fr'
         }}
       />

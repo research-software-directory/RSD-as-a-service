@@ -21,24 +21,22 @@ export default function OrganisationsSection({organisations = []}: { organisatio
   if (organisations?.length === 0) return null
 
   return (
-    <section>
-      <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
-        <h2
-          data-testid="software-contributors-section-title"
-          className="pb-8 text-[2rem] text-primary leading-10">
-          Participating organisations
-        </h2>
-        <OrganisationGridSection>
-          {organisations.map((item, pos) => {
-            return (
-              <ParticipatingOrganisation
-                key={pos}
-                {...item}
-              />
-            )
-          })}
-        </OrganisationGridSection>
-      </PageContainer>
-    </section>
+    <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
+      <h2
+        data-testid="software-contributors-section-title"
+        className="pb-8 text-[2rem] text-primary leading-10">
+        Participating organisations
+      </h2>
+      <OrganisationGridSection>
+        {organisations.map((item, pos) => {
+          return (
+            <ParticipatingOrganisation
+              key={pos}
+              {...item}
+            />
+          )
+        })}
+      </OrganisationGridSection>
+    </PageContainer>
   )
 }

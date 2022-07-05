@@ -32,7 +32,7 @@ export default function ProjectDescription({image_id,image_caption,description}:
   return (
     <article>
       {getImage()}
-      <div className="text-sm text-grey-600 mt-2 mb-4">{image_caption}</div>
+      <div className="text-sm text-grey-600 mt-2 mb-4" style={{wordBreak:'break-word'}}>{image_caption}</div>
       <ReactMarkdownWithSettings
         markdown={description}
       />
