@@ -18,6 +18,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -34,6 +36,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -58,6 +61,7 @@ public class Main {
 			"https://github.com/TODO");
 
 	public static final Collection<String> softwareSlugsToFeature = new HashSet<>();
+	public static final Map<String, String> collapsedOrgNames = new HashMap<>();
 
 	public static void main(String[] args) {
 		String signingSecret = System.getenv("PGRST_JWT_SECRET");
@@ -117,10 +121,11 @@ public class Main {
 		Map<String, String> conceptDoiToSoftwareId = conceptDoiToSoftwareId(allSoftwareFromLegacyRSD, slugToIdSoftware);
 		saveReleases(allReleasesFromLegacyRSD, conceptDoiToSoftwareId);
 
-		saveOrganisations(allOrganisationsFromLegacyRSD);
+		Map<String, OrgData> slugToOrgData = parseOrgCsv();
+		saveOrganisations(allOrganisationsFromLegacyRSD, slugToOrgData);
 		Map<String, String> orgNameToId = orgNameToId();
 		saveOrganisationLogos(allOrganisationsFromLegacyRSD, orgNameToId);
-		Map<String, String> legacyOrgIdToId = idToIdOrg(allOrganisationsFromLegacyRSD, orgNameToId);
+		Map<String, String> legacyOrgIdToId = idToIdOrg(allOrganisationsFromLegacyRSD, orgNameToId, collapsedOrgNames);
 		saveOrganisationsRelatedToSoftware(allSoftwareFromLegacyRSD, slugToIdSoftware, legacyOrgIdToId);
 		saveProjectsRelatedToSoftware(allProjectsFromLegacyRSD, slugToIdProject, legacyOrgIdToId);
 	}
@@ -934,7 +939,53 @@ public class Main {
 		post(URI.create(POSTGREST_URI + "/release_content"), allReleaseContentsToSave.toString());
 	}
 
-	public static void saveOrganisations(JsonArray allOrganisationsFromLegacyRSD) {
+	static class OrgData {
+		public String slug;
+		public String name;
+		public String website;
+		public String rorId;
+		public String comment;
+
+		public OrgData(String slug, String name, String website, String rorId, String comment) {
+			this.slug = slug;
+			this.name = name;
+			this.website = website;
+			this.rorId = rorId;
+			this.comment = comment;
+		}
+	}
+
+	public static Map<String, OrgData> parseOrgCsv() {
+		Map<String, OrgData> slugToOrgData = new HashMap<>();
+		try {
+			Scanner orgCsvScanner = new Scanner(new File("src/main/resources/organisation_202207011308.csv"));
+			// first line is the header
+			orgCsvScanner.nextLine();
+			while (orgCsvScanner.hasNext()) {
+				String orgLine = orgCsvScanner.nextLine();
+				String[] orgDataArray = orgLine.split(";");
+				if (orgDataArray.length != 5 && orgDataArray.length != 4) {
+					throw new RuntimeException("Unexpected length: " + orgDataArray.length + ", line is: " + orgLine);
+				}
+				String slug = orgDataArray[0].isBlank() ? null : orgDataArray[0].replace("\"", "");
+				String name = orgDataArray[1].isBlank() ? null : orgDataArray[1].replace("\"", "");
+				String website = orgDataArray[2].isBlank() ? null : orgDataArray[2].replace("\"", "");
+				String rorId = orgDataArray[3].isBlank() ? null : orgDataArray[3].replace("\"", "");
+//				if there is no comment, the line ends with a delimiter and the split function doesn't
+//				consider the comment part to be an empty string
+				String comment = orgDataArray.length == 5 ? orgDataArray[4].replace("\"", "") : null;
+
+				OrgData orgData = new OrgData(slug, name, website, rorId, comment);
+				slugToOrgData.put(slug, orgData);
+			}
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		return slugToOrgData;
+	}
+
+	public static void saveOrganisations(JsonArray allOrganisationsFromLegacyRSD, Map<String, OrgData> slugToOrgData) {
+		Map<String, String> usedRorIdsToName = new HashMap<>();
 		JsonArray allOrganisationsToSave = new JsonArray();
 		Set<String> existingNames = new HashSet<>();
 		Set<String> existingSlugs = new HashSet<>();
@@ -982,6 +1033,14 @@ public class Main {
 				organisationToSave.addProperty("website", website);
 				if (website != null) existingWebsites.add(website);
 			}
+
+			String rorId = slugToOrgData.get(slug).rorId;
+			if (usedRorIdsToName.containsKey(rorId)) {
+				collapsedOrgNames.put(name, usedRorIdsToName.get(rorId));
+				return;
+			}
+			if (rorId != null) usedRorIdsToName.put(rorId, name);
+			organisationToSave.addProperty("ror_id", rorId);
 			allOrganisationsToSave.add(organisationToSave);
 		});
 		post(URI.create(POSTGREST_URI + "/organisation"), allOrganisationsToSave.toString());
@@ -1013,7 +1072,7 @@ public class Main {
 			if (name.equals("FUGRO")) return;
 
 			String orgId = orgNameToId.get(name);
-			if (orgId == null) System.out.println(name);
+			if (orgId == null) return;
 			if (existingIds.contains(orgId)) return;
 
 			logoToSave.addProperty("organisation", orgId);
@@ -1028,11 +1087,12 @@ public class Main {
 		post(URI.create(POSTGREST_URI + "/logo_for_organisation"), allLogosToSave.toString());
 	}
 
-	public static Map<String, String> idToIdOrg(JsonArray allOrganisationsFromLegacyRSD, Map<String, String> nameToId) {
+	public static Map<String, String> idToIdOrg(JsonArray allOrganisationsFromLegacyRSD, Map<String, String> nameToId, Map<String, String> collapsedOrgNames) {
 		Map<String, String> idToId = new HashMap<>();
 		allOrganisationsFromLegacyRSD.forEach(jsonElement -> {
 			String idLegacy = jsonElement.getAsJsonObject().getAsJsonObject("primaryKey").getAsJsonPrimitive("id").getAsString();
 			String name = jsonElement.getAsJsonObject().getAsJsonPrimitive("name").getAsString();
+			if (collapsedOrgNames.containsKey(name)) name = collapsedOrgNames.get(name);
 			String idNew = nameToId.get(name);
 			idToId.put(idLegacy, idNew);
 		});
