@@ -18,13 +18,14 @@ export type SoftwareCardType = {
   is_published?: boolean
 }
 
-export default function SoftwareCard({
-                                       href, brand_name, short_statement, is_featured,
-                                       updated_at, mention_cnt, contributor_cnt, is_published
-                                     }: SoftwareCardType) {
+export default function SoftwareCard({href, brand_name, short_statement, is_featured,
+  updated_at, mention_cnt, contributor_cnt, is_published}: SoftwareCardType) {
 
   const colors = is_featured ? 'bg-base-300 text-content' : 'bg-base-200 text-content'
   const today = new Date()
+  // if not published use opacity 0.50
+  let opacity = ''
+  if (typeof is_published !='undefined' && is_published===false) opacity='opacity-50'
 
   function getInitals() {
     if (brand_name) {
@@ -92,10 +93,9 @@ export default function SoftwareCard({
 
   return (
     <Link href={href} passHref>
-      <section className="h-full">
-        <a
-          className={`flex flex-col h-full ${colors} hover:bg-secondary group`}>
-
+      {/* anchor tag MUST be first element after Link component */}
+      <a className="flex flex-col h-full">
+        <article className={`flex-1 flex flex-col ${colors} ${opacity} hover:bg-secondary group`}>
           <div className="flex relative">
             <h2
               title={brand_name}
@@ -117,8 +117,8 @@ export default function SoftwareCard({
             </span>
             {renderCounts()}
           </div>
-        </a>
-      </section>
+        </article>
+      </a>
     </Link>
   )
 }
