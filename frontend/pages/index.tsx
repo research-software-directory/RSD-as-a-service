@@ -48,46 +48,50 @@ type HomeProps = {
   organisations: number
 }
 
-
-export default function Home({software,projects,organisations}:HomeProps) {
+export default function Home({software, projects, organisations}: HomeProps) {
   const [isDark, setDark] = useState(true)
 
   // Initialize AOS library
-  useEffect(() => { AOS.init() }, [])
+  useEffect(() => {
+    AOS.init()
+  }, [])
 
   return (
-      <div className="bg-white dark:bg-black dark:text-white">
-        {/* Header  */}
-        <AppHeader/>
+    <div className="bg-white dark:bg-black dark:text-white">
+      {/* Header  */}
+      <AppHeader/>
 
-        {/* Jumbo Banner  */}
-        <div className="mx-auto mt-20 relative overflow-x-clip">
+      {/* Jumbo Banner  */}
+      <div className="mx-auto mt-20 relative overflow-x-clip">
 
-          {/* Jumbo Image*/}
-          <div className="max-w-[1200px] mx-auto ">
-            <div className="pointer-events-none absolute w-full h-full -top-[170px] md:-top-48 -left-[60px] md:left-[50%] opacity-50 md:opacity-100">
-            <Image src="/images/illustration.webp" width="847" height="760" alt="rsd-illustration" />
-            </div>
+        {/* Jumbo Image*/}
+        <div className="max-w-[1200px] mx-auto ">
+          <div
+            className="pointer-events-none absolute w-full h-full -top-[170px] md:-top-48 -left-[60px] md:left-[50%] opacity-50 md:opacity-100">
+            <Image src="/images/illustration.webp" width="847" height="760" alt="rsd-illustration"/>
           </div>
+        </div>
 
-          <div className="w-full max-w-screen-xl p-5 md:p-10 mx-auto">
-            {/* Jumbo Text*/}
-            <div className="w-full md:w-1/2 flex flex-col justify-center"
-                 data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
-            >
-              <div className="text-5xl font-rsd-titles font-bold">
-                Improving the <br/>impact of research software
-              </div>
-              <div className="mt-8 text-lg">
-                To promote the visibility, reuse and impact of research software,
-                <span className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400 px-1">
+        <div className="w-full max-w-screen-xl p-5 md:p-10 mx-auto">
+          {/* Jumbo Text*/}
+          <div className="w-full md:w-1/2 flex flex-col justify-center"
+               data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
+          >
+            <div className="text-5xl font-rsd-titles font-bold">
+              Improving the <br/>impact of research software
+            </div>
+            <div className="mt-8 text-lg">
+              To promote the visibility, reuse and impact of research software,
+              <span
+                className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400 px-1">
                   the Netherlands eScience Center
                 </span>
-                 has developed the Research Software Directory, a content management system tailored to software.
-              </div>
+              has developed the Research Software Directory, a content management system tailored to
+              software.
+            </div>
 
-              {/* Email  */}
-              {/* <div className="mt-10 flex gap-4">
+            {/* Email  */}
+            {/* <div className="mt-10 flex gap-4">
               <input type="email"
                      className="border p-3 text-xl flex-1 text-white bg-transparent rounded-sm focus:outline-none"
                      placeholder="Email address"/>
@@ -106,18 +110,18 @@ export default function Home({software,projects,organisations}:HomeProps) {
               </button>
 
             </div>*/}
-            <div className="flex gap-4 md:gap-10 mt-10 items-center" >
+            <div className="flex gap-4 md:gap-10 mt-10 items-center">
               <Link href="/software" passHref>
                 <a className="flex gap-4 cursor-pointer"
-                     data-aos="fade" data-aos-offset="200" data-aos-delay="50"
-                     data-aos-duration="1000"
-                     tabIndex={0}>
+                   data-aos="fade" data-aos-offset="200" data-aos-delay="50"
+                   data-aos-duration="1000"
+                   tabIndex={0}>
                   <div className="relative group">
                     <div
                       className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
                     <div
                       className="flex gap-3 text-black relative px-8 py-3 bg-white ring-1 ring-gray-900/5 rounded leading-none items-center space-x-2 ">
-                    <span className="space-y-2 text-xl font-medium  whitespace-nowrap " >
+                    <span className="space-y-2 text-xl font-medium  whitespace-nowrap ">
                       Discover Software
                     </span>
                     </div>
@@ -181,7 +185,13 @@ export default function Home({software,projects,organisations}:HomeProps) {
                     Discover
                   </div>
                   <div className="text-lg mt-5">
-                    Find <span className="text-blue-400"> research software </span> that is relevant to your research
+                    Find
+
+                    <span
+                      className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400 px-1">
+                  research software
+                </span>
+                    that is relevant to your research
                   </div>
                 </div>
               </div>
@@ -199,7 +209,7 @@ export default function Home({software,projects,organisations}:HomeProps) {
                     Share
                   </div>
                   <div className="text-lg mt-5">
-			              Showcase your research software and promote reuse by others.
+                    Showcase your research software and promote reuse by others.
                   </div>
                 </div>
               </div>
@@ -216,7 +226,8 @@ export default function Home({software,projects,organisations}:HomeProps) {
                     Impact
                   </div>
                   <div className="text-lg mt-5">
-			              Enable developers and research organizations to monitor the impact of their research software.
+                    Enable developers and research organizations to monitor the impact of their
+                    research software.
                   </div>
                 </div>
               </div>
