@@ -23,21 +23,18 @@ const colors = {
   'base-content':'rgba(34,36,37,1)',
   // mui - text.disabled
   'base-content-disabled':'rgba(34,36,37,0.45)',
-
   // mui - primary.main
   primary:'#01ad83',
   // mui - primary.contrastText
   'primary-content':'white',
-
   // mui - secondary.main
   secondary:'#000',
   // mui - secondary.contrastText
   'secondary-content':'white',
-
   // mui - not existing in mui
   accent:'#73095d',
   'accent-content':'white',
-
+  // snackbar colors by type
   error:'#e53935',
   'error-content':'black',
   warning:'#ed6c02',
@@ -46,12 +43,7 @@ const colors = {
   'info-content':'black',
   success:'#2e7d32',
   'success-content':'white',
-
-  // mui - divider is on base-300
-  // divider:'#ddd',
-
-  // contrastText:'#fff',
-  //
+  // actions for buttons, comboxes etc.
   action: {
     active: 'rgba(0, 0, 0, 0.54)',
     hover: 'rgba(0, 0, 0, 0.04)',
@@ -65,8 +57,6 @@ const colors = {
     focusOpacity: 0.12,
     activatedOpacity: 0.12
   },
-
-
   // black:'#000',
   // white: '#fff',
   // background: '#fff',

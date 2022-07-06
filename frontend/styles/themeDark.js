@@ -21,21 +21,18 @@ const colors = {
   'base-content':'rgba(255,255,255,0.87)',
   // mui - text.disabled
   'base-content-disabled':'rgba(255,255,255,0.45)',
-
   // mui - primary.main
   primary:'#01ad83',
   // mui - primary.contrastText
   'primary-content':'white',
-
   // mui - secondary.main
   secondary:'#000',
   // mui - secondary.contrastText
   'secondary-content':'white',
-
   // mui - not existing in mui
   accent:'#73095d',
   'accent-content':'white',
-
+  // snackbar colors by type
   error:'#e53935',
   'error-content':'black',
   warning:'#ed6c02',
@@ -43,14 +40,12 @@ const colors = {
   info:'#0288d1',
   'info-content':'black',
   success:'#2e7d32',
-  'success-content':'white',
-
-
-// TODO fix for now until we remove the dark theme
+  'success-content': 'white',
+  // actions for buttons, comboxes etc.
   action: {
     active: 'rgba(255, 255, 255, 0.54)',
     hover: 'rgba(255, 255, 255, 0.4)',
-    hoverOpacity: 1,
+    hoverOpacity: 0.1,
     selected: 'rgba(255, 255, 255, 0.08)',
     selectedOpacity: 0.16,
     disabled: 'rgba(255, 255, 255, 0.26)',
@@ -62,10 +57,7 @@ const colors = {
   },
   // mui - divider is on base-300
   // divider:'#ddd',
-
   // contrastText:'#fff',
-
-
   // black:'#000',
   // white: '#fff',
   // background: '#fff',
