@@ -71,9 +71,9 @@ export default function AboutLanguages({languages}: {languages: ProgramingLangua
       {Object?.keys(stats)?.map((key) => {
         return (
           <li key={key}>
-            {key} <span className="text-grey-500 ml-2">{stats[key].pct}%</span>
+            {key} <span className="ml-2">{stats[key].pct}%</span>
             <div
-              className="bg-grey-400"
+              className="bg-base-300"
               style={{
                 width: `${stats[key].pct}%`,
                 height: '0.5rem',
