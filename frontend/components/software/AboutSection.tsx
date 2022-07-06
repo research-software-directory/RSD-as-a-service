@@ -33,7 +33,7 @@ export default function AboutSection({
 
   return (
     <PageContainer className="flex flex-col px-4 py-12 lg:flex-row lg:pt-0 lg:pb-12">
-      <div className="flex-[3] 2xl:flex-[4] pr-12">
+      <div className="flex-[3] 2xl:flex-[4] md:pr-12">
         <AboutStatement
           brand_name={brand_name}
           description={description}

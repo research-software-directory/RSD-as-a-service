@@ -41,7 +41,7 @@ export default function Searchbox({placeholder, onSearch, delay = 400}: { placeh
       value={state.value}
       sx={{
         flex:1,
-        minWidth: ['inherit', '20.5rem', '19.5rem']
+        minWidth: ['auto','auto', '20rem']
       }}
       onChange={({target})=>{
         setState({

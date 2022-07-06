@@ -17,7 +17,7 @@ export default function ContentHeader({title, subtitle, children}: ContentHeader
   const {embedMode} = useContext(EmbedLayoutContext)
 
   return (
-      <section className="flex flex-col lg:flex-row px-4 py-6 lg:py-12">
+      <section className="flex-1 lg:container lg:mx-auto flex flex-col lg:flex-row px-4 py-6 lg:py-12">
         <div className="flex-1 lg:pr-12">
           {/*go back link*/}
           {embedMode && <GoBackLink/>}

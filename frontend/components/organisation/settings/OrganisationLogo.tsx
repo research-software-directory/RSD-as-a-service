@@ -196,7 +196,7 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,t
   }
 
   return (
-    <div className='py-[3rem]'>
+    <div className='hidden md:block md:py-[3rem]'>
       {renderLogo()}
     </div>
   )

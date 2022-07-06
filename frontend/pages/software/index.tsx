@@ -8,6 +8,7 @@ import Head from 'next/head'
 import {useRouter} from 'next/router'
 import {GetServerSidePropsContext} from 'next/types'
 import TablePagination from '@mui/material/TablePagination'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {app} from '../../config/app'
 import DefaultLayout from '../../components/layout/DefaultLayout'
@@ -24,9 +25,13 @@ import logger from '../../utils/logger'
 
 export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareListItem[]
-}){
+  }) {
   // use next router (hook is only for browser)
   const router = useRouter()
+  // use media query hook for small screen logic
+  const smallScreen = useMediaQuery('(max-width:600px)')
+  // adjust grid min width for mobile to 18rem
+  const minWidth = smallScreen ? '18rem' : '26rem'
 
   // next/previous page button
   function handlePageChange(
@@ -91,7 +96,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
         <title>Software | {app.title}</title>
       </Head>
       <PageTitle title="Software">
-        <div className="flex flex-wrap justify-end">
+        <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center">
             <Searchbox
               placeholder="Search for software"
@@ -126,7 +131,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
       <SoftwareGrid
         grid={{
           height: '17rem',
-          minWidth:'26rem',
+          minWidth,
           maxWidth:'1fr'
         }}
         software={software}

@@ -25,7 +25,7 @@ export const PageTitleSticky = styled('section')(({theme})=>({
 export default function PageTitle({title,children}:{title:string,children?:ReactNode}) {
   return (
     <PageTitleSticky>
-      <h1 className="flex-1 w-full mb-4 md:my-4">{title}</h1>
+      <h1 className="flex-1 flex w-full mb-4 md:my-4">{title}</h1>
       {children}
     </PageTitleSticky>
   )

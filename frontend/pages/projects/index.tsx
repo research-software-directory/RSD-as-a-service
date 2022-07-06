@@ -9,6 +9,7 @@ import {GetServerSidePropsContext} from 'next'
 import {useRouter} from 'next/router'
 
 import TablePagination from '@mui/material/TablePagination'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {rowsPerPageOptions} from '../../config/pagination'
 import {Project} from '../../types/Project'
@@ -23,7 +24,12 @@ import Searchbox from '../../components/form/Searchbox'
 export default function ProjectsIndexPage({count,page,rows,projects=[]}:
   {count:number,page:number,rows:number,projects:Project[]
 }) {
+  // use next router (hook is only for browser)
   const router = useRouter()
+  // use media query hook for small screen logic
+  const smallScreen = useMediaQuery('(max-width:600px)')
+  // adjust grid min width for mobile
+  const minWidth = smallScreen ? '18rem' : '26rem'
 
   function handleChangePage(
     event: MouseEvent<HTMLButtonElement> | null,
@@ -54,7 +60,7 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
         <title>Projects | RSD</title>
       </Head>
       <PageTitle title="Projects">
-        <div className="flex flex-wrap justify-end">
+        <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center lg:ml-4">
             <Searchbox
               placeholder="Search for project"
@@ -79,7 +85,7 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
       <ProjectGrid
         projects={projects}
         height='17rem'
-        minWidth='26rem'
+        minWidth={minWidth}
         maxWidth='1fr'
         className="gap-[0.125rem] pt-4 pb-12"
       />
