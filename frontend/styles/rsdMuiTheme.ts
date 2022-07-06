@@ -93,7 +93,7 @@ function applyThemeConfig({colors,muiTypography}:ThemeConfig) {
       // grey: colors.grey,
       text: {
         primary: colors['base-content'],
-        // secondary: colors.textSecondary,
+        secondary: colors['base-content'],
         disabled: colors['base-content-disabled'],
       },
       divider: colors.base?.['300'],

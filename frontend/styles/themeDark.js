@@ -11,11 +11,11 @@
 const colors = {
   base: {
     // background color for the body - mui: paper and background
-    100: '#ffffff',
+    100: '#0a0a0a',
     // background color variation
-    200: '#c2c2c2',
+    200: '#151515',
     // background color variation
-    300: '#a6a6a6',
+    300: '#2a2a2a',
   },
   // mui - text.primary
   'base-content':'rgba(255,255,255,0.87)',
@@ -49,8 +49,8 @@ const colors = {
 // TODO fix for now until we remove the dark theme
   action: {
     active: 'rgba(255, 255, 255, 0.54)',
-    hover: 'yellow',
-    hoverOpacity: 0.1,
+    hover: 'rgba(255, 255, 255, 0.4)',
+    hoverOpacity: 1,
     selected: 'rgba(255, 255, 255, 0.08)',
     selectedOpacity: 0.16,
     disabled: 'rgba(255, 255, 255, 0.26)',
@@ -60,7 +60,6 @@ const colors = {
     focusOpacity: 0.12,
     activatedOpacity: 0.12
   },
-
   // mui - divider is on base-300
   // divider:'#ddd',
 

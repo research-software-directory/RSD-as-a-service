@@ -17,7 +17,7 @@ const colors = {
     // background color variation
     200: '#EEEEEE',
     // background color variation
-    300: '#d0d0d0',
+    300: '#dcdcdc',
   },
   // mui - text.primary
   'base-content':'rgba(34,36,37,1)',
