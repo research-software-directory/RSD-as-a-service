@@ -47,14 +47,14 @@ export default function AppFooter () {
 
           <div className="mt-8 text-lg">Research Software Directory</div>
           <div className="flex flex-col">
-            <Link href="/" passHref>
-              <a className="footer-link">Home</a>
+            <Link href="/about" passHref>
+              <a className="footer-link">About</a>
             </Link>
-            <Link href="/software" passHref>
-              <a className="footer-link">Software</a>
+            <Link href="/privacy" passHref>
+              <a className="footer-link">Privacy Policy</a>
             </Link>
-            <Link href="/projects" passHref>
-              <a className="footer-link">Projects</a>
+            <Link href="/terms" passHref>
+              <a className="footer-link">Terms of Service</a>
             </Link>
               <a href={isDev ? 'http://localhost:3030' : 'https://research-software-directory.github.io/RSD-as-a-service'}
               target="_blank"
