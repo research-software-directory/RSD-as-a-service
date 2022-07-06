@@ -199,7 +199,7 @@ export default function Home({software,projects,organisations}:HomeProps) {
                     Share
                   </div>
                   <div className="text-lg mt-5">
-			Showcase your research software and promote reuse by others.
+			              Showcase your research software and promote reuse by others.
                   </div>
                 </div>
               </div>
@@ -216,7 +216,7 @@ export default function Home({software,projects,organisations}:HomeProps) {
                     Impact
                   </div>
                   <div className="text-lg mt-5">
-			Enable research organizations to monitor the impact of their research software.
+			              Enable research organizations to monitor the impact of their research software.
                   </div>
                 </div>
               </div>
