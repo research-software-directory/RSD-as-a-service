@@ -15,7 +15,8 @@ module.exports = {
     logo: '/images/circle.webp',
     // logoDark: '/images/heroDark.webp',
     repo: 'research-software-directory/RSD-as-a-service',
-    // docsDir: 'docs',
+    docsDir: 'documentation/docs',
+    docsBranch: 'main',
     displayAllHeaders: true, // Default: false
 
     navbar: [
