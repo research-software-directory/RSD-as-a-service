@@ -145,7 +145,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
               className="animate-pulse">No results...</span></div>}
             {searchResults.map((item, index) =>
               <div key={index}
-                   className={`${selected === index ? 'bg-[#09A1E3] text-white' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
+                   className={`${selected === index ? 'bg-primary text-white' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
                    onClick={handleClick}
                    onMouseEnter={() => setSelected(index)}
               >

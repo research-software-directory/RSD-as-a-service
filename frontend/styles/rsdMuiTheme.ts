@@ -15,7 +15,8 @@
 
 import {createTheme} from '@mui/material/styles'
 // import default colors, typography and getThemeMethod for loading theme configuration
-import {colors,muiTypography,getThemeConfig} from './themeConfig'
+import {colors,getThemeConfig} from './themeConfig'
+import {muiTypography} from './muiTypography'
 
 type MuiColorSchema = typeof colors
 type MuiTypography = typeof muiTypography
@@ -31,7 +32,7 @@ type MuiTypography = typeof muiTypography
 // }
 
 export type ThemeConfig = {
-  colors: MuiColorSchema
+  colors: any
   muiTypography: MuiTypography
 }
 
@@ -60,43 +61,44 @@ function applyThemeConfig({colors,muiTypography}:ThemeConfig) {
     palette: {
       primary: {
         main: colors.primary,
-        contrastText: colors.contrastText
+        contrastText: colors['primary-content']
       },
       secondary: {
         main: colors.secondary,
-        contrastText: colors.contrastText
+        contrastText: colors['secondary-content']
       },
       error: {
         main: colors.error,
-        contrastText: colors.contrastText
+        contrastText: colors['error-content']
       },
-      common: {
-        black: colors.black,
-        white: colors.white,
-      },
+      // common: {
+      //   black: colors.black,
+      //   white: colors.white,
+      // },
       warning: {
         main: colors.warning,
-        contrastText: colors.contrastText
+        contrastText: colors['warning-content']
       },
       info: {
         main: colors.info,
-        contrastText: colors.contrastText
+        contrastText: colors['info-content']
       },
       success: {
         main: colors.success,
-        contrastText: colors.contrastText
+        contrastText: colors['success-content']
       },
-      grey: colors.grey,
+      // grey: colors.grey,
       text: {
-        primary: colors.textPrimary,
-        secondary: colors.textSecondary,
-        disabled: colors.textDisabled,
+        primary: colors['base-content'],
+        // secondary: colors.textSecondary,
+        disabled: colors['base-content-disabled'],
       },
-      divider: colors.divider,
+      divider: colors.base?.['300'],
       background: {
-        paper: colors.paper,
-        default: colors.background,
+        paper: colors.base?.['100'],
+        default: colors.base?.['100'],
       },
+      action: colors.action
     },
     shape: {
       borderRadius: 2
@@ -108,17 +110,17 @@ function applyThemeConfig({colors,muiTypography}:ThemeConfig) {
       },
       // change headers fontSize and weight
       h1: {
-        fontWeight: 300,
+        // fontWeight: 300,
         fontSize: '4rem',
         lineHeight: 1.3,
       },
       h2: {
-        fontWeight: 100,
+        // fontWeight: 100,
         fontSize: '2rem',
         lineHeight: 1.25,
       },
       h3: {
-        fontWeight: 300,
+        // fontWeight: 300,
         fontSize: '1.5rem',
         lineHeight: 1.125,
       },
