@@ -53,6 +53,9 @@ export function loadMuiTheme(theme:RsdThemes) {
   if (theme === 'dark') {
     muiTheme.palette.mode = 'dark'
   }
+  // console.group('loadMuiTheme')
+  // console.log('muiTheme...', muiTheme)
+  // console.groupEnd()
   return muiTheme
 }
 

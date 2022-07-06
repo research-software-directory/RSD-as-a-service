@@ -12,11 +12,7 @@ export default function DarkThemeSection(props:any) {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <section
-        className="bg-secondary"
-      >
-        {props?.children}
-      </section>
+      {props?.children}
     </ThemeProvider>
   )
 }
