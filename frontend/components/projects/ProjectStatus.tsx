@@ -52,7 +52,7 @@ export default function ProjectStatus({date_start, date_end}: ProjectStatusProps
   return (
     <div>
       <h4 className="text-primary pb-4">Status</h4>
-      <div className="mb-2 w-full h-2 bg-grey-400 rounded-md overflow-hidden relative">
+      <div className="mb-2 w-full h-2 bg-base-300 rounded-md overflow-hidden relative">
         <div
           className="bg-primary h-2"
           style={{width: `${progress}%`}} />
