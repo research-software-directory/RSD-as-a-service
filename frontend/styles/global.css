@@ -9,13 +9,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* todo dinamyc variables*/
+/*:root{
+    --base-100: blue;
+    --base-200: red;
+    --base-300: green;
+}*/
+
 /**
   Default values
 **/
 
 body{
   font-size: 1rem;
-  font-weight: 300;
+  font-weight: 400;
+
 }
 
 #__next {
@@ -66,10 +74,6 @@ RangeError: Maximum call stack size exceeded
 
 .primary-link {
   @apply no-underline text-primary hover:text-white;
-}
-
-.footer-link {
-  @apply text-xl text-primary no-underline hover:text-white;
 }
 
 .btn {

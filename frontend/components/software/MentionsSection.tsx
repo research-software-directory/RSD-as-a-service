@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import DarkThemeSection from '../layout/DarkThemeSection'
-
 import PageContainer from '../layout/PageContainer'
 import {sortOnNumProp} from '../../utils/sortFn'
 import {MentionForSoftware, MentionItemProps, MentionTypeKeys} from '../../types/Mention'
@@ -24,8 +23,9 @@ export default function SoftwareMentionsSection({mentions}: { mentions: MentionF
   // console.log('featuredMentions...', featuredMentions)
   // console.groupEnd()
   return (
-    <DarkThemeSection>
+    <article className="bg-secondary">
       <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
+        <DarkThemeSection>
         <h2
           data-testid="software-mentions-section-title"
           className="pb-8 text-[2rem] text-white">
@@ -56,8 +56,9 @@ export default function SoftwareMentionsSection({mentions}: { mentions: MentionF
               />
             )
           })}
-        </section>
-      </PageContainer>
-    </DarkThemeSection>
+          </section>
+          </DarkThemeSection>
+        </PageContainer>
+    </article>
   )
 }

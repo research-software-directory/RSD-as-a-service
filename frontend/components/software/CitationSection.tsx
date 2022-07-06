@@ -4,20 +4,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState,useEffect} from 'react'
-import {createTheme, ThemeProvider} from '@mui/material/styles'
 import {SelectChangeEvent} from '@mui/material/Select'
 
+import DarkThemeSection from '../layout/DarkThemeSection'
 import PageContainer from '../layout/PageContainer'
 import CiteDropdown from './CiteDropdown'
 import CitationDoi from './CitationDoi'
 import CitationDownload from './CitationDownload'
 import {SoftwareCitationInfo,SoftwareCitationContent} from '../../types/SoftwareCitation'
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-})
 
 export default function CitationSection({citationInfo,concept_doi}:
   {citationInfo:SoftwareCitationInfo, concept_doi:string|null}) {
@@ -54,37 +48,35 @@ export default function CitationSection({citationInfo,concept_doi}:
 
   // render section
   return (
-    <ThemeProvider theme={darkTheme}>
-      <PageContainer className='lg:px-4'>
-        <article className="flex flex-col min-h-[16rem] px-4 py-8 bg-secondary text-white md:flex-row lg:py-10 lg:px-16 lg:translate-y-[-3rem]">
-          <div className="flex-1 flex flex-col justify-between">
-            <h2 className='py-4'
-              data-testid="citation-section-title">
-                Cite this software
-            </h2>
-            {
-              versions?.length > 0 ?
-                <CiteDropdown
-                  label="Choose a version:"
-                  options={versions}
-                  value={version}
-                  onChange={onVersionChange}
-                />
-                :null
-            }
-          </div>
-          <div className="flex-[3] flex flex-col justify-between md:px-4">
-            <CitationDoi doi={citation?.doi ?? concept_doi ?? ''} />
-            {
-              // only when citability full
-              citation?.citability==='full' ?
-                <CitationDownload citation={citation} />
-                :null
-            }
-          </div>
-
-        </article>
-      </PageContainer>
-    </ThemeProvider>
+    <PageContainer className='lg:px-4'>
+      <article className="flex flex-col min-h-[16rem] px-4 py-8 bg-secondary text-white md:flex-row lg:py-10 lg:px-16 lg:translate-y-[-3rem]">
+        <DarkThemeSection>
+        <div className="flex-1 flex flex-col justify-between">
+          <h2 className='py-4'
+            data-testid="citation-section-title">
+              Cite this software
+          </h2>
+          {
+            versions?.length > 0 ?
+              <CiteDropdown
+                label="Choose a version:"
+                options={versions}
+                value={version}
+                onChange={onVersionChange}
+              />
+              :null
+          }
+        </div>
+        <div className="flex-[3] flex flex-col justify-between md:px-4">
+          <CitationDoi doi={citation?.doi ?? concept_doi ?? ''} />
+          { // only when citability full
+            citation?.citability==='full' ?
+            <CitationDownload citation={citation} />
+            :null
+          }
+        </div>
+        </DarkThemeSection>
+      </article>
+    </PageContainer>
   )
 }

@@ -9,37 +9,84 @@
  */
 
 const colors = {
-  primary:'#60a5fa',
+  base: {
+    // background color for the body - mui: paper and background
+    100: '#0a0a0a',
+    // background color variation
+    200: '#151515',
+    // background color variation
+    300: '#2a2a2a',
+  },
+  // mui - text.primary
+  'base-content':'rgba(255,255,255,0.87)',
+  // mui - text.disabled
+  'base-content-disabled':'rgba(255,255,255,0.45)',
+
+  // mui - primary.main
+  primary:'#01ad83',
+  // mui - primary.contrastText
+  'primary-content':'white',
+
+  // mui - secondary.main
   secondary:'#000',
-  textPrimary:'rgba(200,200,200,1)',
-  textSecondary:'rgba(34,36,37,0.87)',
-  textDisabled:'rgba(34,36,37,0.45)',
-  divider:'#ddd',
-  contrastText:'#fff',
+  // mui - secondary.contrastText
+  'secondary-content':'white',
+
+  // mui - not existing in mui
+  accent:'#73095d',
+  'accent-content':'white',
+
   error:'#e53935',
+  'error-content':'black',
   warning:'#ed6c02',
+  'warning-content':'black',
   info:'#0288d1',
+  'info-content':'black',
   success:'#2e7d32',
-  black:'#fff',
-  white: '#fafafa',
-  background: '#000',
-  paper: '#000',
-  grey: {
-    50: '#fafafa',
-    100: '#f5f5f5',
-    200: '#eeeeee',
-    300: '#e0e0e0',
-    400: '#bdbdbd',
-    500: '#9e9e9e',
-    600: '#757575',
-    700: '#616161',
-    800: '#424242',
-    900: '#212121',
-    A100: '#f5f5f5',
-    A200: '#eeeeee',
-    A400: '#bdbdbd',
-    A700: '#616161',
-  }
+  'success-content':'white',
+
+
+// TODO fix for now until we remove the dark theme
+  action: {
+    active: 'rgba(255, 255, 255, 0.54)',
+    hover: 'rgba(255, 255, 255, 0.4)',
+    hoverOpacity: 1,
+    selected: 'rgba(255, 255, 255, 0.08)',
+    selectedOpacity: 0.16,
+    disabled: 'rgba(255, 255, 255, 0.26)',
+    disabledBackground: 'rgba(255, 255, 255, 0.12)',
+    disabledOpacity: 0.38,
+    focus: 'rgba(255, 255, 255, 0.12)',
+    focusOpacity: 0.12,
+    activatedOpacity: 0.12
+  },
+  // mui - divider is on base-300
+  // divider:'#ddd',
+
+  // contrastText:'#fff',
+
+
+  // black:'#000',
+  // white: '#fff',
+  // background: '#fff',
+  // paper: '#fff',
+  // grey: {
+  //   50: '#fafafa',
+  //   100: '#f5f5f5',
+  //   200: '#eeeeee',
+  //   300: '#e0e0e0',
+  //   400: '#bdbdbd',
+  //   500: '#9e9e9e',
+  //   600: '#757575',
+  //   700: '#616161',
+  //   800: '#424242',
+  //   900: '#212121',
+  //   A100: '#f5f5f5',
+  //   A200: '#eeeeee',
+  //   // tailwind neutral is A400 in MUI
+  //   A400: '#909090',
+  //   A700: '#616161',
+  // }
 }
 
 /**
@@ -54,21 +101,6 @@ const colors = {
 //   xl: 1920
 // }
 
-const muiTypography={
-  // Note! if you change the fonts here ensure you update
-  // pages/_document.tsx file to import proper fontFamily
-  // Currently we import the fonst from Google Fonts
-  // legacy RSD uses these fonts
-  fontFamily: 'Roboto,Helvetica,arial,sans-serif',
-  // set default fontsize to 1rem for MUI-5
-  // fontSize:14,
-  fontWeightLight: 100,
-  fontWeightRegular: 300,
-  fontWeightMedium: 300,
-  fontWeightBold: 400,
-}
-
 module.exports={
-  colors,
-  muiTypography
+  colors
 }

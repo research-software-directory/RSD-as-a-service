@@ -36,7 +36,7 @@ export default function ContributorsSection({contributors, title='Contributors'}
   // clasify
   const {contact, contributorList} = clasifyContributors(contributors)
   return (
-    <section className="bg-grey-200">
+    <section className="bg-base-200">
       <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
         <h2
           data-testid="software-contributors-section-title"

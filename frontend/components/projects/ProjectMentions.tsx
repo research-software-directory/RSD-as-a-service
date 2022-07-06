@@ -107,9 +107,11 @@ export default function ProjectMentions({output=[], impact=[]}: MentionsSectionP
   }
 
   return (
-    <DarkThemeSection>
-      {renderImpact(impactByType)}
-      {renderOutput(outputByType)}
-    </DarkThemeSection>
+    <article className="bg-secondary">
+      <DarkThemeSection>
+        {renderImpact(impactByType)}
+        {renderOutput(outputByType)}
+      </DarkThemeSection>
+    </article>
   )
 }

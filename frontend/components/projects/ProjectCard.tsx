@@ -27,7 +27,7 @@ export default function ProjectCard({slug, title, subtitle, image_id, updated_at
   // get current date
   const today = new Date()
   // featured has primary bg color
-  const colors = is_featured ? 'bg-primary text-white' : 'bg-grey-100 text-gray-800'
+  const colors = is_featured ? 'bg-base-300 text-content' : 'bg-base-200 text-content'
   // if not published use opacity 0.50
   let opacity = ''
   if (typeof is_published != 'undefined' && is_published === false) opacity = 'opacity-50'

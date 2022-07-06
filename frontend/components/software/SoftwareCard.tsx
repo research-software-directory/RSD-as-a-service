@@ -18,18 +18,17 @@ export type SoftwareCardType = {
   is_published?: boolean
 }
 
-export default function SoftwareCard({href, brand_name, short_statement, is_featured,
-  updated_at, mention_cnt, contributor_cnt, is_published}: SoftwareCardType) {
+export default function SoftwareCard({
+                                       href, brand_name, short_statement, is_featured,
+                                       updated_at, mention_cnt, contributor_cnt, is_published
+                                     }: SoftwareCardType) {
 
-  const colors = is_featured ? 'bg-primary text-white' : 'bg-grey-100 text-grey-800'
-  let opacity = ''
+  const colors = is_featured ? 'bg-base-300 text-content' : 'bg-base-200 text-content'
   const today = new Date()
-  // if not published use opacity 0.50
-  if (typeof is_published !='undefined' && is_published===false) opacity='opacity-50'
 
   function getInitals() {
     if (brand_name) {
-      return brand_name.slice(0,2).toUpperCase()
+      return brand_name.slice(0, 2).toUpperCase()
     }
     return ''
   }
@@ -57,9 +56,9 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
   function renderCounts() {
     let message = mentionCntMessage()
     if (message) {
-      message+=`, ${contributorsMessage()}`
+      message += `, ${contributorsMessage()}`
     } else {
-      message=contributorsMessage()
+      message = contributorsMessage()
     }
     if (message) {
       return (
@@ -73,7 +72,7 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
   }
 
   function renderPublished() {
-    if (typeof is_published !='undefined' && is_published===false){
+    if (typeof is_published != 'undefined' && is_published === false) {
       return (
         <span
           title="Not published"
@@ -93,30 +92,33 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
 
   return (
     <Link href={href} passHref>
-      <a className="flex flex-col h-full">
-        <article className={`flex-1 flex flex-col ${colors} ${opacity} hover:bg-secondary hover:text-white`}>
+      <section className="h-full">
+        <a
+          className={`flex flex-col h-full ${colors} hover:bg-secondary group`}>
+
           <div className="flex relative">
             <h2
               title={brand_name}
-              className="p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap"
+              className="p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white"
             >
               {renderPublished()} {brand_name}
             </h2>
-            <div className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-gray-800 text-[1.5rem] absolute top-0 right-0">
+            <div
+              className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-base text-[1.5rem] absolute top-0 right-0 group-hover:text-secondary">
               {getInitals()}
             </div>
           </div>
-          <p className="flex-1 p-4 overflow-auto max-h-[9.75rem]">
+          <p className="flex-1 p-4 overflow-auto max-h-[9.75rem] text-gray-800 group-hover:text-white">
             {short_statement}
           </p>
-          <div className="flex justify-between p-4 text-sm">
+          <div className="flex justify-between p-4 text-sm group-hover:text-white">
             <span className="last-update">
-              Updated {getTimeAgoSince(today,updated_at)}
+              Updated {getTimeAgoSince(today, updated_at)}
             </span>
             {renderCounts()}
           </div>
-        </article>
-      </a>
+        </a>
+      </section>
     </Link>
   )
 }

@@ -28,7 +28,7 @@ export default function ContributorsList({contributors}: { contributors: Contrib
                 displayInitials={getDisplayInitials(item)}
               />
               <div className='flex-1'>
-                <div className="text-xl text-primary">
+                <div className="text-xl font-medium ">
                   {displayName}
                 </div>
                 <PersonalInfo {...item} />

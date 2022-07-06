@@ -12,7 +12,8 @@
  */
 const defaultTheme = require('tailwindcss/defaultTheme')
 // custom theme variables to be used in both themes
-const {colors, muiTypography} = require('./styles/themeConfig')
+const {colors} = require('./styles/themeConfig')
+const {muiTypography} = require('./styles/muiTypography')
 
 module.exports = {
   darkMode: 'class',
@@ -31,20 +32,16 @@ module.exports = {
       // we set Roboto as first font-type
       // and then the defaults from tailwind
       sans: [
-        'Roboto',
-        'ui-sans-serif',
-        'system-ui',
         '-apple-system',
         'BlinkMacSystemFont',
-        'Segoe UI',
-        'Helvetica Neue',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
         'Arial',
-        'Noto Sans',
         'sans-serif',
-        'Apple Color Emoji',
-        'Segoe UI Emoji',
-        'Segoe UI Symbol',
-        'Noto Color Emoji'
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"'
       ],
       mono: [
         'ui-monospace',
@@ -70,21 +67,36 @@ module.exports = {
       fontFamily: {
         'rsd-titles': ['Work Sans']
       },
+      //
+      // THEME COLORS
+      //
       colors: {
         // in order to have optimal theme integration with material ui components
         // please keep the color names (props) in sync with MUI definitions
         // the list of all theme properties can be found in README.md
+        // todo: move it to css variables to change the theme dinamically
+        // 'base-100': 'var(--base-100)', // background colors - mui: 'paper'
+        'base-100': colors.base['100'], // background colorss - mui: 'paper'
+        'base-200': colors.base['200'],
+        'base-300': colors.base['300'],
+        'base-content': colors['base-content'],
+        'base-content-disabled': colors['base-content-disabled'],
         primary: colors.primary,
+        'primary-content': colors['primary-content'],
         secondary: colors.secondary,
-        divider: colors.divider,
+        'secondary-content': colors['secondary-content'],
+        accent: colors.accent,
+        'accent-content': colors['accent-content'],
         error: colors.error,
+        'error-content': colors['error-content'],
         warning: colors.warning,
+        'warning-content': colors['warning-content'],
         info: colors.info,
+        'info-content': colors['info-content'],
         success: colors.success,
-        background: colors.background,
-        paper: colors.paper,
-        grey: colors.grey,
+        'success-content': colors['success-content'],
       },
+
       fontWeight: {
         regular: muiTypography.fontWeightRegular
       }

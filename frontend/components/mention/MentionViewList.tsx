@@ -81,7 +81,7 @@ export default function MentionViewList({title, type, items}: MentionSectionList
         <ul>
           {items.map((item, pos) => {
             return (
-              <li key={pos} className="p-4 hover:bg-grey-200 hover:text-black">
+              <li key={pos} className="p-4">
                 <MentionViewItem
                   pos={pos+1}
                   item={item}

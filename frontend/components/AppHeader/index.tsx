@@ -55,13 +55,13 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
       <div className="w-full lg:container mx-auto flex py-3 items-center">
 
         <Link href="/" passHref>
-          <a className="hover:shadow-2xl">
+          <a className="hover:text-inherit">
             <LogoApp className="hidden xl:block"/>
             <LogoAppSmall className="block xl:hidden"/>
           </a>
         </Link>
 
-        <GlobalSearchAutocomplete className="hidden sm:block ml-8 "/>
+        <GlobalSearchAutocomplete className="hidden sm:block ml-12 mr-6 "/>
 
         {/* Large menu*/}
         <div className="flex flex-1">

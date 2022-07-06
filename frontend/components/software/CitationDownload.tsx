@@ -61,31 +61,52 @@ export default function CitationFormat({citation}: { citation: SoftwareCitationC
     }
   }
 
+  function renderDownloadBtn(){
+    if (format.v === ''){
+      // return disabled button
+      return(
+        <Button
+          disabled={true}
+          startIcon={<DownloadIcon />}
+          sx={{
+            display:'flex',
+            justifyContent:'flex-start',
+            minWidth:['15rem'],
+            ml:[null,2],
+            p:2,
+          }}
+        >
+          Download file
+        </Button>
+      )
+    }
+    // return download link
+    return (
+      <Button
+        startIcon={<DownloadIcon />}
+        sx={{
+          display:'flex',
+          justifyContent:'flex-start',
+          minWidth:['15rem'],
+          ml:[null,2],
+          p:2,
+        }}
+        href={`/api/fe/cite/${citation.id}?f=${format.f}&t=${format.t}&n=${format.n}`}
+      >
+        Download file
+      </Button>
+    )
+  }
+
   return (
-    <div className='flex flex-col md:flex-row'>
+    <div className='flex flex-col items-center md:flex-row'>
       <CiteDropdown
         label="Choose a reference manager format:"
         options={options}
         value={format.v}
         onChange={onFormatChange}
       />
-      <Button
-        disabled={format.v===''}
-        sx={{
-          display:'flex',
-          justifyContent:'flex-start',
-          minWidth:['100%','13rem'],
-          ml:[null,2],
-          p:2,
-        }}
-      >
-        <DownloadIcon sx={{mr:1}}/>
-        <a href={`/api/fe/cite/${citation.id}?f=${format.f}&t=${format.t}&n=${format.n}`}
-          download={format.n}
-        >
-          Download file
-        </a>
-      </Button>
+      {renderDownloadBtn()}
     </div>
   )
 }

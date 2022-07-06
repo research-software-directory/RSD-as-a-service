@@ -6,7 +6,7 @@
 module.exports = {
   // site config
   lang: 'en-US',
-  title: 'RSD Documentation',
+  title: 'RSD Developer Documentation',
   description: 'RSD As a Service documentation',
   base: '/RSD-as-a-service/',
   port: '3030',
@@ -15,7 +15,8 @@ module.exports = {
     logo: '/images/circle.webp',
     // logoDark: '/images/heroDark.webp',
     repo: 'research-software-directory/RSD-as-a-service',
-    // docsDir: 'docs',
+    docsDir: 'documentation/docs',
+    docsBranch: 'main',
     displayAllHeaders: true, // Default: false
 
     navbar: [
@@ -25,7 +26,7 @@ module.exports = {
       },
       {
         text: 'RSD Site',
-        link: 'https://research-software.dev/'
+        link: 'https://research-software-directory.org'
       },
     ],
     sidebarDepth: 2,
