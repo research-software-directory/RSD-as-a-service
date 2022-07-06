@@ -8,8 +8,8 @@ export default function StatCounter({label,value}:{label:string,value:number|und
   if (typeof value!=='undefined' && label){
     return (
       <div className="px-4 text-center">
-        <div className="text-primary text-[3.5rem]">{value}</div>
-        <div className="text-secondary">{label}</div>
+        <div className=" text-5xl font-light">{value}</div>
+        <div className="">{label}</div>
       </div>
     )
   }

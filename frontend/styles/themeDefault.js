@@ -15,9 +15,9 @@ const colors = {
     // background color for the body - mui: paper and background
     100: '#ffffff',
     // background color variation
-    200: '#c2c2c2',
+    200: '#EEEEEE',
     // background color variation
-    300: '#ababab',
+    300: '#d0d0d0',
   },
   // mui - text.primary
   'base-content':'rgba(34,36,37,1)',

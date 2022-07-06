@@ -23,7 +23,7 @@ export default function SoftwareCard({
                                        updated_at, mention_cnt, contributor_cnt, is_published
                                      }: SoftwareCardType) {
 
-  const colors = is_featured ? 'bg-[#e3e3e3] text-black' : 'bg-grey-100 text-grey-800'
+  const colors = is_featured ? 'bg-base-300 text-content' : 'bg-base-200 text-content'
   const today = new Date()
 
   function getInitals() {
@@ -94,7 +94,7 @@ export default function SoftwareCard({
     <Link href={href} passHref>
       <section className="h-full">
         <a
-          className="flex flex-col h-full bg-base-200 hover:bg-secondary group">
+          className={`flex flex-col h-full ${colors} hover:bg-secondary group`}>
 
           <div className="flex relative">
             <h2
