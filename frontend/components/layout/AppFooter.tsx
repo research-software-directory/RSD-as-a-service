@@ -56,11 +56,17 @@ export default function AppFooter () {
             <Link href="/terms" passHref>
               <a className="hover:text-primary">Terms of Service</a>
             </Link>
+            <a href='https://research-software-directory.github.io/documentation'
+              target="_blank"
+              className="hover:text-primary"
+              rel="noreferrer">
+              Documentation
+            </a>
               <a href={isDev ? 'http://localhost:3030' : 'https://research-software-directory.github.io/RSD-as-a-service'}
               target="_blank"
               className="hover:text-primary"
               rel="noreferrer">
-              Technical Documention
+              Technical Documentation
             </a>
           </div>
         </div>

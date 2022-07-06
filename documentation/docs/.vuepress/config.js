@@ -6,7 +6,7 @@
 module.exports = {
   // site config
   lang: 'en-US',
-  title: 'RSD Documentation',
+  title: 'RSD Developer Documentation',
   description: 'RSD As a Service documentation',
   base: '/RSD-as-a-service/',
   port: '3030',
