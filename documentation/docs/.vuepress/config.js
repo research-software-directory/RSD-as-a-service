@@ -25,7 +25,7 @@ module.exports = {
       },
       {
         text: 'RSD Site',
-        link: 'https://research-software.dev/'
+        link: 'https://research-software-directory.org'
       },
     ],
     sidebarDepth: 2,

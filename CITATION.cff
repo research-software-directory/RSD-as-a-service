@@ -43,12 +43,12 @@ identifiers:
     description: The archived releases for the sourcecode
 repository-code: >-
   https://github.com/research-software-directory/RSD-as-a-service
-url: 'https://research-software.dev'
+url: 'https://research-software-directory.org'
 abstract: >-
   The Research Software Directory (as a service) is a
   content management system that is tailored to
   research software. Its main goal is to increase the
-  visibility, impact and reuse of research software. 
+  visibility, impact and reuse of research software.
 keywords:
   - Research Software
   - Software Citation
