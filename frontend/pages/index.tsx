@@ -216,7 +216,7 @@ export default function Home({software,projects,organisations}:HomeProps) {
                     Impact
                   </div>
                   <div className="text-lg mt-5">
-			              Enable research organizations to monitor the impact of their research software.
+			              Enable developers and research organizations to monitor the impact of their research software.
                   </div>
                 </div>
               </div>
