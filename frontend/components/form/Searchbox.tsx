@@ -50,9 +50,12 @@ export default function Searchbox({placeholder, onSearch, delay = 400}: { placeh
         })
       }}
       onKeyPress={(event)=>{
-        // pass search value on enter
-        if (event.key.toLowerCase()==='enter'){
-          onSearch(state)
+        if (event.key.toLowerCase() === 'enter') {
+          // pass search value on enter
+          setState({
+            value:state.value,
+            wait:false
+          })
         }
       }}
       startAdornment={
