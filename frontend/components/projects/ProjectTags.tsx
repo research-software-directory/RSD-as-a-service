@@ -33,7 +33,7 @@ export default function ProjectTags({title,tags}:{title:string, tags: string[] |
                 key={pos}
                 label={label}
                 title={title}
-                className="bg-grey-400"
+                className="bg-base-300"
               />
             )
           })

@@ -14,7 +14,7 @@ export default function GetStartedSection({get_started_url, commit_history}:
     if (get_started_url) {
       return (
         <a href={get_started_url ?? ''} target="_blank" rel="noreferrer">
-          <div className="bg-primary hover:bg-grey-500 text-white font-medium text-2xl py-4 px-6">
+          <div className="bg-primary text-primary-content font-medium text-2xl py-4 px-6">
             Get started
             <LinkIcon sx={{marginLeft:'1rem', height:'2rem'}} />
           </div>

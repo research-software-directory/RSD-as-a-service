@@ -23,8 +23,19 @@ export default function EditButton({title,url}:EditButtonProps) {
       onClick={() => {
         router.push(url)
       }}
+      sx={{
+        color: 'primary.contrastText',
+        margin:'0rem 0.5rem',
+        '&:hover': {
+          color: 'primary.main'
+        },
+        alignSelf: 'center',
+        '&:focus-visible': {
+          outline: 'auto'
+        }
+      }}
     >
-      <EditIcon className="text-white"/>
+      <EditIcon />
     </IconButton>
   )
 }

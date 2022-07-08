@@ -40,7 +40,8 @@ export default function AddMenu() {
         aria-expanded={open ? 'true' : 'false'}
         onClick={handleClick}
         sx={{
-          'color': 'primary.contrastText',
+          color: 'primary.contrastText',
+          margin:'0rem 0.5rem',
           '&:hover': {
             color: 'primary.main'
           },
