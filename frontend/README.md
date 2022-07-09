@@ -136,3 +136,43 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+
+## Major version updates
+
+Upgrading minor version changes can be usally done using `yarn outdated` and `yarn upgrade`. Major updates are more demanding and might require changes in the source code.
+
+### Next and React
+
+```bash
+# upgrade next and react
+yarn add next react react-dom typescript
+# upgrade types
+yarn add -D @types/node @types/react @types/react-dom
+```
+
+### Material UI
+
+```bash
+# upgrade material ui
+yarn add @mui/material @emotion/react @emotion/styled @mui/icons-material
+```
+
+### Testing
+
+```bash
+# react testing lib
+yarn add @testing-library/react jest
+
+yarn add -D @types/jest
+
+```
+
+### Others
+
+```bash
+# cookie for tokens
+yarn add cookie
+# type
+yarn add -D @types/cookie
+```
