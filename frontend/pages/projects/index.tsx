@@ -11,6 +11,7 @@ import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
+import {app} from '../../config/app'
 import {rowsPerPageOptions} from '../../config/pagination'
 import {Project} from '../../types/Project'
 import {getProjectList} from '../../utils/getProjects'
@@ -20,6 +21,8 @@ import DefaultLayout from '../../components/layout/DefaultLayout'
 import PageTitle from '../../components/layout/PageTitle'
 import ProjectGrid from '../../components/projects/ProjectsGrid'
 import Searchbox from '../../components/form/Searchbox'
+
+const pageTitle = `Projects | ${app.title}`
 
 export default function ProjectsIndexPage({count,page,rows,projects=[]}:
   {count:number,page:number,rows:number,projects:Project[]
@@ -57,7 +60,7 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
   return (
     <DefaultLayout>
       <Head>
-        <title>Projects | RSD</title>
+        <title>{pageTitle}</title>
       </Head>
       <PageTitle title="Projects">
         <div className="md:flex flex-wrap justify-end">
