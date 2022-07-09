@@ -14,7 +14,7 @@ const defaultResponse = {
 }
 
 export async function getUserCounts({token,frontend=false}:
-  {token: string, frontend:boolean}) {
+  {token?: string, frontend?:boolean}) {
   try {
     // NOTE! the selection is based on the token
     // RLS in postgres returns only counts for the user

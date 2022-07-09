@@ -114,7 +114,7 @@ export default function ControlledAffiliation({
                 }
               }}
               value={option}
-              getOptionLabel={(option) => option.label ? option.label : ''}
+              getOptionLabel={(option) => typeof option === 'string' ? option : option?.label}
               isOptionEqualToValue={(
                 option: AutocompleteOption<string>,
                 value: AutocompleteOption<string>) => {

@@ -124,7 +124,7 @@ export async function findRSDOrganisation({searchFor, token, frontend}:
 }
 
 export async function getOrganisationsForSoftware({software, token, frontend = true}:
-  {software: string, token: string, frontend?: boolean}) {
+  {software: string, token?: string, frontend?: boolean}) {
   let url = `${process.env.POSTGREST_URL}/rpc/organisations_of_software?software=eq.${software}&order=name.asc`
   // SSR request within docker network
   if (frontend) {
@@ -149,7 +149,7 @@ export async function getOrganisationsForSoftware({software, token, frontend = t
 }
 
 export async function getParticipatingOrganisations({software, token, frontend = true}:
-  {software: string, token: string, frontend?: boolean}) {
+  {software: string, token?: string, frontend?: boolean}) {
   const resp = await getOrganisationsForSoftware({software, token, frontend})
   // filter only approved organisations
   // extract only properties used
@@ -505,7 +505,7 @@ export async function deleteOrganisationFromSoftware({software, organisation, to
 }
 
 export async function getRsdPathForOrganisation({uuid,token,frontend = false}:
-  {uuid: string, token: string, frontend?: boolean}) {
+  {uuid: string, token?: string, frontend?: boolean}) {
   try {
     const query = `rpc/organisation_route?id=${uuid}`
     let url = `${process.env.POSTGREST_URL}/${query}`

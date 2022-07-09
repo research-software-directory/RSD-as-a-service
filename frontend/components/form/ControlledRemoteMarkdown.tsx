@@ -40,7 +40,7 @@ export default function ControlledRemoteMarkdown({control, rules, options}: Cont
     }
   })
   // listen for error
-  let error:FieldError|undefined
+  let error:any
   if (errors.hasOwnProperty(options.name) === true) {
     error = errors[options.name]
   }

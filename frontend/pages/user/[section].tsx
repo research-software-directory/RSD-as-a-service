@@ -82,8 +82,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
 
     const section = params?.section
     const token = req?.cookies['rsd_token']
-    // extract user info from token
-    const user = decodeJwt(token)
 
     // console.log('getServerSideProps...params...', params)
     // console.log('getServerSideProps...token...', token)

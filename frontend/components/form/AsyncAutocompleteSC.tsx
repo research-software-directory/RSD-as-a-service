@@ -237,7 +237,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
           }
         }}
         isOptionEqualToValue={(option, value) => option.key === value.key}
-        getOptionLabel={(option) => option.label ? option.label : ''}
+        getOptionLabel={(option) => typeof option === 'string' ? option : option?.label}
         onInputChange={onInputChange}
         onChange={onAutocompleteChange}
         // onHighlightChange={onHighlightChange}

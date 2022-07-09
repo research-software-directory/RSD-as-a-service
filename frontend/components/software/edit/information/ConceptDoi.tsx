@@ -14,7 +14,7 @@ import ValidateConceptDoi from './ValidateConceptDoi'
 import UpdateIcon from '@mui/icons-material/Sync'
 
 type ConceptDoiProps = {
-  control: Control<EditSoftwareItem, 'concept_doi'>
+  control: Control<EditSoftwareItem, object>
   setValue: UseFormSetValue<EditSoftwareItem>
 }
 

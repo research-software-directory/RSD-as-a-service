@@ -93,7 +93,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     // console.log('getServerSideProps...params...', params)
     const organisation = await getOrganisationBySlug({
       slug: params?.slug as string[],
-      token: req?.cookies['rsd_token']
+      token: req?.cookies['rsd_token'] ?? ''
     })
     if (typeof organisation == 'undefined'){
       // returning notFound triggers 404 page
