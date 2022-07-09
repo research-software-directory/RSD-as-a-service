@@ -11,7 +11,7 @@ export default function DefaultLayout({children}:{children:ReactNode}) {
   return (
     <>
       <AppHeader/>
-      <main className="flex flex-col flex-1 px-4 lg:container lg:mx-auto overflow-hidden">
+      <main className="flex flex-col flex-1 px-4 lg:container lg:mx-auto">
         {children}
       </main>
       <AppFooter/>
