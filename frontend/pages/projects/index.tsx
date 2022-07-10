@@ -19,7 +19,7 @@ import {ssrProjectsParams} from '../../utils/extractQueryParam'
 import {ssrProjectsUrl} from '../../utils/postgrestUrl'
 import DefaultLayout from '../../components/layout/DefaultLayout'
 import PageTitle from '../../components/layout/PageTitle'
-import ProjectGrid from '../../components/projects/ProjectsGrid'
+import ProjectsGrid from '../../components/projects/ProjectsGrid'
 import Searchbox from '../../components/form/Searchbox'
 
 const pageTitle = `Projects | ${app.title}`
@@ -85,12 +85,12 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
             />
         </div>
       </PageTitle>
-      <ProjectGrid
+      <ProjectsGrid
         projects={projects}
         height='17rem'
         minWidth={minWidth}
         maxWidth='1fr'
-        className="gap-[0.125rem] pt-4 pb-12"
+        className="gap-[0.125rem] p-[0.125rem] pt-4 pb-12"
       />
     </DefaultLayout>
   )

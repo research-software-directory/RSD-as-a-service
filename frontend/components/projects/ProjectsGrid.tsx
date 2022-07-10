@@ -13,7 +13,7 @@ type ProjectGridProps = FlexGridProps & {
 }
 
 // render software cards
-export default function ProjectsGrid({projects,className='gap-[0.125rem] py-[2rem]',...props}:ProjectGridProps){
+export default function ProjectsGrid({projects,className='gap-[0.125rem] p-[0.125rem] py-[2rem]',...props}:ProjectGridProps){
   if (typeof projects == 'undefined' || projects.length===0){
     return <NoContent />
   }

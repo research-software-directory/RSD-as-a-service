@@ -129,6 +129,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
         </div>
       </PageTitle>
       <SoftwareGrid
+        className='gap-[0.125rem] p-[0.125rem] pt-4 pb-12'
         grid={{
           height: '17rem',
           minWidth,
