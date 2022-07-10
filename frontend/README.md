@@ -93,15 +93,15 @@ There are several practices that the React Testing Library promotes:
 - Avoid testing internal component state
 - Testing how a component renders
 
-The setup is performed according to [official Next documentation](https://nextjs.org/docs/testing#jest-and-react-testing-library)
+The setup is performed according to [official Next documentation](https://nextjs.org/docs/testing#setting-up-jest-with-the-rust-compiler). We use rust compiler instead of babel setup.
 
 ### Setup steps performed
 
 ```bash
 # install dependencies
-npm install --save-dev jest @testing-library/react @testing-library/jest-dom react-test-renderer
+yarn add -D jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom
 # install whatwg-fetch to address next-auth fetch requests on node js (node-fetch)
-npm i -D whatwg-fetch
+yarn add -D whatwg-fetch
 
 ```
 

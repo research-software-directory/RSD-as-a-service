@@ -17,7 +17,7 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // moduleDirectories: ['./node_modules', './frontend'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-environment-jsdom',
   // use only files with *.test.js
   testMatch: [
     '**/*.test.{js,jsx,ts,tsx}'
@@ -30,6 +30,8 @@ const customJestConfig = {
     './utils/**/*.{js,jsx,ts,tsx}',
     '!./utils/jest/**'
   ],
+  // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
+  moduleDirectories: ['node_modules', '<rootDir>/'],
   moduleNameMapper: {
     // need to map d3 to avoid SyntaxError: Unexpected token 'export'
     'd3': '<rootDir>/node_modules/d3/dist/d3.min.js',
