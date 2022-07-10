@@ -12,24 +12,33 @@
 import {loadMuiTheme,RsdThemes} from '../../styles/rsdMuiTheme'
 import {ThemeProvider} from '@mui/material/styles'
 import {AuthProvider, defaultSession, Session} from '../../auth'
+import EmbedLayoutContext,{EmbedLayoutProp} from '~/components/layout/embedLayoutContext'
 
 type WrapProps = {
   props?: any
   session?: Session
   theme?: RsdThemes
+  embed?: EmbedLayoutProp
 }
 
 export function WrappedComponentWithProps(Component: any, options?: WrapProps) {
   const theme = options?.theme ?? 'default'
   const session = options?.session ?? defaultSession
   const props = options?.props ?? {}
+  const embedMode = options?.embed?.embedMode ?? false
+  const setEmbedMode = options?.embed?.setEmbedMode ?? function (embedMode) {
+    // eslint-disable-next-line no-console
+    console.log('setEmbedMode...',embedMode)
+  }
 
   const rsdMuiTheme = loadMuiTheme(theme)
   if (session) {
     return (
       <ThemeProvider theme={rsdMuiTheme}>
         <AuthProvider session={session}>
-          <Component {...props} />
+          <EmbedLayoutContext.Provider value={{embedMode,setEmbedMode}}>
+            <Component {...props} />
+          </EmbedLayoutContext.Provider>
         </AuthProvider>
       </ThemeProvider>
     )
@@ -37,7 +46,9 @@ export function WrappedComponentWithProps(Component: any, options?: WrapProps) {
   return (
     <ThemeProvider theme={rsdMuiTheme}>
       <AuthProvider session={defaultSession}>
-        <Component { ...props }/>
+        <EmbedLayoutContext.Provider value={{embedMode,setEmbedMode}}>
+          <Component {...props} />
+        </EmbedLayoutContext.Provider>
       </AuthProvider>
     </ThemeProvider>
   )
