@@ -7,12 +7,11 @@
 
 import {useState, useEffect, useContext} from 'react'
 import Link from 'next/link'
-import {useAuth} from '../../auth'
 // local dependencies (project components)
+import {useAuth} from '../../auth'
 import {menuItems} from '../../config/menuItems'
 import AddMenu from './AddMenu'
 import LoginButton from '~/components/login/LoginButton'
-
 import JavascriptSupportWarning from './JavascriptSupportWarning'
 import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
@@ -49,7 +48,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
 
   return (
     <header
-      data-testid="Landing Page"
+      data-testid="app-header"
       className="z-10 px-5 md:px-10 min-h-[88px] bg-secondary text-white flex items-center flex-wrap"
     >
       <div className="w-full lg:container mx-auto flex py-3 items-center">
@@ -82,6 +81,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
           {/* Responsive menu items*/}
           <div className="block md:hidden ml-6 mr-2">
             <Button
+              data-testid="mobile-menu"
               color="inherit"
               id="basic-button"
               aria-controls={open ? 'basic-menu' : undefined}

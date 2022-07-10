@@ -23,6 +23,7 @@ coverage
 
 # next.js
 .next
+.swc
 out
 
 # frontend production build
