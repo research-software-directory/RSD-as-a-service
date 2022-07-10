@@ -30,11 +30,15 @@ const customJestConfig = {
     './utils/**/*.{js,jsx,ts,tsx}',
     '!./utils/jest/**'
   ],
-  // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
-  moduleDirectories: ['node_modules', '<rootDir>/'],
+  // if using TypeScript with a baseUrl set to the root directory
+  // then you need the below for alias' to work
+  // moduleDirectories: ['node_modules', '<rootDir>/'],
   moduleNameMapper: {
     // need to map d3 to avoid SyntaxError: Unexpected token 'export'
     'd3': '<rootDir>/node_modules/d3/dist/d3.min.js',
+    // mock svg imports, it seems that webpack config with svgr in next.config.js
+    // doesn't work with next swc compiler and this jest.config.js?!?
+    '^.+\\.(svg)$': '<rootDir>/utils/jest/mockSvgFile.js',
     // Wildcard module name mapper MUST BE at the botton of this list
     '~/(.*)$': '<rootDir>/$1',
   },
