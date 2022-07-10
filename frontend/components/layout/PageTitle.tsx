@@ -19,6 +19,7 @@ export const PageTitleSticky = styled('section')(({theme})=>({
   '@media (max-width: 640px)':{
     flexDirection:'column',
     flexWrap: 'wrap',
+    position: 'relative'
   },
 }))
 
