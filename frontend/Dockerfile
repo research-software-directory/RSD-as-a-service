@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Install dependencies only when needed
-FROM node:16.13-buster-slim AS builder
+FROM node:18.5-buster-slim AS builder
 
 WORKDIR /app
 
@@ -24,7 +24,7 @@ RUN yarn test
 RUN yarn run build
 
 # Production image, copy all the files and run next
-FROM node:16.13-buster-slim AS runner
+FROM node:18.5-buster-slim AS runner
 
 RUN apt-get update && apt-get install curl -y
 
