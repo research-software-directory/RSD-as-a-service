@@ -49,8 +49,11 @@ function timeRange(data: LineData[]) {
 
 export default function drawLineChart(props: LineChartConfig) {
   const {dim: {w, h}, svgEl, data} = props
+  // if no data return null
+  if (data.length === 0) return null
   // ignore if no size
   if (!w || !h) return
+
   // defined dimensions
   const width = w - margin.left - margin.right
   const height = h - margin.top - margin.bottom
