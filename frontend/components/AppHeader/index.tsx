@@ -64,7 +64,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
 
         {/* Large menu*/}
         <div className="flex flex-1">
-          <div className="hidden md:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
+          <div className="hidden lg:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''}>
                 <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
@@ -79,7 +79,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
         <div
           className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right md:flex-none">
           {/* Responsive menu items*/}
-          <div className="block md:hidden ml-6 mr-2">
+          <div className="block lg:hidden ml-6 mr-2">
             <Button
               data-testid="mobile-menu"
               color="inherit"
