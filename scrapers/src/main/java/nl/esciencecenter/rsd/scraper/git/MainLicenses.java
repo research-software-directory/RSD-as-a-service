@@ -8,7 +8,6 @@ package nl.esciencecenter.rsd.scraper.git;
 import nl.esciencecenter.rsd.scraper.Config;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +28,7 @@ public class MainLicenses {
 		for (RepositoryUrlData licenseData : dataToScrape) {
 			try {
 				String repoUrl = licenseData.url();
-				String hostname = new URI(repoUrl).getHost();
+				String hostname = URI.create(repoUrl).getHost();
 				String apiUrl = "https://" + hostname + "/api";
 				String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 				if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
@@ -44,9 +43,12 @@ public class MainLicenses {
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				System.out.println("Error obtaining hostname of repository with url: " + licenseData.url() + ":");
-				e.printStackTrace();
+				RepositoryUrlData oldDataWithUpdatedAt = new RepositoryUrlData(
+						licenseData.software(), licenseData.url(), CodePlatformProvider.GITLAB,
+						licenseData.license(), scrapedAt,
+						licenseData.commitHistory(), licenseData.commitHistoryScrapedAt(),
+						licenseData.languages(), licenseData.languagesScrapedAt());
+				updatedDataAll.add(oldDataWithUpdatedAt);
 			}
 		}
 		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).save(updatedDataAll);
@@ -72,6 +74,12 @@ public class MainLicenses {
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 				e.printStackTrace();
+				RepositoryUrlData oldDataWithUpdatedAt = new RepositoryUrlData(
+						licenseData.software(), licenseData.url(), CodePlatformProvider.GITHUB,
+						licenseData.license(), scrapedAt,
+						licenseData.commitHistory(), licenseData.commitHistoryScrapedAt(),
+						licenseData.languages(), licenseData.languagesScrapedAt());
+				updatedDataAll.add(oldDataWithUpdatedAt);
 			}
 		}
 		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).save(updatedDataAll);

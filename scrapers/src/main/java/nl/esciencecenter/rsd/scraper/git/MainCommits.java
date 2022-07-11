@@ -8,7 +8,6 @@ package nl.esciencecenter.rsd.scraper.git;
 import nl.esciencecenter.rsd.scraper.Config;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +29,7 @@ public class MainCommits {
 		for (RepositoryUrlData commitData : dataToScrape) {
 			try {
 				String repoUrl = commitData.url();
-				String hostname = new URI(repoUrl).getHost();
+				String hostname = URI.create(repoUrl).getHost();
 				String apiUrl = "https://" + hostname + "/api";
 				String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 				if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
@@ -45,9 +44,12 @@ public class MainCommits {
 			} catch (RuntimeException  e) {
 				System.out.println("Exception when handling data from url " + commitData.url() + ":");
 				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				System.out.println("Error obtaining hostname of repository with url: " + commitData.url() + ":");
-				e.printStackTrace();
+				RepositoryUrlData oldDataWithUpdatedAt = new RepositoryUrlData(
+						commitData.software(), commitData.url(), CodePlatformProvider.GITLAB,
+						commitData.license(), commitData.licenseScrapedAt(),
+						commitData.commitHistory(), scrapedAt,
+						commitData.languages(), commitData.languagesScrapedAt());
+				updatedDataAll.add(oldDataWithUpdatedAt);
 			}
 		}
 		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).save(updatedDataAll);
@@ -74,6 +76,12 @@ public class MainCommits {
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + commitData.url() + ":");
 				e.printStackTrace();
+				RepositoryUrlData oldDataWithUpdatedAt = new RepositoryUrlData(
+						commitData.software(), commitData.url(), CodePlatformProvider.GITHUB,
+						commitData.license(), commitData.licenseScrapedAt(),
+						commitData.commitHistory(), scrapedAt,
+						commitData.languages(), commitData.languagesScrapedAt());
+				updatedDataAll.add(oldDataWithUpdatedAt);
 			}
 		}
 		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).save(updatedDataAll);
