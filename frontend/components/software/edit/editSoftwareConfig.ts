@@ -258,7 +258,7 @@ export const organisationInformation = {
     label: 'Website',
     help: 'Web address including http(s)',
     validation: {
-      required: 'Website is required',
+      // required: 'Website is required',
       minLength: {value: 6, message: 'Minimum length is 6'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
