@@ -56,7 +56,7 @@ module.exports = {
         'spin-slow': 'spin 3s linear infinite',
       },
       fontFamily: {
-        'rsd-titles': fonts.default
+        'rsd-titles': muiTypography.fontFamily.split(',')
       },
       //
       // THEME COLORS

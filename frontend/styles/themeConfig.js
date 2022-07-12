@@ -38,8 +38,8 @@ function getThemeConfig(theme) {
       }
     default:
       return {
-        colors: helmholtzTheme.colors,
-        muiTypography: helmholtzTheme.muiTypography
+        colors: defaultTheme.colors,
+        muiTypography: defaultTheme.muiTypography
       }
   }
 }
