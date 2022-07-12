@@ -1,0 +1,1 @@
+const e={key:"v-123dff2c",path:"/navigation.html",title:"Navigating the RSD",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1654242952e3,contributors:[{name:"Jesu\u0301s Garci\u0301a Gonzalez (Netherlands eScience Center)",email:"j.g.gonzalez@esciencecenter.nl",commits:1}]},filePathRelative:"navigation.md"};export{e as data};
