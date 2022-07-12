@@ -8,7 +8,6 @@ package nl.esciencecenter.rsd.scraper.git;
 import nl.esciencecenter.rsd.scraper.Config;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +29,7 @@ public class MainProgrammingLanguages {
 		for (RepositoryUrlData programmingLanguageData : dataToScrape) {
 			try {
 				String repoUrl = programmingLanguageData.url();
-				String hostname = new URI(repoUrl).getHost();
+				String hostname = URI.create(repoUrl).getHost();
 				String apiUrl = "https://" + hostname + "/api";
 				String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 				if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
@@ -45,9 +44,12 @@ public class MainProgrammingLanguages {
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + programmingLanguageData.url() + ":");
 				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				System.out.println("Error obtaining hostname of repository with url: " + programmingLanguageData.url() + ":");
-				e.printStackTrace();
+				RepositoryUrlData oldDataWithUpdatedAt = new RepositoryUrlData(
+						programmingLanguageData.software(), programmingLanguageData.url(), CodePlatformProvider.GITLAB,
+						programmingLanguageData.license(), programmingLanguageData.licenseScrapedAt(),
+						programmingLanguageData.commitHistory(), programmingLanguageData.commitHistoryScrapedAt(),
+						programmingLanguageData.languages(), scrapedAt);
+				updatedDataAll.add(oldDataWithUpdatedAt);
 			}
 
 		}
@@ -79,6 +81,12 @@ public class MainProgrammingLanguages {
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + programmingLanguageData.url() + ":");
 				e.printStackTrace();
+				RepositoryUrlData oldDataWithUpdatedAt = new RepositoryUrlData(
+						programmingLanguageData.software(), programmingLanguageData.url(), CodePlatformProvider.GITHUB,
+						programmingLanguageData.license(), programmingLanguageData.licenseScrapedAt(),
+						programmingLanguageData.commitHistory(), programmingLanguageData.commitHistoryScrapedAt(),
+						programmingLanguageData.languages(), scrapedAt);
+				updatedDataAll.add(oldDataWithUpdatedAt);
 			}
 		}
 		new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).save(updatedDataAll);
