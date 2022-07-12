@@ -44,7 +44,7 @@ export default function OrganisationSoftware({organisation, session, isMaintaine
 
   return (
     <FlexibleGridSection
-      className="gap-[0.125rem] pt-2 pb-12"
+      className="gap-[0.125rem] p-[0.125rem] pt-2 pb-12"
       height='17rem'
       minWidth={minWidth}
       maxWidth='1fr'
