@@ -20,6 +20,8 @@ import {ssrOrganisationParams} from '../../utils/extractQueryParam'
 import {getOrganisationsList} from '../../utils/getOrganisations'
 import OrganisationsGrid from '../../components/organisation/OrganisationGrid'
 
+const pageTitle = `Organisations | ${app.title}`
+
 export default function OrganisationsIndexPage({count,page,rows,organisations=[]}:
   {count:number,page:number,rows:number,organisations:OrganisationForOverview[]
 }) {
@@ -64,7 +66,7 @@ export default function OrganisationsIndexPage({count,page,rows,organisations=[]
   return (
      <DefaultLayout>
       <Head>
-        <title>Organisations | {app.title}</title>
+        <title>{pageTitle}</title>
       </Head>
       <PageTitle title="Organisations">
         <div className="md:flex flex-wrap justify-end">

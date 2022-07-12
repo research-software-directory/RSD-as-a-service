@@ -7,12 +7,11 @@
 
 import {useState, useEffect, useContext} from 'react'
 import Link from 'next/link'
-import {useAuth} from '../../auth'
 // local dependencies (project components)
+import {useAuth} from '../../auth'
 import {menuItems} from '../../config/menuItems'
 import AddMenu from './AddMenu'
 import LoginButton from '~/components/login/LoginButton'
-
 import JavascriptSupportWarning from './JavascriptSupportWarning'
 import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
@@ -49,7 +48,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
 
   return (
     <header
-      data-testid="Landing Page"
+      data-testid="app-header"
       className="z-10 px-5 md:px-10 min-h-[88px] bg-secondary text-white flex items-center flex-wrap"
     >
       <div className="w-full lg:container mx-auto flex py-3 items-center">
@@ -65,7 +64,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
 
         {/* Large menu*/}
         <div className="flex flex-1">
-          <div className="hidden md:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
+          <div className="hidden lg:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''}>
                 <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
@@ -80,8 +79,9 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
         <div
           className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right md:flex-none">
           {/* Responsive menu items*/}
-          <div className="block md:hidden ml-6 mr-2">
+          <div className="block lg:hidden ml-6 mr-2">
             <Button
+              data-testid="mobile-menu"
               color="inherit"
               id="basic-button"
               aria-controls={open ? 'basic-menu' : undefined}

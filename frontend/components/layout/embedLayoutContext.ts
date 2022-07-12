@@ -1,6 +1,6 @@
 import {createContext} from 'react'
 
-type EmbedLayoutProp = {
+export type EmbedLayoutProp = {
   embedMode: boolean,
   setEmbedMode: (embedMode:boolean) => void
 }

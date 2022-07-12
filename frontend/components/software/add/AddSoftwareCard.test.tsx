@@ -14,15 +14,18 @@ import {getSlugFromString} from '../../../utils/getSlugFromString'
 // mock addSoftware
 import * as editSoftware from '../../../utils/editSoftware'
 
+// mock addSoftware
 const mockAddSoftware = jest.spyOn(editSoftware, 'addSoftware')
   .mockImplementation((props) => Promise.resolve({status: 201, message: props}))
+
 // mock validSoftwareItem
 const mockValidSoftwareItem = jest.spyOn(editSoftware, 'validSoftwareItem')
   .mockImplementation((props) => new Promise((res, rej) => {
     setTimeout(() => {
       res(false)
-    },1)
+    },10)
   }))
+
 // mock next router
 const mockBack = jest.fn()
 const mockReplace = jest.fn()
@@ -39,7 +42,7 @@ it('render card with title', async () => {
   expect(title).toBeInTheDocument()
 })
 
-it('card has textbox with Name that can be entered', async() => {
+it('card has textbox with Name that can be entered', () => {
   render(WrappedComponentWithProps(AddSoftwareCard))
   const name = screen.getByRole<HTMLInputElement>('textbox', {name: 'Name'})
   expect(name).toBeInTheDocument()
@@ -50,7 +53,7 @@ it('card has textbox with Name that can be entered', async() => {
   expect(name.value).toEqual(inputValue)
 })
 
-it('card has textbox with Short description that can be entered', async() => {
+it('card has textbox with Short description that can be entered', () => {
   render(WrappedComponentWithProps(AddSoftwareCard))
   const desc = screen.getByRole<HTMLInputElement>('textbox', {name: 'Short description'})
   expect(desc).toBeInTheDocument()
@@ -60,7 +63,7 @@ it('card has textbox with Short description that can be entered', async() => {
   expect(desc.value).toEqual(inputValue)
 })
 
-it('card has cancel and submit buttons', async() => {
+it('card has cancel and submit buttons', () => {
   render(WrappedComponentWithProps(AddSoftwareCard))
   const submit = screen.getByRole('button',{name:'Save'})
   expect(submit).toBeInTheDocument()
@@ -69,14 +72,14 @@ it('card has cancel and submit buttons', async() => {
   expect(cancel).toBeInTheDocument()
 })
 
-it('goes back on cancel', async () => {
+it('goes back on cancel', () => {
   // render
   render(WrappedComponentWithProps(AddSoftwareCard))
   // accepts test value
   const cancel = screen.getByRole('button', {name: 'Cancel'})
   expect(cancel).toBeInTheDocument()
   // click op cancel
-  await fireEvent.click(cancel)
+  fireEvent.click(cancel)
   // assert that router back is called
   expect(mockBack).toHaveBeenCalledTimes(1)
 })
@@ -90,6 +93,7 @@ it('validate, save and redirect', async () => {
     token: 'TEST_TOKEN',
     status: 'authenticated'
   }
+  const slug = getSlugFromString(inputName)
   // render
   render(WrappedComponentWithProps(AddSoftwareCard,{
     session
@@ -105,6 +109,7 @@ it('validate, save and redirect', async () => {
   fireEvent.change(desc, {target: {value: inputValue}})
 
   // confirm slug validation in progress
+  // we mock validSoftwareItem and wait for 100ms
   const loader = await screen.findByTestId('slug-circular-progress')
   expect(loader).toBeInTheDocument()
   // confirm that loader is removed
@@ -112,17 +117,14 @@ it('validate, save and redirect', async () => {
 
   // save
   const save = screen.getByRole('button', {name: 'Save'})
-  await waitFor(async () => {
-    expect(name.value).toEqual(inputName)
-    expect(desc.value).toEqual(inputValue)
-    expect(save).toBeInTheDocument()
-  })
+  expect(save).toBeInTheDocument()
+  expect(name.value).toEqual(inputName)
+  expect(desc.value).toEqual(inputValue)
 
   // submit button
-  await fireEvent.submit(save)
+  fireEvent.submit(save)
 
   await waitFor(() => {
-    const slug = getSlugFromString(inputName)
     // validate slug
     expect(mockValidSoftwareItem).toHaveBeenCalledTimes(1)
     expect(mockValidSoftwareItem).toHaveBeenCalledWith(slug, session.token)

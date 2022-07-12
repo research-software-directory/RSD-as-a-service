@@ -21,7 +21,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortBySearchFor} from '~/utils/sortFn'
 
 type SoftwareLicensesProps = {
-  control: Control<EditSoftwareItem, AutocompleteOption<License>[]>,
+  control: Control<EditSoftwareItem, any>,
   software: string,
   concept_doi?: string
 }

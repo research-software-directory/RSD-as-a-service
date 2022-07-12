@@ -32,6 +32,7 @@ export default function AddMenu() {
   return (
     <>
       <IconButton
+        title="Add information"
         className="group"
         size="large"
         data-testid="add-menu-button"

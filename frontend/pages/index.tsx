@@ -77,9 +77,9 @@ export default function Home({software, projects, organisations}: HomeProps) {
           <div className="w-full md:w-1/2 flex flex-col justify-center"
                data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
           >
-            <div className="text-5xl font-rsd-titles font-bold">
+            <h1 className="text-5xl font-rsd-titles font-bold">
               Improving the <br/>impact of research software
-            </div>
+            </h1>
             <div className="mt-8 text-lg">
               To promote the visibility, reuse and impact of research software,
               <span

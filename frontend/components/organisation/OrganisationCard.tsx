@@ -61,14 +61,14 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
               />
             }
           </div>
-          <div className="flex-1 md:grid md:grid-cols-[3fr,2fr] px-8 pb-4 overflow-hidden">
+          <div className="flex-1 flex md:grid md:grid-cols-[3fr,2fr] px-8 pb-4 overflow-hidden">
             <div className="hidden md:block">
               <LogoAvatar
                 name={organisation.name ?? ''}
                 src={getUrlFromLogoId(organisation.logo_id) ?? undefined}
               />
             </div>
-            <div className="flex-1 flex justify-center items-start md:justify-end pl-4">
+            <div className="flex-1 flex justify-center items-center md:justify-end pl-4">
               <StatCounter
                 label={label}
                 value={count}

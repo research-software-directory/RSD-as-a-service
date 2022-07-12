@@ -9,6 +9,7 @@ import {useEffect, useState} from 'react'
 import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 
+import {app} from '../../config/app'
 import {useAuth} from '~/auth'
 import ProtectedContent from '~/auth/ProtectedContent'
 import DefaultLayout from '~/components/layout/DefaultLayout'
@@ -17,7 +18,6 @@ import {PaginationProvider} from '~/components/pagination/PaginationContext'
 import {SearchProvider} from '~/components/search/SearchContext'
 import UserTitle from '~/components/user/UserTitle'
 import UserNav, {UserCounts} from '../../components/user/UserNav'
-import {decodeJwt} from '~/auth/jwtUtils'
 import {getUserCounts} from '~/components/user/getUserCounts'
 
 type UserPagesProps = {
@@ -28,7 +28,7 @@ type UserPagesProps = {
 export default function UserPages({section,counts}:UserPagesProps) {
   const {session} = useAuth()
   const [pageSection, setPageSection] = useState<UserMenuProps>(userMenu[section])
-
+  const pageTitle = `${session.user?.name} | ${app.title}`
   // console.log('section...', section)
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function UserPages({section,counts}:UserPagesProps) {
   return (
     <DefaultLayout>
       <Head>
-        <title>{session.user?.name} | RSD</title>
+        <title>{pageTitle}</title>
       </Head>
       <ProtectedContent>
         <SearchProvider>
@@ -82,8 +82,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
 
     const section = params?.section
     const token = req?.cookies['rsd_token']
-    // extract user info from token
-    const user = decodeJwt(token)
 
     // console.log('getServerSideProps...params...', params)
     // console.log('getServerSideProps...token...', token)

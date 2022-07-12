@@ -19,16 +19,30 @@ type Error={
   message:string
 }
 
+function extractParam(req: NextApiRequest, param: string) {
+  // load parameter
+  const p = req.query[param]
+  if (p) {
+    // if exists
+    if (typeof p === 'string') {
+      return p
+    } else {
+      return p.toString()
+    }
+  }
+  return ''
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data|Error>
 ){
   try{
     // extract query parameters
-    const id = req.query?.id.toString()
-    const format = req.query?.f.toString()
-    const type = req.query?.t.toString()
-    const name = req.query?.n.toString()
+    const id = extractParam(req,'id')
+    const format = extractParam(req,'f')
+    const type = extractParam(req, 't')
+    const name = extractParam(req, 'n')
 
     // make request to postgREST api
     const url = `${process.env.POSTGREST_URL}/release_content?select=${format}&id=eq.${id}`

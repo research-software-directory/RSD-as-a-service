@@ -15,6 +15,9 @@ export default function CommitsChart({commit_history,className}:
   // format commits data for chart and calculate other stats
   const {lineData, lastCommitDate, totalCountY} = prepareDataForSoftwarePage(commit_history)
 
+  // exit if no commit history
+  if (lineData.length===0) return null
+
   // render
   return (
     <div className={`flex-1 w-full ${className ?? ''}`}>

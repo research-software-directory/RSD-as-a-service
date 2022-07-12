@@ -93,15 +93,15 @@ There are several practices that the React Testing Library promotes:
 - Avoid testing internal component state
 - Testing how a component renders
 
-The setup is performed according to [official Next documentation](https://nextjs.org/docs/testing#jest-and-react-testing-library)
+The setup is performed according to [official Next documentation](https://nextjs.org/docs/testing#setting-up-jest-with-the-rust-compiler). We use rust compiler instead of babel setup.
 
 ### Setup steps performed
 
 ```bash
 # install dependencies
-npm install --save-dev jest @testing-library/react @testing-library/jest-dom react-test-renderer
+yarn add -D jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom
 # install whatwg-fetch to address next-auth fetch requests on node js (node-fetch)
-npm i -D whatwg-fetch
+yarn add -D whatwg-fetch
 
 ```
 
@@ -136,3 +136,42 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Major version updates
+
+Upgrading minor version changes can be usally done using `yarn outdated` and `yarn upgrade`. Major updates are more demanding and might require changes in the source code.
+
+### Next and React
+
+```bash
+# upgrade next and react
+yarn add next react react-dom typescript
+# upgrade types
+yarn add -D @types/node @types/react @types/react-dom
+```
+
+### Material UI
+
+```bash
+# upgrade material ui
+yarn add @mui/material @emotion/react @emotion/styled @mui/icons-material
+```
+
+### Testing
+
+```bash
+# react testing lib
+yarn add @testing-library/react jest
+
+yarn add -D @types/jest
+
+```
+
+### Others
+
+```bash
+# cookie for tokens
+yarn add cookie
+# type
+yarn add -D @types/cookie
+```

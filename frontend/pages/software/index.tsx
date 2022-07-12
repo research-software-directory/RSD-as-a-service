@@ -32,6 +32,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   const smallScreen = useMediaQuery('(max-width:600px)')
   // adjust grid min width for mobile to 18rem
   const minWidth = smallScreen ? '18rem' : '26rem'
+  const pageTitle = `Software | ${app.title}`
 
   // next/previous page button
   function handlePageChange(
@@ -93,7 +94,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   return (
     <DefaultLayout>
       <Head>
-        <title>Software | {app.title}</title>
+        <title>{pageTitle}</title>
       </Head>
       <PageTitle title="Software">
         <div className="md:flex flex-wrap justify-end">
@@ -129,6 +130,7 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
         </div>
       </PageTitle>
       <SoftwareGrid
+        className='gap-[0.125rem] p-[0.125rem] pt-4 pb-12'
         grid={{
           height: '17rem',
           minWidth,

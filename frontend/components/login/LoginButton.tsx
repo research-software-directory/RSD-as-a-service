@@ -42,7 +42,6 @@ export default function LoginButton() {
     // we show user menu with the avatar and user specific options
     return (
       <UserMenu
-        name='No Name'
         menuOptions={userMenuItems}
       />
     )

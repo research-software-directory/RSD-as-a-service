@@ -7,6 +7,7 @@ import {useState} from 'react'
 import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 
+import {app} from '../../config/app'
 import {Session, useAuth} from '../../auth'
 import useOrganisationMaintainer from '../../auth/permissions/useOrganisationMaintainer'
 import DefaultLayout from '../../components/layout/DefaultLayout'
@@ -35,6 +36,7 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
     organisation: organisation.id,
     session
   })
+  const pageTitle = `${organisation.name} | ${app.title}`
 
   // console.log('OrganisationPage...organisation...',organisation)
 
@@ -52,7 +54,7 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
   return (
     <DefaultLayout>
       <Head>
-        <title>{organisation.name} | RSD</title>
+        <title>{pageTitle}</title>
       </Head>
       <SearchProvider>
       <PaginationProvider>
@@ -93,7 +95,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     // console.log('getServerSideProps...params...', params)
     const organisation = await getOrganisationBySlug({
       slug: params?.slug as string[],
-      token: req?.cookies['rsd_token']
+      token: req?.cookies['rsd_token'] ?? ''
     })
     if (typeof organisation == 'undefined'){
       // returning notFound triggers 404 page

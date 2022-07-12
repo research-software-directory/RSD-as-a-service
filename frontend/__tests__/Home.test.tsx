@@ -15,8 +15,10 @@ describe('pages/index.tsx', () => {
     // fetch.mockResponse(JSON.stringify([]))
     render(WrappedComponentWithProps(Home))
   })
-  it('renders heading with Home page title', () => {
-    const heading = screen.getByTestId('Landing Page')
+  it('renders Home page with the title', () => {
+    const heading = screen.getByRole('heading', {
+      name: 'Improving the impact of research software'
+    })
     expect(heading).toBeInTheDocument()
   })
 })

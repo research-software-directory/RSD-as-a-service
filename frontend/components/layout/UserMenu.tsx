@@ -16,7 +16,6 @@ import {MenuItemType} from '../../config/menuItems'
 import {getDisplayInitials, splitName} from '../../utils/getDisplayName'
 
 type UserMenuType = {
-  name: string,
   image?: string
   menuOptions?: MenuItemType[]
 }
@@ -68,6 +67,7 @@ export default function UserMenu(props: UserMenuType) {
   return (
     <>
       <IconButton
+        title="My RSD"
         data-testid="user-menu-button"
         aria-controls="user-menu"
         aria-haspopup="true"

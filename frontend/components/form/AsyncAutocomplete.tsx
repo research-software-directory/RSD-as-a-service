@@ -157,7 +157,7 @@ export default function AsyncAutocomplete<T>({status,options,config,onSearch,onA
           return options
         }}
         isOptionEqualToValue={(option, value) => option.key === value.key}
-        getOptionLabel={(option) => option.label}
+        getOptionLabel={(option) => typeof option === 'string' ? option : option?.label}
         onInputChange={onInputChange}
         onChange={onAutocompleteChange}
         options={options}

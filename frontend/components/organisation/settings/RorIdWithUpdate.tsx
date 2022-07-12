@@ -19,7 +19,7 @@ import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import RorIdOptionsModal from './RorIdOptionsModal'
 
 type FindRorIdProps = {
-  control: Control<EditOrganisation, 'ror_id'>
+  control: Control<EditOrganisation, any>
   setValue: UseFormSetValue<EditOrganisation>
 }
 
