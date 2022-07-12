@@ -9,16 +9,16 @@
  */
 
 // import {SessionProvider} from 'next-auth/react'
-import {loadMuiTheme,RsdThemes} from '../../styles/rsdMuiTheme'
+import {loadMuiTheme} from '../../styles/rsdMuiTheme'
 import {ThemeProvider} from '@mui/material/styles'
 import {AuthProvider, defaultSession, Session} from '../../auth'
 import {RsdSettingsState,defaultRsdSettings, RsdTheme} from '~/config/rsdSettingsReducer'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
+import {RsdThemeProps} from '~/styles/RsdThemeOptionsContext'
 
 type WrapProps = {
   props?: any
   session?: Session
-  // theme?: RsdThemes
   settings?: RsdSettingsState
 }
 
@@ -27,9 +27,9 @@ export function WrappedComponentWithProps(Component: any, options?: WrapProps) {
   const props = options?.props ?? {}
   const settings = options?.settings ?? defaultRsdSettings
   // extract theme from rsd settings
-  const theme = settings?.theme.mode ?? 'default'
+  const theme: RsdTheme = settings?.theme ?? {host: 'default', mode: 'default'}
   // load MUI theme
-  const rsdMuiTheme = loadMuiTheme(theme as RsdThemes)
+  const rsdMuiTheme = loadMuiTheme(theme)
 
   return (
     <ThemeProvider theme={rsdMuiTheme}>

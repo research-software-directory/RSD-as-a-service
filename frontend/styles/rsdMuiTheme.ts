@@ -13,14 +13,6 @@
  * https://mui.com/customization/default-theme/ *
  */
 
-import {createTheme} from '@mui/material/styles'
-// import default colors, typography and getThemeMethod for loading theme configuration
-import {colors,getThemeConfig} from './themeConfig'
-import {muiTypography} from './muiTypography'
-
-type MuiColorSchema = typeof colors
-type MuiTypography = typeof muiTypography
-
 /**
  * EXAMPLE of extendings MUI-5 theme interface
  * See https://mui.com/customization/breakpoints/
@@ -31,35 +23,59 @@ type MuiTypography = typeof muiTypography
 //   }
 // }
 
+import {createTheme} from '@mui/material/styles'
+import {RsdTheme} from '~/config/rsdSettingsReducer'
+// import default colors, typography and getThemeMethod for loading theme configuration
+import getThemeConfig from './getThemeConfig'
+import {MuiActionSchema, MuiColorSchema, MuiTypography} from './RsdThemeOptionsContext'
+import {updateCssVariables} from './updateCssVariables'
+
 export type ThemeConfig = {
-  colors: any
+  colors: MuiColorSchema
+  action: MuiActionSchema
   muiTypography: MuiTypography
 }
 
-export type RsdThemes = 'dark' | 'default'
-
 /**
  * Call this method to switch MuiTheme
- * @param theme
+ * @param RsdThemeProps
  * @returns Theme
  */
-export function loadMuiTheme(theme:RsdThemes) {
+export function loadMuiTheme({host, mode}: RsdTheme) {
   // get theme colors and typography
-  const config: ThemeConfig = getThemeConfig(theme)
+  const config = getThemeConfig({host, mode}) as ThemeConfig
   // create Mui Theme
-  const muiTheme = applyThemeConfig({
-    ...config
-  })
-  if (theme === 'dark') {
-    muiTheme.palette.mode = 'dark'
-  }
+  const muiTheme = applyThemeConfig(config)
+
   // console.group('loadMuiTheme')
+  // console.log('mode...', mode)
+  // console.log('host...', host)
+  if (mode && mode === 'dark') {
+    muiTheme.palette.mode = 'dark'
+  } else if (mode && mode === 'default') {
+    // TODO! update css variables
+    // update css variables
+    updateCssVariables({
+      ...config.colors,
+      'default-font-family': config.muiTypography.defaultFontFamily,
+      'titles-font-family': config.muiTypography.titlesFontFamily,
+      'font-light': config.muiTypography.fontWeightLight,
+      'font-regular': config.muiTypography.fontWeightRegular,
+      'font-medium': config.muiTypography.fontWeightMedium,
+      'font-bold': config.muiTypography.fontWeightBold
+    })
+    // console.log('update css variables...',config.colors)
+  }
   // console.log('muiTheme...', muiTheme)
   // console.groupEnd()
+  // return new theme
   return muiTheme
 }
 
-function applyThemeConfig({colors,muiTypography}:ThemeConfig) {
+function applyThemeConfig({colors, action, muiTypography}: ThemeConfig) {
+  // note! this is only part of
+  // mui theme we want to overwrite,
+  // for the complete list see https://mui.com/customization/default-theme/
   return createTheme({
     palette: {
       primary: {
@@ -74,10 +90,6 @@ function applyThemeConfig({colors,muiTypography}:ThemeConfig) {
         main: colors.error,
         contrastText: colors['error-content']
       },
-      // common: {
-      //   black: colors.black,
-      //   white: colors.white,
-      // },
       warning: {
         main: colors.warning,
         contrastText: colors['warning-content']
@@ -93,54 +105,54 @@ function applyThemeConfig({colors,muiTypography}:ThemeConfig) {
       // grey: colors.grey,
       text: {
         primary: colors['base-content'],
-        secondary: colors['base-content'],
+        secondary: colors['base-content-secondary'],
         disabled: colors['base-content-disabled'],
       },
-      divider: colors.base?.['300'],
+      divider: colors['base-300'],
       background: {
-        paper: colors.base?.['100'],
-        default: colors.base?.['100'],
+        paper: colors['base-100'],
+        default: colors['base-200']
       },
-      action: colors.action
+      // action colors
+      action
     },
     shape: {
       borderRadius: 2
     },
     typography: {
+      fontFamily: muiTypography.defaultFontFamily,
+      fontWeightLight: muiTypography.fontWeightLight,
+      fontWeightRegular: muiTypography.fontWeightRegular,
+      fontWeightMedium: muiTypography.fontWeightMedium,
+      fontWeightBold: muiTypography.fontWeightBold,
       button: {
         fontWeight: 400,
         letterSpacing: '0.125rem',
       },
-      // change headers fontSize and weight
+      // change headers typography
       h1: {
         // fontWeight: 300,
         fontSize: '4rem',
         lineHeight: 1.3,
+        fontFamily: muiTypography.titlesFontFamily
       },
       h2: {
         // fontWeight: 100,
         fontSize: '2rem',
         lineHeight: 1.25,
+        fontFamily: muiTypography.titlesFontFamily
       },
       h3: {
         // fontWeight: 300,
         fontSize: '1.5rem',
         lineHeight: 1.125,
-      },
-      ...muiTypography
+        fontFamily: muiTypography.titlesFontFamily
+      }
     },
     // overriding defaults
     // in Mui components
     // see https://mui.com/customization/theme-components/
     components: {
-      // MuiButton:{
-      //   styleOverrides:{
-      //     root:{
-      //       // remove upper text transform from buttons
-      //       textTransform:'inherit'
-      //     }
-      //   }
-      // },
       MuiListItemText: {
         styleOverrides: {
           primary: {

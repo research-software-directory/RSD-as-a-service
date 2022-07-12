@@ -5,13 +5,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useMemo} from 'react'
 import {useRouter} from 'next/router'
 import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
 import {ThemeProvider} from '@mui/material/styles'
 import {CacheProvider, EmotionCache} from '@emotion/react'
-import {loadMuiTheme, RsdThemes} from '../styles/rsdMuiTheme'
+import {loadMuiTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
 // loading bar at the top of the screen
 import nprogress from 'nprogress'
@@ -30,6 +30,7 @@ import 'nprogress/nprogress.css'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
 import {getPageLinks} from '~/components/page/useMarkdownPages'
+import {RsdThemeProps} from '~/styles/RsdThemeOptionsContext'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -50,10 +51,12 @@ function RsdApp(props: MuiAppProps) {
     Component, emotionCache = clientSideEmotionCache,
     pageProps, session, settings
   } = props
-  const [options, setSnackbar] = useState(snackbarDefaults)
-  //currently we support only default (light) and dark RSD theme for MUI
-  const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
+  const [options, setSnackbar] = useState(snackbarDefaults)
+  // request theme when options changed
+  const muiTheme = useMemo(() => {
+    return loadMuiTheme(settings.theme as RsdThemeProps)
+  }, [settings.theme])
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -116,23 +119,21 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
   const appProps = await App.getInitialProps(appContext)
   const {req, res} = appContext.ctx
 
-  // console.log('RsdApp.getInitialProps')
-
   // extract user session from cookies
   const session = getSessionSeverSide(req, res)
-
   // get embed mode
   // provide embed param to remove headers
   const {embed} = appContext.router.query
   // get links
   const links = await getPageLinks({is_published:true})
+
   // create rsd settings
   const settings = {
     embed: typeof embed !== 'undefined',
     links,
     theme: {
       mode: 'default',
-      host: 'default'
+      host: process.env.RSD_THEME_HOST || 'default'
     }
   }
 

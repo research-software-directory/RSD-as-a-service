@@ -14,17 +14,25 @@ import createEmotionCache from '../styles/createEmotionCache'
 
 export default class MyDocument extends Document {
   readonly hotjarId = process.env.HOTJAR_ID
+  readonly fontFamily = process.env.RSD_FONT_HREF
 
   render() {
+    // console.group('MyDocument')
+    // console.log('hotjarId...', this.hotjarId)
+    // console.log('fontFamily...', this.fontFamily)
+    // console.groupEnd()
     return (
       <Html lang="en">
         <Head>
           {/* Theme color for the browser, if it supports it, is REMOVED 2022-04-10 by Dusan */}
           {/* <meta name="theme-color" content={rsdMuiTheme.palette.primary.main} /> */}
-          {/* Roboto fonts */}
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400&display=swap"
-          />
-          <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap" rel="stylesheet" />
+          {/* Google Fonts preconnect imports */}
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          {/* Fonts */}
+          {
+            this.fontFamily && <link href={this.fontFamily} rel="stylesheet"/>
+          }
           {/* add support for gracefull fallback for aos animations when js is disabled */}
           <noscript dangerouslySetInnerHTML={{__html: `
             <style type="text/css">

@@ -9,29 +9,25 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Global styles
 
-The global.css file is imported in page/\_document.tsx. It is applied to all pages. Use it only in case you cannot achieve your goal using MUI theme adjustments. So far it is only used to style `next` root element.
+The global.css file is imported in `page/_app.tsx`. The `global.css` in its turn imports `fonts.css` and `custom.css` files. Global css is applied to all pages. Use it only in case you cannot achieve your goal with MUI (Material UI) and Tailwind theme adjustments.
 
-## CSS Baseline
+## Themes
 
-MUI provides baseline styles as CSSBaseline component. These are applied in page/\_document.tsx file.
-For more information [see documentation](https://mui.com/components/css-baseline/). However in this project we currently apply tailwind base classes rather than MUI's.
+Initially each them should have two modes: default and dark. The definition are loaded using getThemeConfig method from getThemeConfig.js file. getThemeConfig method is called in tailing.config.js and rsdMuiTheme.ts to load the colors and the typography definitions in both Tailwind and Material-UI.
 
-## MUI theme and global styles
+**TODO! To be able to change themes dynamically during the runtime the tailwind configuration should use css variables. We will them programatically change the values of css variables when swithing the MUI theme. This approach enables us to keep Tailind anf MUI in sync.**
 
-Initially we defined two themes: default and dark theme. The definitions are stored in themeDark and themeDefault javascript files. The definition are loaded by getThemeConfig(theme) method in themeConfig.js file.
+### Theme files
 
-The same color definitions are loaded into tailwind configuration (tailwind.config.js)
+In this folder there are 3 theme folders:
 
-For more information see comments in these files:
-
-- themeConfig.js
-- themeDefault.js
-- tailwind.config.js
-
-For general information about MUI themes [see documentation](https://mui.com/customization/theming/)
+- `helmholtz`: the folder holds definitoins of the Helmholtz theme (default and dark theme colors and the typography definitions). The theme can be activated by defining env variable `RSD_THEME_HOST=helmholtz`
+- `nlesc`: holds theme definitions of The Netherlands eScience Center. It is loaded when env variable `RSD_THEME_HOST=nlesc`
+- `rsd`: holds the default rsd theme definitions. If env variable `RSD_THEME_HOST` is `NOT provided` or has unknown value the default RSD theme is loaded.
 
 ## MUI Theme properties
 
+For general information about MUI themes [see documentation](https://mui.com/customization/theming/)
 Below is the print of all theme properites created at scafold of the project. You can overwrite any property by specifying new values in the **rsdTheme.ts** file.
 
 ```javascript
