@@ -41,7 +41,7 @@ export default function AddMenu() {
         aria-expanded={open ? 'true' : 'false'}
         onClick={handleClick}
         sx={{
-          color: 'primary.contrastText',
+          color: '#ffffff', // Fix for Helmholtz design
           margin:'0rem 0.5rem',
           '&:hover': {
             color: 'primary.main'
