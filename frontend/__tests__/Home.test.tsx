@@ -17,7 +17,7 @@ describe('pages/index.tsx', () => {
   })
   it('renders Home page with the title', () => {
     const heading = screen.getByRole('heading', {
-      name: 'Promote and discover Research Software'
+      name: 'Promote and Discover Research Software'
     })
     expect(heading).toBeInTheDocument()
   })
