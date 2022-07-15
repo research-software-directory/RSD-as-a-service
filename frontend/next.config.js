@@ -28,6 +28,9 @@ const rewritesConfig = isDevelopment
   : []
 
 module.exports = {
+  // create standalone output to use in docker image
+  // and achieve minimal image size (see Dockerfile)
+  output: 'standalone',
   reactStrictMode: true,
   eslint: {
     // Run ESLint in these directories during production builds (next build)
@@ -43,7 +46,6 @@ module.exports = {
       issuer: /\.[jt]sx?$/,
       use: ['@svgr/webpack'],
     })
-
     return config
   },
 }
