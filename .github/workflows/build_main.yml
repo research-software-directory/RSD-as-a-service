@@ -22,6 +22,7 @@ jobs:
       docker_context: ./authentication
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
+      ssh_private_key: ${{secrets.DEPLOY_KEY_RSD_HALVAR}}
 
   database:
     name: database
@@ -34,6 +35,7 @@ jobs:
       docker_context: ./database
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
+      ssh_private_key: ${{secrets.DEPLOY_KEY_RSD_HALVAR}}
 
   backend:
     name: backend api
@@ -46,6 +48,7 @@ jobs:
       docker_context: ./backend-postgrest
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
+      ssh_private_key: ${{secrets.DEPLOY_KEY_RSD_HALVAR}}
 
   frontend:
     name: frontend
@@ -58,6 +61,7 @@ jobs:
       docker_context: ./frontend
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
+      ssh_private_key: ${{secrets.DEPLOY_KEY_RSD_HALVAR}}
 
   nginx:
     name: nginx
@@ -70,6 +74,7 @@ jobs:
       docker_context: ./nginx
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
+      ssh_private_key: ${{secrets.DEPLOY_KEY_RSD_HALVAR}}
 
   scrapers:
     name: scrapers
@@ -82,3 +87,4 @@ jobs:
       docker_context: ./scrapers
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
+      ssh_private_key: ${{secrets.DEPLOY_KEY_RSD_HALVAR}}
