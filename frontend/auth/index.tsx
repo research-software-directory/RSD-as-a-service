@@ -12,10 +12,10 @@ import {refreshSession} from './refreshSession'
 
 // refresh schedule margin 5min. before expiration time
 export const REFRESH_MARGIN = 5 * 60 * 1000
-
+export type RsdRole = 'rsd_admin' | 'rsd_user'
 export type RsdUser = {
   iss: 'rsd_auth'
-  role: 'rsd_user' | 'rsd_admin'
+  role: RsdRole
   // expiration time
   exp: number
   // uid

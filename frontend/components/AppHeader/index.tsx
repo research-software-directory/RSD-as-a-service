@@ -5,25 +5,26 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, useEffect, useContext} from 'react'
+import {useState, useEffect} from 'react'
+// import {IconButton, Menu, MenuItem} from '@mui/material'
+// import MenuIcon from '@mui/icons-material/Menu'
 import Link from 'next/link'
 // local dependencies (project components)
-import {useAuth} from '../../auth'
-import {menuItems} from '../../config/menuItems'
+import {useAuth} from '~/auth'
+import {menuItems} from '~/config/menuItems'
+import useRsdSettings from '~/config/useRsdSettings'
 import AddMenu from './AddMenu'
 import LoginButton from '~/components/login/LoginButton'
 import JavascriptSupportWarning from './JavascriptSupportWarning'
 import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
 import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
-import {Button, Menu, MenuItem} from '@mui/material'
-import EmbedLayoutContext from '~/components/layout/embedLayoutContext'
 
 export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
-  const {embedMode} = useContext(EmbedLayoutContext)
+  const {embedMode} = useRsdSettings()
   // Responsive menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -49,22 +50,20 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   return (
     <header
       data-testid="app-header"
-      className="z-10 px-5 md:px-10 min-h-[88px] bg-secondary text-white flex items-center flex-wrap"
+      className="z-10 py-4 min-h-[88px] bg-secondary text-white flex items-center flex-wrap"
     >
-      <div className="w-full lg:container mx-auto flex py-3 items-center">
-
-        <Link href="/" passHref>
-          <a className="hover:text-inherit">
-            <LogoApp className="hidden xl:block"/>
-            <LogoAppSmall className="block xl:hidden"/>
-          </a>
-        </Link>
-
-        <GlobalSearchAutocomplete className="hidden sm:block ml-12 mr-6 "/>
-
-        {/* Large menu*/}
-        <div className="flex flex-1">
-          <div className="hidden lg:flex text-lg ml-6 gap-5 text-center opacity-90 font-normal">
+      {/* keep these styles in sync with main in MainContent.tsx */}
+      <div className="flex-1 flex flex-col items-start px-4 lg:flex-row lg:container lg:mx-auto lg:items-center">
+        <div className="w-full flex-1 flex items-center">
+          <Link href="/" passHref>
+            <a className="hover:text-inherit">
+              <LogoApp className="hidden xl:block"/>
+              <LogoAppSmall className="block xl:hidden"/>
+            </a>
+          </Link>
+          <GlobalSearchAutocomplete className="hidden md:block ml-12 mr-6" />
+          {/* Large menu*/}
+          <div className="hidden lg:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''}>
                 <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
@@ -72,15 +71,18 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
                 </a>
               </Link>)}
           </div>
-        </div>
 
-        <JavascriptSupportWarning/>
-
-        <div
-          className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right md:flex-none">
-          {/* Responsive menu items*/}
-          <div className="block lg:hidden ml-6 mr-2">
-            <Button
+          <div className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right ml-4">
+            {/* EDIT button */}
+            {editButton ? editButton : null}
+            {/* ADD menu button */}
+            {status === 'authenticated' ? <AddMenu/> : null}
+            {/*
+              Mobile menu disabled due to lack of space when edit+add+user buttons
+              Users can use global search jump to option instead
+            */}
+            {/* <IconButton
+              title="Pages"
               data-testid="mobile-menu"
               color="inherit"
               id="basic-button"
@@ -88,18 +90,31 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={handleClick}
-              className="whitespace-nowrap"
+              sx={{
+                // display by breakpoint: sm,md,lg, etc.
+                display: ['inline-block','inline-block','none'],
+                margin:'0rem 0.5rem',
+                '&:hover': {
+                  color: 'primary.main'
+                },
+                alignSelf: 'center',
+                '&:focus-visible': {
+                  outline: 'auto'
+                }
+              }}
             >
-              Pages ▾
-            </Button>
+              <MenuIcon />
+            </IconButton>
             <Menu
               id="basic-menu"
               anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
               MenuListProps={{
-                'aria-labelledby': 'basic-button',
+                'aria-labelledby': 'menu-button',
               }}
+              transformOrigin={{horizontal: 'right', vertical: 'top'}}
+              anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
             >
               {menuItems.map(item =>
                 <MenuItem onClick={handleClose} key={item.path}>
@@ -108,18 +123,16 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
                       {item.label}
                     </a>
                   </Link>
-                </MenuItem>)}
-            </Menu>
-          </div>
-          <div className="flex flex-nowrap">
-            {editButton ? editButton : null}
-            {status === 'authenticated' ? <AddMenu/> : null}
-            {/*<ThemeSwitcher/>*/}
+                </MenuItem>
+              )}
+            </Menu> */}
+            {/* LOGIN / USER MENU */}
             <LoginButton/>
           </div>
+          <JavascriptSupportWarning />
         </div>
+        <GlobalSearchAutocomplete className="md:hidden float-right w-full mt-4"/>
       </div>
-      <GlobalSearchAutocomplete className="sm:hidden float-right w-full mb-4"/>
     </header>
   )
 }

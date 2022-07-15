@@ -125,7 +125,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
     }}>
 
       <div
-        className={`${props.className} relative z-10 flex sm:w-48 sm:max-w-[300px] focus-within:w-full duration-700`}>
+        className={`${props.className} relative z-10 flex sm:w-48 sm:max-w-[320px] focus-within:w-full duration-700`}>
         <input className="px-3 py-2 bg-transparent rounded-sm border border-white border-opacity-50 focus:outline-0
                           w-full focus:bg-white focus:text-black
                           duration-300"

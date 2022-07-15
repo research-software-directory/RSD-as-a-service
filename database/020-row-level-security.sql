@@ -625,3 +625,14 @@ CREATE POLICY maintainer_delete ON project_for_organisation FOR DELETE TO rsd_us
 CREATE POLICY admin_all_rights ON project_for_organisation TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
+
+
+-- meta-pages
+ALTER TABLE meta_pages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON meta_pages FOR SELECT TO web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY admin_all_rights ON meta_pages TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);

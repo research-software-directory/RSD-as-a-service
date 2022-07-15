@@ -9,7 +9,7 @@ import remarkGfm from 'remark-gfm'
 export default function ReactMarkdownWithSettings({markdown, className}:{markdown:string, className?:string}) {
   return (
     <ReactMarkdown
-      className={`prose ${className ?? ''}`}
+      className={`prose max-w-none prose-h1:text-3xl prose-headings:font-normal ${className ?? ''}`}
       linkTarget="_blank"
       skipHtml={true}
       remarkPlugins={[remarkGfm]}

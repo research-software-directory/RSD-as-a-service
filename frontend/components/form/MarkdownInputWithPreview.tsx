@@ -31,15 +31,24 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
     // this is quickfix using object id
     const textInput = document.getElementById('markdown-textarea')
     if (textInput) {
+      // save scroll position
+      const scrollLeft = window.pageXOffset || (document.documentElement || document.body.parentNode || document.body).scrollLeft
+      const scrollTop = window.pageYOffset || (document.documentElement || document.body.parentNode || document.body).scrollTop
+      // reset height
+      textInput.style.height = 'auto'
+      // get new height
       const height = textInput.scrollHeight
+      // assign the height
       if (height > 432) {
         textInput.style.height = `${height}px`
       } else {
         // default height
         textInput.style.height = '432px'
       }
+      // recover scroll position
+      window.scrollTo(scrollLeft, scrollTop)
     }
-  }, [])
+  }, [markdown])
 
   useEffect(() => {
     if (autofocus === true) {
@@ -77,13 +86,13 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
 
   return (
     <article className="border rounded-sm min-h-[33rem]">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center">
         <Tabs
           value={tab}
           onChange={handleChange}
           aria-label="Tabs"
           sx={{
-            padding:'1rem 2rem'
+            padding:['0.5rem 1rem','1rem 2rem']
           }}
         >
           <Tab
@@ -110,11 +119,11 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
           name="markdown-input"
           id="markdown-textarea"
           rows={20}
-          className="text-secondary w-full h-full py-4 px-8 font-mono text-sm"
-          onInput={({target}:{target:any}) => {
-            target.style.height = ''
-            target.style.height = target.scrollHeight + 'px'
-          }}
+          className="text-base-content w-full h-full pt-4 px-8 font-mono text-sm"
+          // onInput={({target}:{target:any}) => {
+          //   target.style.height = ''
+          //   target.style.height = target.scrollHeight + 'px'
+          // }}
           {...register}
         ></textarea>
       </div>
