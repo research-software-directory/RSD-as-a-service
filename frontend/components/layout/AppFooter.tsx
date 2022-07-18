@@ -20,7 +20,7 @@ export default function AppFooter () {
       return (
         <Link
           key={page.slug}
-          href={`/${page.slug}`} passHref>
+          href={`/page/${page.slug}`} passHref>
           <a className="hover:text-primary">{page.title}</a>
         </Link>
       )

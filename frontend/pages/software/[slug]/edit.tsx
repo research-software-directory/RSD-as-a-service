@@ -31,6 +31,11 @@ export default function EditSoftwareItem() {
     isValid: false
   })
 
+  // console.group('EditSoftwareItem')
+  // console.log('slug...', slug)
+  // console.log('pageState...', pageState)
+  // console.groupEnd()
+
   function onChangeStep({nextStep}:{nextStep:EditSoftwarePageStep}) {
     // changes made but not saved or cancelled
     if (pageState?.isDirty===true) {
@@ -80,37 +85,3 @@ export default function EditSoftwareItem() {
     </DefaultLayout>
   )
 }
-
-// fetching data server side
-// see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-// export async function getServerSideProps(context:GetServerSidePropsContext) {
-//   try {
-//     const {req,params} = context
-//     const rsd_token = req?.cookies['rsd_token']
-//     // if we have token and slug we can load software table server side
-//     if (rsd_token && params?.slug) {
-//       const resp = await getSoftwareToEdit({
-//         slug: params?.slug.toString(),
-//         token: rsd_token,
-//         // we need baseUrl when calling fn from node
-//         baseUrl:process.env.POSTGREST_URL
-//       })
-//       // provide software data to component
-//       return {
-//         props: {
-//           software:resp
-//         }
-//       }
-//     } else {
-//       // return 404 page for now
-//       return {
-//         notFound: true,
-//       }
-//     }
-//   }catch(e:any){
-//     logger(`SoftwareIndexPage.getServerSideProps: ${e.message}`,'error')
-//     return {
-//       notFound: true,
-//     }
-//   }
-// }

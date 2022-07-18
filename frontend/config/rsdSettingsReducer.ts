@@ -1,9 +1,11 @@
 import logger from '~/utils/logger'
 
-export type RsdLinks = {
+export type RsdLink = {
+  id: string,
   position: number,
   title: string,
-  slug: string
+  slug: string,
+  is_published?:boolean
 }
 
 export type RsdTheme = {
@@ -20,7 +22,7 @@ export enum RsdActionType{
 export type RsdSettingsState = {
   embed: boolean
   theme: RsdTheme,
-  links: RsdLinks[]
+  links: RsdLink[]
 }
 
 export type RsdSettingsAction = {

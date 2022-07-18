@@ -3,14 +3,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 import Head from 'next/head'
+import {GetServerSidePropsContext} from 'next'
 
 import {app} from '~/config/app'
-import {ssrMarkdownPage} from '~/components/admin/pages/useMarkdownPages'
+import {ssrMarkdownPage} from '~/components/page/useMarkdownPages'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/layout/AppFooter'
 import MarkdownPage from '~/components/layout/MarkdownPage'
 
-export default function AboutPage({title,markdown}: {title:string, markdown: string }) {
+export default function PublicPage({title,markdown}: {title:string, markdown: string }) {
   const pageTitle=`${title} | ${app.title}`
   return (
     <>
@@ -26,7 +27,8 @@ export default function AboutPage({title,markdown}: {title:string, markdown: str
 
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const slug = context.params?.slug?.toString()
   // call ssr method which returns 404 or markdown props
-  return await ssrMarkdownPage('about')
+  return await ssrMarkdownPage(slug)
 }

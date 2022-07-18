@@ -31,7 +31,9 @@ module.exports = {
   // create standalone output to use in docker image
   // and achieve minimal image size (see Dockerfile)
   output: 'standalone',
-  reactStrictMode: true,
+  // disable strict mode for react-beautiful-dnd in development
+  // see for more info https://nextjs.org/docs/api-reference/next.config.js/react-strict-mode
+  reactStrictMode: false,
   eslint: {
     // Run ESLint in these directories during production builds (next build)
     // by default next runs linter only in pages/, components/, and lib/

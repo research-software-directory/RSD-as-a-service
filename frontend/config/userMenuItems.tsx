@@ -37,7 +37,7 @@ const userMenuItems: MenuItemType[] = [
     role:['rsd_admin'],
     type: 'link',
     label: 'Administration',
-    path: '/admin/pages/about',
+    path: '/admin/pages',
     icon: <ManageAccountsIcon />
   }, {
     role:['rsd_admin'],

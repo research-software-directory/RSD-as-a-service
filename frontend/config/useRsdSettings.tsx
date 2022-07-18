@@ -1,19 +1,11 @@
 import {useContext} from 'react'
 import {RsdSettingsContext} from './RsdSettingsContext'
-import {RsdActionType, RsdLinks, RsdTheme} from './rsdSettingsReducer'
-
-// export async function getRsdSettings() {
-//   const links = await getPublishedMarkdownPages(false)
-//   return {
-//     links,
-//     theme:
-//   }
-// }
+import {RsdActionType, RsdLink, RsdTheme} from './rsdSettingsReducer'
 
 export default function useRsdSettings() {
   const {state, dispatch} = useContext(RsdSettingsContext)
 
-  function setRsdLinks(links: RsdLinks) {
+  function setRsdLinks(links: RsdLink) {
     dispatch({
       type: RsdActionType.SET_LINKS,
       payload: links
@@ -35,7 +27,7 @@ export default function useRsdSettings() {
   }
 
   return {
-    links:state.links,
+    links: state.links,
     theme: state.theme,
     embedMode: state.embed,
     setRsdLinks,

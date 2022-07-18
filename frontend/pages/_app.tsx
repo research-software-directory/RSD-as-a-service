@@ -29,7 +29,7 @@ import '../styles/global.css'
 import 'nprogress/nprogress.css'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
-import {getPublishedMarkdownPages} from '~/components/admin/pages/useMarkdownPages'
+import {getPageLinks} from '~/components/page/useMarkdownPages'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -76,6 +76,11 @@ function RsdApp(props: MuiAppProps) {
     saveLocationCookie()
   }
 
+  // console.group('RsdApp')
+  // console.log('session...', session)
+  // console.log('settings...', settings)
+  // console.groupEnd()
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -101,6 +106,9 @@ function RsdApp(props: MuiAppProps) {
 
 /**
  * Extract session info from httpOnly cookie (server side)
+ * NOTE! initially it runs server side but moves to client side
+ * when Link or router.push is used.
+ * see https://nextjs.org/docs/api-reference/data-fetching/get-initial-props
  * @param appContext
  * @returns
  */
@@ -108,18 +116,16 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
   const appProps = await App.getInitialProps(appContext)
   const {req, res} = appContext.ctx
 
+  // console.log('RsdApp.getInitialProps')
+
   // extract user session from cookies
   const session = getSessionSeverSide(req, res)
-
-  // console.group('RsdApp.getInitialProps')
-  // console.log('session...', session)
-  // console.groupEnd()
 
   // get embed mode
   // provide embed param to remove headers
   const {embed} = appContext.router.query
   // get links
-  const links = await getPublishedMarkdownPages(false)
+  const links = await getPageLinks({is_published:true})
   // create rsd settings
   const settings = {
     embed: typeof embed !== 'undefined',
@@ -129,7 +135,11 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
       host: 'default'
     }
   }
+
+  // console.group('RsdApp.getInitialProps')
+  // console.log('session...', session)
   // console.log('settings...', settings)
+  // console.groupEnd()
 
   // return app props and session info from cookie
   return {

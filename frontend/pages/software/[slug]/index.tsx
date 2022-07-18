@@ -102,7 +102,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...mentions...', mentions)
+  // console.log('SoftwareIndexPage...slug...', slug)
   return (
     <>
       {/* Page Head meta tags */}
@@ -126,7 +126,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <CanoncialUrl
         canonicalUrl={resolvedUrl}
       />
-      <AppHeader editButton={ isMaintainer
+      <AppHeader editButton={isMaintainer
         ? <EditButton title="Edit software" url={`${slug}/edit`} />
         : undefined
       }/>

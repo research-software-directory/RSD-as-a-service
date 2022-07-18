@@ -10,7 +10,13 @@ const config = {
   },
   slug: {
     label: 'RSD path (slug)',
-    help: 'Use letters, numbers and dash "-". Other characters are not allowed.',
+    help: '',
+    baseUrl: () => {
+      if (typeof location != 'undefined') {
+        return `${location.origin}/page/`
+      }
+      return '/page'
+    },
     // react-hook-form validation rules
     validation: {
       required: 'Slug is required',
