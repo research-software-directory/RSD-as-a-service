@@ -203,11 +203,11 @@ export default function Home({software,projects,organisations}:HomeProps) {
             <div className="min-w-min flex flex-col">
               <LogoHelmholtz width="220" />
               <div className="pt-1 pb-12">Research for grand challenges.</div>
-              <a onClick={handleClickOpen}>
+              {/* <a onClick={handleClickOpen}>
                 <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
                   Add your software
                 </div>
-              </a>
+              </a> */}
             </div>
             <div className="xs:pt-6 sm:pt-0 md:pt-0 lg:pt-0 xl:pt-0 ml-auto">
               <h1 className="text-6xl">Promote and Discover <br/>Research Software</h1>
@@ -218,8 +218,39 @@ export default function Home({software,projects,organisations}:HomeProps) {
 
         {/* Software spotlights */}
         <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
+          <h2 className='text-5xl'>Software Spotlights</h2>
+          <div className='text-2xl mt-2'>Browse the latest outstanding software products in Helmholtz</div>
+          <div className="w-full">
+            <Spotlights spotlights={SPOTLIGHTS} />
+          </div>
+        </div>
+
+        {/* Software meta repository */}
+        <div className="conainer mx-auto p-12 max-w-screen-xl text-secondary bg-[#ecfbfd]">
+          <h2 className='text-5xl'>Research Software Directory</h2>
+          <div className="text-xl my-4">Browse Software by Research Topic</div>
+          <p className="text-secondary text-xl my-6">
+            The Research Software Directory is originally developed at the netherlands eScience center. < br/>
+            In a joint collaboration, Helmholtz offers this portal that allows Research Software Engineers to promote their software.
+          </p>
+          <div className="flex justify-end mt-12">
+            <Link
+              href="/software"
+              passHref
+            >
+              <a>
+                <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
+                  Discover software
+                </div>
+              </a>
+            </Link>
+          </div>
+        </div>
+
+        {/* Software spotlights */}
+        <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
           <div className='py-6'>
-            <h2 className='text-5xl'>Research Software Directory</h2>
+            <h2 className='text-5xl'>For RSEs and Researchers</h2>
             <div className="text-2xl my-4">A place for Research Software that is being developed in the Helmholtz Association.</div>
             <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
 
@@ -250,6 +281,13 @@ export default function Home({software,projects,organisations}:HomeProps) {
                   </div>
                 </div>
               </div>
+              <div className="">
+                <a onClick={handleClickOpen}>
+                  <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
+                    Add your software
+                  </div>
+                </a>
+              </div>
             </div>
 
             {/* <div className="text-2xl mt-8 mb-4">
@@ -265,37 +303,6 @@ export default function Home({software,projects,organisations}:HomeProps) {
             </div> */}
           </div>
         </div>
-
-        {/* Software spotlights */}
-        <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
-          <h2 className='text-5xl'>Software Spotlights</h2>
-          <div className='text-2xl mt-2'>Browse the latest outstanding software products in Helmholtz</div>
-          <div className="w-full">
-            <Spotlights spotlights={SPOTLIGHTS} />
-          </div>
-        </div>
-
-        {/* Software meta repository */}
-        {/* <div className="conainer mx-auto p-12 max-w-screen-xl text-secondary bg-[#ecfbfd]">
-          <h2 className='text-5xl'>Software Meta Repository</h2>
-          <div className="text-xl my-4">Browse Software by Research Topic</div>
-          <p className="text-secondary text-xl my-6">
-            The Research Software Directory is originally developed at the netherlands eScience center. < br/>
-            In a joint collaboration, Helmholtz offers this portal that allows Research Software Engineers to promote their software.
-          </p>
-          <div className="flex justify-end mt-12">
-            <Link
-              href="/software"
-              passHref
-            >
-              <a>
-                <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
-                  Discover software
-                </div>
-              </a>
-            </Link>
-          </div>
-        </div> */}
 
         {/* Roadmap */}
         {/* <div className="bg-white">
