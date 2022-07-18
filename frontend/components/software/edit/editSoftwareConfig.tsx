@@ -34,7 +34,7 @@ export const softwareInformation = {
   },
   short_statement: {
     label: 'Short description',
-    help: 'Provide short description of your software to use as page subtitle.',
+    help: 'Provide a short description of your software to use as page subtitle.',
     validation: {
       required: 'Short description is required',
       minLength: {value: 10, message: 'Minimum length is 10'},
@@ -42,24 +42,24 @@ export const softwareInformation = {
     }
   },
   get_started_url: {
-    label: 'Get Started Url',
-    help: 'Link to source code repository or documentation web page.',
+    label: 'Get Started URL',
+    help: 'Link to documentation for users.',
     validation: {
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^https?:\/\/.+\..+/,
-        message: 'Url should start with http(s):// and use at least one dot (.)'
+        message: 'URL should start with http(s):// and use at least one dot (.)'
       }
     }
   },
   repository_url: {
-    label: 'Repository Url',
+    label: 'Repository URL',
     help: 'Link to source code repository',
     validation: {
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^https?:\/\/.+\..+/,
-        message: 'Url should start with htps://, have at least one dot (.) and at least one slash (/).'
+        message: 'URL should start with htps://, have at least one dot (.) and at least one slash (/).'
       }
     }
   },
@@ -82,16 +82,16 @@ export const softwareInformation = {
       maxLength: {value: 10000, message: 'Maximum length is 10000'},
     }
   },
-  // field for markdown url
+  // field for markdown URL
   description_url: {
-    label: 'Url location of markdown file',
-    help: 'Point to the location of markdown file including the filename.',
+    label: 'URL location of markdown file',
+    help: <>Point to the location of markdown file including the filename. Make sure to provide the <u><a href='https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md'>raw file</a></u> and <strong>not</strong> the <u><a href='https://github.com/research-software-directory/RSD-as-a-service/blob/main/README.md'>rendered output</a></u>.</>,
     validation: {
-      required: 'Valid markdown url must be provided',
+      required: 'Valid markdown URL must be provided',
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^https?:\/\/.+\..+.md$/,
-        message: 'Url should start with http(s):// have at least one dot (.) and end with (.md)'
+        message: 'URL should start with http(s):// have at least one dot (.) and end with (.md)'
       }
     }
   },
@@ -99,13 +99,13 @@ export const softwareInformation = {
     title: 'Citation',
     subtitle: 'We generate citation files using concept DOI',
     label: 'Concept DOI',
-    help: 'Initial DOI of your software',
+    help: <>Concept DOI of your software, i.e. a DOI representing <u><a href='https://help.zenodo.org/'>all of the versions</a></u> of this software</>,
     validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
       pattern: {
         value: /^10(\.\w+)+\/\S+$/,
-        message: 'Invalid DOI pattern. Maybe you used complete url?'
+        message: 'Invalid DOI pattern. Maybe you provided a complete URL?'
       }
     }
   },
@@ -263,13 +263,13 @@ export const organisationInformation = {
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^https?:\/\/.+\..+/,
-        message: 'Url should start with http(s):// and have at least one dot (.)'
+        message: 'URL should start with http(s):// and have at least one dot (.)'
       }
     }
   },
   slug: {
     label: 'RSD path',
-    help: 'Partial RSD url for this organisation (slug)',
+    help: 'Partial RSD URL for this organisation (slug)',
     validation: {
       required: 'The rsd path is required',
       minLength: {value: 2, message: 'Minimum length is 2'},
@@ -337,11 +337,11 @@ export const mentionInformation = {
   },
   url: {
     label: 'Link',
-    help: 'Provide url to publication',
+    help: 'Provide URL to publication',
     validation: {
       pattern: {
         value: /^https?:\/\/.+\..+/,
-        message: 'Url should start with http(s):// have at least one dot (.)'
+        message: 'URL should start with http(s):// have at least one dot (.)'
       }
     }
   },
@@ -353,11 +353,11 @@ export const mentionInformation = {
   },
   image_url: {
     label: 'Image',
-    help:'Provide url to image',
+    help:'Provide URL to image',
     validation: {
       pattern: {
         value: /^https?:\/\/.+\..+/,
-        message: 'Url should start with http(s):// have at least one dot (.)'
+        message: 'URL should start with http(s):// have at least one dot (.)'
       }
     }
   },
@@ -365,7 +365,7 @@ export const mentionInformation = {
     title: 'Find mention',
     subtitle: 'Search mentions scraped from Zotero',
     label: 'Search for mentions',
-    help: 'Type the title or the url of scraped mention (at least first 2 letters)',
+    help: 'Type the title or the URL of scraped mention (at least first 2 letters)',
     // reset value after selected
     reset: true,
     validation: {
