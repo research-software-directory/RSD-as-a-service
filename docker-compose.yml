@@ -140,7 +140,7 @@ services:
     container_name: nginx
     build:
       context: ./nginx
-    image: rsd/nginx:1.0.0
+    image: rsd/nginx:1.0.1
     ports:
       - "80:80"
       - "443:443"
@@ -151,6 +151,8 @@ services:
       - frontend
     networks:
       - net
+    volumes:
+      - lets-encrypt:/etc/letsencrypt
 
 # define name for docker network
 # it should have name: rsd-as-a-service_net
@@ -161,3 +163,4 @@ networks:
 # volume should have name rsd-as-a-service_pgdb
 volumes:
   pgdb:
+  lets-encrypt:
