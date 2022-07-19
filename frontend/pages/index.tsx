@@ -11,21 +11,26 @@
 // SPDX-License-Identifier: EUPL-1.2
 
 /* eslint-disable @next/next/no-img-element */
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import AOS from 'aos'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/layout/AppFooter'
 import Link from 'next/link'
-import Image from 'next/image'
 
-import styles from '~/components/home/home.module.css'
 
 import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
 import LogoHifis from '~/assets/logos/LogoHIFISBlue.svg'
+import {OrganisationForOverview} from '../types/Organisation'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
 import LogoEscience from '~/components/svg/LogoEscience'
+import LogoAvatar from '~/components/layout/LogoAvatar'
+import {GetServerSidePropsContext} from 'next'
+import {createJsonHeaders} from '~/utils/fetchHelpers'
+import logger from '~/utils/logger'
+import {getUrlFromLogoId} from '~/utils/editOrganisation'
+import {isNull} from 'util'
 /*! purgecss end ignore */
 
 const whyrsd = [
@@ -173,9 +178,64 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
   )
 }
 
+function ResearchField({background, name}:{background: string, name: string}) {
+  function mouseEnter(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (!(event.target instanceof HTMLAnchorElement)) return
+    const background = '/images/' + event.target.dataset.background
+    event.target.parentElement!.parentElement!.style.backgroundImage = 'url("' + background + '")'
+  }
 
-export default function Home({software,projects,organisations}:HomeProps) {
-  const [isDark, setDark] = useState(true)
+  return (
+    <a onMouseEnter={mouseEnter} data-background={background}>{name}</a>
+  )
+}
+
+function ResearchFields() {
+  return (
+    <div id="researchTopicBox" className="grid grid-cols-3 gap-x-10 gap-y-20 text-center text-3xl place-items-center py-16">
+      <ResearchField background="pexels-pixabay-414837.jpg" name="Energy" />
+      <ResearchField background="pexels-blue-ox-studio-695299.jpg" name="Earth & Environment" />
+      <ResearchField background="pexels-rfstudio-3825529.jpg" name="Health" />
+      <ResearchField background="jj-ying-8bghKxNU1j0-unsplash.jpg" name="Information" />
+      <ResearchField background="pexels-aleksejs-bergmanis-681335.jpg" name="Aeronautics, Space and Transport" />
+      <ResearchField background="desy_yulia-buchatskaya-hYvZHggmuc4-unsplash.jpg" name="Matter" />
+    </div>
+  )
+}
+
+function clearBackgroundImage(event: React.MouseEvent<HTMLDivElement>) {
+  if (!(event.target instanceof HTMLDivElement)) return
+  event.target.style.backgroundImage = ''
+}
+
+function ParticipatingOrganisations({organisations}:{organisations:OrganisationForOverview[]}) {
+  return (
+    <div
+      className="flex flex-row flex-nowrap w-full overflow-x-scroll h-[12rem] hgf-scrollbar"
+    >
+      {
+        organisations.map(item => {
+          return(
+            <Link
+              key={`link_${item.name}`}
+              href={`/organisations/${item.rsd_path}`}
+              passHref
+            >
+              <img
+                key={item.name}
+                alt={item.name}
+                src={getUrlFromLogoId(item.logo_id) ?? undefined}
+                className="p-10 hover:cursor-pointer"
+              />
+            </Link>
+          )
+        })
+      }
+    </div>
+  )
+}
+
+export default function Home({organisations=[]}:{organisations: OrganisationForOverview[]}) {
 
   // Initialize AOS library
   useEffect(() => {
@@ -222,40 +282,58 @@ export default function Home({software,projects,organisations}:HomeProps) {
           <div className='text-2xl mt-2'>Browse the latest outstanding software products in Helmholtz</div>
           <div className="w-full">
             <Spotlights spotlights={SPOTLIGHTS} />
+            <div className="flex">
+              <Link href="/software" passHref>
+              <a>
+                <div
+                  className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
+                  Browse software
+                </div>
+              </a>
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* Software meta repository */}
-        <div className="conainer mx-auto p-12 max-w-screen-xl text-secondary bg-[#ecfbfd]">
-          <h2 className='text-5xl'>Research Software Directory</h2>
-          <div className="text-xl my-4">Browse Software by Research Topic</div>
-          <p className="text-secondary text-xl my-6">
-            The Research Software Directory is originally developed at the netherlands eScience center. < br/>
-            In a joint collaboration, Helmholtz offers this portal that allows Research Software Engineers to promote their software.
-          </p>
-          <div className="flex justify-end mt-12">
-            <Link
-              href="/software"
-              passHref
-            >
-              <a>
-                <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
-                  Discover software
-                </div>
-              </a>
-            </Link>
+        <div className="conainer mx-auto max-w-screen-xl text-white bg-secondary">
+          <div id="backgroundContainer"
+            className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75"
+            onMouseLeave={clearBackgroundImage}>
+            <h2 className='text-5xl'>Discover by research topic</h2>
+            {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
+            <ResearchFields />
+          </div>
+        </div>
+
+        {/* Participating organsiations */}
+        <div className="container mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
+          <div className="py-6">
+            <h2 className="text-5xl">Participating organisations</h2>
+            <ParticipatingOrganisations organisations={organisations}/>
+            <div className="text-2xl mt-8 mb-4">
+              The Research Software Directory is open source and jointly developed by
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center pt-8 text-black">
+                <a href="https://esciencecenter.nl" className="hover:cursor-pointer w-full grid place-items-center" target="_blank" rel="noreferrer">
+                  <LogoEscience width="100%"/>
+                </a>
+                <a href="https://hifis.net" className="hover:cursor-pointer w-full grid place-items-center" target="_blank" rel="noreferrer">
+                  <LogoHifis width="60%" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Software spotlights */}
-        <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
+        {/* <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
           <div className='py-6'>
             <h2 className='text-5xl'>For RSEs and Researchers</h2>
             <div className="text-2xl my-4">A place for Research Software that is being developed in the Helmholtz Association.</div>
             <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
 
               <div className='text-center text-2xl py-4'>
-                {/* <div className="pb-4">For Research Software Engineers</div> */}
+                <div className="pb-4">For Research Software Engineers</div>
                 <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">
                   <div className="aspect-video grid place-items-center bg-center bg-cover group text-white bg-promote">
                     <div className="group-hover:hidden text-4xl">Promote</div>
@@ -269,7 +347,7 @@ export default function Home({software,projects,organisations}:HomeProps) {
               </div>
 
               <div className='text-center text-2xl my-4'>
-                {/* <div className="mb-4">For Researchers</div> */}
+                <div className="mb-4">For Researchers</div>
                 <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">
                   <div className="aspect-video grid place-items-center bg-center bg-cover group text-white bg-discover">
                     <div className="group-hover:hidden text-4xl">Discover</div>
@@ -289,20 +367,8 @@ export default function Home({software,projects,organisations}:HomeProps) {
                 </a>
               </div>
             </div>
-
-            {/* <div className="text-2xl mt-8 mb-4">
-              The Research Software Directory is open source and jointly developed by
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center pt-8 text-black">
-                <a href="https://esciencecenter.nl" className="hover:cursor-pointer w-full grid place-items-center" target="_blank" rel="noreferrer">
-                  <LogoEscience width="100%"/>
-                </a>
-                <a href="https://hifis.net" className="hover:cursor-pointer w-full grid place-items-center" target="_blank" rel="noreferrer">
-                  <LogoHifis width="60%" />
-                </a>
-              </div>
-            </div> */}
           </div>
-        </div>
+        </div> */}
 
         {/* Roadmap */}
         {/* <div className="bg-white">
@@ -315,4 +381,45 @@ export default function Home({software,projects,organisations}:HomeProps) {
         <AppFooter/>
       </div>
   )
+}
+
+async function getOrganisationsList({url, token}: {url: string, token?: string}) {
+  try {
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+      },
+    })
+
+    if ([200, 206].includes(resp.status)) {
+      const json = await resp.json()
+      return {
+        data: json
+      }
+    }
+    // otherwise request failed
+    logger(`getOrganisationsList failed: ${resp.status} ${resp.statusText}`, 'warn')
+    // we log and return zero
+    return {
+      data: []
+    }
+  } catch (e: any) {
+    logger(`getOrganisationsList: ${e?.message}`, 'error')
+    return {
+      data: []
+    }
+  }
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const {req} = context
+  const token = req?.cookies['rsd_token']
+  const url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null`
+  const {data} = await getOrganisationsList({url, token})
+  return {
+    props: {
+      organisations: data
+    }
+  }
 }

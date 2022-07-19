@@ -31,3 +31,15 @@ header input {
 .bg-cite {
   background: url("/images/pexels-pixabay-159751_scaled.jpg")
 }
+.hgf-scrollbar::-webkit-scrollbar {
+  height: 5px;
+}
+.hgf-scrollbar::-webkit-scrollbar-thumb {
+  background: #05e5ba;
+  border-radius: 0;
+  border-bottom: 1px solid #002864;
+}
+.hgf-scrollbar::-webkit-scrollbar-track {
+  background: white;
+  border-bottom: 1px solid #002864;
+}
