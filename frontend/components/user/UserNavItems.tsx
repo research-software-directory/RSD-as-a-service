@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -40,7 +42,7 @@ export const userMenu:UserMenuItems = {
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
     icon: <TerminalIcon />,
     component: (props?) => <UserSoftware {...props} />,
-    status: 'You are maintainer of software',
+    status: 'Software you maintain',
     showSearch: true
   },
   projects:{
@@ -48,7 +50,7 @@ export const userMenu:UserMenuItems = {
     label: ({project_cnt})=>`Projects (${project_cnt ?? 0})`,
     icon: <ListAltIcon />,
     component: (props?) => <UserProjects {...props} />,
-    status: 'You are maintainer of projects',
+    status: 'Projects you maintain',
     showSearch: true
   },
   organisations:{
@@ -56,7 +58,7 @@ export const userMenu:UserMenuItems = {
     label: ({organisation_cnt})=>`Organisations (${organisation_cnt ?? 0})`,
     icon: <BusinessIcon />,
     component: (props?) => <Organisations {...props} />,
-    status: 'Departments or institutions',
+    status: 'Departments or institutions you maintain',
     showSearch: true
   },
 }
