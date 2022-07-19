@@ -85,7 +85,7 @@ export const softwareInformation = {
   // field for markdown URL
   description_url: {
     label: 'URL location of markdown file',
-    help: <>Point to the location of markdown file including the filename. Make sure to provide the <u><a href='https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md'>raw file</a></u> and <strong>not</strong> the <u><a href='https://github.com/research-software-directory/RSD-as-a-service/blob/main/README.md'>rendered output</a></u>.</>,
+    help: <>Point to the location of markdown file including the filename. Make sure to provide the <u><a target = '_blank' href='https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md' rel="noreferrer">raw file</a></u> and <strong>not</strong> the <u><a target = '_blank' href='https://github.com/research-software-directory/RSD-as-a-service/blob/main/README.md' rel="noreferrer">rendered output</a></u>.</>,
     validation: {
       required: 'Valid markdown URL must be provided',
       maxLength: {value: 200, message: 'Maximum length is 200'},
@@ -99,7 +99,7 @@ export const softwareInformation = {
     title: 'Citation',
     subtitle: 'We generate citation files using concept DOI',
     label: 'Concept DOI',
-    help: <>Concept DOI of your software, i.e. a DOI representing <u><a href='https://help.zenodo.org/'>all of the versions</a></u> of this software</>,
+    help: <>Concept DOI of your software, i.e. a DOI representing <u><a target = '_blank' href='https://help.zenodo.org/' rel="noreferrer">all of the versions</a></u> of this software</>,
     validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
