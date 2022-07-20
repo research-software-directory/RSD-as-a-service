@@ -4,8 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {GoBackLink} from '~/components/GoBackButton'
-import EmbedLayoutContext from '~/components/layout/embedLayoutContext'
-import {useContext} from 'react'
+import useRsdSettings from '~/config/useRsdSettings'
 
 type ContentHeaderProps = {
   title: string,
@@ -14,7 +13,7 @@ type ContentHeaderProps = {
 }
 
 export default function ContentHeader({title, subtitle, children}: ContentHeaderProps) {
-  const {embedMode} = useContext(EmbedLayoutContext)
+  const {embedMode} = useRsdSettings()
 
   return (
       <section className="flex-1 lg:container lg:mx-auto flex flex-col lg:flex-row px-4 py-6 lg:py-12">

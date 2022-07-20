@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {RsdRole} from '~/auth'
 
 export type MenuItemType = {
   type?: 'link' | 'function' |'divider'
@@ -13,6 +14,7 @@ export type MenuItemType = {
   // optional, but fn is provided it will have higher priority
   // than path
   fn?: Function,
+  role?: RsdRole[]
 }
 // routes defined for nav/menu
 // used in components/AppHeader

@@ -12,43 +12,31 @@
 import {loadMuiTheme,RsdThemes} from '../../styles/rsdMuiTheme'
 import {ThemeProvider} from '@mui/material/styles'
 import {AuthProvider, defaultSession, Session} from '../../auth'
-import EmbedLayoutContext,{EmbedLayoutProp} from '~/components/layout/embedLayoutContext'
+import {RsdSettingsState,defaultRsdSettings, RsdTheme} from '~/config/rsdSettingsReducer'
+import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 
 type WrapProps = {
   props?: any
   session?: Session
-  theme?: RsdThemes
-  embed?: EmbedLayoutProp
+  // theme?: RsdThemes
+  settings?: RsdSettingsState
 }
 
 export function WrappedComponentWithProps(Component: any, options?: WrapProps) {
-  const theme = options?.theme ?? 'default'
   const session = options?.session ?? defaultSession
   const props = options?.props ?? {}
-  const embedMode = options?.embed?.embedMode ?? false
-  const setEmbedMode = options?.embed?.setEmbedMode ?? function (embedMode) {
-    // eslint-disable-next-line no-console
-    console.log('setEmbedMode...',embedMode)
-  }
+  const settings = options?.settings ?? defaultRsdSettings
+  // extract theme from rsd settings
+  const theme = settings?.theme.mode ?? 'default'
+  // load MUI theme
+  const rsdMuiTheme = loadMuiTheme(theme as RsdThemes)
 
-  const rsdMuiTheme = loadMuiTheme(theme)
-  if (session) {
-    return (
-      <ThemeProvider theme={rsdMuiTheme}>
-        <AuthProvider session={session}>
-          <EmbedLayoutContext.Provider value={{embedMode,setEmbedMode}}>
-            <Component {...props} />
-          </EmbedLayoutContext.Provider>
-        </AuthProvider>
-      </ThemeProvider>
-    )
-  }
   return (
     <ThemeProvider theme={rsdMuiTheme}>
-      <AuthProvider session={defaultSession}>
-        <EmbedLayoutContext.Provider value={{embedMode,setEmbedMode}}>
+      <AuthProvider session={session}>
+        <RsdSettingsProvider settings={settings}>
           <Component {...props} />
-        </EmbedLayoutContext.Provider>
+        </RsdSettingsProvider>
       </AuthProvider>
     </ThemeProvider>
   )

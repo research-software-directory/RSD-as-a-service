@@ -11,7 +11,7 @@ import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
 import {ThemeProvider} from '@mui/material/styles'
 import {CacheProvider, EmotionCache} from '@emotion/react'
-import {loadMuiTheme} from '../styles/rsdMuiTheme'
+import {loadMuiTheme, RsdThemes} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
 // loading bar at the top of the screen
 import nprogress from 'nprogress'
@@ -23,12 +23,13 @@ import {saveLocationCookie} from '../auth/locationCookie'
 import PageSnackbar from '../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
 
-import EmbedLayoutContext from '~/components/layout/embedLayoutContext'
-
 // global CSS and tailwind
 import '../styles/global.css'
 // nprogress styles
 import 'nprogress/nprogress.css'
+import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
+import {RsdSettingsState} from '~/config/rsdSettingsReducer'
+import {getPageLinks} from '~/components/page/useMarkdownPages'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -36,7 +37,8 @@ const clientSideEmotionCache = createEmotionCache()
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {
   emotionCache: EmotionCache
-  session: Session
+  session: Session,
+  settings: RsdSettingsState
 }
 
 // define npgrogres setup, no spinner
@@ -44,14 +46,14 @@ export interface MuiAppProps extends AppProps {
 nprogress.configure({showSpinner: false})
 
 function RsdApp(props: MuiAppProps) {
-  const {Component, emotionCache = clientSideEmotionCache, pageProps, session} = props
+  const {
+    Component, emotionCache = clientSideEmotionCache,
+    pageProps, session, settings
+  } = props
   const [options, setSnackbar] = useState(snackbarDefaults)
   //currently we support only default (light) and dark RSD theme for MUI
-  const muiTheme = loadMuiTheme('default')
+  const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
-  // provide embed param to remove headers
-  const {embed} = router.query
-  const [embedMode, setEmbedMode] = useState(typeof embed !== 'undefined')
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -74,6 +76,11 @@ function RsdApp(props: MuiAppProps) {
     saveLocationCookie()
   }
 
+  // console.group('RsdApp')
+  // console.log('session...', session)
+  // console.log('settings...', settings)
+  // console.groupEnd()
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -85,12 +92,12 @@ function RsdApp(props: MuiAppProps) {
         {/* CssBaseline from MUI-5*/}
         {/* <CssBaseline /> */}
         <AuthProvider session={session}>
-          <EmbedLayoutContext.Provider value={{embedMode,setEmbedMode}}>
+          <RsdSettingsProvider settings={settings}>
           <PageSnackbarContext.Provider value={{options, setSnackbar}}>
             <Component {...pageProps} />
           </PageSnackbarContext.Provider>
           <PageSnackbar options={options} setOptions={setSnackbar} />
-          </EmbedLayoutContext.Provider>
+          </RsdSettingsProvider>
         </AuthProvider>
       </ThemeProvider>
     </CacheProvider>
@@ -99,6 +106,9 @@ function RsdApp(props: MuiAppProps) {
 
 /**
  * Extract session info from httpOnly cookie (server side)
+ * NOTE! initially it runs server side but moves to client side
+ * when Link or router.push is used.
+ * see https://nextjs.org/docs/api-reference/data-fetching/get-initial-props
  * @param appContext
  * @returns
  */
@@ -106,17 +116,36 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
   const appProps = await App.getInitialProps(appContext)
   const {req, res} = appContext.ctx
 
+  // console.log('RsdApp.getInitialProps')
+
   // extract user session from cookies
   const session = getSessionSeverSide(req, res)
 
+  // get embed mode
+  // provide embed param to remove headers
+  const {embed} = appContext.router.query
+  // get links
+  const links = await getPageLinks({is_published:true})
+  // create rsd settings
+  const settings = {
+    embed: typeof embed !== 'undefined',
+    links,
+    theme: {
+      mode: 'default',
+      host: 'default'
+    }
+  }
+
   // console.group('RsdApp.getInitialProps')
   // console.log('session...', session)
+  // console.log('settings...', settings)
   // console.groupEnd()
 
   // return app props and session info from cookie
   return {
     ...appProps,
-    session
+    session,
+    settings
   }
 }
 

@@ -7,9 +7,11 @@ import {render,screen, fireEvent} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
 
 import UserMenu from './UserMenu'
-import {userMenuItems} from '~/config/userMenuItems'
+import {getUserMenuItems} from '~/config/userMenuItems'
 
-it('should render userMenu',()=>{
+const userMenuItems = getUserMenuItems()
+
+it('should render userMenu', () => {
   render(WrappedComponentWithProps(UserMenu))
   const userMenu = screen.queryByTestId('user-menu-button')
   expect(userMenu).toBeInTheDocument()

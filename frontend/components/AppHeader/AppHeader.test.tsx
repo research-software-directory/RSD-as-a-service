@@ -4,8 +4,17 @@ import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
 import {menuItems} from '~/config/menuItems'
 import AppHeader from './index'
 
+// mocks login providers list
+const redirectUrl = 'https://test-login-redirect.com'
+jest.mock('~/auth/api/useLoginProviders', () => {
+  return ()=>[{
+    name: 'test provider',
+    redirectUrl
+  }]
+})
+
 beforeEach(() => {
-  render(WrappedComponentWithProps(AppHeader))
+  render(WrappedComponentWithProps(AppHeader,))
 })
 
 it('renders AppHeader with header tag', () => {
@@ -21,7 +30,7 @@ it('renders AppHeader with 2 searchboxes', () => {
   expect(search).toHaveLength(2)
 })
 
-it('renders AppHeader with links', () => {
+it('renders AppHeader with links and logo link', () => {
   // has searchbox
   const links = screen.getAllByRole('link')
   // menu items + logo link to root
@@ -29,20 +38,11 @@ it('renders AppHeader with links', () => {
   // screen.debug()
 })
 
-it('renders AppHeader with links', () => {
+it.only('renders AppHeader with Sign in link', async() => {
   // has searchbox
-  const links = screen.getAllByRole('link')
-  // menu items + logo link to root
-  expect(links).toHaveLength(menuItems.length + 1)
-  // screen.debug()
+  const link = await screen.findByText('Sign in')
+  // link should exists
+  expect(link).toBeInTheDocument()
+  // and have value of redirectUrl
+  expect(link).toHaveAttribute('href',redirectUrl)
 })
-
-it('renders AppHeader with mobile menu', () => {
-  // has searchbox
-  const menu = screen.getByTestId('mobile-menu')
-  // menu items + logo link to root
-  expect(menu).toBeInTheDocument()
-  // screen.debug()
-})
-
-

@@ -18,7 +18,7 @@ import {useTheme} from '@mui/material/styles'
 
 import {useAuth} from '~/auth'
 import useLoginProviders from '~/auth/api/useLoginProviders'
-import {userMenuItems} from '~/config/userMenuItems'
+import {getUserMenuItems} from '~/config/userMenuItems'
 import UserMenu from '~/components/layout/UserMenu'
 
 export default function LoginButton() {
@@ -39,10 +39,11 @@ export default function LoginButton() {
 
   if (status === 'authenticated') {
     // when user is authenticated
+    const menuItems = getUserMenuItems(session.user?.role)
     // we show user menu with the avatar and user specific options
     return (
       <UserMenu
-        menuOptions={userMenuItems}
+        menuOptions={menuItems}
       />
     )
   }

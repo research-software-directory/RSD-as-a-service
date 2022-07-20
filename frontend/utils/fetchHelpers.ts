@@ -103,3 +103,8 @@ export async function extractRespFromGraphQL(resp: Response) {
     data: json?.data ?? undefined
   }
 }
+
+export function getBaseUrl() {
+  const baseUrl = process.env.POSTGREST_URL || '/api/v1'
+  return baseUrl
+}

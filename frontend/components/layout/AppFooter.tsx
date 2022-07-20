@@ -8,14 +8,24 @@
 import Link from 'next/link'
 import LogoEscience from '~/components/svg/LogoEscience'
 import Mail from '@mui/icons-material/Mail'
-import {useContext} from 'react'
-import EmbedLayoutContext from './embedLayoutContext'
+import useRsdSettings from '~/config/useRsdSettings'
 
 export default function AppFooter () {
   const isDev = process.env.NODE_ENV === 'development'
-
-  const {embedMode} = useContext(EmbedLayoutContext)
+  const {links,embedMode} = useRsdSettings()
   if (embedMode === true) return null
+
+  function renderLinks() {
+    return links.map(page => {
+      return (
+        <Link
+          key={page.slug}
+          href={`/page/${page.slug}`} passHref>
+          <a className="hover:text-primary">{page.title}</a>
+        </Link>
+      )
+    })
+  }
 
   return (
     <footer className="flex flex-wrap text-white border-t bg-secondary border-grey-A400">
@@ -47,15 +57,7 @@ export default function AppFooter () {
 
           <div className="mt-8 text-lg">Research Software Directory</div>
           <div className="flex flex-col">
-            <Link href="/about" passHref>
-              <a className="hover:text-primary">About</a>
-            </Link>
-            <Link href="/privacy" passHref>
-              <a className="hover:text-primary">Privacy Policy</a>
-            </Link>
-            <Link href="/terms" passHref>
-              <a className="hover:text-primary">Terms of Service</a>
-            </Link>
+            {renderLinks()}
             <a href='https://research-software-directory.github.io/documentation'
               target="_blank"
               className="hover:text-primary"

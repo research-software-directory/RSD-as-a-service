@@ -23,7 +23,8 @@
 body{
   font-size: 1rem;
   font-weight: 400;
-
+  /* minimal with to have logo, menu and profile */
+  min-width: 375px;
 }
 
 #__next {
@@ -119,26 +120,26 @@ body{
 /* --------------------------------------
 Format JSON.stringify - FOR TESTING ONLY
 ----------------------------------------*/
-pre {
+/* pre {
   border: 1px solid lightgrey;
   padding: 1rem;
   white-space: pre-wrap;
   word-wrap: break-word;
-}
+} */
 
 
-/* ---------------------
-Tailwind remove max-width for markdown
-*/
+/* ------------------------------------
+Tailwind prose correction for markdown
+--------------------------------------*/
+
 .prose{
-  max-width: inherit;
   overflow: hidden;
   word-break: break-word;
 }
 
 /* ---------------------
  MARKDOWN EDIT / PREVIEW
- */
+*/
 
 #markdown-textarea:focus-visible{
   outline:none;
@@ -149,5 +150,5 @@ Tailwind remove max-width for markdown
 }
 
 .nav-active{
-    @apply border-b border-primary cursor-pointer
+  @apply border-b border-primary cursor-pointer
 }

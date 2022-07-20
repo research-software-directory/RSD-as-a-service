@@ -36,7 +36,7 @@ const colors = {
   'accent-content':'white',
   // snackbar colors by type
   error:'#e53935',
-  'error-content':'black',
+  'error-content':'white',
   warning:'#ed6c02',
   'warning-content':'black',
   info:'#0288d1',

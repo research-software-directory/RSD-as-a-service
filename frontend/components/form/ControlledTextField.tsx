@@ -70,7 +70,7 @@ export default function ControlledTextField({options, control, rules}: {
             variant={options?.variant ?? 'standard'}
             // controlled mui input requires "" instead of null
             // but the value in controller of react-hook-form is null (can be null)
-            value={value ?? options?.defaultValue ?? ''}
+            value={value ?? ''}
             FormHelperTextProps={{
               sx:{
                 display: 'flex',
