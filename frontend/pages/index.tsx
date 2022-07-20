@@ -19,18 +19,16 @@ import Link from 'next/link'
 
 
 import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
-import LogoHifis from '~/assets/logos/LogoHIFISBlue.svg'
 import {OrganisationForOverview} from '../types/Organisation'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
-import LogoEscience from '~/components/svg/LogoEscience'
-import LogoAvatar from '~/components/layout/LogoAvatar'
 import {GetServerSidePropsContext} from 'next'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {getUrlFromLogoId} from '~/utils/editOrganisation'
-import {isNull} from 'util'
+import {IconButton} from '@mui/material'
+import {ChevronLeft, ChevronRight} from '@mui/icons-material'
 /*! purgecss end ignore */
 
 const whyrsd = [
@@ -210,8 +208,10 @@ function clearBackgroundImage(event: React.MouseEvent<HTMLDivElement>) {
 
 function ParticipatingOrganisations({organisations}:{organisations:OrganisationForOverview[]}) {
   return (
+    <div className="w-full h-full relative">
     <div
-      className="flex flex-row flex-nowrap w-full overflow-x-scroll h-[12rem] hgf-scrollbar"
+      id="participatingOrganisations"
+      className="flex flex-row flex-nowrap w-full overflow-x-scroll h-[12rem] hgf-scrollbar animate-"
     >
       {
         organisations.map(item => {
@@ -231,8 +231,61 @@ function ParticipatingOrganisations({organisations}:{organisations:OrganisationF
           )
         })
       }
+      </div>
+      <IconButton
+        id="scrollLeftButton"
+        color="primary"
+        sx={{
+          fontSize: '2.5rem',
+          backgroundColor: 'white',
+          position: 'absolute',
+          transform: 'translateY(-50%)',
+          top: '50%',
+          left: '0px'
+        }}
+        onClick={moveLeft}
+      >
+        <ChevronLeft fontSize="inherit" />
+      </IconButton>
+      <IconButton
+        id="scrollRightButton"
+        color="primary"
+        sx={{
+          fontSize: '2.5rem',
+          backgroundColor: 'white',
+          position: 'absolute',
+          top: '50%',
+          right: '0px',
+          transform: 'translateY(-50%)',
+        }}
+        onClick={moveRight}
+      >
+        <ChevronRight fontSize="inherit" />
+      </IconButton>
     </div>
   )
+}
+
+function moveRight() {
+  const container = document.getElementById('participatingOrganisations')
+  if(container) {
+    container.scroll({
+      left: container.scrollLeft + 500,
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+}
+
+function moveLeft() {
+  const container = document.getElementById('participatingOrganisations')
+  if(container) {
+    container.scroll({
+      left: container.scrollLeft - 500,
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
 }
 
 export default function Home({organisations=[]}:{organisations: OrganisationForOverview[]}) {
@@ -258,7 +311,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         <AppHeader/>
 
         {/* Head and claim */}
-        <div className="bg-secondary bg-landing-page">
+        <div className="bg-secondary bg-landing-page mb-6">
           <div className="flex flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-screen-xl text-white">
             <div className="min-w-min flex flex-col">
               <LogoHelmholtz width="220" />
@@ -296,8 +349,9 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         </div>
 
         {/* Software meta repository */}
-        <div className="conainer mx-auto max-w-screen-xl text-white bg-secondary">
-          <div id="backgroundContainer"
+        <div className="conainer mx-auto my-10 max-w-screen-xl text-white bg-secondary">
+          <div
+            id="backgroundContainer"
             className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75"
             onMouseLeave={clearBackgroundImage}>
             <h2 className='text-5xl'>Discover by research topic</h2>
@@ -306,22 +360,30 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
           </div>
         </div>
 
+        {/* Teaser */}
+        <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
+          <h2 className='text-5xl'>Upcoming</h2>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-20 py-10'>
+            <div className='text-3xl'>
+              <div>This service is in <span className="bg-[#cdeefb]">active development</span>. Upcoming features include:</div>
+              <ul className="list-disc px-6 py-2">
+                <li className="py-4">Login using your Helmholtz Institution&apos;s account</li>
+                <li className="py-4">Add your own software products</li>
+                <li className="py-4">Add related projects, funding and institutions</li>
+                <li className="py-4">Obtain a free HIFIS license consultation</li>
+              </ul>
+              <div className="py-2">Do you have <span className="bg-[#cdeefb]">suggestions for improvements or new features</span>?</div>
+              <div className="py-2">Please let us know! Write us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="bg-[#cdeefb] underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
+            </div>
+            <div className="bg-[url(/images/pexels-cottonbro-5483075.jpg)] bg-center bg-cover"></div>
+          </div>
+        </div>
+
         {/* Participating organsiations */}
         <div className="container mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
           <div className="py-6">
             <h2 className="text-5xl">Participating organisations</h2>
             <ParticipatingOrganisations organisations={organisations}/>
-            <div className="text-2xl mt-8 mb-4">
-              The Research Software Directory is open source and jointly developed by
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center pt-8 text-black">
-                <a href="https://esciencecenter.nl" className="hover:cursor-pointer w-full grid place-items-center" target="_blank" rel="noreferrer">
-                  <LogoEscience width="100%"/>
-                </a>
-                <a href="https://hifis.net" className="hover:cursor-pointer w-full grid place-items-center" target="_blank" rel="noreferrer">
-                  <LogoHifis width="60%" />
-                </a>
-              </div>
-            </div>
           </div>
         </div>
 
