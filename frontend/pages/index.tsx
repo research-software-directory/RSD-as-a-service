@@ -3,9 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: EUPL-1.2
@@ -361,21 +360,21 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         </div>
 
         {/* Teaser */}
-        <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
-          <h2 className='text-5xl'>Upcoming</h2>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-20 py-10'>
-            <div className='text-3xl'>
+        <div className="conainer mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+          <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-20'>
+            <div className='text-2xl'>
+              <h2 className='text-5xl pb-10'>Upcoming</h2>
               <div>This service is in <span className="bg-[#cdeefb]">active development</span>. Upcoming features include:</div>
-              <ul className="list-disc px-6 py-2">
-                <li className="py-4">Login using your Helmholtz Institution&apos;s account</li>
-                <li className="py-4">Add your own software products</li>
-                <li className="py-4">Add related projects, funding and institutions</li>
-                <li className="py-4">Obtain a free HIFIS license consultation</li>
-              </ul>
+              <div className="px-6 my-4 border-l-2 border-[#002864]">
+                <div className="py-4">Login with your Helmholtz Institution&apos;s account</div>
+                <div className="py-4">Add your own software products</div>
+                <div className="py-4">Add related projects, funding and institutions</div>
+                <div className="py-4">Obtain a free license consultation from HIFIS</div>
+              </div>
               <div className="py-2">Do you have <span className="bg-[#cdeefb]">suggestions for improvements or new features</span>?</div>
-              <div className="py-2">Please let us know! Write us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="bg-[#cdeefb] underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
+              <div className="py-2">Please let us know! Send us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="bg-[#cdeefb] underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
             </div>
-            <div className="bg-[url(/images/pexels-cottonbro-5483075.jpg)] bg-center bg-cover"></div>
+            <div className="md:block md:bg-[url(/images/pexels-cottonbro-5483075.jpg)] bg-center bg-cover"></div>
           </div>
         </div>
 
