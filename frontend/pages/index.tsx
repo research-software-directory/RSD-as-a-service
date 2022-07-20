@@ -57,6 +57,12 @@ type SpotlightDescription = {
 }
 
 const SPOTLIGHTS= [
+  // {
+  //   name: 'MassBank',
+  //   description: 'MassBank is an open source mass spectral library for the identification of small chemical molecules of metabolomics, exposomics and environmental relevance.',
+  //   image: 'https://hifis.net/assets/img/spotlights/massbank/Atrazine_Mass_Spectrum.png',
+  //   link: '/software'
+  // },
   {
     name: 'FishInspector',
     description: 'The software FishInspector provides automatic feature detections in images of zebrafish embryos (body size, eye size, pigmentation). It is Matlab-based and provided as a Windows executable (no matlab installation needed).',
@@ -189,7 +195,7 @@ function ResearchField({background, name}:{background: string, name: string}) {
 
 function ResearchFields() {
   return (
-    <div id="researchTopicBox" className="grid grid-cols-3 gap-x-10 gap-y-20 text-center text-3xl place-items-center py-16">
+    <div id="researchTopicBox" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-20 text-center text-3xl place-items-center py-16">
       <ResearchField background="pexels-pixabay-414837.jpg" name="Energy" />
       <ResearchField background="pexels-blue-ox-studio-695299.jpg" name="Earth & Environment" />
       <ResearchField background="pexels-rfstudio-3825529.jpg" name="Health" />
@@ -310,7 +316,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         <AppHeader/>
 
         {/* Head and claim */}
-        <div className="bg-secondary bg-landing-page mb-6">
+        <div className="bg-secondary bg-landing-page mb-10">
           <div className="flex flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-screen-xl text-white">
             <div className="min-w-min flex flex-col">
               <LogoHelmholtz width="220" />
@@ -329,9 +335,9 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         </div>
 
         {/* Software spotlights */}
-        <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
+        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <h2 className='text-5xl'>Software Spotlights</h2>
-          <div className='text-2xl mt-2'>Browse the latest outstanding software products in Helmholtz</div>
+          <div className='text-2xl mt-2'>Outstanding software products of the Helmholtz community</div>
           <div className="w-full">
             <Spotlights spotlights={SPOTLIGHTS} />
             <div className="flex">
@@ -351,7 +357,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         <div className="conainer mx-auto my-10 max-w-screen-xl text-white bg-secondary">
           <div
             id="backgroundContainer"
-            className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75"
+            className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75 relative"
             onMouseLeave={clearBackgroundImage}>
             <h2 className='text-5xl'>Discover by research topic</h2>
             {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
@@ -374,19 +380,19 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
               <div className="py-2">Do you have <span className="bg-[#cdeefb]">suggestions for improvements or new features</span>?</div>
               <div className="py-2">Please let us know! Send us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="bg-[#cdeefb] underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
             </div>
-            <div className="md:block md:bg-[url(/images/pexels-cottonbro-5483075.jpg)] bg-center bg-cover"></div>
+            <div className="hidden md:block md:bg-[url(/images/pexels-cottonbro-5483075.jpg)] bg-center bg-cover"></div>
           </div>
         </div>
 
         {/* Participating organsiations */}
-        <div className="container mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
+        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <div className="py-6">
             <h2 className="text-5xl">Participating organisations</h2>
             <ParticipatingOrganisations organisations={organisations}/>
           </div>
         </div>
 
-        {/* Software spotlights */}
+        {/* For RSEs and Researchers */}
         {/* <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
           <div className='py-6'>
             <h2 className='text-5xl'>For RSEs and Researchers</h2>
@@ -430,15 +436,6 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
             </div>
           </div>
         </div> */}
-
-        {/* Roadmap */}
-        {/* <div className="bg-white">
-          <div className="conainer mx-auto py-6 px-4 max-w-screen-xl text-secondary">
-            <h1 className="pb-4">Roadmap</h1>
-            <p className="prose">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Proin libero nunc consequat interdum. Pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Id volutpat lacus laoreet non curabitur gravida arcu. Amet mauris commodo quis imperdiet massa tincidunt nunc. Varius sit amet mattis vulputate. Suscipit adipiscing bibendum est ultricies integer. Hendrerit gravida rutrum quisque non tellus. Eget felis eget nunc lobortis mattis aliquam. Integer enim neque volutpat ac tincidunt vitae. Condimentum id venenatis a condimentum vitae sapien pellentesque habitant.</p>
-          </div>
-        </div> */}
-
         <AppFooter/>
       </div>
   )
