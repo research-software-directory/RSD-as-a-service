@@ -1,6 +1,10 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useForm} from 'react-hook-form'
 import Button from '@mui/material/Button'
-import SaveIcon from '@mui/icons-material/Save'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import ControlledSwitch from '~/components/form/ControlledSwitch'
@@ -11,6 +15,7 @@ import {MarkdownPage} from '../useMarkdownPages'
 
 import {saveMarkdownPage} from '../saveMarkdownPage'
 import ControlledSlugTextField from '~/components/form/ControlledSlugTextField'
+import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 export type SubmitProps = {
   status: number
@@ -123,28 +128,19 @@ export default function EditMarkdownPage({token,page,onDelete,onSubmit}:EditMark
           />
         </div>
         <div className="flex justify-end items-center pb-8 lg:pb-0">
-          <Button
-            type="submit"
-            id="save-button"
-            variant="text"
-            sx={{
-              marginRight:'2rem'
-              // overwrite tailwind preflight.css for submit type
-              // '&[type="submit"]:not(.Mui-disabled)': {
-              //   backgroundColor: 'primary.main',
-              // },
-            }}
-            startIcon={<SaveIcon />}
+          <SubmitButtonWithListener
             disabled={!isValid || !isDirty}
-          >
-            Save
-          </Button>
+            formId={page.slug ?? ''}
+          />
           <Button
             id="delete-button"
             variant="text"
             color="error"
-            startIcon={<DeleteIcon />}
-            onClick={()=>onDelete(page)}
+            endIcon={<DeleteIcon />}
+            onClick={() => onDelete(page)}
+            sx={{
+              marginLeft:'1rem'
+            }}
           >
             Remove
           </Button>
