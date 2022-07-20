@@ -45,32 +45,4 @@ export default function PagesNav({selected, links, onSelect, onDragEnd}: PagesNa
       </Droppable>
     </DragDropContext>
   )
-  // return (
-  //   <nav>
-  //     <List sx={{
-  //       width:'100%'
-  //     }}>
-  //       {links.map((item, pos) => {
-  //         return (
-  //           <ListItemButton
-  //             key={`step-${pos}`}
-  //             selected={item.slug === selected}
-  //             onClick={() => {
-  //               onSelect(item)
-  //             }}
-  //           >
-  //             <ListItemIcon>
-  //               <span className='text-[2rem]'>{item?.position ?? pos+1}</span>
-  //             </ListItemIcon>
-  //             <ListItemText primary={
-  //               <span className={`${item.is_published ? '' : 'text-base-content-disabled'}`}>
-  //                 {item.title}
-  //               </span>
-  //             } />
-  //           </ListItemButton>
-  //         )
-  //       })}
-  //     </List>
-  //   </nav>
-  // )
 }
