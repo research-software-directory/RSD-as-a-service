@@ -3,14 +3,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext, useMemo} from 'react'
+import {useMemo} from 'react'
 import {ThemeProvider} from '@mui/material/styles'
 
 import {loadMuiTheme} from '~/styles/rsdMuiTheme'
-import RsdThemeOptions from '~/styles/RsdThemeOptionsContext'
+import useRsdSettings from '~/config/useRsdSettings'
 
 export default function DarkThemeSection(props: any) {
-  const {theme} = useContext(RsdThemeOptions)
+  const {theme} = useRsdSettings()
   const darkTheme = useMemo(() => {
     return loadMuiTheme({
       mode: 'dark',

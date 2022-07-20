@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
+import {RsdThemeHost, RsdThemeMode} from '~/styles/rsdMuiTheme'
 
 export type RsdLink = {
   id: string,
@@ -14,8 +15,8 @@ export type RsdLink = {
 }
 
 export type RsdTheme = {
-  mode: string
-  host: string
+  host: RsdThemeHost
+  mode: RsdThemeMode
 }
 
 export enum RsdActionType{
@@ -40,8 +41,8 @@ export type RsdSettingsDispatch = (action: RsdSettingsAction)=>void
 export const defaultRsdSettings = {
   embed: false,
   theme: {
-    mode: 'default',
-    host: 'default'
+    host: 'default' as RsdThemeHost,
+    mode: 'default' as RsdThemeMode
   },
   links:[]
 }

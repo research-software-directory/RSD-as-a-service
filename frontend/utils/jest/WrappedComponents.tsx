@@ -14,7 +14,6 @@ import {ThemeProvider} from '@mui/material/styles'
 import {AuthProvider, defaultSession, Session} from '../../auth'
 import {RsdSettingsState,defaultRsdSettings, RsdTheme} from '~/config/rsdSettingsReducer'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
-import {RsdThemeProps} from '~/styles/RsdThemeOptionsContext'
 
 type WrapProps = {
   props?: any

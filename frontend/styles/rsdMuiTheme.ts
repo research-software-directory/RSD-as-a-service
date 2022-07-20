@@ -25,10 +25,18 @@
 
 import {createTheme} from '@mui/material/styles'
 import {RsdTheme} from '~/config/rsdSettingsReducer'
+
 // import default colors, typography and getThemeMethod for loading theme configuration
 import getThemeConfig from './getThemeConfig'
-import {MuiActionSchema, MuiColorSchema, MuiTypography} from './RsdThemeOptionsContext'
 import {updateCssVariables} from './updateCssVariables'
+import {colors, action, muiTypography} from './rsd/default'
+
+export type MuiColorSchema = typeof colors
+export type MuiActionSchema = typeof action
+export type MuiTypography = typeof muiTypography
+
+export type RsdThemeHost = 'default' | 'hemholtz' | 'nlesc'
+export type RsdThemeMode = 'default' | 'dark'
 
 export type ThemeConfig = {
   colors: MuiColorSchema

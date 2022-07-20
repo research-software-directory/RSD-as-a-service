@@ -21,7 +21,7 @@ const colors = {
   'base-content-secondary':'rgba(34,36,37,0.7)',
   'base-content-disabled': 'rgba(34,36,37,0.45)',
   primary: '#14c8ff', /* Primary Light Blue */
-  'primary-content': '#002864',
+  'primary-content': '#fff',
   secondary:'#002864', /* Primary Blue */
   'secondary-content': '#05e5ba',
 

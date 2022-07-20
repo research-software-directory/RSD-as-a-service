@@ -25,12 +25,10 @@ import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/Page
 
 // global CSS and tailwind
 import '../styles/global.css'
-// nprogress styles
-import 'nprogress/nprogress.css'
+
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
 import {getPageLinks} from '~/components/page/useMarkdownPages'
-import {RsdThemeProps} from '~/styles/RsdThemeOptionsContext'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -55,7 +53,7 @@ function RsdApp(props: MuiAppProps) {
   const [options, setSnackbar] = useState(snackbarDefaults)
   // request theme when options changed
   const muiTheme = useMemo(() => {
-    return loadMuiTheme(settings.theme as RsdThemeProps)
+    return loadMuiTheme(settings.theme)
   }, [settings.theme])
 
   useEffect(()=>{
@@ -137,10 +135,11 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     }
   }
 
-  // console.group('RsdApp.getInitialProps')
+  console.group('RsdApp.getInitialProps')
   // console.log('session...', session)
   // console.log('settings...', settings)
-  // console.groupEnd()
+  console.log('RSD_THEME_HOST...', process.env.RSD_THEME_HOST)
+  console.groupEnd()
 
   // return app props and session info from cookie
   return {
