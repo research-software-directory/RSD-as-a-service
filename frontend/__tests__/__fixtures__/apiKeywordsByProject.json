@@ -1,0 +1,27 @@
+[
+  {
+    "id": "d906834b-4b65-49aa-8a3e-e8df47f3103d",
+    "keyword": "Machine learning",
+    "project": "31dfad8f-3155-4df9-a126-e5aa34ec427b"
+  },
+  {
+    "id": "13d9444f-4923-4a1e-8105-821e6f2c591a",
+    "keyword": "Visualization",
+    "project": "31dfad8f-3155-4df9-a126-e5aa34ec427b"
+  },
+  {
+    "id": "518f0a1d-c6e5-4e42-8a95-aa34711cb2c2",
+    "keyword": "Image processing",
+    "project": "31dfad8f-3155-4df9-a126-e5aa34ec427b"
+  },
+  {
+    "id": "12a81843-27b1-4abf-afb9-55ccebf5237a",
+    "keyword": "Text analysis & natural language processing",
+    "project": "31dfad8f-3155-4df9-a126-e5aa34ec427b"
+  },
+  {
+    "id": "f6940064-8f81-40f2-91c1-e9dbb3c28cf1",
+    "keyword": "GPU",
+    "project": "31dfad8f-3155-4df9-a126-e5aa34ec427b"
+  }
+]

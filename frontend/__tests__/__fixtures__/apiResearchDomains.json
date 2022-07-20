@@ -1,0 +1,19 @@
+
+[
+  {
+    "id": "23732a08-c3b8-4c7c-8531-a4612a9ea64c",
+    "key": "LS",
+    "name": "Life Sciences",
+    "description": "Life Sciences (LS)",
+    "project": "dfb0d480-5eba-466c-a5dd-e485a04a2c8e",
+    "parent": null
+  },
+  {
+    "id": "32bcd236-4b1c-4035-879e-1ef1630a014c",
+    "key": "PE9",
+    "name": "Universe Sciences",
+    "description": "Astro-physics/-chemistry/-biology; solar system; planetary systems; stellar, galactic and extragalactic astronomy; cosmology; space sciences; astronomical instrumentation and data (PE9)",
+    "project": "31dfad8f-3155-4df9-a126-e5aa34ec427b",
+    "parent": null
+  }
+]

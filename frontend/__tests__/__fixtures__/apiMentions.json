@@ -1,1142 +1,418 @@
 [
   {
-    "id": "83227acf-9177-40c4-a0f8-8e83dffcea29",
-    "author": null,
-    "date": "2017-11-16T13:29:47",
-    "image": null,
-    "is_featured": false,
-    "title": "Kernel Tuner",
-    "type": "computerProgram",
-    "url": "https://github.com/benvanwerkhoven/kernel_tuner",
-    "version": 3687,
-    "zotero_key": "AZFLQAD7",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "eb35baf7-dc60-4d76-aa33-2a42d5a5eaef",
+    "doi": "10.1007/978-1-4939-7465-8_4",
+    "url": "https://doi.org/10.1007/978-1-4939-7465-8_4",
+    "title": "A Structural Framework for GPCR Chemogenomics: What’s In a Residue Number?",
+    "authors": "Márton Vass, Albert J. Kooistra, Stefan Verhoeven, David Gloriam, Iwan J. P. de Esch, Chris de Graaf",
+    "publisher": "Springer New York",
+    "publication_year": 2017,
+    "page": "73-113",
+    "image_url": null,
+    "mention_type": "bookSection",
+    "source": "Crossref"
   },
   {
-    "id": "9b22cf7a-61a0-46c7-bf64-d85607f3ea8e",
-    "author": null,
-    "date": "2016-01-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "A spatial column-store to triangulate the Netherlands on the fly.",
-    "type": "conferencePaper",
-    "url": "https://doi.org/10.1145/2996913.2997005",
-    "version": 4224,
-    "zotero_key": "ZEMZ3HN8",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "43acf9ca-8528-4331-95a3-8354fa166de3",
+    "doi": "10.5281/zenodo.1209378",
+    "url": "https://doi.org/10.5281/zenodo.1209378",
+    "title": "Generator For Key Representation Of Interaction In Pockets (Kripo) Fingerprints",
+    "authors": "Stefan Verhoeven",
+    "publisher": "Zenodo",
+    "publication_year": 2018,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "7bc96d9a-a257-4430-8a23-4a86f6b339d6",
-    "author": null,
-    "date": "2017-11-10T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Test-driven development of auto-tuned GPU code with Kernel Tuner",
-    "type": "presentation",
-    "url": "http://fmt.ewi.utwente.nl/NIRICT_GPGPU/3rdworkshop#Werkhoven",
-    "version": 2918,
-    "zotero_key": "7N3E58NF",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "64850956-ceb5-403f-b4f9-a9e9478412ec",
+    "doi": "10.5281/zenodo.997333",
+    "url": "https://doi.org/10.5281/zenodo.997333",
+    "title": "3D-E-Chem/Knime-Pharmacophore: V1.0.0",
+    "authors": "Stefan Verhoeven, Albert J. Kooistra, Marton Vass, Ross McGuire, Chris De Graaf",
+    "publisher": "Zenodo",
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "65a24156-1b5c-4466-8a3a-c9566e858522",
-    "author": null,
-    "date": "2017-06-08T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "GPU Computing at the Netherlands eScience Center",
-    "type": "presentation",
-    "url": "http://fmt.ewi.utwente.nl/NIRICT_GPGPU/slides/June8App/NIRICT-Workshop-GPU-at-NLeSC.pdf",
-    "version": 2917,
-    "zotero_key": "E94KZJZP",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "64fb002c-62a6-4d07-a097-530ff76ac589",
+    "doi": "10.5281/zenodo.259403",
+    "url": "https://doi.org/10.5281/zenodo.259403",
+    "title": "3D-E-Chem/Knime-Python-Node-Archetype: V1.2.2",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "a5548e85-7510-4ac3-bdc2-8a4fadf0b159",
-    "author": null,
-    "date": "2016-10-28T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Kernel Tuner: A simple CUDA/OpenCL tuner in Python",
-    "type": "presentation",
-    "url": "http://fmt.ewi.utwente.nl/NIRICT_GPGPU/events.html",
-    "version": 2916,
-    "zotero_key": "3Q3DWW4N",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "44cd8d38-1aea-477b-ac00-2bf19b173b48",
+    "doi": "10.5281/zenodo.321904",
+    "url": "https://doi.org/10.5281/zenodo.321904",
+    "title": "3D-E-Chem/Knime-Python-Wrapper: V1.1.0",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "3dbb33bc-5865-41c0-8b48-3e96b1b0d0f6",
-    "author": null,
-    "date": "2018-01-25T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Kernel Tuner: A Search-Optimizing GPU Code Auto-Tuner",
-    "type": "presentation",
-    "url": null,
-    "version": 6587,
-    "zotero_key": "8RB3P9GS",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "a905fc64-5329-4468-b695-96112e788999",
+    "doi": "10.5281/zenodo.376514",
+    "url": "https://doi.org/10.5281/zenodo.376514",
+    "title": "3D-E-Chem/3D-E-Chem-Vm: V1.4.0",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "96b089f0-b6b5-42c9-8aa2-543d57f6acb8",
-    "author": "Ben van Werkhoven",
-    "date": "2018-04-12T09:32:02",
-    "image": "https://cdn-images-1.medium.com/max/1200/1*OtfM8fdvOaIT3OlaUfZBjw.jpeg",
-    "is_featured": true,
-    "title": "Writing Testable GPU Code",
-    "type": "blogPost",
-    "url": "https://blog.esciencecenter.nl/writing-testable-gpu-code-23bbda3a5d62",
-    "version": 2872,
-    "zotero_key": "WMCV6WE7",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "6bdd84e7-9b0f-4fee-8553-16989cf2e1d6",
+    "doi": null,
+    "url": "http://3d-e-chem.vu-compmedchem.nl/kripodb/ui/",
+    "title": "Kripo db web service",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "82b65b80-ff51-497f-97f5-8f884fb74df2",
-    "author": null,
-    "date": "2017-10-06T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "SPOT",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1003345",
-    "version": 4057,
-    "zotero_key": "9JFAADGG",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "02f10c26-5bc3-4aaa-9cc6-6a600921250a",
+    "doi": "10.5281/zenodo.1033753",
+    "url": "https://doi.org/10.5281/zenodo.1033753",
+    "title": "3D-E-Chem/Knime-Sygma: V1.1.3",
+    "authors": "Stefan Verhoeven, Lars Ridder, Albert J. Kooistra",
+    "publisher": "Zenodo",
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "3a327b7f-c428-4aba-9e7a-bce96c099aa1",
-    "author": null,
-    "date": "2018-03-09T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Softwaresaved/International-Survey: Public Release For 2017 Results",
-    "type": "document",
-    "url": "https://doi.org/10.5281/zenodo.1194668",
-    "version": 2813,
-    "zotero_key": "PKEH6RSI",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "ef1a20d8-f07f-4750-a666-969061a5252a",
+    "doi": null,
+    "url": "https://atlas.hashicorp.com/nlesc/boxes/3d-e-chem",
+    "title": "3D-e-Chem Vagrant box",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "12837780-ab2b-4b6c-9679-284c5561f64e",
-    "author": null,
-    "date": "2018-02-15T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Screencast: Research Software Directory admin interface",
-    "type": "videoRecording",
-    "url": "https://www.youtube.com/watch?v=xIa8PBN4lxQ",
-    "version": 3687,
-    "zotero_key": "A4VM84DE",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "4122f04d-41f9-4888-8ecc-568baf010a32",
+    "doi": "10.5281/zenodo.997294",
+    "url": "https://doi.org/10.5281/zenodo.997294",
+    "title": "3D-E-Chem/Knime-Silicos-It: V1.1.1",
+    "authors": "Stefan Verhoeven, Albert J. Kooistra, Ross McGuire, Chris De Graaf",
+    "publisher": "Zenodo",
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "7320f9e1-860e-44bf-97fc-2a1bdfe0a21c",
-    "author": null,
-    "date": "2018-02-15T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Screencast: Research Software Directory",
-    "type": "videoRecording",
-    "url": "https://www.youtube.com/watch?v=-eB5s54wRNE",
-    "version": 3687,
-    "zotero_key": "NDY56PVS",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "54a12c40-07af-46ce-951e-e8312c538948",
+    "doi": "10.5281/zenodo.833372",
+    "url": "https://doi.org/10.5281/zenodo.833372",
+    "title": "3D-E-Chem/Kripodb: V2.3.1",
+    "authors": "Stefan Verhoeven, Albert J. Kooistra, Chris De Graaf, Ross McGuire, Tina Ritschel",
+    "publisher": "Zenodo",
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "4c2cca99-b562-4fdb-9f6c-833152d8467f",
-    "author": null,
-    "date": "2017-11-06T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "NLeSC/Xenon: This Is Release 2.2.0 Of Xenon.",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1042443",
-    "version": 3687,
-    "zotero_key": "6AZEKMLQ",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "707736d0-bb29-4743-b58c-0451ac03e843",
+    "doi": "10.5281/zenodo.833391",
+    "url": "https://doi.org/10.5281/zenodo.833391",
+    "title": "3D-E-Chem/Knime-Kripodb: V2.3.0",
+    "authors": "Stefan Verhoeven, Albert Kooistra, Chris De Graaf, Ross McGuire, Tina Ritschel",
+    "publisher": "Zenodo",
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "aa45922a-82ac-4da5-beff-01cdbf49e9a3",
-    "author": null,
-    "date": "2017-08-04T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "NLeSC/Xenon: This Is Release Candidate 1 Of Xenon 2.0.0.",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.838984",
-    "version": 3687,
-    "zotero_key": "5HC7I86M",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "43d8e54d-b348-4c94-8ff8-fe64b9c7ba68",
+    "doi": "10.5281/zenodo.997273",
+    "url": "https://doi.org/10.5281/zenodo.997273",
+    "title": "3D-E-Chem/Knime-Plants: V0.3.2",
+    "authors": "Stefan Verhoeven, George Kanev, Albert J. Kooistra, Ross McGuire, Chris De Graaf",
+    "publisher": "Zenodo",
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "769a7f21-eb67-4f75-be56-96b3effe1980",
-    "author": null,
-    "date": "2017-11-01T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "NLeSC/Xenon: This Is Release 2.1.0 Of Xenon.",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1040261",
-    "version": 3687,
-    "zotero_key": "4C4VALLZ",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "83c79ca6-1631-42cb-813f-8dd685fd0c91",
+    "doi": "10.5281/zenodo.1168906",
+    "url": "https://doi.org/10.5281/zenodo.1168906",
+    "title": "3D-E-Chem/Knime-Node-Collection: V1.1.3",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2018,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "485ebfa3-f7dc-4f85-9742-e7e237e0a462",
-    "author": null,
-    "date": "2017-10-25T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "NLeSC/Xenon: This Is Release 2.0.0 Of Xenon.",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1036769",
-    "version": 3687,
-    "zotero_key": "HZM5Y5HK",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "198dff59-709f-4889-92c6-0456a57ecbd8",
+    "doi": "10.5281/zenodo.1002077",
+    "url": "https://doi.org/10.5281/zenodo.1002077",
+    "title": "3D-E-Chem/Knime-Molviewer: V1.1.1",
+    "authors": "Stefan Verhoeven, Albert J. Kooistra, Marton Vass, Ross McGuire, Chris De Graaf",
+    "publisher": "Zenodo",
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "d8c46ca8-631a-4b1a-8096-73513fa5ef33",
-    "author": null,
-    "date": "2017-04-06T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "NLeSC/mcfly v1.0.1",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.596127",
-    "version": 3961,
-    "zotero_key": "V2SYB7XC",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "d991f6e5-5615-4ce3-a4c1-6b83c686464b",
+    "doi": "10.5281/zenodo.240491",
+    "url": "https://doi.org/10.5281/zenodo.240491",
+    "title": "3D-E-Chem/Knime-Gpcrdb: V1.1.0",
+    "authors": "Stefan Verhoeven, Albert J. Kooistra, Ross McGuire, Tina Ritschel, Chris De Graaf",
+    "publisher": "Zenodo",
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "46e8197e-ab56-4707-b989-86bce9bb54af",
-    "author": null,
-    "date": "2018-01-16T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "NLeSC/boatswain: Release 1.0.2",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1149011",
-    "version": 2731,
-    "zotero_key": "GAT2QRMY",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "d375cdb6-a060-4d82-afe0-5503e9742d6c",
+    "doi": "10.5281/zenodo.1043307",
+    "url": "https://doi.org/10.5281/zenodo.1043307",
+    "title": "3D-E-Chem/Sygma: V1.1.1",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "e07b3091-2ecd-4e98-9676-4c875b7d50c8",
-    "author": "Faruk Diblen",
-    "date": "2018-01-16T00:00:00",
-    "image": "https://miro.medium.com/max/1000/1*m1tuq42Vwl4bPaZIZLog0g.jpeg",
-    "is_featured": true,
-    "title": "SPOT : Visual scientific data analytics made easy",
-    "type": "blogPost",
-    "url": "https://blog.esciencecenter.nl/visual-scientific-data-analytics-made-easy-62e03a895bae",
-    "version": 2734,
-    "zotero_key": "HI7ZAHTI",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "1898bc56-2ae2-4486-b9bb-e7822bf18664",
+    "doi": "10.5281/zenodo.45270",
+    "url": "https://doi.org/10.5281/zenodo.45270",
+    "title": "Knime Plugin For Calculating Distance Of Bitvector Using Modifed Tanimoto Similarity Index: V1.0.4",
+    "authors": "Stefan Verhoeven, Ross McGuire, Chris De Graaf, Tina Ritschel",
+    "publisher": "Zenodo",
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite"
   },
   {
-    "id": "e6f2c939-ffd3-4974-96b6-80469df38319",
-    "author": null,
-    "date": "2017-01-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Track 2 Lightning Talk: Software Development Best Practices at the Netherlands eScience Center",
-    "type": "presentation",
-    "url": "https://doi.org/10.6084/m9.figshare.5327587",
-    "version": 4352,
-    "zotero_key": "CPRSVHSS",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "dd4830fa-79b5-4f0b-bf6e-7b4ec7a84157",
+    "doi": "10.5281/zenodo.55805",
+    "url": "https://doi.org/10.5281/zenodo.55805",
+    "title": "Knime-Testflow: V1.0.0",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "9efeae21-8088-4dd3-9c4b-74259ac67ac2",
-    "author": null,
-    "date": "2017-01-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Engineering Academic Software (Dagstuhl Perspectives Workshop 16252)",
-    "type": "conferencePaper",
-    "url": "https://doi.org/10.4230/dagman.6.1.1",
-    "version": 4243,
-    "zotero_key": "G6YCMR4A",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "ab3426d9-17e6-40d6-8af4-c656b2ae1e40",
+    "doi": "10.5281/zenodo.58369",
+    "url": "https://doi.org/10.5281/zenodo.58369",
+    "title": "Knime-Sstea: V1.0.5",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "c0e290fb-5dcc-4aee-bec2-8353f803d755",
-    "author": null,
-    "date": "2017-07-12T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Overcoming barriers to adopting software best practices in research",
-    "type": "blogPost",
-    "url": "https://www.software.ac.uk/blog/2017-12-07-overcoming-barriers-adopting-software-best-practices-research",
-    "version": 2692,
-    "zotero_key": "YVWT4U7P",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "f235e7c9-b25f-4dca-bdb2-f3a5019bc7be",
+    "doi": "10.5281/zenodo.376531",
+    "url": "https://doi.org/10.5281/zenodo.376531",
+    "title": "3D-E-Chem/Tycho-Knime-Node-Archetype: V1.4.1",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "manual"
   },
   {
-    "id": "7f1e7971-0cef-4af8-b26b-0ca07ee1eddf",
-    "author": null,
-    "date": "2017-01-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Software-defined networks in large-scale radio telescopes",
-    "type": "conferencePaper",
-    "url": "https://doi.org/10.1145/3075564.3075594",
-    "version": 4473,
-    "zotero_key": "GDXGPNRC",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "2fb05556-308d-46b1-9092-7f0c61cad1ce",
+    "doi": "10.5281/zenodo.50835",
+    "url": "https://doi.org/10.5281/zenodo.50835",
+    "title": "Kripo Gpcr Subset",
+    "authors": "Stefan Verhoeven, Chris De Graaf, Ross McGuire, Tina Ritschel",
+    "publisher": "Zenodo",
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "mention_type": "dataset",
+    "source": "DataCite"
   },
   {
-    "id": "474f526d-9870-4f01-be37-cc1724ee4220",
-    "author": null,
-    "date": "2017-01-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Programming Models for Multicore and Many-Core Computing Systems",
-    "type": "bookSection",
-    "url": "https://doi.org/10.1002/9781119332015.ch2",
-    "version": 4518,
-    "zotero_key": "M7P99NEF",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "69b68b7f-036a-4b5e-bc8f-2136380685fd",
+    "doi": "10.5281/zenodo.55254",
+    "url": "https://doi.org/10.5281/zenodo.55254",
+    "title": "Kripo Pdb Dec 2015",
+    "authors": "Stefan Verhoeven, Chris De Graaf, Ross McGuire, Tina Ritschel",
+    "publisher": "Zenodo",
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "mention_type": "dataset",
+    "source": "DataCite"
   },
   {
-    "id": "b11e7b0b-e5d1-401c-9290-bbbc7d2962b4",
-    "author": null,
-    "date": "2017-10-16T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Xenon - A Uniform Interface To Distributed Storage And Compute Resources",
-    "type": "report",
-    "url": "https://doi.org/10.5281/zenodo.1064695",
-    "version": 2786,
-    "zotero_key": "QDDQUR8S",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "acdb41d4-2c9c-430f-9e06-2b4447a94ca7",
+    "doi": null,
+    "url": "https://pharma.elsevier.com/chemistry/importance-team-drug-development/",
+    "title": "The Importance of the Team in Drug Development",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "mention_type": "interview",
+    "source": "manual"
   },
   {
-    "id": "78ba9cc8-4bec-40e5-887c-0d3b02edc7ae",
-    "author": null,
-    "date": "2017-10-03T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Xenon Tutorial RSE 2017",
-    "type": "document",
-    "url": "https://doi.org/10.5281/zenodo.1064674",
-    "version": 2786,
-    "zotero_key": "QLEK6HLW",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "5c73a37b-f942-4ad8-b4bc-bd75dd4976b3",
+    "doi": "10.4155/fmc.15.58",
+    "url": "https://doi.org/10.4155/fmc.15.58",
+    "title": "Finding the right approach to big data-driven medicinal chemistry",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2015,
+    "page": null,
+    "image_url": null,
+    "mention_type": "journalArticle",
+    "source": "manual"
   },
   {
-    "id": "6044a962-be57-4919-b70b-aff9ce673e9b",
-    "author": null,
-    "date": "2017-11-22T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "course materials \"Inverse modeling for improving Hydrological, Environmental, and Ecological models\"",
-    "type": "document",
-    "url": "https://doi.org/10.5281/zenodo.1064599",
-    "version": 2578,
-    "zotero_key": "AWG73QH8",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "abaecc55-ff1c-4593-aed9-48c88e30a6f4",
+    "doi": "10.1021/acs.jcim.6b00686",
+    "url": "https://doi.org/10.1021/acs.jcim.6b00686",
+    "title": "3D-e-Chem-VM: Structural Cheminformatics Research Infrastructure in a Freely Available Virtual Machine",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "journalArticle",
+    "source": "manual"
   },
   {
-    "id": "86da72bb-a33b-46ee-9526-9db02104dd76",
-    "author": null,
-    "date": "2016-02-01T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Tutorial Distributed Computing With Xenon 1.1.0",
-    "type": "report",
-    "url": "https://doi.org/10.5281/zenodo.1064100",
-    "version": 2786,
-    "zotero_key": "RJSMU2ZG",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "4bdca85e-88e7-4f45-91f1-c8f2d7114261",
+    "doi": "10.1002/cmdc.201700754",
+    "url": "https://doi.org/10.1002/cmdc.201700754",
+    "title": "3D-e-Chem: Structural Cheminformatics Workflows for Computer-Aided Drug Discovery",
+    "authors": "Albert J. Kooistra, Márton Vass, Ross McGuire, Rob Leurs, Iwan J. P. de Esch, Gert Vriend, Stefan Verhoeven, Chris de Graaf",
+    "publisher": "Wiley",
+    "publication_year": 2018,
+    "page": "614-626",
+    "image_url": null,
+    "mention_type": "journalArticle",
+    "source": "Crossref"
   },
   {
-    "id": "d924faa3-58dd-4ecb-8cce-a0bccd6a4895",
-    "author": null,
-    "date": "2017-03-01T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Inverse Modeling For Improving Hydrological, Environmental And Ecological Models",
-    "type": "report",
-    "url": "https://doi.org/10.5281/zenodo.1064106",
-    "version": 2545,
-    "zotero_key": "B9X4KGE2",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "974ba44d-f7d1-40c5-8c57-5faf062cf2c5",
+    "doi": "10.5281/zenodo.1203122",
+    "url": "https://doi.org/10.5281/zenodo.1203122",
+    "title": "Knime Node Development: Maven And Tycho",
+    "authors": "Stefan Verhoeven",
+    "publisher": "Zenodo",
+    "publication_year": 2018,
+    "page": null,
+    "image_url": null,
+    "mention_type": "presentation",
+    "source": "DataCite"
   },
   {
-    "id": "ca4c174a-fa50-4c60-bfc1-de7cf23efe31",
-    "author": "Lourens Veen",
-    "date": "2017-10-05T00:00:00",
-    "image": "https://miro.medium.com/max/500/1*lOmZnKT6YzZqn0H5Jn-oAA.jpeg",
-    "is_featured": true,
-    "title": "Free as in Free Market: Or why the GNU General Public License is open for business",
-    "type": "blogPost",
-    "url": "https://blog.esciencecenter.nl/free-as-in-free-market-e1fce8b7e655",
-    "version": 2497,
-    "zotero_key": "74YV68JJ",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "c100be1a-9422-4e04-a16e-f8052a1d7fdc",
+    "doi": "10.5281/zenodo.161567",
+    "url": "https://doi.org/10.5281/zenodo.161567",
+    "title": "3D-E-Chem-Vm: Cheminformatics Toolbox In A Freely Available Virtual Machine",
+    "authors": "Márton Vass, Stefan Verhoeven, Ross McGuire, Albert J. Kooistra, Lars Ridder, Tina Ritschel, Iwan de Esch, Rob Leurs, Gerrit Vriend, Chris de Graaf",
+    "publisher": "Zenodo",
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "mention_type": "presentation",
+    "source": "DataCite"
   },
   {
-    "id": "60dfc95b-e5a4-40bd-9d2e-8f42a3c9404a",
-    "author": "Lourens Veen",
-    "date": "2017-05-23T00:00:00",
-    "image": "https://miro.medium.com/max/640/1*xp0qkMsh77QMu93QaIOGoQ.jpeg",
-    "is_featured": true,
-    "title": "A license to science",
-    "type": "blogPost",
-    "url": "https://blog.esciencecenter.nl/a-license-to-science-cd8030a4a145",
-    "version": 2495,
-    "zotero_key": "658YZRYD",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "ebd8b1dc-fdc3-496a-a447-b21218ce97fc",
+    "doi": "10.5281/zenodo.47208",
+    "url": "https://doi.org/10.5281/zenodo.47208",
+    "title": "3-D-Echem Vm: Cheminformatics Research Infrastructure In A Downloadable Virtual Machine",
+    "authors": "Stefan Verhoeven, Marton Vass, Iwan de Esch, Rob Leurs, Scott Lusher, Gerrrit Vriend, Tina Ritschel, Chris de Graaf, Ross McGuire",
+    "publisher": "Zenodo",
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "mention_type": "presentation",
+    "source": "DataCite"
   },
   {
-    "id": "b6dbab47-787b-4443-bb63-86a2dce2789f",
-    "author": null,
-    "date": "2017-07-27T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "SalientDescriptor-matlab",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.835476",
-    "version": 3687,
-    "zotero_key": "GCU8VI78",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "5676fc9a-b372-4d70-9a29-b47a26f5473e",
+    "doi": null,
+    "url": "https://www.knime.com/about/events/knime-spring-summit-2017-berlin#workshops",
+    "title": "3D-e-Chem KNIME Nodes for Integrated Structural Cheminformatics Analysis and Computer-Aided Drug Discovery",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2017,
+    "page": null,
+    "image_url": null,
+    "mention_type": "presentation",
+    "source": "manual"
   },
   {
-    "id": "5e089ae4-665b-4a5f-9c89-8e8539a17726",
-    "author": null,
-    "date": "2017-11-16T14:21:27",
-    "image": null,
-    "is_featured": false,
-    "title": "Research Environment for GIS",
-    "type": "computerProgram",
-    "url": "https://github.com/ReGIS-org/regis-v2",
-    "version": 2364,
-    "zotero_key": "AUDJL9N5",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "96dc3508-7cbd-4826-ac2d-9182fbeeeb75",
-    "author": null,
-    "date": "2015-08-26T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "An Integrated Approach to Porting Large Scientific Applications to GPUs",
-    "type": "conferencePaper",
-    "url": "https://doi.org/10.1109/eScience.2015.23",
-    "version": 3311,
-    "zotero_key": "Y2BTERPC",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "f67b38f0-56ee-4a05-9272-bbff8edaf055",
-    "author": null,
-    "date": "2017-10-17T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Tutorial deep learning with mcfly",
-    "type": "presentation",
-    "url": null,
-    "version": 3961,
-    "zotero_key": "N8QDKSBT",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "125d10fd-1698-4ae6-9ea4-aeace700cea2",
-    "author": null,
-    "date": "2016-12-16T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Noodles",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.595714",
-    "version": 2266,
-    "zotero_key": "YTP6F3XH",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "afadd7fb-fa6a-4731-8c1c-04c916e58c48",
-    "author": null,
-    "date": "2017-11-13T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "PyXenon 2.2.0: Python interface to Xenon 2.2",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1045888",
-    "version": 2781,
-    "zotero_key": "XRA6XBNB",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "adba5151-9c0d-42f8-afe4-6dda9bc9dabe",
-    "author": null,
-    "date": "2017-08-27T02:10:02",
-    "image": null,
-    "is_featured": false,
-    "title": "SalientDetector-python",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1042644",
-    "version": 4115,
-    "zotero_key": "UFQ5SVNK",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "af45e50d-4226-4c5d-94e6-7354aa3e0e57",
-    "author": null,
-    "date": "2017-10-12T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Mcfly: Explore deep learning for time series",
-    "type": "presentation",
-    "url": null,
-    "version": 2173,
-    "zotero_key": "S26RLGSC",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "a4ad7e55-717a-4fbb-aeaa-ee4aea6ce9d2",
-    "author": null,
-    "date": "2017-07-27T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "mcfly tutorial",
-    "type": "webpage",
-    "url": "https://github.com/NLeSC/mcfly-tutorial",
-    "version": 3049,
-    "zotero_key": "2QD8M69G",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "d4fa60b2-fab6-49c5-80c6-5fa738a79d76",
-    "author": null,
-    "date": "2017-05-18T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Clustit 1.0",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.581169",
-    "version": 2176,
-    "zotero_key": "HDF69YUU",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "e770a625-df62-436e-9ba0-3c7da7f4f1be",
-    "author": null,
-    "date": "2017-09-25T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Nlesc/Dive: 1.2",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.598204",
-    "version": 4117,
-    "zotero_key": "6PT8BCAA",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "5f09bc47-6a43-4f5d-8ea8-47f2210889ef",
-    "author": null,
-    "date": "2016-11-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "A Salient Regions Detector for Structured Scenes",
-    "type": "presentation",
-    "url": null,
-    "version": 4117,
-    "zotero_key": "TPLTCBC2",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "a155cb14-b89d-4b29-9e73-ba22f58a5582",
-    "author": "Dafne van Kuppevelt",
-    "date": "2017-03-20T00:00:00",
-    "image": "https://miro.medium.com/max/1200/1*sT8uHuUVZ-7OnowqXugn0A.png",
-    "is_featured": true,
-    "title": "mcfly: time series classification made easy",
-    "type": "blogPost",
-    "url": "https://blog.esciencecenter.nl/mcfly-time-series-classification-made-easy-e47de8d29838",
-    "version": 2156,
-    "zotero_key": "6HCZNBN9",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "e292287c-28fe-4b87-b932-f2b13c3c9897",
-    "author": null,
-    "date": "2017-04-08T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Mcfly: Deep learning for time series made easy.",
-    "type": "presentation",
-    "url": "https://www.youtube.com/watch?v=9X_4i7zdSY8",
-    "version": 2156,
-    "zotero_key": "VVUWP3ZW",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "ef17c56b-9ae7-4e7b-a257-24c7a28117b5",
-    "author": null,
-    "date": "2017-11-07T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "NLeSC/xenon-grpc: v2.0.0",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1043481",
-    "version": 2786,
-    "zotero_key": "IKDX5IJ2",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "07f4a2f2-3d26-4375-a81e-d6a84a85ce50",
-    "author": null,
-    "date": "2017-11-07T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "NLeSC/xenon-cli: v2.0.0",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.597603",
-    "version": 2786,
-    "zotero_key": "4YFQQKF2",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "6ad4eb4f-32ab-45b5-856e-b9156f4c040f",
-    "author": null,
-    "date": "2016-01-25T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "OxFrei dataset",
-    "type": "document",
-    "url": "https://doi.org/10.5281/zenodo.45156",
-    "version": 4116,
-    "zotero_key": "K9AS8XX8",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "56056485-e548-4f11-8695-f5c9b233fd50",
-    "author": null,
-    "date": "2017-09-01T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Local Shape and Moment Invariant Descriptor for Structured Images",
-    "type": "conferencePaper",
-    "url": null,
-    "version": 4357,
-    "zotero_key": "T32H4MVS",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "e953daa3-03f5-4d20-84e0-62d027b3f2e1",
-    "author": null,
-    "date": "2016-11-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "A Salient Region Detector for structured images",
-    "type": "conferencePaper",
-    "url": "https://doi.org/10.1109/AICCSA.2016.7945643",
-    "version": 4539,
-    "zotero_key": "2LG6TPQX",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "2df43493-7b1f-4b4c-84c8-21d19c01e394",
-    "author": null,
-    "date": "2017-05-18T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Sherlock_Dive 1.0",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.581175",
-    "version": 2178,
-    "zotero_key": "BRULKMX4",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "d462f6b4-f7e9-4161-9b6e-8b8be6280e21",
-    "author": null,
-    "date": "2018-01-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Evaluating Layer-wise Relevance Propagation Explainability Maps for Artificial Neural Networks",
-    "type": "conferencePaper",
-    "url": null,
-    "version": 4245,
-    "zotero_key": "75U2H2IG",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "6a42daa3-950c-4128-a337-e63a91a7f5d5",
-    "author": null,
-    "date": "2018-10-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Survey on Research Software Engineering in the Netherlands",
-    "type": "conferencePaper",
-    "url": "https://doi.org/10.5281/zenodo.1420436",
-    "version": 4337,
-    "zotero_key": "GPB932KX",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "3795a198-5c54-4d50-aa28-561f5ddbb459",
-    "author": null,
-    "date": "2019-01-25T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Kernel Tuner: A search-optimizing GPU code auto-tuner",
-    "type": "journalArticle",
-    "url": "https://doi.org/10.1016/j.future.2018.08.004",
-    "version": 6585,
-    "zotero_key": "RQ6ZWG92",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "2a046af9-3c29-4a1e-9e57-430762da073d",
-    "author": null,
-    "date": "2018-07-05T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Research Software Directory",
-    "type": "computerProgram",
-    "url": "https://doi.org/10.5281/zenodo.1305971",
-    "version": 3410,
-    "zotero_key": "NWEDIS97",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "9db1b054-a1c4-4e49-a146-bdbe492468ea",
-    "author": null,
-    "date": "2018-06-22T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Boatswain - A Simple Docker Build System",
-    "type": "presentation",
-    "url": "https://doi.org/10.5281/zenodo.1296012",
-    "version": 4112,
-    "zotero_key": "JWKAVCCI",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "46949c28-0e70-41da-9e28-0880e1927300",
-    "author": null,
-    "date": "2018-01-30T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "Computer performance engineering",
-    "type": "book",
-    "url": null,
-    "version": 4112,
-    "zotero_key": "37ARAW8H",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
-  },
-  {
-    "id": "0ca0e114-29f9-4371-84d0-72f2f2d42624",
-    "author": null,
-    "date": "2020-08-11T00:00:00",
-    "image": null,
-    "is_featured": false,
-    "title": "The data representativeness criterion: Predicting the performance of supervised classification based on data set similarity",
-    "type": "journalArticle",
-    "url": "https://doi.org/10.1371/journal.pone.0237009",
-    "version": 6018,
-    "zotero_key": "82AE85CW",
-    "scraped_at": null,
-    "created_at": "2022-04-07T13:39:27.690302",
-    "updated_at": "2022-04-07T13:39:27.690302",
-    "output_for_project": [
-      {
-        "project": "96a6da44-7a2c-4129-b90e-3699d084f816"
-      }
-    ]
+    "id": "e17da793-f006-49a4-afc3-108927471f6e",
+    "doi": null,
+    "url": "https://www.youtube.com/watch?v=zBv4rPfsLLc",
+    "title": "3D-e-Chem Virtual Machine",
+    "authors": null,
+    "publisher": null,
+    "publication_year": 2016,
+    "page": null,
+    "image_url": null,
+    "mention_type": "videoRecording",
+    "source": "manual"
   }
 ]
