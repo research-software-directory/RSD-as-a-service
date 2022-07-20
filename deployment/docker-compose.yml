@@ -147,6 +147,38 @@ services:
       - net
     restart: unless-stopped
 
+  migration-database:
+    container_name: database
+    image: ghcr.io/research-software-directory/rsd-saas/database:latest
+    expose:
+      - 5432
+    environment:
+      # it uses values from .env file
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_AUTHENTICATOR_PASSWORD
+    volumes:
+      # named volume so it can easily be removed
+      - remove-this-db-volume:/var/lib/postgresql/data/
+    networks:
+      - net
+
+  migra:
+    container_name: migra
+    build: ./migration-database
+    image: ghcr.io/research-software-directory/rsd-saas/migra:latest
+    environment:
+      # it uses values from .env file
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    depends_on:
+      - database
+      - migration-database
+    networks:
+      - net
+
 # define name for docker network
 # it should have name: rsd-as-a-service_net
 networks:

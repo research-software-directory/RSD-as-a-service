@@ -150,6 +150,40 @@ services:
     volumes:
       - lets-encrypt:/etc/letsencrypt
 
+  migration-database:
+    container_name: migration-database
+    build: ./database
+    image: rsd/migration-database:1.0.1
+    ports:
+      # only expose the port within the docker network
+      - "5432"
+    environment:
+      # it uses values from .env file
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_AUTHENTICATOR_PASSWORD
+    volumes:
+      # named volume so it can easily be removed
+      - remove-this-db-volume:/var/lib/postgresql/data/
+    networks:
+      - net
+
+  migra:
+    container_name: migra
+    build: ./database-migration
+    image: rsd/migra:1.0.1
+    environment:
+      # it uses values from .env file
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    depends_on:
+      - database
+      - migration-database
+    networks:
+      - net
+
 # define name for docker network
 # it should have name: rsd-as-a-service_net
 networks:
@@ -161,3 +195,4 @@ networks:
 volumes:
   pgdb:
   lets-encrypt:
+  remove-this-db-volume:
