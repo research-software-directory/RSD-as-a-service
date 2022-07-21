@@ -37,6 +37,25 @@ authors:
     email: m.dejong@esciencecenter.nl
     affiliation: Netherlands eScience Center
     orcid: 'https://orcid.org/0000-0003-4803-7411'
+  - given-names: Christian
+    family-names: Meeßen
+    email: christian.meessen@gfz-potsdam.de
+    affiliation: Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+    orcid: 'https://orcid.org/0000-0001-8151-8722'
+  - given-names: Matthias
+    family-names: Rüster
+    email: matthias.ruester@gfz-potsdam.de
+    affiliation: Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+    orcid: 'https://orcid.org/0000-0001-7305-9044'
+  - given-names: Marc
+    family-names: Hanisch
+    affiliation: Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+    orcid: 'https://orcid.org/0000-0001-5272-4674'
+  - given-names: Norman
+    family-names: Ziegner
+    email: norman.ziegner@ufz.de
+    affiliation: Helmholtz Centre for Environmental Research GmbH - UFZ
+    orcid: 'https://orcid.org/0000-0001-7579-216X'
 identifiers:
   - type: doi
     value: 10.5281/zenodo.6379973
