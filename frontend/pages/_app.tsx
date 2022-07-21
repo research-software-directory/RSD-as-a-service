@@ -28,7 +28,7 @@ import '../styles/global.css'
 
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
-import {getPageLinks} from '~/components/page/useMarkdownPages'
+import {getSettingsServerSide} from '~/config/getSettingsServerSide'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -51,10 +51,17 @@ function RsdApp(props: MuiAppProps) {
   } = props
   const router = useRouter()
   const [options, setSnackbar] = useState(snackbarDefaults)
+  /**
+   * NOTE! useState keeps settings and session values in memory after inital load (server side)
+   * getInitalProps runs ONLY on client side when page does not use getServerSideProps.
+   * In that case we cannot extract session from JWT cookie and settings that use node env variables.
+   */
+  const [rsdSession] = useState(session)
+  const [rsdSettings] = useState(settings)
   // request theme when options changed
   const muiTheme = useMemo(() => {
-    return loadMuiTheme(settings.theme)
-  }, [settings.theme])
+    return loadMuiTheme(rsdSettings.theme)
+  }, [rsdSettings.theme])
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -78,6 +85,8 @@ function RsdApp(props: MuiAppProps) {
   }
 
   // console.group('RsdApp')
+  // console.log('rsdSession...', rsdSession)
+  // console.log('rsdSettings...', rsdSettings)
   // console.log('session...', session)
   // console.log('settings...', settings)
   // console.groupEnd()
@@ -92,8 +101,8 @@ function RsdApp(props: MuiAppProps) {
       <ThemeProvider theme={muiTheme}>
         {/* CssBaseline from MUI-5*/}
         {/* <CssBaseline /> */}
-        <AuthProvider session={session}>
-          <RsdSettingsProvider settings={settings}>
+        <AuthProvider session={rsdSession}>
+          <RsdSettingsProvider settings={rsdSettings}>
           <PageSnackbarContext.Provider value={{options, setSnackbar}}>
             <Component {...pageProps} />
           </PageSnackbarContext.Provider>
@@ -119,27 +128,13 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
 
   // extract user session from cookies
   const session = getSessionSeverSide(req, res)
-  // get embed mode
-  // provide embed param to remove headers
-  const {embed} = appContext.router.query
-  // get links
-  const links = await getPageLinks({is_published:true})
+  // extract rsd settings
+  const settings = await getSettingsServerSide(req, appContext.router.query)
 
-  // create rsd settings
-  const settings = {
-    embed: typeof embed !== 'undefined',
-    links,
-    theme: {
-      mode: 'default',
-      host: process.env.RSD_THEME_HOST || 'default'
-    }
-  }
-
-  console.group('RsdApp.getInitialProps')
+  // console.group('RsdApp.getInitialProps')
   // console.log('session...', session)
   // console.log('settings...', settings)
-  console.log('RSD_THEME_HOST...', process.env.RSD_THEME_HOST)
-  console.groupEnd()
+  // console.groupEnd()
 
   // return app props and session info from cookie
   return {
