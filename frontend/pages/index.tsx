@@ -182,6 +182,7 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
 }
 
 function ResearchField({background, name}:{background: string, name: string}) {
+
   function mouseEnter(event: React.MouseEvent<HTMLAnchorElement>) {
     if (!(event.target instanceof HTMLAnchorElement)) return
     const background = '/images/' + event.target.dataset.background
@@ -206,9 +207,10 @@ function ResearchFields() {
   )
 }
 
-function clearBackgroundImage(event: React.MouseEvent<HTMLDivElement>) {
+function resetBackgroundImage(event: React.MouseEvent<HTMLDivElement>) {
   if (!(event.target instanceof HTMLDivElement)) return
-  event.target.style.backgroundImage = ''
+  if (!(event.target.id === 'backgroundContainer')) return
+  event.target.style.backgroundImage = 'url("/images/pexels-olena-bohovyk-3646172.jpg")'
 }
 
 function ParticipatingOrganisations({organisations}:{organisations:OrganisationForOverview[]}) {
@@ -358,7 +360,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
           <div
             id="backgroundContainer"
             className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75 relative"
-            onMouseLeave={clearBackgroundImage}>
+            onMouseLeave={resetBackgroundImage}>
             <h2 className='text-5xl'>Discover by research topic</h2>
             {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
             <ResearchFields />
