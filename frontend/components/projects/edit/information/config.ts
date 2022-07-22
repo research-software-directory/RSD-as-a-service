@@ -10,8 +10,8 @@ export const projectInformation = {
     // react-hook-form validation rules
     validation: {
       required: 'Slug is required',
-      minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 200, message: 'Maximum length is 200'},
+      minLength: { value: 3, message: 'Minimum length is 3' },
+      maxLength: { value: 200, message: 'Maximum length is 200' },
       pattern: {
         value: /^[a-z0-9]+(-[a-z0-9]+)*$/,
         message: 'Use letters, numbers and dash "-". Other characters are not allowed.'
@@ -24,8 +24,8 @@ export const projectInformation = {
     // react-hook-form validation rules
     validation: {
       required: 'Title is required',
-      minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 200, message: 'Maximum length is 200'},
+      minLength: { value: 3, message: 'Minimum length is 3' },
+      maxLength: { value: 200, message: 'Maximum length is 200' },
     }
   },
   subtitle: {
@@ -34,15 +34,15 @@ export const projectInformation = {
     // react-hook-form validation rules
     validation: {
       // required: 'Subtitle is optional',
-      minLength: {value: 3, message: 'Minimum length is 3'},
-      maxLength: {value: 300, message: 'Maximum length is 300'},
+      minLength: { value: 3, message: 'Minimum length is 3' },
+      maxLength: { value: 300, message: 'Maximum length is 300' },
     }
   },
   description: {
     title: 'Project description',
     subtitle: 'The image will apear above the description',
     validation: {
-      maxLength: {value: 10000},
+      maxLength: { value: 10000 },
     }
   },
   is_published: {
@@ -84,7 +84,7 @@ export const projectInformation = {
   },
   url_for_project: {
     sectionTitle: 'Project links',
-    sectionSubtitle: 'Usefull external links',
+    sectionSubtitle: 'Useful external links',
     title: {
       label: 'Link text',
       placeholder: 'Title',
