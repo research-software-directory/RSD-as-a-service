@@ -4,30 +4,43 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
+import {RsdTheme} from '~/styles/rsdMuiTheme'
+import defaultSettings from '~/config/defaultSettings.json'
+
+export type RsdSettingsState = {
+  host: RsdHost,
+  embed: boolean
+  links?: CustomLink[]
+  pages?: RsdLink[]
+  theme: RsdTheme
+}
+
+export type RsdHost = {
+  name: string,
+  email?: string,
+  website?: string,
+  logo_url?: string
+}
+
+export type CustomLink = {
+  label: string
+  url: string
+  target: string
+}
 
 export type RsdLink = {
   id: string,
   position: number,
   title: string,
   slug: string,
-  is_published?:boolean
-}
-
-export type RsdTheme = {
-  mode: string
-  host: string
+  is_published?: boolean
 }
 
 export enum RsdActionType {
   SET_LINKS = 'SET_LINKS',
   SET_THEME = 'SET_THEME',
   SET_EMBED = 'SET_EMBED',
-}
-
-export type RsdSettingsState = {
-  embed: boolean,
-  theme: RsdTheme,
-  links: RsdLink[]
+  SET_HOST = 'SET_HOST'
 }
 
 export type RsdSettingsAction = {
@@ -38,12 +51,13 @@ export type RsdSettingsAction = {
 export type RsdSettingsDispatch = (action: RsdSettingsAction)=>void
 
 export const defaultRsdSettings = {
-  embed: false,
-  theme: {
-    mode: 'default',
-    host: 'default',
+  host: {
+    name: 'rsd',
+    email: 'rsd@esciencecenter.nl',
   },
-  links: []
+  embed: false,
+  theme: defaultSettings.theme,
+  links:[],
 }
 
 export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsAction) {
@@ -66,6 +80,11 @@ export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsA
       return {
         ...state,
         embed: action.payload
+      }
+    case RsdActionType.SET_HOST:
+      return {
+        ...state,
+        host: action.payload
       }
     default:
       logger(`rsdSettingsReducer UNKNOWN ACTION TYPE ${action.type}`, 'warn')

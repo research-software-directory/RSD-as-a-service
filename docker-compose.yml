@@ -125,6 +125,10 @@ services:
       - database
       - backend
       - auth
+    # volumes:
+    #   - ./deployment/hmz/styles:/app/public/styles
+    #   - ./deployment/hmz/data:/app/public/data
+    #   - ./deployment/hmz/images:/app/public/images
     networks:
       - net
 
