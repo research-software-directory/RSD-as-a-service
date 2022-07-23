@@ -91,7 +91,7 @@ export default function LoginButton() {
                   href={provider.redirectUrl}
                   passHref
                 >
-                  <a className=" w-full hover:bg-black hover:text-white transition font-bold py-2 px-4 rounded-full border outline-1">
+                  <a className=" w-full hover:bg-black hover:text-primary-content transition font-bold py-2 px-4 rounded-full border outline-1">
                     {provider.name}
                   </a>
                 </Link>

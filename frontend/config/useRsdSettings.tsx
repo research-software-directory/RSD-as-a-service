@@ -4,8 +4,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useContext} from 'react'
+import {RsdTheme} from '~/styles/rsdMuiTheme'
 import {RsdSettingsContext} from './RsdSettingsContext'
-import {RsdActionType, RsdLink, RsdTheme} from './rsdSettingsReducer'
+import {RsdActionType, RsdLink, RsdHost} from './rsdSettingsReducer'
+
 
 export default function useRsdSettings() {
   const {state, dispatch} = useContext(RsdSettingsContext)
@@ -31,12 +33,22 @@ export default function useRsdSettings() {
     })
   }
 
+  function setHost(host: RsdHost) {
+    dispatch({
+      type: RsdActionType.SET_HOST,
+      payload: host
+    })
+  }
+
   return {
+    host: state.host,
+    pages: state.pages,
     links: state.links,
     theme: state.theme,
     embedMode: state.embed,
     setRsdLinks,
     setRsdTheme,
-    setEmbedMode
+    setEmbedMode,
+    setHost
   }
 }
