@@ -5,33 +5,163 @@ SPDX-FileCopyrightText: 2021 - 2022 dv4all
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# Styles
+# Styles and theming
 
 ## Global styles
 
-The global.css file is imported in page/\_document.tsx. It is applied to all pages. Use it only in case you cannot achieve your goal using MUI theme adjustments. So far it is only used to style `next` root element.
+The global.css file is imported in `page/_app.tsx`. The `global.css` in its turn imports `custom.css` file. Global css is applied to all pages. Use it only in case you cannot achieve your goal with MUI (Material UI) and Tailwind theme adjustments.
 
-## CSS Baseline
+## Themes
 
-MUI provides baseline styles as CSSBaseline component. These are applied in page/\_document.tsx file.
-For more information [see documentation](https://mui.com/components/css-baseline/). However in this project we currently apply tailwind base classes rather than MUI's.
+The theme have two modes: light and dark. The definition are loaded from public/settings/theme.json file. The default RSD theme settings are loaded from styles/themeSettings.json and used in tailing.config.js and rsdMuiTheme.ts. The colors and the typography definitions are used in both Tailwind and Material-UI.
 
-## MUI theme and global styles
+On inital load of the theme the css variables are also populated.
 
-Initially we defined two themes: default and dark theme. The definitions are stored in themeDark and themeDefault javascript files. The definition are loaded by getThemeConfig(theme) method in themeConfig.js file.
+### Define custom theme
 
-The same color definitions are loaded into tailwind configuration (tailwind.config.js)
+The current setup supports loading of custom theme during the runtime. It requires colors, action and typography configuration for light and dark theme.
 
-For more information see comments in these files:
+1. Create index.css file to define font family. See public/styles/index.css as example. You can also use Google Fonts and extract the content from the provided link.
+2. Create theme.json file to define colors, action and typography. See public/settings/theme.json
+3. Mount index.css file to app/public/styles folder of the frontend image. See docker-compose file
+4. Mount theme.json file to app/public/settings folder of the frontend image. See docker-compose file
 
-- themeConfig.js
-- themeDefault.js
-- tailwind.config.js
+Default theme settings from (theme.json)
 
-For general information about MUI themes [see documentation](https://mui.com/customization/theming/)
+```json
+{
+  "light":{
+    "colors": {
+      "base-100": "#ffffff",
+      "base-200": "#eeeeee",
+      "base-300": "#dcdcdc",
+      "base-content": "rgba(34,36,37,1)",
+      "base-content-secondary": "rgba(34,36,37,0.7)",
+      "base-content-disabled": "rgba(34,36,37,0.45)",
+      "primary": "#01ad83",
+      "primary-content": "#ffffff",
+      "secondary": "#000",
+      "secondary-content": "#ffffff",
+      "accent": "#73095d",
+      "accent-content": "#ffffff",
+      "error": "#e53935",
+      "error-content": "#ffffff",
+      "warning": "#ed6c02",
+      "warning-content": "#000000",
+      "info": "#0288d1",
+      "info-content": "#000000",
+      "success": "#2e7d32",
+      "success-content": "#ffffff"
+    },
+    "action": {
+      "active": "rgba(0, 0, 0, 0.54)",
+      "hover": "rgba(0, 0, 0, 0.04)",
+      "hoverOpacity": 0.04,
+      "selected": "rgba(0, 0, 0, 0.08)",
+      "selectedOpacity": 0.08,
+      "disabled": "rgba(0, 0, 0, 0.26)",
+      "disabledBackground": "rgba(0, 0, 0, 0.12)",
+      "disabledOpacity": 0.38,
+      "focus": "rgba(0, 0, 0, 0.12)",
+      "focusOpacity": 0.12,
+      "activatedOpacity": 0.12
+    }
+  },
+  "dark":{
+    "colors": {
+      "base-100": "#0a0a0a",
+      "base-200": "#151515",
+      "base-300": "#2a2a2a",
+      "base-content": "rgba(255,255,255,0.87)",
+      "base-content-secondary": "rgba(255,255,255,0.7)",
+      "base-content-disabled": "rgba(255,255,255,0.45)",
+      "primary": "#01ad83",
+      "primary-content": "#fff",
+      "secondary": "#000",
+      "secondary-content": "#fff",
+      "accent": "#73095d",
+      "accent-content": "#fff",
+      "error": "#e53935",
+      "error-content": "#000",
+      "warning": "#ed6c02",
+      "warning-content": "#000",
+      "info": "#0288d1",
+      "info-content": "#000",
+      "success": "#2e7d32",
+      "success-content": "#fff"
+    },
+    "action": {
+      "active": "rgba(255, 255, 255, 0.54)",
+      "hover": "rgba(255, 255, 255, 0.4)",
+      "hoverOpacity": 0.1,
+      "selected": "rgba(255, 255, 255, 0.08)",
+      "selectedOpacity": 0.16,
+      "disabled": "rgba(255, 255, 255, 0.26)",
+      "disabledBackground": "rgba(255, 255, 255, 0.12)",
+      "disabledOpacity": 0.38,
+      "focus": "rgba(255, 255, 255, 0.12)",
+      "focusOpacity": 0.12,
+      "activatedOpacity": 0.12
+    }
+  },
+  "typography": {
+    "defaultFontFamily": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"sans-serif\",\"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"",
+    "titlesFontFamily": "\"Work Sans\", sans-serif",
+    "fontWeightLight": 300,
+    "fontWeightRegular": 400,
+    "fontWeightMedium": 500,
+    "fontWeightBold": 600
+  }
+}
+```
+
+Example of index.css to load custom fonts
+
+```css
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 200;
+  font-display: fallback;
+  src: url(https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofIO-aBXso.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 200;
+  font-display: fallback;
+  src: url(https://fonts.gstatic.com/s/nunito/v25/XRXV3I6Li01BKofINeaB.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 600;
+  font-display: fallback;
+  src: url(https://fonts.gstatic.com/s/oswald/v49/TK3_WkUHHAIjg75cFRf3bXL8LICs1y9osUhiZTaR.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 600;
+  font-display: fallback;
+  src: url(https://fonts.gstatic.com/s/oswald/v49/TK3_WkUHHAIjg75cFRf3bXL8LICs1y9osUZiZQ.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+```
 
 ## MUI Theme properties
 
+For general information about MUI themes [see documentation](https://mui.com/customization/theming/)
 Below is the print of all theme properites created at scafold of the project. You can overwrite any property by specifying new values in the **rsdTheme.ts** file.
 
 ```javascript

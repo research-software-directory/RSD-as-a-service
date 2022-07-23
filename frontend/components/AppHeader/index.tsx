@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState, useEffect} from 'react'
-import {Menu, MenuItem} from '@mui/material'
+import {IconButton, Menu, MenuItem} from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import Link from 'next/link'
 // local dependencies (project components)
@@ -40,7 +40,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   if (embedMode) return null
 
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
@@ -50,7 +50,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   return (
     <header
       data-testid="app-header"
-      className="z-10 py-4 min-h-[88px] bg-secondary text-white flex items-center flex-wrap"
+      className="z-10 py-4 min-h-[88px] bg-secondary text-primary-content flex items-center flex-wrap"
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
       <div className="flex-1 flex flex-col items-start px-4 lg:flex-row lg:container lg:mx-auto lg:items-center">
@@ -72,8 +72,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
               </Link>)}
           </div>
 
-          <div className="flex flex-1 justify-end items-center text-right ml-4">
-
+          <div className="text-primary-content flex-1 flex justify-end items-center min-w-[8rem] text-right ml-4">
             {/* EDIT button */}
             {editButton ? editButton : null}
             {/* ADD menu button */}
@@ -84,18 +83,28 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
             <LoginButton/>
 
             {/* Responsive pages menu */}
-            <div>
-
-              <div
-                id="basic-button"
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={(e) => handleClick(e)}
-                className="block lg:hidden whitespace-nowrap ml-4 cursor-pointer"
-              >
-                <MenuIcon/>
-              </div>
+            <IconButton
+              size="large"
+              title="Menu"
+              data-testid="menu-button"
+              aria-label="menu button"
+              onClick={handleClick}
+              sx={{
+                display:['inline-block','inline-block','inline-block','none'],
+                color: 'primary.contrastText',
+                margin:'0rem 0.5rem',
+                '&:hover': {
+                  color: 'primary.main'
+                },
+                alignSelf: 'center',
+                '&:focus-visible': {
+                  outline: 'auto'
+                }
+              }}
+              className="block lg:hidden"
+            >
+              <MenuIcon />
+            </IconButton>
               <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
@@ -117,9 +126,6 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
                   </MenuItem>
                 )}
               </Menu>
-            </div>
-
-
           </div>
           <JavascriptSupportWarning/>
         </div>

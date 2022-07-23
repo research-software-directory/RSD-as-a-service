@@ -23,7 +23,7 @@ const rewritesConfig = isDevelopment
     {
       source: '/auth/login/local',
       destination: 'http://localhost/auth/login/local',
-    },
+    }
   ]
   : []
 

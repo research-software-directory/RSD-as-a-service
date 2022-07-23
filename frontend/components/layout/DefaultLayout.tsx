@@ -5,7 +5,7 @@
 
 import {ReactNode} from 'react'
 import AppHeader from '~/components/AppHeader'
-import AppFooter from './AppFooter'
+import AppFooter from '~/components/AppFooter'
 import MainContent from './MainContent'
 
 export default function DefaultLayout({children}:{children:ReactNode}) {
