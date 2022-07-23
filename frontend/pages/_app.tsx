@@ -5,13 +5,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useMemo} from 'react'
 import {useRouter} from 'next/router'
 import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
 import {ThemeProvider} from '@mui/material/styles'
-import {CacheProvider, EmotionCache} from '@emotion/react'
-import {loadMuiTheme, RsdThemes} from '../styles/rsdMuiTheme'
+import {CacheProvider, EmotionCache, Global} from '@emotion/react'
+import {loadMuiTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
 // loading bar at the top of the screen
 import nprogress from 'nprogress'
@@ -25,11 +25,10 @@ import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/Page
 
 // global CSS and tailwind
 import '../styles/global.css'
-// nprogress styles
-import 'nprogress/nprogress.css'
+
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
-import {getPageLinks} from '~/components/page/useMarkdownPages'
+import {getSettingsServerSide} from '~/config/getSettingsServerSide'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
@@ -50,10 +49,19 @@ function RsdApp(props: MuiAppProps) {
     Component, emotionCache = clientSideEmotionCache,
     pageProps, session, settings
   } = props
-  const [options, setSnackbar] = useState(snackbarDefaults)
-  //currently we support only default (light) and dark RSD theme for MUI
-  const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
+  const [options, setSnackbar] = useState(snackbarDefaults)
+  /**
+   * NOTE! useState keeps settings and session values in memory after inital load (server side)
+   * getInitalProps runs ONLY on client side when page does not use getServerSideProps.
+   * In that case we cannot extract session from JWT cookie and settings that use node env variables.
+   */
+  const [rsdSession] = useState(session)
+  const [rsdSettings] = useState(settings)
+  // request theme when options changed
+  const {muiTheme, cssVariables} = useMemo(() => {
+    return loadMuiTheme(rsdSettings.theme)
+  }, [rsdSettings.theme])
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -77,8 +85,8 @@ function RsdApp(props: MuiAppProps) {
   }
 
   // console.group('RsdApp')
-  // console.log('session...', session)
-  // console.log('settings...', settings)
+  // console.log('rsdSettings...', rsdSettings)
+  // console.log('rsdSession...', rsdSession)
   // console.groupEnd()
 
   return (
@@ -91,8 +99,10 @@ function RsdApp(props: MuiAppProps) {
       <ThemeProvider theme={muiTheme}>
         {/* CssBaseline from MUI-5*/}
         {/* <CssBaseline /> */}
-        <AuthProvider session={session}>
-          <RsdSettingsProvider settings={settings}>
+        {/* dynamically pass css variables when theme changes */}
+        <Global styles={cssVariables} />
+        <AuthProvider session={rsdSession}>
+          <RsdSettingsProvider settings={rsdSettings}>
           <PageSnackbarContext.Provider value={{options, setSnackbar}}>
             <Component {...pageProps} />
           </PageSnackbarContext.Provider>
@@ -116,25 +126,10 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
   const appProps = await App.getInitialProps(appContext)
   const {req, res} = appContext.ctx
 
-  // console.log('RsdApp.getInitialProps')
-
   // extract user session from cookies
   const session = getSessionSeverSide(req, res)
-
-  // get embed mode
-  // provide embed param to remove headers
-  const {embed} = appContext.router.query
-  // get links
-  const links = await getPageLinks({is_published:true})
-  // create rsd settings
-  const settings = {
-    embed: typeof embed !== 'undefined',
-    links,
-    theme: {
-      mode: 'default',
-      host: 'default'
-    }
-  }
+  // extract rsd settings
+  const settings = await getSettingsServerSide(req, appContext.router.query)
 
   // console.group('RsdApp.getInitialProps')
   // console.log('session...', session)
