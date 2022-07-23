@@ -6,6 +6,7 @@
 import {useRef, useEffect, useState} from 'react'
 import useResizeObserver from './useResizeObserver'
 import drawLineChart from './drawLineChart'
+import {useTheme} from '@mui/material'
 
 export type Point = {
   // date in ms
@@ -14,7 +15,8 @@ export type Point = {
   y: number
 }
 
-export default function SingleLineChart({data = []}:{data: Point[]}) {
+export default function SingleLineChart({data = []}: { data: Point[] }) {
+  const theme = useTheme()
   const svgRef: any = useRef()
   const divRef: any = useRef()
   const [element, setElement] = useState()
@@ -33,10 +35,11 @@ export default function SingleLineChart({data = []}:{data: Point[]}) {
       drawLineChart({
         dim: {w:size?.w,h:size?.h},
         svgEl: svgRef.current,
+        strokeColor: theme.palette.primary.main,
         data
       })
     }
-  },[size?.w,size.h,data])
+  },[size?.w,size.h,data,theme.palette.primary.main])
 
   return (
     <div ref={divRef} className="flex-1 overflow-hidden relative">

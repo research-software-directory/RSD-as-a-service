@@ -50,7 +50,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   return (
     <header
       data-testid="app-header"
-      className="z-10 py-4 min-h-[88px] bg-secondary text-white flex items-center flex-wrap"
+      className="z-10 py-4 min-h-[88px] bg-secondary text-primary-content flex items-center flex-wrap"
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
       <div className="flex-1 flex flex-col items-start px-4 lg:flex-row lg:container lg:mx-auto lg:items-center">
@@ -72,7 +72,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
               </Link>)}
           </div>
 
-          <div className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right ml-4">
+          <div className="text-primary-content flex-1 flex justify-end items-center min-w-[8rem] text-right ml-4">
             {/* EDIT button */}
             {editButton ? editButton : null}
             {/* ADD menu button */}
