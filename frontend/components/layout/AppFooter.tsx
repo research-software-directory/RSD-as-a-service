@@ -28,7 +28,7 @@ export default function AppFooter () {
   }
 
   return (
-    <footer className="flex flex-wrap text-white border-t bg-secondary border-grey-A400">
+    <footer className="flex flex-wrap text-primary-content border-t bg-secondary border-grey-A400">
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[_2fr,1fr] lg:container lg:mx-auto">
 
         <div className="pt-10 sm:pb-10">
@@ -50,7 +50,7 @@ export default function AppFooter () {
         <div className="pb-10 sm:pt-10">
           <div className="text-lg">Questions or comments?</div>
           <a href="mailto:rsd@esciencecenter.nl"
-             className="flex mt-2 text-primary hover:text-white"
+             className="flex mt-2 text-primary hover:text-primary-content"
           >
             <Mail className="mr-2"/> rsd@esciencecenter.nl
           </a>

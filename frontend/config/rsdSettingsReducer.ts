@@ -4,6 +4,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
+import {RsdTheme} from '~/styles/rsdMuiTheme'
+
+import defaultSettings from '~/config/defaultSettings.json'
+
+export type RsdSettingsState = {
+  host?: string
+  embed: boolean
+  links: RsdLink[]
+  theme: RsdTheme
+}
 
 export type RsdLink = {
   id: string,
@@ -13,21 +23,11 @@ export type RsdLink = {
   is_published?:boolean
 }
 
-export type RsdTheme = {
-  mode: string
-  host: string
-}
-
 export enum RsdActionType{
   SET_LINKS = 'SET_LINKS',
   SET_THEME = 'SET_THEME',
-  SET_EMBED = 'SET_EMBED'
-}
-
-export type RsdSettingsState = {
-  embed: boolean
-  theme: RsdTheme,
-  links: RsdLink[]
+  SET_EMBED = 'SET_EMBED',
+  SET_HOST = 'SET_HOST'
 }
 
 export type RsdSettingsAction = {
@@ -38,12 +38,10 @@ export type RsdSettingsAction = {
 export type RsdSettingsDispatch = (action: RsdSettingsAction)=>void
 
 export const defaultRsdSettings = {
+  host: 'rsd',
   embed: false,
-  theme: {
-    mode: 'default',
-    host: 'default'
-  },
-  links:[]
+  links:[],
+  theme: defaultSettings.theme
 }
 
 export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsAction) {
@@ -66,6 +64,11 @@ export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsA
       return {
         ...state,
         theme: action.payload
+      }
+    case RsdActionType.SET_HOST:
+      return {
+        ...state,
+        host: action.payload
       }
     default:
       logger(`rsdSettingsReducer UNKNOWN ACTION TYPE ${action.type}`, 'warn')
