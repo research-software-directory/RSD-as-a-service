@@ -12,7 +12,6 @@ version: "3.0"
 
 services:
   database:
-    container_name: database
     build: ./database
     image: rsd/database:1.0.1
     ports:
@@ -33,7 +32,6 @@ services:
       - net
 
   backend:
-    container_name: backend
     build: ./backend-postgrest
     image: rsd/backend-postgrest:1.0.0
     expose:
@@ -51,7 +49,6 @@ services:
       - net
 
   auth:
-    container_name: auth
     build: ./authentication
     image: rsd/auth:1.0.0
     expose:
@@ -83,7 +80,6 @@ services:
       - net
 
   frontend:
-    container_name: frontend
     build:
       context: ./frontend
       # dockerfile to use for build
@@ -117,7 +113,6 @@ services:
       - net
 
   scrapers:
-    container_name: scrapers
     build: ./scrapers
     image: rsd/scrapers:1.0.1
     environment:
@@ -137,7 +132,6 @@ services:
       - net
 
   nginx:
-    container_name: nginx
     build:
       context: ./nginx
     image: rsd/nginx:1.0.1
@@ -158,6 +152,7 @@ services:
 # it should have name: rsd-as-a-service_net
 networks:
   net:
+
 
 # named volumes can be managed easier using docker-compose
 # volume should have name rsd-as-a-service_pgdb
