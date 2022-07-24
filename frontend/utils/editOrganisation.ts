@@ -74,7 +74,7 @@ export async function findRSDOrganisationByProperty({searchFor, property, token,
       const options: AutocompleteOption<SearchOrganisation>[] = data.map(item => {
         return {
           // we use slug as primary key and ROR id as alternative
-          key: item.slug ?? item?.ror_id ?? item.name,
+          key: item?.ror_id ?? item?.slug ?? item.name,
           label: item.name ?? '',
           data: {
             ...item,
