@@ -19,10 +19,10 @@ import {
 import {ProjectImageInfo} from '~/components/projects/edit/information'
 import {ProjectLinksForSave} from '~/components/projects/edit/information/projectLinkChanges'
 import {getPropsFromObject} from './getPropsFromObject'
-import {EditOrganisation, OrganisationRole, Status} from '~/types/Organisation'
+import {EditOrganisation, FundingOrganisation, OrganisationRole, Status} from '~/types/Organisation'
 import {createOrganisation, updateDataObjectAfterSave} from './editOrganisation'
 import {getSlugFromString} from './getSlugFromString'
-import {CreateOrganisation, FundingOrganisationsForSave} from '~/components/projects/edit/information/fundingOrganisationsChanges'
+import {FundingOrganisationsForSave} from '~/components/projects/edit/information/fundingOrganisationsChanges'
 import {KeywordsForSave} from '~/components/projects/edit/information/projectKeywordsChanges'
 import {ResearchDomainsForSave} from '~/components/projects/edit/information/researchDomainChanges'
 import {addKeywordsToProject, createKeyword, deleteKeywordFromProject} from './editKeywords'
@@ -316,7 +316,7 @@ export async function updateProjectTable({project,token}:{project:Project,token:
 }
 
 export async function createFundingOrganisationAndAddToProject({project,organisation,role,updateOrganisation, session}: {
-  project: string, organisation: CreateOrganisation, role: OrganisationRole,
+  project: string, organisation: FundingOrganisation, role: OrganisationRole,
   updateOrganisation: UseFieldArrayUpdate<EditProject, 'funding_organisations'>,
   session: Session
 }) {
@@ -337,7 +337,7 @@ export async function createFundingOrganisationAndAddToProject({project,organisa
       logo_b64: null,
       logo_mime_type: null,
       // funding organisation come from ROR
-      source: 'ROR'
+      source: organisation.source
     }
     // create organisation in RSD
     let resp = await createOrganisation({
@@ -360,11 +360,9 @@ export async function createFundingOrganisationAndAddToProject({project,organisa
         is_tenant: newOrganisation.is_tenant,
         logo_id: newOrganisation.logo_id,
         website: newOrganisation.website,
-        // status is not accurate
-        status: 'approved',
-        role,
-        project
-      } as OrganisationsOfProject)
+        source: newOrganisation.source,
+        pos: organisation.pos
+      })
       // and we add organisation to project
       // as funding organisation
       return addOrganisationToProject({

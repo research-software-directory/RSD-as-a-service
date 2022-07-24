@@ -30,7 +30,7 @@ export type EditSoftwarePageStep = {
 export const editSoftwareMenu:EditSoftwarePageStep[] = [
   {
     formId: 'software-information',
-    label: 'Software information',
+    label: 'Information',
     icon: <Filter1Icon />,
     component: (props?) => <SoftwareInformation {...props} />,
     status: 'Required information'

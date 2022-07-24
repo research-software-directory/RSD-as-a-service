@@ -4,7 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
-import {EditProject, ProjectLink} from '~/types/Project'
+import {FundingOrganisation} from '~/types/Organisation'
+import {EditProject, OrganisationsOfProject, ProjectLink} from '~/types/Project'
 import {getKeywordsForProject, getLinksForProject, getOrganisationsOfProject, getProjectItem, getResearchDomainsForProject} from '~/utils/getProjects'
 
 function prepareUrlForProject(url_for_project:ProjectLink[]) {
@@ -23,6 +24,16 @@ function prepareUrlForProject(url_for_project:ProjectLink[]) {
   return data
 }
 
+function prepareFundingOrganisations(organisations:OrganisationsOfProject[]) {
+  const data:FundingOrganisation[] = organisations.map((item, pos) => {
+    return {
+      ...item,
+      pos,
+      source:'RSD'
+    }
+  })
+  return data
+}
 
 export default function useGetProject({slug,token,reload=false}:
   {slug:string,token:string,reload?:boolean}) {
@@ -63,7 +74,7 @@ export default function useGetProject({slug,token,reload=false}:
         setProject({
           ...project,
           url_for_project: prepareUrlForProject(url_for_project),
-          funding_organisations,
+          funding_organisations: prepareFundingOrganisations(funding_organisations),
           research_domains,
           keywords,
           image_b64: null,

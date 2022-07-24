@@ -68,7 +68,7 @@ export const editProjectSteps: EditProjectStep[] = [
     label: 'Related topics',
     icon: <ShareIcon />,
     component: (props?) => <RelatedTopics {...props} />,
-    status: 'Projects and software'
+    status: 'Optional information'
   },
   {
     // formId: 'output',

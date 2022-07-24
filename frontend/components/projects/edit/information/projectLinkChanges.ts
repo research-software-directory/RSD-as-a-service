@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {UseFieldArrayUpdate, UseFormGetFieldState, UseFormGetValues} from 'react-hook-form'
+import {FormState, UseFieldArrayUpdate, UseFormGetFieldState, UseFormGetValues} from 'react-hook-form'
 import {EditProject, ProjectLink} from '~/types/Project'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 
@@ -19,12 +19,13 @@ type ProjectLinkChangesProps = {
   formData: EditProject,
   getValues: UseFormGetValues<EditProject>,
   getFieldState: UseFormGetFieldState<EditProject>,
-  projectState?: EditProject
+  projectState?: EditProject,
+  formState: FormState<EditProject>
 }
 
 export function getProjectLinkChanges(props: ProjectLinkChangesProps) {
   // destructure
-  const {updateUrl,formData,getValues,getFieldState,projectState} = props
+  const {updateUrl,formData,getValues,getFieldState,projectState,formState} = props
   // get project url states, what items to add, delete and update
   const projectLinks: ProjectLinksForSave = {
     add: [],
@@ -32,13 +33,16 @@ export function getProjectLinkChanges(props: ProjectLinkChangesProps) {
     update: [],
     updateUrl
   }
+  // console.group('projectLinkChanges.getProjectLinkChanges')
   // set status to existing items
   formData.url_for_project.forEach((item, pos) => {
     // get the latest value of uuid (this is id prop from database)
     const id = getValues(`url_for_project.${pos}.id`)
-    const title = getFieldState(`url_for_project.${pos}.title`)
-    const url = getFieldState(`url_for_project.${pos}.url`)
-    // debugger
+    // get the lastes state, we need to pass formState to subscribe to event
+    const title = getFieldState(`url_for_project.${pos}.title`,formState)
+    const url = getFieldState(`url_for_project.${pos}.url`,formState)
+    // console.log('title...', title)
+    // console.log('url...', url)
     // update items position after possible manipulation
     if (item.position !== pos) {
       item.position = pos
@@ -82,6 +86,7 @@ export function getProjectLinkChanges(props: ProjectLinkChangesProps) {
       if (item.id) projectLinks.delete.push(item.id)
     })
   }
-
+  // console.log('projectLinks...', projectLinks)
+  // console.groupEnd()
   return projectLinks
 }

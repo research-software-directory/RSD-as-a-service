@@ -44,7 +44,7 @@ export default function SoftwareInformation(
   // destructure methods from react-hook-form
   const {
     register, handleSubmit, watch, formState, reset,
-    control, setValue, getFieldState, getValues
+    control, setValue, getValues
   } = useForm<EditSoftwareItem>({
     mode: 'onChange',
     defaultValues: {
@@ -122,10 +122,9 @@ export default function SoftwareInformation(
     const keywords = getKeywordChanges({
       updateKeyword,
       formData,
-      getFieldState,
-      projectState: editSoftware
+      previousState: editSoftware
     })
-    // debugger
+    // console.log('onSubmit.keywords...', keywords)
     // save all changes
     const resp = await updateSoftwareInfo({
       software: formData,
@@ -287,18 +286,7 @@ export default function SoftwareInformation(
             title={config.concept_doi.title}
             subtitle={config.concept_doi.subtitle}
           />
-          {/* <ControlledTextField
-            options={{
-              name: 'concept_doi',
-              label: config.concept_doi.label,
-              useNull: true,
-              defaultValue: editSoftware?.concept_doi,
-              helperTextMessage: config.concept_doi.help,
-              helperTextCnt: `${formData?.concept_doi?.length || 0}/${config.concept_doi.validation.maxLength.value}`,
-            }}
-            control={control}
-            rules={config.concept_doi.validation}
-          /> */}
+
           <ConceptDoi
             control={control}
             setValue={setValue}

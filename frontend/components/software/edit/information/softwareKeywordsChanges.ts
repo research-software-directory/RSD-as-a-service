@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {UseFieldArrayUpdate, UseFormGetFieldState} from 'react-hook-form'
+import {UseFieldArrayUpdate} from 'react-hook-form'
 
 import {EditSoftwareItem, KeywordForSoftware} from '~/types/SoftwareTypes'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
@@ -11,8 +11,7 @@ import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 type KeywordChanges = {
   updateKeyword: UseFieldArrayUpdate<EditSoftwareItem, 'keywords'>
   formData: EditSoftwareItem
-  getFieldState: UseFormGetFieldState<EditSoftwareItem>
-  projectState?: EditSoftwareItem
+  previousState?: EditSoftwareItem
 }
 
 export type SoftwareKeyword = {
@@ -30,46 +29,50 @@ export type SoftwareKeywordsForSave = {
 }
 
 export function getKeywordChanges(props: KeywordChanges) {
-  const {updateKeyword,formData,getFieldState,projectState} = props
+  const {updateKeyword, formData, previousState} = props
   const keywords: SoftwareKeywordsForSave = {
     create: [],
     add: [],
     delete: [],
     updateKeyword
   }
-  formData.keywords.forEach((item, pos) => {
-    const name = getFieldState(`keywords.${pos}.keyword`)
-    // using only "dirty" items, because dirty items
-    // are the items that are new/changed since last save (form reset)
-    if (name.isDirty === true) {
+
+  function classifyKeywords(newKeywords: KeywordForSoftware[]) {
+    newKeywords.forEach((item, pos) => {
+      // split to new keywords we need to create
       if (item?.action === 'create') {
-        // update position
-        item.pos = pos
         // add item
         keywords.create.push(item)
       } else if (item.id) {
         // only items with id
         keywords.add.push(item)
       }
-    }
-  })
-  // find deleted items
-  if (projectState?.keywords && projectState?.keywords.length > 0) {
-    const toDelete = itemsNotInReferenceList({
-      list: projectState?.keywords,
-      referenceList: formData.keywords,
-      key: 'keyword'
-    })
-    // debugger
-    toDelete.forEach(item => {
-      if (item.id) {
-        keywords.delete.push({
-          software: item.software,
-          keyword: item.id
-        })
-      }
     })
   }
+  // console.group('softwareKeywordChanges.getKeywordChanges')
+  const addKeywords = itemsNotInReferenceList({
+    list: formData.keywords,
+    referenceList: previousState?.keywords ?? [],
+    key: 'keyword'
+  })
+  // console.log('addKeywords...', addKeywords)
+  classifyKeywords(addKeywords)
 
+  const removeKeywords = itemsNotInReferenceList({
+    list: previousState?.keywords ?? [],
+    referenceList: formData.keywords,
+    key: 'keyword'
+  })
+  // console.log('removeKeywords...', removeKeywords)
+  removeKeywords.forEach(item => {
+    if (item.id) {
+      keywords.delete.push({
+        software: item.software,
+        keyword: item.id
+      })
+    }
+  })
+  // console.log('keywords...', keywords)
+  // console.groupEnd()
   return keywords
 }

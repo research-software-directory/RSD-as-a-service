@@ -30,6 +30,7 @@ export default function EditSoftwareItem() {
     isDirty: false,
     isValid: false
   })
+  const pageTitle = `Edit software | ${app.title}`
 
   // console.group('EditSoftwareItem')
   // console.log('slug...', slug)
@@ -68,7 +69,7 @@ export default function EditSoftwareItem() {
   return (
     <DefaultLayout>
       <Head>
-        <title>Edit software | {app.title}</title>
+        <title>{pageTitle}</title>
       </Head>
       <ProtectedContent slug={slug?.toString()}>
         <EditSoftwareContext.Provider value={{pageState, dispatchPageState}}>
