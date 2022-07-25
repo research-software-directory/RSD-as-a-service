@@ -331,7 +331,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
 
         {/* Head and claim */}
         <div className="bg-secondary bg-landing-page mb-10">
-          <div className="flex flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-screen-xl text-white">
+          <div className="flex flex-col sm:flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-screen-xl text-white">
             <div className="min-w-min flex flex-col">
               <LogoHelmholtz width="220" />
               <div className="pt-1 pb-12">Research for grand challenges.</div>
@@ -340,20 +340,20 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
                   Add your software
                 </div>
               </a> */}
-            <div className="flex">
-              <Link href="/software" passHref>
-              <a>
-                <div
-                  className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary text-center font-medium text-2xl py-4 px-6">
-                  Browse software
-                </div>
-              </a>
-              </Link>
+              <div className="flex">
+                <Link href="/software" passHref>
+                <a>
+                  <div
+                    className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary text-center font-medium text-2xl py-4 px-6">
+                    Browse software
+                  </div>
+                </a>
+                </Link>
+              </div>
             </div>
-            </div>
-            <div className="xs:pt-6 sm:pt-0 md:pt-0 lg:pt-0 xl:pt-0 ml-auto">
-              <h1 className="text-6xl">Promote and Discover <br/>Research Software</h1>
-              <div className="text-2xl">Because software matters</div>
+            <div className="my-auto pt-4 md:pt-0 ml-auto">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl md:max-w-md lg:max-w-xl">Promote and Discover Research Software</h1>
+              <div className="text-xl lg:text-2xl">Because software matters</div>
             </div>
           </div>
         </div>
@@ -361,7 +361,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         {/* Software spotlights */}
         <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <h2 className='text-5xl'>Software Spotlights</h2>
-          <div className='text-2xl mt-2'>Outstanding software products of the Helmholtz community</div>
+          <div className='text-2xl mt-2'>Outstanding software products developed in Helmholtz. The latest Software Spotlight is {SPOTLIGHTS[0].name}:</div>
           <div className="w-full">
             <Spotlights spotlights={SPOTLIGHTS} />
           </div>
