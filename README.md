@@ -22,6 +22,24 @@ SPDX-License-Identifier: CC-BY-4.0
 ![All tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/tests_main.yml/badge.svg)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
 
+## :exclamation: HIFIS Notes :exclamation:
+
+[![HIFIS Logo](https://user-images.githubusercontent.com/14222414/180852856-72f5c1b5-b3e8-40fd-a5b7-593408067a13.png)](https://hifis.net)
+
+Welcome to the HIFIS-Fork of the [Research Software Directory](https://github.com/research-software-directory/RSD-as-a-service). This fork contains adjustments for the Helmholtz version of the RSD.
+
+At the current stage of development, we have some divergence to the upstream branch. The goal is to get rid of those in the future. This is why we aim to to keep our contributions at the end of the commit history, which is why we **frequently rebase the main branch** of this repository. Together with the Netherlands eScience Center, we are working on reducing the divergence between our fork and upstream. Until this is managed, please be aware of frequent history rewrites.
+
+If you want to contribute to this repository, please ask for access to the Research Software Directory Team on hifis-net.
+
+To clone the repo, open a terminal and use
+
+```
+git clone --recurse-submodules <URL>
+```
+
+::: End of HIFIS notes
+
 ## Our mission: To promote the visibility, impact and reuse of research software
 
 This repo contains the new RSD-as-a-service implementation
