@@ -340,6 +340,16 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
                   Add your software
                 </div>
               </a> */}
+            <div className="flex">
+              <Link href="/software" passHref>
+              <a>
+                <div
+                  className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary text-center font-medium text-2xl py-4 px-6">
+                  Browse software
+                </div>
+              </a>
+              </Link>
+            </div>
             </div>
             <div className="xs:pt-6 sm:pt-0 md:pt-0 lg:pt-0 xl:pt-0 ml-auto">
               <h1 className="text-6xl">Promote and Discover <br/>Research Software</h1>
@@ -354,16 +364,6 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
           <div className='text-2xl mt-2'>Outstanding software products of the Helmholtz community</div>
           <div className="w-full">
             <Spotlights spotlights={SPOTLIGHTS} />
-            <div className="flex">
-              <Link href="/software" passHref>
-              <a>
-                <div
-                  className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
-                  Browse software
-                </div>
-              </a>
-              </Link>
-            </div>
           </div>
         </div>
 
