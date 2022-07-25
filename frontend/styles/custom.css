@@ -1,10 +1,12 @@
 /*
- * SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
  * SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
  * SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+ * SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
  *
  * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: EUPL-1.2
  */
+
 .bg-landing-page {
   background: linear-gradient(rgb(0, 40, 100), 35%, transparent) repeat scroll 0% 0%, rgba(0, 0, 0, 0) url("/images/bg_hifis_rsd.jpg") repeat scroll 0% 0%;
 }
@@ -31,15 +33,16 @@ header input {
 .bg-cite {
   background: url("/images/pexels-pixabay-159751_scaled.jpg")
 }
+.hgf-scrollbar {
+  border-bottom: 1px solid #002864;
+}
 .hgf-scrollbar::-webkit-scrollbar {
   height: 5px;
 }
 .hgf-scrollbar::-webkit-scrollbar-thumb {
   background: #05e5ba;
   border-radius: 0;
-  border-bottom: 1px solid #002864;
 }
 .hgf-scrollbar::-webkit-scrollbar-track {
   background: white;
-  border-bottom: 1px solid #002864;
 }
