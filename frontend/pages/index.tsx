@@ -360,9 +360,9 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
 
         {/* Teaser */}
         <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
-          <h2 className='text-5xl'>Sustainable Research Software</h2>
+          <h2 className='text-5xl'>Making Research Software Sustainable</h2>
           <div className='text-2xl mt-2'>
-            This service provides a catalogue of research software developed within the <a href="https://helmholtz.de" className='underline'>Helmholtz federation</a>. Our goals are to
+            This service is a <span className='hgf-text-highlight'>teaser</span> for the upcoming Helmholtz Research Software Directory, a <span className='hgf-text-highlight'>showcase for research software</span> developed within the <a href="https://helmholtz.de" target="_blank" className='underline' rel="noreferrer">Helmholtz federation</a>. Our goals are to
             <div className='flex flex-row pt-4'>
               <div className="mx-auto px-6 my-4 border-l-2 border-[#002864]">
                 <div className='py-4'>improve the visibility of research software</div>
@@ -371,13 +371,15 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
               </div>
               {/* <div className="hidden basis-1/3 ml-6 md:block md:bg-[url(/images/pexels-nemuel-sereti-6424586.jpg)] bg-center bg-cover"></div> */}
             </div>
+            We are in <span className='hgf-text-highlight'>active development</span> and login is disabled at the moment.
+            Please stay tuned for future updates, explore the current state of the catalagoue, and have a look at our <a href="#Upcoming" className='underline'>upcoming features</a>.
           </div>
         </div>
 
         {/* Software spotlights */}
         <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <h2 className='text-5xl'>Software Spotlights</h2>
-          <div className='text-2xl mt-2'>Outstanding software products developed in Helmholtz. The latest Software Spotlight is {SPOTLIGHTS[0].name}:</div>
+          <div className='text-2xl mt-2'>Outstanding software products developed in Helmholtz.</div>
           <div className="w-full">
             <Spotlights spotlights={SPOTLIGHTS} />
           </div>
@@ -389,7 +391,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
             id="backgroundContainer"
             className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75 bg-[url(/images/pexels-olena-bohovyk-3646172.jpg)]"
             onMouseLeave={resetBackgroundImage}>
-            <h2 className='text-5xl'>Discover by research topic</h2>
+            <h2 className='text-5xl'>Discover software by research topic</h2>
             {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
             <ResearchFields />
           </div>
@@ -399,13 +401,13 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         <div className="conainer mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-20'>
             <div className='text-2xl'>
-              <h2 className='text-5xl pb-10'>Upcoming</h2>
-              <div>This service is in <span className="hgf-text-highlight">active development</span>. Upcoming features include:</div>
+              <h2 id="Upcoming" className='text-5xl pb-10'>Upcoming</h2>
+              <div>We are continuously updating this service. Upcoming features include:</div>
               <div className="px-6 my-4 border-l-2 border-[#002864]">
                 <div className="py-4">Login with your Helmholtz Institution&apos;s account</div>
                 <div className="py-4">Add your own software products</div>
                 <div className="py-4">Add related projects, funding and institutions</div>
-                <div className="py-4">Obtain a free license consultation from HIFIS</div>
+                <div className="py-4">Obtain license consultation from HIFIS</div>
               </div>
               <div className="py-2">Do you have <span className="hgf-text-highlight">suggestions for improvements or new features</span>?</div>
               <div className="py-2">Please let us know! Send us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="hgf-text-highlight underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
