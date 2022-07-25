@@ -23,7 +23,7 @@ export default function SoftwareKeywords(
   {software, control, concept_doi}:
   { software: string, control: Control<EditSoftwareItem, any>, concept_doi?: string }
 ) {
-  const {showErrorMessage, showSuccessMessage, showInfoMessage} = useSnackbar()
+  const {showSuccessMessage, showInfoMessage} = useSnackbar()
   const [loading, setLoading] = useState(false)
   const {fields, append, remove} = useFieldArray({
     control,
@@ -108,6 +108,7 @@ export default function SoftwareKeywords(
   function onCreate(selected: string) {
     // check if already added
     const find = fields.filter(item => item.keyword === selected)
+    // debugger
     if (find.length === 0) {
       append({
         id: null,

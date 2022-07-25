@@ -29,7 +29,7 @@ export default function ProjectLinkItem({register, control, remove, pos, default
   // console.groupEnd()
 
   return (
-    <div className="flex pb-8">
+    <div className="flex pb-4">
       <div className="flex-1">
         <input type="hidden"
           value={pos}

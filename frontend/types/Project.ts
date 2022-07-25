@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {OrganisationRole, SearchOrganisation, Status} from './Organisation'
+import {FundingOrganisation, OrganisationRole, Status} from './Organisation'
 import {SearchContributor} from './Contributor'
 
 export type NewProject = {
@@ -38,6 +38,7 @@ export type Project = BasicProject & {
 // based on view organisations_of_project
 export type OrganisationsOfProject = {
   id: string
+  parent: string | null
   slug: string | null
   primary_maintainer: string | null
   name: string
@@ -48,7 +49,6 @@ export type OrganisationsOfProject = {
   status: Status
   role: OrganisationRole
   project: string
-  parent: string | null
 }
 
 export type ProjectTag = {
@@ -107,7 +107,7 @@ export type EditProject = Project & {
   image_b64: string | null
   image_mime_type: string | null
   url_for_project: ProjectLink[]
-  funding_organisations: OrganisationsOfProject[] | SearchOrganisation[]
+  funding_organisations: FundingOrganisation[]
   research_domains: ResearchDomain[] | null
   keywords: KeywordForProject[]
 }

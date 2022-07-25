@@ -10,7 +10,6 @@ import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 type ResearchDomainChanges = {
   project?: string
   formData: EditProject
-  getFieldState: UseFormGetFieldState<EditProject>
   projectState?: EditProject
 }
 

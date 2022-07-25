@@ -3,9 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {UseFieldArrayUpdate, UseFormGetFieldState} from 'react-hook-form'
-import {SearchOrganisation} from '~/types/Organisation'
-import {EditProject, OrganisationsOfProject} from '~/types/Project'
+import {UseFieldArrayUpdate} from 'react-hook-form'
+import {FundingOrganisation} from '~/types/Organisation'
+import {EditProject} from '~/types/Project'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 
 type DeleteOrganisation = {
@@ -16,25 +16,19 @@ type DeleteOrganisation = {
 type FundingOrganisationChanges = {
   updateOrganisation: UseFieldArrayUpdate<EditProject, 'funding_organisations'>,
   formData: EditProject,
-  getFieldState: UseFormGetFieldState<EditProject>,
-  projectState?: EditProject
-}
-
-export type CreateOrganisation = SearchOrganisation & {
-  // used to update id of the form item
-  pos: number
+  previousState?: EditProject
 }
 
 export type FundingOrganisationsForSave = {
-  create: CreateOrganisation[]
-  add: SearchOrganisation[]
+  create: FundingOrganisation[]
+  add: FundingOrganisation[]
   delete: DeleteOrganisation[]
   updateOrganisation: UseFieldArrayUpdate<EditProject, 'funding_organisations'>
 }
 
 export function getFundingOrganisationChanges(props: FundingOrganisationChanges) {
   // destructure
-  const {updateOrganisation, formData, getFieldState, projectState} = props
+  const {updateOrganisation, formData, previousState} = props
   // funding organisations
   const fundingOrganisations: FundingOrganisationsForSave = {
     create: [],
@@ -43,43 +37,42 @@ export function getFundingOrganisationChanges(props: FundingOrganisationChanges)
     updateOrganisation
   }
 
-  // set status to existing items
-  formData.funding_organisations.forEach((item, pos) => {
-    const name = getFieldState(`funding_organisations.${pos}.name`)
-    // using only "dirty" items, because dirty items
-    // are the items that are new/changed since last save (form reset)
-    if (name.isDirty === true) {
-      if ((item as SearchOrganisation).source && (item as SearchOrganisation).source === 'RSD') {
-        // funding organisation from RSD should be added to project
-        fundingOrganisations.add.push(item as SearchOrganisation)
-      } else if (item.hasOwnProperty('source') === true) {
-        // funding organisations added from search and not present in RSD should be created in RSD
-        fundingOrganisations.create.push({
-          ...item as SearchOrganisation,
-          pos
-        })
+  function classifyOrganisations(addOrganisations: FundingOrganisation[]) {
+    addOrganisations.forEach((item) => {
+      if (item.id) {
+        // funding organisation from RSD have id and should be only added to project
+        fundingOrganisations.add.push(item)
+      } else {
+        // funding organisations without id are not present in RSD
+        // and should be created in RSD and added to project
+        fundingOrganisations.create.push(item)
       }
-    }
-  })
-
-  // find deleted items
-  if (projectState?.funding_organisations &&
-    projectState?.funding_organisations.length > 0) {
-    // extract items to delete
-    const toDelete = itemsNotInReferenceList<OrganisationsOfProject | SearchOrganisation>({
-      list: projectState?.funding_organisations,
-      referenceList: formData.funding_organisations,
-      key: 'id'
-    })
-    // add delete items to links collection
-    // for deletion we only need id's stored in uuid prop
-    toDelete.forEach(item => {
-      if (item.id) fundingOrganisations.delete.push({
-        project: projectState.id,
-        organisation: item.id
-      })
     })
   }
-  // return object with all changes
+  // console.group('fundingOrganisationsChanges.getFundingOrganisationChanges')
+  const addOrganisations = itemsNotInReferenceList({
+    list: formData.funding_organisations,
+    referenceList: previousState?.funding_organisations ?? [],
+    key: 'name'
+  })
+  // console.log('addOrganisations...', addOrganisations)
+  classifyOrganisations(addOrganisations)
+
+  const removeOrganisations = itemsNotInReferenceList({
+    list: previousState?.funding_organisations ?? [],
+    referenceList: formData.funding_organisations,
+    key: 'name'
+  })
+  // console.log('removeOrganisations...', removeOrganisations)
+  removeOrganisations.forEach(item => {
+    if (item.id) {
+      fundingOrganisations.delete.push({
+        project: formData.id,
+        organisation: item.id
+      })
+    }
+  })
+  // console.log('fundingOrganisations...', fundingOrganisations)
+  // console.groupEnd()
   return fundingOrganisations
 }

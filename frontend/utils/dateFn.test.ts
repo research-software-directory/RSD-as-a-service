@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {daysDiff, isoStrToDate, olderThanXDays} from './dateFn'
+import {daysDiff, isoStrToDate, olderThanXDays, getTimeAgoSince} from './dateFn'
 
 describe('dateFn.daysDiff',()=>{
   it('calculates days in past diff > 2',()=>{
@@ -70,5 +70,63 @@ describe('dateFn.olderThanXDays',()=>{
     atBoundary.setDate(atBoundary.getDate()-9)
     const value = olderThanXDays(atBoundary,7)
     expect(value).toEqual(true)
+  })
+})
+
+describe('dateFn.getTimeAgoSince', () => {
+  it('returns 1 hour', () => {
+    const since = new Date()
+    const plus1 = new Date(since.getTime() + 1000*60*60)
+    const diff = getTimeAgoSince(plus1, since.toISOString())
+    expect(diff).toEqual('1 hour ago')
+  })
+
+  it('returns 3 hours ago', () => {
+    const since = new Date()
+    const plus1 = new Date(since.getTime() + 1000 * 60 * 60 *3)
+    const diff = getTimeAgoSince(plus1, since.toISOString())
+    expect(diff).toEqual('3 hours ago')
+  })
+
+  it('returns 1 day ago', () => {
+    const since = new Date()
+    const plus1 = new Date(since.getTime() + 1000 * 60 * 60 * 25)
+    const diff = getTimeAgoSince(plus1, since.toISOString())
+    expect(diff).toEqual('1 day ago')
+  })
+
+  it('returns 2 days ago', () => {
+    const since = new Date()
+    const plus1 = new Date(since.getTime() + 1000 * 60 * 60 * 48)
+    const diff = getTimeAgoSince(plus1, since.toISOString())
+    expect(diff).toEqual('2 days ago')
+  })
+
+  it('returns 1 week ago', () => {
+    const since = new Date()
+    const plus1 = new Date(since.getTime() + 1000 * 60 * 60 * 24 * 8)
+    const diff = getTimeAgoSince(plus1, since.toISOString())
+    expect(diff).toEqual('1 week ago')
+  })
+
+  it('returns 2 weeks ago', () => {
+    const since = new Date()
+    const plus1 = new Date(since.getTime() + 1000 * 60 * 60 * 24 * 14)
+    const diff = getTimeAgoSince(plus1, since.toISOString())
+    expect(diff).toEqual('2 weeks ago')
+  })
+
+  it('returns 1 month ago', () => {
+    const since = new Date()
+    const plus1 = new Date(since.getTime() + 1000 * 60 * 60 * 24 * 31)
+    const diff = getTimeAgoSince(plus1, since.toISOString())
+    expect(diff).toEqual('1 month ago')
+  })
+
+  it('returns 2 months ago', () => {
+    const since = new Date()
+    const plus1 = new Date(since.getTime() + 1000 * 60 * 60 * 24 * 60)
+    const diff = getTimeAgoSince(plus1, since.toISOString())
+    expect(diff).toEqual('2 months ago')
   })
 })

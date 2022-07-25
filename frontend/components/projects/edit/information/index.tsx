@@ -43,7 +43,7 @@ export type ProjectImageInfo = {
 
 export default function EditProjectInformation({slug, session}: { slug: string, session: Session }) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
-  const {handleSubmit, reset, register, control, getFieldState, setValue, getValues} = useFormContext<EditProject>()
+  const {handleSubmit, reset, register, control, getFieldState, setValue, getValues,formState} = useFormContext<EditProject>()
   const {step, loading, setLoading, setProjectInfo} = useProjectContext()
   const {loading:apiLoading, project} = useProjectToEdit({
     slug,
@@ -103,6 +103,7 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
   // console.log('project...', project)
   // console.log('projectState...', projectState)
   // console.log('formValues...', formValues)
+  // console.log('formState...', formState)
   // console.groupEnd()
 
   if (loading || apiLoading) {
@@ -120,7 +121,8 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
       formData,
       getValues,
       getFieldState,
-      projectState
+      projectState,
+      formState
     })
     //project image "actions", inital values
     const projectImage: ProjectImageInfo = getProjectImageChanges({
@@ -131,21 +133,18 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
     const fundingOrganisations: FundingOrganisationsForSave = getFundingOrganisationChanges({
       updateOrganisation,
       formData,
-      getFieldState,
-      projectState
+      previousState:projectState,
     })
     // research domains
     const researchDomains = getResearchDomainChanges({
       project: project?.id,
       formData,
-      projectState,
-      getFieldState,
+      projectState
     })
     // keywords
     const keywords: KeywordsForSave = getKeywordChanges({
       formData,
-      projectState,
-      getFieldState,
+      previousState:projectState,
       updateKeyword
     })
     return {
@@ -326,9 +325,11 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
           <div className="py-2"></div>
           <FundingOrganisations />
           <div className="py-4"></div>
+          {/* Project links */}
+          <ProjectLinks project={project?.id ?? ''} />
+          <div className="py-2"></div>
           {/* Research Domain */}
           <ResearchDomain />
-          {/* <div className="py-2"></div> */}
           {/* Keywords */}
           <EditSectionTitle
             title={config.keywords.title}
@@ -336,9 +337,6 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
           />
           <ProjectKeywords project={project?.id ?? ''} />
           <div className="py-4"></div>
-          {/* Project links */}
-          <ProjectLinks project={project?.id ?? ''} />
-          <div className="xl:py-4"></div>
         </div>
       </EditSection>
     </form>

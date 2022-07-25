@@ -32,6 +32,7 @@ export default function ProjectItemEdit() {
     // first step is default
     step: editProjectSteps[0]
   })
+  const pageTitle = `Edit project | ${app.title}`
 
   function renderStepComponent() {
     if (state.step) {
@@ -43,7 +44,7 @@ export default function ProjectItemEdit() {
   return (
     <DefaultLayout>
       <Head>
-        <title>Edit project | {app.title}</title>
+        <title>{pageTitle}</title>
       </Head>
       <ProtectedContent
         // validates if user is maintainer of this project

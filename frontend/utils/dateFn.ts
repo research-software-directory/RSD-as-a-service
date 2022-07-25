@@ -90,9 +90,11 @@ export function getTimeAgoSince(since: Date, isoStringDate: string | null) {
         const daysDiff = Math.floor(hoursDiff / 24)
         if (daysDiff > 30) {
           const monthDiff = Math.floor(daysDiff / 30)
+          if (monthDiff === 1) return `${monthDiff} month ago`
           return `${monthDiff} months ago`
         } else if (daysDiff > 7) {
           const weeksDiff = Math.floor(daysDiff / 7)
+          if (weeksDiff === 1) return `${weeksDiff} week ago`
           return `${weeksDiff} weeks ago`
         } else if (daysDiff > 1) return `${daysDiff} days ago`
         return '1 day ago'

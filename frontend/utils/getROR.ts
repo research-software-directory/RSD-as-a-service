@@ -43,8 +43,8 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
   const options = rorItems.map(item => {
     const slug = getSlugFromString(item.name)
     return {
-      // we use slug as primary key and ROR id as alternative
-      key: slug ?? item.id,
+      // we use ror_id as primary key
+      key: item?.id,
       label: item.name,
       data: {
         id: null,

@@ -26,7 +26,11 @@ export default function FundingOrganisations() {
     // check if already exists
     const find = fields.filter(item => item.name === selected.name)
     if (find.length === 0) {
-      append(selected)
+      append({
+        ...selected,
+        // add position for update
+        pos: fields.length
+      })
     }
   }
 
