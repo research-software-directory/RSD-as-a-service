@@ -66,12 +66,12 @@ const RESEARCH_FIELDS = [
 ]
 
 const SPOTLIGHTS= [
-  // {
-  //   name: 'MassBank',
-  //   description: 'MassBank is an open source mass spectral library for the identification of small chemical molecules of metabolomics, exposomics and environmental relevance.',
-  //   image: 'https://hifis.net/assets/img/spotlights/massbank/Atrazine_Mass_Spectrum.png',
-  //   link: '/software'
-  // },
+  {
+    name: 'MassBank',
+    description: 'MassBank is an open source mass spectral library for the identification of small chemical molecules of metabolomics, exposomics and environmental relevance.',
+    image: 'https://hifis.net/assets/img/spotlights/massbank/Atrazine_Mass_Spectrum.png',
+    link: '/software'
+  },
   {
     name: 'FishInspector',
     description: 'The software FishInspector provides automatic feature detections in images of zebrafish embryos (body size, eye size, pigmentation). It is Matlab-based and provided as a Windows executable (no matlab installation needed).',
