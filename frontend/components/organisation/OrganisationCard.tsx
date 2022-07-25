@@ -66,6 +66,14 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
               <LogoAvatar
                 name={organisation.name ?? ''}
                 src={getUrlFromLogoId(organisation.logo_id) ?? undefined}
+                sx={{
+                  '& img': {
+                    height: 'auto',
+                    maxHeight: '10rem',
+                    width: 'auto',
+                    maxWidth: '100%'
+                  }
+                }}
               />
             </div>
             <div className="flex-1 flex justify-center items-center md:justify-end pl-4">
