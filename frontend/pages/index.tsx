@@ -358,6 +358,22 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
           </div>
         </div>
 
+        {/* Teaser */}
+        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+          <h2 className='text-5xl'>Sustainable Research Software</h2>
+          <div className='text-2xl mt-2'>
+            This service provides a catalogue of research software developed within the <a href="https://helmholtz.de" className='underline'>Helmholtz federation</a>. Our goals are to
+            <div className='flex flex-row pt-4'>
+              <div className="mx-auto px-6 my-4 border-l-2 border-[#002864]">
+                <div className='py-4'>improve the visibility of research software</div>
+                <div className='py-4'>promote FAIR principles in research software development</div>
+                <div className='py-4'>monitor the impact of your software</div>
+              </div>
+              {/* <div className="hidden basis-1/3 ml-6 md:block md:bg-[url(/images/pexels-nemuel-sereti-6424586.jpg)] bg-center bg-cover"></div> */}
+            </div>
+          </div>
+        </div>
+
         {/* Software spotlights */}
         <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <h2 className='text-5xl'>Software Spotlights</h2>
