@@ -14,6 +14,8 @@ import createEmotionCache from '../styles/createEmotionCache'
 
 export default class MyDocument extends Document {
   readonly hotjarId = process.env.HOTJAR_ID
+  readonly matomoUrl = process.env.MATOMO_URL
+  readonly matomoId = process.env.MATOMO_ID
 
   render() {
     return (
@@ -52,6 +54,29 @@ export default class MyDocument extends Document {
               }}
             />
           }
+
+          {
+            /* Matomo Tracking Code */
+            this.matomoUrl !== undefined && this.matomoUrl.length !== 0 &&
+            this.matomoId !== undefined && this.matomoId.length !== 0 &&
+            <script
+              dangerouslySetInnerHTML={{__html: `
+                var _paq = window._paq = window._paq || [];
+                /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+                _paq.push(['trackPageView']);
+                _paq.push(['enableLinkTracking']);
+                (function() {
+                  var u="${this.matomoUrl}";
+                  _paq.push(['setTrackerUrl', u+'piwik.php']);
+                  _paq.push(['setSiteId', '${this.matomoId}']);
+                  var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                  g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+                })();
+                `,
+              }}
+            />
+          }
+
         </Head>
         <body className="dark">
           <Main />
