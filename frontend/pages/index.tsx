@@ -400,15 +400,15 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
           <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-20'>
             <div className='text-2xl'>
               <h2 className='text-5xl pb-10'>Upcoming</h2>
-              <div>This service is in <span className="bg-[#cdeefb]">active development</span>. Upcoming features include:</div>
+              <div>This service is in <span className="hgf-text-highlight">active development</span>. Upcoming features include:</div>
               <div className="px-6 my-4 border-l-2 border-[#002864]">
                 <div className="py-4">Login with your Helmholtz Institution&apos;s account</div>
                 <div className="py-4">Add your own software products</div>
                 <div className="py-4">Add related projects, funding and institutions</div>
                 <div className="py-4">Obtain a free license consultation from HIFIS</div>
               </div>
-              <div className="py-2">Do you have <span className="bg-[#cdeefb]">suggestions for improvements or new features</span>?</div>
-              <div className="py-2">Please let us know! Send us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="bg-[#cdeefb] underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
+              <div className="py-2">Do you have <span className="hgf-text-highlight">suggestions for improvements or new features</span>?</div>
+              <div className="py-2">Please let us know! Send us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="hgf-text-highlight underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
             </div>
             <div className="hidden md:block md:bg-[url(/images/pexels-cottonbro-5483075.jpg)] bg-center bg-cover"></div>
           </div>

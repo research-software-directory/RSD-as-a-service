@@ -33,6 +33,9 @@ header input {
 .bg-cite {
   background: url("/images/pexels-pixabay-159751_scaled.jpg")
 }
+.hgf-text-highlight {
+  background-color: #cdeefb;
+}
 .hgf-scrollbar {
   border-bottom: 1px solid #002864;
 }
