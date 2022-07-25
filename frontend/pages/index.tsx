@@ -170,7 +170,7 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
         image={spotlights[0].image}
         link={spotlights[0].link}
       />
-      <div className="w-full flex flex-row flex-wrap py-5">
+      {/* <div className="w-full flex flex-row flex-wrap py-5">
         {spotlights.slice(1, 5).map(spotlight => {
           i++
           let key = 'spotlight_' + i
@@ -185,7 +185,7 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
             />
           )
         })}
-      </div>
+      </div> */}
     </div>
   )
 }
