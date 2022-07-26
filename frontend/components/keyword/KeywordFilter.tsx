@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, useEffect} from 'react'
+import {useState, useEffect,Fragment} from 'react'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import IconButton from '@mui/material/IconButton'
@@ -26,6 +26,9 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import TagListItem from '~/components/layout/TagListItem'
 import FindKeyword, {Keyword} from './FindKeyword'
 import {searchForSoftwareKeyword} from '../software/edit/information/searchForSoftwareKeyword'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+
 
 type KeywordFilterProps = {
   items?: string[]
@@ -88,19 +91,18 @@ export default function KeywordsFilter({items=[], onApply}:KeywordFilterProps) {
   function renderSelectedItems() {
     if (selectedItems && selectedItems.length > 0) {
       return (
-        <section className="flex flex-wrap items-center px-4 pt-4 gap-2">
+        <section className="flex flex-wrap items-center px-4 pb-4 gap-2">
           {selectedItems.map((item, pos) => {
             if (pos > 0) {
               return (
-                <>
-                  <span key={`plus-${pos}`} className="text-md">+</span>
+                <Fragment key={pos}>
+                  <span className="text-md">+</span>
                   <Chip
-                    key={`chip-${pos}`}
                     label={item}
                     size="small"
                     onDelete={() => handleDelete(pos)}
                   />
-                </>
+                </Fragment>
               )
             }
             return (
@@ -115,7 +117,13 @@ export default function KeywordsFilter({items=[], onApply}:KeywordFilterProps) {
         </section>
       )
     }
-    return null
+    // debugger
+    return (
+      <Alert severity="info" sx={{marginTop: '0.5rem'}}>
+        {/* <AlertTitle sx={{fontWeight: 500}}>No keywords to filter.</AlertTitle> */}
+        Add keyword <strong>by typing</strong> in the Find keyword.
+      </Alert>
+    )
   }
 
   return (
@@ -142,14 +150,12 @@ export default function KeywordsFilter({items=[], onApply}:KeywordFilterProps) {
           Filter by keyword
         </h3>
         <Divider />
-        {renderSelectedItems()}
-        <section className="px-4 py-4 w-[22rem]">
+        <div className="px-4 py-4 w-[22rem]">
           <FindKeyword
             config={{
               freeSolo: false,
               minLength: 1,
-              label: 'Add keyword to filter',
-              // help: 'Search for avilable keywords',
+              label: 'Find keyword',
               help: '',
               reset: true
             }}
@@ -157,14 +163,15 @@ export default function KeywordsFilter({items=[], onApply}:KeywordFilterProps) {
             onAdd={onAdd}
             // onCreate={onCreate}
           />
-        </section>
+        </div>
+        {renderSelectedItems()}
         <Divider />
         <div className="flex items-center justify-between px-4 py-2">
           <Button
             color="secondary"
             startIcon={<CloseIcon />}
             onClick={handleClear}>
-            Clear
+            {selectedItems.length === 0 ? 'Close' : 'Clear'}
           </Button>
           <Button
             onClick={handleApply}
