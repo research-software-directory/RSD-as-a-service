@@ -20,11 +20,19 @@ import {ssrOrganisationParams} from '../../utils/extractQueryParam'
 import {getOrganisationsList} from '../../utils/getOrganisations'
 import OrganisationsGrid from '../../components/organisation/OrganisationGrid'
 
+type OrganisationsIndexPageProps = {
+  count: number,
+  page: number,
+  rows: number,
+  organisations: OrganisationForOverview[]
+  search?:string
+}
+
 const pageTitle = `Organisations | ${app.title}`
 
-export default function OrganisationsIndexPage({count,page,rows,organisations=[]}:
-  {count:number,page:number,rows:number,organisations:OrganisationForOverview[]
-}) {
+export default function OrganisationsIndexPage({
+  organisations = [], count, page, rows, search
+}: OrganisationsIndexPageProps){
   // use next router (hook is only for browser)
   const router = useRouter()
 
@@ -34,7 +42,8 @@ export default function OrganisationsIndexPage({count,page,rows,organisations=[]
     newPage: number,
   ){
     const url = ssrOrganisationUrl({
-      query: router.query,
+      // take existing params from url (query)
+      ...ssrOrganisationParams(router.query),
       page: newPage
     })
     router.push(url)
@@ -45,7 +54,8 @@ export default function OrganisationsIndexPage({count,page,rows,organisations=[]
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ){
     const url = ssrOrganisationUrl({
-      query: router.query,
+      // take existing params from url (query)
+      ...ssrOrganisationParams(router.query),
       // reset to first page
       page: 0,
       rows: parseInt(event.target.value),
@@ -55,7 +65,8 @@ export default function OrganisationsIndexPage({count,page,rows,organisations=[]
 
   function handleSearch(searchFor:string){
     const url = ssrOrganisationUrl({
-      query: router.query,
+      // take existing params from url (query)
+      ...ssrOrganisationParams(router.query),
       search: searchFor,
       // start from first page
       page: 0
@@ -74,6 +85,7 @@ export default function OrganisationsIndexPage({count,page,rows,organisations=[]
             <Searchbox
               placeholder='Search for organisation'
               onSearch={handleSearch}
+              defaultValue={search}
             />
           </div>
           <TablePagination
@@ -102,7 +114,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract params from page-query
   // extract rsd_token
   const {req} = context
-  const {search, rows, page} = ssrOrganisationParams(context)
+  const {search, rows, page} = ssrOrganisationParams(context.query)
   const token = req?.cookies['rsd_token']
 
   const {count, data} = await getOrganisationsList({
@@ -116,6 +128,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // see params of SoftwareIndexPage function
   return {
     props: {
+      search,
       count,
       page,
       rows,

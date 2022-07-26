@@ -12,9 +12,16 @@ import SearchIcon from '@mui/icons-material/Search'
 import {useDebounce} from '~/utils/useDebounce'
 import ClearIcon from '@mui/icons-material/Clear'
 
-export default function Searchbox({placeholder, onSearch, delay = 400}: { placeholder:string,onSearch:Function,delay?:number}) {
+type SearchboxProps = {
+  placeholder: string,
+  onSearch: Function,
+  delay?: number,
+  defaultValue?:string
+}
+
+export default function Searchbox({placeholder, onSearch, delay = 400, defaultValue=''}: SearchboxProps) {
   const [state,setState]=useState({
-    value:'',
+    value:defaultValue ?? '',
     wait:true
   })
   const searchFor=useDebounce(state.value,delay)

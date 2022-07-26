@@ -7,40 +7,39 @@ import {ParsedUrlQuery} from 'querystring'
 
 export type PostgrestParams={
   baseUrl:string,
-  search?:string,
-  columns?:string[],
-  filters?:string[],
+  search?:string | null,
+  keywords?:string[] | null,
   order?:string,
   limit:number,
   offset:number
 }
 
 export function softwareListUrl(props:PostgrestParams){
-  const {baseUrl, search, columns, filters, order, limit, offset} = props
-  let url = `${baseUrl}/rpc/software_list?`
+  const {baseUrl, search, keywords, order, limit, offset} = props
+  let url = `${baseUrl}/rpc/software_search?`
 
-  if (columns){
-    url+=`&select=${columns.join(',')}`
+  // console.log('softwareListUrl.keywords...', keywords)
+  // console.log('softwareListUrl.typeof...', typeof keywords)
+  // console.log('softwareListUrl.length...', keywords?.length)
+
+  // filter on keywords using AND
+  if (typeof keywords !== 'undefined' &&
+    keywords !== null &&
+    typeof keywords === 'object') {
+    // sort and convert keywords array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    // and all keywords should be present (AND).
+    // and it needs to be enclosed in {} uri encoded see
+    // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
+    const keywordsAll = keywords.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to fin
+    url += `keywords=cs.%7B${keywordsAll}%7D`
   }
-
-  // TODO! update to keywords
-  // filters need to be after select to
-  // add tag colum from tag table and
-  // define join
-  // if(typeof filters !=='undefined'
-  //   && filters?.length > 0){
-  //   // add tag inner join
-  //   url+=',tag_for_software!inner(tag)'
-  //   // convert tags array to comma separated string
-  //   const tagsIn = filters?.map((item:string)=>`"${encodeURIComponent(item)}"`).join(',')
-  //   // add tag values to in statement
-  //   url+=`&tag_for_software.tag=in.(${tagsIn})`
-  // }
 
   if (search) {
     // search for term in brand_name and short_statement
     // we use ilike (case INsensitive) and * to indicate partial string match
-    url+=`&or=(brand_name.ilike.*${search}*, short_statement.ilike.*${search}*))`
+    url+=`&or=(brand_name.ilike.*${search}*, short_statement.ilike.*${search}*)`
   }
 
   if (order){
@@ -54,14 +53,14 @@ export function softwareListUrl(props:PostgrestParams){
 }
 
 type QueryParams={
-  query: ParsedUrlQuery
-  search?:any,
-  filter?:any,
-  page?:any,
-  rows?:any
+  // query: ParsedUrlQuery
+  search?:string
+  keywords?:string[]
+  page?:number,
+  rows?:number
 }
 
-export function ssrSoftwareUrl(params:QueryParams){
+export function softwareUrl(params:QueryParams){
   const view = 'software'
   const url = ssrUrl(params, view)
   return url
@@ -80,36 +79,32 @@ export function ssrProjectsUrl(params: QueryParams) {
 }
 
 function ssrUrl(params: QueryParams, view:string) {
-  const {search, filter, rows, page, query} = params
+  const {search, keywords, rows, page} = params
+  // console.log('ssrUrl...params...', params)
   let url = `/${view}?`
   if (search) {
     url += `search=${encodeURIComponent(search)}`
   } else if (search === '') {
     //remove search query
-  } else if (query?.search) {
-    url += `search=${encodeURIComponent(query.search.toString())}`
   }
-  if (filter) {
-    url += `&filter=${encodeURIComponent(filter)}`
-  } else if (filter === null) {
+  if (keywords && keywords.length > 0) {
+    // stringify JSON object and encode URI
+    url += `&keywords=${encodeURIComponent(JSON.stringify(keywords))}`
+  } else if (keywords === null) {
     // remove filter
-  } else if (query?.filter) {
-    url += `&filter=${encodeURIComponent(query?.filter.toString())}`
   }
   if (page || page === 0) {
     url += `&page=${page}`
-  } else if (query?.page) {
-    url += `&page=${query.page}`
   } else {
+    // default
     url += '&page=0'
   }
   if (rows) {
     url += `&rows=${rows}`
-  } else if (query?.rows) {
-    url += `&rows=${query?.rows}`
   } else {
     url += '&rows=12'
   }
+  // debugger
   return url
 }
 
