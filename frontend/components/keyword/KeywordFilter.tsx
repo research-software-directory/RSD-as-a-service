@@ -92,14 +92,15 @@ export default function KeywordsFilter({items=[], onApply}:KeywordFilterProps) {
           {selectedItems.map((item, pos) => {
             if (pos > 0) {
               return (
-                <div key={pos}>
-                  <span className="text-md">+</span>
+                <>
+                  <span key={`plus-${pos}`} className="text-md">+</span>
                   <Chip
+                    key={`chip-${pos}`}
                     label={item}
                     size="small"
                     onDelete={() => handleDelete(pos)}
                   />
-                </div>
+                </>
               )
             }
             return (
