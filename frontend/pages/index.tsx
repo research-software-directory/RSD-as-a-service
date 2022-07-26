@@ -198,8 +198,11 @@ function ResearchField({background, name}:{background: string, name: string}) {
     event.target.parentElement!.parentElement!.style.backgroundImage = 'url("' + background + '")'
   }
 
+  const uriComponent = `["${name}"]`
+  const link=`/software?&keywords=${encodeURIComponent(uriComponent)}&page=0&rows=12`
+
   return (
-    <a onMouseEnter={mouseEnter} data-background={background}>{name}</a>
+    <a onMouseEnter={mouseEnter} data-background={background} href={link}>{name}</a>
   )
 }
 
