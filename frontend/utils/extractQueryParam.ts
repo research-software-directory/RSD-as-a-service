@@ -4,24 +4,32 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type {GetServerSidePropsContext} from 'next'
+import {ParsedUrlQuery} from 'querystring'
 import logger from './logger'
 
-export function extractQueryParam({ctx,param,castToType='string',defaultValue}:{
-  ctx: GetServerSidePropsContext, param:string, castToType?:('string'|'number'|'date'),
+export function extractQueryParam({query,param,castToType='string',defaultValue}:{
+  query: ParsedUrlQuery, param: string, castToType?: ('string' | 'number' | 'date' | 'csv-to-array' |'json-encoded'),
   defaultValue:any
 }){
   try{
-    if (ctx?.query && ctx.query.hasOwnProperty(param)){
-      const rawVal = ctx.query[param]
+    if (query && query.hasOwnProperty(param)){
+      const rawVal = query[param]
       if (typeof rawVal == 'undefined') return defaultValue
       switch (castToType){
-      case 'number':
-        return parseInt(rawVal?.toString())
-      case 'date':
-        return new Date(rawVal?.toString())
-      case 'string':
-      default:
-        return rawVal?.toString()
+        case 'number':
+          return parseInt(rawVal?.toString())
+        case 'date':
+          return new Date(rawVal?.toString())
+        case 'string':
+          return rawVal?.toString()
+        case 'csv-to-array':
+          const parsed = rawVal.toString().split(',')
+          return parsed
+        case 'json-encoded':
+          const json = JSON.parse(decodeURI(rawVal.toString()))
+          return json
+        default:
+          return rawVal
       }
     }else{
     // return default value
@@ -33,52 +41,60 @@ export function extractQueryParam({ctx,param,castToType='string',defaultValue}:{
     throw e
   }}
 
-export function ssrSoftwareParams(ctx: GetServerSidePropsContext){
+export function ssrSoftwareParams(query: ParsedUrlQuery) {
+  // console.group('ssrSoftwareParams')
+  // console.log('query...', ctx.query)
+  // console.log('params...', ctx.params)
   const rows = extractQueryParam({
-    ctx,
+    query,
     param: 'rows',
     defaultValue: 12,
     castToType:'number'
   })
   const page = extractQueryParam({
-    ctx,
+    query,
     param: 'page',
     defaultValue: 0,
     castToType:'number'
   })
   const search = extractQueryParam({
-    ctx,
+    query,
     param: 'search',
+    defaultValue: null,
+    castToType:'string'
+  })
+  const keywords = extractQueryParam({
+    query,
+    param: 'keywords',
+    castToType: 'json-encoded',
     defaultValue: null
   })
-  const filterStr = extractQueryParam({
-    ctx,
-    param: 'filter',
-    defaultValue: null
-  })
+  // console.log('keywords...', keywords)
+  // console.log('keywords...', typeof keywords)
+  // console.groupEnd()
   return {
     search,
-    filterStr,
+    keywords,
     rows,
     page,
   }
 }
 
-export function ssrProjectsParams(ctx: GetServerSidePropsContext) {
+export function ssrProjectsParams(query: ParsedUrlQuery) {
   const rows = extractQueryParam({
-    ctx,
+    query,
     param: 'rows',
     defaultValue: 12,
     castToType: 'number'
   })
   const page = extractQueryParam({
-    ctx,
+    query,
     param: 'page',
     defaultValue: 0,
     castToType: 'number'
   })
   const search = extractQueryParam({
-    ctx,
+    query,
     param: 'search',
     defaultValue: null
   })
@@ -89,21 +105,21 @@ export function ssrProjectsParams(ctx: GetServerSidePropsContext) {
   }
 }
 
-export function ssrOrganisationParams(ctx: GetServerSidePropsContext) {
+export function ssrOrganisationParams(query: ParsedUrlQuery) {
   const rows = extractQueryParam({
-    ctx,
+    query,
     param: 'rows',
     defaultValue: 12,
     castToType: 'number'
   })
   const page = extractQueryParam({
-    ctx,
+    query,
     param: 'page',
     defaultValue: 0,
     castToType: 'number'
   })
   const search = extractQueryParam({
-    ctx,
+    query,
     param: 'search',
     defaultValue: null
   })

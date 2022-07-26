@@ -17,30 +17,41 @@ import Searchbox from '../../components/form/Searchbox'
 import SoftwareGrid from '../../components/software/SoftwareGrid'
 import {SoftwareListItem} from '../../types/SoftwareTypes'
 import {rowsPerPageOptions} from '../../config/pagination'
-import {getSoftwareList, TagItem} from '../../utils/getSoftware'
+import {getSoftwareList} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
-import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
-import logger from '../../utils/logger'
+import {softwareListUrl,softwareUrl} from '../../utils/postgrestUrl'
+import KeywordFilter from '~/components/keyword/KeywordFilter'
 
+type SoftwareIndexPageProps = {
+  count: number,
+  page: number,
+  rows: number,
+  keywords?: string[],
+  software: SoftwareListItem[],
+  search?:string
+}
 
-export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
-  {count:number,page:number,rows:number,tags:TagItem[],software:SoftwareListItem[]
-  }) {
+const pageTitle = `Software | ${app.title}`
+
+export default function SoftwareIndexPage({software=[],count,page,rows,keywords,search}:SoftwareIndexPageProps) {
   // use next router (hook is only for browser)
   const router = useRouter()
   // use media query hook for small screen logic
   const smallScreen = useMediaQuery('(max-width:600px)')
   // adjust grid min width for mobile to 18rem
   const minWidth = smallScreen ? '18rem' : '26rem'
-  const pageTitle = `Software | ${app.title}`
+
+
+  // console.log('keywords...', keywords)
 
   // next/previous page button
   function handlePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
-  ){
-    const url = ssrSoftwareUrl({
-      query: router.query,
+  ) {
+    const url = softwareUrl({
+      // take existing params from url (query)
+      ...ssrSoftwareParams(router.query),
       page: newPage
     })
     router.push(url)
@@ -50,8 +61,9 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   function handleItemsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ){
-    const url = ssrSoftwareUrl({
-      query: router.query,
+    const url = softwareUrl({
+      // take existing params from url (query)
+      ...ssrSoftwareParams(router.query),
       // reset to first page
       page: 0,
       rows: parseInt(event.target.value),
@@ -59,9 +71,11 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
     router.push(url)
   }
 
-  function handleSearch(searchFor:string){
-    const url = ssrSoftwareUrl({
-      query: router.query,
+  function handleSearch(searchFor: string) {
+    // debugger
+    const url = softwareUrl({
+      // take existing params from url (query)
+      ...ssrSoftwareParams(router.query),
       search: searchFor,
       // start from first page
       page: 0
@@ -69,17 +83,11 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
     router.push(url)
   }
 
-  function handleFilters(filters:string[]){
-    let filterStr
-    if (filters.length > 0){
-      filterStr = JSON.stringify(filters)
-    }else{
-      filterStr = null
-    }
-    const url = ssrSoftwareUrl({
-      query: router.query,
-      // stringified filters
-      filter: filterStr,
+  function handleFilters(keywords:string[]){
+    const url = softwareUrl({
+      // take existing params from url (query)
+      ...ssrSoftwareParams(router.query),
+      keywords,
       // start from first page
       page: 0
     })
@@ -87,9 +95,9 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
   }
 
   // TODO! handle sort options
-  function handleSort(sortOn:string){
-    logger(`software.index.handleSort: TODO! Sort on...${sortOn}`,'warn')
-  }
+  // function handleSort(sortOn:string){
+  //   logger(`software.index.handleSort: TODO! Sort on...${sortOn}`,'warn')
+  // }
 
   return (
     <DefaultLayout>
@@ -102,20 +110,12 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
             <Searchbox
               placeholder="Search for software"
               onSearch={handleSearch}
+              defaultValue={search}
             />
-            {/*
-            NOTE! tags are replaced with keywords
-            Sort is not yet implemented
-            <FilterTechnologies
-              items={tags}
-              onSelect={handleFilters}
+            <KeywordFilter
+              items={keywords ?? []}
+              onApply={handleFilters}
             />
-            <SortSelection
-              items={[]}
-              defaultValue='Last updated'
-              onSort={handleSort}
-            />
-            */}
           </div>
           <TablePagination
             component="nav"
@@ -146,12 +146,12 @@ export default function SoftwareIndexPage({count,page,rows,tags,software=[]}:
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   // extract params from page-query
-  const {search,filterStr,rows,page} = ssrSoftwareParams(context)
+  const {search, keywords, rows, page} = ssrSoftwareParams(context.query)
   // construct postgREST api url with query params
   const url = softwareListUrl({
     baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
     search,
-    filters: JSON.parse(filterStr),
+    keywords,
     order:'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast',
     limit: rows,
     offset: rows * page
@@ -165,6 +165,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // see params of SoftwareIndexPage function
   return {
     props: {
+      search,
+      keywords,
       count: software.count,
       page,
       rows,

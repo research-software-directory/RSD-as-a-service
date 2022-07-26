@@ -40,7 +40,8 @@ describe('pages/projects/index.tsx', () => {
         page:0,
         rows:12,
         // mocked data
-        projects
+        projects,
+        search: null
       }
     })
   })

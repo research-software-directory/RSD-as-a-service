@@ -22,11 +22,17 @@ import PageTitle from '../../components/layout/PageTitle'
 import ProjectsGrid from '../../components/projects/ProjectsGrid'
 import Searchbox from '../../components/form/Searchbox'
 
+type ProjectsIndexPageProps = {
+  count: number,
+  page: number,
+  rows: number,
+  projects: Project[]
+  search?:string
+}
+
 const pageTitle = `Projects | ${app.title}`
 
-export default function ProjectsIndexPage({count,page,rows,projects=[]}:
-  {count:number,page:number,rows:number,projects:Project[]
-}) {
+export default function ProjectsIndexPage({projects=[],count,page,rows,search}:ProjectsIndexPageProps) {
   // use next router (hook is only for browser)
   const router = useRouter()
   // use media query hook for small screen logic
@@ -38,18 +44,30 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ){
-    router.push(`/projects?page=${newPage}&rows=${rows}`)
+    const url = ssrProjectsUrl({
+      // take existing params from url (query)
+      ...ssrProjectsParams(router.query),
+      page: newPage
+    })
+    router.push(url)
   }
 
   function handleChangeRowsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ){
-    router.push(`/projects?page=0&rows=${parseInt(event.target.value)}`)
+    const url = ssrProjectsUrl({
+      // take existing params from url (query)
+      ...ssrProjectsParams(router.query),
+      // reset to first page
+      page: 0,
+      rows: parseInt(event.target.value),
+    })
+    router.push(url)
   }
 
   function handleSearch(searchFor:string){
     const url = ssrProjectsUrl({
-      query: router.query,
+      ...ssrProjectsParams(router.query),
       search: searchFor,
       // start from first page
       page: 0
@@ -68,6 +86,7 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
             <Searchbox
               placeholder="Search for project"
               onSearch={handleSearch}
+              defaultValue={search}
               />
           </div>
           <TablePagination
@@ -100,7 +119,7 @@ export default function ProjectsIndexPage({count,page,rows,projects=[]}:
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract from page-query
-  const {search, rows, page} = ssrProjectsParams(context)
+  const {search, rows, page} = ssrProjectsParams(context.query)
 
   // make api call, we do not pass the token
   // when token is passed it will return not published items too
@@ -115,6 +134,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     // pass this to page component as props
     props: {
+      search,
       count: projects.count,
       page,
       rows,

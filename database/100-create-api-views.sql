@@ -40,7 +40,7 @@ $$;
 
 -- Keywords by software
 -- for selecting keywords of specific software
--- using filter ?project=eq.UUID
+-- using filter ?software=eq.UUID
 CREATE FUNCTION keywords_by_software() RETURNS TABLE (
 	id UUID,
 	keyword CITEXT,
@@ -57,6 +57,30 @@ FROM
 	keyword_for_software
 INNER JOIN
 	keyword ON keyword.id = keyword_for_software.keyword
+;
+END
+$$;
+
+-- Keywords grouped by software as an array for filtering
+-- for selecting software with specific keywords (AND)
+CREATE FUNCTION keyword_filter_for_software() RETURNS TABLE (
+	software UUID,
+	keywords CITEXT[]
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+SELECT
+	keyword_for_software.software AS software,
+	array_agg(
+		keyword.value
+		ORDER BY value
+	) AS keywords
+FROM
+	keyword_for_software
+INNER JOIN
+	keyword ON keyword.id = keyword_for_software.keyword
+GROUP BY keyword_for_software.software
 ;
 END
 $$;
@@ -103,7 +127,42 @@ END
 $$;
 
 -- SOFTWARE OVERVIEW LIST WITH COUNTS
-CREATE FUNCTION software_list() RETURNS TABLE (
+-- DEPRECATED from 1.3.0 (2022-07-25)
+-- CREATE FUNCTION software_list() RETURNS TABLE (
+-- 	id UUID,
+-- 	slug VARCHAR,
+-- 	brand_name VARCHAR,
+-- 	short_statement VARCHAR,
+-- 	updated_at TIMESTAMPTZ,
+-- 	contributor_cnt BIGINT,
+-- 	mention_cnt BIGINT,
+-- 	is_published BOOLEAN
+-- ) LANGUAGE plpgsql STABLE AS
+-- $$
+-- BEGIN
+-- 	RETURN QUERY
+-- 	SELECT
+-- 		software.id,
+-- 		software.slug,
+-- 		software.brand_name,
+-- 		software.short_statement,
+-- 		software.updated_at,
+-- 		count_software_countributors.contributor_cnt,
+-- 		count_software_mentions.mention_cnt,
+-- 		software.is_published
+-- 	FROM
+-- 		software
+-- 	LEFT JOIN
+-- 		count_software_countributors() ON software.id=count_software_countributors.software
+-- 	LEFT JOIN
+-- 		count_software_mentions() ON software.id=count_software_mentions.software
+-- 	;
+-- END
+-- $$;
+
+-- SOFTWARE OVERVIEW LIST FOR SEARCH
+-- WITH COUNTS and KEYWORDS for filtering
+CREATE FUNCTION software_search() RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	brand_name VARCHAR,
@@ -111,7 +170,8 @@ CREATE FUNCTION software_list() RETURNS TABLE (
 	updated_at TIMESTAMPTZ,
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT,
-	is_published BOOLEAN
+	is_published BOOLEAN,
+	keywords citext[]
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -124,13 +184,16 @@ BEGIN
 		software.updated_at,
 		count_software_countributors.contributor_cnt,
 		count_software_mentions.mention_cnt,
-		software.is_published
+		software.is_published,
+		keyword_filter_for_software.keywords
 	FROM
 		software
 	LEFT JOIN
 		count_software_countributors() ON software.id=count_software_countributors.software
 	LEFT JOIN
 		count_software_mentions() ON software.id=count_software_mentions.software
+	LEFT JOIN
+		keyword_filter_for_software() ON software.id=keyword_filter_for_software.software
 	;
 END
 $$;

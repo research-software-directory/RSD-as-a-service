@@ -38,7 +38,7 @@ export async function getSoftwareList({url,token}:{url:string,token?:string }){
         }))
       }
     } else{
-      logger(`getSoftwareList failed: ${resp.status} ${resp.statusText}`, 'warn')
+      logger(`getSoftwareList failed: ${resp.status} ${resp.statusText} ${url}`, 'warn')
       return {
         count:0,
         data:[]

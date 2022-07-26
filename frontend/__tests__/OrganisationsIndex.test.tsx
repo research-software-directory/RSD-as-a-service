@@ -26,7 +26,7 @@ describe('pages/organisations/index.tsx', () => {
   })
 
   it('getServerSideProps returns mocked values in the props', async () => {
-    const resp = await getServerSideProps({req:{cookies:{}}})
+    const resp = await getServerSideProps({req: {cookies: {}}, query: {}})
     expect(resp).toEqual({
       props:{
         // count is extracted from response header
@@ -35,7 +35,8 @@ describe('pages/organisations/index.tsx', () => {
         page:0,
         rows:12,
         // mocked data
-        organisations: organisationsOverview
+        organisations: organisationsOverview,
+        search: null
       }
     })
   })
