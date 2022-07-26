@@ -38,7 +38,7 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search}:P
   // use media query hook for small screen logic
   const smallScreen = useMediaQuery('(max-width:600px)')
   // adjust grid min width for mobile
-  const minWidth = smallScreen ? '18rem' : '26rem'
+  const minWidth = smallScreen ? '18rem' : '29rem'
 
   function handleChangePage(
     event: MouseEvent<HTMLButtonElement> | null,

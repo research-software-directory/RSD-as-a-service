@@ -97,7 +97,7 @@ export default function ProjectCard({slug, title, subtitle, image_id, updated_at
             </p>
             <div className="flex justify-between text-sm">
               <span className="last-update">
-                {getTimeAgoSince(today,updated_at)}
+                Updated {getTimeAgoSince(today,updated_at)}
               </span>
               <div className="flex items-start justify-center">
                 {renderStatus()}
