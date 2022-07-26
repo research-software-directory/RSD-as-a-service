@@ -70,7 +70,7 @@ const SPOTLIGHTS= [
     name: 'MassBank',
     description: 'MassBank is an open source mass spectral library for the identification of small chemical molecules of metabolomics, exposomics and environmental relevance.',
     image: 'https://hifis.net/assets/img/spotlights/massbank/Atrazine_Mass_Spectrum.png',
-    link: '/software'
+    link: '/software/massbank'
   },
   {
     name: 'FishInspector',
@@ -419,9 +419,10 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         {/* Participating organsiations */}
         <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <div className="py-6">
-            <h2 className="text-5xl">Contributions</h2>
-            <div className='text-2xl'>We present software contributions by these organisations</div>
+            <h2 className="text-5xl pb-2">Contributions</h2>
+            <div className='text-2xl'>We present software contributions by</div>
             <ParticipatingOrganisations organisations={organisations}/>
+            <div className='text-xl pt-2'>Your organisation is not in the list? We will open the RSD for self service soon. Stay tuned.</div>
           </div>
         </div>
 
