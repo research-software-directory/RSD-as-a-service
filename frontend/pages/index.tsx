@@ -488,9 +488,16 @@ async function getOrganisationsList({url, token}: {url: string, token?: string})
     })
 
     if ([200, 206].includes(resp.status)) {
-      const json = await resp.json()
+      const organisationList: Array<JSON> = await resp.json()
+
+      const shuffled_data = []
+      while (organisationList.length > 0) {
+        let rnd = Math.floor(Math.random() * (organisationList.length))
+        shuffled_data.push(organisationList.splice(rnd, 1)[0])
+      }
+
       return {
-        data: json
+        data: shuffled_data
       }
     }
     // otherwise request failed
