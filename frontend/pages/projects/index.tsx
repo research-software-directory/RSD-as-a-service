@@ -11,34 +11,38 @@ import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import {app} from '../../config/app'
-import {rowsPerPageOptions} from '../../config/pagination'
-import {Project} from '../../types/Project'
-import {getProjectList} from '../../utils/getProjects'
-import {ssrProjectsParams} from '../../utils/extractQueryParam'
-import {ssrProjectsUrl} from '../../utils/postgrestUrl'
-import DefaultLayout from '../../components/layout/DefaultLayout'
-import PageTitle from '../../components/layout/PageTitle'
-import ProjectsGrid from '../../components/projects/ProjectsGrid'
-import Searchbox from '../../components/form/Searchbox'
+import {app} from '~/config/app'
+import {rowsPerPageOptions} from '~/config/pagination'
+import {ProjectSearchRpc} from '~/types/Project'
+import {getProjectList} from '~/utils/getProjects'
+import {ssrProjectsParams} from '~/utils/extractQueryParam'
+import {projectListUrl, ssrProjectsUrl} from '~/utils/postgrestUrl'
+import Searchbox from '~/components/form/Searchbox'
+import DefaultLayout from '~/components/layout/DefaultLayout'
+import PageTitle from '~/components/layout/PageTitle'
+import ProjectsGrid from '~/components/projects/ProjectsGrid'
+import ProjectKeywordFilter from '~/components/projects/ProjectKeywordFilter'
 
 type ProjectsIndexPageProps = {
   count: number,
   page: number,
   rows: number,
-  projects: Project[]
-  search?:string
+  projects: ProjectSearchRpc[]
+  search?: string,
+  keywords?: string[]
 }
 
 const pageTitle = `Projects | ${app.title}`
 
-export default function ProjectsIndexPage({projects=[],count,page,rows,search}:ProjectsIndexPageProps) {
+export default function ProjectsIndexPage({projects=[],count,page,rows,search,keywords}:ProjectsIndexPageProps) {
   // use next router (hook is only for browser)
   const router = useRouter()
   // use media query hook for small screen logic
   const smallScreen = useMediaQuery('(max-width:600px)')
   // adjust grid min width for mobile
   const minWidth = smallScreen ? '18rem' : '29rem'
+
+  // console.log('ProjectsIndexPage...projects...', projects)
 
   function handleChangePage(
     event: MouseEvent<HTMLButtonElement> | null,
@@ -75,6 +79,17 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search}:P
     router.push(url)
   }
 
+  function handleFilters(keywords:string[]){
+    const url = ssrProjectsUrl({
+      // take existing params from url (query)
+      ...ssrProjectsParams(router.query),
+      keywords,
+      // start from first page
+      page: 0
+    })
+    router.push(url)
+  }
+
   return (
     <DefaultLayout>
       <Head>
@@ -87,7 +102,11 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search}:P
               placeholder="Search for project"
               onSearch={handleSearch}
               defaultValue={search}
-              />
+            />
+            <ProjectKeywordFilter
+              items={keywords ?? []}
+              onApply={handleFilters}
+            />
           </div>
           <TablePagination
             component="nav"
@@ -119,22 +138,26 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search}:P
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract from page-query
-  const {search, rows, page} = ssrProjectsParams(context.query)
+  const {search, rows, page, keywords} = ssrProjectsParams(context.query)
 
-  // make api call, we do not pass the token
-  // when token is passed it will return not published items too
-  const projects = await getProjectList({
-    searchFor: search,
-    rows,
-    page,
-    //baseUrl within docker network
-    baseUrl: process.env.POSTGREST_URL
+  const url = projectListUrl({
+    baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
+    search,
+    keywords,
+    order:'current_state.desc,date_start.desc,title',
+    limit: rows,
+    offset: rows * page
   })
+
+  // get project list, we do not pass the token
+  // when token is passed it will return not published items too
+  const projects = await getProjectList({url})
 
   return {
     // pass this to page component as props
     props: {
       search,
+      keywords,
       count: projects.count,
       page,
       rows,

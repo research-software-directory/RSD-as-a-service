@@ -475,21 +475,22 @@ END
 $$;
 
 -- Project info by organisation
--- NOTE! single project is shown multiple times in this view
--- we filter this view at least by organisation (uuid)
-CREATE FUNCTION projects_by_organisation() RETURNS TABLE (
+-- NOTE! updated by Dusan 2022-07-27
+-- we filter this view at least by organisation_id (uuid)
+CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	title VARCHAR,
 	subtitle VARCHAR,
+	current_state VARCHAR,
 	date_start DATE,
-	date_end DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	is_featured BOOLEAN,
 	image_id UUID,
 	organisation UUID,
-	status relation_status
+	status relation_status,
+	keywords citext[]
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -499,23 +500,32 @@ BEGIN
 		project.slug,
 		project.title,
 		project.subtitle,
+		CASE
+			WHEN project.date_end IS NULL THEN 'Starting'::varchar
+			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			ELSE 'Running'::varchar
+		END AS current_state,
 		project.date_start,
-		project.date_end,
 		project.updated_at,
 		project.is_published,
 		project_for_organisation.is_featured,
 		image_for_project.project AS image_id,
 		project_for_organisation.organisation,
-		project_for_organisation.status
+		project_for_organisation.status,
+		keyword_filter_for_project.keywords
 	FROM
 		project
 	LEFT JOIN
 		image_for_project ON project.id = image_for_project.project
 	LEFT JOIN
-		project_for_organisation ON project.id = project_for_organisation.project;
+		project_for_organisation ON project.id = project_for_organisation.project
+	LEFT JOIN
+		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
+	WHERE
+		project_for_organisation.organisation=organisation_id
+	;
 END
 $$;
-
 
 -- Participating organisations by project
 -- NOTE! organisation are shown multiple times (for each project)
@@ -563,14 +573,16 @@ END
 $$;
 
 -- RELATED PROJECTS of project (origin)
+-- NOTE! updated by Dusan 2022-07-27
 -- filter by origin to get related project for the origin
-CREATE FUNCTION related_projects_for_project() RETURNS TABLE (
+CREATE FUNCTION related_projects_for_project(origin_id UUID) RETURNS TABLE (
 	origin UUID,
 	id UUID,
 	slug VARCHAR,
 	title VARCHAR,
 	subtitle VARCHAR,
-	date_end DATE,
+	current_state VARCHAR,
+	date_start DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	status relation_status,
@@ -585,7 +597,12 @@ BEGIN
 		project.slug,
 		project.title,
 		project.subtitle,
-		project.date_end,
+		CASE
+			WHEN project.date_end IS NULL THEN 'Starting'::varchar
+			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			ELSE 'Running'::varchar
+		END AS current_state,
+		project.date_start,
 		project.updated_at,
 		project.is_published,
 		project_for_project.status,
@@ -596,19 +613,23 @@ BEGIN
 		image_for_project ON image_for_project.project = project.id
 	INNER JOIN
 		project_for_project ON project.id = project_for_project.relation
+	WHERE
+		project_for_project.origin = origin_id
 	;
 END
 $$;
 
 -- RELATED PROJECTS for software
--- filter by software
-CREATE FUNCTION related_projects_for_software() RETURNS TABLE (
+-- NOTE! updated by Dusan 2022-07-27
+-- filter by software_id
+CREATE FUNCTION related_projects_for_software(software_id UUID) RETURNS TABLE (
 	software UUID,
 	id UUID,
 	slug VARCHAR,
 	title VARCHAR,
 	subtitle VARCHAR,
-	date_end DATE,
+	current_state VARCHAR,
+	date_start DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	status relation_status,
@@ -623,7 +644,12 @@ BEGIN
 		project.slug,
 		project.title,
 		project.subtitle,
-		project.date_end,
+		CASE
+			WHEN project.date_end IS NULL THEN 'Starting'::varchar
+			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			ELSE 'Running'::varchar
+		END AS current_state,
+		project.date_start,
 		project.updated_at,
 		project.is_published,
 		software_for_project.status,
@@ -634,9 +660,12 @@ BEGIN
 		image_for_project ON image_for_project.project = project.id
 	INNER JOIN
 		software_for_project ON project.id = software_for_project.project
+	WHERE
+		software_for_project.software = software_id
 	;
 END
 $$;
+
 
 -- RELATED SOFTWARE for PROJECT
 -- filter by project_id
@@ -929,17 +958,16 @@ BEGIN
 END
 $$;
 
-
 -- PROJECTS BY MAINTAINER
--- NOTE! single project is shown multiple times in this view
+-- NOTE! updated by Dusan on 2022-07-27
 -- we filter this view at least by user acount (uuid)
 CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	title VARCHAR,
 	subtitle VARCHAR,
+	current_state VARCHAR,
 	date_start DATE,
-	date_end DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	image_id UUID
@@ -952,8 +980,12 @@ BEGIN
 		project.slug,
 		project.title,
 		project.subtitle,
+		CASE
+			WHEN project.date_end IS NULL THEN 'Starting'::varchar
+			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			ELSE 'Running'::varchar
+		END AS current_state,
 		project.date_start,
-		project.date_end,
 		project.updated_at,
 		project.is_published,
 		image_for_project.project AS image_id
@@ -1144,5 +1176,71 @@ BEGIN
 	SELECT count(id) FROM software INTO software_cnt;
 	SELECT count(id) FROM project INTO project_cnt;
 	SELECT count(id) FROM organisation WHERE parent IS NULL INTO organisation_cnt;
+END
+$$;
+
+-- Keywords grouped by project as an array for filtering
+-- for selecting project with specific keywords (AND)
+CREATE FUNCTION keyword_filter_for_project() RETURNS TABLE (
+	project UUID,
+	keywords CITEXT[]
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		keyword_for_project.project  AS project,
+		array_agg(
+			keyword.value
+			ORDER BY value
+		) AS keywords
+	FROM
+		keyword_for_project
+	INNER JOIN
+		keyword ON keyword.id = keyword_for_project.keyword
+	GROUP BY keyword_for_project.project
+;
+END
+$$;
+
+-- PROJECT OVERVIEW LIST FOR SEARCH
+-- WITH KEYWORDS for filtering
+CREATE FUNCTION project_search() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	current_state VARCHAR,
+	date_start DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_id UUID,
+	keywords citext[]
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		project.id,
+		project.slug,
+		project.title,
+		project.subtitle,
+		CASE
+			WHEN project.date_end IS NULL THEN 'Starting'::varchar
+			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			ELSE 'Running'::varchar
+		END AS current_state,
+		project.date_start,
+		project.updated_at,
+		project.is_published,
+		image_for_project.project AS image_id,
+		keyword_filter_for_project.keywords
+	FROM
+		project
+	LEFT JOIN
+		image_for_project ON project.id = image_for_project.project
+	LEFT JOIN
+		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
+	;
 END
 $$;

@@ -7,7 +7,7 @@ import {render, screen} from '@testing-library/react'
 
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
-import projectsOverview from './__fixtures__/projectsOverview.json'
+import projectItem from './__fixtures__/projectItem.json'
 import apiParticipatingOrganisations from './__fixtures__/apiParticipatingOrganisations.json'
 import apiResearchDomains from './__fixtures__/apiResearchDomains.json'
 import apiKeywords from './__fixtures__/apiKeywordsByProject.json'
@@ -18,8 +18,7 @@ import apiContributors from './__fixtures__/apiContributors.json'
 import apiRelatedSoftware from './__fixtures__/apiRelatedSoftware.json'
 
 import ProjectItemPage, {ProjectPageProps} from '../pages/projects/[slug]/index'
-import {prepareData} from '../utils/getProjects'
-import {RawProject, RelatedProject} from '../types/Project'
+import {RelatedProject} from '../types/Project'
 import {MentionItemProps} from '../types/Mention'
 import {SoftwareListItem} from '~/types/SoftwareTypes'
 import {ProjectOrganisationProps} from '~/types/Organisation'
@@ -32,14 +31,9 @@ jest.mock('remark-breaks', jest.fn((...props) => {
   return props
 }))
 
-// take first record from mocked overview
-const mockedResponse = [projectsOverview[0]]
-// prepared projects
-const mockedProjects = prepareData(projectsOverview as RawProject[])
-
 const mockedProps: ProjectPageProps = {
   slug: 'test-slug',
-  project: mockedProjects[0],
+  project: projectItem,
   isMaintainer: false,
   organisations: apiParticipatingOrganisations as ProjectOrganisationProps[],
   researchDomains: apiResearchDomains,

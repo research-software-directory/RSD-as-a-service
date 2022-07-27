@@ -13,16 +13,16 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import LockIcon from '@mui/icons-material/Lock'
 
-import {RelatedProject} from '~/types/Project'
+import {SearchProject} from '~/types/Project'
 import {maxText} from '~/utils/maxText'
 
 type ProjectListProps = {
-  projects: RelatedProject[] | undefined
+  projects: SearchProject[] | undefined
   onRemove:(pos:number)=>void
 }
 
 type ProjectItemProps = {
-  project: RelatedProject
+  project: SearchProject
   onDelete:()=>void
 }
 

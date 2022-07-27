@@ -3,43 +3,36 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, useEffect,Fragment} from 'react'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
+import {useState, Fragment} from 'react'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import ListItemText from '@mui/material/ListItemText'
-import Checkbox from '@mui/material/Checkbox'
 import Badge from '@mui/material/Badge'
 import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import ClearAllIcon from '@mui/icons-material/ClearAll'
 import CloseIcon from '@mui/icons-material/Close'
-import {TagItem} from '../../utils/getSoftware'
 import Popover from '@mui/material/Popover'
-import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
-import Stack from '@mui/material/Stack'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 
-import TagListItem from '~/components/layout/TagListItem'
-import FindKeyword, {Keyword} from './FindKeyword'
-import {searchForSoftwareKeyword} from '../software/edit/information/searchForSoftwareKeyword'
+import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
 import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
 
+type SeachApiProps = {
+  searchFor: string
+}
 
 type KeywordFilterProps = {
   items?: string[]
   onApply: (items: string[]) => void
+  searchApi: ({searchFor}:SeachApiProps)=> Promise<Keyword[]>
 }
 
 /**
  * Keywords filter component. It receives array of keywords and returns
  * array of selected tags to use in filter using onSelect callback function
  */
-export default function KeywordsFilter({items=[], onApply}:KeywordFilterProps) {
+export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFilterProps) {
   const [selectedItems, setSelectedItems] = useState<string[]>(items ?? [])
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -128,7 +121,7 @@ export default function KeywordsFilter({items=[], onApply}:KeywordFilterProps) {
 
   return (
     <>
-      <Tooltip title={`Filter: ${selectedItems.join(' + ')}`}>
+      <Tooltip title={`Filter: ${selectedItems.length>0 ? selectedItems.join(' + ') : 'None'}`}>
         <IconButton onClick={handleOpen}>
           <Badge badgeContent={selectedItems.length} color="primary">
             <FilterAltIcon />
@@ -159,7 +152,7 @@ export default function KeywordsFilter({items=[], onApply}:KeywordFilterProps) {
               help: '',
               reset: true
             }}
-            searchForKeyword={searchForSoftwareKeyword}
+            searchForKeyword={searchApi}
             onAdd={onAdd}
             // onCreate={onCreate}
           />

@@ -22,7 +22,7 @@ export default function RelatedProjectsForSoftware() {
   const {session} = useAuth()
   const {showErrorMessage} = useSnackbar()
   const {setLoading,software} = useSoftwareContext()
-  const [relatedProject, setRelatedProject] = useState<RelatedProject[]>()
+  const [relatedProject, setRelatedProject] = useState<SearchProject[]>()
 
   useEffect(() => {
     let abort = false
@@ -71,9 +71,6 @@ export default function RelatedProjectsForSoftware() {
         const newList = [
           ...relatedProject, {
             ...selected,
-            image_id: null,
-            updated_at: null,
-            date_end: null,
             status
           }
         ].sort((a, b) => sortOnStrProp(a, b, 'title'))

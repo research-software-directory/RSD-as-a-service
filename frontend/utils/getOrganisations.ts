@@ -242,8 +242,8 @@ export async function getProjectsForOrganisation({organisation, searchFor, page,
   OrganisationApiParams) {
   try {
     // baseUrl
-    const order ='order=is_published.desc,is_featured.desc,title.asc'
-    let url = `/api/v1/rpc/projects_by_organisation?organisation=eq.${organisation}&${order}`
+    const order ='order=is_published.desc,is_featured.desc,current_state.desc,date_start.desc,title.asc'
+    let url = `/api/v1/rpc/projects_by_organisation?organisation_id=${organisation}&${order}`
     // filter for approved only if not maintainer
     if (!isMaintainer) {
       url += '&status=eq.approved&is_published=eq.true'

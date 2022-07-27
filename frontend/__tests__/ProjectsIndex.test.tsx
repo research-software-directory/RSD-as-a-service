@@ -11,8 +11,6 @@ import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 import projectsOverview from './__fixtures__/projectsOverview.json'
 
 import ProjectsIndexPage, {getServerSideProps} from '../pages/projects/index'
-import {prepareData} from '../utils/getProjects'
-import {RawProject} from '../types/Project'
 import {RsdUser} from '../auth'
 
 
@@ -30,8 +28,7 @@ describe('pages/projects/index.tsx', () => {
 
   it('getServerSideProps returns mocked values in the props', async () => {
     const resp = await getServerSideProps({req: {cookies: {}}})
-    // prepare raw data in the same way as getServerSideProps does it
-    const projects = prepareData(projectsOverview as RawProject[])
+
     expect(resp).toEqual({
       props:{
         // count is extracted from response header
@@ -40,8 +37,9 @@ describe('pages/projects/index.tsx', () => {
         page:0,
         rows:12,
         // mocked data
-        projects,
-        search: null
+        projects: projectsOverview,
+        search: null,
+        keywords: null
       }
     })
   })

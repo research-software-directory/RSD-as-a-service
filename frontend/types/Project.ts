@@ -26,12 +26,26 @@ export type BasicProject = NewProject & {
 export type RawProject = BasicProject & {
   image_for_project?: [
     { project: string }
-  ],
-  url_for_project: ProjectLink[]
+  ]
 }
 
 export type Project = BasicProject & {
   image_id: string | null
+}
+
+export type CurrentState = 'Starting' | 'Running' | 'Finished'
+export type ProjectSearchRpc = {
+  id: string
+  slug: string
+  title: string
+  subtitle: string
+  current_state: CurrentState
+  date_start: string | null
+  updated_at: string | null
+  is_published: boolean
+  image_id: string | null
+  keywords: string[]
+  // is_featured?: boolean
 }
 
 // object returned from api
@@ -76,13 +90,14 @@ export type SearchProject = {
   slug: string
   title: string
   subtitle: string
+  status: Status
 }
 
 export type RelatedProject = SearchProject & {
+  current_state: CurrentState
+  date_start: string | null
   updated_at: string | null
-  date_end: string | null
   image_id: string | null
-  status: Status
 }
 
 export type RelatedProjectForProject = RelatedProject & {
