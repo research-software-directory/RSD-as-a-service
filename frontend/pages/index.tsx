@@ -336,7 +336,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
 
         {/* Head and claim */}
         <div className="bg-secondary bg-landing-page mb-10">
-          <div className="flex flex-col sm:flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-screen-xl text-white">
+          <div className="flex flex-col sm:flex-row flex-wrap container mx-auto px-6 md:px-10 xl:px-0 pt-16 pb-12 max-w-screen-xl text-white">
             <div className="min-w-min flex flex-col">
               <LogoHelmholtz width="220" />
               <div className="pt-1 pb-12">Research for grand challenges.</div>
