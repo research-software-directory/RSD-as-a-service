@@ -341,24 +341,23 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
               <LogoHelmholtz width="220" />
               <div className="pt-1 pb-12">Research for grand challenges.</div>
               {/* <a onClick={handleClickOpen}>
-                <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
-                  Add your software
-                </div>
-              </a> */}
-              <div className="flex">
-                <Link href="/software" passHref>
-                <a>
-                  <div
-                    className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary text-center font-medium text-2xl py-4 px-6">
-                    Browse software
-                  </div>
-                </a>
-                </Link>
+              <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
+              Add your software
               </div>
+              </a> */}
             </div>
             <div className="my-auto pt-4 md:pt-0 ml-auto">
               <h1 className="text-4xl md:text-5xl lg:text-6xl md:max-w-md lg:max-w-xl">Promote and Discover Research Software</h1>
               <div className="text-xl lg:text-2xl">Because software matters</div>
+              <div className="flex pt-8">
+                <Link href="/software" passHref>
+                  <a>
+                    <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary text-center font-medium text-2xl py-4 px-6 rounded-full">
+                      Browse software
+                    </div>
+                  </a>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
