@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 dv4all
+#
+# SPDX-License-Identifier: Apache-2.0
+
+version: "3.0"
+
+services:
+  db_current:
+    container_name: db_current
+    image: ghcr.io/research-software-directory/rsd-saas/database:${DB_CURRENT_VERSION}
+    expose:
+      - 5432
+    environment:
+      # it uses values from .env file
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_AUTHENTICATOR_PASSWORD
+    volumes:
+      # persist data in named docker volume
+      # to remove use: docker-compose down --volumes
+      # to inspect use: docker volume ls
+      - pgdb_current:/var/lib/postgresql/data/
+    networks:
+      - net
+    restart: unless-stopped
+  db_next:
+    container_name: db_next
+    image: ghcr.io/research-software-directory/rsd-saas/database:${DB_NEXT_VERSION}
+    expose:
+      - 5432
+    environment:
+      # it uses values from .env file
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_AUTHENTICATOR_PASSWORD
+    volumes:
+      # persist data in named docker volume
+      # to remove use: docker-compose down --volumes
+      # to inspect use: docker volume ls
+      - pgdb_next:/var/lib/postgresql/data/
+    networks:
+      - net
+    restart: unless-stopped
+  # I am not able to extract console output to sql file ?!?
+  db_migra:
+    container_name: migra
+    image: djrobstep/migra:3.0.1621480950
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "sleep ${MIGRA_SLEEP_TIME} secondes"
+        sleep ${MIGRA_SLEEP_TIME}
+        migra --unsafe postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db_current:5432/${POSTGRES_DB} \
+        postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db_next:5432/${POSTGRES_DB} > home/sql/${MIGRATION_FILE_NAME}.sql
+        echo "saved migration file as ${MIGRATION_FILE_NAME}.sql"
+        echo "you can stop the service using Ctrl + C"
+    volumes:
+      - ./sql:/home/sql
+    depends_on:
+      - db_current
+      - db_next
+    networks:
+      - net
+# define name for docker network
+# it should have name: rsd-as-a-service_net
+networks:
+  net:
+
+# named volumes can be managed easier using docker-compose
+# volume should have name rsd-as-a-service_pgdb
+volumes:
+  pgdb_current:
+  pgdb_next:
