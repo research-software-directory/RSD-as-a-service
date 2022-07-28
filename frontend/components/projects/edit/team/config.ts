@@ -61,7 +61,7 @@ export const cfgTeamMembers = {
   },
   role: {
     label: 'Role',
-    help: 'For this software',
+    help: 'In this project',
     validation: {
       minLength: {value: 2, message: 'Minimum length is 2'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
