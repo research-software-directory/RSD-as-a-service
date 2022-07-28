@@ -202,7 +202,9 @@ function ResearchField({background, name}:{background: string, name: string}) {
   const link=`/software?&keywords=${encodeURIComponent(uriComponent)}&page=0&rows=12`
 
   return (
-    <a onMouseEnter={mouseEnter} data-background={background} href={link}>{name}</a>
+    <a className='underline hover:text-white' onMouseEnter={mouseEnter} data-background={background} href={link}>
+      {name}
+    </a>
   )
 }
 
