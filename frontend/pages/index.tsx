@@ -367,17 +367,21 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <h2 className='text-5xl'>Making Research Software Sustainable</h2>
           <div className='text-2xl mt-2'>
-            This service is a <span className='hgf-text-highlight'>teaser</span> for the upcoming Helmholtz Research Software Directory, a <span className='hgf-text-highlight'>showcase for research software</span> developed within the <a href="https://helmholtz.de" target="_blank" className='underline' rel="noreferrer">Helmholtz federation</a>. Our goals are to
+            This service is a <span className='hgf-text-highlight'>teaser</span> for the upcoming Helmholtz Research
+            Software Directory, a <span className='hgf-text-highlight'>showcase for research software</span> developed
+            within the <a href="https://helmholtz.de" target="_blank" className='underline' rel="noreferrer">Helmholtz
+              federation</a>. Our goals are to
             <div className='flex flex-row pt-4'>
-              <div className="mx-auto px-6 my-4 border-l-2 border-[#002864]">
-                <div className='py-4'>improve the visibility of research software</div>
-                <div className='py-4'>promote FAIR principles in research software development</div>
-                <div className='py-4'>monitor the impact of your software</div>
-              </div>
-              {/* <div className="hidden basis-1/3 ml-6 md:block md:bg-[url(/images/pexels-nemuel-sereti-6424586.jpg)] bg-center bg-cover"></div> */}
+              <ul className="mx-auto px-6 my-4 list-disc">
+                <li className='py-4'>improve the visibility of research software</li>
+                <li className='py-4'>promote FAIR principles in research software development</li>
+                <li className='py-4'>monitor the impact of your software</li>
+              </ul>
             </div>
-            We are in <span className='hgf-text-highlight'>active development</span> and login is disabled at the moment.
-            Please stay tuned for future updates, explore the current state of the catalagoue, and have a look at our <a href="#Upcoming" className='underline'>upcoming features</a>.
+            We are in <span className='hgf-text-highlight'>active development</span> and login is disabled at the
+            moment.
+            Please stay tuned for future updates, explore the current state of the catalagoue, and have a look at our <a
+              href="#Upcoming" className='underline'>upcoming features</a>.
           </div>
         </div>
 
