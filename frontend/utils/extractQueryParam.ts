@@ -98,10 +98,17 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
     param: 'search',
     defaultValue: null
   })
+  const keywords = extractQueryParam({
+    query,
+    param: 'keywords',
+    castToType: 'json-encoded',
+    defaultValue: null
+  })
   return {
     search,
     rows,
     page,
+    keywords
   }
 }
 

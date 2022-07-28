@@ -11,7 +11,7 @@ import {getRelatedProjectsForProject} from '~/utils/getProjects'
 import {addRelatedProject, deleteRelatedProject} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
-import {RelatedProject, SearchProject} from '~/types/Project'
+import {SearchProject} from '~/types/Project'
 import FindRelatedProject from './FindRelatedProject'
 import useProjectContext from '../useProjectContext'
 import RelatedProjectList from './RelatedProjectList'
@@ -22,7 +22,7 @@ export default function RelatedProjectsForProject() {
   const {session} = useAuth()
   const {showErrorMessage} = useSnackbar()
   const {setLoading,project} = useProjectContext()
-  const [relatedProject, setRelatedProject] = useState<RelatedProject[]>()
+  const [relatedProject, setRelatedProject] = useState<SearchProject[]>()
 
   useEffect(() => {
     let abort = false
@@ -70,9 +70,6 @@ export default function RelatedProjectsForProject() {
           ...relatedProject,
           {
             ...selected,
-            image_id: null,
-            updated_at: null,
-            date_end: null,
             status
           }
         ].sort((a, b) => sortOnStrProp(a, b, 'title'))

@@ -9,7 +9,7 @@ import {mentionColumns, MentionForProject, MentionItemProps} from '~/types/Menti
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, RawProject, RelatedProjectForProject,
+  ProjectLink, ProjectSearchRpc, RawProject, RelatedProjectForProject,
   ResearchDomain, SearchProject, TeamMember
 } from '~/types/Project'
 import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
@@ -21,74 +21,107 @@ import logger from './logger'
 import {paginationUrlParams} from './postgrestUrl'
 import {sortOnStrProp} from './sortFn'
 
-export async function getProjectList({rows=12,page=0,baseUrl='/api/v1',searchFor,token}:
-  {rows: number, page: number, baseUrl?: string, searchFor?: string,token?:string}
-){
+export async function getProjectList({url, token}: { url: string, token?: string }) {
   try {
-    const columns = 'id,slug,title,subtitle,date_start,date_end,updated_at,is_published,image_for_project(project)'
-    let url = `${baseUrl}/project?select=${columns}`
-    // search
-    if (searchFor) {
-      url += `&or=(title.ilike.*${searchFor}*,subtitle.ilike.*${searchFor}*))`
-    }
-    // order, by default on updated_at descending
-    // use also id to prevent repeating records
-    // see https://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
-    url +='&order=updated_at.desc,title,id'
-    // pagination
-    url += paginationUrlParams({rows, page})
-
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
         ...createJsonHeaders(token),
-        // request record count to be returned
-        // note: it's returned in the header
         'Prefer': 'count=exact'
-      }
+      },
     })
 
-    if ([200,206].includes(resp.status)){
-      const json: RawProject[] = await resp.json()
-      const data = prepareData(json)
+    if ([200, 206].includes(resp.status)) {
+      const json: ProjectSearchRpc[] = await resp.json()
+      // set
       return {
         count: extractCountFromHeader(resp.headers),
-        data
+        data: json
       }
-    } else{
-      logger(`getProjectList failed: ${resp.status} ${resp.statusText}`, 'warn')
+    } else {
+      logger(`getProjectList failed: ${resp.status} ${resp.statusText} ${url}`, 'warn')
       return {
-        count:0,
-        data:[]
+        count: 0,
+        data: []
       }
     }
-  }catch(e:any){
-    logger(`getProjectList: ${e?.message}`,'error')
+  } catch (e: any) {
+    logger(`getProjectList: ${e?.message}`, 'error')
     return {
-      count:0,
-      data:[]
+      count: 0,
+      data: []
     }
   }
 }
 
-export function prepareData(json:RawProject[]) {
-  const data:Project[] = json.map(item => {
-    const project = getPropsFromObject(item, [
-      'id', 'slug',
-      'title',
-      'subtitle',
-      'date_start',
-      'date_end',
-      'updated_at',
-      'is_published'
-    ])
-    project['image_id'] = extractImageInfo(item)
-    return project
-  })
-  return data
-}
+// export async function getProjectList({rows=12,page=0,baseUrl='/api/v1',searchFor,token}:
+//   {rows: number, page: number, baseUrl?: string, searchFor?: string,token?:string}
+// ){
+//   try {
+//     const columns = 'id,slug,title,subtitle,date_start,date_end,updated_at,is_published,image_for_project(project)'
+//     let url = `${baseUrl}/project?select=${columns}`
+//     // search
+//     if (searchFor) {
+//       url += `&or=(title.ilike.*${searchFor}*,subtitle.ilike.*${searchFor}*))`
+//     }
+//     // order, by default on updated_at descending
+//     // use also id to prevent repeating records
+//     // see https://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
+//     url +='&order=updated_at.desc,title,id'
+//     // pagination
+//     url += paginationUrlParams({rows, page})
 
-function extractImageInfo(item: RawProject) {
+//     const resp = await fetch(url, {
+//       method: 'GET',
+//       headers: {
+//         ...createJsonHeaders(token),
+//         // request record count to be returned
+//         // note: it's returned in the header
+//         'Prefer': 'count=exact'
+//       }
+//     })
+
+//     if ([200,206].includes(resp.status)){
+//       const json: RawProject[] = await resp.json()
+//       const data = prepareData(json)
+//       return {
+//         count: extractCountFromHeader(resp.headers),
+//         data
+//       }
+//     } else{
+//       logger(`getProjectList failed: ${resp.status} ${resp.statusText}`, 'warn')
+//       return {
+//         count:0,
+//         data:[]
+//       }
+//     }
+//   }catch(e:any){
+//     logger(`getProjectList: ${e?.message}`,'error')
+//     return {
+//       count:0,
+//       data:[]
+//     }
+//   }
+// }
+
+// export function prepareData(json:RawProject[]) {
+//   const data:Project[] = json.map(item => {
+//     const project = getPropsFromObject(item, [
+//       'id', 'slug',
+//       'title',
+//       'subtitle',
+//       'date_start',
+//       'date_end',
+//       'updated_at',
+//       'is_published'
+//     ])
+//     project['image_id'] = extractImageInfo(item)
+//     return project
+//   })
+//   return data
+// }
+
+export function extractImageInfo(item: RawProject) {
   if (item.image_for_project && item.image_for_project.length > 0) {
     return item.image_for_project[0].project
   } else {
@@ -461,7 +494,7 @@ export async function getRelatedProjectsForProject({project, token, frontend, ap
   { project: string, token?: string, frontend?: boolean, approved?: boolean }) {
   try {
     // construct api url based on request source
-    let query = `rpc/related_projects_for_project?origin=eq.${project}&order=title.asc`
+    let query = `rpc/related_projects_for_project?origin_id=${project}&order=current_state.desc,date_start.desc,title.asc`
     if (approved) {
       // select only approved and published relations
       query += '&status=eq.approved&is_published=eq.true'

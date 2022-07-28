@@ -3,53 +3,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ParsedUrlQuery} from 'querystring'
+import {rowsPerPageOptions} from '~/config/pagination'
 
-export type PostgrestParams={
-  baseUrl:string,
-  search?:string | null,
-  keywords?:string[] | null,
-  order?:string,
-  limit:number,
-  offset:number
+type baseQueryStringProps = {
+  search?: string | null,
+  keywords?: string[] | null,
+  order?: string,
+  limit?: number,
+  offset?: number
 }
 
-export function softwareListUrl(props:PostgrestParams){
-  const {baseUrl, search, keywords, order, limit, offset} = props
-  let url = `${baseUrl}/rpc/software_search?`
-
-  // console.log('softwareListUrl.keywords...', keywords)
-  // console.log('softwareListUrl.typeof...', typeof keywords)
-  // console.log('softwareListUrl.length...', keywords?.length)
-
-  // filter on keywords using AND
-  if (typeof keywords !== 'undefined' &&
-    keywords !== null &&
-    typeof keywords === 'object') {
-    // sort and convert keywords array to comma separated string
-    // we need to sort because search is on ARRAY field in pgSql
-    // and all keywords should be present (AND).
-    // and it needs to be enclosed in {} uri encoded see
-    // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
-    const keywordsAll = keywords.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
-    // use cs. command to fin
-    url += `keywords=cs.%7B${keywordsAll}%7D`
-  }
-
-  if (search) {
-    // search for term in brand_name and short_statement
-    // we use ilike (case INsensitive) and * to indicate partial string match
-    url+=`&or=(brand_name.ilike.*${search}*, short_statement.ilike.*${search}*)`
-  }
-
-  if (order){
-    url+=`&order=${order}`
-  }
-
-  // add limit and offset
-  url+=`&limit=${limit || 12}&offset=${offset || 0}`
-
-  return url
+export type PostgrestParams = baseQueryStringProps & {
+  baseUrl:string
 }
 
 type QueryParams={
@@ -122,4 +87,80 @@ export function paginationUrlParams({rows=12, page=0}:
     params += `&offset=${page * rows}`
   }
   return params
+}
+
+/**
+ * Provides basic url query string for postgrest endpoints
+ * @param '{keywords[], order, limit, offset}'
+ * @returns string
+ */
+export function baseQueryString(props: baseQueryStringProps) {
+  const {keywords, order, limit, offset} = props
+  let query
+  // console.group('baseQueryString')
+  // console.log('keywords...', keywords)
+  // console.log('order...', order)
+  // console.log('limit...', limit)
+  // console.log('offset...', offset)
+  // filter on keywords using AND
+  if (typeof keywords !== 'undefined' &&
+    keywords !== null &&
+    typeof keywords === 'object') {
+    // sort and convert keywords array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    // and all keywords should be present (AND).
+    // and it needs to be enclosed in {} uri encoded see
+    // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
+    const keywordsAll = keywords.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to fin
+    query = `keywords=cs.%7B${keywordsAll}%7D`
+  }
+  // order
+  if (order) {
+    if (query) {
+      query += `&order=${order}`
+    } else {
+      query = `order=${order}`
+    }
+  }
+  // add limit and offset
+  if (query) {
+    query += `&limit=${limit || rowsPerPageOptions[0]}&offset=${offset || 0}`
+  } else {
+    query = `limit=${limit || rowsPerPageOptions[0]}&offset=${offset || 0}`
+  }
+  // console.log('query...', query)
+  // console.groupEnd()
+  return query
+}
+
+export function softwareListUrl(props: PostgrestParams) {
+  const {baseUrl, search} = props
+  let query = baseQueryString(props)
+
+  if (search) {
+    // search for term in brand_name and short_statement
+    // we use ilike (case INsensitive) and * to indicate partial string match
+    query += `&or=(brand_name.ilike.*${search}*, short_statement.ilike.*${search}*)`
+  }
+
+  const url = `${baseUrl}/rpc/software_search?${query}`
+  // console.log('softwareListUrl...', url)
+  return url
+}
+
+
+export function projectListUrl(props: PostgrestParams) {
+  const {baseUrl, search} = props
+  let query = baseQueryString(props)
+
+  if (search) {
+    // search for term in brand_name and short_statement
+    // we use ilike (case INsensitive) and * to indicate partial string match
+    query += `&or=(title.ilike.*${search}*,subtitle.ilike.*${search}*)`
+  }
+
+  const url = `${baseUrl}/rpc/project_search?${query}`
+  // console.log('projectListUrl...',url)
+  return url
 }

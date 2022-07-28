@@ -311,7 +311,7 @@ export async function getRelatedProjectsForSoftware({software, token, frontend, 
   { software: string, token?: string, frontend?: boolean, approved?:boolean }) {
   try {
     // construct api url based on request source
-    let query = `rpc/related_projects_for_software?software=eq.${software}&order=title.asc`
+    let query = `rpc/related_projects_for_software?software_id=${software}&order=current_state.desc,date_start.desc,title.asc`
     if (approved) {
       // select only approved relations
       query +='&status=eq.approved&is_published=eq.true'

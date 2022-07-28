@@ -27,7 +27,7 @@ export default function OrganisationProjects({organisation, session, isMaintaine
   // use media query hook for small screen logic
   const smallScreen = useMediaQuery('(max-width:600px)')
   // adjust grid min width for mobile to 18rem
-  const minWidth = smallScreen ? '18rem' : '26rem'
+  const minWidth = smallScreen ? '18rem' : '28rem'
 
   useEffect(() => {
     if (count && loading === false) {

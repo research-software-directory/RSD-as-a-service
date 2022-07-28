@@ -1,182 +1,158 @@
 [
   {
-    "id": "bab0af48-020a-4548-b165-d4ae01de61ce",
-    "slug": "covid-19-grand-challenge",
-    "title": "COVID-19 Grand Challenge",
-    "subtitle": "Assessing the suspicion and severity of COVID-19 in a CT scan",
-    "date_start": "2020-04-15",
-    "date_end": "2020-12-31",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "d8d60d90-589f-4dbb-8d6f-a7d796d7594c",
+    "slug": "test-project",
+    "title": "Test project",
+    "subtitle": "This is test project",
+    "current_state": "Starting",
+    "date_start": null,
+    "updated_at": "2022-07-26T15:54:34.659439+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "bab0af48-020a-4548-b165-d4ae01de61ce"
-      }
+    "image_id": "d8d60d90-589f-4dbb-8d6f-a7d796d7594c",
+    "keywords": null
+  },
+  {
+    "id": "4b3d933a-60c5-4746-b5ca-0bcbc3586a30",
+    "slug": "bakeoff",
+    "title": "Facilitating the \"Great Bake Off\" of Bioinformatics Workflows",
+    "subtitle": " ",
+    "current_state": "Running",
+    "date_start": "2022-07-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
+    "is_published": true,
+    "image_id": "4b3d933a-60c5-4746-b5ca-0bcbc3586a30",
+    "keywords": [
+      "Inter-operability & linked data",
+      "Workflow technologies"
     ]
   },
   {
-    "id": "8a40bfeb-23e8-404b-abee-f0d56b1fe940",
-    "slug": "fair-data-for-capacity",
-    "title": "FAIR Data for CAPACITY",
-    "subtitle": "Statistical analyses and machine learning models: Insights about the relation between...",
-    "date_start": "2020-04-15",
-    "date_end": "2021-06-01",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "474931a8-fcc5-4b66-aec0-39020ecd07a2",
+    "slug": "microbialgenes",
+    "title": "A community-supported workflow connecting microbial genes, and organisms to their molecular products",
+    "subtitle": " ",
+    "current_state": "Running",
+    "date_start": "2022-03-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "8a40bfeb-23e8-404b-abee-f0d56b1fe940"
-      }
+    "image_id": "474931a8-fcc5-4b66-aec0-39020ecd07a2",
+    "keywords": [
+      "High performance computing",
+      "Inter-operability & linked data"
     ]
   },
   {
-    "id": "25c7750e-9dc9-45a9-b3c5-5e5ae10a0892",
-    "slug": "retina-covid19",
-    "title": "Retina COVID19",
-    "subtitle": "Social distancing measures carry economic and social costs",
-    "date_start": "2020-04-15",
-    "date_end": "2021-09-01",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "226dbd2a-ded2-4c24-9177-c1b1cd4b96d8",
+    "slug": "emg",
+    "title": "Development of a software tool for automated surface EMG analysis of respiratory muscles during mechanical ventilation",
+    "subtitle": " ",
+    "current_state": "Running",
+    "date_start": "2022-03-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "25c7750e-9dc9-45a9-b3c5-5e5ae10a0892"
-      }
+    "image_id": "226dbd2a-ded2-4c24-9177-c1b1cd4b96d8",
+    "keywords": [
+      "Machine learning",
+      "Real time data analysis"
     ]
   },
   {
-    "id": "3e577027-12df-4b79-87b7-07f4cf6a2bb3",
-    "slug": "glammap",
-    "title": "GlamMap",
-    "subtitle": "Visual analytics for the world’s library data",
-    "date_start": "2017-08-01",
-    "date_end": "2019-08-01",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "9820bc87-b8a9-49e9-9d9d-3054fab5b1c5",
+    "slug": "3dvac",
+    "title": "Personalized cancer vaccine design through 3D modelling boosted geometric learning",
+    "subtitle": " ",
+    "current_state": "Running",
+    "date_start": "2022-03-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "3e577027-12df-4b79-87b7-07f4cf6a2bb3"
-      }
+    "image_id": "9820bc87-b8a9-49e9-9d9d-3054fab5b1c5",
+    "keywords": [
+      "High performance computing",
+      "Machine learning"
     ]
   },
   {
-    "id": "9d94b989-ebbc-40e4-b7e2-9df1aac63f60",
-    "slug": "magic",
-    "title": "MAGIC",
-    "subtitle": "Metrics and Access to Global Indices for Climate Projections",
-    "date_start": "2016-10-01",
-    "date_end": "2019-03-31",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "4bb2e4b3-04dc-48d6-975d-e51f23fdb06f",
+    "slug": "demoses",
+    "title": "DEMOSES",
+    "subtitle": "Designing and modelling future systems of energy systems",
+    "current_state": "Running",
+    "date_start": "2022-02-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "9d94b989-ebbc-40e4-b7e2-9df1aac63f60"
-      }
-    ]
+    "image_id": "4bb2e4b3-04dc-48d6-975d-e51f23fdb06f",
+    "keywords": null
   },
   {
-    "id": "975d4234-98b6-4d9c-80ba-235b7bdde548",
-    "slug": "stochastic-multiscale-climate-models",
-    "title": "Stochastic Multiscale Climate Models",
-    "subtitle": "Coupling an implicit low-resolution model to an explicit high-resolution ocean model",
-    "date_start": "2017-12-18",
-    "date_end": "2021-12-31",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "499fdc5b-942f-408e-97d0-80d9e77ddb3d",
+    "slug": "hychain-esi",
+    "title": "HyChain-ESI",
+    "subtitle": "Hydrogen value chain deployment – Agenda for the emerging hydrogen economy supporting energy system integration",
+    "current_state": "Running",
+    "date_start": "2022-02-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "975d4234-98b6-4d9c-80ba-235b7bdde548"
-      }
-    ]
+    "image_id": "499fdc5b-942f-408e-97d0-80d9e77ddb3d",
+    "keywords": null
   },
   {
-    "id": "cf274cd3-b78c-4d4d-9dc7-05a0ff509cea",
-    "slug": "multixmas",
-    "title": "MULTIXMAS",
-    "subtitle": "Multiscale simulations of excitation dynamics in molecular materials for sustainable energy applications",
-    "date_start": "2017-12-18",
-    "date_end": "2022-02-28",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "7c03691c-2696-4e3d-a2f7-a83994b61387",
+    "slug": "nextgenopt",
+    "title": "NextGenOpt",
+    "subtitle": "Next Generation Sector-Coupling Models for Optimal Investments and Operation",
+    "current_state": "Running",
+    "date_start": "2022-02-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "cf274cd3-b78c-4d4d-9dc7-05a0ff509cea"
-      }
-    ]
+    "image_id": "7c03691c-2696-4e3d-a2f7-a83994b61387",
+    "keywords": null
   },
   {
-    "id": "d649d193-8b54-4e5e-9eea-df7cbd6a4f89",
-    "slug": "integrated-omics-analysis-for-small-molecule-mediated-host-microbiome-interactions",
-    "title": "Integrated omics analysis for small molecule-mediated host-microbiome interactions",
-    "subtitle": "Advancing our understanding of molecular mechanisms of health and disease",
-    "date_start": "2017-12-18",
-    "date_end": "2022-07-01",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "257320c0-fecb-49c6-a6df-5f9f3b95b6fd",
+    "slug": "tesops",
+    "title": "TeSoPs",
+    "subtitle": "Technologically and socially feasible transition pathways for local energy system integration",
+    "current_state": "Running",
+    "date_start": "2022-02-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "d649d193-8b54-4e5e-9eea-df7cbd6a4f89"
-      }
-    ]
+    "image_id": "257320c0-fecb-49c6-a6df-5f9f3b95b6fd",
+    "keywords": null
   },
   {
-    "id": "f3cbad3e-d5ab-4845-9435-811dc71e45ea",
-    "slug": "large-scale-data-assimilation",
-    "title": "Large Scale Data Assimilation",
-    "subtitle": "Handling data assimilation on a large scale",
-    "date_start": "2014-12-18",
-    "date_end": "2017-11-30",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "d9110d68-17db-4428-b067-679fd7116cb4",
+    "slug": "granular-materials",
+    "title": "An artificial brain for interpreting and accelerating physics-based simulations of granular materials",
+    "subtitle": " ",
+    "current_state": "Running",
+    "date_start": "2022-01-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "f3cbad3e-d5ab-4845-9435-811dc71e45ea"
-      }
-    ]
+    "image_id": "d9110d68-17db-4428-b067-679fd7116cb4",
+    "keywords": null
   },
   {
-    "id": "b0cb0599-1d46-4f0a-ac2f-091e53da1703",
-    "slug": "a-phase-field-model-to-guide-the-development-and-design-of-next-generation-solid-state-batteries",
-    "title": "A phase field model to guide the development and design of next generation solid-state-batteries",
-    "subtitle": "Safer batteries with higher energy densities",
-    "date_start": "2017-12-18",
-    "date_end": "2021-12-31",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "7f0a32a8-630a-4fe2-b6c8-faa19c626795",
+    "slug": "fusion-reactor",
+    "title": "Development of the European fusion reactor simulation framework for experimental design, optimization, and control",
+    "subtitle": " ",
+    "current_state": "Running",
+    "date_start": "2022-01-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "b0cb0599-1d46-4f0a-ac2f-091e53da1703"
-      }
-    ]
+    "image_id": "7f0a32a8-630a-4fe2-b6c8-faa19c626795",
+    "keywords": null
   },
   {
-    "id": "3546bb00-ecb0-4f76-94ca-5c567ec0e6bb",
-    "slug": "passing-xsams",
-    "title": "Passing XSAMS",
-    "subtitle": "New tools for researchers in plasma, combustion and chemical reactor science",
-    "date_start": "2017-12-18",
-    "date_end": "2022-01-31",
-    "updated_at": "2022-04-07T13:39:25.736194",
+    "id": "7386533b-e762-4272-9eaa-eae5589ba2ee",
+    "slug": "et-apps",
+    "title": "Efficient and robust open-source modelling platform for Energy Transition applications",
+    "subtitle": " ",
+    "current_state": "Running",
+    "date_start": "2022-01-01",
+    "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
-    "image_for_project": [
-      {
-        "project": "3546bb00-ecb0-4f76-94ca-5c567ec0e6bb"
-      }
-    ]
-  },
-  {
-    "id": "3cb6b203-85c0-4249-ba9f-53d23d9bc2ec",
-    "slug": "puregome",
-    "title": "PuReGoMe",
-    "subtitle": "Understanding Dutch public sentiment during the COVID-19 outbreak period by analyzing real-time...",
-    "date_start": "2020-04-15",
-    "date_end": "2020-10-31",
-    "updated_at": "2022-04-07T13:39:25.736194",
-    "is_published": true,
-    "image_for_project": [
-      {
-        "project": "3cb6b203-85c0-4249-ba9f-53d23d9bc2ec"
-      }
-    ]
+    "image_id": "7386533b-e762-4272-9eaa-eae5589ba2ee",
+    "keywords": null
   }
 ]

@@ -16,13 +16,13 @@ export type ProjectCardProps = {
   subtitle: string | null
   image_id: string | null
   updated_at: string | null
-  date_end: string | null
+  current_state: 'Starting' | 'Running' | 'Finished'
   is_featured?: boolean
   is_published?: boolean
   menuSpace?: boolean
 }
 
-export default function ProjectCard({slug, title, subtitle, image_id, updated_at, date_end,
+export default function ProjectCard({slug, title, subtitle, image_id, updated_at, current_state,
   is_featured, is_published, menuSpace}: ProjectCardProps) {
   // get current date
   const today = new Date()
@@ -33,19 +33,6 @@ export default function ProjectCard({slug, title, subtitle, image_id, updated_at
   if (typeof is_published != 'undefined' && is_published === false) opacity = 'opacity-50'
   // add margin to title to make space for more button
   const titleMargin = menuSpace ? 'mr-8':''
-
-  function renderStatus() {
-    try {
-      if (date_end) {
-        const endDate = new Date(date_end)
-        if (today > endDate) return 'Finished'
-        return 'Running'
-      }
-      return 'Starting'
-    } catch (e) {
-      return null
-    }
-  }
 
   function projectUrl() {
     return `/projects/${slug}/`
@@ -97,10 +84,10 @@ export default function ProjectCard({slug, title, subtitle, image_id, updated_at
             </p>
             <div className="flex justify-between text-sm">
               <span className="last-update">
-                {getTimeAgoSince(today,updated_at)}
+                Updated {getTimeAgoSince(today,updated_at)}
               </span>
               <div className="flex items-start justify-center">
-                {renderStatus()}
+                {current_state ?? 'Starting'}
               </div>
             </div>
           </section>

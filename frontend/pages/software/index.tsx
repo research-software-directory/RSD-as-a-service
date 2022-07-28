@@ -20,7 +20,7 @@ import {rowsPerPageOptions} from '../../config/pagination'
 import {getSoftwareList} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareListUrl,softwareUrl} from '../../utils/postgrestUrl'
-import KeywordFilter from '~/components/keyword/KeywordFilter'
+import SoftwareKeywordFilter from '~/components/software/SoftwareKeywordFilter'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -112,7 +112,7 @@ export default function SoftwareIndexPage({software=[],count,page,rows,keywords,
               onSearch={handleSearch}
               defaultValue={search}
             />
-            <KeywordFilter
+            <SoftwareKeywordFilter
               items={keywords ?? []}
               onApply={handleFilters}
             />
