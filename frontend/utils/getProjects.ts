@@ -490,11 +490,17 @@ export async function getTeamForProject({project, token, frontend}:
   }
 }
 
-export async function getRelatedProjectsForProject({project, token, frontend, approved = true}:
-  { project: string, token?: string, frontend?: boolean, approved?: boolean }) {
+export async function getRelatedProjectsForProject({project, token, frontend, approved = true, order}:
+  { project: string, token?: string, frontend?: boolean, approved?: boolean, order?:string }) {
   try {
     // construct api url based on request source
-    let query = `rpc/related_projects_for_project?origin_id=${project}&order=current_state.desc,date_start.desc,title.asc`
+    let query = `rpc/related_projects_for_project?origin_id=${project}`
+    if (order) {
+      query += `&order=${order}`
+    } else {
+      // default project order
+      query += '&order=current_state.desc,date_start.desc,title.asc'
+    }
     if (approved) {
       // select only approved and published relations
       query += '&status=eq.approved&is_published=eq.true'
