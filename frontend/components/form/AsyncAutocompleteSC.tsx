@@ -121,7 +121,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
    * value to useDebounce, which returns searchFor value after the timeout.
    */
   function onInputChange(e: any, newInputValue: string) {
-    // console.log('onInputChange.AsyncAutocompleteSC')
+    // console.log('onInputChange.AsyncAutocompleteSC...',newInputValue)
     if (e?.key === 'Enter') {
       // ignore enter
     } else {
@@ -258,9 +258,6 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
               if (e.key === 'Enter' && open === false) {
                 // stop propagation
                 e.stopPropagation()
-              }
-              if (e.key === 'Delete') {
-                setInputValue('')
               }
             }}
             InputProps={{
