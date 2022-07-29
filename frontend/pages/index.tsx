@@ -227,7 +227,7 @@ function ParticipatingOrganisations({organisations}:{organisations:OrganisationF
     <div className="w-full h-full relative">
     <div
       id="participatingOrganisations"
-      className="flex flex-row flex-nowrap w-full overflow-x-scroll h-[12rem] hgf-scrollbar animate-"
+      className="flex flex-row flex-nowrap w-full overflow-x-scroll h-[12rem] hgf-scrollbar"
     >
       {
         organisations.map(item => {
@@ -363,7 +363,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         </div>
 
         {/* Teaser */}
-        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+        {/* <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <h2 className='text-5xl'>Making Research Software Sustainable</h2>
           <div className='text-2xl mt-2'>
             This service is a <span className='hgf-text-highlight'>teaser</span> for the upcoming Helmholtz Research
@@ -372,22 +372,21 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
               federation</a>. Our goals are to
             <div className='flex flex-row pt-4'>
               <ul className="mx-auto px-6 my-4 list-disc">
-                <li className='py-4'>improve the visibility of research software</li>
+                <li className='py-4'>collect and improve the visibility of research software developed in Helmholtz</li>
                 <li className='py-4'>promote FAIR principles in research software development</li>
                 <li className='py-4'>monitor the impact of your software</li>
               </ul>
             </div>
-            We are in <span className='hgf-text-highlight'>active development</span> and login is disabled at the
-            moment.
-            Please stay tuned for future updates, explore the current state of the catalagoue, and have a look at our <a
+            We are in <span className='hgf-text-highlight'>active development</span> and login for all Helmholtz members will be activated soon.
+            Please stay tuned for future updates, explore the current state of the directory, and have a look at our <a
               href="#Upcoming" className='underline'>upcoming features</a>.
           </div>
-        </div>
+        </div> */}
 
         {/* Software spotlights */}
         <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <h2 className='text-5xl'>Software Spotlights</h2>
-          <div className='text-2xl mt-2'>Outstanding software products developed in Helmholtz.</div>
+          <div className='text-2xl mt-2'>The latest outstanding software product developed in Helmholtz.</div>
           <div className="w-full">
             <Spotlights spotlights={SPOTLIGHTS} />
           </div>
