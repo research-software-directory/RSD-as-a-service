@@ -32,7 +32,9 @@ export default function RelatedProjectsForProject() {
         project: project.id,
         token: session.token,
         frontend: true,
-        approved: false
+        approved: false,
+        // order by title only
+        order:'title.asc'
       })
       // check abort
       if (abort) return null
@@ -94,7 +96,7 @@ export default function RelatedProjectsForProject() {
         const newList = [
           ...relatedProject.slice(0, pos),
           ...relatedProject.slice(pos+1)
-        ].sort((a, b) => sortOnStrProp(a, b, 'brand_name'))
+        ].sort((a, b) => sortOnStrProp(a, b, 'title'))
         setRelatedProject(newList)
       }
     }

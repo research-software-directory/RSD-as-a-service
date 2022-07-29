@@ -3,16 +3,23 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import logger from './logger'
+
 /**
  * Array sorting functions for array of objects.
 */
 
-export function sortOnStrProp(itemA:any, itemB:any, prop:string, sortDir:'asc'|'desc'='asc'){
-  // ignore case
-  const nameA = itemA[prop].toUpperCase()
-  const nameB = itemB[prop].toUpperCase()
-
-  return sortItems(nameA,nameB,sortDir)
+export function sortOnStrProp(itemA: any, itemB: any, prop: string, sortDir: 'asc' | 'desc' = 'asc') {
+  try {
+    // ignore case
+    const nameA = itemA[prop].toUpperCase()
+    const nameB = itemB[prop].toUpperCase()
+    return sortItems(nameA,nameB,sortDir)
+  } catch (e: any) {
+    // on error we log and return neutral score
+    logger(`sortOnStrProp failed. Error: ${e.message}`)
+    return 0
+  }
 }
 
 export function sortOnDateProp(itemA: any, itemB: any, prop: string, sortDir: 'asc' | 'desc' = 'asc'){

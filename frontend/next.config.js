@@ -33,7 +33,7 @@ module.exports = {
   output: 'standalone',
   // disable strict mode for react-beautiful-dnd in development
   // see for more info https://nextjs.org/docs/api-reference/next.config.js/react-strict-mode
-  reactStrictMode: false,
+  reactStrictMode: true,
   eslint: {
     // Run ESLint in these directories during production builds (next build)
     // by default next runs linter only in pages/, components/, and lib/
