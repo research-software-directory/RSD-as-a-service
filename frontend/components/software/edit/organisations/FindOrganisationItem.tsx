@@ -9,22 +9,18 @@ import {SearchOrganisation} from '../../../../types/Organisation'
 export default function FindOrganisationItem({option}: { option: AutocompleteOption<SearchOrganisation> }) {
 
   function renderSecondRow() {
-    if (option.data?.website && option.data?.ror_id) {
-      return (
-        <div className="grid grid-cols-[4fr,3fr] gap-2">
-          <div className="break-all" >{option.data?.website}</div>
-          <div className="pl-4 text-right">{option.data?.ror_id}</div>
-        </div>
-      )
-    }
-    if (option.data?.ror_id) {
-      return (
-        <div className="flex-1">
-          {option.data?.ror_id}
-        </div>
-      )
-    }
-    return null
+    return (
+      <div className="grid grid-cols-[4fr,3fr] gap-2">
+        <div className="break-all" >{
+          option.data?.website ??
+          <span className="text-base-content-disabled">website url missing</span>
+        }</div>
+        <div className="pl-4 text-right">{
+          option.data?.ror_id ??
+          <span className="text-base-content-disabled">ror_id missing</span>
+        }</div>
+      </div>
+    )
   }
 
   return (
