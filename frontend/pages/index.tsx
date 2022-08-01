@@ -57,12 +57,12 @@ type SpotlightDescription = {
 }
 
 const RESEARCH_FIELDS = [
-  {key: 1, name: 'Energy', img: '/images/pexels-pixabay-414837.jpg'},
-  {key: 2, name: 'Earth & Environment', img: '/images/pexels-blue-ox-studio-695299.jpg'},
-  {key: 3, name: 'Health', img: '/images/pexels-rfstudio-3825529.jpg'},
-  {key: 4, name: 'Information', img: '/images/jj-ying-8bghKxNU1j0-unsplash.jpg'},
-  {key: 5, name: 'Aeronautics, Space and Transport', img: '/images/pexels-aleksejs-bergmanis-681335.jpg'},
-  {key: 6, name: 'Matter', img: '/images/desy_yulia-buchatskaya-hYvZHggmuc4-unsplash.jpg'},
+  {key: 1, name: 'Energy', img: '/images/pexels-pixabay-414837-transition.jpg'},
+  {key: 2, name: 'Earth & Environment', img: '/images/pexels-blue-ox-studio-695299-transition.jpg'},
+  {key: 3, name: 'Health', img: '/images/pexels-rfstudio-3825529-transition.jpg'},
+  {key: 4, name: 'Information', img: '/images/jj-ying-8bghKxNU1j0-unsplash-transition.jpg'},
+  {key: 5, name: 'Aeronautics, Space and Transport', img: '/images/pexels-aleksejs-bergmanis-681335-transition.jpg'},
+  {key: 6, name: 'Matter', img: '/images/desy_yulia-buchatskaya-hYvZHggmuc4-unsplash-transition.jpg'},
 ]
 
 const SPOTLIGHTS= [
@@ -210,7 +210,7 @@ function ResearchField({background, name}:{background: string, name: string}) {
 
 function ResearchFields() {
   return (
-    <div id="researchTopicBox" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-20 text-center text-3xl place-items-center py-16">
+    <div id="researchTopicBox" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10 md:gap-y-20 text-center text-3xl place-items-center py-16">
       {
         RESEARCH_FIELDS.map(item => {
           return(
@@ -315,7 +315,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
   const resetBackgroundImage = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!(event.target instanceof HTMLDivElement)) return
     if (!(event.target.id === 'backgroundContainer')) return
-    event.target.style.backgroundImage = 'url("/images/pexels-olena-bohovyk-3646172.jpg")'
+    event.target.style.backgroundImage = 'url("/images/pexels-olena-bohovyk-3646172-transition.jpg")'
   }
 
 
@@ -327,6 +327,10 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
       })
       loginButton.dispatchEvent(evt)
     }
+  }
+
+  const backgroundTransitionStyle = {
+    'transition': 'background 0.3s ease 0.3s',
   }
 
   return (
@@ -396,7 +400,8 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         <div className="conainer mx-auto my-10 max-w-screen-xl text-white bg-secondary">
           <div
             id="backgroundContainer"
-            className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75 bg-[url(/images/pexels-olena-bohovyk-3646172.jpg)]"
+            className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75 bg-[url(/images/pexels-olena-bohovyk-3646172-transition.jpg)]"
+            style={backgroundTransitionStyle}
             onMouseLeave={resetBackgroundImage}>
             <h2 className='text-5xl'>Discover software by research topic</h2>
             {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
