@@ -526,7 +526,7 @@ async function getOrganisationsList({url, token}: {url: string, token?: string})
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const {req} = context
   const token = req?.cookies['rsd_token']
-  const url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null`
+  const url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&software_cnt=gt.0`
   const {data} = await getOrganisationsList({url, token})
   return {
     props: {
