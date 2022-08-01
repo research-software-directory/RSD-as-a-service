@@ -330,7 +330,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
   }
 
   const backgroundTransitionStyle = {
-    'transition': 'background 0.3s ease 0.3s',
+    'transition': 'background 0.3s ease 0.1s',
   }
 
   return (
