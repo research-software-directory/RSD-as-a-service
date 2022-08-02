@@ -28,6 +28,10 @@ const rewritesConfig = isDevelopment
   : []
 
 module.exports = {
+  images: {
+    // Allow loading images from hifis.net
+    domains: ['hifis.net']
+  },
   // create standalone output to use in docker image
   // and achieve minimal image size (see Dockerfile)
   output: 'standalone',

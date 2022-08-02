@@ -28,6 +28,7 @@ import logger from '~/utils/logger'
 import {getUrlFromLogoId} from '~/utils/editOrganisation'
 import {IconButton} from '@mui/material'
 import {ChevronLeft, ChevronRight} from '@mui/icons-material'
+import Image from 'next/image'
 /*! purgecss end ignore */
 
 const whyrsd = [
@@ -112,8 +113,15 @@ function LatestSpotlight({name, description, image, link}:
     passHref
     >
     <div className="w-full flex flex-row flex-wrap my-5 hover:bg-[#ecfbfd] hover:cursor-pointer relative group">
-      <div className="md:w-2/3 overflow-hidden md:my-auto">
-        <img alt={name} className="group-hover:scale-105 transition duration-100" src={image} />
+      <div className="h-[20rem] md:h-[30rem] lg:h-[35rem] w-full md:w-2/3 overflow-hidden md:my-auto relative">
+        <Image
+          alt={name}
+          layout="fill"
+          objectFit='cover'
+          objectPosition='top left'
+          className="group-hover:scale-105 transition duration-100"
+          src={image}
+        />
       </div>
       <div className="md:w-1/3 md:pl-8 mt-auto text-xl">
         <div className="text-4xl py-2">{name}</div>
@@ -424,7 +432,14 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
               <div className="py-2">Do you have <span className="hgf-text-highlight">suggestions for improvements or new features</span>?</div>
               <div className="py-2">Please let us know! Send us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="hgf-text-highlight underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
             </div>
-            <div className="hidden md:block md:bg-[url(/images/pexels-cottonbro-5483075.jpg)] bg-center bg-cover"></div>
+            <div className="hidden md:block overflow-clip relative h-full">
+              <Image
+                layout='fill'
+                objectFit='cover'
+                alt="Someone typing on a laptop"
+                src="/images/pexels-cottonbro-5483075.jpg"
+              />
+            </div>
           </div>
         </div>
 
