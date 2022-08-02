@@ -23,6 +23,8 @@ import {saveLocationCookie} from '../auth/locationCookie'
 import PageSnackbar from '../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
 
+import MatomoCookieConsentDialog from '~/components/dialogs/MatomoCookieConsentDialog'
+
 // global CSS and tailwind
 import '../styles/global.css'
 // nprogress styles
@@ -54,6 +56,9 @@ function RsdApp(props: MuiAppProps) {
   //currently we support only default (light) and dark RSD theme for MUI
   const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
+
+  const matomoUrl = process.env.MATOMO_URL
+  const matomoId = process.env.MATOMO_ID
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -93,10 +98,18 @@ function RsdApp(props: MuiAppProps) {
         {/* <CssBaseline /> */}
         <AuthProvider session={session}>
           <RsdSettingsProvider settings={settings}>
-          <PageSnackbarContext.Provider value={{options, setSnackbar}}>
-            <Component {...pageProps} />
-          </PageSnackbarContext.Provider>
-          <PageSnackbar options={options} setOptions={setSnackbar} />
+            <PageSnackbarContext.Provider value={{options, setSnackbar}}>
+              <Component {...pageProps} />
+            </PageSnackbarContext.Provider>
+
+            <PageSnackbar options={options} setOptions={setSnackbar} />
+
+            {/* Cookie consents */}
+            {
+              matomoUrl !== undefined && matomoUrl.length !== 0 &&
+              matomoId !== undefined && matomoId.length !== 0 &&
+              <MatomoCookieConsentDialog />
+            }
           </RsdSettingsProvider>
         </AuthProvider>
       </ThemeProvider>

@@ -50,4 +50,9 @@ module.exports = {
     })
     return config
   },
+
+  env: {
+    MATOMO_URL: process.env.MATOMO_URL,
+    MATOMO_ID: process.env.MATOMO_ID,
+  },
 }
