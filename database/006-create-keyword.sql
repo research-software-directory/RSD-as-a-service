@@ -3,11 +3,6 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
--- install citex extension for
--- case insensitive indexing
--- https://www.postgresql.org/docs/current/citext.html
-CREATE EXTENSION IF NOT EXISTS citext;
-
 CREATE TABLE keyword (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	value CITEXT UNIQUE

@@ -45,7 +45,7 @@ CREATE TRIGGER sanitise_update_release BEFORE UPDATE ON release FOR EACH ROW EXE
 CREATE FUNCTION software_join_release() RETURNS TABLE (
 	software_id UUID,
 	slug VARCHAR,
-	concept_doi VARCHAR,
+	concept_doi CITEXT,
 	release_id UUID,
 	releases_scraped_at TIMESTAMPTZ
 ) LANGUAGE plpgsql STABLE AS
@@ -67,7 +67,7 @@ CREATE TABLE release_content (
 	release_id UUID REFERENCES release (id) NOT NULL,
 	citability citability NOT NULL,
 	date_published DATE NOT NULL,
-	doi VARCHAR NOT NULL UNIQUE,
+	doi CITEXT NOT NULL UNIQUE CHECK (doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(doi) <= 255),
 	tag VARCHAR NOT NULL,
 	url VARCHAR NOT NULL,
 	bibtex VARCHAR,
