@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class MainMentions {
@@ -30,7 +31,7 @@ public class MainMentions {
 //		we will remove successfully scraped mentions from here,
 //		we use this to set scrapedAt even for failed mentions,
 //		to put them back at the scraping order
-		Map<String, MentionRecord> mentionsFailedToScrape = new HashMap<>();
+		Map<String, MentionRecord> mentionsFailedToScrape = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		for (MentionRecord mentionRecord : mentionsToScrape) {
 			mentionsFailedToScrape.put(mentionRecord.doi, mentionRecord);
 		}

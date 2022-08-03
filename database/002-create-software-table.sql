@@ -5,6 +5,11 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
+-- install citext extension for
+-- case insensitive indexing
+-- https://www.postgresql.org/docs/current/citext.html
+CREATE EXTENSION IF NOT EXISTS citext;
+
 CREATE TYPE description_type AS ENUM (
 	'link',
 	'markdown'
@@ -14,7 +19,7 @@ CREATE TABLE software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	brand_name VARCHAR(200) NOT NULL,
-	concept_doi VARCHAR(100) CHECK (concept_doi ~ '^10(\.\w+)+/\S+$'),
+	concept_doi CITEXT CHECK (concept_doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(concept_doi) <= 255),
 	description VARCHAR(10000),
 	description_url VARCHAR(200) CHECK (description_url ~ '^https?://'),
 	description_type description_type DEFAULT 'markdown' NOT NULL,

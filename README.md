@@ -32,7 +32,7 @@ Copy the file `.env.example` to `.env` file at the root of the project
 and fill the secrets and passwords. Check if the secrets are correct.
 The `Makefile` will take care about creating an appropraite `frontend/.env.local`
 from the `.env` file.
-2. Running once `make local` will install all dependencies, build the docker images and run the **data migration** script.
+2. Running once `make install` will install all dependencies and build the docker images.
 
 **Requirements:**
 
@@ -41,7 +41,7 @@ from the `.env` file.
 ### List of commands
 
 ```shell
-make up     # Run the complete solution locally.
+make start     # Run the complete solution locally.
 make down      # Stop all services with `docker-compose down`
 ```
 
@@ -55,7 +55,7 @@ make down      # Stop all services with `docker-compose down`
 ```shell
 # Developing the frontend
 # One time
-make install   # Build and install all dependencies and will run the **data migration** script.
+make install   # Build and install all dependencies.
 
 # Run the Development version
 make dev       # Run the frontend and the documentation locally on localhost:3000 and localhost:3030 respectively
