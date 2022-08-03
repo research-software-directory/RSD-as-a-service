@@ -13,7 +13,7 @@ version: "3.0"
 services:
   database:
     build: ./database
-    image: rsd/database:1.2.0
+    image: rsd/database:1.3.0
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -116,7 +116,7 @@ services:
 
   scrapers:
     build: ./scrapers
-    image: rsd/scrapers:1.0.1
+    image: rsd/scrapers:1.0.2
     environment:
       # it uses values from .env file
       - POSTGREST_URL
