@@ -1,4 +1,5 @@
 <!--
+SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 
@@ -102,22 +103,6 @@ To clear the database, if the database structure has changed or you need to run 
 ```bash
 docker-compose down --volumes
 ```
-
-## Data migration
-
-A data migration script is available to migrate data from the legacy RSD to the new one:
-
-*   run current RSD solution using `docker-compose up` from the root of the project
-*   run the migration script using docker-compose file in the data-migration folder
-
-```bash
-# navigate to data-migration folder
-cd data-migration
-# run data migration docker-compose file
-docker-compose up
-```
-
-More information about [data migration is available here](data-migration/README.md).
 
 ## Tech Stack
 

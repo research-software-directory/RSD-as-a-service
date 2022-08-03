@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 Netherlands eScience Center
@@ -14,9 +15,6 @@ start:
 	docker-compose down --volumes #cleanup phase
 	docker-compose build # build all services
 	docker-compose up  --scale scrapers=0 -d
-	# Sleep 30 seconds to be sure that docker-compose up is running
-	sleep 30
-	cd data-migration && docker-compose build && docker-compose up
 	# open http://localhost to see the application running
 
 install:
@@ -27,7 +25,6 @@ install:
 	cd documentation && yarn -d
 	# Sleep 30 seconds to be sure that docker-compose up is running
 	sleep 30
-	cd data-migration && docker-compose build && docker-compose up
 	docker-compose down
 
 dev:
