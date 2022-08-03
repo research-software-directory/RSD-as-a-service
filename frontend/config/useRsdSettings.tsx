@@ -31,12 +31,21 @@ export default function useRsdSettings() {
     })
   }
 
+  function setCookiesAccepted(accepted: boolean=false) {
+    dispatch({
+      type: RsdActionType.SET_COOKIES_ACCEPTED,
+      payload: accepted
+    })
+  }
+
   return {
     links: state.links,
     theme: state.theme,
     embedMode: state.embed,
+    cookiesAccepted: state.cookiesAccepted,
     setRsdLinks,
     setRsdTheme,
-    setEmbedMode
+    setEmbedMode,
+    setCookiesAccepted,
   }
 }
