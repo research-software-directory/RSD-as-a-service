@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: EUPL-1.2
 
 import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
