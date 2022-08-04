@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
-// SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: EUPL-1.2
 
 import Link from 'next/link'
 import LogoEscience from '~/components/svg/LogoEscience'
@@ -90,11 +92,11 @@ export default function AppFooter () {
           <div className="text-lg">Research Software Directory</div>
           <div className="flex flex-col">
             {renderLinks()}
-            <a href={'/cookies'}
-              className="hover:text-primary"
-              rel="noreferrer">
-              Cookies
-            </a>
+            <Link
+              key="cookie_settings"
+              href={'/cookies'} passHref>
+              <a className="hover:text-primary">Cookie settings</a>
+            </Link>
             <a href='https://research-software-directory.github.io/documentation'
               target="_blank"
               className="hover:text-primary"
