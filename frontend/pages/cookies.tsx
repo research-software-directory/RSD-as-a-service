@@ -3,22 +3,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect} from 'react'
+import getConfig from 'next/config'
 import {getCookie, setCookie} from 'react-use-cookie'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import useRsdSettings from '~/config/useRsdSettings'
 
 export default function Cookies() {
-  const matomoUrl = process.env.MATOMO_URL
-  const matomoId = process.env.MATOMO_ID
-  const matomoEnabled = matomoUrl !== undefined && matomoUrl.length !== 0
-    && matomoId !== undefined && matomoId.length !== 0
   const {cookiesAccepted, setCookiesAccepted} = useRsdSettings()
+  const {publicRuntimeConfig: config} = getConfig()
+  const matomoUrl = config.MATOMO_URL
+  const matomoId = config.MATOMO_ID
 
   useEffect(
     () => {
       setCookiesAccepted(getCookie('cookie_consent') === 'true')
     },
-    // call setCookiesAccepted only once, use an empty array
+    // use an empty array to call setCookiesAccepted only once
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
@@ -58,11 +58,17 @@ export default function Cookies() {
 
         { /* Matomo specific section */ }
         {
-          matomoEnabled &&
+          (
+            matomoUrl !== undefined && matomoUrl.length !== 0 &&
+            matomoId !== undefined && matomoId.length !== 0
+          ) &&
           <h2 className="mb-5">Matomo Tracking</h2>
         }
         {
-          matomoEnabled &&
+          (
+            matomoUrl !== undefined && matomoUrl.length !== 0 &&
+            matomoId !== undefined && matomoId.length !== 0
+          ) &&
           <p className="mb-5">
             Detailed information about Matomo&apos;s privacy settings is
             available at <a
@@ -75,8 +81,11 @@ export default function Cookies() {
         }
 
         {
-          matomoEnabled &&
-          cookiesAccepted &&
+          (
+            matomoUrl !== undefined && matomoUrl.length !== 0 &&
+            matomoId !== undefined && matomoId.length !== 0 &&
+            cookiesAccepted
+          ) &&
           <p>
             <button onClick={onDeclineMatomo} className={buttonClasses}>
               Revoke tracking consent
@@ -85,8 +94,11 @@ export default function Cookies() {
         }
 
         {
-          matomoEnabled &&
-          !cookiesAccepted &&
+          (
+            matomoUrl !== undefined && matomoUrl.length !== 0 &&
+            matomoId !== undefined && matomoId.length !== 0 &&
+            !cookiesAccepted
+          ) &&
           <p>
             <button onClick={onAcceptMatomo} className={buttonClasses}>
               Accept tracking

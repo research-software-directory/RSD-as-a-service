@@ -6,6 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
+import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
@@ -56,9 +57,10 @@ function RsdApp(props: MuiAppProps) {
   //currently we support only default (light) and dark RSD theme for MUI
   const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
+  const {publicRuntimeConfig: config} = getConfig()
 
-  const matomoUrl = process.env.MATOMO_URL
-  const matomoId = process.env.MATOMO_ID
+  const matomoUrl = config.MATOMO_URL
+  const matomoId = config.MATOMO_ID
 
   useEffect(()=>{
     router.events.on('routeChangeStart', ()=>{
@@ -106,8 +108,10 @@ function RsdApp(props: MuiAppProps) {
 
             {/* Cookie consents */}
             {
-              matomoUrl !== undefined && matomoUrl.length !== 0 &&
-              matomoId !== undefined && matomoId.length !== 0 &&
+              (
+                matomoUrl !== undefined && matomoUrl.length !== 0 &&
+                matomoId !== undefined && matomoId.length !== 0
+              ) &&
               <MatomoCookieConsentDialog />
             }
           </RsdSettingsProvider>
