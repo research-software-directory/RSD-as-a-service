@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,8 +9,8 @@ import LinkIcon from '@mui/icons-material/Link'
 import CommitsChart from './CommitsChart'
 import {CommitHistory} from '../../types/SoftwareTypes'
 
-export default function GetStartedSection({get_started_url, commit_history}:
-  {get_started_url: string | null, commit_history: CommitHistory}) {
+export default function GetStartedSection({get_started_url, commit_history, noCommitMessage}:
+  {get_started_url: string | null, commit_history: CommitHistory, noCommitMessage: string | undefined}) {
 
   function renderGetStartedUrl() {
     if (get_started_url) {
@@ -31,12 +33,14 @@ export default function GetStartedSection({get_started_url, commit_history}:
         <CommitsChart
           className='pl-0 lg:pl-24'
           commit_history={commit_history}
+          noCommitMessage={noCommitMessage}
         />
       )
     }
     return (
       <CommitsChart
         commit_history={commit_history}
+        noCommitMessage={noCommitMessage}
       />
     )
   }

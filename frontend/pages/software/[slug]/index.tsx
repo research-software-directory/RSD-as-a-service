@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -86,6 +88,14 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     slug, organisations
   } = props
 
+  let noCommitGraphMessage : string | undefined
+  if (repositoryInfo?.commit_history_scraped_at && repositoryInfo?.commit_history === null) {
+    noCommitGraphMessage = 'We cannot display this graph because we cannot read the commit history.'
+  }
+  if (repositoryInfo?.commit_history_scraped_at === null) {
+    noCommitGraphMessage = 'We did not scrape the commit history of this repository yet.'
+  }
+
   useEffect(() => {
     if (typeof location != 'undefined') {
       setResolvedUrl(location.href)
@@ -142,6 +152,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <GetStartedSection
         get_started_url={software.get_started_url}
         commit_history={repositoryInfo?.commit_history}
+        noCommitMessage={noCommitGraphMessage}
       />
       <CitationSection
         citationInfo={citationInfo}
