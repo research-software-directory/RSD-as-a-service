@@ -10,6 +10,7 @@ import MentionEditSection from '~/components/mention/MentionEditSection'
 import useProjectContext from '../useProjectContext'
 import {cfgOutput as config} from './config'
 import useOutputForProject from './useOutputForProject'
+import Alert from '@mui/material/Alert'
 
 export default function OutputByType({session}: { session: Session }) {
   const {project} = useProjectContext()
@@ -35,7 +36,12 @@ export default function OutputByType({session}: { session: Session }) {
       >
         <h2>{outputCnt ?? 0}</h2>
       </EditSectionTitle>
-      <div className="py-4"></div>
+      <div className="py-2" />
+      <Alert severity="info">
+        Here you can add things which were produced by the project itself.
+        These can be papers, books, articles, software, datasets, blogs, etc.
+      </Alert>
+      <div className="py-2" />
       <MentionEditSection />
     </>
   )
