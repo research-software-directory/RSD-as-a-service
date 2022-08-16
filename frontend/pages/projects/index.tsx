@@ -9,6 +9,7 @@ import {GetServerSidePropsContext} from 'next'
 import {useRouter} from 'next/router'
 
 import TablePagination from '@mui/material/TablePagination'
+import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {app} from '~/config/app'
@@ -27,14 +28,16 @@ type ProjectsIndexPageProps = {
   count: number,
   page: number,
   rows: number,
-  projects: ProjectSearchRpc[]
+  projects: ProjectSearchRpc[],
   search?: string,
-  keywords?: string[]
+  keywords?: string[],
 }
 
 const pageTitle = `Projects | ${app.title}`
 
-export default function ProjectsIndexPage({projects=[],count,page,rows,search,keywords}:ProjectsIndexPageProps) {
+export default function ProjectsIndexPage(
+  {projects=[], count, page, rows, search, keywords}: ProjectsIndexPageProps
+) {
   // use next router (hook is only for browser)
   const router = useRouter()
   // use media query hook for small screen logic
@@ -44,16 +47,24 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search,ke
 
   // console.log('ProjectsIndexPage...projects...', projects)
 
-  function handleChangePage(
+  function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ){
     const url = ssrProjectsUrl({
       // take existing params from url (query)
       ...ssrProjectsParams(router.query),
-      page: newPage
+      page: newPage,
     })
     router.push(url)
+  }
+
+  function handlePaginationChange(
+    event: ChangeEvent<unknown>,
+    newPage: number,
+  ) {
+    // Pagination component starts counting from 1, but we need to start from 0
+    handleTablePageChange(event as any, newPage - 1)
   }
 
   function handleChangeRowsPerPage(
@@ -74,7 +85,7 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search,ke
       ...ssrProjectsParams(router.query),
       search: searchFor,
       // start from first page
-      page: 0
+      page: 0,
     })
     router.push(url)
   }
@@ -85,7 +96,7 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search,ke
       ...ssrProjectsParams(router.query),
       keywords,
       // start from first page
-      page: 0
+      page: 0,
     })
     router.push(url)
   }
@@ -113,7 +124,7 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search,ke
             count={count}
             page={page}
             labelRowsPerPage="Per page"
-            onPageChange={handleChangePage}
+            onPageChange={handleTablePageChange}
             rowsPerPage={rows}
             rowsPerPageOptions={rowsPerPageOptions}
             onRowsPerPageChange={handleChangeRowsPerPage}
@@ -123,6 +134,7 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search,ke
             />
         </div>
       </PageTitle>
+
       <ProjectsGrid
         projects={projects}
         height='17rem'
@@ -130,6 +142,16 @@ export default function ProjectsIndexPage({projects=[],count,page,rows,search,ke
         maxWidth='1fr'
         className="gap-[0.125rem] p-[0.125rem] pt-4 pb-12"
       />
+
+      <div className="flex flex-wrap justify-center mb-5">
+        <Pagination
+          count={Math.ceil(count/rows)}
+          page={page + 1}
+          onChange={handlePaginationChange}
+          size="large"
+          shape="rounded"
+        />
+      </div>
     </DefaultLayout>
   )
 }
@@ -144,9 +166,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
     search,
     keywords,
-    order:'current_state.desc,date_start.desc,title',
+    order: 'current_state.desc,date_start.desc,title',
     limit: rows,
-    offset: rows * page
+    offset: rows * page,
   })
 
   // get project list, we do not pass the token
@@ -161,7 +183,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       count: projects.count,
       page,
       rows,
-      projects: projects.data
+      projects: projects.data,
     },
   }
 }
