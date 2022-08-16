@@ -8,6 +8,7 @@ import Head from 'next/head'
 import {useRouter} from 'next/router'
 import {GetServerSidePropsContext} from 'next/types'
 import TablePagination from '@mui/material/TablePagination'
+import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {app} from '../../config/app'
@@ -28,12 +29,14 @@ type SoftwareIndexPageProps = {
   rows: number,
   keywords?: string[],
   software: SoftwareListItem[],
-  search?:string
+  search?: string,
 }
 
 const pageTitle = `Software | ${app.title}`
 
-export default function SoftwareIndexPage({software=[],count,page,rows,keywords,search}:SoftwareIndexPageProps) {
+export default function SoftwareIndexPage(
+  {software=[], count, page, rows, keywords, search}: SoftwareIndexPageProps
+) {
   // use next router (hook is only for browser)
   const router = useRouter()
   // use media query hook for small screen logic
@@ -41,20 +44,25 @@ export default function SoftwareIndexPage({software=[],count,page,rows,keywords,
   // adjust grid min width for mobile to 18rem
   const minWidth = smallScreen ? '18rem' : '26rem'
 
-
-  // console.log('keywords...', keywords)
-
   // next/previous page button
-  function handlePageChange(
+  function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) {
     const url = softwareUrl({
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
-      page: newPage
+      page: newPage,
     })
     router.push(url)
+  }
+
+  function handlePaginationChange(
+    event: ChangeEvent<unknown>,
+    newPage: number,
+  ) {
+    // Pagination component starts counting from 1, but we need to start from 0
+    handleTablePageChange(event as any, newPage - 1)
   }
 
   // change number of cards per page
@@ -78,18 +86,18 @@ export default function SoftwareIndexPage({software=[],count,page,rows,keywords,
       ...ssrSoftwareParams(router.query),
       search: searchFor,
       // start from first page
-      page: 0
+      page: 0,
     })
     router.push(url)
   }
 
-  function handleFilters(keywords:string[]){
+  function handleFilters(keywords: string[]){
     const url = softwareUrl({
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
       keywords,
       // start from first page
-      page: 0
+      page: 0,
     })
     router.push(url)
   }
@@ -122,13 +130,14 @@ export default function SoftwareIndexPage({software=[],count,page,rows,keywords,
             count={count}
             page={page}
             labelRowsPerPage="Per page"
-            onPageChange={handlePageChange}
+            onPageChange={handleTablePageChange}
             rowsPerPage={rows}
             rowsPerPageOptions={rowsPerPageOptions}
             onRowsPerPageChange={handleItemsPerPage}
           />
         </div>
       </PageTitle>
+
       <SoftwareGrid
         className='gap-[0.125rem] p-[0.125rem] pt-4 pb-12'
         grid={{
@@ -138,6 +147,16 @@ export default function SoftwareIndexPage({software=[],count,page,rows,keywords,
         }}
         software={software}
       />
+
+      <div className="flex flex-wrap justify-center mb-5">
+        <Pagination
+          count={Math.ceil(count/rows)}
+          page={page + 1}
+          onChange={handlePaginationChange}
+          size="large"
+          shape="rounded"
+        />
+      </div>
     </DefaultLayout>
   )
 }
@@ -152,9 +171,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
     search,
     keywords,
-    order:'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast',
+    order: 'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast',
     limit: rows,
-    offset: rows * page
+    offset: rows * page,
   })
 
   // get software list, we do not pass the token
