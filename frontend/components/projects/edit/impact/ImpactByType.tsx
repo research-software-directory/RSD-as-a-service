@@ -10,6 +10,7 @@ import ContentLoader from '~/components/layout/ContentLoader'
 import useProjectContext from '../useProjectContext'
 import {cfgImpact as config} from './config'
 import useImpactForProject from './useImpactForProject'
+import Alert from '@mui/material/Alert'
 
 export default function ImpactByType({session}: { session: Session }) {
   const {project} = useProjectContext()
@@ -35,7 +36,14 @@ export default function ImpactByType({session}: { session: Session }) {
       >
         <h2>{impactCnt ?? 0}</h2>
       </EditSectionTitle>
-      <div className="py-4"></div>
+      <div className="py-2" />
+      <Alert severity="info">
+      Here you can add results of the project which had impact on others.
+        This could be papers by others re-using your software or data,
+        articles or videos in the press describing the results, policy
+        documents based on these results, etc.
+      </Alert>
+      <div className="py-2" />
       <MentionEditSection />
     </>
   )
