@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import Button from '@mui/material/Button'
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
 import EmailIcon from '@mui/icons-material/Email'
@@ -12,11 +14,22 @@ import CopyIcon from '@mui/icons-material/ContentCopy'
 import {createMaintainerLink} from '~/utils/editProject'
 import {copyToClipboard,canCopyToClipboard} from '~/utils/copyToClipboard'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import InvitationList from '~/components/layout/InvitationList'
+import {Invitation} from '~/types/Invitation'
+import {getUnusedInvitations} from '~/utils/getUnusedInvitations'
 
 export default function ProjectMaintainerLink({project,account,token}: { project: string,account:string,token: string }) {
   const {showErrorMessage,showInfoMessage} = useSnackbar()
   const [magicLink, setMagicLink] = useState(null)
+  const [unusedInvitations, setUnusedInvitations] = useState<Invitation[]>([])
   const canCopy = useState(canCopyToClipboard())
+
+  async function fetchUnusedInvitations() {
+    setUnusedInvitations(await getUnusedInvitations('project', project, token))
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {fetchUnusedInvitations()}, [])
 
   async function createInviteLink() {
     const resp = await createMaintainerLink({
@@ -26,6 +39,7 @@ export default function ProjectMaintainerLink({project,account,token}: { project
     })
     if (resp.status === 201) {
       setMagicLink(resp.message)
+      fetchUnusedInvitations()
     } else {
       showErrorMessage(`Failed to generate maintainer link. ${resp.message}`)
     }
@@ -92,6 +106,7 @@ export default function ProjectMaintainerLink({project,account,token}: { project
     </Button>
     <div className="py-2"></div>
     {renderLinkOptions()}
+    <InvitationList invitations={unusedInvitations} token={token} onDeleteCallback={() => fetchUnusedInvitations()}/>
     </>
   )
 }
