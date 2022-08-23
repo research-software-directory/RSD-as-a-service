@@ -73,7 +73,7 @@ export default function AboutLanguages({languages}: {languages: ProgramingLangua
           <li key={key}>
             {key} <span className="ml-2">{stats[key].pct}%</span>
             <div
-              className="bg-base-300"
+              className="bg-primary"
               style={{
                 width: `${stats[key].pct}%`,
                 height: '0.5rem',
