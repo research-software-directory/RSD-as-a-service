@@ -8,6 +8,7 @@ import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination'
+import Pagination from '@mui/material/Pagination'
 
 import {app} from '../../config/app'
 import DefaultLayout from '../../components/layout/DefaultLayout'
@@ -24,8 +25,8 @@ type OrganisationsIndexPageProps = {
   count: number,
   page: number,
   rows: number,
-  organisations: OrganisationForOverview[]
-  search?:string
+  organisations: OrganisationForOverview[],
+  search?: string,
 }
 
 const pageTitle = `Organisations | ${app.title}`
@@ -37,16 +38,24 @@ export default function OrganisationsIndexPage({
   const router = useRouter()
 
   // next/previous page button
-  function handlePageChange(
+  function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ){
     const url = ssrOrganisationUrl({
       // take existing params from url (query)
       ...ssrOrganisationParams(router.query),
-      page: newPage
+      page: newPage,
     })
     router.push(url)
+  }
+
+  function handlePaginationChange(
+    event: ChangeEvent<unknown>,
+    newPage: number,
+  ) {
+    // Pagination component starts counting from 1, but we need to start from 0
+    handleTablePageChange(event as any, newPage - 1)
   }
 
   // change number of cards per page
@@ -69,7 +78,7 @@ export default function OrganisationsIndexPage({
       ...ssrOrganisationParams(router.query),
       search: searchFor,
       // start from first page
-      page: 0
+      page: 0,
     })
     router.push(url)
   }
@@ -93,16 +102,27 @@ export default function OrganisationsIndexPage({
             count={count}
             page={page}
             labelRowsPerPage="Per page"
-            onPageChange={handlePageChange}
+            onPageChange={handleTablePageChange}
             rowsPerPage={rows}
             rowsPerPageOptions={rowsPerPageOptions}
             onRowsPerPageChange={handleItemsPerPage}
           />
         </div>
       </PageTitle>
+
       <OrganisationsGrid
         organisations={organisations}
       />
+
+      <div className="flex flex-wrap justify-center mb-5">
+        <Pagination
+          count={Math.ceil(count/rows)}
+          page={page + 1}
+          onChange={handlePaginationChange}
+          size="large"
+          shape="rounded"
+        />
+      </div>
     </DefaultLayout>
   )
 }
@@ -121,7 +141,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     search,
     rows,
     page,
-    token
+    token,
   })
 
   // will be passed as props to page
@@ -132,7 +152,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       count,
       page,
       rows,
-      organisations:data
+      organisations: data,
     }
   }
 }
