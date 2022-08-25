@@ -84,23 +84,10 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
     // create request is allowed only
     // if the length is sufficient
     // and we are not loading api responses
+    // AND onCreate method is provided
     if (value.length >= config.minLength &&
-      loading === false) {
-      // console.log('requestCreate...', value)
-      if (options.length > 0) {
-        // try to find item in the options
-        const foundItems = options.filter(item => item.label.toLocaleLowerCase() === value.toLocaleLowerCase())
-        if (foundItems.length > 0) {
-          // if we found item in available options
-          // we use it
-          onAdd(foundItems[0])
-        } else if (onCreate) {
-          // otherwise we create item
-          onCreate(value)
-        }
-      } else if (onCreate) {
-        onCreate(value)
-      }
+      loading === false && onCreate) {
+      onCreate(value)
       if (config?.reset) {
         // reset selected value to nothing
         setSelected(null)
