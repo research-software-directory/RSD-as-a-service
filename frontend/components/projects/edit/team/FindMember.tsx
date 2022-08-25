@@ -104,11 +104,10 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
     option: AutocompleteOption<SearchTeamMember>) {
     // console.log('renderOption...', option)
-    // when value is not not found option returns input prop
+    // when value is not found option returns input prop
     if (option?.input) {
-      // if input is over minLength
-      if (option?.input.length >= cfgTeamMembers.find.validation.minLength
-        && !isOrcid(option?.input)) {
+      // add option is NOT available when searching by ORCID
+      if (isOrcid(option?.input)===false) {
         // we offer an option to create this entry
         return renderAddOption(props,option)
       } else {

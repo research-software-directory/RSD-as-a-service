@@ -83,11 +83,10 @@ export default function FindContributor({onAdd, onCreate}:
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
     option: AutocompleteOption<SearchContributor>) {
     // console.log('renderOption...', option)
-    // when value is not not found option returns input prop
+    // when value is not found option returns input prop
     if (option?.input) {
-      // if input is over minLength
-      if (option?.input.length >= config.findContributor.validation.minLength
-        && !isOrcid(option?.input)) {
+      // add option is NOT available when searching by ORCID
+      if (isOrcid(option?.input)===false) {
         // we offer an option to create this entry
         return renderAddOption(props,option)
       } else {
