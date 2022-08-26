@@ -32,9 +32,10 @@ export type PageSnackbarType={
   setSnackbar: (options:SnackbarOptions)=>void
 }
 
-const PageSnackbarContext = createContext<PageSnackbarType>({
+const MuiSnackbarContext = createContext<PageSnackbarType>({
   options:snackbarDefaults,
   setSnackbar:()=>{}
 })
 
-export default PageSnackbarContext
+
+export default MuiSnackbarContext

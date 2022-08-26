@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -48,7 +50,7 @@ export default function InvitationList({invitations, token, onDeleteCallback}: {
         {invitations.map(inv => {
           const currentLink = `${location.origin}/invite/${inv.type}/${inv.id}`
           return (
-            <ListItem key={inv.id}>
+            <ListItem key={inv.id} disableGutters>
               <ListItemText primary={'Created on ' + new Date(inv.created_at).toDateString()} secondary={currentLink}/>
               <IconButton onClick={() => toClipboard(currentLink)}><CopyIcon/></IconButton>
               <IconButton onClick={() => deleteMaintainerLink(inv)}><DeleteIcon/></IconButton>

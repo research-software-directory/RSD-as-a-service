@@ -20,8 +20,8 @@ import nprogress from 'nprogress'
 import {AuthProvider, Session, getSessionSeverSide} from '../auth'
 import {saveLocationCookie} from '../auth/locationCookie'
 // snackbar notifications
-import PageSnackbar from '../components/snackbar/PageSnackbar'
-import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
+import MuiSnackbarProvider from '../components/snackbar/MuiSnackbarProvider'
+// import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
 import CookieConsentMessage from '~/components/cookies/CookieConsentMessage'
 
 // global CSS and tailwind
@@ -51,7 +51,6 @@ function RsdApp(props: MuiAppProps) {
     Component, emotionCache = clientSideEmotionCache,
     pageProps, session, settings
   } = props
-  const [options, setSnackbar] = useState(snackbarDefaults)
   //currently we support only default (light) and dark RSD theme for MUI
   const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
@@ -94,10 +93,10 @@ function RsdApp(props: MuiAppProps) {
         <AuthProvider session={session}>
           {/* RSD settings/config */}
           <RsdSettingsProvider settings={settings}>
-            <PageSnackbarContext.Provider value={{options, setSnackbar}}>
+            {/* MUI snackbar service */}
+            <MuiSnackbarProvider>
               <Component {...pageProps} />
-            </PageSnackbarContext.Provider>
-            <PageSnackbar options={options} setOptions={setSnackbar}/>
+            </MuiSnackbarProvider>
           </RsdSettingsProvider>
         </AuthProvider>
         <CookieConsentMessage route={router.pathname} />

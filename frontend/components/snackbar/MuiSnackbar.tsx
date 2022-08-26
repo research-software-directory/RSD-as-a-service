@@ -7,10 +7,9 @@ import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
 import Slide from '@mui/material/Slide'
 
-import {SnackbarOptions} from './PageSnackbarContext'
+import {PageSnackbarType} from './MuiSnackbarContext'
 
-export default function PageSnackbar({options, setOptions}:{options:SnackbarOptions, setOptions:Function}){
-
+export default function MuiSnackbar({options, setSnackbar}:PageSnackbarType){
   const {open, severity, message, duration, anchor} = options
 
   function slideTransition (props:any){
@@ -21,10 +20,10 @@ export default function PageSnackbar({options, setOptions}:{options:SnackbarOpti
   // console.log('PageSnackbar.options: ', options)
   function handleClose(event: React.SyntheticEvent | Event, reason?: string){
     if (reason!=='clickaway'){
-      setOptions({
+      setSnackbar({
         ...options,
         open: false,
-        message: undefined
+        message: ''
       })
     }
   }

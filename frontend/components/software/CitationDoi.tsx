@@ -7,7 +7,7 @@ import {useState, useContext} from 'react'
 import Button from '@mui/material/Button'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import {copyToClipboard,canCopyToClipboard} from '../../utils/copyToClipboard'
-import snackbarContext from '../snackbar/PageSnackbarContext'
+import snackbarContext from '../snackbar/MuiSnackbarContext'
 import Box from '@mui/material/Box'
 
 export default function CitationDoi({doi}:{doi:string}) {
