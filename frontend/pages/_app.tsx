@@ -22,6 +22,7 @@ import {saveLocationCookie} from '../auth/locationCookie'
 // snackbar notifications
 import PageSnackbar from '../components/snackbar/PageSnackbar'
 import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
+import CookieConsentMessage from '~/components/cookies/CookieConsentMessage'
 
 // global CSS and tailwind
 import '../styles/global.css'
@@ -89,16 +90,17 @@ function RsdApp(props: MuiAppProps) {
       </Head>
       {/* MUI Theme provider */}
       <ThemeProvider theme={muiTheme}>
-        {/* CssBaseline from MUI-5*/}
-        {/* <CssBaseline /> */}
+        {/* Authentication */}
         <AuthProvider session={session}>
+          {/* RSD settings/config */}
           <RsdSettingsProvider settings={settings}>
-          <PageSnackbarContext.Provider value={{options, setSnackbar}}>
-            <Component {...pageProps} />
-          </PageSnackbarContext.Provider>
-          <PageSnackbar options={options} setOptions={setSnackbar} />
+            <PageSnackbarContext.Provider value={{options, setSnackbar}}>
+              <Component {...pageProps} />
+            </PageSnackbarContext.Provider>
+            <PageSnackbar options={options} setOptions={setSnackbar}/>
           </RsdSettingsProvider>
         </AuthProvider>
+        <CookieConsentMessage route={router.pathname} />
       </ThemeProvider>
     </CacheProvider>
   )
@@ -115,8 +117,6 @@ function RsdApp(props: MuiAppProps) {
 RsdApp.getInitialProps = async(appContext:AppContext) => {
   const appProps = await App.getInitialProps(appContext)
   const {req, res} = appContext.ctx
-
-  // console.log('RsdApp.getInitialProps')
 
   // extract user session from cookies
   const session = getSessionSeverSide(req, res)

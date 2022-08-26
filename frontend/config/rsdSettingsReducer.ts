@@ -18,14 +18,14 @@ export type RsdTheme = {
   host: string
 }
 
-export enum RsdActionType{
+export enum RsdActionType {
   SET_LINKS = 'SET_LINKS',
   SET_THEME = 'SET_THEME',
-  SET_EMBED = 'SET_EMBED'
+  SET_EMBED = 'SET_EMBED',
 }
 
 export type RsdSettingsState = {
-  embed: boolean
+  embed: boolean,
   theme: RsdTheme,
   links: RsdLink[]
 }
@@ -41,9 +41,9 @@ export const defaultRsdSettings = {
   embed: false,
   theme: {
     mode: 'default',
-    host: 'default'
+    host: 'default',
   },
-  links:[]
+  links: []
 }
 
 export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsAction) {
@@ -65,7 +65,7 @@ export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsA
     case RsdActionType.SET_EMBED:
       return {
         ...state,
-        theme: action.payload
+        embed: action.payload
       }
     default:
       logger(`rsdSettingsReducer UNKNOWN ACTION TYPE ${action.type}`, 'warn')
