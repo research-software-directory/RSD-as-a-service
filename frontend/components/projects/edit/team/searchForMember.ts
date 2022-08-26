@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -6,7 +8,7 @@
 import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import {SearchTeamMember} from '~/types/Project'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
-import {getORCID} from '~/utils/getORCID'
+import {getORCID, isOrcid} from '~/utils/getORCID'
 import logger from '../../../../utils/logger'
 
 export type Keyword = {
@@ -46,10 +48,19 @@ export async function searchForMember({searchFor,token,frontend=true}:
 export async function findRSDMember({searchFor, token, frontend}:
   { searchFor: string, token?: string, frontend?: boolean }) {
   try {
-    let url = `${process.env.POSTGREST_URL}/rpc/unique_team_members?display_name=ilike.*${searchFor}*&limit=20`
+    let url = '/rpc/unique_team_members?limit=20'
     if (frontend) {
-      url = `/api/v1/rpc/unique_team_members?display_name=ilike.*${searchFor}*&limit=20`
+      url = '/api/v1' + url
+    } else {
+      url = `${process.env.POSTGREST_URL}` + url
     }
+
+    if (isOrcid(searchFor)) {
+      url = url + `&orcid=eq.${searchFor}`
+    } else {
+      url = url + `&display_name=ilike.*${searchFor}*`
+    }
+
     const resp = await fetch(url, {
       method: 'GET',
       headers: {

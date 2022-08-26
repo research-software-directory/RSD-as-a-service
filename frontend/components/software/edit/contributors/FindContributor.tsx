@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -11,6 +13,7 @@ import FindContributorItem from './FindContributorItem'
 import {splitName} from '../../../../utils/getDisplayName'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import AsyncAutocompleteSC,{AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
+import {isOrcid} from '~/utils/getORCID'
 
 export type Name = {
   given_names: string
@@ -80,10 +83,10 @@ export default function FindContributor({onAdd, onCreate}:
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
     option: AutocompleteOption<SearchContributor>) {
     // console.log('renderOption...', option)
-    // when value is not not found option returns input prop
+    // when value is not found option returns input prop
     if (option?.input) {
-      // if input is over minLength
-      if (option?.input.length > config.findContributor.validation.minLength) {
+      // add option is NOT available when searching by ORCID
+      if (isOrcid(option?.input)===false) {
         // we offer an option to create this entry
         return renderAddOption(props,option)
       } else {
@@ -109,6 +112,7 @@ export default function FindContributor({onAdd, onCreate}:
         onRenderOption={renderOption}
         config={{
           freeSolo: true,
+          forceShowAdd: true,
           minLength: config.findContributor.validation.minLength,
           label: config.findContributor.label,
           help: config.findContributor.help,

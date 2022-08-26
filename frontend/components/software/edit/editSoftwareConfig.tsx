@@ -154,9 +154,9 @@ export type SoftwareInformationConfig = typeof softwareInformation
 export const contributorInformation = {
   findContributor: {
     title: 'Add contributor',
-    subtitle: 'We search by name in the RSD and the ORCID databases',
+    subtitle: 'We search by name and ORCID in the RSD and the ORCID databases',
     label: 'Find or add contributor',
-    help: 'At least 2 letters, use pattern {First name} {Last name}',
+    help: 'At least 2 letters, use pattern {First name} {Last name} or 0000-0000-0000-0000',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,

@@ -12,7 +12,7 @@
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {Contributor, ContributorProps, SearchContributor} from '../types/Contributor'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
-import {getORCID} from './getORCID'
+import {getORCID, isOrcid} from './getORCID'
 import {getPropsFromObject} from './getPropsFromObject'
 import logger from './logger'
 import {sortOnStrProp} from './sortFn'
@@ -96,11 +96,19 @@ export async function searchForContributor({searchFor, token, frontend}:
 async function findRSDContributor({searchFor, token, frontend}:
   { searchFor: string, token?: string, frontend?: boolean }) {
   try {
-
-    let url = `${process.env.POSTGREST_URL}/rpc/unique_contributors?display_name=ilike.*${searchFor}*&limit=20`
+    let url = '/rpc/unique_contributors?limit=20'
     if (frontend) {
-      url = `/api/v1/rpc/unique_contributors?display_name=ilike.*${searchFor}*&limit=20`
+      url = '/api/v1' + url
+    } else {
+      url = `${process.env.POSTGREST_URL}` + url
     }
+
+    if (isOrcid(searchFor)) {
+      url = url + `&orcid=eq.${searchFor}`
+    } else {
+      url = url + `&display_name=ilike.*${searchFor}*`
+    }
+
     const resp = await fetch(url, {
       method: 'GET',
       headers: {

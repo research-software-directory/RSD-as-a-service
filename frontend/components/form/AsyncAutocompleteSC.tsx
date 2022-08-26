@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,6 +24,7 @@ export type AutocompleteOption<T> = {
 export type AsyncAutocompleteConfig = {
   // enables creation of new items
   freeSolo: boolean
+  forceShowAdd?: boolean,
   minLength: number,
   label: string,
   help: string,
@@ -81,23 +84,10 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
     // create request is allowed only
     // if the length is sufficient
     // and we are not loading api responses
+    // AND onCreate method is provided
     if (value.length >= config.minLength &&
-      loading === false) {
-      // console.log('requestCreate...', value)
-      if (options.length > 0) {
-        // try to find item in the options
-        const foundItems = options.filter(item => item.label.toLocaleLowerCase() === value.toLocaleLowerCase())
-        if (foundItems.length > 0) {
-          // if we found item in available options
-          // we use it
-          onAdd(foundItems[0])
-        } else if (onCreate) {
-          // otherwise we create item
-          onCreate(value)
-        }
-      } else if (onCreate) {
-        onCreate(value)
-      }
+      loading === false && onCreate) {
+      onCreate(value)
       if (config?.reset) {
         // reset selected value to nothing
         setSelected(null)
@@ -213,7 +203,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
           // console.groupEnd()
           if (loading === false &&
             inputValue === foundFor &&
-            inputInOptions === false &&
+            (inputInOptions === false || config.forceShowAdd === true) &&
             config.freeSolo === true
           ) {
             // if we are not loading from api,
