@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useEffect} from 'react'
 import {useRouter} from 'next/router'
 import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
@@ -21,8 +21,8 @@ import {AuthProvider, Session, getSessionSeverSide} from '../auth'
 import {saveLocationCookie} from '../auth/locationCookie'
 // snackbar notifications
 import MuiSnackbarProvider from '../components/snackbar/MuiSnackbarProvider'
-// import PageSnackbarContext, {snackbarDefaults} from '../components/snackbar/PageSnackbarContext'
-import CookieConsentMessage from '~/components/cookies/CookieConsentMessage'
+// Matomo cookie consent notification
+import CookieConsentMatomo from '~/components/cookies/CookieConsentMatomo'
 
 // global CSS and tailwind
 import '../styles/global.css'
@@ -31,25 +31,37 @@ import 'nprogress/nprogress.css'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
 import {getPageLinks} from '~/components/page/useMarkdownPages'
-
-// Client-side cache, shared for the whole session of the user in the browser.
-const clientSideEmotionCache = createEmotionCache()
+import {getMatomoConsent,Matomo} from '~/components/cookies/nodeCookies'
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {
   emotionCache: EmotionCache
   session: Session,
-  settings: RsdSettingsState
+  settings: RsdSettingsState,
+  matomo: Matomo
 }
 
 // define npgrogres setup, no spinner
 // just a tiny bar at the top of the screen
 nprogress.configure({showSpinner: false})
 
+// Client-side cache, shared for the whole session of the user in the browser.
+const clientSideEmotionCache = createEmotionCache()
+// Matomo cached settings passed via getInitialProps
+// Note! getInitalProps does not always run server side
+// so we keep the last obtained values in this object
+const matomo: Matomo = {
+  // extract matomo if from env and
+  id: process.env.MATOMO_ID || null,
+  consent: null
+}
+// init session
+let session: Session | null = null
+
 function RsdApp(props: MuiAppProps) {
   const {
     Component, emotionCache = clientSideEmotionCache,
-    pageProps, session, settings
+    pageProps, session, settings, matomo
   } = props
   //currently we support only default (light) and dark RSD theme for MUI
   const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
@@ -79,6 +91,7 @@ function RsdApp(props: MuiAppProps) {
   // console.group('RsdApp')
   // console.log('session...', session)
   // console.log('settings...', settings)
+  // console.log('matomo...', matomo)
   // console.groupEnd()
 
   return (
@@ -99,7 +112,8 @@ function RsdApp(props: MuiAppProps) {
             </MuiSnackbarProvider>
           </RsdSettingsProvider>
         </AuthProvider>
-        <CookieConsentMessage route={router.pathname} />
+        {/* Matomo cookie consent dialog */}
+        <CookieConsentMatomo matomo={matomo} route={router.pathname} />
       </ThemeProvider>
     </CacheProvider>
   )
@@ -117,8 +131,15 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
   const appProps = await App.getInitialProps(appContext)
   const {req, res} = appContext.ctx
 
-  // extract user session from cookies
-  const session = getSessionSeverSide(req, res)
+  // extract user session from cookies and
+  // matomo consent if matomo is used (id)
+  // only in SSR mode (req && res present)
+  if (req && res) {
+    session = getSessionSeverSide(req, res)
+    if (matomo.id) {
+      matomo.consent = getMatomoConsent(req).matomoConsent
+    }
+  }
 
   // get embed mode
   // provide embed param to remove headers
@@ -138,13 +159,15 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
   // console.group('RsdApp.getInitialProps')
   // console.log('session...', session)
   // console.log('settings...', settings)
+  // console.log('matomo...', matomo)
   // console.groupEnd()
 
   // return app props and session info from cookie
   return {
     ...appProps,
     session,
-    settings
+    settings,
+    matomo
   }
 }
 

@@ -6,6 +6,11 @@
 import {IncomingMessage} from 'http'
 import cookie from 'cookie'
 
+export type Matomo = {
+  id: string | null
+  consent: boolean | null
+}
+
 /**
  * Extract Matomo cookies
  * Available only on the server side, using plain Node request
@@ -37,7 +42,7 @@ export function getMatomoCookies(req: IncomingMessage) {
  * @param req
  * @returns Session
  */
-export function getMatomoConsent(req: IncomingMessage) {
+export function getMatomoConsent(req:IncomingMessage) {
   // check for cookies
   if (req?.headers?.cookie) {
     const matomo = getMatomoCookies(req)

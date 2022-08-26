@@ -5,46 +5,44 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import Backdrop from '@mui/material/Backdrop'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 
+import {Matomo} from './nodeCookies'
 import {useMatomoConsent} from './useCookieConsent'
+
+type CookieConsentMatomoProps = {
+  matomo: Matomo,
+  route: string
+}
 
 /**
  * The CookieConsent component will only open when Matomo is used
  * and matomo cookies (mtm_consent or mtm_consent_removed) are not present
  * @returns
  */
-export default function CookieConsentMessage({route}:{route:string}) {
-  const [open, setOpen] = useState(false)
-  const {usesMatomo, matomoConsent, setMatomoConsent} = useMatomoConsent()
+export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomoProps) {
+  const {setMatomoConsent} = useMatomoConsent()
+  const [open, setOpen] = useState((matomo.id!==null && matomo.consent === null && route!=='/cookies'))
 
   // console.group('CookieConsentModal')
-  // console.log('usesMatomo...', usesMatomo)
-  // console.log('matomoConsent...', matomoConsent)
+  // console.log('matomo...', matomo)
   // console.log('route...', route)
   // console.log('open...', open)
   // console.groupEnd()
 
-  useEffect(() => {
-    // if matomo is used and
-    // no consent given and
-    // not on cookies page
-    if (usesMatomo === true &&
-      typeof matomoConsent == 'undefined' &&
-      route!=='/cookies'
-    ) {
-      // we show the message and ask for permission
-      setOpen(true)
-    } else {
-      setOpen(false)
-    }
-  },[usesMatomo,matomoConsent,route])
+  // do not render if matomo is not used
+  if (matomo.id === null) return null
+  // do not render on cookies page (page uses MatomoTracking component)
+  if (route==='/cookies') return null
+  // do not render if user already answered consent question
+  if (matomo.id && matomo.consent!==null) return null
 
   return (
     <Backdrop
+      data-testid="cookie-consent-matomo"
       open={open}
       sx={{
         display: 'flex',
@@ -91,14 +89,20 @@ export default function CookieConsentMessage({route}:{route:string}) {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => setMatomoConsent(true)}
+              onClick={() => {
+                setMatomoConsent(true)
+                setOpen(false)
+              }}
             >
               Accept
             </Button>
             <Button
               variant="contained"
               color="error"
-              onClick={() => setMatomoConsent(false)}
+              onClick={() => {
+                setMatomoConsent(false)
+                setOpen(false)
+              }}
             >
               Decline
             </Button>

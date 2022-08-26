@@ -12,7 +12,7 @@ import {useMatomoConsent} from './useCookieConsent'
 
 export type MatomoTrackingProps = {
   matomoId: string | null
-  matomoConsent: boolean
+  matomoConsent: boolean | null
 }
 
 export default function MatomoTracking({matomoId,matomoConsent}:MatomoTrackingProps) {
@@ -42,11 +42,6 @@ export default function MatomoTracking({matomoId,matomoConsent}:MatomoTrackingPr
   }
 
   function renderSwitch() {
-    // on inital load we set consent to true
-    if (typeof consent === 'undefined') {
-      return null
-    }
-
     return (
       <FormGroup>
         <FormControlLabel
@@ -63,7 +58,7 @@ export default function MatomoTracking({matomoId,matomoConsent}:MatomoTrackingPr
   }
 
   // return nothing if there is no matomo active
-  if (matomoId === null) return null
+  if (matomoId === null || typeof consent === 'undefined') return null
 
   return (
     <>
