@@ -77,13 +77,7 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
             user-friendliness improved. We also use the Matomo web analysis tool,
             which tracks data anonymously. This enables us to statistically evaluate
             the use of our website. Your consent to the use of Matomo can be revoked
-            at any time via the <u><Link
-              className="text-primary hover:text-secondary"
-              href="/cookies"
-              passHref
-            >
-              <a>cookies page</a>
-            </Link></u>.
+            at any time via the cookies page.
           </p>
           <nav className='flex pt-8 items-start justify-around md:pl-4 md:pt-0'>
             <Button
