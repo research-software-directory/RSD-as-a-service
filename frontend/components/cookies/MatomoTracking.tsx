@@ -27,9 +27,9 @@ export default function MatomoTracking({matomoId,matomoConsent}:MatomoTrackingPr
 
   useEffect(() => {
     if (matomoConsent === null) {
-      // default value is ON
-      setMatomoConsent(true)
-      setConsent(true)
+      // default value is OFF
+      setMatomoConsent(false)
+      setConsent(false)
     } else {
       setConsent(matomoConsent)
     }
