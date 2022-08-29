@@ -125,7 +125,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
     }}>
 
       <div
-        className={`${props.className} relative z-10 flex sm:w-48 sm:max-w-[320px] focus-within:w-full duration-700`}>
+        className={`${props.className} relative z-10 flex sm:w-48 md:max-w-[320px] focus-within:w-full duration-700`}>
         <input className="px-3 py-2 bg-transparent rounded-sm border border-white border-opacity-50 focus:outline-0
                           w-full focus:bg-white focus:text-black
                           duration-300"
@@ -145,13 +145,13 @@ export default function GlobalSearchAutocomplete(props: Props) {
               className="animate-pulse">No results...</span></div>}
             {searchResults.map((item, index) =>
               <div key={index}
-                   className={`${selected === index ? 'bg-primary text-white' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
+                   className={`${selected === index ? 'bg-secondary text-secondary-content' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
                    onClick={handleClick}
                    onMouseEnter={() => setSelected(index)}
               >
                 <div className="flex gap-3 w-full">
                   {/*icon*/}
-                  <div className={selected === index ? 'text-white' : 'text-gray-500'}>
+                  <div className={selected === index ? 'text-content' : 'text-gray-500'}>
                     {item?.source === 'software' && <TerminalIcon/>}
                     {item?.source === 'projects' && <ListAltIcon/>}
                     {item?.source === 'organisations' && <BusinessIcon/>}
@@ -162,7 +162,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
                     <div className="text-xs text-current text-opacity-40">
                       {item?.source}{item?.is_published === false && <span
-                      className="flex-nowrap border px-1 py-[2px] rounded bg-warning ml-3 text-xs text-white">unpublished</span>}
+                      className="flex-nowrap border px-1 py-[2px] rounded bg-warning ml-3 text-xs text-warning-content">unpublished</span>}
                     </div>
 
                   </div>
