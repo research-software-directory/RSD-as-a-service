@@ -108,6 +108,7 @@ export default function ProjectPage(props: ProjectPageProps) {
           description={project?.description ?? null}
           image_id={project?.image_id}
           image_caption={project?.image_caption ?? null}
+          image_contain={project?.image_contain ?? false}
           grant_id={project.grant_id}
           fundingOrganisations={organisations.filter(item=>item.role==='funding')}
           researchDomains={researchDomains}

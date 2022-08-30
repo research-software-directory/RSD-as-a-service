@@ -11,19 +11,22 @@ import ImageAsBackground from '../layout/ImageAsBackground'
 import {getImageUrl} from '../../utils/getProjects'
 
 export type ProjectCardProps = {
-  slug: string
-  title: string
-  subtitle: string | null
-  image_id: string | null
-  updated_at: string | null
-  current_state: 'Starting' | 'Running' | 'Finished'
-  is_featured?: boolean
-  is_published?: boolean
-  menuSpace?: boolean
+  slug: string,
+  title: string,
+  subtitle: string | null,
+  image_id: string | null,
+  updated_at: string | null,
+  current_state: 'Starting' | 'Running' | 'Finished',
+  is_featured?: boolean,
+  is_published?: boolean,
+  image_contain?: boolean,
+  menuSpace?: boolean,
 }
 
-export default function ProjectCard({slug, title, subtitle, image_id, updated_at, current_state,
-  is_featured, is_published, menuSpace}: ProjectCardProps) {
+export default function ProjectCard(
+  {slug, title, subtitle, image_id, updated_at, current_state,
+  is_featured, is_published, image_contain, menuSpace}: ProjectCardProps
+) {
   // get current date
   const today = new Date()
   // featured has primary bg color
@@ -68,6 +71,8 @@ export default function ProjectCard({slug, title, subtitle, image_id, updated_at
             <ImageAsBackground
               alt={title}
               src={getImageUrl(image_id)}
+              bgSize={image_contain ? 'contain' : 'cover'}
+              bgPosition={image_contain ? 'center' : 'top center'}
               className="flex-1 h-full"
               noImgMsg='no image'
             />

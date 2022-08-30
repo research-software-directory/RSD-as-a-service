@@ -15,6 +15,7 @@ export type NewProject = {
   date_start: string | null
   date_end: string | null
   image_caption: string | null
+  image_contain: boolean
   grant_id: string | null
 }
 
@@ -167,5 +168,5 @@ export type SearchTeamMember = SearchContributor
 export const ProjectTableProps = [
   'id', 'slug', 'title', 'subtitle', 'is_published',
   'description', 'date_start', 'date_end', 'image_caption',
-  'grant_id'
+  'image_contain', 'grant_id'
 ]

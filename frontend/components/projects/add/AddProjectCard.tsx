@@ -116,7 +116,7 @@ export default function AddProjectCard() {
     }
     // console.log('AddProjectCard.onSubmit...', data)
     // create data object
-    const project:NewProject = {
+    const project: NewProject = {
       slug: data.slug,
       title: data.project_title,
       is_published: false,
@@ -125,6 +125,7 @@ export default function AddProjectCard() {
       date_start: null,
       date_end: null,
       image_caption: null,
+      image_contain: false,
       grant_id: null
     }
     // add software to database

@@ -486,6 +486,7 @@ CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
 	date_start DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
+	image_contain BOOLEAN,
 	is_featured BOOLEAN,
 	image_id UUID,
 	organisation UUID,
@@ -508,6 +509,7 @@ BEGIN
 		project.date_start,
 		project.updated_at,
 		project.is_published,
+		project.image_contain,
 		project_for_organisation.is_featured,
 		image_for_project.project AS image_id,
 		project_for_organisation.organisation,
@@ -585,6 +587,7 @@ CREATE FUNCTION related_projects_for_project(origin_id UUID) RETURNS TABLE (
 	date_start DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
+	image_contain BOOLEAN,
 	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
@@ -605,6 +608,7 @@ BEGIN
 		project.date_start,
 		project.updated_at,
 		project.is_published,
+		project.image_contain,
 		project_for_project.status,
 		image_for_project.project AS image_id
 	FROM
@@ -632,6 +636,7 @@ CREATE FUNCTION related_projects_for_software(software_id UUID) RETURNS TABLE (
 	date_start DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
+	image_contain BOOLEAN,
 	status relation_status,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
@@ -652,6 +657,7 @@ BEGIN
 		project.date_start,
 		project.updated_at,
 		project.is_published,
+		project.image_contain,
 		software_for_project.status,
 		image_for_project.project AS image_id
 	FROM
@@ -970,6 +976,7 @@ CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	date_start DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
+	image_contain BOOLEAN,
 	image_id UUID
 ) LANGUAGE plpgsql STABLE AS
 $$
@@ -988,6 +995,7 @@ BEGIN
 		project.date_start,
 		project.updated_at,
 		project.is_published,
+		project.image_contain,
 		image_for_project.project AS image_id
 	FROM
 		project
@@ -1214,6 +1222,7 @@ CREATE FUNCTION project_search() RETURNS TABLE (
 	date_start DATE,
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
+	image_contain BOOLEAN,
 	image_id UUID,
 	keywords citext[]
 ) LANGUAGE plpgsql STABLE AS
@@ -1233,6 +1242,7 @@ BEGIN
 		project.date_start,
 		project.updated_at,
 		project.is_published,
+		project.image_contain,
 		image_for_project.project AS image_id,
 		keyword_filter_for_project.keywords
 	FROM
