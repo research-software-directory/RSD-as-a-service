@@ -29,21 +29,19 @@ export default function Cookies({matomoId,matomoConsent}: MatomoTrackingProps) {
       <PageTitle title="Cookies" />
 
       <p className="mb-4">
-        Cookies are stored on the user&apos;s computer, from where they are
-        sent to our website. This means that users have full control over the
-        use of cookies. Users can deactivate or restrict the transmission of
-        cookies by changing their web browser cookie settings. Any cookies already
-        stored can be deleted at any time. This can also be effected
-        automatically.
+        Cookies are small blocks of data created by our website and stored by your web browser on your computer.
+        Using cookies allows our website to store information between your visits. You have full control over
+        these cookies and can deactivate or restrict them by changing your web browser&apos;s cookie settings.
+        Any cookies already stored can be deleted at any time. This may limit the functionality of our website,
+        however.
       </p>
 
       <h2 className="mb-4">Functional cookies</h2>
 
       <p className="mb-8">
-        These cookies are necessary for the website to function and cannot be switched off.
-        They are only set in response to actions made by you which amount to a request for services, such as
-        setting your privacy preferences, logging in or filling in forms. You can set your browser to block
-        or alert you about these cookies, but some parts of the site will not work properly.
+        We use several functional cookies that are necessary for our website to function.
+        These are used to remember your privacy preferences and if you are logged in to the website. You can set your browser to block these cookies,
+        but some parts of the site will not work properly if you do so.
       </p>
 
       { /* Matomo specific section */ }

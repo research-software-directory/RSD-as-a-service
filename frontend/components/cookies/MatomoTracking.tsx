@@ -62,33 +62,37 @@ export default function MatomoTracking({matomoId,matomoConsent}:MatomoTrackingPr
 
   return (
     <>
-      <h2 className="mb-4">Anonymous statistics</h2>
+      <h2 className="mb-4">Tracking cookies</h2>
 
       <p className="mb-4">
-        We use Matomo web analysis tool to anonymously record page visits.
-        The cookies allow us to count visits and traffic sources so we can measure
-        and improve the performance of our site. They help us to know which pages
-        are the most popular and see how visitors move around the site.
-      </p>
-      <p className="mb-4">
-        All information these cookies collect is anonymous.
-        If you do not allow these cookies we will not know when you have visited our site,
-        and will not be able to monitor its performance.
-        Your consent to the use of Matomo can be revoked at any time by
-        setting the &quot;Allow anonymous statistics&quot; to off position.
-      </p>
-
-      {renderSwitch()}
-
-      <p className="py-8">
-        Detailed information about Matomo&apos;s privacy settings is
-        available at <a
+        We use the <a
           className="text-primary hover:text-secondary"
           target="_blank"
           href="https://matomo.org"
           rel="noreferrer"
-        >Matomo website</a>.
+        >Matomo web analysis tool</a> to anonymously record page visits.
+        Matomo is an open-source and self-hosted web analytics platform that allows us to collect
+        information about visits to our web site. The collected data is only accessible to us and
+        not shared with any commercial organization.
       </p>
+      <p className="mb-4">
+        We use this data to track which pages are the most popular and see how visitors move around the site.
+        This allows us to estimate the impact of the research software listed on our site, as well as helping
+        us improve the overall website performance.
+      </p>
+      <p className="mb-4">
+        Matomo requires a functional cookie to remember if it is allowed to track you. If you do not accept
+        being tracked (or block this cookie) we will not know when you have visited our site.
+        If you give consent, Matomo will record anonymized information about your visit. It only stores the first
+        half of your IP address, allowing us to estimate the country or region in which you are located.
+        In addition, it collects information about which pages you visit, and what type of device you are
+        using to visit our site.
+      </p>
+      <p className="mb-4">
+        Your consent to be tracked by Matomo can be revoked at any time by setting the &quot;Allow anonymous statistics&quot; to off position.
+      </p>
+
+      {renderSwitch()}
     </>
   )
 }

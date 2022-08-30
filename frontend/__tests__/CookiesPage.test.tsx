@@ -36,7 +36,7 @@ it('renders cookies page with anonymous statistics checkbox ON', async() => {
   }))
 
   const heading = await screen.findByRole('heading',{
-    name: 'Anonymous statistics'
+    name: 'Tracking cookies'
   })
   expect(heading).toBeInTheDocument()
 
