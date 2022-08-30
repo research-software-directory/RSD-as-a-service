@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect} from 'react'
-import {useRouter} from 'next/router'
+import Router, {useRouter} from 'next/router'
 import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
 import {ThemeProvider} from '@mui/material/styles'
@@ -32,6 +32,7 @@ import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
 import {getPageLinks} from '~/components/page/useMarkdownPages'
 import {getMatomoConsent,Matomo} from '~/components/cookies/nodeCookies'
+import {initMatomoCustomUrl} from '~/components/cookies/setMatomoPage'
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {
@@ -55,8 +56,23 @@ const matomo: Matomo = {
   id: process.env.MATOMO_ID || null,
   consent: null
 }
+const setCustomUrl = initMatomoCustomUrl()
 // init session
 let session: Session | null = null
+// ProgressBar at the top
+// listen to route change and drive nprogress status
+// it's taken out of RsdApp to be initialized only once
+Router.events.on('routeChangeStart', (props) => {
+  // console.log('routeChangeStart...props...', props)
+  nprogress.start()
+})
+Router.events.on('routeChangeComplete', (path) => {
+  // console.log('routeChangeComplete...path...', path)
+  nprogress.done()
+})
+Router.events.on('routeChangeError', ()=>{
+  nprogress.done()
+})
 
 function RsdApp(props: MuiAppProps) {
   const {
@@ -67,21 +83,13 @@ function RsdApp(props: MuiAppProps) {
   const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
 
+  // Matomo customUrl method
+  // to register SPA route changes
   useEffect(()=>{
-    router.events.on('routeChangeStart', ()=>{
-      nprogress.start()
-    })
-    router.events.on('routeChangeComplete', ()=>{
-      nprogress.done()
-    })
-    router.events.on('routeChangeError', ()=>{
-      nprogress.done()
-    })
-    return () => {
-      // on effect teardown
-      nprogress.done()
+    if (matomo?.id) {
+      setCustomUrl(matomo)
     }
-  })
+  },[router.asPath,matomo])
 
   // save location cookie
   if (typeof document != 'undefined') {
@@ -124,6 +132,26 @@ function RsdApp(props: MuiAppProps) {
  * NOTE! initially it runs server side but moves to client side
  * when Link or router.push is used.
  * see https://nextjs.org/docs/api-reference/data-fetching/get-initial-props
+ * Resolution order
+  On the server:
+  1. app.getInitialProps
+  2. page.getInitialProps
+  3. document.getInitialProps
+  4. app.render
+  5. page.render
+  6. document.render
+
+  On the server with error:
+  1. document.getInitialProps
+  2. app.render
+  3. page.render
+  4. document.render
+
+  On the client
+  1. app.getInitialProps
+  2. page.getInitialProps
+  3. app.render
+  4. page.render
  * @param appContext
  * @returns
  */
