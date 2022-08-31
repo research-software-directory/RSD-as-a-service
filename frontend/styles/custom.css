@@ -49,3 +49,34 @@ header input {
 .hgf-scrollbar::-webkit-scrollbar-track {
   background: white;
 }
+
+#research-fields-container {
+  display: grid;
+  grid-template: 1fr / 1fr;
+  place-items: center;
+  z-index: 1;
+}
+
+#research-fields-container > * {
+  grid-column: 1 / 1;
+  grid-row: 1 / 1;
+}
+
+#research-fields-container #research-fields-list {
+  z-index: 3;
+}
+
+#research-fields-container .research-field-image {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#research-fields-container .research-field-image.active {
+  opacity: 1;
+}
+
+#research-fields-container #research-field-default-background {
+  z-index: 1;
+  background-image: url("/images/pexels-olena-bohovyk-3646172.jpg");
+}

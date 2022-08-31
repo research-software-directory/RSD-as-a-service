@@ -57,6 +57,8 @@ type SpotlightDescription = {
   link: string
 }
 
+const RESEARCH_FIELDS_PREFIX = 'research-field-image-'
+
 const RESEARCH_FIELDS = [
   {key: 1, name: 'Energy', img: '/images/pexels-pixabay-414837.jpg'},
   {key: 2, name: 'Earth & Environment', img: '/images/pexels-blue-ox-studio-695299.jpg'},
@@ -198,19 +200,47 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
   )
 }
 
-function ResearchField({background, name}:{background: string, name: string}) {
+function deactivateAllResearchFieldImages () {
+  for (const item of RESEARCH_FIELDS) {
+    const deactivateId = RESEARCH_FIELDS_PREFIX + item.key
+    const div = document.getElementById(deactivateId)
+
+    if (!div) {
+      continue
+    }
+
+    div.classList.remove('active')
+  }
+}
+
+function ResearchField({targetkey, name}: {targetkey: number, name: string}) {
 
   function mouseEnter(event: React.MouseEvent<HTMLAnchorElement>) {
-    if (!(event.target instanceof HTMLAnchorElement)) return
-    const background = event.target.dataset.background
-    event.target.parentElement!.parentElement!.style.backgroundImage = 'url("' + background + '")'
+    if (!(event.target instanceof HTMLAnchorElement)) {
+      return
+    }
+
+    const targetId = RESEARCH_FIELDS_PREFIX + event.target.dataset.targetkey
+    const imageDiv = document.getElementById(targetId)
+
+    if (!imageDiv) {
+      return
+    }
+
+    deactivateAllResearchFieldImages()
+    imageDiv.classList.add('active')
   }
 
   const uriComponent = `["${name}"]`
   const link=`/software?&keywords=${encodeURIComponent(uriComponent)}&page=0&rows=12`
 
   return (
-    <a className='underline hover:text-white' onMouseEnter={mouseEnter} data-background={background} href={link}>
+    <a
+      className='underline hover:text-white'
+      onMouseEnter={mouseEnter}
+      data-targetkey={targetkey}
+      href={link}
+    >
       {name}
     </a>
   )
@@ -222,7 +252,7 @@ function ResearchFields() {
       {
         RESEARCH_FIELDS.map(item => {
           return(
-            <ResearchField key={`researchfield-${item.key}`} background={item.img} name={item.name} />
+            <ResearchField key={`researchfield-${item.key}`} targetkey={item.key} name={item.name} />
           )
         })
       }
@@ -321,9 +351,11 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
 
 
   const resetBackgroundImage = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!(event.target instanceof HTMLDivElement)) return
-    if (!(event.target.id === 'backgroundContainer')) return
-    event.target.style.backgroundImage = 'url("/images/pexels-olena-bohovyk-3646172.jpg")'
+    if (!(event.target instanceof HTMLDivElement)) {
+      return
+    }
+
+    deactivateAllResearchFieldImages()
   }
 
 
@@ -335,10 +367,6 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
       })
       loginButton.dispatchEvent(evt)
     }
-  }
-
-  const backgroundTransitionStyle = {
-    'transition': 'background 0.3s ease 0.1s',
   }
 
   return (
@@ -405,12 +433,33 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         </div>
 
         {/* Software meta repository */}
-        <div className="conainer mx-auto my-10 max-w-screen-xl text-white bg-secondary">
+        <div
+          id="research-fields-container"
+          className="container mx-auto my-10 max-w-screen-xl text-white bg-secondary"
+          onMouseLeave={resetBackgroundImage}
+        >
           <div
-            id="backgroundContainer"
-            className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75 bg-[url(/images/pexels-olena-bohovyk-3646172.jpg)]"
-            style={backgroundTransitionStyle}
-            onMouseLeave={resetBackgroundImage}>
+            id="research-field-default-background"
+            className="bg-secondary w-full h-full bg-cover bg-center bg-blend-multiply bg-opacity-75"
+          />
+
+          {
+            RESEARCH_FIELDS.map(item => {
+              return(
+                <div
+                  id={RESEARCH_FIELDS_PREFIX + item.key}
+                  key={`researchfield-${item.key}`}
+                  className="research-field-image bg-secondary w-full h-full bg-cover bg-center bg-blend-multiply bg-opacity-75"
+                  style={{'backgroundImage': `url(${item.img})`} as any}
+                />
+              )
+            })
+          }
+
+          <div
+            id="research-fields-list"
+            className="w-full h-full p-12"
+          >
             <h2 className='text-5xl'>Discover software by research topic</h2>
             {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
             <ResearchFields />
@@ -418,7 +467,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         </div>
 
         {/* Teaser */}
-        <div className="conainer mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-20'>
             <div className='text-2xl'>
               <h2 id="Upcoming" className='text-5xl pb-10'>Upcoming</h2>
@@ -454,7 +503,7 @@ export default function Home({organisations=[]}:{organisations: OrganisationForO
         </div>
 
         {/* For RSEs and Researchers */}
-        {/* <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
+        {/* <div className="container mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
           <div className='py-6'>
             <h2 className='text-5xl'>For RSEs and Researchers</h2>
             <div className="text-2xl my-4">A place for Research Software that is being developed in the Helmholtz Association.</div>
