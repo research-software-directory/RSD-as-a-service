@@ -4,8 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Link from 'next/link'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import Backdrop from '@mui/material/Backdrop'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
@@ -25,13 +24,25 @@ type CookieConsentMatomoProps = {
  */
 export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomoProps) {
   const {setMatomoConsent} = useMatomoConsent()
-  const [open, setOpen] = useState((matomo.id!==null && matomo.consent === null && route!=='/cookies'))
+  const [open, setOpen] = useState((matomo.id !== null && matomo.consent === null && route !== '/cookies'))
+  // do not show backdrop by default
+  const [display,setDisplay]=useState('none')
 
   // console.group('CookieConsentModal')
   // console.log('matomo...', matomo)
   // console.log('route...', route)
   // console.log('open...', open)
   // console.groupEnd()
+
+  useEffect(() => {
+    // when JS is disabled we render this component on server side
+    // but when the component is hydrated in FE AND matomo.id is present
+    // AND JS is disabled the component does not function properly and only
+    // the backdrop is shown. The backdrop blocks the minimal website functionality
+    // in this case. Therefore we start with display none and change to flex when
+    // the component is succefuly loaded on the frontend (and JS is enabled).
+    setDisplay('flex')
+  },[])
 
   // do not render if matomo is not used
   if (matomo.id === null) return null
@@ -45,7 +56,7 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
       data-testid="cookie-consent-matomo"
       open={open}
       sx={{
-        display: 'flex',
+        display,
         flexDirection: 'column',
         justifyContent: 'end',
         zIndex:99
