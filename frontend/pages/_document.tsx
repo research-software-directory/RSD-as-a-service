@@ -63,6 +63,7 @@ export default class MyDocument extends Document {
               dangerouslySetInnerHTML={{__html: `
                 var _paq = window._paq = window._paq || [];
                 /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+                _paq.push(['requireConsent']);
                 _paq.push(['trackPageView']);
                 _paq.push(['enableLinkTracking']);
                 (function() {
@@ -89,29 +90,27 @@ export default class MyDocument extends Document {
 
 // `getInitialProps` belongs to `_document` (instead of `_app`),
 // it's compatible with static-site generation (SSG).
-MyDocument.getInitialProps = async (ctx) => {
-  // Resolution order
-  //
-  // On the server:
-  // 1. app.getInitialProps
-  // 2. page.getInitialProps
-  // 3. document.getInitialProps
-  // 4. app.render
-  // 5. page.render
-  // 6. document.render
-  //
-  // On the server with error:
-  // 1. document.getInitialProps
-  // 2. app.render
-  // 3. page.render
-  // 4. document.render
-  //
-  // On the client
-  // 1. app.getInitialProps
-  // 2. page.getInitialProps
-  // 3. app.render
-  // 4. page.render
+// Resolution order
+// On the server:
+// 1. app.getInitialProps
+// 2. page.getInitialProps
+// 3. document.getInitialProps
+// 4. app.render
+// 5. page.render
+// 6. document.render
 
+// On the server with error:
+// 1. document.getInitialProps
+// 2. app.render
+// 3. page.render
+// 4. document.render
+
+// On the client
+// 1. app.getInitialProps
+// 2. page.getInitialProps
+// 3. app.render
+// 4. page.render
+MyDocument.getInitialProps = async (ctx) => {
   const originalRenderPage = ctx.renderPage
 
   // You can consider sharing the same emotion cache between all the SSR requests to speed up performance.

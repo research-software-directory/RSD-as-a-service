@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useContext} from 'react'
-import snackbarContext, {snackbarDefaults,SnackbarOptions} from './PageSnackbarContext'
+import snackbarContext, {snackbarDefaults,SnackbarOptions} from './MuiSnackbarContext'
 
 export default function useSnackbar() {
   const {setSnackbar} = useContext(snackbarContext)
