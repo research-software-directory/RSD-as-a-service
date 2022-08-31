@@ -28,7 +28,7 @@ export default function ProjectDescription(
           alt={image_caption ?? 'image'}
           bgSize={image_contain ? 'contain' : 'cover'}
           bgPosition={image_contain ? 'center' : 'top center'}
-          className="w-full h-[30rem]"
+          className="w-full h-[12rem] sm:h-[20rem] md:h-[25rem] lg:h-[30rem]"
         />
       )
     }
