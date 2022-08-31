@@ -48,6 +48,20 @@ services:
     networks:
       - net
 
+  data-generation:
+    build: ./data-generator
+    image: rsd/generation:1.0.0
+    environment:
+      # it needs to be here to use values from .env file
+      - PGRST_JWT_SECRET
+      - POSTGREST_URL
+    depends_on:
+      - backend
+    networks:
+      - net
+    deploy:
+      replicas: 0
+
   auth:
     build: ./authentication
     image: rsd/auth:1.0.0
