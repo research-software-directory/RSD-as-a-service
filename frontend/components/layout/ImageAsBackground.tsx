@@ -6,7 +6,7 @@
 /* eslint-disable @next/next/no-img-element */
 import PhotoSizeSelectActualOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActualOutlined'
 
-type ImpageAsBackgroundProps = {
+type ImageAsBackgroundProps = {
   src: string | null | undefined
   alt: string,
   className: string,
@@ -15,8 +15,10 @@ type ImpageAsBackgroundProps = {
   noImgMsg?: string
 }
 
-export default function ImageAsBackground({src, alt, className, bgSize = 'cover',
-  bgPosition = 'top center', noImgMsg = 'no image avaliable'}:ImpageAsBackgroundProps) {
+export default function ImageAsBackground(
+  {src, alt, className, bgSize = 'cover', bgPosition = 'top center',
+  noImgMsg = 'no image avaliable'}: ImageAsBackgroundProps
+) {
 
   if (!src) {
     return (

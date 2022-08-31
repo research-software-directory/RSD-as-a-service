@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton'
 import {useFormContext} from 'react-hook-form'
 
 import ControlledTextInput from '~/components/form/ControlledTextInput'
+import ControlledSwitch from '~/components/form/ControlledSwitch'
 import ImageAsBackground from '~/components/layout/ImageAsBackground'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {EditProject} from '~/types/Project'
@@ -77,10 +78,13 @@ export default function ProjectImage() {
         <ImageAsBackground
           src={imageUrl()}
           alt={formData.image_caption ?? 'image'}
+          bgSize={formData.image_contain ? 'contain' : 'cover'}
+          bgPosition={formData.image_contain ? 'center' : 'top center'}
           className="w-full h-[23rem]"
           noImgMsg="Click to upload image < 2MB"
         />
       </label>
+
       <input
         id="upload-avatar-image"
         type="file"
@@ -88,7 +92,8 @@ export default function ProjectImage() {
         onChange={handleFileUpload}
         style={{display:'none'}}
       />
-      <div className="flex">
+
+      <div className="flex pt-4">
         <ControlledTextInput
           name="image_caption"
           defaultValue={formData.image_caption}
@@ -110,6 +115,7 @@ export default function ProjectImage() {
             }
           }}
         />
+
         <div className="flex pl-4">
           <IconButton
             color="primary"
@@ -122,6 +128,14 @@ export default function ProjectImage() {
             <DeleteIcon />
           </IconButton>
         </div>
+      </div>
+
+      <div className="flex pb-3">
+          <ControlledSwitch
+            label='Always show the whole image'
+            name='image_contain'
+            control={control}
+          />
       </div>
     </div>
   )

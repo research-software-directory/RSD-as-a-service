@@ -15,6 +15,7 @@ CREATE TABLE project (
 	description VARCHAR(10000),
 	grant_id VARCHAR(50),
 	image_caption VARCHAR(500),
+	image_contain BOOLEAN DEFAULT FALSE NOT NULL,
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL

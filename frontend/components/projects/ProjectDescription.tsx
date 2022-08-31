@@ -9,12 +9,15 @@ import ReactMarkdownWithSettings from '../layout/ReactMarkdownWithSettings'
 
 
 type ProjectInfoProps = {
-  image_id: string | null
-  image_caption: string | null
-  description: string
+  image_id: string | null,
+  image_caption: string | null,
+  image_contain: boolean,
+  description: string,
 }
 
-export default function ProjectDescription({image_id,image_caption,description}:ProjectInfoProps) {
+export default function ProjectDescription(
+  {image_id, image_caption, image_contain, description}: ProjectInfoProps
+) {
   const image = getImageUrl(image_id)
 
   function getImage() {
@@ -23,7 +26,9 @@ export default function ProjectDescription({image_id,image_caption,description}:
         <ImageAsBackground
           src={image}
           alt={image_caption ?? 'image'}
-          className="w-full h-[30rem]"
+          bgSize={image_contain ? 'contain' : 'cover'}
+          bgPosition={image_contain ? 'center' : 'top center'}
+          className="w-full h-[12rem] sm:h-[20rem] md:h-[25rem] lg:h-[30rem]"
         />
       )
     }
