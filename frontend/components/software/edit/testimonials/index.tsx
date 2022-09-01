@@ -8,15 +8,13 @@ import AddIcon from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
 
 import {useForm} from 'react-hook-form'
-import {DropResult} from 'react-beautiful-dnd'
 
 import useSnackbar from '../../../snackbar/useSnackbar'
-import {Testimonial} from '../../../../types/Testimonial'
+import {NewTestimonial, Testimonial} from '../../../../types/Testimonial'
 import {
   postTestimonial, getTestimonialsForSoftware,
   patchTestimonial, deleteTestimonialById, patchTestimonialPositions
 } from '../../../../utils/editTestimonial'
-import {reorderList} from '../../../../utils/dndHelpers'
 import {sortOnNumProp} from '../../../../utils/sortFn'
 import ContentLoader from '../../../layout/ContentLoader'
 import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
@@ -25,11 +23,12 @@ import EditTestimonialModal from './EditTestimonialModal'
 import EditSoftwareSection from '../../../layout/EditSection'
 import editSoftwareContext, {EditSoftwareActionType} from '../editSoftwareContext'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
-import SoftwareTestimonialsDndList from './SoftwareTestimonialsDndList'
 import {ModalProps,ModalStates} from '../editSoftwareTypes'
 
+import SortableTestimonialList from './SortableTestimonialList'
+
 type EditTestimonialModal = ModalProps & {
-  testimonial?: Testimonial
+  testimonial?: NewTestimonial | Testimonial
 }
 
 export default function SoftwareTestimonials({token}: {token: string }) {
@@ -100,7 +99,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     }
   }
 
-  function loadTestimonialIntoModal(testimonial:Testimonial,pos?:number) {
+  function loadTestimonialIntoModal(testimonial:NewTestimonial|Testimonial,pos?:number) {
     setModal({
       edit: {
         open: true,
@@ -136,7 +135,6 @@ export default function SoftwareTestimonials({token}: {token: string }) {
   }
 
   function onEdit(pos: number){
-    // console.log('edit testimonial at ...', pos)
     const testimonial = testimonials[pos]
     // update position if null
     if (!testimonial.position) {
@@ -146,21 +144,21 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     loadTestimonialIntoModal(testimonial,pos)
   }
 
-  async function onSubmitTestimonial({data,pos}:{data:Testimonial,pos?:number}) {
+  async function onSubmitTestimonial({data,pos}:{data:Testimonial|NewTestimonial,pos?:number}) {
     // debugger
     closeModals()
     // if id present we update
     if (data?.id) {
-      const resp = await patchTestimonial({testimonial: data, token})
+      const resp = await patchTestimonial({testimonial: data as Testimonial, token})
       // debugger
       if (resp.status === 200) {
-        updateTestimonialList({data,pos})
+        updateTestimonialList({data:data as Testimonial,pos})
       } else {
         showErrorMessage(`Failed to update testimonial. Error: ${resp.message}`)
       }
     } else {
       // new testimonial
-      const resp = await postTestimonial({testimonial: data, token})
+      const resp = await postTestimonial({testimonial: data as NewTestimonial, token})
       // debugger
       if (resp.status === 201) {
         // we receive processed item as message
@@ -193,7 +191,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     // debugger
     const testimonial = testimonials[pos]
     if (testimonial?.id) {
-      const resp = await deleteTestimonialById({id: testimonial?.id, token})
+      const resp = await deleteTestimonialById({id: testimonial?.id ?? '', token})
       // debugger
       if (resp.status === 200) {
         // showSuccessMessage("Removed teste")
@@ -220,22 +218,10 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     if (list.length > 0) patchPositions(list)
   }
 
-  function onDragEnd({destination, source}: DropResult){
-    // dropped outside the list
-    if (!destination) return
-    const newItems = reorderList({
-      list:testimonials,
-      startIndex:source.index,
-      endIndex:destination.index
-    }).map((item,pos)=>{
-      // renumber
-      item.position=pos+1
-      return item
-    })
-    // debugger
-    setTestimonials(newItems)
-    // position changed
-    if (source.index !== destination.index) {
+  function onSorted(items: Testimonial[]) {
+    // set updated items
+      setTestimonials(items)
+      // enable save
       dispatchPageState({
         type: EditSoftwareActionType.UPDATE_STATE,
         payload: {
@@ -243,7 +229,6 @@ export default function SoftwareTestimonials({token}: {token: string }) {
           isValid:true,
         }
       })
-    }
   }
 
   /**
@@ -305,11 +290,11 @@ export default function SoftwareTestimonials({token}: {token: string }) {
               Add
             </Button>
           </EditSectionTitle>
-          <SoftwareTestimonialsDndList
-            testimonials={testimonials}
+          <SortableTestimonialList
+            items={testimonials}
             onEdit={onEdit}
             onDelete={onDelete}
-            onDragEnd={onDragEnd}
+            onSorted={onSorted}
           />
         </div>
       </EditSoftwareSection>

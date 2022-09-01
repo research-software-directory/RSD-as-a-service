@@ -7,6 +7,7 @@
 // 003-create-relations-for-software.sql
 
 export type NewTestimonial = {
+  id: string | null
   position?: number
   software: string,
   message: string|null,
@@ -14,5 +15,6 @@ export type NewTestimonial = {
 }
 
 export type Testimonial = NewTestimonial & {
-  id:string|null
+  id: string
+  position: number
 }

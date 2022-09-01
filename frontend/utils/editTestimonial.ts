@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
-import {Testimonial} from '../types/Testimonial'
+import {NewTestimonial, Testimonial} from '../types/Testimonial'
 import logger from './logger'
 
 
@@ -41,7 +41,7 @@ export async function getTestimonialsForSoftware({software, frontend, token}:
   }
 }
 
-export async function postTestimonial({testimonial, token}: { testimonial: Testimonial, token: string }) {
+export async function postTestimonial({testimonial, token}: { testimonial: NewTestimonial, token: string }) {
   try {
     const url = '/api/v1/testimonial'
     const resp = await fetch(url, {
