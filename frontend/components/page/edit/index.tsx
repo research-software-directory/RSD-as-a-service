@@ -123,6 +123,7 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
       if (newLinks.length > 0) {
         setSelected(newLinks[0].slug)
       }
+      patchPositions(newLinks)
     } else {
       showErrorMessage(`Failed to remove ${delModal.title}`)
     }
@@ -151,6 +152,10 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
   }
 
   function onSorted(items: RsdLink[]) {
+    patchPositions(items)
+  }
+
+  async function patchPositions(items: RsdLink[]) {
     const patchPosition = items.map(item => {
         return {
           id: item.id,
