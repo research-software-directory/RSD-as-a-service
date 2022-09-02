@@ -6,8 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState, useEffect} from 'react'
-// import {IconButton, Menu, MenuItem} from '@mui/material'
-// import MenuIcon from '@mui/icons-material/Menu'
+import {Menu, MenuItem} from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
 import Link from 'next/link'
 // local dependencies (project components)
 import {useAuth} from '~/auth'
@@ -40,7 +40,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   if (embedMode) return null
 
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
@@ -61,7 +61,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
               <LogoAppSmall className="block xl:hidden"/>
             </a>
           </Link>
-          <GlobalSearchAutocomplete className="hidden md:block ml-12 mr-6" />
+          <GlobalSearchAutocomplete className="hidden md:block ml-12 mr-6"/>
           {/* Large menu*/}
           <div className="hidden lg:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
@@ -72,66 +72,58 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
               </Link>)}
           </div>
 
-          <div className="text-white flex-1 flex justify-end items-center min-w-[8rem] text-right ml-4">
+          <div className="flex flex-1 justify-end items-center text-right ml-4">
+
             {/* EDIT button */}
             {editButton ? editButton : null}
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
-            {/*
-              Mobile menu disabled due to lack of space when edit+add+user buttons
-              Users can use global search jump to option instead
-            */}
-            {/* <IconButton
-              title="Pages"
-              data-testid="mobile-menu"
-              color="inherit"
-              id="basic-button"
-              aria-controls={open ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-              onClick={handleClick}
-              sx={{
-                // display by breakpoint: sm,md,lg, etc.
-                display: ['inline-block','inline-block','none'],
-                margin:'0rem 0.5rem',
-                '&:hover': {
-                  color: 'primary.main'
-                },
-                alignSelf: 'center',
-                '&:focus-visible': {
-                  outline: 'auto'
-                }
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': 'menu-button',
-              }}
-              transformOrigin={{horizontal: 'right', vertical: 'top'}}
-              anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-            >
-              {menuItems.map(item =>
-                <MenuItem onClick={handleClose} key={item.path}>
-                  <Link href={item.path || ''}>
-                    <a className={`${activePath === item.path && 'nav-active'}`}>
-                      {item.label}
-                    </a>
-                  </Link>
-                </MenuItem>
-              )}
-            </Menu> */}
+
+
             {/* LOGIN / USER MENU */}
             <LoginButton/>
+
+            {/* Responsive pages menu */}
+            <div>
+
+              <div
+                id="basic-button"
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={(e) => handleClick(e)}
+                className="block lg:hidden whitespace-nowrap ml-4 cursor-pointer"
+              >
+                <MenuIcon/>
+              </div>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'menu-button',
+                }}
+                transformOrigin={{horizontal: 'right', vertical: 'top'}}
+                anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+              >
+                {menuItems.map(item =>
+                  <MenuItem onClick={handleClose} key={item.path}>
+                    <Link href={item.path || ''}>
+                      <a className={`${activePath === item.path && 'nav-active'}`}>
+                        {item.label}
+                      </a>
+                    </Link>
+                  </MenuItem>
+                )}
+              </Menu>
+            </div>
+
+
           </div>
-          <JavascriptSupportWarning />
+          <JavascriptSupportWarning/>
         </div>
-        <GlobalSearchAutocomplete className="md:hidden float-right w-full mt-4"/>
+        <GlobalSearchAutocomplete className="md:hidden mt-4"/>
       </div>
     </header>
   )
