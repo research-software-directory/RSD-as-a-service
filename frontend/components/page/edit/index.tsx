@@ -7,7 +7,6 @@ import {useState} from 'react'
 
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
-import {DropResult} from 'react-beautiful-dnd'
 
 import {useAuth} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -18,10 +17,9 @@ import {RsdLink} from '~/config/rsdSettingsReducer'
 import AddPageModal from '../add/AddPageModal'
 import {MarkdownPage, useMarkdownPage} from '../useMarkdownPages'
 import EditMarkdownPage, {SubmitProps} from './EditMarkdownPage'
-import PagesNav from './PageNav'
+import SortableNav from './SortableNav'
 import {deleteMarkdownPage, updatePagePositions} from '../saveMarkdownPage'
 import NoPageItems from './NoPageItems'
-import {reorderList} from '~/utils/dndHelpers'
 import logger from '~/utils/logger'
 
 export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
@@ -152,39 +150,25 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
     )
   }
 
-  function onDragEnd({destination, source}: DropResult){
-    // dropped outside the list
-    if (!destination) return
-    const newItems = reorderList({
-      list:navItems,
-      startIndex:source.index,
-      endIndex:destination.index
-    }).map((item,pos)=>{
-      // update position to new order
-      item.position=pos+1
-      return item
-    })
-    // positions changed
-    if (source.index !== destination.index) {
-      const patchPosition = newItems.map(item => {
+  function onSorted(items: RsdLink[]) {
+    const patchPosition = items.map(item => {
         return {
           id: item.id,
           slug: item.slug,
           position: item.position
         }
       })
-      updatePagePositions({
+    updatePagePositions({
         positions: patchPosition,
         token:session.token
       }).then(resp => {
         if (resp.status !== 200) {
           logger(`Failed to patch page positions. ${resp.status}: ${resp?.message}`)
         }
-        setNavItems(newItems)
+        setNavItems(items)
       }).catch((e: any) => {
         logger(`Failed to patch page positions. Error: ${e?.message}`)
       })
-    }
   }
 
   return (
@@ -205,11 +189,11 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
 
       <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
         <div>
-          <PagesNav
+          <SortableNav
             onSelect={(item)=>setSelected(item.slug)}
             selected={selected}
             links={navItems}
-            onDragEnd={onDragEnd}
+            onSorted={onSorted}
           />
         </div>
         <div>
