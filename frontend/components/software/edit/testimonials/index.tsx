@@ -7,8 +7,6 @@ import {useContext, useEffect, useState} from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
 
-import {useForm} from 'react-hook-form'
-
 import useSnackbar from '../../../snackbar/useSnackbar'
 import {NewTestimonial, Testimonial} from '../../../../types/Testimonial'
 import {
@@ -43,14 +41,6 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     },
     delete: {
       open: false
-    }
-  })
-
-  // destructure methods from react-hook-form
-  const {handleSubmit, reset, control} = useForm<{update:boolean}>({
-    mode: 'onChange',
-    defaultValues: {
-      update:false
     }
   })
 
@@ -172,7 +162,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
   }
 
   function onDelete(pos: number) {
-    const displayName = `testimonial from ${testimonials[pos].source}`
+    const displayName = `${testimonials[pos].source}`
     setModal({
       edit: {
         open: false
@@ -220,15 +210,8 @@ export default function SoftwareTestimonials({token}: {token: string }) {
 
   function onSorted(items: Testimonial[]) {
     // set updated items
-      setTestimonials(items)
-      // enable save
-      dispatchPageState({
-        type: EditSoftwareActionType.UPDATE_STATE,
-        payload: {
-          isDirty:true,
-          isValid:true,
-        }
-      })
+    patchPositions(items)
+    setTestimonials(items)
   }
 
   /**
@@ -251,14 +234,6 @@ export default function SoftwareTestimonials({token}: {token: string }) {
     }
   }
 
-  /**
-   * This fn is called by "dummy" form which is
-   * linked to Save button at the header of the page
-   */
-  function patchSubmit() {
-    patchPositions(testimonials)
-  }
-
   function getTestimonialSubtitle() {
     if (testimonials?.length === 1) {
       return `${software?.brand_name} has 1 testimonial`
@@ -268,15 +243,6 @@ export default function SoftwareTestimonials({token}: {token: string }) {
 
   return (
     <section className="flex-1">
-      <form
-        id={pageState.step?.formId}
-        onSubmit={handleSubmit(patchSubmit)}>
-        {/*
-          This form is used to enable Save button in the header
-          and trigger saving item positions when drag-and-drop
-          <input type="hidden" {...register('update') } />
-        */}
-      </form>
       <EditSoftwareSection>
         <div className="py-4">
           <EditSectionTitle
@@ -286,6 +252,9 @@ export default function SoftwareTestimonials({token}: {token: string }) {
             <Button
               startIcon={<AddIcon />}
               onClick={onAdd}
+              sx={{
+                marginRight:'1rem'
+              }}
             >
               Add
             </Button>
@@ -309,7 +278,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
         title="Remove testimonial"
         open={modal.delete.open}
         body={
-          <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? ''}</strong>?</p>
+          <p>Are you sure you want to remove testimonial from source <strong>{modal.delete.displayName ?? ''}</strong>?</p>
         }
         onCancel={closeModals}
         onDelete={()=>deleteTestimonial(modal.delete.pos)}

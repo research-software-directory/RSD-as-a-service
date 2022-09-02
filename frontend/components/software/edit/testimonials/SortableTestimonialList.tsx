@@ -38,7 +38,7 @@ export default function SortableTestimonialList({items, onEdit, onDelete, onSort
             aria-label="edit"
             sx={{marginRight: '1rem'}}
             onClick={() => {
-              if (index) onEdit(index)
+              if (typeof index !== 'undefined') onEdit(index)
             }}
           >
             <EditIcon />
@@ -47,7 +47,7 @@ export default function SortableTestimonialList({items, onEdit, onDelete, onSort
             edge="end"
             aria-label="delete"
             onClick={() => {
-              if (index) onDelete(index)
+              if (typeof index !== 'undefined') onDelete(index)
             }}
           >
             <DeleteIcon />
