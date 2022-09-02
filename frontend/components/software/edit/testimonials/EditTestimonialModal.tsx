@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,14 +14,14 @@ import {useForm} from 'react-hook-form'
 
 import ControlledTextField from '../../../form/ControlledTextField'
 import {testimonialInformation as config} from '../editSoftwareConfig'
-import {Testimonial} from '../../../../types/Testimonial'
+import {NewTestimonial, Testimonial} from '../../../../types/Testimonial'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 type EditTestimonialModalProps = {
   open: boolean,
   onCancel: () => void,
-  onSubmit: ({data, pos}: { data: Testimonial, pos?: number }) => void,
-  testimonial?: Testimonial,
+  onSubmit: ({data, pos}: { data: Testimonial|NewTestimonial, pos?: number }) => void,
+  testimonial?: Testimonial|NewTestimonial,
   // item position in the array
   pos?: number
 }
@@ -30,7 +30,7 @@ const formId='edit-testimonial-modal'
 
 export default function EditTestimonialModal({open, onCancel, onSubmit, testimonial, pos}: EditTestimonialModalProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Testimonial>({
+  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Testimonial|NewTestimonial>({
     mode: 'onChange',
     defaultValues: {
       ...testimonial
@@ -72,7 +72,7 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
       </DialogTitle>
       <form
         id={formId}
-        onSubmit={handleSubmit((data: Testimonial) => onSubmit({data, pos}))}
+        onSubmit={handleSubmit((data: Testimonial|NewTestimonial) => onSubmit({data, pos}))}
         autoComplete="off"
       >
         {/* hidden inputs */}

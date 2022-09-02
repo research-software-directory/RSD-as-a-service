@@ -55,7 +55,7 @@ export const editSoftwareMenu:EditSoftwarePageStep[] = [
     status: 'Optional information'
   },
   {
-    formId: 'testimonials',
+    // formId: 'testimonials',
     label: 'Testimonials',
     icon: <Filter5Icon />,
     component: (props?) => <SoftwareTestimonials {...props} />,
