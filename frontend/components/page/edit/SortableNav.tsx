@@ -6,8 +6,9 @@
 import {RsdLink} from '~/config/rsdSettingsReducer'
 import SortableList from '~/components/layout/SortableList'
 import PageNavItem from './SortableNavItem'
+import {useFormContext} from 'react-hook-form'
 
-type PagesNavProps = {
+export type PagesNavProps = {
   links: RsdLink[]
   selected: string,
   onSelect: (item: RsdLink) => void
@@ -15,6 +16,15 @@ type PagesNavProps = {
 }
 
 export default function SortableNav({selected, links, onSelect, onSorted}: PagesNavProps) {
+  const {formState: {isDirty}} = useFormContext()
+
+  function onNavigation(item: RsdLink) {
+    if (isDirty === false) {
+      onSelect(item)
+    } else {
+      alert('Please save your changes first.')
+    }
+  }
 
   /**
    * This method is called by SortableList component to enable
@@ -30,15 +40,16 @@ export default function SortableNav({selected, links, onSelect, onSorted}: Pages
         item={item}
         index={index ?? 1}
         selected={selected}
-        onSelect={onSelect}
+        onSelect={onNavigation}
       />
     )
   }
 
-  // console.group('PagesNav')
-  // console.log('selected...', selected)
+  console.group('SortableNav')
+  console.log('selected...', selected)
   // console.log('links...', links)
-  // console.groupEnd()
+  console.log('isDirty...', isDirty)
+  console.groupEnd()
 
   return (
     <SortableList

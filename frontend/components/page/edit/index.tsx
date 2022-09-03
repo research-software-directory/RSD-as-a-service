@@ -9,18 +9,16 @@ import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 
 import {useAuth} from '~/auth'
+import logger from '~/utils/logger'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import {PageTitleSticky} from '~/components/layout/PageTitle'
 import {RsdLink} from '~/config/rsdSettingsReducer'
 import AddPageModal from '../add/AddPageModal'
-import {MarkdownPage, useMarkdownPage} from '../useMarkdownPages'
-import EditMarkdownPage, {SubmitProps} from './EditMarkdownPage'
-import SortableNav from './SortableNav'
+import {MarkdownPage} from '../useMarkdownPages'
+import {SubmitProps} from './EditMarkdownPage'
 import {deleteMarkdownPage, updatePagePositions} from '../saveMarkdownPage'
-import NoPageItems from './NoPageItems'
-import logger from '~/utils/logger'
+import PageEditorBody from './PageEditorBody'
 
 export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
   const {session} = useAuth()
@@ -29,17 +27,10 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
   const [selected, setSelected] = useState<string>(links.length>0 ? links[0].slug : '')
   const [open, setOpen] = useState(false)
   const [delModal, setDelModal] = useState({open:false,slug:'',title:''})
-  const {loading, page} = useMarkdownPage({
-    slug: selected,
-    token: session.token,
-    is_published: false
-  })
 
   // console.group('EditMarkdownPages')
   // console.log('navItems...', navItems)
   // console.log('selected...', selected)
-  // console.log('loading...', loading)
-  // console.log('page...', page)
   // console.groupEnd()
 
   function showAddModal() {
@@ -137,21 +128,7 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
     })
   }
 
-  function renderEditMarkdown() {
-    // loading
-    if (loading) return <ContentLoader />
-    if (navItems.length === 0) return <NoPageItems />
-    return (
-      <EditMarkdownPage
-        page={page}
-        token={session.token}
-        onDelete={onDeletePage}
-        onSubmit={onSavePage}
-      />
-    )
-  }
-
-  function onSorted(items: RsdLink[]) {
+  function onChangePagePostion(items: RsdLink[]) {
     patchPositions(items)
   }
 
@@ -191,20 +168,14 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
           </Button>
         </div>
       </PageTitleSticky>
-
-      <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
-        <div>
-          <SortableNav
-            onSelect={(item)=>setSelected(item.slug)}
-            selected={selected}
-            links={navItems}
-            onSorted={onSorted}
-          />
-        </div>
-        <div>
-          {renderEditMarkdown()}
-        </div>
-      </section>
+      <PageEditorBody
+        links={navItems}
+        selected={selected}
+        onSelect={(item) => setSelected(item.slug)}
+        onSorted={onChangePagePostion}
+        onDelete={onDeletePage}
+        onSubmit={onSavePage}
+      />
       <AddPageModal
         pos={navItems.length + 1}
         open={open}

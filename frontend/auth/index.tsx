@@ -11,7 +11,9 @@ import logger from '../utils/logger'
 import {refreshSession} from './refreshSession'
 
 // refresh schedule margin 5min. before expiration time
-export const REFRESH_MARGIN = 5 * 60 * 1000
+// REFRESH_MARGIN_MSEC env variable is used for test purposes ONLY
+const testMargin = process.env.NEXT_PUBLIC_REFRESH_MARGIN_MSEC ? parseInt(process.env.NEXT_PUBLIC_REFRESH_MARGIN_MSEC) : undefined
+export const REFRESH_MARGIN = testMargin || 5 * 60 * 1000
 export type RsdRole = 'rsd_admin' | 'rsd_user'
 export type RsdUser = {
   iss: 'rsd_auth'
@@ -43,7 +45,7 @@ export const defaultSession:Session={
 
 export const initSession: AuthSession = {
   session: defaultSession,
-  setSession: ()=>defaultSession
+  setSession: () => defaultSession
 }
 
 const AuthContext = createContext(initSession)
@@ -61,7 +63,7 @@ export function AuthProvider(props: any) {
       const {user} = session
       const expiresInMs = getExpInMs(user.exp)
       const waitInMs = getWaitInMs(expiresInMs)
-      // console.log('waitInMs...', waitInMs)
+      console.log('waitInMs...', waitInMs)
       if (schedule) clearTimeout(schedule)
       if (expiresInMs <= 0) {
         // token expired
@@ -73,7 +75,7 @@ export function AuthProvider(props: any) {
           // refresh token by sending current valid cookie
           refreshSession()
             .then(newSession => {
-              // console.log('newSession...', newSession)
+              console.log('newSession.token...', newSession?.token)
               // update only if "valid" session
               if (newSession?.status === 'authenticated') {
                 setSession(newSession)
