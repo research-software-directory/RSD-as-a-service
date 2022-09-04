@@ -45,11 +45,11 @@ export default function SortableNav({selected, links, onSelect, onSorted}: Pages
     )
   }
 
-  console.group('SortableNav')
-  console.log('selected...', selected)
+  // console.group('SortableNav')
+  // console.log('selected...', selected)
   // console.log('links...', links)
-  console.log('isDirty...', isDirty)
-  console.groupEnd()
+  // console.log('isDirty...', isDirty)
+  // console.groupEnd()
 
   return (
     <SortableList

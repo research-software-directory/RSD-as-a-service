@@ -60,11 +60,11 @@ export default function AddSoftwareCard() {
   // construct slug from title
   const bouncedSlug = useDebounceValid(slugValue, errors['slug'])
 
-  console.group('AddSoftwareCard')
-  console.log('session...', session)
-  console.log('state...', state)
-  console.log('data...', data)
-  console.groupEnd()
+  // console.group('AddSoftwareCard')
+  // console.log('session...', session)
+  // console.log('state...', state)
+  // console.log('data...', data)
+  // console.groupEnd()
 
   useEffect(() => {
     if (typeof location != 'undefined') {

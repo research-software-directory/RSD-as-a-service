@@ -63,7 +63,7 @@ export function AuthProvider(props: any) {
       const {user} = session
       const expiresInMs = getExpInMs(user.exp)
       const waitInMs = getWaitInMs(expiresInMs)
-      console.log('waitInMs...', waitInMs)
+      // console.log('waitInMs...', waitInMs)
       if (schedule) clearTimeout(schedule)
       if (expiresInMs <= 0) {
         // token expired
@@ -75,7 +75,7 @@ export function AuthProvider(props: any) {
           // refresh token by sending current valid cookie
           refreshSession()
             .then(newSession => {
-              console.log('newSession.token...', newSession?.token)
+              // console.log('newSession.token...', newSession?.token)
               // update only if "valid" session
               if (newSession?.status === 'authenticated') {
                 setSession(newSession)
