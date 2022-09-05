@@ -34,6 +34,15 @@ export type Project = BasicProject & {
   image_id: string | null
 }
 
+export type EditProject = Project & {
+  image_b64: string | null
+  image_mime_type: string | null
+  url_for_project: ProjectLink[]
+  funding_organisations: FundingOrganisation[]
+  research_domains: ResearchDomain[] | null
+  keywords: KeywordForProject[]
+}
+
 export type CurrentState = 'Starting' | 'Running' | 'Finished'
 export type ProjectSearchRpc = {
   id: string
@@ -117,15 +126,6 @@ export type KeywordForProject = {
   action?: 'add' | 'create'
   // passed to save function for updating form value with uuid
   pos?: number
-}
-
-export type EditProject = Project & {
-  image_b64: string | null
-  image_mime_type: string | null
-  url_for_project: ProjectLink[]
-  funding_organisations: FundingOrganisation[]
-  research_domains: ResearchDomain[] | null
-  keywords: KeywordForProject[]
 }
 
 export type ResearchDomain = {
