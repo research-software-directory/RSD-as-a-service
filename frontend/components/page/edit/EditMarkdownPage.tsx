@@ -71,12 +71,11 @@ export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPa
     // FIX: this logic is required to prevent reloading
     // of the form/data when token is refreshed
     if (slug && token &&
-      isDirty === false &&
       slug!==loadedSlug
     ) {
       getMarkdown()
     }
-  }, [slug, loadedSlug, token, isDirty,getMarkdown])
+  }, [slug, loadedSlug, token, getMarkdown])
 
   // useEffect(() => {
   //   // fetch markdown from database

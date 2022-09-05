@@ -4,9 +4,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {RsdLink} from '~/config/rsdSettingsReducer'
+import {useFormContext} from 'react-hook-form'
+
+import {app} from '~/config/app'
 import SortableList from '~/components/layout/SortableList'
 import PageNavItem from './SortableNavItem'
-import {useFormContext} from 'react-hook-form'
+import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
 
 export type PagesNavProps = {
   links: RsdLink[]
@@ -16,13 +19,23 @@ export type PagesNavProps = {
 }
 
 export default function SortableNav({selected, links, onSelect, onSorted}: PagesNavProps) {
-  const {formState: {isDirty}} = useFormContext()
+  const {formState: {isDirty,isValid}} = useFormContext()
+
+  // watch for unsaved changes
+  useOnUnsaveChange({
+    isDirty,
+    isValid,
+    warning: app.unsavedChangesMessage
+  })
 
   function onNavigation(item: RsdLink) {
     if (isDirty === false) {
       onSelect(item)
     } else {
-      alert('Please save your changes first.')
+      const leavePage = confirm(app.unsavedChangesMessage)
+      if (leavePage === true) {
+        onSelect(item)
+      }
     }
   }
 
