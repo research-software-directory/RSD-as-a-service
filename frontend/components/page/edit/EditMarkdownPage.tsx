@@ -3,19 +3,21 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useForm} from 'react-hook-form'
+import {useCallback, useEffect, useState} from 'react'
+import {useFormContext} from 'react-hook-form'
 import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 
+import {useAuth} from '~/auth'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import MarkdownInputWithPreview from '~/components/form/MarkdownInputWithPreview'
-import config from './config'
-import {MarkdownPage} from '../useMarkdownPages'
-
-import {saveMarkdownPage} from '../saveMarkdownPage'
 import ControlledSlugTextField from '~/components/form/ControlledSlugTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import ContentLoader from '~/components/layout/ContentLoader'
+import config from './config'
+import {getMarkdownPage, MarkdownPage} from '../useMarkdownPages'
+import {saveMarkdownPage} from '../saveMarkdownPage'
 
 export type SubmitProps = {
   status: number
@@ -28,33 +30,66 @@ export type SubmitProps = {
   }
 }
 
-type EditMarkdownPageProps = {
-  token: string,
-  page?: MarkdownPage
+export type EditMarkdownPageProps = {
+  slug: string
   onDelete: (page: MarkdownPage) => void
   onSubmit: ({status,message,data}:SubmitProps) => void
 }
 
-export default function EditMarkdownPage({token,page,onDelete,onSubmit}:EditMarkdownPageProps) {
-  // const {showErrorMessage,showSuccessMessage} = useSnackbar()
+export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPageProps) {
+  const {session: {token}} = useAuth()
+  const [fetch, setFetch] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [loadedSlug, setLoadedSlug]=useState<string>()
   const {
     register, handleSubmit, watch, formState, reset, control
-  } = useForm<MarkdownPage>({
-    mode: 'onChange',
-    defaultValues: {
-      ...page
-    }
-  })
+  } = useFormContext()
   // destructure formState
   const {isDirty, isValid} = formState
   // form data provided by react-hook-form
   const formData = watch()
 
+  const getMarkdown = useCallback(()=>{
+    setLoading(true)
+    getMarkdownPage({slug, token, is_published: false})
+      .then(resp => {
+        if (resp.page) {
+          reset(resp.page)
+          setLoadedSlug(slug)
+        }
+      })
+      .finally(() =>
+        setLoading(false)
+      )
+    setFetch(false)
+  },[slug,token,reset])
+
+  useEffect(() => {
+    // request fetching data from database
+    // only if form is not dirty, info present
+    // and not already loaded
+    // FIX: this logic is required to prevent reloading
+    // of the form/data when token is refreshed
+    if (slug && token &&
+      slug!==loadedSlug
+    ) {
+      getMarkdown()
+    }
+  }, [slug, loadedSlug, token, getMarkdown])
+
+  // useEffect(() => {
+  //   // fetch markdown from database
+  //   // on explicit demand ONLY (token refresh fix)
+  //   if (fetch === true && slug !== currentPage) {
+  //     getMarkdown()
+  //   }
+  // },[fetch,currentPage,getMarkdown])
+
   // console.group('EditMarkdownPage')
   // console.log('isDirty...', isDirty)
   // console.log('isValid...', isValid)
-  // console.log('formData.slug...', formData?.slug)
-  // console.log('page.slug...', page?.slug)
+  // console.log('formData...', formData)
+  // console.log('token...', token)
   // console.groupEnd()
 
   async function savePage(data: MarkdownPage) {
@@ -92,11 +127,12 @@ export default function EditMarkdownPage({token,page,onDelete,onSubmit}:EditMark
     }
   }
 
-  if (!page) return null
+  // loading
+  if (loading) return <ContentLoader />
 
   return (
     <form
-      id={page.slug}
+      id={'edit-markdown'}
       onSubmit={handleSubmit(savePage)}
       className='flex-1 py-4'>
       {/* hidden inputs */}
@@ -113,7 +149,7 @@ export default function EditMarkdownPage({token,page,onDelete,onSubmit}:EditMark
               name: 'title',
               label: config.title.label,
               useNull: true,
-              defaultValue: page?.title,
+              // defaultValue: page?.title,
               helperTextMessage: config.title.help,
               helperTextCnt: `${formData?.title?.length || 0}/${config.title.validation.maxLength.value}`,
             }}
@@ -130,14 +166,14 @@ export default function EditMarkdownPage({token,page,onDelete,onSubmit}:EditMark
         <div className="flex justify-end items-center pb-8 lg:pb-0">
           <SubmitButtonWithListener
             disabled={!isValid || !isDirty}
-            formId={page.slug ?? ''}
+            formId={'edit-markdown'}
           />
           <Button
             id="delete-button"
             variant="text"
             color="error"
             endIcon={<DeleteIcon />}
-            onClick={() => onDelete(page)}
+            onClick={() => onDelete(formData)}
             sx={{
               marginLeft:'1rem'
             }}
@@ -152,7 +188,7 @@ export default function EditMarkdownPage({token,page,onDelete,onSubmit}:EditMark
           name:'slug',
           label: config.slug.label,
           baseUrl: config.slug.baseUrl(),
-          defaultValue: formData.slug,
+          defaultValue: formData.slug ?? '',
           helperTextMessage: config.slug.help,
         }}
         control={control}

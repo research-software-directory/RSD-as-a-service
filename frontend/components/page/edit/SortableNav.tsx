@@ -4,10 +4,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {RsdLink} from '~/config/rsdSettingsReducer'
+import {useFormContext} from 'react-hook-form'
+
+import {app} from '~/config/app'
 import SortableList from '~/components/layout/SortableList'
 import PageNavItem from './SortableNavItem'
+import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
 
-type PagesNavProps = {
+export type PagesNavProps = {
   links: RsdLink[]
   selected: string,
   onSelect: (item: RsdLink) => void
@@ -15,6 +19,25 @@ type PagesNavProps = {
 }
 
 export default function SortableNav({selected, links, onSelect, onSorted}: PagesNavProps) {
+  const {formState: {isDirty,isValid}} = useFormContext()
+
+  // watch for unsaved changes
+  useOnUnsaveChange({
+    isDirty,
+    isValid,
+    warning: app.unsavedChangesMessage
+  })
+
+  function onNavigation(item: RsdLink) {
+    if (isDirty === false) {
+      onSelect(item)
+    } else {
+      const leavePage = confirm(app.unsavedChangesMessage)
+      if (leavePage === true) {
+        onSelect(item)
+      }
+    }
+  }
 
   /**
    * This method is called by SortableList component to enable
@@ -30,14 +53,15 @@ export default function SortableNav({selected, links, onSelect, onSorted}: Pages
         item={item}
         index={index ?? 1}
         selected={selected}
-        onSelect={onSelect}
+        onSelect={onNavigation}
       />
     )
   }
 
-  // console.group('PagesNav')
+  // console.group('SortableNav')
   // console.log('selected...', selected)
   // console.log('links...', links)
+  // console.log('isDirty...', isDirty)
   // console.groupEnd()
 
   return (
