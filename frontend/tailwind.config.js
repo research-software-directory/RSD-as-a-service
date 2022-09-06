@@ -11,10 +11,17 @@
  * based on the article but extended with MUI properties
  * https://medium.com/@akarX23/a-full-setup-of-next-js-with-redux-tailwind-material-ui-pwa-and-docker-c33bdceadce5
  */
-const defaultTheme = require('tailwindcss/defaultTheme')
-// custom theme variables to be used in both themes
-const {colors} = require('./styles/themeConfig')
-const {muiTypography} = require('./styles/muiTypography')
+
+// default tailwind theme
+// const defaultTheme = require('tailwindcss/defaultTheme')
+// default theme variables
+const defaultSettings = require('./config/defaultSettings.json')
+// console.log('defaultSettings...', defaultSettings)
+// load colors and typography
+const colors = defaultSettings.theme.light.colors
+const typography = defaultSettings.theme.typography
+// console.log('colors...', colors)
+// console.log('typography...', typography)
 
 module.exports = {
   darkMode: 'class',
@@ -29,10 +36,8 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      // sans is default font used
-      // we set Roboto as first font-type
-      // and then the defaults from tailwind
-      sans: muiTypography.fontFamily.split(','),
+      // font-sans is default
+      sans: `var(--rsd-default-font-family,${typography.defaultFontFamily})`,
       mono: [
         'ui-monospace',
         'SFMono-Regular',
@@ -55,7 +60,7 @@ module.exports = {
         'spin-slow': 'spin 3s linear infinite',
       },
       fontFamily: {
-        'rsd-titles': muiTypography.fontFamily.split(',')
+        'rsd-titles': `var(--rsd-titles-font-family,${typography.titlesFontFamily})`,
       },
       //
       // THEME COLORS
@@ -64,31 +69,32 @@ module.exports = {
         // in order to have optimal theme integration with material ui components
         // please keep the color names (props) in sync with MUI definitions
         // the list of all theme properties can be found in README.md
-        // todo: move it to css variables to change the theme dinamically
-        // 'base-100': 'var(--base-100)', // background colors - mui: 'paper'
-        'base-100': colors.base['100'], // background colorss - mui: 'paper'
-        'base-200': colors.base['200'],
-        'base-300': colors.base['300'],
-        'base-content': colors['base-content'],
-        'base-content-disabled': colors['base-content-disabled'],
-        primary: colors.primary,
-        'primary-content': colors['primary-content'],
-        secondary: colors.secondary,
-        'secondary-content': colors['secondary-content'],
-        accent: colors.accent,
-        'accent-content': colors['accent-content'],
-        error: colors.error,
-        'error-content': colors['error-content'],
-        warning: colors.warning,
-        'warning-content': colors['warning-content'],
-        info: colors.info,
-        'info-content': colors['info-content'],
-        success: colors.success,
-        'success-content': colors['success-content'],
+        // 'base-100': colors['base-100'],
+        'base-100':`var(--rsd-base-100,${colors['base-100']})`,
+        'base-200':`var(--rsd-base-200,${colors['base-200']})`,
+        'base-300':`var(--rsd-base-300,${colors['base-300']})`,
+        'base-content':`var(--rsd-base-content,${colors['base-content']})`,
+        'base-content-disabled':`var(--rsd-base-content,${colors['base-content-disabled']})`,
+        primary:`var(--rsd-primary,${colors.primary})`,
+        'primary-content':`var(--rsd-primary-content,${colors['primary-content']})`,
+        secondary:`var(--rsd-secondary,${colors.secondary})`,
+        'secondary-content':`var(--rsd-secondary-content,${colors['secondary-content']})`,
+        accent:`var(--rsd-accent,${colors.accent})`,
+        'accent-content':`var(--rsd-accent-content,${colors['accent-content']})`,
+        error:`var(--rsd-error,${colors.error})`,
+        'error-content':`var(--rsd-error-content,${colors['error-content']})`,
+        warning:`var(--rsd-warning,${colors.warning})`,
+        'warning-content':`var(--rsd-warning-content.${colors['warning-content']})`,
+        info:`var(--rsd-info,${colors.info})`,
+        'info-content':`var(--rsd-info-content,${colors['info-content']})`,
+        success:`var(--rsd-success,${colors.success})`,
+        'success-content':`var(--rsd-success-content,${colors['success-content']})`
       },
-
       fontWeight: {
-        regular: muiTypography.fontWeightRegular
+        light:`var(--rsd-font-light, ${typography.fontWeightLight})`,
+        normal:`var(--rsd-font-regular,${typography.fontWeightRegular})`,
+        medium:`var(--rsd-font-medium,${typography.fontWeightMedium})`,
+        bold:`var(--rsd-font-bold,${typography.fontWeightBold})`
       }
     },
   },
@@ -97,5 +103,4 @@ module.exports = {
       display: ['group-hover']
     },
   },
-
 }

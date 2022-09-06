@@ -1,82 +1,134 @@
 /*
- * SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
- * SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
- * SPDX-FileCopyrightText: 2022 Marc Hanisch (GFZ) <marc.hanisch@gfz-potsdam.de>
+ * SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+ * SPDX-FileCopyrightText: 2022 dv4all
  *
  * SPDX-License-Identifier: Apache-2.0
- * SPDX-License-Identifier: EUPL-1.2
  */
 
-.bg-landing-page {
-  background: linear-gradient(rgb(0, 40, 100), 35%, transparent) repeat scroll 0% 0%, rgba(0, 0, 0, 0) url("/images/bg_hifis_rsd.jpg") repeat scroll 0% 0%;
-}
-header input {
-  color: white !important;
-  background: rgba(255, 255, 255, 0.25) !important;
-  border: none !important;
-}
-.bg-promote div,
-.bg-reference div,
-.bg-discover div,
-.bg-cite div {
-  text-shadow: 0px 0px 5px black, 0px 0px 5px black;
-}
-.bg-promote {
-  background: url("/images/pexels-markus-spiske-4439901_scaled.jpg");
-}
-.bg-reference {
-  background: url("/images/pexels-anna-tarazevich-6412253_scaled.jpg");
-}
-.bg-discover {
-  background: url("/images/pexels-pixabay-247781_scaled.jpg")
-}
-.bg-cite {
-  background: url("/images/pexels-pixabay-159751_scaled.jpg")
-}
-.hgf-text-highlight {
-  background-color: #cdeefb;
-}
-.hgf-scrollbar {
-  border-bottom: 1px solid #002864;
-}
-.hgf-scrollbar::-webkit-scrollbar {
-  height: 5px;
-}
-.hgf-scrollbar::-webkit-scrollbar-thumb {
-  background: #05e5ba;
-  border-radius: 0;
-}
-.hgf-scrollbar::-webkit-scrollbar-track {
-  background: white;
+/* NOTE!
+
+1. you cannot define class with the same name as tailwind utility classes you will get following error::after
+error - ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[2].oneOf[8].use[1]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[2].oneOf[8].use[2]!./styles/global.css
+RangeError: Maximum call stack size exceeded
+
+2. all CSS in custom is imported before tailwind functions are applied afaik, in other words, you won't be able to overwrite tailwind  classes by defining new classes in this file.
+
+*/
+
+/* -------------------------------------
+  custom scrollbar
+---------------------------------------*/
+body {
+  /* fix jumping scrollbar */
+  overflow: overlay;
+  --scrollbar-thumb: #e4e4e7;
 }
 
-#research-fields-container {
-  display: grid;
-  grid-template: 1fr / 1fr;
-  place-items: center;
-  z-index: 1;
+/* width */
+::-webkit-scrollbar {
+  width: 0.5rem;
 }
 
-#research-fields-container > * {
-  grid-column: 1 / 1;
-  grid-row: 1 / 1;
+/* track */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
 }
 
-#research-fields-container #research-fields-list {
-  z-index: 3;
+/* handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.25);
 }
 
-#research-fields-container .research-field-image {
-  z-index: 2;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+/* handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
 }
 
-#research-fields-container .research-field-image.active {
-  opacity: 1;
+
+/* ----------------------------------------------
+  nprogress styles
+  orginates from 'nprogress/nprogress.css'
+------------------------------------------------*/
+/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
 }
 
-#research-fields-container #research-field-default-background {
-  z-index: 1;
-  background-image: url("/images/pexels-olena-bohovyk-3646172.jpg");
+#nprogress .bar {
+  background: var(--rsd-primary,'red');
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
 }
+
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px var(--rsd-primary,'red'), 0 0 5px var(--rsd-primary,'red');
+  opacity: 1.0;
+  transform: rotate(3deg) translate(0px, -4px);
+}
+
+/* Remove these to get rid of the spinner */
+/* WE DO NOT USE SPINNER - ONLY PROGRESS BAR AT THE TOP */
+/* #nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+  animation: nprogress-spinner 400ms linear infinite;
+}
+
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+
+.nprogress-custom-parent #nprogress .spinner,
+.nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+
+@-webkit-keyframes nprogress-spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+} */

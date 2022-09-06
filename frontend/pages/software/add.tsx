@@ -5,8 +5,8 @@
 
 import ProtectedContent from '../../auth/ProtectedContent'
 import AppHeader from '~/components/AppHeader'
-import PageContainer from '../../components/layout/PageContainer'
-import AppFooter from '../../components/layout/AppFooter'
+import PageContainer from '~/components/layout/PageContainer'
+import AppFooter from '~/components/AppFooter'
 
 // import AddSoftwareModal from '../../components/software/add/AddSoftwareModal'
 import AddSoftwareCard from '../../components/software/add/AddSoftwareCard'

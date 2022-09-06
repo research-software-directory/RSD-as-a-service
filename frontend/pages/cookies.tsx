@@ -51,6 +51,8 @@ export default function Cookies({matomoId,matomoConsent}: MatomoTrackingProps) {
         matomoConsent={matomoConsent}
       />
 
+      <div className="py-8"></div>
+
     </DefaultLayout>
   )
 }
