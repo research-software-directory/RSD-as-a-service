@@ -81,14 +81,6 @@ export default function AppFooter () {
           >
             <Mail className="mr-2"/> support@hifis.net
           </a>
-          {/* <a target="_blank" href="https://esciencecenter.nl" rel="noreferrer"
-            className="hover:text-primary"
-          >
-            <LogoEscience />
-          </a> */}
-          {/* <div className="mt-4 text-sm">Copyright © {new Date().getFullYear()}</div> */}
-        </div>
-        <div className="pb-10 sm:pt-10">
           <div className="text-lg">Research Software Directory</div>
           <div className="flex flex-col">
             {renderLinks()}
