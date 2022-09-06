@@ -43,8 +43,8 @@ export type ProjectImageInfo = {
 
 export default function EditProjectInformation({slug, session}: { slug: string, session: Session }) {
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
-  const {handleSubmit, reset, register, control, getFieldState, setValue, getValues,formState} = useFormContext<EditProject>()
   const {step, loading, setLoading, setProjectInfo} = useProjectContext()
+  const {handleSubmit, reset, register, control, getFieldState, setValue, getValues, formState} = useFormContext<EditProject>()
   const {loading:apiLoading, project} = useProjectToEdit({
     slug,
     token: session?.token ?? ''
@@ -64,11 +64,14 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
 
   // const researchFields = useResearchFieldOptions()
   // local state for keeping track what is deleted since last save
-  const [projectState,setProjectState]=useState<EditProject>()
+  const [projectState, setProjectState] = useState<EditProject>()
 
   // form data provided by react-hook-form
   // const formData = watch()
   const formValues = getValues()
+  // NOTE! need to "subscribe" to dirty fields state
+  // in order to detect first change using isDirty prop
+  const {dirtyFields} = formState
 
   useEffect(() => {
     // sync loading values
@@ -84,9 +87,7 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
         // set local state
         setProjectState(project)
         // set project values in the form
-        reset({
-          ...project
-        })
+        reset(project)
       }
     }
   }, [
@@ -103,7 +104,7 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
   // console.log('project...', project)
   // console.log('projectState...', projectState)
   // console.log('formValues...', formValues)
-  // console.log('formState...', formState)
+  // console.log('dirtyFields...', dirtyFields)
   // console.groupEnd()
 
   if (loading || apiLoading) {
@@ -213,9 +214,6 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
       <input type="hidden"
         {...register('id',{required:'id is required'})}
       />
-      <input type="hidden"
-        {...register('slug',{required:'slug is required'})}
-      />
       <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
         {/* middle panel */}
         <div className="py-4 xl:pl-[3rem]">
@@ -238,7 +236,10 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
                 rules={config.slug.validation}
               />
             </>
-            :null
+            :
+            <input type="hidden"
+              {...register('slug',{required:'slug is required'})}
+            />
           }
           <div className="py-2"></div>
           <ControlledTextField
