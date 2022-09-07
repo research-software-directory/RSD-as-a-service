@@ -17,7 +17,10 @@ type UseParticipatingOrganisationsProps = {
 export function useParticipatingOrganisations({project, token, account}: UseParticipatingOrganisationsProps) {
   const [organisations, setOrganisations] = useState<EditOrganisation[]>([])
   const [loading, setLoading] = useState(true)
-
+  const [loadedProject, setLoadedProject] = useState({
+    id:'',
+    account:'',
+  })
   useEffect(() => {
     let abort = false
     async function getOrganisations({project, token, account}:
@@ -63,18 +66,30 @@ export function useParticipatingOrganisations({project, token, account}: UsePart
       if (abort === true) return
       // update organisation list
       setOrganisations(organisations)
+      // keep track of loaded info
+      setLoadedProject({
+        id: project,
+        account
+      })
       // upadate loading state
       setLoading(false)
     }
-    if (project && token && account) {
+    if (project && token && account &&
+      loadedProject.id !== project &&
+      loadedProject.account !== account) {
       getOrganisations({
         project,
         token,
         account
       })
+    } else {
+      console.group('skip request useParticipatingOrganisations')
+      console.log('project...', project)
+      console.log('account...', account)
+      console.groupEnd()
     }
     () => { abort = true }
-  }, [project, token, account])
+  }, [project, token, account, loadedProject])
 
   return {
     loading,

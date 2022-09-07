@@ -5,7 +5,7 @@
 
 import {useEffect,useState} from 'react'
 
-import {Session} from '~/auth'
+import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
@@ -24,11 +24,13 @@ type DeleteModal = {
 }
 
 
-export default function ProjectMaintainers({session}: { session: Session }) {
+export default function ProjectMaintainers() {
+  const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {loading:loadProject, setLoading, project} = useProjectContext()
   const {loading:loadMaintainers,maintainers} = useProjectMaintainers({
-    project: project.id,token:session.token
+    project: project.id,
+    token
   })
   const [projectMaintainers, setProjectMaintaners] = useState<MaintainerOfProject[]>([])
   const [modal, setModal] = useState<DeleteModal>({
@@ -77,7 +79,7 @@ export default function ProjectMaintainers({session}: { session: Session }) {
       const resp = await deleteMaintainerFromProject({
         maintainer: admin.account,
         project: project.id,
-        token: session.token,
+        token,
         frontend: true
       })
       if (resp.status === 200) {
@@ -111,8 +113,8 @@ export default function ProjectMaintainers({session}: { session: Session }) {
           />
           <ProjectMaintainerLink
             project={project.id}
-            account={session.user?.account ?? ''}
-            token={session.token}
+            account={user?.account ?? ''}
+            token={token}
           />
         </div>
       </EditSection>

@@ -4,10 +4,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
-
 import {useFieldArray, useFormContext} from 'react-hook-form'
 
-import {Session} from '~/auth'
+import {Session, useSession} from '~/auth'
 import {EditProject, ProjectTableProps} from '~/types/Project'
 import {updateProjectInfo} from '~/utils/editProject'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
@@ -41,13 +40,14 @@ export type ProjectImageInfo = {
   image_mime_type: string|null
 }
 
-export default function EditProjectInformation({slug, session}: { slug: string, session: Session }) {
+export default function EditProjectInformation({slug}: { slug: string, session: Session }) {
+  const session = useSession()
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {step, loading, setLoading, setProjectInfo} = useProjectContext()
   const {handleSubmit, reset, register, control, getFieldState, setValue, getValues, formState} = useFormContext<EditProject>()
-  const {loading:apiLoading, project} = useProjectToEdit({
+  const {project} = useProjectToEdit({
     slug,
-    token: session?.token ?? ''
+    token:session.token
   })
   const {update:updateOrganisation} = useFieldArray({
     control,
@@ -73,30 +73,35 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
   // in order to detect first change using isDirty prop
   const {dirtyFields} = formState
 
+  // 1. load form and set copy of project state
   useEffect(() => {
-    // sync loading values
-    if (loading !== apiLoading) {
-      setLoading(apiLoading)
-      if (project) {
-        // set shared project info
-        setProjectInfo({
-          id: project.id,
-          slug: project.slug,
-          title: project.title
-        })
-        // set local state
-        setProjectState(project)
-        // set project values in the form
-        reset(project)
-      }
+    if (project) {
+      // rest form to project values
+      reset(project)
+      // save copy to compare later
+      setProjectState(project)
+    }
+  },[project,reset])
+
+  // 2. Set project info when projectState changes
+  // and toggle loading flag (loading is completed)
+  useEffect(() => {
+    // if loading is in process
+    if (projectState && loading===true) {
+      // debugger
+      // set shared project info
+      setProjectInfo({
+        id: projectState.id,
+        slug: projectState.slug,
+        title: projectState.title
+      })
+      setLoading(false)
     }
   }, [
-    loading,
-    apiLoading,
-    setLoading,
-    project,
+    projectState,
     setProjectInfo,
-    reset
+    loading,
+    setLoading
   ])
 
   // console.group('EditProjectInformation')
@@ -107,7 +112,7 @@ export default function EditProjectInformation({slug, session}: { slug: string, 
   // console.log('dirtyFields...', dirtyFields)
   // console.groupEnd()
 
-  if (loading || apiLoading) {
+  if (loading) {
     return (
       <ContentLoader />
     )

@@ -38,6 +38,48 @@ it('renders content when authenticated', async() => {
   expect(header).toBeInTheDocument()
 })
 
+it('renders 401 when no token for all pages', async() => {
+  session.status = 'missing'
+  const Content = () => (
+    <ProtectedContent slug="/software">
+      <h1>Authenticated</h1>
+    </ProtectedContent>
+  )
+  render(WrappedComponentWithProps(Content,{
+    session
+  }))
+  const b403 = await screen.findByText('401')
+  expect(b403).toBeInTheDocument()
+})
+
+it('renders 401 when no token for edit software', async() => {
+  session.status = 'missing'
+  const Content = () => (
+    <ProtectedContent slug="/test-software-1" pageType='software'>
+      <h1>Authenticated</h1>
+    </ProtectedContent>
+  )
+  render(WrappedComponentWithProps(Content,{
+    session
+  }))
+  const b403 = await screen.findByText('401')
+  expect(b403).toBeInTheDocument()
+})
+
+it('renders 401 when no token for edit project', async() => {
+  session.status = 'missing'
+  const Content = () => (
+    <ProtectedContent slug="/test-project-1" pageType='project'>
+      <h1>Authenticated</h1>
+    </ProtectedContent>
+  )
+  render(WrappedComponentWithProps(Content,{
+    session
+  }))
+  const b403 = await screen.findByText('401')
+  expect(b403).toBeInTheDocument()
+})
+
 it('renders 403 when no maintainer', async() => {
   session.status = 'authenticated'
   const Content = () => (

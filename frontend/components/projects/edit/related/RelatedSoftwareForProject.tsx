@@ -23,6 +23,7 @@ export default function RelatedSoftwareForProject() {
   const {showErrorMessage} = useSnackbar()
   const {setLoading, project} = useProjectContext()
   const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftwareOfProject[]>()
+  const [loadedProject, setLoadedProject] = useState('')
 
   useEffect(() => {
     let abort = false
@@ -35,13 +36,19 @@ export default function RelatedSoftwareForProject() {
         approved: false
       })
       setRelatedSoftware(software)
+      setLoadedProject(project.id)
       setLoading(false)
     }
-    if (project.id && session.token) {
+    if (project.id && session.token &&
+      project.id !== loadedProject) {
       getRelatedSoftware()
+    } else {
+      console.group('skip request getRelatedSoftwareForProject')
+      console.log('project...', project.id)
+      console.log('loadedProject...', loadedProject)
+      console.groupEnd()
     }
-
-    ()=>{abort=true}
+    return ()=>{abort=true}
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[project.id,session.token])
 

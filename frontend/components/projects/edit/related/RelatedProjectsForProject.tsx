@@ -23,6 +23,7 @@ export default function RelatedProjectsForProject() {
   const {showErrorMessage} = useSnackbar()
   const {setLoading,project} = useProjectContext()
   const [relatedProject, setRelatedProject] = useState<SearchProject[]>()
+  const [loadedProject, setLoadedProject] = useState('')
 
   useEffect(() => {
     let abort = false
@@ -40,13 +41,18 @@ export default function RelatedProjectsForProject() {
       if (abort) return null
       // set local state
       setRelatedProject(projects)
+      setLoadedProject(project.id)
       setLoading(false)
     }
-    if (project.id && session.token) {
+    if (project.id && session.token && project.id!==loadedProject) {
       getRelatedProjects()
+    }else {
+      console.group('skip request getRelatedProjectsForProject')
+      console.log('project...', project.id)
+      console.log('loadedProject...', loadedProject)
+      console.groupEnd()
     }
-
-    ()=>{abort=true}
+    return ()=>{abort=true}
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[project.id,session.token])
 

@@ -35,14 +35,55 @@ function prepareFundingOrganisations(organisations:OrganisationsOfProject[]) {
   return data
 }
 
-export default function useGetProject({slug,token,reload=false}:
+async function getProjectInfoForEdit({slug,token}:
+  {slug:string,token:string}):Promise<EditProject|undefined> {
+
+  const project = await getProjectItem({
+    slug,
+    token,
+    frontend:true
+  })
+
+  if (project) {
+    // load other project related data
+    const [
+      url_for_project,
+      funding_organisations,
+      research_domains,
+      keywords
+    ] = await Promise.all([
+      getLinksForProject({project: project.id, token, frontend: true}),
+      getOrganisationsOfProject({project: project.id, token, frontend: true, role: 'funding'}),
+      getResearchDomainsForProject({project: project.id, token, frontend: true}),
+      getKeywordsForProject({project: project.id, token, frontend: true})
+    ])
+
+    const data = {
+      ...project,
+      url_for_project: prepareUrlForProject(url_for_project),
+      funding_organisations: prepareFundingOrganisations(funding_organisations),
+      research_domains,
+      keywords,
+      image_b64: null,
+      image_mime_type: null,
+    }
+    // console.log('getProjectInfoForEdit...', data)
+    return data
+  }
+  // return null
+}
+
+export default function useProjectToEdit({slug,token}:
   {slug:string,token:string,reload?:boolean}) {
   const [project, setProject] = useState<EditProject>()
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [loadedSlug, setLoadedSlug] = useState<string>('')
 
-  // console.group('useGetProject')
+  // console.group('useProjectToEdit')
   // console.log('slug...', slug)
-  // console.log('reload...', reload)
+  // console.log('loadedSlug...', loadedSlug)
+  // console.log('loading...', loading)
+  // console.log('project...', project)
   // console.log('token...', token)
   // console.groupEnd()
 
@@ -50,48 +91,28 @@ export default function useGetProject({slug,token,reload=false}:
     let abort = false
     async function getProjectForEdit() {
       setLoading(true)
-      const project = await getProjectItem({
+      const project = await getProjectInfoForEdit({
         slug,
-        token,
-        frontend:true
+        token
       })
       if (abort) return
-      if (project) {
-        // load other project related data
-        const [
-          url_for_project,
-          funding_organisations,
-          research_domains,
-          keywords
-        ] = await Promise.all([
-          getLinksForProject({project: project.id, token, frontend: true}),
-          getOrganisationsOfProject({project: project.id, token, frontend: true, role: 'funding'}),
-          getResearchDomainsForProject({project: project.id, token, frontend: true}),
-          getKeywordsForProject({project: project.id, token, frontend: true})
-        ])
-        if (abort) return
-        // debugger
-        setProject({
-          ...project,
-          url_for_project: prepareUrlForProject(url_for_project),
-          funding_organisations: prepareFundingOrganisations(funding_organisations),
-          research_domains,
-          keywords,
-          image_b64: null,
-          image_mime_type: null,
-        })
-      } else {
-        setProject(undefined)
-      }
-      if (abort) return
+      setLoadedSlug(slug)
+      setProject(project)
       setLoading(false)
+      // debugger
     }
-
-    if (slug && token) {
+    if (slug && token &&
+      slug !== loadedSlug) {
+      // debugger
       getProjectForEdit()
+    } else {
+      console.group('skip request useProjectToEdit')
+      console.log('slug...', slug)
+      console.log('loadedSlug...', loadedSlug)
+      console.groupEnd()
     }
     return ()=>{abort=true}
-  },[slug,token])
+  },[slug,token,loadedSlug])
 
   return {
     loading,
