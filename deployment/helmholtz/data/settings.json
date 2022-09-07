@@ -1,0 +1,118 @@
+{
+  "host": {
+    "name": "helmholtz",
+    "email": "support@hifis.net",
+    "logo_url": "/images/LogoHIFISWhite.svg"
+  },
+  "links": [
+    {
+      "label": "Questions or comments?",
+      "url": "mailto:support@hifis.net",
+      "target": "_self"
+    },
+    {
+      "label": "Cookies",
+      "url": "/cookies",
+      "target": "_self"
+    },
+    {
+      "label": "Documentation",
+      "url": "https://research-software-directory.github.io/documentation",
+      "target": "_blank"
+    },
+    {
+      "label": "Technical Documentation",
+      "url": "https://research-software-directory.github.io/RSD-as-a-service",
+      "target": "_blank"
+    },
+    {
+      "label": "Data protection declaration",
+      "url": "https://www.gfz-potsdam.de/en/data-protection/",
+      "target": "_blank"
+    }
+  ],
+  "theme": {
+    "mode": "light",
+    "light": {
+      "colors": {
+        "base-100": "#fff",
+        "base-200": "#efefef",
+        "base-300": "#efefef",
+        "base-content": "#002864",
+        "base-content-secondary": "rgba(34,36,37,0.7)",
+        "base-content-disabled": "rgba(34,36,37,0.45)",
+        "primary": "#14c8ff",
+        "primary-content": "#fff",
+        "secondary": "#002864",
+        "secondary-content": "#05e5ba",
+        "accent": "#73095d",
+        "accent-content": "#fff",
+        "error": "#e53935",
+        "error-content": "#000",
+        "warning": "#fa7833",
+        "warning-content": "#000",
+        "info": "#05e5ba",
+        "info-content": "#000",
+        "success": "#8cd600",
+        "success-content": "#000"
+      },
+      "action": {
+        "active": "rgba(0, 0, 0, 0.54)",
+        "hover": "rgba(0, 0, 0, 0.04)",
+        "hoverOpacity": 0.04,
+        "selected": "rgba(0, 0, 0, 0.08)",
+        "selectedOpacity": 0.08,
+        "disabled": "rgba(0, 0, 0, 0.26)",
+        "disabledBackground": "rgba(0, 0, 0, 0.12)",
+        "disabledOpacity": 0.38,
+        "focus": "rgba(0, 0, 0, 0.12)",
+        "focusOpacity": 0.12,
+        "activatedOpacity": 0.12
+      }
+    },
+    "dark": {
+      "colors": {
+        "base-100": "#0a0a0a",
+        "base-200": "#151515",
+        "base-300": "#cdeefb",
+        "base-content": "rgba(255,255,255,0.87)",
+        "base-content-disabled": "rgba(255,255,255,0.45)",
+        "primary": "#14c8ff",
+        "primary-content": "#fff",
+        "secondary": "#002864",
+        "secondary-content": "#fff",
+        "accent": "#73095d",
+        "accent-content": "#fff",
+        "error": "#e53935",
+        "error-content": "#000",
+        "warning": "#ed6c02",
+        "warning-content": "#000",
+        "info": "#0288d1",
+        "info-content": "#000",
+        "success": "#2e7d32",
+        "success-content": "#fff"
+      },
+      "action": {
+        "active": "rgba(255, 255, 255, 0.54)",
+        "hover": "rgba(255, 255, 255, 0.4)",
+        "hoverOpacity": 0.1,
+        "selected": "rgba(255, 255, 255, 0.08)",
+        "selectedOpacity": 0.16,
+        "disabled": "rgba(255, 255, 255, 0.26)",
+        "disabledBackground": "rgba(255, 255, 255, 0.12)",
+        "disabledOpacity": 0.38,
+        "focus": "rgba(255, 255, 255, 0.12)",
+        "focusOpacity": 0.12,
+        "activatedOpacity": 0.12
+      }
+    },
+    "typography": {
+      "defaultFontFamily": "'Helmholtz Halvar Mittel Rg', Helvetica, arial, sans-serif",
+      "titlesFontFamily": "'Work Sans', sans-serif",
+      "fontWeightLight": 200,
+      "fontWeightRegular": 400,
+      "fontWeightMedium": 500,
+      "fontWeightBold": 600
+    }
+  }
+}
