@@ -33,11 +33,6 @@ export default function useTestimonals() {
     if (software?.id && token &&
       software?.id !== loadedSoftware) {
       getTestimonials(software.id,token)
-    }else {
-      console.group('skip request getTestimonialsForSoftware')
-      console.log('software...', software.id)
-      console.log('loadedSoftware...', loadedSoftware)
-      console.groupEnd()
     }
     return () => { abort = true }
   },[software?.id,token,loadedSoftware])

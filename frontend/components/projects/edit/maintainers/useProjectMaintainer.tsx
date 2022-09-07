@@ -76,11 +76,6 @@ export default function useProjectMaintainers({project, token}:
 
     if (project && token && project!==loadedProject) {
       getMaintainers()
-    } else {
-      console.group('skip request useImpactForProject')
-      console.log('project...', project)
-      console.log('loadedProject...', loadedProject)
-      console.groupEnd()
     }
     return ()=>{abort=true}
   },[project,token,loadedProject])

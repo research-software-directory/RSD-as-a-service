@@ -34,7 +34,7 @@ export default function SoftwareInformation({slug}: {slug: string}) {
   const {showErrorMessage, showSuccessMessage} = useSnackbar()
   const {step,software,loading,setSoftwareInfo,setLoading} = useSoftwareContext()
   const {editSoftware, setEditSoftware} = useSoftwareToEdit({slug, token})
-  const [initalState,setInitialState]=useState<EditSoftwareItem>()
+  const [initalState, setInitialState] = useState<EditSoftwareItem>()
 
   // destructure methods from react-hook-form
   const {
@@ -74,8 +74,8 @@ export default function SoftwareInformation({slug}: {slug: string}) {
     }
   }, [
     initalState,
-    setSoftwareInfo,
     loading,
+    setSoftwareInfo,
     setLoading
   ])
 
@@ -115,14 +115,6 @@ export default function SoftwareInformation({slug}: {slug: string}) {
       const latestFormData = getValues()
       // to be equal to data in the form
       setEditSoftware(latestFormData)
-      // dispatchPageState({
-      //   type: EditSoftwareActionType.SET_SOFTWARE_INFO,
-      //   payload: {
-      //     id: formData?.id,
-      //     slug,
-      //     brand_name:formData?.brand_name
-      //   }
-      // })
     } else {
       showErrorMessage(`Failed to save. ${resp.message}`)
     }

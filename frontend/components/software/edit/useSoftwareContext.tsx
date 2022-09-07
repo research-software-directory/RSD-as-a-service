@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext} from 'react'
+import {useCallback, useContext} from 'react'
 
 import editSoftwareContext, {SoftwareInfo} from './editSoftwareContext'
 import {EditSoftwareActionType} from './editSoftwareReducer'
@@ -12,28 +12,28 @@ import {EditSoftwarePageProps} from './editSoftwareSteps'
 export default function useSoftwareContext() {
   const {state,dispatch} = useContext(editSoftwareContext)
 
-  function setSoftwareInfo(software: SoftwareInfo) {
+  const setSoftwareInfo = useCallback((software: SoftwareInfo)=>{
     dispatch({
       type: EditSoftwareActionType.SET_SOFTWARE_INFO,
       payload: software
     })
-  }
+  },[dispatch])
 
-  function setEditStep(step: EditSoftwarePageProps) {
+  const setEditStep = useCallback((step: EditSoftwarePageProps)=>{
     dispatch({
       type: EditSoftwareActionType.SET_EDIT_STEP,
       payload: step
     })
-  }
+  },[dispatch])
 
-  function setLoading(loading: boolean) {
+  const setLoading = useCallback((loading: boolean)=>{
     dispatch({
       type: EditSoftwareActionType.SET_LOADING,
       payload: loading
     })
-  }
+  },[dispatch])
 
-  function setFormState({isDirty,isValid}:{isDirty:boolean,isValid:boolean}) {
+  const setFormState = useCallback(({isDirty,isValid}:{isDirty:boolean,isValid:boolean})=>{
     dispatch({
       type: EditSoftwareActionType.UPDATE_STATE,
       payload: {
@@ -41,7 +41,7 @@ export default function useSoftwareContext() {
         isValid,
       }
     })
-  }
+  },[dispatch])
 
   return {
     ...state,

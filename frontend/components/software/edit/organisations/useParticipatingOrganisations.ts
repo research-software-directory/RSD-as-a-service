@@ -79,11 +79,6 @@ export function useParticipatingOrganisations({software, token, account}: UsePar
         token,
         account
       })
-    } else {
-      console.group('skip request useParticipatingOrganisations')
-      console.log('software...', software)
-      console.log('loadedSoftware...', loadedSoftware)
-      console.groupEnd()
     }
     return () => { abort = true }
   }, [software, token, account, loadedSoftware])

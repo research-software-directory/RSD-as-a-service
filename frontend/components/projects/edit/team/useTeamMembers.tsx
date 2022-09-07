@@ -14,7 +14,7 @@ export default function useTeamMembers({slug}:{slug:string}) {
   const {token} = useSession()
   const {project, loading, setLoading} = useProjectContext()
   const [members, setMembers] = useState<TeamMember[]>([])
-  const [loadedSlug,setLoadedSlug]=useState('')
+  const [loadedSlug,setLoadedSlug] = useState('')
 
   useEffect(() => {
     let abort = false
@@ -26,7 +26,6 @@ export default function useTeamMembers({slug}:{slug:string}) {
         frontend: true
       })
       // debugger
-      // set member to form
       setMembers(members)
       setLoadedSlug(slug)
       setLoading(false)
@@ -35,11 +34,6 @@ export default function useTeamMembers({slug}:{slug:string}) {
       project.id &&
       slug!==loadedSlug) {
       getMembers()
-    } else {
-      console.group('skip request useTeamMembers')
-      console.log('slug...', slug)
-      console.log('loadedSlug...', loadedSlug)
-      console.groupEnd()
     }
     return () => { abort = true }
   },[slug,loadedSlug,token,project.id,setLoading])
@@ -51,5 +45,4 @@ export default function useTeamMembers({slug}:{slug:string}) {
     project,
     setMembers
   }
-
 }

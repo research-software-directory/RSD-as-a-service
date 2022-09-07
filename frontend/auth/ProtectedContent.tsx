@@ -89,7 +89,7 @@ export default function ProtectedContent({children, pageType='software', slug=''
 
   // console.group('ProtectedContent')
   // console.log('slug...', slug)
-  console.log('ProtectedContent.status...', status)
+  // console.log('ProtectedContent.status...', status)
   // console.log('expired...', expired)
   // console.log('token...', token)
   // console.log('isMaintainer...', isMaintainer)

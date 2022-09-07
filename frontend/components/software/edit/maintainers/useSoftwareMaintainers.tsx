@@ -81,14 +81,8 @@ export default function useSoftwareMaintainers() {
     if (software.id && token &&
       software.id !== loadedSoftware) {
       getMaintainers()
-    } else {
-      console.group('skip request useSoftwareMaintainers')
-      console.log('software...', software?.id)
-      console.log('loadedSoftware...', loadedSoftware)
-      console.groupEnd()
     }
-
-    ()=>{abort=true}
+    return()=>{abort=true}
   },[software?.id,token,loadedSoftware])
 
   return {maintainers, loading}

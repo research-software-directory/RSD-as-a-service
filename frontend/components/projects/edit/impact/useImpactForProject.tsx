@@ -42,15 +42,12 @@ export default function useImpactForProject({project, token}: ImpactForProjectPr
     }
     if (project && token && project!==loadedProject) {
       getImpactFromApi()
-    } else {
-      console.group('skip request useImpactForProject')
-      console.log('project...', project)
-      console.log('loadedProject...', loadedProject)
-      console.groupEnd()
     }
     return () => { abort = true }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[project,token])
+    // we skip setMentions and setLoading methods in the deps to avoid loop
+    // TODO! try wrapping methods of useEditMentionReducer in useCallback?
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[project,token,loadedProject])
 
   // console.group('useImpactForProject')
   // console.log('loading...', loading)

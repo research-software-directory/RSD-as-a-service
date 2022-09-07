@@ -82,13 +82,8 @@ export function useParticipatingOrganisations({project, token, account}: UsePart
         token,
         account
       })
-    } else {
-      console.group('skip request useParticipatingOrganisations')
-      console.log('project...', project)
-      console.log('account...', account)
-      console.groupEnd()
     }
-    () => { abort = true }
+    return () => { abort = true }
   }, [project, token, account, loadedProject])
 
   return {

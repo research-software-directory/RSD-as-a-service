@@ -68,11 +68,6 @@ export default function useSoftwareToEdit({slug, token}: {slug: string, token: s
     if (slug && token &&
       slug !== loadedSlug) {
       getSoftwareToEdit()
-    } else {
-      console.group('skip request useSoftwareToEdit')
-      console.log('slug...', slug)
-      console.log('loadedSlug...', loadedSlug)
-      console.groupEnd()
     }
     return ()=>{abort=true}
   },[slug,token,loadedSlug])

@@ -42,11 +42,6 @@ export default function RelatedSoftwareForProject() {
     if (project.id && token &&
       project.id !== loadedProject) {
       getRelatedSoftware()
-    } else {
-      console.group('skip request getRelatedSoftwareForProject')
-      console.log('project...', project.id)
-      console.log('loadedProject...', loadedProject)
-      console.groupEnd()
     }
     return ()=>{abort=true}
   },[project.id,token,loadedProject])

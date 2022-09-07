@@ -55,13 +55,7 @@ export default function RelatedSoftwareForSoftware() {
     if (software.id && token &&
       software?.id !== loadedSoftware) {
       getRelatedSoftware()
-    } else {
-      console.group('skip request getRelatedSoftwareForSoftware')
-      console.log('software...', software.id)
-      console.log('loadedSoftware...', loadedSoftware)
-      console.groupEnd()
     }
-
     return ()=>{abort=true}
   },[software.id,token,loadedSoftware])
 

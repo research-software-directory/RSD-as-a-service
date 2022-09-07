@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext} from 'react'
+import {useCallback, useContext} from 'react'
 
 import editProjectContext, {ProjectInfo} from './editProjectContext'
 import {EditProjectActionType} from './editProjectReducer'
@@ -12,26 +12,26 @@ import {EditProjectStep} from './editProjectSteps'
 export default function useProjectContext() {
   const {state,dispatch} = useContext(editProjectContext)
 
-  function setProjectInfo(project: ProjectInfo) {
+  const setProjectInfo = useCallback((project: ProjectInfo)=>{
     dispatch({
       type: EditProjectActionType.SET_PROJECT_INFO,
       payload: project
     })
-  }
+  },[dispatch])
 
-  function setEditStep(step: EditProjectStep) {
+  const setEditStep = useCallback((step: EditProjectStep)=>{
     dispatch({
       type: EditProjectActionType.SET_EDIT_STEP,
       payload: step
     })
-  }
+  },[dispatch])
 
-  function setLoading(loading: boolean) {
+  const setLoading = useCallback((loading: boolean)=>{
     dispatch({
       type: EditProjectActionType.SET_LOADING,
       payload: loading
     })
-  }
+  },[dispatch])
 
   return {
     step: state.step,

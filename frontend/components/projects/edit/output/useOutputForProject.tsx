@@ -40,15 +40,18 @@ export default function useOutputForProject({project, token}: OutputForProjectPr
     }
     if (project && token && project!==loadedProject) {
       getImpact()
-    } else {
-      console.group('skip request useOutputForProject')
-      console.log('project...', project)
-      console.log('loadedProject...', loadedProject)
-      console.groupEnd()
     }
-    () => { abort = true }
+    // else {
+    //   console.group('skip request useOutputForProject')
+    //   console.log('project...', project)
+    //   console.log('loadedProject...', loadedProject)
+    //   console.groupEnd()
+    // }
+    return () => { abort = true }
+    // we skip setMentions and setLoading methods in the deps to avoid loop
+    // TODO! try wrapping methods of useEditMentionReducer in useCallback?
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[project,token])
+  },[project,token,loadedProject])
 
   // console.group('useOutputForProject')
   // console.log('loading...', loading)

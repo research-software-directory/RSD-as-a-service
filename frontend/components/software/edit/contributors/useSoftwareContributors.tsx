@@ -34,11 +34,6 @@ export default function useSoftwareContributors() {
     if (software?.id && token &&
       software.id !== loadedSoftware) {
       getContributors(software.id,token)
-    } else {
-      console.group('skip request useSoftwareContributors')
-      console.log('software...', software.id)
-      console.log('loadedSoftware...', loadedSoftware)
-      console.groupEnd()
     }
     return () => { abort = true }
   }, [software?.id,loadedSoftware,token])

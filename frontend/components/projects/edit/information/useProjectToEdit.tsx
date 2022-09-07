@@ -105,11 +105,6 @@ export default function useProjectToEdit({slug,token}:
       slug !== loadedSlug) {
       // debugger
       getProjectForEdit()
-    } else {
-      console.group('skip request useProjectToEdit')
-      console.log('slug...', slug)
-      console.log('loadedSlug...', loadedSlug)
-      console.groupEnd()
     }
     return ()=>{abort=true}
   },[slug,token,loadedSlug])

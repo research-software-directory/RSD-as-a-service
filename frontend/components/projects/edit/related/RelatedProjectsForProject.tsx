@@ -46,11 +46,6 @@ export default function RelatedProjectsForProject() {
     }
     if (project.id && token && project.id!==loadedProject) {
       getRelatedProjects()
-    }else {
-      console.group('skip request getRelatedProjectsForProject')
-      console.log('project...', project.id)
-      console.log('loadedProject...', loadedProject)
-      console.groupEnd()
     }
     return ()=>{abort=true}
   },[project.id,token,loadedProject])
