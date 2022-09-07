@@ -21,7 +21,7 @@ export type EditProjectState = {
   loading: boolean
 }
 
-export const initalState: EditProjectState = {
+export const initialState: EditProjectState = {
   // loading first page/step by default
   step: editProjectSteps[0],
   project: {
@@ -39,12 +39,12 @@ export type EditProjectContextProps = {
 
 
 const EditProjectContext = createContext<EditProjectContextProps>({
-  state: initalState,
+  state: initialState,
   dispatch: (action)=>{}
 })
 
 export function EditProjectProvider(props: any) {
-  const [state, dispatch] = useReducer(editProjectReducer, props?.state ?? initalState)
+  const [state, dispatch] = useReducer(editProjectReducer, props?.state ?? initialState)
 
   return (
     <EditProjectContext.Provider value={{

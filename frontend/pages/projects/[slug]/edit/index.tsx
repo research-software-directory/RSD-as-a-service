@@ -30,7 +30,7 @@ export default function ProjectEditPage() {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-        {/* form provider to share isValid, isDirty states in the header */}
+      {/* form provider to share isValid, isDirty states in the header */}
       <FormProvider {...methods}>
         {/* edit project context is share project info between pages */}
         <EditProjectProvider>

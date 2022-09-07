@@ -5,13 +5,13 @@
 
 import {useEffect, useState} from 'react'
 
-import {useAuth} from '~/auth'
+import {useSession} from '~/auth'
 import {cfgRelatedItems as config} from './config'
 import {getRelatedProjectsForSoftware} from '~/utils/getSoftware'
 import {addRelatedSoftware, deleteRelatedSoftware} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
-import {RelatedProject, SearchProject} from '~/types/Project'
+import {SearchProject} from '~/types/Project'
 import useSoftwareContext from '../useSoftwareContext'
 import FindRelatedProject from '~/components/projects/edit/related/FindRelatedProject'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
@@ -19,18 +19,18 @@ import RelatedProjectList from '~/components/projects/edit/related/RelatedProjec
 import {Status} from '~/types/Organisation'
 
 export default function RelatedProjectsForSoftware() {
-  const {session} = useAuth()
+  const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {setLoading,software} = useSoftwareContext()
+  const {software} = useSoftwareContext()
   const [relatedProject, setRelatedProject] = useState<SearchProject[]>()
+  const [loadedSoftware, setLoadedSoftware] = useState('')
 
   useEffect(() => {
     let abort = false
     async function getRelatedProjects() {
-      // setLoading(true)
       const resp = await getRelatedProjectsForSoftware({
         software: software.id ?? '',
-        token: session.token,
+        token,
         frontend: true,
         approved: false
       })
@@ -40,15 +40,19 @@ export default function RelatedProjectsForSoftware() {
       if (abort) return null
       // debugger
       setRelatedProject(projects)
-      // setLoading(false)
+      setLoadedSoftware(software?.id ?? '')
     }
-    if (software.id && session.token) {
+    if (software.id && token &&
+      software?.id !== loadedSoftware) {
       getRelatedProjects()
+    }else {
+      console.group('skip request getRelatedProjectsForSoftware')
+      console.log('software...', software.id)
+      console.log('loadedSoftware...', loadedSoftware)
+      console.groupEnd()
     }
-
-    ()=>{abort=true}
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[software.id,session.token])
+    return ()=>{abort=true}
+  },[software.id,token,loadedSoftware])
 
   async function onAdd(selected: SearchProject) {
     if (typeof relatedProject=='undefined') return
@@ -63,7 +67,7 @@ export default function RelatedProjectsForSoftware() {
         software: software.id ?? '',
         project: selected.id,
         status,
-        token: session.token
+        token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to add related project. ${resp.message}`)
@@ -87,7 +91,7 @@ export default function RelatedProjectsForSoftware() {
       const resp = await deleteRelatedSoftware({
         software: software.id ?? '',
         project: related.id,
-        token: session.token
+        token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to delete related project. ${resp.message}`)
@@ -115,7 +119,7 @@ export default function RelatedProjectsForSoftware() {
       </EditSectionTitle>
       <FindRelatedProject
         project={''}
-        token={session.token}
+        token={token}
         config={{
           freeSolo: false,
           minLength: config.relatedProject.validation.minLength,

@@ -7,22 +7,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState, useContext} from 'react'
-import {useFieldArray, useForm} from 'react-hook-form'
+import {useEffect, useState} from 'react'
+import {useFieldArray, useFormContext} from 'react-hook-form'
 
-import {useAuth} from '~/auth'
-import {app} from '~/config/app'
+import {useSession} from '~/auth'
 import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import {updateSoftwareInfo} from '~/utils/editSoftware'
-import useEditSoftwareData from '~/utils/useEditSoftwareData'
-import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import editSoftwareContext from '../editSoftwareContext'
-import {EditSoftwareActionType} from '../editSoftwareContext'
 import SoftwareMarkdown from './SoftwareMarkdown'
 import SoftwareLicenses from './SoftwareLicenses'
 import SoftwarePageStatus from './SoftwarePageStatus'
@@ -31,80 +26,58 @@ import RepositoryPlatform from './RepositoryPlatform'
 import SoftwareKeywords from './SoftwareKeywords'
 import {getKeywordChanges} from './softwareKeywordsChanges'
 import ConceptDoi from './ConceptDoi'
+import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareToEdit from './useSoftwareToEdit'
 
-export default function SoftwareInformation(
-  {slug, token}: {slug: string, token: string}
-) {
-  const {session} = useAuth()
-  const {showErrorMessage,showSuccessMessage} = useSnackbar()
-  const {pageState, dispatchPageState} = useContext(editSoftwareContext)
-  const {loading: apiLoading, editSoftware, setEditSoftware} = useEditSoftwareData({slug, token})
-  const [loading, setLoading] = useState(true)
+export default function SoftwareInformation({slug}: {slug: string}) {
+  const {token,user} = useSession()
+  const {showErrorMessage, showSuccessMessage} = useSnackbar()
+  const {step,software,loading,setSoftwareInfo,setLoading} = useSoftwareContext()
+  const {editSoftware, setEditSoftware} = useSoftwareToEdit({slug, token})
+  const [initalState,setInitialState]=useState<EditSoftwareItem>()
 
   // destructure methods from react-hook-form
   const {
     register, handleSubmit, watch, formState, reset,
     control, setValue, getValues
-  } = useForm<EditSoftwareItem>({
-    mode: 'onChange',
-    defaultValues: {
-      ...editSoftware
-    }
-  })
+  } = useFormContext<EditSoftwareItem>()
 
   const {update: updateKeyword} = useFieldArray({
     control,
     name: 'keywords'
   })
 
-  // destructure formState
-  const {isDirty, isValid, errors} = formState
+  // destructure formState (subscribe to changes)
+  const {dirtyFields, errors} = formState
   // form data provided by react-hook-form
   const formData = watch()
-  // watch for unsaved changes
-  useOnUnsaveChange({
-    isDirty,
-    isValid,
-    warning: app.unsavedChangesMessage
-  })
 
+  // 1. load form and set copy of project state
   useEffect(() => {
-    if (editSoftware?.id && apiLoading === false) {
+    if (editSoftware?.id) {
       // set data into form
       reset(editSoftware)
-      // share with other steps
-      dispatchPageState({
-        type: EditSoftwareActionType.UPDATE_STATE,
-        payload: {
-          software: {
-            slug,
-            id: editSoftware?.id ?? '',
-            brand_name: editSoftware?.brand_name ?? '',
-            concept_doi: editSoftware?.concept_doi ?? '',
-          },
-          loading: false
-        }
+      setInitialState(editSoftware)
+    }
+  }, [reset, editSoftware])
+
+  // 2. set software info
+  // and toggle loading flag(loading is completed)
+  useEffect(() => {
+    if (initalState && loading === true) {
+      setSoftwareInfo({
+        id: initalState.id,
+        slug: initalState.slug,
+        brand_name: initalState.brand_name
       })
       setLoading(false)
     }
-  }, [reset, editSoftware, apiLoading, slug, dispatchPageState])
-
-  useEffect(() => {
-    // update form state
-    // only if values are different (avoid loop)
-    if (
-      pageState?.isDirty !== isDirty ||
-      pageState?.isValid !== isValid
-    ) {
-      dispatchPageState({
-        type: EditSoftwareActionType.UPDATE_STATE,
-        payload: {
-          isDirty,
-          isValid,
-        }
-      })
-    }
-  }, [isDirty, isValid, pageState, dispatchPageState])
+  }, [
+    initalState,
+    setSoftwareInfo,
+    loading,
+    setLoading
+  ])
 
   // console.group('SoftwareInformation')
   // console.log('isDirty...', isDirty)
@@ -142,14 +115,14 @@ export default function SoftwareInformation(
       const latestFormData = getValues()
       // to be equal to data in the form
       setEditSoftware(latestFormData)
-      dispatchPageState({
-        type: EditSoftwareActionType.SET_SOFTWARE_INFO,
-        payload: {
-          id: formData?.id,
-          slug,
-          brand_name:formData?.brand_name
-        }
-      })
+      // dispatchPageState({
+      //   type: EditSoftwareActionType.SET_SOFTWARE_INFO,
+      //   payload: {
+      //     id: formData?.id,
+      //     slug,
+      //     brand_name:formData?.brand_name
+      //   }
+      // })
     } else {
       showErrorMessage(`Failed to save. ${resp.message}`)
     }
@@ -157,7 +130,7 @@ export default function SoftwareInformation(
 
   return (
     <form
-      id={pageState.step?.formId}
+      id={step?.formId}
       onSubmit={handleSubmit(onSubmit)}
       className='flex-1'>
       {/* hidden inputs */}
@@ -172,7 +145,7 @@ export default function SoftwareInformation(
           <EditSectionTitle
             title="Software information"
           />
-          {session?.user?.role === 'rsd_admin' ?
+          {user?.role === 'rsd_admin' ?
             <>
               <div className="py-2"></div>
               <ControlledTextField
@@ -312,7 +285,7 @@ export default function SoftwareInformation(
 
           <SoftwareLicenses
             control={control}
-            software={pageState.software.id ?? ''}
+            software={software.id ?? ''}
             concept_doi={formData.concept_doi ?? undefined}
           />
 

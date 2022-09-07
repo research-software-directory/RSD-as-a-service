@@ -96,8 +96,8 @@ export default function useProjectToEdit({slug,token}:
         token
       })
       if (abort) return
-      setLoadedSlug(slug)
       setProject(project)
+      setLoadedSlug(slug)
       setLoading(false)
       // debugger
     }

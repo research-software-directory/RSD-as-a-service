@@ -13,7 +13,7 @@ import CopyIcon from '@mui/icons-material/ContentCopy'
 
 import {copyToClipboard,canCopyToClipboard} from '~/utils/copyToClipboard'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {softwareMaintainerLink} from './useSoftwareMaintainer'
+import {softwareMaintainerLink} from './useSoftwareMaintainers'
 import {useEffect} from 'react'
 
 import {Invitation} from '~/types/Invitation'

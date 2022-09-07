@@ -5,7 +5,7 @@
 
 import {useEffect, useState} from 'react'
 
-import {useAuth} from '~/auth'
+import {useAuth, useSession} from '~/auth'
 import {cfgRelatedItems as config} from './config'
 import {getRelatedProjectsForProject} from '~/utils/getProjects'
 import {addRelatedProject, deleteRelatedProject} from '~/utils/editProject'
@@ -19,19 +19,19 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {Status} from '~/types/Organisation'
 
 export default function RelatedProjectsForProject() {
-  const {session} = useAuth()
+  const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {setLoading,project} = useProjectContext()
+  const {project} = useProjectContext()
   const [relatedProject, setRelatedProject] = useState<SearchProject[]>()
   const [loadedProject, setLoadedProject] = useState('')
 
   useEffect(() => {
     let abort = false
     async function getRelatedProjects() {
-      setLoading(true)
+      // setLoading(true)
       const projects = await getRelatedProjectsForProject({
         project: project.id,
-        token: session.token,
+        token,
         frontend: true,
         approved: false,
         // order by title only
@@ -42,9 +42,9 @@ export default function RelatedProjectsForProject() {
       // set local state
       setRelatedProject(projects)
       setLoadedProject(project.id)
-      setLoading(false)
+      // setLoading(false)
     }
-    if (project.id && session.token && project.id!==loadedProject) {
+    if (project.id && token && project.id!==loadedProject) {
       getRelatedProjects()
     }else {
       console.group('skip request getRelatedProjectsForProject')
@@ -53,8 +53,7 @@ export default function RelatedProjectsForProject() {
       console.groupEnd()
     }
     return ()=>{abort=true}
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[project.id,session.token])
+  },[project.id,token,loadedProject])
 
   async function onAdd(selected: SearchProject) {
     if (typeof relatedProject=='undefined') return
@@ -69,7 +68,7 @@ export default function RelatedProjectsForProject() {
         origin: project.id,
         relation: selected.id,
         status,
-        token: session.token
+        token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to add related project. ${resp.message}`)
@@ -94,7 +93,7 @@ export default function RelatedProjectsForProject() {
       const resp = await deleteRelatedProject({
         origin: project.id,
         relation: related.id,
-        token: session.token
+        token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to remove related project. ${resp.message}`)
@@ -122,7 +121,7 @@ export default function RelatedProjectsForProject() {
       </EditSectionTitle>
       <FindRelatedProject
         project={project.id}
-        token={session.token}
+        token={token}
         config={{
           freeSolo: false,
           minLength: config.relatedProject.validation.minLength,

@@ -5,7 +5,7 @@
 
 import {useEffect, useState} from 'react'
 
-import {useAuth} from '~/auth'
+import {useSession} from '~/auth'
 import {RelatedSoftwareOfProject, SearchSoftware} from '~/types/SoftwareTypes'
 import FindRelatedSoftware from './FindRelatedSoftware'
 import {cfgRelatedItems as config} from './config'
@@ -19,27 +19,27 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {Status} from '~/types/Organisation'
 
 export default function RelatedSoftwareForProject() {
-  const {session} = useAuth()
+  const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {setLoading, project} = useProjectContext()
+  const {project} = useProjectContext()
   const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftwareOfProject[]>()
   const [loadedProject, setLoadedProject] = useState('')
 
   useEffect(() => {
     let abort = false
     async function getRelatedSoftware() {
-      setLoading(true)
+      // setLoading(true)
       const software = await getRelatedSoftwareForProject({
         project: project.id,
-        token: session.token,
+        token,
         frontend: true,
         approved: false
       })
       setRelatedSoftware(software)
       setLoadedProject(project.id)
-      setLoading(false)
+      // setLoading(false)
     }
-    if (project.id && session.token &&
+    if (project.id && token &&
       project.id !== loadedProject) {
       getRelatedSoftware()
     } else {
@@ -49,8 +49,7 @@ export default function RelatedSoftwareForProject() {
       console.groupEnd()
     }
     return ()=>{abort=true}
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[project.id,session.token])
+  },[project.id,token,loadedProject])
 
   async function onAdd(selected: SearchSoftware) {
     if (typeof relatedSoftware == 'undefined') return
@@ -65,7 +64,7 @@ export default function RelatedSoftwareForProject() {
         project: project.id,
         software: selected.id,
         status,
-        token: session.token
+        token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to add related software. ${resp.message}`)
@@ -94,7 +93,7 @@ export default function RelatedSoftwareForProject() {
       const resp = await deleteRelatedSoftware({
         project: project.id,
         software: software.id,
-        token: session.token
+        token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to add related software. ${resp.message}`)
@@ -122,7 +121,7 @@ export default function RelatedSoftwareForProject() {
       </EditSectionTitle>
       <FindRelatedSoftware
         software={''}
-        token={session.token}
+        token={token}
         config={{
           freeSolo: false,
           minLength: config.relatedSoftware.validation.minLength,

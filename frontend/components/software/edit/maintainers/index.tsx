@@ -5,7 +5,7 @@
 
 import {useEffect,useState} from 'react'
 
-import {Session} from '~/auth'
+import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
@@ -16,7 +16,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import useSoftwareContext from '../useSoftwareContext'
 import useSoftwareMaintainers, {
   deleteMaintainerFromSoftware, MaintainerOfSoftware
-} from './useSoftwareMaintainer'
+} from './useSoftwareMaintainers'
 import SoftwareMaintainerLink from './SoftwareMaintainerLink'
 
 type DeleteModal = {
@@ -25,14 +25,11 @@ type DeleteModal = {
   displayName?:string
 }
 
-
-export default function SoftwareMaintainers({session}: { session: Session }) {
+export default function SoftwareMaintainers() {
+  const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()
-  const {loading,maintainers} = useSoftwareMaintainers({
-    software: software.id ?? '',
-    token: session.token
-  })
+  const {loading,maintainers} = useSoftwareMaintainers()
   const [projectMaintainers, setProjectMaintaners] = useState<MaintainerOfSoftware[]>([])
   const [modal, setModal] = useState<DeleteModal>({
     open: false
@@ -79,7 +76,7 @@ export default function SoftwareMaintainers({session}: { session: Session }) {
       const resp = await deleteMaintainerFromSoftware({
         maintainer: admin.account,
         software: software.id ?? '',
-        token: session.token,
+        token,
         frontend: true
       })
       if (resp.status === 200) {
@@ -113,8 +110,8 @@ export default function SoftwareMaintainers({session}: { session: Session }) {
           />
           <SoftwareMaintainerLink
             software={software.id ?? ''}
-            account={session.user?.account ?? ''}
-            token={session.token}
+            account={user?.account ?? ''}
+            token={token}
           />
         </div>
       </EditSection>

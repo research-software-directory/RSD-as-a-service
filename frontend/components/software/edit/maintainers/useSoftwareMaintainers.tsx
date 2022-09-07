@@ -4,8 +4,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState,useEffect} from 'react'
+import {useSession} from '~/auth'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
+import useSoftwareContext from '../useSoftwareContext'
 
 export type RawMaintainerOfSoftware = {
   // unique maintainer id
@@ -50,17 +52,19 @@ export async function getMaintainersOfSoftware({software, token, frontend=true}:
   }
 }
 
-export default function useSoftwareMaintainers({software, token}:
-  {software: string, token: string }) {
+export default function useSoftwareMaintainers() {
+  const {token} = useSession()
+  const {software} = useSoftwareContext()
   const [maintainers, setMaintainers] = useState<MaintainerOfSoftware[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadedSoftware, setLoadedSoftware] = useState<string>('')
 
   useEffect(() => {
     let abort = false
     async function getMaintainers() {
       setLoading(true)
       const raw_maintainers = await getMaintainersOfSoftware({
-        software,
+        software: software.id ?? '',
         token,
         frontend:true
       })
@@ -68,16 +72,24 @@ export default function useSoftwareMaintainers({software, token}:
       if (abort) return null
       // update maintainers state
       setMaintainers(maintainers)
+      // keep track what is loaded
+      setLoadedSoftware(software?.id ?? '')
       // update loading flag
       setLoading(false)
     }
 
-    if (software && token) {
+    if (software.id && token &&
+      software.id !== loadedSoftware) {
       getMaintainers()
+    } else {
+      console.group('skip request useSoftwareMaintainers')
+      console.log('software...', software?.id)
+      console.log('loadedSoftware...', loadedSoftware)
+      console.groupEnd()
     }
 
     ()=>{abort=true}
-  },[software,token])
+  },[software?.id,token,loadedSoftware])
 
   return {maintainers, loading}
 }

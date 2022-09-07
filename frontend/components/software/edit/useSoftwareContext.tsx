@@ -5,39 +5,49 @@
 
 import {useContext} from 'react'
 
-import editSoftwareContext, {SoftwareInfo,EditSoftwareActionType} from './editSoftwareContext'
-import {EditSoftwarePageStep} from './editSoftwareSteps'
+import editSoftwareContext, {SoftwareInfo} from './editSoftwareContext'
+import {EditSoftwareActionType} from './editSoftwareReducer'
+import {EditSoftwarePageProps} from './editSoftwareSteps'
 
-export default function useProjectContext() {
-  const {pageState,dispatchPageState} = useContext(editSoftwareContext)
+export default function useSoftwareContext() {
+  const {state,dispatch} = useContext(editSoftwareContext)
 
   function setSoftwareInfo(software: SoftwareInfo) {
-    dispatchPageState({
+    dispatch({
       type: EditSoftwareActionType.SET_SOFTWARE_INFO,
       payload: software
     })
   }
 
-  function setEditStep(step: EditSoftwarePageStep) {
-    dispatchPageState({
+  function setEditStep(step: EditSoftwarePageProps) {
+    dispatch({
       type: EditSoftwareActionType.SET_EDIT_STEP,
       payload: step
     })
   }
 
   function setLoading(loading: boolean) {
-    dispatchPageState({
+    dispatch({
       type: EditSoftwareActionType.SET_LOADING,
       payload: loading
     })
   }
 
+  function setFormState({isDirty,isValid}:{isDirty:boolean,isValid:boolean}) {
+    dispatch({
+      type: EditSoftwareActionType.UPDATE_STATE,
+      payload: {
+        isDirty,
+        isValid,
+      }
+    })
+  }
+
   return {
-    step: pageState.step,
-    software: pageState.software,
-    loading: pageState.loading,
+    ...state,
     setSoftwareInfo,
     setEditStep,
-    setLoading
+    setLoading,
+    setFormState
   }
 }
