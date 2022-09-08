@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # PHONY makes possible to call `make commands` from inside the Makefile
-.PHONY: dev-docs dev-frontend
+.PHONY: start install dev down dev-docs
 
 # Main commands
 # ----------------------------------------------------------------
@@ -29,7 +29,7 @@ install:
 
 dev:
 	docker-compose up --scale scrapers=0 -d
-	make -j 2 dev-docs dev-frontend # Run concurrently
+	make dev-docs
 
 down:
 	docker-compose down
@@ -44,6 +44,3 @@ frontend/.env.local: .env
 	cp .env frontend/.env.local
 	sed -i 's/POSTGREST_URL=http:\/\/backend:3500/POSTGREST_URL=http:\/\/localhost\/api\/v1/g' frontend/.env.local
 	sed -i 's/RSD_AUTH_URL=http:\/\/auth:7000/RSD_AUTH_URL=http:\/\/localhost\/auth/g' frontend/.env.local
-
-dev-frontend: frontend/.env.local
-	cd frontend && yarn dev

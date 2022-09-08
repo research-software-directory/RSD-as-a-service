@@ -132,6 +132,46 @@ services:
     networks:
       - net
 
+  frontend-dev:
+    build:
+      context: ./frontend
+      # dockerfile to use for build
+      dockerfile: Dockerfile.dev
+    # update version number to correspond to frontend/package.json
+    image: rsd/frontend-dev:1.3.0
+    environment:
+      # it uses values from .env file
+      - POSTGREST_URL
+      - PGRST_JWT_SECRET
+      - RSD_AUTH_URL
+      - RSD_AUTH_PROVIDERS
+      - HOTJAR_ID
+      - MATOMO_URL
+      - MATOMO_ID
+      - NEXT_PUBLIC_SURFCONEXT_CLIENT_ID
+      - NEXT_PUBLIC_SURFCONEXT_REDIRECT
+      - NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL
+      - NEXT_PUBLIC_SURFCONEXT_SCOPES
+      - NEXT_PUBLIC_SURFCONEXT_RESPONSE_MODE
+      - NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID
+      - NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT
+      - NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL
+      - NEXT_PUBLIC_HELMHOLTZAAI_SCOPES
+      - NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE
+    expose:
+      - 3000
+    depends_on:
+      - database
+      - backend
+      - auth
+    volumes:
+      - ./frontend:/app
+      # - ./deployment/hmz/styles:/app/public/styles
+      # - ./deployment/hmz/data:/app/public/data
+      # - ./deployment/hmz/images:/app/public/images
+    networks:
+      - net
+
   scrapers:
     build: ./scrapers
     image: rsd/scrapers:1.0.2
@@ -158,6 +198,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "3000:3000"
     depends_on:
       - database
       - backend
