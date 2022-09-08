@@ -15,6 +15,7 @@ type UseOrganisationSettingsProps = {
 export default function useOrganisationSettings({uuid, token}:UseOrganisationSettingsProps) {
   const [loading, setLoading] = useState(true)
   const [settings, setOrganisation] = useState<OrganisationForOverview>()
+  const [loadedOrganisation, setLoadedOranisation] = useState('')
 
   useEffect(() => {
     let abort = false
@@ -27,13 +28,15 @@ export default function useOrganisationSettings({uuid, token}:UseOrganisationSet
       })
       if (abort) return
       setOrganisation(organisation)
+      setLoadedOranisation(uuid)
       setLoading(false)
     }
-    if (uuid && token) {
+    if (uuid && token &&
+      uuid !== loadedOrganisation) {
       getOrganisationSettings()
     }
     return ()=>{abort=true}
-  },[uuid,token])
+  },[uuid,token,loadedOrganisation])
 
   return {
     loading,
