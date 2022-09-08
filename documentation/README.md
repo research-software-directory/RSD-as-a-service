@@ -2,7 +2,7 @@
 
 [Visit the documentation here.](https://research-software-directory.github.io/RSD-as-a-service/)
 
-Any changes merge to the main branch will trigger automatically a build deploy to githuv pages.
+Any changes merge to the main branch will trigger automatically a build deploy to github pages.
 
 ## Running locally: 
 ```bash
