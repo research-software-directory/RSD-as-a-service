@@ -76,11 +76,13 @@ function generateMentions(amountExtra = 10) {
 	return result;
 }
 
-function generateSofware(amount=10) {
+function generateSofware(amount=50) {
 	const result = [];
 
 	for (let index = 0; index < amount; index++) {
-		const brandName = faker.hacker.adjective() + ' ' + faker.hacker.noun() + ' ' + faker.helpers.replaceSymbolWithNumber('####');
+		const brandName = faker.helpers.unique(() =>
+			faker.hacker.adjective() + ' ' + faker.hacker.noun() + ' ' + faker.helpers.replaceSymbolWithNumber('####')
+		);
 		result.push({
 			slug: faker.helpers.slugify(brandName),
 			brand_name: brandName,
@@ -257,11 +259,13 @@ function generateSoftwareForSoftware(ids) {
 	return result;
 }
 
-function generateProjects(amount=10) {
+function generateProjects(amount=50) {
 	const result = [];
 
 	for (let index = 0; index < amount; index++) {
-		const title = faker.hacker.adjective() + ' ' + faker.hacker.noun()  + ' ' + faker.helpers.replaceSymbolWithNumber('####');
+		const title = faker.helpers.unique(() =>
+			faker.hacker.adjective() + ' ' + faker.hacker.noun()  + ' ' + faker.helpers.replaceSymbolWithNumber('####')
+		);
 		result.push({
 			slug: faker.helpers.slugify(title),
 			title: title,
@@ -279,7 +283,7 @@ function generateProjects(amount=10) {
 	return result;
 }
 
-async function generateContributors(ids, amount=20) {
+async function generateContributors(ids, amount=100) {
 	const base64Images = await downloadImagesAsBase64(faker.image.avatar, amount);
 
 	const result = [];
@@ -302,7 +306,7 @@ async function generateContributors(ids, amount=20) {
 	return result;
 }
 
-async function generateTeamMembers(ids, amount=20) {
+async function generateTeamMembers(ids, amount=100) {
 	const result = await generateContributors(ids, amount);
 	result.forEach(contributor => {
 		contributor['project'] = contributor['software'];
@@ -317,6 +321,7 @@ async function generateImagesForProjects(ids) {
 	const result = [];
 
 	for (let index = 0; index < ids.length; index++) {
+		if (base64Images[index] === null) continue;
 		result.push({
 			project: ids[index],
 			data: base64Images[index],
@@ -345,11 +350,13 @@ function generateUrlsForProjects(ids) {
 	return result;
 }
 
-function generateOrganisations(amount=10) {
+function generateOrganisations(amount=50) {
 	const result = [];
 
 	for (let index = 0; index < amount; index++) {
-		const name = faker.company.name();
+		const name = faker.helpers.unique(() =>
+			faker.company.name()
+		);
 		result.push({
 			parent: null,
 			primary_maintainer: null,
@@ -370,6 +377,7 @@ async function generateLogosForOrganisations(ids) {
 	const result = [];
 
 	for (let index = 0; index < ids.length; index++) {
+		if (base64Images === null) continue;
 		result.push({
 			organisation: ids[index],
 			data: base64Images[index],
@@ -462,7 +470,8 @@ async function downloadImagesAsBase64(urlGenerator, amount) {
 					.then(resp => {clearTimeout(timeOuts[index]); return resp.arrayBuffer()})
 					.then(ab => Buffer.from(ab))
 					.then(bf => bf.toString('base64')),
-				new Promise((res, rej) => timeOuts[index] = setTimeout(rej, 3000, url))
+				new Promise((res, rej) => timeOuts[index] = setTimeout(res, 3000))
+					.then(() => {console.warn('Timeout for ' + url + ', skipping'); return null;})
 			])
 		);
 	}
