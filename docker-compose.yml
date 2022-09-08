@@ -111,10 +111,10 @@ services:
       - database
       - backend
       - auth
-    # volumes:
-    #   - ./deployment/hmz/styles:/app/public/styles
-    #   - ./deployment/hmz/data:/app/public/data
-    #   - ./deployment/hmz/images:/app/public/images
+    volumes:
+      - ./deployment/helmholtz/styles:/app/public/styles
+      - ./deployment/helmholtz/data:/app/public/data
+      - ./deployment/helmholtz/images:/app/public/images
     networks:
       - net
 
@@ -152,9 +152,9 @@ services:
       - auth
     volumes:
       - ./frontend:/app
-      # - ./deployment/hmz/styles:/app/public/styles
-      # - ./deployment/hmz/data:/app/public/data
-      # - ./deployment/hmz/images:/app/public/images
+      - ./deployment/helmholtz/styles:/app/public/styles
+      - ./deployment/helmholtz/data:/app/public/data
+      - ./deployment/helmholtz/images:/app/public/images
     networks:
       - net
 
