@@ -18,8 +18,8 @@ CREATE TYPE organisation_role AS ENUM (
 );
 
 CREATE TABLE software_for_software (
-	origin UUID references software (id),
-	relation UUID references software (id),
+	origin UUID REFERENCES software (id),
+	relation UUID REFERENCES software (id),
 	PRIMARY KEY (origin, relation)
 );
 
@@ -36,8 +36,8 @@ CREATE TRIGGER sanitise_update_software_for_software BEFORE UPDATE ON software_f
 
 
 CREATE TABLE software_for_project (
-	software UUID references software (id),
-	project UUID references project (id),
+	software UUID REFERENCES software (id),
+	project UUID REFERENCES project (id),
 	status relation_status NOT NULL DEFAULT 'approved',
 	PRIMARY KEY (software, project)
 );
@@ -67,8 +67,8 @@ CREATE TRIGGER sanitise_update_software_for_project BEFORE UPDATE ON software_fo
 
 
 CREATE TABLE project_for_project (
-	origin UUID references project (id),
-	relation UUID references project (id),
+	origin UUID REFERENCES project (id),
+	relation UUID REFERENCES project (id),
 	status relation_status NOT NULL DEFAULT 'approved',
 	PRIMARY KEY (origin, relation)
 );
@@ -98,8 +98,8 @@ CREATE TRIGGER sanitise_update_project_for_project BEFORE UPDATE ON project_for_
 
 
 CREATE TABLE software_for_organisation (
-	software UUID references software (id),
-	organisation UUID references organisation (id),
+	software UUID REFERENCES software (id),
+	organisation UUID REFERENCES organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
 	PRIMARY KEY (software, organisation)
@@ -133,12 +133,12 @@ CREATE TRIGGER sanitise_update_software_for_organisation BEFORE UPDATE ON softwa
 
 
 CREATE TABLE project_for_organisation (
-	project UUID references project (id),
-	organisation UUID references organisation (id),
+	project UUID REFERENCES project (id),
+	organisation UUID REFERENCES organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
 	role organisation_role NOT NULL DEFAULT 'participating',
 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
-	PRIMARY KEY (project, organisation)
+	PRIMARY KEY (project, organisation, role)
 );
 
 CREATE FUNCTION sanitise_update_project_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
