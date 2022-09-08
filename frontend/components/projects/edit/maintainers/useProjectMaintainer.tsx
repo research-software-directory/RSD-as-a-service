@@ -54,6 +54,7 @@ export default function useProjectMaintainers({project, token}:
   {project: string, token: string }) {
   const [maintainers, setMaintainers] = useState<MaintainerOfProject[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadedProject, setLoadedProject] = useState('')
 
   useEffect(() => {
     let abort = false
@@ -68,18 +69,21 @@ export default function useProjectMaintainers({project, token}:
       if (abort) return null
       // update maintainers state
       setMaintainers(maintainers)
+      setLoadedProject(project)
       // update loading flag
       setLoading(false)
     }
 
-    if (project && token) {
+    if (project && token && project!==loadedProject) {
       getMaintainers()
     }
+    return ()=>{abort=true}
+  },[project,token,loadedProject])
 
-    ()=>{abort=true}
-  },[project,token])
-
-  return {maintainers, loading}
+  return {
+    maintainers,
+    loading
+  }
 }
 
 export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfProject[]) {

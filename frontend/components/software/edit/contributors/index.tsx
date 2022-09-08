@@ -8,6 +8,7 @@
 import {useContext,useEffect,useState} from 'react'
 
 import {app} from '~/config/app'
+import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
@@ -27,22 +28,22 @@ import EditContributorModal from './EditContributorModal'
 import FindContributor, {Name} from './FindContributor'
 import SoftwareContributorsList from './SoftwareContributorsList'
 import EditSoftwareSection from '../../../layout/EditSection'
-import editSoftwareContext from '../editSoftwareContext'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {ModalProps, ModalStates} from '../editSoftwareTypes'
 import GetContributorsFromDoi from './GetContributorsFromDoi'
+import useSoftwareContext from '../useSoftwareContext'
+import useSoftwareContributors from './useSoftwareContributors'
 
 type EditContributorModal = ModalProps & {
   contributor?: Contributor
 }
 
-export default function SoftwareContributors({token}: {token: string }) {
+export default function SoftwareContributors({slug}: { slug: string }) {
+  const {token} = useSession()
   const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
-  const {pageState, dispatchPageState} = useContext(editSoftwareContext)
-  const {software} = pageState
-  const [loading, setLoading] = useState(true)
-  const [contributors, setContributors] = useState<Contributor[]>([])
+  const {software} = useSoftwareContext()
+  const {loading,contributors,setContributors, setLoading} = useSoftwareContributors()
   const [modal, setModal] = useState<ModalStates<EditContributorModal>>({
     edit: {
       open: false
@@ -51,35 +52,6 @@ export default function SoftwareContributors({token}: {token: string }) {
       open: false
     }
   })
-  // we use pageState to enable/disable Save button in the header
-  // extract from (shared) pageState
-  const {isDirty,isValid} = pageState
-  // watch for unsaved changes
-  useOnUnsaveChange({
-    isDirty,
-    isValid,
-    warning: app.unsavedChangesMessage
-  })
-
-  useEffect(() => {
-    let abort = false
-    const getContributors = async (software: string, token: string) => {
-      setLoading(true)
-      const resp = await getContributorsForSoftware({
-        software,
-        token,
-        frontend:true
-      })
-      if (abort) return
-      // update state
-      setContributors(resp ?? [])
-      setLoading(false)
-    }
-    if (software?.id && token) {
-      getContributors(software.id,token)
-    }
-    return () => { abort = true }
-  },[software?.id,token])
 
   // if loading show loader
   if (loading) return (

@@ -63,7 +63,7 @@ export function AuthProvider(props: any) {
       const {user} = session
       const expiresInMs = getExpInMs(user.exp)
       const waitInMs = getWaitInMs(expiresInMs)
-      // console.log('waitInMs...', waitInMs)
+      console.log('waitInMs...', waitInMs)
       if (schedule) clearTimeout(schedule)
       if (expiresInMs <= 0) {
         // token expired
@@ -104,6 +104,14 @@ export function AuthProvider(props: any) {
 
 // Auth hook to use in the components
 export const useAuth = () => useContext(AuthContext)
+
+// More specific session hook which destructures session
+export function useSession(){
+  const {session} = useContext(AuthContext)
+  return {
+    ...session
+  }
+}
 
 /**
  * Calculate expirition time from now in milliseconds

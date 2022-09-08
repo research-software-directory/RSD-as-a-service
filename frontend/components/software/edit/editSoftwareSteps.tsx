@@ -19,7 +19,7 @@ import SoftwareTestimonials from './testimonials'
 import RelatedTopics from './related'
 import SoftwareMaintainers from './maintainers'
 
-export type EditSoftwarePageStep = {
+export type EditSoftwarePageProps = {
   formId?:string,
   status: string,
   label: string,
@@ -27,7 +27,7 @@ export type EditSoftwarePageStep = {
   component: (props:any)=>JSX.Element
 }
 
-export const editSoftwareMenu:EditSoftwarePageStep[] = [
+export const editSoftwarePage:EditSoftwarePageProps[] = [
   {
     formId: 'software-information',
     label: 'Information',

@@ -3,9 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext, useState} from 'react'
+import {useState} from 'react'
 
-import {Session} from '../../../../auth'
+import {useSession} from '../../../../auth'
 import useSnackbar from '../../../snackbar/useSnackbar'
 import ContentLoader from '../../../layout/ContentLoader'
 import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
@@ -24,29 +24,29 @@ import {
   saveNewOrganisationForSoftware,
   searchToEditOrganisation,
 } from '../../../../utils/editOrganisation'
-import useParticipatingOrganisations from '../../../../utils/useParticipatingOrganisations'
+import useParticipatingOrganisations from './useParticipatingOrganisations'
 import {organisationInformation as config} from '../editSoftwareConfig'
 import EditSoftwareSection from '../../../layout/EditSection'
-import editSoftwareContext from '../editSoftwareContext'
 import {ModalProps, ModalStates} from '../editSoftwareTypes'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import FindOrganisation from './FindOrganisation'
 import EditOrganisationModal from './EditOrganisationModal'
 import OrganisationsList from './OrganisationsList'
 import {getSlugFromString} from '../../../../utils/getSlugFromString'
+import useSoftwareContext from '../useSoftwareContext'
 
 export type EditOrganisationModalProps = ModalProps & {
   organisation?: EditOrganisation
 }
 
-export default function SoftwareOganisations({session}:{session:Session}) {
+export default function SoftwareOganisations() {
+  const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {pageState} = useContext(editSoftwareContext)
-  const {software} = pageState
+  const {software} = useSoftwareContext()
   const {loading, organisations, setOrganisations} = useParticipatingOrganisations({
-    software: software?.id,
-    token: session?.token,
-    account: session.user?.account
+    software: software?.id ?? '',
+    account: user?.account ?? '',
+    token
   })
   const [modal, setModal] = useState<ModalStates<EditOrganisationModalProps>>({
     edit: {
@@ -66,7 +66,7 @@ export default function SoftwareOganisations({session}:{session:Session}) {
     // add default values
     const addOrganisation: EditOrganisation = searchToEditOrganisation({
       item,
-      account: session?.user?.account,
+      account: user?.account,
       position: organisations.length + 1
     })
     if (item.source === 'ROR') {
@@ -85,8 +85,8 @@ export default function SoftwareOganisations({session}:{session:Session}) {
       const resp = await addOrganisationToSoftware({
         software: software?.id ?? '',
         organisation: item.id ?? '',
-        account: session.user?.account ?? '',
-        token: session.token
+        account: user?.account ?? '',
+        token
       })
       if (resp.status === 200) {
         // update status received in message
@@ -162,7 +162,7 @@ export default function SoftwareOganisations({session}:{session:Session}) {
       const resp = await deleteOrganisationFromSoftware({
         software: software?.id,
         organisation: organisation.id,
-        token: session.token
+        token
       })
       if (resp.status === 200) {
         deleteOrganisationFromList(pos)
@@ -179,7 +179,7 @@ export default function SoftwareOganisations({session}:{session:Session}) {
         // update existing organisation
         const resp = await saveExistingOrganisation({
           item: data,
-          token: session?.token,
+          token,
           pos,
           setState: updateOrganisationInList
         })
@@ -193,8 +193,8 @@ export default function SoftwareOganisations({session}:{session:Session}) {
         const resp = await saveNewOrganisationForSoftware({
           item: data,
           software: software?.id ?? '',
-          account: session?.user?.account ?? '',
-          token: session?.token,
+          account: user?.account ?? '',
+          token,
           setState: addOrganisationToList
         })
         if (resp.status !== 200) {
@@ -209,7 +209,7 @@ export default function SoftwareOganisations({session}:{session:Session}) {
   async function onDeleteOrganisationLogo(logo_id:string) {
     const resp = await deleteOrganisationLogo({
       id: logo_id,
-      token: session.token
+      token
     })
     if (resp.status !== 200) {
       showErrorMessage(resp.message)

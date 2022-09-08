@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {getMentionsForSoftware} from '~/utils/editMentions'
@@ -15,6 +15,7 @@ type MentionForSoftwareProps = {
 
 export default function useMentionForSoftware({software, token}: MentionForSoftwareProps) {
   const {mentions, setMentions, loading, setLoading} = useEditMentionReducer()
+  const [loadedSoftware, setLoadedSoftware] = useState<string>('')
 
   useEffect(() => {
     let abort = false
@@ -29,15 +30,25 @@ export default function useMentionForSoftware({software, token}: MentionForSoftw
       if (mentionsForProject && abort === false) {
         // debugger
         setMentions(mentionsForProject)
+        setLoadedSoftware(software)
         setLoading(false)
       }
     }
-    if (software && token) {
+    if (software && token &&
+      software !== loadedSoftware) {
       getImpactFromApi()
     }
+    // else {
+    //   console.group('skip request useMentionForSoftware')
+    //   console.log('software...', software)
+    //   console.log('loadedSoftware...', loadedSoftware)
+    //   console.groupEnd()
+    // }
     return () => { abort = true }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[software,token])
+    // we skip setMentions and setLoading methods in the deps to avoid loop
+    // TODO! try wrapping methods of useEditMentionReducer in useCallback?
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[software,token,loadedSoftware])
 
   // console.group('useMentionForSoftware')
   // console.log('loading...', loading)

@@ -3,18 +3,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext, useState, useRef} from 'react'
+import {useState, useRef} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
 
 import StickyHeader from '../../layout/StickyHeader'
 import useStickyHeaderBorder from '~/components/layout/useStickyHeaderBorder'
-import editSoftwareContext from './editSoftwareContext'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import {useFormContext} from 'react-hook-form'
+import useSoftwareContext from './useSoftwareContext'
 
 export default function StickyHeaderEditSoftware() {
-  const {pageState} = useContext(editSoftwareContext)
-  const {isDirty, isValid} = pageState
+  const {software,step} = useSoftwareContext()
+  const {formState:{isValid,isDirty}} = useFormContext()
   const headerRef = useRef(null)
   const [classes, setClasses] = useState('')
   const router = useRouter()
@@ -35,7 +36,7 @@ export default function StickyHeaderEditSoftware() {
       <h1
         ref={headerRef}
         className="flex-1 text-primary">
-        {pageState?.software?.brand_name || ''}
+        {software?.brand_name || ''}
       </h1>
       <div>
         <Button
@@ -52,9 +53,9 @@ export default function StickyHeaderEditSoftware() {
         >
           VIEW
         </Button>
-        {pageState?.step?.formId ?
+        {step?.formId ?
           <SubmitButtonWithListener
-            formId={pageState?.step?.formId}
+            formId={step?.formId}
             disabled={isSaveDisabled()}
           />
         : null

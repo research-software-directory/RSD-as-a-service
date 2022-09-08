@@ -6,7 +6,7 @@
 import {createContext, useReducer} from 'react'
 import {Action} from './editProjectReducer'
 
-import {EditProjectStep} from './editProjectSteps'
+import {EditProjectStep, editProjectSteps} from './editProjectSteps'
 import {editProjectReducer} from './editProjectReducer'
 
 export type ProjectInfo = {
@@ -21,8 +21,9 @@ export type EditProjectState = {
   loading: boolean
 }
 
-export const initalState:EditProjectState = {
-  step: undefined,
+export const initialState: EditProjectState = {
+  // loading first page/step by default
+  step: editProjectSteps[0],
   project: {
     id: '',
     slug: '',
@@ -38,12 +39,12 @@ export type EditProjectContextProps = {
 
 
 const EditProjectContext = createContext<EditProjectContextProps>({
-  state: initalState,
+  state: initialState,
   dispatch: (action)=>{}
 })
 
 export function EditProjectProvider(props: any) {
-  const [state, dispatch] = useReducer(editProjectReducer, props?.state ?? initalState)
+  const [state, dispatch] = useReducer(editProjectReducer, props?.state ?? initialState)
 
   return (
     <EditProjectContext.Provider value={{

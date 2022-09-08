@@ -3,15 +3,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext, useEffect, useState} from 'react'
+import {useState} from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
 
+import {useSession} from '~/auth'
 import useSnackbar from '../../../snackbar/useSnackbar'
 import {NewTestimonial, Testimonial} from '../../../../types/Testimonial'
 import {
-  postTestimonial, getTestimonialsForSoftware,
-  patchTestimonial, deleteTestimonialById, patchTestimonialPositions
+  postTestimonial, patchTestimonial,
+  deleteTestimonialById, patchTestimonialPositions
 } from '../../../../utils/editTestimonial'
 import {sortOnNumProp} from '../../../../utils/sortFn'
 import ContentLoader from '../../../layout/ContentLoader'
@@ -19,22 +20,21 @@ import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
 
 import EditTestimonialModal from './EditTestimonialModal'
 import EditSoftwareSection from '../../../layout/EditSection'
-import editSoftwareContext, {EditSoftwareActionType} from '../editSoftwareContext'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {ModalProps,ModalStates} from '../editSoftwareTypes'
 
 import SortableTestimonialList from './SortableTestimonialList'
+import useTestimonals from './useTestimonials'
+
 
 type EditTestimonialModal = ModalProps & {
   testimonial?: NewTestimonial | Testimonial
 }
 
-export default function SoftwareTestimonials({token}: {token: string }) {
+export default function SoftwareTestimonials() {
+  const {token} = useSession()
   const {showErrorMessage, showSuccessMessage} = useSnackbar()
-  const {pageState, dispatchPageState} = useContext(editSoftwareContext)
-  const {software} = pageState
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
-  const [loading, setLoading] = useState(true)
+  const {loading,software,testimonials,setTestimonials} = useTestimonals()
   const [modal, setModal] = useState<ModalStates<EditTestimonialModal>>({
     edit: {
       open: false,
@@ -43,26 +43,6 @@ export default function SoftwareTestimonials({token}: {token: string }) {
       open: false
     }
   })
-
-  useEffect(() => {
-    let abort = false
-    const getTestimonials = async (software:string,token:string) => {
-      const resp = await getTestimonialsForSoftware({
-        software,
-        token,
-        frontend:true
-      })
-      if (abort) return
-      // update state
-      setTestimonials(resp ?? [])
-      setLoading(false)
-    }
-    if (software?.id && token) {
-      getTestimonials(software.id,token)
-    }
-
-    return () => { abort = true }
-  },[software?.id,token])
 
   // if loading show loader
   if (loading) return (
@@ -220,16 +200,7 @@ export default function SoftwareTestimonials({token}: {token: string }) {
    */
   async function patchPositions(data:Testimonial[]) {
     const resp = await patchTestimonialPositions({testimonials:data, token})
-    if (resp.status === 200) {
-      // after we patched all items
-      dispatchPageState({
-        type: EditSoftwareActionType.UPDATE_STATE,
-        payload: {
-          isDirty:false,
-          isValid:true,
-        }
-      })
-    } else {
+    if (resp.status !== 200) {
       showErrorMessage(`Failed to update testimonial positions! Error: ${resp.message}`)
     }
   }

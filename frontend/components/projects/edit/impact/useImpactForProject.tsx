@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import {getImpactForProject} from '~/utils/getProjects'
 
 import {sortOnNumProp} from '~/utils/sortFn'
@@ -17,6 +17,7 @@ type ImpactForProjectProps = {
 
 export default function useImpactForProject({project, token}: ImpactForProjectProps) {
   const {mentions, setMentions, loading, setLoading} = useEditMentionReducer()
+  const [loadedProject, setLoadedProject] = useState('')
 
   useEffect(() => {
     let abort = false
@@ -35,15 +36,18 @@ export default function useImpactForProject({project, token}: ImpactForProjectPr
         })
         // debugger
         setMentions(mentions)
+        setLoadedProject(project)
         setLoading(false)
       }
     }
-    if (project && token) {
+    if (project && token && project!==loadedProject) {
       getImpactFromApi()
     }
     return () => { abort = true }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[project,token])
+    // we skip setMentions and setLoading methods in the deps to avoid loop
+    // TODO! try wrapping methods of useEditMentionReducer in useCallback?
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[project,token,loadedProject])
 
   // console.group('useImpactForProject')
   // console.log('loading...', loading)

@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Session} from '~/auth'
+import {useSession} from '~/auth'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import MentionEditSection from '~/components/mention/MentionEditSection'
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -12,11 +12,12 @@ import {cfgImpact as config} from './config'
 import useImpactForProject from './useImpactForProject'
 import Alert from '@mui/material/Alert'
 
-export default function ImpactByType({session}: { session: Session }) {
+export default function ImpactByType() {
   const {project} = useProjectContext()
+  const {token} = useSession()
   const {loading,impactCnt} = useImpactForProject({
     project: project.id,
-    token: session.token
+    token
   })
 
   // console.group('ImpactByType')

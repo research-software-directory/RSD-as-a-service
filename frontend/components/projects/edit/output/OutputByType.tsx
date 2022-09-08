@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Session} from '~/auth'
+import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import MentionEditSection from '~/components/mention/MentionEditSection'
@@ -12,11 +12,12 @@ import {cfgOutput as config} from './config'
 import useOutputForProject from './useOutputForProject'
 import Alert from '@mui/material/Alert'
 
-export default function OutputByType({session}: { session: Session }) {
+export default function OutputByType() {
   const {project} = useProjectContext()
+  const {token} = useSession()
   const {loading,outputCnt} = useOutputForProject({
     project: project.id,
-    token: session.token
+    token
   })
 
   // console.group('OutputByType')

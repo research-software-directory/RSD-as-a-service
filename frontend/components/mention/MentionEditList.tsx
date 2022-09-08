@@ -47,7 +47,9 @@ export default function MentionEditList({title, type, items}: MentionSectionList
         sx={{
           position: 'sticky',
           top: 0,
-          // backgroundColor: 'primary.main',
+          // FF fix for list items mixing with section title
+          // when scrolling through long list
+          backgroundColor: 'background.paper',
           padding: '0rem',
           '&:hover': {
             opacity:0.95

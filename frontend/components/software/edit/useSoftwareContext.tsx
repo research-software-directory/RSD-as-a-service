@@ -3,41 +3,51 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext} from 'react'
+import {useCallback, useContext} from 'react'
 
-import editSoftwareContext, {SoftwareInfo,EditSoftwareActionType} from './editSoftwareContext'
-import {EditSoftwarePageStep} from './editSoftwareSteps'
+import editSoftwareContext, {SoftwareInfo} from './editSoftwareContext'
+import {EditSoftwareActionType} from './editSoftwareReducer'
+import {EditSoftwarePageProps} from './editSoftwareSteps'
 
-export default function useProjectContext() {
-  const {pageState,dispatchPageState} = useContext(editSoftwareContext)
+export default function useSoftwareContext() {
+  const {state,dispatch} = useContext(editSoftwareContext)
 
-  function setSoftwareInfo(software: SoftwareInfo) {
-    dispatchPageState({
+  const setSoftwareInfo = useCallback((software: SoftwareInfo)=>{
+    dispatch({
       type: EditSoftwareActionType.SET_SOFTWARE_INFO,
       payload: software
     })
-  }
+  },[dispatch])
 
-  function setEditStep(step: EditSoftwarePageStep) {
-    dispatchPageState({
+  const setEditStep = useCallback((step: EditSoftwarePageProps)=>{
+    dispatch({
       type: EditSoftwareActionType.SET_EDIT_STEP,
       payload: step
     })
-  }
+  },[dispatch])
 
-  function setLoading(loading: boolean) {
-    dispatchPageState({
+  const setLoading = useCallback((loading: boolean)=>{
+    dispatch({
       type: EditSoftwareActionType.SET_LOADING,
       payload: loading
     })
-  }
+  },[dispatch])
+
+  const setFormState = useCallback(({isDirty,isValid}:{isDirty:boolean,isValid:boolean})=>{
+    dispatch({
+      type: EditSoftwareActionType.UPDATE_STATE,
+      payload: {
+        isDirty,
+        isValid,
+      }
+    })
+  },[dispatch])
 
   return {
-    step: pageState.step,
-    software: pageState.software,
-    loading: pageState.loading,
+    ...state,
     setSoftwareInfo,
     setEditStep,
-    setLoading
+    setLoading,
+    setFormState
   }
 }

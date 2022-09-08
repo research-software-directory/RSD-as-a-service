@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Session} from '~/auth'
+import {Session, useSession} from '~/auth'
 import EditSection from '~/components/layout/EditSection'
 import EditImpactProvider from './EditImpactProvider'
 import ImpactByType from './ImpactByType'
@@ -12,7 +12,8 @@ import AddImpact from './AddImpact'
 import useProjectContext from '../useProjectContext'
 import EditMentionsInfo from '~/components/software/edit/mentions/EditMentionsInfo'
 
-export default function ProjectImpact({session}:{session:Session}) {
+export default function ProjectImpact() {
+  const {token} = useSession()
   const {project} = useProjectContext()
 
   // console.group('ProjectImpact')
@@ -20,10 +21,10 @@ export default function ProjectImpact({session}:{session:Session}) {
   // console.groupEnd()
 
   return (
-    <EditImpactProvider token={session.token} project={project.id}>
+    <EditImpactProvider token={token} project={project.id}>
       <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]'>
         <div className="pt-4 pb-8 xl:pl-[3rem]">
-          <ImpactByType session={session}/>
+          <ImpactByType />
         </div>
         <div className="pt-4 pb-8">
           <FindImpact />

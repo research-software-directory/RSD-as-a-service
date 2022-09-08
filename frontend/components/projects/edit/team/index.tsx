@@ -3,10 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 
-import {Session} from '~/auth'
-import {getTeamForProject} from '~/utils/getProjects'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {sortOnStrProp} from '~/utils/sortFn'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -15,7 +13,6 @@ import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {TeamMember} from '~/types/Project'
-import useProjectContext from '../useProjectContext'
 import {cfgTeamMembers} from './config'
 import TeamMemberList from './TeamMemberList'
 import FindMember from './FindMember'
@@ -24,15 +21,15 @@ import {
   ModalProps, ModalStates, updateTeamMember
 } from './editTeamMembers'
 import TeamMemberModal from './TeamMemberModal'
+import useTeamMembers from './useTeamMembers'
 
 type EditMemberModal = ModalProps & {
   member?: TeamMember
 }
 
-export default function ProjectTeam({slug, session}: { slug: string, session: Session }) {
+export default function ProjectTeam({slug}: { slug: string }) {
   const {showErrorMessage} = useSnackbar()
-  const {step, project, loading, setLoading} = useProjectContext()
-  const [members, setMembers] = useState<TeamMember[]>([])
+  const {token,loading,project,members,setMembers} = useTeamMembers({slug})
   const [modal, setModal] = useState<ModalStates<EditMemberModal>>({
     edit: {
       open: false
@@ -43,39 +40,11 @@ export default function ProjectTeam({slug, session}: { slug: string, session: Se
     }
   })
 
-  useEffect(() => {
-    let abort = false
-    async function getMembers() {
-      setLoading(true)
-      const members = await getTeamForProject({
-        project: project.id,
-        token: session.token,
-        frontend: true
-      })
-      // debugger
-      // set member to form
-      setMembers(members)
-      setLoading(false)
-    }
-    if (slug && session.token && project.id) {
-      getMembers()
-    }
-    return () => { abort = true }
-    // exclude functions to avoid endless reloading of effect
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    slug, session.token, project.id
-  ])
-
-  if (loading) {
-    return (
-      <ContentLoader />
-    )
-  }
-
   // console.group('ProjectTeam')
+  // console.log('slug...', slug)
   // console.log('loading...', loading)
   // console.log('project...', project)
+  // console.log('token...', token)
   // console.log('members...', members)
   // console.groupEnd()
 
@@ -148,7 +117,7 @@ export default function ProjectTeam({slug, session}: { slug: string, session: Se
     if (member) {
       const resp = await deleteTeamMemberById({
         ids: [member?.id ?? ''],
-        token: session.token
+        token
       })
       if (resp.status === 200) {
         const newMembersList = [
@@ -171,7 +140,7 @@ export default function ProjectTeam({slug, session}: { slug: string, session: Se
     if (data?.id && typeof pos != 'undefined') {
       const resp = await updateTeamMember({
         data,
-        token: session.token
+        token
       })
       if (resp.status === 200) {
         // updated record delivered in message
@@ -183,7 +152,7 @@ export default function ProjectTeam({slug, session}: { slug: string, session: Se
     } else {
       const resp = await createTeamMember({
         data,
-        token: session.token
+        token
       })
       if (resp.status === 201) {
         // updated record delivered in message
@@ -193,6 +162,12 @@ export default function ProjectTeam({slug, session}: { slug: string, session: Se
         showErrorMessage(`Failed to add member. ${resp.message}`)
       }
     }
+  }
+
+  if (loading) {
+    return (
+      <ContentLoader />
+    )
   }
 
   return (
@@ -216,7 +191,7 @@ export default function ProjectTeam({slug, session}: { slug: string, session: Se
           />
           <FindMember
             project={project.id}
-            token={session.token}
+            token={token}
             onAdd={onEditMember}
           />
         </div>
