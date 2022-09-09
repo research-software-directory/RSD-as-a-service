@@ -334,7 +334,7 @@ BEGIN
 		RETURN QUERY
 		SELECT
 			project_for_organisation.organisation,
-			COUNT(*) AS project_cnt
+			COUNT(DISTINCT project) AS project_cnt
 		FROM
 			project_for_organisation
 		WHERE
@@ -347,7 +347,7 @@ BEGIN
 		RETURN QUERY
 		SELECT
 			project_for_organisation.organisation,
-			COUNT(*) AS project_cnt
+			COUNT(DISTINCT project) AS project_cnt
 		FROM
 			project_for_organisation
 		GROUP BY project_for_organisation.organisation;
@@ -496,7 +496,7 @@ CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
 $$
 BEGIN
 	RETURN QUERY
-	SELECT
+	SELECT DISTINCT ON (project.id)
 		project.id,
 		project.slug,
 		project.title,
