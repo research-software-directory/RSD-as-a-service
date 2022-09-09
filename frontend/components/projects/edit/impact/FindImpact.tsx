@@ -23,7 +23,9 @@ export default function FindImpact() {
 
   async function findPublication(searchFor: string) {
     // regex validation if DOI string
-    if (searchFor.match(/^10(\.\w+)+\/\S+$/) !== null) {
+    const doiRegexMatch = searchFor.match(/^\s*((https?:\/\/)?(www\.)?(dx\.)?doi\.org\/)?(10(\.\w+)+\/\S+)\s*$/)
+    if (doiRegexMatch !== null && doiRegexMatch[5] !== undefined) {
+      searchFor = doiRegexMatch[5]
       // look first at RSD
       const rsd = await getMentionByDoiFromRsd({
         doi: searchFor,
