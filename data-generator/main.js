@@ -81,7 +81,7 @@ function generateSofware(amount=50) {
 
 	for (let index = 0; index < amount; index++) {
 		const brandName = faker.helpers.unique(() =>
-			faker.hacker.adjective() + ' ' + faker.hacker.noun() + ' ' + faker.helpers.replaceSymbolWithNumber('####')
+			'software: ' + faker.hacker.adjective() + ' ' + faker.hacker.noun() + ' ' + faker.helpers.replaceSymbolWithNumber('####')
 		);
 		result.push({
 			slug: faker.helpers.slugify(brandName),
@@ -264,7 +264,7 @@ function generateProjects(amount=50) {
 
 	for (let index = 0; index < amount; index++) {
 		const title = faker.helpers.unique(() =>
-			faker.hacker.adjective() + ' ' + faker.hacker.noun()  + ' ' + faker.helpers.replaceSymbolWithNumber('####')
+			'project: ' + faker.hacker.adjective() + ' ' + faker.hacker.noun()  + ' ' + faker.helpers.replaceSymbolWithNumber('####')
 		);
 		result.push({
 			slug: faker.helpers.slugify(title),
