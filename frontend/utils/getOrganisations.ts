@@ -156,10 +156,11 @@ export async function getOrganisationById({uuid, token,frontend=false,isMaintain
 }
 
 export async function getOrganisationChildren({uuid, token,frontend=false}:
-  {uuid: string, token: string,frontend?:boolean}) {
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=eq.${uuid}`
+  { uuid: string, token: string, frontend?: boolean }) {
+  const query = `rpc/organisations_overview?parent=eq.${uuid}&order=name.asc`
+  let url = `${process.env.POSTGREST_URL}/${query}`
   if (frontend) {
-    url = `/api/v1/rpc/organisations_overview?parent=eq.${uuid}`
+    url = `/api/v1/${query}`
   }
   const resp = await fetch(url, {
     method: 'GET',
