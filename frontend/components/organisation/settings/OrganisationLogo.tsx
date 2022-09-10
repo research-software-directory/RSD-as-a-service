@@ -8,6 +8,7 @@ import {useEffect, useState} from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 
+import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import {deleteOrganisationLogo, getUrlFromLogoId, uploadOrganisationLogo} from '../../../utils/editOrganisation'
 import logger from '../../../utils/logger'
@@ -21,7 +22,6 @@ type OrganisationLogoProps = {
   name: string
   website: string | null
   isMaintainer: boolean
-  token?: string
 }
 
 type LogoProps = {
@@ -30,8 +30,9 @@ type LogoProps = {
   mime_type: string | null
 }
 
-export default function OrganisationLogo({id,name,website,logo_id,isMaintainer,token}:
+export default function OrganisationLogo({id,name,website,logo_id,isMaintainer}:
   OrganisationLogoProps) {
+  const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
   // currently shown image
   // after new upload uses b64 prop

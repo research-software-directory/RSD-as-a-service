@@ -8,7 +8,7 @@
 import {useEffect} from 'react'
 import {useForm} from 'react-hook-form'
 
-import {Session} from '../../../auth'
+import {useSession} from '../../../auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import ControlledTextField from '../../form/ControlledTextField'
 import {OrganisationForOverview} from '../../../types/Organisation'
@@ -19,16 +19,17 @@ import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener
 import RorIdWithUpdate from './RorIdWithUpdate'
 import useOrganisationSettings from './useOrganisationSettings'
 import RsdAdminSection from './RsdAdminSection'
-
+import ProtectedOrganisationPage from '../ProtectedOrganisationPage'
 
 const formId='organisation-settings-form'
 
-export default function OrganisationSettings({organisation, session}:
-  { organisation: OrganisationForOverview, session: Session }) {
+export default function OrganisationSettings({organisation, isMaintainer}:
+  { organisation: OrganisationForOverview, isMaintainer: boolean }) {
+  const {token,user} = useSession()
   const {showErrorMessage, showSuccessMessage} = useSnackbar()
   const {loading, settings} = useOrganisationSettings({
     uuid: organisation.id,
-    token: session.token
+    token
   })
   const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<EditOrganisation>({
     mode: 'onChange',
@@ -61,7 +62,7 @@ export default function OrganisationSettings({organisation, session}:
     if (data && data.id) {
       const resp = await updateOrganisation({
         item: data,
-        token: session.token
+        token
       })
       // debugger
       if (resp.status === 200) {
@@ -76,6 +77,9 @@ export default function OrganisationSettings({organisation, session}:
   }
 
   return (
+    <ProtectedOrganisationPage
+      isMaintainer={isMaintainer}
+    >
     <form
       id={formId}
       onSubmit={handleSubmit(onSubmit)}
@@ -133,10 +137,11 @@ export default function OrganisationSettings({organisation, session}:
       />
       <div className="py-4"></div>
       {/* RSD admin section */}
-      {session.user?.role === 'rsd_admin' ?
+      {user?.role === 'rsd_admin' ?
         <RsdAdminSection control={control} />
         : null
       }
-    </form>
+      </form>
+    </ProtectedOrganisationPage>
   )
 }

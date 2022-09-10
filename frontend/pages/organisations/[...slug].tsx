@@ -8,7 +8,7 @@ import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '../../config/app'
-import {Session, useAuth} from '../../auth'
+import {Session, useAuth, useSession} from '../../auth'
 import useOrganisationMaintainer from '../../auth/permissions/useOrganisationMaintainer'
 import DefaultLayout from '../../components/layout/DefaultLayout'
 import {getOrganisationBySlug} from '../../utils/getOrganisations'
@@ -25,18 +25,13 @@ import {PaginationProvider} from '../../components/pagination/PaginationContext'
 export type OrganisationPageProps = {
   organisation: OrganisationForOverview,
   slug: string[],
-  // page/section id
-  page: string,
-  session: Session,
-  isMaintainer: boolean
+  page: string
 }
 
 export default function OrganisationPage({organisation,slug,page}:OrganisationPageProps) {
-  const {session} = useAuth()
-  const [pageState, setPageState] = useState<OrganisationMenuProps>(organisationMenu[0])
+  const [pageState, setPageState] = useState<OrganisationMenuProps>()
   const {loading, isMaintainer} = useOrganisationMaintainer({
-    organisation: organisation.id,
-    session
+    organisation: organisation.id
   })
   const pageTitle = `${organisation.name} | ${app.title}`
 
@@ -48,21 +43,21 @@ export default function OrganisationPage({organisation,slug,page}:OrganisationPa
       }
     } else {
       console.log('set default page')
-      // default is first menu item
+      // default is the first item
       setPageState(organisationMenu[0])
     }
   },[page])
 
   console.group('OrganisationPage')
-  // console.log('organisation...', organisation)
+  console.log('organisation...', organisation)
   console.log('slug....', slug)
   console.log('page....', page)
   console.groupEnd()
 
   function renderStepComponent() {
-    if (loading) return <ContentLoader />
+    if (loading || typeof pageState == 'undefined') return <ContentLoader />
     if (pageState.component) {
-      return pageState.component({organisation,slug,session,isMaintainer})
+      return pageState.component({organisation,isMaintainer})
     }
   }
 
@@ -76,7 +71,7 @@ export default function OrganisationPage({organisation,slug,page}:OrganisationPa
         <OrganisationTitle
           title={organisation.name}
           slug={slug}
-          showSearch={pageState.showSearch}
+          showSearch={pageState?.showSearch ?? false}
         />
         <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
           <div>
@@ -86,7 +81,6 @@ export default function OrganisationPage({organisation,slug,page}:OrganisationPa
             />
             <OrganisationLogo
               isMaintainer={isMaintainer}
-              token={session.token}
               {...organisation}
             />
           </div>

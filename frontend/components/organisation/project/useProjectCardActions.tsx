@@ -4,6 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
+
+import {useSession} from '~/auth'
 import {IconBtnMenuOption} from '~/components/menu/IconBtnMenuOnAction'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {OrganisationForOverview, ProjectOfOrganisation} from '~/types/Organisation'
@@ -13,7 +15,6 @@ import logger from '~/utils/logger'
 export type ProjectCardWithMenuProps = {
   organisation: OrganisationForOverview,
   item: ProjectOfOrganisation
-  token: string
 }
 
 export type ProjectMenuAction = {
@@ -21,7 +22,8 @@ export type ProjectMenuAction = {
   payload?: string
 }
 
-export function useProjectCardActions({organisation, item, token}: ProjectCardWithMenuProps) {
+export function useProjectCardActions({organisation, item}: ProjectCardWithMenuProps) {
+  const {token} = useSession()
   const {showErrorMessage, showSuccessMessage} = useSnackbar()
   const [project, setProject] = useState<ProjectOfOrganisation>(item)
   const [menuOptions, setMenuOptions] = useState<IconBtnMenuOption<ProjectMenuAction>[]>([])

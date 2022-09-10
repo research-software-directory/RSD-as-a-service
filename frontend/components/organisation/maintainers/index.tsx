@@ -5,7 +5,7 @@
 
 import {useEffect,useState} from 'react'
 
-import {Session} from '~/auth'
+import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
@@ -18,6 +18,7 @@ import useOrganisationMaintainers, {
 import OrganisationMaintainerLink from './OrganisationMaintainerLink'
 import {OrganisationForOverview} from '~/types/Organisation'
 import OrganisationMaintainersList from './OrganisationMaintainersList'
+import ProtectedOrganisationPage from '../ProtectedOrganisationPage'
 
 type DeleteModal = {
   open: boolean,
@@ -26,12 +27,13 @@ type DeleteModal = {
 }
 
 
-export default function OrganisationMaintainers({session, organisation}:
-  {session: Session, organisation:OrganisationForOverview }) {
+export default function OrganisationMaintainers({organisation, isMaintainer}:
+  { organisation: OrganisationForOverview, isMaintainer: boolean }) {
+  const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {loading,maintainers} = useOrganisationMaintainers({
     organisation: organisation.id ?? '',
-    token: session.token
+    token
   })
   const [organisationMaintainers, setOrganisationMaintaners] = useState<MaintainerOfOrganisation[]>([])
   const [modal, setModal] = useState<DeleteModal>({
@@ -78,7 +80,7 @@ export default function OrganisationMaintainers({session, organisation}:
       const resp = await deleteMaintainerFromOrganisation({
         maintainer: admin.account,
         organisation: organisation.id ?? '',
-        token: session.token,
+        token,
         frontend: true
       })
       if (resp.status === 200) {
@@ -94,7 +96,9 @@ export default function OrganisationMaintainers({session, organisation}:
   }
 
   return (
-    <>
+    <ProtectedOrganisationPage
+      isMaintainer={isMaintainer}
+    >
       <EditSection className='xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
         <div className="py-4 xl:pl-[3rem]">
           <EditSectionTitle
@@ -112,8 +116,8 @@ export default function OrganisationMaintainers({session, organisation}:
           />
           <OrganisationMaintainerLink
             organisation={organisation.id ?? ''}
-            account={session.user?.account ?? ''}
-            token={session.token}
+            account={user?.account ?? ''}
+            token={token}
           />
         </div>
       </EditSection>
@@ -130,6 +134,6 @@ export default function OrganisationMaintainers({session, organisation}:
         }}
         onDelete={()=>deleteMaintainer(modal.pos ?? 0)}
       />
-    </>
+    </ProtectedOrganisationPage>
   )
 }
