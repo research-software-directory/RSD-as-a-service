@@ -63,7 +63,7 @@ export function AuthProvider(props: any) {
       const {user} = session
       const expiresInMs = getExpInMs(user.exp)
       const waitInMs = getWaitInMs(expiresInMs)
-      console.log('waitInMs...', waitInMs)
+      // console.log('waitInMs...', waitInMs)
       if (schedule) clearTimeout(schedule)
       if (expiresInMs <= 0) {
         // token expired
