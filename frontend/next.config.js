@@ -14,15 +14,15 @@ const rewritesConfig = isDevelopment
   ? [
     {
       source: '/image/:path*',
-      destination: 'http://localhost/image/:path*',
+      destination: 'http://nginx/image/:path*',
     },
     {
       source: '/api/v1/:path*',
-      destination: 'http://localhost/api/v1/:path*',
+      destination: 'http://nginx/api/v1/:path*',
     },
     {
       source: '/auth/login/local',
-      destination: 'http://localhost/auth/login/local',
+      destination: 'http://nginx/auth/login/local',
     }
   ]
   : []
