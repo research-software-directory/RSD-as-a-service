@@ -6,11 +6,6 @@
   },
   "links": [
     {
-      "label": "Questions or comments?",
-      "url": "mailto:support@hifis.net",
-      "target": "_self"
-    },
-    {
       "label": "Cookies",
       "url": "/cookies",
       "target": "_self"

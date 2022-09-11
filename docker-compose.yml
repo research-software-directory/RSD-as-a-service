@@ -85,7 +85,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:1.3.0
+    image: rsd/frontend:1.4.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -124,7 +124,9 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile.dev
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend-dev:1.3.0
+    image: rsd/frontend-dev:1.4.0
+    ports:
+      - "3000:3000"
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -144,8 +146,6 @@ services:
       - NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL
       - NEXT_PUBLIC_HELMHOLTZAAI_SCOPES
       - NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE
-    expose:
-      - 3000
     depends_on:
       - database
       - backend
@@ -184,7 +184,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "3000:3000"
     depends_on:
       - database
       - backend

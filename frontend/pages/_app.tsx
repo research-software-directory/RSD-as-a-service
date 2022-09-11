@@ -111,7 +111,7 @@ function RsdApp(props: MuiAppProps) {
   // console.log('session...', session)
   // console.log('settings...', settings)
   // console.log('matomo...', matomo)
-  console.log('rsdSettings...', rsdSettings)
+  // console.log('rsdSettings...', rsdSettings)
   // console.log('rsdSession...', rsdSession)
   // console.groupEnd()
 

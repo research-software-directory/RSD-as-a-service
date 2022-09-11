@@ -16,7 +16,6 @@ export default class MyDocument extends Document {
   readonly hotjarId = process.env.HOTJAR_ID
   readonly matomoUrl = process.env.MATOMO_URL
   readonly matomoId = process.env.MATOMO_ID
-  readonly fontFamily = process.env.RSD_FONT_HREF
 
   render() {
     // console.group('MyDocument')

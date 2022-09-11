@@ -10,6 +10,65 @@ import PageErrorMessage from '../components/layout/PageErrorMessage'
 import ContentLoader from '../components/layout/ContentLoader'
 import {isMaintainerOfSoftware} from './permissions/isMaintainerOfSoftware'
 import {isMaintainerOfProject} from './permissions/isMaintainerOfProject'
+import logger from '~/utils/logger'
+
+type isMaintainerProps = {
+  slug: string,
+  account?: string,
+  token: string,
+  pageType: 'software'|'project'
+}
+
+let isMaintainer = false
+let lastSlug = ''
+let lastAccount = ''
+let lastPageType = ''
+let lastToken = ''
+
+async function isMaintainerOf({slug, account, token, pageType}: isMaintainerProps) {
+try {
+  if (typeof account == 'undefined') return false
+  if (slug === '') return false
+  if (token === '') return false
+
+  if (lastSlug === slug &&
+    lastAccount === account &&
+    lastPageType === pageType &&
+    lastToken === token
+  ) {
+    // return last value for this user?
+    // console.log('isMaintainerOf...(cached)...', isMaintainer)
+    return isMaintainer
+  }
+
+  switch (pageType) {
+    case 'project':
+      isMaintainer = await isMaintainerOfProject({
+        slug,
+        account,
+        token
+      })
+      break
+    default:
+      // software is default for now
+      isMaintainer = await isMaintainerOfSoftware({
+        slug,
+        account,
+        token
+      })
+  }
+  // update last values
+  lastSlug = slug
+  lastAccount = account
+  lastPageType = pageType
+  lastToken = token
+  // debugger
+  return isMaintainer
+} catch (e: any) {
+  logger(`isMaintainer error ${e?.message}`, 'error')
+  return false
+}}
+
 
 /**
  * Wrap the content you want to protect in this component.
