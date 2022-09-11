@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useState} from 'react'
+import {useState} from 'react'
 
 import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -14,7 +14,7 @@ import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import useOrganisationMaintainers, {
   deleteMaintainerFromOrganisation, MaintainerOfOrganisation
-} from './useOrganisationMaintainer'
+} from './useOrganisationMaintainers'
 import OrganisationMaintainerLink from './OrganisationMaintainerLink'
 import {OrganisationForOverview} from '~/types/Organisation'
 import OrganisationMaintainersList from './OrganisationMaintainersList'
@@ -31,23 +31,20 @@ export default function OrganisationMaintainers({organisation, isMaintainer}:
   { organisation: OrganisationForOverview, isMaintainer: boolean }) {
   const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {loading,maintainers} = useOrganisationMaintainers({
+  const {loading,maintainers,setMaintainers} = useOrganisationMaintainers({
     organisation: organisation.id ?? '',
     token
   })
-  const [organisationMaintainers, setOrganisationMaintaners] = useState<MaintainerOfOrganisation[]>([])
+  // const [organisationMaintainers, setOrganisationMaintaners] = useState<MaintainerOfOrganisation[]>(maintainers)
   const [modal, setModal] = useState<DeleteModal>({
     open: false
   })
 
-  useEffect(() => {
-    let abort = false
-    if (loading === false &&
-      abort === false) {
-      setOrganisationMaintaners(maintainers)
-    }
-    return () => { abort = true }
-  },[maintainers,loading])
+  // console.group('OrganisationMaintainers')
+  // console.log('OrganisationMaintainers.maintainers...', maintainers)
+  // console.log('OrganisationMaintainers.organisationMaintainers...', organisationMaintainers)
+  // console.log('OrganisationMaintainers.loading...', loading)
+  // console.groupEnd()
 
   if (loading) {
     return (
@@ -88,7 +85,7 @@ export default function OrganisationMaintainers({organisation, isMaintainer}:
           ...maintainers.slice(0, pos),
           ...maintainers.slice(pos+1)
         ]
-        setOrganisationMaintaners(newMaintainersList)
+        setMaintainers(newMaintainersList)
       } else {
         showErrorMessage(`Failed to remove maintainer. ${resp.message}`)
       }
@@ -100,13 +97,13 @@ export default function OrganisationMaintainers({organisation, isMaintainer}:
       isMaintainer={isMaintainer}
     >
       <EditSection className='xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4 xl:pl-[3rem]">
+        <div className="py-4">
           <EditSectionTitle
             title={config.title}
           />
           <OrganisationMaintainersList
             onDelete={onDeleteMaintainer}
-            maintainers={organisationMaintainers}
+            maintainers={maintainers}
           />
         </div>
         <div className="py-4 min-w-[21rem] xl:my-0">

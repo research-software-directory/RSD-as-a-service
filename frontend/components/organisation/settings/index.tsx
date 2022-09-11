@@ -12,12 +12,10 @@ import {useSession} from '../../../auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import ControlledTextField from '../../form/ControlledTextField'
 import {OrganisationForOverview} from '../../../types/Organisation'
-import {EditOrganisation} from '../../../types/Organisation'
-import {updateOrganisation} from '../../../utils/editOrganisation'
 import {organisationInformation as config} from '../organisationConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import RorIdWithUpdate from './RorIdWithUpdate'
-import useOrganisationSettings from './useOrganisationSettings'
+import updateOrganisationSettings from './updateOrganisationSettings'
 import RsdAdminSection from './RsdAdminSection'
 import ProtectedOrganisationPage from '../ProtectedOrganisationPage'
 
@@ -27,25 +25,21 @@ export default function OrganisationSettings({organisation, isMaintainer}:
   { organisation: OrganisationForOverview, isMaintainer: boolean }) {
   const {token,user} = useSession()
   const {showErrorMessage, showSuccessMessage} = useSnackbar()
-  const {loading, settings} = useOrganisationSettings({
-    uuid: organisation.id,
-    token
-  })
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<EditOrganisation>({
+  const {
+    handleSubmit, watch, formState, reset, control, register, setValue
+  } = useForm<OrganisationForOverview>({
     mode: 'onChange',
-    defaultValues: {
-      ...organisation
-    }
+    defaultValues: organisation
   })
   // extract
   const {isValid, isDirty} = formState
   const formData = watch()
 
-  useEffect(() => {
-    if (settings && loading==false) {
-      reset(settings)
-    }
-  }, [settings,loading,reset])
+  // console.group('OrganisationSettings')
+  // console.log('isDirty...', isDirty)
+  // console.log('isValid...', isValid)
+  // console.log('organisation...', organisation)
+  // console.groupEnd()
 
   function isSaveDisabled() {
     // if pos is undefined we are creating
@@ -57,10 +51,10 @@ export default function OrganisationSettings({organisation, isMaintainer}:
     return false
   }
 
-  async function onSubmit(data: EditOrganisation) {
+  async function onSubmit(data: OrganisationForOverview) {
     // console.log('submit...', data)
     if (data && data.id) {
-      const resp = await updateOrganisation({
+      const resp = await updateOrganisationSettings({
         item: data,
         token
       })

@@ -8,7 +8,6 @@ import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '../../config/app'
-import {Session, useAuth, useSession} from '../../auth'
 import useOrganisationMaintainer from '../../auth/permissions/useOrganisationMaintainer'
 import DefaultLayout from '../../components/layout/DefaultLayout'
 import {getOrganisationBySlug} from '../../utils/getOrganisations'
@@ -42,17 +41,16 @@ export default function OrganisationPage({organisation,slug,page}:OrganisationPa
         setPageState(nextStep)
       }
     } else {
-      console.log('set default page')
       // default is the first item
       setPageState(organisationMenu[0])
     }
   },[page])
 
-  console.group('OrganisationPage')
-  console.log('organisation...', organisation)
-  console.log('slug....', slug)
-  console.log('page....', page)
-  console.groupEnd()
+  // console.group('OrganisationPage')
+  // console.log('organisation...', organisation)
+  // console.log('slug....', slug)
+  // console.log('page....', page)
+  // console.groupEnd()
 
   function renderStepComponent() {
     if (loading || typeof pageState == 'undefined') return <ContentLoader />

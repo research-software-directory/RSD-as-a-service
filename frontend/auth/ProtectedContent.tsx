@@ -37,7 +37,7 @@ try {
     lastToken === token
   ) {
     // return last value for this user?
-    console.log('isMaintainerOf...(cached)...', isMaintainer)
+    // console.log('isMaintainerOf...(cached)...', isMaintainer)
     return isMaintainer
   }
 

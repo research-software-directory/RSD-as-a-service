@@ -6,11 +6,11 @@
 import ControlledTextField from '~/components/form/ControlledTextField'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import {Control, useWatch} from 'react-hook-form'
-import {EditOrganisation} from '~/types/Organisation'
+import {EditOrganisation, OrganisationForOverview} from '~/types/Organisation'
 import {organisationInformation as config} from '../organisationConfig'
 
 type AdminSectionProps = {
-  control: Control<EditOrganisation,any>
+  control: Control<OrganisationForOverview,any>
 }
 
 export default function AdminSection({control}:AdminSectionProps) {

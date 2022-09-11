@@ -68,8 +68,9 @@ export async function getOrganisationsList({search, rows, page, token}:
 }
 
 export async function getOrganisationBySlug({slug, token}:
-  {slug: string[], token: string}) {
+  { slug: string[], token: string }) {
   try {
+    // console.log('getOrganisationBySlug...',slug)
     // resolve slug to id and
     // get list of organisation uuid's this user is mantainer of
     const [uuid, maintainerOf] = await Promise.all([
