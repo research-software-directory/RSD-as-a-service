@@ -11,4 +11,4 @@ VOLUME [ "/app" ]
 
 EXPOSE 3000
 
-CMD [ "sh", "-c", "yarn install ; yarn dev" ]
+CMD [ "sh", "-c", "yarn install ; yarn dev:docker" ]
