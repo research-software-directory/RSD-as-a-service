@@ -62,28 +62,46 @@ export default function SoftwareLicenses(
     const licenses = await getLicensesFromDoi(concept_doi)
     // find licenses SPDX keys that match items in the options
     for (const license of licenses) {
-      // exlude if already in fields
-      const find = fields.filter(item => item.key.toLowerCase() === license.toLowerCase())
-      if (find.length > 0) {
+      // find license by identifier
+      let spdx = allOptions.find(item => item.key.toLocaleLowerCase() === license.toLowerCase())
+      if (typeof spdx == 'undefined') {
+        // if not found by identifier try to find it by name
+        spdx = allOptions.find(item => item.data.name.toLocaleLowerCase() === license.toLowerCase())
+      }
+      let find
+      if (typeof spdx !== 'undefined') {
+        // exlude if already in fields based on spdx key
+        find = fields.find(item => item.key.toLowerCase() === spdx?.key.toLowerCase())
+      } else {
+        // exlude if already in fields based on key
+        find = fields.find(item => item.key.toLowerCase() === license.toLowerCase())
+        if (typeof find == 'undefined') {
+          // try to match on label
+          find = fields.find(item => item.label.toLowerCase() === license.toLowerCase())
+        }
+      }
+      if (find) {
+        // go to next license thisone is already proccessed
         continue
       }
+      // add to collection
       added++
-      // improve identifier
-      const spdx = allOptions.find(item=>item.key.toLocaleLowerCase()===license.toLowerCase())
-      // add to fields collection
       append({
         key: spdx?.key ?? license,
         label: spdx?.key ?? license,
         data: {
           id: undefined,
           software,
-          license: spdx?.key ?? license
+          license: spdx?.key ?? license,
+          name: spdx?.data.name ?? license
         }
       })
     }
     setDoiLoad(false)
-    if (added > 0) {
-      showSuccessMessage(`${added} liceses imported from DOI ${concept_doi}`)
+    if (added === 1) {
+      showSuccessMessage(`${added} license imported from DOI ${concept_doi}`)
+    } else if (added > 1) {
+      showSuccessMessage(`${added} licenses imported from DOI ${concept_doi}`)
     } else {
       showInfoMessage(`No (additional) license to import from DOI ${concept_doi}`)
     }
@@ -105,7 +123,8 @@ export default function SoftwareLicenses(
           id: undefined,
           software,
           license: item.label,
-          deprecated: item.data.deprecated
+          deprecated: item.data.deprecated,
+          name: item.data.name
         }
       }
     })
@@ -140,7 +159,8 @@ export default function SoftwareLicenses(
         data: {
           id: undefined,
           software,
-          license: newInputValue
+          license: newInputValue,
+          name: newInputValue
         }
       })
     }

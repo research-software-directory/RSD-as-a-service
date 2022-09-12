@@ -27,7 +27,7 @@ import SoftwareKeywords from './SoftwareKeywords'
 import {getKeywordChanges} from './softwareKeywordsChanges'
 import ConceptDoi from './ConceptDoi'
 import useSoftwareContext from '../useSoftwareContext'
-import useSoftwareToEdit from './useSoftwareToEdit'
+import useSoftwareToEdit, {getSoftwareInfoForEdit} from './useSoftwareToEdit'
 
 export default function SoftwareInformation({slug}: {slug: string}) {
   const {token,user} = useSession()
@@ -39,7 +39,7 @@ export default function SoftwareInformation({slug}: {slug: string}) {
   // destructure methods from react-hook-form
   const {
     register, handleSubmit, watch, formState, reset,
-    control, setValue, getValues
+    control, setValue
   } = useFormContext<EditSoftwareItem>()
 
   const {update: updateKeyword} = useFieldArray({
@@ -68,7 +68,8 @@ export default function SoftwareInformation({slug}: {slug: string}) {
       setSoftwareInfo({
         id: initalState.id,
         slug: initalState.slug,
-        brand_name: initalState.brand_name
+        brand_name: initalState.brand_name,
+        concept_doi: initalState.concept_doi
       })
       setLoading(false)
     }
@@ -110,11 +111,10 @@ export default function SoftwareInformation({slug}: {slug: string}) {
     // if OK
     if (resp.status === 200) {
       showSuccessMessage(`${formData?.brand_name} saved`)
-      // update software state
-      // reset form to remove dirty states with latest form data
-      const latestFormData = getValues()
-      // to be equal to data in the form
-      setEditSoftware(latestFormData)
+      // reload software from api (confirm all changes saved and retreive new ids)
+      const updated = await getSoftwareInfoForEdit({slug,token})
+      // update local state (useEffect will then reset form to new values)
+      setEditSoftware(updated)
     } else {
       showErrorMessage(`Failed to save. ${resp.message}`)
     }

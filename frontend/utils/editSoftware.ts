@@ -13,7 +13,8 @@ import {
   EditSoftwareItem,
   License,
   SoftwareItemFromDB,
-  KeywordForSoftware
+  KeywordForSoftware,
+  LicenseForSoftware
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {AutocompleteOption} from '../types/AutocompleteOptions'
@@ -383,7 +384,7 @@ export async function createKeywordAndAddToSoftware({data, token, updateKeyword}
 }
 
 export async function addLicensesForSoftware({software, data, token}:
-  {software: string, data: License[], token: string}) {
+  { software: string, data: LicenseForSoftware[], token: string}) {
   try {
     const url = `/api/v1/license_for_software?software=eq.${software}`
     const resp = await fetch(url, {

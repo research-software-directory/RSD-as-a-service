@@ -216,7 +216,7 @@ export default function SoftwareContributors({slug}: { slug: string }) {
     setLoading(true)
 
     const contribDoi: Contributor[] = await getContributorsFromDoi(
-      software?.id, software?.concept_doi
+      software?.id ?? '', software?.concept_doi ?? ''
     )
 
     if (!contribDoi || contribDoi.length === 0) {

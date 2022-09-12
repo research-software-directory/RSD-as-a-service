@@ -148,9 +148,9 @@ export async function getDoiInfo(doiId: string) {
 }
 
 export async function getContributorsFromDoi(
-  softwareId: string | undefined, doiId: string | undefined
+  softwareId: string, doiId: string
 ) {
-  if (!doiId || !softwareId) {
+  if (doiId==='' || softwareId==='') {
     return []
   }
 
@@ -264,9 +264,11 @@ export async function getLicensesFromDoi(doiId: string | null | undefined) {
   const spdxLicenses = []
 
   for (const license of allLicenses) {
-    // extract all licenses with an identifier
+    // use identifier if present
     if (license.rightsIdentifier) {
       spdxLicenses.push(license.rightsIdentifier)
+    } else if (license.rights) {
+      spdxLicenses.push(license.rights)
     }
   }
 
