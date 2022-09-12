@@ -12,13 +12,12 @@
 import {loadMuiTheme,RsdThemes} from '../../styles/rsdMuiTheme'
 import {ThemeProvider} from '@mui/material/styles'
 import {AuthProvider, defaultSession, Session} from '../../auth'
-import {RsdSettingsState,defaultRsdSettings, RsdTheme} from '~/config/rsdSettingsReducer'
+import {RsdSettingsState, defaultRsdSettings} from '~/config/rsdSettingsReducer'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 
 type WrapProps = {
   props?: any
   session?: Session
-  // theme?: RsdThemes
   settings?: RsdSettingsState
 }
 

@@ -23,14 +23,6 @@ import {MentionItemProps} from '../types/Mention'
 import {SoftwareListItem} from '~/types/SoftwareTypes'
 import {ProjectOrganisationProps} from '~/types/Organisation'
 
-/**
- * We need to mock remark-breaks for now as it is breaking Jest setup
- */
-jest.mock('remark-breaks', jest.fn((...props) => {
-  // console.log('remark-breaks...', props)
-  return props
-}))
-
 const mockedProps: ProjectPageProps = {
   slug: 'test-slug',
   project: projectItem,

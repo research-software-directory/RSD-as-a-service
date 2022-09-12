@@ -4,15 +4,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
-import {Session} from '..'
+import {Session, useSession} from '..'
 import isMaintainerOfOrganisation, {getMaintainerOrganisations} from './isMaintainerOfOrganisation'
 
 type UseOrganisationMaintainerProps = {
   organisation: string
-  session: Session
 }
 
-export default function useOrganisationMaintainer({organisation,session}:UseOrganisationMaintainerProps) {
+export default function useOrganisationMaintainer({organisation}: UseOrganisationMaintainerProps) {
+  const {user,token,status} = useSession()
   const [isMaintainer, setIsMaintainer] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -22,8 +22,8 @@ export default function useOrganisationMaintainer({organisation,session}:UseOrga
       setLoading(true)
       const isMaintainer = await isMaintainerOfOrganisation({
         organisation,
-        account: session.user?.account ?? '',
-        token: session.token,
+        account: user?.account ?? '',
+        token,
         frontend: true
       })
       if (abort) return
@@ -31,9 +31,8 @@ export default function useOrganisationMaintainer({organisation,session}:UseOrga
       setLoading(false)
     }
     if (organisation &&
-      session &&
-      session.status === 'authenticated') {
-      if (session.user?.role === 'rsd_admin') {
+      status === 'authenticated') {
+      if (user?.role === 'rsd_admin') {
         if (abort) return
         setIsMaintainer(true)
         setLoading(false)
@@ -41,13 +40,13 @@ export default function useOrganisationMaintainer({organisation,session}:UseOrga
         organisationMaintainer()
       }
     } else if (isMaintainer===true) {
-      // set to false if flag is true without
+      // set (back) to false
       setIsMaintainer(false)
-    } else if (session && session?.status!=='loading'){
+    } else if (status!=='loading'){
       setLoading(false)
     }
     return ()=>{abort=true}
-  },[organisation,session, isMaintainer])
+  },[organisation,user,status,token,isMaintainer])
 
   return {
     loading,

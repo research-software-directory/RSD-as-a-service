@@ -6,15 +6,17 @@
 import {useEffect} from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
+import {useSession} from '~/auth'
 import useOrganisationSoftware from '../../../utils/useOrganisationSoftware'
 import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
-import {OrganisationPageProps} from 'pages/organisations/[...slug]'
 import FlexibleGridSection from '~/components/layout/FlexibleGridSection'
-import SoftwareCardWithMenu from './SoftwareCardWithMenu'
 import SoftwareCard from '~/components/software/SoftwareCard'
 import NoContent from '~/components/layout/NoContent'
+import {OrganisationComponentsProps} from '../OrganisationNavItems'
+import SoftwareCardWithMenu from './SoftwareCardWithMenu'
 
-export default function OrganisationSoftware({organisation, session, isMaintainer}: OrganisationPageProps) {
+export default function OrganisationSoftware({organisation, isMaintainer}: OrganisationComponentsProps) {
+  const {token} = useSession()
   const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search for software')
   const {loading, software, count} = useOrganisationSoftware({
     organisation: organisation.id,
@@ -22,7 +24,7 @@ export default function OrganisationSoftware({organisation, session, isMaintaine
     page,
     rows,
     isMaintainer,
-    token: session.token
+    token
   })
   // use media query hook for small screen logic
   const smallScreen = useMediaQuery('(max-width:600px)')
@@ -56,7 +58,7 @@ export default function OrganisationSoftware({organisation, session, isMaintaine
               key={item.id}
               organisation={organisation}
               item={item}
-              token={session.token}
+              token={token}
             />
           )
         }

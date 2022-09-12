@@ -4,8 +4,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
-import {ProjectOfOrganisation} from '../types/Organisation'
-import {getProjectsForOrganisation, OrganisationApiParams} from './getOrganisations'
+import {useSession} from '~/auth'
+import {ProjectOfOrganisation} from '~/types/Organisation'
+import {getProjectsForOrganisation, OrganisationApiParams} from '~/utils/getOrganisations'
 
 type State = {
   count: number,

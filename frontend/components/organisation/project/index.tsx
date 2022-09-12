@@ -6,22 +6,24 @@
 import {useEffect} from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import {OrganisationPageProps} from 'pages/organisations/[...slug]'
-import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
-import useOrganisationProjects from '../../../utils/useOrganisationProjects'
+import {useSession} from '~/auth'
+import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
+import useOrganisationProjects from './useOrganisationProjects'
 import NoContent from '~/components/layout/NoContent'
 import FlexibleGridSection from '~/components/layout/FlexibleGridSection'
 import ProjectCardWithMenu from './ProjectCardWithMenu'
 import ProjectCard from '~/components/projects/ProjectCard'
+import {OrganisationComponentsProps} from '../OrganisationNavItems'
 
-export default function OrganisationProjects({organisation, session, isMaintainer}:OrganisationPageProps) {
+export default function OrganisationProjects({organisation, isMaintainer}:OrganisationComponentsProps) {
+  const {token} = useSession()
   const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search for projects')
   const {loading, projects, count} = useOrganisationProjects({
     organisation: organisation.id,
     searchFor,
     page,
     rows,
-    token: session.token,
+    token,
     isMaintainer
   })
   // use media query hook for small screen logic
@@ -56,7 +58,6 @@ export default function OrganisationProjects({organisation, session, isMaintaine
               key={item.slug}
               organisation={organisation}
               item={item}
-              token={session.token}
             />
           )
         }

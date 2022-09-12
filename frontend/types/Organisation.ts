@@ -87,6 +87,7 @@ export type ProjectOrganisationProps = ParticipatingOrganisationProps & {
 
 export type OrganisationForOverview = CoreOrganisationProps & {
   id: string
+  slug: string
   logo_id: string | null
   software_cnt: number | null
   project_cnt: number | null

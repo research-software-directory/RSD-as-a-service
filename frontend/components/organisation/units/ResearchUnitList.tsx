@@ -7,7 +7,6 @@
  * UnitsList component is adjusted OrganisationsList component
  * from (/components/software/organisations/)
  */
-import {useRouter} from 'next/router'
 import {Alert, AlertTitle} from '@mui/material'
 import List from '@mui/material/List'
 import {OrganisationForOverview} from '../../../types/Organisation'
@@ -18,22 +17,21 @@ type UnitsListProps = {
   organisations: OrganisationForOverview[]
   isMaintainer: boolean
   onEdit: (pos: number) => void
-  onDelete: (pos: number) => void
 }
 
-export default function ResearchUnitsList({organisations,onEdit,onDelete,isMaintainer}:UnitsListProps) {
-  const router = useRouter()
+export default function ResearchUnitsList({organisations,onEdit,isMaintainer}:UnitsListProps) {
   function renderList() {
     return organisations.map((item,pos) => {
       return (
         <ResearchUnitItem
           key={pos}
           pos={pos}
-          organisation={item}
-          onEdit={onEdit}
-          onDelete={onDelete}
+          slug={item.slug}
+          name={item.name}
+          website={item.website}
+          logo_id={item.logo_id}
           isMaintainer={isMaintainer}
-          rsdPath={router.asPath}
+          onEdit={onEdit}
         />
       )
     })

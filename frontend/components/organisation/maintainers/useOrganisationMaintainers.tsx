@@ -6,6 +6,7 @@
 import {useState,useEffect} from 'react'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
+import {getMaintainersOfOrganisation} from './getMaintainersOfOrganisation'
 
 export type RawMaintainerOfOrganisation = {
   // unique maintainer id
@@ -25,33 +26,6 @@ export type MaintainerOfOrganisation = {
   is_primary?: boolean
 }
 
-export async function getMaintainersOfOrganisation({organisation, token, frontend=true}:
-  {organisation: string, token: string,frontend?:boolean}) {
-  try {
-    let query = `rpc/maintainers_of_organisation?organisation_id=${organisation}`
-    let url = `/api/v1/${query}`
-    if (frontend === false) {
-      url = `${process.env.POSTGREST_URL}/${query}`
-    }
-
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders(token)
-    })
-
-    if (resp.status === 200) {
-      const json:RawMaintainerOfOrganisation[] = await resp.json()
-      return json
-    }
-    // ERRORS
-    logger(`getMaintainersOfOrganisation: ${resp.status}:${resp.statusText} organisation: ${organisation}`, 'warn')
-    return []
-  } catch (e: any) {
-    logger(`getMaintainersOfOrganisation: ${e?.message}`, 'error')
-    return []
-  }
-}
-
 export default function useOrganisationMaintainers({organisation, token}:
   {organisation: string, token: string }) {
   const [maintainers, setMaintainers] = useState<MaintainerOfOrganisation[]>([])
@@ -60,12 +34,14 @@ export default function useOrganisationMaintainers({organisation, token}:
   useEffect(() => {
     let abort = false
     async function getMaintainers() {
+      // console.log('useOrganisationMaintainers.useEffect.getMaintainers')
       setLoading(true)
       const raw_maintainers = await getMaintainersOfOrganisation({
         organisation,
         token,
         frontend:true
       })
+      // console.log('useOrganisationMaintainers.useEffect...raw_maintainers',raw_maintainers)
       const maintainers = rawMaintainersToMaintainers(raw_maintainers)
       if (abort) return null
       // update maintainers state
@@ -73,15 +49,31 @@ export default function useOrganisationMaintainers({organisation, token}:
       // update loading flag
       setLoading(false)
     }
-
+    // console.log('useOrganisationMaintainers.useEffect...')
     if (organisation && token) {
       getMaintainers()
+    } else if (token==='') {
+      setLoading(false)
     }
-
     return ()=>{abort=true}
-  },[organisation,token])
+  }, [organisation,token])
 
-  return {maintainers, loading}
+  if (token === '') {
+    return {
+      loading: false,
+      maintainers,
+      setMaintainers
+    }
+  }
+
+  // console.log('useOrganisationMaintainers.loading...', loading)
+  // console.log('useOrganisationMaintainers.organisation...',organisation)
+  // console.log('useOrganisationMaintainers.token...',token)
+  return {
+    loading,
+    maintainers,
+    setMaintainers
+  }
 }
 
 export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfOrganisation[]) {

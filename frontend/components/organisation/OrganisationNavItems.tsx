@@ -14,13 +14,19 @@ import OrganisationProjects from './project'
 import OrganisationUnits from './units'
 import OrganisationMaintainers from './maintainers'
 import OrganisationSettings from './settings'
+import {OrganisationForOverview} from '~/types/Organisation'
+
+export type OrganisationComponentsProps = {
+  organisation: OrganisationForOverview,
+  isMaintainer: boolean
+}
 
 export type OrganisationMenuProps = {
   id: string,
   status: string,
   label: (props:any)=>string,
   icon: JSX.Element,
-  component: (props: any) => JSX.Element
+  component: (props: OrganisationComponentsProps) => JSX.Element
   isVisible: (props: any) => boolean
   showSearch: boolean
 }
@@ -30,7 +36,7 @@ export const organisationMenu:OrganisationMenuProps[] = [
     id:'software',
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
     icon: <TerminalIcon />,
-    component: (props?) => <OrganisationSoftware {...props} />,
+    component: (props) => <OrganisationSoftware {...props} />,
     status: 'Participating organisation',
     isVisible: (props) => true,
     showSearch: true
@@ -39,7 +45,7 @@ export const organisationMenu:OrganisationMenuProps[] = [
     id:'projects',
     label: ({project_cnt})=>`Projects (${project_cnt ?? 0})`,
     icon: <ListAltIcon />,
-    component: (props?) => <OrganisationProjects {...props} />,
+    component: (props) => <OrganisationProjects {...props} />,
     status: 'Participating organisation',
     isVisible: (props) => true,
     showSearch: true
@@ -48,7 +54,7 @@ export const organisationMenu:OrganisationMenuProps[] = [
     id:'units',
     label:()=> 'Research units',
     icon: <AccountTreeIcon />,
-    component: (props?) => <OrganisationUnits {...props} />,
+    component: (props) => <OrganisationUnits {...props} />,
     status: 'Departments or institutions',
     isVisible: ({children_cnt, isMaintainer}) => {
       // we do not show this options if no children
@@ -62,7 +68,7 @@ export const organisationMenu:OrganisationMenuProps[] = [
     id:'maintainers',
     label:()=>'Maintainers',
     icon: <PersonIcon />,
-    component: (props?) => <OrganisationMaintainers {...props} />,
+    component: (props) => <OrganisationMaintainers {...props} />,
     status: 'Maintainers of organisation',
     // we do not show this option if not a maintainer
     isVisible: ({isMaintainer}) => isMaintainer,
@@ -72,7 +78,7 @@ export const organisationMenu:OrganisationMenuProps[] = [
     id:'settings',
     label:()=>'Settings',
     icon: <SettingsIcon />,
-    component: (props?) => <OrganisationSettings {...props} />,
+    component: (props) => <OrganisationSettings {...props} />,
     status: 'Organisation settings',
     // we do not show this option if not a maintainer
     isVisible: ({isMaintainer}) => isMaintainer,

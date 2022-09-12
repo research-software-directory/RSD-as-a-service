@@ -59,8 +59,8 @@ const StyledNav = styled('nav', {
 })
 
 
-export default function ProjectCardWithMenu({organisation,item,token}: ProjectCardWithMenuProps) {
-  const {project, menuOptions, onAction} = useProjectCardActions({organisation, item, token})
+export default function ProjectCardWithMenu({organisation,item}: ProjectCardWithMenuProps) {
+  const {project, menuOptions, onAction} = useProjectCardActions({organisation, item})
   const [hover,setHover]=useState(false)
 
   function renderStatus() {

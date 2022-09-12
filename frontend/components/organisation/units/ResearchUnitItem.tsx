@@ -11,22 +11,37 @@ import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 
-import {OrganisationForOverview} from '../../../types/Organisation'
 import {getUrlFromLogoId} from '../../../utils/editOrganisation'
+import {useRouter} from 'next/router'
 
 type UnitListItemProps = {
-  rsdPath: string
-  organisation: OrganisationForOverview
   pos: number
-  onEdit: (pos:number)=>void
-  onDelete: (pos: number) => void
+  slug: string,
+  name: string,
+  website: string | null,
+  logo_id: string | null,
   isMaintainer: boolean
+  onEdit: (pos:number)=>void
+  // onDelete: (pos: number) => void
 }
 
-export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, isMaintainer}: UnitListItemProps) {
-
-  const rsdUrl = `${rsdPath}/${organisation.slug}`
-
+export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onEdit}: UnitListItemProps) {
+  const router = useRouter()
+  // remove query params from url (id)
+  const baseUrl = router.asPath.split('?')
+  const slugs = []
+  if (typeof router.query['slug'] === 'string') {
+    slugs.push(router.query['slug'])
+    slugs.push(slug)
+  } else if (typeof router.query['slug'] === 'object') {
+    slugs.push(
+      ...router.query['slug'],
+      slug
+    )
+  }
+  const rsdUrl = `${baseUrl[0]}/${slug}`
+  // slugs.push(slug)
+  // console.log('router...', router)
   function getSecondaryActions() {
     if (isMaintainer) {
       return (
@@ -47,11 +62,11 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
   }
 
   function getSecondaryLabel(){
-    if (organisation.website) {
+    if (website) {
       return (
         <>
           <span>
-            <a href={organisation.website} target="_blank" rel="noreferrer">{organisation.website}</a>
+            <a href={website} target="_blank" rel="noreferrer">{website}</a>
           </span>
         </>
       )
@@ -61,7 +76,6 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
 
   return (
      <ListItem
-        key={JSON.stringify(organisation)}
         secondaryAction={getSecondaryActions()}
         sx={{
           // this makes space for buttons
@@ -72,11 +86,12 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
         }}
     >
       <ListItemAvatar>
-        {/* <a href={rsdUrl}> */}
-        <Link href={rsdUrl} passHref>
+        <Link
+          href={rsdUrl}
+          passHref>
           <Avatar
-            alt={organisation.name ?? ''}
-            src={getUrlFromLogoId(organisation.logo_id) ?? ''}
+            alt={name}
+            src={getUrlFromLogoId(logo_id) ?? ''}
             sx={{
               width: '4rem',
               height: '4rem',
@@ -88,16 +103,26 @@ export default function UnitItem({rsdPath,organisation, pos, onEdit, onDelete, i
             }}
             variant="square"
           >
-            {organisation.name.slice(0,3)}
+            {name.slice(0,3)}
           </Avatar>
         </Link>
-        {/* </a> */}
       </ListItemAvatar>
       <ListItemText
         primary={
-          <a href={rsdUrl}>
-            {organisation.name}
-          </a>
+          <Link
+            href={{
+              pathname: router.pathname,
+              query: {
+                slug: slugs,
+                page:'software'
+              }
+            }}
+            passHref
+          >
+            <a >
+              {name}
+            </a>
+          </Link>
         }
         secondary={getSecondaryLabel()}
         />

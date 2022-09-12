@@ -9,7 +9,7 @@ import List from '@mui/material/List'
 import logger from '~/utils/logger'
 
 import ProjectMaintainer from '~/components/projects/edit/maintainers/ProjectMaintainer'
-import {MaintainerOfOrganisation} from './useOrganisationMaintainer'
+import {MaintainerOfOrganisation} from './useOrganisationMaintainers'
 
 type ProjectMaintainerListProps = {
   maintainers: MaintainerOfOrganisation[]
@@ -46,6 +46,8 @@ export default function OrganisationMaintainersList({maintainers,onDelete}:Proje
       )
     })
   }
+
+  // console.log('OrganisationMaintainersList...maintainers...', maintainers)
 
   return (
     <List sx={{

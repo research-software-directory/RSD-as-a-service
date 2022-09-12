@@ -9,7 +9,7 @@ import {Control, UseFormSetValue, useFormState, useWatch} from 'react-hook-form'
 import CircularProgress from '@mui/material/CircularProgress'
 import FindReplaceIcon from '@mui/icons-material/FindReplace'
 
-import {EditOrganisation, SearchOrganisation} from '~/types/Organisation'
+import {OrganisationForOverview, SearchOrganisation} from '~/types/Organisation'
 import {findInROR} from '~/utils/getROR'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -19,8 +19,8 @@ import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import RorIdOptionsModal from './RorIdOptionsModal'
 
 type FindRorIdProps = {
-  control: Control<EditOrganisation, any>
-  setValue: UseFormSetValue<EditOrganisation>
+  control: Control<OrganisationForOverview, any>
+  setValue: UseFormSetValue<OrganisationForOverview>
 }
 
 export default function FindRorId({control, setValue}: FindRorIdProps) {
@@ -47,9 +47,9 @@ export default function FindRorId({control, setValue}: FindRorIdProps) {
     // find by organisation name
     const options = await findInROR({searchFor: name})
     // make slug from name
-    const key = getSlugFromString(name)
+    // const key = getSlugFromString(name)
     // match the results by key/slug
-    const found = options.filter(item => item.key.toLowerCase() === key.toLowerCase())
+    const found = options.filter(item => item.label.toLowerCase() === name.toLowerCase())
     // if exact match
     if (found.length === 1) {
       // extract ror id
