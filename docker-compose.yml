@@ -50,7 +50,7 @@ services:
       - net
 
   data-generation:
-    build: ./data-generator
+    build: ./data-generation
     image: rsd/generation:1.0.0
     environment:
       # it needs to be here to use values from .env file
@@ -172,6 +172,8 @@ services:
       # - ./deployment/hmz/images:/app/public/images
     networks:
       - net
+    deploy:
+      replicas: 0
 
   scrapers:
     build: ./scrapers
