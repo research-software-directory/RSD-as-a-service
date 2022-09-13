@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -46,6 +48,7 @@ export default function ProjectSidebar({date_start, date_end, grant_id, links, r
       <ProjectTags
         title="Research domains"
         tags={researchDomains.map(item => ({label: item.key, title: item.description}))}
+        infoLink = "https://erc.europa.eu/news/new-erc-panel-structure-2021-and-2022"
       />
 
       <ProjectTags
