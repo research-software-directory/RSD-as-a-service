@@ -299,24 +299,26 @@ BEGIN
 	IF (public) THEN
 		RETURN QUERY
 		SELECT
-			software_for_organisation.organisation,
-			count(software_for_organisation.organisation) AS software_cnt
+			list_parent_organisations.organisation_id,
+			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
 		FROM
 			software_for_organisation
+		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
 		WHERE
 			software_for_organisation.status = 'approved' AND
 			software IN (
 				SELECT id FROM software WHERE is_published=TRUE
 			)
-		GROUP BY software_for_organisation.organisation;
+		GROUP BY list_parent_organisations.organisation_id;
 	ELSE
 		RETURN QUERY
 		SELECT
-			software_for_organisation.organisation,
-			count(software_for_organisation.organisation) AS software_cnt
+			list_parent_organisations.organisation_id,
+			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
 		FROM
 			software_for_organisation
-		GROUP BY software_for_organisation.organisation;
+		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
+		GROUP BY list_parent_organisations.organisation_id;
 	END IF;
 END
 $$;
@@ -434,7 +436,7 @@ $$;
 -- Software info by organisation
 -- NOTE! one software is shown multiple times in this view
 -- we filter this view at least by organisation uuid
-CREATE FUNCTION software_by_organisation() RETURNS TABLE (
+CREATE FUNCTION software_by_organisation(organisation_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	brand_name VARCHAR,
@@ -450,7 +452,7 @@ CREATE FUNCTION software_by_organisation() RETURNS TABLE (
 $$
 BEGIN
 	RETURN QUERY
-	SELECT
+	SELECT DISTINCT ON (software.id)
 		software.id,
 		software.slug,
 		software.brand_name,
@@ -470,6 +472,7 @@ BEGIN
 		count_software_countributors() ON software.id=count_software_countributors.software
 	LEFT JOIN
 		count_software_mentions() ON software.id=count_software_mentions.software
+	WHERE software_for_organisation.organisation IN (SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id))
 	;
 END
 $$;
@@ -503,7 +506,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
@@ -602,7 +605,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
@@ -651,7 +654,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
@@ -989,7 +992,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
@@ -1122,7 +1125,7 @@ BEGIN
 	INNER JOIN
 		login_for_account ON organisation.primary_maintainer = login_for_account.account
 	WHERE
-		organisation.id  = organisation_id
+		organisation.id = organisation_id
 	GROUP BY
 		organisation.id,organisation.primary_maintainer
 	-- append second selection
@@ -1197,7 +1200,7 @@ $$
 BEGIN
 	RETURN QUERY
 	SELECT
-		keyword_for_project.project  AS project,
+		keyword_for_project.project AS project,
 		array_agg(
 			keyword.value
 			ORDER BY value
@@ -1236,7 +1239,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
