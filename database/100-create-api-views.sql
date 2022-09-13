@@ -262,10 +262,24 @@ END
 $$;
 
 -- Participating organisations by software
-CREATE FUNCTION organisations_of_software() RETURNS TABLE (id UUID, slug VARCHAR, primary_maintainer UUID, name VARCHAR, ror_id VARCHAR, is_tenant BOOLEAN, website VARCHAR, logo_id UUID, status relation_status, software UUID) LANGUAGE plpgsql STABLE AS
+-- requires software UUID
+CREATE FUNCTION organisations_of_software(software_id UUID) RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	primary_maintainer UUID,
+	name VARCHAR,
+	ror_id VARCHAR,
+	is_tenant BOOLEAN,
+	website VARCHAR,
+	rsd_path VARCHAR,
+	logo_id UUID,
+	status relation_status,
+	software UUID
+) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY SELECT
+	RETURN QUERY
+	SELECT
 		organisation.id AS id,
 		organisation.slug,
 		organisation.primary_maintainer,
@@ -273,17 +287,23 @@ BEGIN
 		organisation.ror_id,
 		organisation.is_tenant,
 		organisation.website,
+		organisation_route.rsd_path,
 		logo_for_organisation.organisation AS logo_id,
 		software_for_organisation.status,
 		software.id AS software
-FROM
-	software
-INNER JOIN
-	software_for_organisation ON software.id = software_for_organisation.software
-INNER JOIN
-	organisation ON software_for_organisation.organisation = organisation.id
-LEFT JOIN
-	logo_for_organisation ON logo_for_organisation.organisation = organisation.id;
+	FROM
+		software
+	INNER JOIN
+		software_for_organisation ON software.id = software_for_organisation.software
+	INNER JOIN
+		organisation ON software_for_organisation.organisation = organisation.id
+	LEFT JOIN
+		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
+	LEFT JOIN
+		logo_for_organisation ON logo_for_organisation.organisation = organisation.id
+	WHERE
+		software.id = software_id
+	;
 END
 $$;
 
@@ -303,7 +323,8 @@ BEGIN
 			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
 		FROM
 			software_for_organisation
-		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
+		INNER JOIN list_parent_organisations(software_for_organisation.organisation)
+			ON list_parent_organisations.organisation_id IN (SELECT organisation_ID FROM list_parent_organisations(software_for_organisation.organisation))
 		WHERE
 			software_for_organisation.status = 'approved' AND
 			software IN (
@@ -317,7 +338,8 @@ BEGIN
 			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
 		FROM
 			software_for_organisation
-		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
+		INNER JOIN list_parent_organisations(software_for_organisation.organisation)
+			ON list_parent_organisations.organisation_id IN (SELECT organisation_ID FROM list_parent_organisations(software_for_organisation.organisation))
 		GROUP BY list_parent_organisations.organisation_id;
 	END IF;
 END
@@ -507,9 +529,9 @@ BEGIN
 		project.title,
 		project.subtitle,
 		CASE
-			WHEN project.date_end IS NULL THEN 'Starting'::VARCHAR
-			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-			ELSE 'Running'::VARCHAR
+			WHEN project.date_end IS NULL THEN 'Starting'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
+			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
 		project.updated_at,
@@ -535,9 +557,8 @@ END
 $$;
 
 -- Participating organisations by project
--- NOTE! organisation are shown multiple times (for each project)
--- we filter this view by project UUID
-CREATE FUNCTION organisations_of_project() RETURNS TABLE (
+-- we filter this view by project_id UUID
+CREATE FUNCTION organisations_of_project(project_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	primary_maintainer UUID,
@@ -545,6 +566,7 @@ CREATE FUNCTION organisations_of_project() RETURNS TABLE (
 	ror_id VARCHAR,
 	is_tenant BOOLEAN,
 	website VARCHAR,
+	rsd_path VARCHAR,
 	logo_id UUID,
 	status relation_status,
 	role organisation_role,
@@ -562,6 +584,7 @@ BEGIN
 			organisation.ror_id,
 			organisation.is_tenant,
 			organisation.website,
+			organisation_route.rsd_path,
 			logo_for_organisation.organisation AS logo_id,
 			project_for_organisation.status,
 			project_for_organisation.role,
@@ -574,7 +597,11 @@ BEGIN
 	INNER JOIN
 		organisation ON project_for_organisation.organisation = organisation.id
 	LEFT JOIN
+		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
+	LEFT JOIN
 		logo_for_organisation ON logo_for_organisation.organisation = organisation.id
+	WHERE
+		project.id = project_id
 	;
 END
 $$;

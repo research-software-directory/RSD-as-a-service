@@ -181,7 +181,7 @@ export function getImageUrl(image_id:string|null) {
 export async function getOrganisationsOfProject({project, token, frontend = true, role}:
   { project: string, token: string, frontend?: boolean, role?: OrganisationRole }) {
   try {
-    let query = `rpc/organisations_of_project?project=eq.${project}&order=name.asc`
+    let query = `rpc/organisations_of_project?project_id=${project}&order=name.asc`
     if (role) query += `&role=eq.${role}`
     // SSR request within docker network
     let url = `${process.env.POSTGREST_URL}/${query}`
@@ -220,6 +220,7 @@ export async function getOrganisations({project, token, frontend = true}:
         slug: item.slug,
         name: item.name,
         website: item.website ?? '',
+        rsd_path: item.rsd_path,
         logo_url: getUrlFromLogoId(item.logo_id),
         role: item.role
       }

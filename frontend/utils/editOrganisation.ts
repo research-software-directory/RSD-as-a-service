@@ -124,11 +124,12 @@ export async function findRSDOrganisation({searchFor, token, frontend}:
 }
 
 export async function getOrganisationsForSoftware({software, token, frontend = true}:
-  {software: string, token?: string, frontend?: boolean}) {
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_of_software?software=eq.${software}&order=name.asc`
-  // SSR request within docker network
-  if (frontend) {
-    url = `/api/v1/rpc/organisations_of_software?software=eq.${software}&order=name.asc`
+  { software: string, token?: string, frontend?: boolean }) {
+  const query = `rpc/organisations_of_software?software_id=${software}&order=name.asc`
+  let url = `/api/v1/${query}`
+  if (frontend === false) {
+    // SSR request within docker network
+    url = `${process.env.POSTGREST_URL}/${query}`
   }
   try {
     const resp = await fetch(url, {
@@ -156,12 +157,12 @@ export async function getParticipatingOrganisations({software, token, frontend =
   // sort on name
   const organisations = resp.filter(item => {
     return item.status === 'approved'
-  })
-    .map(item => {
-      return {
+  }).map(item => {
+    return {
       slug: item.slug,
       name: item.name,
-      website: item.website ?? '',
+      website: item.website,
+      rsd_path: item.rsd_path,
       logo_url: getUrlFromLogoId(item.logo_id)
     }
   })
