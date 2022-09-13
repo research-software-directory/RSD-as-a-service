@@ -69,7 +69,7 @@ export default function SoftwareInformation({slug}: {slug: string}) {
         id: initalState.id,
         slug: initalState.slug,
         brand_name: initalState.brand_name,
-        concept_doi: initalState.concept_doi
+        concept_doi: initalState.concept_doi,
       })
       setLoading(false)
     }
@@ -110,11 +110,20 @@ export default function SoftwareInformation({slug}: {slug: string}) {
     })
     // if OK
     if (resp.status === 200) {
-      showSuccessMessage(`${formData?.brand_name} saved`)
       // reload software from api (confirm all changes saved and retreive new ids)
-      const updated = await getSoftwareInfoForEdit({slug,token})
-      // update local state (useEffect will then reset form to new values)
-      setEditSoftware(updated)
+      const updated = await getSoftwareInfoForEdit({slug, token})
+      if (updated) {
+        // update local state (useEffect will then reset form to new values)
+        setEditSoftware(updated)
+        // update shared software info
+        setSoftwareInfo({
+          id: updated.id,
+          slug: updated.slug,
+          brand_name: updated.brand_name,
+          concept_doi: updated.concept_doi,
+        })
+      }
+      showSuccessMessage(`${formData?.brand_name} saved`)
     } else {
       showErrorMessage(`Failed to save. ${resp.message}`)
     }

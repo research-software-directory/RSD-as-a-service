@@ -18,7 +18,6 @@ import {
   getAvatarUrl, getContributorsForSoftware,
   prepareContributorData, updateContributorInDb
 } from '~/utils/editContributors'
-import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'

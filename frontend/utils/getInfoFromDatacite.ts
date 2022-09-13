@@ -7,6 +7,7 @@
 
 import {Contributor} from '~/types/Contributor'
 import {createJsonHeaders} from './fetchHelpers'
+import {itemsNotInReferenceList} from './itemsNotInReferenceList'
 import logger from './logger'
 
 const exampleCreator = {
@@ -164,11 +165,19 @@ export async function getContributorsFromDoi(
   let allPersons: DatacitePerson[] = []
 
   if ('creators' in doiData) {
-    allPersons = allPersons.concat(doiData['creators'])
+    allPersons = doiData['creators']
   }
 
   if ('contributors' in doiData) {
-    allPersons = allPersons.concat(doiData['contributors'])
+    const contributors = itemsNotInReferenceList({
+      list: doiData['contributors'],
+      referenceList: allPersons,
+      key: 'name'
+    })
+    allPersons = [
+      ...allPersons,
+      ...contributors
+    ]
   }
 
   for (const person of allPersons) {
