@@ -14,7 +14,7 @@
 start:
 	docker-compose down --volumes #cleanup phase
 	docker-compose build # build all services
-	docker-compose up  --scale scrapers=0 -d
+	docker-compose up --scale data-generation=1 --scale scrapers=0 -d
 	# open http://localhost to see the application running
 
 install:
@@ -32,6 +32,15 @@ dev:
 	make dev-docs
 
 down:
+	docker-compose down
+
+frontend:
+	docker-compose up --scale frontend-dev=1 --scale scrapers=0 -d
+	docker-compose logs -f frontend-dev
+
+data:
+	docker-compose up --scale data-generation=1 --scale scrapers=0
+	sleep 60
 	docker-compose down
 
 # Helper commands
