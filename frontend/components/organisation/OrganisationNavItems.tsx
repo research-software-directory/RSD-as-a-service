@@ -52,7 +52,7 @@ export const organisationMenu:OrganisationMenuProps[] = [
   },
   {
     id:'units',
-    label:()=> 'Research units',
+    label:({children_cnt})=> `Research units (${children_cnt ?? 0})`,
     icon: <AccountTreeIcon />,
     component: (props) => <OrganisationUnits {...props} />,
     status: 'Departments or institutions',

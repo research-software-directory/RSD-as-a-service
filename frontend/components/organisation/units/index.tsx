@@ -126,7 +126,15 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
         if (resp.status !== 200) {
           showErrorMessage(resp.message)
         } else {
-          updateUnitInList(data,pos)
+          if (data.logo_b64) {
+            const updatedUnit = updateDataObjectAfterSave({
+              data,
+              id: data.id
+            })
+            updateUnitInList(updatedUnit,pos)
+          } else {
+            updateUnitInList(data,pos)
+          }
         }
       } else {
         // create new organisation
