@@ -7,6 +7,7 @@
 
 import {Contributor} from '~/types/Contributor'
 import {createJsonHeaders} from './fetchHelpers'
+import {itemsNotInReferenceList} from './itemsNotInReferenceList'
 import logger from './logger'
 
 const exampleCreator = {
@@ -148,9 +149,9 @@ export async function getDoiInfo(doiId: string) {
 }
 
 export async function getContributorsFromDoi(
-  softwareId: string | undefined, doiId: string | undefined
+  softwareId: string, doiId: string
 ) {
-  if (!doiId || !softwareId) {
+  if (doiId==='' || softwareId==='') {
     return []
   }
 
@@ -164,11 +165,19 @@ export async function getContributorsFromDoi(
   let allPersons: DatacitePerson[] = []
 
   if ('creators' in doiData) {
-    allPersons = allPersons.concat(doiData['creators'])
+    allPersons = doiData['creators']
   }
 
   if ('contributors' in doiData) {
-    allPersons = allPersons.concat(doiData['contributors'])
+    const contributors = itemsNotInReferenceList({
+      list: doiData['contributors'],
+      referenceList: allPersons,
+      key: 'name'
+    })
+    allPersons = [
+      ...allPersons,
+      ...contributors
+    ]
   }
 
   for (const person of allPersons) {
@@ -264,9 +273,11 @@ export async function getLicensesFromDoi(doiId: string | null | undefined) {
   const spdxLicenses = []
 
   for (const license of allLicenses) {
-    // extract all licenses with an identifier
+    // use identifier if present
     if (license.rightsIdentifier) {
       spdxLicenses.push(license.rightsIdentifier)
+    } else if (license.rights) {
+      spdxLicenses.push(license.rights)
     }
   }
 

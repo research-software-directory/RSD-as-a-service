@@ -160,7 +160,7 @@ export default function SoftwareOganisations() {
     // if it has id
     if (organisation?.id) {
       const resp = await deleteOrganisationFromSoftware({
-        software: software?.id,
+        software: software?.id ?? undefined,
         organisation: organisation.id,
         token
       })

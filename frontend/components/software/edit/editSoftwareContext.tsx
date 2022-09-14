@@ -11,10 +11,10 @@ import {editSoftwarePage, EditSoftwarePageProps} from './editSoftwareSteps'
 import {EditSoftwareAction, editSoftwareReducer} from './editSoftwareReducer'
 
 export type SoftwareInfo = {
-  id?: string,
-  slug?: string,
-  brand_name?: string,
-  concept_doi?: string,
+  id: string | null,
+  slug: string | null,
+  brand_name: string | null,
+  concept_doi: string | null,
 }
 
 export type EditSoftwareState = {

@@ -21,7 +21,7 @@ function prepareLicenses(rawLicense: License[]=[]) {
 }
 
 
-async function getSoftwareInfoForEdit({slug, token}: { slug: string, token: string }) {
+export async function getSoftwareInfoForEdit({slug, token}: { slug: string, token: string }) {
   const software = await getSoftwareToEdit({slug, token})
 
   if (software) {

@@ -101,11 +101,15 @@ export type KeywordForSoftware = {
  * LiCENSES
  */
 
-export type License = {
-  id?: string,
+export type LicenseForSoftware = {
   software: string
   license: string
-  deprecated?: boolean
+}
+
+export type License = LicenseForSoftware & {
+  id?: string,
+  deprecated?: boolean,
+  name: string
 }
 
 

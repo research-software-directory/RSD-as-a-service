@@ -18,7 +18,6 @@ import {
   getAvatarUrl, getContributorsForSoftware,
   prepareContributorData, updateContributorInDb
 } from '~/utils/editContributors'
-import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {sortOnStrProp} from '~/utils/sortFn'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
@@ -216,7 +215,7 @@ export default function SoftwareContributors({slug}: { slug: string }) {
     setLoading(true)
 
     const contribDoi: Contributor[] = await getContributorsFromDoi(
-      software?.id, software?.concept_doi
+      software?.id ?? '', software?.concept_doi ?? ''
     )
 
     if (!contribDoi || contribDoi.length === 0) {
