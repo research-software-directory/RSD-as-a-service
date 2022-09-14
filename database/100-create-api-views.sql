@@ -335,24 +335,26 @@ BEGIN
 	IF (public) THEN
 		RETURN QUERY
 		SELECT
-			project_for_organisation.organisation,
-			COUNT(DISTINCT project) AS project_cnt
+			list_parent_organisations.organisation_id,
+			COUNT(DISTINCT project_for_organisation.project) AS project_cnt
 		FROM
 			project_for_organisation
+		CROSS JOIN list_parent_organisations(project_for_organisation.organisation)
 		WHERE
 			status = 'approved' AND
 			project IN (
 				SELECT id FROM project WHERE is_published=TRUE
 			)
-		GROUP BY project_for_organisation.organisation;
+		GROUP BY list_parent_organisations.organisation_id;
 	ELSE
 		RETURN QUERY
 		SELECT
-			project_for_organisation.organisation,
-			COUNT(DISTINCT project) AS project_cnt
+			list_parent_organisations.organisation_id,
+			COUNT(DISTINCT project_for_organisation.project) AS project_cnt
 		FROM
 			project_for_organisation
-		GROUP BY project_for_organisation.organisation;
+		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
+		GROUP BY list_parent_organisations.organisation_id;
 	END IF;
 END
 $$;
@@ -505,9 +507,9 @@ BEGIN
 		project.title,
 		project.subtitle,
 		CASE
-			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now() THEN 'Finished'::varchar
-			ELSE 'Running'::varchar
+			WHEN project.date_end IS NULL THEN 'Starting'::VARCHAR
+			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+			ELSE 'Running'::VARCHAR
 		END AS current_state,
 		project.date_start,
 		project.updated_at,
@@ -527,7 +529,7 @@ BEGIN
 	LEFT JOIN
 		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
 	WHERE
-		project_for_organisation.organisation=organisation_id
+		project_for_organisation.organisation IN (SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id))
 	;
 END
 $$;
