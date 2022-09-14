@@ -23,4 +23,5 @@ RUN crontab /etc/cron.d/jobs.cron
 COPY --from=builder /usr/mymaven/target/*-jar-with-dependencies.jar scrapers.jar
 COPY --from=builder /usr/mymaven/src/main/resources/releases.py releases.py
 COPY --from=builder /usr/mymaven/src/main/resources/zotero.py zotero.py
+COPY --from=builder /usr/mymaven/src/main/resources/oaipmh.py oaipmh.py
 CMD printenv > /etc/environment && cron -f
