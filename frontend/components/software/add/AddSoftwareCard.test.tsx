@@ -23,7 +23,7 @@ const mockValidSoftwareItem = jest.spyOn(editSoftware, 'validSoftwareItem')
   .mockImplementation((props) => new Promise((res, rej) => {
     setTimeout(() => {
       res(false)
-    },10)
+    },100)
   }))
 
 // mock next router

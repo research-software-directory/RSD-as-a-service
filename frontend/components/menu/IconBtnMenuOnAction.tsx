@@ -50,7 +50,7 @@ export default function IconBtnMenuOnAction({options, onAction,
       return (
         options.map(item => {
           if (item.type === 'divider') {
-            return <Divider />
+            return <Divider key={item.label} />
           }
           return (
             <MenuItem
