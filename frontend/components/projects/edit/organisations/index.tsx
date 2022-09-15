@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
 
-import {Session} from '~/auth'
+import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
@@ -25,12 +27,13 @@ import {deleteOrganisationLogo, newOrganisationProps, saveExistingOrganisation, 
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {addOrganisationToProject, createOrganisationAndAddToProject, deleteOrganisationFromProject} from '~/utils/editProject'
 
-export default function ProjectOrganisations({session}: { session: Session }) {
+export default function ProjectOrganisations({slug}: { slug: string }) {
+  const session = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {setLoading, project} = useProjectContext()
+  const {project} = useProjectContext()
   const {loading, organisations, setOrganisations} = useParticipatingOrganisations({
     project: project.id,
-    token: session?.token,
+    token: session.token,
     account: session.user?.account
   })
   const [modal, setModal] = useState<ModalStates<EditOrganisationModalProps>>({
@@ -41,17 +44,12 @@ export default function ProjectOrganisations({session}: { session: Session }) {
       open: false
     }
   })
-  if (loading) {
-    return (
-      <ContentLoader />
-    )
-  }
 
-   async function onAddOrganisation(item: SearchOrganisation) {
+  async function onAddOrganisation(item: SearchOrganisation) {
     // add default values
     const addOrganisation: EditOrganisation = searchToEditOrganisation({
       item,
-      account: session?.user?.account,
+      account: session.user?.account,
       position: organisations.length + 1
     })
     if (item.source === 'ROR') {
@@ -147,6 +145,7 @@ export default function ProjectOrganisations({session}: { session: Session }) {
       const resp = await deleteOrganisationFromProject({
         project: project.id,
         organisation: organisation.id,
+        role: 'participating',
         token: session.token
       })
       if (resp.status === 200) {
@@ -234,6 +233,12 @@ export default function ProjectOrganisations({session}: { session: Session }) {
       ...organisations.slice(pos+1)
     ]
     setOrganisations(newList)
+  }
+
+  if (loading) {
+    return (
+      <ContentLoader />
+    )
   }
 
   return (

@@ -87,7 +87,7 @@ export default function RorIdOptionsModal({open,options,onSelect}:RorIdOptionsMo
         <Select
           labelId="demo-dialog-select-label"
           id="select-organisation"
-          value={ror_id}
+          value={ror_id ?? ''}
           variant="standard"
           onChange={handleChange}
           sx={{
@@ -105,13 +105,16 @@ export default function RorIdOptionsModal({open,options,onSelect}:RorIdOptionsMo
       >
         <Button
           onClick={handleClose}
+          color="secondary"
           sx={{
             marginRight:'1rem'
           }}
         >
           Cancel
         </Button>
-        <Button onClick={handleClose}>
+        <Button
+          variant="contained"
+          onClick={handleClose}>
           Select
         </Button>
       </DialogActions>

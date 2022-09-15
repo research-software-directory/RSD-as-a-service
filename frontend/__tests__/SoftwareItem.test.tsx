@@ -10,15 +10,6 @@ import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 // mock fetch response
 import softwareIndexData from './__fixtures__/softwareIndexData'
 
-/**
- * We need to mock remark-breaks for now as it is breaking Jest setup
- */
-jest.mock('remark-breaks', jest.fn((...props) => {
-  // console.log('remark-breaks...', props)
-  return props
-}))
-
-
 jest.mock('../utils/getSoftware')
 
 describe('pages/software/[slug]/index.tsx', () => {

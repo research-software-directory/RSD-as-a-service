@@ -3,9 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useState} from 'react'
+import {useState} from 'react'
 
-import {Session} from '~/auth'
+import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
@@ -14,10 +14,11 @@ import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import useOrganisationMaintainers, {
   deleteMaintainerFromOrganisation, MaintainerOfOrganisation
-} from './useOrganisationMaintainer'
+} from './useOrganisationMaintainers'
 import OrganisationMaintainerLink from './OrganisationMaintainerLink'
 import {OrganisationForOverview} from '~/types/Organisation'
 import OrganisationMaintainersList from './OrganisationMaintainersList'
+import ProtectedOrganisationPage from '../ProtectedOrganisationPage'
 
 type DeleteModal = {
   open: boolean,
@@ -26,26 +27,24 @@ type DeleteModal = {
 }
 
 
-export default function OrganisationMaintainers({session, organisation}:
-  {session: Session, organisation:OrganisationForOverview }) {
+export default function OrganisationMaintainers({organisation, isMaintainer}:
+  { organisation: OrganisationForOverview, isMaintainer: boolean }) {
+  const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {loading,maintainers} = useOrganisationMaintainers({
+  const {loading,maintainers,setMaintainers} = useOrganisationMaintainers({
     organisation: organisation.id ?? '',
-    token: session.token
+    token
   })
-  const [organisationMaintainers, setOrganisationMaintaners] = useState<MaintainerOfOrganisation[]>([])
+  // const [organisationMaintainers, setOrganisationMaintaners] = useState<MaintainerOfOrganisation[]>(maintainers)
   const [modal, setModal] = useState<DeleteModal>({
     open: false
   })
 
-  useEffect(() => {
-    let abort = false
-    if (loading === false &&
-      abort === false) {
-      setOrganisationMaintaners(maintainers)
-    }
-    return () => { abort = true }
-  },[maintainers,loading])
+  // console.group('OrganisationMaintainers')
+  // console.log('OrganisationMaintainers.maintainers...', maintainers)
+  // console.log('OrganisationMaintainers.organisationMaintainers...', organisationMaintainers)
+  // console.log('OrganisationMaintainers.loading...', loading)
+  // console.groupEnd()
 
   if (loading) {
     return (
@@ -78,7 +77,7 @@ export default function OrganisationMaintainers({session, organisation}:
       const resp = await deleteMaintainerFromOrganisation({
         maintainer: admin.account,
         organisation: organisation.id ?? '',
-        token: session.token,
+        token,
         frontend: true
       })
       if (resp.status === 200) {
@@ -86,7 +85,7 @@ export default function OrganisationMaintainers({session, organisation}:
           ...maintainers.slice(0, pos),
           ...maintainers.slice(pos+1)
         ]
-        setOrganisationMaintaners(newMaintainersList)
+        setMaintainers(newMaintainersList)
       } else {
         showErrorMessage(`Failed to remove maintainer. ${resp.message}`)
       }
@@ -94,15 +93,17 @@ export default function OrganisationMaintainers({session, organisation}:
   }
 
   return (
-    <>
+    <ProtectedOrganisationPage
+      isMaintainer={isMaintainer}
+    >
       <EditSection className='xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4 xl:pl-[3rem]">
+        <div className="py-4">
           <EditSectionTitle
             title={config.title}
           />
           <OrganisationMaintainersList
             onDelete={onDeleteMaintainer}
-            maintainers={organisationMaintainers}
+            maintainers={maintainers}
           />
         </div>
         <div className="py-4 min-w-[21rem] xl:my-0">
@@ -112,8 +113,8 @@ export default function OrganisationMaintainers({session, organisation}:
           />
           <OrganisationMaintainerLink
             organisation={organisation.id ?? ''}
-            account={session.user?.account ?? ''}
-            token={session.token}
+            account={user?.account ?? ''}
+            token={token}
           />
         </div>
       </EditSection>
@@ -130,6 +131,6 @@ export default function OrganisationMaintainers({session, organisation}:
         }}
         onDelete={()=>deleteMaintainer(modal.pos ?? 0)}
       />
-    </>
+    </ProtectedOrganisationPage>
   )
 }

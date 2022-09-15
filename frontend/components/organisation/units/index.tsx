@@ -8,20 +8,20 @@ import {useEffect, useState} from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
 
-import {Session} from '../../../auth'
+import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import ContentLoader from '../../layout/ContentLoader'
 import {EditOrganisation, OrganisationForOverview} from '../../../types/Organisation'
 import {
   createOrganisation, deleteOrganisationLogo,
   newOrganisationProps, updateOrganisation,
-  updateDataObjectAfterSave,
-  deleteOrganisation
+  updateDataObjectAfterSave
 } from '../../../utils/editOrganisation'
 import useOrganisationUnits from '../../../utils/useOrganisationUnits'
 import {sortOnStrProp} from '../../../utils/sortFn'
-import UnitsList from './ResearchUnitList'
+import ResearchUnitList from './ResearchUnitList'
 import ResearchUnitModal from './ResearchUnitModal'
+import {OrganisationComponentsProps} from '../OrganisationNavItems'
 
 type EditOrganisationModal = {
   open: boolean,
@@ -29,27 +29,27 @@ type EditOrganisationModal = {
   organisation?: EditOrganisation
 }
 
-export default function ResearchUnits({organisation, session}:
-  {organisation: OrganisationForOverview, session: Session}) {
-  const {showErrorMessage,showSuccessMessage} = useSnackbar()
+export default function ResearchUnits({organisation}: OrganisationComponentsProps) {
+  const {token,user} = useSession()
+  const {showErrorMessage} = useSnackbar()
   const {units, setUnits,loading} = useOrganisationUnits({
     organisation: organisation.id,
-    token: session.token
+    token
   })
   const [modal, setModal] = useState<EditOrganisationModal>({
     open: false
   })
-  const [isPrimary,setPrimary]=useState(organisation.primary_maintainer===session.user?.account)
+  const [isPrimary,setPrimary]=useState(organisation.primary_maintainer===user?.account)
 
   useEffect(() => {
     let abort = false
-    if (organisation.primary_maintainer === session.user?.account ||
-      session?.user?.role === 'rsd_admin') {
+    if (organisation.primary_maintainer === user?.account ||
+      user?.role === 'rsd_admin') {
       if (abort) return
       setPrimary(true)
     }
     return ()=>{abort=true}
-  },[organisation.primary_maintainer,session.user?.account,session.user?.role])
+  },[organisation.primary_maintainer,user?.account,user?.role])
 
   function renderAddBtn() {
     if (isPrimary) {
@@ -121,7 +121,7 @@ export default function ResearchUnits({organisation, session}:
         // update existing organisation
         const resp = await updateOrganisation({
           item: data,
-          token: session?.token
+          token
         })
         if (resp.status !== 200) {
           showErrorMessage(resp.message)
@@ -132,7 +132,7 @@ export default function ResearchUnits({organisation, session}:
         // create new organisation
         const resp = await createOrganisation({
           item: data,
-          token: session?.token
+          token
         })
         if (resp.status === 201) {
           const newUnit = updateDataObjectAfterSave({
@@ -152,7 +152,7 @@ export default function ResearchUnits({organisation, session}:
   async function onDeleteOrganisationLogo(logo_id: string) {
     const resp = await deleteOrganisationLogo({
       id: logo_id,
-      token: session.token
+      token
     })
     if (resp.status !== 200) {
       showErrorMessage(resp.message)
@@ -181,37 +181,15 @@ export default function ResearchUnits({organisation, session}:
     }
   }
 
-  async function onDeleteUnit(pos: number) {
-    // TODO!
-    // DELETE is more involved as it would need
-    // to REMOVE logo, all software and projects
-    // BEFORE removing the organisation
-    // logger('ResearchUnits: TODO! delete not implemented', 'warn')
-    const unit = units[pos]
-    if (unit) {
-      const resp = await deleteOrganisation({
-        uuid: unit.id,
-        logo_id: unit.logo_id,
-        token: session.token
-      })
-      if (resp.status === 200) {
-        showSuccessMessage(`${unit.name} is removed`)
-      } else {
-        showErrorMessage(`Failed to remove ${unit.name}. ${resp.message}`)
-      }
-    }
-  }
-
   function renderUnitList() {
     if (loading) {
       return <ContentLoader />
     }
     return (
-      <UnitsList
+      <ResearchUnitList
         organisations={units}
         isMaintainer={isPrimary}
         onEdit={onEditUnit}
-        onDelete={onDeleteUnit}
       />
     )
   }

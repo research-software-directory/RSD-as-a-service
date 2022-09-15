@@ -175,6 +175,7 @@ export async function updateProjectInfo({project, projectLinks, projectImage, fu
       deleteOrganisationFromProject({
         project: item.project,
         organisation: item.organisation,
+        role: 'funding',
         token: session.token
       })
     )
@@ -452,8 +453,6 @@ export async function addOrganisationToProject({project, organisation, role, ses
       method: 'POST',
       headers: {
         ...createJsonHeaders(session.token),
-        // this will add new items and update existing
-        'Prefer': 'resolution=merge-duplicates'
       },
       body: JSON.stringify({
         project,
@@ -503,11 +502,11 @@ export async function patchProjectForOrganisation({project, organisation, data, 
   }
 }
 
-export async function deleteOrganisationFromProject({project,organisation,token}:
-  { project: string, organisation:string, token:string }) {
+export async function deleteOrganisationFromProject({project, organisation, role, token}:
+  { project: string, organisation:string, role: OrganisationRole, token:string }) {
   try {
     // POST
-    const url = `/api/v1/project_for_organisation?project=eq.${project}&organisation=eq.${organisation}`
+    const url = `/api/v1/project_for_organisation?project=eq.${project}&organisation=eq.${organisation}&role=eq.${role}`
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {

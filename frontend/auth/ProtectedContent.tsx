@@ -78,7 +78,7 @@ try {
  * based on page slug. NOTE! Slug is optional prop and if not provided the
  * maintainer validation is not performed.
  */
-export default function ProtectedContent({children, pageType='software', slug}:
+export default function ProtectedContent({children, pageType='software', slug=''}:
   { children: any, pageType?:'software'|'project', slug?: string }) {
   const {session} = useAuth()
   // keep maintainer flag
@@ -87,44 +87,31 @@ export default function ProtectedContent({children, pageType='software', slug}:
   // is maintainer of the software
   const [status, setStatus] = useState(slug ? 'loading' : session?.status)
 
+  // console.group('ProtectedContent')
+  // console.log('slug...', slug)
+  // console.log('ProtectedContent.status...', status)
+  // console.log('expired...', expired)
+  // console.log('token...', token)
+  // console.log('isMaintainer...', isMaintainer)
+  // console.groupEnd()
+
   useEffect(() => {
-    let abort = false
-    if (slug && session.token) {
-      setStatus('loading')
-      if (pageType === 'project') {
-        // validate if user is maintainer
-        // of this project
-        isMaintainerOfProject({
-          slug,
-          account: session?.user?.account ?? '',
-          token: session?.token
-        }).then(resp => {
-          // stop on abort
-          if (abort) return
-          // update states
-          setIsMaintainer(resp)
-          setStatus(session.status)
-        })
-      } else {
-        // validate if user is maintainer
-        // of this software
-        isMaintainerOfSoftware({
-          slug,
-          account: session?.user?.account ?? '',
-          token: session?.token
-        }).then(resp => {
-          // stop on abort
-          if (abort) return
-          // update states
-          setIsMaintainer(resp)
-          setStatus(session.status)
-        })
-      }
-    } else if (session?.status) {
+    async function getMaintainerFlag() {
+      const maintainer = await isMaintainerOf({
+        slug,
+        pageType,
+        token: session.token,
+        account: session.user?.account
+      })
+      setIsMaintainer(maintainer)
       setStatus(session.status)
     }
-    return () => { abort = true }
-  }, [slug, pageType, session.token, session?.user?.account, session?.user?.role, session.status])
+    if (slug && session.token && pageType) {
+      getMaintainerFlag()
+    } else if (session.status) {
+      setStatus(session.status)
+    }
+  },[slug,session,pageType])
 
   // return nothing
   if (status === 'loading') return <ContentLoader />

@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {MentionItemProps} from '~/types/Mention'
 import {getOutputForProject} from '~/utils/getProjects'
@@ -16,6 +16,7 @@ type OutputForProjectProps = {
 
 export default function useOutputForProject({project, token}: OutputForProjectProps) {
   const {setLoading, setMentions, loading, mentions} = useEditMentionReducer()
+  const [loadedProject, setLoadedProject] = useState('')
 
   useEffect(() => {
     let abort = false
@@ -33,15 +34,24 @@ export default function useOutputForProject({project, token}: OutputForProjectPr
       // debugger
       if (mentions && abort === false) {
         setMentions(output)
+        setLoadedProject(project)
         setLoading(false)
       }
     }
-    if (project && token) {
+    if (project && token && project!==loadedProject) {
       getImpact()
     }
-    () => { abort = true }
+    // else {
+    //   console.group('skip request useOutputForProject')
+    //   console.log('project...', project)
+    //   console.log('loadedProject...', loadedProject)
+    //   console.groupEnd()
+    // }
+    return () => { abort = true }
+    // we skip setMentions and setLoading methods in the deps to avoid loop
+    // TODO! try wrapping methods of useEditMentionReducer in useCallback?
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[project,token])
+  },[project,token,loadedProject])
 
   // console.group('useOutputForProject')
   // console.log('loading...', loading)

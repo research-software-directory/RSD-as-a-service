@@ -36,5 +36,13 @@ jest.mock('remark-gfm', () => {
   })
 })
 
+// MOCK REMARK-BREAKS plugin as it fails to load in current setup
+// there seem to be problem with ESM modules and Jest loading these
+jest.mock('remark-breaks', jest.fn((...props) => {
+  // console.log('remark-breaks...', props)
+  return props
+}))
+
+
 // TOKEN
 // process.env.PGRST_JWT_SECRET='reallyreallyreallyreallyverysafe'

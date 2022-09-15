@@ -68,8 +68,9 @@ export async function getOrganisationsList({search, rows, page, token}:
 }
 
 export async function getOrganisationBySlug({slug, token}:
-  {slug: string[], token: string}) {
+  { slug: string[], token: string }) {
   try {
+    // console.log('getOrganisationBySlug...',slug)
     // resolve slug to id and
     // get list of organisation uuid's this user is mantainer of
     const [uuid, maintainerOf] = await Promise.all([
@@ -156,10 +157,11 @@ export async function getOrganisationById({uuid, token,frontend=false,isMaintain
 }
 
 export async function getOrganisationChildren({uuid, token,frontend=false}:
-  {uuid: string, token: string,frontend?:boolean}) {
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=eq.${uuid}`
+  { uuid: string, token: string, frontend?: boolean }) {
+  const query = `rpc/organisations_overview?parent=eq.${uuid}&order=name.asc`
+  let url = `${process.env.POSTGREST_URL}/${query}`
   if (frontend) {
-    url = `/api/v1/rpc/organisations_overview?parent=eq.${uuid}`
+    url = `/api/v1/${query}`
   }
   const resp = await fetch(url, {
     method: 'GET',

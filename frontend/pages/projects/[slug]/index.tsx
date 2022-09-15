@@ -72,7 +72,7 @@ export default function ProjectPage(props: ProjectPageProps) {
   if (!project?.title){
     return <NoContent />
   }
-  // console.log('ProjectItemPage...isMaintainer...', isMaintainer)
+  // console.log('ProjectItemPage...relatedProjects...', relatedProjects)
   return (
     <>
       {/* Page Head meta tags */}

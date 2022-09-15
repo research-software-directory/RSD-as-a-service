@@ -5,7 +5,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext} from 'react'
 import {useAuth} from '~/auth'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import FindMention from '~/components/mention/FindMention'
@@ -13,18 +12,21 @@ import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {MentionItemProps} from '~/types/Mention'
 import {getMentionByDoiFromRsd} from '~/utils/editMentions'
 import {getMentionByDoi} from '~/utils/getDOI'
-import editSoftwareContext from '../editSoftwareContext'
+import useSoftwareContext from '../useSoftwareContext'
 import {cfgImpact as config} from './config'
 import {findPublicationByTitle} from './mentionForSoftwareApi'
 
 export default function FindSoftwareMention() {
-  const {pageState} = useContext(editSoftwareContext)
+  // const {pageState} = useContext(editSoftwareContext)
+  const {software} = useSoftwareContext()
   const {session: {token}} = useAuth()
   const {onAdd} = useEditMentionReducer()
 
   async function findPublication(searchFor: string) {
     // regex validation if DOI string
-    if (searchFor.match(/^10(\.\w+)+\/\S+$/) !== null) {
+    const doiRegexMatch = searchFor.match(/^\s*((https?:\/\/)?(www\.)?(dx\.)?doi\.org\/)?(10(\.\w+)+\/\S+)\s*$/)
+    if (doiRegexMatch !== null && doiRegexMatch[5] !== undefined) {
+      searchFor = doiRegexMatch[5]
       // look first at RSD
       const rsd = await getMentionByDoiFromRsd({
         doi: searchFor,
@@ -45,7 +47,7 @@ export default function FindSoftwareMention() {
     } else {
       // find by title
       const mentions = await findPublicationByTitle({
-        software: pageState.software.id ?? '',
+        software: software.id ?? '',
         searchFor,
         token
       })

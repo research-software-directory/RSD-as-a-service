@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Session} from '~/auth'
+import {useSession} from '~/auth'
 import EditSection from '~/components/layout/EditSection'
 import OutputByType from './OutputByType'
 import FindOutput from './FindOutput'
@@ -12,7 +12,8 @@ import EditOutputProvider from './EditOutputProvider'
 import useProjectContext from '../useProjectContext'
 import EditMentionsInfo from '~/components/software/edit/mentions/EditMentionsInfo'
 
-export default function ProjectOutput({session}: { session: Session }) {
+export default function ProjectOutput() {
+  const {token} = useSession()
   const {project} = useProjectContext()
 
   // console.group('ProjectOutput')
@@ -20,10 +21,10 @@ export default function ProjectOutput({session}: { session: Session }) {
   // console.groupEnd()
 
   return (
-    <EditOutputProvider token={session.token} project={project.id}>
+    <EditOutputProvider token={token} project={project.id}>
       <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]'>
         <div className="pt-4 pb-8 xl:pl-[3rem]">
-          <OutputByType session={session}/>
+          <OutputByType />
         </div>
         <div className="pt-4 pb-8">
           <FindOutput />

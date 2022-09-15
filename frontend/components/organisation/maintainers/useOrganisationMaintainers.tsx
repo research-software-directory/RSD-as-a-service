@@ -6,64 +6,42 @@
 import {useState,useEffect} from 'react'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
+import {getMaintainersOfOrganisation} from './getMaintainersOfOrganisation'
 
-export type RawMaintainerOfSoftware = {
+export type RawMaintainerOfOrganisation = {
   // unique maintainer id
   maintainer: string
   name: string[]
   email: string[]
   affiliation: string[],
+  is_primary?: boolean
 }
 
-export type MaintainerOfSoftware = {
+export type MaintainerOfOrganisation = {
   // unique maintainer id
   account: string
   name: string
   email: string
   affiliation: string,
+  is_primary?: boolean
 }
 
-export async function getMaintainersOfSoftware({software, token, frontend=true}:
-  {software: string, token: string,frontend?:boolean}) {
-  try {
-    let query = `rpc/maintainers_of_software?software_id=${software}`
-    let url = `/api/v1/${query}`
-    if (frontend === false) {
-      url = `${process.env.POSTGREST_URL}/${query}`
-    }
-
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders(token)
-    })
-
-    if (resp.status === 200) {
-      const json:RawMaintainerOfSoftware[] = await resp.json()
-      return json
-    }
-    // ERRORS
-    logger(`getMaintainersOfSoftware: ${resp.status}:${resp.statusText} software: ${software}`, 'warn')
-    return []
-  } catch (e: any) {
-    logger(`getMaintainersOfSoftware: ${e?.message}`, 'error')
-    return []
-  }
-}
-
-export default function useSoftwareMaintainers({software, token}:
-  {software: string, token: string }) {
-  const [maintainers, setMaintainers] = useState<MaintainerOfSoftware[]>([])
+export default function useOrganisationMaintainers({organisation, token}:
+  {organisation: string, token: string }) {
+  const [maintainers, setMaintainers] = useState<MaintainerOfOrganisation[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let abort = false
     async function getMaintainers() {
+      // console.log('useOrganisationMaintainers.useEffect.getMaintainers')
       setLoading(true)
-      const raw_maintainers = await getMaintainersOfSoftware({
-        software,
+      const raw_maintainers = await getMaintainersOfOrganisation({
+        organisation,
         token,
         frontend:true
       })
+      // console.log('useOrganisationMaintainers.useEffect...raw_maintainers',raw_maintainers)
       const maintainers = rawMaintainersToMaintainers(raw_maintainers)
       if (abort) return null
       // update maintainers state
@@ -71,20 +49,36 @@ export default function useSoftwareMaintainers({software, token}:
       // update loading flag
       setLoading(false)
     }
-
-    if (software && token) {
+    // console.log('useOrganisationMaintainers.useEffect...')
+    if (organisation && token) {
       getMaintainers()
+    } else if (token==='') {
+      setLoading(false)
     }
+    return ()=>{abort=true}
+  }, [organisation,token])
 
-    ()=>{abort=true}
-  },[software,token])
+  if (token === '') {
+    return {
+      loading: false,
+      maintainers,
+      setMaintainers
+    }
+  }
 
-  return {maintainers, loading}
+  // console.log('useOrganisationMaintainers.loading...', loading)
+  // console.log('useOrganisationMaintainers.organisation...',organisation)
+  // console.log('useOrganisationMaintainers.token...',token)
+  return {
+    loading,
+    maintainers,
+    setMaintainers
+  }
 }
 
-export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfSoftware[]) {
+export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfOrganisation[]) {
   try {
-    const maintainers:MaintainerOfSoftware[] = []
+    const maintainers:MaintainerOfOrganisation[] = []
     raw_maintainers.forEach(item => {
       // use name as second loop indicator
       item.name.forEach((name, pos) => {
@@ -92,7 +86,8 @@ export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfSoft
           account: item.maintainer,
           name,
           email: item.email[pos] ? item.email[pos] : '',
-          affiliation: item.affiliation[pos] ? item.affiliation[pos] : ''
+          affiliation: item.affiliation[pos] ? item.affiliation[pos] : '',
+          is_primary: item?.is_primary ?? false
         }
         maintainers.push(maintainer)
       })
@@ -105,10 +100,10 @@ export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfSoft
 }
 
 
-export async function deleteMaintainerFromSoftware({maintainer,software,token,frontend=true}:
-  {maintainer:string,software:string,token:string,frontend?:boolean}) {
+export async function deleteMaintainerFromOrganisation({maintainer,organisation,token,frontend=true}:
+  {maintainer:string,organisation:string,token:string,frontend?:boolean}) {
   try {
-    let query = `maintainer_for_software?maintainer=eq.${maintainer}&software=eq.${software}`
+    let query = `maintainer_for_organisation?maintainer=eq.${maintainer}&organisation=eq.${organisation}`
     let url = `/api/v1/${query}`
     if (frontend === false) {
       url = `${process.env.POSTGREST_URL}/${query}`
@@ -130,11 +125,11 @@ export async function deleteMaintainerFromSoftware({maintainer,software,token,fr
   }
 }
 
-export async function softwareMaintainerLink({software, account, token}:
-  { software: string, account: string, token: string }) {
+export async function organisationMaintainerLink({organisation, account, token}:
+  { organisation: string, account: string, token: string }) {
   try {
     // POST
-    const url = '/api/v1/invite_maintainer_for_software'
+    const url = '/api/v1/invite_maintainer_for_organisation'
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
@@ -142,14 +137,14 @@ export async function softwareMaintainerLink({software, account, token}:
         'Prefer': 'return=headers-only'
       },
       body: JSON.stringify({
-        software,
+        organisation,
         created_by:account
       })
     })
     if (resp.status === 201) {
       const id = resp.headers.get('location')?.split('.')[1]
       if (id) {
-        const link = `${location.origin}/invite/software/${id}`
+        const link = `${location.origin}/invite/organisation/${id}`
         return {
           status: 201,
           message: link
@@ -160,9 +155,9 @@ export async function softwareMaintainerLink({software, account, token}:
         message: 'Id is missing'
       }
     }
-    return extractReturnMessage(resp, software ?? '')
+    return extractReturnMessage(resp, organisation ?? '')
   } catch (e: any) {
-    logger(`createMaintainerLink: ${e?.message}`, 'error')
+    logger(`organisationMaintainerLink: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message

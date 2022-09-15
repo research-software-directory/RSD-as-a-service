@@ -5,7 +5,7 @@
 
 import {useEffect, useState} from 'react'
 
-import {useAuth} from '~/auth'
+import {useSession} from '~/auth'
 import {RelatedSoftwareOfSoftware, SearchSoftware} from '~/types/SoftwareTypes'
 
 import {cfgRelatedItems as config} from './config'
@@ -21,18 +21,18 @@ import {Status} from '~/types/Organisation'
 
 
 export default function RelatedSoftwareForSoftware() {
-  const {session} = useAuth()
+  const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()
   const [relatedSoftware, setRelatedSoftware] = useState<RelatedSoftwareOfSoftware[]>()
+  const [loadedSoftware, setLoadedSoftware] = useState('')
 
   useEffect(() => {
     let abort = false
     async function getRelatedSoftware() {
-      // setLoading(true)
       const resp = await getRelatedSoftwareForSoftware({
         software: software.id ?? '',
-        token: session.token,
+        token,
         frontend: true
       })
       const softwareList = resp
@@ -50,15 +50,14 @@ export default function RelatedSoftwareForSoftware() {
       if (abort) return null
       // debugger
       setRelatedSoftware(softwareList)
-      // setLoading(false)
+      setLoadedSoftware(software?.id ?? '')
     }
-    if (software.id && session.token) {
+    if (software.id && token &&
+      software?.id !== loadedSoftware) {
       getRelatedSoftware()
     }
-
-    ()=>{abort=true}
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[software.id,session.token])
+    return ()=>{abort=true}
+  },[software.id,token,loadedSoftware])
 
   async function onAdd(selected: SearchSoftware) {
     if (typeof relatedSoftware == 'undefined') return
@@ -70,7 +69,7 @@ export default function RelatedSoftwareForSoftware() {
       const resp = await addRelatedSoftware({
         origin: software.id ?? '',
         relation: selected.id,
-        token: session.token
+        token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to add related software. ${resp.message}`)
@@ -95,7 +94,7 @@ export default function RelatedSoftwareForSoftware() {
       const resp = await deleteRelatedSoftware({
         origin: software.id ?? '',
         relation: related.id ?? '',
-        token: session.token
+        token
       })
       if (resp.status !== 200) {
         showErrorMessage(`Failed to add related software. ${resp.message}`)
@@ -123,7 +122,7 @@ export default function RelatedSoftwareForSoftware() {
       </EditSectionTitle>
       <FindRelatedSoftware
         software={software.id ?? ''}
-        token={session.token}
+        token={token}
         config={{
           freeSolo: false,
           minLength: config.relatedSoftware.validation.minLength,

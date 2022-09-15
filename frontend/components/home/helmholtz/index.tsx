@@ -504,7 +504,6 @@ export default function HelmholtzHome({organisations=[]}:{organisations: Organis
             <h2 className='text-5xl'>For RSEs and Researchers</h2>
             <div className="text-2xl my-4">A place for Research Software that is being developed in the Helmholtz Association.</div>
             <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
-
               <div className='text-center text-2xl py-4'>
                 <div className="pb-4">For Research Software Engineers</div>
                 <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">
@@ -518,7 +517,6 @@ export default function HelmholtzHome({organisations=[]}:{organisations: Organis
                   </div>
                 </div>
               </div>
-
               <div className='text-center text-2xl my-4'>
                 <div className="mb-4">For Researchers</div>
                 <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">

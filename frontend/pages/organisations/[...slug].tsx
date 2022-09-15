@@ -3,12 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '../../config/app'
-import {Session, useAuth} from '../../auth'
 import useOrganisationMaintainer from '../../auth/permissions/useOrganisationMaintainer'
 import DefaultLayout from '../../components/layout/DefaultLayout'
 import {getOrganisationBySlug} from '../../utils/getOrganisations'
@@ -25,29 +24,38 @@ import {PaginationProvider} from '../../components/pagination/PaginationContext'
 export type OrganisationPageProps = {
   organisation: OrganisationForOverview,
   slug: string[],
-  session: Session,
-  isMaintainer: boolean
+  page: string
 }
 
-export default function OrganisationPage({organisation,slug}:OrganisationPageProps) {
-  const {session} = useAuth()
-  const [pageState, setPageState] = useState<OrganisationMenuProps>(organisationMenu[0])
+export default function OrganisationPage({organisation,slug,page}:OrganisationPageProps) {
+  const [pageState, setPageState] = useState<OrganisationMenuProps>()
   const {loading, isMaintainer} = useOrganisationMaintainer({
-    organisation: organisation.id,
-    session
+    organisation: organisation.id
   })
   const pageTitle = `${organisation.name} | ${app.title}`
 
-  // console.log('OrganisationPage...organisation...',organisation)
+  useEffect(() => {
+    if (page && page!=='') {
+      const nextStep = organisationMenu.find(item => item.id === page)
+      if (nextStep) {
+        setPageState(nextStep)
+      }
+    } else {
+      // default is the first item
+      setPageState(organisationMenu[0])
+    }
+  },[page])
 
-  function onChangeStep({nextStep}: { nextStep: OrganisationMenuProps }) {
-    setPageState(nextStep)
-  }
+  // console.group('OrganisationPage')
+  // console.log('organisation...', organisation)
+  // console.log('slug....', slug)
+  // console.log('page....', page)
+  // console.groupEnd()
 
   function renderStepComponent() {
-    if (loading) return <ContentLoader />
+    if (loading || typeof pageState == 'undefined') return <ContentLoader />
     if (pageState.component) {
-      return pageState.component({organisation,slug,session,isMaintainer})
+      return pageState.component({organisation,isMaintainer})
     }
   }
 
@@ -61,19 +69,16 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
         <OrganisationTitle
           title={organisation.name}
           slug={slug}
-          showSearch={pageState.showSearch}
+          showSearch={pageState?.showSearch ?? false}
         />
         <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
           <div>
             <OrganisationNav
-              onChangeStep={onChangeStep}
-              selected={pageState.id}
               organisation={organisation}
               isMaintainer={isMaintainer}
             />
             <OrganisationLogo
               isMaintainer={isMaintainer}
-              token={session.token}
               {...organisation}
             />
           </div>
@@ -91,7 +96,7 @@ export default function OrganisationPage({organisation,slug}:OrganisationPagePro
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
-    const {params,req} = context
+    const {params,req,query} = context
     // console.log('getServerSideProps...params...', params)
     const organisation = await getOrganisationBySlug({
       slug: params?.slug as string[],
@@ -108,7 +113,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // passed to the page component as props
       props: {
         organisation,
-        slug: params?.slug
+        slug: params?.slug,
+        page: query?.page ?? '',
       },
     }
   }catch(e){

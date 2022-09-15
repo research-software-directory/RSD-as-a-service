@@ -105,6 +105,14 @@ export function AuthProvider(props: any) {
 // Auth hook to use in the components
 export const useAuth = () => useContext(AuthContext)
 
+// More specific session hook which destructures session
+export function useSession(){
+  const {session} = useContext(AuthContext)
+  return {
+    ...session
+  }
+}
+
 /**
  * Calculate expirition time from now in milliseconds
  * @param exp in seconds
