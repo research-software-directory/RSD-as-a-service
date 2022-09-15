@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # PHONY makes possible to call `make commands` from inside the Makefile
-.PHONY: start install dev down dev-docs
+.PHONY: start install frontend data dev down dev-docs
 
 # Main commands
 # ----------------------------------------------------------------
