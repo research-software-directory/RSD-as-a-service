@@ -32,7 +32,7 @@ type EditOrganisationModal = {
 export default function ResearchUnits({organisation}: OrganisationComponentsProps) {
   const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {units, setUnits,loading} = useOrganisationUnits({
+  const {units, setUnits, loading} = useOrganisationUnits({
     organisation: organisation.id,
     token
   })
@@ -116,7 +116,6 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
 
   async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number }) {
     try {
-      closeModals()
       if (typeof pos != 'undefined' && data.id) {
         // update existing organisation
         const resp = await updateOrganisation({
@@ -135,6 +134,7 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
           } else {
             updateUnitInList(data,pos)
           }
+          closeModals()
         }
       } else {
         // create new organisation
@@ -148,6 +148,7 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
             id: resp.message
           })
           addUnitToCollection(newUnit)
+          closeModals()
         } else {
           showErrorMessage(resp.message)
         }

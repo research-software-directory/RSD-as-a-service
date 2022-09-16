@@ -37,4 +37,6 @@ export function sanitizeSlugValue(slug: string, separator: string = '-') {
     .replace(/[^a-z0-9\-]/g, '')
     .trim()
     .replace(/[-\s]+/g, separator)
+    // remove first and last -
+    .replace(/^-+|-+$/g, '')
 }

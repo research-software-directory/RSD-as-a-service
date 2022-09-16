@@ -56,7 +56,7 @@ export default function EditOrganisationModal({
   const {isValid, isDirty, errors} = formState
   const formData = watch()
 
-    useEffect(() => {
+  useEffect(() => {
       if (typeof location != 'undefined') {
       const baseUrl = location.href.split('?')
       // baseUrl is current location without params
