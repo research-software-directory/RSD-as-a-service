@@ -136,4 +136,7 @@ def _get_datacite(url, headers):
 
 
 if __name__ == "__main__":
-	list_records(None)
+	if bool(os.environ.get('ENABLE_OAIPMH_SCRAPER')):
+		list_records(None)
+	else:
+		print("The oaipmh scraper is disabled, aborting")

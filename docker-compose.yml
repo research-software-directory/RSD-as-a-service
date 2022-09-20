@@ -142,6 +142,7 @@ services:
       - ZENODO_ACCESS_TOKEN
       - MAX_REQUESTS_DOI
       - CROSSREF_CONTACT_EMAIL
+      - ENABLE_OAIPMH_SCRAPER
     depends_on:
       - database
       - backend
