@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: frontend unit tests
+name: frontend unit and build test
 
 on:
   pull_request:
@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: "install node v16 and cash yarn"
+      - name: "install node v18 and cash yarn"
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: 'yarn'
           cache-dependency-path: frontend/yarn.lock
       - name: "install dependencies"
@@ -27,3 +27,6 @@ jobs:
       - name: "run unit test"
         working-directory: frontend
         run: yarn test:coverage
+      - name: "run build test"
+        working-directory: frontend
+        run: yarn build
