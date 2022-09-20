@@ -49,20 +49,6 @@ services:
     networks:
       - net
 
-  data-generation:
-    build: ./data-generation
-    image: rsd/generation:1.0.0
-    environment:
-      # it needs to be here to use values from .env file
-      - PGRST_JWT_SECRET
-      - POSTGREST_URL
-    depends_on:
-      - backend
-    networks:
-      - net
-    deploy:
-      replicas: 0
-
   auth:
     build: ./authentication
     image: rsd/auth:1.0.0
@@ -133,6 +119,60 @@ services:
     networks:
       - net
 
+  scrapers:
+    build: ./scrapers
+    image: rsd/scrapers:1.1.0
+    environment:
+      # it uses values from .env file
+      - POSTGREST_URL
+      - PGRST_JWT_SECRET
+      - MAX_REQUESTS_GITHUB
+      - MAX_REQUESTS_GITLAB
+      - API_CREDENTIALS_GITHUB
+      - ZENODO_ACCESS_TOKEN
+      - MAX_REQUESTS_DOI
+      - CROSSREF_CONTACT_EMAIL
+      - ENABLE_OAIPMH_SCRAPER
+    depends_on:
+      - database
+      - backend
+    networks:
+      - net
+
+  nginx:
+    build:
+      context: ./nginx
+    image: rsd/nginx:1.1.0
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - database
+      - backend
+      - auth
+      - frontend
+    networks:
+      - net
+    volumes:
+      - lets-encrypt:/etc/letsencrypt
+
+  #----------------------------------------------
+  # DEVELOPMENT ONLY SERVICES
+  #----------------------------------------------
+  data-generation:
+    build: ./data-generation
+    image: rsd/generation:1.0.0
+    environment:
+      # it needs to be here to use values from .env file
+      - PGRST_JWT_SECRET
+      - POSTGREST_URL
+    depends_on:
+      - backend
+    networks:
+      - net
+    deploy:
+      replicas: 0
+
   frontend-dev:
     build:
       context: ./frontend
@@ -175,48 +215,10 @@ services:
     deploy:
       replicas: 0
 
-  scrapers:
-    build: ./scrapers
-    image: rsd/scrapers:1.1.0
-    environment:
-      # it uses values from .env file
-      - POSTGREST_URL
-      - PGRST_JWT_SECRET
-      - MAX_REQUESTS_GITHUB
-      - MAX_REQUESTS_GITLAB
-      - API_CREDENTIALS_GITHUB
-      - ZENODO_ACCESS_TOKEN
-      - MAX_REQUESTS_DOI
-      - CROSSREF_CONTACT_EMAIL
-      - ENABLE_OAIPMH_SCRAPER
-    depends_on:
-      - database
-      - backend
-    networks:
-      - net
-
-  nginx:
-    build:
-      context: ./nginx
-    image: rsd/nginx:1.1.0
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - database
-      - backend
-      - auth
-      - frontend
-    networks:
-      - net
-    volumes:
-      - lets-encrypt:/etc/letsencrypt
-
 # define name for docker network
 # it should have name: rsd-as-a-service_net
 networks:
   net:
-
 
 # named volumes can be managed easier using docker-compose
 # volume should have name rsd-as-a-service_pgdb
