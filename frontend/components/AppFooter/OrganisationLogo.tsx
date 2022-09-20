@@ -8,18 +8,31 @@ import LogoAvatar from '../layout/LogoAvatar'
 
 
 export default function OrganisationLogo({host}: { host: RsdHost }) {
-  if (host?.logo_url) {
-    const {name,logo_url}=host
+
+  if (host?.logo_url && host?.website) {
+    const {name,logo_url,website}=host
     return (
       <div className="flex items-center">
-        <a href={logo_url} target="_blank"
-          title={name}
+        <a href={website} target="_blank"
           className="h-[4rem] w-[16rem]" rel="noreferrer">
           <LogoAvatar
             name={name}
             src={logo_url}
           />
         </a>
+      </div>
+    )
+  }
+  if (host?.logo_url) {
+    const {name,logo_url,website}=host
+    return (
+      <div className="flex items-center">
+        <span className="h-[4rem] w-[16rem]">
+          <LogoAvatar
+            name={name}
+            src={logo_url}
+          />
+        </span>
       </div>
     )
   }
