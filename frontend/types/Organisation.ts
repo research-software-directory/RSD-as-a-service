@@ -69,6 +69,7 @@ export type OrganisationsForSoftware={
   ror_id: string
   is_tenant: boolean
   website: string | null
+  rsd_path: string
   logo_id: string | null
   status: Status
   software: string
@@ -78,6 +79,7 @@ export type ParticipatingOrganisationProps = {
   name: string
   website: string | null
   logo_url: string | null
+  rsd_path: string
   slug?: string
 }
 

@@ -62,17 +62,18 @@ export type ProjectSearchRpc = {
 // based on view organisations_of_project
 export type OrganisationsOfProject = {
   id: string
-  parent: string | null
   slug: string | null
   primary_maintainer: string | null
   name: string
   ror_id: string
   is_tenant: boolean
   website: string | null
+  rsd_path: string
   logo_id: string | null
   status: Status
   role: OrganisationRole
   project: string
+  parent: string | null
 }
 
 export type ProjectTag = {

@@ -102,7 +102,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...slug...', slug)
+  // console.log('SoftwareIndexPage...organisations...', organisations)
   return (
     <>
       {/* Page Head meta tags */}

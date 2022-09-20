@@ -92,6 +92,24 @@ $$;
 
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
 
+-- including the parent itself
+CREATE OR REPLACE FUNCTION list_child_organisations(parent_id UUID) RETURNS TABLE (organisation_id UUID) STABLE LANGUAGE plpgsql AS
+$$
+DECLARE child_organisations UUID[];
+DECLARE search_child_organisations UUID[];
+DECLARE current_organisation UUID;
+BEGIN
+-- breadth-first search to find all child organisations
+	search_child_organisations = search_child_organisations || parent_id;
+	WHILE CARDINALITY(search_child_organisations) > 0 LOOP
+		current_organisation = search_child_organisations[CARDINALITY(search_child_organisations)];
+		child_organisations = child_organisations || current_organisation;
+		search_child_organisations = trim_array(search_child_organisations, 1);
+		search_child_organisations = search_child_organisations || (SELECT ARRAY(SELECT organisation.id FROM organisation WHERE parent = current_organisation));
+	END LOOP;
+	RETURN QUERY SELECT UNNEST(child_organisations);
+END
+$$;
 
 CREATE FUNCTION list_parent_organisations(id UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
 $$

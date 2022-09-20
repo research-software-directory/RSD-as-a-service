@@ -8,7 +8,7 @@ import Link from 'next/link'
 import {ParticipatingOrganisationProps} from '../../types/Organisation'
 import LogoAvatar from '~/components/layout/LogoAvatar'
 
-export default function OrganisationItem({slug, name, website, logo_url}: ParticipatingOrganisationProps) {
+export default function OrganisationItem({rsd_path, name, website, logo_url}: ParticipatingOrganisationProps) {
 
   function renderLogo() {
     return (
@@ -20,9 +20,9 @@ export default function OrganisationItem({slug, name, website, logo_url}: Partic
   }
 
   let url: string=''
-  if (slug) {
+  if (rsd_path) {
     // internal RSD link to organisation
-    url = `/organisations/${slug}`
+    url = `/organisations/${rsd_path}`
     return (
       <Link href={url} passHref>
         <a
