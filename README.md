@@ -58,7 +58,7 @@ docker-compose down
 
 ## Developing the frontend
 
-You can run frontend in development mode as docker service (frontend-dev) to allow hot reloading. By default the frontend-dev service will not be started automatically.
+You can run frontend in development mode as docker a service (called frontend-dev) that enables hot reloading. By default this frontend-dev service will not be started automatically.
 
 ```
 # Run frontend development using docker at http://localhost:3000
