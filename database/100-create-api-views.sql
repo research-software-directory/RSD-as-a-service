@@ -323,8 +323,7 @@ BEGIN
 			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
 		FROM
 			software_for_organisation
-		INNER JOIN list_parent_organisations(software_for_organisation.organisation)
-			ON list_parent_organisations.organisation_id IN (SELECT organisation_ID FROM list_parent_organisations(software_for_organisation.organisation))
+		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
 		WHERE
 			software_for_organisation.status = 'approved' AND
 			software IN (
@@ -338,8 +337,7 @@ BEGIN
 			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
 		FROM
 			software_for_organisation
-		INNER JOIN list_parent_organisations(software_for_organisation.organisation)
-			ON list_parent_organisations.organisation_id IN (SELECT organisation_ID FROM list_parent_organisations(software_for_organisation.organisation))
+		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
 		GROUP BY list_parent_organisations.organisation_id;
 	END IF;
 END
