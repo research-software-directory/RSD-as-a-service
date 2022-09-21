@@ -8,10 +8,28 @@
 
 /** @type {import('next').NextConfig} */
 
-// proxy to localhost when NOT in production mode
-const isDevelopment = process.env.NODE_ENV !== 'production'
-const rewritesConfig = isDevelopment
-  ? [
+// proxy to nginx service when running as frontend-dev docker service
+// proxy to localhost when in standalone development mode (yarn dev)
+let rewritesConfig = []
+if (process.env.NODE_ENV === 'docker') {
+  // proxies for frontend-dev service
+  // developing using node docker container
+  rewritesConfig=[
+    {
+      source: '/image/:path*',
+      destination: 'http://nginx/image/:path*',
+    },
+    {
+      source: '/api/v1/:path*',
+      destination: 'http://nginx/api/v1/:path*',
+    },
+    {
+      source: '/auth/login/local',
+      destination: 'http://nginx/auth/login/local',
+    }
+  ]
+} else if (process.env.NODE_ENV === 'development'){
+  rewritesConfig = [
     {
       source: '/image/:path*',
       destination: 'http://localhost/image/:path*',
@@ -23,9 +41,12 @@ const rewritesConfig = isDevelopment
     {
       source: '/auth/login/local',
       destination: 'http://localhost/auth/login/local',
-    },
+    }
   ]
-  : []
+}
+
+// console.log('process.env.NODE_ENV',process.env.NODE_ENV)
+// console.log('process.env.PWD', process.env.PWD)
 
 module.exports = {
   // create standalone output to use in docker image

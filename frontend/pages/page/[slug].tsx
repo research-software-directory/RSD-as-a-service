@@ -2,13 +2,14 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
+
 import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next'
 
 import {app} from '~/config/app'
 import {ssrMarkdownPage} from '~/components/page/useMarkdownPages'
 import AppHeader from '~/components/AppHeader'
-import AppFooter from '~/components/layout/AppFooter'
+import AppFooter from '~/components/AppFooter'
 import MarkdownPage from '~/components/layout/MarkdownPage'
 
 export default function PublicPage({title,markdown}: {title:string, markdown: string }) {

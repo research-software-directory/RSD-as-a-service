@@ -5,13 +5,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect} from 'react'
+import {useEffect, useState, useMemo} from 'react'
 import Router, {useRouter} from 'next/router'
 import App, {AppContext, AppProps} from 'next/app'
 import Head from 'next/head'
 import {ThemeProvider} from '@mui/material/styles'
-import {CacheProvider, EmotionCache} from '@emotion/react'
-import {loadMuiTheme, RsdThemes} from '../styles/rsdMuiTheme'
+import {CacheProvider, EmotionCache, Global} from '@emotion/react'
+import {loadMuiTheme} from '../styles/rsdMuiTheme'
 import createEmotionCache from '../styles/createEmotionCache'
 // loading bar at the top of the screen
 import nprogress from 'nprogress'
@@ -23,16 +23,14 @@ import {saveLocationCookie} from '../auth/locationCookie'
 import MuiSnackbarProvider from '../components/snackbar/MuiSnackbarProvider'
 // Matomo cookie consent notification
 import CookieConsentMatomo from '~/components/cookies/CookieConsentMatomo'
-
 // global CSS and tailwind
 import '../styles/global.css'
-// nprogress styles
-import 'nprogress/nprogress.css'
+
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
-import {getPageLinks} from '~/components/page/useMarkdownPages'
 import {getMatomoConsent,Matomo} from '~/components/cookies/nodeCookies'
 import {initMatomoCustomUrl} from '~/components/cookies/setMatomoPage'
+import {getSettingsServerSide} from '~/config/getSettingsServerSide'
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {
@@ -57,7 +55,8 @@ const matomo: Matomo = {
   consent: null
 }
 const setCustomUrl = initMatomoCustomUrl()
-// init session
+// init session, it is loaded by getInitialProps
+// when running in SSR mode (req,res are present)
 let session: Session | null = null
 // ProgressBar at the top
 // listen to route change and drive nprogress status
@@ -80,8 +79,20 @@ function RsdApp(props: MuiAppProps) {
     pageProps, session, settings, matomo
   } = props
   //currently we support only default (light) and dark RSD theme for MUI
-  const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
+  // const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
+  // const [options, setSnackbar] = useState(snackbarDefaults)
+  /**
+   * NOTE! useState keeps settings and session values in memory after inital load (server side)
+   * getInitalProps runs ONLY on client side when page does not use getServerSideProps.
+   * In that case we cannot extract session from JWT cookie and settings that use node env variables.
+   */
+  const [rsdSession] = useState(session)
+  const [rsdSettings] = useState(settings)
+  // request theme when options changed
+  const {muiTheme, cssVariables} = useMemo(() => {
+    return loadMuiTheme(rsdSettings.theme)
+  }, [rsdSettings.theme])
 
   // Matomo customUrl method
   // to register SPA route changes
@@ -100,6 +111,8 @@ function RsdApp(props: MuiAppProps) {
   // console.log('session...', session)
   // console.log('settings...', settings)
   // console.log('matomo...', matomo)
+  // console.log('rsdSettings...', rsdSettings)
+  // console.log('rsdSession...', rsdSession)
   // console.groupEnd()
 
   return (
@@ -110,10 +123,12 @@ function RsdApp(props: MuiAppProps) {
       </Head>
       {/* MUI Theme provider */}
       <ThemeProvider theme={muiTheme}>
+        {/* dynamically pass css variables when theme changes */}
+        <Global styles={cssVariables} />
         {/* Authentication */}
-        <AuthProvider session={session}>
+        <AuthProvider session={rsdSession}>
           {/* RSD settings/config */}
-          <RsdSettingsProvider settings={settings}>
+          <RsdSettingsProvider settings={rsdSettings}>
             {/* MUI snackbar service */}
             <MuiSnackbarProvider>
               <Component {...pageProps} />
@@ -158,31 +173,18 @@ function RsdApp(props: MuiAppProps) {
 RsdApp.getInitialProps = async(appContext:AppContext) => {
   const appProps = await App.getInitialProps(appContext)
   const {req, res} = appContext.ctx
-
   // extract user session from cookies and
   // matomo consent if matomo is used (id)
   // only in SSR mode (req && res present)
   if (req && res) {
+    // session is declared as module variable at the top of the file
     session = getSessionSeverSide(req, res)
     if (matomo.id) {
       matomo.consent = getMatomoConsent(req).matomoConsent
     }
   }
-
-  // get embed mode
-  // provide embed param to remove headers
-  const {embed} = appContext.router.query
-  // get links
-  const links = await getPageLinks({is_published:true})
-  // create rsd settings
-  const settings = {
-    embed: typeof embed !== 'undefined',
-    links,
-    theme: {
-      mode: 'default',
-      host: 'default'
-    }
-  }
+  // extract rsd settings
+  const settings = await getSettingsServerSide(req, appContext.router.query)
 
   // console.group('RsdApp.getInitialProps')
   // console.log('session...', session)

@@ -111,6 +111,7 @@ services:
     networks:
       - net
     restart: unless-stopped
+
   scrapers:
     container_name: scrapers
     image: ghcr.io/research-software-directory/rsd-saas/scrapers:latest
@@ -131,6 +132,7 @@ services:
     networks:
       - net
     restart: unless-stopped
+
   nginx:
     container_name: nginx
     image: ghcr.io/research-software-directory/rsd-saas/nginx:latest

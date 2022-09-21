@@ -154,17 +154,14 @@ yarn add -D @types/node @types/react @types/react-dom
 
 ```bash
 # upgrade material ui
-yarn add @mui/material @emotion/react @emotion/styled @mui/icons-material
+yarn add @mui/material @mui/icons-material @emotion/react @emotion/server @emotion/styled
 ```
 
 ### Testing
 
 ```bash
 # react testing lib
-yarn add @testing-library/react jest
-
-yarn add -D @types/jest
-
+yarn add -D @testing-library/react @testing-library/jest-dom jest jest-environment-jsdom @types/jest
 ```
 
 ### Others

@@ -5,8 +5,8 @@
 
 import ProtectedContent from '../../auth/ProtectedContent'
 import AppHeader from '~/components/AppHeader'
-import PageContainer from '../../components/layout/PageContainer'
-import AppFooter from '../../components/layout/AppFooter'
+import PageContainer from '~/components/layout/PageContainer'
+import AppFooter from '~/components/AppFooter'
 
 import AddProjectCard from '../../components/projects/add/AddProjectCard'
 
