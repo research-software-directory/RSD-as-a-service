@@ -25,12 +25,12 @@ import styles from './home.module.css'
 import 'aos/dist/aos.css'
 
 export type RsdHomeProps = {
-  software: number,
-  projects: number,
-  organisations: number
+  software_cnt: number,
+  project_cnt: number,
+  organisation_cnt: number
 }
 
-export default function RsdHome({software, projects, organisations}: RsdHomeProps) {
+export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: RsdHomeProps) {
   // Initialize AOS library
   useEffect(() => {
     AOS.init()
@@ -110,17 +110,17 @@ export default function RsdHome({software, projects, organisations}: RsdHomeProp
       {/* stats  */}
       <div className="w-full max-w-screen-xl mx-auto flex flex-wrap gap-10 md:gap-16 p-5 md:p-10 ">
         <div>
-          <div className="text-lg">{software} Software</div>
+          <div className="text-lg">{software_cnt} Software</div>
           <div className="opacity-40">packages</div>
         </div>
 
         <div>
-          <div className="text-lg">{projects} Projects</div>
+          <div className="text-lg">{project_cnt} Projects</div>
           <div className="opacity-40">registered</div>
         </div>
 
         <div>
-          <div className="text-lg">{organisations} Organisations</div>
+          <div className="text-lg">{organisation_cnt} Organisations</div>
           <div className="opacity-40">contributed</div>
         </div>
       </div>
