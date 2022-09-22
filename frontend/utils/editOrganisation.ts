@@ -34,10 +34,9 @@ export async function searchForOrganisation({searchFor, token, frontend}:
   { searchFor: string, token?: string, frontend?: boolean }) {
   try {
     // make requests to RSD and ROR
-    const [rsdOptions, rorOptions] = await Promise.all([
-      findRSDOrganisation({searchFor, token, frontend}),
-      findInROR({searchFor})
-    ])
+    const rorOptions = await findInROR({searchFor})
+    const rorIdsFound: string[] = rorOptions.map(rorResult => rorResult.key)
+    const rsdOptions = await findRSDOrganisation({searchFor, token, frontend, rorIds: rorIdsFound})
     // create options collection
     const options = [
       ...rsdOptions,
@@ -55,10 +54,16 @@ export async function searchForOrganisation({searchFor, token, frontend}:
   }
 }
 
-export async function findRSDOrganisationByProperty({searchFor, property, token, frontend}:
-  { searchFor: string, property:string, token?: string, frontend?: boolean }) {
+export async function fetchRSDOrganisations({searchFor, rorIds, token, frontend}:
+  { searchFor: string, rorIds: string[], token?: string, frontend?: boolean }) {
   try {
-    const query = `rpc/organisations_overview?${property}=ilike.*${searchFor}*&limit=20`
+    let query
+    if (rorIds.length) {
+      const rorIdsCommaSeparated = rorIds.join(',')
+      query = `rpc/organisations_overview?or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*,ror_id.in.(${rorIdsCommaSeparated}))&limit=20`
+    } else {
+      query = `rpc/organisations_overview?or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*)&limit=20`
+    }
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
       url = `/api/v1/${query}`
@@ -96,27 +101,12 @@ export async function findRSDOrganisationByProperty({searchFor, property, token,
   }
 }
 
-export async function findRSDOrganisation({searchFor, token, frontend}:
-  { searchFor: string, token?: string, frontend?: boolean }){
+export async function findRSDOrganisation({searchFor, token, frontend, rorIds}:
+  { searchFor: string, token?: string, frontend?: boolean, rorIds: string[] }){
   try {
-    // search for term in name and website
-    // because postgrest or does not return desired results we use 2 calls
-    const [byName, byWebsite] = await Promise.all([
-      findRSDOrganisationByProperty({searchFor, property: 'name', token, frontend}),
-      findRSDOrganisationByProperty({searchFor, property: 'website', token, frontend})
-    ])
-    // remove duplicate website entries
-    const websiteOnly = itemsNotInReferenceList<AutocompleteOption<SearchOrganisation>>({
-      list: byWebsite,
-      referenceList: byName,
-      key: 'key'
-    })
-    // return unique collection of both requests
-    const foundInRSD = [
-      ...byName,
-      ...websiteOnly
-    ]
-    return foundInRSD
+    // search for term in name, website and rorIds
+    const fetchResults = await fetchRSDOrganisations({searchFor, rorIds, token, frontend})
+    return fetchResults
   } catch (e:any) {
     logger(`findRSDOrganisation: ${e?.message}`, 'error')
     return []
