@@ -17,9 +17,9 @@ describe('pages/index.tsx', () => {
       name: 'rsd'
     },
     counts: {
-      software: 1,
-      projects: 2,
-      organisations: 3
+      software_cnt: 1111,
+      project_cnt: 2222,
+      organisation_cnt: 3333
     }
   }
   it('renders default RSD Home page when host=rsd', () => {
@@ -44,6 +44,19 @@ describe('pages/index.tsx', () => {
     render(WrappedComponentWithProps(Home))
     const page = screen.getByTestId('rsd-home-page')
     expect(page).toBeInTheDocument()
+  })
+
+  it('renders counts on RSD Home page', () => {
+    render(WrappedComponentWithProps(Home,{props}))
+    // software_cnt
+    const software = screen.getByText(`${props.counts.software_cnt} Software`)
+    expect(software).toBeInTheDocument()
+    // project_cnt
+    const project = screen.getByText(`${props.counts.project_cnt} Projects`)
+    expect(project).toBeInTheDocument()
+    // organisation_cnt
+    const organisation = screen.getByText(`${props.counts.organisation_cnt} Organisations`)
+    expect(organisation).toBeInTheDocument()
   })
 
   it('renders Helmholtz Home page when host=helmholtz', () => {
