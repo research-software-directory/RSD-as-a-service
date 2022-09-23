@@ -116,8 +116,8 @@ export default function FindMention({config, onAdd, searchFn, onCreate}: FindMen
     if (typeof onCreate == 'undefined' &&
       config.freeSolo === true &&
       options.length === 0) {
-      // Return different element from li which is handled as options
-      // while div is handles as message
+      // Return different element from li which is handled as option
+      // while p or div element is handled as message
       return <p key={option.key} className="px-4">{
         config.noOptions?.notFound ??
         'Hmmm...nothing found. Check spelling or try again later.'
