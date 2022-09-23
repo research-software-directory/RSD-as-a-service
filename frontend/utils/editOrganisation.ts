@@ -88,15 +88,11 @@ export async function fetchRSDOrganisations({searchFor, rorIds, token, frontend}
         }
       })
       return options
-    } else if (resp.status === 404) {
-      logger('findRSDOrganisationByProperty ERROR: 404 Not found', 'error')
-      // query not found
-      return []
     }
-    logger(`findRSDOrganisationByProperty ERROR: ${resp?.status} ${resp?.statusText}`, 'error')
+    logger(`fetchRSDOrganisations ERROR: ${resp?.status} ${resp?.statusText}`, 'error')
     return []
   } catch (e: any) {
-    logger(`findRSDOrganisationByProperty: ${e?.message}`, 'error')
+    logger(`fetchRSDOrganisations: ${e?.message}`, 'error')
     return []
   }
 }
