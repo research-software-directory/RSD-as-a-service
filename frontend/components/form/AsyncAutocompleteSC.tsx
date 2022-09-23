@@ -8,10 +8,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState, ReactNode, HTMLAttributes, SyntheticEvent, useEffect} from 'react'
-import Autocomplete, {AutocompleteChangeReason, AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
+import Autocomplete, {AutocompleteChangeReason, AutocompleteInputChangeReason, AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
 import {CircularProgress, FilterOptionsState, TextField} from '@mui/material'
 
-import {useDebounceWithAutocomplete} from '~/utils/useDebounce'
+import {useDebounce} from '~/utils/useDebounce'
 
 export type AutocompleteOption<T> = {
   key: string
@@ -29,6 +29,7 @@ export type AsyncAutocompleteConfig = {
   label: string,
   help: string,
   reset?: boolean,
+  clearText?: string,
   // makes help text red on true
   error?: boolean
   noOptions?: {
@@ -42,7 +43,7 @@ export type AsyncAutocompleteConfig = {
 type AsyncAutocompleteProps<T> = {
   status: {
     loading: boolean,
-    foundFor: string|undefined,
+    foundFor: string | undefined
   },
   options: AutocompleteOption<T>[]
   onSearch: (searchFor:string) => void
@@ -55,30 +56,46 @@ type AsyncAutocompleteProps<T> = {
   ) => ReactNode
   config: AsyncAutocompleteConfig,
   defaultValue?: AutocompleteOption<T>
+  onClear?: ()=>void
 }
 
 
 export default function AsyncAutocompleteSC<T>({status, options, config,
-  onSearch, onAdd, onCreate, onRenderOption, defaultValue}: AsyncAutocompleteProps<T>) {
+  onSearch, onAdd, onCreate, onClear, onRenderOption, defaultValue}: AsyncAutocompleteProps<T>) {
   const [open, setOpen] = useState(false)
   const [newInputValue, setInputValue] = useState('')
   const [selected, setSelected] = useState<AutocompleteOption<T>|null>(null)
-  const searchFor = useDebounceWithAutocomplete(newInputValue, selected?.label, 500)
-  const {loading,foundFor} = status
+  const searchFor = useDebounce(newInputValue, 700)
+  const [processing, setProcessing] = useState('')
+  const {loading, foundFor} = status
 
   useEffect(() => {
     // if we have search term at least minLength long
-    // and we are not searching already (loading)
-    // and new search term is different from search we already done
-    if (searchFor
-      && searchFor.length >= config.minLength
-      && loading === false
-      && searchFor!== foundFor) {
+    // and search term is different from one we already processing
+    // and search term is differrent from on we already searched (foundFor)
+    // and the input box is not empty (newInputValue)
+    if (searchFor &&
+      searchFor.length >= config.minLength &&
+      searchFor !== foundFor &&
+      searchFor !== processing &&
+      newInputValue!==''
+    ) {
       // debugger
-      // console.log('useEffect...onSearch...', searchFor)
+      // issue search requestion AND
+      // set value as processing
       onSearch(searchFor)
+      setProcessing(searchFor)
     }
-  },[searchFor,foundFor,loading,config.minLength,onSearch])
+  }, [searchFor, foundFor, processing, newInputValue, config.minLength, onSearch])
+
+  // console.group('AsyncAutocompleteSC')
+  // console.log('loading...', loading)
+  // console.log('options...', options)
+  // console.log('newInputValue...', newInputValue)
+  // console.log('searchFor...', searchFor)
+  // console.log('foundFor...', foundFor)
+  // console.log('processing...', processing)
+  // console.groupEnd()
 
   function requestCreate(value: string) {
     // create request is allowed only
@@ -110,12 +127,37 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
    * Value changes of the input text while typing. We pass this
    * value to useDebounce, which returns searchFor value after the timeout.
    */
-  function onInputChange(e: any, newInputValue: string) {
-    // console.log('onInputChange.AsyncAutocompleteSC...',newInputValue)
-    if (e?.key === 'Enter') {
-      // ignore enter
-    } else {
+  function onInputChange(e: any, newInputValue: string, reason: AutocompleteInputChangeReason) {
+    // console.group('onInputChange')
+    // console.log('newInputValue...', newInputValue)
+    // console.log('reason...', reason)
+    // console.groupEnd()
+    if (e?.key === 'Enter' &&
+      newInputValue.length >= config.minLength) {
+      // send search request immediately
+      onSearch(newInputValue)
+      setProcessing(newInputValue)
+      // debugger
+    } else if (loading === false &&
+      reason !== 'reset') {
+      // reset reason occures when option is selected from the list
+      // because search text is usually not identical to selected item
+      // we ignore onInputChange event when reason==='reset'
       setInputValue(newInputValue)
+      // we start new search if processing
+      // is not empty we should reset it??
+      if (processing !== '') {
+        setTimeout(() => {
+          setProcessing('')
+        },0)
+      }
+    }
+    // pass clear event to parent
+    // it can be used to cancel api calls
+    if (reason === 'clear' && onClear) {
+      setInputValue('')
+      setProcessing('')
+      onClear()
     }
   }
 
@@ -151,18 +193,21 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
   }
 
   // dynamic no options messaging
+  // NOTE! it is not used when freeSolo === true
   function noOptionsMessage() {
-    // debugger
-    if (loading === true) {
-      return config?.noOptions?.loading ?? 'Loading...'
-    } else if (!newInputValue ||
+    // console.log('noOptionsMessage')
+    if (!newInputValue ||
       newInputValue.length === 0
     ) {
       return config?.noOptions?.empty ?? 'Type something'
     } else if (newInputValue.length < config.minLength) {
       return config?.noOptions?.minLength ?? 'Keep typing ...'
-    } else if (foundFor && loading === false) {
+    } else if (searchFor && searchFor === foundFor) {
       return config?.noOptions?.notFound ?? 'No options'
+    } else {
+      // in all other situation when no options
+      // we show a loading message
+      return config?.noOptions?.loading ?? 'Loading...'
     }
   }
 
@@ -181,6 +226,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
         onClose={() => {
           setOpen(false)
         }}
+        clearText={config?.clearText}
         noOptionsText={noOptionsMessage()}
         // use to control/reset value
         value={selected}
@@ -193,7 +239,6 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
           // console.group('filterOptions.AsyncAutocomplete')
           // console.log('loading...', loading)
           // console.log('options...', options)
-          // console.log('state...', state)
           // console.log('inputValue...', inputValue)
           // console.log('searchFor...', searchFor)
           // console.log('foundFor...', foundFor)
@@ -230,10 +275,8 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
         getOptionLabel={(option) => typeof option === 'string' ? option : option?.label}
         onInputChange={onInputChange}
         onChange={onAutocompleteChange}
-        // onHighlightChange={onHighlightChange}
         options={options}
         // we use loading icon in text field
-        // loading={loading}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -244,7 +287,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
             onKeyDown={(e) => {
               // console.log('onKeyDown.TextField.AsyncAutocompleteSC')
               // dissable enter key when autocomplete menu options closed
-              // it seem to crash component in some situations
+              // it seem to crash component in some configuration (probably when freeSolo===false)
               if (e.key === 'Enter' && open === false) {
                 // stop propagation
                 e.stopPropagation()

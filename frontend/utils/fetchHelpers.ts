@@ -108,3 +108,23 @@ export function getBaseUrl() {
   const baseUrl = process.env.POSTGREST_URL || '/api/v1'
   return baseUrl
 }
+
+export async function promiseWithTimeout<T>(
+  promise:Promise<T>,
+  timeout:number
+):Promise<T>{
+  const timeoutPromise = new Promise<T>((res,rej)=>{
+    setTimeout(()=>{
+      rej({
+        status:408,
+        statusText:'Request timeout'
+      })
+    },timeout*1000)
+  })
+  const resp = await Promise.race([
+    promise,
+    timeoutPromise
+  ])
+  // console.log('promiseWithTimeout...', resp)
+  return resp
+}

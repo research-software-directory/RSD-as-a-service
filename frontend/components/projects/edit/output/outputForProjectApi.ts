@@ -4,76 +4,28 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {CrossrefSelectItem} from '~/types/Crossref'
-import {WorkResponse} from '~/types/Datacite'
 import {MentionItemProps} from '~/types/Mention'
 import {addMentionItem} from '~/utils/editMentions'
-import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
-import {crossrefItemToMentionItem, getCrossrefItemsByTitle} from '~/utils/getCrossref'
-import {dataCiteGraphQLItemToMentionItem, getDataciteItemsByTitleGraphQL} from '~/utils/getDataCite'
-import {sortBySearchFor} from '~/utils/sortFn'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl, promiseWithTimeout} from '~/utils/fetchHelpers'
 
 export async function findPublicationByTitle({project, searchFor, token}:
   { project: string, searchFor: string, token: string }) {
-  const promises = [
-    getCrossrefItemsByTitle(searchFor),
-    getDataciteItemsByTitleGraphQL(searchFor),
-    searchForAvailableOutput({
-      project,
-      searchFor,
-      token
-    })
-  ]
-  // make requests
-  const [crossref, datacite, rsd] = await Promise.all(promises)
-  // convert crossref responses to MentionItems
-  const crosrefItems = crossref?.map(item => {
-    return crossrefItemToMentionItem(item as CrossrefSelectItem)
-  })
-  // convert datacite responses to MentionItems
-  const dataciteItems = datacite?.map(item => {
-    return dataCiteGraphQLItemToMentionItem(item as WorkResponse)
-  })
-  // change items source to RSD for ones pulled from RSD
-  const rsdItems: MentionItemProps[] = rsd.map(item => ({
-    ...item as MentionItemProps,
-    source: 'RSD'
-  }))
-  // return results
-  const sorted = [
-    // RSD items at the top
-    ...rsdItems,
-    ...crosrefItems,
-    ...dataciteItems
-  ].sort((a, b) => sortBySearchFor(a, b, 'title', searchFor))
-  return sorted
-}
-
-/**
- * Searching for items in mention table which are NOT assigned to impact of the project already.
- * @returns MentionItem[]
- */
-export async function searchForAvailableOutput({project, searchFor, token}:
-  { project: string, searchFor: string, token: string }) {
-  const url = '/api/v1/rpc/search_output_for_project'
+  const query = `id=${project}&search=${encodeURIComponent(searchFor)}`
+  const url = `/api/fe/mention/output?${query}`
   try {
     const resp = await fetch(url, {
-      method: 'POST',
-      headers: createJsonHeaders(token),
-      body: JSON.stringify({
-        project_id: project,
-        search_text: searchFor
-      })
+      method: 'GET',
+      headers: createJsonHeaders(token)
     })
     // debugger
     if (resp.status === 200) {
       const json: MentionItemProps[] = await resp.json()
       return json
     }
-    logger(`searchForAvailableOutput: 404 [${url}]`, 'error')
+    logger(`findPublicationByTitle: ${resp.status} ${resp.statusText} [${url}]`, 'error')
     return []
   } catch (e: any) {
-    logger(`searchForAvailableOutput: ${e?.message}`, 'error')
+    logger(`findPublicationByTitle: ${e?.message}`, 'error')
     return []
   }
 }

@@ -5,6 +5,17 @@
 
 import {MentionByType, MentionTypeKeys} from '~/types/Mention'
 
+export const findMention={
+  title: 'Add publication',
+  subtitle: 'We search in Crossref, DataCite and RSD databases',
+  label: 'Search by DOI or publication title',
+  help: 'Provide a valid DOI or the title of the publication',
+  validation: {
+    // custom validation rule, not in use by react-hook-form
+    minLength: 2,
+  }
+}
+
 export const mentionModal = {
   sectionTitle: 'Mentions',
   title: {
@@ -101,13 +112,15 @@ export const mentionModal = {
 
 export function getMentionType(type: MentionTypeKeys | null, option: 'plural' | 'singular') {
   let item
-  if (type === null) {
+  if (type === null || typeof type == 'undefined') {
     // default is other type
     item = mentionType['other']
   } else {
     item = mentionType[type]
   }
   if (option) {
+    // console.log('getMentionType...option...',option)
+    // debugger
     return item[option]
   }
   // default is singular

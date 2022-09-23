@@ -4,65 +4,20 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {CrossrefSelectItem} from '~/types/Crossref'
-import {WorkResponse} from '~/types/Datacite'
-import {
-  crossrefItemToMentionItem,
-  getCrossrefItemsByTitle
-} from '~/utils/getCrossref'
-import {
-  dataCiteGraphQLItemToMentionItem,
-  getDataciteItemsByTitleGraphQL
-} from '~/utils/getDataCite'
-import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {MentionItemProps} from '~/types/Mention'
 import {addMentionItem} from '~/utils/editMentions'
-import {sortBySearchFor} from '~/utils/sortFn'
-
-export async function findPublicationByTitle({software, searchFor, token}:
-  { software: string, searchFor: string, token: string }) {
-  const promises = [
-    getCrossrefItemsByTitle(searchFor),
-    getDataciteItemsByTitleGraphQL(searchFor),
-    searchForAvailableMentions({
-      software,
-      searchFor,
-      token
-    })
-  ]
-  // make requests
-  const [crossref, datacite, rsd] = await Promise.all(promises)
-  // convert crossref responses to MentionItems
-  const crosrefItems = crossref?.map(item => {
-    return crossrefItemToMentionItem(item as CrossrefSelectItem)
-  })
-  // convert datacite responses to MentionItems
-  const dataciteItems = datacite?.map(item => {
-    return dataCiteGraphQLItemToMentionItem(item as WorkResponse)
-  })
-  // change items source to RSD for ones pulled from RSD
-  const rsdItems: MentionItemProps[] = rsd.map(item => ({
-    ...item as MentionItemProps,
-    source: 'RSD'
-  }))
-  // return results
-  const sorted = [
-    // RSD items at the top
-    ...rsdItems,
-    ...crosrefItems,
-    ...dataciteItems
-  ].sort((a, b) => sortBySearchFor(a, b, 'title', searchFor))
-  return sorted
-}
 
 /**
- * Searching for items in mention table which are NOT assigned to impact of the project already.
- * @returns MentionItem[]
+ * Request to next api to aggreate search from Crossref, Datacite and RSD
+ * For Crossref request we defined timeout of 30sec and we use polite request
+ * @param param0
+ * @returns MentionItemProps[]
  */
-export async function searchForAvailableMentions({software, searchFor, token}:
+export async function findPublicationByTitle({software, searchFor, token}:
   { software: string, searchFor: string, token: string }) {
-  const limit=10
-  const url = `/api/v1/rpc/search_mentions_for_software?software_id=${software}&search_text=${searchFor}&limit=${limit}`
+  const query = `id=${software}&search=${encodeURIComponent(searchFor)}`
+  const url = `/api/fe/mention/software?${query}`
   try {
     const resp = await fetch(url, {
       method: 'GET',
@@ -73,10 +28,10 @@ export async function searchForAvailableMentions({software, searchFor, token}:
       const json: MentionItemProps[] = await resp.json()
       return json
     }
-    logger(`searchForAvailableImpact: 404 [${url}]`, 'error')
+    logger(`findPublicationByTitle: ${resp.status} ${resp.statusText} [${url}]`, 'error')
     return []
   } catch (e: any) {
-    logger(`searchForAvailableImpact: ${e?.message}`, 'error')
+    logger(`findPublicationByTitle: ${e?.message}`, 'error')
     return []
   }
 }

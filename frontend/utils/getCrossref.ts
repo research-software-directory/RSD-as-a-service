@@ -89,7 +89,7 @@ export async function getCrossrefItemsByTitle(title: string) {
     const order = 'sort=score&order=desc'
     const rows = 'rows=10'
     // get top 10 items
-    const url = `https://api.crossref.org/works?${filter}&${order}&${rows}`
+    const url = `https://api.crossref.org/works?${filter}&${order}&${rows}&mailto=rsd@esciencecenter.nl`
 
     const resp = await fetch(url)
 
@@ -112,7 +112,7 @@ export async function getCrossrefItemsByQuery(query: string) {
     const order = 'sort=score&order=desc'
     const rows = 'rows=10'
     // get top 10 items
-    const url = `https://api.crossref.org/works?${filter}&${order}&${rows}`
+    const url = `https://api.crossref.org/works?${filter}&${order}&${rows}&mailto=rsd@esciencecenter.nl`
 
     const resp = await fetch(url)
 
