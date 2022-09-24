@@ -12,97 +12,119 @@ import {MentionItemProps} from '~/types/Mention'
 import {getMentionType} from './config'
 import MentionItemBase from './MentionItemBase'
 
-type FindMentionProps = {
+export type FindMentionProps = {
   config: AsyncAutocompleteConfig
   searchFn: (title:string) => Promise<MentionItemProps[]>
   onAdd: (item: MentionItemProps) => void
   onCreate?: (keyword: string) => void
-  onCancel?: () => void
 }
 
-let cancel = false
+type FindMentionState = {
+  options: AutocompleteOption<MentionItemProps>[]
+  loading: boolean
+  searchFor: string | undefined
+  foundFor: string | undefined
+}
+
+// Use global variable processing
+// to return options of the last processing request
+let processing = ''
 
 export default function FindMention({config, onAdd, searchFn, onCreate}: FindMentionProps) {
-  const [state, setState] = useState<{
-    options: AutocompleteOption<MentionItemProps>[]
-    loading: boolean
-    searchFor: string | undefined
-    foundFor: string | undefined
-  }>({
+  const [state, setState] = useState<FindMentionState>({
     options: [],
     loading: false,
     searchFor: undefined,
     foundFor: undefined
   })
 
-  const {options,searchFor,foundFor,loading} = state
+  const {options, searchFor, foundFor, loading} = state
 
   // console.group('FindMention')
-  // console.log('options...', options)
   // console.log('searchFor...', searchFor)
   // console.log('foundFor...', foundFor)
+  // console.log('processing...', processing)
   // console.log('loading...', loading)
-  // console.log('cancel...', cancel)
+  // console.log('options...', options)
   // console.groupEnd()
 
   useEffect(() => {
+    // because we use global variable
+    // we need to reset value on each component load
+    // otherwise the value is memorized and the last
+    // processing value will be present.
+    processing=''
+  },[])
+
+  useEffect(() => {
     async function searchForItems() {
+      if (typeof searchFor == 'undefined') return
+      if (searchFor === foundFor) return
+      if (searchFor === processing) return
+      // flag start of the process
+      processing = searchFor
       setState({
         searchFor,
         foundFor,
         options: [],
         loading: true
       })
-      if (!searchFor) return
       // make request
-      // console.log('call searchFn for...', searchFor)
       const resp = await searchFn(searchFor)
-      // console.log('cancel...', cancel)
-      // debugger
-      // if cancel is used we abort this function
-      if (cancel) return
+      // prepare options
       const options = resp.map((item,pos) => ({
         key: pos.toString(),
         label: item.title ?? '',
         data: item
       }))
-      // debugger
-      setState({
-        searchFor,
-        options,
-        loading: false,
-        foundFor: searchFor
-      })
+      // ONLY if the response concerns the processing term.
+      // processing is a "global" variable and keeps track of
+      // the most recent request, previous request are ignored.
+      // This logic is needed because we allow user to change
+      // search term during the api request.
+      if (searchFor === processing) {
+        // console.group('FindMention.searchForItems.UseResponse')
+        // console.log('searchFor...', searchFor)
+        // console.log('foundFor...', foundFor)
+        // console.log('processing...', processing)
+        // console.log('loading...', loading)
+        // console.log('options...', options)
+        // console.groupEnd()
+        // debugger
+        setState({
+          searchFor,
+          options,
+          loading: false,
+          foundFor: searchFor
+        })
+      }
     }
-    if (searchFor &&
-      searchFor !== foundFor &&
-      loading === false &&
-      cancel == false
-    ) {
-      // debugger
-      searchForItems()
-    }
-  },[searchFor,foundFor,loading,searchFn])
+    // call search function
+    if (searchFor) searchForItems()
+  // Note! we ignore searchFn in dependency array because it's not memoized
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[searchFor,foundFor])
 
   function onCancel() {
-    // we reset state and set cancel on true
-    // for any call to abort if in process (see useEffect)
+    // remove processing value to avoid state update
+    // see useEffect line 88
+    processing = ''
+    // clear options and loading state
     setState({
       options: [],
       loading: false,
       searchFor: undefined,
       foundFor: undefined
     })
-    cancel = true
   }
 
-  function onAddKeyword(selected:AutocompleteOption<MentionItemProps>) {
+  function onAddMention(selected: AutocompleteOption<MentionItemProps>) {
     if (selected && selected.data) {
       onAdd(selected.data)
     }
   }
 
-  function createKeyword(newInputValue: string) {
+  function createMention(newInputValue: string) {
     if (onCreate) onCreate(newInputValue)
   }
 
@@ -112,7 +134,7 @@ export default function FindMention({config, onAdd, searchFn, onCreate}: FindMen
     // and freeSolo (free text) options is enabled
     // but there are no options to show
     // we change addOption to No options message
-    // NOTE! the order of conditionals in this fn matters
+    // NOTE! the order of conditionals matters
     if (typeof onCreate == 'undefined' &&
       config.freeSolo === true &&
       options.length === 0) {
@@ -120,7 +142,7 @@ export default function FindMention({config, onAdd, searchFn, onCreate}: FindMen
       // while p or div element is handled as message
       return <p key={option.key} className="px-4">{
         config.noOptions?.notFound ??
-        'Hmmm...nothing found. Check spelling or try again later.'
+        'Hmm...nothing found. Check the spelling or maybe try later.'
       }</p>
     }
     // ignore add option if minLength not met or
@@ -179,7 +201,6 @@ export default function FindMention({config, onAdd, searchFn, onCreate}: FindMen
         }}
         options={options}
         onSearch={(searchFor) => {
-          cancel = false,
           setState({
             ...state,
             // remove options
@@ -188,8 +209,8 @@ export default function FindMention({config, onAdd, searchFn, onCreate}: FindMen
             searchFor,
           })
         }}
-        onAdd={onAddKeyword}
-        onCreate={createKeyword}
+        onAdd={onAddMention}
+        onCreate={createMention}
         onRenderOption={renderOption}
         config={{
           ...config,

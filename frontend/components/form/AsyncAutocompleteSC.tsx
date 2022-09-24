@@ -56,7 +56,7 @@ type AsyncAutocompleteProps<T> = {
   ) => ReactNode
   config: AsyncAutocompleteConfig,
   defaultValue?: AutocompleteOption<T>
-  onClear?: ()=>void
+  onClear?: () => void
 }
 
 
@@ -138,12 +138,12 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
       onSearch(newInputValue)
       setProcessing(newInputValue)
       // debugger
-    } else if (loading === false &&
-      reason !== 'reset') {
+    } else if (reason !== 'reset') {
       // reset reason occures when option is selected from the list
       // because search text is usually not identical to selected item
       // we ignore onInputChange event when reason==='reset'
       setInputValue(newInputValue)
+
       // we start new search if processing
       // is not empty we should reset it??
       if (processing !== '') {
