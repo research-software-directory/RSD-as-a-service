@@ -193,7 +193,7 @@ export async function getSoftwareForOrganisation({organisation, searchFor, page,
   try {
     // baseUrl
     const order ='order=is_published.desc,is_featured.desc,mention_cnt.desc.nullslast,brand_name.asc'
-    let url = `/api/v1/rpc/software_by_organisation?organisation=eq.${organisation}&${order}`
+    let url = `/api/v1/rpc/software_by_organisation?organisation_id=${organisation}&${order}`
     // filter for approved, only published if filtered by RLS
     if (!isMaintainer) {
       url+='&status=eq.approved&is_published=eq.true'

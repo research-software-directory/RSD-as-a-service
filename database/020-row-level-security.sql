@@ -636,3 +636,14 @@ CREATE POLICY anyone_can_read ON meta_pages FOR SELECT TO web_anon, rsd_user
 CREATE POLICY admin_all_rights ON meta_pages TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
+
+
+-- oaipmh
+ALTER TABLE oaipmh ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON oaipmh FOR SELECT TO web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY admin_all_rights ON oaipmh TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);

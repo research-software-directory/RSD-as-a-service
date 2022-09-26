@@ -11,10 +11,8 @@
 // import {SessionProvider} from 'next-auth/react'
 import {loadMuiTheme} from '../../styles/rsdMuiTheme'
 import {ThemeProvider} from '@mui/material/styles'
-import {AuthProvider, defaultSession, Session} from '../../auth'
-import {RsdSettingsState, defaultRsdSettings} from '~/config/rsdSettingsReducer'
-// import {AuthProvider,defaultSession,Session} from '../../auth'
-// import {RsdSettingsState,defaultRsdSettings} from '~/config/rsdSettingsReducer'
+import {AuthProvider,defaultSession,Session} from '../../auth'
+import {RsdSettingsState,defaultRsdSettings} from '~/config/rsdSettingsReducer'
 import {RsdSettingsProvider} from '~/config/RsdSettingsContext'
 
 type WrapProps = {

@@ -262,10 +262,24 @@ END
 $$;
 
 -- Participating organisations by software
-CREATE FUNCTION organisations_of_software() RETURNS TABLE (id UUID, slug VARCHAR, primary_maintainer UUID, name VARCHAR, ror_id VARCHAR, is_tenant BOOLEAN, website VARCHAR, logo_id UUID, status relation_status, software UUID) LANGUAGE plpgsql STABLE AS
+-- requires software UUID
+CREATE FUNCTION organisations_of_software(software_id UUID) RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	primary_maintainer UUID,
+	name VARCHAR,
+	ror_id VARCHAR,
+	is_tenant BOOLEAN,
+	website VARCHAR,
+	rsd_path VARCHAR,
+	logo_id UUID,
+	status relation_status,
+	software UUID
+) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY SELECT
+	RETURN QUERY
+	SELECT
 		organisation.id AS id,
 		organisation.slug,
 		organisation.primary_maintainer,
@@ -273,17 +287,23 @@ BEGIN
 		organisation.ror_id,
 		organisation.is_tenant,
 		organisation.website,
+		organisation_route.rsd_path,
 		logo_for_organisation.organisation AS logo_id,
 		software_for_organisation.status,
 		software.id AS software
-FROM
-	software
-INNER JOIN
-	software_for_organisation ON software.id = software_for_organisation.software
-INNER JOIN
-	organisation ON software_for_organisation.organisation = organisation.id
-LEFT JOIN
-	logo_for_organisation ON logo_for_organisation.organisation = organisation.id;
+	FROM
+		software
+	INNER JOIN
+		software_for_organisation ON software.id = software_for_organisation.software
+	INNER JOIN
+		organisation ON software_for_organisation.organisation = organisation.id
+	LEFT JOIN
+		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
+	LEFT JOIN
+		logo_for_organisation ON logo_for_organisation.organisation = organisation.id
+	WHERE
+		software.id = software_id
+	;
 END
 $$;
 
@@ -299,24 +319,26 @@ BEGIN
 	IF (public) THEN
 		RETURN QUERY
 		SELECT
-			software_for_organisation.organisation,
-			count(software_for_organisation.organisation) AS software_cnt
+			list_parent_organisations.organisation_id,
+			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
 		FROM
 			software_for_organisation
+		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
 		WHERE
 			software_for_organisation.status = 'approved' AND
 			software IN (
 				SELECT id FROM software WHERE is_published=TRUE
 			)
-		GROUP BY software_for_organisation.organisation;
+		GROUP BY list_parent_organisations.organisation_id;
 	ELSE
 		RETURN QUERY
 		SELECT
-			software_for_organisation.organisation,
-			count(software_for_organisation.organisation) AS software_cnt
+			list_parent_organisations.organisation_id,
+			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
 		FROM
 			software_for_organisation
-		GROUP BY software_for_organisation.organisation;
+		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
+		GROUP BY list_parent_organisations.organisation_id;
 	END IF;
 END
 $$;
@@ -333,24 +355,26 @@ BEGIN
 	IF (public) THEN
 		RETURN QUERY
 		SELECT
-			project_for_organisation.organisation,
-			COUNT(DISTINCT project) AS project_cnt
+			list_parent_organisations.organisation_id,
+			COUNT(DISTINCT project_for_organisation.project) AS project_cnt
 		FROM
 			project_for_organisation
+		CROSS JOIN list_parent_organisations(project_for_organisation.organisation)
 		WHERE
 			status = 'approved' AND
 			project IN (
 				SELECT id FROM project WHERE is_published=TRUE
 			)
-		GROUP BY project_for_organisation.organisation;
+		GROUP BY list_parent_organisations.organisation_id;
 	ELSE
 		RETURN QUERY
 		SELECT
-			project_for_organisation.organisation,
-			COUNT(DISTINCT project) AS project_cnt
+			list_parent_organisations.organisation_id,
+			COUNT(DISTINCT project_for_organisation.project) AS project_cnt
 		FROM
 			project_for_organisation
-		GROUP BY project_for_organisation.organisation;
+		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
+		GROUP BY list_parent_organisations.organisation_id;
 	END IF;
 END
 $$;
@@ -434,7 +458,7 @@ $$;
 -- Software info by organisation
 -- NOTE! one software is shown multiple times in this view
 -- we filter this view at least by organisation uuid
-CREATE FUNCTION software_by_organisation() RETURNS TABLE (
+CREATE FUNCTION software_by_organisation(organisation_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	brand_name VARCHAR,
@@ -450,7 +474,7 @@ CREATE FUNCTION software_by_organisation() RETURNS TABLE (
 $$
 BEGIN
 	RETURN QUERY
-	SELECT
+	SELECT DISTINCT ON (software.id)
 		software.id,
 		software.slug,
 		software.brand_name,
@@ -470,6 +494,7 @@ BEGIN
 		count_software_countributors() ON software.id=count_software_countributors.software
 	LEFT JOIN
 		count_software_mentions() ON software.id=count_software_mentions.software
+	WHERE software_for_organisation.organisation IN (SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id))
 	;
 END
 $$;
@@ -503,7 +528,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
@@ -524,15 +549,14 @@ BEGIN
 	LEFT JOIN
 		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
 	WHERE
-		project_for_organisation.organisation=organisation_id
+		project_for_organisation.organisation IN (SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id))
 	;
 END
 $$;
 
 -- Participating organisations by project
--- NOTE! organisation are shown multiple times (for each project)
--- we filter this view by project UUID
-CREATE FUNCTION organisations_of_project() RETURNS TABLE (
+-- we filter this view by project_id UUID
+CREATE FUNCTION organisations_of_project(project_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
 	primary_maintainer UUID,
@@ -540,6 +564,7 @@ CREATE FUNCTION organisations_of_project() RETURNS TABLE (
 	ror_id VARCHAR,
 	is_tenant BOOLEAN,
 	website VARCHAR,
+	rsd_path VARCHAR,
 	logo_id UUID,
 	status relation_status,
 	role organisation_role,
@@ -557,6 +582,7 @@ BEGIN
 			organisation.ror_id,
 			organisation.is_tenant,
 			organisation.website,
+			organisation_route.rsd_path,
 			logo_for_organisation.organisation AS logo_id,
 			project_for_organisation.status,
 			project_for_organisation.role,
@@ -569,7 +595,11 @@ BEGIN
 	INNER JOIN
 		organisation ON project_for_organisation.organisation = organisation.id
 	LEFT JOIN
+		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
+	LEFT JOIN
 		logo_for_organisation ON logo_for_organisation.organisation = organisation.id
+	WHERE
+		project.id = project_id
 	;
 END
 $$;
@@ -602,7 +632,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
@@ -651,7 +681,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
@@ -989,7 +1019,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,
@@ -1122,7 +1152,7 @@ BEGIN
 	INNER JOIN
 		login_for_account ON organisation.primary_maintainer = login_for_account.account
 	WHERE
-		organisation.id  = organisation_id
+		organisation.id = organisation_id
 	GROUP BY
 		organisation.id,organisation.primary_maintainer
 	-- append second selection
@@ -1197,7 +1227,7 @@ $$
 BEGIN
 	RETURN QUERY
 	SELECT
-		keyword_for_project.project  AS project,
+		keyword_for_project.project AS project,
 		array_agg(
 			keyword.value
 			ORDER BY value
@@ -1236,7 +1266,7 @@ BEGIN
 		project.subtitle,
 		CASE
 			WHEN project.date_end IS NULL THEN 'Starting'::varchar
-			WHEN project.date_end < now()  THEN 'Finished'::varchar
+			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
 		project.date_start,

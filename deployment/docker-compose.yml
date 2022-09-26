@@ -43,6 +43,7 @@ services:
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT
       - PGRST_JWT_SECRET
+      - PGRST_RAW_MEDIA_TYPES=application/xml
     depends_on:
       - database
     networks:
@@ -111,6 +112,7 @@ services:
     networks:
       - net
     restart: unless-stopped
+
   scrapers:
     container_name: scrapers
     image: ghcr.io/research-software-directory/rsd-saas/scrapers:latest
@@ -124,12 +126,14 @@ services:
       - ZENODO_ACCESS_TOKEN
       - MAX_REQUESTS_DOI
       - CROSSREF_CONTACT_EMAIL
+      - ENABLE_OAIPMH_SCRAPER
     depends_on:
       - database
       - backend
     networks:
       - net
     restart: unless-stopped
+
   nginx:
     container_name: nginx
     image: ghcr.io/research-software-directory/rsd-saas/nginx:latest

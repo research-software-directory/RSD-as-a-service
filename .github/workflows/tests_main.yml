@@ -18,14 +18,14 @@ on:
       - "scrapers/**"
 
 jobs:
-  unit-tests:
+  fe-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: "install node v16 and cash yarn"
+      - uses: actions/checkout@v3
+      - name: "install node v18.5 and cash yarn"
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18.5
           cache: 'yarn'
           cache-dependency-path: frontend/yarn.lock
       - name: "install dependencies"
@@ -34,6 +34,9 @@ jobs:
       - name: "run unit test"
         working-directory: frontend
         run: yarn test:coverage
+      - name: "run build test"
+        working-directory: frontend
+        run: yarn build
 
   api-tests:
     runs-on: ubuntu-latest

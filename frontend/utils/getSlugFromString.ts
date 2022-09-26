@@ -19,9 +19,11 @@ export function getSlugFromString(title: string, separator:string='-') {
     .toLowerCase()
     // .replace(/[^\w\s-]/g, '')
     // remove all chars not letters, numbers and spaces (to be replaced)
-    .replace(/[^a-z0-9 ]/g, '')
+    .replace(/[^a-z0-9\- ]/g, '')
     .trim()
     .replace(/[-\s]+/g, separator)
+    // remove first and last -
+    .replace(/^-+|-+$/g, '')
 }
 
 export function sanitizeSlugValue(slug: string, separator: string = '-') {
@@ -37,4 +39,6 @@ export function sanitizeSlugValue(slug: string, separator: string = '-') {
     .replace(/[^a-z0-9\-]/g, '')
     .trim()
     .replace(/[-\s]+/g, separator)
+    // remove first and last -
+    .replace(/^-+|-+$/g, '')
 }

@@ -377,7 +377,7 @@ async function generateLogosForOrganisations(ids) {
 	const result = [];
 
 	for (let index = 0; index < ids.length; index++) {
-		if (base64Images === null) continue;
+		if (base64Images[index] === null) continue;
 		result.push({
 			organisation: ids[index],
 			data: base64Images[index],

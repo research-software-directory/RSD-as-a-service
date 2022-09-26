@@ -56,10 +56,11 @@ export default function EditOrganisationModal({
   const {isValid, isDirty, errors} = formState
   const formData = watch()
 
-    useEffect(() => {
-    if (typeof location != 'undefined') {
-      // baseUrl is current location
-      setBaseUrl(`${location.href}/`)
+  useEffect(() => {
+      if (typeof location != 'undefined') {
+      const baseUrl = location.href.split('?')
+      // baseUrl is current location without params
+      setBaseUrl(`${baseUrl[0]}/`)
     }
   }, [])
 
@@ -240,7 +241,7 @@ export default function EditOrganisationModal({
                 error={false}
                 helperText={config.slug.help}
                 onChange={({target}) => onSlugChange(target.value)}
-                disabled={formData.id!==null}
+                // disabled={formData.id!==null}
                 sx={{
                   width:'100%'
                 }}

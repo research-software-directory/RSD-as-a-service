@@ -44,46 +44,50 @@ git clone --recurse-submodules <URL>
 
 This repo contains the new RSD-as-a-service implementation
 
-## Running a local version
+## How to build and run the RSD
 
-1. Before installing the dependencies be sure you have running Docker locally. You need to set the environment variables in place:
+### Building from source code
+
+1. Before installing the dependencies ensure that you have Docker and docker-compose locally.
+2. Set the required environment variables:
    Copy the file `.env.example` to `.env` file at the root of the project
    and fill the secrets and passwords. Check if the secrets are correct.
-   The `Makefile` will take care about creating an appropraite `frontend/.env.local`
+   The `Makefile` will take care about creating an appropriate `frontend/.env.local`
    from the `.env` file.
-2. Running once `make install` will install all dependencies and build the docker images.
+3. Run `make install` to install all dependencies and build the docker images.
 
-**Requirements:**
+### Running the services
 
-- Docker and docker-compose installed locally
-
-### Testing production build locally
-
-```bash
-# Run the complete solution production mode locally
+```
+# Start the containers via the make file
 make start
-# OR
+# OR directly use docker-compose
 docker-compose up
-# Stop all services
+```
+
+### Stopping the services
+
+```
+# Stop all services via the makefile
 make down
-# OR
+# OR directly use docker-compose
 docker-compose down
 ```
 
-## Developing the Frontend
+## Developing the frontend
 
-You can run frontend in development mode, with hot-reloading, as docker service (frontend-dev). By default frontend-dev service is scaled to 0 (it will not be started automatically).
+You can run frontend in development mode as docker a service (called frontend-dev) that enables hot reloading. By default this frontend-dev service will not be started automatically.
 
-```bash
-# frontend development as docker service at http://localhost:3000
+```
+# Run frontend development using docker at http://localhost:3000
 make frontend
-# OR
+# OR use docker-compose directly
 docker-compose up --scale frontend-dev=1 --scale scrapers=0 -d
 ```
 
-It is possible to run frontend outside containers too. In addition to docker and docker-compose you need NodeJS, preferably v18.
+It is possible to directly run the frontend too (without using a docker container). You must then have NodeJS installed, preferably v18.
 
-```bash
+```
 # Build and install all dependencies.
 make install
 # Run the frontend and the documentation on localhost:3000 and localhost:3030
