@@ -338,7 +338,7 @@ function moveLeft() {
   }
 }
 
-export default function HelmholtzHome({organisations=[]}:{organisations: OrganisationForOverview[]}) {
+export default function HelmholtzHome({organisations=[]}:{organisations?: OrganisationForOverview[]}) {
 
   // Initialize AOS library
   useEffect(() => {
