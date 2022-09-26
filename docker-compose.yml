@@ -7,6 +7,7 @@
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 #
 # SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: EUPL-1.2
 
 version: "3.0"
 
@@ -209,9 +210,9 @@ services:
       - auth
     volumes:
       - ./frontend:/app
-      # - ./deployment/hmz/styles:/app/public/styles
-      # - ./deployment/hmz/data:/app/public/data
-      # - ./deployment/hmz/images:/app/public/images
+      - ./deployment/helmholtz/styles:/app/public/styles
+      - ./deployment/helmholtz/data:/app/public/data
+      - ./deployment/helmholtz/images:/app/public/images
     networks:
       - net
     deploy:
