@@ -98,16 +98,15 @@ export default function EditOutputProvider(props: any) {
 
   async function processOnAdd(action: EditMentionAction) {
     const item = action.payload
-
-    if (item.id && item.source === 'RSD') {
-      // check if already in collection
-      if (item.doi) {
-        const found = state.mentions.find(mention=>mention.doi===item.doi)
-        if (found) {
-          showInfoMessage(`Output item with DOI ${item.doi} is already in ${getMentionType(item.mention_type,'plural')}.`)
-          return true
-        }
+    // check if already in collection
+    if (item.doi) {
+      const found = state.mentions.find(mention=>mention.doi===item.doi)
+      if (found) {
+        showInfoMessage(`Output item with DOI ${item.doi} is already in ${getMentionType(item.mention_type,'plural')}.`)
+        return true
       }
+    }
+    if (item.id && item.source === 'RSD') {
       // existing RSD mention item to be added to project
       const resp = await addOutputToProject({
         project,

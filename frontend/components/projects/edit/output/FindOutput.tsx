@@ -67,11 +67,11 @@ export default function FindOutput() {
       // onCreate={onCreateImpact}
       searchFn={findPublication}
       config={{
-        freeSolo: false,
+        freeSolo: true,
         minLength: config.findMention.validation.minLength,
         label: config.findMention.label,
         help: config.findMention.help,
-        reset: true
+        reset: false
       }}
       />
     </>

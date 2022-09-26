@@ -10,6 +10,16 @@ import {makeDoiRedirectUrl} from './getDOI'
 import logger from './logger'
 
 
+function addPoliteEmail(url:string) {
+  const mailto = process.env.CROSSREF_CONTACT_EMAIL
+  // console.log('addPoliteEmail...',mailto)
+  if (mailto) {
+    return url += `&mailto=${mailto}`
+  }
+  return url
+}
+
+
 function extractAuthors(item: CrossrefSelectItem) {
   if (item.author) {
     return item.author.map(author => {
@@ -89,8 +99,7 @@ export async function getCrossrefItemsByTitle(title: string) {
     const order = 'sort=score&order=desc'
     const rows = 'rows=10'
     // get top 10 items
-    const url = `https://api.crossref.org/works?${filter}&${order}&${rows}`
-
+    let url = addPoliteEmail(`https://api.crossref.org/works?${filter}&${order}&${rows}`)
     const resp = await fetch(url)
 
     if (resp.status === 200) {
@@ -112,7 +121,7 @@ export async function getCrossrefItemsByQuery(query: string) {
     const order = 'sort=score&order=desc'
     const rows = 'rows=10'
     // get top 10 items
-    const url = `https://api.crossref.org/works?${filter}&${order}&${rows}`
+    const url = addPoliteEmail(`https://api.crossref.org/works?${filter}&${order}&${rows}`)
 
     const resp = await fetch(url)
 
