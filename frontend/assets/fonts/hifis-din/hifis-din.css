@@ -1,0 +1,71 @@
+/*
+ * SPDX-License-Identifier: CC0-1.0
+ */
+
+@font-face {
+    font-family: 'hifis-din-regular';
+    src: url('hifis-din.woff2') format('woff2'),
+         url('hifis-din.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'hifis-din-bold';
+    src: url('hifis-din-bold.woff2') format('woff2'),
+         url('hifis-din-bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'hifis-din-italic';
+    src: url('hifis-din-italic.woff2') format('woff2'),
+         url('hifis-din-italic.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'hifis-din-condensed-regular';
+    src: url('hifis-din-condensed.woff2') format('woff2'),
+         url('hifis-din-condensed.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'hifis-din-condensed-bold';
+    src: url('hifis-din-condensed-bold.woff2') format('woff2'),
+         url('hifis-din-condensed-bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'hifis-din-expanded-regular';
+    src: url('hifis-din-exp.woff2') format('woff2'),
+         url('hifis-din-exp.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'hifis-din-expanded-bold';
+    src: url('hifis-din-exp-bold.woff2') format('woff2'),
+         url('hifis-din-exp-bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'hifis-din-expanded-italic';
+    src: url('hifis-din-exp-italic.woff2') format('woff2'),
+         url('hifis-din-exp-italic.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
