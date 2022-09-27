@@ -31,9 +31,6 @@ on:
     secrets:
       token:
         required: true
-      ssh_private_key:
-        required: true
-        description: Required to pull RSD-Halvar
     outputs:
       image_created:
         description: Full image name after upload to ghcr.io
