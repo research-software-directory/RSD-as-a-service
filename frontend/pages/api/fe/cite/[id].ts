@@ -5,6 +5,7 @@
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
+import {extractParam, Error} from '~/utils/apiHelpers'
 import logger from '../../../../utils/logger'
 
 type Data = {
@@ -15,23 +16,6 @@ type Data = {
   data:string
 }
 
-type Error={
-  message:string
-}
-
-function extractParam(req: NextApiRequest, param: string) {
-  // load parameter
-  const p = req.query[param]
-  if (p) {
-    // if exists
-    if (typeof p === 'string') {
-      return p
-    } else {
-      return p.toString()
-    }
-  }
-  return ''
-}
 
 export default async function handler(
   req: NextApiRequest,
