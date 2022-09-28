@@ -102,7 +102,7 @@
       }
     },
     "typography": {
-      "defaultFontFamily": "'Helmholtz Halvar Mittel Rg', Helvetica, arial, sans-serif",
+      "defaultFontFamily": "hifis-din-regular, Helvetica, arial, sans-serif",
       "titlesFontFamily": "'Work Sans', sans-serif",
       "fontWeightLight": 200,
       "fontWeightRegular": 400,
