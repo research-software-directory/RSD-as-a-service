@@ -80,3 +80,9 @@ header input {
   z-index: 1;
   background-image: url("/images/pexels-olena-bohovyk-3646172.jpg");
 }
+
+p strong,
+p b {
+  font-weight: normal !important;
+  background-color:#cdeefb;
+}
