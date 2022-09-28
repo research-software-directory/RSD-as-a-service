@@ -32,7 +32,7 @@
       "colors": {
         "base-100": "#fff",
         "base-200": "#efefef",
-        "base-300": "#efefef",
+        "base-300": "#dcdcdc",
         "base-content": "#002864",
         "base-content-secondary": "rgba(34,36,37,0.7)",
         "base-content-disabled": "rgba(34,36,37,0.45)",
