@@ -178,6 +178,9 @@ services:
       context: ./frontend
       # dockerfile to use for build
       dockerfile: Dockerfile.dev
+      args:
+        - DUID
+        - DGID
     # update version number to correspond to frontend/package.json
     image: rsd/frontend-dev:1.4.0
     ports:

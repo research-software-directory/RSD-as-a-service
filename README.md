@@ -30,8 +30,8 @@ This repo contains the new RSD-as-a-service implementation
 
 ### Building from source code
 
-1. Before installing the dependencies ensure that you have Docker and docker-compose locally. 
-2. Set the required environment variables:  
+1. Before installing the dependencies ensure that you have Docker and docker-compose locally.
+2. Set the required environment variables:
    Copy the file `.env.example` to `.env` file at the root of the project
    and fill the secrets and passwords. Check if the secrets are correct.
    The `Makefile` will take care about creating an appropriate `frontend/.env.local`
@@ -50,7 +50,7 @@ docker-compose up
 ### Stopping the services
 
 ```
-# Stop all services via the makefile 
+# Stop all services via the makefile
 make down
 # OR directly use docker-compose
 docker-compose down
@@ -62,9 +62,9 @@ You can run frontend in development mode as docker a service (called frontend-de
 
 ```
 # Run frontend development using docker at http://localhost:3000
-make frontend
+make dev-frontend-docker
 # OR use docker-compose directly
-docker-compose up --scale frontend-dev=1 --scale scrapers=0 -d
+docker-compose up --scale frontend=0 --scale nginx=0 --scale scrapers=0 --scale frontend-dev=1 --scale nginx-dev=1
 ```
 
 It is possible to directly run the frontend too (without using a docker container). You must then have NodeJS installed, preferably v18.
