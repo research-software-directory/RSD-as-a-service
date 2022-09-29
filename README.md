@@ -58,13 +58,13 @@ docker-compose down
 
 ## Developing the frontend
 
-You can run frontend in development mode as docker a service (called frontend-dev) that enables hot reloading. By default this frontend-dev service will not be started automatically.
+You can run frontend in development mode as docker a service (called frontend-dev) that enables hot reloading. By default this frontend-dev service will not be started automatically. For more detailed instructions see [frontend/README.md](frontend/README.md).
 
 ```
 # Run frontend development using docker at http://localhost:3000
 make dev-frontend-docker
 # OR use docker-compose directly
-docker-compose up --scale frontend=0 --scale nginx=0 --scale scrapers=0 --scale frontend-dev=1 --scale nginx-dev=1
+docker-compose up --scale frontend=0 --scale scrapers=0 --scale frontend-dev=1
 ```
 
 It is possible to directly run the frontend too (without using a docker container). You must then have NodeJS installed, preferably v18.
