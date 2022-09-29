@@ -36,18 +36,34 @@ header input {
 .hgf-text-highlight {
   background-color: #cdeefb;
 }
-.hgf-scrollbar {
+
+#hgf-scroll-container {
+  display: flex;
+  height: 200px;
+}
+
+.simplebar-track.simplebar-horizontal {
+  height: 7px !important;
   border-bottom: 1px solid #002864;
 }
-.hgf-scrollbar::-webkit-scrollbar {
-  height: 5px;
+
+.simplebar-horizontal .simplebar-scrollbar {
+  height: 5px !important;
 }
-.hgf-scrollbar::-webkit-scrollbar-thumb {
-  background: #05e5ba;
-  border-radius: 0;
+
+.simplebar-horizontal .simplebar-scrollbar::before {
+  background-color: #05e5ba !important;
+  border-radius: 0px !important;
+  opacity: 1 !important;
 }
-.hgf-scrollbar::-webkit-scrollbar-track {
-  background: white;
+
+.simplebar-track.simplebar-horizontal .simplebar-scrollbar:before {
+  left: 0px !important;
+  right: 0px !important;
+}
+
+.simplebar-vertical {
+  display: none !important;
 }
 
 #research-fields-container {
