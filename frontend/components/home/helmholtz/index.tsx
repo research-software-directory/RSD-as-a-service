@@ -332,8 +332,8 @@ function ParticipatingOrganisations(
   )
 }
 
-export default function Home({organisations=[]}:{organisations?: OrganisationForOverview[]}) {
-
+export default function Home() {
+  const [organisations, setOrganisations] = useState([])
   const simplebarRef = useRef()
 
   useEffect(() => {
@@ -352,9 +352,17 @@ export default function Home({organisations=[]}:{organisations?: OrganisationFor
       const trackWidth = sb.axis['x'].track.el[sb.axis['x'].offsetSizeAttr]
       const scrollbarWidth = Math.round(trackWidth*0.33)
       sb.axis.x.scrollbar.el.style.width = scrollbarWidth + 'px'
-  }
+    }
   }, [])
 
+  useEffect(() => {
+    async function getData () {
+      const url = '/api/v1/rpc/organisations_overview?parent=is.null&software_cnt=gt.0'
+      const {data} = await getOrganisationsList({url})
+      setOrganisations(data)
+    }
+    getData()
+  }, [])
 
   const resetBackgroundImage = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!(event.target instanceof HTMLDivElement)) return
@@ -573,18 +581,6 @@ async function getOrganisationsList({url, token}: {url: string, token?: string})
     logger(`getOrganisationsList: ${e?.message}`, 'error')
     return {
       data: []
-    }
-  }
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const {req} = context
-  const token = req?.cookies['rsd_token']
-  const url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&software_cnt=gt.0`
-  const {data} = await getOrganisationsList({url, token})
-  return {
-    props: {
-      organisations: data
     }
   }
 }
