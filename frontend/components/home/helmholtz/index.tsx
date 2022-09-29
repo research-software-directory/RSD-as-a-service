@@ -10,17 +10,22 @@
 // SPDX-License-Identifier: EUPL-1.2
 
 /* eslint-disable @next/next/no-img-element */
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import AOS from 'aos'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import Link from 'next/link'
+import SimpleBar from 'simplebar-react'
+import 'simplebar/dist/simplebar.min.css'
 
 import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
 import {OrganisationForOverview} from '~/types/Organisation'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
+import {GetServerSidePropsContext} from 'next'
+import {createJsonHeaders} from '~/utils/fetchHelpers'
+import logger from '~/utils/logger'
 import {getUrlFromLogoId} from '~/utils/editOrganisation'
 import {IconButton} from '@mui/material'
 import {ChevronLeft, ChevronRight} from '@mui/icons-material'
@@ -52,8 +57,6 @@ type SpotlightDescription = {
   image: string,
   link: string
 }
-
-const RESEARCH_FIELDS_PREFIX = 'research-field-image-'
 
 const RESEARCH_FIELDS = [
   {key: 1, name: 'Energy', img: '/images/pexels-pixabay-414837.jpg'},
@@ -102,6 +105,8 @@ const SPOTLIGHTS= [
     link: '/software/palladio'
   }
 ]
+
+const HELMHOLTZ_BLUE_DARK = '#015aa0'
 
 function LatestSpotlight({name, description, image, link}:
   {name:string, description:string, image:string, link: string}) {
@@ -196,47 +201,19 @@ function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
   )
 }
 
-function deactivateAllResearchFieldImages () {
-  for (const item of RESEARCH_FIELDS) {
-    const deactivateId = RESEARCH_FIELDS_PREFIX + item.key
-    const div = document.getElementById(deactivateId)
-
-    if (!div) {
-      continue
-    }
-
-    div.classList.remove('active')
-  }
-}
-
-function ResearchField({targetkey, name}: {targetkey: number, name: string}) {
+function ResearchField({background, name}:{background: string, name: string}) {
 
   function mouseEnter(event: React.MouseEvent<HTMLAnchorElement>) {
-    if (!(event.target instanceof HTMLAnchorElement)) {
-      return
-    }
-
-    const targetId = RESEARCH_FIELDS_PREFIX + event.target.dataset.targetkey
-    const imageDiv = document.getElementById(targetId)
-
-    if (!imageDiv) {
-      return
-    }
-
-    deactivateAllResearchFieldImages()
-    imageDiv.classList.add('active')
+    if (!(event.target instanceof HTMLAnchorElement)) return
+    const background = event.target.dataset.background
+    event.target.parentElement!.parentElement!.style.backgroundImage = 'url("' + background + '")'
   }
 
   const uriComponent = `["${name}"]`
   const link=`/software?&keywords=${encodeURIComponent(uriComponent)}&page=0&rows=12`
 
   return (
-    <a
-      className='underline hover:text-white'
-      onMouseEnter={mouseEnter}
-      data-targetkey={targetkey}
-      href={link}
-    >
+    <a className='underline hover:text-white' onMouseEnter={mouseEnter} data-background={background} href={link}>
       {name}
     </a>
   )
@@ -248,7 +225,7 @@ function ResearchFields() {
       {
         RESEARCH_FIELDS.map(item => {
           return(
-            <ResearchField key={`researchfield-${item.key}`} targetkey={item.key} name={item.name} />
+            <ResearchField key={`researchfield-${item.key}`} background={item.img} name={item.name} />
           )
         })
       }
@@ -256,58 +233,97 @@ function ResearchFields() {
   )
 }
 
-function ParticipatingOrganisations({organisations}:{organisations:OrganisationForOverview[]}) {
+function ParticipatingOrganisations(
+  {organisations, sbRef}: {organisations: OrganisationForOverview[], sbRef: any},
+) {
+  const commonButtonStyle = {
+    fontSize: '2.5rem',
+    color: HELMHOLTZ_BLUE_DARK,
+    backgroundColor: 'white',
+    position: 'absolute',
+    transform: 'translateY(-50%)',
+    top: '50%',
+    '&:hover': {
+      color: 'white',
+      backgroundColor: HELMHOLTZ_BLUE_DARK,
+    },
+  }
+
+  const buttonStyleLeft = {
+    ...commonButtonStyle,
+    left: '0px',
+  }
+
+  const buttonStyleRight = {
+    ...commonButtonStyle,
+    right: '0px',
+  }
+
+  const wrapperSelector = '#hgf-simplebar .simplebar-content-wrapper'
+
+  const moveRight = () => {
+    const container = document.querySelector(wrapperSelector)
+    if (container) {
+      container.scroll({
+        left: container.scrollLeft + 500,
+        top: 0,
+        behavior: 'smooth',
+      })
+    }
+  }
+
+  const moveLeft = () => {
+    const container = document.querySelector(wrapperSelector)
+    if (container) {
+      container.scroll({
+        left: container.scrollLeft - 500,
+        top: 0,
+        behavior: 'smooth',
+      })
+    }
+  }
+
   return (
     <div className="w-full h-full relative">
-    <div
-      id="participatingOrganisations"
-      className="flex flex-row flex-nowrap w-full overflow-x-scroll h-[12rem] hgf-scrollbar"
-    >
-      {
-        organisations.map(item => {
-          return(
-            <Link
-              key={`link_${item.name}`}
-              href={`/organisations/${item.rsd_path}`}
-              passHref
-            >
-              <img
-                key={item.name}
-                alt={item.name}
-                src={getUrlFromLogoId(item.logo_id) ?? undefined}
-                className="p-10 hover:cursor-pointer"
-              />
-            </Link>
-          )
-        })
-      }
-      </div>
+      <SimpleBar
+        id="hgf-simplebar"
+        ref={sbRef}
+        autoHide={false}
+        forceVisible="x"
+        style={{maxHeight: 300}}
+      >
+        <div id="hgf-scroll-container">
+          {
+            organisations.map(item => {
+              return(
+                <Link
+                  key={`link_${item.name}`}
+                  href={`/organisations/${item.rsd_path}`}
+                  passHref
+                >
+                  <img
+                    alt={item.name}
+                    src={getUrlFromLogoId(item.logo_id) ?? undefined}
+                    className="p-10 hover:cursor-pointer"
+                  />
+                </Link>
+              )
+            })
+          }
+        </div>
+      </SimpleBar>
+
       <IconButton
         id="scrollLeftButton"
-        color="primary"
-        sx={{
-          fontSize: '2.5rem',
-          backgroundColor: 'white',
-          position: 'absolute',
-          transform: 'translateY(-50%)',
-          top: '50%',
-          left: '0px'
-        }}
+        sx={buttonStyleLeft}
         onClick={moveLeft}
       >
         <ChevronLeft fontSize="inherit" />
       </IconButton>
+
       <IconButton
         id="scrollRightButton"
-        color="primary"
-        sx={{
-          fontSize: '2.5rem',
-          backgroundColor: 'white',
-          position: 'absolute',
-          top: '50%',
-          right: '0px',
-          transform: 'translateY(-50%)',
-        }}
+        sx={buttonStyleRight}
         onClick={moveRight}
       >
         <ChevronRight fontSize="inherit" />
@@ -316,42 +332,34 @@ function ParticipatingOrganisations({organisations}:{organisations:OrganisationF
   )
 }
 
-function moveRight() {
-  const container = document.getElementById('participatingOrganisations')
-  if(container) {
-    container.scroll({
-      left: container.scrollLeft + 500,
-      top: 0,
-      behavior: 'smooth'
-    })
-  }
-}
+export default function Home({organisations=[]}:{organisations?: OrganisationForOverview[]}) {
 
-function moveLeft() {
-  const container = document.getElementById('participatingOrganisations')
-  if(container) {
-    container.scroll({
-      left: container.scrollLeft - 500,
-      top: 0,
-      behavior: 'smooth'
-    })
-  }
-}
+  const simplebarRef = useRef()
 
-export default function HelmholtzHome({organisations=[]}:{organisations?: OrganisationForOverview[]}) {
-
-  // Initialize AOS library
   useEffect(() => {
+    // Initialize AOS library
     AOS.init()
+
+    // create ref for simplebar and recalculate
+    // https://github.com/Grsmto/simplebar/tree/master/packages/simplebar#notifying-the-plugin-of-content-changes
+    const sb: any = simplebarRef.current
+    if (sb && 'recalculate' in sb) {
+      sb.recalculate()
+      // The following lines are a workaround to set the width of the scrollbar
+      // to 33% of the container width. The resizing works when building the
+      // page the first time. This method does not correct the size of the
+      // scrollbar after resizing the window.
+      const trackWidth = sb.axis['x'].track.el[sb.axis['x'].offsetSizeAttr]
+      const scrollbarWidth = Math.round(trackWidth*0.33)
+      sb.axis.x.scrollbar.el.style.width = scrollbarWidth + 'px'
+  }
   }, [])
 
 
   const resetBackgroundImage = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!(event.target instanceof HTMLDivElement)) {
-      return
-    }
-
-    deactivateAllResearchFieldImages()
+    if (!(event.target instanceof HTMLDivElement)) return
+    if (!(event.target.id === 'backgroundContainer')) return
+    event.target.style.backgroundImage = 'url("/images/pexels-olena-bohovyk-3646172.jpg")'
   }
 
 
@@ -363,6 +371,10 @@ export default function HelmholtzHome({organisations=[]}:{organisations?: Organi
       })
       loginButton.dispatchEvent(evt)
     }
+  }
+
+  const backgroundTransitionStyle = {
+    'transition': 'background 0.3s ease 0.1s',
   }
 
   return (
@@ -429,33 +441,12 @@ export default function HelmholtzHome({organisations=[]}:{organisations?: Organi
         </div>
 
         {/* Software meta repository */}
-        <div
-          id="research-fields-container"
-          className="container mx-auto my-10 max-w-screen-xl text-white bg-secondary"
-          onMouseLeave={resetBackgroundImage}
-        >
+        <div className="conainer mx-auto my-10 max-w-screen-xl text-white bg-secondary">
           <div
-            id="research-field-default-background"
-            className="bg-secondary w-full h-full bg-cover bg-center bg-blend-multiply bg-opacity-75"
-          />
-
-          {
-            RESEARCH_FIELDS.map(item => {
-              return(
-                <div
-                  id={RESEARCH_FIELDS_PREFIX + item.key}
-                  key={`researchfield-${item.key}`}
-                  className="research-field-image bg-secondary w-full h-full bg-cover bg-center bg-blend-multiply bg-opacity-75"
-                  style={{'backgroundImage': `url(${item.img})`} as any}
-                />
-              )
-            })
-          }
-
-          <div
-            id="research-fields-list"
-            className="w-full h-full p-12"
-          >
+            id="backgroundContainer"
+            className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-[#002864] bg-opacity-75 bg-[url(/images/pexels-olena-bohovyk-3646172.jpg)]"
+            style={backgroundTransitionStyle}
+            onMouseLeave={resetBackgroundImage}>
             <h2 className='text-5xl'>Discover software by research topic</h2>
             {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
             <ResearchFields />
@@ -463,7 +454,7 @@ export default function HelmholtzHome({organisations=[]}:{organisations?: Organi
         </div>
 
         {/* Teaser */}
-        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+        <div className="conainer mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
           <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-20'>
             <div className='text-2xl'>
               <h2 id="Upcoming" className='text-5xl pb-10'>Upcoming</h2>
@@ -489,21 +480,25 @@ export default function HelmholtzHome({organisations=[]}:{organisations?: Organi
         </div>
 
         {/* Participating organsiations */}
-        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
-          <div className="py-6">
-            <h2 className="text-5xl pb-2">Contributions</h2>
-            <div className='text-2xl'>We present software contributions by</div>
-            <ParticipatingOrganisations organisations={organisations}/>
-            <div className='text-xl pt-2'>Your organisation is not in the list? We will open the RSD for self service soon. Stay tuned.</div>
+        {
+          organisations.length > 0 &&
+          <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+            <div className="py-6">
+              <h2 className="text-5xl pb-2">Contributions</h2>
+              <div className='text-2xl'>We present software contributions by</div>
+                <ParticipatingOrganisations organisations={organisations} sbRef={simplebarRef}/>
+              <div className='text-xl pt-2'>Your organisation is not in the list? We will open the RSD for self service soon. Stay tuned.</div>
+            </div>
           </div>
-        </div>
+        }
 
         {/* For RSEs and Researchers */}
-        {/* <div className="container mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
+        {/* <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
           <div className='py-6'>
             <h2 className='text-5xl'>For RSEs and Researchers</h2>
             <div className="text-2xl my-4">A place for Research Software that is being developed in the Helmholtz Association.</div>
             <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
+
               <div className='text-center text-2xl py-4'>
                 <div className="pb-4">For Research Software Engineers</div>
                 <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">
@@ -517,6 +512,7 @@ export default function HelmholtzHome({organisations=[]}:{organisations?: Organi
                   </div>
                 </div>
               </div>
+
               <div className='text-center text-2xl my-4'>
                 <div className="mb-4">For Researchers</div>
                 <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">
@@ -543,4 +539,52 @@ export default function HelmholtzHome({organisations=[]}:{organisations?: Organi
         <AppFooter/>
       </div>
   )
+}
+
+async function getOrganisationsList({url, token}: {url: string, token?: string}) {
+  try {
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+      },
+    })
+
+    if ([200, 206].includes(resp.status)) {
+      const organisationList: Array<JSON> = await resp.json()
+
+      const shuffled_data = []
+      while (organisationList.length > 0) {
+        let rnd = Math.floor(Math.random() * (organisationList.length))
+        shuffled_data.push(organisationList.splice(rnd, 1)[0])
+      }
+
+      return {
+        data: shuffled_data
+      }
+    }
+    // otherwise request failed
+    logger(`getOrganisationsList failed: ${resp.status} ${resp.statusText}`, 'warn')
+    // we log and return zero
+    return {
+      data: []
+    }
+  } catch (e: any) {
+    logger(`getOrganisationsList: ${e?.message}`, 'error')
+    return {
+      data: []
+    }
+  }
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const {req} = context
+  const token = req?.cookies['rsd_token']
+  const url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&software_cnt=gt.0`
+  const {data} = await getOrganisationsList({url, token})
+  return {
+    props: {
+      organisations: data
+    }
+  }
 }
