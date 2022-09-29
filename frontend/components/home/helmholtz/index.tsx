@@ -23,7 +23,6 @@ import {OrganisationForOverview} from '~/types/Organisation'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
-import {GetServerSidePropsContext} from 'next'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {getUrlFromLogoId} from '~/utils/editOrganisation'
@@ -31,25 +30,6 @@ import {IconButton} from '@mui/material'
 import {ChevronLeft, ChevronRight} from '@mui/icons-material'
 import Image from 'next/image'
 /*! purgecss end ignore */
-
-const whyrsd = [
-  'Improves findability of software packages.',
-  'Includes metadata to help search engines understand what a given software package is about.',
-  'Harvests data from Zotero, Zenodo, GitHub, GitLab, and other sources.',
-  'Presents software packages within their social and scientific context.',
-  'Promotes dissemination of software.',
-  // 'Modular system that is meant to be customizable, e.g. with respect to branding, database schemas, an so on..',
-  'Makes scientific impact visible in a qualitative way.',
-  'Helps decision-making based on metrics and graphs.',
-  'Provides metadata via OAI-PMH, the standard protocol for metadata harvesting.',
-  'The Research Software Directory is a content management system that is tailored to software.'
-]
-
-type HomeProps = {
-  software: number,
-  projects: number,
-  organisations: number
-}
 
 type SpotlightDescription = {
   name: string,
@@ -333,7 +313,7 @@ function ParticipatingOrganisations(
 }
 
 export default function Home() {
-  const [organisations, setOrganisations] = useState([])
+  const [organisations, setOrganisations] = useState<OrganisationForOverview[]>([])
   const simplebarRef = useRef()
 
   useEffect(() => {
@@ -358,7 +338,7 @@ export default function Home() {
   useEffect(() => {
     async function getData () {
       const url = '/api/v1/rpc/organisations_overview?parent=is.null&software_cnt=gt.0'
-      const {data} = await getOrganisationsList({url})
+      const data = await getOrganisationsList({url})
       setOrganisations(data)
     }
     getData()
@@ -559,7 +539,7 @@ async function getOrganisationsList({url, token}: {url: string, token?: string})
     })
 
     if ([200, 206].includes(resp.status)) {
-      const organisationList: Array<JSON> = await resp.json()
+      const organisationList: OrganisationForOverview[] = await resp.json()
 
       const shuffled_data = []
       while (organisationList.length > 0) {
@@ -567,20 +547,14 @@ async function getOrganisationsList({url, token}: {url: string, token?: string})
         shuffled_data.push(organisationList.splice(rnd, 1)[0])
       }
 
-      return {
-        data: shuffled_data
-      }
+      return shuffled_data
     }
     // otherwise request failed
     logger(`getOrganisationsList failed: ${resp.status} ${resp.statusText}`, 'warn')
     // we log and return zero
-    return {
-      data: []
-    }
+    return []
   } catch (e: any) {
     logger(`getOrganisationsList: ${e?.message}`, 'error')
-    return {
-      data: []
-    }
+    return []
   }
 }
