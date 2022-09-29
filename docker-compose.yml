@@ -185,6 +185,7 @@ services:
     image: rsd/frontend-dev:1.4.0
     ports:
       - "3000:3000"
+      - "9229:9229"
     environment:
       # it uses values from .env file
       - POSTGREST_URL
