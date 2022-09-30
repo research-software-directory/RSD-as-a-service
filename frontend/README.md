@@ -31,7 +31,7 @@ Based on the features in the legacy application and the current requirements we 
 You can start the frontend in dev mode inside Docker using the `Makefile`. The command will make sure that the created Docker container uses a user with the same user id and group id as your local account. This ensures that you will be the owner of all files that are written via mounted volumes to your drive (mainly everything in the `frontend/.next` and `frontend/node_modules` folders).
 
 ```bash
-make dev-frontend-docker
+make frontend-docker
 ```
 
 Alternatively you can run

@@ -48,7 +48,7 @@ dev:
 down:
 	docker-compose down
 
-dev-frontend-docker: frontend/.env.local
+frontend-docker: frontend/.env.local
 	docker-compose build frontend-dev
 	docker-compose up --scale frontend=0 --scale scrapers=0 --scale frontend-dev=1
 

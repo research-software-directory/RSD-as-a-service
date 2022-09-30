@@ -62,7 +62,7 @@ You can run frontend in development mode as docker a service (called frontend-de
 
 ```
 # Run frontend development using docker at http://localhost:3000
-make dev-frontend-docker
+make frontend-docker
 # OR use docker-compose directly
 docker-compose up --scale frontend=0 --scale scrapers=0 --scale frontend-dev=1
 ```
