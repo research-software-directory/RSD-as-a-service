@@ -6,20 +6,15 @@
 import {useState} from 'react'
 
 import Button from '@mui/material/Button'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
-import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
 
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {ProjectLink} from '~/types/Project'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {deleteProjectLink} from '~/utils/editProject'
+import {deleteProjectLink, patchProjectLinkPositions} from '~/utils/editProject'
 import {projectInformation as config} from './config'
 import ProjectLinkModal from './ProjectLinkModal'
+import SortableProjectLinksList from './SortableProjectLinksList'
 
 type ProjectLinksProps = {
   project_id: string,
@@ -43,7 +38,7 @@ export default function AutosaveProjectLinks({project_id, url_for_project}: Proj
   function addLink() {
     const newLink = {
       id: null,
-      position: links.length,
+      position: links.length + 1,
       title: null,
       url: null,
       project: project_id
@@ -70,18 +65,36 @@ export default function AutosaveProjectLinks({project_id, url_for_project}: Proj
     const item = links[pos]
     if (item.id) {
       const resp = await deleteProjectLink({
-        ids: [item.id],
+        id: item.id,
         token
       })
       if (resp.status === 200) {
         const items = [
+          // remove item
           ...links.slice(0, pos),
           ...links.slice(pos+1)
-        ]
-        setLinks(items)
+        ].map((item, pos) => {
+          // renumber positions
+          item.position = pos + 1
+          return item
+        })
+        // update links positions
+        sortedLinks(items)
       } else {
         showErrorMessage(`Failed to remove link. ${resp.message}`)
       }
+    }
+  }
+
+  async function sortedLinks(links: ProjectLink[]) {
+    const resp = await patchProjectLinkPositions({
+      links,
+      token
+    })
+    if (resp.status === 200) {
+      setLinks(links)
+    } else {
+      showErrorMessage(`Failed to update project link positions. ${resp.message}`)
     }
   }
 
@@ -118,45 +131,14 @@ export default function AutosaveProjectLinks({project_id, url_for_project}: Proj
           Add
         </Button>
       </EditSectionTitle>
+
       <section>
-        <List>
-        {links.map((item, pos) => {
-          return(
-            <ListItem
-              key={item.id}
-              disableGutters
-              secondaryAction={
-                <>
-                <IconButton
-                  edge="end"
-                  aria-label="edit"
-                  sx={{marginRight: '1rem'}}
-                  onClick={() => {
-                    editLink(pos)
-                  }}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => {
-                    deleteLink(pos)
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-                </>
-              }
-            >
-              <ListItemText
-                primary={item.title}
-                secondary={item.url}
-              />
-            </ListItem>
-          )
-        })}
-        </List>
+        <SortableProjectLinksList
+          links={links}
+          onEdit={editLink}
+          onDelete={deleteLink}
+          onSorted={sortedLinks}
+        />
       </section>
 
       <ProjectLinkModal

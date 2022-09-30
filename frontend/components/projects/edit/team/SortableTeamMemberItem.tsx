@@ -8,6 +8,7 @@ import ContributorAvatar from '~/components/software/ContributorAvatar'
 import {combineRoleAndAffiliation, getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import {TeamMember} from '~/types/Project'
+import {useMediaQuery} from '@mui/material'
 
 type TeamMemberProps = {
   pos: number,
@@ -18,6 +19,7 @@ type TeamMemberProps = {
 
 // Shell we move this component to separate file?
 export default function SortableTeamMemberItem({pos, item, onEdit, onDelete}: TeamMemberProps) {
+  const smallScreen = useMediaQuery('(max-width:600px)')
   const {
     attributes,listeners,setNodeRef,
     transform,transition,isDragging
@@ -44,7 +46,8 @@ export default function SortableTeamMemberItem({pos, item, onEdit, onDelete}: Te
       }
       sx={{
         // this makes space for buttons
-        paddingRight:'11rem',
+        paddingRight: '11rem',
+        // height:'5rem',
         '&:hover': {
           backgroundColor:'grey.100'
         },
@@ -56,14 +59,15 @@ export default function SortableTeamMemberItem({pos, item, onEdit, onDelete}: Te
         cursor: isDragging ? 'move' : 'default'
       }}
     >
-      <ListItemAvatar
-      >
-        <ContributorAvatar
-          avatarUrl={item.avatar_url ?? ''}
-          displayName={displayName ?? ''}
-          displayInitials={displayInitials}
-        />
-      </ListItemAvatar>
+      {smallScreen ? null :
+        <ListItemAvatar>
+          <ContributorAvatar
+            avatarUrl={item.avatar_url ?? ''}
+            displayName={displayName ?? ''}
+            displayInitials={displayInitials}
+          />
+        </ListItemAvatar>
+      }
       <ListItemText primary={primaryText} secondary={combineRoleAndAffiliation(item)} />
 
     </ListItem>

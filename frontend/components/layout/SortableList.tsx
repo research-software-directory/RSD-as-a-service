@@ -29,9 +29,9 @@ export default function SortableList<T extends RequiredProps>({
     useSensor(MouseSensor,{
       // required to enable click events
       // on draggable items with buttons
-      activationConstraint: {
-        distance: 8,
-      }
+      // activationConstraint: {
+      //   distance: 8,
+      // }
     })
   )
 
