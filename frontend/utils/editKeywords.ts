@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {SoftwareKeyword} from '~/components/software/edit/information/softwareKeywordsChanges'
+// import {SoftwareKeyword} from '~/components/software/edit/information/softwareKeywordsChanges'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 
@@ -95,9 +95,13 @@ export async function deleteKeywordFromProject({project, keyword, token}:
   }
 }
 
+type SoftwareKeyword = {
+  software: string
+  keyword: string
+}
 
 export async function addKeywordsToSoftware({data, token}:
-  { data: SoftwareKeyword[], token: string }) {
+  {data: SoftwareKeyword | SoftwareKeyword[], token: string }) {
   try {
     // POST
     const url = '/api/v1/keyword_for_software'

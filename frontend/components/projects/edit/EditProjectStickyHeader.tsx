@@ -9,32 +9,26 @@ import {useState, useRef} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
 
-import {useFormContext} from 'react-hook-form'
+import {useController, useFormContext} from 'react-hook-form'
 
 import StickyHeader from '../../layout/StickyHeader'
 import useStickyHeaderBorder from '~/components/layout/useStickyHeaderBorder'
 import useProjectContext from './useProjectContext'
-import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 export default function EditProjectStickyHeader() {
   const {project, step} = useProjectContext()
   const router = useRouter()
-  const {formState:{isValid,isDirty,dirtyFields},watch} = useFormContext()
+  const {control} = useFormContext()
+  const {field:{value:slug},fieldState:{error:slugError}} = useController({
+    name: 'slug',
+    control
+  })
   const headerRef = useRef(null)
   const [classes, setClasses] = useState('')
   // add border when header is at the top of the page
   const {el} = useStickyHeaderBorder({
     headerRef, setClasses
   })
-
-  function isSaveDisabled() {
-    if (isDirty === false || isValid === false) {
-      return true
-    }
-    return false
-  }
-  // get slug from form - in case of update
-  const [slug] = watch(['slug'])
 
   // if (isDirty) {
   //   console.group('EditProjectStickyHeader')
@@ -63,19 +57,12 @@ export default function EditProjectStickyHeader() {
             // location.href=`/projects/${slug}`
           }}
           sx={{
-            marginRight:'2rem'
+            marginRight:'0.5rem'
           }}
-          // disabled={!isValid}
+          disabled={typeof slugError !=='undefined'}
         >
-          VIEW
+          VIEW PAGE
         </Button>
-        {step?.formId ?
-          <SubmitButtonWithListener
-          formId={step?.formId}
-          disabled={isSaveDisabled()}
-        />
-      : null
-        }
       </div>
     </StickyHeader>
   )

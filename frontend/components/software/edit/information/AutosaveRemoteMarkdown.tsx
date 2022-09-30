@@ -6,21 +6,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState,useEffect} from 'react'
-import {useWatch,useFormState, FieldError} from 'react-hook-form'
-import ControlledTextField, {ControlledTextFieldOptions} from './ControlledTextField'
-import ReactMarkdownWithSettings from '../layout/ReactMarkdownWithSettings'
-import PageErrorMessage from '../layout/PageErrorMessage'
-import {getRemoteMarkdown} from '../../utils/getSoftware'
-import ContentLoader from '../layout/ContentLoader'
+import {useWatch,useFormState} from 'react-hook-form'
+import ReactMarkdownWithSettings from '~/components/layout/ReactMarkdownWithSettings'
+import PageErrorMessage from '~/components/layout/PageErrorMessage'
+import {getRemoteMarkdown} from '~/utils/getSoftware'
+import ContentLoader from '~/components/layout/ContentLoader'
 import {useDebounceValid} from '~/utils/useDebounce'
+import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
+import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 
-type ControlledRemoteMarkdownProps = {
+type AutosaveRemoteMarkdownProps = {
   control: any,
   rules: any,
   options: ControlledTextFieldOptions,
+  onSaveField: ({name,value}: OnSaveProps) => void
 }
 
-export default function ControlledRemoteMarkdown({control, rules, options}: ControlledRemoteMarkdownProps) {
+export default function AutosaveRemoteMarkdown({control,rules,options,onSaveField}: AutosaveRemoteMarkdownProps) {
   // watch for change
   const markdownUrl = useWatch({control, name: options.name})
   const {errors} = useFormState({control})
@@ -45,7 +47,7 @@ export default function ControlledRemoteMarkdown({control, rules, options}: Cont
     error = errors[options.name]
   }
 
-  // console.group(`ControlledRemoteMarkdown...${options.name}`)
+  // console.group(`AutosaveRemoteMarkdownProps...${options.name}`)
   // console.log('markdownUrl...',markdownUrl)
   // console.log('debouncedUrl...',debouncedUrl)
   // console.log('errors...', errors)
@@ -121,10 +123,11 @@ export default function ControlledRemoteMarkdown({control, rules, options}: Cont
 
   return (
     <div>
-      <ControlledTextField
+     <AutosaveControlledTextField
         options={options}
         control={control}
         rules={rules}
+        onSaveField={onSaveField}
       />
       <h2 className="py-4 text-sm font-medium text-primary tracking-[0.125rem] uppercase">PREVIEW</h2>
       <div className="border rounded-sm min-h-[33rem] flex">

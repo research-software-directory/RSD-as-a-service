@@ -17,7 +17,15 @@ export type RepositoryUrl = {
   url: string,
   // enum based on db enum defined as
   // platform_type in 003-create-relations-for-software.sql
-  code_platform: CodePlatform
+  code_platform: CodePlatform,
+  // options fields used to reset values on update
+  // these are filled by scrapers
+  languages?: string | null,
+  languages_scraped_at?: string | null,
+  license?: string | null,
+  license_scraped_at?: string | null,
+  commit_history?: string | null,
+  commit_history_scraped_at?: string | null
 }
 
 export type NewSoftwareItem = {
