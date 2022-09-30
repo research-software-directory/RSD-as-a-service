@@ -161,3 +161,33 @@ export async function deleteTeamMemberById({ids, token}: { ids: string[], token:
     }
   }
 }
+
+export async function patchTeamMemberPositions({members, token}:
+  { members: TeamMember[], token: string }) {
+  try {
+    // create all requests
+    const requests = members.map(member => {
+      const url = `/api/v1/team_member?id=eq.${member.id}`
+      return fetch(url, {
+        method: 'PATCH',
+        headers: {
+          ...createJsonHeaders(token),
+        },
+        // just update position!
+        body: JSON.stringify({
+          position: member.position
+        })
+      })
+    })
+    // execute them in parallel
+    const responses = await Promise.all(requests)
+    // check for errors
+    return extractReturnMessage(responses[0])
+  } catch (e: any) {
+    logger(`patchTestimonial: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}

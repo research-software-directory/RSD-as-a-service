@@ -10,7 +10,7 @@ export const cfgTeamMembers = {
   find: {
     title: 'Add member',
     subtitle: 'We search by name and ORCID in RSD and ORCID databases',
-    label: 'Find or add team memeber',
+    label: 'Find or add team member',
     help: 'At least 2 letters, use pattern {First name} {Last name} or 0000-0000-0000-0000',
     validation: {
       // custom validation rule, not in use by react-hook-form
