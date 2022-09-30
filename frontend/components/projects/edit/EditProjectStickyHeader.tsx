@@ -19,7 +19,7 @@ import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener
 export default function EditProjectStickyHeader() {
   const {project, step} = useProjectContext()
   const router = useRouter()
-  const {formState:{isValid,isDirty}} = useFormContext()
+  const {formState:{isValid,isDirty,dirtyFields},watch} = useFormContext()
   const headerRef = useRef(null)
   const [classes, setClasses] = useState('')
   // add border when header is at the top of the page
@@ -33,12 +33,16 @@ export default function EditProjectStickyHeader() {
     }
     return false
   }
+  // get slug from form - in case of update
+  const [slug] = watch(['slug'])
 
-  // console.group('EditProjectStickyHeader')
-  // console.log('isDirty...', isDirty)
-  // console.log('isValid...', isValid)
-  // console.log('errors...', errors)
-  // console.groupEnd()
+  // if (isDirty) {
+  //   console.group('EditProjectStickyHeader')
+  //   console.log('isDirty...', isDirty)
+  //   console.log('isValid...', isValid)
+  //   console.log('dirtyFields...', dirtyFields)
+  //   console.groupEnd()
+  // }
 
   return (
     <StickyHeader className={`md:flex py-4 w-full bg-white ${classes}`}>
@@ -53,12 +57,15 @@ export default function EditProjectStickyHeader() {
           type="button"
           color="secondary"
           onClick={() => {
-            const slug = router.query['slug']
+            // const slug = router.query['slug']
             router.push(`/projects/${slug}`)
+            // complete page reload?
+            // location.href=`/projects/${slug}`
           }}
           sx={{
             marginRight:'2rem'
           }}
+          // disabled={!isValid}
         >
           VIEW
         </Button>

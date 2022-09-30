@@ -184,7 +184,7 @@ export async function patchTeamMemberPositions({members, token}:
     // check for errors
     return extractReturnMessage(responses[0])
   } catch (e: any) {
-    logger(`patchTestimonial: ${e?.message}`, 'error')
+    logger(`patchTeamMemberPositions: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message

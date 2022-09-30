@@ -18,11 +18,12 @@ type MarkdownInputWithPreviewProps = {
     length: number
     maxLength: number
   }
+  onBlur?:()=>void
 }
 
 
 export default function MarkdownInputWithPreview({markdown, register, disabled = true,
-  autofocus = false, helperInfo}:MarkdownInputWithPreviewProps) {
+  autofocus = false, helperInfo, onBlur}:MarkdownInputWithPreviewProps) {
   const [tab, setTab] = useState(0)
 
   useEffect(() => {
@@ -125,6 +126,7 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
           //   target.style.height = target.scrollHeight + 'px'
           // }}
           {...register}
+          onBlur={onBlur ? onBlur : null}
         ></textarea>
       </div>
       <div

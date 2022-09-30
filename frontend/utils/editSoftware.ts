@@ -375,7 +375,7 @@ export async function createKeywordAndAddToSoftware({data, token, updateKeyword}
     // debugger
     return resp
   } catch (e: any) {
-    logger(`createKeywordAndAddToProject: ${e?.message}`, 'error')
+    logger(`createKeywordAndAddToSoftware: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message

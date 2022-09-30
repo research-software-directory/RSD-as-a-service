@@ -3,10 +3,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ProjectKeyword} from '~/components/projects/edit/information/projectKeywordsChanges'
 import {SoftwareKeyword} from '~/components/software/edit/information/softwareKeywordsChanges'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
+
+export type ProjectKeyword = {
+  // UUID
+  project: string,
+  // UUID
+  keyword: string
+}
 
 export async function createKeyword({keyword, token}: { keyword: string, token: string }) {
   try {

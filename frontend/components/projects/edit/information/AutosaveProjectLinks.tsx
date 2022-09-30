@@ -1,0 +1,171 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import {useState} from 'react'
+
+import Button from '@mui/material/Button'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import IconButton from '@mui/material/IconButton'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+
+import {useSession} from '~/auth'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {ProjectLink} from '~/types/Project'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {deleteProjectLink} from '~/utils/editProject'
+import {projectInformation as config} from './config'
+import ProjectLinkModal from './ProjectLinkModal'
+
+type ProjectLinksProps = {
+  project_id: string,
+  url_for_project: ProjectLink[]
+}
+
+type ModalState = {
+  open: boolean,
+  item?: ProjectLink,
+  pos?: number
+}
+
+export default function AutosaveProjectLinks({project_id, url_for_project}: ProjectLinksProps) {
+  const {token} = useSession()
+  const {showErrorMessage} = useSnackbar()
+  const [links, setLinks] = useState(url_for_project)
+  const [modal, setModal] = useState<ModalState>({
+    open: false
+  })
+
+  function addLink() {
+    const newLink = {
+      id: null,
+      position: links.length,
+      title: null,
+      url: null,
+      project: project_id
+    }
+    setModal({
+      open: true,
+      item: newLink
+    })
+  }
+
+  function editLink(pos: number) {
+    const item = links[pos]
+    if (item) {
+      setModal({
+        open: true,
+        item,
+        pos
+      })
+    }
+  }
+
+  async function deleteLink(pos: number) {
+    // console.log('delete link...', pos)
+    const item = links[pos]
+    if (item.id) {
+      const resp = await deleteProjectLink({
+        ids: [item.id],
+        token
+      })
+      if (resp.status === 200) {
+        const items = [
+          ...links.slice(0, pos),
+          ...links.slice(pos+1)
+        ]
+        setLinks(items)
+      } else {
+        showErrorMessage(`Failed to remove link. ${resp.message}`)
+      }
+    }
+  }
+
+  function updateLink({data, pos}: { data: ProjectLink, pos?: number }) {
+    if (typeof pos !== 'undefined') {
+      const items = links.map((item, i) => {
+        // return updated item
+        if (i === pos) return data
+        return item
+      })
+      setLinks(items)
+    } else {
+      const items = [
+        ...links,
+        data
+      ]
+      setLinks(items)
+    }
+    setModal({
+      open:false
+    })
+  }
+
+  return (
+    <>
+      <EditSectionTitle
+        title={config.url_for_project.sectionTitle}
+        subtitle={config.url_for_project.sectionSubtitle}
+      >
+        <Button
+          onClick={addLink}
+          sx={{margin:'0rem 0rem 0.5rem 1rem'}}
+        >
+          Add
+        </Button>
+      </EditSectionTitle>
+      <section>
+        <List>
+        {links.map((item, pos) => {
+          return(
+            <ListItem
+              key={item.id}
+              disableGutters
+              secondaryAction={
+                <>
+                <IconButton
+                  edge="end"
+                  aria-label="edit"
+                  sx={{marginRight: '1rem'}}
+                  onClick={() => {
+                    editLink(pos)
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => {
+                    deleteLink(pos)
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+                </>
+              }
+            >
+              <ListItemText
+                primary={item.title}
+                secondary={item.url}
+              />
+            </ListItem>
+          )
+        })}
+        </List>
+      </section>
+
+      <ProjectLinkModal
+        pos={modal.pos}
+        open={modal.open}
+        url_for_project={modal?.item}
+        onCancel={() => setModal({open: false})}
+        onSubmit={updateLink}
+      />
+    </>
+  )
+}
