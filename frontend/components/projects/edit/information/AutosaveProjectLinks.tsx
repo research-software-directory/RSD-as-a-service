@@ -87,14 +87,19 @@ export default function AutosaveProjectLinks({project_id, url_for_project}: Proj
   }
 
   async function sortedLinks(links: ProjectLink[]) {
-    const resp = await patchProjectLinkPositions({
-      links,
-      token
-    })
-    if (resp.status === 200) {
-      setLinks(links)
+    // patch only if there are items left
+    if (links.length > 0) {
+      const resp = await patchProjectLinkPositions({
+        links,
+        token
+      })
+      if (resp.status === 200) {
+        setLinks(links)
+      } else {
+        showErrorMessage(`Failed to update project link positions. ${resp.message}`)
+      }
     } else {
-      showErrorMessage(`Failed to update project link positions. ${resp.message}`)
+      setLinks(links)
     }
   }
 

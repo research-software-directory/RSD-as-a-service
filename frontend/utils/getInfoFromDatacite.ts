@@ -229,6 +229,8 @@ export async function getContributorsFromDoi(
       affiliation: useAffiliation,
       is_contact_person: false,
       orcid: useOrcid,
+      position: null,
+      id: null
     })
   }
 

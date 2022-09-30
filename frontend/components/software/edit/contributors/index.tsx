@@ -7,7 +7,6 @@
 
 import {useContext,useEffect,useState} from 'react'
 
-import {app} from '~/config/app'
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -16,6 +15,7 @@ import {Contributor, ContributorProps} from '~/types/Contributor'
 import {
   addContributorToDb, deleteContributorsById,
   getAvatarUrl, getContributorsForSoftware,
+  patchContributorPositions,
   prepareContributorData, updateContributorInDb
 } from '~/utils/editContributors'
 import {getDisplayName} from '~/utils/getDisplayName'
@@ -25,7 +25,6 @@ import {getContributorsFromDoi} from '~/utils/getInfoFromDatacite'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 import EditContributorModal from './EditContributorModal'
 import FindContributor, {Name} from './FindContributor'
-import SoftwareContributorsList from './SoftwareContributorsList'
 import EditSoftwareSection from '../../../layout/EditSection'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {contributorInformation as config} from '../editSoftwareConfig'
@@ -33,16 +32,17 @@ import {ModalProps, ModalStates} from '../editSoftwareTypes'
 import GetContributorsFromDoi from './GetContributorsFromDoi'
 import useSoftwareContext from '../useSoftwareContext'
 import useSoftwareContributors from './useSoftwareContributors'
+import SortableContributorsList from './SortableContributorsList'
 
 type EditContributorModal = ModalProps & {
   contributor?: Contributor
 }
 
-export default function SoftwareContributors({slug}: { slug: string }) {
+export default function SoftwareContributors() {
   const {token} = useSession()
   const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   const {software} = useSoftwareContext()
-  const {loading,contributors,setContributors, setLoading} = useSoftwareContributors()
+  const {loading,contributors,setContributors,setLoading} = useSoftwareContributors()
   const [modal, setModal] = useState<ModalStates<EditContributorModal>>({
     edit: {
       open: false
@@ -58,13 +58,13 @@ export default function SoftwareContributors({slug}: { slug: string }) {
   )
 
   function updateContributorList({data, pos}: { data: Contributor, pos?: number }) {
-    if (typeof pos == 'number') {
+    if (typeof pos === 'number') {
       // REPLACE existing item and sort
-      const list = [
-        ...contributors.slice(0, pos),
-        data,
-        ...contributors.slice(pos+1)
-      ].sort((a,b)=>sortOnStrProp(a,b,'given_names'))
+      const list = contributors.map((item, i) => {
+        // replace item at pos
+        if (i === pos) return data
+        return item
+      })
       // pass new list with addition contributor
       setContributors(list)
     } else {
@@ -72,7 +72,7 @@ export default function SoftwareContributors({slug}: { slug: string }) {
       const list = [
         ...contributors,
         data
-      ].sort((a,b)=>sortOnStrProp(a,b,'given_names'))
+      ]
       setContributors(list)
     }
   }
@@ -207,68 +207,28 @@ export default function SoftwareContributors({slug}: { slug: string }) {
     const list = [
       ...contributors.slice(0, pos),
       ...contributors.slice(pos+1)
-    ]
-    setContributors(list)
+    ].map((item, pos) => {
+      // renumber positions
+      item.position = pos + 1
+      return item
+    })
+    sortedContributors(list)
   }
 
-  async function onGetContributorsFromDoi() {
-    setLoading(true)
-
-    const contribDoi: Contributor[] = await getContributorsFromDoi(
-      software?.id ?? '', software?.concept_doi ?? ''
-    )
-
-    if (!contribDoi || contribDoi.length === 0) {
-      showErrorMessage(
-        `Contributors could not be added from DOI ${software?.concept_doi}`
-      )
-      setLoading(false)
-      return
-    }
-
-    // extract only new Contributors
-    // for now using only family names as key
-    // TODO!
-    // extend itemsNotInReferenceList to use combination of props (first_name + last_name)
-    // and not to be case sensitive?
-    const newContributors = itemsNotInReferenceList({
-      list: contribDoi,
-      referenceList: contributors,
-      key: 'family_names'
-    })
-
-    if (newContributors.length === 0) {
-      showInfoMessage(
-        `No new contributors to add from DOI ${software?.concept_doi} based on family_names.`
-      )
-      setLoading(false)
-      return
-    }
-
-    for (const c of newContributors) {
-      const contributor = prepareContributorData(c)
-      const resp = await addContributorToDb({contributor, token})
-
-      if (resp.status === 201) {
-        // update item in newContributors
-        c.id = resp.message
-        // no image provided by datacite
-        c.avatar_data = null
-        c.avatar_url = null
+  async function sortedContributors(contributors: Contributor[]) {
+    if (contributors.length > 0) {
+      const resp = await patchContributorPositions({
+        contributors,
+        token
+      })
+      if (resp.status === 200) {
+        setContributors(contributors)
       } else {
-        showErrorMessage(
-          `Failed to add ${getDisplayName(contributor)}. Error: ${resp.message}`
-        )
+        showErrorMessage(`Failed to update contributor positions. ${resp.message}`)
       }
+    } else {
+      setContributors(contributors)
     }
-
-    const list = [
-      ...contributors,
-      ...newContributors
-    ].sort((a, b) => sortOnStrProp(a, b, 'given_names'))
-    setContributors(list)
-
-    setLoading(false)
   }
 
   return (
@@ -279,10 +239,11 @@ export default function SoftwareContributors({slug}: { slug: string }) {
             <span>Contributors</span>
             <span>{contributors?.length}</span>
           </h2>
-          <SoftwareContributorsList
+          <SortableContributorsList
             contributors={contributors}
             onEdit={onEditContributor}
             onDelete={onDeleteContributor}
+            onSorted={sortedContributors}
           />
         </section>
         <section className="py-4">
@@ -302,8 +263,8 @@ export default function SoftwareContributors({slug}: { slug: string }) {
                 subtitle={config.importContributors.subtitle}
               />
               <GetContributorsFromDoi
-                onClick={onGetContributorsFromDoi}
-                title={config.importContributors.message(software?.concept_doi)}
+                contributors={contributors}
+                onSetContributors={setContributors}
               />
             </div>
           }

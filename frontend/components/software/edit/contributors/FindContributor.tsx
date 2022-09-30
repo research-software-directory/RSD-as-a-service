@@ -51,7 +51,9 @@ export default function FindContributor({onAdd, onCreate}:
       onAdd({
         ...selected.data,
         is_contact_person: false,
-        software: ''
+        software: '',
+        id: null,
+        position: null
       })
     }
   }
