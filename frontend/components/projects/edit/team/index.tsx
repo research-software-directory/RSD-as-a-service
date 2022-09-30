@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -6,7 +8,6 @@
 import {useState} from 'react'
 
 import {getDisplayName} from '~/utils/getDisplayName'
-import {sortOnStrProp} from '~/utils/sortFn'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -14,14 +15,14 @@ import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {TeamMember} from '~/types/Project'
 import {cfgTeamMembers} from './config'
-import TeamMemberList from './TeamMemberList'
 import FindMember from './FindMember'
 import {
   createTeamMember, deleteTeamMemberById,
-  ModalProps, ModalStates, updateTeamMember
+  ModalProps, ModalStates, patchTeamMemberPositions, updateTeamMember
 } from './editTeamMembers'
 import TeamMemberModal from './TeamMemberModal'
 import useTeamMembers from './useTeamMembers'
+import SortableTeamMemberList from './SortableTeamMemberList'
 
 type EditMemberModal = ModalProps & {
   member?: TeamMember
@@ -61,20 +62,19 @@ export default function ProjectTeam({slug}: { slug: string }) {
   }
 
   function updateLocalState(member: TeamMember, pos?: number) {
-    if (typeof pos != 'undefined') {
+    if (typeof pos !== 'undefined') {
       // update
-      const newMembersList = [
-        ...members.slice(0, pos),
-        ...members.slice(pos+1),
-        member
-      ].sort((a, b) => sortOnStrProp(a, b, 'given_names'))
+      const newMembersList = members.map((item, i) => {
+        if (i === pos) return member
+        return item
+      })
       setMembers(newMembersList)
     } else {
-      // append
+      // append to bottom
       const newMembersList = [
         ...members,
         member
-      ].sort((a, b) => sortOnStrProp(a, b, 'given_names'))
+      ]
       setMembers(newMembersList)
     }
   }
@@ -123,8 +123,13 @@ export default function ProjectTeam({slug}: { slug: string }) {
         const newMembersList = [
           ...members.slice(0, pos),
           ...members.slice(pos+1)
-        ]
-        setMembers(newMembersList)
+        ].map((item, pos) => {
+          // renumber
+          item.position = pos + 1
+          return item
+        })
+        // renumber remaining members
+        await sortTeamMembers(newMembersList)
       } else {
         showErrorMessage(`Failed to remove member. ${resp.message}`)
       }
@@ -150,6 +155,8 @@ export default function ProjectTeam({slug}: { slug: string }) {
         showErrorMessage(`Failed to update member. ${resp.message}`)
       }
     } else {
+      // define items postion at the end
+      data.position = members.length + 1
       const resp = await createTeamMember({
         data,
         token
@@ -161,6 +168,19 @@ export default function ProjectTeam({slug}: { slug: string }) {
       } else {
         showErrorMessage(`Failed to add member. ${resp.message}`)
       }
+    }
+  }
+
+  async function sortTeamMembers(members: TeamMember[]) {
+    // console.log('sortTeamMembers...', members)
+    const resp = await patchTeamMemberPositions({
+      members,
+      token
+    })
+    if (resp.status === 200) {
+      setMembers(members)
+    } else {
+      showErrorMessage(`Failed to update team positions. ${resp.message}`)
     }
   }
 
@@ -178,10 +198,11 @@ export default function ProjectTeam({slug}: { slug: string }) {
             <span>{cfgTeamMembers.title}</span>
             <span>{members?.length}</span>
           </h2>
-          <TeamMemberList
+          <SortableTeamMemberList
             members={members}
             onEdit={onEditMember}
             onDelete={onDeleteMember}
+            onSorted={sortTeamMembers}
           />
         </div>
         <div className="py-4 min-w-[21rem] xl:my-0">

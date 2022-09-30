@@ -162,6 +162,7 @@ export type TeamMember = {
   avatar_url?: string | null
   // uploaded raw image data
   avatar_b64?: string | null
+  position: number | null
 }
 
 export type SearchTeamMember = SearchContributor

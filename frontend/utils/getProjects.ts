@@ -462,7 +462,7 @@ export async function getTeamForProject({project, token, frontend}:
   try {
     // use standardized list of columns - after team_member table is updated (as with contributors)
     const columns = TeamMemberProps.join(',')
-    const query = `team_member?select=${columns}&project=eq.${project}&order=given_names.asc`
+    const query = `team_member?select=${columns}&project=eq.${project}&order=position,given_names.asc`
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
       url = `/api/v1/${query}`
@@ -480,7 +480,7 @@ export async function getTeamForProject({project, token, frontend}:
         ...item,
         // add avatar url based on uuid
         avatar_url: getAvatarUrl(item)
-      })).sort((a, b) => sortOnStrProp(a, b, 'given_names'))
+      }))
     }
     logger(`getTeamForProject: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
     // / query not found

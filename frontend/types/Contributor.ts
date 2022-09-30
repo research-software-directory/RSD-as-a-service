@@ -68,7 +68,8 @@ export const Person = [
 
 export const TeamMemberProps = [
   ...Person,
-  'project'
+  'project',
+  'position'
 ]
 
 export const ContributorProps = [
