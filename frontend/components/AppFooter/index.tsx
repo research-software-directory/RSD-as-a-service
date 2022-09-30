@@ -29,12 +29,9 @@ export default function AppFooter () {
           <div className="py-4"></div>
           <OrganisationLogo host={host} />
         </div>
-        <div className="pb-8 md:py-8">
-          <div className="text-lg">Research Software Directory</div>
-          <div className="py-4 flex flex-col">
-            <MarkdownPages pages={pages ?? []} />
-            <CustomLinks links={links ?? []} />
-         </div>
+        <div className="pb-8 md:py-8 flex flex-col gap-2">
+          <MarkdownPages pages={pages ?? []} />
+          <CustomLinks links={links ?? []} />
         </div>
       </div>
     </footer>
