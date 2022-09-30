@@ -5,9 +5,10 @@
 
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
-import ListItemButton from '@mui/material/ListItemButton'
+import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
+import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import {RsdLink} from '~/config/rsdSettingsReducer'
 
 export type DraggableListItemProps = {
@@ -24,11 +25,10 @@ export default function SortableNavItem({item, selected, index, onSelect}: Dragg
   } = useSortable({id: item.id ?? ''})
 
   return (
-    <ListItemButton
+    <ListItem
       // draggable
       ref={setNodeRef}
       {...attributes}
-      {...listeners}
       selected={item.slug === selected}
       onClick={() => onSelect(item)}
       sx={{
@@ -38,6 +38,12 @@ export default function SortableNavItem({item, selected, index, onSelect}: Dragg
         zIndex: isDragging ? 9:0,
         cursor: isDragging ? 'move' : 'default'
       }}
+      secondaryAction={
+        <SortableListItemActions
+          pos={index}
+          listeners={listeners}
+        />
+      }
     >
       <ListItemIcon>
         <span className='text-[2rem]'>{item?.position ?? index+1}</span>
@@ -49,6 +55,6 @@ export default function SortableNavItem({item, selected, index, onSelect}: Dragg
           </span>
         }
       />
-    </ListItemButton>
+    </ListItem>
   )
 }

@@ -8,7 +8,7 @@ import {useFormContext} from 'react-hook-form'
 
 import {app} from '~/config/app'
 import SortableList from '~/components/layout/SortableList'
-import PageNavItem from './SortableNavItem'
+import SortableNavItem from './SortableNavItem'
 import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
 
 export type PagesNavProps = {
@@ -48,7 +48,7 @@ export default function SortableNav({selected, links, onSelect, onSorted}: Pages
    */
   function renderListItem(item: RsdLink, index?: number) {
     return (
-       <PageNavItem
+       <SortableNavItem
         key={item.id}
         item={item}
         index={index ?? 1}
