@@ -18,7 +18,7 @@ import {addImage, deleteImage, updateImage} from '~/utils/editProject'
 import AutosaveProjectTextField from './AutosaveProjectTextField'
 import AutosaveControlledSwitch from './AutosaveControlledSwitch'
 import {projectInformation as config} from './config'
-import {patchProjectInfo, patchProjectTable} from './patchProjectInfo'
+import {patchProjectTable} from './patchProjectInfo'
 
 export default function AutosaveProjectImage() {
   const {token} = useSession()
@@ -30,10 +30,6 @@ export default function AutosaveProjectImage() {
   ] = watch([
     'id', 'image_id', 'image_b64', 'image_mime_type','image_caption','image_contain'
   ])
-  // const {dirtyFields} = formState
-  // console.group('AutosaveProjectImage')
-  // console.log('dirtyFields...', dirtyFields)
-  // console.groupEnd()
 
   async function saveImage(image_b64: string, mime_type: string) {
     let resp
@@ -125,36 +121,13 @@ export default function AutosaveProjectImage() {
       },
       token
     })
-    // resp = await patchProjectInfo({
-    //   id: form_id,
-    //   variable: 'image_caption',
-    //   value: null,
-    //   token
-    // })
+
     if (resp.status === 200) {
       resetField('image_caption', {defaultValue: null})
       resetField('image_contain',{defaultValue:false})
     } else {
       logger(`AutosaveProjectImage.patchImageCaption failed. ${resp.message}`,'warn')
     }
-    // resp = await patchProjectInfo({
-    //   id: form_id,
-    //   variable: 'image_contain',
-    //   value: false,
-    //   token
-    // })
-    // if (resp.status === 200) {
-    //   resetField('image_contain',{defaultValue:false})
-    // } else {
-    //   logger(`AutosaveProjectImage...patch image_contain. ${resp.message}`,'warn')
-    // }
-  }
-
-  function isCaptionDisabled() {
-    if (form_image_b64 === null && form_image_id === null) {
-      return true
-    }
-    return false
   }
 
   function renderImageAttributes() {

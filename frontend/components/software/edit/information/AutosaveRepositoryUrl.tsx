@@ -101,9 +101,9 @@ export default function AutosaveRepositoryUrl() {
     }
     let resp
     if (data.url === null) {
-      console.group('saveRepositoryInfo')
-      console.log('DELETE...', id)
-      console.groupEnd()
+      // console.group('saveRepositoryInfo')
+      // console.log('DELETE...', id)
+      // console.groupEnd()
       // DELETE entry when url is clered
       resp = await deleteFromRepositoryTable({software: id, token})
       // remove platform value
@@ -113,9 +113,9 @@ export default function AutosaveRepositoryUrl() {
         helperText: ''
       })
     } else {
-      console.group('saveRepositoryInfo')
-      console.log('UPSERT...', data)
-      console.groupEnd()
+      // console.group('saveRepositoryInfo')
+      // console.log('UPSERT...', data)
+      // console.groupEnd()
       // UPSERT
       resp = await addToRepositoryTable({data, token})
     }

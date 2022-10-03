@@ -56,7 +56,6 @@ export const softwareInformation = {
     label: 'Repository URL',
     help: 'Link to source code repository',
     validation: {
-      required: 'Valid remote url is required',
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^https?:\/\/.+\..+/,

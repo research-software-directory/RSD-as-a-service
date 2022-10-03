@@ -16,7 +16,7 @@ import useStickyHeaderBorder from '~/components/layout/useStickyHeaderBorder'
 import useProjectContext from './useProjectContext'
 
 export default function EditProjectStickyHeader() {
-  const {project, step} = useProjectContext()
+  const {project} = useProjectContext()
   const router = useRouter()
   const {control} = useFormContext()
   const {field:{value:slug},fieldState:{error:slugError}} = useController({

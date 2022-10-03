@@ -1,4 +1,3 @@
-import {SoftwareTableItem} from '~/types/SoftwareTypes'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
@@ -22,7 +21,7 @@ export async function patchSoftwareTable({id,data,token}:PatchSoftwareTableProps
     // debugger
     return extractReturnMessage(resp, id)
   } catch (e: any) {
-    logger(`patchProjectInfo failed ${e.message}`, 'error')
+    logger(`patchSoftwareTable failed ${e.message}`, 'error')
     return {
       status: 500,
       message: e.message

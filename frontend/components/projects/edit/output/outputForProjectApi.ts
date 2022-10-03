@@ -6,7 +6,7 @@
 import logger from '~/utils/logger'
 import {MentionItemProps} from '~/types/Mention'
 import {addMentionItem} from '~/utils/editMentions'
-import {createJsonHeaders, extractReturnMessage, getBaseUrl, promiseWithTimeout} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 
 export async function findPublicationByTitle({project, searchFor, token}:
   { project: string, searchFor: string, token: string }) {

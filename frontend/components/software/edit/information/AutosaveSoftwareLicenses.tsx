@@ -6,14 +6,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {HTMLAttributes, useState} from 'react'
-import {Control, useFieldArray} from 'react-hook-form'
 
 import {useSession} from '~/auth'
-import GetLicensesFromDoi from './GetLicensesFromDoi'
 import {softwareInformation as config} from '../editSoftwareConfig'
 import useSpdxLicenses from '~/utils/useSpdxLicenses'
-import {getLicensesFromDoi} from '~/utils/getInfoFromDatacite'
-import {EditSoftwareItem, License} from '~/types/SoftwareTypes'
+import {License} from '~/types/SoftwareTypes'
 import AsyncAutocompleteSC, {
   AutocompleteOption
 } from '~/components/form/AsyncAutocompleteSC'
@@ -44,13 +41,6 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
   })
   const [options, setOptions] = useState<AutocompleteOption<License>[]>(allOptions)
   const [licenses, setLicenses] = useState(items)
-  // const {fields, append, remove} = useFieldArray({
-  //   control,
-  //   name: 'licenses',
-  //   // change internal key name from id to fid
-  //   // to avoid conflict with id prop in data
-  //   keyName: 'fid'
-  // })
 
   // console.group('AutosaveSoftwareLicenses')
   // console.log('licenses...', licenses)

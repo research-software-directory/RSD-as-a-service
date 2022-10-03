@@ -26,7 +26,6 @@ import AutosaveProjectLinks from './AutosaveProjectLinks'
 
 export default function EditProjectInformation({slug}: {slug: string}) {
   const {token,user} = useSession()
-  // const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {loading, setLoading, setProjectInfo} = useProjectContext()
   const {reset, register, getValues, formState} = useFormContext<EditProject>()
   const {project} = useProjectToEdit({

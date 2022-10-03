@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useController} from 'react-hook-form'
 import ControlledTextField, {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 
@@ -14,7 +19,7 @@ export type AutosaveControlledTextField = {
 }
 
 export default function AutosaveControlledTextField({control,options,rules,onSaveField}:AutosaveControlledTextField) {
-  const {fieldState:{isDirty,error}} = useController({
+  const {field:{value},fieldState:{isDirty,error}} = useController({
     control,
     name: options.name
   })
@@ -29,18 +34,23 @@ export default function AutosaveControlledTextField({control,options,rules,onSav
     }
   }
 
-  function onSaveInfo({target}:any) {
+  /**
+   * This function is passed to onBlur event of ControlledTextField component.
+   * We use value from react-hook-form controller because the Controlled component
+   * will pass a null value rather than an empty string when isNull prop is provided.
+   */
+  function onSaveInfo() {
     if (isDirty === false) return
     if (error) return
-    console.group('AutosaveControlledTextField')
-    console.log('onSaveInfo...', options.name)
-    console.log('value...', target.value)
+    // console.group('AutosaveControlledTextField')
+    // console.log('onSaveInfo...', options.name)
+    // console.log('value...', value)
     // console.log('isDirty...', isDirty)
-    console.groupEnd()
+    // console.groupEnd()
     // call provided save fn
     onSaveField({
       name: options.name,
-      value: target.value
+      value
     })
   }
 

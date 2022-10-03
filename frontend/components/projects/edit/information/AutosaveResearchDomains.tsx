@@ -8,12 +8,9 @@
 import {useEffect, useState} from 'react'
 import Select from '@mui/material/Select'
 
-import {useFieldArray, useFormContext} from 'react-hook-form'
-
 import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
-
 
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -22,12 +19,10 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import useResearchDomains from './useResearchDomains'
 import {sortOnStrProp} from '~/utils/sortFn'
 import logger from '~/utils/logger'
-import {EditProject, ResearchDomain} from '~/types/Project'
+import {ResearchDomain} from '~/types/Project'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import {addResearchDomainToProject, deleteResearchDomainFromProject} from '~/utils/editProject'
-import {relative} from 'path'
-import ListItem from '@mui/material/ListItem'
 
 type ResearchDomainsProps = {
   project_id: string
@@ -290,9 +285,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
                 level: 'l3'
               })
             }}
-
             sx={{
-              // nor here
               // maxWidth: '20rem',
             }}
             disabled={l2Selected ? false : true}

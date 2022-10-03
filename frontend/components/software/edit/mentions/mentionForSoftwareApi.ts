@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {MentionItemProps} from '~/types/Mention'
 import {addMentionItem} from '~/utils/editMentions'
 

@@ -6,16 +6,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
-import {Control, useFieldArray} from 'react-hook-form'
-
 import Chip from '@mui/material/Chip'
 
 import {useSession} from '~/auth'
 import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
 import {softwareInformation as config} from '../editSoftwareConfig'
-import {searchForSoftwareKeyword, searchForSoftwareKeywordExact} from './searchForSoftwareKeyword'
-import {EditSoftwareItem, KeywordForSoftware} from '~/types/SoftwareTypes'
-import {getKeywordsFromDoi} from '~/utils/getInfoFromDatacite'
+import {searchForSoftwareKeyword} from './searchForSoftwareKeyword'
+import {KeywordForSoftware} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ImportKeywordsFromDoi from './ImportKeywordsFromDoi'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'

@@ -1,9 +1,14 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useController, useFormContext} from 'react-hook-form'
 import {useSession} from '~/auth'
 import MarkdownInputWithPreview from '~/components/form/MarkdownInputWithPreview'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {projectInformation as config} from './config'
-import {patchProjectInfo} from './patchProjectInfo'
+import {patchProjectTable} from './patchProjectInfo'
 
 export default function AutosaveProjectMarkdown({project_id,name}: {project_id:string,name:string}) {
   const {token} = useSession()
@@ -15,17 +20,18 @@ export default function AutosaveProjectMarkdown({project_id,name}: {project_id:s
   })
 
   async function saveProjectInfo(){
-    const resp = await patchProjectInfo({
+    const resp = await patchProjectTable({
       id:project_id,
-      variable:name,
-      value,
+      data: {
+        [name]:value
+      },
       token
     })
 
-    console.group('AutosaveProjectMarkdown')
-    console.log('saved...', name)
-    console.log('status...', resp?.status)
-    console.groupEnd()
+    // console.group('AutosaveProjectMarkdown')
+    // console.log('saved...', name)
+    // console.log('status...', resp?.status)
+    // console.groupEnd()
 
     if (resp?.status !== 200) {
       showErrorMessage(`Failed to save ${name}. ${resp?.message}`)

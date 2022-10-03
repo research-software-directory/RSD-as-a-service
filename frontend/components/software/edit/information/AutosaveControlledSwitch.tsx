@@ -25,11 +25,11 @@ export default function AutosaveControlledSwitch({software_id,name,label,default
       token
     })
 
-    console.group('AutosaveControlledSwitch')
-    console.log('saved...', name)
-    console.log('value...', value)
-    console.log('status...', resp?.status)
-    console.groupEnd()
+    // console.group('AutosaveControlledSwitch')
+    // console.log('saved...', name)
+    // console.log('value...', value)
+    // console.log('status...', resp?.status)
+    // console.groupEnd()
 
     if (resp?.status === 200) {
       // debugger

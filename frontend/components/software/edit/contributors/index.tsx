@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext,useEffect,useState} from 'react'
+import {useState} from 'react'
 
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -14,15 +14,11 @@ import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import {Contributor, ContributorProps} from '~/types/Contributor'
 import {
   addContributorToDb, deleteContributorsById,
-  getAvatarUrl, getContributorsForSoftware,
-  patchContributorPositions,
+  getAvatarUrl, patchContributorPositions,
   prepareContributorData, updateContributorInDb
 } from '~/utils/editContributors'
 import {getDisplayName} from '~/utils/getDisplayName'
-import {sortOnStrProp} from '~/utils/sortFn'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
-import {getContributorsFromDoi} from '~/utils/getInfoFromDatacite'
-import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
 import EditContributorModal from './EditContributorModal'
 import FindContributor, {Name} from './FindContributor'
 import EditSoftwareSection from '../../../layout/EditSection'
@@ -40,9 +36,9 @@ type EditContributorModal = ModalProps & {
 
 export default function SoftwareContributors() {
   const {token} = useSession()
-  const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
+  const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const {software} = useSoftwareContext()
-  const {loading,contributors,setContributors,setLoading} = useSoftwareContributors()
+  const {loading,contributors,setContributors} = useSoftwareContributors()
   const [modal, setModal] = useState<ModalStates<EditContributorModal>>({
     edit: {
       open: false

@@ -1,8 +1,13 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {useFormContext} from 'react-hook-form'
 import {useSession} from '~/auth'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {patchProjectInfo} from './patchProjectInfo'
+import {patchProjectTable} from './patchProjectInfo'
 
 export type AutosaveControlledSwitchProps = {
   project_id: string
@@ -17,18 +22,19 @@ export default function AutosaveControlledSwitch({project_id,name,label,defaultV
   const {control,resetField} = useFormContext()
 
   async function saveProjectInfo(value:boolean){
-    const resp = await patchProjectInfo({
-      id:project_id,
-      variable:name,
-      value,
+    const resp = await patchProjectTable({
+      id: project_id,
+      data: {
+        [name]:value
+      },
       token
     })
 
-    console.group('AutosaveControlledSwitch')
-    console.log('saved...', name)
-    console.log('value...', value)
-    console.log('status...', resp?.status)
-    console.groupEnd()
+    // console.group('AutosaveControlledSwitch')
+    // console.log('saved...', name)
+    // console.log('value...', value)
+    // console.log('status...', resp?.status)
+    // console.groupEnd()
 
     if (resp?.status === 200) {
       // debugger

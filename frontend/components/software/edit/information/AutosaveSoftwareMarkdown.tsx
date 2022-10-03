@@ -26,7 +26,7 @@ type SaveInfo = {
 export default function AutosaveSoftwareMarkdown() {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {register, control, resetField, watch, setValue, formState: {dirtyFields, isValid}} = useFormContext()
+  const {register, control, resetField, watch, setValue} = useFormContext()
   const {field: {value: description}, fieldState: {error: errDescription}} = useController({
     control,
     name: 'description'
@@ -92,11 +92,11 @@ export default function AutosaveSoftwareMarkdown() {
       token
     })
 
-    console.group('AutosaveSoftwareMarkdown.saveSoftwareInfo')
-    console.log('saved...', name)
-    console.log('data...', data)
-    console.log('status...', resp?.status)
-    console.groupEnd()
+    // console.group('AutosaveSoftwareMarkdown.saveSoftwareInfo')
+    // console.log('saved...', name)
+    // console.log('data...', data)
+    // console.log('status...', resp?.status)
+    // console.groupEnd()
 
     if (resp?.status !== 200) {
       showErrorMessage(`Failed to save ${name}. ${resp?.message}`)

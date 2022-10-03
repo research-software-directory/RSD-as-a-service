@@ -16,7 +16,6 @@ import {addContributorToDb, prepareContributorData} from '~/utils/editContributo
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {getDisplayName} from '~/utils/getDisplayName'
-import {sortOnStrProp} from '~/utils/sortFn'
 import {CircularProgress} from '@mui/material'
 
 type GetContributorsFromDoiProps = {

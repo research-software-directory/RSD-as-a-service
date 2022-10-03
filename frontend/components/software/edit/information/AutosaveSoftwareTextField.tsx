@@ -28,11 +28,11 @@ export default function AutosaveSoftwareTextField({software_id,options,rules}:Au
       token
     })
 
-    console.group('AutosaveSoftwareTextField')
-    console.log('saved...', options.name)
-    console.log('value...', value)
-    console.log('status...', resp?.status)
-    console.groupEnd()
+    // console.group('AutosaveSoftwareTextField')
+    // console.log('saved...', options.name)
+    // console.log('value...', value)
+    // console.log('status...', resp?.status)
+    // console.groupEnd()
 
     if (resp?.status !== 200) {
       showErrorMessage(`Failed to save ${options.name}. ${resp?.message}`)

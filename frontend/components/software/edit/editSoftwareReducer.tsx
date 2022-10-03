@@ -30,8 +30,6 @@ export function editSoftwareReducer(state: EditSoftwareState = initialState, act
       return {
         ...state,
         // default values
-        isDirty: false,
-        isValid: true,
         loading: true,
         // new step
         step: action.payload,
