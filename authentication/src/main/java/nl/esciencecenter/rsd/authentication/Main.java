@@ -48,6 +48,9 @@ public class Main {
 		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
 		if (Config.isLocalEnabled()) {
+			System.out.println("********************");
+			System.out.println("Warning: local accounts are enabled, this is not safe for production!");
+			System.out.println("********************");
 			app.post("/login/local", ctx -> {
 				try {
 					String sub = ctx.formParam("sub");
@@ -104,6 +107,29 @@ public class Main {
 
 					AccountInfo accountInfo = new PostgrestAccount(helmholtzInfo, "helmholtz").account();
 					String email = helmholtzInfo.email();
+					boolean isAdmin = isAdmin(email);
+					createAndSetToken(ctx, accountInfo, isAdmin);
+				} catch (RuntimeException ex) {
+					ex.printStackTrace();
+					ctx.status(400);
+					ctx.redirect("/login/failed");
+				}
+			});
+		}
+
+		if (Config.isOrcidEnabled()) {
+			app.get("/login/orcid", ctx -> {
+				try {
+					String code = ctx.queryParam("code");
+					String redirectUrl = Config.orcidRedirect();
+					OpenIdInfo orcidInfo = new OrcidLogin(code, redirectUrl).openidInfo();
+//
+//					if (!userIsAllowed(helmholtzInfo)) {
+//						throw new RuntimeException("User is not whitelisted");
+//					}
+//
+					AccountInfo accountInfo = new PostgrestAccount(orcidInfo, "orcid").account();
+					String email = orcidInfo.email();
 					boolean isAdmin = isAdmin(email);
 					createAndSetToken(ctx, accountInfo, isAdmin);
 				} catch (RuntimeException ex) {

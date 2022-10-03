@@ -53,6 +53,10 @@ public class Config {
 		return rsdAuthProviders().contains("HELMHOLTZAAI");
 	}
 
+	public static boolean isOrcidEnabled() {
+		return rsdAuthProviders().contains("ORCID");
+	}
+
 	public static String userMailWhitelist() {
 		return System.getenv("RSD_AUTH_USER_MAIL_WHITELIST");
 	}
@@ -61,6 +65,7 @@ public class Config {
 		return System.getenv("POSTGREST_URL");
 	}
 
+//	SURFconext
 	public static String surfconextRedirect() {
 		return System.getenv("NEXT_PUBLIC_SURFCONEXT_REDIRECT");
 	}
@@ -81,10 +86,11 @@ public class Config {
 		return System.getenv("AUTH_SURFCONEXT_TOKEN_URL");
 	}
 
-	public static String surconextScopes() {
+	public static String surfconextScopes() {
 		return System.getenv("NEXT_PUBLIC_SURFCONEXT_SCOPES");
 	}
 
+//	Helmholtz AAI
 	public static String helmholtzAaiRedirect() {
 		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT");
 	}
@@ -114,4 +120,30 @@ public class Config {
 			System.getenv("HELMHOLTZAAI_ALLOW_EXTERNAL_USERS")
 		);
 	}
+
+//	ORCID
+	public static String orcidRedirect() {
+	return System.getenv("NEXT_PUBLIC_ORCID_REDIRECT");
+}
+
+	public static String orcidClientId() {
+		return System.getenv("NEXT_PUBLIC_ORCID_CLIENT_ID");
+	}
+
+	public static String orcidWellknown() {
+		return System.getenv("NEXT_PUBLIC_ORCID_WELL_KNOWN_URL");
+	}
+
+	public static String orcidClientSecret() {
+		return System.getenv("AUTH_ORCID_CLIENT_SECRET");
+	}
+
+	public static String orcidTokenUrl() {
+		return System.getenv("AUTH_ORCID_TOKEN_URL");
+	}
+
+	public static String orcidScopes() {
+		return System.getenv("NEXT_PUBLIC_ORCID_SCOPES");
+	}
+
 }

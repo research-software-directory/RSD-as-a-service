@@ -18,6 +18,7 @@ import type {NextApiRequest, NextApiResponse} from 'next'
 import {surfconextInfo} from './surfconext'
 import {helmholtzInfo} from './helmholtzaai'
 import {localInfo} from './local'
+import {orcidInfo} from './orcid'
 import logger from '~/utils/logger'
 
 export type ApiError = {
@@ -42,6 +43,8 @@ async function getRedirectInfo(provider: string) {
       return helmholtzInfo()
     case 'local':
       return localInfo()
+      case 'orcid':
+        return orcidInfo()
     default:
       const message = `${provider} NOT SUPPORTED, check your spelling`
       logger(`api/fe/auth/providers: ${message}`, 'error')

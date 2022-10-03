@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * SURFconext OpenID endpoint
+ * ORCID OpenID endpoint
  * It provides frontend with redirect uri for the login button
  */
 
@@ -20,9 +20,9 @@ import {Provider, ApiError} from '.'
 
 type Data = Provider | ApiError
 
-export async function surfconextRedirectProps() {
+export async function orcidRedirectProps() {
   // extract wellknow url from env
-  const wellknownUrl = process.env.NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL ?? null
+  const wellknownUrl = process.env.NEXT_PUBLIC_ORCID_WELL_KNOWN_URL ?? null
   if (wellknownUrl) {
     // extract authorisation endpoint from wellknow response
     const authorization_endpoint = await getAuthorisationEndpoint(wellknownUrl)
@@ -30,34 +30,34 @@ export async function surfconextRedirectProps() {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
-        redirect_uri: process.env.NEXT_PUBLIC_SURFCONEXT_REDIRECT || 'https://research-software.nl/auth/login/surfconext',
-        client_id: process.env.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID || 'www.research-software.nl',
-        scope: process.env.NEXT_PUBLIC_SURFCONEXT_SCOPES || 'openid',
-        response_mode: process.env.NEXT_PUBLIC_SURFCONEXT_RESPONSE_MODE || 'form_post',
+        redirect_uri: process.env.NEXT_PUBLIC_ORCID_REDIRECT || 'https://research-software.nl/auth/login/orcid',
+        client_id: process.env.NEXT_PUBLIC_ORCID_CLIENT_ID || 'www.research-software.nl',
+        scope: process.env.NEXT_PUBLIC_ORCID_SCOPES || 'openid',
+        response_mode: process.env.NEXT_PUBLIC_ORCID_RESPONSE_MODE || 'query',
         claims
       }
       return props
     } else {
       const message = 'authorization_endpoint is missing'
-      logger(`api/fe/auth/surfconext: ${message}`, 'error')
+      logger(`api/fe/auth/orcid: ${message}`, 'error')
       throw new Error(message)
     }
   } else {
-    const message = 'NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL is missing'
-    logger(`api/fe/auth/surfconext: ${message}`, 'error')
+    const message = 'NEXT_PUBLIC_ORCID_WELL_KNOWN_URL is missing'
+    logger(`api/fe/auth/orcid: ${message}`, 'error')
     throw new Error(message)
   }
 }
 
-export async function surfconextInfo() {
+export async function orcidInfo() {
   // extract all props from env and wellknow endpoint
-  const redirectProps = await surfconextRedirectProps()
+  const redirectProps = await orcidRedirectProps()
   if (redirectProps) {
     // create return url and the name to use in login button
     const redirectUrl = getRedirectUrl(redirectProps)
     // provide redirectUrl and name/label
     return {
-      name: 'SURFconext',
+      name: 'ORCID',
       redirectUrl
     }
   }
@@ -71,7 +71,7 @@ export default async function handler(
   try {
     // extract all props from env and wellknow endpoint
     // and create return url and the name to use in login button
-    const loginInfo = await surfconextInfo()
+    const loginInfo = await orcidInfo()
     if (loginInfo) {
       res.status(200).json(loginInfo)
     } else {
@@ -81,7 +81,7 @@ export default async function handler(
       })
     }
   } catch (e: any) {
-    logger(`api/fe/auth/surfconext: ${e?.message}`, 'error')
+    logger(`api/fe/auth/orcid: ${e?.message}`, 'error')
     res.status(500).json({
       status: 500,
       message: e?.message
