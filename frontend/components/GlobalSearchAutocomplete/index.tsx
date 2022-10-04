@@ -123,10 +123,17 @@ export default function GlobalSearchAutocomplete(props: Props) {
     <ClickAwayListener onClickAway={() => {
       setOpen(false)
     }}>
-
       <div
-        className={`${props.className} relative z-10 flex w-full md:w-48 md:max-w-[320px] focus-within:w-full duration-700`}>
-        <input className="px-3 py-2 bg-transparent rounded-sm border border-white border-opacity-50 focus:outline-0
+        className={`${props.className} relative z-10 flex w-full md:w-52 md:max-w-[320px] focus-within:w-full duration-700`}>
+        <div className="absolute top-[14px] left-3 pointer-events-none">
+          <svg width="16" height="16" viewBox="0 0 14 14" fill="none"
+               xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M5.72217 0.34082C2.86783 0.34082 0.559204 2.64944 0.559204 5.50378C0.559204 8.35812 2.86783 10.6667 5.72217 10.6667C6.74123 10.6667 7.68438 10.3678 8.48397 9.86003L12.2138 13.5899L13.5046 12.2992L9.82216 8.62624C10.4841 7.75783 10.8851 6.68182 10.8851 5.50378C10.8851 2.64944 8.57651 0.34082 5.72217 0.34082ZM5.72217 1.55564C7.90859 1.55564 9.67031 3.31735 9.67031 5.50378C9.67031 7.69021 7.90859 9.45193 5.72217 9.45193C3.53574 9.45193 1.77402 7.69021 1.77402 5.50378C1.77402 3.31735 3.53574 1.55564 5.72217 1.55564Z"
+              fill="#707070"/>
+          </svg>
+        </div>
+        <input className="px-2 pl-8 py-2 bg-transparent rounded-sm border border-white border-opacity-50 focus:outline-0
                           w-full focus:bg-white focus:text-black
                           duration-200"
                placeholder="Search or jump to..."
