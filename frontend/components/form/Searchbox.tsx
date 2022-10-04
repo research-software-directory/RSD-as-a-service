@@ -8,7 +8,6 @@
 import {useState, useEffect} from 'react'
 import Input from '@mui/material/Input'
 import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
 import {useDebounce} from '~/utils/useDebounce'
 import ClearIcon from '@mui/icons-material/Clear'
 
@@ -65,11 +64,12 @@ export default function Searchbox({placeholder, onSearch, delay = 400, defaultVa
           })
         }
       }}
-      startAdornment={
-        <InputAdornment position="start">
-          <SearchIcon sx={{cursor:'pointer'}} onClick={()=>onSearch(searchFor)} />
-        </InputAdornment>
-      }
+      /* Icon search for the input */
+      // startAdornment={
+      //   <InputAdornment position="start">
+      //     <SearchIcon sx={{cursor:'pointer'}} onClick={()=>onSearch(searchFor)} />
+      //   </InputAdornment>
+      // }
       endAdornment={
         <InputAdornment position="start">
           {searchFor ?
