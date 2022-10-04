@@ -34,7 +34,7 @@ dev:
 down:
 	docker-compose down
 
-frontend:
+frontend: frontend/.env.local
 	docker-compose up --scale frontend-dev=1 --scale scrapers=0 -d
 	docker-compose logs -f frontend-dev
 
