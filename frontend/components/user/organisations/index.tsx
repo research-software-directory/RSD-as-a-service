@@ -19,7 +19,7 @@ export default function UserOrganisations({session}: { session: Session }) {
     page,
     rows,
     setCount
-  } = usePaginationWithSearch('Search for organisation')
+  } = usePaginationWithSearch('Filter organisations')
   const {loading, organisations, count} = useUserOrganisations({
     searchFor,
     page,

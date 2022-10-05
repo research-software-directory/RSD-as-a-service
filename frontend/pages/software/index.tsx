@@ -116,7 +116,7 @@ export default function SoftwareIndexPage(
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center">
             <Searchbox
-              placeholder="Search for software"
+              placeholder="Filter software"
               onSearch={handleSearch}
               defaultValue={search}
             />

@@ -14,7 +14,7 @@ import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import useUserProjects from './useUserProjects'
 
 export default function UserProjects({session}: {session: Session}) {
-  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Search for project')
+  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Filter projects')
   const {loading, projects, count} = useUserProjects({
     searchFor,
     page,
