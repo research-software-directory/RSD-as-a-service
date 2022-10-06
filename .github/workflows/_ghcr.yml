@@ -58,8 +58,8 @@ jobs:
           ssh-key: ${{secrets.ssh_private_key}}
       - name: hifis styling
         run: |
-          rm -rf ./frontend/public/data ./frontend/public/images ./frontend/public/styles
-          mv ./deployment/helmholtz/* ./frontend/public
+          rm -rf ./frontend/public
+          mv ./deployment/helmholtz ./frontend/public
       - name: build
         id: build_image
         run: |

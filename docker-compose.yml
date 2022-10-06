@@ -114,9 +114,7 @@ services:
       - backend
       - auth
     volumes:
-      - ./deployment/helmholtz/styles:/app/public/styles
-      - ./deployment/helmholtz/data:/app/public/data
-      - ./deployment/helmholtz/images:/app/public/images
+      - ./deployment/helmholtz:/app/public
     networks:
       - net
     deploy:
@@ -210,9 +208,7 @@ services:
       - auth
     volumes:
       - ./frontend:/app
-      - ./deployment/helmholtz/styles:/app/public/styles
-      - ./deployment/helmholtz/data:/app/public/data
-      - ./deployment/helmholtz/images:/app/public/images
+      - ./deployment/helmholtz:/app/public
     networks:
       - net
     deploy:
