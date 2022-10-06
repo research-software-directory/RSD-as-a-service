@@ -11,6 +11,7 @@ import Box from '@mui/material/Box'
 
 import {Matomo} from './nodeCookies'
 import {useMatomoConsent} from './useCookieConsent'
+import Link from 'next/link'
 
 type CookieConsentMatomoProps = {
   matomo: Matomo,
@@ -50,70 +51,63 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
   if (route==='/cookies') return null
   // do not render if user already answered consent question
   if (matomo.id && matomo.consent!==null) return null
+  // Hide the consent modal on click
+  if (!open) return null
 
   return (
-    <Backdrop
-      data-testid="cookie-consent-matomo"
-      open={open}
-      sx={{
-        display,
-        flexDirection: 'column',
-        justifyContent: 'end',
-        zIndex:99
-      }}
+    <div className=" fixed bottom-0 right-0 animated animatedFadeInUp fadeInUp"
+         data-testid="cookie-consent-matomo"
     >
-      <Box
-        component="section"
-        sx={{
-          width: '100%',
-          display: 'flex',
-          backgroundColor: 'secondary.light'
-        }}
-      >
-        <Box
-          component="div"
-          className="flex-1 lg:container lg:mx-auto"
-          sx={{
-            display: ['block','grid'],
-            gridTemplateColumns:'1fr 16rem',
-            padding: '2rem 1rem',
-            margin: ['1rem','auto'],
-            backgroundColor: 'secondary.light',
-            color: 'primary.contrastText',
-          }}
-        >
-          <p>
-            We use cookies that are necessary for the basic functionality of our
-            website so that it can be continuously optimized for you and its
-            user-friendliness improved. We also use the Matomo web analysis tool,
-            which tracks data anonymously. This enables us to statistically evaluate
-            the use of our website. Your consent to the use of Matomo can be revoked
-            at any time via the cookies page.
-          </p>
-          <nav className='flex pt-8 items-start justify-around md:pl-4 md:pt-0'>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                setMatomoConsent(true)
-                setOpen(false)
-              }}
-            >
-              Accept
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
-                setMatomoConsent(false)
-                setOpen(false)
-              }}
-            >
-              Decline
-            </Button>
-          </nav>
-        </Box>
-      </Box>
-    </Backdrop>
+      <div className="container mx-auto px-20 ">
+          <div className="border border-b-base-content border-t-4 border-x-4 border-t-4 border-b-0 w-96 bg-white shadow-lg p-6">
+            <div className="w-16 mx-auto relative -mt-10 mb-3">
+              <img className="-mt-1" src="/images/cookie.svg"
+                   alt="Cookie Icon SVG"/>
+            </div>
+            <span
+              className="w-full block leading-normal text-gray-800 text-md mb-3">We use&nbsp;
+              <span className="text-primary">
+                <Link href="/cookies" passHref>
+                <a target="_blank" className="text-primary" rel="noopener noreferrer">
+                     cookies
+                </a></Link>
+              </span> with&nbsp;
+              <Link href="https://matomo.org/">
+                <a target="_blank" className="text-primary" rel="noopener noreferrer">
+                     matomo.org
+                </a>
+              </Link> to provide a better user experience. </span>
+            <div className="flex items-center justify-between">
+              <Link href="/cookies" passHref>
+                <a className="text-xs text-gray-400 mr-1 hover:text-gray-800 hover:underline">
+                  Read more
+                </a>
+              </Link>
+              <div className="flex gap-4">
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => {
+                    setMatomoConsent(false)
+                    setOpen(false)
+                  }}
+                >
+                  Decline
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setMatomoConsent(true)
+                    setOpen(false)
+                  }}
+                >
+                  Accept
+                </Button>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
   )
 }
