@@ -5,7 +5,9 @@
 
 package nl.esciencecenter.rsd.authentication;
 
-public interface Account {
-
-	AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider);
+public enum OpenidProvider {
+	local,
+	surfconext,
+	helmholtz,
+	orcid
 }

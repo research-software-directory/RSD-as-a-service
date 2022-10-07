@@ -12,6 +12,8 @@ package nl.esciencecenter.rsd.authentication;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.ForbiddenResponse;
+import io.javalin.http.RedirectResponse;
 
 import java.util.Base64;
 
@@ -60,12 +62,11 @@ public class Main {
 					String organisation = "Example organisation";
 					OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation);
 
-					AccountInfo accountInfo = new PostgrestAccount(localInfo, "local").account();
+					AccountInfo accountInfo = new PostgrestAccount().account(localInfo, OpenidProvider.local);
 					boolean isAdmin = isAdmin(email);
 					createAndSetToken(ctx, accountInfo, isAdmin);
 				} catch (RuntimeException ex) {
 					ex.printStackTrace();
-					ctx.status(400);
 					ctx.redirect("/login/failed");
 				}
 			});
@@ -82,13 +83,12 @@ public class Main {
 						throw new RuntimeException("User is not whitelisted");
 					}
 
-					AccountInfo accountInfo = new PostgrestAccount(surfconextInfo, "surfconext").account();
+					AccountInfo accountInfo = new PostgrestAccount().account(surfconextInfo, OpenidProvider.surfconext);
 					String email = surfconextInfo.email();
 					boolean isAdmin = isAdmin(email);
 					createAndSetToken(ctx, accountInfo, isAdmin);
 				} catch (RuntimeException ex) {
 					ex.printStackTrace();
-					ctx.status(400);
 					ctx.redirect("/login/failed");
 				}
 			});
@@ -105,13 +105,12 @@ public class Main {
 						throw new RuntimeException("User is not whitelisted");
 					}
 
-					AccountInfo accountInfo = new PostgrestAccount(helmholtzInfo, "helmholtz").account();
+					AccountInfo accountInfo = new PostgrestAccount().account(helmholtzInfo, OpenidProvider.helmholtz);
 					String email = helmholtzInfo.email();
 					boolean isAdmin = isAdmin(email);
 					createAndSetToken(ctx, accountInfo, isAdmin);
 				} catch (RuntimeException ex) {
 					ex.printStackTrace();
-					ctx.status(400);
 					ctx.redirect("/login/failed");
 				}
 			});
@@ -123,18 +122,13 @@ public class Main {
 					String code = ctx.queryParam("code");
 					String redirectUrl = Config.orcidRedirect();
 					OpenIdInfo orcidInfo = new OrcidLogin(code, redirectUrl).openidInfo();
-//
-//					if (!userIsAllowed(helmholtzInfo)) {
-//						throw new RuntimeException("User is not whitelisted");
-//					}
-//
-					AccountInfo accountInfo = new PostgrestAccount(orcidInfo, "orcid").account();
+
+					AccountInfo accountInfo = new PostgrestCheckOrcidWhitelistedAccount(new PostgrestAccount()).account(orcidInfo, OpenidProvider.orcid);
 					String email = orcidInfo.email();
 					boolean isAdmin = isAdmin(email);
 					createAndSetToken(ctx, accountInfo, isAdmin);
 				} catch (RuntimeException ex) {
 					ex.printStackTrace();
-					ctx.status(400);
 					ctx.redirect("/login/failed");
 				}
 			});
