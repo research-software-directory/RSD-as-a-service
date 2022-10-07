@@ -10,6 +10,7 @@
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {
   EditOrganisation, Organisation,
+  OrganisationRole,
   OrganisationsForSoftware,
   SearchOrganisation, SoftwareForOrganisation
 } from '../types/Organisation'
@@ -574,22 +575,31 @@ export function updateDataObjectAfterSave({data, id}:
   return data
 }
 
-export function newOrganisationProps({name, position, primary_maintainer, is_tenant = false, parent=null}:
-  { name: string, position: number, primary_maintainer: string | null, is_tenant?: boolean, parent?:string|null}) {
+type NewOrganisation = {
+  name: string
+  position: number
+  primary_maintainer: string | null
+  role?: OrganisationRole
+  is_tenant?: boolean
+  parent?: string | null
+}
+
+export function newOrganisationProps(props: NewOrganisation) {
   const initOrg = {
     id: null,
-    parent,
-    name,
-    is_tenant,
+    parent: props?.parent ?? null,
+    name: props.name,
+    is_tenant: props?.is_tenant ?? false,
     slug: null,
     ror_id: null,
-    position,
+    position: props.position,
     logo_b64: null,
     logo_mime_type: null,
     logo_id: null,
     website: null,
     source: 'MANUAL' as 'MANUAL',
-    primary_maintainer,
+    primary_maintainer: props.primary_maintainer,
+    role: props?.role ?? 'participating',
     canEdit: false
   }
   return initOrg
