@@ -42,9 +42,7 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
 
   // extract
   const {isValid, isDirty, errors} = formState
-  // const formData = watch()
 
-  // const {formState: {errors}} = useFormContext<EditProject>()
   // console.group(`ProjectLinkModal...${pos}`)
   // console.log('errors...', errors)
   // console.log('formData...', formData)
@@ -118,7 +116,12 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
       </DialogTitle>
       <form
         id={formId}
-        // onSubmit={handleSubmit((data: ProjectLink) => onSubmit({data, pos}))}
+        onSubmit={(e) => {
+          // prevent default submit
+          e.preventDefault()
+          // call save link fn
+          saveLink()
+        }}
         autoComplete="off"
       >
         <input type="hidden"
@@ -193,6 +196,7 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
             id="save-button"
             variant="contained"
             tabIndex={0}
+            type="submit"
             form={formId}
             sx={{
               // overwrite tailwind preflight.css for submit type
@@ -202,7 +206,6 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
             }}
             endIcon={<SaveIcon />}
             disabled={isSaveDisabled()}
-            onClick={saveLink}
           >
             Save
           </Button>

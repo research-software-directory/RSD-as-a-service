@@ -53,7 +53,7 @@ async function getProjectInfoForEdit({slug,token}:
       keywords
     ] = await Promise.all([
       getLinksForProject({project: project.id, token, frontend: true}),
-      getOrganisationsOfProject({project: project.id, token, frontend: true, role: 'funding'}),
+      getOrganisationsOfProject({project: project.id, token, frontend: true, roles:['funding']}),
       getResearchDomainsForProject({project: project.id, token, frontend: true}),
       getKeywordsForProject({project: project.id, token, frontend: true})
     ])

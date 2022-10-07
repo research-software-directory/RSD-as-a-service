@@ -436,7 +436,7 @@ export async function searchForRelatedProjectByTitle({project, searchFor, token}
   project: string, searchFor: string, token?: string
 }) {
   try {
-    let query = `&title=ilike.*${searchFor}*&order=title.asc&limit=50`
+    let query = `&title=ilike.*${searchFor}*&is_published=eq.true&order=title.asc&limit=50`
     // software item to exclude
     if (project) {
       query += `&id=neq.${project}`
