@@ -28,16 +28,6 @@ SPDX-License-Identifier: CC-BY-4.0
 
 Welcome to the HIFIS-Fork of the [Research Software Directory](https://github.com/research-software-directory/RSD-as-a-service). This fork contains adjustments for the Helmholtz version of the RSD.
 
-At the current stage of development, we have some divergence to the upstream branch. The goal is to get rid of those in the future. This is why we aim to to keep our contributions at the end of the commit history, which is why we **frequently rebase the main branch** of this repository. Together with the Netherlands eScience Center, we are working on reducing the divergence between our fork and upstream. Until this is managed, please be aware of frequent history rewrites.
-
-If you want to contribute to this repository, please ask for access to the Research Software Directory Team on hifis-net.
-
-To clone the repo, open a terminal and use
-
-```
-git clone --recurse-submodules <URL>
-```
-
 ::: End of HIFIS notes
 
 ## Our mission: To promote the visibility, impact and reuse of research software
