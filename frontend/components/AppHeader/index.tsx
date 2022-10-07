@@ -19,6 +19,7 @@ import JavascriptSupportWarning from './JavascriptSupportWarning'
 import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
 import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
+import FeedbackPanelButton from '~/components/feedback/FeedbackPanelButton'
 
 export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   const [activePath, setActivePath] = useState('/')
@@ -62,6 +63,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
             </a>
           </Link>
           <GlobalSearchAutocomplete className="hidden md:block ml-12 mr-6"/>
+
           {/* Large menu*/}
           <div className="hidden lg:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal">
             {menuItems.map(item =>
@@ -72,12 +74,15 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
               </Link>)}
           </div>
 
-          <div className="text-primary-content flex-1 flex justify-end items-center min-w-[8rem] text-right ml-4">
+          <div className="text-primary-content flex-1 flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
+
             {/* EDIT button */}
             {editButton ? editButton : null}
+
+            <FeedbackPanelButton />
+
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
-
 
             {/* LOGIN / USER MENU */}
             <LoginButton/>
