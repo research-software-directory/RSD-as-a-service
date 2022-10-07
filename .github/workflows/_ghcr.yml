@@ -53,9 +53,6 @@ jobs:
       - name: checkout
         # https://github.com/actions/checkout
         uses: actions/checkout@v3
-        with:
-          submodules: recursive
-          ssh-key: ${{secrets.ssh_private_key}}
       - name: hifis styling
         run: |
           rm -rf ./frontend/public
