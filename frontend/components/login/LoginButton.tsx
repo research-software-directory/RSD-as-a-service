@@ -57,7 +57,7 @@ export default function LoginButton() {
         href={providers[0].redirectUrl}
         passHref
       >
-        <a className="whitespace-nowrap" tabIndex={0}>
+        <a className="whitespace-nowrap ml-2" tabIndex={0} >
           Sign in
         </a>
       </Link>
@@ -67,7 +67,7 @@ export default function LoginButton() {
   // we show modal with the list of login options
   if (providers && providers.length > 1) {
     return (
-      <div className="whitespace-nowrap">
+      <div className="whitespace-nowrap ml-2">
         <button onClick={handleClickOpen} tabIndex={0}>
           Sign in
         </button>
