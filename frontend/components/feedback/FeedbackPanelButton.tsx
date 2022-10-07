@@ -31,11 +31,6 @@ export default function FeedbackPanelButton(props: Props) {
     setText('')
   }
 
-  const [isEditing, setEditing] = useState(false)
-  const toggleEditing = () => {
-    setEditing(!isEditing)
-  }
-
   const focusArea = useRef(null)
 
   useEffect(() => {
@@ -62,7 +57,6 @@ export default function FeedbackPanelButton(props: Props) {
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        onClick={toggleEditing}
         anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
       >
         <div className="h-full w-full max-w-[300px] bg-[#232323] p-3">
