@@ -20,6 +20,7 @@ import {useAuth} from '~/auth'
 import useLoginProviders from '~/auth/api/useLoginProviders'
 import {getUserMenuItems} from '~/config/userMenuItems'
 import UserMenu from '~/components/layout/UserMenu'
+import CaretIcon from '~/components/icons/caret.svg'
 
 export default function LoginButton() {
   const providers = useLoginProviders()
@@ -42,9 +43,10 @@ export default function LoginButton() {
     const menuItems = getUserMenuItems(session.user?.role)
     // we show user menu with the avatar and user specific options
     return (
-      <UserMenu
-        menuOptions={menuItems}
-      />
+      <>
+        <UserMenu menuOptions={menuItems}/>
+        <CaretIcon className="-ml-2"/>
+      </>
     )
   }
   // when there is only 1 provider we
@@ -65,7 +67,7 @@ export default function LoginButton() {
   // we show modal with the list of login options
   if (providers && providers.length > 1) {
     return (
-       <div className="whitespace-nowrap">
+      <div className="whitespace-nowrap">
         <button onClick={handleClickOpen} tabIndex={0}>
           Sign in
         </button>

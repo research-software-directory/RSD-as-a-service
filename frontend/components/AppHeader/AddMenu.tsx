@@ -11,6 +11,8 @@ import AddIcon from '@mui/icons-material/Add'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import {IconButton, ListItemIcon} from '@mui/material'
+import CaretIcon from '~/components/icons/caret.svg'
+
 
 export default function AddMenu() {
   const router = useRouter()
@@ -54,6 +56,8 @@ export default function AddMenu() {
       >
         <AddIcon />
       </IconButton>
+
+      <CaretIcon className="-ml-6"/>
 
       <Menu
         anchorEl={anchorEl}
