@@ -9,6 +9,11 @@
  */
 import createCache from '@emotion/cache'
 
-export default function createEmotionCache() {
-  return createCache({key: 'css'})
+export default function createEmotionCache(nonce?:string) {
+  return createCache({
+    key: 'css',
+    // https://mui.com/material-ui/guides/content-security-policy/
+    nonce,
+    prepend: true
+  })
 }
