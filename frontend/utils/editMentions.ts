@@ -106,13 +106,31 @@ export function clasifyMentionsByType(mentions: MentionItemProps[]) {
 }
 
 /**
- * Add new mention item to mention table
+ * Add new mention item to mention table if not found
+ * otherwise return the existing item
  * @returns MentionItem
  */
-export async function addMentionItem({mention, token}:
+export async function addOrGetMentionItem({mention, token}:
   { mention: MentionItemProps, token: string }) {
   const url = '/api/v1/mention'
   try {
+    // check if publication is already
+    // imported to RSD by ID
+    if (mention.doi) {
+      const found = await getMentionByDoiFromRsd({
+        doi: mention.doi,
+        token
+      })
+      // if publication found in RSD
+      if (found.status === 200 &&
+        found.message.length === 1) {
+        // we return that entry
+        return {
+          status: 200,
+          message: found.message[0]
+        }
+      }
+    }
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
@@ -126,21 +144,20 @@ export async function addMentionItem({mention, token}:
       const json: MentionItemProps[] = await resp.json()
       // take item from array response
       return {
-        status: 201,
+        status: 200,
         message: json[0]
       }
     }
-    logger(`addMentionItem: ${resp.status} ${resp.statusText}`, 'error')
+    logger(`upsertMentionItem: ${resp.status} ${resp.statusText}`, 'error')
     return extractReturnMessage(resp)
   } catch (e: any) {
-    logger(`addMentionItem: ${e?.message}`, 'error')
+    logger(`upsertMentionItem: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e.message
     }
   }
 }
-
 
 /**
  * Update existing mention item in mention table
