@@ -53,8 +53,8 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
       data-testid="cookie-consent-matomo"
     >
       <div className="container mx-auto px-20 ">
-          <div className="border border-b-base-content border-t-4 border-x-4 border-b-0 w-96 bg-white shadow-lg p-6">
-            <div className="w-16 mx-auto relative -mt-10 mb-3">
+          <div className="border border-b-base-content border-t-4 border-x-4 border-b-0 w-96 bg-white shadow-lg p-6 rounded-tr-3xl">
+            <div className="w-16 mx-auto relative  mb-3">
               <CookieTwoToneIcon className="scale-[2]  mb-3" color="primary" fontSize="large"/>
             </div>
             <span
