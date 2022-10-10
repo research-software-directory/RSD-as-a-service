@@ -10,6 +10,7 @@ import Button from '@mui/material/Button'
 import {Matomo} from './nodeCookies'
 import {useMatomoConsent} from './useCookieConsent'
 import Link from 'next/link'
+import CookieTwoToneIcon from '@mui/icons-material/CookieTwoTone'
 
 type CookieConsentMatomoProps = {
   matomo: Matomo,
@@ -26,7 +27,7 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
   const [open, setOpen] = useState(false)
 
   // do not show backdrop by default
-  const [display,setDisplay]=useState('none')
+  const [display, setDisplay] = useState('none')
 
   // console.group('CookieConsentModal')
   // console.log('matomo...', matomo)
@@ -48,14 +49,14 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
     // in this case. Therefore, we start with display none and change to flex when
     // the component is successfully loaded on the frontend (and JS is enabled).
     setDisplay('flex')
-  },[])
+  }, [])
 
   // do not render if matomo is not used
   if (matomo.id === null) return null
   // do not render on cookies page (page uses MatomoTracking component)
-  if (route==='/cookies') return null
+  if (route === '/cookies') return null
   // do not render if user already answered consent question
-  if (matomo.id && matomo.consent!==null) return null
+  if (matomo.id && matomo.consent !== null) return null
   // Hide the consent modal on click
   if (!open) return null
 
@@ -64,54 +65,54 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
          data-testid="cookie-consent-matomo"
     >
       <div className="container mx-auto px-20 ">
-          <div className="border border-b-base-content border-t-4 border-x-4 border-t-4 border-b-0 w-96 bg-white shadow-lg p-6">
-            <div className="w-16 mx-auto relative -mt-10 mb-3">
-              <img className="-mt-1" src="/images/cookie.svg"
-                   alt="Cookie Icon SVG"/>
-            </div>
-            <span
-              className="w-full block leading-normal text-gray-800 text-md mb-3">We use&nbsp;
-              <span className="text-primary">
+        <div
+          className="border border-b-base-content border-t-4 border-x-4 border-t-4 border-b-0 w-96 bg-white shadow-lg p-6">
+          <div className="w-16 mx-auto relative -mt-10 mb-3">
+            <CookieTwoToneIcon className="scale-[2]  mb-3" color="primary" fontSize="large"/>
+          </div>
+          <span
+            className="w-full block leading-normal text-gray-800 text-md mb-3">We use&nbsp;
+            <span className="text-primary">
                 <Link href="/cookies" passHref>
                 <a target="_blank" className="text-primary" rel="noopener noreferrer">
                      cookies
                 </a></Link>
               </span> with&nbsp;
-              <Link href="https://matomo.org/">
+            <Link href="https://matomo.org/">
                 <a target="_blank" className="text-primary" rel="noopener noreferrer">
                      matomo.org
                 </a>
               </Link> to provide a better user experience. </span>
-            <div className="flex items-center justify-between">
-              <Link href="/cookies" passHref>
-                <a className="text-xs text-gray-400 mr-1 hover:text-gray-800 hover:underline">
-                  Read more
-                </a>
-              </Link>
-              <div className="flex gap-4">
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => {
-                    setMatomoConsent(false)
-                    setOpen(false)
-                  }}
-                >
-                  Decline
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    setMatomoConsent(true)
-                    setOpen(false)
-                  }}
-                >
-                  Accept
-                </Button>
-              </div>
+          <div className="flex items-center justify-between">
+            <Link href="/cookies" passHref>
+              <a className="text-xs text-gray-400 mr-1 hover:text-gray-800 hover:underline">
+                Read more
+              </a>
+            </Link>
+            <div className="flex gap-4">
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => {
+                  setMatomoConsent(false)
+                  setOpen(false)
+                }}
+              >
+                Decline
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  setMatomoConsent(true)
+                  setOpen(false)
+                }}
+              >
+                Accept
+              </Button>
             </div>
           </div>
+        </div>
       </div>
     </div>
   )
