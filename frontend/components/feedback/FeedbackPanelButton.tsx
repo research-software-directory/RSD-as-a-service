@@ -4,10 +4,9 @@ import Popover from '@mui/material/Popover'
 import {useEffect, useRef, useState} from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
-type Props = {
-  className?: string
-}
-export default function FeedbackPanelButton(props: Props) {
+import {MailOutlineOutlined} from '@mui/icons-material'
+
+export default function FeedbackPanelButton() {
   const router = useRouter()
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>()
@@ -31,6 +30,8 @@ export default function FeedbackPanelButton(props: Props) {
     setText('')
   }
 
+  const mailAddress = process.env.NEXT_PUBLIC_FEEDBACK_URL
+
   const focusArea = useRef(null)
 
   useEffect(() => {
@@ -46,8 +47,13 @@ export default function FeedbackPanelButton(props: Props) {
     triggerFocusArea()
   }, [open])
 
+  // Don't display the button if the mail address is not defined in the exnvironment
+  if(!mailAddress){
+    return
+  }
+
   return (
-    <div className={props.className}>
+    <div>
       <button className="flex gap-2 items-center" aria-describedby={id} onClick={handleClick}>
         Feedback <CaretIcon/> {open}
       </button>
@@ -74,7 +80,7 @@ export default function FeedbackPanelButton(props: Props) {
               Cancel
             </button>
             <Link rel="noreferrer"
-                  href={`mailto:rsd@esciencecenter.nl?subject=Feedback about the RSD&body=
+                  href={`mailto:${mailAddress}?subject=Feedback about the RSD&body=
 Hi RSD Team,%0D%0D
 I would like to give some feedback about the RSD on the page "https://research-software-directory.org${router.asPath}":%0D%0D
 ---%0D
@@ -86,7 +92,7 @@ ${text}%0D
                 className="text-sm text-white hover:text-white bg-primary px-3 py-1 rounded hover:opacity-90 active:opacity-95"
                 target="_blank"
               >
-                Send feedback
+                <MailOutlineOutlined/> Send feedback
               </a>
             </Link>
 
