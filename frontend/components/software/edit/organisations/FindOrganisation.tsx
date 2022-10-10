@@ -5,13 +5,11 @@
 
 import {HTMLAttributes, useState} from 'react'
 
-// import AsyncAutocomplete from '../../../form/AsyncAutocomplete'
-// import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
 import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
-import FindOrganisationItem from './FindOrganisationItem'
+import {SearchOrganisation} from '~/types/Organisation'
+import {searchForOrganisation} from '~/utils/editOrganisation'
 import {organisationInformation as config} from '../editSoftwareConfig'
-import {SearchOrganisation} from '../../../../types/Organisation'
-import {searchForOrganisation} from '../../../../utils/editOrganisation'
+import FindOrganisationItem from './FindOrganisationItem'
 
 export default function FindOrganisation({onAdd, onCreate}:
   { onAdd: (item: SearchOrganisation) => void, onCreate:(name:string)=>void}) {

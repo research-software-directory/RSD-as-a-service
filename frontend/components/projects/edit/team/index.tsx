@@ -172,15 +172,19 @@ export default function ProjectTeam({slug}: { slug: string }) {
   }
 
   async function sortTeamMembers(members: TeamMember[]) {
-    // console.log('sortTeamMembers...', members)
-    const resp = await patchTeamMemberPositions({
-      members,
-      token
-    })
-    if (resp.status === 200) {
-      setMembers(members)
+    // patch only if there are items left
+    if (members.length > 0) {
+      const resp = await patchTeamMemberPositions({
+        members,
+        token
+      })
+      if (resp.status === 200) {
+        setMembers(members)
+      } else {
+        showErrorMessage(`Failed to update team positions. ${resp.message}`)
+      }
     } else {
-      showErrorMessage(`Failed to update team positions. ${resp.message}`)
+      setMembers(members)
     }
   }
 

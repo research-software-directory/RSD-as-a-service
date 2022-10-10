@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, useEffect} from 'react'
+import {useState, useEffect, FocusEventHandler} from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 
@@ -18,11 +18,11 @@ type MarkdownInputWithPreviewProps = {
     length: number
     maxLength: number
   }
+  onBlur?:(e:FocusEventHandler<HTMLTextAreaElement>)=>void
 }
 
-
 export default function MarkdownInputWithPreview({markdown, register, disabled = true,
-  autofocus = false, helperInfo}:MarkdownInputWithPreviewProps) {
+  autofocus = false, helperInfo, onBlur}:MarkdownInputWithPreviewProps) {
   const [tab, setTab] = useState(0)
 
   useEffect(() => {
@@ -120,11 +120,8 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
           id="markdown-textarea"
           rows={20}
           className="text-base-content w-full h-full pt-4 px-8 font-mono text-sm"
-          // onInput={({target}:{target:any}) => {
-          //   target.style.height = ''
-          //   target.style.height = target.scrollHeight + 'px'
-          // }}
           {...register}
+          onBlur={onBlur}
         ></textarea>
       </div>
       <div

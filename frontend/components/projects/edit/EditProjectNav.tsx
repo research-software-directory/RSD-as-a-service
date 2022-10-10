@@ -11,33 +11,34 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
 import {app} from '~/config/app'
-import useOnUnsaveChange from '~/utils/useOnUnsavedChange'
 import {editProjectSteps} from './editProjectSteps'
 import useProjectContext from './useProjectContext'
 
 export default function EditProjectNav() {
-  const {formState:{isDirty,isValid},reset} = useFormContext()
+  const {formState:{isDirty,isValid,dirtyFields}} = useFormContext()
   const {step, setEditStep} = useProjectContext()
-
-  // watch for unsaved changes on page reload
-  useOnUnsaveChange({
-    isDirty,
-    isValid,
-    warning: app.unsavedChangesMessage
-  })
 
   function onChangeStep(pos: number) {
     const newStep = editProjectSteps[pos]
     // ignore click on same step
     if (newStep.label===step?.label) return
     // if unsaved changes in the form when changing step
-    if (isDirty === true) {
+    // isDirty prop can be incorrect when defaultValue
+    // was undefined at form initalization.
+    // see https://github.com/react-hook-form/react-hook-form/issues/6105
+    // To mitigate this we include dirtyFields object as additional check
+    if (isDirty === true && Object.keys(dirtyFields).length > 0) {
+      // console.group('EditProjectNav')
+      // console.log('isDirty...', isDirty)
+      // console.log('isValid...', isValid)
+      // console.log('dirtyFields...', dirtyFields)
+      // console.groupEnd()
       // notify user about unsaved changes
       const leavePage = confirm(app.unsavedChangesMessage)
       // if user is OK to leave section without saving
       if (leavePage === true) {
         // clean form
-        reset()
+        // reset()
         // change step
         setEditStep(editProjectSteps[pos])
       }
