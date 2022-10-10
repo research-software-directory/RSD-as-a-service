@@ -49,7 +49,7 @@ export default function FeedbackPanelButton() {
 
   // Don't display the button if the mail address is not defined in the exnvironment
   if(!mailAddress){
-    return
+    return (<></>)
   }
 
   return (
