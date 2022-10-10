@@ -31,6 +31,7 @@ import {RsdSettingsState} from '~/config/rsdSettingsReducer'
 import {getMatomoConsent,Matomo} from '~/components/cookies/nodeCookies'
 import {initMatomoCustomUrl} from '~/components/cookies/setMatomoPage'
 import {getSettingsServerSide} from '~/config/getSettingsServerSide'
+import {setContentSecurityPolicyHeader} from '~/utils/contentSecurityPolicy'
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {
@@ -182,6 +183,8 @@ RsdApp.getInitialProps = async(appContext:AppContext) => {
     if (matomo.id) {
       matomo.consent = getMatomoConsent(req).matomoConsent
     }
+    // set content security header
+    setContentSecurityPolicyHeader(res)
   }
   // extract rsd settings
   const settings = await getSettingsServerSide(req, appContext.router.query)
