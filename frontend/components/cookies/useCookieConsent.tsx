@@ -65,9 +65,7 @@ export function useMatomoConsent() {
 
   const setMatomoConsent = useCallback((value: boolean)=>{
     // Store cookie for in the local storage to avoid blocking by adblockers
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('rsd_cookies_consent', JSON.stringify(value))
-    }
+    localStorage?.setItem('rsd_cookies_consent', JSON.stringify(value))
     if ('_paq' in window) {
       if (value === true) {
         (window as any)._paq.push(['rememberConsentGiven'])

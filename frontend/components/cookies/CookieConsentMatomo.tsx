@@ -26,30 +26,17 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
   const {setMatomoConsent} = useMatomoConsent()
   const [open, setOpen] = useState(false)
 
-  // do not show backdrop by default
-  const [display, setDisplay] = useState('none')
-
   // console.group('CookieConsentModal')
   // console.log('matomo...', matomo)
   // console.log('route...', route)
   // console.log('open...', open)
   // console.groupEnd()
-
   useEffect(() => {
-    // Check if the cookies consent has been granted or not by the user
-    if (typeof window !== 'undefined') {
+    if (localStorage) {
       const cookieConsent = localStorage.getItem('rsd_cookies_consent')
       setOpen(cookieConsent === null && matomo.id !== null && matomo.consent === null && route !== '/cookies')
     }
-
-    // when JS is disabled we render this component on server side
-    // but when the component is hydrated in FE AND matomo.id is present
-    // AND JS is disabled the component does not function properly and only
-    // the backdrop is shown. The backdrop blocks the minimal website functionality
-    // in this case. Therefore, we start with display none and change to flex when
-    // the component is successfully loaded on the frontend (and JS is enabled).
-    setDisplay('flex')
-  }, [])
+  },[matomo.id,matomo.consent,route])
 
   // do not render if matomo is not used
   if (matomo.id === null) return null
@@ -61,18 +48,18 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
   if (!open) return null
 
   return (
-    <div className=" fixed bottom-0 right-0 animated animatedFadeInUp fadeInUp"
-         data-testid="cookie-consent-matomo"
+    <div
+      className="fixed bottom-0 right-0 animated animatedFadeInUp fadeInUp"
+      data-testid="cookie-consent-matomo"
     >
       <div className="container mx-auto px-20 ">
-        <div
-          className="border border-b-base-content border-t-4 border-x-4 border-t-4 border-b-0 w-96 bg-white shadow-lg p-6">
-          <div className="w-16 mx-auto relative -mt-10 mb-3">
-            <CookieTwoToneIcon className="scale-[2]  mb-3" color="primary" fontSize="large"/>
-          </div>
-          <span
-            className="w-full block leading-normal text-gray-800 text-md mb-3">We use&nbsp;
-            <span className="text-primary">
+          <div className="border border-b-base-content border-t-4 border-x-4 border-b-0 w-96 bg-white shadow-lg p-6">
+            <div className="w-16 mx-auto relative -mt-10 mb-3">
+              <CookieTwoToneIcon className="scale-[2]  mb-3" color="primary" fontSize="large"/>
+            </div>
+            <span
+              className="w-full block leading-normal text-gray-800 text-md mb-3">We use&nbsp;
+              <span className="text-primary">
                 <Link href="/cookies" passHref>
                 <a target="_blank" className="text-primary" rel="noopener noreferrer">
                      cookies
