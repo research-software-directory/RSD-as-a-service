@@ -5,7 +5,9 @@
 
 import Link from 'next/link'
 import {getTimeAgoSince} from '../../utils/dateFn'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+// import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import FeaturedIcon from '~/components/icons/FeaturedIcon'
+import NotPublishedIcon from '~/components/icons/NotPublishedIcon'
 
 export type SoftwareCardType = {
   href: string
@@ -21,7 +23,7 @@ export type SoftwareCardType = {
 export default function SoftwareCard({href, brand_name, short_statement, is_featured,
   updated_at, mention_cnt, contributor_cnt, is_published}: SoftwareCardType) {
 
-  const colors = is_featured ? 'bg-base-300 text-content' : 'bg-base-200 text-content'
+  // const colors = is_featured ? 'bg-base-300 text-content' : 'bg-base-200 text-content'
   const today = new Date()
   // if not published use opacity 0.50
   let opacity = ''
@@ -75,17 +77,12 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
   function renderPublished() {
     if (typeof is_published != 'undefined' && is_published === false) {
       return (
-        <span
-          title="Not published"
-        >
-          <VisibilityOffIcon
-            sx={{
-              width: '2rem',
-              height: '2rem',
-              margin: '0 0.5rem 0.5rem 0'
-            }}
-          />
-        </span>
+       <NotPublishedIcon />
+      )
+    }
+    if (is_featured){
+      return (
+        <FeaturedIcon />
       )
     }
     return null
@@ -95,8 +92,8 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
     <Link href={href} passHref>
       {/* anchor tag MUST be first element after Link component */}
       <a className="flex flex-col h-full">
-        <article className={`flex-1 flex flex-col ${colors} ${opacity} hover:bg-secondary group`}>
-          <div className="flex relative">
+        <article className={`flex-1 flex flex-col bg-base-200 text-content ${opacity} hover:bg-secondary group`}>
+          <div className="relative flex">
             <h2
               title={brand_name}
               className="p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white"
