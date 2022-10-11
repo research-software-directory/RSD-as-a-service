@@ -138,6 +138,7 @@ CREATE TABLE project_for_organisation (
 	status relation_status NOT NULL DEFAULT 'approved',
 	role organisation_role NOT NULL DEFAULT 'participating',
 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
+	position INTEGER,
 	PRIMARY KEY (project, organisation, role)
 );
 
