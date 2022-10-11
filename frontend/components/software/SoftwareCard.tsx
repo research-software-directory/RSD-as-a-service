@@ -4,8 +4,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
-import {getTimeAgoSince} from '../../utils/dateFn'
+import {getTimeAgoSince} from '~/utils/dateFn'
+import {Tooltip} from '@mui/material'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined'
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
+import TurnedInNotOutlinedIcon from '@mui/icons-material/TurnedInNotOutlined'
 
 export type SoftwareCardType = {
   href: string
@@ -18,62 +22,24 @@ export type SoftwareCardType = {
   is_published?: boolean
 }
 
-export default function SoftwareCard({href, brand_name, short_statement, is_featured,
-  updated_at, mention_cnt, contributor_cnt, is_published}: SoftwareCardType) {
+export default function SoftwareCard({
+                                       href, brand_name, short_statement, is_featured,
+                                       updated_at, mention_cnt, contributor_cnt, is_published
+                                     }: SoftwareCardType) {
 
   const colors = is_featured ? 'bg-base-300 text-content' : 'bg-base-200 text-content'
   const today = new Date()
+
   // if not published use opacity 0.50
   let opacity = ''
-  if (typeof is_published !='undefined' && is_published===false) opacity='opacity-50'
+  if (typeof is_published != 'undefined' && !is_published) opacity = 'opacity-50'
 
   function getInitals() {
-    if (brand_name) {
-      return brand_name.slice(0, 2).toUpperCase()
-    }
-    return ''
-  }
-
-  function mentionCntMessage() {
-    if (mention_cnt && mention_cnt > 1) {
-      return `${mention_cnt} mentions`
-    }
-    if (mention_cnt && mention_cnt === 1) {
-      return `${mention_cnt} mention`
-    }
-    return ''
-  }
-
-  function contributorsMessage() {
-    if (contributor_cnt && contributor_cnt > 1) {
-      return `${contributor_cnt} contributors`
-    }
-    if (contributor_cnt && contributor_cnt === 1) {
-      return `${contributor_cnt} contributor`
-    }
-    return ''
-  }
-
-  function renderCounts() {
-    let message = mentionCntMessage()
-    if (message) {
-      message += `, ${contributorsMessage()}`
-    } else {
-      message = contributorsMessage()
-    }
-    if (message) {
-      return (
-        <div className="flex items-start justify-center">
-          {/* <StarIcon sx={{height:'1rem'}} /> */}
-          {message}
-        </div>
-      )
-    }
-    return null
+    return brand_name?.slice(0, 2).toUpperCase() || ''
   }
 
   function renderPublished() {
-    if (typeof is_published != 'undefined' && is_published === false) {
+    if (typeof is_published != 'undefined' && !is_published) {
       return (
         <span
           title="Not published"
@@ -95,29 +61,55 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
     <Link href={href} passHref>
       {/* anchor tag MUST be first element after Link component */}
       <a className="flex flex-col h-full">
-        <article className={`flex-1 flex flex-col ${colors} ${opacity} hover:bg-secondary group`}>
-          <div className="flex relative">
-            <h2
+        <div
+          className={`flex-1 flex flex-col justify-between ${colors} ${opacity} hover:bg-secondary group`}>
+          {/*Title and initials*/}
+          <div className="flex pt-3 relative min-h-[60px]">
+            <div
               title={brand_name}
-              className="p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white"
+              className="text-lg font-medium line-clamp-2 px-4 flex-1 mr-[4rem] group-hover:text-white"
             >
               {renderPublished()} {brand_name}
-            </h2>
+            </div>
             <div
-              className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-base text-[1.5rem] absolute top-0 right-0 group-hover:text-secondary">
+              className="flex w-[50px] h-[50px] justify-center items-center bg-white text-base text-[1.5rem] absolute top-0 right-0 group-hover:text-secondary">
               {getInitals()}
             </div>
           </div>
-          <p className="flex-1 p-4 overflow-auto max-h-[9.75rem] text-gray-800 group-hover:text-white">
-            {short_statement}
-          </p>
-          <div className="flex justify-between p-4 text-sm group-hover:text-white">
-            <span className="last-update">
-              Updated {getTimeAgoSince(today, updated_at)}
-            </span>
-            {renderCounts()}
+
+          {/*description and more information*/}
+          <div>
+            <p className="px-4 my-2 line-clamp-3 text-gray-800 group-hover:text-white">
+              {short_statement}
+            </p>
+            <div className="flex justify-between p-4 text-sm group-hover:text-white opacity-60">
+              <div className="">
+                {getTimeAgoSince(today, updated_at)}
+              </div>
+              <div className="flex gap-3">
+
+                {contributor_cnt &&
+                  <Tooltip title="Contributors" placement="top">
+                    <div>
+                      <PeopleAltOutlinedIcon className="w-5 h-5 "/> {contributor_cnt}
+                    </div>
+                  </Tooltip>}
+
+                {mention_cnt &&
+                  <Tooltip title="Mentions" placement="top">
+                    <div>
+                      <TurnedInNotOutlinedIcon className="w-5 h-5 "/> {mention_cnt}
+                    </div>
+                  </Tooltip>}
+
+                {is_featured &&
+                  <Tooltip title="Feature Software" placement="top">
+                    <PushPinOutlinedIcon className="rotate-45 w-5 h-5 "/>
+                </Tooltip>}
+              </div>
+            </div>
           </div>
-        </article>
+        </div>
       </a>
     </Link>
   )

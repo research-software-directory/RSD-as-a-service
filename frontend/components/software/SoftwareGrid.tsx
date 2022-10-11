@@ -4,8 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import SoftwareCard from './SoftwareCard'
-import FlexibleGridSection, {FlexGridProps} from '../layout/FlexibleGridSection'
-import NoContent from '../layout/NoContent'
+import NoContent from '~/components/layout/NoContent'
 
 export type SoftwareGridType = {
   slug: string
@@ -19,21 +18,17 @@ export type SoftwareGridType = {
 }
 
 // render software cards
-export default function SoftwareGrid({software,grid,className='gap-[0.125rem] pt-4 pb-12'}:
-  {software: SoftwareGridType[], grid: FlexGridProps, className?:string }) {
+export default function SoftwareGrid({software,className}: { software: SoftwareGridType[], className?:string }) {
   // console.log("renderItems...software...", software)
 
-  if (software.length===0){
-    return <NoContent />
+  if (software.length === 0) {
+    return <NoContent message="No results"/>
   }
 
   return (
-    <FlexibleGridSection
-      className={className}
-      {...grid}
-    >
-      {software.map(item=>{
-        return(
+    <div className={'grid gap-[3px] grid-cols-1 sm:grid-cols-2 xl:grid-cols-3'+ className}>
+      {software.map(item => {
+        return (
           <SoftwareCard
             key={`/software/${item.slug}/`}
             href={`/software/${item.slug}/`}
@@ -47,6 +42,6 @@ export default function SoftwareGrid({software,grid,className='gap-[0.125rem] pt
           />
         )
       })}
-    </FlexibleGridSection>
+    </div>
   )
 }
