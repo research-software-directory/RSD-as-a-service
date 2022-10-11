@@ -5,7 +5,9 @@
 
 package nl.esciencecenter.rsd.authentication;
 
-public interface Account {
+public class AuthenticationException extends RuntimeException {
 
-	AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider);
+	public AuthenticationException(String message) {
+		super(message);
+	}
 }

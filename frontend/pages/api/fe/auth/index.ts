@@ -18,6 +18,7 @@ import type {NextApiRequest, NextApiResponse} from 'next'
 import {surfconextInfo} from './surfconext'
 import {helmholtzInfo} from './helmholtzaai'
 import {localInfo} from './local'
+import {orcidInfo} from './orcid'
 import logger from '~/utils/logger'
 
 export type ApiError = {
@@ -42,6 +43,8 @@ async function getRedirectInfo(provider: string) {
       return helmholtzInfo()
     case 'local':
       return localInfo()
+    case 'orcid':
+      return orcidInfo()
     default:
       const message = `${provider} NOT SUPPORTED, check your spelling`
       logger(`api/fe/auth/providers: ${message}`, 'error')
@@ -67,9 +70,14 @@ export default async function handler(
       )
     })
     // return providers with redirectUrl
-    const resp = await Promise.all(promises)
+    const resp = await Promise.allSettled(promises)
     // filter null responses (if any)
-    const info = resp.filter(item => item !== null)
+    const info: Provider[] = []
+    resp.forEach(item => {
+      if (item.status === 'fulfilled') {
+        info.push(item.value as Provider)
+      }
+    })
     // return only 'valid' providers
     res.status(200).json(info as Provider[])
   } catch (e: any) {
