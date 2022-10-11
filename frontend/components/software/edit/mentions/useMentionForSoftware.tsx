@@ -38,12 +38,7 @@ export default function useMentionForSoftware({software, token}: MentionForSoftw
       software !== loadedSoftware) {
       getImpactFromApi()
     }
-    // else {
-    //   console.group('skip request useMentionForSoftware')
-    //   console.log('software...', software)
-    //   console.log('loadedSoftware...', loadedSoftware)
-    //   console.groupEnd()
-    // }
+
     return () => { abort = true }
     // we skip setMentions and setLoading methods in the deps to avoid loop
     // TODO! try wrapping methods of useEditMentionReducer in useCallback?

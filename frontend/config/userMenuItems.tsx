@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +9,7 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import Logout from '@mui/icons-material/Logout'
 
 import {MenuItemType} from './menuItems'
@@ -40,6 +43,12 @@ const userMenuItems: MenuItemType[] = [
     label: 'Administration',
     path: '/admin/pages',
     icon: <ManageAccountsIcon />
+  }, {
+    role:['rsd_admin'],
+    type: 'link',
+    label: 'ORCID whitelist',
+    path: '/admin/orcid-whitelist',
+    icon: <PlaylistAddCheckIcon />
   }, {
     role:['rsd_admin'],
     type: 'divider',

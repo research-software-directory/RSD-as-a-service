@@ -41,6 +41,20 @@ export default function useSoftwareContext() {
         isValid,
       }
     })
+  }, [dispatch])
+
+  const setSoftwareSlug = useCallback((slug: string)=>{
+    dispatch({
+      type: EditSoftwareActionType.SET_SOFTWARE_SLUG,
+      payload: slug
+    })
+  }, [dispatch])
+
+  const setSoftwareTitle = useCallback((title: string)=>{
+    dispatch({
+      type: EditSoftwareActionType.SET_SOFTWARE_TITLE,
+      payload: title
+    })
   },[dispatch])
 
   return {
@@ -48,6 +62,8 @@ export default function useSoftwareContext() {
     setSoftwareInfo,
     setEditStep,
     setLoading,
-    setFormState
+    setFormState,
+    setSoftwareSlug,
+    setSoftwareTitle
   }
 }

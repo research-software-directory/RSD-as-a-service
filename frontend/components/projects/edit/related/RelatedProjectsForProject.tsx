@@ -5,7 +5,7 @@
 
 import {useEffect, useState} from 'react'
 
-import {useAuth, useSession} from '~/auth'
+import {useSession} from '~/auth'
 import {cfgRelatedItems as config} from './config'
 import {getRelatedProjectsForProject} from '~/utils/getProjects'
 import {addRelatedProject, deleteRelatedProject} from '~/utils/editProject'

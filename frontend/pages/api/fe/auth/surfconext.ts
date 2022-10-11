@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -28,7 +30,7 @@ export async function surfconextRedirectProps() {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
-        redirect_uri: process.env.NEXT_PUBLIC_SURFCONEXT_REDIRECT || 'https://research-software.nl//auth/login/surfconext',
+        redirect_uri: process.env.NEXT_PUBLIC_SURFCONEXT_REDIRECT || 'https://research-software.nl/auth/login/surfconext',
         client_id: process.env.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID || 'www.research-software.nl',
         scope: process.env.NEXT_PUBLIC_SURFCONEXT_SCOPES || 'openid',
         response_mode: process.env.NEXT_PUBLIC_SURFCONEXT_RESPONSE_MODE || 'form_post',

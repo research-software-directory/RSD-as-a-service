@@ -16,8 +16,8 @@ export async function searchForSoftwareKeyword(
   try {
     const searchForEncoded = encodeURIComponent(searchFor)
 
-    // GET top 50 matches
-    const url = `/api/v1/rpc/keyword_count_for_software?keyword=ilike.*${searchForEncoded}*&order=keyword.asc&limit=50`
+    // GET top 20 matches
+    const url = `/api/v1/rpc/keyword_count_for_software?keyword=ilike.*${searchForEncoded}*&order=keyword.asc&limit=20`
     const resp = await fetch(url, {
       method: 'GET'
     })

@@ -31,10 +31,11 @@ export type NewContributor = {
 
 
 export type Contributor = NewContributor & {
-  id?: string
+  id: string | null
   avatar_url?: string | null
   // avatar_file?: string
   avatar_b64?: string | null
+  position: number | null
   // created_at?: string
   // updated_at?: string
 }
@@ -62,14 +63,14 @@ export const Person = [
   'affiliation',
   'role',
   'orcid',
-  'avatar_mime_type'
+  'avatar_mime_type',
+  'position'
 ]
 
 
 export const TeamMemberProps = [
   ...Person,
-  'project',
-  'position'
+  'project'
 ]
 
 export const ContributorProps = [

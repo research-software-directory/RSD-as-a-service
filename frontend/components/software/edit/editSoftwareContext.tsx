@@ -20,8 +20,6 @@ export type SoftwareInfo = {
 export type EditSoftwareState = {
   step: EditSoftwarePageProps
   software: SoftwareInfo
-  isDirty: boolean
-  isValid: boolean
   loading: boolean
 }
 
@@ -33,8 +31,6 @@ export const initialState = {
     brand_name:'',
     concept_doi: '',
   },
-  isDirty: false,
-  isValid: true,
   loading: true
 }
 

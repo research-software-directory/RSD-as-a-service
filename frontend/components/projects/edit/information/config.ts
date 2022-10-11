@@ -42,13 +42,16 @@ export const projectInformation = {
   },
   description: {
     title: 'Project description',
-    subtitle: 'The image will apear above the description',
+    subtitle: 'The image will apear above the description.',
     validation: {
       maxLength: {value: 10000},
     }
   },
   is_published: {
     label: 'Published',
+  },
+  image_contain: {
+    label: 'Always show the whole image',
   },
   date_start: {
     label: 'Start date'

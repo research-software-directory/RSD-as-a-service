@@ -40,7 +40,7 @@ export async function searchForRelatedSoftware({software, searchFor, token}: {
   software: string, searchFor:string, token?: string
 }) {
   try {
-    let query = `&brand_name=ilike.*${searchFor}*&order=brand_name.asc&limit=50`
+    let query = `&brand_name=ilike.*${searchFor}*&is_published=eq.true&order=brand_name.asc&limit=50`
     // software item to exclude
     if (software) {
       query += `&id=neq.${software}`
