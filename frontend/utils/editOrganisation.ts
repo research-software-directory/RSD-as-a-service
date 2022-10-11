@@ -330,6 +330,9 @@ export async function uploadOrganisationLogo({id, data, mime_type, token}:
         mime_type
       })
     })
+    await fetch(`/image/rpc/get_logo?id=${id}`, {cache: 'reload'})
+    // @ts-ignore
+    location.reload(true)
     return extractReturnMessage(resp)
   } catch (e: any) {
     return {
