@@ -9,7 +9,7 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
 import Logout from '@mui/icons-material/Logout'
 
 import {MenuItemType} from './menuItems'

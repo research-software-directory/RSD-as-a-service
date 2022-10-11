@@ -20,7 +20,7 @@ import {Invitation} from '~/types/Invitation'
 import InvitationList from '~/components/layout/InvitationList'
 import {getUnusedInvitations} from '~/utils/getUnusedInvitations'
 
-export default function SoftwareMaintainerLink({software,account,token}: { software: string,account:string,token: string }) {
+export default function SoftwareMaintainerLink({software,brand_name,account,token}: {software: string, brand_name: string, account: string,token: string}) {
   const {showErrorMessage,showInfoMessage} = useSnackbar()
   const [magicLink, setMagicLink] = useState(null)
   const [unusedInvitations, setUnusedInvitations] = useState<Invitation[]>([])
@@ -82,7 +82,7 @@ export default function SoftwareMaintainerLink({software,account,token}: { softw
             >
             <a
               target="_blank"
-              href={`mailto:?subject=Software maintainer invite&body=Please use the link to become software maintainer. \n ${magicLink}`} rel="noreferrer">
+              href={`mailto:?subject=Software maintainer invite&body=Please use the following link to become a maintainer of the software ${brand_name}. \n ${magicLink}`} rel="noreferrer">
               Email this invite
             </a>
             </Button>

@@ -18,8 +18,8 @@ import InvitationList from '~/components/layout/InvitationList'
 import {Invitation} from '~/types/Invitation'
 import {getUnusedInvitations} from '~/utils/getUnusedInvitations'
 
-export default function OrganisationMaintainerLink({organisation, account, token}:
-  { organisation: string, account: string, token: string }) {
+export default function OrganisationMaintainerLink({organisation, name, account, token}:
+  {organisation: string, name: string, account: string, token: string}) {
   const {showErrorMessage,showInfoMessage} = useSnackbar()
   const [magicLink, setMagicLink] = useState(null)
   const [unusedInvitations, setUnusedInvitations] = useState<Invitation[]>([])
@@ -81,7 +81,7 @@ export default function OrganisationMaintainerLink({organisation, account, token
             >
             <a
               target="_blank"
-              href={`mailto:?subject=Organisation maintainer invite&body=Please use the link to become organisation maintainer. \n ${magicLink}`} rel="noreferrer">
+              href={`mailto:?subject=Organisation maintainer invite&body=Please use the following link to become a maintainer of the organisation ${name}. \n ${magicLink}`} rel="noreferrer">
               Email this invite
             </a>
             </Button>
