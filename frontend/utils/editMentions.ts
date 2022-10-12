@@ -52,7 +52,8 @@ export async function getMentionsForSoftware({software,token,frontend}:{software
 
 export async function getMentionByDoiFromRsd({doi,token}:{doi: string, token: string}) {
   try {
-    const url = `/api/v1/mention?select=${mentionColumns}&doi=eq.${doi}`
+    // we need to encode DOI because it supports "exotic" values
+    const url = `/api/v1/mention?select=${mentionColumns}&doi=eq.${encodeURIComponent(doi)}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -115,12 +116,17 @@ export async function addOrGetMentionItem({mention, token}:
   const url = '/api/v1/mention'
   try {
     // check if publication is already
-    // imported to RSD by ID
+    // imported to RSD by DOI
     if (mention.doi) {
+      // console.group('addOrGetMentionItem')
+      // console.log('doi...', mention.doi)
+      // addOrGetMentionItem
       const found = await getMentionByDoiFromRsd({
         doi: mention.doi,
         token
       })
+      // console.log('found...', found)
+      // console.groupEnd()
       // if publication found in RSD
       if (found.status === 200 &&
         found.message.length === 1) {

@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {MentionItemProps} from '~/types/Mention'
 import {addOrGetMentionItem} from '~/utils/editMentions'
 
@@ -30,55 +30,44 @@ export async function findPublicationByTitle({project, searchFor, token}:
   }
 }
 
-export async function addImpactItem({item, project, token}: { item: MentionItemProps, project: string, token: string }) {
-  let mention: MentionItemProps
-  // new item not in rsd
-  if (item.id === null) {
-    // add mention item to RSD
-    const resp = await addOrGetMentionItem({
-      mention: item,
-      token
-    })
-    if (resp.status !== 200) {
-      // exit
-      return {
-        status: resp.status,
-        message: `Failed to add ${item.title}. ${resp.message}`
-      }
-    }
-    // assign created mention item
-    mention = resp.message
-  } else {
-    // use existing RSD item
-    mention = item
-  }
-  // add mention item to impact table
-  if (mention && mention.id) {
-    const resp = await addImpactToProject({
-      project,
-      mention: mention.id,
-      token
-    })
-    if (resp.status !== 200) {
-      return {
-        status: resp.status,
-        message: `Failed to add ${item.title}. ${resp.message}`
+export async function addNewImpactToProject({item, project, token}:
+  { item: MentionItemProps, project: string, token: string }) {
+  // add new item or get existing by DOI
+  let resp = await addOrGetMentionItem({
+    mention: item,
+    token
+  })
+  // debugger
+  if (resp.status === 200) {
+    // mention item returned in message
+    const mention: MentionItemProps = resp.message
+    if (mention.id) {
+      resp = await addToImpactForProject({
+        project,
+        mention: mention.id,
+        token
+      })
+      if (resp.status === 200) {
+        // we return mention item in message
+        return {
+          status: 200,
+          message: mention
+        }
+      } else {
+        return resp
       }
     } else {
-      // return mention in message
       return {
-        status: 200,
-        message: mention
+        status: 500,
+        message: 'Mention id missing.'
       }
     }
-  }
-  return {
-    status: 500,
-    message: 'Failed to save item'
+  } else {
+    return resp
   }
 }
 
-export async function addImpactToProject({mention, project, token}: { mention: string, project: string, token: string }) {
+export async function addToImpactForProject({mention, project, token}: { mention: string, project: string, token: string }) {
   const url = '/api/v1/impact_for_project'
   try {
     const resp = await fetch(url, {
