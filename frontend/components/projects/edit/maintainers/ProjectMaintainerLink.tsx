@@ -80,7 +80,7 @@ export default function ProjectMaintainerLink({project,title,account,token}: {pr
             >
             <a
               target="_blank"
-              href={`mailto:?subject=Project maintainer invite&body=Please use the following link to become a maintainer of the project ${title}. \n ${magicLink}`} rel="noreferrer">
+              href={`mailto:?subject=Maintainer invite for project ${encodeURIComponent(title)}&body=Please use the following link to become a maintainer of the project ${encodeURIComponent(title)}. ${encodeURIComponent('\n')}${magicLink}`} rel="noreferrer">
               Email this invite
             </a>
             </Button>

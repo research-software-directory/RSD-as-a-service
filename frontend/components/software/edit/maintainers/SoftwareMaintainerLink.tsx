@@ -82,7 +82,7 @@ export default function SoftwareMaintainerLink({software,brand_name,account,toke
             >
             <a
               target="_blank"
-              href={`mailto:?subject=Software maintainer invite&body=Please use the following link to become a maintainer of the software ${brand_name}. \n ${magicLink}`} rel="noreferrer">
+              href={`mailto:?subject=Maintainer invite for software ${encodeURIComponent(brand_name)}&body=Please use the following link to become a maintainer of the software ${encodeURIComponent(brand_name)}. ${encodeURIComponent('\n')}${magicLink}`} rel="noreferrer">
               Email this invite
             </a>
             </Button>

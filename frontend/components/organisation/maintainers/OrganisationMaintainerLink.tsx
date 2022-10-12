@@ -81,7 +81,7 @@ export default function OrganisationMaintainerLink({organisation, name, account,
             >
             <a
               target="_blank"
-              href={`mailto:?subject=Organisation maintainer invite&body=Please use the following link to become a maintainer of the organisation ${name}. \n ${magicLink}`} rel="noreferrer">
+              href={`mailto:?subject=Maintainer invite for organisation ${encodeURIComponent(name)}&body=Please use the following link to become a maintainer of the organisation ${encodeURIComponent(name)}. ${encodeURIComponent('\n')}${magicLink}`} rel="noreferrer">
               Email this invite
             </a>
             </Button>
