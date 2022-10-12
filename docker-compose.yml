@@ -165,6 +165,7 @@ services:
       - net
     volumes:
       - lets-encrypt:/etc/letsencrypt
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
 
   #----------------------------------------------
   # DEVELOPMENT ONLY SERVICES
@@ -188,10 +189,14 @@ services:
       context: ./frontend
       # dockerfile to use for build
       dockerfile: Dockerfile.dev
+      args:
+        - DUID
+        - DGID
     # update version number to correspond to frontend/package.json
     image: rsd/frontend-dev:1.4.0
     ports:
       - "3000:3000"
+      - "9229:9229"
     environment:
       # it uses values from .env file
       - POSTGREST_URL
