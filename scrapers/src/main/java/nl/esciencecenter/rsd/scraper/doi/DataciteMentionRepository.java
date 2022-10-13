@@ -15,6 +15,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -103,7 +104,7 @@ public class DataciteMentionRepository implements MentionRepository {
 	static MentionRecord parseWork(JsonObject work) {
 		MentionRecord result = new MentionRecord();
 		result.doi = work.get("doi").getAsString();
-		result.url = URI.create("https://doi.org/" + result.doi);
+		result.url = URI.create("https://doi.org/" + Utils.urlEncode(result.doi));
 		result.title = work.getAsJsonArray("titles").get(0).getAsJsonObject().get("title").getAsString();
 
 		Collection<String> authors = new ArrayList<>();
@@ -148,6 +149,8 @@ public class DataciteMentionRepository implements MentionRepository {
 
 	@Override
 	public Collection<MentionRecord> mentionData(Collection<String> dois) {
+		if (dois.isEmpty()) return Collections.EMPTY_LIST;
+
 		JsonObject body = new JsonObject();
 		body.addProperty("query", QUERY_UNFORMATTED.formatted(joinCollection(dois)));
 		String responseJson = Utils.post("https://api.datacite.org/graphql", body.toString(), "Content-Type", "application/json");
