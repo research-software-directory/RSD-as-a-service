@@ -6,8 +6,6 @@
 import {Alert, AlertTitle} from '@mui/material'
 import SortableList from '~/components/layout/SortableList'
 import {EditOrganisation} from '../../../../types/Organisation'
-
-import OrganisationsItem from './OrganisationsItem'
 import SortableOrganisationItem from './SortableOrganisationItem'
 
 type OrganisationListProps = {
