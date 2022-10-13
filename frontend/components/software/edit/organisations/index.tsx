@@ -14,14 +14,10 @@ import {
   SearchOrganisation,
   SoftwareForOrganisation
 } from '../../../../types/Organisation'
-import {sortOnStrProp} from '../../../../utils/sortFn'
 import {
-  addOrganisationToSoftware,
-  deleteOrganisationFromSoftware,
   deleteOrganisationLogo,
   newOrganisationProps,
   saveExistingOrganisation,
-  saveNewOrganisationForSoftware,
   searchToEditOrganisation,
 } from '../../../../utils/editOrganisation'
 import useParticipatingOrganisations from './useParticipatingOrganisations'
@@ -31,9 +27,10 @@ import {ModalProps, ModalStates} from '../editSoftwareTypes'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import FindOrganisation from './FindOrganisation'
 import EditOrganisationModal from './EditOrganisationModal'
-import OrganisationsList from './OrganisationsList'
 import {getSlugFromString} from '../../../../utils/getSlugFromString'
 import useSoftwareContext from '../useSoftwareContext'
+import SortableOrganisationsList from './SortableOrganisationsList'
+import {addOrganisationToSoftware, deleteOrganisationFromSoftware, patchOrganisationPositions, saveNewOrganisationForSoftware} from './organisationForSoftware'
 
 export type EditOrganisationModalProps = ModalProps & {
   organisation?: EditOrganisation
@@ -231,25 +228,47 @@ export default function SoftwareOganisations() {
     const newList = [
       ...organisations,
       newItem
-    ].sort((a, b) => sortOnStrProp(a, b, 'name'))
+    ]
     setOrganisations(newList)
   }
 
   function updateOrganisationInList(newItem: EditOrganisation,pos:number) {
-    const newList = [
-      ...organisations.slice(0, pos),
-      ...organisations.slice(pos+1),
-      newItem
-    ].sort((a, b) => sortOnStrProp(a, b, 'name'))
+    const newList = organisations.map((item, i) => {
+      if (i === pos) return newItem
+      return item
+    })
     setOrganisations(newList)
   }
 
-  function deleteOrganisationFromList(pos: number) {
+  async function deleteOrganisationFromList(pos: number) {
     const newList = [
       ...organisations.slice(0, pos),
       ...organisations.slice(pos+1)
-    ]
-    setOrganisations(newList)
+    ].map((item, pos) => {
+      // renumber
+      item.position = pos + 1
+      return item
+    })
+    // renumber remaining organisations
+    await sortedOrganisations(newList)
+  }
+
+  async function sortedOrganisations(organisations: EditOrganisation[]) {
+    if (organisations.length > 0) {
+      // console.log('sorted organisations...', organisations)
+      const resp = await patchOrganisationPositions({
+        software: software.id ?? '',
+        organisations,
+        token
+      })
+      if (resp.status === 200) {
+        setOrganisations(organisations)
+      } else {
+        showErrorMessage(`Failed to update organisation positions. ${resp.message}`)
+      }
+    } else {
+      setOrganisations(organisations)
+    }
   }
 
   return (
@@ -260,10 +279,11 @@ export default function SoftwareOganisations() {
             <span>{config.title}</span>
             <span>{organisations?.length}</span>
           </h2>
-          <OrganisationsList
+          <SortableOrganisationsList
             organisations={organisations}
             onEdit={onEdit}
             onDelete={onDelete}
+            onSorted={sortedOrganisations}
           />
         </section>
         <section className="py-4">

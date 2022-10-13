@@ -10,6 +10,7 @@ import {
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
+import {EditOrganisation} from '~/types/Organisation'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
