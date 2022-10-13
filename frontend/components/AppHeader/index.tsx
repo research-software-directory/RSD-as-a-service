@@ -25,7 +25,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
-  const {embedMode} = useRsdSettings()
+  const {host,embedMode} = useRsdSettings()
   // Responsive menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -79,7 +79,11 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
             {/* EDIT button */}
             {editButton ? editButton : null}
 
-            <FeedbackPanelButton />
+            {/* FEEDBACK panel */}
+            {host.feedback_email
+              ? <FeedbackPanelButton feedback_email={host.feedback_email} />
+              : null
+            }
 
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
