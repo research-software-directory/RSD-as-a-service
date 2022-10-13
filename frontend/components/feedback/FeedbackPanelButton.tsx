@@ -49,7 +49,14 @@ export default function FeedbackPanelButton({feedback_email}:{feedback_email:str
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+         anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
       >
         <div className="h-full w-full max-w-[300px] bg-[#232323] p-3">
           <textarea
