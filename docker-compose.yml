@@ -127,8 +127,6 @@ services:
       - ./deployment/helmholtz:/app/public
     networks:
       - net
-    deploy:
-      replicas: 0
 
   scrapers:
     build: ./scrapers
@@ -223,7 +221,9 @@ services:
       - auth
     volumes:
       - ./frontend:/app
-      - ./deployment/helmholtz:/app/public
+      # - ./deployment/hmz/styles:/app/public/styles
+      # - ./deployment/hmz/data:/app/public/data
+      # - ./deployment/hmz/images:/app/public/images
     networks:
       - net
     deploy:
