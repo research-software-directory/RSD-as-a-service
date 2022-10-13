@@ -102,6 +102,7 @@ CREATE TABLE software_for_organisation (
 	organisation UUID REFERENCES organisation (id),
 	status relation_status NOT NULL DEFAULT 'approved',
 	is_featured BOOLEAN DEFAULT FALSE NOT NULL,
+	position INTEGER,
 	PRIMARY KEY (software, organisation)
 );
 

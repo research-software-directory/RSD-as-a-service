@@ -31,6 +31,7 @@ function createNewOrganisation(organisation:SearchOrganisation){
     // new image to upload
     logo_b64: null,
     logo_mime_type: null,
+    position: null,
     // funding organisation come from ROR
     source: organisation.source
   }

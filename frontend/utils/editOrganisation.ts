@@ -536,7 +536,7 @@ export function searchToEditOrganisation({item, account, position}:
     ...item,
     logo_b64: null,
     logo_mime_type: null,
-    position
+    position: position ?? null
   }
 
   if (item.source === 'ROR') {

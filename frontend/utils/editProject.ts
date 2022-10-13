@@ -194,6 +194,41 @@ export async function patchProjectForOrganisation({project, organisation, data, 
   }
 }
 
+export async function patchOrganisationPositions({project,organisations, token}:
+  {project:string,organisations:EditOrganisation[],token:string}) {
+  try {
+    if (organisations.length === 0) return {
+      status: 400,
+      message: 'Empty organisations array'
+    }
+    // create all requests
+    const requests = organisations.map(organisation => {
+      const query = `project=eq.${project}&organisation=eq.${organisation.id}`
+      const url = `/api/v1/project_for_organisation?${query}`
+      return fetch(url, {
+        method: 'PATCH',
+        headers: {
+          ...createJsonHeaders(token),
+        },
+        // just update position!
+        body: JSON.stringify({
+          position: organisation.position
+        })
+      })
+    })
+    // execute them in parallel
+    const responses = await Promise.all(requests)
+    // check for errors
+    return extractReturnMessage(responses[0])
+  } catch (e: any) {
+    logger(`patchOrganisationPositions: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
 export async function deleteOrganisationFromProject({project, organisation, role, token}:
   { project: string, organisation:string, role: OrganisationRole, token:string }) {
   try {
