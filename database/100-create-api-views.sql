@@ -373,7 +373,7 @@ BEGIN
 			COUNT(DISTINCT project_for_organisation.project) AS project_cnt
 		FROM
 			project_for_organisation
-		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
+		CROSS JOIN list_parent_organisations(project_for_organisation.organisation)
 		GROUP BY list_parent_organisations.organisation_id;
 	END IF;
 END

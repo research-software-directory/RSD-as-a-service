@@ -8,7 +8,6 @@
 import {useContext} from 'react'
 import Input from '@mui/material/Input'
 import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
 import ClearIcon from '@mui/icons-material/Clear'
 
 import SearchContext from './SearchContext'
@@ -35,13 +34,14 @@ export default function Searchbox() {
           setSearchFor(searchInput)
         }
       }}
-      startAdornment={
-        <InputAdornment position="start">
-          <SearchIcon
-            sx={{cursor: 'pointer'}}
-            onClick={() => setSearchFor(searchInput)} />
-        </InputAdornment>
-      }
+      /* Icon search for the input */
+      // startAdornment={
+      //   <InputAdornment position="start">
+      //     <SearchIcon
+      //       sx={{cursor: 'pointer'}}
+      //       onClick={() => setSearchFor(searchInput)} />
+      //   </InputAdornment>
+      // }
       endAdornment={
         <InputAdornment position="start">
           {searchInput ?

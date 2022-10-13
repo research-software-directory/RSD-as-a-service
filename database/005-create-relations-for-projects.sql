@@ -15,6 +15,7 @@ CREATE TABLE team_member (
 	affiliation VARCHAR(200),
 	role VARCHAR(200),
 	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
+	position INTEGER,
 	avatar_data VARCHAR(2750000),
 	avatar_mime_type VARCHAR(100),
 	created_at TIMESTAMPTZ NOT NULL,

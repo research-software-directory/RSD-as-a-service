@@ -13,7 +13,7 @@ import {List} from '@mui/material'
 
 type RequiredProps = {
   id: string | null,
-  position: number
+  position: number | null
 }
 
 type SortableListProps<T extends RequiredProps>={
@@ -29,18 +29,18 @@ export default function SortableList<T extends RequiredProps>({
     useSensor(MouseSensor,{
       // required to enable click events
       // on draggable items with buttons
-      activationConstraint: {
-        distance: 8,
-      }
+      // activationConstraint: {
+      //   distance: 8,
+      // }
     })
   )
 
-  function onDragEnd({active, over}: DragEndEvent){
+  function onDragEnd({active, over}: DragEndEvent) {
+    // console.group('onDragEnd')
+    // console.log('active...', active)
+    // console.log('over...', over)
+    // console.groupEnd()
     if (over && active.id!==over?.id){
-      // console.group('onDragEnd')
-      // console.log('active...', active)
-      // console.log('over...', over)
-      // console.log('testimonials...', testimonials)
       const oldIndex = items.findIndex(item => item.id === active.id)
       const newIndex = items.findIndex(item => item.id === over.id)
       const newItems = arrayMove(items, oldIndex, newIndex)
@@ -51,8 +51,6 @@ export default function SortableList<T extends RequiredProps>({
             position: pos + 1
           }
         })
-      // console.log('newItems...', newItems)
-      // console.groupEnd()
       // debugger
       onSorted(newItems)
     }

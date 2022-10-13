@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,15 +15,13 @@ import {EditSoftwareAction, editSoftwareReducer} from './editSoftwareReducer'
 export type SoftwareInfo = {
   id: string | null,
   slug: string | null,
-  brand_name: string | null,
+  brand_name: string,
   concept_doi: string | null,
 }
 
 export type EditSoftwareState = {
   step: EditSoftwarePageProps
   software: SoftwareInfo
-  isDirty: boolean
-  isValid: boolean
   loading: boolean
 }
 
@@ -33,8 +33,6 @@ export const initialState = {
     brand_name:'',
     concept_doi: '',
   },
-  isDirty: false,
-  isValid: true,
   loading: true
 }
 

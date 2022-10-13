@@ -11,7 +11,7 @@ import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import useUserSoftware from './useUserSoftware'
 
 export default function UserSoftware({session}:{session:Session}) {
-  const {searchFor,page,rows, setCount} = usePaginationWithSearch('Search for software')
+  const {searchFor,page,rows, setCount} = usePaginationWithSearch('Filter software')
   const {loading, software, count} = useUserSoftware({
     searchFor,
     page,

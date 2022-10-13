@@ -8,45 +8,8 @@
 
 /** @type {import('next').NextConfig} */
 
-// proxy to nginx service when running as frontend-dev docker service
-// proxy to localhost when in standalone development mode (yarn dev)
-let rewritesConfig = []
-if (process.env.NODE_ENV === 'docker') {
-  // proxies for frontend-dev service
-  // developing using node docker container
-  rewritesConfig=[
-    {
-      source: '/image/:path*',
-      destination: 'http://nginx/image/:path*',
-    },
-    {
-      source: '/api/v1/:path*',
-      destination: 'http://nginx/api/v1/:path*',
-    },
-    {
-      source: '/auth/login/local',
-      destination: 'http://nginx/auth/login/local',
-    }
-  ]
-} else if (process.env.NODE_ENV === 'development'){
-  rewritesConfig = [
-    {
-      source: '/image/:path*',
-      destination: 'http://nginx/image/:path*',
-    },
-    {
-      source: '/api/v1/:path*',
-      destination: 'http://nginx/api/v1/:path*',
-    },
-    {
-      source: '/auth/login/local',
-      destination: 'http://localhost/auth/login/local',
-    }
-  ]
-}
-
-// console.log('process.env.NODE_ENV',process.env.NODE_ENV)
-// console.log('process.env.PWD', process.env.PWD)
+const rewritesConfig = require('./next.rewrites')
+const securityHeaders = require('./next.headers')
 
 module.exports = {
   images: {
@@ -66,6 +29,16 @@ module.exports = {
   },
   // only in development
   rewrites: async () => rewritesConfig,
+
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes in your application.
+        source: '/:path*',
+        headers: securityHeaders,
+      },
+    ]
+  },
 
   webpack(config) {
     config.module.rules.push({

@@ -92,7 +92,7 @@ export default function OrganisationsIndexPage({
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center lg:ml-4">
             <Searchbox
-              placeholder='Search for organisation'
+              placeholder='Filter organisations'
               onSearch={handleSearch}
               defaultValue={search}
             />

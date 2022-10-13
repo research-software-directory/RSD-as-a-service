@@ -11,11 +11,10 @@
 
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {Contributor, ContributorProps, SearchContributor} from '../types/Contributor'
-import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
 import {getORCID, isOrcid} from './getORCID'
 import {getPropsFromObject} from './getPropsFromObject'
 import logger from './logger'
-import {sortOnStrProp} from './sortFn'
 
 export function getAvatarUrl({id, avatar_mime_type}:{id?:string|null,avatar_mime_type?:string|null}) {
   if (avatar_mime_type) {
@@ -41,10 +40,10 @@ export async function getContributorsForSoftware({software, token, frontend}:
     // use standardized list of columns
     const columns = ContributorProps.join(',')
     // , avatar_data
-    let url = `${process.env.POSTGREST_URL}/contributor?select=${columns}&software=eq.${software}&order=given_names.asc`
-    if (frontend) {
-      url = `/api/v1/contributor?select=${columns}&software=eq.${software}&order=given_names.asc`
-    }
+    const query = `contributor?select=${columns}&software=eq.${software}&order=position,given_names.asc`
+    const baseUrl = getBaseUrl()
+    const url = `${baseUrl}/${query}`
+
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -58,7 +57,7 @@ export async function getContributorsForSoftware({software, token, frontend}:
         ...item,
         // add avatar url based on uuid
         avatar_url: getAvatarUrl(item)
-      })).sort((a,b)=>sortOnStrProp(a,b,'given_names'))
+      }))
     } else if (resp.status === 404) {
       logger(`getContributorsForSoftware: 404 [${url}]`, 'error')
       // query not found
@@ -229,6 +228,40 @@ export async function patchContributor({contributor, token}: { contributor: Cont
     return extractReturnMessage(resp)
   } catch (e: any) {
     logger(`patchContributor: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function patchContributorPositions({contributors, token}:
+  { contributors: Contributor[], token: string }) {
+  try {
+    if (contributors.length === 0) return {
+      status: 400,
+      message: 'Empty contributors array'
+    }
+    // create all requests
+    const requests = contributors.map(contributor => {
+      const url = `/api/v1/contributor?id=eq.${contributor.id}`
+      return fetch(url, {
+        method: 'PATCH',
+        headers: {
+          ...createJsonHeaders(token),
+        },
+        // just update position!
+        body: JSON.stringify({
+          position: contributor.position
+        })
+      })
+    })
+    // execute them in parallel
+    const responses = await Promise.all(requests)
+    // check for errors
+    return extractReturnMessage(responses[0])
+  } catch (e: any) {
+    logger(`patchContributorPositions: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message

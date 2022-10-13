@@ -7,7 +7,7 @@
 
 import {useEffect, useRef} from 'react'
 import {Controller} from 'react-hook-form'
-import TextField from '@mui/material/TextField'
+import TextField, {TextFieldProps} from '@mui/material/TextField'
 import HelperTextWithCounter from './HelperTextWithCounter'
 
 export type ControlledTextFieldOptions = {
@@ -26,11 +26,16 @@ export type ControlledTextFieldOptions = {
   helperTextMessage?: string | JSX.Element
   helperTextCnt?: string
   disabled?: boolean
+  muiProps?: TextFieldProps
 }
 
-export default function ControlledTextField({options, control, rules}: {
-  options: ControlledTextFieldOptions, control: any, rules:any
-}) {
+export type ControlledTextFieldProps = {
+  options: ControlledTextFieldOptions,
+  control: any,
+  rules?: any
+}
+
+export default function ControlledTextField({options, control, rules}:ControlledTextFieldProps) {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
@@ -92,6 +97,7 @@ export default function ControlledTextField({options, control, rules}: {
                 onChange(target.value)
               }
             }}
+            {...options.muiProps}
           />
         )
       }}

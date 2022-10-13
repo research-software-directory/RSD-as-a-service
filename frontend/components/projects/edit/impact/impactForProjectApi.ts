@@ -6,7 +6,7 @@
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import {MentionItemProps} from '~/types/Mention'
-import {addMentionItem} from '~/utils/editMentions'
+import {addOrGetMentionItem} from '~/utils/editMentions'
 
 export async function findPublicationByTitle({project, searchFor, token}:
   { project: string, searchFor: string, token: string }) {
@@ -35,11 +35,11 @@ export async function addImpactItem({item, project, token}: { item: MentionItemP
   // new item not in rsd
   if (item.id === null) {
     // add mention item to RSD
-    const resp = await addMentionItem({
+    const resp = await addOrGetMentionItem({
       mention: item,
       token
     })
-    if (resp.status !== 201) {
+    if (resp.status !== 200) {
       // exit
       return {
         status: resp.status,

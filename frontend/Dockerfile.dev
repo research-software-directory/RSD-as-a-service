@@ -5,6 +5,22 @@
 
 FROM node:18.5-buster-slim
 
+#  Change the user and group id of the node user to the specified ids
+ARG DUID=1000
+ARG DGID=1000
+ARG DUNAME=node
+RUN export OUID=$(id -u);\
+    if [ $DUID != $OUID ];\
+    then usermod -u $DUID $DUNAME &&\
+    find / -user 1000 -ignore_readdir_race -exec chown -h $DUNAME {} \; ;\
+    fi
+RUN export OGID=$(id -g);\
+    if [ $DGID != $OGID ];\
+    then groupmod -g $DGID $DUNAME &&\
+    find / -group 1000 -ignore_readdir_race -exec chgrp -h $DUNAME {} \; ;\
+    fi
+USER $DUNAME
+
 WORKDIR /app
 
 VOLUME [ "/app" ]

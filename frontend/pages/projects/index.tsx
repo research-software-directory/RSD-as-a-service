@@ -110,7 +110,7 @@ export default function ProjectsIndexPage(
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center lg:ml-4">
             <Searchbox
-              placeholder="Search for project"
+              placeholder="Filter projects"
               onSearch={handleSearch}
               defaultValue={search}
             />
