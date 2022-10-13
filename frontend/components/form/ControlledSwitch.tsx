@@ -13,10 +13,12 @@ type ControlledSwitchProps = {
   control: any,
   defaultValue?: boolean
   disabled?: boolean
+  onSave?:(value:boolean)=>void
 }
 
 
-export default function ControlledSwitch({label, name, defaultValue = false, control, disabled=false}:ControlledSwitchProps) {
+export default function ControlledSwitch({label, name,
+  defaultValue = false, control, disabled = false, onSave}: ControlledSwitchProps) {
   // console.log('ControlledSwitch.defaultValue...', defaultValue)
   return (
     <Controller
@@ -33,6 +35,7 @@ export default function ControlledSwitch({label, name, defaultValue = false, con
                 checked={value}
                 onChange={({target}) => {
                   onChange(target.checked)
+                  if(onSave) onSave(target.checked)
                 }}
                 disabled={disabled ?? false}
               />

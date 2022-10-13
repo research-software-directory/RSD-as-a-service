@@ -7,6 +7,8 @@ import logger from '~/utils/logger'
 import {EditProjectState} from './editProjectContext'
 
 export enum EditProjectActionType {
+  SET_PROJECT_TITLE = 'SET_PROJECT_TITLE',
+  SET_PROJECT_SLUG = 'SET_PROJECT_SLUG',
   SET_PROJECT_INFO = 'SET_PROJECT_INFO',
   SET_EDIT_STEP = 'SET_EDIT_STEP',
   SET_LOADING = 'SET_LOADING'
@@ -37,6 +39,22 @@ export function editProjectReducer(state: EditProjectState, action: Action) {
         project: {
           ...state.project,
           ...action.payload
+        }
+      }
+    case EditProjectActionType.SET_PROJECT_SLUG:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          slug: action.payload
+        }
+      }
+    case EditProjectActionType.SET_PROJECT_TITLE:
+      return {
+        ...state,
+        project: {
+          ...state.project,
+          title: action.payload
         }
       }
     case EditProjectActionType.SET_LOADING: {

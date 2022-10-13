@@ -9,13 +9,16 @@ import Button from '@mui/material/Button'
 
 import StickyHeader from '../../layout/StickyHeader'
 import useStickyHeaderBorder from '~/components/layout/useStickyHeaderBorder'
-import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
-import {useFormContext} from 'react-hook-form'
+import {useController, useFormContext} from 'react-hook-form'
 import useSoftwareContext from './useSoftwareContext'
 
-export default function StickyHeaderEditSoftware() {
-  const {software,step} = useSoftwareContext()
-  const {formState:{isValid,isDirty}} = useFormContext()
+export default function EditSoftwareStickyHeader() {
+  const {software} = useSoftwareContext()
+  const {control} = useFormContext()
+  const {field:{value:slug},fieldState:{error:slugError}} = useController({
+    name: 'slug',
+    control
+  })
   const headerRef = useRef(null)
   const [classes, setClasses] = useState('')
   const router = useRouter()
@@ -24,12 +27,13 @@ export default function StickyHeaderEditSoftware() {
     headerRef, setClasses
   })
 
-  function isSaveDisabled() {
-    if (isDirty === false || isValid === false) {
-      return true
-    }
-    return false
-  }
+  // if (isDirty) {
+  //   console.group('EditProjectStickyHeader')
+  //   console.log('isDirty...', isDirty)
+  //   console.log('isValid...', isValid)
+  //   console.log('dirtyFields...', dirtyFields)
+  //   console.groupEnd()
+  // }
 
   return (
     <StickyHeader className={`flex py-4 w-full bg-white ${classes}`}>
@@ -44,22 +48,18 @@ export default function StickyHeaderEditSoftware() {
           type="button"
           color="secondary"
           onClick={() => {
-            const slug = router.query['slug']
+            // const slug = router.query['slug']
             router.push(`/software/${slug}`)
+            // complete page reload?
+            // location.href=`/projects/${slug}`
           }}
           sx={{
-            marginRight:'2rem'
+            marginRight:'0.5rem'
           }}
+          disabled={typeof slugError !=='undefined'}
         >
-          VIEW
+          VIEW PAGE
         </Button>
-        {step?.formId ?
-          <SubmitButtonWithListener
-            formId={step?.formId}
-            disabled={isSaveDisabled()}
-          />
-        : null
-        }
       </div>
     </StickyHeader>
   )

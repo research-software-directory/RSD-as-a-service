@@ -2,14 +2,13 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
-
-import Filter1Icon from '@mui/icons-material/Filter1'
-import Filter2Icon from '@mui/icons-material/Filter2'
-import Filter3Icon from '@mui/icons-material/Filter3'
-import Filter4Icon from '@mui/icons-material/Filter4'
-import Filter5Icon from '@mui/icons-material/Filter5'
-import Filter6Icon from '@mui/icons-material/Filter6'
-import Filter7Icon from '@mui/icons-material/Filter7'
+import InfoIcon from '@mui/icons-material/Info'
+import Diversity1Icon from '@mui/icons-material/Diversity1'
+import FactoryIcon from '@mui/icons-material/Factory'
+import AddCommentIcon from '@mui/icons-material/AddComment'
+import ThreePIcon from '@mui/icons-material/ThreeP'
+import ShareIcon from '@mui/icons-material/Share'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 import SoftwareInformation from './information'
 import SoftwareContributors from './contributors'
@@ -29,49 +28,49 @@ export type EditSoftwarePageProps = {
 
 export const editSoftwarePage:EditSoftwarePageProps[] = [
   {
-    formId: 'software-information',
+    // formId: 'software-information',
     label: 'Information',
-    icon: <Filter1Icon />,
+    icon: <InfoIcon />,
     component: (props?) => <SoftwareInformation {...props} />,
     status: 'Required information'
   },
   {
     // formId: 'contributors',
     label: 'Contributors',
-    icon: <Filter2Icon />,
+    icon: <Diversity1Icon />,
     component: (props?) => <SoftwareContributors {...props} />,
     status: 'Required information'
   },
   {
     label: 'Organisations',
-    icon: <Filter3Icon />,
+    icon: <FactoryIcon />,
     component: (props?) => <SoftwareOgranisations {...props} />,
     status: 'Optional information'
   },
   {
     label: 'Mentions',
-    icon: <Filter4Icon />,
+    icon: <AddCommentIcon />,
     component: (props?) => <SoftwareMentions {...props} />,
     status: 'Optional information'
   },
   {
     // formId: 'testimonials',
     label: 'Testimonials',
-    icon: <Filter5Icon />,
+    icon: <ThreePIcon />,
     component: (props?) => <SoftwareTestimonials {...props} />,
     status: 'Optional information'
   },
   {
     // formId: 'related-software',
     label: 'Related topics',
-    icon: <Filter6Icon />,
+    icon: <ShareIcon />,
     component: (props?) => <RelatedTopics {...props} />,
     status: 'Optional information'
   },
   {
     // formId: 'output',
     label: 'Maintainers',
-    icon: <Filter7Icon />,
+    icon: <PersonAddIcon />,
     component: (props?) => <SoftwareMaintainers {...props} />,
     status: 'Optional information'
   }

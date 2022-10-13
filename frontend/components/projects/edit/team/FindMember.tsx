@@ -60,6 +60,7 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
         project,
         is_contact_person: false,
         role: null,
+        position: null
       })
     }
   }
@@ -78,7 +79,8 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
       orcid: null,
       avatar_data: null,
       avatar_mime_type: null,
-      avatar_b64: null
+      avatar_b64: null,
+      position: null
     })
   }
 

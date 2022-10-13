@@ -34,13 +34,11 @@ export type SearchOrganisation = Organisation & {
   source: OrganisationSource
 }
 
-export type FundingOrganisation = SearchOrganisation & {
-  // used to update id of the form item
-  pos: number
-}
+export type FundingOrganisation = SearchOrganisation
 
 // extending with other props for software edit page
 export type EditOrganisation = SearchOrganisation & {
+  role?: OrganisationRole,
   position?: number
   // new image to upload
   logo_b64: string | null

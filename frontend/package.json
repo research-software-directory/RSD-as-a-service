@@ -1,10 +1,10 @@
 {
   "name": "rsd-frontend",
-  "version": "1.4.1",
+  "version": "1.6.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:docker": "NODE_ENV=docker next dev",
+    "dev:docker": "NODE_ENV=docker NODE_OPTIONS='--inspect=0.0.0.0:9229' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

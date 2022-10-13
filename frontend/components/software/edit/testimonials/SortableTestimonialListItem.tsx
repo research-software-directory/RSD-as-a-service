@@ -4,18 +4,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import ListItem from '@mui/material/ListItem'
+
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemText from '@mui/material/ListItemText'
 import {Testimonial} from '~/types/Testimonial'
+import SortableListItemActions from '~/components/layout/SortableListItemActions'
 
 export type SortableTestimonialItem = {
+  pos: number,
   item: Testimonial
-  secondaryAction: JSX.Element
+  onEdit:(pos:number)=>void,
+  onDelete:(pos:number)=>void,
 }
 
-export default function SortableTestimonialListItem({item,secondaryAction}:SortableTestimonialItem){
+export default function SortableTestimonialListItem({pos,item,onEdit,onDelete}:SortableTestimonialItem){
   const {
     attributes,listeners,setNodeRef,
     transform,transition,isDragging
@@ -25,11 +29,17 @@ export default function SortableTestimonialListItem({item,secondaryAction}:Sorta
     <ListItem
       // draggable
       ref={setNodeRef}
-      // style={style}
       {...attributes}
-      {...listeners}
+      secondaryAction={
+        <SortableListItemActions
+          pos={pos}
+          listeners={listeners}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      }
       sx={{
-        paddingRight:'8rem',
+        paddingRight:'11rem',
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
@@ -37,7 +47,6 @@ export default function SortableTestimonialListItem({item,secondaryAction}:Sorta
         zIndex: isDragging ? 9:0,
         cursor: isDragging ? 'move' : 'default'
       }}
-      secondaryAction={secondaryAction}
     >
       <ListItemAvatar>
         <span className='text-[3rem]'>{item?.position}</span>

@@ -119,15 +119,6 @@ export async function patchTestimonialPositions({testimonials, token}: { testimo
     // execute them in parallel
     const responses = await Promise.all(requests)
     // check for errors
-    responses.map((async(resp) => {
-      const msg = await extractReturnMessage(resp)
-      if ([200, 201].includes(msg.status) === false) {
-        // maybe throw error here?
-        // return msg
-        throw new Error(msg?.message ?? 'Unknown error')
-      }
-    }))
-    // or first response
     return extractReturnMessage(responses[0])
   } catch (e: any) {
     logger(`patchTestimonial: ${e?.message}`, 'error')

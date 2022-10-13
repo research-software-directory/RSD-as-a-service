@@ -29,7 +29,7 @@ export function useParticipatingOrganisations({project, token, account}: UsePart
         project,
         token,
         frontend: true,
-        role:'participating'
+        roles:['participating','hosting']
       })
       // collect isMaintainerRequests
       const promises:Promise<boolean>[] = []

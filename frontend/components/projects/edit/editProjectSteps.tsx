@@ -29,7 +29,7 @@ export type EditProjectStep = {
 
 export const editProjectSteps: EditProjectStep[] = [
   {
-    formId: 'project-information',
+    // formId: 'project-information',
     label: 'Information',
     icon: <InfoIcon />,
     component: (props?) => <ProjectInformation {...props} />,

@@ -423,13 +423,15 @@ it('returns expected contributors', async () => {
         'given_names': 'John',
         'is_contact_person': false,
         'orcid': '0000-0000-0000-0000',
-        'software': '0'
+        'software': '0',
+        'id': null,
+        'position': null
       }
     ]
   )
 })
 
-it.only('returns authors and contributors (without duplicates)', async () => {
+it('returns authors and contributors (without duplicates)', async () => {
   mockResolvedValueOnce(dataciteFullExample)
 
   const expectedList = [
@@ -440,7 +442,9 @@ it.only('returns authors and contributors (without duplicates)', async () => {
       software: '0',
       affiliation: 'GFZ German Research Centre for Geosciences, Potsdam, Germany',
       is_contact_person: false,
-      orcid: '0000-0003-4940-3444'
+      orcid: '0000-0003-4940-3444',
+      id: null,
+      position: null
     },
     {
       given_names: 'Michael',
@@ -449,7 +453,9 @@ it.only('returns authors and contributors (without duplicates)', async () => {
       software: '0',
       affiliation: 'Formerly at GFZ German Research Centre for Geosciences, Potsdam, Germany',
       is_contact_person: false,
-      orcid: '0000-0002-1179-1659'
+      orcid: '0000-0002-1179-1659',
+      id: null,
+      position: null
     }
   ]
   const resp = await getContributorsFromDoi('0', 'DOI')
@@ -465,7 +471,19 @@ it('skips invalid persons', async () => {
 it('returns expected keywords', async () => {
   mockResolvedValueOnce(dataciteFullExample)
   const resp = await getKeywordsFromDoi('0')
-  expect(resp).toEqual(['000 computer science'])
+  const expected = [
+    'Earthquake catalogue',
+    'provider',
+    'script',
+    'python',
+    'RIESGOS',
+    'Scenario-based multi-risk assessment in the Andes region',
+    'EARTH SCIENCE SERVICES &gt; DATA ANALYSIS AND VISUALIZATION',
+    'EARTH SCIENCE SERVICES &gt; DATA MANAGEMENT/DATA HANDLING',
+    'EARTH SCIENCE SERVICES &gt; WEB SERVICES',
+    'EARTH SCIENCE SERVICES &gt; WEB SERVICES &gt; DATA PROCESSING SERVICES'
+  ]
+  expect(resp).toEqual(expected)
 })
 
 it('returns no keywords if there are none', async () => {

@@ -145,7 +145,7 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
       const resp = await deleteOrganisationFromProject({
         project: project.id,
         organisation: organisation.id,
-        role: 'participating',
+        role: organisation.role ?? 'participating',
         token: session.token
       })
       if (resp.status === 200) {

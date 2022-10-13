@@ -3,10 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
-
 import {Testimonial} from '~/types/Testimonial'
 import SortableList from '~/components/layout/SortableList'
 import SortableTestimonialListItem from './SortableTestimonialListItem'
@@ -41,29 +37,9 @@ export default function SortableTestimonialList({items, onEdit, onDelete, onSort
       <SortableTestimonialListItem
         key={JSON.stringify(item)}
         item={item}
-        secondaryAction={
-          <>
-          <IconButton
-            edge="end"
-            aria-label="edit"
-            sx={{marginRight: '1rem'}}
-            onClick={() => {
-              if (typeof index !== 'undefined') onEdit(index)
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            onClick={() => {
-              if (typeof index !== 'undefined') onDelete(index)
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-          </>
-        }
+        pos={index ?? 0}
+        onEdit={onEdit}
+        onDelete={onDelete}
       />
     )
   }

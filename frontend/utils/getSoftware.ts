@@ -31,11 +31,7 @@ export async function getSoftwareList({url,token}:{url:string,token?:string }){
       // set
       return {
         count: extractCountFromHeader(resp.headers),
-        data: json.map(item => ({
-          ...item,
-          // set featured flag for software items with mentions
-          is_featured: item.mention_cnt && item.mention_cnt > 0 ? true : false
-        }))
+        data: json
       }
     } else{
       logger(`getSoftwareList failed: ${resp.status} ${resp.statusText} ${url}`, 'warn')

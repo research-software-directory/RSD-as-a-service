@@ -86,14 +86,16 @@ export type ProjectTopic = {
   topic: string
 }
 
-export type ProjectLink = {
-  // react-form unique id
-  id: string | null
-  title: string | null
-  url: string | null
-  position: number | null
+export type NewProjectLink = {
   // project id
   project: string | null
+  title: string | null
+  url: string | null
+}
+
+export type ProjectLink = NewProjectLink & {
+  id: string | null
+  position: number | null
 }
 
 export type SearchProject = {
@@ -162,6 +164,7 @@ export type TeamMember = {
   avatar_url?: string | null
   // uploaded raw image data
   avatar_b64?: string | null
+  position: number | null
 }
 
 export type SearchTeamMember = SearchContributor
