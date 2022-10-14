@@ -31,6 +31,7 @@ function createNewOrganisation(organisation:SearchOrganisation){
     // new image to upload
     logo_b64: null,
     logo_mime_type: null,
+    position: null,
     // funding organisation come from ROR
     source: organisation.source
   }
@@ -69,6 +70,7 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
             project: id,
             organisation: resp.message,
             role: 'funding',
+            position: null,
             session
           })
         }
@@ -78,6 +80,7 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
           project: id,
           organisation: organisation.id as string,
           role: 'funding',
+          position: null,
           session
         })
       }

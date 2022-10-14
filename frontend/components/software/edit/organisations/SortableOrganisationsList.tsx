@@ -4,33 +4,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {Alert, AlertTitle} from '@mui/material'
-import List from '@mui/material/List'
+import SortableList from '~/components/layout/SortableList'
 import {EditOrganisation} from '../../../../types/Organisation'
-
-import OrganisationsItem from './OrganisationsItem'
+import SortableOrganisationItem from './SortableOrganisationItem'
 
 type OrganisationListProps = {
   organisations: EditOrganisation[]
   onEdit: (pos: number) => void
   onDelete: (pos: number) => void
+  onSorted: (organisation:EditOrganisation[])=>void
 }
 
 
-export default function OrganisationsList({organisations,onEdit,onDelete}:OrganisationListProps) {
-
-  function renderList() {
-    return organisations.map((item,pos) => {
-      return (
-        <OrganisationsItem
-          key={pos}
-          pos={pos}
-          organisation={item}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      )
-    })
-  }
+export default function SortableOrganisationsList({organisations,onEdit,onDelete,onSorted}:OrganisationListProps) {
 
   if (organisations.length === 0) {
     return (
@@ -41,11 +27,21 @@ export default function OrganisationsList({organisations,onEdit,onDelete}:Organi
     )
   }
 
+  function onRenderItem(item:EditOrganisation,index?:number) {
+    return <SortableOrganisationItem
+      key={item.id ?? index}
+      pos={index ?? 0}
+      organisation={item}
+      onEdit={onEdit}
+      onDelete={onDelete}
+    />
+  }
+
   return (
-    <List sx={{
-      width: '100%',
-    }}>
-      {renderList()}
-    </List>
+    <SortableList
+      items={organisations}
+      onSorted={onSorted}
+      onRenderItem={onRenderItem}
+    />
   )
 }
