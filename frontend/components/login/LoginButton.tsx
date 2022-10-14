@@ -49,20 +49,7 @@ export default function LoginButton() {
       </>
     )
   }
-  // when there is only 1 provider we
-  // link redirect directly to Sign in button
-  if (providers && providers.length === 1) {
-    return (
-      <Link
-        href={providers[0].redirectUrl}
-        passHref
-      >
-        <a className="whitespace-nowrap ml-2" tabIndex={0} >
-          Sign in
-        </a>
-      </Link>
-    )
-  }
+
   // when there are multiple providers
   // we show modal with the list of login options
   if (providers && providers.length > 1) {
@@ -105,5 +92,17 @@ export default function LoginButton() {
       </div>
     )
   }
-  return null
+
+  // If there is only 1 provider we
+  // link redirect directly to Sign in button
+  return (
+    <Link
+      href={providers[0]?.redirectUrl ?? ''}
+      passHref
+    >
+      <a className="whitespace-nowrap ml-2" tabIndex={0} >
+        Sign in
+      </a>
+    </Link>
+  )
 }
