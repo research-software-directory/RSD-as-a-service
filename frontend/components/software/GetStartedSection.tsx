@@ -9,9 +9,15 @@ import LinkIcon from '@mui/icons-material/Link'
 import CommitsChart from './CommitsChart'
 import {CommitHistory} from '../../types/SoftwareTypes'
 
-export default function GetStartedSection({get_started_url, commit_history, noCommitMessage}:
-  {get_started_url: string | null, commit_history: CommitHistory, noCommitMessage: string | undefined}) {
+type GetStartedSectionProps = {
+  get_started_url: string | null,
+  repository_url: string | null,
+  commit_history: CommitHistory,
+  commit_history_scraped_at: string
+}
 
+export default function GetStartedSection(props:GetStartedSectionProps) {
+  const {repository_url,get_started_url,commit_history,commit_history_scraped_at} = props
   function renderGetStartedUrl() {
     if (get_started_url) {
       return (
@@ -27,20 +33,17 @@ export default function GetStartedSection({get_started_url, commit_history, noCo
   }
 
   function renderCommitChart() {
+    let classes=''
     if (get_started_url) {
       // add margin when get_started_url is present
-      return (
-        <CommitsChart
-          className='pl-0 lg:pl-24'
-          commit_history={commit_history}
-          noCommitMessage={noCommitMessage}
-        />
-      )
+      classes = 'pl-0 lg:pl-24'
     }
     return (
       <CommitsChart
+        className={classes}
+        repository_url={repository_url}
         commit_history={commit_history}
-        noCommitMessage={noCommitMessage}
+        commit_history_scraped_at={commit_history_scraped_at}
       />
     )
   }

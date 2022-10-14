@@ -10,14 +10,15 @@ import {useRef, useEffect, useState} from 'react'
 import useResizeObserver from './useResizeObserver'
 import {SizeType} from './useResizeObserver'
 import logger from '../../../utils/logger'
-import {colors} from '../../../styles/themeConfig'
+import {useTheme} from '@mui/material'
 
 export type Point = {x: number, y: number}
 
 type LineChartConfig = {
   svgEl: SVGAElement,
   dim: SizeType,
-  text: string | undefined
+  text: string | undefined,
+  strokeColor: string
 }
 
 const margin = {
@@ -39,7 +40,7 @@ const noCommitData: Point[] = [
 ]
 
 function drawLine(props: LineChartConfig) {
-  let {dim: {w, h}, svgEl, text} = props
+  let {dim: {w, h}, svgEl, text, strokeColor} = props
   if (text === undefined) {
     text = 'Whoops, something went wronge here.'
   }
@@ -116,7 +117,7 @@ function drawLine(props: LineChartConfig) {
       .attr('class','line')
       .attr('d',d=>generateScaledLine(d as any))
       .attr('fill','none')
-      .attr('stroke', colors.primary)
+      .attr('stroke', strokeColor)
       .attr('stroke-width', 2)
       .attr('stroke-opacity', 0.7)
 
@@ -139,7 +140,8 @@ function drawLine(props: LineChartConfig) {
   return true
 }
 
-export default function NoDataAvailableChart({text}:{text: string | undefined}) {
+export default function NoDataAvailableChart({text}: { text: string | undefined }) {
+  const theme = useTheme()
   const svgRef: any = useRef()
   const divRef: any = useRef()
   const [element, setElement] = useState()
@@ -154,25 +156,26 @@ export default function NoDataAvailableChart({text}:{text: string | undefined}) 
   }, [divRef])
 
   useEffect(() => {
-    if (size?.w && size?.h) {
+    if (size?.w && size?.h && text) {
       drawLine({
         dim: {w:size?.w,h:size?.h},
         svgEl: svgRef.current,
+        strokeColor:theme.palette.primary.main,
         text
       })
     }
-  },[size?.w, size.h, text])
+  },[size?.w, size.h, text,theme.palette.primary.main])
 
   return (
     <div ref={divRef} className="flex-1 overflow-hidden relative">
       <svg
-          ref={svgRef}
-          // requires block to remove 4px space from parent element
-          // automatically added to parent
-          // see https://stackoverflow.com/questions/22300062/svg-and-parent-height-of-svg-different
-          style={{
-            display: 'block'
-          }}
+        ref={svgRef}
+        // requires block to remove 4px space from parent element
+        // automatically added to parent
+        // see https://stackoverflow.com/questions/22300062/svg-and-parent-height-of-svg-different
+        style={{
+          display: 'block'
+        }}
       ></svg>
     </div>
   )

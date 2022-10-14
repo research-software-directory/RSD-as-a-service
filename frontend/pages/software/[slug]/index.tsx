@@ -88,17 +88,6 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     slug, organisations
   } = props
 
-  let noCommitGraphMessage : string | undefined
-  if (repositoryInfo?.commit_history_scraped_at && repositoryInfo?.commit_history && Object.keys( repositoryInfo?.commit_history ).length == 0 ) {
-    noCommitGraphMessage = 'We cannot display this graph because the repository is empty.'
-  }
-  if (repositoryInfo?.commit_history_scraped_at && repositoryInfo?.commit_history === null) {
-    noCommitGraphMessage = 'We cannot display this graph because we cannot read the commit history.'
-  }
-  if (repositoryInfo?.commit_history_scraped_at === null) {
-    noCommitGraphMessage = 'We did not scrape the commit history of this repository yet.'
-  }
-
   useEffect(() => {
     if (typeof location != 'undefined') {
       setResolvedUrl(location.href)
@@ -115,7 +104,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...organisations...', organisations)
+  // console.log('SoftwareIndexPage...repositoryInfo...', repositoryInfo)
   return (
     <>
       {/* Page Head meta tags */}
@@ -154,8 +143,9 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
 
       <GetStartedSection
         get_started_url={software.get_started_url}
+        repository_url={repositoryInfo?.url}
         commit_history={repositoryInfo?.commit_history}
-        noCommitMessage={noCommitGraphMessage}
+        commit_history_scraped_at={repositoryInfo?.commit_history_scraped_at}
       />
       <CitationSection
         citationInfo={citationInfo}
