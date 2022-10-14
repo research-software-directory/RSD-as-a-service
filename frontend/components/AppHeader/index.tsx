@@ -67,21 +67,17 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
           <GlobalSearchAutocomplete className="hidden lg:block ml-12 mr-6"/>
 
           {/* Large menu*/}
-            <div className="justify-center lg:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
-              <Link href={''}>
-                <a >
-                  Discover
+          <div
+            className="justify-center lg:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
+            {menuItems.map(item =>
+              <Link key={item.path} href={item.path || ''}>
+                <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
+                  {item.label}
                 </a>
               </Link>
-              {menuItems.map(item =>
-                <Link key={item.path} href={item.path || ''}>
-                  <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
-                    {item.label}
-                  </a>
-                </Link>
-              )}
-
+            )}
           </div>
+
           <div
             className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
 
