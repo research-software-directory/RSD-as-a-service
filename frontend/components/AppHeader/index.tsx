@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, useEffect} from 'react'
+import {useState, useEffect, MouseEvent} from 'react'
 import {IconButton, Menu, MenuItem} from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import Link from 'next/link'
@@ -41,7 +41,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   if (embedMode) return null
 
   const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
   const handleClose = () => {
@@ -58,11 +58,12 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
         <div className="w-full flex-1 flex items-center">
           <Link href="/" passHref>
             <a className="hover:text-inherit">
-              <LogoApp className="hidden xl:block"/>
-              <LogoAppSmall className="block xl:hidden"/>
+              <LogoApp className="hidden 2xl:block"/>
+              <LogoAppSmall className="block 2xl:hidden"/>
             </a>
           </Link>
-          <GlobalSearchAutocomplete className="hidden md:block ml-12 mr-6"/>
+
+          <GlobalSearchAutocomplete className="hidden lg:block ml-12 mr-6"/>
 
           {/* Large menu*/}
           <div className="hidden lg:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal">
@@ -80,10 +81,12 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
             {editButton ? editButton : null}
 
             {/* FEEDBACK panel */}
+            <div className="hidden lg:block">
             {host.feedback_email
               ? <FeedbackPanelButton feedback_email={host.feedback_email} />
               : null
             }
+            </div>
 
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
@@ -134,11 +137,17 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
                     </Link>
                   </MenuItem>
                 )}
+                <li >
+                {host.feedback_email
+                  ? <FeedbackPanelButton feedback_email={host.feedback_email} closeFeedbackPanel={handleClose}/>
+                  : null
+                }
+                </li>
               </Menu>
           </div>
           <JavascriptSupportWarning/>
         </div>
-        <GlobalSearchAutocomplete className="md:hidden mt-4"/>
+        <GlobalSearchAutocomplete className="lg:hidden mt-4"/>
       </div>
     </header>
   )
