@@ -86,14 +86,11 @@ export default function FeedbackPanelButton({feedback_email}:{feedback_email:str
 
           </div>
           <div className="text-sm my-4 text-[#B7B7B7]">
-            Have questions or comments? Contact by <a
-            className="text-primary"
-            href={'mailto:rsd@esciencecenter.nl?subject=Feedback about the RSD'}
-            rel="noreferrer"> email </a>
-            or see <a className="text-primary"
+            We will send your feedback using your default email application,
+            or you can open a new <a className="text-primary"
                       href="https://github.com/research-software-directory/RSD-as-a-service/issues"
                       target="_blank" rel="noreferrer">
-            open issues</a>
+            issue</a>
           </div>
         </div>
       </Popover>
