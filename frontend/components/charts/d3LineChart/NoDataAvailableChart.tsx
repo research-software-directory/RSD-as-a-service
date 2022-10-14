@@ -59,6 +59,8 @@ function drawLine(props: LineChartConfig) {
     // to calculate
     .attr('width', '100%')
     .attr('height', '100%')
+    .attr('xmlns', 'http://www.w3.org/2000/svg')
+    .attr('xmlns:xhtml', 'http://www.w3.org/1999/xhtml')
     // .style('background', '#eeee')
 
   const xScale = d3.scaleLinear()
@@ -118,7 +120,17 @@ function drawLine(props: LineChartConfig) {
       .attr('stroke-width', 2)
       .attr('stroke-opacity', 0.7)
 
-  group.append('text')
+  const sw = group.append('switch')
+  sw.append('foreignObject')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('height', yScale(0))
+    .attr('width', '100%')
+    .append('xhtml:p')
+    .attr('style', 'margin-left:100px; position:absolute; bottom:0')
+    .text(text)
+
+  sw.append('text')
     .attr('x', 100)
     .attr('y', yScale(0))
     .attr('dy', '-0.5rem')
