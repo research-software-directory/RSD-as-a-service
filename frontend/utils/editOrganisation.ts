@@ -12,7 +12,7 @@ import {
   EditOrganisation, Organisation,
   OrganisationRole,
   OrganisationsForSoftware,
-  SearchOrganisation, SoftwareForOrganisation
+  SearchOrganisation
 } from '../types/Organisation'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import {getPropsFromObject} from './getPropsFromObject'
@@ -466,7 +466,8 @@ export function newOrganisationProps(props: NewOrganisation) {
     source: 'MANUAL' as 'MANUAL',
     primary_maintainer: props.primary_maintainer,
     role: props?.role ?? 'participating',
-    canEdit: false
+    canEdit: false,
+    description: null
   }
   return initOrg
 }

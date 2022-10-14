@@ -57,6 +57,7 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
         website: item.links[0] ?? '',
         logo_id: null,
         source: 'ROR' as 'ROR',
+        description: null
       }
     }
   })
