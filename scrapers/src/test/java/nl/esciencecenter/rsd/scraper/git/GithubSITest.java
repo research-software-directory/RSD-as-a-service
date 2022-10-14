@@ -36,21 +36,21 @@ public class GithubSITest {
 		Assertions.assertEquals("Apache-2.0", githubScraper.license());
 	}
 
-	// @Disabled
+	@Disabled
 	@Test
 	void contributions() {
 		final String contributions = githubScraper.contributions();
 		Assertions.assertTrue(contributions.startsWith("[{\"total"));
 	}
 
-	// @Disabled
+	@Disabled
 	@Test
 	void contributionsEmpty() {
 		final String contributionsEmpty = githubScraperEmpty.contributions();
 		Assertions.assertTrue(contributionsEmpty.equals("[]"));
 	}
 
-	// @Disabled
+	@Disabled
 	@Test
 	void contributionsNonEx() {
 		final String contributionsNonEx = githubScraperNonEx.contributions();
