@@ -81,8 +81,8 @@ export default function SoftwareOganisations() {
       // we add organisation directly
       const resp = await addOrganisationToSoftware({
         software: software?.id ?? '',
-        organisation: item.id ?? '',
-        account: user?.account ?? '',
+        organisation: addOrganisation.id ?? '',
+        position: addOrganisation.position,
         token
       })
       if (resp.status === 200) {
@@ -190,7 +190,6 @@ export default function SoftwareOganisations() {
         const resp = await saveNewOrganisationForSoftware({
           item: data,
           software: software?.id ?? '',
-          account: user?.account ?? '',
           token,
           setState: addOrganisationToList
         })

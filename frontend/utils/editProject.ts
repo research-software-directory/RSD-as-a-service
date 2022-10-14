@@ -97,6 +97,7 @@ export async function createOrganisationAndAddToProject({project, item, session,
       project,
       organisation: id,
       role: 'participating',
+      position: item.position,
       session
     })
     if (resp.status === 200) {
@@ -134,8 +135,8 @@ export async function createOrganisationAndAddToProject({project, item, session,
   }
 }
 
-export async function addOrganisationToProject({project, organisation, role, session}:
-  { project: string, organisation: string, role: OrganisationRole, session:Session }) {
+export async function addOrganisationToProject({project, organisation, role, position, session}:
+  { project: string, organisation: string, role: OrganisationRole, position:number|null, session:Session }) {
   try {
     // by default request status is approved
     const status = 'approved'
@@ -150,7 +151,8 @@ export async function addOrganisationToProject({project, organisation, role, ses
         project,
         organisation,
         status,
-        role
+        role,
+        position
       })
     })
     if ([200, 201].includes(resp.status)) {

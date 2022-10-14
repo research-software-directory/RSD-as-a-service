@@ -70,6 +70,7 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
             project: id,
             organisation: resp.message,
             role: 'funding',
+            position: null,
             session
           })
         }
@@ -79,6 +80,7 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
           project: id,
           organisation: organisation.id as string,
           role: 'funding',
+          position: null,
           session
         })
       }

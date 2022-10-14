@@ -53,7 +53,8 @@ export type EditOrganisation = SearchOrganisation & {
 export type SoftwareForOrganisation = {
   software: string,
   organisation: string,
-  status: Status
+  status: Status,
+  position: number|null
 }
 
 // object returned from api

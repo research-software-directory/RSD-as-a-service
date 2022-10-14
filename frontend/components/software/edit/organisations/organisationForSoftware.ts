@@ -8,8 +8,8 @@ import {createOrganisation, updateDataObjectAfterSave} from '~/utils/editOrganis
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
-export async function saveNewOrganisationForSoftware({item, token, software, account, setState}:
-  { item: EditOrganisation, token: string, software: string, account: string, setState: (item: EditOrganisation) => void }) {
+export async function saveNewOrganisationForSoftware({item, token, software, setState}:
+  { item: EditOrganisation, token: string, software: string, setState: (item: EditOrganisation) => void }) {
   // create new organisation
   let resp = await createOrganisation({
     item,
@@ -27,7 +27,7 @@ export async function saveNewOrganisationForSoftware({item, token, software, acc
     resp = await addOrganisationToSoftware({
       software,
       organisation: id,
-      account,
+      position: item.position,
       token
     })
     if (resp.status === 200) {
@@ -65,14 +65,15 @@ export async function saveNewOrganisationForSoftware({item, token, software, acc
   }
 }
 
-export async function addOrganisationToSoftware({software, organisation, account, token}:
-  { software: string, organisation: string, account: string, token: string }) {
+export async function addOrganisationToSoftware({software, organisation, position, token}:
+  { software: string, organisation: string, position: number|null, token: string }) {
   // 2a. determine status - default is approved
   let status: SoftwareForOrganisation['status'] = 'approved'
   // 2b. register participating organisation for this software
   const data: SoftwareForOrganisation = {
     software,
     organisation,
+    position,
     status
   }
   const url = '/api/v1/software_for_organisation'

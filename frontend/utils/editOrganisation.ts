@@ -23,7 +23,7 @@ import logger from './logger'
 
 // organisation colums used in editOrganisation.createOrganisation
 const columsForCreate = [
-  'parent','slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website'
+  'parent','slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website',
 ]
 // organisation colums used in editOrganisation.updateOrganisation
 export const columsForUpdate = [

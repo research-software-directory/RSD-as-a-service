@@ -78,8 +78,9 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
       // we add organisation directly
       const resp = await addOrganisationToProject({
         project: project.id ?? '',
-        organisation: item.id ?? '',
+        organisation: addOrganisation.id ?? '',
         role: 'participating',
+        position: addOrganisation.position,
         session
       })
       if (resp.status === 200) {
