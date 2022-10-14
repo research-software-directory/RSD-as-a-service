@@ -11,7 +11,7 @@ import {
   editMentionReducer, EditMentionState
 } from '~/components/mention/editMentionReducer'
 import EditMentionContext from '~/components/mention/editMentionContext'
-import {addMention2Item, addMentionToSoftware, removeMentionForSoftware} from './mentionForSoftwareApi'
+import {addNewMentionToSoftware, addToMentionForSoftware, removeMentionForSoftware} from './mentionForSoftwareApi'
 import {MentionItemProps} from '~/types/Mention'
 import {getMentionType} from '~/components/mention/config'
 import {updateDoiItem, updateMentionItem} from '~/utils/editMentions'
@@ -62,7 +62,11 @@ export default function EditMentionsProvider(props: any) {
       item.id = null
       item.source = 'manual'
       // new item to be added
-      const resp = await addMention2Item({item, software, token})
+      const resp = await addNewMentionToSoftware({
+        item,
+        software,
+        token
+      })
       // debugger
       if (resp.status === 200) {
         dispatch({
@@ -103,9 +107,9 @@ export default function EditMentionsProvider(props: any) {
         return true
       }
     }
-    if (item.id && item.source === 'RSD') {
+    if (item.id) {
       // existing RSD mention item to be added to project
-      const resp = await addMentionToSoftware({
+      const resp = await addToMentionForSoftware({
         software,
         mention: item.id,
         token
@@ -122,8 +126,8 @@ export default function EditMentionsProvider(props: any) {
         showSuccessMessage(createSuccessMessage(item))
       }
     } else {
-      // new item from crossref or datacite (source)
-      const resp = await addMention2Item({item, software, token})
+      // probably new item from crossref or datacite
+      const resp = await addNewMentionToSoftware({item, software, token})
       // debugger
       if (resp.status === 200) {
         dispatch({
