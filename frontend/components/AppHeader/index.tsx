@@ -25,7 +25,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
-  const {host,embedMode} = useRsdSettings()
+  const {host, embedMode} = useRsdSettings()
   // Responsive menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -54,8 +54,9 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
       className="z-10 py-4 min-h-[88px] bg-secondary text-primary-content flex items-center flex-wrap"
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
-      <div className="flex-1 flex flex-col items-start px-4 lg:flex-row lg:container lg:mx-auto lg:items-center">
-        <div className="w-full flex-1 flex items-center">
+      <div
+        className="flex-1 flex flex-col items-start px-4 lg:flex-row lg:container lg:mx-auto lg:items-center">
+        <div className="w-full flex-1 flex items-center justify-between">
           <Link href="/" passHref>
             <a className="hover:text-inherit">
               <LogoApp className="hidden 2xl:block"/>
@@ -66,26 +67,33 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
           <GlobalSearchAutocomplete className="hidden lg:block ml-12 mr-6"/>
 
           {/* Large menu*/}
-          <div className="hidden lg:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal">
-            {menuItems.map(item =>
-              <Link key={item.path} href={item.path || ''}>
-                <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
-                  {item.label}
+            <div className="justify-center lg:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
+              <Link href={''}>
+                <a >
+                  Discover
                 </a>
-              </Link>)}
-          </div>
+              </Link>
+              {menuItems.map(item =>
+                <Link key={item.path} href={item.path || ''}>
+                  <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
+                    {item.label}
+                  </a>
+                </Link>
+              )}
 
-          <div className="text-primary-content flex-1 flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
+          </div>
+          <div
+            className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
 
             {/* EDIT button */}
             {editButton ? editButton : null}
 
             {/* FEEDBACK panel */}
-            <div className="hidden lg:block">
-            {host.feedback_email
-              ? <FeedbackPanelButton feedback_email={host.feedback_email} />
-              : null
-            }
+            <div className="hidden md:block">
+              {host.feedback_email
+                ? <FeedbackPanelButton feedback_email={host.feedback_email}/>
+                : null
+              }
             </div>
 
             {/* ADD menu button */}
@@ -94,29 +102,27 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
             {/* LOGIN / USER MENU */}
             <LoginButton/>
 
-            {/* Responsive pages menu */}
-            <IconButton
-              size="large"
-              title="Menu"
-              data-testid="menu-button"
-              aria-label="menu button"
-              onClick={handleClick}
-              sx={{
-                display:['inline-block','inline-block','inline-block','none'],
-                color: 'primary.contrastText',
-                margin:'0rem 0.5rem',
-                '&:hover': {
-                  color: 'primary.main'
-                },
-                alignSelf: 'center',
-                '&:focus-visible': {
-                  outline: 'auto'
-                }
-              }}
-              className="block lg:hidden"
-            >
-              <MenuIcon />
-            </IconButton>
+            {/* Responsive menu */}
+            <div className="block md:hidden">
+
+              <IconButton
+                size="large"
+                title="Menu"
+                data-testid="menu-button"
+                aria-label="menu button"
+                onClick={handleClick}
+                sx={{
+                  display: ['inline-block', 'inline-block', 'inline-block', 'none'],
+                  color: 'primary.contrastText',
+                  margin: '0rem 0.5rem',
+                  alignSelf: 'center',
+                  '&:focus-visible': {
+                    outline: 'auto'
+                  }
+                }}
+              >
+                <MenuIcon/>
+              </IconButton>
               <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
@@ -137,16 +143,20 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
                     </Link>
                   </MenuItem>
                 )}
-                <li >
-                {host.feedback_email
-                  ? <FeedbackPanelButton feedback_email={host.feedback_email} closeFeedbackPanel={handleClose}/>
-                  : null
-                }
+                <li>
+                  {host.feedback_email
+                    ? <FeedbackPanelButton feedback_email={host.feedback_email}
+                                           closeFeedbackPanel={handleClose}/>
+                    : null
+                  }
                 </li>
               </Menu>
+            </div>
           </div>
           <JavascriptSupportWarning/>
         </div>
+
+
         <GlobalSearchAutocomplete className="lg:hidden mt-4"/>
       </div>
     </header>

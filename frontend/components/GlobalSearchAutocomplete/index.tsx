@@ -124,7 +124,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
       setOpen(false)
     }}>
       <div
-        className={`${props.className} relative z-10 flex w-full md:w-52 md:max-w-[320px] focus-within:w-full duration-700`}>
+        className={`${props.className} relative z-10 flex w-full lg:w-52 lg:max-w-[320px] focus-within:w-full duration-700`}>
         <div className="absolute top-[14px] left-3 pointer-events-none">
           <svg width="16" height="16" viewBox="0 0 14 14" fill="none"
                xmlns="http://www.w3.org/2000/svg">

@@ -17,7 +17,7 @@ export default function FeedbackPanelButton(
   const [open, setOpen] = useState(false)
 
   const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -48,16 +48,16 @@ export default function FeedbackPanelButton(
   return (
     <div>
       {/* If desktop size */}
-      <button className="hidden lg:flex flex gap-2 items-center no-underline"
+      <button className="hidden md:flex flex gap-2 items-center no-underline"
               aria-describedby="feedback panel"
               onClick={handleClickOpen}
       >
         Feedback <CaretIcon/>
       </button>
       {/*If  mobile size */}
-      <div className="block lg:hidden">
+      <div className="block md:hidden">
         <Divider/>
-        <button className="flex lg:hidden hover:bg-gray-100 hover:text-primary w-full py-2 px-4"
+        <button className="flex md:hidden hover:bg-gray-100 hover:text-primary w-full py-2 px-4"
                 onClick={handleClickOpen}>
           Send feedback
         </button>
