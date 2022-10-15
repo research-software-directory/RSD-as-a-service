@@ -20,7 +20,6 @@ import {useAuth} from '~/auth'
 import useLoginProviders from '~/auth/api/useLoginProviders'
 import {getUserMenuItems} from '~/config/userMenuItems'
 import UserMenu from '~/components/layout/UserMenu'
-import CaretIcon from '~/components/icons/caret.svg'
 
 export default function LoginButton() {
   const providers = useLoginProviders()
@@ -42,12 +41,7 @@ export default function LoginButton() {
     // when user is authenticated
     const menuItems = getUserMenuItems(session.user?.role)
     // we show user menu with the avatar and user specific options
-    return (
-      <>
-        <UserMenu menuOptions={menuItems}/>
-        <CaretIcon className="-ml-2"/>
-      </>
-    )
+    return <UserMenu menuOptions={menuItems}/>
   }
 
   // when there are multiple providers

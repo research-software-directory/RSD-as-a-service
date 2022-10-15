@@ -4,6 +4,8 @@ import FeedbackPanelButton from './FeedbackPanelButton'
 
 it('it has feedback button', () => {
   render(<FeedbackPanelButton feedback_email='test@email.com' />)
-  const btn = screen.getByRole('button')
+  const btn = screen.getByRole('button', {
+    name: /Feedback/
+  })
   expect(btn).toBeInTheDocument()
 })

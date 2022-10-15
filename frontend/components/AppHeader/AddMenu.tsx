@@ -11,8 +11,6 @@ import AddIcon from '@mui/icons-material/Add'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import {IconButton, ListItemIcon} from '@mui/material'
-import CaretIcon from '~/components/icons/caret.svg'
-
 
 export default function AddMenu() {
   const router = useRouter()
@@ -56,9 +54,6 @@ export default function AddMenu() {
       >
         <AddIcon />
       </IconButton>
-
-      <CaretIcon className="-ml-6"/>
-
       <Menu
         anchorEl={anchorEl}
         open={open}
@@ -66,6 +61,8 @@ export default function AddMenu() {
         MenuListProps={{'aria-labelledby': 'menu-button'}}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+        // disable adding styles to body (overflow:hidden & padding-right)
+        disableScrollLock={true}
       >
         <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/software/add')}>
           <ListItemIcon>

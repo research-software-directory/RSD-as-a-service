@@ -15,8 +15,8 @@
 
 body{
   font-size: 1rem;
-  /* minimal with to have logo, menu and profile */
-  min-width: 375px;
+  /* minimal with to have logo, edit, add, profile and menu */
+  min-width: 27rem;
 }
 
 #__next {

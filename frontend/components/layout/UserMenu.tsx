@@ -10,6 +10,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Avatar from '@mui/material/Avatar'
 import {Divider, ListItemIcon} from '@mui/material'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
 import {useAuth} from '../../auth/index'
 import {MenuItemType} from '../../config/menuItems'
@@ -67,7 +68,7 @@ export default function UserMenu(props: UserMenuType) {
   return (
     <>
       <IconButton
-        title="My RSD"
+        title="Click for menu options"
         data-testid="user-menu-button"
         aria-controls="user-menu"
         aria-haspopup="true"
@@ -90,6 +91,13 @@ export default function UserMenu(props: UserMenuType) {
         >
           {getDisplayInitials(splitName(session?.user?.name ?? ''))}
         </Avatar>
+        {
+        /* Does not fit at 375px in edit software mode
+        <KeyboardArrowDownIcon
+          sx={{
+            color:'secondary.contrastText'
+          }}
+        /> */}
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -100,6 +108,8 @@ export default function UserMenu(props: UserMenuType) {
         }}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+        // disable adding styles to body (overflow:hidden & padding-right)
+        disableScrollLock={true}
       >
         {renderMenuOptions()}
       </Menu>

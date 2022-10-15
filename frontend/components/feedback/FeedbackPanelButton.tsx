@@ -1,4 +1,3 @@
-import CaretIcon from '~/components/icons/caret.svg'
 import * as React from 'react'
 import {useState} from 'react'
 import Link from 'next/link'
@@ -7,7 +6,6 @@ import Dialog from '@mui/material/Dialog'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {useTheme} from '@mui/material/styles'
 import LinkIcon from '@mui/icons-material/Link'
-import Divider from '@mui/material/Divider'
 
 export default function FeedbackPanelButton(
   {feedback_email, closeFeedbackPanel}: { feedback_email: string, closeFeedbackPanel?: () => void }
@@ -46,33 +44,34 @@ export default function FeedbackPanelButton(
   }
 
   return (
-    <div>
-      {/* If desktop size */}
-      <button className="hidden md:flex flex gap-2 items-center no-underline"
-              aria-describedby="feedback panel"
-              onClick={handleClickOpen}
+    <div className="lg:container lg:mx-auto relative">
+      <button
+        title="We value your feedback"
+        aria-describedby="feedback panel"
+        onClick={handleClickOpen}
+        className="bg-error text-error-content"
+        style={{
+          position: 'absolute',
+          left:'1rem',
+          bottom: '-2rem',
+          padding: '0.25rem 0.75rem',
+          borderRadius: '0.5rem 0rem'
+        }}
       >
-        Feedback <CaretIcon/>
+      Your Feedback
       </button>
-      {/*If  mobile size */}
-      <div className="block md:hidden">
-        <Divider/>
-        <button className="flex md:hidden hover:bg-gray-100 hover:text-primary w-full py-2 px-4"
-                onClick={handleClickOpen}>
-          Send feedback
-        </button>
-      </div>
-
       <Dialog
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
+        // disable adding styles to body (overflow:hidden & padding-right)
+        disableScrollLock={fullScreen}
       >
         <div className="h-full w-full bg-[#232323] p-5 ">
           <div className="mx-auto max-w-[500px]">
             <div className="text-white text-xl mb-4">
-              Send Feedback
+              Your Feedback
             </div>
             <textarea
               autoFocus

@@ -51,22 +51,25 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   return (
     <header
       data-testid="app-header"
-      className="z-10 py-4 min-h-[88px] bg-secondary text-primary-content flex items-center flex-wrap"
+      className="z-10 py-4 min-h-[6rem] bg-secondary text-primary-content flex flex-col"
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
       <div
         className="flex-1 flex flex-col items-start px-4 lg:flex-row lg:container lg:mx-auto lg:items-center">
         <div className="w-full flex-1 flex items-center justify-between">
+          {/* Logo */}
           <Link href="/" passHref>
-            <a className="hover:text-inherit">
+            <a title="Homepage"
+              className="hover:text-inherit">
               <LogoApp className="hidden 2xl:block"/>
               <LogoAppSmall className="block 2xl:hidden"/>
             </a>
           </Link>
 
+          {/* Desktop global search*/}
           <GlobalSearchAutocomplete className="hidden lg:block ml-12 mr-6"/>
 
-          {/* Large menu*/}
+          {/* Desktop menu*/}
           <div
             className="justify-center lg:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
             {menuItems.map(item =>
@@ -80,81 +83,68 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
 
           <div
             className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
-
             {/* EDIT button */}
             {editButton ? editButton : null}
-
-            {/* FEEDBACK panel */}
-            <div className="hidden md:block">
-              {host.feedback_email
-                ? <FeedbackPanelButton feedback_email={host.feedback_email}/>
-                : null
-              }
-            </div>
 
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
 
+            {/* Mobile menu */}
+            <IconButton
+              size="large"
+              title="Menu"
+              data-testid="menu-button"
+              aria-label="menu button"
+              onClick={handleClick}
+              sx={{
+                display: ['flex', 'flex', 'none'],
+                color: 'primary.contrastText',
+                margin: '0rem 0.5rem',
+                alignSelf: 'center',
+                '&:focus-visible': {
+                  outline: 'auto'
+                }
+              }}
+            >
+              <MenuIcon/>
+            </IconButton>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'menu-button'
+              }}
+              transformOrigin={{horizontal: 'right', vertical: 'top'}}
+              anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+              // disable adding styles to body (overflow:hidden & padding-right)
+              disableScrollLock={true}
+            >
+              {menuItems.map(item =>
+                <MenuItem onClick={handleClose} key={item.path}>
+                  <Link href={item.path || ''}>
+                    <a className={`${activePath === item.path && 'nav-active'}`}>
+                      {item.label}
+                    </a>
+                  </Link>
+                </MenuItem>
+              )}
+            </Menu>
+
             {/* LOGIN / USER MENU */}
             <LoginButton/>
-
-            {/* Responsive menu */}
-            <div className="block md:hidden">
-
-              <IconButton
-                size="large"
-                title="Menu"
-                data-testid="menu-button"
-                aria-label="menu button"
-                onClick={handleClick}
-                sx={{
-                  display: ['inline-block', 'inline-block', 'inline-block', 'none'],
-                  color: 'primary.contrastText',
-                  margin: '0rem 0.5rem',
-                  alignSelf: 'center',
-                  '&:focus-visible': {
-                    outline: 'auto'
-                  }
-                }}
-              >
-                <MenuIcon/>
-              </IconButton>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  'aria-labelledby': 'menu-button',
-                }}
-                transformOrigin={{horizontal: 'right', vertical: 'top'}}
-                anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-              >
-                {menuItems.map(item =>
-                  <MenuItem onClick={handleClose} key={item.path}>
-                    <Link href={item.path || ''}>
-                      <a className={`${activePath === item.path && 'nav-active'}`}>
-                        {item.label}
-                      </a>
-                    </Link>
-                  </MenuItem>
-                )}
-                <li>
-                  {host.feedback_email
-                    ? <FeedbackPanelButton feedback_email={host.feedback_email}
-                                           closeFeedbackPanel={handleClose}/>
-                    : null
-                  }
-                </li>
-              </Menu>
-            </div>
           </div>
-          <JavascriptSupportWarning/>
+          <JavascriptSupportWarning />
         </div>
-
-
-        <GlobalSearchAutocomplete className="lg:hidden mt-4"/>
+        {/* Mobile global search */}
+        <GlobalSearchAutocomplete className="lg:hidden my-4" />
       </div>
+      {/* FEEDBACK panel */}
+      {host.feedback_email
+        ? <FeedbackPanelButton feedback_email={host.feedback_email}/>
+        : null
+      }
     </header>
   )
 }
