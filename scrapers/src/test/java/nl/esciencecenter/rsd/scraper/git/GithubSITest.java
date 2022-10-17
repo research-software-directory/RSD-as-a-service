@@ -47,13 +47,13 @@ public class GithubSITest {
 	@Test
 	void contributionsEmpty() {
 		final String contributionsEmpty = githubScraperEmpty.contributions();
-		Assertions.assertTrue(contributionsEmpty.equals("[]"));
+		Assertions.assertEquals("[]", contributionsEmpty);
 	}
 
 	@Disabled
 	@Test
 	void contributionsNonEx() {
 		final String contributionsNonEx = githubScraperNonEx.contributions();
-		Assertions.assertTrue(contributionsNonEx.equals(""));
+		Assertions.assertNull(contributionsNonEx);
 	}
 }

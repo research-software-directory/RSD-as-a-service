@@ -42,6 +42,8 @@ public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 	@Override
 	public String contributions() {
 		String data = origin.contributions();
+		if (data == null) return null;
+
 		return switch (codePlatform) {
 			case GITHUB -> contributionsGitHub(data);
 			case GITLAB -> contributionsGitLab(data);
@@ -77,28 +79,28 @@ public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 		// create empty map
 		SortedMap<Long, Long> commitsPerWeek = new TreeMap<>();
 		JsonArray allCommits = JsonParser.parseString(data).getAsJsonArray();
-                if (allCommits.size() > 0) {
-                    String oldestCommit = allCommits.get(allCommits.size() - 1).getAsJsonObject().get("committed_date").getAsString();
-                    ZonedDateTime oldestCommitDate = ZonedDateTime.parse(oldestCommit).withZoneSameInstant(ZoneOffset.UTC);
-                    ZonedDateTime firstAggregationWeek = collapseToWeekUTC(oldestCommitDate);
-                    ZonedDateTime lastAggregationWeek = collapseToWeekUTC(ZonedDateTime.now(ZoneOffset.UTC));
-                    long oneWeekInSeconds = 604800L; // 60*60*24*7
-                    long currentSeconds = firstAggregationWeek.toEpochSecond();
-                    while (currentSeconds < lastAggregationWeek.toEpochSecond() + oneWeekInSeconds) {
-                            commitsPerWeek.put(currentSeconds, 0L);
-                            currentSeconds += oneWeekInSeconds;
-                    }
-                    // Fill map
-                    for (int i = allCommits.size() - 1; i >= 0; i--) {
-                            JsonObject currentCommit = allCommits.get(i).getAsJsonObject();
-                            ZonedDateTime commitDateUTC = ZonedDateTime.parse(currentCommit.get("committed_date").getAsString()).withZoneSameInstant(ZoneOffset.UTC);
-                            ZonedDateTime commitWeek = collapseToWeekUTC(commitDateUTC);
-                            Long commitWeekSeconds = commitWeek.toEpochSecond();
-                            Long newCommitsThisWeek;
-                            newCommitsThisWeek = commitsPerWeek.get(commitWeekSeconds) + 1L;
-                            commitsPerWeek.put(commitWeekSeconds, newCommitsThisWeek);
-                    }
-                }
+		if (allCommits.size() > 0) {
+			String oldestCommit = allCommits.get(allCommits.size() - 1).getAsJsonObject().get("committed_date").getAsString();
+			ZonedDateTime oldestCommitDate = ZonedDateTime.parse(oldestCommit).withZoneSameInstant(ZoneOffset.UTC);
+			ZonedDateTime firstAggregationWeek = collapseToWeekUTC(oldestCommitDate);
+			ZonedDateTime lastAggregationWeek = collapseToWeekUTC(ZonedDateTime.now(ZoneOffset.UTC));
+			long oneWeekInSeconds = 604800L; // 60*60*24*7
+			long currentSeconds = firstAggregationWeek.toEpochSecond();
+			while (currentSeconds < lastAggregationWeek.toEpochSecond() + oneWeekInSeconds) {
+				commitsPerWeek.put(currentSeconds, 0L);
+				currentSeconds += oneWeekInSeconds;
+			}
+			// Fill map
+			for (int i = allCommits.size() - 1; i >= 0; i--) {
+				JsonObject currentCommit = allCommits.get(i).getAsJsonObject();
+				ZonedDateTime commitDateUTC = ZonedDateTime.parse(currentCommit.get("committed_date").getAsString()).withZoneSameInstant(ZoneOffset.UTC);
+				ZonedDateTime commitWeek = collapseToWeekUTC(commitDateUTC);
+				Long commitWeekSeconds = commitWeek.toEpochSecond();
+				Long newCommitsThisWeek;
+				newCommitsThisWeek = commitsPerWeek.get(commitWeekSeconds) + 1L;
+				commitsPerWeek.put(commitWeekSeconds, newCommitsThisWeek);
+			}
+		}
 		return new Gson().toJson(commitsPerWeek);
 	}
 }
