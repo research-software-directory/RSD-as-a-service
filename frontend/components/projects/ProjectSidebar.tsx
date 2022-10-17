@@ -12,7 +12,7 @@ import ProjectFunding from './ProjectFunding'
 import ProjectLinks from './ProjectLinks'
 import ProjectTags from './ProjectTags'
 import {ProjectOrganisationProps} from '~/types/Organisation'
-
+import ResearchDomains from './ResearchDomains'
 
 type ProjectSidebarProps = {
   date_start: string | null
@@ -23,7 +23,6 @@ type ProjectSidebarProps = {
   links: ProjectLink[]
   fundingOrganisations: ProjectOrganisationProps[]
 }
-
 
 export default function ProjectSidebar({date_start, date_end, grant_id, links, researchDomains,
   keywords, fundingOrganisations}: ProjectSidebarProps) {
@@ -45,10 +44,8 @@ export default function ProjectSidebar({date_start, date_end, grant_id, links, r
         links={links}
       />
 
-      <ProjectTags
-        title="Research domains"
-        tags={researchDomains.map(item => ({label: item.key, title: item.description}))}
-        infoLink = "https://erc.europa.eu/news/new-erc-panel-structure-2021-and-2022"
+      <ResearchDomains
+        domains={researchDomains}
       />
 
       <ProjectTags
