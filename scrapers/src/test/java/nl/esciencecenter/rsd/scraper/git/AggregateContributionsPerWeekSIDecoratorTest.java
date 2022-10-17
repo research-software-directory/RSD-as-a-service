@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -11,6 +13,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class AggregateContributionsPerWeekSIDecoratorTest {
+	private final String apiUrl = "https://api.github.com";
+	private final String projectPath = "cmeessen/empty";
+
+	@Test
+	void emptyRepository() {
+		// String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GithubSI(apiUrl, projectPath), CodePlatformProvider.GITHUB).contributions();
+		String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(
+			new GitLabSI("https://gitlab.hzdr.de/api", "christian.meessen/empty"),
+			CodePlatformProvider.GITHUB
+		).contributions();
+	}
 
 	@Test
 	void givenGithubCommitData_whenAggregating_thenAggregatedDataReturned() {
