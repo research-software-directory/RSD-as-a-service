@@ -17,7 +17,11 @@ type GetStartedSectionProps = {
 }
 
 export default function GetStartedSection(props:GetStartedSectionProps) {
-  const {repository_url,get_started_url,commit_history,commit_history_scraped_at} = props
+  const {repository_url, get_started_url, commit_history, commit_history_scraped_at} = props
+
+  // if no get_started_url and repository_url we do not render this section
+  if (!get_started_url && !repository_url) return null
+
   function renderGetStartedUrl() {
     if (get_started_url) {
       return (
@@ -47,8 +51,6 @@ export default function GetStartedSection(props:GetStartedSectionProps) {
       />
     )
   }
-
-  if (!get_started_url && !commit_history) return null
 
   return (
     <section className="flex bg-base-200 py-12 lg:pt-24 lg:pb-28">
