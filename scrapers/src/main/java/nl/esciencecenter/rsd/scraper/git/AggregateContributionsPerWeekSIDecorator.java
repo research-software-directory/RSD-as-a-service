@@ -42,6 +42,8 @@ public class AggregateContributionsPerWeekSIDecorator implements SoftwareInfo {
 	@Override
 	public String contributions() {
 		String data = origin.contributions();
+		if (data == null) return null;
+
 		return switch (codePlatform) {
 			case GITHUB -> contributionsGitHub(data);
 			case GITLAB -> contributionsGitLab(data);

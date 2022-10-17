@@ -70,7 +70,7 @@ public class GithubSI implements SoftwareInfo {
 	 */
 	@Override
 	public String contributions() {
-		String contributions = "";
+		String contributions;
 		try {
 			contributions = Config.apiCredentialsGithub()
 					.map(apiCredentials -> Utils.get(baseApiUrl + "/repos/" + repo + "/stats/contributors", "Authorization", "Basic " + Utils.base64Encode(apiCredentials)))
@@ -81,9 +81,9 @@ public class GithubSI implements SoftwareInfo {
 			}
 		} catch (ResponseException e) {
 			if (e.getStatusCode() == 404) {
-				// Repository does not exist, emtpy string will be parsed to null
-				contributions = "";
-			}
+				// Repository does not exist
+				contributions = null;
+			} else throw e;
 		}
 		return contributions;
 	}

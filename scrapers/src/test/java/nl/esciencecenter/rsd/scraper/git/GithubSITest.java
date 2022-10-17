@@ -54,6 +54,6 @@ public class GithubSITest {
 	@Test
 	void contributionsNonEx() {
 		final String contributionsNonEx = githubScraperNonEx.contributions();
-		Assertions.assertEquals("", contributionsNonEx);
+		Assertions.assertNull(contributionsNonEx);
 	}
 }
