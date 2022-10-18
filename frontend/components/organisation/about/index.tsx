@@ -17,8 +17,10 @@ export function AboutPagePlaceholder() {
   return (
     <Alert severity="info" sx={{marginTop:'0.5rem'}}>
       <AlertTitle sx={{fontWeight: 500}}>About section not defined</AlertTitle>
-      <p>About section is not visible to the vistors because it does not have any content.</p>
-      <span>To activate about section add the content to about section <strong>
+      <p>
+        The about section is not visible to vistors because it does not have any content.
+      </p>
+      <span>To activate the about section, add content to the about section <strong>
           <button onClick={goToSettings}>in the settings.</button>
         </strong>
       </span>
