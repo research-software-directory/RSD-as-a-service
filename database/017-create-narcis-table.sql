@@ -6,7 +6,7 @@
 CREATE TABLE oaipmh (
 --	trick to only have one row in this table:
 	id BOOLEAN DEFAULT TRUE PRIMARY KEY CHECK (id),
-	data VARCHAR,
+	data XML,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
