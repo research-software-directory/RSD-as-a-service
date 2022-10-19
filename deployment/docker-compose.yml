@@ -43,7 +43,6 @@ services:
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT
       - PGRST_JWT_SECRET
-      - PGRST_RAW_MEDIA_TYPES=application/xml
     depends_on:
       - database
     networks:

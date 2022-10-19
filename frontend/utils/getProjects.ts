@@ -51,8 +51,8 @@ export async function getProjectList({url, token}: { url: string, token?: string
   }
 }
 export function extractImageInfo(item: RawProject) {
-  if (item.image_for_project && item.image_for_project.length > 0) {
-    return item.image_for_project[0].project
+  if (item?.image_for_project && item?.image_for_project !== null) {
+    return item.image_for_project.project
   } else {
     return null
   }
