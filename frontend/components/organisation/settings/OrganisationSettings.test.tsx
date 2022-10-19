@@ -20,7 +20,8 @@ const dummyProps = {
     'software_cnt': 6,
     'project_cnt': 4,
     'children_cnt': 2,
-    'score': 10
+    'score': 10,
+    'description': null
   },
   isMaintainer: true
 }

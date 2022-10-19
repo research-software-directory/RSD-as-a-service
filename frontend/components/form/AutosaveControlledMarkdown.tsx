@@ -7,33 +7,45 @@ import {useController, useFormContext} from 'react-hook-form'
 import {useSession} from '~/auth'
 import MarkdownInputWithPreview from '~/components/form/MarkdownInputWithPreview'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {projectInformation as config} from './config'
-import {patchProjectTable} from './patchProjectInfo'
 
-export default function AutosaveProjectMarkdown({project_id,name}: {project_id:string,name:string}) {
+type PatchFnProps = {
+  id: string,
+  data: object,
+  token: string
+}
+
+type AutosaveControlledMarkdownProps = {
+  id: string
+  name: string
+  maxLength: number
+  patchFn: (props:PatchFnProps)=>Promise<any>
+}
+
+export default function AutosaveControlledMarkdown(props: AutosaveControlledMarkdownProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
+  const {id,name, maxLength,patchFn} = props
   const {register, control, resetField} = useFormContext()
   const {field:{value},fieldState:{isDirty,error}} = useController({
     control,
     name
   })
 
-  async function saveProjectInfo() {
+  async function saveMarkdown() {
     let description = null
     // we do not save when error or no change
     if (isDirty === false || error) return
     // only if not empty string, we use null when empty
     if (value!=='') description = value
-    const resp = await patchProjectTable({
-      id:project_id,
+    const resp = await patchFn({
+      id,
       data: {
         [name]:value
       },
       token
     })
 
-    // console.group('AutosaveProjectMarkdown')
+    // console.group('AutosaveControlledMarkdown')
     // console.log('saved...', name)
     // console.log('status...', resp?.status)
     // console.groupEnd()
@@ -48,7 +60,7 @@ export default function AutosaveProjectMarkdown({project_id,name}: {project_id:s
     }
   }
 
-  // console.group('AutosaveProjectMarkdown')
+  // console.group('AutosaveControlledMarkdown')
   // console.log('name...', name)
   // console.log('value...', value)
   // console.log('isDirty...', isDirty)
@@ -59,14 +71,14 @@ export default function AutosaveProjectMarkdown({project_id,name}: {project_id:s
     <MarkdownInputWithPreview
       markdown={value ?? ''}
       register={register(name, {
-        maxLength: config.description.validation.maxLength.value
+        maxLength
       })}
       disabled={false}
       helperInfo={{
         length: value?.length ?? 0,
-        maxLength: config.description.validation.maxLength.value
+        maxLength
       }}
-      onBlur={()=>saveProjectInfo()}
+      onBlur={()=>saveMarkdown()}
     />
   )
 }
