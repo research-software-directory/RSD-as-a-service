@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider'
 import getBrowser from '~/utils/getBrowser'
 
 export default function FeedbackPanelButton(
-  {feedback_email, closeFeedbackPanel}: { feedback_email: string, closeFeedbackPanel?: () => void }
+  {feedback_email, issues_page_url, closeFeedbackPanel}: { feedback_email: string, issues_page_url:string, closeFeedbackPanel?: () => void }
 ) {
 
   const [text, setText] = useState('')
@@ -44,13 +44,13 @@ export default function FeedbackPanelButton(
     if (typeof location === 'undefined') return
 
     return encodeURIComponent(`Hi RSD Team,
-      I would like to give some feedback about the RSD for the browser ${browserNameAndVersion()} on the page ${location.href}:
-      ---
-      ${text}
-      ---
-      
-      User Agent: ${navigator.userAgent}
-      `
+
+I would like to give some feedback about the RSD for the browser ${browserNameAndVersion()} on the page ${location.href}:
+---
+${text}
+---
+
+User Agent: ${navigator.userAgent}`
     )
   }
 
@@ -110,7 +110,7 @@ export default function FeedbackPanelButton(
                 className="text-sm text-white hover:text-white bg-primary px-3 py-1 rounded hover:opacity-90 active:opacity-95"
                 target="_blank"
                 rel="noreferrer"
-                href={`mailto:${feedback_email}?subject=Feedback about the RSD&body=${mailBody()}`}
+                href={`mailto:${feedback_email}?subject=${encodeURIComponent('Feedback about the RSD')}&body=${mailBody()}`}
               >
                 <MailOutlineOutlined/> Send feedback
               </a>
@@ -119,7 +119,7 @@ export default function FeedbackPanelButton(
             <div className="text-sm mt-8 mb-6 text-[#B7B7B7]">
               We will send your feedback using your default email application,
               or you can open a new <a className="text-primary"
-                                       href="https://github.com/research-software-directory/RSD-as-a-service/issues"
+                                       href={issues_page_url}
                                        target="_blank" rel="noreferrer">
               issue</a>
             </div>

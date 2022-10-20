@@ -20,7 +20,11 @@ export type RsdHost = {
   email?: string,
   website?: string,
   logo_url?: string,
-  feedback_email?:string
+  feedback?: {
+    enabled: boolean,
+    url: string,
+    issues_page_url: string
+  },
 }
 
 export type CustomLink = {

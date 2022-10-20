@@ -84,8 +84,8 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
 
             {/* FEEDBACK panel */}
             <div className="hidden md:block">
-              {host.feedback_email
-                ? <FeedbackPanelButton feedback_email={host.feedback_email}/>
+              {host.feedback?.enabled
+                ? <FeedbackPanelButton feedback_email={host.feedback.url} issues_page_url={host.feedback.issues_page_url} />
                 : null
               }
             </div>
@@ -139,9 +139,8 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
                   </MenuItem>
                 )}
                 <li>
-                  {host.feedback_email
-                    ? <FeedbackPanelButton feedback_email={host.feedback_email}
-                                           closeFeedbackPanel={handleCloseResponsiveMenu}/>
+                  {host.feedback?.enabled
+                    ? <FeedbackPanelButton feedback_email={host.feedback.url} issues_page_url={host.feedback.issues_page_url} />
                     : null
                   }
                 </li>

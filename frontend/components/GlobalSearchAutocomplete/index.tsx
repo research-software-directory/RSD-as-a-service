@@ -151,19 +151,19 @@ export default function GlobalSearchAutocomplete(props: Props) {
           <div
             className="shadow-xl absolute top-[50px] w-full left-0 bg-white text-black py-2 rounded">
             {!hasResults &&
-              <div className="px-4 py-3 font-normal bg-gray-200 mb-2 ">
+              <div className="px-4 py-3 font-normal bg-base-200 mb-2 ">
                 <span className="animate-pulse">No results...</span>
               </div>}
             {searchResults.map((item, index) =>
               <div key={index}
-                   className={`${selected === index ? 'bg-gray-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
+                   className={`${selected === index ? 'bg-base-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
                    onClick={handleClick}
                    onMouseEnter={() => setSelected(index)}
                    onTouchStart={() => setSelected(index)}
               >
                 <div className="flex gap-3 w-full">
                   {/*icon*/}
-                  <div className={selected === index ? 'text-content' : 'text-gray-500'}>
+                  <div className={selected === index ? 'text-content' : 'opacity-40'}>
                     {item?.source === 'software' && <TerminalIcon/>}
                     {item?.source === 'projects' && <ListAltIcon/>}
                     {item?.source === 'organisations' && <BusinessIcon/>}
