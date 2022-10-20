@@ -49,7 +49,10 @@ export default function FeedbackPanelButton(
       I would like to give some feedback about the RSD for the browser ${browserNameAndVersion()} on the page ${location.href}:
       ---
       ${text}
-      ---`
+      ---
+      
+      User Agent: ${navigator.userAgent}
+      `
     )
   }
 

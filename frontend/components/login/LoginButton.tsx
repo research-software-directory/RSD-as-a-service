@@ -45,7 +45,6 @@ export default function LoginButton() {
     return (
       <>
         <UserMenu menuOptions={menuItems}/>
-        <CaretIcon className="-ml-2"/>
       </>
     )
   }

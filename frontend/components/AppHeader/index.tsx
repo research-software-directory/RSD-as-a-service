@@ -40,11 +40,12 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
   // Doesn't show the header in embed mode
   if (embedMode) return null
 
+  // Responsive menu
   const open = Boolean(anchorEl)
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClickResponsiveMenu = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
   }
-  const handleClose = () => {
+  const handleCloseResponsiveMenu = () => {
     setAnchorEl(null)
   }
 
@@ -55,7 +56,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
       <div
-        className="flex-1 flex flex-col items-start px-4 lg:flex-row lg:container lg:mx-auto lg:items-center">
+        className="flex-1 flex flex-col px-4 xl:flex-row max-w-screen-2xl mx-auto items-start xl:items-center">
         <div className="w-full flex-1 flex items-center justify-between">
           <Link href="/" passHref>
             <a className="hover:text-inherit">
@@ -64,11 +65,11 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
             </a>
           </Link>
 
-          <GlobalSearchAutocomplete className="hidden lg:block ml-12 mr-6"/>
+          <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
 
           {/* Large menu*/}
           <div
-            className="justify-center lg:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
+            className="justify-center xl:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''}>
                 <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
@@ -78,11 +79,8 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
             )}
           </div>
 
-          <div
-            className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
+          <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
 
-            {/* EDIT button */}
-            {editButton ? editButton : null}
 
             {/* FEEDBACK panel */}
             <div className="hidden md:block">
@@ -92,25 +90,24 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
               }
             </div>
 
+
+            {/* EDIT button */}
+            {editButton ? editButton : null}
+
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
 
-            {/* LOGIN / USER MENU */}
-            <LoginButton/>
 
             {/* Responsive menu */}
-            <div className="block md:hidden">
-
+            <div className="flex items-center md:hidden">
               <IconButton
                 size="large"
                 title="Menu"
                 data-testid="menu-button"
                 aria-label="menu button"
-                onClick={handleClick}
+                onClick={handleClickResponsiveMenu}
                 sx={{
-                  display: ['inline-block', 'inline-block', 'inline-block', 'none'],
                   color: 'primary.contrastText',
-                  margin: '0rem 0.5rem',
                   alignSelf: 'center',
                   '&:focus-visible': {
                     outline: 'auto'
@@ -123,15 +120,17 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
-                onClose={handleClose}
+                onClose={handleCloseResponsiveMenu}
                 MenuListProps={{
                   'aria-labelledby': 'menu-button',
                 }}
                 transformOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+                // disable adding styles to body (overflow:hidden & padding-right)
+                disableScrollLock = { true}
               >
                 {menuItems.map(item =>
-                  <MenuItem onClick={handleClose} key={item.path}>
+                  <MenuItem onClick={handleCloseResponsiveMenu} key={item.path}>
                     <Link href={item.path || ''}>
                       <a className={`${activePath === item.path && 'nav-active'}`}>
                         {item.label}
@@ -142,18 +141,23 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
                 <li>
                   {host.feedback_email
                     ? <FeedbackPanelButton feedback_email={host.feedback_email}
-                                           closeFeedbackPanel={handleClose}/>
+                                           closeFeedbackPanel={handleCloseResponsiveMenu}/>
                     : null
                   }
                 </li>
               </Menu>
             </div>
+
+            {/* LOGIN / USER MENU */}
+            <LoginButton/>
+
+
           </div>
           <JavascriptSupportWarning/>
         </div>
 
 
-        <GlobalSearchAutocomplete className="lg:hidden mt-4"/>
+        <GlobalSearchAutocomplete className="xl:hidden mt-4"/>
       </div>
     </header>
   )
