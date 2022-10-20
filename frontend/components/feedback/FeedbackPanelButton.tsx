@@ -7,7 +7,9 @@ import Dialog from '@mui/material/Dialog'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {useTheme} from '@mui/material/styles'
 import LinkIcon from '@mui/icons-material/Link'
+import WebIcon from '@mui/icons-material/Web'
 import Divider from '@mui/material/Divider'
+import getBrowser from '~/utils/getBrowser'
 
 export default function FeedbackPanelButton(
   {feedback_email, closeFeedbackPanel}: { feedback_email: string, closeFeedbackPanel?: () => void }
@@ -34,11 +36,17 @@ export default function FeedbackPanelButton(
     }, 0)
   }
 
-  function mailBody() {
+
+  function browserNameAndVersion(): string | undefined{
+    const browser = getBrowser()
+    return `${browser?.name} ${browser?.version}`
+  }
+
+  function mailBody():string | undefined {
     if (typeof location === 'undefined') return
 
     return encodeURIComponent(`Hi RSD Team,
-      I would like to give some feedback about the RSD on the page ${location.href}:
+      I would like to give some feedback about the RSD for the browser ${browserNameAndVersion()} on the page ${location.href}:
       ---
       ${text}
       ---`
@@ -81,8 +89,13 @@ export default function FeedbackPanelButton(
               onChange={e => setText(e.target.value)}>
           </textarea>
 
-            <div className="text-[#888] text-sm mb-8">
+            {/* Location URL */}
+            <div className="text-[#888] text-sm break-all">
               <LinkIcon className="-rotate-45"/> {typeof location !== 'undefined' && location.href}
+            </div>
+            {/* Browser user agent detection */}
+            <div className="text-[#888] text-sm mb-8">
+              <WebIcon/> {browserNameAndVersion()}
             </div>
 
             <div className="flex justify-end gap-4 w-full my-2">
