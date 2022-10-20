@@ -1,7 +1,6 @@
 import CaretIcon from '~/components/icons/caret.svg'
 import * as React from 'react'
 import {useState} from 'react'
-import Link from 'next/link'
 import {MailOutlineOutlined} from '@mui/icons-material'
 import Dialog from '@mui/material/Dialog'
 import useMediaQuery from '@mui/material/useMediaQuery'
