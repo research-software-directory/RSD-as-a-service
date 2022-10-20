@@ -20,7 +20,7 @@ import {SoftwareListItem} from '../../types/SoftwareTypes'
 import {rowsPerPageOptions} from '../../config/pagination'
 import {getSoftwareList} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
-import {softwareListUrl,softwareUrl} from '../../utils/postgrestUrl'
+import {softwareListUrl, softwareUrl} from '../../utils/postgrestUrl'
 import SoftwareKeywordFilter from '~/components/software/SoftwareKeywordFilter'
 
 type SoftwareIndexPageProps = {
@@ -35,7 +35,7 @@ type SoftwareIndexPageProps = {
 const pageTitle = `Software | ${app.title}`
 
 export default function SoftwareIndexPage(
-  {software=[], count, page, rows, keywords, search}: SoftwareIndexPageProps
+  {software = [], count, page, rows, keywords, search}: SoftwareIndexPageProps
 ) {
   // use next router (hook is only for browser)
   const router = useRouter()
@@ -68,7 +68,7 @@ export default function SoftwareIndexPage(
   // change number of cards per page
   function handleItemsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ){
+  ) {
     const url = softwareUrl({
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
@@ -91,7 +91,7 @@ export default function SoftwareIndexPage(
     router.push(url)
   }
 
-  function handleFilters(keywords: string[]){
+  function handleFilters(keywords: string[]) {
     const url = softwareUrl({
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
@@ -138,32 +138,47 @@ export default function SoftwareIndexPage(
         </div>
       </PageTitle>
 
-      <SoftwareGrid
-        className='gap-[0.125rem] p-[0.125rem] pt-4 pb-12'
-        grid={{
-          height: '17rem',
-          minWidth,
-          maxWidth:'1fr'
-        }}
-        software={software}
-      />
+      <div className="flex gap-3">
 
-      <div className="flex flex-wrap justify-center mb-5">
-        <Pagination
-          count={Math.ceil(count/rows)}
-          page={page + 1}
-          onChange={handlePaginationChange}
-          size="large"
-          shape="rounded"
-        />
+
+        <div className="w-[14rem]">
+            filters
+          Filter
+          - tags
+          <br/>
+          <br/>
+          Order by
+          - Last update
+          - more contributors
+          - mentions
+          - featured
+
+
+        </div>
+        <div className="w-full">
+          {/*software list*/}
+          <SoftwareGrid software={software} className=""/>
+
+          <div className="flex flex-wrap justify-center mt-3 mb-5">
+            <Pagination
+              count={Math.ceil(count / rows)}
+              page={page + 1}
+              onChange={handlePaginationChange}
+              size="large"
+              shape="rounded"
+            />
+          </div>
+        </div>
+
       </div>
+
     </DefaultLayout>
   )
 }
 
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps(context:GetServerSidePropsContext) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract params from page-query
   const {search, keywords, rows, page} = ssrSoftwareParams(context.query)
   // construct postgREST api url with query params

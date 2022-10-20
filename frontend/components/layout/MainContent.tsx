@@ -12,7 +12,7 @@ type MaintContainerProps = {
 export default function MainContent({className,children,...props}:MaintContainerProps) {
   return (
     <main
-      className={`flex-1 flex flex-col px-4 lg:container lg:mx-auto ${className ?? ''}`}
+      className={`flex-1 flex flex-col px-4 max-w-screen-2xl mx-auto ${className ?? ''}`}
       {...props}
     >
       {children}
