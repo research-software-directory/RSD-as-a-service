@@ -36,13 +36,12 @@ export default function FeedbackPanelButton(
     }, 0)
   }
 
-
-  function browserNameAndVersion(): string | undefined{
+  function browserNameAndVersion(): string | undefined {
     const browser = getBrowser()
     return `${browser?.name} ${browser?.version}`
   }
 
-  function mailBody():string | undefined {
+  function mailBody(): string | undefined {
     if (typeof location === 'undefined') return
 
     return encodeURIComponent(`Hi RSD Team,
@@ -107,17 +106,15 @@ export default function FeedbackPanelButton(
                 onClick={closeAndClean}>
                 Cancel
               </button>
-              <Link rel="noreferrer"
-                    href={`mailto:${feedback_email}?subject=Feedback about the RSD&body=${mailBody()}`}
+              <a
+                onClick={closeAndClean}
+                className="text-sm text-white hover:text-white bg-primary px-3 py-1 rounded hover:opacity-90 active:opacity-95"
+                target="_blank"
+                rel="noreferrer"
+                href={`mailto:${feedback_email}?subject=Feedback about the RSD&body=${mailBody()}`}
               >
-                <a
-                  onClick={closeAndClean}
-                  className="text-sm text-white hover:text-white bg-primary px-3 py-1 rounded hover:opacity-90 active:opacity-95"
-                  target="_blank"
-                >
-                  <MailOutlineOutlined/> Send feedback
-                </a>
-              </Link>
+                <MailOutlineOutlined/> Send feedback
+              </a>
 
             </div>
             <div className="text-sm mt-8 mb-6 text-[#B7B7B7]">
