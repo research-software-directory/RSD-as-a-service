@@ -126,6 +126,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
       <div
         className={`${props.className} relative z-10 flex w-full lg:w-52 lg:max-w-[320px] focus-within:w-full duration-700`}>
         <div className="absolute top-[14px] left-3 pointer-events-none">
+          {/* Search Icon */}
           <svg width="16" height="16" viewBox="0 0 14 14" fill="none"
                xmlns="http://www.w3.org/2000/svg">
             <path
@@ -154,7 +155,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
               </div>}
             {searchResults.map((item, index) =>
               <div key={index}
-                   className={`${selected === index ? 'bg-secondary text-secondary-content' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
+                   className={`${selected === index ? 'bg-gray-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
                    onClick={handleClick}
                    onMouseEnter={() => setSelected(index)}
                    onTouchStart={() => setSelected(index)}
