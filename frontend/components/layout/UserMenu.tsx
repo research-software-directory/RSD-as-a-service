@@ -100,6 +100,8 @@ export default function UserMenu(props: UserMenuType) {
         }}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+        // disable adding styles to body (overflow:hidden & padding-right)
+        disableScrollLock = { true}
       >
         {renderMenuOptions()}
       </Menu>
