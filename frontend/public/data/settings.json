@@ -2,8 +2,13 @@
   "host": {
     "name": "rsd",
     "email": "rsd@esciencecenter.nl",
-    "logo_url": "https://www.esciencecenter.nl/wp-content/themes/raadhuis/dist/assets/img/logo-fc-white.svg",
-    "website": "https://www.esciencecenter.nl"
+    "logo_url": "/images/logo-escience.svg",
+    "website": "https://www.esciencecenter.nl",
+    "feedback": {
+      "enabled": true,
+      "url": "rsd@esciencecenter.nl",
+      "issues_page_url": "https://github.com/research-software-directory/RSD-as-a-service/issues"
+    }
   },
   "links": [
     {

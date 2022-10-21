@@ -2,7 +2,9 @@
   "host": {
     "name": "rsd",
     "email": "rsd@esciencecenter.nl",
-    "logo_url": "/images/logo-escience.svg"
+    "logo_url": "/images/logo-escience.svg",
+    "website": "https://www.esciencecenter.nl",
+    "feedback_email": "rsd@esciencecenter.nl"
   },
   "links": [
     {

@@ -14,6 +14,7 @@ import {Divider, ListItemIcon} from '@mui/material'
 import {useAuth} from '../../auth/index'
 import {MenuItemType} from '../../config/menuItems'
 import {getDisplayInitials, splitName} from '../../utils/getDisplayName'
+import CaretIcon from '~/components/icons/caret.svg'
 
 type UserMenuType = {
   image?: string
@@ -90,6 +91,7 @@ export default function UserMenu(props: UserMenuType) {
         >
           {getDisplayInitials(splitName(session?.user?.name ?? ''))}
         </Avatar>
+        <CaretIcon className="text-secondary-content ml-2"/>
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -100,6 +102,8 @@ export default function UserMenu(props: UserMenuType) {
         }}
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+        // disable adding styles to body (overflow:hidden & padding-right)
+        disableScrollLock = { true}
       >
         {renderMenuOptions()}
       </Menu>
