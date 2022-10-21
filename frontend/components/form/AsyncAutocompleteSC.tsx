@@ -81,9 +81,9 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
       newInputValue!==''
     ) {
       // debugger
-      // issue search requestion AND
-      // set value as processing
-      onSearch(searchFor)
+      // issue search request using trimmed value
+      onSearch(searchFor.trim())
+      // set raw value as processing
       setProcessing(searchFor)
     }
   }, [searchFor, foundFor, processing, newInputValue, config.minLength, onSearch])
@@ -102,9 +102,10 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
     // if the length is sufficient
     // and we are not loading api responses
     // AND onCreate method is provided
-    if (value.length >= config.minLength &&
+    if (value.trim().length >= config.minLength &&
       loading === false && onCreate) {
-      onCreate(value)
+      // we send trimmed value
+      onCreate(value.trim())
       if (config?.reset) {
         // reset selected value to nothing
         setSelected(null)

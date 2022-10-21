@@ -79,7 +79,7 @@ export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}:
     return (
       <li {...props} key={option.key}>
         {/* if new option (has input) show label and count  */}
-        <strong>{`Add "${option.label}"`}</strong>
+        <strong>{`Add "${option.label.trim()}"`}</strong>
       </li>
     )
   }
@@ -91,7 +91,7 @@ export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}:
     // when value is not not found option returns input prop
     if (option?.input && onCreate) {
       // if input is over minLength
-      if (option?.input.length > config.minLength) {
+      if (option?.input.trim().length > config.minLength) {
         // we offer an option to create this entry
         return renderAddOption(props,option)
       } else {
