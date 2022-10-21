@@ -15,9 +15,9 @@ export enum EditMentionActionType{
   ON_UPDATE='ON_UPDATE',
   ON_DELETE='ON_DELETE',
   ADD_ITEM='ADD_ITEM',
-  UPDATE_ITEM='UPDATE_ITEM',
+  UPDATE_ITEM ='UPDATE_ITEM',
   DELETE_ITEM='DELETE_ITEM',
-  // REPLACE_ITEM='REPLACE_ITEM',
+  REPLACE_ITEM='REPLACE_ITEM',
   SETTINGS='SETTINGS',
   SET_CONFIRM_MODAL='SET_CONFIRM_MODAL',
   SET_EDIT_MODAL='SET_EDIT_MODAL',
@@ -104,6 +104,26 @@ export function editMentionReducer(state: EditMentionState, action: EditMentionA
         // set processing state
         processing: false,
         mentions: updatedList as MentionItemProps[]
+      }
+    case EditMentionActionType.REPLACE_ITEM:
+      // replace existing item with payload
+      const {newItem, oldItem} = action.payload
+      const replacedList = state.mentions
+        .map(item => {
+          if (item.id === oldItem.id) {
+            return newItem
+          }
+          return item
+        })
+        .sort((a, b) => {
+          // sort mentions on date, newest at the top
+          return sortOnDateProp(a,b,'publication_year','desc')
+        })
+      return {
+        ...state,
+        // set processing state
+        processing: false,
+        mentions: replacedList as MentionItemProps[]
       }
     case EditMentionActionType.DELETE_ITEM:
       // remove item to delete from impact state

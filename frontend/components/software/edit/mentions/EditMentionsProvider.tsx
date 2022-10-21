@@ -14,8 +14,10 @@ import EditMentionContext from '~/components/mention/editMentionContext'
 import {addNewMentionToSoftware, addToMentionForSoftware, removeMentionForSoftware} from './mentionForSoftwareApi'
 import {MentionItemProps} from '~/types/Mention'
 import {getMentionType} from '~/components/mention/config'
-import {updateDoiItem, updateMentionItem} from '~/utils/editMentions'
+import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
 import NoMentionItems from './NoMentionItems'
+import logger from '~/utils/logger'
+import {useSession} from '~/auth'
 
 const initalState:EditMentionState = {
   settings: {
@@ -43,6 +45,7 @@ function createSuccessMessage(item:MentionItemProps) {
 }
 
 export default function EditMentionsProvider(props: any) {
+  const {user} = useSession()
   const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   // extract needed info from props
   const {token, software} = props
@@ -60,7 +63,7 @@ export default function EditMentionsProvider(props: any) {
     // new item created manually
     if (item.id === null || item.id === '') {
       item.id = null
-      item.source = 'manual'
+      item.source = 'RSD'
       // new item to be added
       const resp = await addNewMentionToSoftware({
         item,
@@ -79,21 +82,21 @@ export default function EditMentionsProvider(props: any) {
       } else {
         showErrorMessage(resp.message as string)
       }
-    } else {
-      // this is existing item
+    } else if (user?.role === 'rsd_admin') {
+      // rsd_admin can update mention
       const resp = await updateMentionItem({
         mention: item,
-        token
+        token,
       })
-      if (resp.status === 200) {
-        dispatch({
-          type: EditMentionActionType.UPDATE_ITEM,
-          // item is returned in message
-          payload: resp.message
-        })
-      } else {
-        showErrorMessage(`Failed to save ${item.title}. ${resp.message}`)
+      if (resp.status !== 200) {
+        showErrorMessage(`Failed to update ${item.title}. ${resp.message}`)
+        return
       }
+      dispatch({
+        type: EditMentionActionType.UPDATE_ITEM,
+        // item is returned in message
+        payload: resp.message
+      })
     }
   }
 
@@ -143,22 +146,25 @@ export default function EditMentionsProvider(props: any) {
     }
   }
 
-  async function processOnUpdate(action: EditMentionAction) {
-    const rsdItem = action.payload
-    const resp = await updateDoiItem({
-      rsdItem,
-      token
-    })
-    if (resp.status == 200 && rsdItem) {
-      dispatch({
-        type: EditMentionActionType.UPDATE_ITEM,
-        // item is returned in message
-        payload: resp.message
-      })
-    } else {
-      showErrorMessage(`Failed to update ${rsdItem.title}. ${resp.message}`)
-    }
-  }
+  // WE do not allow update of mentions with DOI from FE
+  // Dusan 2022-10-19
+  // async function processOnUpdate(action: EditMentionAction) {
+  //   debugger
+  //   const rsdItem = action.payload
+  //   const resp = await updateDoiItem({
+  //     rsdItem,
+  //     token
+  //   })
+  //   if (resp.status == 200 && rsdItem) {
+  //     dispatch({
+  //       type: EditMentionActionType.UPDATE_ITEM,
+  //       // item is returned in message
+  //       payload: resp.message
+  //     })
+  //   } else {
+  //     showErrorMessage(`Failed to update ${rsdItem.title}. ${resp.message}`)
+  //   }
+  // }
 
   async function processOnDelete(action: EditMentionAction) {
     const item = action.payload
@@ -173,6 +179,14 @@ export default function EditMentionsProvider(props: any) {
           type: EditMentionActionType.DELETE_ITEM,
           // item is returned in message
           payload: item
+        })
+        // try to remove mention item
+        // we do not handle response result
+        // because if mention is referenced in other
+        // software the delete action will fail (and that's ok)
+        const del = await deleteMentionItem({
+          id: item.id,
+          token
         })
       } else {
         showErrorMessage(`Failed to delete ${item.title}. ${resp.message}`)
@@ -206,10 +220,13 @@ export default function EditMentionsProvider(props: any) {
         processOnAdd(action)
         break
       case EditMentionActionType.ON_UPDATE:
+        // WE do not allow update of mentions with DOI
+        // Dusan 2022-10-19
+        logger('ON_UPDATE action not supported','warn')
         // pass original action
         dispatch(action)
         // process item by api
-        processOnUpdate(action)
+        // processOnUpdate(action)
         break
       case EditMentionActionType.ON_DELETE:
         // pass original action

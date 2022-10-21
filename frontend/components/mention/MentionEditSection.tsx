@@ -14,11 +14,6 @@ import useEditMentionReducer from './useEditMentionReducer'
 import MentionEditFeatured from './MentionEditFeatured'
 import {sortOnNumProp} from '~/utils/sortFn'
 
-type ModalState = {
-  open: boolean,
-  item?: MentionItemProps
-}
-
 export default function MentionEditSection() {
   const {
     settings, mentions, loading, editModal, setEditModal,

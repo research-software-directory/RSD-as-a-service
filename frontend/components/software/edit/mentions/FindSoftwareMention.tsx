@@ -35,7 +35,6 @@ export default function FindSoftwareMention() {
       if (rsd?.status === 200 && rsd.message?.length === 1) {
         // return first found item in RSD
         const item:MentionItemProps = rsd.message[0]
-        item.source = 'RSD'
         return [item]
       }
       // else find by DOI

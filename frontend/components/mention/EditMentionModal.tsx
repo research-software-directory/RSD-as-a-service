@@ -10,6 +10,9 @@ import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
 } from '@mui/material'
+import Alert from '@mui/material/Alert'
+// import AlertTitle from '@mui/material/AlertTitle'
+
 import {useForm} from 'react-hook-form'
 
 import ControlledTextField from '../form/ControlledTextField'
@@ -51,12 +54,12 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
     }
   })
   // extract form states
-  const {isValid, isDirty, errors} = formState
+  const {isValid, isDirty} = formState
   const formData = watch()
 
   // console.group('EditMentionModal')
-  // console.log('item...', item)
-  // console.log('formData...', formData)
+  // console.log('isValid...', isValid)
+  // console.log('isDirty...', isDirty)
   // console.groupEnd()
 
   useEffect(() => {
@@ -201,20 +204,26 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             rules={config.url.validation}
           />
           <div className="py-2"></div>
-          <ControlledTextField
-            control={control}
-            options={{
-              name: 'image_url',
-              label: config.image_url.label,
-              useNull: true,
-              defaultValue: formData?.image_url,
-              helperTextMessage: config.image_url.help,
-              helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`,
-              disabled: formData.mention_type !== 'highlight'
-            }}
-            rules={formData.mention_type === 'highlight' ? config.image_url.validation : undefined}
-          />
-
+          {formData.mention_type === 'highlight' &&
+            <ControlledTextField
+              control={control}
+              options={{
+                name: 'image_url',
+                label: config.image_url.label,
+                useNull: true,
+                defaultValue: formData?.image_url,
+                helperTextMessage: config.image_url.help,
+                helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`,
+                disabled: formData.mention_type !== 'highlight'
+              }}
+              rules={formData.mention_type === 'highlight' ? config.image_url.validation : undefined}
+            />
+          }
+          <Alert severity="warning" sx={{marginTop: '1.5rem'}}>
+            {/* <AlertTitle sx={{fontWeight: 500}}>Validate entered information</AlertTitle> */}
+            Please double check the data because this entry <strong>cannot be edited after it has been created</strong>.
+            {/* You can only delete it and create new one. */}
+          </Alert>
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',

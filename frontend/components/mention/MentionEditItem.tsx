@@ -6,7 +6,8 @@
 import {IconButton} from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-import UpdateIcon from '@mui/icons-material/Update'
+// import UpdateIcon from '@mui/icons-material/Update'
+import {useSession} from '~/auth'
 import MentionItemBase from './MentionItemBase'
 import {MentionItemProps} from '~/types/Mention'
 import useEditMentionReducer from './useEditMentionReducer'
@@ -17,6 +18,7 @@ type MentionListItem = {
 }
 
 export default function MentionEditItem({item, pos}: MentionListItem) {
+  const {user} = useSession()
   // use context methods to pass btn action
   // const {onUpdate, confirmDelete, setEditModal} = useContext(EditMentionContext)
   const {setEditModal,onUpdate,confirmDelete} = useEditMentionReducer()
@@ -28,19 +30,20 @@ export default function MentionEditItem({item, pos}: MentionListItem) {
   function renderButtons() {
     const html = []
 
-    if (item.source.toLowerCase() === 'manual' &&
-      item.doi) {
+    if (item.doi) {
+      // WE do not allow update of mentions with DOI from FE
+      // Dusan 2022-10-19
       // we only update items with DOI
-      html.push(
-        <IconButton
-          key="update-button"
-          title={`Update from DOI: ${item.doi}`}
-          onClick={() => onUpdate(item)}>
-            <UpdateIcon />
-        </IconButton>
-      )
-    } else if (item.source.toLowerCase() === 'manual') {
-      // manual items without DOI can be edited
+      // html.push(
+      //   <IconButton
+      //     key="update-button"
+      //     title={`Update from DOI: ${item.doi}`}
+      //     onClick={() => onUpdate(item)}>
+      //       <UpdateIcon />
+      //   </IconButton>
+      // )
+    } else if (user?.role==='rsd_admin') {
+      // items without DOI can be edited by rsd_admin
       html.push(
         <IconButton
           key="edit-button"
