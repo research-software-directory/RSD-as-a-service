@@ -36,7 +36,7 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
 
   async function onAdd(selected: Keyword) {
     // check if already added
-    const find = keywords.filter(item => item.keyword === selected.keyword)
+    const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.keyword.trim().toLowerCase())
     let resp
     if (find.length === 0) {
       resp = await addKeywordsToSoftware({
@@ -56,13 +56,13 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
         showErrorMessage(`Failed to save keyword. ${resp.message}`)
       }
     }else{
-      showInfoMessage(`${selected.keyword} is already in the list`)
+      showInfoMessage(`${selected.keyword.trim()} is already in the list`)
     }
   }
 
   async function onCreate(selected: string) {
     // check if already exists
-    const find = keywords.filter(item => item.keyword === selected)
+    const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.trim().toLowerCase())
     if (find.length === 0) {
       // create keyword
       let resp = await createKeyword({
@@ -82,7 +82,7 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
         showErrorMessage(`Failed to save keyword. ${resp.message}`)
       }
     }else{
-      showInfoMessage(`${selected} is already in the list`)
+      showInfoMessage(`${selected.trim()} is already in the list`)
     }
   }
 
@@ -123,6 +123,9 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
               title={item.keyword}
               label={item.keyword}
               onDelete={() => onRemove(pos)}
+              sx={{
+                textTransform:'capitalize'
+              }}
             />
           </div>
         )

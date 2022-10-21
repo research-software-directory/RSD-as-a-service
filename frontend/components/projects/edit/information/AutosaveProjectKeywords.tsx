@@ -31,7 +31,7 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
 
   async function onAdd(selected: Keyword) {
     // check if already exists
-    const find = keywords.filter(item => item.keyword === selected.keyword)
+    const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.keyword.trim().toLowerCase())
     let resp
     if (find.length === 0) {
       resp = await addKeywordsToProject({
@@ -57,7 +57,7 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
 
   async function onCreate(selected: string) {
     // check if already exists
-    const find = keywords.filter(item => item.keyword === selected)
+    const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.trim().toLowerCase())
     if (find.length === 0) {
       // create keyword
       let resp = await createKeyword({
@@ -114,6 +114,9 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
               title={field.keyword}
               label={field.keyword}
               onDelete={() => onRemove(pos)}
+              sx={{
+                textTransform:'capitalize'
+              }}
             />
           </div>
         )
