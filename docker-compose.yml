@@ -212,7 +212,6 @@ services:
       - NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL
       - NEXT_PUBLIC_HELMHOLTZAAI_SCOPES
       - NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE
-      - NEXT_PUBLIC_FEEDBACK_URL
     depends_on:
       - database
       - backend
