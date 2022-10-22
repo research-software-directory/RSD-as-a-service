@@ -37,7 +37,10 @@ export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}:
     // set loading status and clear foundFor
     setStatus({loading: true, foundFor: undefined})
     // make search request
-    const resp = await searchForKeyword({searchFor})
+    const resp = await searchForKeyword({
+      // we trim raw search value
+      searchFor: searchFor.trim()
+    })
     // console.log('searchKeyword...resp...', resp)
     // convert keywords to autocomplete options
     const options = resp.map(item => ({

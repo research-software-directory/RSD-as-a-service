@@ -82,7 +82,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
     ) {
       // debugger
       // issue search request using trimmed value
-      onSearch(searchFor.trim())
+      onSearch(searchFor)
       // set raw value as processing
       setProcessing(searchFor)
     }
@@ -105,7 +105,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
     if (value.trim().length >= config.minLength &&
       loading === false && onCreate) {
       // we send trimmed value
-      onCreate(value.trim())
+      onCreate(value)
       if (config?.reset) {
         // reset selected value to nothing
         setSelected(null)
@@ -244,7 +244,7 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
           // console.log('searchFor...', searchFor)
           // console.log('foundFor...', foundFor)
           // check if newInputValue is in the options
-          const inputInOptions = options.some(option => option.label.toLowerCase() === inputValue.toLowerCase())
+          const inputInOptions = options.some(option => option.label.trim().toLowerCase() === inputValue.trim().toLowerCase())
           // console.log('inputInOptions...', inputInOptions)
           // console.groupEnd()
           if (loading === false &&
