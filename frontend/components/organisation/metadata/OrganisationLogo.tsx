@@ -143,25 +143,17 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer}:
     )
   }
 
-  // for the users we add link to organisation website (if present)
-  // for the maintainers click on the logo opens the image upload
-  function renderLogo() {
-    if (website) {
-      return (
-        <Link href={website} passHref>
-          <a target="_blank">
-            {renderAvatar()}
-          </a>
-        </Link>
-      )
-    }
-    return renderAvatar()
-  }
   if (isMaintainer) {
     return (
-      <div className="py-[4rem] flex relative">
-        {renderAvatar()}
-        <div className="absolute flex justify-start left-2 bottom-1">
+      <div className="pt-12 pb-2 flex relative">
+        <div className="">
+          {renderAvatar()}
+        </div>
+        <div style={{
+          position: 'absolute',
+          top: '0rem',
+          right: '0rem'
+        }}>
           <label htmlFor="upload-avatar-image"
             // style={{cursor:'pointer'}}
             title="Click to upload an image"
@@ -196,9 +188,5 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer}:
     )
   }
 
-  return (
-    <div className='hidden md:block md:py-[3rem]'>
-      {renderLogo()}
-    </div>
-  )
+  return renderAvatar()
 }

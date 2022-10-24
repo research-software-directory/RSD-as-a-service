@@ -73,7 +73,7 @@ module.exports = {
         'base-200':`var(--rsd-base-200,${colors['base-200']})`,
         'base-300':`var(--rsd-base-300,${colors['base-300']})`,
         'base-content':`var(--rsd-base-content,${colors['base-content']})`,
-        'base-content-disabled':`var(--rsd-base-content,${colors['base-content-disabled']})`,
+        'base-content-disabled':`var(--rsd-base-content-disabled,${colors['base-content-disabled']})`,
         primary:`var(--rsd-primary,${colors.primary})`,
         'primary-content':`var(--rsd-primary-content,${colors['primary-content']})`,
         secondary:`var(--rsd-secondary,${colors.secondary})`,
