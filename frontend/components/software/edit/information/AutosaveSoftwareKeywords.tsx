@@ -16,7 +16,10 @@ import {KeywordForSoftware} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ImportKeywordsFromDoi from './ImportKeywordsFromDoi'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {addKeywordsToSoftware, createKeyword, deleteKeywordFromSoftware} from '~/utils/editKeywords'
+import {
+  addKeywordsToSoftware, createOrGetKeyword,
+  deleteKeywordFromSoftware, silentKeywordDelete
+} from '~/utils/editKeywords'
 import {sortOnStrProp} from '~/utils/sortFn'
 
 type SoftwareKeywordsProps={
@@ -64,12 +67,12 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
     // check if already exists
     const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.trim().toLowerCase())
     if (find.length === 0) {
-      // create keyword
-      let resp = await createKeyword({
+      // create or get existing keyword
+      let resp = await createOrGetKeyword({
         keyword: selected,
         token
       })
-      if (resp.status===201){
+      if (resp.status === 201) {
         const keyword = {
           id: resp.message as string,
           keyword: selected,
@@ -100,6 +103,13 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
           ...keywords.slice(pos+1)
         ]
         setKeywords(items)
+        // try to delete this keyword from keyword table
+        // delete will fail if the keyword is referenced
+        // therefore we do not check the status
+        const del = await silentKeywordDelete({
+          keyword: item.keyword,
+          token
+        })
       }else{
         showErrorMessage(`Failed to delete keyword. ${resp.message}`)
       }

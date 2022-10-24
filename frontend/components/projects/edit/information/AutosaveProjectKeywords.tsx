@@ -11,7 +11,10 @@ import {KeywordForProject} from '~/types/Project'
 import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
 import {projectInformation as config} from './config'
 import {searchForProjectKeyword} from './searchForKeyword'
-import {addKeywordsToProject, createKeyword, deleteKeywordFromProject} from '~/utils/editKeywords'
+import {
+  addKeywordsToProject, createOrGetKeyword,
+  deleteKeywordFromProject, silentKeywordDelete
+} from '~/utils/editKeywords'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
 
@@ -60,7 +63,7 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
     const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.trim().toLowerCase())
     if (find.length === 0) {
       // create keyword
-      let resp = await createKeyword({
+      let resp = await createOrGetKeyword({
         keyword: selected,
         token
       })
@@ -95,6 +98,13 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
           ...keywords.slice(pos+1)
         ]
         setKeywords(items)
+        // try to delete this keyword from keyword table
+        // delete will fail if the keyword is referenced
+        // therefore we do not check the status
+        const del = await silentKeywordDelete({
+          keyword: item.keyword,
+          token
+        })
       }else{
         showErrorMessage(`Failed to delete keyword. ${resp.message}`)
       }

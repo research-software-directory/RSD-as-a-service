@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // import {SoftwareKeyword} from '~/components/software/edit/information/softwareKeywordsChanges'
+import {Keyword} from '~/components/keyword/FindKeyword'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 
@@ -42,6 +43,57 @@ export async function createKeyword({keyword, token}: { keyword: string, token: 
     return extractReturnMessage(resp, keyword ?? '')
   } catch (e: any) {
     logger(`createKeyword: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function createOrGetKeyword({keyword, token}: {keyword: string, token: string }) {
+  try {
+    // try to find keyword
+    const url = '/api/v1/keyword'
+    const find = `${url}?value=eq.${keyword}`
+    const resp = await fetch(find, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    if (resp.status === 200) {
+      const json:Keyword[] = await resp.json()
+      if (json.length > 0) {
+        return {
+          status: 201,
+          message: json[0].id
+        }
+      }
+    }
+    // if not found create new
+    return createKeyword({keyword,token})
+  } catch (e:any) {
+    logger(`createOrGetKeyword: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function silentKeywordDelete({keyword, token}: { keyword: string, token: string }) {
+  try {
+    // try to find keyword
+    const url = `/api/v1/keyword?value=eq.${keyword}`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    return extractReturnMessage(resp, keyword)
+  } catch (e: any) {
+    logger(`silentKeywordDelete: ${e?.message}`, 'warn')
     return {
       status: 500,
       message: e?.message
