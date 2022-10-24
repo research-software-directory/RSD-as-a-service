@@ -26,7 +26,7 @@ export async function createKeyword({keyword, token}: { keyword: string, token: 
         'Prefer': 'return=headers-only'
       },
       body: JSON.stringify({
-        value: keyword.trim().toLocaleLowerCase()
+        value: keyword.trim()
       })
     })
     if (resp.status === 201) {
