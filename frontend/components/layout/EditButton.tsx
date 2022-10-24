@@ -25,7 +25,6 @@ export default function EditButton({title,url}:EditButtonProps) {
       }}
       sx={{
         color: 'primary.contrastText',
-        margin:'0rem 0.5rem',
         '&:hover': {
           color: 'primary.main'
         },

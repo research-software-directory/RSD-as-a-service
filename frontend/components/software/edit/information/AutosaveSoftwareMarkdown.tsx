@@ -17,6 +17,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {useController, useFormContext} from 'react-hook-form'
 import {patchSoftwareTable} from './patchSoftwareTable'
 import AutosaveRemoteMarkdown from './AutosaveRemoteMarkdown'
+import {FocusEventHandler} from 'react'
 
 type SaveInfo = {
   name: string,
@@ -27,7 +28,7 @@ export default function AutosaveSoftwareMarkdown() {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {register, control, resetField, watch, setValue} = useFormContext()
-  const {field: {value: description}, fieldState: {error: errDescription}} = useController({
+  const {field: {value: description}, fieldState: {isDirty:dirtyDesc, error: errDescription}} = useController({
     control,
     name: 'description'
   })
@@ -56,16 +57,16 @@ export default function AutosaveSoftwareMarkdown() {
       // when changing type we need to check
       // if the values provided are valid before saving
       if (value === 'link') {
-        // when link type description_url field should not container errors
+        // when link type description_url field should not contain errors
         if (typeof errDescriptionUrl == 'undefined') return true
       } else {
-        // when other types (markdown) description field should not container errors
+        // when other types (markdown) description field should not contain errors
         if (typeof errDescription == 'undefined') return true
       }
       // otherwise where are errors
       return false
     }
-    // other fields are not additinally validated by this method
+    // other fields are not validated by this method
     // because they use internal validation (before onSave event is called)
     return true
   }
@@ -108,6 +109,17 @@ export default function AutosaveSoftwareMarkdown() {
     }
   }
 
+  function saveDescription(e: FocusEventHandler<HTMLTextAreaElement>) {
+    // we do not save when error or no change
+    if (dirtyDesc===false || errDescription) return
+    // cast types
+    const target = (e as any).target as HTMLTextAreaElement
+    saveSoftwareInfo({
+      name: 'description',
+      value: target.value
+    })
+  }
+
   function renderMarkdownComponents() {
     if (description_type === 'link') {
       return (
@@ -141,14 +153,7 @@ export default function AutosaveSoftwareMarkdown() {
             length: description?.length ?? 0,
             maxLength: config.description.validation.maxLength.value
           }}
-          onBlur={(e) => {
-            // cast types
-            const target = (e as any).target as HTMLTextAreaElement
-            saveSoftwareInfo({
-              name: 'description',
-              value: target.value
-            })
-          }}
+          onBlur={saveDescription}
         />
       </>
     )
@@ -160,7 +165,6 @@ export default function AutosaveSoftwareMarkdown() {
         title={config.description.label}
         subtitle={config.description.help(brand_name ?? '')}
       />
-
       <RadioGroup
         row
         aria-labelledby="radio-group"

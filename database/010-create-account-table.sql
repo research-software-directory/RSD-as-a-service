@@ -75,3 +75,9 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_login_for_account BEFORE UPDATE ON login_for_account FOR EACH ROW EXECUTE PROCEDURE sanitise_update_login_for_account();
+
+
+
+CREATE TABLE orcid_whitelist (
+	orcid VARCHAR(19) PRIMARY KEY CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$')
+);

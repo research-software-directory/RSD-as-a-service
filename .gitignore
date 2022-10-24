@@ -11,6 +11,9 @@
 **/target
 **.iml
 
+**/nbactions.xml
+**/nb-configuration.xml
+
 # .vscode
 **/launch.json
 

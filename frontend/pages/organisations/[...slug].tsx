@@ -41,10 +41,16 @@ export default function OrganisationPage({organisation,slug,page}:OrganisationPa
         setPageState(nextStep)
       }
     } else {
-      // default is the first item
-      setPageState(organisationMenu[0])
+      // if there is description
+      if (organisation.description) {
+        // we show about page
+        setPageState(organisationMenu[0])
+      } else {
+        // otherwise software is default
+        setPageState(organisationMenu[1])
+      }
     }
-  },[page])
+  },[page,organisation.description])
 
   // console.group('OrganisationPage')
   // console.log('organisation...', organisation)

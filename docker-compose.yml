@@ -13,7 +13,7 @@ version: "3.0"
 services:
   database:
     build: ./database
-    image: rsd/database:1.6.1
+    image: rsd/database:1.6.4
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -33,7 +33,7 @@ services:
 
   backend:
     build: ./backend-postgrest
-    image: rsd/backend-postgrest:1.0.0
+    image: rsd/backend-postgrest:1.1.0
     expose:
       - 3500
     environment:
@@ -43,7 +43,6 @@ services:
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT
       - PGRST_JWT_SECRET
-      - PGRST_RAW_MEDIA_TYPES=application/xml
     depends_on:
       - database
     networks:
@@ -51,7 +50,7 @@ services:
 
   auth:
     build: ./authentication
-    image: rsd/auth:1.0.0
+    image: rsd/auth:1.1.0
     expose:
       - 7000
     environment:
@@ -68,11 +67,17 @@ services:
       - NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT
       - NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL
       - NEXT_PUBLIC_HELMHOLTZAAI_SCOPES
+      - NEXT_PUBLIC_ORCID_CLIENT_ID
+      - NEXT_PUBLIC_ORCID_REDIRECT
+      - NEXT_PUBLIC_ORCID_WELL_KNOWN_URL
+      - NEXT_PUBLIC_ORCID_SCOPES
       - HELMHOLTZAAI_ALLOW_EXTERNAL_USERS
       - AUTH_SURFCONEXT_CLIENT_SECRET
       - AUTH_SURFCONEXT_TOKEN_URL
       - AUTH_HELMHOLTZAAI_CLIENT_SECRET
       - AUTH_HELMHOLTZAAI_TOKEN_URL
+      - AUTH_ORCID_CLIENT_SECRET
+      - AUTH_ORCID_TOKEN_URL
       - PGRST_JWT_SECRET
     depends_on:
       - database
@@ -86,7 +91,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:1.6.2
+    image: rsd/frontend:1.6.6
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -106,6 +111,10 @@ services:
       - NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL
       - NEXT_PUBLIC_HELMHOLTZAAI_SCOPES
       - NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE
+      - NEXT_PUBLIC_ORCID_CLIENT_ID
+      - NEXT_PUBLIC_ORCID_REDIRECT
+      - NEXT_PUBLIC_ORCID_WELL_KNOWN_URL
+      - NEXT_PUBLIC_ORCID_SCOPES
     expose:
       - 3000
     depends_on:
@@ -142,7 +151,7 @@ services:
   nginx:
     build:
       context: ./nginx
-    image: rsd/nginx:1.1.0
+    image: rsd/nginx:1.1.1
     ports:
       - "80:80"
       - "443:443"
@@ -155,6 +164,7 @@ services:
       - net
     volumes:
       - lets-encrypt:/etc/letsencrypt
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
 
   #----------------------------------------------
   # DEVELOPMENT ONLY SERVICES
@@ -178,10 +188,14 @@ services:
       context: ./frontend
       # dockerfile to use for build
       dockerfile: Dockerfile.dev
+      args:
+        - DUID
+        - DGID
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend-dev:1.4.0
+    image: rsd/frontend-dev:1.6.4
     ports:
       - "3000:3000"
+      - "9229:9229"
     environment:
       # it uses values from .env file
       - POSTGREST_URL

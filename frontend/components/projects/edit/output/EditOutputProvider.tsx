@@ -14,7 +14,7 @@ import {MentionItemProps} from '~/types/Mention'
 import {updateDoiItem, updateMentionItem} from '~/utils/editMentions'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {getMentionType} from '~/components/mention/config'
-import {addOutputItem, addOutputToProject, removeOutputForProject} from './outputForProjectApi'
+import {addNewOutputToProject, addToOutputForProject, removeOutputForProject} from './outputForProjectApi'
 import NoOutputItems from './NoOutputItems'
 
 export const initialState: EditMentionState = {
@@ -63,8 +63,11 @@ export default function EditOutputProvider(props: any) {
     if (item.id === null || item.id === '') {
       item.id = null
       item.source = 'manual'
-      // new item to be added
-      const resp = await addOutputItem({item, project, token})
+      const resp = await addNewOutputToProject({
+        item,
+        project,
+        token
+      })
       // debugger
       if (resp.status === 200) {
         dispatch({
@@ -106,9 +109,9 @@ export default function EditOutputProvider(props: any) {
         return true
       }
     }
-    if (item.id && item.source === 'RSD') {
+    if (item.id) {
       // existing RSD mention item to be added to project
-      const resp = await addOutputToProject({
+      const resp = await addToOutputForProject({
         project,
         mention: item.id,
         token
@@ -125,8 +128,12 @@ export default function EditOutputProvider(props: any) {
         showSuccessMessage(createSuccessMessage(item))
       }
     } else {
-      // new item from crossref or datacite (source)
-      const resp = await addOutputItem({item, project, token})
+      // probably new item from crossref or datacite
+      const resp = await addNewOutputToProject({
+        item,
+        project,
+        token
+      })
       // debugger
       if (resp.status === 200) {
         dispatch({

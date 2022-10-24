@@ -15,8 +15,11 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DataciteMentionRepository implements MentionRepository {
@@ -85,13 +88,20 @@ public class DataciteMentionRepository implements MentionRepository {
 				.collect(Collectors.joining("\",\"", "\"", "\""));
 	}
 
-	static Collection<MentionRecord> jsonStringToMention(String json) {
+	static Collection<MentionRecord> jsonStringToUniqueMentions(String json) {
 		JsonObject root = JsonParser.parseString(json).getAsJsonObject();
 		JsonArray worksJson = root.getAsJsonObject("data").getAsJsonObject("works").getAsJsonArray("nodes");
 		Collection<MentionRecord> mentions = new ArrayList<>();
+		Set<String> usedDois = new HashSet<>();
 		for (JsonElement work : worksJson) {
 			try {
-				mentions.add(parseWork(work.getAsJsonObject()));
+//				Sometimes, DataCite gives back two of the same results for one DOI, e.g. for 10.4122/1.1000000817,
+//				so we need to only add it once, otherwise we cannot POST it to the backend
+				MentionRecord parsedMention = parseWork(work.getAsJsonObject());
+				if (usedDois.contains(parsedMention.doi)) continue;
+
+				usedDois.add(parsedMention.doi);
+				mentions.add(parsedMention);
 			} catch (RuntimeException e) {
 				System.out.println("Failed to scrape a DataCite mention with data " + work);
 				e.printStackTrace();
@@ -103,7 +113,7 @@ public class DataciteMentionRepository implements MentionRepository {
 	static MentionRecord parseWork(JsonObject work) {
 		MentionRecord result = new MentionRecord();
 		result.doi = work.get("doi").getAsString();
-		result.url = URI.create("https://doi.org/" + result.doi);
+		result.url = URI.create("https://doi.org/" + Utils.urlEncode(result.doi));
 		result.title = work.getAsJsonArray("titles").get(0).getAsJsonObject().get("title").getAsString();
 
 		Collection<String> authors = new ArrayList<>();
@@ -148,10 +158,12 @@ public class DataciteMentionRepository implements MentionRepository {
 
 	@Override
 	public Collection<MentionRecord> mentionData(Collection<String> dois) {
+		if (dois.isEmpty()) return Collections.EMPTY_LIST;
+
 		JsonObject body = new JsonObject();
 		body.addProperty("query", QUERY_UNFORMATTED.formatted(joinCollection(dois)));
 		String responseJson = Utils.post("https://api.datacite.org/graphql", body.toString(), "Content-Type", "application/json");
-		return jsonStringToMention(responseJson);
+		return jsonStringToUniqueMentions(responseJson);
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import {useAuth} from '~/auth'
 import useLoginProviders from '~/auth/api/useLoginProviders'
 import {getUserMenuItems} from '~/config/userMenuItems'
 import UserMenu from '~/components/layout/UserMenu'
+import CaretIcon from '~/components/icons/caret.svg'
 
 export default function LoginButton() {
   const providers = useLoginProviders()
@@ -42,30 +43,17 @@ export default function LoginButton() {
     const menuItems = getUserMenuItems(session.user?.role)
     // we show user menu with the avatar and user specific options
     return (
-      <UserMenu
-        menuOptions={menuItems}
-      />
+      <>
+        <UserMenu menuOptions={menuItems}/>
+      </>
     )
   }
-  // when there is only 1 provider we
-  // link redirect directly to Sign in button
-  if (providers && providers.length === 1) {
-    return (
-      <Link
-        href={providers[0].redirectUrl}
-        passHref
-      >
-        <a className="whitespace-nowrap" tabIndex={0}>
-          Sign in
-        </a>
-      </Link>
-    )
-  }
+
   // when there are multiple providers
   // we show modal with the list of login options
   if (providers && providers.length > 1) {
     return (
-       <div className="whitespace-nowrap">
+      <div className="whitespace-nowrap ml-2">
         <button onClick={handleClickOpen} tabIndex={0}>
           Sign in
         </button>
@@ -103,5 +91,17 @@ export default function LoginButton() {
       </div>
     )
   }
-  return null
+
+  // If there is only 1 provider we
+  // link redirect directly to Sign in button
+  return (
+    <Link
+      href={providers[0]?.redirectUrl ?? ''}
+      passHref
+    >
+      <a className="whitespace-nowrap ml-2" tabIndex={0} >
+        Sign in
+      </a>
+    </Link>
+  )
 }

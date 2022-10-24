@@ -274,6 +274,7 @@ CREATE FUNCTION organisations_of_software(software_id UUID) RETURNS TABLE (
 	rsd_path VARCHAR,
 	logo_id UUID,
 	status relation_status,
+	"position" INTEGER,
 	software UUID
 ) LANGUAGE plpgsql STABLE AS
 $$
@@ -290,6 +291,7 @@ BEGIN
 		organisation_route.rsd_path,
 		logo_for_organisation.organisation AS logo_id,
 		software_for_organisation.status,
+		software_for_organisation.position,
 		software.id AS software
 	FROM
 		software
@@ -568,6 +570,7 @@ CREATE FUNCTION organisations_of_project(project_id UUID) RETURNS TABLE (
 	logo_id UUID,
 	status relation_status,
 	role organisation_role,
+	"position" INTEGER,
 	project UUID,
 	parent UUID
 ) LANGUAGE plpgsql STABLE AS
@@ -586,6 +589,7 @@ BEGIN
 			logo_for_organisation.organisation AS logo_id,
 			project_for_organisation.status,
 			project_for_organisation.role,
+			project_for_organisation.position,
 			project.id AS project,
 			organisation.parent
 	FROM

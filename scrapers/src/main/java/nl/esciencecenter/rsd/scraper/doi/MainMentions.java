@@ -12,8 +12,6 @@ import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +36,7 @@ public class MainMentions {
 
 		String doisJoined = mentionsToScrape.stream()
 				.map(mention -> mention.doi)
-				.map(doi -> URLEncoder.encode(doi, StandardCharsets.UTF_8))
+				.map(doi -> Utils.urlEncode(doi))
 				.collect(Collectors.joining(","));
 		String jsonSources = Utils.get("https://doi.org/doiRA/" + doisJoined);
 

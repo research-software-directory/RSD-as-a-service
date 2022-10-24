@@ -34,14 +34,14 @@ export default function AutosaveRepositoryUrl() {
     control,
     name:'repository_url'
   })
-  const [id] = watch(['id'])
+  const [id,repository_platform] = watch(['id','repository_platform'])
   const [platform, setPlatform] = useState<{
     id: CodePlatform | null
     disabled: boolean
     helperText: string
   }>({
-    id: null,
-    disabled: true,
+    id: repository_platform,
+    disabled: repository_platform===null,
     helperText: 'Suggestion'
   })
 
@@ -58,20 +58,23 @@ export default function AutosaveRepositoryUrl() {
   useEffect(() => {
     if (typeof urlError == 'undefined' && repository_url) {
       // debugger
-      const suggestedPlatform = suggestPlatform(repository_url)
-      setPlatform({
-        id: suggestedPlatform,
-        disabled: false,
-        helperText: 'Suggestion'
-      })
+      if (platform.id === null) {
+        const suggestedPlatform = suggestPlatform(repository_url)
+        setPlatform({
+          id: suggestedPlatform,
+          disabled: false,
+          helperText: 'Suggestion'
+        })
+      }
     } else if (urlError) {
+      debugger
       setPlatform({
         id: null,
         disabled: true,
         helperText: ''
       })
     }
-  },[urlError,repository_url])
+  },[urlError,repository_url,platform.id])
 
   async function saveRepositoryInfo({name, value}: OnSaveProps) {
     // complete record for upsert
@@ -90,13 +93,21 @@ export default function AutosaveRepositoryUrl() {
     if (name === 'repository_url') {
       data.url = value
     } else if (name === 'repository_platform') {
+      // compare to suggested platform
+      const suggestedPlatform = suggestPlatform(repository_url)
+      let helperText = 'Selected'
+      if (suggestedPlatform === value) {
+        helperText = 'Suggested'
+      } else {
+        helperText = 'Are you sure?'
+      }
       // update value
       data.code_platform = value as CodePlatform
       // manualy overwriting advice
       setPlatform({
         id: value as CodePlatform,
         disabled: false,
-        helperText: 'Are you sure?'
+        helperText
       })
     }
     let resp

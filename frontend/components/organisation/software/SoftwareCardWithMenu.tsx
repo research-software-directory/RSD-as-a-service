@@ -23,7 +23,7 @@ const StyledNav = styled('nav')(({theme})=>({
   height: '4rem',
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.secondary.main,
-  zIndex: 9
+  zIndex: 7
 }))
 
 

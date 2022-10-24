@@ -7,5 +7,5 @@ package nl.esciencecenter.rsd.authentication;
 
 public interface Account {
 
-	AccountInfo account();
+	AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider);
 }
