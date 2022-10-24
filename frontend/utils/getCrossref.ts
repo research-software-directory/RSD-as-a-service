@@ -72,13 +72,16 @@ export async function getCrossrefItemByDoi(doi: string) {
 
     if (resp.status === 200) {
       const json: CrossrefResponse = await resp.json()
-      // find doi item
-      const doiItem = json.message.items.filter(item => item.DOI.toLowerCase() === doi.toLocaleLowerCase())
-      // if found return it
-      if (doiItem.length === 1) {
+      // if found return item
+      if (json.message.items.length > 0) {
         return {
           status: 200,
-          message: doiItem[0]
+          message: json.message.items[0]
+        }
+      } else {
+        return {
+          status: 404,
+          message: 'DOI not found'
         }
       }
     }

@@ -97,6 +97,7 @@ export async function createOrganisationAndAddToProject({project, item, session,
       project,
       organisation: id,
       role: 'participating',
+      position: item.position,
       session
     })
     if (resp.status === 200) {
@@ -134,8 +135,8 @@ export async function createOrganisationAndAddToProject({project, item, session,
   }
 }
 
-export async function addOrganisationToProject({project, organisation, role, session}:
-  { project: string, organisation: string, role: OrganisationRole, session:Session }) {
+export async function addOrganisationToProject({project, organisation, role, position, session}:
+  { project: string, organisation: string, role: OrganisationRole, position:number|null, session:Session }) {
   try {
     // by default request status is approved
     const status = 'approved'
@@ -150,7 +151,8 @@ export async function addOrganisationToProject({project, organisation, role, ses
         project,
         organisation,
         status,
-        role
+        role,
+        position
       })
     })
     if ([200, 201].includes(resp.status)) {
@@ -187,6 +189,41 @@ export async function patchProjectForOrganisation({project, organisation, data, 
     return extractReturnMessage(resp)
   } catch (e: any) {
     debugger
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function patchOrganisationPositions({project,organisations, token}:
+  {project:string,organisations:EditOrganisation[],token:string}) {
+  try {
+    if (organisations.length === 0) return {
+      status: 400,
+      message: 'Empty organisations array'
+    }
+    // create all requests
+    const requests = organisations.map(organisation => {
+      const query = `project=eq.${project}&organisation=eq.${organisation.id}`
+      const url = `/api/v1/project_for_organisation?${query}`
+      return fetch(url, {
+        method: 'PATCH',
+        headers: {
+          ...createJsonHeaders(token),
+        },
+        // just update position!
+        body: JSON.stringify({
+          position: organisation.position
+        })
+      })
+    })
+    // execute them in parallel
+    const responses = await Promise.all(requests)
+    // check for errors
+    return extractReturnMessage(responses[0])
+  } catch (e: any) {
+    logger(`patchOrganisationPositions: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message

@@ -12,7 +12,7 @@ import {
 } from '~/components/mention/editMentionReducer'
 import EditMentionContext from '~/components/mention/editMentionContext'
 import NoImpactItems from './NoImpactItems'
-import {addImpactItem, addImpactToProject, removeImpactForProject} from './impactForProjectApi'
+import {addToImpactForProject, addNewImpactToProject, removeImpactForProject} from './impactForProjectApi'
 import {MentionItemProps} from '~/types/Mention'
 import {getMentionType} from '~/components/mention/config'
 import {updateDoiItem, updateMentionItem} from '~/utils/editMentions'
@@ -63,7 +63,11 @@ export default function EditImpactProvider(props: any) {
       item.id = null
       item.source = 'manual'
       // new item to be added
-      const resp = await addImpactItem({item, project, token})
+      const resp = await addNewImpactToProject({
+        item,
+        project,
+        token
+      })
       // debugger
       if (resp.status === 200) {
         dispatch({
@@ -105,9 +109,9 @@ export default function EditImpactProvider(props: any) {
         return true
       }
     }
-    if (item.id && item.source === 'RSD') {
+    if (item.id) {
       // existing RSD mention item to be added to project
-      const resp = await addImpactToProject({
+      const resp = await addToImpactForProject({
         project,
         mention: item.id,
         token
@@ -124,9 +128,12 @@ export default function EditImpactProvider(props: any) {
         showSuccessMessage(createSuccessMessage(item))
       }
     } else {
-      // new item from crossref or datacite (source)
-      const resp = await addImpactItem({item, project, token})
-      // debugger
+      // probably new item from crossref or datacite
+      const resp = await addNewImpactToProject({
+        item,
+        project,
+        token
+      })
       if (resp.status === 200) {
         dispatch({
           type: EditMentionActionType.ADD_ITEM,

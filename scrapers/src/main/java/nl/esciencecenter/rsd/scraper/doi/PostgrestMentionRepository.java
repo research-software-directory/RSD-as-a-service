@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.net.URI;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Objects;
@@ -30,6 +31,14 @@ public class PostgrestMentionRepository implements MentionRepository {
 		return new GsonBuilder()
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.registerTypeAdapter(Instant.class, (JsonDeserializer) (json, typeOfT, context) -> Instant.parse(json.getAsString()))
+				.registerTypeAdapter(URI.class, (JsonDeserializer) (json, typeOfT, context) -> {
+					try {
+						return URI.create(json.getAsString());
+					} catch (IllegalArgumentException e) {
+						System.out.println("Warning: couldn't create a URI of the following: " + json.getAsString());
+						return null;
+					}
+				})
 				.create()
 				.fromJson(data, new TypeToken<Collection<MentionRecord>>() {
 				}.getType());

@@ -13,8 +13,6 @@ import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,7 +67,7 @@ public class CrossrefMention implements Mention {
 
 	@Override
 	public MentionRecord mentionData() {
-		StringBuilder url = new StringBuilder("https://api.crossref.org/works/" + URLDecoder.decode(doi, StandardCharsets.UTF_8));
+		StringBuilder url = new StringBuilder("https://api.crossref.org/works/" + Utils.urlEncode(doi));
 		Config.crossrefContactEmail().ifPresent(email -> url.append("?mailto=" + email));
 		String responseJson = Utils.get(url.toString());
 		JsonObject jsonTree = JsonParser.parseString(responseJson).getAsJsonObject();
@@ -77,7 +75,7 @@ public class CrossrefMention implements Mention {
 		JsonObject workJson = jsonTree.getAsJsonObject("message");
 
 		result.doi = doi;
-		result.url = URI.create("https://doi.org/" + result.doi);
+		result.url = URI.create("https://doi.org/" + Utils.urlEncode(result.doi));
 		result.title = workJson.getAsJsonArray("title").get(0).getAsString();
 
 		Collection<String> authors = new ArrayList<>();
