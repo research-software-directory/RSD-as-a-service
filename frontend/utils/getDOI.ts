@@ -31,7 +31,7 @@ export async function getDoiRA(doi: string) {
 
 export async function getUrlFromDoiOrg(doi: string) {
   try {
-    const url = ` https://doi.org/api/handles/${doi}?type=URL`
+    const url = ` https://doi.org/api/handles/${encodeURIComponent(doi)}?type=URL`
     const resp = await fetch(url)
     // debugger
     if (resp.status === 200) {
@@ -105,7 +105,9 @@ export async function getMentionByDoi(doi: string) {
 
 // This url will always redirect to the current url
 export function makeDoiRedirectUrl(doi: string) {
-  return `https://doi.org/${doi}`
+  // we need to encode doi because it allows lot of
+  // "exotic" values like 10.1175/1520-0469(2003)60%3C1201:ALESIS%3E2.0.CO;2
+  return `https://doi.org/${encodeURIComponent(doi)}`
 }
 
 const exampleUrlResponse = {

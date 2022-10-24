@@ -168,7 +168,7 @@ export async function getDataciteItemsByDoiGraphQL(doi: string) {
     const error = await extractReturnMessage(resp)
     return error
   } catch (e: any) {
-    logger(`getMentionByDoi: ${e?.message}`, 'error')
+    logger(`getDataciteItemsByDoiGraphQL: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
