@@ -77,7 +77,8 @@ export function Links({links=[]}:{links:string[]}) {
                 title={item}
                 style={{
                   overflow: 'hidden',
-                  textOverflow:'ellipsis'
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
                 }}>{item}</div>
             </a>
           </Link>
