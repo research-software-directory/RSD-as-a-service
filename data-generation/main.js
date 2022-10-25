@@ -126,7 +126,6 @@ function generateRepositoryUrls(ids) {
 	];
 
 	const gitlabUrls = [
-		'https://gitlab.com/inkscape/inkscape',
 		'https://gitlab.com/dwt1/dotfiles',
 		'https://gitlab.com/famedly/fluffychat',
 		'https://gitlab.com/gitlab-org/gitlab-shell',

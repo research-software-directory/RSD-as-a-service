@@ -50,7 +50,7 @@ services:
 
   auth:
     build: ./authentication
-    image: rsd/auth:1.1.0
+    image: rsd/auth:1.2.0
     expose:
       - 7000
     environment:
@@ -130,7 +130,7 @@ services:
 
   scrapers:
     build: ./scrapers
-    image: rsd/scrapers:1.1.0
+    image: rsd/scrapers:1.2.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -171,7 +171,7 @@ services:
   #----------------------------------------------
   data-generation:
     build: ./data-generation
-    image: rsd/generation:1.0.1
+    image: rsd/generation:1.0.2
     environment:
       # it needs to be here to use values from .env file
       - PGRST_JWT_SECRET
