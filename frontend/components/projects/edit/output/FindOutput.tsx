@@ -9,6 +9,7 @@ import {useAuth} from '~/auth'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import FindMention from '~/components/mention/FindMention'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
+import AddExistingPublicationInfo from '~/components/software/edit/mentions/AddExistingPublicationInfo'
 import {MentionItemProps} from '~/types/Mention'
 import {getMentionByDoiFromRsd} from '~/utils/editMentions'
 import {getMentionByDoi} from '~/utils/getDOI'
@@ -72,7 +73,8 @@ export default function FindOutput() {
         help: config.findMention.help,
         reset: false
       }}
-      />
+    />
+    <AddExistingPublicationInfo />
     </>
   )
 }

@@ -10,7 +10,6 @@ import FindOutput from './FindOutput'
 import AddOutput from './AddOutput'
 import EditOutputProvider from './EditOutputProvider'
 import useProjectContext from '../useProjectContext'
-import EditMentionsInfo from '~/components/software/edit/mentions/EditMentionsInfo'
 
 export default function ProjectOutput() {
   const {token} = useSession()
@@ -31,9 +30,6 @@ export default function ProjectOutput() {
           <div className="py-4"></div>
           <AddOutput />
           <div className="py-4"></div>
-          <EditMentionsInfo
-            title="Edit output items"
-          />
         </div>
       </EditSection>
     </EditOutputProvider>

@@ -13,6 +13,7 @@ import {MentionItemProps} from '~/types/Mention'
 import {getMentionByDoiFromRsd} from '~/utils/editMentions'
 import {getMentionByDoi} from '~/utils/getDOI'
 import useSoftwareContext from '../useSoftwareContext'
+import AddExistingPublicationInfo from './AddExistingPublicationInfo'
 import {cfgImpact as config} from './config'
 import {findPublicationByTitle} from './mentionForSoftwareApi'
 
@@ -74,6 +75,7 @@ export default function FindSoftwareMention() {
           reset: false
         }}
       />
+      <AddExistingPublicationInfo />
     </>
   )
 }
