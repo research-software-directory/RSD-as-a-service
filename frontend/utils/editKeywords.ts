@@ -15,6 +15,11 @@ export type ProjectKeyword = {
   keyword: string
 }
 
+type KeywordItem = {
+  id: string,
+  value: string
+}
+
 export async function createKeyword({keyword, token}: { keyword: string, token: string }) {
   try {
     // POST
@@ -23,20 +28,17 @@ export async function createKeyword({keyword, token}: { keyword: string, token: 
       method: 'POST',
       headers: {
         ...createJsonHeaders(token),
-        // return id in header
-        'Prefer': 'return=headers-only'
+        'Prefer': 'return=representation',
       },
       body: JSON.stringify({
         value: keyword.trim()
       })
     })
     if (resp.status === 201) {
-      // we need to return id of created record
-      // it can be extracted from header.location
-      const id = resp.headers.get('location')?.split('.')[1]
+      const json:KeywordItem[] = await resp.json()
       return {
         status: 201,
-        message: id
+        message: json[0]
       }
     }
     // debugger
@@ -62,11 +64,11 @@ export async function createOrGetKeyword({keyword, token}: {keyword: string, tok
       }
     })
     if (resp.status === 200) {
-      const json:Keyword[] = await resp.json()
+      const json: KeywordItem[] = await resp.json()
       if (json.length > 0) {
         return {
           status: 201,
-          message: json[0].id
+          message: json[0]
         }
       }
     }

@@ -69,8 +69,8 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
       })
       if (resp.status===201){
         const keyword = {
-          id: resp.message as string,
-          keyword: selected,
+          id: resp.message.id,
+          keyword: resp.message.value,
           project: project_id,
           cnt: null
         }

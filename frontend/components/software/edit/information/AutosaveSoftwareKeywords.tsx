@@ -74,8 +74,8 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
       })
       if (resp.status === 201) {
         const keyword = {
-          id: resp.message as string,
-          keyword: selected,
+          id: resp.message.id,
+          keyword: resp.message.value,
           software: software_id,
           cnt: null
         }
