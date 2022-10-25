@@ -18,7 +18,7 @@ import {getImageUrl} from '~/utils/getProjects'
 import logger from '~/utils/logger'
 import {addImage, deleteImage, updateImage} from '~/utils/editProject'
 import AutosaveProjectTextField from './AutosaveProjectTextField'
-import AutosaveControlledSwitch from './AutosaveControlledSwitch'
+import AutosaveProjectSwitch from './AutosaveProjectSwitch'
 import {projectInformation as config} from './config'
 import {patchProjectTable} from './patchProjectInfo'
 
@@ -179,7 +179,7 @@ export default function AutosaveProjectImage() {
       </div>
 
       <div className="flex pb-3">
-        <AutosaveControlledSwitch
+        <AutosaveProjectSwitch
           project_id={form_id}
           name='image_contain'
           label={config.image_contain.label}

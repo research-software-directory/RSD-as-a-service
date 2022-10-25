@@ -113,8 +113,8 @@ export const softwareInformation = {
     label:'Validate DOI'
   },
   pageStatus: {
-    title: 'Page status',
-    subtitle: 'Only published software is visible to others'
+    title: 'Status',
+    subtitle: 'Published software is visible to others.'
   },
   is_published: {
     label: 'Published',

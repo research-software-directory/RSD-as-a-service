@@ -2,6 +2,9 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
+import Link from 'next/link'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import AutosaveControlledSwitch from './AutosaveControlledSwitch'
@@ -31,6 +34,18 @@ export default function AutosaveSoftwarePageStatus() {
           defaultValue={is_published}
         />
       </div>
+      <Alert
+        severity="info"
+        sx={{
+          marginTop:'1rem'
+        }}
+      >
+        <AlertTitle>Publishing software page</AlertTitle>
+        Setting the page status to published will expose the software page to public.
+        Not published software can be found under <strong>
+          <Link href="/user/software"><a>your profile</a></Link>
+        </strong> page.
+      </Alert>
     </>
   )
 }

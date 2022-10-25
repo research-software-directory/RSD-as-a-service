@@ -47,6 +47,10 @@ export const projectInformation = {
       maxLength: {value: 10000},
     }
   },
+  pageStatus: {
+    title: 'Status',
+    subtitle: 'Published project is visible to others.'
+  },
   is_published: {
     label: 'Published',
   },
@@ -74,7 +78,7 @@ export const projectInformation = {
   },
   research_domain: {
     title: 'Research domains',
-    subtitle: 'ERC classification',
+    subtitle: 'ERC classification.',
     infoLink: 'https://erc.europa.eu/news/new-erc-panel-structure-2021-and-2022',
     label: 'Select main research domain and field'
   },
@@ -90,7 +94,7 @@ export const projectInformation = {
   },
   url_for_project: {
     sectionTitle: 'Project links',
-    sectionSubtitle: 'Useful external links',
+    sectionSubtitle: 'Useful external links.',
     title: {
       label: 'Link text',
       placeholder: 'Title',
