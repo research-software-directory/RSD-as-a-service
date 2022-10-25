@@ -269,6 +269,8 @@ export async function updateOrganisation({item, token}:
         mime_type: item.logo_mime_type,
         token
       })
+      // fetch image to reload the cache
+      await fetch(`/image/rpc/get_logo?id=${item.id}`, {cache: 'reload'})
       return resp
     }
     return extractReturnMessage(resp)
@@ -330,9 +332,6 @@ export async function uploadOrganisationLogo({id, data, mime_type, token}:
         mime_type
       })
     })
-    await fetch(`/image/rpc/get_logo?id=${id}`, {cache: 'reload'})
-    // @ts-ignore
-    location.reload(true)
     return extractReturnMessage(resp)
   } catch (e: any) {
     return {

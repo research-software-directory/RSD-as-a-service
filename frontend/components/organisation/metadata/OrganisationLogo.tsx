@@ -12,7 +12,6 @@ import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import {deleteOrganisationLogo, getUrlFromLogoId, uploadOrganisationLogo} from '../../../utils/editOrganisation'
 import logger from '../../../utils/logger'
-import Link from 'next/link'
 import LogoAvatar from '~/components/layout/LogoAvatar'
 import IconButton from '@mui/material/IconButton'
 
@@ -30,7 +29,7 @@ type LogoProps = {
   mime_type: string | null
 }
 
-export default function OrganisationLogo({id,name,website,logo_id,isMaintainer}:
+export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
   OrganisationLogoProps) {
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
@@ -77,6 +76,10 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer}:
         b64,
         mime_type
       })
+      // fetch image to reload the cache
+      await fetch(`/image/rpc/get_logo?id=${id}`, {cache: 'reload'})
+      // @ts-ignore (hard) reload the page, true is for FF
+      location.reload(true)
     }
     if (upload.id && upload.b64 && upload.mime_type && token) {
       uploadLogo({

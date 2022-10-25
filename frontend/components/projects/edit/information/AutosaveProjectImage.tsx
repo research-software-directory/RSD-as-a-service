@@ -46,7 +46,7 @@ export default function AutosaveProjectImage() {
         token
       })
       await fetch(`/image/rpc/get_project_image?id=${form_id}`, {cache: 'reload'})
-      // @ts-ignore
+      // @ts-ignore (hard) reload the page, true is for FF
       location.reload(true)
     } else {
       // add new image
