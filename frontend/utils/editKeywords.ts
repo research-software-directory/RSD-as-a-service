@@ -56,7 +56,7 @@ export async function createOrGetKeyword({keyword, token}: {keyword: string, tok
   try {
     // try to find keyword
     const url = '/api/v1/keyword'
-    const find = `${url}?value=eq.${keyword}`
+    const find = `${url}?value=eq.${keyword.trim()}`
     const resp = await fetch(find, {
       method: 'GET',
       headers: {
