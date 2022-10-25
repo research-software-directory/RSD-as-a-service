@@ -21,7 +21,7 @@ import {organisationInformation as config} from '../organisationConfig'
 import {getUrlFromLogoId} from '../../../utils/editOrganisation'
 import logger from '../../../utils/logger'
 
-import {getSlugFromString, sanitizeSlugValue} from '../../../utils/getSlugFromString'
+import {getSlugFromString} from '../../../utils/getSlugFromString'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 
 type EditOrganisationModalProps = {
@@ -43,9 +43,9 @@ export default function EditOrganisationModal({
   const {showWarningMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [baseUrl, setBaseUrl] = useState('')
-  const [slugValue, setSlugValue] = useState(organisation?.slug ?? '')
-  const [validating, setValidating] = useState(false)
-  const {handleSubmit, watch, formState, reset, control, register, setValue, setError,clearErrors} = useForm<EditOrganisation>({
+  const {
+    handleSubmit, watch, formState, reset, control, register, setValue
+  } = useForm<EditOrganisation>({
     mode: 'onChange',
     defaultValues: {
       ...organisation
@@ -71,11 +71,13 @@ export default function EditOrganisationModal({
   }, [organisation, reset])
 
   useEffect(() => {
-    const organisationSlug = getSlugFromString(formData.name)
-    // debugger
-    setSlugValue(organisationSlug)
-    setValue('slug', organisationSlug,{shouldValidate:true,shouldDirty:true})
-    // reset({slug:organisationSlug})
+    if (formData.name) {
+      const organisationSlug = getSlugFromString(formData.name)
+      setValue('slug', organisationSlug, {
+        shouldValidate: true,
+        shouldDirty: true
+      })
+    }
   },[formData.name, setValue])
 
   function handleCancel() {
@@ -112,25 +114,6 @@ export default function EditOrganisationModal({
       onDeleteLogo(formData.logo_id)
     }
     setValue('logo_id', null)
-  }
-
-  function onSlugChange(slug: string) {
-    // if nothing is changed
-    const newSlug = sanitizeSlugValue(slug)
-    if (newSlug === formData.slug) return
-    if (newSlug.length < config.slug.validation.minLength.value) {
-      setError('slug',{
-        type: 'invalid-slug',
-        message: config.slug.validation.minLength.message
-      })
-    } else {
-      // clear errors
-      if (errors?.slug) clearErrors('slug')
-    }
-    // save new value on both locations
-    // debugger
-    setSlugValue(newSlug)
-    setValue('slug', newSlug,{shouldValidate:true,shouldDirty:true})
   }
 
   return (
@@ -238,13 +221,12 @@ export default function EditOrganisationModal({
                 placeholder={config.slug.label}
                 variant="standard"
                 value={formData.slug ?? ''}
-                error={false}
-                helperText={config.slug.help}
-                onChange={({target}) => onSlugChange(target.value)}
-                // disabled={formData.id!==null}
+                error={errors?.slug ? true : false}
+                helperText={errors?.slug ? errors?.slug?.message : config.slug.help}
                 sx={{
                   width:'100%'
                 }}
+                {...register('slug',config.slug.validation)}
               />
             </div>
           </section>
