@@ -80,15 +80,17 @@ public class CrossrefMention implements Mention {
 
 		Collection<String> authors = new ArrayList<>();
 		Iterable<JsonObject> authorsJson = (Iterable) workJson.getAsJsonArray("author");
-		for (JsonObject authorJson : authorsJson) {
-			String givenName = Utils.stringOrNull(authorJson.get("given"));
-			String familyName = Utils.stringOrNull(authorJson.get("family"));
-			if (givenName == null && familyName == null) continue;
-			if (givenName == null) authors.add(familyName);
-			else if (familyName == null) authors.add(givenName);
-			else authors.add(givenName + " " + familyName);
+		if (authorsJson != null) {
+			for (JsonObject authorJson : authorsJson) {
+				String givenName = Utils.stringOrNull(authorJson.get("given"));
+				String familyName = Utils.stringOrNull(authorJson.get("family"));
+				if (givenName == null && familyName == null) continue;
+				if (givenName == null) authors.add(familyName);
+				else if (familyName == null) authors.add(givenName);
+				else authors.add(givenName + " " + familyName);
+			}
+			result.authors = String.join(", ", authors);
 		}
-		result.authors = String.join(", ", authors);
 
 		result.publisher = Utils.stringOrNull(workJson.get("publisher"));
 		try {
