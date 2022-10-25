@@ -141,3 +141,55 @@ export async function removeMentionForSoftware({mention, software, token}:
     }
   }
 }
+
+// OBSOLETE?
+// WE decided not to allow update of mentions by rsd_user role
+// Dusan 2022-10-24
+// export async function replaceMentionForSoftware({mention, software, token}:
+//   { mention: MentionItemProps, software: string, token: string }) {
+//   try {
+//     let resp
+//     // remove refference to existing mention item
+//     resp = await removeMentionForSoftware({
+//       software,
+//       mention: mention.id ?? '',
+//       token
+//     })
+//     if (resp.status !== 200) {
+//       return resp
+//     }
+//     // debugger
+//     // replace mention item
+//     resp = await replaceMentionItem({
+//       mention,
+//       token
+//     })
+//     if (resp.status !== 200) {
+//       return resp
+//     }
+//     const newMention = {
+//       ...resp.message
+//     }
+//     // debugger
+//     // create refference to new mention item
+//     resp = await addToMentionForSoftware({
+//       software,
+//       mention: newMention.id,
+//       token
+//     })
+//     if (resp.status !== 200) {
+//       return resp
+//     }
+//     // debugger
+//     return {
+//       status: 200,
+//       message: newMention
+//     }
+//   } catch (e: any) {
+//     logger(`replaceMentionForSoftware: ${e?.message}`, 'error')
+//     return {
+//       status: 500,
+//       message: e?.message
+//     }
+//   }
+// }
