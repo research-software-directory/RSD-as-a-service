@@ -160,7 +160,7 @@ services:
   nginx:
     build:
       context: ./nginx
-    image: rsd/nginx:1.1.1
+    image: rsd/nginx:1.1.2
     ports:
       - "80:80"
       - "443:443"
