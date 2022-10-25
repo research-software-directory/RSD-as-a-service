@@ -13,7 +13,8 @@ export default function TagChip({label, title}:
         marginBottom: '1rem',
         marginRight: '0.5rem',
         maxWidth: '21rem',
-        borderRadius: '0.125rem'
+        borderRadius: '0.125rem',
+        textTransform: 'capitalize'
       }}
     />
   )

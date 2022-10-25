@@ -241,6 +241,9 @@ CREATE POLICY anyone_can_read ON keyword FOR SELECT TO web_anon, rsd_user
 CREATE POLICY maintainer_can_insert ON keyword FOR INSERT TO rsd_user
 	WITH CHECK (TRUE);
 
+CREATE POLICY maintainer_can_delete ON keyword FOR DELETE TO rsd_user
+	USING (TRUE);
+
 CREATE POLICY admin_all_rights ON keyword TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
