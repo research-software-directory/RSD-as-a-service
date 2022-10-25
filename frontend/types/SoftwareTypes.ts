@@ -41,7 +41,7 @@ export type NewSoftwareItem = {
   description_type: 'markdown'|'link',
   get_started_url: string | null,
   is_published: boolean,
-  short_statement: string,
+  short_statement: string | null,
 }
 
 export type SoftwareTableItem = NewSoftwareItem & {

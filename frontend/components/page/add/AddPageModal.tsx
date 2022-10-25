@@ -7,7 +7,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
 
 import {useForm} from 'react-hook-form'
@@ -15,8 +14,8 @@ import {useForm} from 'react-hook-form'
 import {useAuth} from '../../../auth'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 import SlugTextField from '../../form/SlugTextField'
-import {getSlugFromString,sanitizeSlugValue} from '../../../utils/getSlugFromString'
-import {useDebounceValid} from '~/utils/useDebounce'
+import {getSlugFromString} from '../../../utils/getSlugFromString'
+import {useDebounce} from '~/utils/useDebounce'
 import {addConfig as config} from './addConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {MarkdownPage, validPageSlug} from '../useMarkdownPages'
@@ -44,11 +43,11 @@ type AddPageModalProps = {
   onSuccess: (page:MarkdownPage) => void
 }
 
+let lastValidatedSlug = ''
 const formId='add-page-form'
 
 export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalProps) {
   const {session} = useAuth()
-  const router = useRouter()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')
@@ -63,9 +62,9 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
   })
   const {errors, isValid} = formState
   // watch for data change in the form
-  const data = watch()
+  const [slug,title] = watch(['slug','title'])
   // construct slug from title
-  const bouncedSlug = useDebounceValid(slugValue, errors['slug'])
+  const bouncedSlug = useDebounce(slugValue,700)
 
   useEffect(() => {
     if (typeof location != 'undefined') {
@@ -73,39 +72,49 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
     }
   }, [])
 
+  /**
+   * Convert title value into slugValue.
+   * The title is then debounced and produces bouncedSlug
+   * We use bouncedSlug value later on to perform call to api
+   */
   useEffect(() => {
-    const softwareSlug = getSlugFromString(data.title)
-    clearErrors('slug')
+    const softwareSlug = getSlugFromString(title)
     setSlugValue(softwareSlug)
-  },[data.title,clearErrors])
+  }, [title])
+  /**
+   * When bouncedSlug value is changed,
+   * we need to update slug value (value in the input) shown to user.
+   * This change occures when brand_name value is changed
+   */
+  useEffect(() => {
+    setValue('slug', bouncedSlug, {
+      shouldValidate: true
+    })
+  }, [bouncedSlug, setValue])
 
   useEffect(() => {
     let abort = false
-    async function validateSlug(slug: string) {
+    async function validateSlug() {
       setValidating(true)
-      const isValid = await validPageSlug({slug, token: session?.token})
-      // debugger
-      if (abort) return
-      if (isValid) {
+      const isUsed = await validPageSlug({slug, token: session?.token})
+      // if (abort) return
+      if (isUsed === true) {
+        const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
         setError('slug', {
-          type: 'invalid-slug',
-          message: `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
-        })
-      } else {
-        clearErrors('slug')
-        setValue('slug', slug, {
-          shouldValidate: true
+          type: 'validate',
+          message
         })
       }
+      lastValidatedSlug = slug
       // we need to wait some time
       setValidating(false)
     }
-    if (bouncedSlug) {
+    if (slug !== lastValidatedSlug) {
       // debugger
-      validateSlug(bouncedSlug)
+      validateSlug()
     }
     return ()=>{abort=true}
-  },[bouncedSlug,session?.token,setError,setValue,clearErrors])
+  },[slug,session?.token,setError])
 
   function handleClose() {
     // rest form values
@@ -155,30 +164,13 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
     })
   }
 
-  function onSlugChange(slug: string) {
-    // if nothing is changed
-    const newSlug = sanitizeSlugValue(slug)
-    if (newSlug === slugValue) return
-    if (newSlug.length < config.slug.validation.minLength.value) {
-      setError('slug',{
-        type: 'invalid-slug',
-        message: config.slug.validation.minLength.message
-      })
-    } else {
-      // clear errors
-      if (errors?.slug) clearErrors('slug')
-    }
-    // save new value
-    setSlugValue(newSlug)
-  }
 
   function isSaveDisabled() {
     if (state.loading == true) return true
-    // when manually setting errors, like with brand_name async validation
-    // we also need to ensure these errors are handled here
-    if (errors && errors?.slug) return true
-    if (isValid === false) return true
-    return false
+    // during async validation we disable button
+    if (validating === true) return true
+    // if isValid is not true
+    return isValid===false
   }
 
   return (
@@ -213,7 +205,7 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
                 error: errors.title?.message !== undefined,
                 label: config.title.label,
                 helperTextMessage: errors?.title?.message ?? config.title.help,
-                helperTextCnt: `${data?.title?.length || 0}/${config.title.validation.maxLength.value}`,
+                helperTextCnt: `${title?.length || 0}/${config.title.validation.maxLength.value}`,
                 variant:'outlined'
               }}
               register={register('title', {
@@ -222,13 +214,14 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
             />
             <div className="py-4"></div>
             <SlugTextField
-              label={config.slug.label}
               baseUrl={baseUrl}
-              value={slugValue}
-              error={errors.slug?.message !== undefined}
-              helperTextMessage={errors?.slug?.message ?? config.slug.help}
-              onSlugChange={onSlugChange}
               loading={validating}
+              options={{
+                label:config.slug.label,
+                error: errors.slug?.message !== undefined,
+                helperText: errors?.slug?.message ?? config.slug.help
+              }}
+              register={register('slug',config.slug.validation)}
             />
           </section>
         </DialogContent>

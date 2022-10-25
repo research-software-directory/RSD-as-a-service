@@ -39,10 +39,12 @@ jest.mock('next/router', () => ({
 it('render card with title', async () => {
   render(WrappedComponentWithProps(AddProjectCard))
   const title = await screen.queryByText(addConfig.title)
-  expect(title).toBeInTheDocument()
+  await act(() => {
+    expect(title).toBeInTheDocument()
+  })
 })
 
-it.only('card has textbox with Title that can be entered', async() => {
+it('card has textbox with Title that can be entered', async() => {
   render(WrappedComponentWithProps(AddProjectCard))
   // dummy input value
   const inputSubtitle = 'Test project title'
@@ -57,26 +59,30 @@ it.only('card has textbox with Title that can be entered', async() => {
   })
 })
 
-it('card has textbox with Subtitle that can be entered', () => {
+it('card has textbox with Subtitle that can be entered', async() => {
   render(WrappedComponentWithProps(AddProjectCard))
   const desc = screen.getByRole<HTMLInputElement>('textbox', {name: 'Subtitle'})
   expect(desc).toBeInTheDocument()
   // accepts test value
   const inputSubtitle = 'Test project description'
   fireEvent.change(desc, {target: {value: inputSubtitle}})
-  expect(desc.value).toEqual(inputSubtitle)
+  await act(() => {
+    expect(desc.value).toEqual(inputSubtitle)
+  })
 })
 
-it('card has cancel and submit buttons', () => {
+it('card has cancel and submit buttons', async() => {
   render(WrappedComponentWithProps(AddProjectCard))
   const submit = screen.getByRole('button',{name:'Save'})
   expect(submit).toBeInTheDocument()
   // accepts test value
   const cancel = screen.getByRole('button', {name: 'Cancel'})
-  expect(cancel).toBeInTheDocument()
+  await act(() => {
+    expect(cancel).toBeInTheDocument()
+  })
 })
 
-it('goes back on cancel', () => {
+it('goes back on cancel', async() => {
   // render
   render(WrappedComponentWithProps(AddProjectCard))
   // accepts test value
@@ -84,8 +90,10 @@ it('goes back on cancel', () => {
   expect(cancel).toBeInTheDocument()
   // click op cancel
   fireEvent.click(cancel)
-  // assert that router back is called
-  expect(mockBack).toHaveBeenCalledTimes(1)
+  await act(() => {
+    // assert that router back is called
+    expect(mockBack).toHaveBeenCalledTimes(1)
+  })
 })
 
 it('validate, save and redirect', async () => {
@@ -143,6 +151,7 @@ it('validate, save and redirect', async () => {
         date_start: null,
         date_end: null,
         image_caption: null,
+        image_contain: false,
         grant_id: null
       },
       'token': 'TEST_TOKEN',
