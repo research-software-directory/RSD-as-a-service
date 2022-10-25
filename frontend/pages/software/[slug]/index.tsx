@@ -110,7 +110,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       {/* Page Head meta tags */}
       <PageMeta
         title={`${software?.brand_name} | ${app.title}`}
-        description={software.short_statement}
+        description={software.short_statement ?? ''}
       />
       {/* Page Head meta tags */}
       <CitationMeta
@@ -122,7 +122,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       {/* Page Head meta tags */}
       <OgMetaTags
         title={software?.brand_name}
-        description={software.short_statement}
+        description={software.short_statement ?? ''}
         url={resolvedUrl}
       />
       <CanoncialUrl
@@ -133,13 +133,11 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         : undefined
       }/>
 
-      {/* <PageContainer> */}
-        <SoftwareIntroSection
-          brand_name={software.brand_name}
-          short_statement={software.short_statement}
-          counts={softwareIntroCounts}
-        />
-      {/* </PageContainer> */}
+      <SoftwareIntroSection
+        brand_name={software.brand_name}
+        short_statement={software.short_statement ?? ''}
+        counts={softwareIntroCounts}
+      />
 
       <GetStartedSection
         get_started_url={software.get_started_url}
