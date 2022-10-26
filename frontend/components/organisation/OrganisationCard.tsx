@@ -52,9 +52,9 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
                 sx={{
                   position: 'absolute',
                   right: '0.75rem',
-                  top: '0.75rem',
-                  width: '4rem',
-                  height: '4rem',
+                  top: '1.25rem',
+                  width: '2rem',
+                  height: '2rem',
                   opacity: 0.4,
                   color: 'primary.main'
                 }}
