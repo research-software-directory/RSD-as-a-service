@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
-import {getTimeAgoSince} from '../../utils/dateFn'
+import {getTimeAgoSince} from '~/utils/dateFn'
 // import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import FeaturedIcon from '~/components/icons/FeaturedIcon'
 import NotPublishedIcon from '~/components/icons/NotPublishedIcon'
@@ -63,7 +63,7 @@ export default function SoftwareCard({
           className={`flex-1 flex flex-col bg-base-200 text-content ${opacity} hover:bg-secondary group`}>
           <div className="relative flex">
             <h2
-              className={`p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white`}>
+              className={'p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white'}>
               {/*Title and initials*/}
               <div className="flex pt-3 relative min-h-[5rm]">
                 <div
@@ -77,7 +77,7 @@ export default function SoftwareCard({
                   {getInitals()}
                 </div>
               </div>
-
+            </h2>
               {/*description and more information*/}
               <div>
                 <p className="px-4 my-2 line-clamp-3 text-gray-800 group-hover:text-white">

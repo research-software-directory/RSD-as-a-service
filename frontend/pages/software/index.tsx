@@ -11,17 +11,19 @@ import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import {app} from '../../config/app'
-import DefaultLayout from '../../components/layout/DefaultLayout'
-import PageTitle from '../../components/layout/PageTitle'
-import Searchbox from '../../components/form/Searchbox'
-import SoftwareGrid from '../../components/software/SoftwareGrid'
-import {SoftwareListItem} from '../../types/SoftwareTypes'
-import {rowsPerPageOptions} from '../../config/pagination'
-import {getSoftwareList} from '../../utils/getSoftware'
-import {ssrSoftwareParams} from '../../utils/extractQueryParam'
-import {softwareListUrl, softwareUrl} from '../../utils/postgrestUrl'
+import {SoftwareListItem} from '~/types/SoftwareTypes'
+
+import {app} from '~/config/app'
 import SoftwareKeywordFilter from '~/components/software/SoftwareKeywordFilter'
+import {rowsPerPageOptions} from '~/config/pagination'
+import {getSoftwareList} from '~/utils/getSoftware'
+import {ssrSoftwareParams} from '~/utils/extractQueryParam'
+import {softwareListUrl, softwareUrl} from '~/utils/postgrestUrl'
+
+import DefaultLayout from '~/components/layout/DefaultLayout'
+import PageTitle from '~/components/layout/PageTitle'
+import Searchbox from '~/components/form/Searchbox'
+import SoftwareGrid from '~/components/software/SoftwareGrid'
 
 type SoftwareIndexPageProps = {
   count: number,
