@@ -24,6 +24,9 @@ import DefaultLayout from '~/components/layout/DefaultLayout'
 import PageTitle from '~/components/layout/PageTitle'
 import Searchbox from '~/components/form/Searchbox'
 import SoftwareGrid from '~/components/software/SoftwareGrid'
+import KeywordsFilter from '~/components/keyword/KeywordFilter'
+import FilterByKeywordsPanel from '~/components/keyword/FilterByKeywordsPanel'
+
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -109,6 +112,9 @@ export default function SoftwareIndexPage(
   //   logger(`software.index.handleSort: TODO! Sort on...${sortOn}`,'warn')
   // }
 
+  function filterKeywords(keywords: string[]){
+    console.log('🎹 keywords to filter', keywords )
+  }
   return (
     <DefaultLayout>
       <Head>
@@ -142,20 +148,10 @@ export default function SoftwareIndexPage(
 
       <div className="flex gap-3">
 
+        <div className="w-64 hidden sm:block">
 
-        <div className="w-[14rem]">
-            filters
-          Filter
-          - tags
-          <br/>
-          <br/>
-          Order by
-          - Last update
-          - more contributors
-          - mentions
-          - featured
-
-
+          <FilterByKeywordsPanel onFilterChange={filterKeywords}/>
+          
         </div>
         <div className="w-full">
           {/*software list*/}
