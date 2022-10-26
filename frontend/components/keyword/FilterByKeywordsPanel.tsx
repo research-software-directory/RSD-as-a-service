@@ -1,7 +1,7 @@
 import {TextField} from '@mui/material'
 import Autocomplete from '@mui/material/Autocomplete'
 
-export default function FilterByKeywordsPanel({onFilterChange}: any) {
+export default function FilterByKeywordsPanel({keywords,onFilterChange}: any) {
 
   let tags = ['keyword 1', 'keyword 2', 'keyword 3', 'keyword 4']
 
@@ -34,7 +34,7 @@ export default function FilterByKeywordsPanel({onFilterChange}: any) {
       )}
     />
 
-      {tags.map((tag) => (<div className="mb-3 cursor-pointer hover:text-primary">{tag}</div>))}
+      {tags.map((tag) => (<div key={tag} className="mb-3 cursor-pointer hover:text-primary">{tag}</div>))}
     </div>
   )
 }

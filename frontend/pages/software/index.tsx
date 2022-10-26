@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {MouseEvent, ChangeEvent} from 'react'
+import {MouseEvent, ChangeEvent, useState} from 'react'
 import Head from 'next/head'
 import {useRouter} from 'next/router'
 import {GetServerSidePropsContext} from 'next/types'
@@ -24,9 +24,8 @@ import DefaultLayout from '~/components/layout/DefaultLayout'
 import PageTitle from '~/components/layout/PageTitle'
 import Searchbox from '~/components/form/Searchbox'
 import SoftwareGrid from '~/components/software/SoftwareGrid'
-import KeywordsFilter from '~/components/keyword/KeywordFilter'
 import FilterByKeywordsPanel from '~/components/keyword/FilterByKeywordsPanel'
-
+import Button from '@mui/material/Button'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -42,12 +41,10 @@ const pageTitle = `Software | ${app.title}`
 export default function SoftwareIndexPage(
   {software = [], count, page, rows, keywords, search}: SoftwareIndexPageProps
 ) {
+  const [openPanel, setOpenPanel] = useState(false)
+
   // use next router (hook is only for browser)
   const router = useRouter()
-  // use media query hook for small screen logic
-  const smallScreen = useMediaQuery('(max-width:600px)')
-  // adjust grid min width for mobile to 18rem
-  const minWidth = smallScreen ? '18rem' : '26rem'
 
   // next/previous page button
   function handleTablePageChange(
@@ -112,9 +109,10 @@ export default function SoftwareIndexPage(
   //   logger(`software.index.handleSort: TODO! Sort on...${sortOn}`,'warn')
   // }
 
-  function filterKeywords(keywords: string[]){
-    console.log('🎹 keywords to filter', keywords )
+  function filterKeywords(keywords: string[]) {
+    console.log('🎹 keywords to filter', keywords)
   }
+
   return (
     <DefaultLayout>
       <Head>
@@ -146,13 +144,29 @@ export default function SoftwareIndexPage(
         </div>
       </PageTitle>
 
+      <div className="sm:hidden">
+        <Button variant="contained" style={{textTransform: 'capitalize'}}
+                onClick={() => setOpenPanel(true)}>Open Filters</Button>
+      </div>
+
       <div className="flex gap-3">
 
-        <div className="w-64 hidden sm:block">
-
-          <FilterByKeywordsPanel onFilterChange={filterKeywords}/>
-          
+        {/* Filter panel*/}
+        <div
+          className={`bg-black bg-opacity-0 pointer-events-none fixed top-0 left-0 h-screen w-screen z-10 ${openPanel && 'bg-opacity-40 pointer-events-auto'}`}
+          onClick={() => setOpenPanel(false)}>
         </div>
+        <div className={`w-64 fixed -translate-x-72 bg-base-100 top-0 h-full transition-transform duration-300 p-4  
+                      sm:relative sm:translate-x-0 sm:left-0 sm:z-auto z-10 shadow-2xl sm:shadow-none
+                      ${openPanel && '-translate-x-4'}`}
+        >
+          <div className="sm:hidden">
+            <Button onClick={() => setOpenPanel(false)}>Close</Button>
+          </div>
+          <FilterByKeywordsPanel keywords={keywords} onFilterChange={filterKeywords}/>
+        </div>
+
+        {/* Grid Software*/}
         <div className="w-full">
           {/*software list*/}
           <SoftwareGrid software={software} className=""/>
