@@ -22,6 +22,7 @@ CREATE TYPE mention_type AS ENUM (
 	'thesis',
 	'videoRecording',
 	'webpage',
+	'workshop',
 	'other'
 );
 
