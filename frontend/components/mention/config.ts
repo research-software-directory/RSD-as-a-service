@@ -89,6 +89,17 @@ export const mentionModal = {
       }
     }
   },
+  note: {
+    label: 'Note',
+    help: 'Add a custom note',
+    validation: {
+      required: false,
+      maxLength: {
+        value: 500,
+        message: 'Maximum length is 500'
+      }
+    }
+  },
   image_url: {
     label: 'Image url*',
     help: 'Url to publication image is required for highlighted mention',

@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -212,6 +214,18 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               helperTextCnt: `${formData?.url?.length || 0}/${config.url.validation.maxLength.value}`,
             }}
             rules={config.url.validation}
+          />
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'note',
+              label: config.note.label,
+              useNull: true,
+              defaultValue: formData?.note,
+              helperTextMessage: config.note.help,
+              helperTextCnt: `${formData?.note?.length || 0}/${config.note.validation.maxLength.value}`,
+            }}
+            rules={config.note.validation}
           />
           <div className="py-2"></div>
           {formData.mention_type === 'highlight' ?
