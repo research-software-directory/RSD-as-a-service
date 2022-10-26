@@ -16,8 +16,7 @@ import useProjectToEdit from './useProjectToEdit'
 import {projectInformation as config} from './config'
 import AutosaveProjectTextField from './AutosaveProjectTextField'
 import AutosaveProjectImage from './AutosaveProjectImage'
-import AutosaveProjectMarkdown from './AutosaveProjectMarkdown'
-import AutosaveControlledSwitch from './AutosaveControlledSwitch'
+import AutosaveProjectSwitch from './AutosaveProjectSwitch'
 import AutosaveProjectPeriod from './AutosaveProjectPeriod'
 import AutosaveFundingOrganisations from './AutosaveFundingOrganisations'
 import AutosaveProjectKeywords from './AutosaveProjectKeywords'
@@ -25,6 +24,7 @@ import AutosaveResearchDomains from './AutosaveResearchDomains'
 import AutosaveProjectLinks from './AutosaveProjectLinks'
 import AutosaveControlledMarkdown from '~/components/form/AutosaveControlledMarkdown'
 import {patchProjectTable} from './patchProjectInfo'
+import PublishingProjectInfo from './PublishingProjectInfo'
 
 export default function EditProjectInformation({slug}: {slug: string}) {
   const {token,user} = useSession()
@@ -152,15 +152,16 @@ export default function EditProjectInformation({slug}: {slug: string}) {
         {/* right panel */}
         <div className="py-4 min-w-[21rem] xl:my-0">
           <EditSectionTitle
-            title="Status"
+            title={config.pageStatus.title}
+            subtitle={config.pageStatus.subtitle}
           />
-          <div className="py-2"></div>
-          <AutosaveControlledSwitch
+          <AutosaveProjectSwitch
             project_id={formValues.id}
             name='is_published'
             label={config.is_published.label}
             defaultValue={formValues.is_published}
           />
+          <PublishingProjectInfo />
           <div className="py-4"></div>
           <AutosaveProjectPeriod
             date_start={project?.date_start ?? null}

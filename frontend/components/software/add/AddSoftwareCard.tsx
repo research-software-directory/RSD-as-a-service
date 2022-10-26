@@ -119,7 +119,6 @@ export default function AddSoftwareCard() {
         const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
         setError('slug',{type:'validate',message})
       }
-      debugger
       lastValidatedSlug = slug
       setValidating(false)
     }
