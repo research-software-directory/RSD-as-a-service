@@ -114,7 +114,7 @@ export const softwareInformation = {
   },
   pageStatus: {
     title: 'Status',
-    subtitle: 'Published software is visible to others.'
+    subtitle: 'A published software is visible to others.'
   },
   is_published: {
     label: 'Published',

@@ -11,8 +11,8 @@ export default function PublishingProjectInfo() {
         }}
       >
         <AlertTitle>Publishing project page</AlertTitle>
-        Setting the page status to published will expose the project page to public.
-        Not published project can be found under <strong>
+        Setting the page status to published will expose the project page to all visitors.
+        Unpublished project can be found under <strong>
           <Link href="/user/projects"><a>your profile</a></Link>
         </strong> page.
       </Alert>

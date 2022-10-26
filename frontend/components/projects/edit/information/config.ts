@@ -49,7 +49,7 @@ export const projectInformation = {
   },
   pageStatus: {
     title: 'Status',
-    subtitle: 'Published project is visible to others.'
+    subtitle: 'A published project is visible to others.'
   },
   is_published: {
     label: 'Published',
