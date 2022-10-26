@@ -10,8 +10,8 @@ import SoftwareGrid from '~/components/software/SoftwareGrid'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import useUserSoftware from './useUserSoftware'
 
-export default function UserSoftware({session}:{session:Session}) {
-  const {searchFor,page,rows, setCount} = usePaginationWithSearch('Filter software')
+export default function UserSoftware({session}: { session: Session }) {
+  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Filter software')
   const {loading, software, count} = useUserSoftware({
     searchFor,
     page,
@@ -23,18 +23,12 @@ export default function UserSoftware({session}:{session:Session}) {
     if (count && loading === false) {
       setCount(count)
     }
-  },[count,loading,setCount])
+  }, [count, loading, setCount])
 
   return (
     <SoftwareGrid
       software={software}
-      grid={{
-        height:'17rem',
-        minWidth:'25rem',
-        maxWidth:'1fr'
-      }}
       className="gap-[0.125rem] pt-4 pb-12"
     />
   )
-
 }

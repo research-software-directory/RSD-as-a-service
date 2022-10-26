@@ -26,11 +26,6 @@ export default function RelatedSoftwareSection({relatedSoftware = []}: { related
       <SoftwareGrid
         className="gap-[0.125rem]"
         software={relatedSoftware}
-        grid={{
-          height: '17rem',
-          minWidth,
-          maxWidth:'1fr'
-        }}
       />
     </PageContainer>
   )

@@ -34,7 +34,7 @@ export default function SoftwareCard({
 
   // if not published use opacity 0.50
   let opacity = ''
-  if (typeof is_published != = 'undefined' && !is_published) opacity = 'opacity-50'
+  if (typeof is_published !== 'undefined' && !is_published) opacity = 'opacity-50'
 
   function getInitals() {
     return brand_name?.slice(0, 2).toUpperCase() || ''
@@ -57,58 +57,48 @@ export default function SoftwareCard({
 
   return (
     <Link href={href} passHref>
-      {/* anchor tag MUST be first element after Link component */}
-      <a className="flex flex-col h-full">
-        <div
-          className={`flex-1 flex flex-col bg-base-200 text-content ${opacity} hover:bg-secondary group`}>
-          <div className="relative flex">
-            <h2
-              className={'p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white'}>
-              {/*Title and initials*/}
-              <div className="flex pt-3 relative min-h-[5rm]">
-                <div
-                  title={brand_name}
-                  className="text-lg font-medium line-clamp-2 px-4 flex-1 mr-[4rem] group-hover:text-white"
-                >
-                  {renderPublished()} {brand_name}
-                </div>
-                <div
-                  className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-base text-2xl absolute top-0 right-0 group-hover:text-secondary">
-                  {getInitals()}
-                </div>
-              </div>
-            </h2>
-              {/*description and more information*/}
-              <div>
-                <p className="px-4 my-2 line-clamp-3 text-gray-800 group-hover:text-white">
-                  {short_statement}
-                </p>
-                <div className="flex justify-between p-4 text-sm group-hover:text-white opacity-60">
-                  <div> {getTimeAgoSince(today, updated_at)} </div>
-                  <div className="flex gap-3">
-
-                    {contributor_cnt &&
-                      <Tooltip title="Contributors" placement="top">
-                        <div>
-                          <PeopleAltOutlinedIcon className="w-5 h-5 "/> {contributor_cnt}
-                        </div>
-                      </Tooltip>}
-
-                    {mention_cnt &&
-                      <Tooltip title="Mentions" placement="top">
-                        <div>
-                          <TurnedInNotOutlinedIcon className="w-5 h-5 "/> {mention_cnt}
-                        </div>
-                      </Tooltip>}
-
-                    {is_featured &&
-                      <Tooltip title="Feature Software" placement="top">
-                        <PushPinOutlinedIcon className="rotate-45 w-5 h-5 "/>
-                      </Tooltip>}
-                  </div>
-                </div>
-              </div>
+      {/* Anchor tag MUST be first element after Link component */}
+      <a className={`flex flex-col h-full bg-base-200 text-content ${opacity} hover:bg-secondary group`}>
+        {/* Title and initials*/}
+        <div className="flex group-hover:text-white">
+          <div className="line-clamp-2 max-h-16 h-full pt-3 p-4 text-lg font-medium flex-1 group-hover:text-white">
+            {renderPublished()} {brand_name}
+          </div>
+          <div className="flex justify-center items-center w-16 h-16 bg-white text-base text-2xl group-hover:text-secondary">
+            {getInitals()}
+          </div>
         </div>
+        {/* Description and more information*/}
+        <div className="flex flex-col h-full">
+          <p className="flex-1 px-4 my-2 line-clamp-3 text-gray-800 group-hover:text-white">
+            {short_statement}
+          </p>
+          <div className="flex justify-between p-4 text-sm group-hover:text-white opacity-60">
+            <Tooltip title="Updated" placement="top">
+              <div> {getTimeAgoSince(today, updated_at)} </div>
+            </Tooltip>
+            <div className="flex gap-3">
+
+              {contributor_cnt &&
+                <Tooltip title="Contributors" placement="top">
+                  <div>
+                    <PeopleAltOutlinedIcon className="scale-[0.8]"/> {contributor_cnt}
+                  </div>
+                </Tooltip>}
+
+              {mention_cnt &&
+                <Tooltip title="Mentions" placement="top">
+                  <div>
+                    <TurnedInNotOutlinedIcon className="scale-[0.8]"/> {mention_cnt}
+                  </div>
+                </Tooltip>}
+
+              {is_featured &&
+                <Tooltip title="Feature Software" placement="top">
+                  <PushPinOutlinedIcon className="rotate-45 scale-[0.8]"/>
+                </Tooltip>}
+            </div>
+          </div>
         </div>
       </a>
     </Link>
