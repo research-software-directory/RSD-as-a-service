@@ -48,7 +48,7 @@ dev:
 	docker-compose up --scale scrapers=0 -d
 	make -j 2 dev-docs dev-frontend # Run concurrently
 
-down:
+down stop: # stop the application with 'make down' OR 'make stop'
 	docker-compose down
 
 frontend-docker: frontend/.env.local
