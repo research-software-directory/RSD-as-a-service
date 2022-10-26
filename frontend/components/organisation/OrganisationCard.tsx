@@ -10,6 +10,7 @@ import StatCounter from '../layout/StatCounter'
 import VerifiedIcon from '@mui/icons-material/Verified'
 import SingleLineTitle from '../layout/SingleLineTitle'
 import LogoAvatar from '../layout/LogoAvatar'
+import {Tooltip} from '@mui/material'
 
 export default function OrganisationCard(organisation: OrganisationForOverview) {
 
@@ -30,64 +31,33 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
       href={`/organisations/${organisation.rsd_path}`}
       passHref
     >
-      <a
-        className="h-full relative"
-      >
-        <article
-          className="flex flex-col border h-full min-h-[16rem] overflow-hidden">
-          {/* <h2 className='h-[5rem]'>{organisation.name}</h2> */}
-          <div className="pl-8 flex">
-            <SingleLineTitle
-              title={organisation.name}
+      <a className="h-full flex flex-col border h-full min-h-[16rem] overflow-hidden p-4 ">
+        <div className="flex">
+          <h2 className='flex-1 line-clamp-2'>{organisation.name}</h2>
+          {organisation.is_tenant && <Tooltip title="Verified organisation">
+            <div><VerifiedIcon className="w-12 opacity-50 text-primary"/></div>
+          </Tooltip>}
+        </div>
+        <div className="flex-1 flex overflow-hidden">
+          <div className="">
+            <LogoAvatar
+              name={organisation.name ?? ''}
+              src={getUrlFromLogoId(organisation.logo_id) ?? undefined}
               sx={{
-                padding: '1.5rem 0rem',
-                // place for verified
-                margin: organisation.is_tenant ? '0rem 6rem 0rem 0rem' : '0rem 2rem 0rem 0rem',
+                '& img': {
+                  height: 'auto',
+                  maxHeight: '10rem',
+                  width: 'auto',
+                  maxWidth: '100%'
+                }
               }}
-            >
-              {organisation.name}
-            </SingleLineTitle>
-            {
-              organisation.is_tenant && <VerifiedIcon
-                sx={{
-                  position: 'absolute',
-                  right: '0.75rem',
-                  top: '1.25rem',
-                  width: '2rem',
-                  height: '2rem',
-                  opacity: 0.4,
-                  color: 'primary.main'
-                }}
-              />
-            }
+            />
           </div>
-          <div className="flex-1 flex md:grid md:grid-cols-[3fr,2fr] px-8 pb-4 overflow-hidden">
-            <div className="hidden md:block">
-              <LogoAvatar
-                name={organisation.name ?? ''}
-                src={getUrlFromLogoId(organisation.logo_id) ?? undefined}
-                sx={{
-                  '& img': {
-                    height: 'auto',
-                    maxHeight: '10rem',
-                    width: 'auto',
-                    maxWidth: '100%'
-                  }
-                }}
-              />
-            </div>
-            <div className="flex-1 flex justify-center items-center md:justify-end pl-4">
-              <StatCounter
-                label={label}
-                value={count}
-              />
-              <StatCounter
-                label={'research projects'}
-                value={organisation.project_cnt ?? 0}
-              />
-            </div>
+          <div className="flex-1 flex justify-center items-center md:justify-end pl-4">
+            <StatCounter label={label} value={count}/>
+            <StatCounter label={'research projects'} value={organisation.project_cnt ?? 0}/>
           </div>
-        </article>
+        </div>
       </a>
     </Link>
   )
