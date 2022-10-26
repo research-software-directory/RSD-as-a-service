@@ -48,7 +48,11 @@ module.exports = {
         'monospace',
       ],
     },
+
     extend: {
+      container: {
+        center: true
+      },
       // ultra large resolutions
       // not relevant at the moment
       // screens: {

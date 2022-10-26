@@ -18,7 +18,7 @@ import InvitationList from '~/components/layout/InvitationList'
 import {Invitation} from '~/types/Invitation'
 import {getUnusedInvitations} from '~/utils/getUnusedInvitations'
 
-export default function ProjectMaintainerLink({project,account,token}: { project: string,account:string,token: string }) {
+export default function ProjectMaintainerLink({project,title,account,token}: {project: string, title: string, account: string, token: string}) {
   const {showErrorMessage,showInfoMessage} = useSnackbar()
   const [magicLink, setMagicLink] = useState(null)
   const [unusedInvitations, setUnusedInvitations] = useState<Invitation[]>([])
@@ -80,7 +80,7 @@ export default function ProjectMaintainerLink({project,account,token}: { project
             >
             <a
               target="_blank"
-              href={`mailto:?subject=Project maintainer invite&body=Please use the link to become project maintainer. \n ${magicLink}`} rel="noreferrer">
+              href={`mailto:?subject=Maintainer invite for project ${encodeURIComponent(title)}&body=Please use the following link to become a maintainer of the project ${encodeURIComponent(title)}. ${encodeURIComponent('\n')}${magicLink}`} rel="noreferrer">
               Email this invite
             </a>
             </Button>

@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,6 +12,7 @@ import {
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
+import {EditOrganisation} from '~/types/Organisation'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
@@ -64,9 +67,9 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
       // fix repositoryUrl
       const software: SoftwareItem = getPropsFromObject(data[0], SoftwarePropsToSave)
       // repository url should at least be http://a.b
-      if (data[0]?.repository_url[0]?.url?.length > 9) {
-        software.repository_url = data[0]?.repository_url[0]?.url
-        software.repository_platform = data[0]?.repository_url[0]?.code_platform
+      if (data[0]?.repository_url?.url?.length > 9) {
+        software.repository_url = data[0]?.repository_url?.url
+        software.repository_platform = data[0]?.repository_url?.code_platform
       } else {
         software.repository_url = null
         software.repository_platform = null

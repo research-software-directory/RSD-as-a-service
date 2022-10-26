@@ -11,7 +11,6 @@ import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import OrganisationsList from '~/components/software/edit/organisations/OrganisationsList'
 import useProjectContext from '../useProjectContext'
 import useParticipatingOrganisations from './useParticipatingOrganisations'
 import {cfgOrganisations as config} from './config'
@@ -21,15 +20,21 @@ import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import {EditOrganisationModalProps} from '~/components/software/edit/organisations'
 import {ModalStates} from '~/components/software/edit/editSoftwareTypes'
 import {EditOrganisation, SearchOrganisation} from '~/types/Organisation'
-import {sortOnStrProp} from '~/utils/sortFn'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {deleteOrganisationLogo, newOrganisationProps, saveExistingOrganisation, searchToEditOrganisation} from '~/utils/editOrganisation'
+import {
+  deleteOrganisationLogo, newOrganisationProps,
+  saveExistingOrganisation, searchToEditOrganisation
+} from '~/utils/editOrganisation'
 import {getSlugFromString} from '~/utils/getSlugFromString'
-import {addOrganisationToProject, createOrganisationAndAddToProject, deleteOrganisationFromProject} from '~/utils/editProject'
+import {
+  addOrganisationToProject, createOrganisationAndAddToProject,
+  deleteOrganisationFromProject, patchOrganisationPositions
+} from '~/utils/editProject'
+import SortableOrganisationsList from '~/components/software/edit/organisations/SortableOrganisationsList'
 
 export default function ProjectOrganisations({slug}: { slug: string }) {
   const session = useSession()
-  const {showErrorMessage} = useSnackbar()
+  const {showErrorMessage,showInfoMessage} = useSnackbar()
   const {project} = useProjectContext()
   const {loading, organisations, setOrganisations} = useParticipatingOrganisations({
     project: project.id,
@@ -52,6 +57,12 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
       account: session.user?.account,
       position: organisations.length + 1
     })
+    // check if present by ror_id
+    const found = organisations.find(item => item.ror_id === addOrganisation.ror_id)
+    if (found) {
+      showInfoMessage(`${item.name} is already in the collection (based on ror_id).`)
+      return
+    }
     if (item.source === 'ROR') {
       // show edit modal
       setModal({
@@ -67,8 +78,9 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
       // we add organisation directly
       const resp = await addOrganisationToProject({
         project: project.id ?? '',
-        organisation: item.id ?? '',
+        organisation: addOrganisation.id ?? '',
         role: 'participating',
+        position: addOrganisation.position,
         session
       })
       if (resp.status === 200) {
@@ -214,25 +226,47 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
     const newList = [
       ...organisations,
       newItem
-    ].sort((a, b) => sortOnStrProp(a, b, 'name'))
+    ]
     setOrganisations(newList)
   }
 
   function updateOrganisationInList(newItem: EditOrganisation,pos:number) {
-    const newList = [
-      ...organisations.slice(0, pos),
-      ...organisations.slice(pos+1),
-      newItem
-    ].sort((a, b) => sortOnStrProp(a, b, 'name'))
+    const newList = organisations.map((item,i) => {
+      if (i === pos) return newItem
+      return item
+    })
     setOrganisations(newList)
   }
 
-  function deleteOrganisationFromList(pos: number) {
+  async function deleteOrganisationFromList(pos: number) {
     const newList = [
       ...organisations.slice(0, pos),
       ...organisations.slice(pos+1)
-    ]
-    setOrganisations(newList)
+    ].map((item, pos) => {
+      // renumber
+      item.position = pos + 1
+      return item
+    })
+    // renumber remaining organisations
+    await sortedOrganisations(newList)
+  }
+
+  async function sortedOrganisations(organisations: EditOrganisation[]) {
+    if (organisations.length > 0) {
+      // console.log('sorted organisations...', organisations)
+      const resp = await patchOrganisationPositions({
+        project: project.id,
+        organisations,
+        token: session.token
+      })
+      if (resp.status === 200) {
+        setOrganisations(organisations)
+      } else {
+        showErrorMessage(`Failed to update organisation positions. ${resp.message}`)
+      }
+    } else {
+      setOrganisations(organisations)
+    }
   }
 
   if (loading) {
@@ -249,10 +283,11 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
             <span>{config.title}</span>
             <span>{organisations?.length}</span>
           </h2>
-          <OrganisationsList
+          <SortableOrganisationsList
             organisations={organisations}
             onEdit={onEdit}
             onDelete={onDelete}
+            onSorted={sortedOrganisations}
           />
         </section>
         <section className="py-4">

@@ -39,6 +39,7 @@ module.exports = {
       'release',
       'contributors',
       'embed',
+      'frontend-settings'
       // 'code-of-conduct',
     ],
   },

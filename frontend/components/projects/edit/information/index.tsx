@@ -23,6 +23,8 @@ import AutosaveFundingOrganisations from './AutosaveFundingOrganisations'
 import AutosaveProjectKeywords from './AutosaveProjectKeywords'
 import AutosaveResearchDomains from './AutosaveResearchDomains'
 import AutosaveProjectLinks from './AutosaveProjectLinks'
+import AutosaveControlledMarkdown from '~/components/form/AutosaveControlledMarkdown'
+import {patchProjectTable} from './patchProjectInfo'
 
 export default function EditProjectInformation({slug}: {slug: string}) {
   const {token,user} = useSession()
@@ -139,9 +141,11 @@ export default function EditProjectInformation({slug}: {slug: string}) {
             subtitle={config.description.subtitle}
           />
           <AutosaveProjectImage />
-          <AutosaveProjectMarkdown
-            project_id={formValues.id}
+          <AutosaveControlledMarkdown
+            id={formValues.id}
             name="description"
+            maxLength={config.description.validation.maxLength.value}
+            patchFn={patchProjectTable}
           />
           <div className="xl:py-4"></div>
         </div>

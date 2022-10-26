@@ -14,6 +14,6 @@ export default function createEmotionCache(nonce?:string) {
     key: 'css',
     // https://mui.com/material-ui/guides/content-security-policy/
     nonce,
-    prepend: true
+    prepend: false
   })
 }

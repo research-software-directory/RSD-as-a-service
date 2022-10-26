@@ -63,7 +63,7 @@ public class Utils {
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+			throw new ResponseException(response.statusCode(), "Error fetching data from endpoint " + uri + " with response: " + response.body());
 		}
 		return response.body();
 	}

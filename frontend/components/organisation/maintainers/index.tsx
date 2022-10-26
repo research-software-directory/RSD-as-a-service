@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -96,28 +98,27 @@ export default function OrganisationMaintainers({organisation, isMaintainer}:
     <ProtectedOrganisationPage
       isMaintainer={isMaintainer}
     >
-      <EditSection className='xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4">
-          <EditSectionTitle
-            title={config.title}
-          />
-          <OrganisationMaintainersList
-            onDelete={onDeleteMaintainer}
-            maintainers={maintainers}
-          />
-        </div>
-        <div className="py-4 min-w-[21rem] xl:my-0">
-          <EditSectionTitle
-            title={config.inviteLink.title}
-            subtitle={config.inviteLink.subtitle}
-          />
-          <OrganisationMaintainerLink
-            organisation={organisation.id ?? ''}
-            account={user?.account ?? ''}
-            token={token}
-          />
-        </div>
-      </EditSection>
+      <div className="py-4">
+        <EditSectionTitle
+          title={config.title}
+        />
+        <OrganisationMaintainersList
+          onDelete={onDeleteMaintainer}
+          maintainers={maintainers}
+        />
+      </div>
+      <div className="py-4 min-w-[21rem] xl:my-0">
+        <EditSectionTitle
+          title={config.inviteLink.title}
+          subtitle={config.inviteLink.subtitle}
+        />
+        <OrganisationMaintainerLink
+          organisation={organisation.id ?? ''}
+          name={organisation.name}
+          account={user?.account ?? ''}
+          token={token}
+        />
+      </div>
       <ConfirmDeleteModal
         open={modal.open}
         title="Remove maintainer"

@@ -5,41 +5,29 @@
 
 import {useState} from 'react'
 import IconButton from '@mui/material/IconButton'
-import {Control, UseFormSetValue, useFormState, useWatch} from 'react-hook-form'
+import {useFormContext} from 'react-hook-form'
 import CircularProgress from '@mui/material/CircularProgress'
 import FindReplaceIcon from '@mui/icons-material/FindReplace'
 
-import {OrganisationForOverview, SearchOrganisation} from '~/types/Organisation'
+import {useSession} from '~/auth'
+import {SearchOrganisation} from '~/types/Organisation'
 import {findInROR} from '~/utils/getROR'
-import {getSlugFromString} from '~/utils/getSlugFromString'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import ControlledTextField from '~/components/form/ControlledTextField'
 import {organisationInformation as config} from '../organisationConfig'
 import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import RorIdOptionsModal from './RorIdOptionsModal'
+import AutosaveOrganisationTextField from './AutosaveOrganisationTextField'
+import {patchOrganisationTable} from './updateOrganisationSettings'
 
-type FindRorIdProps = {
-  control: Control<OrganisationForOverview, any>
-  setValue: UseFormSetValue<OrganisationForOverview>
-}
-
-export default function FindRorId({control, setValue}: FindRorIdProps) {
+export default function FindRorId() {
+  const {token} = useSession()
+  const {watch, resetField} = useFormContext()
   const {showWarningMessage, showSuccessMessage, showInfoMessage} = useSnackbar()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [options, setOptions] = useState<AutocompleteOption<SearchOrganisation>[]>([])
-  const {errors} = useFormState({
-    control,
-    name: 'ror_id'
-  })
-  const ror_id = useWatch({
-    control,
-    name: 'ror_id',
-  })
-  const name = useWatch({
-    control,
-    name: 'name',
-  })
+  // extract data from form
+  const [id, ror_id, name] = watch(['id', 'ror_id', 'name'])
 
   async function FindRorOrganisation() {
     // set loading flag
@@ -75,10 +63,22 @@ export default function FindRorId({control, setValue}: FindRorIdProps) {
     setLoading(false)
   }
 
-  function updateValue(ror_id: string) {
+  async function updateValue(ror_id: string) {
     // close modal if open
     if (open === true) setOpen(false)
-    setValue('ror_id', ror_id, {shouldValidate: true, shouldDirty: true})
+    const resp = await patchOrganisationTable({
+      id,
+      data: {
+        ror_id
+      },
+      token
+    })
+    if (resp.status === 200) {
+      // debugger
+      resetField('ror_id', {
+        defaultValue:ror_id
+      })
+    }
   }
 
   function showButton() {
@@ -99,8 +99,8 @@ export default function FindRorId({control, setValue}: FindRorIdProps) {
 
   return (
     <div className="flex items-center">
-      <ControlledTextField
-        control={control}
+      <AutosaveOrganisationTextField
+        organisation_id={id}
         options={{
           name: 'ror_id',
           label: config.ror_id.label,

@@ -21,21 +21,16 @@ import java.util.UUID;
 
 public class PostgrestAccount implements Account {
 
-	private final OpenIdInfo openIdInfo;
-	private final String provider;
-
-	public PostgrestAccount(OpenIdInfo openIdInfo, String provider) {
-		this.openIdInfo = Objects.requireNonNull(openIdInfo);
-		Objects.requireNonNull(openIdInfo.sub());
-		this.provider = Objects.requireNonNull(provider);
-	}
 
 	@Override
-	public AccountInfo account() {
+	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) {
+		Objects.requireNonNull(openIdInfo);
+		Objects.requireNonNull(provider);
+
 		String backendUri = Config.backendBaseUrl();
 		String subject = openIdInfo.sub();
 		String subjectUrlEncoded = URLEncoder.encode(subject, StandardCharsets.UTF_8);
-		String providerUrlEncoded = URLEncoder.encode(provider, StandardCharsets.UTF_8);
+		String providerUrlEncoded = URLEncoder.encode(provider.toString(), StandardCharsets.UTF_8);
 		URI queryUri = URI.create(backendUri + "/login_for_account?select=account,name&sub=eq." + subjectUrlEncoded + "&provider=eq." + providerUrlEncoded);
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String token = jwtCreator.createAdminJwt();
@@ -60,7 +55,7 @@ public class PostgrestAccount implements Account {
 			loginForAccountData.addProperty("name", openIdInfo.name());
 			loginForAccountData.addProperty("email", openIdInfo.email());
 			loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
-			loginForAccountData.addProperty("provider", provider);
+			loginForAccountData.addProperty("provider", provider.toString());
 			URI createLoginUri = URI.create(backendUri + "/login_for_account");
 			postJsonAsAdmin(createLoginUri, loginForAccountData.toString(), token);
 
@@ -68,7 +63,7 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	private String getAsAdmin(URI uri, String token) {
+	static String getAsAdmin(URI uri, String token) {
 		HttpRequest request = HttpRequest.newBuilder()
 				.GET()
 				.uri(uri)

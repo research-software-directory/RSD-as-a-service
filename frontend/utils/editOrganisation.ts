@@ -12,7 +12,7 @@ import {
   EditOrganisation, Organisation,
   OrganisationRole,
   OrganisationsForSoftware,
-  SearchOrganisation, SoftwareForOrganisation
+  SearchOrganisation
 } from '../types/Organisation'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import {getPropsFromObject} from './getPropsFromObject'
@@ -23,7 +23,7 @@ import logger from './logger'
 
 // organisation colums used in editOrganisation.createOrganisation
 const columsForCreate = [
-  'parent','slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website'
+  'parent','slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website',
 ]
 // organisation colums used in editOrganisation.updateOrganisation
 export const columsForUpdate = [
@@ -112,7 +112,7 @@ export async function findRSDOrganisation({searchFor, token, frontend, rorIds}:
 
 export async function getOrganisationsForSoftware({software, token, frontend = true}:
   { software: string, token?: string, frontend?: boolean }) {
-  const query = `rpc/organisations_of_software?software_id=${software}&order=name.asc`
+  const query = `rpc/organisations_of_software?software_id=${software}&order=position,name.asc`
   let url = `/api/v1/${query}`
   if (frontend === false) {
     // SSR request within docker network
@@ -181,63 +181,6 @@ export async function saveExistingOrganisation({item, token, pos, setState}:
     }
   } else {
     // showErrorMessage(resp.message)
-    return resp
-  }
-}
-
-export async function saveNewOrganisationForSoftware({item, token, software, account, setState}:
-  {item: EditOrganisation, token: string, software:string, account: string, setState: (item: EditOrganisation) => void }) {
-  // create new organisation
-  let resp = await createOrganisation({
-    item,
-    token
-  })
-  // only 201 and 206 accepted
-  if ([201, 206].includes(resp.status) === false) {
-    // on error we return message
-    return resp
-  }
-  // we receive id in message
-  const id = resp.message
-  if (resp.status === 201) {
-    // add this organisation to software
-    resp = await addOrganisationToSoftware({
-      software,
-      organisation: id,
-      account,
-      token
-    })
-    if (resp.status === 200) {
-      // we receive assigned status in message
-      item.status = resp.message
-      // update data, remove base64 string after upload
-      // and create logo_id to be used as image reference
-      const organisation = updateDataObjectAfterSave({
-        data: item,
-        id
-      })
-      // update local list
-      setState(organisation)
-      return {
-        status: 200,
-        message: 'OK'
-      }
-    } else {
-      return resp
-    }
-  } else if (resp.status === 206) {
-    // organisation is created but the image failed
-    const organisation = updateDataObjectAfterSave({
-      data: item,
-      id
-    })
-    setState(organisation)
-    // we show error about failure on logo
-    return {
-      status: 206,
-      message: 'Failed to upload organisation logo.'
-    }
-  } else {
     return resp
   }
 }
@@ -387,6 +330,9 @@ export async function uploadOrganisationLogo({id, data, mime_type, token}:
         mime_type
       })
     })
+    await fetch(`/image/rpc/get_logo?id=${id}`, {cache: 'reload'})
+    // @ts-ignore
+    location.reload(true)
     return extractReturnMessage(resp)
   } catch (e: any) {
     return {
@@ -400,83 +346,6 @@ export async function deleteOrganisationLogo({id, token}:
   { id: string, token: string }) {
   try {
     const url = `/api/v1/logo_for_organisation?organisation=eq.${id}`
-    const resp = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        ...createJsonHeaders(token)
-      }
-    })
-    return extractReturnMessage(resp)
-  } catch (e: any) {
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function addOrganisationToSoftware({software, organisation, account, token}:
-  { software: string, organisation: string, account: string, token:string }) {
-  // 2a. determine status - default is approved
-  let status: SoftwareForOrganisation['status'] = 'approved'
-  // 2b. register participating organisation for this software
-  const data: SoftwareForOrganisation = {
-    software,
-    organisation,
-    status
-  }
-  const url = '/api/v1/software_for_organisation'
-  const resp = await fetch(url, {
-    method: 'POST',
-    headers: {
-      ...createJsonHeaders(token),
-      'Prefer': 'return=headers-only'
-    },
-    body: JSON.stringify(data)
-  })
-  if ([200,201].includes(resp.status)) {
-    // return status assigned to organisation
-    return {
-      status: 200,
-      message: status
-    }
-  }
-  return extractReturnMessage(resp)
-}
-
-export async function patchSoftwareForOrganisation({software, organisation, data, token}:
-  { software: string, organisation: string, data: any, token: string }) {
-  try {
-    const query = `software=eq.${software}&organisation=eq.${organisation}`
-    const url = `/api/v1/software_for_organisation?${query}`
-    const resp = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        ...createJsonHeaders(token),
-        'Prefer': 'return=headers-only'
-      },
-      body: JSON.stringify(data)
-    })
-    return extractReturnMessage(resp)
-  } catch (e: any) {
-    // debugger
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function deleteOrganisationFromSoftware({software, organisation, token}:
-  {software: string|undefined, organisation: string, token: string }) {
-  try {
-    if (typeof software == 'undefined') {
-      return {
-        status: 400,
-        message: 'Bad request. software id undefined'
-      }
-    }
-    const url = `/api/v1/software_for_organisation?software=eq.${software}&organisation=eq.${organisation}`
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -536,7 +405,7 @@ export function searchToEditOrganisation({item, account, position}:
     ...item,
     logo_b64: null,
     logo_mime_type: null,
-    position
+    position: position ?? null
   }
 
   if (item.source === 'ROR') {
@@ -600,7 +469,8 @@ export function newOrganisationProps(props: NewOrganisation) {
     source: 'MANUAL' as 'MANUAL',
     primary_maintainer: props.primary_maintainer,
     role: props?.role ?? 'participating',
-    canEdit: false
+    canEdit: false,
+    description: null
   }
   return initOrg
 }

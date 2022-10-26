@@ -41,7 +41,8 @@ async function getParticipatingOrganisationsForSoftware({software, token, accoun
       source: 'RSD' as 'RSD',
       status: item.status,
       // false by default
-      canEdit: false
+      canEdit: false,
+      description: null
     }
     return organisation
   })

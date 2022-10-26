@@ -51,8 +51,8 @@ export async function getProjectList({url, token}: { url: string, token?: string
   }
 }
 export function extractImageInfo(item: RawProject) {
-  if (item.image_for_project && item.image_for_project.length > 0) {
-    return item.image_for_project[0].project
+  if (item?.image_for_project && item?.image_for_project !== null) {
+    return item.image_for_project.project
   } else {
     return null
   }
@@ -110,7 +110,7 @@ export function getImageUrl(image_id:string|null) {
 export async function getOrganisationsOfProject({project, token, frontend = true, roles}:
   { project: string, token: string, frontend?: boolean, roles?: OrganisationRole[] }) {
   try {
-    let query = `rpc/organisations_of_project?project_id=${project}&order=name.asc`
+    let query = `rpc/organisations_of_project?project_id=${project}&order=position,name.asc`
     if (roles) query += `&role=in.(${roles.toString()})`
     // SSR request within docker network
     let url = `${process.env.POSTGREST_URL}/${query}`

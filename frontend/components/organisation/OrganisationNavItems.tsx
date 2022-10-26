@@ -3,12 +3,14 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import InfoIcon from '@mui/icons-material/Info'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import AccountTreeIcon from '@mui/icons-material/AccountTree'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import PersonIcon from '@mui/icons-material/Person'
 import SettingsIcon from '@mui/icons-material/Settings'
 
+import AboutOrganisation from './about'
 import OrganisationSoftware from './software'
 import OrganisationProjects from './project'
 import OrganisationUnits from './units'
@@ -31,7 +33,25 @@ export type OrganisationMenuProps = {
   showSearch: boolean
 }
 
-export const organisationMenu:OrganisationMenuProps[] = [
+export const organisationMenu: OrganisationMenuProps[] = [
+  {
+    id:'about',
+    label:()=>'About',
+    icon: <InfoIcon />,
+    component: (props) => <AboutOrganisation {...props} />,
+    status: 'Participating organisation',
+    isVisible: ({organisation, isMaintainer}) => {
+      // we always show about section to maintainer
+      if (isMaintainer === true) return true
+      // we do not show to visitors if there is no content
+      else if (typeof organisation?.description === 'undefined') return false
+      else if (organisation?.description === null) return false
+      else if (organisation?.description.trim()==='') return false
+      // else the description is present and we show about section
+      else return true
+    },
+    showSearch: false
+  },
   {
     id:'software',
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
@@ -56,7 +76,7 @@ export const organisationMenu:OrganisationMenuProps[] = [
     icon: <AccountTreeIcon />,
     component: (props) => <OrganisationUnits {...props} />,
     status: 'Departments or institutions',
-    isVisible: ({children_cnt, isMaintainer}) => {
+    isVisible: ({organisation: {children_cnt}, isMaintainer}) => {
       // we do not show this options if no children
       // and not a maintainer
       if (isMaintainer===false && (children_cnt === 0 || children_cnt===null)) return false

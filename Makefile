@@ -9,6 +9,20 @@
 # PHONY makes possible to call `make commands` from inside the Makefile
 .PHONY: start install frontend data dev down dev-docs
 
+# Detect user and group IDs for frontend-dev configuration
+USER_OS := $(shell uname -s)
+DUID := $(shell /usr/bin/id -u)
+ifeq ($(USER_OS), Linux)
+	DGID := $(shell /usr/bin/id -g)
+endif
+# For MacOS use a workaround, id -g in MacOS returns a GID with a low number (usually 20)
+# such low GIDs are already used in Linux, so let's create a new one
+ifeq ($(USER_OS), Darwin)
+	DGID := $(shell dscl . -list /Groups PrimaryGroupID | awk 'BEGIN{i=0}{if($$2>i)i=$$2}END{print i+1}')
+endif
+export DUID
+export DGID
+
 # Main commands
 # ----------------------------------------------------------------
 start:
@@ -21,11 +35,14 @@ install:
 	docker-compose down --volumes #cleanup phase
 	docker-compose build database backend auth scrapers nginx   # exclude frontend and wait for the build to finish
 	docker-compose up --scale scrapers=0 -d
-	cd frontend && yarn -d
-	cd documentation && yarn -d
-	# Sleep 30 seconds to be sure that docker-compose up is running
-	sleep 30
-	docker-compose down
+	cd frontend && yarn install -d
+	cd documentation && yarn install -d
+	# Sleep 10 seconds to be sure that docker-compose up is running
+	sleep 10
+	docker-compose up --scale data-generation=1 -d
+	# All dependencies are installed. The data migration is runing in the background. You can now run `make dev' to start the application
+
+
 
 dev:
 	docker-compose up --scale scrapers=0 -d
@@ -34,9 +51,9 @@ dev:
 down:
 	docker-compose down
 
-frontend: frontend/.env.local
-	docker-compose up --scale frontend-dev=1 --scale scrapers=0 -d
-	docker-compose logs -f frontend-dev
+frontend-docker: frontend/.env.local
+	docker-compose build frontend-dev
+	docker-compose up --scale frontend=0 --scale scrapers=0 --scale frontend-dev=1
 
 data:
 	docker-compose up --scale data-generation=1 --scale scrapers=0

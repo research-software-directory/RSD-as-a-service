@@ -20,6 +20,8 @@ export type CoreOrganisationProps = {
   ror_id: string | null
   is_tenant: boolean
   website: string | null
+  // about page content created by maintainer
+  description: string | null
 }
 
 // object for organisation
@@ -39,7 +41,7 @@ export type FundingOrganisation = SearchOrganisation
 // extending with other props for software edit page
 export type EditOrganisation = SearchOrganisation & {
   role?: OrganisationRole,
-  position?: number
+  position: number|null
   // new image to upload
   logo_b64: string | null
   logo_mime_type: string | null
@@ -53,7 +55,8 @@ export type EditOrganisation = SearchOrganisation & {
 export type SoftwareForOrganisation = {
   software: string,
   organisation: string,
-  status: Status
+  status: Status,
+  position: number|null
 }
 
 // object returned from api
