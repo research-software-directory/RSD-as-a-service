@@ -215,6 +215,25 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.url.validation}
           />
+          {formData.mention_type === 'highlight' ?
+            <>
+              <div className="py-2"></div>
+              <ControlledTextField
+                control={control}
+                options={{
+                  name: 'image_url',
+                  label: config.image_url.label,
+                  useNull: true,
+                  defaultValue: formData?.image_url,
+                  helperTextMessage: config.image_url.help,
+                  helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`
+                }}
+                rules={config.image_url.validation}
+              />
+            </>
+            :null
+          }
+          <div className="py-2"></div>
           <ControlledTextField
             control={control}
             options={{
@@ -227,22 +246,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.note.validation}
           />
-          <div className="py-2"></div>
-          {formData.mention_type === 'highlight' ?
-            <ControlledTextField
-              control={control}
-              options={{
-                name: 'image_url',
-                label: config.image_url.label,
-                useNull: true,
-                defaultValue: formData?.image_url,
-                helperTextMessage: config.image_url.help,
-                helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`
-              }}
-              rules={config.image_url.validation}
-            />
-            :null
-          }
           <Alert severity="warning" sx={{marginTop: '1.5rem'}}>
             {/* <AlertTitle sx={{fontWeight: 500}}>Validate entered information</AlertTitle> */}
             Please double check the data because this entry <strong>cannot be edited after it has been created</strong>.
