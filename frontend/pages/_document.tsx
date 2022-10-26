@@ -8,6 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as React from 'react'
+import Script from 'next/script'
 import Document, {Html, Head, Main, NextScript, DocumentInitialProps} from 'next/document'
 import createEmotionServer from '@emotion/server/create-instance'
 import createEmotionCache from '../styles/createEmotionCache'
@@ -61,7 +62,9 @@ export default class MyDocument extends Document<RsdDocumentInitialProps>{
             */
             this.matomoUrl !== undefined && this.matomoUrl.length !== 0 &&
             this.matomoId !== undefined && this.matomoId.length !== 0 &&
-            <script
+            <Script
+              id="matomo-script"
+              strategy="afterInteractive"
               nonce={nonce}
               dangerouslySetInnerHTML={{__html: `
                 var _paq = window._paq = window._paq || [];
