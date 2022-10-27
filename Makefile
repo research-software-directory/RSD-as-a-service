@@ -5,6 +5,7 @@
 # SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: EUPL-1.2
 
 # PHONY makes possible to call `make commands` from inside the Makefile
 .PHONY: start install frontend data dev down dev-docs
@@ -59,6 +60,9 @@ data:
 	docker-compose up --scale data-generation=1 --scale scrapers=0
 	sleep 60
 	docker-compose down
+
+spotlights:
+	docker-compose run initial-spotlights
 
 # Helper commands
 # -
