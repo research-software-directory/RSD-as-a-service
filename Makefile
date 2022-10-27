@@ -5,6 +5,7 @@
 # SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: EUPL-1.2
 
 # PHONY makes possible to call `make commands` from inside the Makefile
 .PHONY: start install frontend data dev down dev-docs
@@ -35,11 +36,14 @@ install:
 	docker-compose down --volumes #cleanup phase
 	docker-compose build database backend auth scrapers nginx   # exclude frontend and wait for the build to finish
 	docker-compose up --scale scrapers=0 -d
-	cd frontend && yarn -d
-	cd documentation && yarn -d
-	# Sleep 30 seconds to be sure that docker-compose up is running
-	sleep 30
-	docker-compose down
+	cd frontend && yarn install -d
+	cd documentation && yarn install -d
+	# Sleep 10 seconds to be sure that docker-compose up is running
+	sleep 10
+	docker-compose up --scale data-generation=1 -d
+	# All dependencies are installed. The data migration is runing in the background. You can now run `make dev' to start the application
+
+
 
 dev:
 	docker-compose up --scale scrapers=0 -d
@@ -56,6 +60,9 @@ data:
 	docker-compose up --scale data-generation=1 --scale scrapers=0
 	sleep 60
 	docker-compose down
+
+spotlights:
+	docker-compose run initial-spotlights
 
 # Helper commands
 # -

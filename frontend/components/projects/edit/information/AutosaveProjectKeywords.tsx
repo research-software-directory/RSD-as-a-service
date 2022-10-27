@@ -11,7 +11,10 @@ import {KeywordForProject} from '~/types/Project'
 import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
 import {projectInformation as config} from './config'
 import {searchForProjectKeyword} from './searchForKeyword'
-import {addKeywordsToProject, createKeyword, deleteKeywordFromProject} from '~/utils/editKeywords'
+import {
+  addKeywordsToProject, createOrGetKeyword,
+  deleteKeywordFromProject, silentKeywordDelete
+} from '~/utils/editKeywords'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
 
@@ -31,7 +34,7 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
 
   async function onAdd(selected: Keyword) {
     // check if already exists
-    const find = keywords.filter(item => item.keyword === selected.keyword)
+    const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.keyword.trim().toLowerCase())
     let resp
     if (find.length === 0) {
       resp = await addKeywordsToProject({
@@ -57,17 +60,17 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
 
   async function onCreate(selected: string) {
     // check if already exists
-    const find = keywords.filter(item => item.keyword === selected)
+    const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.trim().toLowerCase())
     if (find.length === 0) {
       // create keyword
-      let resp = await createKeyword({
+      let resp = await createOrGetKeyword({
         keyword: selected,
         token
       })
       if (resp.status===201){
         const keyword = {
-          id: resp.message as string,
-          keyword: selected,
+          id: resp.message.id,
+          keyword: resp.message.value,
           project: project_id,
           cnt: null
         }
@@ -95,6 +98,13 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
           ...keywords.slice(pos+1)
         ]
         setKeywords(items)
+        // try to delete this keyword from keyword table
+        // delete will fail if the keyword is referenced
+        // therefore we do not check the status
+        const del = await silentKeywordDelete({
+          keyword: item.keyword,
+          token
+        })
       }else{
         showErrorMessage(`Failed to delete keyword. ${resp.message}`)
       }
@@ -114,6 +124,9 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
               title={field.keyword}
               label={field.keyword}
               onDelete={() => onRemove(pos)}
+              sx={{
+                textTransform:'capitalize'
+              }}
             />
           </div>
         )

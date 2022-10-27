@@ -5,6 +5,8 @@
 
 import {useReducer} from 'react'
 
+import {useSession} from '~/auth'
+import logger from '~/utils/logger'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {
   EditMentionAction, EditMentionActionType,
@@ -15,7 +17,7 @@ import NoImpactItems from './NoImpactItems'
 import {addToImpactForProject, addNewImpactToProject, removeImpactForProject} from './impactForProjectApi'
 import {MentionItemProps} from '~/types/Mention'
 import {getMentionType} from '~/components/mention/config'
-import {updateDoiItem, updateMentionItem} from '~/utils/editMentions'
+import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
 
 const initalState:EditMentionState = {
   settings: {
@@ -43,6 +45,7 @@ function createSuccessMessage(item:MentionItemProps) {
 }
 
 export default function EditImpactProvider(props: any) {
+  const {user} = useSession()
   const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   // extract needed info from props
   const {token, project} = props
@@ -61,7 +64,7 @@ export default function EditImpactProvider(props: any) {
     // new item created manually
     if (item.id === null || item.id === '') {
       item.id = null
-      item.source = 'manual'
+      item.source = 'RSD'
       // new item to be added
       const resp = await addNewImpactToProject({
         item,
@@ -80,9 +83,8 @@ export default function EditImpactProvider(props: any) {
       } else {
         showErrorMessage(resp.message as string)
       }
-    } else {
-      // this is existing item
-      // we just need to update it
+    } else if (user?.role === 'rsd_admin') {
+      // rsd_admin can update mention
       const resp = await updateMentionItem({
         mention:item,
         token
@@ -148,22 +150,24 @@ export default function EditImpactProvider(props: any) {
     }
   }
 
-  async function processOnUpdate(action: EditMentionAction) {
-    const rsdItem = action.payload
-    const resp = await updateDoiItem({
-      rsdItem,
-      token
-    })
-    if (resp.status == 200 && rsdItem) {
-      dispatch({
-        type: EditMentionActionType.UPDATE_ITEM,
-        // item is returned in message
-        payload: resp.message
-      })
-    } else {
-      showErrorMessage(`Failed to update ${rsdItem.title}. ${resp.message}`)
-    }
-  }
+  // WE do not allow update of mentions with DOI from FE
+  // Dusan 2022-10-19
+  // async function processOnUpdate(action: EditMentionAction) {
+  //   const rsdItem = action.payload
+  //   const resp = await updateDoiItem({
+  //     rsdItem,
+  //     token
+  //   })
+  //   if (resp.status == 200 && rsdItem) {
+  //     dispatch({
+  //       type: EditMentionActionType.UPDATE_ITEM,
+  //       // item is returned in message
+  //       payload: resp.message
+  //     })
+  //   } else {
+  //     showErrorMessage(`Failed to update ${rsdItem.title}. ${resp.message}`)
+  //   }
+  // }
 
   async function processOnDelete(action: EditMentionAction) {
     const item = action.payload
@@ -178,6 +182,14 @@ export default function EditImpactProvider(props: any) {
           type: EditMentionActionType.DELETE_ITEM,
           // item is returned in message
           payload: item
+        })
+        // try to remove mention item from RSD
+        // we do not handle response status
+        // if mention is referenced elswhere
+        // delete action will fail (and that's ok)
+        const del = await deleteMentionItem({
+          id: item.id,
+          token
         })
       } else {
         showErrorMessage(`Failed to delete ${item.title}. ${resp.message}`)
@@ -211,10 +223,13 @@ export default function EditImpactProvider(props: any) {
         processOnAdd(action)
         break
       case EditMentionActionType.ON_UPDATE:
+        // WE do not allow update of mentions with DOI
+        // Dusan 2022-10-19
+        logger('ON_UPDATE action not supported','warn')
         // pass original action
         dispatch(action)
         // process item by api
-        processOnUpdate(action)
+        // processOnUpdate(action)
         break
       case EditMentionActionType.ON_DELETE:
         // pass original action

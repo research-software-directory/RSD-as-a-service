@@ -6,8 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from '@mui/material/Link'
-import TagListItem from '../layout/TagListItem'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import TagChip from '~/components/layout/TagChip'
 
 type TagWithTitle = {
   title: string
@@ -21,7 +21,7 @@ export default function ProjectTags({title,tags,infoLink}:{title: string, tags: 
       return <i>Not specified</i>
     }
     return (
-      <ul className="flex flex-wrap py-1">
+      <div className="flex flex-wrap py-1">
         {
           tags.map((item, pos) => {
             let label
@@ -33,16 +33,15 @@ export default function ProjectTags({title,tags,infoLink}:{title: string, tags: 
               label = item
             }
             return (
-              <TagListItem
+              <TagChip
                 key={pos}
                 label={label}
                 title={title}
-                className="bg-base-300"
               />
             )
           })
         }
-      </ul>
+      </div>
     )
   }
 

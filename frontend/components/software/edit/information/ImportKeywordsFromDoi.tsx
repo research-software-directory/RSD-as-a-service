@@ -88,13 +88,13 @@ export default function ImportKeywordsFromDoi({software_id, concept_doi, keyword
         continue
       }
       // is it already added to this software?
-      const find = keywords.filter(item => item.keyword === kw)
+      const find = keywords.filter(item => item.keyword.trim().toLowerCase() === kw.trim().toLowerCase())
       if (find.length > 0) {
         // skip to next item in the loop
         continue
       }
       // is it already in RSD?
-      const findDb = await searchForSoftwareKeywordExact({searchFor: kw})
+      const findDb = await searchForSoftwareKeywordExact({searchFor: kw.trim()})
       if (findDb.length === 1) {
         const {status, keyword} = await addKeyword(findDb[0])
         if (status === 200) {

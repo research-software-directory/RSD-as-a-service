@@ -6,6 +6,7 @@
 import Button from '@mui/material/Button'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
+import AddNewItemInfo from '~/components/software/edit/mentions/AddNewItemInfo'
 import {newMentionItem} from '~/utils/editMentions'
 import {cfgImpact as config} from './config'
 
@@ -32,6 +33,7 @@ export default function AddImpact() {
           add
         </Button>
       </div>
+      <AddNewItemInfo />
     </>
   )
 }

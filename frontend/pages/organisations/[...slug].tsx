@@ -11,7 +11,7 @@ import {app} from '../../config/app'
 import useOrganisationMaintainer from '../../auth/permissions/useOrganisationMaintainer'
 import DefaultLayout from '../../components/layout/DefaultLayout'
 import {getOrganisationBySlug} from '../../utils/getOrganisations'
-import OrganisationLogo from '../../components/organisation/settings/OrganisationLogo'
+import OrganisationMetadata from '../../components/organisation/metadata'
 import ContentLoader from '../../components/layout/ContentLoader'
 import OrganisationNav from '../../components/organisation/OrganisationNav'
 import {organisationMenu, OrganisationMenuProps} from '../../components/organisation/OrganisationNavItems'
@@ -20,14 +20,16 @@ import {OrganisationForOverview} from '../../types/Organisation'
 
 import {SearchProvider} from '../../components/search/SearchContext'
 import {PaginationProvider} from '../../components/pagination/PaginationContext'
+import {getOrganisationMetadata, RORItem} from '~/utils/getROR'
 
 export type OrganisationPageProps = {
   organisation: OrganisationForOverview,
+  ror: RORItem | null
   slug: string[],
   page: string
 }
 
-export default function OrganisationPage({organisation,slug,page}:OrganisationPageProps) {
+export default function OrganisationPage({organisation,slug,page,ror}:OrganisationPageProps) {
   const [pageState, setPageState] = useState<OrganisationMenuProps>()
   const {loading, isMaintainer} = useOrganisationMaintainer({
     organisation: organisation.id
@@ -41,10 +43,16 @@ export default function OrganisationPage({organisation,slug,page}:OrganisationPa
         setPageState(nextStep)
       }
     } else {
-      // default is the first item
-      setPageState(organisationMenu[0])
+      // if there is description
+      if (organisation.description) {
+        // we show about page
+        setPageState(organisationMenu[0])
+      } else {
+        // otherwise software is default
+        setPageState(organisationMenu[1])
+      }
     }
-  },[page])
+  },[page,organisation.description])
 
   // console.group('OrganisationPage')
   // console.log('organisation...', organisation)
@@ -77,9 +85,10 @@ export default function OrganisationPage({organisation,slug,page}:OrganisationPa
               organisation={organisation}
               isMaintainer={isMaintainer}
             />
-            <OrganisationLogo
+            <OrganisationMetadata
+              organisation={organisation}
               isMaintainer={isMaintainer}
-              {...organisation}
+              meta={ror}
             />
           </div>
           <div className="flex flex-col min-h-[55rem]">
@@ -108,10 +117,12 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         notFound: true,
       }
     }
-
+    // get organisation metadata from ROR
+    const ror = await getOrganisationMetadata(organisation.ror_id ?? null)
     return {
       // passed to the page component as props
       props: {
+        ror,
         organisation,
         slug: params?.slug,
         page: query?.page ?? '',

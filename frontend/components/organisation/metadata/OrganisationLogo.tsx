@@ -12,7 +12,6 @@ import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import {deleteOrganisationLogo, getUrlFromLogoId, uploadOrganisationLogo} from '../../../utils/editOrganisation'
 import logger from '../../../utils/logger'
-import Link from 'next/link'
 import LogoAvatar from '~/components/layout/LogoAvatar'
 import IconButton from '@mui/material/IconButton'
 
@@ -30,7 +29,7 @@ type LogoProps = {
   mime_type: string | null
 }
 
-export default function OrganisationLogo({id,name,website,logo_id,isMaintainer}:
+export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
   OrganisationLogoProps) {
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
@@ -77,6 +76,10 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer}:
         b64,
         mime_type
       })
+      // fetch image to reload the cache
+      await fetch(`/image/rpc/get_logo?id=${id}`, {cache: 'reload'})
+      // @ts-ignore (hard) reload the page, true is for FF
+      location.reload(true)
     }
     if (upload.id && upload.b64 && upload.mime_type && token) {
       uploadLogo({
@@ -143,25 +146,17 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer}:
     )
   }
 
-  // for the users we add link to organisation website (if present)
-  // for the maintainers click on the logo opens the image upload
-  function renderLogo() {
-    if (website) {
-      return (
-        <Link href={website} passHref>
-          <a target="_blank">
-            {renderAvatar()}
-          </a>
-        </Link>
-      )
-    }
-    return renderAvatar()
-  }
   if (isMaintainer) {
     return (
-      <div className="py-[4rem] flex relative">
-        {renderAvatar()}
-        <div className="absolute flex justify-start left-2 bottom-1">
+      <div className="pt-12 pb-2 flex relative">
+        <div className="">
+          {renderAvatar()}
+        </div>
+        <div style={{
+          position: 'absolute',
+          top: '0rem',
+          right: '0rem'
+        }}>
           <label htmlFor="upload-avatar-image"
             // style={{cursor:'pointer'}}
             title="Click to upload an image"
@@ -196,9 +191,5 @@ export default function OrganisationLogo({id,name,website,logo_id,isMaintainer}:
     )
   }
 
-  return (
-    <div className='hidden md:block md:py-[3rem]'>
-      {renderLogo()}
-    </div>
-  )
+  return renderAvatar()
 }

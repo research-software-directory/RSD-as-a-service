@@ -16,7 +16,10 @@ import {KeywordForSoftware} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ImportKeywordsFromDoi from './ImportKeywordsFromDoi'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {addKeywordsToSoftware, createKeyword, deleteKeywordFromSoftware} from '~/utils/editKeywords'
+import {
+  addKeywordsToSoftware, createOrGetKeyword,
+  deleteKeywordFromSoftware, silentKeywordDelete
+} from '~/utils/editKeywords'
 import {sortOnStrProp} from '~/utils/sortFn'
 
 type SoftwareKeywordsProps={
@@ -36,7 +39,7 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
 
   async function onAdd(selected: Keyword) {
     // check if already added
-    const find = keywords.filter(item => item.keyword === selected.keyword)
+    const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.keyword.trim().toLowerCase())
     let resp
     if (find.length === 0) {
       resp = await addKeywordsToSoftware({
@@ -56,23 +59,23 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
         showErrorMessage(`Failed to save keyword. ${resp.message}`)
       }
     }else{
-      showInfoMessage(`${selected.keyword} is already in the list`)
+      showInfoMessage(`${selected.keyword.trim()} is already in the list`)
     }
   }
 
   async function onCreate(selected: string) {
     // check if already exists
-    const find = keywords.filter(item => item.keyword === selected)
+    const find = keywords.filter(item => item.keyword.trim().toLowerCase() === selected.trim().toLowerCase())
     if (find.length === 0) {
-      // create keyword
-      let resp = await createKeyword({
+      // create or get existing keyword
+      let resp = await createOrGetKeyword({
         keyword: selected,
         token
       })
-      if (resp.status===201){
+      if (resp.status === 201) {
         const keyword = {
-          id: resp.message as string,
-          keyword: selected,
+          id: resp.message.id,
+          keyword: resp.message.value,
           software: software_id,
           cnt: null
         }
@@ -82,7 +85,7 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
         showErrorMessage(`Failed to save keyword. ${resp.message}`)
       }
     }else{
-      showInfoMessage(`${selected} is already in the list`)
+      showInfoMessage(`${selected.trim()} is already in the list`)
     }
   }
 
@@ -100,6 +103,13 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
           ...keywords.slice(pos+1)
         ]
         setKeywords(items)
+        // try to delete this keyword from keyword table
+        // delete will fail if the keyword is referenced
+        // therefore we do not check the status
+        const del = await silentKeywordDelete({
+          keyword: item.keyword,
+          token
+        })
       }else{
         showErrorMessage(`Failed to delete keyword. ${resp.message}`)
       }
@@ -123,6 +133,9 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
               title={item.keyword}
               label={item.keyword}
               onDelete={() => onRemove(pos)}
+              sx={{
+                textTransform:'capitalize'
+              }}
             />
           </div>
         )

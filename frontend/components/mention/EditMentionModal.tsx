@@ -10,6 +10,9 @@ import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
 } from '@mui/material'
+import Alert from '@mui/material/Alert'
+// import AlertTitle from '@mui/material/AlertTitle'
+
 import {useForm} from 'react-hook-form'
 
 import ControlledTextField from '../form/ControlledTextField'
@@ -51,11 +54,13 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
     }
   })
   // extract form states
-  const {isValid, isDirty, errors} = formState
+  const {isValid, isDirty} = formState
   const formData = watch()
 
   // console.group('EditMentionModal')
-  // console.log('item...', item)
+  // console.log('isValid...', isValid)
+  // console.log('isDirty...', isDirty)
+  // console.log('errors...', errors)
   // console.log('formData...', formData)
   // console.groupEnd()
 
@@ -64,7 +69,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
       //(re)set form to item values
       reset(item)
     }
-  }, [item,reset])
+  }, [item, reset])
 
   function handleCancel(reason:any) {
     if (reason === 'backdropClick') {
@@ -76,6 +81,14 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
     reset()
     // hide
     onCancel()
+  }
+
+  function onSubmitForm(data: MentionItemProps) {
+    // we need to clean image_url data
+    if (data.mention_type !== 'highlight') {
+      data.image_url = null
+    }
+    onSubmit({data, pos})
   }
 
   return (
@@ -97,7 +110,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
       </DialogTitle>
       <form
         id={formId}
-        onSubmit={handleSubmit((data: MentionItemProps) => onSubmit({data, pos}))}
+        onSubmit={handleSubmit(onSubmitForm)}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -201,20 +214,25 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             rules={config.url.validation}
           />
           <div className="py-2"></div>
-          <ControlledTextField
-            control={control}
-            options={{
-              name: 'image_url',
-              label: config.image_url.label,
-              useNull: true,
-              defaultValue: formData?.image_url,
-              helperTextMessage: config.image_url.help,
-              helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`,
-              disabled: formData.mention_type !== 'highlight'
-            }}
-            rules={formData.mention_type === 'highlight' ? config.image_url.validation : undefined}
-          />
-
+          {formData.mention_type === 'highlight' ?
+            <ControlledTextField
+              control={control}
+              options={{
+                name: 'image_url',
+                label: config.image_url.label,
+                useNull: true,
+                defaultValue: formData?.image_url,
+                helperTextMessage: config.image_url.help,
+                helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`
+              }}
+              rules={config.image_url.validation}
+            />
+            :null
+          }
+          <Alert severity="warning" sx={{marginTop: '1.5rem'}}>
+            {/* <AlertTitle sx={{fontWeight: 500}}>Validate entered information</AlertTitle> */}
+            Please double check the data because this entry <strong>cannot be edited after it has been created</strong>.
+          </Alert>
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',

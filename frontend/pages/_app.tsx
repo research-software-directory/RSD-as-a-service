@@ -120,7 +120,7 @@ function RsdApp(props: MuiAppProps) {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>Research Software Directory</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta name="viewport" content="width=device-width" />
       </Head>
       {/* MUI Theme provider */}
       <ThemeProvider theme={muiTheme}>

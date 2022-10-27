@@ -33,7 +33,8 @@ function createNewOrganisation(organisation:SearchOrganisation){
     logo_mime_type: null,
     position: null,
     // funding organisation come from ROR
-    source: organisation.source
+    source: organisation.source,
+    description: null
   }
   return newOrganisation
 }

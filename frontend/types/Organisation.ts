@@ -20,6 +20,8 @@ export type CoreOrganisationProps = {
   ror_id: string | null
   is_tenant: boolean
   website: string | null
+  // about page content created by maintainer
+  description: string | null
 }
 
 // object for organisation

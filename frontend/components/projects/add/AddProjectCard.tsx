@@ -19,8 +19,8 @@ import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 import SlugTextField from '../../form/SlugTextField'
 import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import {NewProject} from '../../../types/Project'
-import {getSlugFromString,sanitizeSlugValue} from '../../../utils/getSlugFromString'
-import {useDebounceValid} from '~/utils/useDebounce'
+import {getSlugFromString} from '../../../utils/getSlugFromString'
+import {useDebounce} from '~/utils/useDebounce'
 import {addProject, validProjectItem} from '../../../utils/editProject'
 import {addConfig as config} from './addProjectConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
@@ -36,6 +36,7 @@ type AddProjectForm = {
   project_subtitle: string,
 }
 
+let lastValidatedSlug = ''
 const formId='add-project-card-form'
 
 export default function AddProjectCard() {
@@ -43,9 +44,10 @@ export default function AddProjectCard() {
   const router = useRouter()
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')
+  const [validSlug, setValidSlug] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initalState)
-  const {register, handleSubmit, watch, formState, setError, setValue, clearErrors} = useForm<AddProjectForm>({
+  const {register, handleSubmit, watch, formState, setError, setValue} = useForm<AddProjectForm>({
     mode: 'onChange',
     defaultValues: {
       slug:'',
@@ -53,11 +55,11 @@ export default function AddProjectCard() {
       project_subtitle:''
     }
   })
-  const {errors, isValid} = formState
+  const {errors, isValid, isDirty} = formState
   // watch for data change in the form
-  const data = watch()
+  const [slug,project_title,project_subtitle] = watch(['slug', 'project_title', 'project_subtitle'])
   // construct slug from title
-  const bouncedSlug = useDebounceValid(slugValue, errors['slug'])
+  const bouncedSlug = useDebounce(slugValue,700)
 
   useEffect(() => {
     if (typeof location != 'undefined') {
@@ -65,39 +67,50 @@ export default function AddProjectCard() {
     }
   }, [])
 
+  /**
+   * Convert brand_name value into slugValue.
+   * The slugValue is then debounced and produces bouncedSlug
+   * We use bouncedSlug value later on to perform call to api
+   */
   useEffect(() => {
-    const softwareSlug = getSlugFromString(data.project_title)
-    clearErrors('slug')
-    setSlugValue(softwareSlug)
-  },[data.project_title,clearErrors])
-
+    // construct slug from title
+    const slugValue = getSlugFromString(project_title)
+    // update slugValue
+    setSlugValue(slugValue)
+  }, [project_title])
+  /**
+   * When bouncedSlug value is changed,
+   * we need to update slug value (value in the input) shown to user.
+   * This change occures when brand_name value is changed
+   */
   useEffect(() => {
-    let abort = false
-    async function validateSlug(slug: string) {
+    setValue('slug', bouncedSlug, {
+      shouldValidate: true
+    })
+  }, [bouncedSlug, setValue])
+  /**
+   * When slug value is changed by debounce or manually by user
+   * In addition to basic validations we also check if slug is already
+   * used by existing software entries. I moved this validation here
+   * because react-hook-form async validate function calls api 2 times.
+   * Further investigation about this is needed. For now we move it here.
+   */
+  useEffect(() => {
+    async function validateSlug() {
       setValidating(true)
-      const isValid = await validProjectItem(slug, session?.token)
-      // debugger
-      if (abort) return
-      if (isValid) {
-        setError('slug', {
-          type: 'invalid-slug',
-          message: `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
-        })
-      } else {
-        clearErrors('slug')
-        setValue('slug', slug, {
-          shouldValidate: true
-        })
+      const isUsed = await validProjectItem(slug, session?.token)
+      if (isUsed === true) {
+        const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
+        setError('slug',{type:'validate',message})
       }
-      // we need to wait some time
+      lastValidatedSlug = slug
       setValidating(false)
     }
-    if (bouncedSlug) {
-      // debugger
-      validateSlug(bouncedSlug)
+    if (slug !== lastValidatedSlug) {
+      validateSlug()
     }
-    return ()=>{abort=true}
-  },[bouncedSlug,session?.token,setError,setValue,clearErrors])
+  },[slug,session?.token,setError])
+
 
   function handleCancel() {
     // on cancel we send user back to prevous page
@@ -168,29 +181,12 @@ export default function AddProjectCard() {
   }
 
   function isSaveDisabled() {
-    if (state.loading == true) return true
-    // when manually setting errors, like with brand_name async validation
-    // we also need to ensure these errors are handled here
-    if (errors && errors?.slug) return true
-    if (isValid === false) return true
-    return false
-  }
-
-  function onSlugChange(slug: string) {
-    // if nothing is changed
-    const newSlug = sanitizeSlugValue(slug)
-    if (newSlug === slugValue) return
-    if (newSlug.length < config.slug.validation.minLength.value) {
-      setError('slug',{
-        type: 'invalid-slug',
-        message: config.slug.validation.minLength.message
-      })
-    } else {
-      // clear errors
-      if (errors?.slug) clearErrors('slug')
-    }
-    // save new value
-    setSlugValue(newSlug)
+    // during saving we disable button
+    if (state.loading === true) return true
+    // during async validation we disable button
+    if (validating === true) return true
+    // if isValid is not true
+    return isValid===false
   }
 
   return (
@@ -211,7 +207,7 @@ export default function AddProjectCard() {
               error: errors.project_title?.message !== undefined,
               label: config.project_title.label,
               helperTextMessage: errors?.project_title?.message ?? config.project_title.help,
-              helperTextCnt: `${data?.project_title?.length ?? 0}/${config?.project_title?.validation?.maxLength?.value ?? 0}`,
+              helperTextCnt: `${project_title?.length ?? 0}/${config?.project_title?.validation?.maxLength?.value ?? 0}`,
               variant:'outlined'
             }}
             register={register('project_title', {
@@ -226,20 +222,21 @@ export default function AddProjectCard() {
               error: errors?.project_subtitle?.message !== undefined,
               label: config.project_subtitle.label,
               helperTextMessage: errors?.project_subtitle?.message ?? config.project_subtitle.help,
-              helperTextCnt: `${data?.project_subtitle?.length ?? 0}/${config.project_subtitle?.validation?.maxLength?.value ?? 0}`,
+              helperTextCnt: `${project_subtitle?.length ?? 0}/${config.project_subtitle?.validation?.maxLength?.value ?? 0}`,
               variant:'outlined'
             }}
             register={register('project_subtitle', config.project_subtitle.validation)}
           />
           <div className="py-4"></div>
           <SlugTextField
-            label={config.slug.label}
             baseUrl={baseUrl}
-            value={slugValue}
-            error={errors.slug?.message !== undefined}
-            helperTextMessage={errors?.slug?.message ?? config.slug.help}
-            onSlugChange={onSlugChange}
             loading={validating}
+            options={{
+              label: config.slug.label,
+              error: errors.slug?.message !== undefined,
+              helperText: errors?.slug?.message ?? config.slug.help
+            }}
+            register={register('slug', config.slug.validation)}
           />
         </section>
         <section className='flex justify-end'>

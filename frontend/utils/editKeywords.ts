@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // import {SoftwareKeyword} from '~/components/software/edit/information/softwareKeywordsChanges'
+import {Keyword} from '~/components/keyword/FindKeyword'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 
@@ -14,6 +15,11 @@ export type ProjectKeyword = {
   keyword: string
 }
 
+type KeywordItem = {
+  id: string,
+  value: string
+}
+
 export async function createKeyword({keyword, token}: { keyword: string, token: string }) {
   try {
     // POST
@@ -22,26 +28,74 @@ export async function createKeyword({keyword, token}: { keyword: string, token: 
       method: 'POST',
       headers: {
         ...createJsonHeaders(token),
-        // return id in header
-        'Prefer': 'return=headers-only'
+        'Prefer': 'return=representation',
       },
       body: JSON.stringify({
-        value: keyword
+        value: keyword.trim()
       })
     })
     if (resp.status === 201) {
-      // we need to return id of created record
-      // it can be extracted from header.location
-      const id = resp.headers.get('location')?.split('.')[1]
+      const json:KeywordItem[] = await resp.json()
       return {
         status: 201,
-        message: id
+        message: json[0]
       }
     }
     // debugger
     return extractReturnMessage(resp, keyword ?? '')
   } catch (e: any) {
     logger(`createKeyword: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function createOrGetKeyword({keyword, token}: {keyword: string, token: string }) {
+  try {
+    // try to find keyword
+    const url = '/api/v1/keyword'
+    const find = `${url}?value=eq.${keyword.trim()}`
+    const resp = await fetch(find, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    if (resp.status === 200) {
+      const json: KeywordItem[] = await resp.json()
+      if (json.length > 0) {
+        return {
+          status: 201,
+          message: json[0]
+        }
+      }
+    }
+    // if not found create new
+    return createKeyword({keyword,token})
+  } catch (e:any) {
+    logger(`createOrGetKeyword: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function silentKeywordDelete({keyword, token}: { keyword: string, token: string }) {
+  try {
+    // try to find keyword
+    const url = `/api/v1/keyword?value=eq.${keyword}`
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    return extractReturnMessage(resp, keyword)
+  } catch (e: any) {
+    logger(`silentKeywordDelete: ${e?.message}`, 'warn')
     return {
       status: 500,
       message: e?.message

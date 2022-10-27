@@ -19,7 +19,12 @@ export default function AutosaveProjectMarkdown({project_id,name}: {project_id:s
     name
   })
 
-  async function saveProjectInfo(){
+  async function saveProjectInfo() {
+    let description = null
+    // we do not save when error or no change
+    if (isDirty === false || error) return
+    // only if not empty string, we use null when empty
+    if (value!=='') description = value
     const resp = await patchProjectTable({
       id:project_id,
       data: {
@@ -52,7 +57,7 @@ export default function AutosaveProjectMarkdown({project_id,name}: {project_id:s
 
   return (
     <MarkdownInputWithPreview
-      markdown={value || ''}
+      markdown={value ?? ''}
       register={register(name, {
         maxLength: config.description.validation.maxLength.value
       })}

@@ -12,7 +12,7 @@ import {
   EditOrganisation, Organisation,
   OrganisationRole,
   OrganisationsForSoftware,
-  SearchOrganisation, SoftwareForOrganisation
+  SearchOrganisation
 } from '../types/Organisation'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import {getPropsFromObject} from './getPropsFromObject'
@@ -269,6 +269,8 @@ export async function updateOrganisation({item, token}:
         mime_type: item.logo_mime_type,
         token
       })
+      // fetch image to reload the cache
+      await fetch(`/image/rpc/get_logo?id=${item.id}`, {cache: 'reload'})
       return resp
     }
     return extractReturnMessage(resp)
@@ -466,7 +468,8 @@ export function newOrganisationProps(props: NewOrganisation) {
     source: 'MANUAL' as 'MANUAL',
     primary_maintainer: props.primary_maintainer,
     role: props?.role ?? 'participating',
-    canEdit: false
+    canEdit: false,
+    description: null
   }
   return initOrg
 }

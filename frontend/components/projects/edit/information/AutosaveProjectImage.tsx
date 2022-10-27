@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,7 +18,7 @@ import {getImageUrl} from '~/utils/getProjects'
 import logger from '~/utils/logger'
 import {addImage, deleteImage, updateImage} from '~/utils/editProject'
 import AutosaveProjectTextField from './AutosaveProjectTextField'
-import AutosaveControlledSwitch from './AutosaveControlledSwitch'
+import AutosaveProjectSwitch from './AutosaveProjectSwitch'
 import {projectInformation as config} from './config'
 import {patchProjectTable} from './patchProjectInfo'
 
@@ -43,6 +45,9 @@ export default function AutosaveProjectImage() {
         mime_type,
         token
       })
+      await fetch(`/image/rpc/get_project_image?id=${form_id}`, {cache: 'reload'})
+      // @ts-ignore (hard) reload the page, true is for FF
+      location.reload(true)
     } else {
       // add new image
       resp = await addImage({
@@ -174,7 +179,7 @@ export default function AutosaveProjectImage() {
       </div>
 
       <div className="flex pb-3">
-        <AutosaveControlledSwitch
+        <AutosaveProjectSwitch
           project_id={form_id}
           name='image_contain'
           label={config.image_contain.label}

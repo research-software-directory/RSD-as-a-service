@@ -5,7 +5,7 @@
 
 CREATE TABLE keyword (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	value CITEXT UNIQUE
+	value CITEXT UNIQUE CHECK (value ~ '^\S+( \S+)*$')
 );
 
 CREATE FUNCTION sanitise_insert_keyword() RETURNS TRIGGER LANGUAGE plpgsql AS

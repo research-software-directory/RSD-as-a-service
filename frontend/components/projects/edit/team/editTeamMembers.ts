@@ -55,6 +55,8 @@ export async function updateTeamMember({data, token}:
     // if we uploaded new image we remove
     // data and construct avatar_url
     const returned = removeBase64Data(data)
+    // reload image to update cache
+    if (returned.avatar_url) await fetch(returned.avatar_url, {cache: 'reload'})
     return {
       status: 200,
       message: returned

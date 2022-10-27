@@ -69,5 +69,13 @@ export const organisationInformation = {
   is_tenant: {
     label: 'Official member',
     help: 'Set to active if organisation is participating in RSD.',
+  },
+  description: {
+    title: 'About page',
+    subtitle: 'Provide the content of about page. If content is not provided about page is hidden.',
+    validation: {
+      minLength: {value: 16, message: 'Minimum length is 16'},
+      maxLength: {value: 10000, message: 'Maximum length is 10.000'},
+    }
   }
 }

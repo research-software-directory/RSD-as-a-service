@@ -241,6 +241,9 @@ CREATE POLICY anyone_can_read ON keyword FOR SELECT TO web_anon, rsd_user
 CREATE POLICY maintainer_can_insert ON keyword FOR INSERT TO rsd_user
 	WITH CHECK (TRUE);
 
+CREATE POLICY maintainer_can_delete ON keyword FOR DELETE TO rsd_user
+	USING (TRUE);
+
 CREATE POLICY admin_all_rights ON keyword TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
@@ -382,8 +385,13 @@ ALTER TABLE mention ENABLE ROW LEVEL SECURITY;
 CREATE POLICY anyone_can_read ON mention FOR SELECT TO web_anon, rsd_user
 	USING (id IN (SELECT mention FROM mention_for_software) OR id IN (SELECT mention FROM output_for_project) OR id IN (SELECT mention FROM impact_for_project));
 
-CREATE POLICY maintainer_all_rights ON mention TO rsd_user
-	USING (TRUE)
+CREATE POLICY maintainer_can_read ON mention FOR SELECT TO rsd_user
+	USING (TRUE);
+
+CREATE POLICY maintainer_can_delete ON mention FOR DELETE TO rsd_user
+	USING (TRUE);
+
+CREATE POLICY maintainer_can_insert ON mention FOR INSERT TO rsd_user
 	WITH CHECK (TRUE);
 
 CREATE POLICY admin_all_rights ON mention TO rsd_admin

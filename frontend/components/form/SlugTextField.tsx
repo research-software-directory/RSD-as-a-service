@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import MuiTextField from '@mui/material/TextField'
+import MuiTextField, {TextFieldProps} from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
 import {styled} from '@mui/material/styles'
 import {CircularProgress} from '@mui/material'
@@ -32,26 +32,21 @@ const TextField = styled(MuiTextField)(({theme}) => ({
 }))
 
 type SlugFieldProps = {
-  label:string,
   baseUrl: string,
-  value: string,
-  // register: any,
-  error?: boolean,
-  helperTextMessage?: string,
   loading: boolean,
-  onSlugChange:(value:string)=>void
+  options: TextFieldProps,
+  register: any
 }
 
 export default function SlugTextField({
-  label, baseUrl, value, error, helperTextMessage, loading = true, onSlugChange
+  baseUrl,loading = true,options,register
 }: SlugFieldProps) {
 
   return (
     <TextField
+      // default options
       autoComplete='off'
-      label={label}
       variant='outlined'
-      value={value}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -66,9 +61,8 @@ export default function SlugTextField({
           : null
         )
       }}
-      error={error ?? false}
-      helperText={helperTextMessage}
-      onChange={({target})=>onSlugChange(target.value)}
+      {...options}
+      {...register}
     />
   )
 }

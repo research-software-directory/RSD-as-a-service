@@ -9,7 +9,6 @@ import EditMentionsProvider from './EditMentionsProvider'
 import MentionByType from './MentionByType'
 import FindSoftwareMention from './FindSoftwareMention'
 import AddMention from './AddMention'
-import EditMentionsInfo from './EditMentionsInfo'
 import useSoftwareContext from '../useSoftwareContext'
 
 export default function SoftwareMentions() {
@@ -31,9 +30,6 @@ export default function SoftwareMentions() {
           <div className="py-4"></div>
           <AddMention />
           <div className="py-4"></div>
-          <EditMentionsInfo
-            title="Edit mentions"
-          />
         </div>
       </EditSection>
     </EditMentionsProvider>

@@ -43,7 +43,7 @@ export default function AdminPages({links}:AdminPagesProps) {
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
-    const {params, req} = context
+    const {req} = context
     const token = req?.cookies['rsd_token']
 
     // get links to all pages server side

@@ -30,3 +30,24 @@ export default async function updateOrganisationSettings({item, token}:
     }
   }
 }
+
+export async function patchOrganisationTable({id, data, token}:
+  {id:string, data: any, token: string }) {
+  try {
+    // extract only required items
+     const url = `/api/v1/organisation?id=eq.${id}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createJsonHeaders(token)
+      },
+      body: JSON.stringify(data)
+    })
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}

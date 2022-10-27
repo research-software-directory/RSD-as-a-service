@@ -98,29 +98,27 @@ export default function OrganisationMaintainers({organisation, isMaintainer}:
     <ProtectedOrganisationPage
       isMaintainer={isMaintainer}
     >
-      <EditSection className='xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4">
-          <EditSectionTitle
-            title={config.title}
-          />
-          <OrganisationMaintainersList
-            onDelete={onDeleteMaintainer}
-            maintainers={maintainers}
-          />
-        </div>
-        <div className="py-4 min-w-[21rem] xl:my-0">
-          <EditSectionTitle
-            title={config.inviteLink.title}
-            subtitle={config.inviteLink.subtitle}
-          />
-          <OrganisationMaintainerLink
-            organisation={organisation.id ?? ''}
-            name={organisation.name}
-            account={user?.account ?? ''}
-            token={token}
-          />
-        </div>
-      </EditSection>
+      <div className="py-4">
+        <EditSectionTitle
+          title={config.title}
+        />
+        <OrganisationMaintainersList
+          onDelete={onDeleteMaintainer}
+          maintainers={maintainers}
+        />
+      </div>
+      <div className="py-4 min-w-[21rem] xl:my-0">
+        <EditSectionTitle
+          title={config.inviteLink.title}
+          subtitle={config.inviteLink.subtitle}
+        />
+        <OrganisationMaintainerLink
+          organisation={organisation.id ?? ''}
+          name={organisation.name}
+          account={user?.account ?? ''}
+          token={token}
+        />
+      </div>
       <ConfirmDeleteModal
         open={modal.open}
         title="Remove maintainer"

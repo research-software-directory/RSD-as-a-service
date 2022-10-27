@@ -9,7 +9,13 @@ export type Data = {
   [key:string]:number
 }
 
-export function formatUnixDateData(data:Data) {
+export function formatUnixDateData(data: Data) {
+  if (typeof data === 'undefined' || data === null) {
+    return {
+      lineData: [],
+      lastUpdateInMs: 0
+    }
+  }
   const keys = Object.keys(data)
   const lineData: Point[] = []
   let lastUpdateInMs:number|undefined

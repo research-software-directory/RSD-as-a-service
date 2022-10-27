@@ -82,10 +82,7 @@ export async function findPublicationByTitle({project, searchFor, token}:
   // change items source to RSD for ones pulled from RSD
   let rsdItems: MentionItemProps[] = []
   if (rsd.status === 'fulfilled') {
-    rsdItems = rsd.value.map(item => ({
-      ...item as MentionItemProps,
-      source: 'RSD'
-    }))
+    rsdItems = rsd.value as MentionItemProps[]
   } else {
     logger(`output.findPublicationByTitle: RSD request failed ${rsd.reason}`, 'warn')
   }
