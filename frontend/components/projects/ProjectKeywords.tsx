@@ -21,7 +21,7 @@ export default function ProjectKeywords({keywords=[]}:{keywords:KeywordForProjec
       return <i>Not specified</i>
     }
     return (
-      <div className="flex flex-wrap py-1">
+      <div className="flex flex-wrap gap-2 py-1">
         {
           keywords.map((item, pos) => {
             const url = ssrProjectsUrl({keywords: [item.keyword]})

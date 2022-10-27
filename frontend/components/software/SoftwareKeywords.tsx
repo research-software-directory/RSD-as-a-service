@@ -17,7 +17,7 @@ export default function SoftwareKeywords({keywords = []}: { keywords: KeywordFor
       )
     }
     return (
-      <div className="flex flex-wrap py-1">
+      <div className="flex flex-wrap gap-2 py-1">
         {keywords.map((item, pos) => {
           const url = softwareUrl({keywords: [item.keyword]})
           return <TagChipFilter url={url} key={pos} label={item.keyword} />

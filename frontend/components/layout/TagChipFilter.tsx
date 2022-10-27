@@ -2,7 +2,7 @@ import Chip from '@mui/material/Chip'
 import SearchIcon from '@mui/icons-material/Search'
 import Link from 'next/link'
 
-export default function TagChipFilter({url,label, title}:
+export default function TagChipFilter({url, label, title}:
   { label: string, url:string ,title?: string }) {
 
   if (!label) return null
@@ -12,14 +12,13 @@ export default function TagChipFilter({url,label, title}:
       href={url}
       passHref
     >
+    <a>
     <Chip
-      title={`Click to filter for ${title ? title.toLowerCase() : label.toLowerCase()}`}
+      title={`Click to filter for ${title ? title : label}`}
       label={label}
       icon={<SearchIcon />}
       clickable
       sx={{
-        marginBottom: '1rem',
-        marginRight: '0.5rem',
         maxWidth: '21rem',
         borderRadius: '0.125rem',
         textTransform: 'capitalize',
@@ -31,6 +30,7 @@ export default function TagChipFilter({url,label, title}:
         }
       }}
     />
+    </a>
     </Link>
   )
 }
