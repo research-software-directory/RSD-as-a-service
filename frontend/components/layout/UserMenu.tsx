@@ -91,7 +91,7 @@ export default function UserMenu(props: UserMenuType) {
         >
           {getDisplayInitials(splitName(session?.user?.name ?? ''))}
         </Avatar>
-        <CaretIcon className="text-secondary-content ml-2"/>
+        <CaretIcon className="text-primary-content ml-2"/>
       </IconButton>
       <Menu
         anchorEl={anchorEl}
