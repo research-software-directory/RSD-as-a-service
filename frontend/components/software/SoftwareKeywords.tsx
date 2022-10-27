@@ -5,7 +5,8 @@
 
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import {KeywordForSoftware} from '../../types/SoftwareTypes'
-import TagChip from '~/components/layout/TagChip'
+import TagChipFilter from '../layout/TagChipFilter'
+import {softwareUrl} from '~/utils/postgrestUrl'
 
 export default function SoftwareKeywords({keywords = []}: { keywords: KeywordForSoftware[] }) {
 
@@ -16,9 +17,10 @@ export default function SoftwareKeywords({keywords = []}: { keywords: KeywordFor
       )
     }
     return (
-      <div className="flex flex-wrap py-1">
+      <div className="flex flex-wrap gap-2 py-1">
         {keywords.map((item, pos) => {
-          return <TagChip key={pos} label={item.keyword}/>
+          const url = softwareUrl({keywords: [item.keyword]})
+          return <TagChipFilter url={url} key={pos} label={item.keyword} />
         })}
       </div>
     )

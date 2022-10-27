@@ -17,7 +17,7 @@ export default function ResearchDomains({domains}:{domains:ResearchDomain[]}) {
       return <i>Not specified</i>
     }
     return (
-      <div className="flex flex-wrap py-1">
+      <div className="flex flex-wrap gap-2 py-1">
         {
           domains.map((item, pos) => {
             return (
