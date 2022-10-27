@@ -59,14 +59,16 @@ export default class MyDocument extends Document<RsdDocumentInitialProps>{
           {
             /* Matomo Tracking Code
                NOTE! we use nonce to cover security audit
+               we use next Script tag to load script async (non-blocking)
             */
             this.matomoUrl !== undefined && this.matomoUrl.length !== 0 &&
             this.matomoId !== undefined && this.matomoId.length !== 0 &&
             <Script
               id="matomo-script"
-              strategy="afterInteractive"
+              strategy="lazyOnload"
               nonce={nonce}
-              dangerouslySetInnerHTML={{__html: `
+            >
+             {`
                 var _paq = window._paq = window._paq || [];
                 /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
                 _paq.push(['requireConsent']);
@@ -79,9 +81,9 @@ export default class MyDocument extends Document<RsdDocumentInitialProps>{
                   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
                   g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
                 })();
-                `,
-              }}
-            />
+                console.log('matomo loaded with nonce...')
+              `}
+            </Script>
           }
         </Head>
         <body className="dark">
