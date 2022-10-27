@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM maven:3.8.5-openjdk-18 AS builder
+FROM maven:3.8.6-openjdk-18 AS builder
 WORKDIR /usr/mymaven
 RUN mkdir ./src
 COPY pom.xml .

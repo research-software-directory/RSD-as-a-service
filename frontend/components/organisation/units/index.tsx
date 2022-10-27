@@ -107,6 +107,7 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
       ...units.slice(pos+1),
       unit
     ].sort((a, b) => sortOnStrProp(a, b, 'name'))
+    // debugger
     setUnits({
       // cast type for now and improve later
       data: newList as OrganisationForOverview[],
@@ -130,7 +131,9 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
               data,
               id: data.id
             })
-            updateUnitInList(updatedUnit,pos)
+            updateUnitInList(updatedUnit, pos)
+            // @ts-ignore (hard) reload the page, true is for FF
+            location.reload(true)
           } else {
             updateUnitInList(data,pos)
           }

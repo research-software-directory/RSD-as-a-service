@@ -44,5 +44,18 @@ jest.mock('remark-breaks', jest.fn((...props) => {
 }))
 
 
+// MOCK useRouter
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      // pathname: 'testPaths',
+      asPath: 'test-thing'
+      // ... whatever else you you call on `router`
+    }
+  },
+}))
+
+
 // TOKEN
 // process.env.PGRST_JWT_SECRET='reallyreallyreallyreallyverysafe'
+process.env.NEXT_PUBLIC_FEEDBACK_URL= 'test@test.com'

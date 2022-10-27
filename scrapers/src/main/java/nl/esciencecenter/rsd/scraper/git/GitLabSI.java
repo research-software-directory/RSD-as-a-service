@@ -91,6 +91,7 @@ public class GitLabSI implements SoftwareInfo {
 				System.out.println("An error occurred fetching data from: " + request.uri());
 				throw new RuntimeException(e);
 			}
+			if (response.statusCode() == 404) return null;
 
 			JsonArray thisPageCommits = JsonParser.parseString(response.body()).getAsJsonArray();
 			JsonArray relevantData = new JsonArray();

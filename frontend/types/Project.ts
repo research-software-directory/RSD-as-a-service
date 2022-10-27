@@ -25,9 +25,9 @@ export type BasicProject = NewProject & {
 }
 
 export type RawProject = BasicProject & {
-  image_for_project?: [
-    { project: string }
-  ]
+  image_for_project?: {
+    project: string
+  } | null
 }
 
 export type Project = BasicProject & {

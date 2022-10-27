@@ -6,9 +6,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {getMaintainerOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
-import {OrganisationForOverview, ProjectOfOrganisation, SoftwareOfOrganisation} from '../types/Organisation'
+import {Organisation, OrganisationForOverview, ProjectOfOrganisation, SoftwareOfOrganisation} from '../types/Organisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
-import {createJsonHeaders} from './fetchHelpers'
+import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import logger from './logger'
 import {paginationUrlParams} from './postgrestUrl'
 
@@ -70,7 +70,6 @@ export async function getOrganisationsList({search, rows, page, token}:
 export async function getOrganisationBySlug({slug, token}:
   { slug: string[], token: string }) {
   try {
-    // console.log('getOrganisationBySlug...',slug)
     // resolve slug to id and
     // get list of organisation uuid's this user is mantainer of
     const [uuid, maintainerOf] = await Promise.all([
@@ -84,26 +83,28 @@ export async function getOrganisationBySlug({slug, token}:
     if (typeof uuid == 'undefined') return undefined
     // is this user maintainer of this organisation
     const isMaintainer = maintainerOf.includes(uuid)
-    // get organisation info incl. counts
-    const organisation = await getOrganisationById({
-      uuid,
-      token,
-      frontend: false,
-      isMaintainer
-    })
-
-    return organisation
-
+    const [organisation, description] = await Promise.all([
+      getOrganisationById({
+        uuid,
+        token,
+        frontend: false,
+        isMaintainer
+      }),
+      getOrganisationDescription({uuid,token})
+    ])
+    // return consolidate organisation
+    return {
+      ...organisation,
+      description
+    }
   } catch (e:any) {
     logger(`getOrganisationBySlug: ${e?.message}`, 'error')
     return undefined
   }
 }
 
-
 export async function getOrganisationIdForSlug({slug, token, frontend=false}:
   { slug: string[], token: string, frontend?:boolean }) {
-
   const path = slug.join('/')
   let url = `${process.env.POSTGREST_URL}/rpc/slug_to_organisation`
   if (frontend) {
@@ -126,8 +127,8 @@ export async function getOrganisationIdForSlug({slug, token, frontend=false}:
 }
 
 
-export async function getOrganisationById({uuid, token,frontend=false,isMaintainer=false}:
-  { uuid: string, token: string, frontend?: boolean, isMaintainer?:boolean}) {
+export async function getOrganisationById({uuid,token,frontend=false,isMaintainer=false}:
+  {uuid: string, token: string, frontend?: boolean, isMaintainer?:boolean}) {
   let query = `rpc/organisations_overview?id=eq.${uuid}`
   if (isMaintainer) {
     //if user is maintainer of this organisation
@@ -166,7 +167,7 @@ export async function getOrganisationChildren({uuid, token,frontend=false}:
   const resp = await fetch(url, {
     method: 'GET',
     headers: {
-      ...createJsonHeaders(token)
+      ...createJsonHeaders(token),
     }
   })
   if (resp.status === 200) {
@@ -177,6 +178,28 @@ export async function getOrganisationChildren({uuid, token,frontend=false}:
   logger(`getOrganisationChildren failed: ${resp.status} ${resp.statusText}`, 'warn')
   // we log and return zero
   return []
+}
+
+export async function getOrganisationDescription({uuid, token}: { uuid: string, token: string }) {
+  const query = `organisation?id=eq.${uuid}`
+  const url = `${getBaseUrl()}/${query}`
+  // console.log('url...', url)
+  const resp = await fetch(url, {
+    method: 'GET',
+    headers: {
+      ...createJsonHeaders(token),
+      // request single object item
+      'Accept': 'application/vnd.pgrst.object+json'
+    }
+  })
+  if (resp.status === 200) {
+    const json: Organisation = await resp.json()
+    return json.description
+  }
+  // otherwise request failed
+  logger(`getOrganisationDescription failed: ${resp.status} ${resp.statusText}`, 'warn')
+  // we log and return null
+  return null
 }
 
 export type OrganisationApiParams = {

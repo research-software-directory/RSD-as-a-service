@@ -1,26 +1,37 @@
 {
   "host": {
-    "name":"rsd",
-    "email":"rsd@esciencecenter.nl",
-    "logo_url":"/images/logo-escience.svg"
+    "name": "rsd",
+    "email": "rsd@esciencecenter.nl",
+    "logo_url": "/images/logo-escience.svg",
+    "website": "https://www.esciencecenter.nl",
+    "feedback": {
+      "enabled": true,
+      "url": "rsd@esciencecenter.nl",
+      "issues_page_url": "https://github.com/research-software-directory/RSD-as-a-service/issues"
+    }
   },
-  "links":[{
+  "links": [
+    {
       "label": "Cookies",
       "url": "/cookies",
       "target": "_self"
-    },{
+    },
+    {
       "label": "Documentation",
       "url": "https://research-software-directory.github.io/documentation",
       "target": "_blank"
-    },{
+    },
+    {
       "label": "Technical Documentation",
       "url": "https://research-software-directory.github.io/RSD-as-a-service",
       "target": "_blank"
-    },{
-    "label":"Netherlands eScienceCenter",
-    "url":"https://www.esciencecenter.nl/",
-    "target":"_blank"
-  }],
+    },
+    {
+      "label": "Netherlands eScienceCenter",
+      "url": "https://www.esciencecenter.nl/",
+      "target": "_blank"
+    }
+  ],
   "theme": {
     "mode": "light",
     "light": {

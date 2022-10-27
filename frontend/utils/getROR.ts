@@ -57,11 +57,33 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
         website: item.links[0] ?? '',
         logo_id: null,
         source: 'ROR' as 'ROR',
+        description: null
       }
     }
   })
   return options
 }
+
+
+export async function getOrganisationMetadata(ror_id: string|null) {
+  try {
+    // check availability
+    if (typeof ror_id === 'undefined') return null
+    if (ror_id === null && ror_id === '') return null
+    // build url
+    const url = `https://api.ror.org/organizations/${ror_id}`
+    const resp = await fetch(url)
+    if (resp.status === 200) {
+      const json: RORItem = await resp.json()
+      return json
+    }
+    return null
+  } catch (e: any) {
+    logger(`getOrganisationMetadata failed. ${e.message}`)
+    return null
+  }
+}
+
 
 export type RORItem = typeof rorItem
 

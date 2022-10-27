@@ -2,11 +2,12 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
-
 import Button from '@mui/material/Button'
+
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {newMentionItem} from '~/utils/editMentions'
+import AddNewItemInfo from './AddNewItemInfo'
 import {cfgImpact as config} from './config'
 
 export default function AddMention() {
@@ -32,6 +33,7 @@ export default function AddMention() {
           add
         </Button>
       </div>
+      <AddNewItemInfo />
     </>
   )
 }

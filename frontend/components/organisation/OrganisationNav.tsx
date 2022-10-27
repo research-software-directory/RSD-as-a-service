@@ -20,6 +20,9 @@ type OrganisationNavProps = {
 export default function OrganisationNav({isMaintainer, organisation}:OrganisationNavProps) {
   const router = useRouter()
   const page = router.query['page'] ?? ''
+  // console.group('OrganisationNav')
+  // console.log('description...', organisation.description)
+  // console.groupEnd()
   return (
     <nav>
       <List sx={{
@@ -29,14 +32,17 @@ export default function OrganisationNav({isMaintainer, organisation}:Organisatio
           let selected = false
           if (page && page!=='') {
             selected = page === organisationMenu[pos].id
-          } else if (pos === 0) {
-            // select first item by default
+          } else if (pos === 0 && organisation.description) {
+            // select about if description present by default
+            selected=true
+          } else if (pos === 1 && !organisation.description) {
+            // if no about page then first item is default
             selected=true
           }
           // const selected = router.query['id'] ?? organisationMenu[0].id
           if (item.isVisible({
             isMaintainer,
-            children_cnt: organisation?.children_cnt
+            organisation
           }) === true) {
             return (
               <ListItemButton

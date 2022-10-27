@@ -24,8 +24,7 @@ export default function EditButton({title,url}:EditButtonProps) {
         router.push(url)
       }}
       sx={{
-        color: '#ffffff', // Fix for Helmholtz Design
-        margin:'0rem 0.5rem',
+        color: 'primary.contrastText',
         '&:hover': {
           color: 'primary.main'
         },

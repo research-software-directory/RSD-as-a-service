@@ -51,7 +51,7 @@ const StyledNav = styled('nav', {
     width: '3rem',
     height: '3rem',
     color,
-    zIndex: 9,
+    zIndex: 7,
     '&:hover': {
       color: hovercolor
     }

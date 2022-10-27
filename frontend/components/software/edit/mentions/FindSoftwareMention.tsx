@@ -13,6 +13,7 @@ import {MentionItemProps} from '~/types/Mention'
 import {getMentionByDoiFromRsd} from '~/utils/editMentions'
 import {getMentionByDoi} from '~/utils/getDOI'
 import useSoftwareContext from '../useSoftwareContext'
+import AddExistingPublicationInfo from './AddExistingPublicationInfo'
 import {cfgImpact as config} from './config'
 import {findPublicationByTitle} from './mentionForSoftwareApi'
 
@@ -35,7 +36,6 @@ export default function FindSoftwareMention() {
       if (rsd?.status === 200 && rsd.message?.length === 1) {
         // return first found item in RSD
         const item:MentionItemProps = rsd.message[0]
-        item.source = 'RSD'
         return [item]
       }
       // else find by DOI
@@ -75,6 +75,7 @@ export default function FindSoftwareMention() {
           reset: false
         }}
       />
+      <AddExistingPublicationInfo />
     </>
   )
 }

@@ -10,7 +10,7 @@ export const addConfig = {
   `,
   project_title: {
     label: 'Title',
-    help: 'Provide project name to use as a title of your project page.',
+    help: 'Required. Provide project name to use as a title of your project page.',
     validation: {
       required: 'Title is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
@@ -30,7 +30,13 @@ export const addConfig = {
     label: 'The url of this project will be',
     help: 'You can change slug. Use letters, numbers and dash "-". Other characters are not allowed.',
     validation: {
-      minLength: {value: 3, message: 'Minimum length is 3'}
+      required: 'The slug value is required.',
+      minLength: {value: 3, message: 'Minimum length is 3'},
+      maxLength: {value: 200, message: 'Maximum length is 200'},
+      pattern: {
+        value: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+        message: 'Restricted input violiation. Use letters, numbers and dashes "-" only between other input.'
+      }
     }
   }
 }

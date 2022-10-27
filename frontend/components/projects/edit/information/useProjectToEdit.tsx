@@ -29,7 +29,8 @@ function prepareFundingOrganisations(organisations:OrganisationsOfProject[]) {
     return {
       ...item,
       pos,
-      source:'RSD'
+      source: 'RSD',
+      description: null
     }
   })
   return data

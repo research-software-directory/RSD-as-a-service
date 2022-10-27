@@ -6,7 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
@@ -19,9 +19,9 @@ import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 import SlugTextField from '../../form/SlugTextField'
 import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
 import {NewSoftwareItem} from '../../../types/SoftwareTypes'
-import {getSlugFromString,sanitizeSlugValue} from '../../../utils/getSlugFromString'
+import {getSlugFromString} from '../../../utils/getSlugFromString'
 import {validSoftwareItem} from '../../../utils/editSoftware'
-import {useDebounceValid} from '~/utils/useDebounce'
+import {useDebounce} from '~/utils/useDebounce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
@@ -34,10 +34,11 @@ const initalState = {
 type AddSoftwareForm = {
   slug: string,
   brand_name: string,
-  short_statement: string,
+  short_statement: string|null,
 }
 
-const formId='add-software-form'
+let lastValidatedSlug = ''
+const formId = 'add-software-form'
 
 export default function AddSoftwareCard() {
   const {session} = useAuth()
@@ -46,24 +47,28 @@ export default function AddSoftwareCard() {
   const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initalState)
-  const {register, handleSubmit, watch, formState, setError, setValue, clearErrors} = useForm<AddSoftwareForm>({
+  const {register, handleSubmit, watch, formState, setValue,setError} = useForm<AddSoftwareForm>({
     mode: 'onChange',
     defaultValues: {
       slug:'',
       brand_name: '',
-      short_statement:''
+      short_statement: null
     }
   })
   const {errors, isValid} = formState
   // watch for data change in the form
-  const data = watch()
-  // construct slug from title
-  const bouncedSlug = useDebounceValid(slugValue, errors['slug'])
+  const [slug,brand_name,short_statement] = watch(['slug', 'brand_name', 'short_statement'])
+  // take the last slugValue
+  const bouncedSlug = useDebounce(slugValue, 700)
 
   // console.group('AddSoftwareCard')
   // console.log('session...', session)
   // console.log('state...', state)
-  // console.log('data...', data)
+  // console.log('slug...', slug)
+  // console.log('errors...', errors)
+  // console.log('isValid...', isValid)
+  // console.log('validating...', validating)
+  // console.log('validSlug...', validSlug)
   // console.groupEnd()
 
   useEffect(() => {
@@ -72,39 +77,55 @@ export default function AddSoftwareCard() {
     }
   }, [])
 
+  /**
+   * Convert brand_name value into slugValue.
+   * The slugValue is then debounced and produces bouncedSlug
+   * We use bouncedSlug value later on to perform call to api
+   */
   useEffect(() => {
-    const softwareSlug = getSlugFromString(data.brand_name)
-    clearErrors('slug')
-    setSlugValue(softwareSlug)
-  },[data.brand_name,clearErrors])
-
+    // construct slug from title
+    if (brand_name) {
+      const slugValue = getSlugFromString(brand_name)
+      // console.log('useEffect.slugValue...', slugValue)
+      // update slugValue
+      setSlugValue(slugValue)
+    }
+  }, [brand_name])
+  /**
+   * When bouncedSlug value is changed,
+   * we need to update slug value (value in the input) shown to user.
+   * This change occures when brand_name value is changed
+   */
   useEffect(() => {
-    let abort = false
-    async function validateSlug(slug: string) {
+    if (bouncedSlug) {
+      // console.log('useEffect.bouncedSlug...', bouncedSlug)
+      setValue('slug', bouncedSlug, {
+        shouldValidate: true
+      })
+    }
+  }, [bouncedSlug,setValue])
+  /**
+   * When slug value is changed by debounce or manually by user
+   * In addition to basic validations we also check if slug is already
+   * used by existing software entries. I moved this validation here
+   * because react-hook-form async validate function calls api 2 times.
+   * Further investigation about this is needed. For now we move it here.
+   */
+  useEffect(() => {
+    async function validateSlug() {
       setValidating(true)
-      const isValid = await validSoftwareItem(slug, session?.token)
-      // debugger
-      if (abort) return
-      if (isValid) {
-        setError('slug', {
-          type: 'invalid-slug',
-          message: `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
-        })
-      } else {
-        clearErrors('slug')
-        setValue('slug', slug, {
-          shouldValidate: true
-        })
+      const isUsed = await validSoftwareItem(slug, session?.token)
+      if (isUsed === true) {
+        const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
+        setError('slug',{type:'validate',message})
       }
-      // we need to wait some time
+      lastValidatedSlug = slug
       setValidating(false)
     }
-    if (bouncedSlug) {
-      // debugger
-      validateSlug(bouncedSlug)
+    if (slug !== lastValidatedSlug) {
+      validateSlug()
     }
-    return ()=>{abort=true}
-  },[bouncedSlug,session?.token,setError,setValue,clearErrors])
+  },[slug,session?.token,setError])
 
   function handleCancel() {
     // on cancel we send user back to prevous page
@@ -172,30 +193,13 @@ export default function AddSoftwareCard() {
     return config.addInfo
   }
 
-  function onSlugChange(slug: string) {
-    // if nothing is changed
-    const newSlug = sanitizeSlugValue(slug)
-    if (newSlug === slugValue) return
-    if (newSlug.length < config.slug.validation.minLength.value) {
-      setError('slug',{
-        type: 'invalid-slug',
-        message: config.slug.validation.minLength.message
-      })
-    } else {
-      // clear errors
-      if (errors?.slug) clearErrors('slug')
-    }
-    // save new value
-    setSlugValue(newSlug)
-  }
-
   function isSaveDisabled() {
-    if (state.loading == true) return true
-    // when manually setting errors, like with brand_name async validation
-    // we also need to ensure these errors are handled here
-    if (errors && errors?.slug) return true
-    if (isValid === false) return true
-    return false
+    // during saving we disable button
+    if (state.loading === true) return true
+    // during async validation we disable button
+    if (validating === true) return true
+    // if isValid is not true
+    return isValid===false
   }
 
   return (
@@ -215,7 +219,7 @@ export default function AddSoftwareCard() {
               error: errors.brand_name?.message !== undefined,
               label: config.brand_name.label,
               helperTextMessage: errors?.brand_name?.message ?? config.brand_name.help,
-              helperTextCnt: `${data?.brand_name?.length || 0}/${config.brand_name.validation.maxLength.value}`,
+              helperTextCnt: `${brand_name?.length || 0}/${config.brand_name.validation.maxLength.value}`,
               variant:'outlined'
             }}
             register={register('brand_name', {
@@ -230,20 +234,21 @@ export default function AddSoftwareCard() {
               error: errors?.short_statement?.message !== undefined,
               label: config.short_statement.label,
               helperTextMessage: errors?.short_statement?.message ?? config.short_statement.help,
-              helperTextCnt: `${data?.short_statement?.length || 0}/${config.short_statement.validation.maxLength.value}`,
+              helperTextCnt: `${short_statement?.length || 0}/${config.short_statement.validation.maxLength.value}`,
               variant:'outlined'
             }}
             register={register('short_statement', config.short_statement.validation)}
           />
           <div className="py-4"></div>
           <SlugTextField
-            label={config.slug.label}
             baseUrl={baseUrl}
-            value={slugValue}
-            error={errors.slug?.message !== undefined}
-            helperTextMessage={errors?.slug?.message ?? config.slug.help}
-            onSlugChange={onSlugChange}
             loading={validating}
+            options={{
+              label: config.slug.label,
+              error: errors.slug?.message !== undefined,
+              helperText: errors?.slug?.message ?? config.slug.help
+            }}
+            register={register('slug',config.slug.validation)}
           />
         </section>
         <section className='flex justify-end'>
