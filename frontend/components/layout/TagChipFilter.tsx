@@ -1,15 +1,11 @@
 import Chip from '@mui/material/Chip'
-import {softwareUrl} from '~/utils/postgrestUrl'
 import SearchIcon from '@mui/icons-material/Search'
 import Link from 'next/link'
 
-export default function TagChipFilter({label, title}:
-  { label: string, title?: string }) {
+export default function TagChipFilter({url,label, title}:
+  { label: string, url:string ,title?: string }) {
 
   if (!label) return null
-
-  const url = softwareUrl({keywords: [label]})
-  // console.log('url...',url)
 
   return (
     <Link
@@ -20,7 +16,6 @@ export default function TagChipFilter({label, title}:
       title={`Click to filter for ${title ? title.toLowerCase() : label.toLowerCase()}`}
       label={label}
       icon={<SearchIcon />}
-      // onDelete={() => {}}
       clickable
       sx={{
         marginBottom: '1rem',

@@ -10,7 +10,7 @@ import {KeywordForProject, ProjectLink, ResearchDomain} from '../../types/Projec
 import ProjectStatus from './ProjectStatus'
 import ProjectFunding from './ProjectFunding'
 import ProjectLinks from './ProjectLinks'
-import ProjectTags from './ProjectTags'
+import ProjectKeywords from './ProjectKeywords'
 import {ProjectOrganisationProps} from '~/types/Organisation'
 import ResearchDomains from './ResearchDomains'
 
@@ -48,9 +48,8 @@ export default function ProjectSidebar({date_start, date_end, grant_id, links, r
         domains={researchDomains}
       />
 
-      <ProjectTags
-        title="Keywords"
-        tags={keywords.map(item=>item.keyword)}
+      <ProjectKeywords
+        keywords={keywords}
       />
 
     </aside>

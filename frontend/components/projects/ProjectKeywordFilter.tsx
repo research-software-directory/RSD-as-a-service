@@ -15,7 +15,7 @@ type KeywordFilterProps = {
  * Keywords filter component. It receives array of keywords and returns
  * array of selected tags to use in filter using onSelect callback function
  */
-export default function ProjectKeywordsFilter({items=[], onApply}:KeywordFilterProps) {
+export default function ProjectKeywordFilter({items=[], onApply}:KeywordFilterProps) {
   return (
     <KeywordFilter
       items={items}
