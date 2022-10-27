@@ -282,6 +282,7 @@ function rsdTypeFromResourceType(resourceType: string) {
     case 'newspaper-article':
     case 'newspaper article':
       return 'newspaperArticle'
+    case 'audiovisual':
     case 'poster':
     case 'presentation':
       return 'presentation'

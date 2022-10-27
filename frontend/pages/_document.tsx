@@ -81,7 +81,6 @@ export default class MyDocument extends Document<RsdDocumentInitialProps>{
                   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
                   g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
                 })();
-                console.log('matomo loaded with nonce...')
               `}
             </Script>
           }

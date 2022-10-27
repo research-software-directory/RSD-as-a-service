@@ -70,7 +70,7 @@ public class DataciteMentionRepository implements MentionRepository {
 		dataciteTypeMap.put("Event", MentionType.workshop);
 		dataciteTypeMap.put("Image", MentionType.other);
 		dataciteTypeMap.put("InteractiveResource", MentionType.other);
-		dataciteTypeMap.put("Journal", MentionType.other);
+		dataciteTypeMap.put("Journal", MentionType.journalArticle);
 		dataciteTypeMap.put("JournalArticle", MentionType.journalArticle);
 		dataciteTypeMap.put("Model", MentionType.other);
 		dataciteTypeMap.put("OutputManagementPlan", MentionType.other);
