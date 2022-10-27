@@ -49,6 +49,12 @@ const RESEARCH_FIELDS = [
 
 const SPOTLIGHTS= [
   {
+    name: 'CrystFEL',
+    description: 'CrystFEL is a suite of programs to process data from "serial crystallography" experiments.',
+    image: '/images/crystfel.png',
+    link: '/software/crystfel'
+  },
+  {
     name: 'MassBank',
     description: 'MassBank is an open source mass spectral library for the identification of small chemical molecules of metabolomics, exposomics and environmental relevance.',
     image: 'https://hifis.net/assets/img/spotlights/massbank/Atrazine_Mass_Spectrum.png',
@@ -101,7 +107,7 @@ function LatestSpotlight({name, description, image, link}:
           alt={name}
           layout="fill"
           objectFit='cover'
-          objectPosition='top left'
+          objectPosition='50% 50%'
           className="group-hover:scale-105 transition duration-100"
           src={image}
         />

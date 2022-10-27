@@ -221,9 +221,7 @@ services:
       - auth
     volumes:
       - ./frontend:/app
-      # - ./deployment/hmz/styles:/app/public/styles
-      # - ./deployment/hmz/data:/app/public/data
-      # - ./deployment/hmz/images:/app/public/images
+      - ./deployment/helmholtz:/app/public
     networks:
       - net
     deploy:
