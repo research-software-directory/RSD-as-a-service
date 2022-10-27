@@ -39,7 +39,7 @@ type SoftwareIndexPageProps = {
 const pageTitle = `Software | ${app.title}`
 
 export default function SoftwareIndexPage(
-  {software = [], count, page, rows, keywords, search}: SoftwareIndexPageProps
+  {software = [], count, page, rows, keywords:selectedKeywords, search}: SoftwareIndexPageProps
 ) {
   const [openPanel, setOpenPanel] = useState(false)
 
@@ -111,6 +111,8 @@ export default function SoftwareIndexPage(
 
   function filterKeywords(keywords: string[]) {
     console.log('🎹 keywords to filter', keywords)
+    const url = softwareUrl({keywords})
+    router.push(url)
   }
 
   return (
@@ -153,7 +155,7 @@ export default function SoftwareIndexPage(
 
         {/* Filter panel*/}
         <div
-          className={`bg-black bg-opacity-0 pointer-events-none fixed top-0 left-0 h-screen w-screen z-10 ${openPanel && 'bg-opacity-40 pointer-events-auto'}`}
+          className={`bg-black bg-opacity-0 pointer-events-none fixed top-0 left-0 bottom-0 right-0 h-screen w-screen z-10 ${openPanel && 'bg-opacity-40 pointer-events-auto'}`}
           onClick={() => setOpenPanel(false)}>
         </div>
         <div className={`w-64 fixed -translate-x-72 bg-base-100 top-0 h-full transition-transform duration-300 p-4  
@@ -163,7 +165,7 @@ export default function SoftwareIndexPage(
           <div className="sm:hidden">
             <Button onClick={() => setOpenPanel(false)}>Close</Button>
           </div>
-          <FilterByKeywordsPanel keywords={keywords} onFilterChange={filterKeywords}/>
+          <FilterByKeywordsPanel keywords={selectedKeywords} onFilterChange={filterKeywords}/>
         </div>
 
         {/* Grid Software*/}

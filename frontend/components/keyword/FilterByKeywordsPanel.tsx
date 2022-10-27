@@ -3,7 +3,7 @@ import Autocomplete from '@mui/material/Autocomplete'
 
 export default function FilterByKeywordsPanel({keywords,onFilterChange}: any) {
 
-  let tags = ['keyword 1', 'keyword 2', 'keyword 3', 'keyword 4']
+  let tags = ['keyword 1 with a long text thel alkjd flakjsdf laskdjflaskdjf ', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3','keyword 1', 'keyword 2', 'keyword 3', 'keyword 4']
 
   function setTags(tag: string[]) {
     // todo sent to the parent component the trigger
@@ -34,7 +34,7 @@ export default function FilterByKeywordsPanel({keywords,onFilterChange}: any) {
       )}
     />
 
-      {tags.map((tag) => (<div key={tag} className="mb-3 cursor-pointer hover:text-primary">{tag}</div>))}
+      {/*{tags.map((tag) => (<div key={tag} className="mb-3 cursor-pointer hover:text-primary">{tag}</div>))}*/}
     </div>
   )
 }
