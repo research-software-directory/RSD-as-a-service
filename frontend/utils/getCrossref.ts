@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -57,7 +59,8 @@ export function crossrefItemToMentionItem(item: CrossrefSelectItem) {
     page: item.page ?? null,
     image_url: null,
     mention_type: crossrefToRsdType(item.type),
-    source: 'Crossref'
+    source: 'Crossref',
+    note: null
   }
   // debugger
   return mention

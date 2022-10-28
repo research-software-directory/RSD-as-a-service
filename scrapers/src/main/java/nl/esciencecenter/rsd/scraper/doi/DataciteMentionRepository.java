@@ -55,20 +55,33 @@ public class DataciteMentionRepository implements MentionRepository {
 	private static final Map<String, MentionType> dataciteTextTypeMap;
 
 	static {
-//		https://schema.datacite.org/meta/kernel-4.3/
+//		https://schema.datacite.org/meta/kernel-4.4/
 		dataciteTypeMap = new HashMap<>();
 		dataciteTypeMap.put("Audiovisual", MentionType.presentation);
+		dataciteTypeMap.put("Book", MentionType.book);
+		dataciteTypeMap.put("BookChapter", MentionType.bookSection);
 		dataciteTypeMap.put("Collection", MentionType.other);
+		dataciteTypeMap.put("ComputationalNotebook", MentionType.computerProgram);
+		dataciteTypeMap.put("ConferencePaper", MentionType.conferencePaper);
+		dataciteTypeMap.put("ConferenceProceeding", MentionType.conferencePaper);
 		dataciteTypeMap.put("DataPaper", MentionType.other);
 		dataciteTypeMap.put("Dataset", MentionType.dataset);
-		dataciteTypeMap.put("Event", MentionType.other);
+		dataciteTypeMap.put("Dissertation", MentionType.thesis);
+		dataciteTypeMap.put("Event", MentionType.workshop);
 		dataciteTypeMap.put("Image", MentionType.other);
 		dataciteTypeMap.put("InteractiveResource", MentionType.other);
+		dataciteTypeMap.put("Journal", MentionType.journalArticle);
+		dataciteTypeMap.put("JournalArticle", MentionType.journalArticle);
 		dataciteTypeMap.put("Model", MentionType.other);
+		dataciteTypeMap.put("OutputManagementPlan", MentionType.other);
+		dataciteTypeMap.put("PeerReview", MentionType.other);
+		dataciteTypeMap.put("Preprint", MentionType.other);
 		dataciteTypeMap.put("PhysicalObject", MentionType.other);
+		dataciteTypeMap.put("Report", MentionType.report);
 		dataciteTypeMap.put("Service", MentionType.other);
 		dataciteTypeMap.put("Software", MentionType.computerProgram);
 		dataciteTypeMap.put("Sound", MentionType.other);
+		dataciteTypeMap.put("Standard", MentionType.other);
 //		dataciteTypeMap.put("Text", MentionType.other);
 		dataciteTypeMap.put("Workflow", MentionType.other);
 		dataciteTypeMap.put("Other", MentionType.other);

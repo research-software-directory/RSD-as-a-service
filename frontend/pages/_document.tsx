@@ -8,6 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as React from 'react'
+import Script from 'next/script'
 import Document, {Html, Head, Main, NextScript, DocumentInitialProps} from 'next/document'
 import createEmotionServer from '@emotion/server/create-instance'
 import createEmotionCache from '../styles/createEmotionCache'
@@ -58,12 +59,16 @@ export default class MyDocument extends Document<RsdDocumentInitialProps>{
           {
             /* Matomo Tracking Code
                NOTE! we use nonce to cover security audit
+               we use next Script tag to load script async (non-blocking)
             */
             this.matomoUrl !== undefined && this.matomoUrl.length !== 0 &&
             this.matomoId !== undefined && this.matomoId.length !== 0 &&
-            <script
+            <Script
+              id="matomo-script"
+              strategy="lazyOnload"
               nonce={nonce}
-              dangerouslySetInnerHTML={{__html: `
+            >
+             {`
                 var _paq = window._paq = window._paq || [];
                 /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
                 _paq.push(['requireConsent']);
@@ -76,9 +81,8 @@ export default class MyDocument extends Document<RsdDocumentInitialProps>{
                   var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
                   g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
                 })();
-                `,
-              }}
-            />
+              `}
+            </Script>
           }
         </Head>
         <body className="dark">

@@ -22,6 +22,7 @@ CREATE TYPE mention_type AS ENUM (
 	'thesis',
 	'videoRecording',
 	'webpage',
+	'workshop',
 	'other'
 );
 
@@ -37,6 +38,7 @@ CREATE TABLE mention (
 	image_url VARCHAR(500) CHECK (image_url ~ '^https?://'),
 	mention_type mention_type NOT NULL,
 	source VARCHAR(50) NOT NULL,
+	note VARCHAR(500),
 	scraped_at TIMESTAMPTZ,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
