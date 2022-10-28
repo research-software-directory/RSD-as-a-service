@@ -52,8 +52,8 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
       className="fixed bottom-0 right-0 animated animatedFadeInUp fadeInUp"
       data-testid="cookie-consent-matomo"
     >
-      <div className="container mx-auto px-20 ">
-          <div className="border border-b-base-content border-t-4 border-x-4 border-b-0 w-96 bg-white shadow-lg p-6 rounded-tr-3xl">
+      <div className="container mx-auto sm:px-20">
+          <div className="border border-b-base-content border-t-4 border-x-4 border-b-0 bg-white shadow-lg p-6 rounded-tr-3xl sm:w-96">
             <div className="w-16 mx-auto relative  mb-3">
               <CookieTwoToneIcon className="scale-[2]  mb-3" color="primary" fontSize="large"/>
             </div>
