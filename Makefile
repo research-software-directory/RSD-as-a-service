@@ -62,7 +62,7 @@ data:
 	docker-compose down
 
 spotlights:
-	docker-compose run initial-spotlights
+	docker-compose run --rm initial-spotlights
 
 # Helper commands
 # -
