@@ -15,7 +15,6 @@ import AOS from 'aos'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import Link from 'next/link'
-import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 
 import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
@@ -25,27 +24,11 @@ import {OrganisationForOverview} from '~/types/Organisation'
 import 'aos/dist/aos.css'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
-import {getUrlFromLogoId} from '~/utils/editOrganisation'
-import {IconButton} from '@mui/material'
-import {ChevronLeft, ChevronRight} from '@mui/icons-material'
 import Image from 'next/image'
+import ParticipatingOrganisations from '~/components/home/helmholtz/ParticipatingOrganisations'
+import ResearchFieldCollection from './ResearchFieldCollection'
+import SpotlightSection from './SpotlightSection'
 /*! purgecss end ignore */
-
-type SpotlightDescription = {
-  name: string,
-  description: string,
-  image: string,
-  link: string
-}
-
-const RESEARCH_FIELDS = [
-  {key: 1, name: 'Energy', img: '/images/pexels-pixabay-414837.jpg'},
-  {key: 2, name: 'Earth & Environment', img: '/images/pexels-blue-ox-studio-695299.jpg'},
-  {key: 3, name: 'Health', img: '/images/pexels-rfstudio-3825529.jpg'},
-  {key: 4, name: 'Information', img: '/images/jj-ying-8bghKxNU1j0-unsplash.jpg'},
-  {key: 5, name: 'Aeronautics, Space and Transport', img: '/images/pexels-aleksejs-bergmanis-681335.jpg'},
-  {key: 6, name: 'Matter', img: '/images/desy_yulia-buchatskaya-hYvZHggmuc4-unsplash.jpg'},
-]
 
 const SPOTLIGHTS= [
   {
@@ -92,232 +75,6 @@ const SPOTLIGHTS= [
   }
 ]
 
-const HELMHOLTZ_BLUE_DARK = '#015aa0'
-
-function LatestSpotlight({name, description, image, link}:
-  {name:string, description:string, image:string, link: string}) {
-  return(
-    <Link
-    href={link}
-    passHref
-    >
-    <div className="w-full flex flex-row flex-wrap my-5 hover:bg-[#ecfbfd] hover:cursor-pointer relative group">
-      <div className="h-[20rem] md:h-[30rem] lg:h-[35rem] w-full md:w-2/3 overflow-hidden md:my-auto relative">
-        <Image
-          alt={name}
-          layout="fill"
-          objectFit='cover'
-          objectPosition='50% 50%'
-          className="group-hover:scale-105 transition duration-100"
-          src={image}
-        />
-      </div>
-      <div className="md:w-1/3 md:pl-8 mt-auto text-xl">
-        <div className="text-4xl py-2">{name}</div>
-        <p>{description}</p>
-      </div>
-    </div>
-  </Link>
-  )
-}
-
-function PreviousSpotlight({name, image, link, description, i}:
-  {name: string, image: string, link: string, description: string | '', i: number}) {
-
-  const MAX_CHARS = 150
-  function descriptionParagraph (description: string) {
-    if (description != '') {
-      if (description.length > MAX_CHARS) {
-        let description_trunc = description.substring(0, MAX_CHARS)
-        description = description_trunc.substring(0, description_trunc.lastIndexOf(' ')) + ' …'
-      }
-      return (
-        <p>{description}</p>
-      )
-    }
-  }
-
-  return (
-    <Link
-      href={link}
-      passHref
-    >
-      <div className="w-full sm:w-1/2 md:w-1/4 max-h-[15rem] py-[1rem] flex items-center relative group hover:bg-[#ecfbfd] hover:cursor-pointer">
-        <img
-          alt={name}
-          className="max-h-[10rem] max-w-[100%] mx-auto p-[1rem] group-hover:blur-sm group-hover:opacity-50 group-hover:grayscale"
-          src={image}
-        />
-        <div className="hidden group-hover:block group-hover:cursor-pointer absolute bottom-[1rem] left-[1rem]">
-          <h2>{name}</h2>
-          {descriptionParagraph(description)}
-        </div>
-      </div>
-    </Link>
-  )
-}
-
-function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
-  let i = 0
-  return (
-    <div className="w-full">
-      <LatestSpotlight
-        name={spotlights[0].name}
-        description={spotlights[0].description}
-        image={spotlights[0].image}
-        link={spotlights[0].link}
-      />
-      {/* <div className="w-full flex flex-row flex-wrap py-5">
-        {spotlights.slice(1, 5).map(spotlight => {
-          i++
-          let key = 'spotlight_' + i
-          return(
-            <PreviousSpotlight
-              key={key}
-              name={spotlight.name}
-              image={spotlight.image}
-              link={spotlight.link}
-              description={spotlight.description}
-              i={i}
-            />
-          )
-        })}
-      </div> */}
-    </div>
-  )
-}
-
-function ResearchField({background, name}:{background: string, name: string}) {
-
-  function mouseEnter(event: React.MouseEvent<HTMLAnchorElement>) {
-    if (!(event.target instanceof HTMLAnchorElement)) return
-    const background = event.target.dataset.background
-    event.target.parentElement!.parentElement!.style.backgroundImage = 'url("' + background + '")'
-  }
-
-  const uriComponent = `["${name}"]`
-  const link=`/software?&keywords=${encodeURIComponent(uriComponent)}&page=0&rows=12`
-
-  return (
-    <a className='underline hover:text-white' onMouseEnter={mouseEnter} data-background={background} href={link}>
-      {name}
-    </a>
-  )
-}
-
-function ResearchFields() {
-  return (
-    <div id="researchTopicBox" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10 md:gap-y-20 text-center text-3xl place-items-center py-16">
-      {
-        RESEARCH_FIELDS.map(item => {
-          return(
-            <ResearchField key={`researchfield-${item.key}`} background={item.img} name={item.name} />
-          )
-        })
-      }
-    </div>
-  )
-}
-
-function ParticipatingOrganisations(
-  {organisations, sbRef}: {organisations: OrganisationForOverview[], sbRef: any},
-) {
-  const commonButtonStyle = {
-    fontSize: '2.5rem',
-    color: HELMHOLTZ_BLUE_DARK,
-    backgroundColor: 'white',
-    position: 'absolute',
-    transform: 'translateY(-50%)',
-    top: '50%',
-    '&:hover': {
-      color: 'white',
-      backgroundColor: HELMHOLTZ_BLUE_DARK,
-    },
-  }
-
-  const buttonStyleLeft = {
-    ...commonButtonStyle,
-    left: '0px',
-  }
-
-  const buttonStyleRight = {
-    ...commonButtonStyle,
-    right: '0px',
-  }
-
-  const wrapperSelector = '#hgf-simplebar .simplebar-content-wrapper'
-
-  const moveRight = () => {
-    const container = document.querySelector(wrapperSelector)
-    if (container) {
-      container.scroll({
-        left: container.scrollLeft + 500,
-        top: 0,
-        behavior: 'smooth',
-      })
-    }
-  }
-
-  const moveLeft = () => {
-    const container = document.querySelector(wrapperSelector)
-    if (container) {
-      container.scroll({
-        left: container.scrollLeft - 500,
-        top: 0,
-        behavior: 'smooth',
-      })
-    }
-  }
-
-  return (
-    <div className="w-full h-full relative">
-      <SimpleBar
-        id="hgf-simplebar"
-        ref={sbRef}
-        autoHide={false}
-        forceVisible="x"
-        style={{maxHeight: 300}}
-      >
-        <div id="hgf-scroll-container">
-          {
-            organisations.map(item => {
-              return(
-                <Link
-                  key={`link_${item.name}`}
-                  href={`/organisations/${item.rsd_path}`}
-                  passHref
-                >
-                  <img
-                    alt={item.name}
-                    src={getUrlFromLogoId(item.logo_id) ?? undefined}
-                    className="p-10 hover:cursor-pointer"
-                  />
-                </Link>
-              )
-            })
-          }
-        </div>
-      </SimpleBar>
-
-      <IconButton
-        id="scrollLeftButton"
-        sx={buttonStyleLeft}
-        onClick={moveLeft}
-      >
-        <ChevronLeft fontSize="inherit" />
-      </IconButton>
-
-      <IconButton
-        id="scrollRightButton"
-        sx={buttonStyleRight}
-        onClick={moveRight}
-      >
-        <ChevronRight fontSize="inherit" />
-      </IconButton>
-    </div>
-  )
-}
-
 export default function Home() {
   const [organisations, setOrganisations] = useState<OrganisationForOverview[]>([])
   const simplebarRef = useRef()
@@ -356,16 +113,16 @@ export default function Home() {
     event.target.style.backgroundImage = 'url("/images/pexels-olena-bohovyk-3646172.jpg")'
   }
 
-
-  const handleClickOpen = () => {
-    const loginButton = document.querySelector('.rsd-login-button')
-    if (loginButton) {
-      const evt = new MouseEvent('click', {
-        bubbles: true
-      })
-      loginButton.dispatchEvent(evt)
-    }
-  }
+  // Only required if we have the "Add your software button"
+  // const handleClickOpen = () => {
+  //   const loginButton = document.querySelector('.rsd-login-button')
+  //   if (loginButton) {
+  //     const evt = new MouseEvent('click', {
+  //       bubbles: true
+  //     })
+  //     loginButton.dispatchEvent(evt)
+  //   }
+  // }
 
   const backgroundTransitionStyle = {
     'transition': 'background 0.3s ease 0.1s',
@@ -429,7 +186,7 @@ export default function Home() {
           <h2 className='text-5xl'>Software Spotlights</h2>
           <div className='text-2xl mt-2'>The latest outstanding software product developed in Helmholtz.</div>
           <div className="w-full">
-            <Spotlights spotlights={SPOTLIGHTS} />
+            <SpotlightSection spotlights={SPOTLIGHTS} />
           </div>
         </div>
 
@@ -442,7 +199,7 @@ export default function Home() {
             onMouseLeave={resetBackgroundImage}>
             <h2 className='text-5xl'>Discover software by research topic</h2>
             {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
-            <ResearchFields />
+            <ResearchFieldCollection />
           </div>
         </div>
 
