@@ -24,14 +24,14 @@ export default function ParticipatingOrganisations(
   ) {
     const commonButtonStyle = {
       fontSize: '2.5rem',
-      color: 'primary.contrastText',
+      color: 'text.primary',
       backgroundColor: 'white',
       position: 'absolute',
       transform: 'translateY(-50%)',
       top: '50%',
       '&:hover': {
         color: 'white',
-        backgroundColor: 'primary.contrastText',
+        backgroundColor: 'text.primary',
       },
     }
 
