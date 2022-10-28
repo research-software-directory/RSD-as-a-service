@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -30,6 +32,7 @@ export type MentionItemProps = {
   // is_featured?: boolean
   mention_type: MentionTypeKeys | null
   source: string
+  note: string | null
 }
 
 export type MentionByType = {
@@ -47,4 +50,4 @@ export type MentionForProject = MentionItemProps & {
   impact_for_project?: any[]
 }
 
-export const mentionColumns ='id,doi,url,title,authors,publisher,publication_year,page,image_url,mention_type,source'
+export const mentionColumns ='id,doi,url,title,authors,publisher,publication_year,page,image_url,mention_type,source,note'

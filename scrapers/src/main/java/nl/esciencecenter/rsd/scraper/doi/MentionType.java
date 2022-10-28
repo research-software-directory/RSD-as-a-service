@@ -22,5 +22,6 @@ public enum MentionType {
 	thesis,
 	videoRecording,
 	webpage,
+	workshop,
 	other
 }

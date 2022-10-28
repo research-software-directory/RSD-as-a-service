@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -84,6 +86,17 @@ export const mentionModal = {
       pattern: {
         value: /^https?:\/\/.+\..+/,
         message: 'Url should start with http(s):// have at least one dot (.)'
+      }
+    }
+  },
+  note: {
+    label: 'Note',
+    help: 'Add a custom note',
+    validation: {
+      required: false,
+      maxLength: {
+        value: 500,
+        message: 'Maximum length is 500'
       }
     }
   },
@@ -190,7 +203,7 @@ export const mentionType = {
   interview: {
     key: 'interview',
     plural: 'Interviews',
-    singular: 'Interviews',
+    singular: 'Interview',
     manual: true
   },
   journalArticle: {
@@ -220,7 +233,7 @@ export const mentionType = {
   report: {
     key: 'report',
     plural: 'Reports',
-    singular: 'Reports',
+    singular: 'Report',
     manual: true
   },
   thesis: {
@@ -239,6 +252,12 @@ export const mentionType = {
     key: 'webpage',
     plural: 'Webpages',
     singular: 'Webpage',
+    manual: true
+  },
+  workshop: {
+    key: 'workshop',
+    plural: 'Workshops',
+    singular: 'Workshop',
     manual: true
   },
   other: {

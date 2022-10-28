@@ -11,6 +11,7 @@ import MentionAuthors from './MentionAuthors'
 import MentionPublisherItem from './MentionPublisherItem'
 import MentionDoi from './MentionDoi'
 import {MentionTitle} from './MentionItemBase'
+import MentionNote from './MentionNote'
 
 export default function MentionViewItem({item, pos}: {item: MentionItemProps, pos:number}) {
 
@@ -39,6 +40,7 @@ export default function MentionViewItem({item, pos}: {item: MentionItemProps, po
             doi={item?.doi}
             className="text-sm"
           />
+          <MentionNote note={item.note} />
         </div>
         <div className="flex justify-center items-center">
           {item?.url ? <LinkIcon /> : null}

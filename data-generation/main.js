@@ -37,6 +37,7 @@ function generateMentions(amountExtra = 10) {
 		'thesis',
 		'videoRecording',
 		'webpage',
+		'workshop',
 		'other',
 	];
 
@@ -55,6 +56,7 @@ function generateMentions(amountExtra = 10) {
 			image_url: null,
 			mention_type: faker.helpers.arrayElement(mentionTypes),
 			source: 'faker',
+			note: faker.helpers.maybe(() => faker.company.catchPhrase(), 0.3) ?? null
 		});
 	}
 
@@ -70,6 +72,7 @@ function generateMentions(amountExtra = 10) {
 			image_url: null,
 			mention_type: faker.helpers.arrayElement(mentionTypes),
 			source: 'faker',
+			note: faker.helpers.maybe(() => faker.company.catchPhrase(), 0.3) ?? null
 		});
 	}
 
