@@ -15,7 +15,6 @@ import AOS from 'aos'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import Link from 'next/link'
-import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 
 import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
@@ -25,10 +24,9 @@ import {OrganisationForOverview} from '~/types/Organisation'
 import 'aos/dist/aos.css'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
-import {getUrlFromLogoId} from '~/utils/editOrganisation'
-import {IconButton} from '@mui/material'
-import {ChevronLeft, ChevronRight} from '@mui/icons-material'
 import Image from 'next/image'
+import ParticipatingOrganisations from '~/components/home/helmholtz/ParticipatingOrganisations'
+import LatestSpotlight from '~/components/home/helmholtz/LatestSpotlight'
 /*! purgecss end ignore */
 
 type SpotlightDescription = {
@@ -91,35 +89,6 @@ const SPOTLIGHTS= [
     link: '/software/palladio'
   }
 ]
-
-const HELMHOLTZ_BLUE_DARK = '#015aa0'
-
-function LatestSpotlight({name, description, image, link}:
-  {name:string, description:string, image:string, link: string}) {
-  return(
-    <Link
-    href={link}
-    passHref
-    >
-    <div className="w-full flex flex-row flex-wrap my-5 hover:bg-[#ecfbfd] hover:cursor-pointer relative group">
-      <div className="h-[20rem] md:h-[30rem] lg:h-[35rem] w-full md:w-2/3 overflow-hidden md:my-auto relative">
-        <Image
-          alt={name}
-          layout="fill"
-          objectFit='cover'
-          objectPosition='50% 50%'
-          className="group-hover:scale-105 transition duration-100"
-          src={image}
-        />
-      </div>
-      <div className="md:w-1/3 md:pl-8 mt-auto text-xl">
-        <div className="text-4xl py-2">{name}</div>
-        <p>{description}</p>
-      </div>
-    </div>
-  </Link>
-  )
-}
 
 function PreviousSpotlight({name, image, link, description, i}:
   {name: string, image: string, link: string, description: string | '', i: number}) {
@@ -215,105 +184,6 @@ function ResearchFields() {
           )
         })
       }
-    </div>
-  )
-}
-
-function ParticipatingOrganisations(
-  {organisations, sbRef}: {organisations: OrganisationForOverview[], sbRef: any},
-) {
-  const commonButtonStyle = {
-    fontSize: '2.5rem',
-    color: HELMHOLTZ_BLUE_DARK,
-    backgroundColor: 'white',
-    position: 'absolute',
-    transform: 'translateY(-50%)',
-    top: '50%',
-    '&:hover': {
-      color: 'white',
-      backgroundColor: HELMHOLTZ_BLUE_DARK,
-    },
-  }
-
-  const buttonStyleLeft = {
-    ...commonButtonStyle,
-    left: '0px',
-  }
-
-  const buttonStyleRight = {
-    ...commonButtonStyle,
-    right: '0px',
-  }
-
-  const wrapperSelector = '#hgf-simplebar .simplebar-content-wrapper'
-
-  const moveRight = () => {
-    const container = document.querySelector(wrapperSelector)
-    if (container) {
-      container.scroll({
-        left: container.scrollLeft + 500,
-        top: 0,
-        behavior: 'smooth',
-      })
-    }
-  }
-
-  const moveLeft = () => {
-    const container = document.querySelector(wrapperSelector)
-    if (container) {
-      container.scroll({
-        left: container.scrollLeft - 500,
-        top: 0,
-        behavior: 'smooth',
-      })
-    }
-  }
-
-  return (
-    <div className="w-full h-full relative">
-      <SimpleBar
-        id="hgf-simplebar"
-        ref={sbRef}
-        autoHide={false}
-        forceVisible="x"
-        style={{maxHeight: 300}}
-      >
-        <div id="hgf-scroll-container">
-          {
-            organisations.map(item => {
-              return(
-                <Link
-                  key={`link_${item.name}`}
-                  href={`/organisations/${item.rsd_path}`}
-                  passHref
-                >
-                  <img
-                    alt={item.name}
-                    src={getUrlFromLogoId(item.logo_id) ?? undefined}
-                    className="p-10 hover:cursor-pointer"
-                  />
-                </Link>
-              )
-            })
-          }
-        </div>
-      </SimpleBar>
-
-      <IconButton
-        id="scrollLeftButton"
-        sx={buttonStyleLeft}
-        onClick={moveLeft}
-      >
-        <ChevronLeft fontSize="inherit" />
-      </IconButton>
-
-      <IconButton
-        id="scrollRightButton"
-        sx={buttonStyleRight}
-        onClick={moveRight}
-      >
-        <ChevronRight fontSize="inherit" />
-      </IconButton>
     </div>
   )
 }
