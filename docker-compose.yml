@@ -239,6 +239,7 @@ services:
 
   initial-spotlights:
     image: ghcr.io/hifis-net/rsd-spotlight-migration:latest
+    pull_policy: always
     environment:
       - POSTGREST_URL
       - PGRST_JWT_SECRET

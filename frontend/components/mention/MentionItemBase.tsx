@@ -8,6 +8,7 @@ import {ReactNode} from 'react'
 import {MentionItemProps} from '~/types/Mention'
 import MentionAuthors from './MentionAuthors'
 import MentionDoi from './MentionDoi'
+import MentionNote from './MentionNote'
 import MentionPublisherItem from './MentionPublisherItem'
 
 export type MentionItemRole = 'list'|'find'|'view'
@@ -69,6 +70,7 @@ export default function MentionItemBase({item,pos,nav,type,role='find'}:MentionI
         className="text-sm"
         role={role}
       />
+      <MentionNote note={item.note} />
     </article>
   )
 }
