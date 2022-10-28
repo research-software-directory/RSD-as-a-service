@@ -26,16 +26,9 @@ import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import Image from 'next/image'
 import ParticipatingOrganisations from '~/components/home/helmholtz/ParticipatingOrganisations'
-import LatestSpotlight from '~/components/home/helmholtz/LatestSpotlight'
 import ResearchFieldCollection from './ResearchFieldCollection'
+import SpotlightSection from './SpotlightSection'
 /*! purgecss end ignore */
-
-type SpotlightDescription = {
-  name: string,
-  description: string,
-  image: string,
-  link: string
-}
 
 const SPOTLIGHTS= [
   {
@@ -82,72 +75,6 @@ const SPOTLIGHTS= [
   }
 ]
 
-function PreviousSpotlight({name, image, link, description, i}:
-  {name: string, image: string, link: string, description: string | '', i: number}) {
-
-  const MAX_CHARS = 150
-  function descriptionParagraph (description: string) {
-    if (description != '') {
-      if (description.length > MAX_CHARS) {
-        let description_trunc = description.substring(0, MAX_CHARS)
-        description = description_trunc.substring(0, description_trunc.lastIndexOf(' ')) + ' …'
-      }
-      return (
-        <p>{description}</p>
-      )
-    }
-  }
-
-  return (
-    <Link
-      href={link}
-      passHref
-    >
-      <div className="w-full sm:w-1/2 md:w-1/4 max-h-[15rem] py-[1rem] flex items-center relative group hover:bg-[#ecfbfd] hover:cursor-pointer">
-        <img
-          alt={name}
-          className="max-h-[10rem] max-w-[100%] mx-auto p-[1rem] group-hover:blur-sm group-hover:opacity-50 group-hover:grayscale"
-          src={image}
-        />
-        <div className="hidden group-hover:block group-hover:cursor-pointer absolute bottom-[1rem] left-[1rem]">
-          <h2>{name}</h2>
-          {descriptionParagraph(description)}
-        </div>
-      </div>
-    </Link>
-  )
-}
-
-function Spotlights({spotlights}:{spotlights: Array<SpotlightDescription>}) {
-  let i = 0
-  return (
-    <div className="w-full">
-      <LatestSpotlight
-        name={spotlights[0].name}
-        description={spotlights[0].description}
-        image={spotlights[0].image}
-        link={spotlights[0].link}
-      />
-      {/* <div className="w-full flex flex-row flex-wrap py-5">
-        {spotlights.slice(1, 5).map(spotlight => {
-          i++
-          let key = 'spotlight_' + i
-          return(
-            <PreviousSpotlight
-              key={key}
-              name={spotlight.name}
-              image={spotlight.image}
-              link={spotlight.link}
-              description={spotlight.description}
-              i={i}
-            />
-          )
-        })}
-      </div> */}
-    </div>
-  )
-}
-
 export default function Home() {
   const [organisations, setOrganisations] = useState<OrganisationForOverview[]>([])
   const simplebarRef = useRef()
@@ -186,16 +113,16 @@ export default function Home() {
     event.target.style.backgroundImage = 'url("/images/pexels-olena-bohovyk-3646172.jpg")'
   }
 
-
-  const handleClickOpen = () => {
-    const loginButton = document.querySelector('.rsd-login-button')
-    if (loginButton) {
-      const evt = new MouseEvent('click', {
-        bubbles: true
-      })
-      loginButton.dispatchEvent(evt)
-    }
-  }
+  // Only required if we have the "Add your software button"
+  // const handleClickOpen = () => {
+  //   const loginButton = document.querySelector('.rsd-login-button')
+  //   if (loginButton) {
+  //     const evt = new MouseEvent('click', {
+  //       bubbles: true
+  //     })
+  //     loginButton.dispatchEvent(evt)
+  //   }
+  // }
 
   const backgroundTransitionStyle = {
     'transition': 'background 0.3s ease 0.1s',
@@ -259,7 +186,7 @@ export default function Home() {
           <h2 className='text-5xl'>Software Spotlights</h2>
           <div className='text-2xl mt-2'>The latest outstanding software product developed in Helmholtz.</div>
           <div className="w-full">
-            <Spotlights spotlights={SPOTLIGHTS} />
+            <SpotlightSection spotlights={SPOTLIGHTS} />
           </div>
         </div>
 
