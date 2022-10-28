@@ -6,7 +6,6 @@
 
 /* eslint-disable @next/next/no-img-element */
 import React, {useEffect, useState, useRef} from 'react'
-import Link from 'next/link'
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 
@@ -14,9 +13,9 @@ import {OrganisationForOverview} from '~/types/Organisation'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
-import {getUrlFromLogoId} from '~/utils/editOrganisation'
 import {IconButton} from '@mui/material'
 import {ChevronLeft, ChevronRight} from '@mui/icons-material'
+import HorizontalScrollContainer from './HorizontalScrollContainer'
 /*! purgecss end ignore */
 
 export default function ParticipatingOrganisations(
@@ -24,14 +23,14 @@ export default function ParticipatingOrganisations(
   ) {
     const commonButtonStyle = {
       fontSize: '2.5rem',
-      color: 'primary.contrastText',
+      color: 'text.primary',
       backgroundColor: 'white',
       position: 'absolute',
       transform: 'translateY(-50%)',
       top: '50%',
       '&:hover': {
         color: 'white',
-        backgroundColor: 'primary.contrastText',
+        backgroundColor: 'text.primary',
       },
     }
 
@@ -76,27 +75,10 @@ export default function ParticipatingOrganisations(
           ref={sbRef}
           autoHide={false}
           forceVisible="x"
-          style={{maxHeight: 300}}
         >
-          <div id="hgf-scroll-container">
-            {
-              organisations.map(item => {
-                return(
-                  <Link
-                    key={`link_${item.name}`}
-                    href={`/organisations/${item.rsd_path}`}
-                    passHref
-                  >
-                    <img
-                      alt={item.name}
-                      src={getUrlFromLogoId(item.logo_id) ?? undefined}
-                      className="p-10 hover:cursor-pointer"
-                    />
-                  </Link>
-                )
-              })
-            }
-          </div>
+          <HorizontalScrollContainer
+            organisations={organisations}
+          />
         </SimpleBar>
 
         <IconButton
