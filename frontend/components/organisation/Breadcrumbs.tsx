@@ -27,8 +27,9 @@ export default function Breadcrumbs({segments}:
           <Link
             href={item.path}
             key={item.path ?? item.label}
+            className="uppercase text-xs tracking-widest"
           >
-            <a className="uppercase text-xs tracking-widest">{item.label}</a>
+            {item.label}
           </Link>
         )
       } else {

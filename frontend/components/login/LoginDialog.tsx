@@ -61,7 +61,6 @@ export default function LoginDialog({providers,open, onClose}: LoginDialogProps)
                   href={provider.redirectUrl}
                   passHref
                 >
-                <a>
                   <ListItem
                     alignItems="flex-start"
                     className="rounded-[0.25rem] border outline-1 my-2"
@@ -91,7 +90,6 @@ export default function LoginDialog({providers,open, onClose}: LoginDialogProps)
                       }}
                     />
                   </ListItem>
-                </a>
                 </Link>
               )
             })}

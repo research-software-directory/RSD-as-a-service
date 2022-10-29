@@ -14,31 +14,31 @@ export default function MentionItemFeatured({mention}: { mention: MentionItemPro
   if (!mention || mention.url===null) return null
 
   return (
-    <Link href={mention.url ?? ''} passHref>
-      <a data-testid="mention-is-featured"
-        target="_blank"
-        rel="noreferrer"
-      >
-        <article className="mb-8 md:flex">
-          <ImageAsBackground className="flex-1 h-[17rem]" src={mention.image_url} alt={mention.title ?? 'image'} />
-          <div className="flex flex-col py-4 px-0 md:py-0 md:px-6 md:flex-1 lg:flex-[2] text-primary-content">
-              <h3 className="text-[2rem] mb-4 text-primary leading-10">
-                {mention.title}
-              </h3>
-            {/* <div>By {mention.authors}</div> */}
-            <MentionAuthors
-              authors={mention.authors}
-              className="text-md"
-            />
-            <MentionPublisherItem
-              publisher={mention?.publisher ?? ''}
-              page={mention?.page ?? ''}
-              publication_year={mention.publication_year}
-              className="text-md py-2"
-            />
-          </div>
-        </article>
-      </a>
+    <Link href={mention.url ?? ''}
+      data-testid="mention-is-featured"
+      target="_blank"
+      rel="noreferrer"
+      passHref
+    >
+      <article className="mb-8 md:flex">
+        <ImageAsBackground className="flex-1 h-[17rem]" src={mention.image_url} alt={mention.title ?? 'image'} />
+        <div className="flex flex-col py-4 px-0 md:py-0 md:px-6 md:flex-1 lg:flex-[2] text-primary-content">
+            <h3 className="text-[2rem] mb-4 text-primary leading-10">
+              {mention.title}
+            </h3>
+          {/* <div>By {mention.authors}</div> */}
+          <MentionAuthors
+            authors={mention.authors}
+            className="text-md"
+          />
+          <MentionPublisherItem
+            publisher={mention?.publisher ?? ''}
+            page={mention?.page ?? ''}
+            publication_year={mention.publication_year}
+            className="text-md py-2"
+          />
+        </div>
+      </article>
     </Link>
   )
 }

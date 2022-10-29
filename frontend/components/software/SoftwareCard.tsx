@@ -74,48 +74,48 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
   }
 
   return (
-    <Link href={href} passHref>
+    <Link href={href}
+      className="flex flex-col h-full"
+      passHref>
       {/* anchor tag MUST be first element after Link component */}
-      <a className="flex flex-col h-full">
-        <article className={`flex-1 flex flex-col bg-base-200 text-content ${opacity} hover:bg-secondary group`}>
-          <div className="relative flex">
-            <h2
-              title={brand_name}
-              className="p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white"
-            >
-              {renderPublished()} {brand_name}
-            </h2>
-            <div
-              className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-base text-[1.5rem] absolute top-0 right-0 group-hover:text-secondary">
-              {getInitals()}
-            </div>
+      <article className={`flex-1 flex flex-col bg-base-200 text-content ${opacity} hover:bg-secondary group`}>
+        <div className="relative flex">
+          <h2
+            title={brand_name}
+            className="p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white"
+          >
+            {renderPublished()} {brand_name}
+          </h2>
+          <div
+            className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-base text-[1.5rem] absolute top-0 right-0 group-hover:text-secondary">
+            {getInitals()}
           </div>
-          <p className="flex-1 p-4 overflow-auto max-h-[9.75rem] text-gray-800 group-hover:text-white">
-            {short_statement}
-          </p>
-          <div className="flex justify-between p-4 text-sm group-hover:text-white">
-            <span className="last-update">
-              Updated {getTimeAgoSince(today, updated_at)}
-            </span>
-            <div className="flex gap-2">
-            {mention_cnt &&
-              <Tooltip title={mentionCntMessage()} placement="top">
-                <span>
-                  <InsertCommentOutlinedIcon /> {mention_cnt}
-                </span>
-              </Tooltip>
-            }
-            {contributor_cnt &&
-              <Tooltip title={contributorsMessage()} placement="top">
-                <span>
-                  <PeopleAltOutlinedIcon /> {contributor_cnt}
-                </span>
-              </Tooltip>
-            }
-            </div>
+        </div>
+        <p className="flex-1 p-4 overflow-auto max-h-[9.75rem] text-gray-800 group-hover:text-white">
+          {short_statement}
+        </p>
+        <div className="flex justify-between p-4 text-sm group-hover:text-white">
+          <span className="last-update">
+            Updated {getTimeAgoSince(today, updated_at)}
+          </span>
+          <div className="flex gap-2">
+          {mention_cnt &&
+            <Tooltip title={mentionCntMessage()} placement="top">
+              <span>
+                <InsertCommentOutlinedIcon /> {mention_cnt}
+              </span>
+            </Tooltip>
+          }
+          {contributor_cnt &&
+            <Tooltip title={contributorsMessage()} placement="top">
+              <span>
+                <PeopleAltOutlinedIcon /> {contributor_cnt}
+              </span>
+            </Tooltip>
+          }
           </div>
-        </article>
-      </a>
+        </div>
+      </article>
     </Link>
   )
 }

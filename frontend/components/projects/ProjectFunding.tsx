@@ -33,13 +33,12 @@ export default function ProjectFunding({grant_id, fundingOrganisations=[]}:
               <Link
                 key={link}
                 href={link}
+                target="_self"
                 passHref
               >
-                <a target="_self">
-                  <li className="text-sm py-1">
-                    {item.name}
-                  </li>
-                </a>
+                <li className="text-sm py-1">
+                  {item.name}
+                </li>
               </Link>
               )
           })}

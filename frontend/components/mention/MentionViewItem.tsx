@@ -51,10 +51,8 @@ export default function MentionViewItem({item, pos}: {item: MentionItemProps, po
 
   if (item?.url) {
     return (
-      <Link href={item.url} passHref>
-        <a target="_blank" rel="noreferrer">
-          {renderItemBody()}
-        </a>
+      <Link href={item.url} passHref target="_blank" rel="noreferrer">
+        {renderItemBody()}
       </Link>
     )
   }

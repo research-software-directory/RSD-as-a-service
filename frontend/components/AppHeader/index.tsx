@@ -60,11 +60,9 @@ export default function AppHeader() {
       <div
         className="flex-1 flex flex-col px-4 xl:flex-row items-start lg:container lg:mx-auto">
         <div className="w-full flex-1 flex items-center justify-between">
-          <Link href="/" passHref>
-            <a className="hover:text-inherit">
-              <LogoApp className="hidden 2xl:block"/>
-              <LogoAppSmall className="block 2xl:hidden"/>
-            </a>
+          <Link href="/" passHref className="hover:text-inherit">
+            <LogoApp className="hidden 2xl:block"/>
+            <LogoAppSmall className="block 2xl:hidden"/>
           </Link>
 
           <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
@@ -73,10 +71,8 @@ export default function AppHeader() {
           <div
             className="justify-center xl:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
             {menuItems.map(item =>
-              <Link key={item.path} href={item.path || ''}>
-                <a className={`${activePath === item.path ? 'nav-active' : ''}`}>
-                  {item.label}
-                </a>
+              <Link key={item.path} href={item.path || ''} className={`${activePath === item.path ? 'nav-active' : ''}`}>
+                {item.label}
               </Link>
             )}
           </div>
@@ -133,10 +129,8 @@ export default function AppHeader() {
               >
                 {menuItems.map(item =>
                   <MenuItem onClick={handleCloseResponsiveMenu} key={item.path}>
-                    <Link href={item.path || ''}>
-                      <a className={`${activePath === item.path && 'nav-active'}`}>
-                        {item.label}
-                      </a>
+                    <Link href={item.path || ''} className={`${activePath === item.path && 'nav-active'}`}>
+                      {item.label}
                     </Link>
                   </MenuItem>
                 )}

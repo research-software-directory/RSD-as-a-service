@@ -35,8 +35,8 @@ export default function LoginFailed() {
           {errorMessage}
         </p>}
         <Link href="/" passHref>
-          <a>Return to home page</a>
-          </Link>
+          Go home
+        </Link>
       </div>
     </ContentInTheMiddle>
   )

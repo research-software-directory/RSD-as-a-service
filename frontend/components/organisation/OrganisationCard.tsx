@@ -30,66 +30,62 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
       href={`/organisations/${organisation.rsd_path}`}
       passHref
     >
-      <a
-        className="h-full relative"
-      >
-        <article
-          className="flex flex-col border h-full min-h-[16rem] overflow-hidden">
-          {/* <h2 className='h-[5rem]'>{organisation.name}</h2> */}
-          <div className="pl-8 flex">
-            <SingleLineTitle
-              title={organisation.name}
-              sx={{
-                padding: '1.5rem 0rem',
-                // place for verified
-                margin: organisation.is_tenant ? '0rem 6rem 0rem 0rem' : '0rem 2rem 0rem 0rem',
-              }}
-            >
-              {organisation.name}
-            </SingleLineTitle>
-            {
-              organisation.is_tenant && <span title="Officially registered organisation">
-                <VerifiedIcon
-                  sx={{
-                    position: 'absolute',
-                    right: '0.75rem',
-                    top: '0.75rem',
-                    width: '4rem',
-                    height: '4rem',
-                    opacity: 0.4,
-                    color: 'primary.main'
-                  }}
-              /></span>
-            }
-          </div>
-          <div className="flex-1 grid grid-cols-2 md:grid-cols-[1fr,2fr] px-8 mb-4 overflow-hidden">
-            <div className="min-w-[8rem]">
-              <LogoAvatar
-                name={organisation.name ?? ''}
-                src={getUrlFromLogoId(organisation.logo_id) ?? undefined}
+      <article
+        className="flex flex-col border h-full min-h-[16rem] overflow-hidden">
+        {/* <h2 className='h-[5rem]'>{organisation.name}</h2> */}
+        <div className="pl-8 flex">
+          <SingleLineTitle
+            title={organisation.name}
+            sx={{
+              padding: '1.5rem 0rem',
+              // place for verified
+              margin: organisation.is_tenant ? '0rem 6rem 0rem 0rem' : '0rem 2rem 0rem 0rem',
+            }}
+          >
+            {organisation.name}
+          </SingleLineTitle>
+          {
+            organisation.is_tenant && <span title="Officially registered organisation">
+              <VerifiedIcon
                 sx={{
-                  '& img': {
-                    height: 'auto',
-                    maxHeight: '10rem',
-                    width: 'auto',
-                    maxWidth: '100%'
-                  }
+                  position: 'absolute',
+                  right: '0.75rem',
+                  top: '0.75rem',
+                  width: '4rem',
+                  height: '4rem',
+                  opacity: 0.4,
+                  color: 'primary.main'
                 }}
-              />
-            </div>
-            <div className="flex-1 flex justify-center items-center md:justify-end pl-4">
-              <StatCounter
-                label={label}
-                value={count}
-              />
-              <StatCounter
-                label={'research projects'}
-                value={organisation.project_cnt ?? 0}
-              />
-            </div>
+            /></span>
+          }
+        </div>
+        <div className="flex-1 grid grid-cols-2 md:grid-cols-[1fr,2fr] px-8 mb-4 overflow-hidden">
+          <div className="min-w-[8rem]">
+            <LogoAvatar
+              name={organisation.name ?? ''}
+              src={getUrlFromLogoId(organisation.logo_id) ?? undefined}
+              sx={{
+                '& img': {
+                  height: 'auto',
+                  maxHeight: '10rem',
+                  width: 'auto',
+                  maxWidth: '100%'
+                }
+              }}
+            />
           </div>
-        </article>
-      </a>
+          <div className="flex-1 flex justify-center items-center md:justify-end pl-4">
+            <StatCounter
+              label={label}
+              value={count}
+            />
+            <StatCounter
+              label={'research projects'}
+              value={organisation.project_cnt ?? 0}
+            />
+          </div>
+        </div>
+      </article>
     </Link>
   )
 }

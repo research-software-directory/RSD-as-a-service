@@ -55,43 +55,44 @@ export default function ProjectCard(
   }
 
   return (
-    <Link href={projectUrl()} passHref>
-      <a className={`flex flex-col h-full bg-base-200 text-content ${opacity} hover:bg-secondary hover:text-white`}>
-        <article className="flex flex-1 h-full px-4 gap-4 overflow-hidden">
-          <section
-            title={subtitle ?? title}
-            className="flex-[2] py-4 h-full"
-            >
-            <ImageAsBackground
-              alt={title}
-              src={getImageUrl(image_id)}
-              bgSize={image_contain ? 'contain' : 'cover'}
-              bgPosition={image_contain ? 'center' : 'top center'}
-              className="flex-1 h-full"
-              noImgMsg='no image'
-            />
-          </section>
-          <section className="flex-[3] flex flex-col py-4">
-            <h2
-              title={title}
-              className={`max-h-[6rem] overflow-clip ${titleMargin}`}>
-              {renderIcon()} {title}
-            </h2>
+    <Link href={projectUrl()}
+      className={`flex flex-col h-full bg-base-200 text-content ${opacity} hover:bg-secondary hover:text-white`}
+      passHref
+    >
+      <article className="flex flex-1 h-full px-4 overflow-hidden">
+        <section
+          title={subtitle ?? title}
+          className="py-4 h-full md:w-[13rem]"
+          >
+          <ImageAsBackground
+            alt={title}
+            src={getImageUrl(image_id)}
+            bgSize={image_contain ? 'contain' : 'cover'}
+            bgPosition={image_contain ? 'center' : 'top center'}
+            className="flex-1 h-full"
+            noImgMsg='no image'
+          />
+        </section>
+        <section className="flex flex-col flex-1 py-4 md:pl-6">
+          <h2
+            title={title}
+            className={`max-h-[6rem] overflow-clip ${titleMargin}`}>
+            {renderIcon()} {title}
+          </h2>
 
-            <p className="flex-1 my-4 overflow-auto">
-              {subtitle}
-            </p>
-            <div className="flex justify-between text-sm">
-              <span className="last-update">
-                Updated {getTimeAgoSince(today,updated_at)}
-              </span>
-              <div className="flex items-start justify-center">
-                {current_state ?? 'Starting'}
-              </div>
+          <p className="flex-1 py-4 overflow-auto">
+            {subtitle}
+          </p>
+          <div className="flex justify-between text-sm">
+            <span className="last-update">
+              Updated {getTimeAgoSince(today,updated_at)}
+            </span>
+            <div className="flex items-start justify-center">
+              {current_state ?? 'Starting'}
             </div>
-          </section>
-        </article>
-      </a>
+          </div>
+        </section>
+      </article>
     </Link>
   )
 }
