@@ -5,7 +5,6 @@
 
 import {render, screen, waitFor} from '@testing-library/react'
 import {AuthProvider, useAuth, REFRESH_MARGIN, getSessionSeverSide, Session} from './index'
-import * as refreshSession from './refreshSession'
 
 const session:Session = {
   user: null,
@@ -13,11 +12,11 @@ const session:Session = {
   status: 'loading'
 }
 
-// mock refreshSession call
-const mockRefreshSession = jest.spyOn(refreshSession, 'refreshSession')
-mockRefreshSession.mockImplementation(() => {
-  // console.log('Calling mockRefreshSession')
-  return Promise.resolve(session)
+const mockRefreshSession = jest.fn(()=>Promise.resolve(session))
+jest.mock('./refreshSession', () => {
+  return {
+    refreshSession: jest.fn(()=> mockRefreshSession())
+  }
 })
 
 function ChildComponent() {

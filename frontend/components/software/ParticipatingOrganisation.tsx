@@ -24,12 +24,11 @@ export default function OrganisationItem({rsd_path, name, website, logo_url}: Pa
     // internal RSD link to organisation
     url = `/organisations/${rsd_path}`
     return (
-      <Link href={url} passHref>
-        <a
-          title={name}
-          className="flex items-center" rel="noreferrer">
-          {renderLogo()}
-        </a>
+      <Link href={url}
+        title={name}
+        className="flex items-center" rel="noreferrer"
+        passHref>
+        {renderLogo()}
       </Link>
     )
   }
@@ -38,7 +37,8 @@ export default function OrganisationItem({rsd_path, name, website, logo_url}: Pa
     // organisation website
     url = website
     return (
-      <a href={url} target="_blank"
+      <a href={url}
+        target="_blank"
         title={name}
         className="flex items-center" rel="noreferrer">
         {renderLogo()}

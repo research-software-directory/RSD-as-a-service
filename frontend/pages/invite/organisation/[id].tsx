@@ -41,9 +41,7 @@ export default function InviteOrganisationMaintainer({organisationInfo, error}:
             You are now a maintainer of {organisationInfo?.name ?? 'missing'}!
             &nbsp;
             <Link href={`/organisations/${organisationInfo?.slug ?? 'missing'}`}>
-              <a>
-                Open organisation page
-              </a>
+              Open organisation page
             </Link>
           </h2>
         </ContentInTheMiddle>

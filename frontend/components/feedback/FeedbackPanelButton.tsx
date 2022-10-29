@@ -10,8 +10,8 @@ import WebIcon from '@mui/icons-material/Web'
 import Divider from '@mui/material/Divider'
 import getBrowser from '~/utils/getBrowser'
 
-export default function FeedbackPanelButton(
-  {feedback_email, issues_page_url, closeFeedbackPanel}: {feedback_email: string, issues_page_url:string, closeFeedbackPanel?: () => void }
+export default function FeedbackPanelButton({feedback_email, issues_page_url, closeFeedbackPanel}:
+  { feedback_email: string, issues_page_url: string, closeFeedbackPanel?: () => void }
 ) {
 
   const [text, setText] = useState('')
@@ -57,7 +57,7 @@ User Agent: ${navigator.userAgent}`
   return (
     <div>
       {/* If desktop size */}
-      <button className="hidden md:flex flex gap-2 items-center no-underline"
+      <button className="hidden md:flex gap-2 items-center no-underline"
               aria-describedby="feedback panel"
               onClick={handleClickOpen}
       >

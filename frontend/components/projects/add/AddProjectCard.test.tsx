@@ -11,20 +11,22 @@ import AddProjectCard from './AddProjectCard'
 import {addConfig} from './addProjectConfig'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 
-// mock addSoftware
-import * as editProject from '../../../utils/editProject'
-
-// mock addProject
-const mockAddProject = jest.spyOn(editProject, 'addProject')
-  .mockImplementation((props) => Promise.resolve({status: 201, message: props}))
-// mock validSoftwareItem
-const mockValidProjectItem = jest.spyOn(editProject, 'validProjectItem')
-  .mockImplementation((props) => new Promise((res, rej) => {
-    // console.log('validProjectItem')
+const mockAddProject = jest.fn((props)=>Promise.resolve({status: 201, message: props}))
+const mockValidProjectItem = jest.fn((slug,token) => {
+  // console.log('validProjectItem...props...',slug,token)
+  return new Promise((res, rej) => {
     setTimeout(() => {
       res(false)
-    },10)
-  }))
+    }, 10)
+  })
+})
+
+jest.mock('~/utils/editProject', () => {
+  return {
+    addProject: jest.fn((props)=> mockAddProject(props)),
+    validProjectItem: jest.fn((slug,token)=> mockValidProjectItem(slug,token))
+  }
+})
 
 // mock next router
 const mockBack = jest.fn()
@@ -36,39 +38,50 @@ jest.mock('next/router', () => ({
   })
 }))
 
-it('render card with title', async () => {
+// prepare
+jest.useFakeTimers()
+
+afterEach(() => {
+  jest.runOnlyPendingTimers()
+  jest.clearAllMocks()
+})
+
+it('render card with title, subtitle and slug', () => {
   render(WrappedComponentWithProps(AddProjectCard))
-  const title = await screen.queryByText(addConfig.title)
-  await act(() => {
-    expect(title).toBeInTheDocument()
-  })
+
+  const title = screen.getByRole('textbox', {name: addConfig.project_title.label})
+  const subtitle = screen.getByRole('textbox', {name: addConfig.project_subtitle.label})
+  const slug = screen.getByRole('textbox',{name: addConfig.project_subtitle.label})
+
+  expect(title).toBeInTheDocument()
+  expect(subtitle).toBeInTheDocument()
+  expect(slug).toBeInTheDocument()
 })
 
 it('card has textbox with Title that can be entered', async() => {
-  render(WrappedComponentWithProps(AddProjectCard))
-  // dummy input value
-  const inputSubtitle = 'Test project title'
 
-  const title = screen.getByRole<HTMLInputElement>('textbox', {name: 'Title'})
+  render(WrappedComponentWithProps(AddProjectCard))
+  // check title
+  const title:HTMLInputElement = screen.getByRole('textbox', {name: addConfig.project_title.label})
   expect(title).toBeInTheDocument()
 
-  // accepts test value
-  fireEvent.change(title, {target: {value: inputSubtitle}})
-  await act(() => {
-    expect(title.value).toEqual(inputSubtitle)
+  // dummy input value
+  const inputTitle = 'Test project title'
+  act(() => {
+    // accepts test value
+    fireEvent.change(title, {target: {value: inputTitle}})
+    jest.runAllTimers()
   })
-})
 
-it('card has textbox with Subtitle that can be entered', async() => {
-  render(WrappedComponentWithProps(AddProjectCard))
-  const desc = screen.getByRole<HTMLInputElement>('textbox', {name: 'Subtitle'})
-  expect(desc).toBeInTheDocument()
-  // accepts test value
-  const inputSubtitle = 'Test project description'
-  fireEvent.change(desc, {target: {value: inputSubtitle}})
-  await act(() => {
-    expect(desc.value).toEqual(inputSubtitle)
-  })
+  // confirm slug validation in progress
+  // REQUIRED! to avoid act warning/error shown
+  const loader = await screen.findByTestId('slug-circular-progress')
+  expect(loader).toBeInTheDocument()
+  // confirm that loader is removed
+  await waitForElementToBeRemoved(loader)
+
+  // validate value
+  expect(title.value).toEqual(inputTitle)
 })
 
 it('card has cancel and submit buttons', async() => {
@@ -106,6 +119,7 @@ it('validate, save and redirect', async () => {
     status: 'authenticated'
   }
   const slug = getSlugFromString(inputTitle)
+
   // render
   render(WrappedComponentWithProps(AddProjectCard,{
     session
@@ -128,6 +142,7 @@ it('validate, save and redirect', async () => {
 
   // save
   const save = screen.getByRole('button', {name: 'Save'})
+  // validate
   expect(save).toBeInTheDocument()
   expect(title.value).toEqual(inputTitle)
   expect(desc.value).toEqual(inputSubtitle)

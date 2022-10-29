@@ -23,13 +23,13 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
           href={`mailto:${person?.email_address}`}
           target="_blank" rel="noreferrer"
         >
-            <EmailIcon sx={{
-              mr: 1,
-              '&:hover': {
-                opacity: 'inherit'
-              }
-            }} color="primary" />
-            Mail {person?.given_names}
+          <EmailIcon sx={{
+            mr: 1,
+            '&:hover': {
+              opacity: 'inherit'
+            }
+          }} color="primary" />
+          Mail {person?.given_names}
         </a>
       )
     }

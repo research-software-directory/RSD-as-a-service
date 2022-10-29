@@ -44,7 +44,6 @@ export default function AddProjectCard() {
   const router = useRouter()
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')
-  const [validSlug, setValidSlug] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initalState)
   const {register, handleSubmit, watch, formState, setError, setValue} = useForm<AddProjectForm>({
@@ -68,15 +67,17 @@ export default function AddProjectCard() {
   }, [])
 
   /**
-   * Convert brand_name value into slugValue.
+   * Convert project_title value into slugValue.
    * The slugValue is then debounced and produces bouncedSlug
    * We use bouncedSlug value later on to perform call to api
    */
   useEffect(() => {
     // construct slug from title
-    const slugValue = getSlugFromString(project_title)
-    // update slugValue
-    setSlugValue(slugValue)
+    if (project_title) {
+      const slugValue = getSlugFromString(project_title)
+      // update slugValue
+      setSlugValue(slugValue)
+    }
   }, [project_title])
   /**
    * When bouncedSlug value is changed,
@@ -84,9 +85,11 @@ export default function AddProjectCard() {
    * This change occures when brand_name value is changed
    */
   useEffect(() => {
-    setValue('slug', bouncedSlug, {
-      shouldValidate: true
-    })
+    if (bouncedSlug) {
+      setValue('slug', bouncedSlug, {
+        shouldValidate: true
+      })
+    }
   }, [bouncedSlug, setValue])
   /**
    * When slug value is changed by debounce or manually by user

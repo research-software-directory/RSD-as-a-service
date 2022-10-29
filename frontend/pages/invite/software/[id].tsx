@@ -43,9 +43,7 @@ export default function InviteSoftwareMaintainer({softwareInfo, error}:
           You are now a maintainer of {softwareInfo?.brand_name ?? 'missing'}!
           &nbsp;
           <Link href={`/software/${softwareInfo?.slug ?? 'missing'}`}>
-            <a>
-              Open software
-            </a>
+            Open software
           </Link>
         </h2>
       </ContentInTheMiddle>

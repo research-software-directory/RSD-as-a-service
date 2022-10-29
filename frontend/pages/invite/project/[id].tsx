@@ -45,9 +45,7 @@ export default function InviteProjectMaintainer({projectInfo, error}:
           You are now a maintainer of {projectInfo?.title ?? 'missing'}!
           &nbsp;
           <Link href={`/projects/${projectInfo?.slug ?? 'missing'}`}>
-            <a>
-              Open project
-            </a>
+            Open project
           </Link>
         </h2>
       </ContentInTheMiddle>
