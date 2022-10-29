@@ -30,10 +30,9 @@ export default function Links({links=[]}:{links:LinksProps[]}) {
               key={item.url}
               href={item.url}
               passHref
+              target="_blank"
             >
-              <a target="_blank">
-                {item.icon} {item.title}
-              </a>
+              {item.icon} {item.title}
             </Link>
             </li>
           )

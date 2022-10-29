@@ -163,11 +163,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 Upgrading minor version changes can be usally done using `yarn outdated` and `yarn upgrade`. Major updates are more demanding and might require changes in the source code.
 
+Since RSD went live in August 2022 we started using exact versions in the package.json to avoid unexpected upgrades. This means that we manually check for outdated packages and perform "controlled" upgrades. At the same time we perfom security audits using `yarn audit`.
+
 ### Next and React
 
 ```bash
-# upgrade next and react
-yarn add next react react-dom typescript
+# upgrade next, react and typescript
+yarn add next@latest react@latest react-dom@latest eslint-config-next@latest typescript
 # upgrade types
 yarn add -D @types/node @types/react @types/react-dom
 ```

@@ -18,8 +18,8 @@ export default function RorLocation({meta}: { meta: RORItem | null }) {
             <Link
               href={`https://www.google.com/maps/search/?api=1&query=${query}`}
               passHref
+              target="_blank"
             >
-            <a target="_blank">
               <div className="flex gap-2">
                 <PlaceIcon sx={{
                   width: '1.5rem',
@@ -30,7 +30,6 @@ export default function RorLocation({meta}: { meta: RORItem | null }) {
                   <div>{location.city}, {country}</div>
                 </div>
               </div>
-            </a>
             </Link>
           </>
         )

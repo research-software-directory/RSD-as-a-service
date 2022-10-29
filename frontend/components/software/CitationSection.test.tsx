@@ -58,7 +58,7 @@ describe('with dummy data',()=>{
     expect(copyButton).toBeInTheDocument()
   })
 
-  it.only('should have "Download file" button initialy disabled',()=>{
+  it('should have "Download file" button initialy disabled',()=>{
     // find it
     const downloadButton = screen.getByRole('button',{
       name:'Download file'

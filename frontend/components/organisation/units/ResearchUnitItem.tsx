@@ -119,9 +119,7 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
             }}
             passHref
           >
-            <a >
-              {name}
-            </a>
+            {name}
           </Link>
         }
         secondary={getSecondaryLabel()}

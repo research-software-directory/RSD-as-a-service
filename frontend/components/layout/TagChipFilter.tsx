@@ -12,7 +12,6 @@ export default function TagChipFilter({url, label, title}:
       href={url}
       passHref
     >
-    <a>
     <Chip
       title={`Click to filter for ${title ? title : label}`}
       label={label}
@@ -30,7 +29,6 @@ export default function TagChipFilter({url, label, title}:
         }
       }}
     />
-    </a>
     </Link>
   )
 }

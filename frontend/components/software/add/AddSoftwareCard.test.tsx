@@ -11,20 +11,22 @@ import AddSoftwareCard from './AddSoftwareCard'
 import {addConfig} from './addConfig'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 
-// mock addSoftware
-import * as editSoftware from '../../../utils/editSoftware'
-
-// mock addSoftware
-const mockAddSoftware = jest.spyOn(editSoftware, 'addSoftware')
-  .mockImplementation((props) => Promise.resolve({status: 201, message: props}))
-
-// mock validSoftwareItem
-const mockValidSoftwareItem = jest.spyOn(editSoftware, 'validSoftwareItem')
-  .mockImplementation((props) => new Promise((res, rej) => {
+const mockAddSoftware = jest.fn((props)=>Promise.resolve({status: 201, message: props}))
+const mockValidSoftwareItem = jest.fn((slug,token) => {
+  // console.log('validProjectItem...props...',slug,token)
+  return new Promise((res, rej) => {
     setTimeout(() => {
       res(false)
-    },100)
-  }))
+    }, 10)
+  })
+})
+
+jest.mock('~/utils/editSoftware', () => {
+  return {
+    addSoftware: jest.fn((props)=> mockAddSoftware(props)),
+    validSoftwareItem: jest.fn((slug,token)=> mockValidSoftwareItem(slug,token))
+  }
+})
 
 // mock next router
 const mockBack = jest.fn()

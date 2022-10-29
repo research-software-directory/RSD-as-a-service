@@ -318,12 +318,10 @@ export default function HelmholtzHome() {
             <Spotlights spotlights={SPOTLIGHTS} />
             <div className="flex">
               <Link href="/software" passHref>
-              <a>
                 <div
                   className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
                   Browse software
                 </div>
-              </a>
               </Link>
             </div>
           </div>
