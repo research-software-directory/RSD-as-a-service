@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {HTMLAttributes, useState} from 'react'
+import {HTMLAttributes, useEffect, useState} from 'react'
 
 import AsyncAutocompleteSC, {AsyncAutocompleteConfig, AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 
@@ -31,6 +31,27 @@ export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}:
     loading: false,
     foundFor: undefined
   })
+
+  useEffect(() => {
+    async function getInitalList() {
+      const resp = await searchForKeyword({
+        // we trim raw search value
+        searchFor: ''
+      })
+      // convert keywords to autocomplete options
+      const options = resp.map(item => ({
+        key: item.keyword,
+        label: item.keyword,
+        data: item
+      }))
+      // debugger
+      // set options
+      setOptions(options)
+    }
+    getInitalList()
+  // ignore linter for searchForKeyword fn
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   async function searchKeyword(searchFor: string) {
     // console.log('searchKeyword...searchFor...', searchFor)

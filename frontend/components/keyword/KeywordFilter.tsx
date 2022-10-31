@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, Fragment} from 'react'
+import {useState, Fragment, useEffect} from 'react'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Badge from '@mui/material/Badge'
@@ -17,6 +17,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 
 import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
 import Alert from '@mui/material/Alert'
+import {height} from '@mui/system'
 
 type SeachApiProps = {
   searchFor: string
@@ -41,7 +42,9 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
   // console.log('selectedItems...', selectedItems)
   // console.log('open...', open)
   // console.groupEnd()
+  useEffect(() => {
 
+  },[])
 
   function handleOpen(event: React.MouseEvent<HTMLElement>){
     setAnchorEl(event.currentTarget)
@@ -92,8 +95,10 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
                   <span className="text-md">+</span>
                   <Chip
                     label={item}
-                    size="small"
                     onDelete={() => handleDelete(pos)}
+                    sx={{
+                      borderRadius:'0.25rem'
+                    }}
                   />
                 </Fragment>
               )
@@ -102,8 +107,10 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
               <Chip
                 key={pos}
                 label={item}
-                size="small"
                 onDelete={() => handleDelete(pos)}
+                sx={{
+                  borderRadius:'0.25rem'
+                }}
               />
             )
           })}
@@ -129,6 +136,8 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
         </IconButton>
       </Tooltip>
       <Popover
+        // anchorReference="anchorPosition"
+        // anchorPosition={{top: 0, left: 0}}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -136,7 +145,10 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         sx={{
-          maxWidth:'24rem'
+          display: 'flex',
+          flexDirection: 'column',
+          width: ['100vw', '24rem'],
+          height: ['100vh', 'auto']
         }}
       >
         <h3 className="px-4 py-3 text-primary">
