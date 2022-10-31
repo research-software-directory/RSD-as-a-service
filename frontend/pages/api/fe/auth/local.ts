@@ -6,6 +6,10 @@
 export function localInfo() {
   return {
     name: 'Local account',
-    redirectUrl: '/login/local'
+    redirectUrl: '/login/local',
+    html: `
+      <p>Signing in with local account is <strong>for testing purposes only</strong>.
+      This option should not be enabled in the production version.</p>
+    `
   }
 }

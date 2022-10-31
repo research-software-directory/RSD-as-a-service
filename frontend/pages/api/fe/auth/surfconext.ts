@@ -57,8 +57,12 @@ export async function surfconextInfo() {
     const redirectUrl = getRedirectUrl(redirectProps)
     // provide redirectUrl and name/label
     return {
-      name: 'SURFconext',
-      redirectUrl
+      name: 'SURFconext *',
+      redirectUrl,
+      html: `<p>Signing in with SURFconext is for <strong>Dutch Institutions who enabled
+      RSD service</strong> in the <a href="https://dashboard.surfconext.nl/apps/9514/oidc10_rp/about" target = "_new">
+      SURFconext IdP dashboard</a>.
+      </p>`
     }
   }
   return null
