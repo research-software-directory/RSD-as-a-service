@@ -28,7 +28,8 @@ export type ApiError = {
 
 export type Provider = {
   name: string,
-  redirectUrl:string
+  redirectUrl: string,
+  html?: string
 }
 
 type Data = Provider[] | ApiError

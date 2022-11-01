@@ -8,7 +8,8 @@
       "enabled": true,
       "url": "rsd@esciencecenter.nl",
       "issues_page_url": "https://github.com/research-software-directory/RSD-as-a-service/issues"
-    }
+    },
+    "login_info_url":"https://research-software-directory.github.io/documentation/getting-started.html#signing-in"
   },
   "links": [
     {
