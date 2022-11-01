@@ -12,6 +12,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
 
 import {Provider} from 'pages/api/fe/auth'
+import useRsdSettings from '~/config/useRsdSettings'
 
 type LoginDialogProps = {
   providers: Provider[]
@@ -20,6 +21,7 @@ type LoginDialogProps = {
 }
 
 export default function LoginDialog({providers,open, onClose}: LoginDialogProps) {
+  const {host} = useRsdSettings()
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
@@ -89,9 +91,11 @@ export default function LoginDialog({providers,open, onClose}: LoginDialogProps)
               )
             })}
           </List>
-          <span className="italic text-gray-600">
-          <q>Somewhere, something incredible is waiting to be known.</q>
-          </span> - Carl Sagan
+          {host.login_info_url &&
+            <p className="text-base-content-disabled text-sm">
+              You can find more information on signing in to the RSD in our <a href={host.login_info_url} target="_blank" rel="noreferrer"><strong>documentation</strong></a>.
+            </p>
+          }
         </>
       </DialogContent>
     </Dialog>

@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider'
 import getBrowser from '~/utils/getBrowser'
 
 export default function FeedbackPanelButton(
-  {feedback_email, issues_page_url, closeFeedbackPanel}: { feedback_email: string, issues_page_url:string, closeFeedbackPanel?: () => void }
+  {feedback_email, issues_page_url, closeFeedbackPanel}: {feedback_email: string, issues_page_url:string, closeFeedbackPanel?: () => void }
 ) {
 
   const [text, setText] = useState('')
