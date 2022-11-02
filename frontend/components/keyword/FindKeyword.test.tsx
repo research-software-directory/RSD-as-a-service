@@ -31,6 +31,10 @@ const props = {
   onCreate:mockCreate
 }
 
+afterEach(() => {
+  jest.runOnlyPendingTimers()
+  // jest.useRealTimers()
+})
 
 // this test needs to be first to return mocked non-resolving promise
 it('calls seach Fn and renders the loader', async () => {

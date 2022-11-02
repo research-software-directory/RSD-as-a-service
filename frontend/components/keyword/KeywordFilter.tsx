@@ -11,13 +11,13 @@ import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import CloseIcon from '@mui/icons-material/Close'
+import CheckIcon from '@mui/icons-material/Check'
 import Popover from '@mui/material/Popover'
 import Chip from '@mui/material/Chip'
-import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 
 import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
-import Alert from '@mui/material/Alert'
-import {height} from '@mui/system'
 
 type SeachApiProps = {
   searchFor: string
@@ -119,9 +119,9 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
     }
     // debugger
     return (
-      <Alert severity="info" sx={{marginTop: '0.5rem'}}>
-        {/* <AlertTitle sx={{fontWeight: 500}}>No keywords to filter.</AlertTitle> */}
-        Add keyword <strong>by typing</strong> in the Find keyword.
+      <Alert severity="info" sx={{margin: '1rem'}}>
+        <AlertTitle sx={{fontWeight: 500}}>Filter is not active</AlertTitle>
+        Select the keyword from the list of most often used terms or <strong>start typing to search for the specific term</strong>.
       </Alert>
     )
   }
@@ -129,7 +129,10 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
   return (
     <>
       <Tooltip title={`Filter: ${selectedItems.length>0 ? selectedItems.join(' + ') : 'None'}`}>
-        <IconButton onClick={handleOpen}>
+        <IconButton
+          onClick={handleOpen}
+          sx={{marginRight:'0.5rem'}}
+        >
           <Badge badgeContent={selectedItems.length} color="primary">
             <FilterAltIcon />
           </Badge>
@@ -142,8 +145,8 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
         open={open}
         onClose={handleClose}
         // align menu to the right from the menu button
-        transformOrigin={{horizontal: 'right', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+        transformOrigin={{horizontal: 'center', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'center', vertical: 'bottom'}}
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -180,7 +183,7 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
           </Button>
           <Button
             onClick={handleApply}
-            startIcon={<PlayArrowIcon />}
+            startIcon={<CheckIcon />}
             disabled={selectedItems.length===0}
           >
             Apply

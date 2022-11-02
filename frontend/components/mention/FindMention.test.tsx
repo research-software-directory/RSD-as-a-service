@@ -39,6 +39,11 @@ let props:FindMentionProps = {
 
 jest.useFakeTimers()
 
+afterEach(() => {
+  jest.runOnlyPendingTimers()
+  // jest.useRealTimers()
+})
+
 it('has working cancel button when freeSolo', async () => {
   props.config.freeSolo=true
   const searchFor = 'test string'
@@ -230,3 +235,4 @@ it('removes input after selection when reset=true', async () => {
   // exper input to be reset
   expect(searchInput).toHaveValue('')
 })
+

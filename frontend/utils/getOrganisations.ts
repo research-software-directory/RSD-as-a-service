@@ -13,7 +13,7 @@ import logger from './logger'
 import {paginationUrlParams} from './postgrestUrl'
 
 
-export function organisationUrl({search, rows = 12, page = 0}:
+export function organisationListUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
   // by default order is on software count and name
   let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&order=score.desc.nullslast,name.asc`
@@ -32,7 +32,7 @@ export function organisationUrl({search, rows = 12, page = 0}:
 export async function getOrganisationsList({search, rows, page, token}:
   { search: string | undefined, rows: number, page: number, token: string | undefined }) {
   try {
-    const url = organisationUrl({search, rows, page})
+    const url = organisationListUrl({search, rows, page})
 
     const resp = await fetch(url, {
       method: 'GET',

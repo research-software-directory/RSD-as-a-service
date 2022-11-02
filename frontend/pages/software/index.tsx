@@ -20,7 +20,7 @@ import {SoftwareListItem} from '../../types/SoftwareTypes'
 import {rowsPerPageOptions} from '../../config/pagination'
 import {getSoftwareList} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
-import {softwareListUrl,softwareUrl} from '../../utils/postgrestUrl'
+import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import SoftwareKeywordFilter from '~/components/software/SoftwareKeywordFilter'
 import {searchForSoftwareKeyword} from '~/components/software/edit/information/searchForSoftwareKeyword'
 
@@ -50,7 +50,7 @@ export default function SoftwareIndexPage(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) {
-    const url = softwareUrl({
+    const url = ssrSoftwareUrl({
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
       page: newPage,
@@ -70,7 +70,7 @@ export default function SoftwareIndexPage(
   function handleItemsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ){
-    const url = softwareUrl({
+    const url = ssrSoftwareUrl({
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
       // reset to first page
@@ -82,7 +82,7 @@ export default function SoftwareIndexPage(
 
   function handleSearch(searchFor: string) {
     // debugger
-    const url = softwareUrl({
+    const url = ssrSoftwareUrl({
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
       search: searchFor,
@@ -93,7 +93,7 @@ export default function SoftwareIndexPage(
   }
 
   function handleFilters(keywords: string[]){
-    const url = softwareUrl({
+    const url = ssrSoftwareUrl({
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
       keywords,
@@ -116,14 +116,14 @@ export default function SoftwareIndexPage(
       <PageTitle title="Software">
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center">
-            <Searchbox
-              placeholder="Filter software"
-              onSearch={handleSearch}
-              defaultValue={search}
-            />
             <SoftwareKeywordFilter
               items={keywords ?? []}
               onApply={handleFilters}
+            />
+            <Searchbox
+              placeholder={keywords?.length ? 'Find within selection' : 'Find software'}
+              onSearch={handleSearch}
+              defaultValue={search}
             />
           </div>
           <TablePagination
@@ -176,6 +176,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     limit: rows,
     offset: rows * page,
   })
+
+  // console.log('software...url...', url)
 
   // get software list, we do not pass the token
   // when token is passed it will return not published items too
