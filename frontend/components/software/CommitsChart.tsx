@@ -38,7 +38,7 @@ export default function CommitsChart({repository_url, commit_history, commit_his
   // ELSE if no commit history we show graph placeholder with the message
   let noCommitMessage: string | undefined
   if (typeof repository_url === 'undefined' || repository_url === null) {
-    noCommitMessage = 'We cannot scrape the commit history because repository url is missing.'
+    noCommitMessage = 'We cannot display the activity graph, because we do not know the repository url.'
   } else if (typeof commit_history_scraped_at === 'undefined' || commit_history_scraped_at === null) {
     // not scraped yet
     noCommitMessage = 'We did not scrape the commit history of this repository yet.'
