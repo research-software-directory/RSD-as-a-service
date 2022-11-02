@@ -5,9 +5,9 @@
 
 package nl.esciencecenter.rsd.authentication;
 
-public class AuthenticationException extends RuntimeException {
+public class RsdAuthenticationException extends RuntimeException {
 
-	public AuthenticationException(String message) {
+	public RsdAuthenticationException(String message) {
 		super(message);
 	}
 }
