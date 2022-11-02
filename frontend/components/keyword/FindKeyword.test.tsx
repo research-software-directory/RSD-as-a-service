@@ -54,9 +54,9 @@ it('calls seach Fn and renders the loader', async () => {
   })
 
   await waitFor(() => {
-    // validate that searchFn is called once
-    expect(mockSearch).toHaveBeenCalledTimes(1)
-    // is called with seachFor term
+    // validate that searchFn is called twice (first on load then on search)
+    expect(mockSearch).toHaveBeenCalledTimes(2)
+    // last called with seachFor term
     expect(mockSearch).toHaveBeenCalledWith({searchFor})
     // check if loader is present
     const loader = screen.getByTestId('circular-loader')
@@ -80,8 +80,10 @@ it('renders component with label, help and input with role comobox', () => {
 it('offer Add option when search has no results', async() => {
   // prepare
   jest.useFakeTimers()
-  // resolve with no options
-  mockSearch.mockResolvedValueOnce([])
+  // resolve with no options twice (on load and on search)
+  mockSearch
+    .mockResolvedValueOnce([])
+    .mockResolvedValueOnce([])
   // render component
   render(<FindKeyword {...props} />)
 
@@ -113,11 +115,15 @@ it('DOES NOT offer Add option when search return result that match', async () =>
   const searchFor = 'test'
   const searchCnt = 123
   // resolve with no options
-  mockSearch.mockResolvedValueOnce([{
-    id: '123123',
-    keyword: searchFor,
-    cnt: searchCnt
-  }])
+  mockSearch
+    // intial call on load
+    .mockResolvedValueOnce([])
+    // search call
+    .mockResolvedValueOnce([{
+      id: '123123',
+      keyword: searchFor,
+      cnt: searchCnt
+    }])
 
   // render component
   render(<FindKeyword {...props} />)
@@ -152,7 +158,10 @@ it('calls onCreate method with string value to add new option', async() => {
   // prepare
   jest.useFakeTimers()
   // resolve with no options
-  mockSearch.mockResolvedValueOnce([])
+  mockSearch
+    // intial call on load
+    .mockResolvedValueOnce([])
+    .mockResolvedValueOnce([])
   // render component
   render(<FindKeyword {...props} />)
 
@@ -192,7 +201,11 @@ it('calls onAdd method to add option to selection', async() => {
     cnt: searchCnt
   }
   // resolve with no options
-  mockSearch.mockResolvedValueOnce([mockOption])
+  mockSearch
+    // intial call on load
+    .mockResolvedValueOnce([])
+    // search call
+    .mockResolvedValueOnce([mockOption])
   // render component
   render(<FindKeyword {...props} />)
 
