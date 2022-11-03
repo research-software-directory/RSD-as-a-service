@@ -1,6 +1,7 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
@@ -16,8 +17,10 @@ import useLoginProviders from '~/auth/api/useLoginProviders'
 import {getUserMenuItems} from '~/config/userMenuItems'
 import UserMenu from '~/components/layout/UserMenu'
 import LoginDialog from './LoginDialog'
+import useRsdSettings from '~/config/useRsdSettings'
 
 export default function LoginButton() {
+  const {host} = useRsdSettings()
   const providers = useLoginProviders()
   const {session} = useAuth()
   const status = session?.status || 'loading'
@@ -33,7 +36,13 @@ export default function LoginButton() {
 
   if (status === 'authenticated') {
     // when user is authenticated
-    const menuItems = getUserMenuItems(session.user?.role)
+    let hasOrcid = false
+    providers.forEach(provider => {
+      if ( provider.name === 'ORCID' ) {
+        hasOrcid = true
+      }
+    })
+    const menuItems = getUserMenuItems(session.user?.role, hasOrcid)
     // we show user menu with the avatar and user specific options
     return (
       <>

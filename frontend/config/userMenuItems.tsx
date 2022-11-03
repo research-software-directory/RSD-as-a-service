@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,70 +17,76 @@ import Logout from '@mui/icons-material/Logout'
 
 import {MenuItemType} from './menuItems'
 
-const userMenuItems: MenuItemType[] = [
-  {
-    role:['rsd_admin','rsd_user'],
-    type: 'link',
-    label:'My software',
-    path:'/user/software',
-    icon: <TerminalIcon />
-  }, {
-    role:['rsd_admin','rsd_user'],
-    type: 'link',
-    label:'My projects',
-    path:'/user/projects',
-    icon: <ListAltIcon />
-  }, {
-    role:['rsd_admin','rsd_user'],
-    type: 'link',
-    label: 'My organisations',
-    path: '/user/organisations',
-    icon: <BusinessIcon />
-  }, {
-    role:['rsd_admin','rsd_user'],
-    type: 'divider',
-    label: 'divider1'
-  }, {
-    role:['rsd_admin','rsd_user'],
-    type: 'link',
-    label: 'My settings',
-    path: '/user/settings',
-    icon: <SettingsIcon />
-  }, {
-    role:['rsd_admin'],
-    type: 'divider',
-    label: 'divider2'
-  }, {
-    role:['rsd_admin'],
-    type: 'link',
-    label: 'Administration',
-    path: '/admin/pages',
-    icon: <ManageAccountsIcon />
-  }, {
-    role:['rsd_admin'],
-    type: 'link',
-    label: 'ORCID whitelist',
-    path: '/admin/orcid-whitelist',
-    icon: <PlaylistAddCheckIcon />
-  }, {
-    role:['rsd_admin','rsd_user'],
-    type: 'divider',
-    label: 'divider3'
-  }, {
-    role:['rsd_admin','rsd_user'],
-    label: 'Logout',
-    icon: <Logout/>,
-    fn: () => {
-      // forward to logout route
-      // it removes cookies and resets the authContext
-      location.href = '/logout'
-    }
-  },
-]
+export function getUserMenuItems(
+    role: 'rsd_admin' | 'rsd_user'='rsd_user',
+    orcidEnabled: boolean=false,
+  ) {
 
-export function getUserMenuItems(role: 'rsd_admin' | 'rsd_user'='rsd_user') {
+  const userMenuItems: MenuItemType[] = [
+    {
+      type: 'link',
+      label:'My software',
+      active: ['rsd_admin', 'rsd_user'].includes(role),
+      path:'/user/software',
+      icon: <TerminalIcon />
+    }, {
+      type: 'link',
+      label:'My projects',
+      active:['rsd_admin','rsd_user'].includes(role),
+      path:'/user/projects',
+      icon: <ListAltIcon />
+    }, {
+      type: 'link',
+      label: 'My organisations',
+      active:['rsd_admin','rsd_user'].includes(role),
+      path: '/user/organisations',
+      icon: <BusinessIcon />
+    }, {
+      type: 'divider',
+      label: 'divider1',
+      active: ['rsd_admin', 'rsd_user'].includes(role),
+    }, {
+      type: 'link',
+      label: 'My settings',
+      active: ['rsd_admin','rsd_user'].includes(role),
+      path: '/user/settings',
+      icon: <SettingsIcon />
+    }, {
+      type: 'divider',
+      label: 'divider2',
+      active: ['rsd_admin'].includes(role)
+    }, {
+      type: 'link',
+      label: 'Administration',
+      active: ['rsd_admin'].includes(role),
+      path: '/admin/pages',
+      icon: <ManageAccountsIcon />
+    }, {
+      type: 'link',
+      label: 'ORCID whitelist',
+      active: orcidEnabled && ['rsd_admin'].includes(role),
+      path: '/admin/orcid-whitelist',
+      icon: <PlaylistAddCheckIcon />
+    }, {
+      type: 'divider',
+      label: 'divider3',
+      active: ['rsd_admin'].includes(role)
+    }, {
+      label: 'Logout',
+      active: ['rsd_admin', 'rsd_user'].includes(role),
+      icon: <Logout/>,
+      fn: () => {
+        // forward to logout route
+        // it removes cookies and resets the authContext
+        location.href = '/logout'
+      }
+    },
+  ]
+
   const items = userMenuItems.filter(item => {
-    return item.role?.includes(role)
+    if ( item.active != false ) {
+      return item
+    }
   })
   return items
 }
