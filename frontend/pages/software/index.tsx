@@ -22,7 +22,6 @@ import {getSoftwareList} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import SoftwareKeywordFilter from '~/components/software/SoftwareKeywordFilter'
-import {searchForSoftwareKeyword} from '~/components/software/edit/information/searchForSoftwareKeyword'
 
 type SoftwareIndexPageProps = {
   count: number,

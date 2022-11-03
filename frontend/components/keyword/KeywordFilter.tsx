@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, Fragment, useEffect} from 'react'
+import {useState, Fragment} from 'react'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Badge from '@mui/material/Badge'
@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import CloseIcon from '@mui/icons-material/Close'
-import CheckIcon from '@mui/icons-material/Check'
+import DeleteIcon from '@mui/icons-material/Delete'
 import Popover from '@mui/material/Popover'
 import Chip from '@mui/material/Chip'
 import Alert from '@mui/material/Alert'
@@ -42,9 +42,6 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
   // console.log('selectedItems...', selectedItems)
   // console.log('open...', open)
   // console.groupEnd()
-  useEffect(() => {
-
-  },[])
 
   function handleOpen(event: React.MouseEvent<HTMLElement>){
     setAnchorEl(event.currentTarget)
@@ -59,17 +56,14 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
     handleClose()
   }
 
-  function handleApply(){
-    onApply(selectedItems)
-    handleClose()
-  }
-
   function handleDelete(pos:number) {
     const newList = [
       ...selectedItems.slice(0, pos),
       ...selectedItems.slice(pos+1)
     ]
     setSelectedItems(newList)
+    // apply directly
+    onApply(newList)
   }
 
   function onAdd(item: Keyword) {
@@ -81,6 +75,8 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
         item.keyword
       ].sort()
       setSelectedItems(newList)
+      // apply directly
+      onApply(newList)
     }
   }
 
@@ -177,16 +173,19 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
         <div className="flex items-center justify-between px-4 py-2">
           <Button
             color="secondary"
-            startIcon={<CloseIcon />}
-            onClick={handleClear}>
-            {selectedItems.length === 0 ? 'Close' : 'Clear'}
-          </Button>
-          <Button
-            onClick={handleApply}
-            startIcon={<CheckIcon />}
+            startIcon={<DeleteIcon />}
+            onClick={handleClear}
             disabled={selectedItems.length===0}
           >
-            Apply
+
+            {/* {selectedItems.length === 0 ? 'Close' : 'Clear'} */}
+            Clear
+          </Button>
+          <Button
+            onClick={handleClose}
+            startIcon={<CloseIcon />}
+          >
+            Close
           </Button>
         </div>
       </Popover>
