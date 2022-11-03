@@ -23,12 +23,15 @@ type FindKeywordProps = {
 }
 
 export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}: FindKeywordProps) {
+  const [initalList, setInitalList] = useState<AutocompleteOption<Keyword>[]>([])
   const [options, setOptions] = useState<AutocompleteOption<Keyword>[]>([])
   const [status, setStatus] = useState<{
     loading: boolean,
+    searchFor: string | undefined
     foundFor: string | undefined
   }>({
     loading: false,
+    searchFor: undefined,
     foundFor: undefined
   })
 
@@ -47,16 +50,17 @@ export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}:
       // debugger
       // set options
       setOptions(options)
+      setInitalList(options)
     }
     getInitalList()
   // ignore linter for searchForKeyword fn
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  }, [])
 
   async function searchKeyword(searchFor: string) {
     // console.log('searchKeyword...searchFor...', searchFor)
     // set loading status and clear foundFor
-    setStatus({loading: true, foundFor: undefined})
+    setStatus({loading: true, searchFor, foundFor: undefined})
     // make search request
     const resp = await searchForKeyword({
       // we trim raw search value
@@ -75,6 +79,7 @@ export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}:
     // stop loading
     setStatus({
       loading: false,
+      searchFor,
       foundFor: searchFor
     })
   }
@@ -82,6 +87,11 @@ export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}:
   function onAddKeyword(selected:AutocompleteOption<Keyword>) {
     if (selected && selected.data) {
       onAdd(selected.data)
+      // if we use reset of selected input
+      // we also load inital list of keywords
+      if (config.reset === true) {
+        setOptions(initalList)
+      }
     }
   }
 
@@ -139,6 +149,7 @@ export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}:
         onAdd={onAddKeyword}
         onCreate={createKeyword}
         onRenderOption={renderOption}
+        onClear={()=>setOptions(initalList)}
         config={{
           ...config,
           // freeSolo allows create option

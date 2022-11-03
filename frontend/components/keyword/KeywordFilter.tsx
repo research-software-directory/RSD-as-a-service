@@ -162,7 +162,7 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
           <FindKeyword
             config={{
               freeSolo: false,
-              minLength: 1,
+              minLength: 0,
               label: 'Find keyword',
               help: '',
               reset: true
