@@ -42,7 +42,7 @@ export default function LoginButton() {
         hasOrcid = true
       }
     })
-    const menuItems = getUserMenuItems(session.user?.role, hasOrcid)
+    const menuItems = getUserMenuItems(session.user?.role, hasOrcid, host.highlights)
     // we show user menu with the avatar and user specific options
     return (
       <>

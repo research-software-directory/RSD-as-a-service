@@ -70,6 +70,7 @@ export type SoftwareListItem = {
   mention_cnt: number | null
   is_published: boolean
   is_featured?: boolean
+  image_id?: string | null
 }
 
 

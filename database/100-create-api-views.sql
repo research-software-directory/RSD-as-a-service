@@ -1,10 +1,9 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2023 dv4all
--- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -1572,7 +1571,6 @@ CREATE VIEW user_count_per_home_organisation AS
 		home_organisation
 	;
 
-
 -- Return the number of accounts since specified time stamp
 CREATE FUNCTION new_accounts_count_since_timestamp(timestmp TIMESTAMPTZ) RETURNS INTEGER
 LANGUAGE sql SECURITY DEFINER STABLE AS
@@ -1584,7 +1582,6 @@ FROM
 WHERE
 	created_at > timestmp;
 $$;
-
 
 -- Keywords use by software and projects
 -- DEPENDS ON FUNCTIONS keyword_count_for_software and keyword_count_for_projects
@@ -1607,4 +1604,40 @@ LEFT JOIN
 LEFT JOIN
 	keyword_count_for_projects() ON keyword.value = keyword_count_for_projects.keyword
 ;
+$$;
+
+-- Get a list of all software highlights with latest highlights first
+CREATE FUNCTION all_software_highlights() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	updated_at TIMESTAMPTZ,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	image_id VARCHAR,
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		software.id,
+		software.slug,
+		software_highlight.updated_at,
+		software.brand_name,
+		software.short_statement,
+		software.image_id,
+		count_software_countributors.contributor_cnt,
+		count_software_mentions.mention_cnt
+	FROM
+		software
+	INNER JOIN
+		software_highlight ON software.id=software_highlight.software
+	LEFT JOIN
+		count_software_countributors() ON software.id=count_software_countributors.software
+	LEFT JOIN
+		count_software_mentions() ON software.id=count_software_mentions.software
+	ORDER BY software_highlight.updated_at DESC
+	;
+END
 $$;

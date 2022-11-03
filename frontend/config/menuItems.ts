@@ -6,6 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {RsdRole} from '~/auth'
+import RsdSettings from '../public/data/settings.json'
 
 export type MenuItemType = {
   type?: 'link' | 'function' |'divider'
@@ -23,5 +24,6 @@ export const menuItems:MenuItemType[] = [
   // {path:'/#whyrsd', label:'Why RSD'},
   {path:'/software', label:'Software'},
   {path: '/projects', label: 'Projects'},
-  {path: '/organisations', label: 'Organisations'}
+  {path: '/organisations', label: 'Organisations'},
+  {path: '/highlights', label: 'Highlights', active: RsdSettings.host.highlights?.appHeaderEntry || false},
 ]

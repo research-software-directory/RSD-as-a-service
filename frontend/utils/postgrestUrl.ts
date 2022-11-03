@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -260,5 +262,20 @@ export function projectListUrl(props: PostgrestParams) {
 
   const url = `${baseUrl}/rpc/project_search?${query}`
   // console.log('projectListUrl...',url)
+  return url
+}
+
+export function highlightsListUrl(props: PostgrestParams) {
+  const {baseUrl, search} = props
+  let query = baseQueryString(props)
+
+  if (search) {
+    // search for term in brand_name and short_statement
+    // we use ilike (case INsensitive) and * to indicate partial string match
+    query += `&or=(brand_name.ilike.*${search}*, short_statement.ilike.*${search}*)`
+  }
+
+  const url = `${baseUrl}/rpc/all_software_highlights?${query}`
+  // console.log('softwareListUrl...', url)
   return url
 }

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,6 +17,13 @@ export type RsdSettingsState = {
   theme: RsdTheme
 }
 
+export type RsdHighlightsProps = {
+  enabled: boolean,
+  appHeaderEntry: boolean,
+  title: string,
+  titlePlural: string
+}
+
 export type RsdHost = {
   name: string,
   email: string,
@@ -30,7 +37,8 @@ export type RsdHost = {
   },
   login_info_url?:string,
   terms_of_service_url?: string,
-  privacy_statement_url?: string
+  privacy_statement_url?: string,
+  highlights?: RsdHighlightsProps,
 }
 
 export type CustomLink = {
@@ -60,6 +68,13 @@ export type RsdSettingsAction = {
 }
 
 export type RsdSettingsDispatch = (action: RsdSettingsAction)=>void
+
+export const defaultHighlightsSettings: RsdHighlightsProps = {
+  enabled: false,
+  appHeaderEntry: false,
+  title: 'Software Highlight',
+  titlePlural: 'Software Highlights'
+}
 
 export const defaultRsdSettings: RsdSettingsState = {
   host: {

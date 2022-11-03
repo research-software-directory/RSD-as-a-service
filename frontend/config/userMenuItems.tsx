@@ -11,15 +11,16 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
 import SettingsIcon from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
 
 import {MenuItemType} from './menuItems'
+import {defaultHighlightsSettings, RsdHighlightsProps} from './rsdSettingsReducer'
 
 export function getUserMenuItems(
     role: 'rsd_admin' | 'rsd_user'='rsd_user',
     orcidEnabled: boolean=false,
+    highlightsProps: RsdHighlightsProps=defaultHighlightsSettings
   ) {
 
   const userMenuItems: MenuItemType[] = [

@@ -58,9 +58,10 @@ frontend-docker: frontend/.env.local
 	docker-compose up --scale frontend=0 --scale scrapers=0 --scale frontend-dev=1
 
 data:
-	docker-compose up --scale data-generation=1 --scale scrapers=0
-	sleep 60
-	docker-compose down
+	docker-compose run --rm data-generation
+
+clean:
+	docker-compose down --volumes
 
 # Helper commands
 # -

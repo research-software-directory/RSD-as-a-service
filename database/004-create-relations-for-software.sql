@@ -133,3 +133,32 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_testimonial BEFORE UPDATE ON testimonial FOR EACH ROW EXECUTE PROCEDURE sanitise_update_testimonial();
+
+
+
+CREATE TABLE software_highlight (
+	software UUID REFERENCES software (id) PRIMARY KEY UNIQUE,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
+);
+
+CREATE FUNCTION sanitise_insert_software_highlight() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.created_at = LOCALTIMESTAMP;
+	NEW.updated_at = NEW.created_at;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_software_highlight BEFORE INSERT ON software_highlight FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_software_highlight();
+
+CREATE FUNCTION sanitise_update_software_highlight() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.software = OLD.software;
+	NEW.created_at = OLD.created_at;
+	NEW.updated_at = LOCALTIMESTAMP;
+	return NEW;
+END
+$$;
