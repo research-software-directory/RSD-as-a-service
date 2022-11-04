@@ -109,14 +109,14 @@ export default function ProjectsIndexPage(
       <PageTitle title="Projects">
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center lg:ml-4">
-            <Searchbox
-              placeholder="Filter projects"
-              onSearch={handleSearch}
-              defaultValue={search}
-            />
             <ProjectKeywordFilter
               items={keywords ?? []}
               onApply={handleFilters}
+            />
+            <Searchbox
+              placeholder={keywords?.length ? 'Find within selection' : 'Find project'}
+              onSearch={handleSearch}
+              defaultValue={search}
             />
           </div>
           <TablePagination
@@ -171,6 +171,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     offset: rows * page,
   })
 
+  // console.log('projects...url...', url)
   // get project list, we do not pass the token
   // when token is passed it will return not published items too
   const projects = await getProjectList({url})

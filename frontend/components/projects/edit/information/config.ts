@@ -86,7 +86,7 @@ export const projectInformation = {
     title: 'Keywords',
     subtitle: 'How to find this project?',
     label: 'Find or add keyword',
-    help: 'Start typing for the suggestions',
+    help: 'Select from top 30 list or start typing for the suggestions',
     validation: {
       //custom validation rule, not in used by react-hook-form
       minLength: 1,

@@ -17,7 +17,7 @@ import {OrganisationComponentsProps} from '../OrganisationNavItems'
 
 export default function OrganisationProjects({organisation, isMaintainer}:OrganisationComponentsProps) {
   const {token} = useSession()
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Filter projects')
+  const {searchFor,page,rows,setCount} = usePaginationWithSearch(`Find project in ${organisation.name}`)
   const {loading, projects, count} = useOrganisationProjects({
     organisation: organisation.id,
     searchFor,

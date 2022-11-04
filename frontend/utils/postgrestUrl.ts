@@ -25,7 +25,7 @@ type QueryParams={
   rows?:number
 }
 
-export function softwareUrl(params:QueryParams){
+export function ssrSoftwareUrl(params:QueryParams){
   const view = 'software'
   const url = ssrUrl(params, view)
   return url
@@ -139,9 +139,16 @@ export function softwareListUrl(props: PostgrestParams) {
   let query = baseQueryString(props)
 
   if (search) {
-    // search for term in brand_name and short_statement
-    // we use ilike (case INsensitive) and * to indicate partial string match
-    query += `&or=(brand_name.ilike.*${search}*, short_statement.ilike.*${search}*)`
+    // console.log('softwareListUrl...keywords...', props.keywords)
+    const encodedSearch = encodeURIComponent(search)
+    // if keyword filter is not used we search in keywords too!
+    if (typeof props.keywords === 'undefined' || props.keywords===null) {
+      query += `&or=(brand_name.ilike.*${encodedSearch}*,short_statement.ilike.*${encodedSearch}*,keywords.cs.%7B${encodedSearch}%7D)`
+    } else {
+      // search for term in brand_name and short_statement
+      // we use ilike (case INsensitive) and * to indicate partial string match
+      query += `&or=(brand_name.ilike.*${encodedSearch}*,short_statement.ilike.*${encodedSearch}*)`
+    }
   }
 
   const url = `${baseUrl}/rpc/software_search?${query}`
@@ -155,9 +162,15 @@ export function projectListUrl(props: PostgrestParams) {
   let query = baseQueryString(props)
 
   if (search) {
-    // search for term in brand_name and short_statement
-    // we use ilike (case INsensitive) and * to indicate partial string match
-    query += `&or=(title.ilike.*${search}*,subtitle.ilike.*${search}*)`
+    const encodedSearch = encodeURIComponent(search)
+    // if keyword filter is not used we search in keywords too!
+    if (typeof props.keywords === 'undefined' || props.keywords === null) {
+      query += `&or=(title.ilike.*${search}*,subtitle.ilike.*${search}*,keywords.cs.%7B${encodedSearch}%7D)`
+    } else {
+      // search for term in brand_name and short_statement
+      // we use ilike (case INsensitive) and * to indicate partial string match
+      query += `&or=(title.ilike.*${search}*,subtitle.ilike.*${search}*)`
+    }
   }
 
   const url = `${baseUrl}/rpc/project_search?${query}`
