@@ -114,10 +114,11 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
       )
     }
     // debugger
+    // return null
     return (
       <Alert severity="info" sx={{margin: '1rem'}}>
         <AlertTitle sx={{fontWeight: 500}}>Filter is not active</AlertTitle>
-        Select the keyword from the list of most often used terms or <strong>start typing to search for the specific term</strong>.
+        Select a keyword from the list or <strong>start typing</strong>.
       </Alert>
     )
   }
@@ -159,7 +160,7 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
             config={{
               freeSolo: false,
               minLength: 0,
-              label: 'Find keyword',
+              label: 'Select or type a keyword',
               help: '',
               reset: true
             }}
