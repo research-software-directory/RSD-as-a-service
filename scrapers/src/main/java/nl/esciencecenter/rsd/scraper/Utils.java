@@ -63,9 +63,44 @@ public class Utils {
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
-			throw new ResponseException(response.statusCode(), "Error fetching data from endpoint " + uri + " with response: " + response.body());
+			throw new RsdResponseException(response.statusCode(), "Error fetching data from endpoint " + uri + " with response: " + response.body());
 		}
 		return response.body();
+	}
+
+	public static String getWithRetryOn202(int retries, long timeoutMillis, String uri, String... headers) {
+		if (retries < 0) retries = 0;
+
+		String result = null;
+		for (int tryNumber = 0; tryNumber < retries + 1; tryNumber++) {
+			HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
+					.GET()
+					.uri(URI.create(uri));
+			if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
+				httpRequestBuilder.headers(headers);
+			}
+			HttpRequest request = httpRequestBuilder.build();
+			HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+			HttpResponse<String> response;
+			try {
+				response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			} catch (IOException | InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+			if (response.statusCode() == 202) {
+				try {
+					Thread.sleep(timeoutMillis);
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			} else if (response.statusCode() == 200) {
+				result = response.body();
+				break;
+			} else {
+				throw new RsdResponseException(response.statusCode(), "Error fetching data from endpoint " + uri + " with response: " + response.body());
+			}
+		}
+		return result;
 	}
 
 	/**
