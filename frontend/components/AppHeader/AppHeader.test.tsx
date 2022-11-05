@@ -30,7 +30,7 @@ it('renders AppHeader with header tag', () => {
 
 it('renders AppHeader with 2 searchboxes', () => {
   // has searchbox
-  const search = screen.getAllByRole('searchbox')
+  const search = screen.getAllByTestId('global-search')
   // two searchboxes, one for mobile and one for larger screens?!?
   expect(search).toHaveLength(2)
 })

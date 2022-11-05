@@ -10,9 +10,12 @@ export type Status = 'rejected_by_origin' | 'rejected_by_relation' | 'approved'
 export type OrganisationRole = 'participating' | 'funding' | 'hosting'
 export type OrganisationSource = 'RSD' | 'ROR' | 'MANUAL'
 
-// shared organisation properies
+// organisation colums used in editOrganisation.createOrganisation
+// NOTE! update when type CoreOrganisationProps changes
+export const columsForCreate = [
+  'parent', 'slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website', 'logo_id',
+]
 export type CoreOrganisationProps = {
-  id: string | null
   parent: string | null
   slug: string | null
   primary_maintainer?: string | null
@@ -20,23 +23,26 @@ export type CoreOrganisationProps = {
   ror_id: string | null
   is_tenant: boolean
   website: string | null
-  // about page content created by maintainer
-  description: string | null
+  logo_id: string | null
 }
 
-// object for organisation
-// from organisation table
+// organisation colums used in editOrganisation.updateOrganisation
+// NOTE! update when type Organisation changes
+export const columsForUpdate = [
+  'id',
+  'description',
+  ...columsForCreate
+]
 export type Organisation = CoreOrganisationProps & {
-  // indicates image is uploaded
-  logo_id: string | null
+  id: string | null
+  // about page content created by maintainer
+  description: string | null
 }
 
 // adding source
 export type SearchOrganisation = Organisation & {
   source: OrganisationSource
 }
-
-export type FundingOrganisation = SearchOrganisation
 
 // extending with other props for software edit page
 export type EditOrganisation = SearchOrganisation & {
@@ -49,6 +55,19 @@ export type EditOrganisation = SearchOrganisation & {
   status?: Status
   // only maintainers can edit values
   canEdit?: boolean
+}
+
+export type PatchOrganisation = {
+  id: string
+  parent?: string | null
+  primary_maintainer?: string | null
+  slug?: string | null
+  name?: string
+  description?: string | null
+  ror_id?: string | null
+  website?: string | null
+  is_tenant?: boolean
+  logo_id?: string | null
 }
 
 // object for software_for_organisation
@@ -88,7 +107,7 @@ export type ProjectOrganisationProps = ParticipatingOrganisationProps & {
   role: OrganisationRole
 }
 
-export type OrganisationForOverview = CoreOrganisationProps & {
+export type OrganisationForOverview = Organisation & {
   id: string
   slug: string
   logo_id: string | null

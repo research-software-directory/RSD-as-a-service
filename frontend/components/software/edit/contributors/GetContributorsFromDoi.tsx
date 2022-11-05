@@ -10,13 +10,14 @@ import {contributorInformation as config} from '../editSoftwareConfig'
 import useSoftwareContext from '../useSoftwareContext'
 import {useState} from 'react'
 import {getContributorsFromDoi} from '~/utils/getInfoFromDatacite'
-import {Contributor} from '~/types/Contributor'
+import {Contributor, ContributorProps} from '~/types/Contributor'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
-import {addContributorToDb, prepareContributorData} from '~/utils/editContributors'
+import {postContributor} from '~/utils/editContributors'
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {CircularProgress} from '@mui/material'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
 type GetContributorsFromDoiProps = {
   contributors: Contributor[]
@@ -64,11 +65,11 @@ export default function GetContributorsFromDoi({contributors,onSetContributors}:
     const newContributors:Contributor[]=[]
     for (const c of newDoiContributors) {
       // prepare data
-      const contributor = prepareContributorData(c)
+      const contributor = getPropsFromObject(c, ContributorProps)
       pos+=1
       contributor.position = contributors.length + pos
       // add contributor to db
-      const resp = await addContributorToDb({contributor, token})
+      const resp = await postContributor({contributor, token})
       if (resp.status === 201) {
         // update item in newContributors
         contributor.id = resp.message

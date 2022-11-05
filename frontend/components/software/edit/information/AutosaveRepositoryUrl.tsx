@@ -71,7 +71,7 @@ export default function AutosaveRepositoryUrl() {
         })
       }
     } else if (urlError) {
-      debugger
+      // debugger
       setPlatform({
         id: null,
         disabled: true,

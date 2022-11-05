@@ -14,21 +14,22 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
+import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import ControlledTextField from '../../form/ControlledTextField'
 import {EditOrganisation} from '../../../types/Organisation'
 import {organisationInformation as config} from '../organisationConfig'
-import {getUrlFromLogoId} from '../../../utils/editOrganisation'
+import {deleteImage, getImageUrl} from '~/utils/editImage'
 import logger from '../../../utils/logger'
-
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+
 
 type EditOrganisationModalProps = {
   open: boolean,
   onCancel: () => void,
   onSubmit: ({data, pos}: { data: EditOrganisation, pos?: number }) => void,
-  onDeleteLogo: (logo_id:string) => void,
+  // onDeleteLogo: (logo_id:string) => void,
   organisation?: EditOrganisation,
   // item position in the array
   pos?: number
@@ -37,9 +38,10 @@ type EditOrganisationModalProps = {
 
 const formId='research-unit-modal'
 
-export default function EditOrganisationModal({
-  open, onCancel, onSubmit, onDeleteLogo, organisation, pos, title = 'Organisation'
+export default function ResearchUnitModal({
+  open, onCancel, onSubmit, organisation, pos, title = 'Organisation'
 }: EditOrganisationModalProps) {
+  const {token} = useSession()
   const {showWarningMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [baseUrl, setBaseUrl] = useState('')
@@ -99,8 +101,12 @@ export default function EditOrganisationModal({
       reader.onloadend = function () {
         if (reader.result) {
           // write to new avatar b64
-          setValue('logo_b64', reader.result as string)
-          setValue('logo_mime_type', file.type,{shouldDirty: true})
+          // setValue('logo_b64', reader.result as string)
+          // setValue('logo_mime_type', file.type, { shouldDirty: true })
+          replaceLogo(
+            reader.result as string,
+            file.type
+          )
         }
       }
       reader.readAsDataURL(file)
@@ -109,11 +115,32 @@ export default function EditOrganisationModal({
     }
   }
 
-  function deleteLogoFromDb() {
+  async function replaceLogo(logo_b64:string, logo_mime_type:string) {
     if (formData.logo_id) {
-      onDeleteLogo(formData.logo_id)
+      // remove old logo from db
+      const del = await deleteImage({
+        id: formData.logo_id,
+        token
+      })
+      setValue('logo_id', null)
+    }
+    // write new logo to logo_b64
+    // we upload the image after submit
+    setValue('logo_b64', logo_b64)
+    setValue('logo_mime_type', logo_mime_type, {shouldDirty: true})
+  }
+
+  async function deleteLogo() {
+    if (formData.logo_id) {
+      // remove old logo from db
+      const del = await deleteImage({
+        id: formData.logo_id,
+        token
+      })
     }
     setValue('logo_id', null)
+    setValue('logo_b64', null)
+    setValue('logo_mime_type', null, {shouldDirty: true})
   }
 
   return (
@@ -147,6 +174,9 @@ export default function EditOrganisationModal({
         <input type="hidden"
           {...register('position')}
         />
+        <input type="hidden"
+          {...register('logo_id')}
+        />
         <DialogContent sx={{
           width: '100%',
           padding: '2rem 1.5rem 2.5rem'
@@ -159,7 +189,7 @@ export default function EditOrganisationModal({
                 >
                 <Avatar
                   alt={formData.name ?? ''}
-                  src={formData.logo_b64 ?? getUrlFromLogoId(formData?.logo_id) ?? ''}
+                  src={formData.logo_b64 ?? getImageUrl(formData?.logo_id) ?? undefined}
                   sx={{
                     width: '8rem',
                     height: '8rem',
@@ -186,15 +216,7 @@ export default function EditOrganisationModal({
                   title="Remove image"
                   // color='primary'
                   disabled={!formData.logo_b64 && !formData.logo_id}
-                  onClick={() => {
-                    if (formData?.logo_b64) {
-                      setValue('logo_b64', null)
-                    }
-                    if (formData.logo_id) {
-                      deleteLogoFromDb()
-                    }
-                    setValue('logo_mime_type',null,{shouldDirty: true})
-                  }}
+                  onClick={deleteLogo}
                 >
                   remove <DeleteIcon/>
                 </Button>

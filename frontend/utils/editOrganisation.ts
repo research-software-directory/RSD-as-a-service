@@ -9,27 +9,19 @@
 
 import {AutocompleteOption} from '../types/AutocompleteOptions'
 import {
+  CoreOrganisationProps,
   EditOrganisation, Organisation,
   OrganisationRole,
   OrganisationsForSoftware,
+  PatchOrganisation,
   SearchOrganisation
 } from '../types/Organisation'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
-import {getPropsFromObject} from './getPropsFromObject'
+import {getImageUrl} from './editImage'
 import {findInROR} from './getROR'
 import {getSlugFromString} from './getSlugFromString'
 import {itemsNotInReferenceList} from './itemsNotInReferenceList'
 import logger from './logger'
-
-// organisation colums used in editOrganisation.createOrganisation
-const columsForCreate = [
-  'parent','slug', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website',
-]
-// organisation colums used in editOrganisation.updateOrganisation
-export const columsForUpdate = [
-  'id',
-  ...columsForCreate
-]
 
 export async function searchForOrganisation({searchFor, token, frontend}:
   { searchFor: string, token?: string, frontend?: boolean }) {
@@ -150,46 +142,15 @@ export async function getParticipatingOrganisations({software, token, frontend =
       name: item.name,
       website: item.website,
       rsd_path: item.rsd_path,
-      logo_url: getUrlFromLogoId(item.logo_id)
+      logo_url: getImageUrl(item.logo_id)
     }
   })
   return organisations
 }
 
-export async function saveExistingOrganisation({item, token, pos, setState}:
-  {item: EditOrganisation, token: string, pos:number, setState: (item:EditOrganisation,pos:number)=>void}) {
-  if (!item.id) return {
-    status: 400,
-    message: 'Organisation id missing.'
-  }
-  // update existing organisation
-  const resp = await updateOrganisation({
-    item,
-    token
-  })
-  if (resp.status === 200) {
-    const organisation = updateDataObjectAfterSave({
-      data: item,
-      id: item.id
-    })
-    // update local list
-    setState(organisation, pos)
-    // return OK state
-    return {
-      status: 200,
-      message: 'OK'
-    }
-  } else {
-    // showErrorMessage(resp.message)
-    return resp
-  }
-}
-
-export async function createOrganisation({item, token}:
-  {item: EditOrganisation, token: string}) {
+export async function createOrganisation({organisation, token}:
+  { organisation: CoreOrganisationProps, token: string}) {
   try {
-    // extract only required items
-    const organisation = getPropsFromObject(item,columsForCreate)
 
     const url = '/api/v1/organisation'
     const resp = await fetch(url, {
@@ -205,33 +166,11 @@ export async function createOrganisation({item, token}:
       // we need to return id of created record
       // it can be extracted from header.location
       const id = resp.headers.get('location')?.split('.')[1]
-      if (id &&
-        item?.logo_b64 &&
-        item?.logo_mime_type) {
-        const base64 = item?.logo_b64.split(',')[1]
-        const resp = await uploadOrganisationLogo({
-          id,
-          data: base64,
-          mime_type: item.logo_mime_type,
-          token
-        })
-        if (resp.status === 200) {
-          return {
-            status: 201,
-            message: id
-          }
-        } else {
-          return {
-            status: 206,
-            message: id
-          }
-        }
-      } else {
-        return {
-          status: 201,
-          message: id
-        }
+      return {
+        status: 201,
+        message: id
       }
+      // }
     } else {
       return extractReturnMessage(resp)
     }
@@ -243,13 +182,10 @@ export async function createOrganisation({item, token}:
   }
 }
 
-export async function updateOrganisation({item, token}:
-  { item: EditOrganisation, token: string }) {
+export async function updateOrganisation({organisation, token}:
+  { organisation: Organisation, token: string }) {
   try {
-    // extract only required items
-    const organisation = getPropsFromObject(item, columsForUpdate)
-
-    const url = `/api/v1/organisation?id=eq.${item.id}`
+    const url = `/api/v1/organisation?id=eq.${organisation.id}`
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {
@@ -257,22 +193,26 @@ export async function updateOrganisation({item, token}:
       },
       body: JSON.stringify(organisation)
     })
-
-    if ([200,204].includes(resp.status) &&
-      item?.logo_b64 &&
-      item?.logo_mime_type &&
-      item?.id) {
-      const base64 = item?.logo_b64.split(',')[1]
-      const resp = await uploadOrganisationLogo({
-        id: item.id,
-        data: base64,
-        mime_type: item.logo_mime_type,
-        token
-      })
-      // fetch image to reload the cache
-      await fetch(`/image/rpc/get_logo?id=${item.id}`, {cache: 'reload'})
-      return resp
+    return extractReturnMessage(resp)
+  } catch (e: any) {
+    return {
+      status: 500,
+      message: e?.message
     }
+  }
+}
+
+export async function patchOrganisation({data, token}:
+  { data: PatchOrganisation, token: string }) {
+  try {
+    const url = `/api/v1/organisation?id=eq.${data.id}`
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        ...createJsonHeaders(token)
+      },
+      body: JSON.stringify(data)
+    })
     return extractReturnMessage(resp)
   } catch (e: any) {
     return {
@@ -285,19 +225,6 @@ export async function updateOrganisation({item, token}:
 export async function deleteOrganisation({uuid,logo_id, token}:
   { uuid: string, logo_id:string|null, token: string }) {
   try {
-
-    // delete logo first
-    if (logo_id) {
-      const resp = await deleteOrganisationLogo({
-        id: logo_id,
-        token
-      })
-      // debugger
-      if (resp.status !== 200) {
-        return resp
-      }
-    }
-
     // delete organisation
     const url = `/api/v1/organisation?id=eq.${uuid}`
     const resp = await fetch(url, {
@@ -307,50 +234,6 @@ export async function deleteOrganisation({uuid,logo_id, token}:
       }
     })
     // debugger
-    return extractReturnMessage(resp)
-  } catch (e: any) {
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function uploadOrganisationLogo({id, data, mime_type, token}:
-  { id: string, data: string, mime_type: string, token: string }) {
-  try {
-    const url = '/api/v1/logo_for_organisation'
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: {
-        ...createJsonHeaders(token),
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify({
-        organisation:id,
-        data,
-        mime_type
-      })
-    })
-    return extractReturnMessage(resp)
-  } catch (e: any) {
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function deleteOrganisationLogo({id, token}:
-  { id: string, token: string }) {
-  try {
-    const url = `/api/v1/logo_for_organisation?organisation=eq.${id}`
-    const resp = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        ...createJsonHeaders(token)
-      }
-    })
     return extractReturnMessage(resp)
   } catch (e: any) {
     return {
@@ -390,13 +273,6 @@ export async function getRsdPathForOrganisation({uuid,token,frontend = false}:
   }
 }
 
-export function getUrlFromLogoId(logo_id: string|null|undefined) {
-  if (logo_id) {
-    return `/image/rpc/get_logo?id=${logo_id}`
-  }
-  return null
-}
-
 export function searchToEditOrganisation({item, account, position}:
   { item: SearchOrganisation, account?: string, position?: number }) {
 
@@ -426,21 +302,6 @@ export function searchToEditOrganisation({item, account, position}:
   }
 
   return addOrganisation
-}
-
-export function updateDataObjectAfterSave({data, id}:
-  {data: EditOrganisation, id: string}) {
-  // update local data
-  if (id) data.id = id
-  // if base64 image is present
-  if (data.logo_b64) {
-    // it is uploaded and uses id
-    data.logo_id = id
-    // remove image strings after upload
-    data.logo_b64 = null
-    data.logo_mime_type = null
-  }
-  return data
 }
 
 type NewOrganisation = {

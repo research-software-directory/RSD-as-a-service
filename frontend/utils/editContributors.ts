@@ -9,30 +9,11 @@
  * CONTRIBUTORS
  */
 
-import {AutocompleteOption} from '../types/AutocompleteOptions'
-import {Contributor, ContributorProps, SearchContributor} from '../types/Contributor'
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
-import {getORCID, isOrcid} from './getORCID'
-import {getPropsFromObject} from './getPropsFromObject'
 import logger from './logger'
-
-export function getAvatarUrl({id, avatar_mime_type}:{id?:string|null,avatar_mime_type?:string|null}) {
-  if (avatar_mime_type) {
-    // construct image path
-    // currently we use posgrest + nginx approach image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
-    return `/image/rpc/get_contributor_image?id=${id}`
-  }
-  return null
-}
-
-export function getAvatarUrlAsBase64({avatar_mime_type,avatar_data}:
-  {avatar_mime_type?: string | null, avatar_data: string | null}) {
-  if (avatar_mime_type && avatar_data) {
-    // construct the image src content for base64 images
-    return `data:${avatar_mime_type};base64,${avatar_data}`
-  }
-  return null
-}
+import {Contributor, ContributorProps, PatchPerson, SaveContributor} from '../types/Contributor'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
+import {findRSDPerson} from './findRSDPerson'
+import {getORCID} from './getORCID'
 
 export async function getContributorsForSoftware({software, token, frontend}:
   { software: string, token?: string, frontend?: boolean }) {
@@ -53,11 +34,7 @@ export async function getContributorsForSoftware({software, token, frontend}:
 
     if (resp.status === 200) {
       const data: Contributor[] = await resp.json()
-      return data.map(item => ({
-        ...item,
-        // add avatar url based on uuid
-        avatar_url: getAvatarUrl(item)
-      }))
+      return data
     } else if (resp.status === 404) {
       logger(`getContributorsForSoftware: 404 [${url}]`, 'error')
       // query not found
@@ -75,7 +52,7 @@ export async function searchForContributor({searchFor, token, frontend}:
   try {
 
     const [rsdContributor, orcidOptions] = await Promise.all([
-      findRSDContributor({searchFor, token, frontend}),
+      findRSDPerson({searchFor, token, frontend}),
       getORCID({searchFor})
     ])
 
@@ -92,56 +69,8 @@ export async function searchForContributor({searchFor, token, frontend}:
   }
 }
 
-async function findRSDContributor({searchFor, token, frontend}:
-  { searchFor: string, token?: string, frontend?: boolean }) {
-  try {
-    let url = '/rpc/unique_contributors?limit=20'
-    if (frontend) {
-      url = '/api/v1' + url
-    } else {
-      url = `${process.env.POSTGREST_URL}` + url
-    }
-
-    if (isOrcid(searchFor)) {
-      url = url + `&orcid=eq.${searchFor}`
-    } else {
-      url = url + `&display_name=ilike.*${searchFor}*`
-    }
-
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: {
-        ...createJsonHeaders(token),
-      }
-    })
-
-    if (resp.status === 200) {
-      const data: SearchContributor[] = await resp.json()
-      const options: AutocompleteOption<SearchContributor>[] = data.map(item => {
-        return {
-          key: item.display_name ?? '',
-          label: item.display_name ?? '',
-          data: {
-            ...item,
-            source: 'RSD'
-          }
-        }
-      })
-      return options
-    } else if (resp.status === 404) {
-      logger('findRSDContributor ERROR: 404 Not found', 'error')
-      // query not found
-      return []
-    }
-    logger(`findRSDContributor ERROR: ${resp?.status} ${resp?.statusText}`, 'error')
-    return []
-  } catch (e: any) {
-    logger(`findRSDContributor: ${e?.message}`, 'error')
-    return []
-  }
-}
-
-export async function addContributorToDb({contributor, token}: { contributor: Contributor, token: string }) {
+export async function postContributor({contributor, token}:
+  { contributor: SaveContributor, token: string }) {
   try {
     const url = '/api/v1/contributor'
 
@@ -165,7 +94,7 @@ export async function addContributorToDb({contributor, token}: { contributor: Co
       return extractReturnMessage(resp)
     }
   } catch (e: any) {
-    logger(`addContributorToDb: ${e?.message}`, 'error')
+    logger(`postContributor: ${e?.message}`, 'error')
     return {
       status: 500,
       message: e?.message
@@ -173,50 +102,8 @@ export async function addContributorToDb({contributor, token}: { contributor: Co
   }
 }
 
-export async function updateContributorInDb({data, token}: { data: Contributor, token: string }) {
-
-  const contributor = prepareContributorData(data)
-  const resp = await patchContributor({contributor, token})
-
-  if (resp.status === 200) {
-    // if we uploaded new image we remove
-    // data and construct avatar_url
-    const returned = removeBase64Data(data)
-    // reload image to update cache
-    if (returned.avatar_url) await fetch(returned.avatar_url, {cache: 'reload'})
-    return {
-      status: 200,
-      message: returned
-    }
-  } else {
-    return resp
-  }
-}
-
-export function prepareContributorData(data: Contributor) {
-  const contributor = getPropsFromObject(data, ContributorProps)
-  // do we need to save new base64 image
-  if (data?.avatar_b64 &&
-    data?.avatar_b64.length > 10 &&
-    data?.avatar_mime_type !== null) {
-    // split base64 to use only encoded content
-    contributor.avatar_data = data?.avatar_b64.split(',')[1]
-  }
-  return contributor
-}
-
-export function removeBase64Data(contributor: Contributor) {
-  if (contributor.avatar_b64 &&
-    contributor?.avatar_b64.length > 10) {
-    // clean it from memory data
-    contributor.avatar_b64 = null
-    // and we use avatar url instead
-    contributor.avatar_url = getAvatarUrl(contributor)
-  }
-  return contributor
-}
-
-export async function patchContributor({contributor, token}: { contributor: Contributor, token: string }) {
+export async function patchContributor({contributor, token}:
+  { contributor: PatchPerson, token: string }) {
   try {
     const url = `/api/v1/contributor?id=eq.${contributor.id}`
     const resp = await fetch(url, {

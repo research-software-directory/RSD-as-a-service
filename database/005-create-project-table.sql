@@ -16,6 +16,7 @@ CREATE TABLE project (
 	grant_id VARCHAR(50),
 	image_caption VARCHAR(500),
 	image_contain BOOLEAN DEFAULT FALSE NOT NULL,
+	image_id VARCHAR(40) REFERENCES image(id),
 	is_published BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
@@ -80,42 +81,3 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_url_for_project BEFORE UPDATE ON url_for_project FOR EACH ROW EXECUTE PROCEDURE sanitise_update_url_for_project();
-
-
-CREATE TABLE image_for_project (
-	project UUID REFERENCES project (id) PRIMARY KEY,
-	data VARCHAR(2750000) NOT NULL,
-	mime_type VARCHAR(100) NOT NULL
-);
-
-
-CREATE FUNCTION get_project_image(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
-$$
-DECLARE headers TEXT;
-DECLARE blob BYTEA;
-DECLARE project_slug VARCHAR;
-
-BEGIN
-	SELECT slug FROM project WHERE project.id = get_project_image.id INTO project_slug;
-	SELECT format(
-		'[{"Content-Type": "%s"},'
-		'{"Content-Disposition": "inline; filename=\"%s\""},'
-		'{"Cache-Control": "max-age=259200"}]',
-		mime_type,
-		project_slug)
-	FROM image_for_project WHERE project = id INTO headers;
-
-	PERFORM set_config('response.headers', headers, TRUE);
-
-	SELECT decode(image_for_project.data, 'base64') FROM image_for_project WHERE image_for_project.project = get_project_image.id INTO blob;
-
-	IF FOUND
-		THEN RETURN(blob);
-	ELSE RAISE SQLSTATE 'PT404'
-		USING
-			message = 'NOT FOUND',
-			detail = 'File not found',
-			hint = format('%s seems to be an invalid file id', get_project_image.id);
-	END IF;
-END
-$$;

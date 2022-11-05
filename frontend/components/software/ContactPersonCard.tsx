@@ -8,6 +8,7 @@
 /* eslint-disable @next/next/no-img-element */
 import EmailIcon from '@mui/icons-material/Email'
 import Avatar from '@mui/material/Avatar'
+import {getImageUrl} from '~/utils/editImage'
 
 import {Contributor} from '../../types/Contributor'
 import {getDisplayName, getDisplayInitials} from '../../utils/getDisplayName'
@@ -45,7 +46,7 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
         {/* <div className="self-center md:mr-8 2xl:mr-0"> */}
         <Avatar
           alt={displayName ?? ''}
-          src={person.avatar_url ?? ''}
+          src={getImageUrl(person.avatar_id) ?? ''}
           sx={{
             width: '7rem',
             height: '7rem',

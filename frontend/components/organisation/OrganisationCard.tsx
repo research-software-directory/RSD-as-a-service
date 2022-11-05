@@ -5,7 +5,7 @@
 
 import Link from 'next/link'
 import {OrganisationForOverview} from '../../types/Organisation'
-import {getUrlFromLogoId} from '../../utils/editOrganisation'
+import {getImageUrl} from '~/utils/editImage'
 import StatCounter from '../layout/StatCounter'
 import VerifiedIcon from '@mui/icons-material/Verified'
 import SingleLineTitle from '../layout/SingleLineTitle'
@@ -28,6 +28,7 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
   return (
     <Link
       href={`/organisations/${organisation.rsd_path}`}
+      className="flex flex-col h-full"
       passHref
     >
       <article
@@ -63,7 +64,7 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
           <div className="min-w-[8rem]">
             <LogoAvatar
               name={organisation.name ?? ''}
-              src={getUrlFromLogoId(organisation.logo_id) ?? undefined}
+              src={getImageUrl(organisation.logo_id) ?? undefined}
               sx={{
                 '& img': {
                   height: 'auto',

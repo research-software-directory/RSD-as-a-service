@@ -167,7 +167,8 @@ it('validate, save and redirect', async () => {
         date_end: null,
         image_caption: null,
         image_contain: false,
-        grant_id: null
+        grant_id: null,
+        image_id: null
       },
       'token': 'TEST_TOKEN',
     })

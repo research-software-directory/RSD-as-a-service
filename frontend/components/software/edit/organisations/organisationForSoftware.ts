@@ -3,65 +3,53 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {EditOrganisation, SoftwareForOrganisation} from '~/types/Organisation'
-import {createOrganisation, updateDataObjectAfterSave} from '~/utils/editOrganisation'
+import {columsForCreate, EditOrganisation, SoftwareForOrganisation} from '~/types/Organisation'
+import {createOrganisation} from '~/utils/editOrganisation'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import logger from '~/utils/logger'
 
-export async function saveNewOrganisationForSoftware({item, token, software, setState}:
+export async function createOrganisationAndAddToSoftware({item, token, software, setState}:
   { item: EditOrganisation, token: string, software: string, setState: (item: EditOrganisation) => void }) {
+  // extract props we need for createOrganisation
+  const organisation = getPropsFromObject(item, columsForCreate)
   // create new organisation
   let resp = await createOrganisation({
-    item,
+    organisation,
     token
   })
-  // only 201 and 206 accepted
-  if ([201, 206].includes(resp.status) === false) {
-    // on error we return message
+  // only 201 accepted
+  if (resp.status !== 201) {
+    // on error we return resp status
     return resp
   }
   // we receive id in message
-  const id = resp.message
-  if (resp.status === 201) {
+  // const id = resp.message
+  item.id = resp.message
+  if (item.id) {
     // add this organisation to software
     resp = await addOrganisationToSoftware({
       software,
-      organisation: id,
+      organisation: item.id,
       position: item.position,
       token
     })
     if (resp.status === 200) {
       // we receive assigned status in message
       item.status = resp.message
-      // update data, remove base64 string after upload
-      // and create logo_id to be used as image reference
-      const organisation = updateDataObjectAfterSave({
-        data: item,
-        id
-      })
-      // update local list
-      setState(organisation)
+      // return updated item
       return {
         status: 200,
-        message: 'OK'
+        message: item
       }
-    } else {
-      return resp
     }
-  } else if (resp.status === 206) {
-    // organisation is created but the image failed
-    const organisation = updateDataObjectAfterSave({
-      data: item,
-      id
-    })
-    setState(organisation)
-    // we show error about failure on logo
-    return {
-      status: 206,
-      message: 'Failed to upload organisation logo.'
-    }
-  } else {
+    // debugger
     return resp
+  } else {
+    return {
+      status: 400,
+      message: 'Organisation id is missing.'
+    }
   }
 }
 

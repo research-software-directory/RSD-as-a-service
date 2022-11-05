@@ -135,6 +135,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
           </svg>
         </div>
         <input className="px-2 pl-8 py-2 bg-transparent rounded-sm border border-white border-opacity-50 focus:outline-0 w-full focus:bg-white focus:text-black duration-200"
+          data-testid="global-search"
           placeholder="Search in RSD or jump to..."
           autoComplete="off"
           value={inputValue}

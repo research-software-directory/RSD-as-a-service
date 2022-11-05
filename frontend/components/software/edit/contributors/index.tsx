@@ -11,11 +11,10 @@ import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import {Contributor, ContributorProps} from '~/types/Contributor'
+import {Contributor, ContributorProps, SaveContributor} from '~/types/Contributor'
 import {
-  addContributorToDb, deleteContributorsById,
-  getAvatarUrl, patchContributorPositions,
-  prepareContributorData, updateContributorInDb
+  deleteContributorsById, patchContributor,
+  patchContributorPositions, postContributor,
 } from '~/utils/editContributors'
 import {getDisplayName} from '~/utils/getDisplayName'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
@@ -29,6 +28,7 @@ import GetContributorsFromDoi from './GetContributorsFromDoi'
 import useSoftwareContext from '../useSoftwareContext'
 import useSoftwareContributors from './useSoftwareContributors'
 import SortableContributorsList from './SortableContributorsList'
+import {deleteImage, upsertImage} from '~/utils/editImage'
 
 type EditContributorModal = ModalProps & {
   contributor?: Contributor
@@ -53,6 +53,18 @@ export default function SoftwareContributors() {
     <ContentLoader />
   )
 
+  function hideModals() {
+    // hide modals
+    setModal({
+      edit: {
+        open:false
+      },
+      delete: {
+        open:false
+      }
+    })
+  }
+
   function updateContributorList({data, pos}: { data: Contributor, pos?: number }) {
     if (typeof pos === 'number') {
       // REPLACE existing item and sort
@@ -71,24 +83,6 @@ export default function SoftwareContributors() {
       ]
       setContributors(list)
     }
-  }
-
-  function onCreateNewContributor(name:Name) {
-    const newContributor: Contributor = getPropsFromObject(name, ContributorProps)
-    // set defaults
-    newContributor.software = software?.id ?? ''
-    newContributor.is_contact_person = false
-    loadContributorIntoModal(newContributor)
-  }
-
-  async function onAddContributor(item: Contributor) {
-    // update software id if missing
-    if (item.software === '' &&
-      software?.id &&
-      software?.id !== '') {
-      item.software = software?.id
-    }
-    loadContributorIntoModal(item)
   }
 
   function loadContributorIntoModal(contributor: Contributor,pos?:number) {
@@ -114,38 +108,55 @@ export default function SoftwareContributors() {
   }
 
   async function onSubmitContributor({data, pos}:{data:Contributor,pos?: number}) {
-    setModal({
-      edit: {
-        open: false
-      },
-      delete: {
-        open: false
+     // UPLOAD avatar
+    if (data.avatar_b64 && data.avatar_mime_type) {
+      // split base64 to use only encoded content
+      const b64data = data.avatar_b64.split(',')[1]
+      const upload = await upsertImage({
+        data: b64data,
+        mime_type: data.avatar_mime_type,
+        token
+      })
+      // debugger
+      if (upload.status === 201) {
+        // update data values
+        data.avatar_id = upload.message
+      } else {
+        showErrorMessage(`Failed to upload image. ${upload.message}`)
+        return
       }
-    })
+    }
+    // ensure software id
+    if (!data.software && software.id) {
+      data.software = software.id
+    }
+    // prepare member object for save (remove helper props)
+    const contributor:SaveContributor = getPropsFromObject(data, ContributorProps)
     // if id present we update
-    if (data?.id) {
-      const resp = await updateContributorInDb({data, token})
+    if (contributor?.id && typeof pos !== 'undefined') {
+      const resp = await patchContributor({
+        contributor,
+        token
+      })
       if (resp.status === 200) {
-        updateContributorList({data: resp.message,pos})
-        // show notification
-        showSuccessMessage(`Updated ${getDisplayName(data)}`)
+        updateContributorList({data:contributor,pos})
+        hideModals()
       } else {
         showErrorMessage(`Failed to update ${getDisplayName(data)}. Error: ${resp.message}`)
       }
     } else {
       // this is completely new contributor we need to add to DB
-      const contributor = prepareContributorData(data)
-      const resp = await addContributorToDb({contributor, token})
-
+      contributor.position = contributors.length + 1
+      const resp = await postContributor({
+        contributor,
+        token
+      })
       if (resp.status === 201) {
         // id of created record is provided in returned in message
         contributor.id = resp.message
-        // remove avatar data
-        contributor.avatar_data = null
-        // construct url
-        contributor.avatar_url = getAvatarUrl(contributor)
         // update contributors list
         updateContributorList({data: contributor})
+        hideModals()
       } else {
         showErrorMessage(`Failed to add ${getDisplayName(contributor)}. Error: ${resp.message}`)
       }
@@ -168,14 +179,7 @@ export default function SoftwareContributors() {
 
   async function deleteContributor(pos?: number) {
     // hide modals
-    setModal({
-      edit: {
-        open:false
-      },
-      delete: {
-        open:false
-      }
-    })
+    hideModals()
     // abort if not specified
     if (typeof pos == 'number') {
       const contributor = contributors[pos]
@@ -190,6 +194,14 @@ export default function SoftwareContributors() {
           removeFromContributorList(pos)
         } else {
           showErrorMessage(`Failed to remove ${getDisplayName(contributor)}. Error: ${resp.message}`)
+        }
+        // try to remove member avatar
+        // without waiting for result
+        if (contributor.avatar_id) {
+          const del = await deleteImage({
+            id: contributor.avatar_id,
+            token
+          })
         }
       } else {
         // new contributor
@@ -248,8 +260,8 @@ export default function SoftwareContributors() {
             subtitle={config.findContributor.subtitle}
           />
           <FindContributor
-            onAdd={onAddContributor}
-            onCreate={onCreateNewContributor}
+            software={software?.id ?? ''}
+            onAdd={loadContributorIntoModal}
           />
           {
             software?.concept_doi &&

@@ -417,15 +417,17 @@ it('returns expected contributors', async () => {
   expect(resp).toEqual(
     [
       {
-        'affiliation': 'Example organisation',
-        'email_address': '',
-        'family_names': 'Doe',
-        'given_names': 'John',
-        'is_contact_person': false,
-        'orcid': '0000-0000-0000-0000',
-        'software': '0',
-        'id': null,
-        'position': null
+        affiliation: 'Example organisation',
+        email_address: '',
+        family_names: 'Doe',
+        given_names: 'John',
+        is_contact_person: false,
+        orcid: '0000-0000-0000-0000',
+        software: '0',
+        id: null,
+        position: null,
+        role: null,
+        avatar_id: null
       }
     ]
   )
@@ -444,7 +446,9 @@ it('returns authors and contributors (without duplicates)', async () => {
       is_contact_person: false,
       orcid: '0000-0003-4940-3444',
       id: null,
-      position: null
+      position: null,
+      role: null,
+      avatar_id: null
     },
     {
       given_names: 'Michael',
@@ -455,7 +459,9 @@ it('returns authors and contributors (without duplicates)', async () => {
       is_contact_person: false,
       orcid: '0000-0002-1179-1659',
       id: null,
-      position: null
+      position: null,
+      role: null,
+      avatar_id: null
     }
   ]
   const resp = await getContributorsFromDoi('0', 'DOI')

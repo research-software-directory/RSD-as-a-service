@@ -11,17 +11,22 @@ import Button from '@mui/material/Button'
 import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import ContentLoader from '../../layout/ContentLoader'
-import {EditOrganisation, OrganisationForOverview} from '../../../types/Organisation'
 import {
-  createOrganisation, deleteOrganisationLogo,
-  newOrganisationProps, updateOrganisation,
-  updateDataObjectAfterSave
+  columsForCreate, columsForUpdate, CoreOrganisationProps,
+  EditOrganisation, Organisation, OrganisationForOverview
+} from '../../../types/Organisation'
+import {
+  createOrganisation,
+  newOrganisationProps,
+  updateOrganisation
 } from '../../../utils/editOrganisation'
 import useOrganisationUnits from '../../../utils/useOrganisationUnits'
 import {sortOnStrProp} from '../../../utils/sortFn'
 import ResearchUnitList from './ResearchUnitList'
 import ResearchUnitModal from './ResearchUnitModal'
 import {OrganisationComponentsProps} from '../OrganisationNavItems'
+import {upsertImage} from '~/utils/editImage'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
 type EditOrganisationModal = {
   open: boolean,
@@ -117,40 +122,53 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
 
   async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number }) {
     try {
-      if (typeof pos != 'undefined' && data.id) {
-        // update existing organisation
-        const resp = await updateOrganisation({
-          item: data,
+      // UPLOAD logo
+      if (data.logo_b64 && data.logo_mime_type) {
+        // split base64 to use only encoded content
+        const b64data = data.logo_b64.split(',')[1]
+        const upload = await upsertImage({
+          data: b64data,
+          mime_type: data.logo_mime_type,
           token
         })
+        // debugger
+        if (upload.status === 201) {
+          // update data values
+          data.logo_id = upload.message
+          // remove image strings after upload
+          data.logo_b64 = null
+          data.logo_mime_type = null
+        } else {
+          showErrorMessage(`Failed to upload image. ${upload.message}`)
+          return
+        }
+      }
+      // SAVE organisation
+      if (typeof pos != 'undefined' && data.id) {
+        const unit:Organisation = getPropsFromObject(data,columsForUpdate)
+        // update existing organisation
+        const resp = await updateOrganisation({
+          organisation: unit,
+          token
+        })
+        // debugger
         if (resp.status !== 200) {
           showErrorMessage(resp.message)
         } else {
-          if (data.logo_b64) {
-            const updatedUnit = updateDataObjectAfterSave({
-              data,
-              id: data.id
-            })
-            updateUnitInList(updatedUnit, pos)
-            // @ts-ignore (hard) reload the page, true is for FF
-            location.reload(true)
-          } else {
-            updateUnitInList(data,pos)
-          }
+          updateUnitInList(data,pos)
           closeModals()
         }
       } else {
         // create new organisation
+        const unit:CoreOrganisationProps = getPropsFromObject(data, columsForCreate)
         const resp = await createOrganisation({
-          item: data,
+          organisation:unit,
           token
         })
+        // debugger
         if (resp.status === 201) {
-          const newUnit = updateDataObjectAfterSave({
-            data,
-            id: resp.message
-          })
-          addUnitToCollection(newUnit)
+          data.id = resp.message
+          addUnitToCollection(data)
           closeModals()
         } else {
           showErrorMessage(resp.message)
@@ -158,16 +176,6 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
       }
     } catch (e:any) {
       showErrorMessage(e.message)
-    }
-  }
-
-  async function onDeleteOrganisationLogo(logo_id: string) {
-    const resp = await deleteOrganisationLogo({
-      id: logo_id,
-      token
-    })
-    if (resp.status !== 200) {
-      showErrorMessage(resp.message)
     }
   }
 
@@ -222,7 +230,6 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
         organisation={modal.organisation}
         onCancel={closeModals}
         onSubmit={saveOrganisation}
-        onDeleteLogo={onDeleteOrganisationLogo}
       />
     </section>
   )

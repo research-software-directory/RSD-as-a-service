@@ -9,11 +9,11 @@ import {mentionColumns, MentionForProject, MentionItemProps} from '~/types/Menti
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, ProjectSearchRpc, RawProject, RelatedProjectForProject,
+  ProjectLink, ProjectSearchRpc, RelatedProjectForProject,
   ResearchDomain, SearchProject, TeamMember
 } from '~/types/Project'
 import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
-import {getUrlFromLogoId} from './editOrganisation'
+import {getImageUrl} from './editImage'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders} from './fetchHelpers'
 import logger from './logger'
@@ -50,20 +50,13 @@ export async function getProjectList({url, token}: { url: string, token?: string
     }
   }
 }
-export function extractImageInfo(item: RawProject) {
-  if (item?.image_for_project && item?.image_for_project !== null) {
-    return item.image_for_project.project
-  } else {
-    return null
-  }
-}
 
 //used by view and edit pages
 export async function getProjectItem({slug,token,frontend = false}:
   {slug: string, token: string, frontend: boolean}) {
   try{
     // get project by slug
-    const query = `project?select=*,image_for_project(project)&slug=eq.${slug}`
+    const query = `project?slug=eq.${slug}`
     let url = `${process.env.POSTGREST_URL}/${query}`
     if (frontend) {
       url=`/api/v1/${query}`
@@ -75,21 +68,10 @@ export async function getProjectItem({slug,token,frontend = false}:
       }
     })
     if (resp.status===200){
-      const rawData: RawProject[] = await resp.json()
+      const rawData: Project[] = await resp.json()
       if (rawData && rawData.length === 1) {
-        // extract if image is present
-        const image_id = extractImageInfo(rawData[0])
-        // remove raw property
-        const raw = rawData[0]
-        if (raw?.image_for_project) {
-          delete raw.image_for_project
-        }
-        const data: Project = {
-          ...raw,
-          image_id
-        }
         // delete data.image_for_project
-        return data
+        return rawData[0]
       }
       return undefined
     }
@@ -100,12 +82,6 @@ export async function getProjectItem({slug,token,frontend = false}:
     return undefined
   }
 }
-
-export function getImageUrl(image_id:string|null) {
-  if (image_id) return `/image/rpc/get_project_image?id=${image_id}`
-  return null
-}
-
 
 export async function getOrganisationsOfProject({project, token, frontend = true, roles}:
   { project: string, token: string, frontend?: boolean, roles?: OrganisationRole[] }) {
@@ -140,7 +116,7 @@ export async function getOrganisations({project, token, frontend = true}:
   { project: string, token: string, frontend?: boolean}) {
   const resp = await getOrganisationsOfProject({project, token, frontend})
   // filter only approved organisations
-  // extract only properties used
+  // extract only used properties
   const organisations = resp.filter(item => {
     return item.status === 'approved'
   })
@@ -150,7 +126,7 @@ export async function getOrganisations({project, token, frontend = true}:
         name: item.name,
         website: item.website ?? '',
         rsd_path: item.rsd_path,
-        logo_url: getUrlFromLogoId(item.logo_id),
+        logo_url: getImageUrl(item.logo_id),
         role: item.role
       }
     })
@@ -323,15 +299,6 @@ export async function getImpactForProject({project, token, frontend}:
   }
 }
 
-export function getAvatarUrl({id, avatar_mime_type}: { id?: string | null, avatar_mime_type?: string | null }) {
-  if (avatar_mime_type) {
-    // construct image path
-    // currently we use posgrest + nginx approach image/rpc/get_contributor_image?id=15c8d47f-f8f0-45ff-861c-1e57640ebd56
-    return `/image/rpc/get_team_member_image?id=${id}`
-  }
-  return null
-}
-
 export async function getTeamForProject({project, token, frontend}:
   {project: string, token?: string, frontend?: boolean}) {
   try {
@@ -351,11 +318,7 @@ export async function getTeamForProject({project, token, frontend}:
 
     if (resp.status === 200) {
       const data: TeamMember[] = await resp.json()
-      return data.map(item => ({
-        ...item,
-        // add avatar url based on uuid
-        avatar_url: getAvatarUrl(item)
-      }))
+      return data
     }
     logger(`getTeamForProject: ${resp.status} ${resp.statusText} [${url}]`, 'warn')
     // / query not found

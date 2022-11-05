@@ -12,11 +12,10 @@ CREATE TABLE organisation (
 	slug VARCHAR(200) NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	name VARCHAR(200) NOT NULL,
 	description VARCHAR(10000),
-	-- location VARCHAR(200),
-	-- type VARCHAR(100),
 	ror_id VARCHAR(100) UNIQUE,
 	website VARCHAR(200) UNIQUE,
 	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
+	logo_id VARCHAR(40) REFERENCES image(id),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL,
 	UNIQUE (slug, parent)
@@ -141,43 +140,6 @@ BEGIN
 END
 $$;
 
-
-CREATE TABLE logo_for_organisation (
-	organisation UUID references organisation(id) PRIMARY KEY,
-	data VARCHAR(2750000) NOT NULL,
-	mime_type VARCHAR(100) NOT NULL,
-	created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
-
-
-CREATE FUNCTION get_logo(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
-$$
-DECLARE headers TEXT;
-DECLARE blob BYTEA;
-
-BEGIN
-	SELECT format(
-		'[{"Content-Type": "%s"},'
-		'{"Content-Disposition": "inline; filename=\"%s\""},'
-		'{"Cache-Control": "max-age=259200"}]',
-		logo_for_organisation.mime_type,
-		logo_for_organisation.organisation)
-	FROM logo_for_organisation WHERE logo_for_organisation.organisation = get_logo.id INTO headers;
-
-	PERFORM set_config('response.headers', headers, TRUE);
-
-	SELECT decode(logo_for_organisation.data, 'base64') FROM logo_for_organisation WHERE logo_for_organisation.organisation = get_logo.id INTO blob;
-
-	IF FOUND
-		THEN RETURN(blob);
-	ELSE RAISE SQLSTATE 'PT404'
-		USING
-			message = 'NOT FOUND',
-			detail = 'File not found',
-			hint = format('%s seems to be an invalid file id', get_logo.id);
-	END IF;
-END
-$$;
 
 -- ORGANISATION route / path for all organisations
 -- we combine slugs of all parent organisation into route

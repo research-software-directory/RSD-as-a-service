@@ -9,7 +9,8 @@ import {HTMLAttributes, useState} from 'react'
 
 import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 import FindContributorItem from '~/components/software/edit/contributors/FindContributorItem'
-import {SearchTeamMember, TeamMember} from '~/types/Project'
+import {SearchPerson} from '~/types/Contributor'
+import {TeamMember} from '~/types/Project'
 import {splitName} from '~/utils/getDisplayName'
 import {isOrcid} from '~/utils/getORCID'
 import {cfgTeamMembers} from './config'
@@ -27,7 +28,7 @@ type FindMemberProps = {
 }
 
 export default function FindMember({onAdd,project,token}:FindMemberProps) {
-  const [options, setOptions] = useState<AutocompleteOption<SearchTeamMember>[]>([])
+  const [options, setOptions] = useState<AutocompleteOption<SearchPerson>[]>([])
   const [status, setStatus] = useState<{
     loading: boolean,
     foundFor: string | undefined
@@ -52,7 +53,7 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
     })
   }
 
-  function addMember(selected:AutocompleteOption<SearchTeamMember>) {
+  function addMember(selected:AutocompleteOption<SearchPerson>) {
     if (selected && selected.data) {
       onAdd({
         ...selected.data,
@@ -60,7 +61,9 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
         project,
         is_contact_person: false,
         role: null,
-        position: null
+        position: null,
+        // RSD entries could have avatar
+        avatar_id: selected.data.avatar_id ?? null
       })
     }
   }
@@ -77,7 +80,7 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
       affiliation: null,
       role: null,
       orcid: null,
-      avatar_data: null,
+      avatar_id: null,
       avatar_mime_type: null,
       avatar_b64: null,
       position: null
@@ -85,7 +88,7 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
   }
 
   function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<SearchTeamMember>) {
+    option: AutocompleteOption<SearchPerson>) {
     // if more than one option we add border at the bottom
     // we assume that first option is Add "new item"
     if (options.length > 1) {
@@ -104,7 +107,7 @@ export default function FindMember({onAdd,project,token}:FindMemberProps) {
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<SearchTeamMember>) {
+    option: AutocompleteOption<SearchPerson>) {
     // console.log('renderOption...', option)
     // when value is not found option returns input prop
     if (option?.input) {
