@@ -14,11 +14,9 @@ import {KeywordForSoftware} from '~/types/SoftwareTypes'
 import {useState} from 'react'
 import {getKeywordsFromDoi} from '~/utils/getInfoFromDatacite'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {searchForSoftwareKeywordExact} from './searchForSoftwareKeyword'
-import {addKeywordsToSoftware, createKeyword} from '~/utils/editKeywords'
+import {addKeywordsToSoftware, createOrGetKeyword, KeywordItem} from '~/utils/editKeywords'
 import {useSession} from '~/auth'
 import {sortOnStrProp} from '~/utils/sortFn'
-import {Keyword} from '~/components/keyword/FindKeyword'
 import logger from '~/utils/logger'
 
 type ImportKeywordsFromDoiProps = {
@@ -32,42 +30,6 @@ export default function ImportKeywordsFromDoi({software_id, concept_doi, keyword
   const {token} = useSession()
   const [loading, setLoading] = useState(false)
   const {showInfoMessage,showSuccessMessage} = useSnackbar()
-
-  async function addKeyword(selected: Keyword) {
-    const resp = await addKeywordsToSoftware({
-      data:{software:software_id, keyword: selected.id},
-      token
-    })
-    return {
-      ...resp,
-      keyword: {
-        ...selected,
-        software: software_id
-      }
-    }
-  }
-
-  async function createAndAdd(selected: string) {
-    // create keyword
-    const resp = await createKeyword({
-      keyword: selected,
-      token
-    })
-    if (resp.status === 201) {
-      const keyword = {
-        id: resp.message as string,
-        keyword: selected,
-        cnt: null
-      }
-      // add keyword after created
-      return addKeyword(keyword)
-    } else {
-      return {
-        ...resp,
-        keyword: null
-      }
-    }
-  }
 
   async function importKeywordsFromDoi() {
     const importedKeywords:KeywordForSoftware[] = []
@@ -88,28 +50,40 @@ export default function ImportKeywordsFromDoi({software_id, concept_doi, keyword
         continue
       }
       // is it already added to this software?
-      const find = keywords.filter(item => item.keyword.trim().toLowerCase() === kw.trim().toLowerCase())
-      if (find.length > 0) {
+      const find = keywords.find(item => item.keyword.trim().toLowerCase() === kw.trim().toLowerCase())
+      if (find) {
         // skip to next item in the loop
         continue
       }
-      // is it already in RSD?
-      const findDb = await searchForSoftwareKeywordExact({searchFor: kw.trim()})
-      if (findDb.length === 1) {
-        const {status, keyword} = await addKeyword(findDb[0])
-        if (status === 200) {
-          importedKeywords.push(keyword)
+      // create new or get reference to existing
+      const create = await createOrGetKeyword({
+        keyword: kw.trim(),
+        token
+      })
+      if (create.status === 201) {
+        const newKeyword: KeywordItem = create.message
+        const add = await addKeywordsToSoftware({
+          data: {
+            software: software_id,
+            keyword: newKeyword.id
+          },
+          token
+        })
+        // if added properly
+        if (add.status === 200) {
+          // add to list of imported
+          importedKeywords.push({
+            id: newKeyword.id,
+            keyword: newKeyword.value,
+            software: software_id
+          })
         } else {
+          // add to list of failed
           failedKeywords.push(kw)
         }
       } else {
-        // create new keyword
-        const {status, keyword} = await createAndAdd(kw)
-        if (status === 200 && keyword!==null) {
-          importedKeywords.push(keyword)
-        } else {
-          failedKeywords.push(kw)
-        }
+        // add to list of failed
+        failedKeywords.push(kw)
       }
     }
     if (importedKeywords.length > 0) {
@@ -121,12 +95,12 @@ export default function ImportKeywordsFromDoi({software_id, concept_doi, keyword
       // update collection
       onSetKeywords(items)
       showSuccessMessage(`${importedKeywords.length} keywords imported from DOI ${concept_doi}`)
+    } else if (failedKeywords.length > 0) {
+      showInfoMessage(`Failed to import keywords [${failedKeywords.toString()}] from DOI [${concept_doi}]`)
+      // log failure
+      logger(`importKeywordsFromDoi: Failed to import keywords [${failedKeywords.toString()}] from DOI [${concept_doi}]`,'warn')
     } else {
       showInfoMessage(`No (additional) keywords imported from DOI ${concept_doi}`)
-    }
-    // we only log failed for now
-    if (failedKeywords.length > 0) {
-      logger(`Failed to import keywords [${failedKeywords.toString()}] from DOI [${concept_doi}]`,'warn')
     }
     setLoading(false)
   }
