@@ -3,8 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {FundingOrganisation, OrganisationRole, Status} from './Organisation'
-import {SearchContributor} from './Contributor'
+import {SearchOrganisation, OrganisationRole, Status} from './Organisation'
+import {Person, SearchPerson} from './Contributor'
 
 export type NewProject = {
   slug: string
@@ -16,18 +16,13 @@ export type NewProject = {
   date_end: string | null
   image_caption: string | null
   image_contain: boolean
+  image_id: string | null
   grant_id: string | null
 }
 
 export type BasicProject = NewProject & {
   id: string
   updated_at: string
-}
-
-export type RawProject = BasicProject & {
-  image_for_project?: {
-    project: string
-  } | null
 }
 
 export type Project = BasicProject & {
@@ -38,7 +33,7 @@ export type EditProject = Project & {
   image_b64: string | null
   image_mime_type: string | null
   url_for_project: ProjectLink[]
-  funding_organisations: FundingOrganisation[]
+  funding_organisations: SearchOrganisation[]
   research_domains: ResearchDomain[] | null
   keywords: KeywordForProject[]
 }
@@ -55,7 +50,6 @@ export type ProjectSearchRpc = {
   is_published: boolean
   image_id: string | null
   keywords: string[]
-  // is_featured?: boolean
 }
 
 // object returned from api
@@ -144,30 +138,19 @@ export type ResearchDomainForProject = {
   research_domain: string
 }
 
-export type TeamMember = {
-  id: string | null,
+export type SaveTeamMember = Person & {
   project: string,
-  is_contact_person: boolean,
-  family_names: string,
-  given_names: string,
-  email_address: string | null,
-  affiliation?: string | null,
+}
+
+export type TeamMember = Person & {
+  project: string,
   // ORCID delivers array of institutions
   // selected one is moved to affiliation
   institution?: string[] | null,
-  role: string | null,
-  orcid?: string | null,
-  // base64 image in table
-  avatar_data?: string | null
-  avatar_mime_type?: string | null
-  // image_url to use
-  avatar_url?: string | null
   // uploaded raw image data
   avatar_b64?: string | null
-  position: number | null
+  avatar_mime_type?: string | null
 }
-
-export type SearchTeamMember = SearchContributor
 
 export const ProjectTableProps = [
   'id', 'slug', 'title', 'subtitle', 'is_published',

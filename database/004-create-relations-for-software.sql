@@ -75,8 +75,9 @@ CREATE TABLE contributor (
 	role VARCHAR(200),
 	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
 	position INTEGER,
-	avatar_data VARCHAR(2750000),
-	avatar_mime_type VARCHAR(100),
+	avatar_id VARCHAR(40) REFERENCES image(id),
+	-- avatar_data VARCHAR(2750000),
+	-- avatar_mime_type VARCHAR(100),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
@@ -105,37 +106,6 @@ END
 $$;
 
 CREATE TRIGGER sanitise_update_contributor BEFORE UPDATE ON contributor FOR EACH ROW EXECUTE PROCEDURE sanitise_update_contributor();
-
-
-CREATE FUNCTION get_contributor_image(id UUID) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
-$$
-DECLARE headers TEXT;
-DECLARE blob BYTEA;
-
-BEGIN
-	SELECT format(
-		'[{"Content-Type": "%s"},'
-		'{"Content-Disposition": "inline; filename=\"%s\""},'
-		'{"Cache-Control": "max-age=259200"}]',
-		contributor.avatar_mime_type,
-		contributor.id)
-	FROM contributor WHERE contributor.id = get_contributor_image.id INTO headers;
-
-	PERFORM set_config('response.headers', headers, TRUE);
-
-	SELECT decode(contributor.avatar_data, 'base64') FROM contributor WHERE contributor.id = get_contributor_image.id INTO blob;
-
-	IF FOUND
-		THEN RETURN(blob);
-	ELSE RAISE SQLSTATE 'PT404'
-		USING
-			message = 'NOT FOUND',
-			detail = 'File not found',
-			hint = format('%s seems to be an invalid file id', get_contributor_image.id);
-	END IF;
-END
-$$;
-
 
 CREATE TABLE testimonial (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useState} from 'react'
+import {ChangeEvent, useEffect} from 'react'
 import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
@@ -13,6 +13,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useForm} from 'react-hook-form'
 
+import {useSession} from '~/auth'
 import useSnackbar from '../../../snackbar/useSnackbar'
 import {Contributor} from '../../../../types/Contributor'
 import ControlledTextField from '../../../form/ControlledTextField'
@@ -20,9 +21,11 @@ import ControlledSwitch from '../../../form/ControlledSwitch'
 import ContributorAvatar from '../../ContributorAvatar'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {getDisplayInitials, getDisplayName} from '../../../../utils/getDisplayName'
-import logger from '../../../../utils/logger'
 import ControlledAffiliation from '~/components/form/ControlledAffiliation'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import {handleFileUpload} from '~/utils/handleFileUpload'
+import {deleteImage, getImageUrl} from '~/utils/editImage'
+import {patchContributor} from '~/utils/editContributors'
 
 type EditContributorModalProps = {
   open: boolean,
@@ -35,14 +38,13 @@ type EditContributorModalProps = {
 const formId='edit-contributor-modal'
 
 export default function EditContributorModal({open, onCancel, onSubmit, contributor, pos}: EditContributorModalProps) {
-  const {showWarningMessage} = useSnackbar()
+  const {token} = useSession()
+  const {showWarningMessage,showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const [b64Image, setB64Image]=useState<string>()
   const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Contributor>({
     mode: 'onChange',
     defaultValues: {
-      ...contributor,
-      avatar_b64:null
+      ...contributor
     }
   })
 
@@ -59,44 +61,82 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   function handleCancel() {
     // reset form
     reset()
-    // remove image upload
-    setB64Image(undefined)
     // hide
     onCancel()
   }
 
-  function handleFileUpload({target}:{target: any}) {
-    try {
-      let file = target.files[0]
-      if (typeof file == 'undefined') return
-      // check file size
-      if (file.size > 2097152) {
-        // file is to large > 2MB
-        showWarningMessage('The file is too large. Please select image < 2MB.')
-        return
+  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
+    if (typeof e !== 'undefined') {
+      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+      if (status === 200 && image_b64 && image_mime_type) {
+        replaceImage(image_b64, image_mime_type)
+      } else if (status===413) {
+        showWarningMessage(message)
+      } else {
+        showErrorMessage(message)
       }
-      let reader = new FileReader()
-      reader.onloadend = function () {
-        if (reader.result) {
-          // write to new avatar b64
-          setValue('avatar_b64', reader.result as string)
-          setValue('avatar_mime_type', file.type,{shouldDirty: true})
-        }
-      }
-      reader.readAsDataURL(file)
-    } catch (e:any) {
-      logger(`handleFileUpload: ${e.message}`,'error')
     }
   }
 
-  function getAvatarUrl() {
-    if (formData?.avatar_b64 && formData?.avatar_b64?.length > 10) {
-      return formData?.avatar_b64
+  async function replaceImage(avatar_b64:string, avatar_mime_type:string) {
+    if (formData.id && formData.avatar_id) {
+      // remove refrence to avatar first
+      const patch = await patchContributor({
+        contributor: {
+          id: formData.id,
+          avatar_id: null
+        },
+        token
+      })
+      // debugger
+      if (patch.status !== 200) {
+        showErrorMessage('Failed to remove image')
+        return
+      }
+      // then try to remove avatar from db
+      // without waiting for result
+      const del = await deleteImage({
+        id: formData.avatar_id,
+        token
+      })
+      // remove id in the form too
+      setValue('avatar_id', null)
     }
-    if (formData?.avatar_url && formData?.avatar_url.length > 10) {
-      return formData?.avatar_url
+    // write new logo to logo_b64
+    // we upload the image after submit
+    setValue('avatar_b64', avatar_b64)
+    setValue('avatar_mime_type', avatar_mime_type, {shouldDirty: true})
+  }
+
+   async function deleteAvatar() {
+    if (formData.id && formData.avatar_id) {
+      // remove reference to avatar first
+      const patch = await patchContributor({
+        contributor: {
+          id: formData.id,
+          avatar_id: null
+        },
+        token
+      })
+      // debugger
+      if (patch.status !== 200) {
+        showErrorMessage('Failed to remove image')
+        return
+      }
+      // then try to remove avatar from db
+      // without waiting for result
+      const del = await deleteImage({
+        id: formData.avatar_id,
+        token
+      })
+      // update form
+      setValue('avatar_id', null)
+     } else {
+      // just remove uploaded image from form
+      // because it is not save yet to DB
+      setValue('avatar_b64', null)
+      setValue('avatar_mime_type', null, {shouldDirty: true})
     }
-    return ''
   }
 
   return (
@@ -128,10 +168,10 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
           {...register('software')}
         />
         <input type="hidden"
-          {...register('avatar_mime_type')}
+          {...register('position')}
         />
         <input type="hidden"
-          {...register('avatar_b64')}
+          {...register('avatar_id')}
         />
         <DialogContent sx={{
           width: ['100%', '37rem'],
@@ -144,7 +184,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                 >
                 <ContributorAvatar
                   size={8}
-                  avatarUrl={getAvatarUrl()}
+                  avatarUrl={formData.avatar_b64 ?? getImageUrl(formData.avatar_id) ?? ''}
                   displayName={getDisplayName(contributor ?? {}) ?? ''}
                   displayInitials={getDisplayInitials(contributor ?? {}) ?? ''}
                 />
@@ -153,23 +193,15 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                 id="upload-avatar-image"
                 type="file"
                 accept="image/*"
-                onChange={handleFileUpload}
+                onChange={onFileUpload}
                 style={{display:'none'}}
               />
               <div className="flex pt-4">
                 <Button
                   title="Remove image"
                   // color='primary'
-                  disabled={!formData.avatar_b64 && !formData.avatar_url}
-                  onClick={() => {
-                    if (formData?.avatar_b64) {
-                      setValue('avatar_b64', null)
-                    }
-                    if (formData.avatar_url) {
-                      setValue('avatar_url', null)
-                    }
-                    setValue('avatar_mime_type',null,{shouldDirty: true})
-                  }}
+                  disabled={!formData.avatar_b64 && !formData.avatar_id}
+                  onClick={deleteAvatar}
                 >
                   remove <DeleteIcon/>
                 </Button>

@@ -19,11 +19,11 @@ import EditOrganisationModal from '~/components/software/edit/organisations/Edit
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import {EditOrganisationModalProps} from '~/components/software/edit/organisations'
 import {ModalStates} from '~/components/software/edit/editSoftwareTypes'
-import {EditOrganisation, SearchOrganisation} from '~/types/Organisation'
+import {columsForUpdate, EditOrganisation, SearchOrganisation} from '~/types/Organisation'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {
-  deleteOrganisationLogo, newOrganisationProps,
-  saveExistingOrganisation, searchToEditOrganisation
+  newOrganisationProps,
+  searchToEditOrganisation, updateOrganisation
 } from '~/utils/editOrganisation'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import {
@@ -31,15 +31,17 @@ import {
   deleteOrganisationFromProject, patchOrganisationPositions
 } from '~/utils/editProject'
 import SortableOrganisationsList from '~/components/software/edit/organisations/SortableOrganisationsList'
+import {upsertImage} from '~/utils/editImage'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
 export default function ProjectOrganisations({slug}: { slug: string }) {
-  const session = useSession()
+  const {token,user} = useSession()
   const {showErrorMessage,showInfoMessage} = useSnackbar()
   const {project} = useProjectContext()
   const {loading, organisations, setOrganisations} = useParticipatingOrganisations({
     project: project.id,
-    token: session.token,
-    account: session.user?.account
+    token: token,
+    account: user?.account
   })
   const [modal, setModal] = useState<ModalStates<EditOrganisationModalProps>>({
     edit: {
@@ -50,11 +52,15 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
     }
   })
 
+  // console.group('ProjectOrganisations')
+  // console.log('organisations...', organisations)
+  // console.groupEnd()
+
   async function onAddOrganisation(item: SearchOrganisation) {
     // add default values
     const addOrganisation: EditOrganisation = searchToEditOrganisation({
       item,
-      account: session.user?.account,
+      account: user?.account,
       position: organisations.length + 1
     })
     // check if present by ror_id
@@ -81,7 +87,7 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
         organisation: addOrganisation.id ?? '',
         role: 'participating',
         position: addOrganisation.position,
-        session
+        token
       })
       if (resp.status === 200) {
         // update status received in message
@@ -158,7 +164,7 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
         project: project.id,
         organisation: organisation.id,
         role: organisation.role ?? 'participating',
-        token: session.token
+        token
       })
       if (resp.status === 200) {
         deleteOrganisationFromList(pos)
@@ -170,44 +176,60 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
 
   async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number }) {
     try {
-      closeModals()
-      if (typeof pos != 'undefined' && data.id) {
-        // update existing organisation
-        const resp = await saveExistingOrganisation({
-          item: data,
-          token: session?.token,
-          pos,
-          setState: updateOrganisationInList
+      // UPLOAD logo
+      if (data.logo_b64 && data.logo_mime_type) {
+        // split base64 to use only encoded content
+        const b64data = data.logo_b64.split(',')[1]
+        const upload = await upsertImage({
+          data: b64data,
+          mime_type: data.logo_mime_type,
+          token
         })
-        if (resp.status !== 200) {
+        // debugger
+        if (upload.status === 201) {
+          // update data values
+          data.logo_id = upload.message
+          // remove image strings after upload
+          data.logo_b64 = null
+          data.logo_mime_type = null
+        } else {
+          showErrorMessage(`Failed to upload image. ${upload.message}`)
+          return
+        }
+      }
+      // SAVE organisation
+      if (typeof pos != 'undefined' && data.id) {
+        // extract data for update
+        const organisation = getPropsFromObject(data,columsForUpdate)
+        // update existing organisation
+        const resp = await updateOrganisation({
+          organisation,
+          token
+        })
+        if (resp.status === 200) {
+          updateOrganisationInList(data,pos)
+          closeModals()
+        } else {
           showErrorMessage(resp.message)
         }
       } else {
         // create slug for new organisation based on name
         data.slug = getSlugFromString(data.name)
         // create new organisation and add it
-        const resp = await createOrganisationAndAddToProject({
+        const {status,message} = await createOrganisationAndAddToProject({
           project: project.id,
           item: data,
-          session,
-          setState: addOrganisationToList
+          token
         })
-        if (resp.status !== 200) {
-          showErrorMessage(resp.message)
+        if (status === 200) {
+          addOrganisationToList(message)
+          closeModals()
+        } else {
+          showErrorMessage(message)
         }
       }
     } catch (e:any) {
       showErrorMessage(e.message)
-    }
-  }
-
-  async function onDeleteOrganisationLogo(logo_id:string) {
-    const resp = await deleteOrganisationLogo({
-      id: logo_id,
-      token: session.token
-    })
-    if (resp.status !== 200) {
-      showErrorMessage(resp.message)
     }
   }
 
@@ -257,7 +279,7 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
       const resp = await patchOrganisationPositions({
         project: project.id,
         organisations,
-        token: session.token
+        token
       })
       if (resp.status === 200) {
         setOrganisations(organisations)
@@ -307,7 +329,6 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
         organisation={modal.edit.organisation}
         onCancel={closeModals}
         onSubmit={saveOrganisation}
-        onDeleteLogo={onDeleteOrganisationLogo}
       />
       <ConfirmDeleteModal
         title="Remove organisation"

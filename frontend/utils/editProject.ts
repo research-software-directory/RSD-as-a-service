@@ -13,8 +13,9 @@ import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import {
   NewProject, ProjectLink, ResearchDomainForProject
 } from '~/types/Project'
-import {EditOrganisation, OrganisationRole, Status} from '~/types/Organisation'
-import {createOrganisation, updateDataObjectAfterSave} from './editOrganisation'
+import {columsForCreate, EditOrganisation, OrganisationRole, Status} from '~/types/Organisation'
+import {createOrganisation} from './editOrganisation'
+import {getPropsFromObject} from './getPropsFromObject'
 
 // query for software item page based on slug
 export async function validProjectItem(slug: string | undefined, token?: string) {
@@ -77,66 +78,56 @@ export async function addProject({project, token}:
   }
 }
 
-export async function createOrganisationAndAddToProject({project, item, session, setState, role='participating'}:
-  { item: EditOrganisation, project: string, session: Session, setState: (item: EditOrganisation) => void, role?: OrganisationRole}) {
+/**
+ * Returns item with updated props on success
+ */
+export async function createOrganisationAndAddToProject({project, item, token, role='participating'}:
+  { item: EditOrganisation, project: string, token: string, role?: OrganisationRole}) {
+  // extract props we need for createOrganisation
+  const organisation = getPropsFromObject(item, columsForCreate)
   // create new organisation
   let resp = await createOrganisation({
-    item,
-    token: session.token
+    organisation,
+    token
   })
-  // only 201 and 206 accepted
-  if ([201, 206].includes(resp.status) === false) {
-    // on error we return message
+  // only 201 accepted
+  if (resp.status !== 201) {
+    // on error we return resp status
     return resp
   }
   // we receive id in message
-  const id = resp.message
-  if (resp.status === 201) {
+  // const id = resp.message
+  item.id = resp.message
+  if (item.id) {
     // add this organisation to software
     resp = await addOrganisationToProject({
       project,
-      organisation: id,
-      role: 'participating',
+      organisation: item.id,
+      role,
       position: item.position,
-      session
+      token
     })
     if (resp.status === 200) {
       // we receive assigned status in message
       item.status = resp.message
-      // update data, remove base64 string after upload
-      // and create logo_id to be used as image reference
-      const organisation = updateDataObjectAfterSave({
-        data: item,
-        id
-      })
-      // update local list
-      setState(organisation)
+      // return updated item
       return {
         status: 200,
-        message: 'OK'
+        message: item
       }
-    } else {
-      return resp
     }
-  } else if (resp.status === 206) {
-    // organisation is created but the image failed
-    const organisation = updateDataObjectAfterSave({
-      data: item,
-      id
-    })
-    setState(organisation)
-    // we show error about failure on logo
-    return {
-      status: 206,
-      message: 'Failed to upload organisation logo.'
-    }
-  } else {
+    // debugger
     return resp
+  } else {
+    return {
+      status: 400,
+      message: 'Organisation id is missing.'
+    }
   }
 }
 
-export async function addOrganisationToProject({project, organisation, role, position, session}:
-  { project: string, organisation: string, role: OrganisationRole, position:number|null, session:Session }) {
+export async function addOrganisationToProject({project, organisation, role, position, token}:
+  { project: string, organisation: string, role: OrganisationRole, position:number|null, token:string }) {
   try {
     // by default request status is approved
     const status = 'approved'
@@ -145,7 +136,7 @@ export async function addOrganisationToProject({project, organisation, role, pos
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
-        ...createJsonHeaders(session.token),
+        ...createJsonHeaders(token),
       },
       body: JSON.stringify({
         project,
@@ -188,7 +179,7 @@ export async function patchProjectForOrganisation({project, organisation, data, 
     })
     return extractReturnMessage(resp)
   } catch (e: any) {
-    debugger
+    // debugger
     return {
       status: 500,
       message: e?.message
@@ -416,82 +407,6 @@ export async function deleteProjectLink({id,token}:{id:string,token:string }) {
     }
   }
 }
-
-export async function addImage({project, data, mime_type,token}: {
-  project:string,data:string,mime_type:string,token:string
-}) {
-  try {
-    // POST
-    const url = '/api/v1/image_for_project'
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: {
-        ...createJsonHeaders(token),
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify({
-        project,
-        data,
-        mime_type
-      })
-    })
-    return extractReturnMessage(resp, project ?? '')
-  } catch (e: any) {
-    logger(`addImage: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function updateImage({project, data, mime_type, token}: {
-  project: string, data: string, mime_type: string, token: string
-}) {
-  try {
-    // PATCH
-    const url = `/api/v1/image_for_project?project=eq.${project}`
-    const resp = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        ...createJsonHeaders(token)
-      },
-      body: JSON.stringify({
-        project,
-        data,
-        mime_type
-      })
-    })
-    return extractReturnMessage(resp, project ?? '')
-  } catch (e: any) {
-    logger(`updateImage: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function deleteImage({project,token}:{project:string,token:string}) {
-  try {
-    // DELETE
-    const url = `/api/v1/image_for_project?project=eq.${project}`
-    const resp = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        ...createJsonHeaders(token)
-      }
-    })
-    return extractReturnMessage(resp, project ?? '')
-  } catch (e: any) {
-    logger(`deleteImage: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
 
 export async function createMaintainerLink({project,account,token}:{project:string,account:string,token:string}) {
   try {

@@ -142,7 +142,8 @@ export default function AddProjectCard() {
       date_end: null,
       image_caption: null,
       image_contain: false,
-      grant_id: null
+      grant_id: null,
+      image_id: null
     }
     // add software to database
     addProject({

@@ -126,40 +126,6 @@ BEGIN
 END
 $$;
 
--- SOFTWARE OVERVIEW LIST WITH COUNTS
--- DEPRECATED from 1.3.0 (2022-07-25)
--- CREATE FUNCTION software_list() RETURNS TABLE (
--- 	id UUID,
--- 	slug VARCHAR,
--- 	brand_name VARCHAR,
--- 	short_statement VARCHAR,
--- 	updated_at TIMESTAMPTZ,
--- 	contributor_cnt BIGINT,
--- 	mention_cnt BIGINT,
--- 	is_published BOOLEAN
--- ) LANGUAGE plpgsql STABLE AS
--- $$
--- BEGIN
--- 	RETURN QUERY
--- 	SELECT
--- 		software.id,
--- 		software.slug,
--- 		software.brand_name,
--- 		software.short_statement,
--- 		software.updated_at,
--- 		count_software_countributors.contributor_cnt,
--- 		count_software_mentions.mention_cnt,
--- 		software.is_published
--- 	FROM
--- 		software
--- 	LEFT JOIN
--- 		count_software_countributors() ON software.id=count_software_countributors.software
--- 	LEFT JOIN
--- 		count_software_mentions() ON software.id=count_software_mentions.software
--- 	;
--- END
--- $$;
-
 -- SOFTWARE OVERVIEW LIST FOR SEARCH
 -- WITH COUNTS and KEYWORDS for filtering
 CREATE FUNCTION software_search() RETURNS TABLE (
@@ -249,11 +215,26 @@ END
 $$;
 
 -- UNIQUE contributor display_names
-CREATE OR REPLACE FUNCTION unique_contributors() RETURNS TABLE (display_name TEXT, affiliation VARCHAR, orcid VARCHAR, given_names VARCHAR, family_names VARCHAR, email_address VARCHAR, avatar_mime_type VARCHAR) LANGUAGE plpgsql STABLE AS
+CREATE OR REPLACE FUNCTION unique_contributors() RETURNS TABLE (
+	display_name TEXT,
+	affiliation VARCHAR,
+	orcid VARCHAR,
+	given_names VARCHAR,
+	family_names VARCHAR,
+	email_address VARCHAR,
+	avatar_id VARCHAR
+) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY SELECT DISTINCT
-		(CONCAT(c.given_names,' ',c.family_names)) AS display_name, c.affiliation, c.orcid, c.given_names, c.family_names, c.email_address, c.avatar_mime_type
+	RETURN QUERY
+		SELECT DISTINCT
+		(CONCAT(c.given_names,' ',c.family_names)) AS display_name,
+		c.affiliation,
+		c.orcid,
+		c.given_names,
+		c.family_names,
+		c.email_address,
+		c.avatar_id
 	FROM
 		contributor c
 	ORDER BY
@@ -272,7 +253,7 @@ CREATE FUNCTION organisations_of_software(software_id UUID) RETURNS TABLE (
 	is_tenant BOOLEAN,
 	website VARCHAR,
 	rsd_path VARCHAR,
-	logo_id UUID,
+	logo_id VARCHAR,
 	status relation_status,
 	"position" INTEGER,
 	software UUID
@@ -289,7 +270,7 @@ BEGIN
 		organisation.is_tenant,
 		organisation.website,
 		organisation_route.rsd_path,
-		logo_for_organisation.organisation AS logo_id,
+		organisation.logo_id,
 		software_for_organisation.status,
 		software_for_organisation.position,
 		software.id AS software
@@ -301,8 +282,8 @@ BEGIN
 		organisation ON software_for_organisation.organisation = organisation.id
 	LEFT JOIN
 		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
-	LEFT JOIN
-		logo_for_organisation ON logo_for_organisation.organisation = organisation.id
+	-- LEFT JOIN
+	-- 	logo_for_organisation ON logo_for_organisation.organisation = organisation.id
 	WHERE
 		software.id = software_id
 	;
@@ -415,7 +396,7 @@ CREATE FUNCTION organisations_overview(public BOOLEAN DEFAULT TRUE) RETURNS TABL
 	website VARCHAR,
 	is_tenant BOOLEAN,
 	rsd_path VARCHAR,
-	logo_id UUID,
+	logo_id VARCHAR,
 	software_cnt BIGINT,
 	project_cnt BIGINT,
 	children_cnt BIGINT,
@@ -434,7 +415,7 @@ BEGIN
 		organisation.website,
 		organisation.is_tenant,
 		organisation_route.rsd_path,
-		logo_for_organisation.organisation AS logo_id,
+		organisation.logo_id,
 		software_count_by_organisation.software_cnt,
 		project_count_by_organisation.project_cnt,
 		children_count_by_organisation.children_cnt,
@@ -452,8 +433,9 @@ BEGIN
 		project_count_by_organisation(public) ON project_count_by_organisation.organisation = organisation.id
 	LEFT JOIN
 		children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
-	LEFT JOIN
-		logo_for_organisation ON logo_for_organisation.organisation = organisation.id;
+	-- LEFT JOIN
+	-- 	logo_for_organisation ON logo_for_organisation.organisation = organisation.id
+	;
 END
 $$;
 
@@ -515,7 +497,7 @@ CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
 	is_published BOOLEAN,
 	image_contain BOOLEAN,
 	is_featured BOOLEAN,
-	image_id UUID,
+	image_id VARCHAR,
 	organisation UUID,
 	status relation_status,
 	keywords citext[]
@@ -538,14 +520,14 @@ BEGIN
 		project.is_published,
 		project.image_contain,
 		project_for_organisation.is_featured,
-		image_for_project.project AS image_id,
+		project.image_id,
 		project_for_organisation.organisation,
 		project_for_organisation.status,
 		keyword_filter_for_project.keywords
 	FROM
 		project
-	LEFT JOIN
-		image_for_project ON project.id = image_for_project.project
+	-- LEFT JOIN
+	-- 	image_for_project ON project.id = image_for_project.project
 	LEFT JOIN
 		project_for_organisation ON project.id = project_for_organisation.project
 	LEFT JOIN
@@ -567,7 +549,7 @@ CREATE FUNCTION organisations_of_project(project_id UUID) RETURNS TABLE (
 	is_tenant BOOLEAN,
 	website VARCHAR,
 	rsd_path VARCHAR,
-	logo_id UUID,
+	logo_id VARCHAR,
 	status relation_status,
 	role organisation_role,
 	"position" INTEGER,
@@ -586,7 +568,7 @@ BEGIN
 			organisation.is_tenant,
 			organisation.website,
 			organisation_route.rsd_path,
-			logo_for_organisation.organisation AS logo_id,
+			organisation.logo_id,
 			project_for_organisation.status,
 			project_for_organisation.role,
 			project_for_organisation.position,
@@ -600,8 +582,8 @@ BEGIN
 		organisation ON project_for_organisation.organisation = organisation.id
 	LEFT JOIN
 		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
-	LEFT JOIN
-		logo_for_organisation ON logo_for_organisation.organisation = organisation.id
+	-- LEFT JOIN
+	-- 	logo_for_organisation ON logo_for_organisation.organisation = organisation.id
 	WHERE
 		project.id = project_id
 	;
@@ -623,7 +605,7 @@ CREATE FUNCTION related_projects_for_project(origin_id UUID) RETURNS TABLE (
 	is_published BOOLEAN,
 	image_contain BOOLEAN,
 	status relation_status,
-	image_id UUID
+	image_id VARCHAR
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -644,11 +626,11 @@ BEGIN
 		project.is_published,
 		project.image_contain,
 		project_for_project.status,
-		image_for_project.project AS image_id
+		project.image_id
 	FROM
 		project
-	LEFT JOIN
-		image_for_project ON image_for_project.project = project.id
+	-- LEFT JOIN
+	-- 	image_for_project ON image_for_project.project = project.id
 	INNER JOIN
 		project_for_project ON project.id = project_for_project.relation
 	WHERE
@@ -672,7 +654,7 @@ CREATE FUNCTION related_projects_for_software(software_id UUID) RETURNS TABLE (
 	is_published BOOLEAN,
 	image_contain BOOLEAN,
 	status relation_status,
-	image_id UUID
+	image_id VARCHAR
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -693,11 +675,11 @@ BEGIN
 		project.is_published,
 		project.image_contain,
 		software_for_project.status,
-		image_for_project.project AS image_id
+		project.image_id
 	FROM
 		project
-	LEFT JOIN
-		image_for_project ON image_for_project.project = project.id
+	-- LEFT JOIN
+	-- 	image_for_project ON image_for_project.project = project.id
 	INNER JOIN
 		software_for_project ON project.id = software_for_project.project
 	WHERE
@@ -896,7 +878,8 @@ CREATE OR REPLACE FUNCTION unique_team_members() RETURNS TABLE (
 	orcid VARCHAR,
 	given_names VARCHAR,
 	family_names VARCHAR,
-	email_address VARCHAR
+	email_address VARCHAR,
+	avatar_id VARCHAR
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -907,7 +890,8 @@ BEGIN
 			c.orcid,
 			c.given_names,
 			c.family_names,
-			c.email_address
+			c.email_address,
+			c.avatar_id
 		FROM
 			team_member c
 		ORDER BY
@@ -1011,7 +995,7 @@ CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	image_contain BOOLEAN,
-	image_id UUID
+	image_id VARCHAR
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -1030,11 +1014,11 @@ BEGIN
 		project.updated_at,
 		project.is_published,
 		project.image_contain,
-		image_for_project.project AS image_id
+		project.image_id
 	FROM
 		project
-	LEFT JOIN
-		image_for_project ON project.id = image_for_project.project
+	-- LEFT JOIN
+	-- 	image_for_project ON project.id = image_for_project.project
 	INNER JOIN
 		maintainer_for_project ON project.id = maintainer_for_project.project
 	WHERE
@@ -1054,7 +1038,7 @@ CREATE FUNCTION organisations_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	ror_id VARCHAR,
 	website VARCHAR,
 	is_tenant BOOLEAN,
-	logo_id UUID,
+	logo_id VARCHAR,
 	software_cnt BIGINT,
 	project_cnt BIGINT,
 	children_cnt BIGINT,
@@ -1072,15 +1056,15 @@ BEGIN
 		organisation.ror_id,
 		organisation.website,
 		organisation.is_tenant,
-		logo_for_organisation.organisation AS logo_id,
+		organisation.logo_id,
 		software_count_by_organisation.software_cnt,
 		project_count_by_organisation.project_cnt,
 		children_count_by_organisation.children_cnt,
 		organisation_route.rsd_path
 	FROM
 		organisation
-	LEFT JOIN
-		logo_for_organisation ON logo_for_organisation.organisation = organisation.id
+	-- LEFT JOIN
+	-- 	logo_for_organisation ON logo_for_organisation.organisation = organisation.id
 	LEFT JOIN
 		software_count_by_organisation() ON software_count_by_organisation.organisation = organisation.id
 	LEFT JOIN
@@ -1257,7 +1241,7 @@ CREATE FUNCTION project_search() RETURNS TABLE (
 	updated_at TIMESTAMPTZ,
 	is_published BOOLEAN,
 	image_contain BOOLEAN,
-	image_id UUID,
+	image_id VARCHAR,
 	keywords citext[]
 ) LANGUAGE plpgsql STABLE AS
 $$
@@ -1277,14 +1261,53 @@ BEGIN
 		project.updated_at,
 		project.is_published,
 		project.image_contain,
-		image_for_project.project AS image_id,
+		project.image_id,
 		keyword_filter_for_project.keywords
 	FROM
 		project
 	LEFT JOIN
-		image_for_project ON project.id = image_for_project.project
-	LEFT JOIN
 		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
 	;
+END
+$$;
+
+-- ALL unique persons in RSD (contributors and team members)
+-- TO BE USED IN SEARCH
+-- NOTE! UNION takes care of duplicate entries
+CREATE FUNCTION unique_persons() RETURNS TABLE (
+	display_name TEXT,
+	affiliation VARCHAR,
+	orcid VARCHAR,
+	given_names VARCHAR,
+	family_names VARCHAR,
+	email_address VARCHAR,
+	avatar_id VARCHAR
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+		SELECT
+			unique_contributors.display_name,
+			unique_contributors.affiliation,
+			unique_contributors.orcid,
+			unique_contributors.given_names,
+			unique_contributors.family_names,
+			unique_contributors.email_address,
+			unique_contributors.avatar_id
+		FROM
+			unique_contributors()
+		UNION
+		SELECT
+			unique_team_members.display_name,
+			unique_team_members.affiliation,
+			unique_team_members.orcid,
+			unique_team_members.given_names,
+			unique_team_members.family_names,
+			unique_team_members.email_address,
+			unique_team_members.avatar_id
+		FROM
+			unique_team_members()
+		ORDER BY
+			display_name ASC;
 END
 $$;

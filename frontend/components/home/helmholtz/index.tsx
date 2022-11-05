@@ -15,10 +15,10 @@ import {OrganisationForOverview} from '~/types/Organisation'
 /*! purgecss start ignore */
 // import 'aos/dist/aos.css'
 
-import {getUrlFromLogoId} from '~/utils/editOrganisation'
 import {IconButton} from '@mui/material'
 import {ChevronLeft, ChevronRight} from '@mui/icons-material'
 import {useAuth} from '~/auth'
+import {getImageUrl} from '~/utils/editImage'
 import useOrganisations from './useOrganisations'
 /*! purgecss end ignore */
 
@@ -208,7 +208,7 @@ function ParticipatingOrganisations({organisations}:{organisations:OrganisationF
               <img
                 key={item.name}
                 alt={item.name}
-                src={getUrlFromLogoId(item.logo_id) ?? undefined}
+                src={getImageUrl(item.logo_id) ?? undefined}
                 className="p-10 hover:cursor-pointer"
               />
             </Link>

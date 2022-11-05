@@ -22,7 +22,7 @@ import {
   RelatedProject, ResearchDomain
 } from '~/types/Project'
 import {MentionItemProps} from '~/types/Mention'
-import {Contributor} from '~/types/Contributor'
+import {Contributor, Person} from '~/types/Contributor'
 import {ProjectOrganisationProps} from '~/types/Organisation'
 import {SoftwareListItem} from '~/types/SoftwareTypes'
 import AppHeader from '~/components/AppHeader'
@@ -51,7 +51,7 @@ export interface ProjectPageProps extends ScriptProps{
   links: ProjectLink[],
   output: MentionItemProps[],
   impact: MentionItemProps[],
-  team: Contributor[],
+  team: Person[],
   relatedSoftware: SoftwareListItem[],
   relatedProjects: RelatedProject[]
 }
@@ -72,7 +72,7 @@ export default function ProjectPage(props: ProjectPageProps) {
   if (!project?.title){
     return <NoContent />
   }
-  // console.log('ProjectItemPage...relatedProjects...', relatedProjects)
+  // console.log('ProjectPage...project...', project)
   return (
     <>
       {/* Page Head meta tags */}

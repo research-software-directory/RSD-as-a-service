@@ -5,7 +5,7 @@
 
 import Link from 'next/link'
 import {OrganisationForOverview} from '../../types/Organisation'
-import {getUrlFromLogoId} from '../../utils/editOrganisation'
+import {getImageUrl} from '~/utils/editImage'
 import StatCounter from '../layout/StatCounter'
 import VerifiedIcon from '@mui/icons-material/Verified'
 import SingleLineTitle from '../layout/SingleLineTitle'
@@ -60,10 +60,10 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
           }
         </div>
         <div className="flex-1 flex md:grid md:grid-cols-[3fr,2fr] px-8 pb-4 overflow-hidden">
-          <div className="hidden md:block">
+          <div className="min-w-[8rem]">
             <LogoAvatar
               name={organisation.name ?? ''}
-              src={getUrlFromLogoId(organisation.logo_id) ?? undefined}
+              src={getImageUrl(organisation.logo_id) ?? undefined}
               sx={{
                 '& img': {
                   height: 'auto',
@@ -74,7 +74,7 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
               }}
             />
           </div>
-          <div className="flex items-center justify-center flex-1 pl-4 md:justify-end">
+          <div className="flex-1 flex justify-center items-center md:justify-end pl-4">
             <StatCounter
               label={label}
               value={count}

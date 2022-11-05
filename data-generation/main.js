@@ -513,7 +513,7 @@ const projectPromise = postToBackend('/project', generateProjects())
 	.then(async pjArray => {
 		idsProjects = pjArray.map(sw => sw['id']);
 		postToBackend('/team_member', await generateTeamMembers(idsProjects));
-		postToBackend('/image_for_project', await generateImagesForProjects(idsProjects));
+		// postToBackend('/image_for_project', await generateImagesForProjects(idsProjects));
 		postToBackend('/url_for_project', generateUrlsForProjects(idsProjects));
 		postToBackend('/keyword_for_project', generateKeywordsForEntity(idsProjects, idsKeywords, 'project'));
 		postToBackend('/output_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));
@@ -522,11 +522,11 @@ const projectPromise = postToBackend('/project', generateProjects())
 		postToBackend('/project_for_project', generateSoftwareForSoftware(idsProjects));
 	});
 const organisationPromise = postToBackend('/organisation', generateOrganisations())
-	.then(resp => resp.json())
-	.then(async orgArray => {
-		idsOrganisations = orgArray.map(org => org['id']);
-		postToBackend('/logo_for_organisation', await generateLogosForOrganisations(idsOrganisations));
-	});
+	// .then(resp => resp.json())
+	// .then(async orgArray => {
+	// 	idsOrganisations = orgArray.map(org => org['id']);
+	// 	postToBackend('/logo_for_organisation', await generateLogosForOrganisations(idsOrganisations));
+	// });
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
 
 await Promise.all([softwarePromise, projectPromise, organisationPromise]).then(() => console.log('sw, pg, org done'));

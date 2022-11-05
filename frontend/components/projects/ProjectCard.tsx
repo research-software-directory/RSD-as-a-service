@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 import {getTimeAgoSince} from '../../utils/dateFn'
 import ImageAsBackground from '../layout/ImageAsBackground'
-import {getImageUrl} from '../../utils/getProjects'
+import {getImageUrl} from '../../utils/editImage'
 import FeaturedIcon from '~/components/icons/FeaturedIcon'
 import NotPublishedIcon from '~/components/icons/NotPublishedIcon'
 

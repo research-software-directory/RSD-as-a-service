@@ -3,8 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {OrganisationForOverview} from '~/types/Organisation'
-import {columsForUpdate} from '~/utils/editOrganisation'
+import {columsForUpdate, OrganisationForOverview} from '~/types/Organisation'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 

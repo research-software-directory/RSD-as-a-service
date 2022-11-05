@@ -56,7 +56,7 @@ export default function useSearchFn({searchFor, searchFn}: useSearchFnProps) {
       searchForItems()
     }
     return () => {
-      debugger
+      // debugger
       abort=true
     }
   }, [searchFor, searchFn])
