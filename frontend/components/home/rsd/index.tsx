@@ -313,42 +313,6 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: R
         {/*  Divider  */}
         <LandingPageDivider/>
 
-
-        {/* About us section  */}
-        <section className="px-5 md:px-10 py-5 w-full max-w-screen-lg mx-auto mt-10">
-          <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
-              data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
-            {/* eslint-disable-next-line react/no-unescaped-entities */}
-            About us
-          </h2>
-          <p className="text-center text-lg mt-5" data-aos="fade"
-             data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
-            The Research Software Directory is an open source project initiated by the Netherlands
-            eScience Center. We are always open for improvements and discussions. Feel free to
-            contact us or join our effort!
-          </p>
-
-          <div
-            className="w-full max-w-screen-md mt-6 mx-auto flex-col grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-2 scale-90">
-            <div className="flex justify-center" data-aos="fade" data-aos-duration="500"
-                 data-aos-easing="ease-in-out">
-              <GlowingButton text="About us" url="/"/>
-            </div>
-            <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
-                 data-aos-duration="500" data-aos-easing="ease-in-out">
-              <GlowingButton text="Docs" url="/"/>
-            </div>
-            <div className="flex justify-center" data-aos="fade" data-aos-delay="200"
-                 data-aos-duration="500" data-aos-easing="ease-in-out">
-              <GlowingButton text="FAQs" url="/"/>
-            </div>
-          </div>
-        </section>
-
-
-        {/*  Divider  */}
-        <LandingPageDivider/>
-
         {/* Learn more section  */}
         <section
           className="grid gap-6 grid-cols-1 sm:grid-cols-2 w-full max-w-screen-xl mt-20 mx-auto">
@@ -388,6 +352,41 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: R
         {/*  Divider  */}
         <LandingPageDivider/>
 
+
+        {/* About us section  */}
+        <section className="px-5 md:px-10 py-5 w-full max-w-screen-lg mx-auto mt-10">
+          <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
+              data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
+            About us
+          </h2>
+          <p className="text-center text-lg mt-5" data-aos="fade"
+             data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
+            The Research Software Directory is an open source project initiated by the Netherlands
+            eScience Center. We are always open for improvements and discussions. Feel free to
+            contact us or join our effort!
+          </p>
+
+          <div
+            className="w-full max-w-screen-md mt-6 mx-auto flex-col grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-2 scale-90">
+            <div className="flex justify-center" data-aos="fade" data-aos-duration="500"
+                 data-aos-easing="ease-in-out">
+              <GlowingButton text="Contact us" url="/"/>
+            </div>
+            <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
+                 data-aos-duration="500" data-aos-easing="ease-in-out">
+              <GlowingButton text="Meet our team" url="/"/>
+            </div>
+            <div className="flex justify-center" data-aos="fade" data-aos-delay="200"
+                 data-aos-duration="500" data-aos-easing="ease-in-out">
+              <GlowingButton text="Join us on GitHub" url="/"/>
+            </div>
+          </div>
+        </section>
+
+
+        {/*  Divider  */}
+        <LandingPageDivider/>
 
         {/* Logos  */}
         <div className="w-full max-w-screen-xl mx-auto mt-10 p-5 md:p-10">
