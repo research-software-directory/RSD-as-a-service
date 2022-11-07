@@ -3,8 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// import {SoftwareKeyword} from '~/components/software/edit/information/softwareKeywordsChanges'
-import {Keyword} from '~/components/keyword/FindKeyword'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 
@@ -15,7 +13,7 @@ export type ProjectKeyword = {
   keyword: string
 }
 
-type KeywordItem = {
+export type KeywordItem = {
   id: string,
   value: string
 }
