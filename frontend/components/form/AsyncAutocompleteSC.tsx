@@ -144,7 +144,14 @@ export default function AsyncAutocompleteSC<T>({status, options, config,
       // because search text is usually not identical to selected item
       // we ignore onInputChange event when reason==='reset'
       setInputValue(newInputValue)
-
+      // if user removes all input and onClear is provided
+      // we trigger on clear event. In addition, in freeSolo
+      // the icon is present that activates reason===clear
+      if (reason === 'input' && newInputValue === '' && onClear) {
+        // console.log('Call on clear event')
+        // issue clear attempt
+        onClear()
+      }
       // we start new search if processing
       // is not empty we should reset it??
       if (processing !== '') {

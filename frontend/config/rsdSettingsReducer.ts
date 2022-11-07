@@ -25,6 +25,7 @@ export type RsdHost = {
     url: string,
     issues_page_url: string
   },
+  login_info_url?:string
 }
 
 export type CustomLink = {

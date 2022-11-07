@@ -17,7 +17,7 @@ import SoftwareCardWithMenu from './SoftwareCardWithMenu'
 
 export default function OrganisationSoftware({organisation, isMaintainer}: OrganisationComponentsProps) {
   const {token} = useSession()
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Filter software')
+  const {searchFor,page,rows,setCount} = usePaginationWithSearch(`Find software in ${organisation.name}`)
   const {loading, software, count} = useOrganisationSoftware({
     organisation: organisation.id,
     searchFor,

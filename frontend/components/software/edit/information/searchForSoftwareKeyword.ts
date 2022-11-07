@@ -6,6 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {Keyword} from '~/components/keyword/FindKeyword'
+import {getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '../../../../utils/logger'
 
 
@@ -15,9 +16,9 @@ export async function searchForSoftwareKeyword(
 ) {
   try {
     const searchForEncoded = encodeURIComponent(searchFor)
-
-    // GET top 20 matches
-    const url = `/api/v1/rpc/keyword_count_for_software?keyword=ilike.*${searchForEncoded}*&order=keyword.asc&limit=20`
+    const baseUrl = getBaseUrl()
+    // GET top 30 matches
+    const url = `${baseUrl}/rpc/keyword_count_for_software?keyword=ilike.*${searchForEncoded}*&order=cnt.desc.nullslast,keyword.asc&limit=30`
     const resp = await fetch(url, {
       method: 'GET'
     })

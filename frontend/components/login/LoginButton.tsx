@@ -10,17 +10,13 @@
 
 import {useState} from 'react'
 import Link from 'next/link'
-import Dialog from '@mui/material/Dialog'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import {useTheme} from '@mui/material/styles'
 
 import {useAuth} from '~/auth'
 import useLoginProviders from '~/auth/api/useLoginProviders'
 import {getUserMenuItems} from '~/config/userMenuItems'
 import UserMenu from '~/components/layout/UserMenu'
-import CaretIcon from '~/components/icons/caret.svg'
+import LoginDialog from './LoginDialog'
 
 export default function LoginButton() {
   const providers = useLoginProviders()
@@ -28,9 +24,8 @@ export default function LoginButton() {
   const status = session?.status || 'loading'
   const [open, setOpen] = useState(false)
   const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
-  /* Sign in dialog */
+  /* LoginDialog */
   const handleClickOpen = () => { setOpen(true) }
   const handleClose = () => { setOpen(false) }
 
@@ -57,37 +52,11 @@ export default function LoginButton() {
         <button onClick={handleClickOpen} tabIndex={0} className="rsd-login-buton">
           Sign in
         </button>
-        <Dialog
-          fullScreen={fullScreen}
+        <LoginDialog
+          providers={providers}
           open={open}
           onClose={handleClose}
-          aria-labelledby="responsive-dialog-title"
-        >
-          <DialogTitle id="responsive-dialog-title">
-            Sign in with
-          </DialogTitle>
-
-          <DialogContent>
-            <span className="italic text-gray-600">
-              Somewhere, something incredible is waiting to be known.
-            </span> <br/> Carl Sagan
-            <div className="flex flex-col gap-3 my-8">
-            {providers.map(provider => {
-              return (
-                <Link
-                  key={provider.redirectUrl}
-                  href={provider.redirectUrl}
-                  passHref
-                >
-                  <a className=" w-full hover:bg-black hover:text-primary-content transition font-bold py-2 px-4 rounded-full border outline-1">
-                    {provider.name}
-                  </a>
-                </Link>
-              )
-            })}
-            </div>
-          </DialogContent>
-        </Dialog>
+        />
       </div>
     )
   }

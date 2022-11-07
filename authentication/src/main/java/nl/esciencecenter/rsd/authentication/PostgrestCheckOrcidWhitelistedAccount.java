@@ -37,7 +37,7 @@ public class PostgrestCheckOrcidWhitelistedAccount implements Account {
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String token = jwtCreator.createAdminJwt();
 		String response = PostgrestAccount.getAsAdmin(queryUri, token);
-		if (!orcidInResponse(orcid, response)) throw new AuthenticationException("Your ORCID (" + orcid + ") is not whitelisted.");
+		if (!orcidInResponse(orcid, response)) throw new RsdAuthenticationException("Your ORCID (" + orcid + ") is not whitelisted.");
 
 		return origin.account(openIdInfo, provider);
 	}

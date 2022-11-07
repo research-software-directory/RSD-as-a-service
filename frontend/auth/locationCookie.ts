@@ -17,6 +17,7 @@ export function saveLocationCookie() {
     case '/login':
     case '/logout':
     case '/login/local':
+    case '/login/failed':
       break
     case '/':
       // root is send to /software
