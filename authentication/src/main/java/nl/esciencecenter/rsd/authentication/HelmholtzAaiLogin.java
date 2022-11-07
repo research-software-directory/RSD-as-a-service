@@ -135,7 +135,7 @@ public class HelmholtzAaiLogin implements Login {
 			ClientID clientID = new ClientID(Config.helmholtzAaiClientId());
 			Secret clientSecret = new Secret(Config.helmholtzAaiClientSecret());
 			ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-			URI tokenEndpoint = new URI(Config.helmholtzAaiTokenUrl());
+			URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.helmholtzAaiWellknown()));
 
 			Scope scopes = new Scope();
 
@@ -181,7 +181,7 @@ public class HelmholtzAaiLogin implements Login {
 		if (organisation == null) {
 			// login denied by missing entitlements
 			// or external providers are not allowed
-			throw new RuntimeException("User is not allowed to login");
+			throw new RsdAuthenticationException("You are not allowed to login");
 		}
 
 		return new OpenIdInfo(

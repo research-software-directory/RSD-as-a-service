@@ -65,6 +65,7 @@ public class Config {
 		return System.getenv("POSTGREST_URL");
 	}
 
+
 //	SURFconext
 	public static String surfconextRedirect() {
 		return System.getenv("NEXT_PUBLIC_SURFCONEXT_REDIRECT");
@@ -82,13 +83,10 @@ public class Config {
 		return System.getenv("AUTH_SURFCONEXT_CLIENT_SECRET");
 	}
 
-	public static String surfconextTokenUrl() {
-		return System.getenv("AUTH_SURFCONEXT_TOKEN_URL");
-	}
-
 	public static String surfconextScopes() {
 		return System.getenv("NEXT_PUBLIC_SURFCONEXT_SCOPES");
 	}
+
 
 //	Helmholtz AAI
 	public static String helmholtzAaiRedirect() {
@@ -107,10 +105,6 @@ public class Config {
 		return System.getenv("AUTH_HELMHOLTZAAI_CLIENT_SECRET");
 	}
 
-	public static String helmholtzAaiTokenUrl() {
-		return System.getenv("AUTH_HELMHOLTZAAI_TOKEN_URL");
-	}
-
 	public static String helmholtzAaiScopes() {
 		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_SCOPES");
 	}
@@ -120,6 +114,7 @@ public class Config {
 			System.getenv("HELMHOLTZAAI_ALLOW_EXTERNAL_USERS")
 		);
 	}
+
 
 //	ORCID
 	public static String orcidRedirect() {
@@ -136,10 +131,6 @@ public class Config {
 
 	public static String orcidClientSecret() {
 		return System.getenv("AUTH_ORCID_CLIENT_SECRET");
-	}
-
-	public static String orcidTokenUrl() {
-		return System.getenv("AUTH_ORCID_TOKEN_URL");
 	}
 
 	public static String orcidScopes() {

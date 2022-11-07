@@ -61,7 +61,8 @@ public class OrcidLogin implements Login {
 
 	private String getTokensFromOrcidconext(Map<String, String> form) {
 		String body = formMapToxWwwFormUrlencoded(form);
-		return postForm(URI.create(Config.orcidTokenUrl()), body);
+		URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.orcidWellknown()));
+		return postForm(tokenEndpoint, body);
 	}
 
 	private String formMapToxWwwFormUrlencoded(Map<String, String> form) {
