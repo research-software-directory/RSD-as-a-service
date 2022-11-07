@@ -67,6 +67,8 @@ public class MainCommits {
 				if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
 				String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GithubSI("https://api.github.com", repo), CodePlatformProvider.GITHUB).contributions();
+//				this happens on 202 response, keep the old value
+				if (scrapedCommits == null) scrapedCommits = commitData.commitHistory();
 				RepositoryUrlData updatedData = new RepositoryUrlData(
 						commitData.software(), commitData.url(), CodePlatformProvider.GITHUB,
 						commitData.license(), commitData.licenseScrapedAt(),

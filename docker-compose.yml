@@ -130,7 +130,7 @@ services:
 
   scrapers:
     build: ./scrapers
-    image: rsd/scrapers:1.2.0
+    image: rsd/scrapers:1.2.1
     environment:
       # it uses values from .env file
       - POSTGREST_URL

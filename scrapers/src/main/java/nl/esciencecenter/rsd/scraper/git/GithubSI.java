@@ -10,10 +10,11 @@ package nl.esciencecenter.rsd.scraper.git;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
-import nl.esciencecenter.rsd.scraper.ResponseException;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class GithubSI implements SoftwareInfo {
 
@@ -30,9 +31,13 @@ public class GithubSI implements SoftwareInfo {
 	 */
 	@Override
 	public String languages() {
-		return Config.apiCredentialsGithub()
-				.map(apiCredentials -> Utils.get(baseApiUrl + "/repos/" + repo + "/languages", "Authorization", "Basic " + Utils.base64Encode(apiCredentials)))
-				.orElseGet(() -> Utils.get(baseApiUrl + "/repos/" + repo + "/languages"));
+		Optional<String> apiCredentials = Config.apiCredentialsGithub();
+		if (apiCredentials.isPresent()) {
+			return Utils.get(baseApiUrl + "/repos/" + repo + "/languages", "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
+		}
+		else {
+			return Utils.get(baseApiUrl + "/repos/" + repo + "/languages");
+		}
 	}
 
 	/**
@@ -40,9 +45,14 @@ public class GithubSI implements SoftwareInfo {
 	 */
 	@Override
 	public String license() {
-		String repoData = Config.apiCredentialsGithub()
-				.map(apiCredentials -> Utils.get(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials)))
-				.orElseGet(() -> Utils.get(baseApiUrl + "/repos/" + repo));
+		Optional<String> apiCredentials = Config.apiCredentialsGithub();
+		String repoData;
+		if (apiCredentials.isPresent()) {
+			repoData = Utils.get(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
+		}
+		else {
+			repoData = Utils.get(baseApiUrl + "/repos/" + repo);
+		}
 		JsonElement jsonLicense = JsonParser.parseString(repoData).getAsJsonObject().get("license");
 		return jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().getAsJsonPrimitive("spdx_id").getAsString();
 	}
@@ -72,14 +82,18 @@ public class GithubSI implements SoftwareInfo {
 	public String contributions() {
 		String contributions;
 		try {
-			contributions = Config.apiCredentialsGithub()
-					.map(apiCredentials -> Utils.get(baseApiUrl + "/repos/" + repo + "/stats/contributors", "Authorization", "Basic " + Utils.base64Encode(apiCredentials)))
-					.orElseGet(() -> Utils.get(baseApiUrl + "/repos/" + repo + "/stats/contributors"));
-			if (contributions.equals("")) {
+			Optional<String> apiCredentials = Config.apiCredentialsGithub();
+			if (apiCredentials.isPresent()) {
+				contributions = Utils.getWithRetryOn202(1, 3000, baseApiUrl + "/repos/" + repo + "/stats/contributors", "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
+			} else {
+				contributions = Utils.getWithRetryOn202(1, 3000, baseApiUrl + "/repos/" + repo + "/stats/contributors");
+			}
+
+			if (contributions != null && contributions.equals("")) {
 				// Repository exists, but no contributions yet, empty list is more appropriate
 				contributions = "[]";
 			}
-		} catch (ResponseException e) {
+		} catch (RsdResponseException e) {
 			if (e.getStatusCode() == 404) {
 				// Repository does not exist
 				contributions = null;
