@@ -9,7 +9,8 @@ type MaintContainerProps = {
   children:any
 }
 
-export default function MainContent({className,children,...props}:MaintContainerProps) {
+export default function MainContent({className, children, ...props}: MaintContainerProps) {
+  // keep these styles in sync with AppHeader and AppFooter
   return (
     <main
       className={`flex-1 flex flex-col px-4 lg:container lg:mx-auto ${className ?? ''}`}

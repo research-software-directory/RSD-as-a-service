@@ -15,6 +15,12 @@
 
 body{
   font-size: 1rem;
+  /*
+    minimal with to have logo,
+    add and edit buttons,
+    mobile menu and profile
+    min-width: 26.125rem;
+  */
 }
 
 #__next {
@@ -47,11 +53,11 @@ RangeError: Maximum call stack size exceeded
     @apply text-xl;
   }
   a {
-    @apply cursor-pointer no-underline transition duration-100 hover:text-primary;
+    @apply no-underline transition duration-100 cursor-pointer hover:text-primary;
   }
 
   body{
-    @apply text-base-content font-normal;
+    @apply font-normal text-base-content;
   }
 }
 

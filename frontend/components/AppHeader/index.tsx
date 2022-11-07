@@ -56,7 +56,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
       <div
-        className="flex-1 flex flex-col px-4 xl:flex-row max-w-screen-2xl mx-auto items-start xl:items-center">
+        className="flex-1 flex flex-col px-4 xl:flex-row items-start lg:container lg:mx-auto">
         <div className="w-full flex-1 flex items-center justify-between">
           <Link href="/" passHref>
             <a className="hover:text-inherit">

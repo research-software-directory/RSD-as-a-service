@@ -150,6 +150,8 @@ export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFil
           width: ['100vw', '24rem'],
           height: ['100vh', 'auto']
         }}
+        // disable adding styles to body (overflow:hidden & padding-right)
+        disableScrollLock={true}
       >
         <h3 className="px-4 py-3 text-primary">
           Filter by keyword
