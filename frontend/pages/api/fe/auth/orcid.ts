@@ -58,7 +58,11 @@ export async function orcidInfo() {
     // provide redirectUrl and name/label
     return {
       name: 'ORCID',
-      redirectUrl
+      redirectUrl,
+      html: `
+        Sign in with ORCID is supported <strong>only for persons invited by the RSD administrators</strong>.
+        <strong><a href="mailto:rsd@esciencecenter.nl?subject=${encodeURIComponent('Login with ORCID')}" target="_blank">Contact us</a></strong> if you wish to login with your ORCID.
+      `
     }
   }
   return null

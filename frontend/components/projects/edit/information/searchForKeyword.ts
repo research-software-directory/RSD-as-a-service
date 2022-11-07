@@ -20,8 +20,8 @@ export type NewKeyword = {
 export async function searchForProjectKeyword({searchFor}:
   { searchFor: string }) {
   try {
-    // GET top 50 matches
-    const url = `/api/v1/rpc/keyword_count_for_projects?keyword=ilike.*${searchFor}*&order=keyword.asc&limit=50`
+    // GET top 30 matches
+    const url = `/api/v1/rpc/keyword_count_for_projects?keyword=ilike.*${searchFor}*&order=cnt.desc.nullslast,keyword.asc&limit=30`
     const resp = await fetch(url, {
       method: 'GET'
     })

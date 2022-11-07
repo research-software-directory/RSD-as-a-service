@@ -123,7 +123,7 @@ export const softwareInformation = {
     title: 'Keywords',
     subtitle: 'Find, add or import using concept DOI.',
     label: 'Find or add keyword',
-    help: 'Start typing for the suggestions',
+    help: 'Select from top 30 list or start typing for the suggestions',
     validation: {
       //custom validation rule, not in used by react-hook-form
       minLength: 1,
