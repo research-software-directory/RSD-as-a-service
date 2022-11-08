@@ -9,6 +9,8 @@ import AOS from 'aos'
 import Link from 'next/link'
 import Image from 'next/image'
 
+import useRsdSettings from '~/config/useRsdSettings'
+import {config} from './config'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import LandingPageCiteIcon from '~/components/icons/LandingPageCiteIcon.svg'
@@ -21,7 +23,6 @@ import LogoHelmholtz from '~/assets/logos/LogoHelmholtz.svg'
 import LogoUMC from '~/assets/logos/LogoUMC.svg'
 import LogoUU from '~/assets/logos/LogoUU.svg'
 import LogoLeiden from '~/assets/logos/LogoLeiden.svg'
-
 import Arc from './arc.svg'
 
 /*! purgecss start ignore */
@@ -31,20 +32,23 @@ export type RsdHomeProps = {
   software_cnt: number,
   project_cnt: number,
   organisation_cnt: number,
-  developers_cnt: number, // todo: get this from the backend
-  citations_cnt: number, // todo: get this from the backend
+  contributor_cnt: number,
+  software_mention_cnt: number,
 }
 
-function GlowingButton({text, url}: { text: string, url: string }) {
+function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string, url: string, target?:string, minWidth?:string}) {
   return <Link href={url} passHref>
-    <a className="flex gap-4 cursor-pointer" tabIndex={0}>
+    <a className="flex gap-4 cursor-pointer" target={target}>
       <div className="relative group">
         <div
           className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
         <div
-          className="flex gap-3 text-black relative px-8 py-3 bg-white ring-1 ring-gray-900/5 rounded leading-none items-center space-x-2 "
+          className="flex gap-3 text-black relative px-8 py-3 bg-white ring-1 ring-gray-900/5 rounded leading-none items-center justify-center space-x-2"
+          style={{
+            minWidth
+          }}
         >
-          <span className="space-y-2 text-xl font-medium  whitespace-nowrap ">
+          <span className="space-y-2 text-xl font-medium whitespace-nowrap">
             {text}
           </span>
         </div>
@@ -58,7 +62,9 @@ function LandingPageDivider() {
     className="w-full max-w-screen-xl mx-auto border-t border-[#90909060] mt-[80px]"></div>
 }
 
-export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: RsdHomeProps) {
+export default function RsdHome({software_cnt, project_cnt, organisation_cnt, contributor_cnt, software_mention_cnt}: RsdHomeProps) {
+  const {host} = useRsdSettings()
+  const {button} = config
   // Initialize AOS library
   useEffect(() => {
     AOS.init()
@@ -98,20 +104,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: R
             </div>
 
             <div className="flex gap-4 md:gap-10 mt-10 items-center">
-              <GlowingButton text="Discover Software" url="/software"/>
-
-              {/* Resgister with email button */}
-
-              {/*<a data-aos="fade" data-aos-offset="200" data-aos-delay="150" data-aos-duration="1000"*/}
-              {/*   className="text-xl leading-6 text-transparent bg-clip-text bg-gradient-to-br from-[#FD54BB] to-[#1BECCB] "*/}
-              {/*   target="_blank"*/}
-              {/*   rel="noreferrer"*/}
-              {/*   href="mailto:rsd@esciencecenter.nl?subject=More information about the RSD&body=Hi,*/}
-              {/*    I would like to get in contact to start my organization within the Research*/}
-              {/*    Software Directory"*/}
-              {/*>*/}
-              {/*  Register your <br/> Organisation*/}
-              {/*</a>*/}
+              <GlowingButton text={button.discover.label} url={button.discover.url} target={button.discover.target} />
             </div>
           </div>
         </div>
@@ -121,10 +114,10 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: R
       <LandingPageDivider/>
 
       {/* stats  */}
-      <div className="w-full max-w-screen-xl mx-auto flex flex-wrap gap-10 md:gap-16 p-5 md:p-10 ">
+      <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <div>
           <div className="text-lg">{software_cnt} Software</div>
-          <div className="opacity-40">packages</div>
+          <div className="opacity-40">packages registered</div>
         </div>
 
         <div>
@@ -138,13 +131,13 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: R
         </div>
 
         <div>
-          <div className="text-lg">354 Software</div>
-          <div className="opacity-40">developers</div>
+          <div className="text-lg">{contributor_cnt} Developers</div>
+          <div className="opacity-40">contributed</div>
         </div>
 
         <div>
-          <div className="text-lg">708 Software</div>
-          <div className="opacity-40">citations</div>
+          <div className="text-lg">{software_mention_cnt} Citations</div>
+          <div className="opacity-40">of registered software</div>
         </div>
       </div>
 
@@ -233,23 +226,35 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: R
           </p>
 
           <div
-            className="w-full max-w-screen-lg mt-6 mx-auto flex-col grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-2 scale-90">
+            className="max-w-screen-lg mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
             <div className="flex justify-center"
-                 data-aos="fade-up" data-aos-duration="300" data-aos-easing="ease-in-out"
+              data-aos="fade-up" data-aos-duration="300" data-aos-easing="ease-in-out"
             >
-              <GlowingButton text="Discover Software" url="/software"/>
+              <GlowingButton
+                text={button.discover.label}
+                url={button.discover.url}
+                target={button.discover.target}
+                minWidth='19rem' />
             </div>
             <div className="flex justify-center" data-aos="fade-up" data-aos-delay="100"
-                 data-aos-duration="300"
-                 data-aos-easing="ease-in-out"
+              data-aos-duration="300"
+              data-aos-easing="ease-in-out"
             >
-              <GlowingButton text="Add your Software" url="/"/>
+              <GlowingButton
+                text={button.addSoftware.label}
+                url={button.addSoftware.url}
+                target={button.addSoftware.target}
+                minWidth='19rem' />
             </div>
             <div className="flex justify-center" data-aos="fade-up" data-aos-delay="200"
-                 data-aos-duration="300"
-                 data-aos-easing="ease-in-out"
+              data-aos-duration="300"
+              data-aos-easing="ease-in-out"
             >
-              <GlowingButton text="Register your organization" url="/"/>
+              <GlowingButton
+                text={button.register.label}
+                url={button.register.url}
+                target={button.register.target}
+                minWidth='19rem' />
             </div>
           </div>
         </section>
@@ -315,10 +320,17 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: R
 
         {/* Learn more section  */}
         <section
-          className="grid gap-6 grid-cols-1 sm:grid-cols-2 w-full max-w-screen-xl mt-20 mx-auto">
-          <Image src="/images/learnMore.webp" width="1475" height="638"
-                 alt="rsd learn more illustration"/>
-          <div className="px-5 md:px-10 py-5 w-full max-w-screen-lg mx-auto">
+          className="p-5 md:p-10 grid gap-12 grid-cols-1 sm:grid-cols-2 max-w-screen-xl mt-20 mx-auto">
+          <div className="relative">
+            <Image
+              src="/images/learnMore.webp"
+              width="1920"
+              height="830"
+              layout="responsive"
+              alt="rsd learn more illustration"
+            />
+          </div>
+          <div>
             <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
                 data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
               Learn more
@@ -330,20 +342,32 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: R
             </p>
 
             <div
-              className="flex-col grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-2 scale-90 mt-5">
-              <div className="flex justify-center" data-aos="zoom-out" data-aos-duration="600"
+              className="flex flex-wrap justify-center gap-4 p-2 scale-90 mt-5">
+              <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
                    data-aos-easing="ease-in-out">
-                <GlowingButton text="About us" url="/"/>
+                <GlowingButton
+                  text={button.about.label}
+                  url={button.about.url}
+                  target={button.about.target}
+                />
               </div>
-              <div className="flex justify-center" data-aos="zoom-out" data-aos-duration="600"
+              <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
                    data-aos-delay="100"
                    data-aos-easing="ease-in-out">
-                <GlowingButton text="Docs" url="/"/>
+                <GlowingButton
+                  text={button.docs.label}
+                  url={button.docs.url}
+                  target={button.docs.target}
+                />
               </div>
-              <div className="flex justify-center" data-aos="zoom-out" data-aos-duration="600"
+              <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
                    data-aos-delay="200"
                    data-aos-easing="ease-in-out">
-                <GlowingButton text="FAQs" url="/"/>
+                <GlowingButton
+                  text={button.faq.label}
+                  url={button.faq.url}
+                  target={button.faq.target}
+                />
               </div>
             </div>
           </div>
@@ -368,18 +392,32 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt}: R
           </p>
 
           <div
-            className="w-full max-w-screen-md mt-6 mx-auto flex-col grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 p-2 scale-90">
-            <div className="flex justify-center" data-aos="fade" data-aos-duration="500"
-                 data-aos-easing="ease-in-out">
-              <GlowingButton text="Contact us" url="/"/>
-            </div>
+            className="max-w-screen-md mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
+            {host.email &&
+              <div className="flex justify-center" data-aos="fade" data-aos-duration="500"
+                  data-aos-easing="ease-in-out">
+                <GlowingButton
+                  text={button.contact.label}
+                  url={button.contact.url}
+                  target={button.contact.target}
+                  minWidth='14rem' />
+              </div>
+            }
             <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
                  data-aos-duration="500" data-aos-easing="ease-in-out">
-              <GlowingButton text="Meet our team" url="/"/>
+              <GlowingButton
+                text={button.team.label}
+                url={button.team.url}
+                target={button.team.target}
+                minWidth='14rem' />
             </div>
             <div className="flex justify-center" data-aos="fade" data-aos-delay="200"
                  data-aos-duration="500" data-aos-easing="ease-in-out">
-              <GlowingButton text="Join us on GitHub" url="/"/>
+              <GlowingButton
+                text={button.github.label}
+                url={button.github.url}
+                target={button.github.target}
+                minWidth='14rem' />
             </div>
           </div>
         </section>

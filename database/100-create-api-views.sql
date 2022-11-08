@@ -1163,13 +1163,17 @@ $$;
 CREATE FUNCTION homepage_counts(
 	OUT software_cnt BIGINT,
 	OUT project_cnt BIGINT,
-	OUT organisation_cnt BIGINT
+	OUT organisation_cnt BIGINT,
+	OUT contributor_cnt BIGINT,
+	OUT software_mention_cnt BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	SELECT count(id) FROM software INTO software_cnt;
 	SELECT count(id) FROM project INTO project_cnt;
 	SELECT count(id) FROM organisation WHERE parent IS NULL INTO organisation_cnt;
+	SELECT count(display_name) FROM unique_contributors() INTO contributor_cnt;
+	SELECT count(mention) FROM mention_for_software INTO software_mention_cnt;
 END
 $$;
 
