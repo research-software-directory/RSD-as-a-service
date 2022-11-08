@@ -18,7 +18,7 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {useSession} from '~/auth'
 import {useEffect, useState} from 'react'
 import Link from '@mui/material/Link'
-import {Button, CircularProgress, TextField} from '@mui/material'
+import {Button, CircularProgress, ListItemText, TextField} from '@mui/material'
 import {PageTitleSticky} from '~/components/layout/PageTitle'
 
 export default function OrcidWitelistPage() {
@@ -153,14 +153,20 @@ function OrcidWhitelist({orcids, onDeleteCallback, token}:
     setFetchingNames(false)
   }
 
+
   return (
     <>
-      {!fetchingNames &&
-        <Button variant="contained" onClick={() => setAllNames()}>
-          Fetch names
-        </Button>
-      }
-      {fetchingNames && <CircularProgress/>}
+      <div className='h-[2rem] mb-4'>
+        {fetchingNames ?
+          <CircularProgress size="2rem" />
+          :
+          <Button
+            variant="contained"
+            onClick={() => setAllNames()}>
+            Fetch names
+          </Button>
+        }
+      </div>
       <List>
         {orcids.map(orcid => {
           return (
@@ -170,10 +176,16 @@ function OrcidWhitelist({orcids, onDeleteCallback, token}:
                 <IconButton onClick={() => deleteOrcid(orcid)}><DeleteIcon/></IconButton>
               }
             >
-              <Link href={`https://orcid.org/${orcid}`} underline="always" target="_blank" rel="noreferrer">
-                {orcid}
-              </Link>
-              {names.has(orcid) && names.get(orcid)}
+              <ListItemText
+                primary={
+                  <Link href={`https://orcid.org/${orcid}`} underline="always" target="_blank" rel="noreferrer">
+                    {orcid}
+                  </Link>
+                }
+                secondary={
+                  <span>{names.get(orcid) ?? ''}</span>
+                }
+              />
             </ListItem>
           )
         })}
