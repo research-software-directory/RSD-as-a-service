@@ -50,7 +50,7 @@ services:
 
   auth:
     build: ./authentication
-    image: rsd/auth:1.2.0
+    image: rsd/auth:1.2.1
     expose:
       - 7000
     environment:
