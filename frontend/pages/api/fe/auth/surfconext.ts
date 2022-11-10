@@ -22,7 +22,7 @@ type Data = Provider | ApiError
 
 export async function surfconextRedirectProps() {
   // extract wellknow url from env
-  const wellknownUrl = process.env.NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL ?? null
+  const wellknownUrl = process.env.SURFCONEXT_WELL_KNOWN_URL ?? null
   if (wellknownUrl) {
     // extract authorisation endpoint from wellknow response
     const authorization_endpoint = await getAuthorisationEndpoint(wellknownUrl)
@@ -30,10 +30,10 @@ export async function surfconextRedirectProps() {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
-        redirect_uri: process.env.NEXT_PUBLIC_SURFCONEXT_REDIRECT || 'https://research-software.nl/auth/login/surfconext',
-        client_id: process.env.NEXT_PUBLIC_SURFCONEXT_CLIENT_ID || 'www.research-software.nl',
-        scope: process.env.NEXT_PUBLIC_SURFCONEXT_SCOPES || 'openid',
-        response_mode: process.env.NEXT_PUBLIC_SURFCONEXT_RESPONSE_MODE || 'form_post',
+        redirect_uri: process.env.SURFCONEXT_REDIRECT || 'https://research-software.nl/auth/login/surfconext',
+        client_id: process.env.SURFCONEXT_CLIENT_ID || 'www.research-software.nl',
+        scope: process.env.SURFCONEXT_SCOPES || 'openid',
+        response_mode: process.env.SURFCONEXT_RESPONSE_MODE || 'form_post',
         claims
       }
       return props
@@ -43,7 +43,7 @@ export async function surfconextRedirectProps() {
       throw new Error(message)
     }
   } else {
-    const message = 'NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL is missing'
+    const message = 'SURFCONEXT_WELL_KNOWN_URL is missing'
     logger(`api/fe/auth/surfconext: ${message}`, 'error')
     throw new Error(message)
   }

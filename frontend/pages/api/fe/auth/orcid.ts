@@ -22,7 +22,7 @@ type Data = Provider | ApiError
 
 export async function orcidRedirectProps() {
   // extract wellknow url from env
-  const wellknownUrl = process.env.NEXT_PUBLIC_ORCID_WELL_KNOWN_URL ?? null
+  const wellknownUrl = process.env.ORCID_WELL_KNOWN_URL ?? null
   if (wellknownUrl) {
     // extract authorisation endpoint from wellknow response
     const authorization_endpoint = await getAuthorisationEndpoint(wellknownUrl)
@@ -30,10 +30,10 @@ export async function orcidRedirectProps() {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
-        redirect_uri: process.env.NEXT_PUBLIC_ORCID_REDIRECT || 'https://research-software.nl/auth/login/orcid',
-        client_id: process.env.NEXT_PUBLIC_ORCID_CLIENT_ID || 'www.research-software.nl',
-        scope: process.env.NEXT_PUBLIC_ORCID_SCOPES || 'openid',
-        response_mode: process.env.NEXT_PUBLIC_ORCID_RESPONSE_MODE || 'query',
+        redirect_uri: process.env.ORCID_REDIRECT || 'https://research-software.nl/auth/login/orcid',
+        client_id: process.env.ORCID_CLIENT_ID || 'www.research-software.nl',
+        scope: process.env.ORCID_SCOPES || 'openid',
+        response_mode: process.env.ORCID_RESPONSE_MODE || 'query',
         claims
       }
       return props
@@ -43,7 +43,7 @@ export async function orcidRedirectProps() {
       throw new Error(message)
     }
   } else {
-    const message = 'NEXT_PUBLIC_ORCID_WELL_KNOWN_URL is missing'
+    const message = 'ORCID_WELL_KNOWN_URL is missing'
     logger(`api/fe/auth/orcid: ${message}`, 'error')
     throw new Error(message)
   }
