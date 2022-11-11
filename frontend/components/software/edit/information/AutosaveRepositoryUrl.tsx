@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 import {useController, useFormContext} from 'react-hook-form'
 import {CodePlatform, EditSoftwareItem, RepositoryUrl} from '~/types/SoftwareTypes'
