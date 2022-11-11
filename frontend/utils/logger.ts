@@ -20,8 +20,7 @@ export default function logger(
     break
   default:
     // info logs only in dev
-    // ensure NEXT_PUBLIC_ENV=dev is present .env.local
-    if (process.env.NEXT_PUBLIC_ENV==='dev'){
+    if (process.env.NODE_ENV ==='development'){
       // eslint-disable-next-line
       console.log(`[INFO] ${message}`)
     }
