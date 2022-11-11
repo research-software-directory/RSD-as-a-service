@@ -61,29 +61,36 @@ INNER JOIN
 END
 $$;
 
--- Keywords grouped by software as an array for filtering
--- for selecting software with specific keywords (AND)
+-- Keywords grouped by software for filtering
+-- We use array for selecting software with specific keywords
+-- We use text value for "wild card" search
 CREATE FUNCTION keyword_filter_for_software() RETURNS TABLE (
 	software UUID,
-	keywords CITEXT[]
+	keywords CITEXT[],
+	keywords_text TEXT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	RETURN QUERY
-SELECT
-	keyword_for_software.software AS software,
-	array_agg(
-		keyword.value
-		ORDER BY value
-	) AS keywords
-FROM
-	keyword_for_software
-INNER JOIN
-	keyword ON keyword.id = keyword_for_software.keyword
-GROUP BY keyword_for_software.software
+	SELECT
+		keyword_for_software.software AS software,
+		ARRAY_AGG(
+			keyword.value
+			ORDER BY value
+		) AS keywords,
+		STRING_AGG(
+			keyword.value,' '
+			ORDER BY value
+		) AS keywords_text
+	FROM
+		keyword_for_software
+	INNER JOIN
+		keyword ON keyword.id = keyword_for_software.keyword
+	GROUP BY keyword_for_software.software
 ;
 END
 $$;
+
 
 -- COUNT contributors per software
 CREATE FUNCTION count_software_countributors() RETURNS TABLE (software UUID, contributor_cnt BIGINT) LANGUAGE plpgsql STABLE AS
@@ -126,40 +133,6 @@ BEGIN
 END
 $$;
 
--- SOFTWARE OVERVIEW LIST WITH COUNTS
--- DEPRECATED from 1.3.0 (2022-07-25)
--- CREATE FUNCTION software_list() RETURNS TABLE (
--- 	id UUID,
--- 	slug VARCHAR,
--- 	brand_name VARCHAR,
--- 	short_statement VARCHAR,
--- 	updated_at TIMESTAMPTZ,
--- 	contributor_cnt BIGINT,
--- 	mention_cnt BIGINT,
--- 	is_published BOOLEAN
--- ) LANGUAGE plpgsql STABLE AS
--- $$
--- BEGIN
--- 	RETURN QUERY
--- 	SELECT
--- 		software.id,
--- 		software.slug,
--- 		software.brand_name,
--- 		software.short_statement,
--- 		software.updated_at,
--- 		count_software_countributors.contributor_cnt,
--- 		count_software_mentions.mention_cnt,
--- 		software.is_published
--- 	FROM
--- 		software
--- 	LEFT JOIN
--- 		count_software_countributors() ON software.id=count_software_countributors.software
--- 	LEFT JOIN
--- 		count_software_mentions() ON software.id=count_software_mentions.software
--- 	;
--- END
--- $$;
-
 -- SOFTWARE OVERVIEW LIST FOR SEARCH
 -- WITH COUNTS and KEYWORDS for filtering
 CREATE FUNCTION software_search() RETURNS TABLE (
@@ -171,7 +144,8 @@ CREATE FUNCTION software_search() RETURNS TABLE (
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT,
 	is_published BOOLEAN,
-	keywords citext[]
+	keywords citext[],
+	keywords_text TEXT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -185,7 +159,8 @@ BEGIN
 		count_software_countributors.contributor_cnt,
 		count_software_mentions.mention_cnt,
 		software.is_published,
-		keyword_filter_for_software.keywords
+		keyword_filter_for_software.keywords,
+		keyword_filter_for_software.keywords_text
 	FROM
 		software
 	LEFT JOIN
@@ -1221,21 +1196,27 @@ BEGIN
 END
 $$;
 
--- Keywords grouped by project as an array for filtering
--- for selecting project with specific keywords (AND)
+-- Keywords grouped by project
+-- We use keywords array for filtering
+-- We use keywords_text for "wild card" search
 CREATE FUNCTION keyword_filter_for_project() RETURNS TABLE (
 	project UUID,
-	keywords CITEXT[]
+	keywords CITEXT[],
+	keywords_text TEXT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	RETURN QUERY
 	SELECT
 		keyword_for_project.project AS project,
-		array_agg(
+		ARRAY_AGG(
 			keyword.value
 			ORDER BY value
-		) AS keywords
+		) AS keywords,
+		STRING_AGG(
+			keyword.value,' '
+			ORDER BY value
+		) AS keywords_text
 	FROM
 		keyword_for_project
 	INNER JOIN
@@ -1245,8 +1226,39 @@ BEGIN
 END
 $$;
 
+-- RESEARCH DOMAIN grouped by project
+-- We use array for exact filtering by KEY
+-- We use research_domain_text for "wild card" search when filter is not active
+CREATE FUNCTION research_domain_filter_for_project() RETURNS TABLE (
+	project UUID,
+	research_domain VARCHAR[],
+	research_domain_text TEXT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		research_domain_for_project.project AS project,
+		ARRAY_AGG(
+			research_domain.key
+			ORDER BY key
+		) AS research_domain,
+		STRING_AGG(
+			research_domain.key || ' ' || research_domain."name",' '
+			ORDER BY key
+		) AS research_domain_text
+	FROM
+		research_domain_for_project
+	INNER JOIN
+		research_domain ON research_domain.id = research_domain_for_project.research_domain
+	GROUP BY research_domain_for_project.project
+;
+END
+$$;
+
+
 -- PROJECT OVERVIEW LIST FOR SEARCH
--- WITH KEYWORDS for filtering
+-- WITH KEYWORDS and research domain for filtering
 CREATE FUNCTION project_search() RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
@@ -1258,7 +1270,10 @@ CREATE FUNCTION project_search() RETURNS TABLE (
 	is_published BOOLEAN,
 	image_contain BOOLEAN,
 	image_id UUID,
-	keywords citext[]
+	keywords citext[],
+	keywords_text TEXT,
+	research_domain VARCHAR[],
+	research_domain_text TEXT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -1278,13 +1293,49 @@ BEGIN
 		project.is_published,
 		project.image_contain,
 		image_for_project.project AS image_id,
-		keyword_filter_for_project.keywords
+		keyword_filter_for_project.keywords,
+		keyword_filter_for_project.keywords_text,
+		research_domain_filter_for_project.research_domain,
+		research_domain_filter_for_project.research_domain_text
 	FROM
 		project
 	LEFT JOIN
 		image_for_project ON project.id = image_for_project.project
 	LEFT JOIN
 		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
+	LEFT JOIN
+		research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
+	;
+END
+$$;
+
+
+-- RESEARCH DOMAIN count used in project filter
+-- to show used research domains with count
+CREATE FUNCTION research_domain_count_for_projects() RETURNS TABLE (
+	id UUID,
+	key VARCHAR,
+	name VARCHAR,
+	cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		research_domain.id,
+		research_domain.key,
+		research_domain.name,
+		research_domain_count.cnt
+	FROM
+		research_domain
+	LEFT JOIN
+		(SELECT
+				research_domain_for_project.research_domain,
+				count(research_domain_for_project.research_domain) AS cnt
+			FROM
+				research_domain_for_project
+			GROUP BY research_domain_for_project.research_domain
+		) AS research_domain_count ON research_domain.id = research_domain_count.research_domain
 	;
 END
 $$;

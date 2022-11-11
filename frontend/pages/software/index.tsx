@@ -21,7 +21,7 @@ import {rowsPerPageOptions} from '../../config/pagination'
 import {getSoftwareList} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
-import SoftwareKeywordFilter from '~/components/software/SoftwareKeywordFilter'
+import SoftwareFilter from '~/components/software/filter'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -115,7 +115,7 @@ export default function SoftwareIndexPage(
       <PageTitle title="Software">
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center">
-            <SoftwareKeywordFilter
+            <SoftwareFilter
               items={keywords ?? []}
               onApply={handleFilters}
             />

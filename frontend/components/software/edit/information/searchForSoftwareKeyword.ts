@@ -43,7 +43,7 @@ export async function searchForSoftwareKeywordExact(
   try {
     const searchForEncoded = encodeURIComponent(searchFor)
 
-    // GET top 50 matches
+    // GET first exact match
     const url = `/api/v1/rpc/keyword_count_for_software?keyword=eq.${searchForEncoded}&limit=1`
     const resp = await fetch(url, {
       method: 'GET'
