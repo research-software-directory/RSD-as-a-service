@@ -13,6 +13,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import CloseIcon from '@mui/icons-material/Close'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Divider from '@mui/material/Divider'
+import useDisableScrollLock from '~/utils/useDisableScrollLock'
 
 type FilterPopoverProps = {
   title: string
@@ -29,12 +30,13 @@ type FilterPopoverProps = {
  * The content of the popover is received via children prop.
  */
 export default function FilterPopover(props: FilterPopoverProps) {
+  const disable = useDisableScrollLock()
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
   const {
     title, filterTooltip, badgeContent,
     disableClear, children, onClear
   } = props
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
 
   function handleOpen(event: React.MouseEvent<HTMLElement>){
     setAnchorEl(event.currentTarget)
@@ -72,13 +74,21 @@ export default function FilterPopover(props: FilterPopoverProps) {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          width: ['100vw', '24rem'],
-          height: ['100vh', 'auto']
+          width: '24rem',
+          '.MuiPaper-root': {
+            minWidth: '21rem',
+            maxWidth: 'calc(100% - 4rem)'
+          },
+          '.MuiAlert-root': {
+            minWidth: '19rem',
+            maxWidth: 'calc(100% - 4rem)'
+          }
         }}
         // disable adding styles to body (overflow:hidden & padding-right)
-        disableScrollLock={true}
+        // for mobile phone
+        disableScrollLock={disable}
       >
-        <h3 className="p-4 text-primary">
+        <h3 className="p-4">
           {title}
         </h3>
         <Divider />

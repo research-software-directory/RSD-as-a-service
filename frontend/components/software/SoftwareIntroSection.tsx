@@ -7,9 +7,14 @@ import {ContributorMentionCount} from '../../utils/getSoftware'
 import ContentHeader from '../layout/ContentHeader'
 import SoftwareStatCounter from './SoftwareStatCounter'
 
-export default function SoftwareIntroSection({brand_name, short_statement, counts}:
-  { brand_name: string, short_statement: string, counts: ContributorMentionCount }) {
+type SoftwareIntroSectionProps = {
+  brand_name: string,
+  short_statement: string,
+  counts: ContributorMentionCount
+}
 
+export default function SoftwareIntroSection(props:SoftwareIntroSectionProps) {
+  const {brand_name,short_statement,counts} = props
   function getMentionsLabel() {
     if (counts?.mention_cnt === 1) {
       return 'mention'

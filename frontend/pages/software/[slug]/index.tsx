@@ -25,7 +25,7 @@ import AboutSection from '~/components/software/AboutSection'
 import MentionsSection from '~/components/software/MentionsSection'
 import ContributorsSection from '~/components/software/ContributorsSection'
 import TestimonialSection from '~/components/software/TestimonialsSection'
-import EditButton from '~/components/layout/EditButton'
+import EditPageButton from '~/components/layout/EditPageButton'
 import OrganisationsSection from '~/components/software/OrganisationsSection'
 import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
 import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
@@ -128,17 +128,19 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <CanoncialUrl
         canonicalUrl={resolvedUrl}
       />
-      <AppHeader editButton={isMaintainer
-        ? <EditButton title="Edit software" url={`${slug}/edit`} />
-        : undefined
-      }/>
-
+      <AppHeader />
+      {/* Edit page button only when maintainer */}
+      <EditPageButton
+        title="Edit software"
+        url={`${slug}/edit`}
+        isMaintainer={isMaintainer}
+        variant="text"
+      />
       <SoftwareIntroSection
         brand_name={software.brand_name}
         short_statement={software.short_statement ?? ''}
         counts={softwareIntroCounts}
       />
-
       <GetStartedSection
         get_started_url={software.get_started_url}
         repository_url={repositoryInfo?.url}

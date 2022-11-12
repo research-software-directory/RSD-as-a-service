@@ -12,9 +12,11 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import {IconButton, ListItemIcon} from '@mui/material'
 import CaretIcon from '~/components/icons/caret.svg'
+import useDisableScrollLock from '~/utils/useDisableScrollLock'
 
 export default function AddMenu() {
   const router = useRouter()
+  const disable = useDisableScrollLock()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
@@ -65,7 +67,7 @@ export default function AddMenu() {
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         // disable adding styles to body (overflow:hidden & padding-right)
-        disableScrollLock={true}
+        disableScrollLock={disable}
       >
         <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/software/add')}>
           <ListItemIcon>

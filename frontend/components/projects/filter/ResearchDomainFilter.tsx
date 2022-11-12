@@ -63,7 +63,7 @@ export default function ResearchDomainFilter({items=[], searchApi, onApply}:Rese
 
   return (
     <>
-      <div className="px-4 py-4 w-[22rem]">
+      <div className="px-4 py-4">
         <h4 className="mb-2">By research domain</h4>
         <FindFilterOptions
           config={{

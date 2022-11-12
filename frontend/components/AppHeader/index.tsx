@@ -20,12 +20,14 @@ import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
 import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
 import FeedbackPanelButton from '~/components/feedback/FeedbackPanelButton'
+import useDisableScrollLock from '~/utils/useDisableScrollLock'
 
-export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
+export default function AppHeader() {
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
   const {host, embedMode} = useRsdSettings()
+  const disable = useDisableScrollLock()
   // Responsive menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -91,8 +93,8 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
             </div>
 
 
-            {/* EDIT button */}
-            {editButton ? editButton : null}
+            {/* EDIT button MOVED TO PAGE TITLE */}
+            {/* {editButton ? editButton : null} */}
 
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
@@ -127,7 +129,7 @@ export default function AppHeader({editButton}: { editButton?: JSX.Element }) {
                 transformOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
                 // disable adding styles to body (overflow:hidden & padding-right)
-                disableScrollLock = { true}
+                disableScrollLock = {disable}
               >
                 {menuItems.map(item =>
                   <MenuItem onClick={handleCloseResponsiveMenu} key={item.path}>

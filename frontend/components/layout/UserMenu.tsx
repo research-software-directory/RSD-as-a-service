@@ -15,6 +15,7 @@ import {useAuth} from '../../auth/index'
 import {MenuItemType} from '../../config/menuItems'
 import {getDisplayInitials, splitName} from '../../utils/getDisplayName'
 import CaretIcon from '~/components/icons/caret.svg'
+import useDisableScrollLock from '~/utils/useDisableScrollLock'
 
 type UserMenuType = {
   image?: string
@@ -22,9 +23,10 @@ type UserMenuType = {
 }
 
 export default function UserMenu(props: UserMenuType) {
+  const {session} = useAuth()
+  const disable = useDisableScrollLock()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
-  const {session} = useAuth()
   const {menuOptions} = props
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -103,7 +105,7 @@ export default function UserMenu(props: UserMenuType) {
         transformOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         // disable adding styles to body (overflow:hidden & padding-right)
-        disableScrollLock = { true}
+        disableScrollLock = {disable}
       >
         {renderMenuOptions()}
       </Menu>

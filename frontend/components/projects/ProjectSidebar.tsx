@@ -28,7 +28,7 @@ export default function ProjectSidebar({date_start, date_end, grant_id, links, r
   keywords, fundingOrganisations}: ProjectSidebarProps) {
 
   return (
-    <aside className="bg-base-200 p-6">
+    <aside className="bg-base-200 p-6 mb-4">
 
       <ProjectStatus
         date_start={date_start}

@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import CaretIcon from '~/components/icons/caret.svg'
 import * as React from 'react'
 import {useState} from 'react'
@@ -57,9 +62,9 @@ User Agent: ${navigator.userAgent}`
   return (
     <div>
       {/* If desktop size */}
-      <button className="hidden md:flex flex gap-2 items-center no-underline"
-              aria-describedby="feedback panel"
-              onClick={handleClickOpen}
+      <button className="hidden md:flex gap-2 items-center no-underline"
+        aria-describedby="feedback panel"
+        onClick={handleClickOpen}
       >
         Feedback <CaretIcon/>
       </button>

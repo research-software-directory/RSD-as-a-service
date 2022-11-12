@@ -12,6 +12,18 @@ import softwareIndexData from './__fixtures__/softwareIndexData'
 
 jest.mock('../utils/getSoftware')
 
+// mock next router
+const mockBack = jest.fn()
+const mockReplace = jest.fn()
+const mockPush = jest.fn()
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    back: mockBack,
+    replace: mockReplace,
+    push: mockPush
+  })
+}))
+
 describe('pages/software/[slug]/index.tsx', () => {
   it('renders heading with software title', async() => {
     render(WrappedComponentWithProps(

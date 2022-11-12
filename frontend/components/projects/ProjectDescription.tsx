@@ -23,21 +23,26 @@ export default function ProjectDescription(
   function getImage() {
     if (image) {
       return (
-        <ImageAsBackground
-          src={image}
-          alt={image_caption ?? 'image'}
-          bgSize={image_contain ? 'contain' : 'cover'}
-          bgPosition={image_contain ? 'center' : 'top center'}
-          className="w-full h-[12rem] sm:h-[20rem] md:h-[25rem] lg:h-[30rem]"
-        />
+        <>
+          <ImageAsBackground
+            src={image}
+            alt={image_caption ?? 'image'}
+            bgSize={image_contain ? 'contain' : 'cover'}
+            bgPosition={image_contain ? 'center' : 'top center'}
+            className="w-full h-[12rem] sm:h-[20rem] md:h-[25rem] lg:h-[30rem]"
+          />
+          <div className="text-sm text-grey-600 mt-2 mb-4"
+            style={{wordBreak: 'break-word'}}>
+            {image_caption}
+          </div>
+        </>
       )
     }
     return null
   }
   return (
-    <article>
+    <article className="mb-4">
       {getImage()}
-      <div className="text-sm text-grey-600 mt-2 mb-4" style={{wordBreak:'break-word'}}>{image_caption}</div>
       <ReactMarkdownWithSettings
         markdown={description}
       />

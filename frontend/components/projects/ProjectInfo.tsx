@@ -28,7 +28,7 @@ export default function ProjectInfo(
   grant_id, links, researchDomains, keywords, fundingOrganisations}: ProjectInfoProps
 ) {
   return (
-    <section className="px-4 grid gap-8 lg:grid-cols-[3fr,1fr] lg:gap-16">
+    <section className="px-4 sm:pb-8 sm:grid sm:gap-8 lg:grid-cols-[3fr,1fr] lg:gap-16">
       <ProjectDescription
         image_id={image_id}
         image_caption={image_caption ?? ''}
