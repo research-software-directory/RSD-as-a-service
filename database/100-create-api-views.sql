@@ -1157,29 +1157,6 @@ BEGIN
 END
 $$;
 
-
---	Global search
-CREATE FUNCTION global_search()
-	RETURNS TABLE
-		(name VARCHAR, slug VARCHAR, source TEXT, is_published BOOLEAN )
-	LANGUAGE plpgsql
-	STABLE
-	AS
-	$$
-BEGIN
-	RETURN QUERY
-		SELECT software.brand_name as name, software.slug AS slug, 'software' as source, software.is_published
-		FROM software
-		UNION
-		SELECT project.title as name, project.slug AS slug, 'projects' as source, project.is_published
-		FROM project
-		UNION
-		SELECT organisation.name, organisation.slug AS slug, 'organisations' as source, is_published
-		FROM organisation;
-END
-$$;
-
-
 -- TOTAL COUNTS FOR HOMEPAGE
 -- software_cnt, project_cnt, organisation_cnt
 -- this rpc returns json object instead of array
@@ -1337,5 +1314,64 @@ BEGIN
 			GROUP BY research_domain_for_project.research_domain
 		) AS research_domain_count ON research_domain.id = research_domain_count.research_domain
 	;
+END
+$$;
+
+--	GLOBAL SEARCH
+--  we use search_text to concatenate all values to use
+CREATE FUNCTION global_search() RETURNS TABLE(
+	slug VARCHAR,
+	name VARCHAR,
+	source TEXT,
+	is_published BOOLEAN,
+	search_text TEXT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN RETURN QUERY
+	-- SOFTWARE search item
+	SELECT
+		software_search.slug,
+		software_search.brand_name AS name,
+		'software' AS "source",
+		software_search.is_published,
+		CONCAT_WS(
+			' ',
+			software_search.brand_name,
+			software_search.short_statement,
+			software_search.keywords_text
+		) AS search_text
+	FROM
+		software_search()
+	UNION
+	-- PROJECT search item
+	SELECT
+		project_search.slug,
+		project_search.title AS name,
+		'projects' AS "source",
+		project_search.is_published,
+		CONCAT_WS(
+			' ',
+			project_search.title,
+			project_search.subtitle,
+			project_search.keywords_text,
+			project_search.research_domain_text
+		) AS search_text
+	FROM
+		project_search()
+	UNION
+	-- ORGANISATION search item
+	SELECT
+		organisation.slug,
+		organisation."name",
+		'organisations' AS "source",
+		TRUE AS is_published,
+		CONCAT_WS(
+			' ',
+			organisation."name",
+			organisation.website
+		) AS search_text
+	FROM
+		organisation
+;
 END
 $$;
