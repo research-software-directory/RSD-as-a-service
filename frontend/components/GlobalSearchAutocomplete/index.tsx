@@ -140,7 +140,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
           value={inputValue}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          type="search"
+          type="text"
           onFocus={focusSearch}
         />
 
