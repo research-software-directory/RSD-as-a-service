@@ -182,7 +182,7 @@ export default function Home() {
         </div> */}
 
         {/* Software spotlights */}
-        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+        <div className="container mx-auto p-6 md:p-10 xl:py-10 max-w-screen-xl text-secondary">
           <h2 className='text-5xl'>Software Spotlights</h2>
           <div className='text-2xl mt-2'>The latest outstanding software product developed in Helmholtz.</div>
           <div className="w-full">
@@ -204,7 +204,7 @@ export default function Home() {
         </div>
 
         {/* Teaser */}
-        <div className="conainer mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+        <div className="conainer mx-auto p-6 md:p-10 xl:py-10 max-w-screen-xl text-secondary">
           <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-20'>
             <div className='text-2xl'>
               <h2 id="Upcoming" className='text-5xl pb-10'>Upcoming</h2>
@@ -232,7 +232,7 @@ export default function Home() {
         {/* Participating organsiations */}
         {
           organisations.length > 0 &&
-          <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+          <div className="container mx-auto p-6 md:p-10 xl:py-10 max-w-screen-xl text-secondary">
             <div className="py-6">
               <h2 className="text-5xl pb-2">Contributions</h2>
               <div className='text-2xl'>We present software contributions by</div>
