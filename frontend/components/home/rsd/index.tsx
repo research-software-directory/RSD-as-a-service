@@ -76,7 +76,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
       <AppHeader/>
 
       {/* Jumbo Banner  */}
-      <div className="mx-auto mt-20 relative overflow-x-clip ">
+      <div className="mx-auto my-20 relative overflow-x-clip ">
 
         {/* Jumbo Image*/}
         <div
@@ -103,15 +103,15 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
               software to ensure researchers and RSEs get credit for their work. {/*Learn more.*/}
             </div>
 
-            <div className="flex gap-4 md:gap-10 mt-10 items-center">
+            {/* <div className="flex gap-4 md:gap-10 mt-10 items-center">
               <GlowingButton text={button.discover.label} url={button.discover.url} target={button.discover.target} />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
 
       {/*  Divider  */}
-      <LandingPageDivider/>
+      {/* <LandingPageDivider/> */}
 
       {/* stats  */}
       <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
@@ -131,13 +131,13 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         </div>
 
         <div>
-          <div className="text-lg">{contributor_cnt} Developers</div>
-          <div className="opacity-40">contributed</div>
+          <div className="text-lg">{contributor_cnt} Contributors</div>
+          <div className="opacity-40">to research software</div>
         </div>
 
         <div>
-          <div className="text-lg">{software_mention_cnt} Citations</div>
-          <div className="opacity-40">of registered software</div>
+          <div className="text-lg">{software_mention_cnt} Mentions</div>
+          <div className="opacity-40">of research software</div>
         </div>
       </div>
 
@@ -241,9 +241,9 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
               data-aos-easing="ease-in-out"
             >
               <GlowingButton
-                text={button.addSoftware.label}
-                url={button.addSoftware.url}
-                target={button.addSoftware.target}
+                text={button.signUp.label}
+                url={button.signUp.url}
+                target={button.signUp.target}
                 minWidth='19rem' />
             </div>
             <div className="flex justify-center" data-aos="fade-up" data-aos-delay="200"
@@ -346,9 +346,9 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
               <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
                    data-aos-easing="ease-in-out">
                 <GlowingButton
-                  text={button.about.label}
-                  url={button.about.url}
-                  target={button.about.target}
+                  text={button.demo.label}
+                  url={button.demo.url}
+                  target={button.demo.target}
                 />
               </div>
               <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
@@ -393,6 +393,14 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
 
           <div
             className="max-w-screen-md mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
+            <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
+                 data-aos-duration="500" data-aos-easing="ease-in-out">
+              <GlowingButton
+                text={button.team.label}
+                url={button.team.url}
+                target={button.team.target}
+                minWidth='14rem' />
+            </div>
             {host.email &&
               <div className="flex justify-center" data-aos="fade" data-aos-duration="500"
                   data-aos-easing="ease-in-out">
@@ -403,14 +411,6 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
                   minWidth='14rem' />
               </div>
             }
-            <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
-                 data-aos-duration="500" data-aos-easing="ease-in-out">
-              <GlowingButton
-                text={button.team.label}
-                url={button.team.url}
-                target={button.team.target}
-                minWidth='14rem' />
-            </div>
             <div className="flex justify-center" data-aos="fade" data-aos-delay="200"
                  data-aos-duration="500" data-aos-easing="ease-in-out">
               <GlowingButton
