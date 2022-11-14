@@ -7,8 +7,9 @@
 
 import Link from '@mui/material/Link'
 import LinkIcon from '@mui/icons-material/Link'
-import TagChip from '~/components/layout/TagChip'
 import {ResearchDomain} from '~/types/Project'
+import {ssrProjectsUrl} from '~/utils/postgrestUrl'
+import TagChipFilter from '../layout/TagChipFilter'
 
 export default function ResearchDomains({domains}:{domains:ResearchDomain[]}) {
 
@@ -20,13 +21,9 @@ export default function ResearchDomains({domains}:{domains:ResearchDomain[]}) {
       <div className="flex flex-wrap gap-2 py-1">
         {
           domains.map((item, pos) => {
-            return (
-              <TagChip
-                key={pos}
-                label={`${item.key}: ${item.name}`}
-                title={item.description}
-              />
-            )
+            const url = ssrProjectsUrl({domains: [item.key]})
+            const label = `${item.key}: ${item.name}`
+            return <TagChipFilter url={url} key={pos} label={label} />
           })
         }
       </div>

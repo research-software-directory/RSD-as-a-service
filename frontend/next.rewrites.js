@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 // proxy to nginx service when running as frontend-dev docker service
 // proxy to localhost when in standalone development mode (yarn dev)

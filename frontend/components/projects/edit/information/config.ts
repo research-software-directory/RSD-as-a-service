@@ -55,7 +55,7 @@ export const projectInformation = {
     label: 'Published',
   },
   image_contain: {
-    label: 'Always show the whole image',
+    label: 'Fit image into the area (recommended when using logos)',
   },
   date_start: {
     label: 'Start date'

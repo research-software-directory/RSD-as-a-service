@@ -58,4 +58,3 @@ jest.mock('next/router', () => ({
 
 // TOKEN
 // process.env.PGRST_JWT_SECRET='reallyreallyreallyreallyverysafe'
-process.env.NEXT_PUBLIC_FEEDBACK_URL= 'test@test.com'

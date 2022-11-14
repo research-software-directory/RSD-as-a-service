@@ -3,28 +3,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, Fragment} from 'react'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
-import Badge from '@mui/material/Badge'
-import Divider from '@mui/material/Divider'
-import Button from '@mui/material/Button'
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import CloseIcon from '@mui/icons-material/Close'
-import DeleteIcon from '@mui/icons-material/Delete'
-import Popover from '@mui/material/Popover'
-import Chip from '@mui/material/Chip'
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
-
-import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
+import {Keyword} from '~/components/keyword/FindKeyword'
+import FindFilterOptions from '~/components/filter/FindFilterOptions'
+import SelectedFilterItems from '~/components/filter/SelectedFilterItems'
 
 type SeachApiProps = {
   searchFor: string
 }
 
 type KeywordFilterProps = {
-  items?: string[]
+  items: string[]
   onApply: (items: string[]) => void
   searchApi: ({searchFor}:SeachApiProps)=> Promise<Keyword[]>
 }
@@ -33,165 +21,65 @@ type KeywordFilterProps = {
  * Keywords filter component. It receives array of keywords and returns
  * array of selected tags to use in filter using onSelect callback function
  */
-export default function KeywordsFilter({items=[], searchApi, onApply}:KeywordFilterProps) {
-  const [selectedItems, setSelectedItems] = useState<string[]>(items ?? [])
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
-
-  // console.group('KeywordsFilter')
-  // console.log('selectedItems...', selectedItems)
-  // console.log('open...', open)
-  // console.groupEnd()
-
-  function handleOpen(event: React.MouseEvent<HTMLElement>){
-    setAnchorEl(event.currentTarget)
-  }
-  function handleClose(){
-    setAnchorEl(null)
-  }
-
-  function handleClear(){
-    setSelectedItems([])
-    onApply([])
-    handleClose()
-  }
+export default function KeywordFilter({items=[], searchApi, onApply}:KeywordFilterProps) {
 
   function handleDelete(pos:number) {
     const newList = [
-      ...selectedItems.slice(0, pos),
-      ...selectedItems.slice(pos+1)
+      ...items.slice(0, pos),
+      ...items.slice(pos+1)
     ]
-    setSelectedItems(newList)
-    // apply directly
+    // apply change
     onApply(newList)
   }
 
   function onAdd(item: Keyword) {
-    const find = selectedItems.find(keyword => keyword.toLowerCase() === item.keyword.toLowerCase())
+    const find = items.find(keyword => keyword.toLowerCase() === item.keyword.toLowerCase())
     // new item
     if (typeof find == 'undefined') {
       const newList = [
-        ...selectedItems,
+        ...items,
         item.keyword
       ].sort()
-      setSelectedItems(newList)
-      // apply directly
+      // apply change
       onApply(newList)
     }
   }
 
-  function renderSelectedItems() {
-    if (selectedItems && selectedItems.length > 0) {
-      return (
-        <section className="flex flex-wrap items-center px-4 pb-4 gap-2">
-          {selectedItems.map((item, pos) => {
-            if (pos > 0) {
-              return (
-                <Fragment key={pos}>
-                  <span className="text-md">+</span>
-                  <Chip
-                    label={item}
-                    onDelete={() => handleDelete(pos)}
-                    sx={{
-                      borderRadius:'0.25rem'
-                    }}
-                  />
-                </Fragment>
-              )
-            }
-            return (
-              <Chip
-                key={pos}
-                label={item}
-                onDelete={() => handleDelete(pos)}
-                sx={{
-                  borderRadius:'0.25rem'
-                }}
-              />
-            )
-          })}
-        </section>
-      )
-    }
-    // debugger
-    // return null
-    return (
-      <Alert severity="info" sx={{margin: '1rem'}}>
-        <AlertTitle sx={{fontWeight: 500}}>Filter is not active</AlertTitle>
-        Select a keyword from the list or <strong>start typing</strong>.
-      </Alert>
-    )
+  function itemsToOptions(items:Keyword[]) {
+    const options = items.map(item => ({
+      key: item.keyword,
+      label: item.keyword,
+      data: item
+    }))
+    return options
   }
 
   return (
     <>
-      <Tooltip title={`Filter: ${selectedItems.length>0 ? selectedItems.join(' + ') : 'None'}`}>
-        <IconButton
-          onClick={handleOpen}
-          sx={{marginRight:'0.5rem'}}
-        >
-          <Badge badgeContent={selectedItems.length} color="primary">
-            <FilterAltIcon />
-          </Badge>
-        </IconButton>
-      </Tooltip>
-      <Popover
-        // anchorReference="anchorPosition"
-        // anchorPosition={{top: 0, left: 0}}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        // align menu to the right from the menu button
-        transformOrigin={{horizontal: 'center', vertical: 'top'}}
-        anchorOrigin={{horizontal: 'center', vertical: 'bottom'}}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: ['100vw', '24rem'],
-          height: ['100vh', 'auto']
-        }}
-        // disable adding styles to body (overflow:hidden & padding-right)
-        disableScrollLock={true}
-      >
-        <h3 className="px-4 py-3 text-primary">
-          Filter by keyword
-        </h3>
-        <Divider />
-        <div className="px-4 py-4 w-[22rem]">
-          <FindKeyword
-            config={{
-              freeSolo: false,
-              minLength: 0,
-              label: 'Select or type a keyword',
-              help: '',
-              reset: true
-            }}
-            searchForKeyword={searchApi}
-            onAdd={onAdd}
-            // onCreate={onCreate}
-          />
-        </div>
-        {renderSelectedItems()}
-        <Divider />
-        <div className="flex items-center justify-between px-4 py-2">
-          <Button
-            color="secondary"
-            startIcon={<DeleteIcon />}
-            onClick={handleClear}
-            disabled={selectedItems.length===0}
-          >
-
-            {/* {selectedItems.length === 0 ? 'Close' : 'Clear'} */}
-            Clear
-          </Button>
-          <Button
-            onClick={handleClose}
-            startIcon={<CloseIcon />}
-          >
-            Close
-          </Button>
-        </div>
-      </Popover>
+      <div className="px-4 py-4 w-[22rem]">
+        <h4 className="mb-2">By keyword</h4>
+        <FindFilterOptions
+          config={{
+            freeSolo: false,
+            minLength: 0,
+            label: 'Select or type a keyword',
+            help: '',
+            reset: true,
+            noOptions: {
+              empty: 'Type keyword',
+              minLength: 'Too short',
+              notFound: 'There are no projects with this keyword'
+            }
+          }}
+          searchApi={searchApi}
+          onAdd={onAdd}
+          itemsToOptions={itemsToOptions}
+        />
+      </div>
+      <SelectedFilterItems
+        items={items}
+        onDelete={handleDelete}
+      />
     </>
   )
 }

@@ -12,7 +12,7 @@ import {refreshSession} from './refreshSession'
 
 // refresh schedule margin 5min. before expiration time
 // REFRESH_MARGIN_MSEC env variable is used for test purposes ONLY
-const testMargin = process.env.NEXT_PUBLIC_REFRESH_MARGIN_MSEC ? parseInt(process.env.NEXT_PUBLIC_REFRESH_MARGIN_MSEC) : undefined
+const testMargin = process.env.REFRESH_MARGIN_MSEC ? parseInt(process.env.REFRESH_MARGIN_MSEC) : undefined
 export const REFRESH_MARGIN = testMargin || 5 * 60 * 1000
 export type RsdRole = 'rsd_admin' | 'rsd_user'
 export type RsdUser = {
