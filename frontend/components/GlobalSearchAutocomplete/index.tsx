@@ -125,7 +125,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
       setOpen(false)
     }}>
       <div
-        className={`${props.className} relative z-10 flex w-full xl:w-52 xl:max-w-[320px] focus-within:w-full duration-700`}>
+        className={`${props.className} relative z-10 flex w-full xl:w-[14.5rem] xl:max-w-[20rem] focus-within:w-full duration-700`}>
         <div className="absolute top-[14px] left-3 pointer-events-none">
           {/* Search Icon */}
           <svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -135,7 +135,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
           </svg>
         </div>
         <input className="px-2 pl-8 py-2 bg-transparent rounded-sm border border-white border-opacity-50 focus:outline-0 w-full focus:bg-white focus:text-black duration-200"
-          placeholder="Search or jump to..."
+          placeholder="Search in RSD or jump to..."
           autoComplete="off"
           value={inputValue}
           onChange={handleChange}
