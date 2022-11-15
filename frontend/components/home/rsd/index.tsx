@@ -24,6 +24,8 @@ import LogoUMC from '~/assets/logos/LogoUMC.svg'
 import LogoUU from '~/assets/logos/LogoUU.svg'
 import LogoLeiden from '~/assets/logos/LogoLeiden.svg'
 import Arc from './arc.svg'
+import PersonalSignUp from './PersonalSignUp'
+import OrganisationSignUp from './OrganisationSignUp'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
@@ -142,7 +144,9 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         <Arc className="w-full text-white dark:text-black -translate-y-1"></Arc>
 
         {/* Get started section  */}
-        <section className="px-5 md:px-10 py-5 ">
+        <section
+          id="get-started"
+          className="px-5 md:px-10 py-5 ">
           <h2 className="flex justify-center text-4xl font-rsd-titles font-bold"
               data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
             {/* eslint-disable-next-line react/no-unescaped-entities */}
@@ -169,21 +173,17 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
               data-aos-duration="300"
               data-aos-easing="ease-in-out"
             >
-              <GlowingButton
-                text={button.signUp.label}
-                url={button.signUp.url}
-                target={button.signUp.target}
-                minWidth='19rem' />
+              <PersonalSignUp
+                minWidth='19rem'
+              />
             </div>
             <div className="flex justify-center" data-aos="fade-up" data-aos-delay="200"
               data-aos-duration="300"
               data-aos-easing="ease-in-out"
             >
-              <GlowingButton
-                text={button.register.label}
-                url={button.register.url}
-                target={button.register.target}
-                minWidth='19rem' />
+              <OrganisationSignUp
+                minWidth='19rem'
+              />
             </div>
           </div>
         </section>
@@ -192,7 +192,9 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         <LandingPageDivider/>
 
         {/* Our Goals Section */}
-        <section className="p-5 md:p-10 w-full max-w-screen-xl mx-auto">
+        <section
+          id="our-goals"
+          className="p-5 md:p-10 w-full max-w-screen-xl mx-auto">
           <h2
             className="flex justify-start text-3xl font-rsd-titles font-bold mt-6"
             data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
@@ -249,6 +251,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
 
         {/* Learn more section  */}
         <section
+          id="learn-more"
           className="p-5 md:p-10 grid gap-12 grid-cols-1 sm:grid-cols-2 max-w-screen-xl mt-20 mx-auto">
           <div className="relative">
             <Image
@@ -307,7 +310,9 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
 
 
         {/* About us section  */}
-        <section className="px-5 md:px-10 py-5 w-full max-w-screen-lg mx-auto mt-10">
+        <section
+          id="about-us"
+          className="px-5 md:px-10 py-5 w-full max-w-screen-lg mx-auto mt-10">
           <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
               data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
             {/* eslint-disable-next-line react/no-unescaped-entities */}
@@ -356,7 +361,9 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         <LandingPageDivider/>
 
         {/* Logos  */}
-        <div className="w-full max-w-screen-xl mx-auto mt-10 p-5 md:p-10">
+        <div
+          id="partners"
+          className="w-full max-w-screen-xl mx-auto mt-10 p-5 md:p-10">
           <div id="whyrsd" className="text-xl opacity-50">
             Partners using the Research Software Directory
           </div>
