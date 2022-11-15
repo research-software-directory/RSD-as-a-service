@@ -104,11 +104,18 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
     castToType: 'json-encoded',
     defaultValue: null
   })
+  const domains = extractQueryParam({
+    query,
+    param: 'domains',
+    castToType: 'json-encoded',
+    defaultValue: null
+  })
   return {
     search,
     rows,
     page,
-    keywords
+    keywords,
+    domains
   }
 }
 

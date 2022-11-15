@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import Chip from '@mui/material/Chip'
 import SearchIcon from '@mui/icons-material/Search'
 import Link from 'next/link'
@@ -19,7 +24,7 @@ export default function TagChipFilter({url, label, title}:
       icon={<SearchIcon />}
       clickable
       sx={{
-        maxWidth: '21rem',
+        maxWidth: '19rem',
         borderRadius: '0.125rem',
         textTransform: 'capitalize',
         '& .MuiChip-icon': {

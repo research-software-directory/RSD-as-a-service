@@ -9,11 +9,6 @@ import {KeywordForProject} from '~/types/Project'
 import {ssrProjectsUrl} from '~/utils/postgrestUrl'
 import TagChipFilter from '../layout/TagChipFilter'
 
-type TagWithTitle = {
-  title: string
-  label: string
-}
-
 export default function ProjectKeywords({keywords=[]}:{keywords:KeywordForProject[]}) {
 
   function renderTags() {

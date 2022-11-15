@@ -60,7 +60,8 @@ public class SurfconextLogin implements Login {
 
 	private String getTokensFromSurfconext(Map<String, String> form) {
 		String body = formMapToxWwwFormUrlencoded(form);
-		return postForm(URI.create(Config.surfconextTokenUrl()), body);
+		URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.surfconextWellknown()));
+		return postForm(tokenEndpoint, body);
 	}
 
 	private String formMapToxWwwFormUrlencoded(Map<String, String> form) {

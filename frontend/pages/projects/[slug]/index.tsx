@@ -26,7 +26,7 @@ import {Contributor} from '~/types/Contributor'
 import {ProjectOrganisationProps} from '~/types/Organisation'
 import {SoftwareListItem} from '~/types/SoftwareTypes'
 import AppHeader from '~/components/AppHeader'
-import EditButton from '~/components/layout/EditButton'
+import EditPageButton from '~/components/layout/EditPageButton'
 import PageContainer from '~/components/layout/PageContainer'
 import ContentHeader from '~/components/layout/ContentHeader'
 import AppFooter from '~/components/AppFooter'
@@ -89,14 +89,13 @@ export default function ProjectPage(props: ProjectPageProps) {
       <CanoncialUrl
         canonicalUrl={resolvedUrl}
       />
-      <AppHeader editButton={
-        isMaintainer ?
-        <EditButton
-          title="Edit project"
-          url={`${slug}/edit`}
-        />
-        : undefined
-      } />
+      <AppHeader />
+      <EditPageButton
+        title="Edit project"
+        url={`${slug}/edit`}
+        isMaintainer={isMaintainer}
+        variant="text"
+      />
       <PageContainer>
         <ContentHeader
           title={project.title}
@@ -115,7 +114,7 @@ export default function ProjectPage(props: ProjectPageProps) {
           keywords={keywords}
           links={links}
         />
-        <div className="py-8"></div>
+        {/* <div className="py-8"></div> */}
       </PageContainer>
       {/* Participating organisations */}
       <OrganisationsSection

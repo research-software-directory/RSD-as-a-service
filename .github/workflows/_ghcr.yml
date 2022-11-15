@@ -64,7 +64,7 @@ jobs:
           IMAGE_TAG_LASTEST=${{inputs.base_image_name}}:latest
           echo image_tag_version $IMAGE_TAG_VERSION
           docker build -t $IMAGE_TAG_VERSION -t $IMAGE_TAG_LASTEST -f ${{inputs.dockerfile}} ${{inputs.docker_context}}
-          echo "::set-output name=image_build::$IMAGE_TAG_VERSION"
+          echo "{image_build}={$IMAGE_TAG_VERSIONvalue}" >> $GITHUB_OUTPUT
       - name: push to ghcr.io
         id: push_image
         run: |
@@ -72,5 +72,5 @@ jobs:
           echo "${{secrets.token}}" | docker login https://ghcr.io -u ${{inputs.ghcr_user}} --password-stdin
           echo push auth image with all tags
           docker push ${{inputs.base_image_name}} --all-tags
-          echo "::set-output name=image_pushed::true"
+          echo "{image_build}={$IMAGE_TAG_VERSIONvalue}" >> $GITHUB_OUTPUT
 

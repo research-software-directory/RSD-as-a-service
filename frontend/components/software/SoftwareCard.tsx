@@ -4,8 +4,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
+import Tooltip from '@mui/material/Tooltip'
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
+import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined'
+
 import {getTimeAgoSince} from '../../utils/dateFn'
-// import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import FeaturedIcon from '~/components/icons/FeaturedIcon'
 import NotPublishedIcon from '~/components/icons/NotPublishedIcon'
 
@@ -56,24 +59,6 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
     return ''
   }
 
-  function renderCounts() {
-    let message = mentionCntMessage()
-    if (message) {
-      message += `, ${contributorsMessage()}`
-    } else {
-      message = contributorsMessage()
-    }
-    if (message) {
-      return (
-        <div className="flex items-start justify-center">
-          {/* <StarIcon sx={{height:'1rem'}} /> */}
-          {message}
-        </div>
-      )
-    }
-    return null
-  }
-
   function renderPublished() {
     if (typeof is_published != 'undefined' && is_published === false) {
       return (
@@ -112,7 +97,22 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
             <span className="last-update">
               Updated {getTimeAgoSince(today, updated_at)}
             </span>
-            {renderCounts()}
+            <div className="flex gap-2">
+            {mention_cnt &&
+              <Tooltip title={mentionCntMessage()} placement="top">
+                <span>
+                  <InsertCommentOutlinedIcon /> {mention_cnt}
+                </span>
+              </Tooltip>
+            }
+            {contributor_cnt &&
+              <Tooltip title={contributorsMessage()} placement="top">
+                <span>
+                  <PeopleAltOutlinedIcon /> {contributor_cnt}
+                </span>
+              </Tooltip>
+            }
+            </div>
           </div>
         </article>
       </a>

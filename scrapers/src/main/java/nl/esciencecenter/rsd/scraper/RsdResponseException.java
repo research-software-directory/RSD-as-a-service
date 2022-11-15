@@ -7,10 +7,10 @@
 
 package nl.esciencecenter.rsd.scraper;
 
-public class ResponseException extends RuntimeException {
+public class RsdResponseException extends RuntimeException {
 	private final Integer statusCode;
 
-	public ResponseException(Integer statusCode, String message) {
+	public RsdResponseException(Integer statusCode, String message) {
 		super(message);
 		this.statusCode = statusCode;
 	}

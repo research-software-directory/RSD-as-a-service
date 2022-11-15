@@ -37,8 +37,7 @@ export default function MentionEditSection() {
       {
         higlightedMentions
         .sort((a, b) => sortOnNumProp(a, b, 'publication_year', 'desc'))
-          .map((item, pos) => {
-
+          .map((item) => {
             return (
               <MentionEditFeatured
                 key={item.id}

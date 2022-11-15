@@ -21,7 +21,7 @@ type Data = Provider | ApiError
 
 async function helmholtzRedirectProps() {
   // extract wellknow url from env
-  const wellknownUrl = process.env.NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL ?? null
+  const wellknownUrl = process.env.HELMHOLTZAAI_WELL_KNOWN_URL ?? null
   if (wellknownUrl) {
     // extract authorisation endpoint from wellknow response
     const authorization_endpoint = await getAuthorisationEndpoint(wellknownUrl)
@@ -30,10 +30,10 @@ async function helmholtzRedirectProps() {
       // use default values if env not provided
       const props: RedirectToProps = {
         authorization_endpoint,
-        client_id: process.env.NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID || 'rsd-dev',
-        redirect_uri: process.env.NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT || 'http://localhost/auth/login/helmholtzaai',
-        scope: process.env.NEXT_PUBLIC_HELMHOLTZAAI_SCOPES || 'openid+profile+email+eduperson_principal_name',
-        response_mode: process.env.NEXT_PUBLIC_HELMHOLTZAAI_RESPONSE_MODE || 'query',
+        client_id: process.env.HELMHOLTZAAI_CLIENT_ID || 'rsd-dev',
+        redirect_uri: process.env.HELMHOLTZAAI_REDIRECT || 'http://localhost/auth/login/helmholtzaai',
+        scope: process.env.HELMHOLTZAAI_SCOPES || 'openid+profile+email+eduperson_principal_name',
+        response_mode: process.env.HELMHOLTZAAI_RESPONSE_MODE || 'query',
         claims
       }
       return props
@@ -43,7 +43,7 @@ async function helmholtzRedirectProps() {
       throw new Error(message)
     }
   } else {
-    const message = 'NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL is missing'
+    const message = 'HELMHOLTZAAI_WELL_KNOWN_URL is missing'
     logger(`api/fe/auth/helmholtzaai: ${message}`, 'error')
     throw new Error(message)
   }

@@ -8,7 +8,8 @@
     "given_names": "Jisk",
     "affiliation": null,
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "c86ef6f6-5428-4142-b338-d8479611e5e6",
@@ -19,7 +20,8 @@
     "given_names": "Patrick",
     "affiliation": "Netherlands eScience Center",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "27716d66-89f7-4f8f-b9a6-2a66ecf4762c",
@@ -30,7 +32,8 @@
     "given_names": "Stijn",
     "affiliation": "Netherlands eScience Center",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "0a68cf00-649f-40b7-b469-d41760194844",
@@ -41,7 +44,8 @@
     "given_names": "Johannes",
     "affiliation": "Netherlands eScience Center",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "d7f2c176-d188-49a4-8265-97a4e7456b47",
@@ -52,7 +56,8 @@
     "given_names": "Willem Jan",
     "affiliation": "CWI",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "0e9e77bd-f64a-4bb1-a4c9-362e77bb0495",
@@ -63,7 +68,8 @@
     "given_names": "Inti",
     "affiliation": "Netherlands eScience Center",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "6ed89f4b-62a9-41f1-811f-b88ed06da04c",
@@ -74,7 +80,8 @@
     "given_names": "Nicolas",
     "affiliation": "Netherlands eScience Center",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "d5e86fc3-79d8-47a1-83da-64ca0d0d8789",
@@ -85,7 +92,8 @@
     "given_names": "Richard",
     "affiliation": "CWI",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "92df99ae-1945-4a8f-a8f2-6b94b492ee30",
@@ -96,7 +104,8 @@
     "given_names": "Alessio",
     "affiliation": "Netherlands eScience Center",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "a7498680-2b2f-42d7-ac02-ba173a711c06",
@@ -107,7 +116,8 @@
     "given_names": "Ben",
     "affiliation": "Netherlands eScience Center",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "a07e253d-4edd-44d3-9d0c-3d25215bbf6c",
@@ -118,7 +128,8 @@
     "given_names": "Floris-Jan",
     "affiliation": "Netherlands eScience Center",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   },
   {
     "id": "21a54d99-aa96-4fe1-a84e-473c1f20a7a5",
@@ -129,6 +140,7 @@
     "given_names": "Felipe",
     "affiliation": "Netherlands eScience Center",
     "role": null,
-    "orcid": null
+    "orcid": null,
+    "position": null
   }
 ]

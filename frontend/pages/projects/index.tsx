@@ -22,7 +22,8 @@ import Searchbox from '~/components/form/Searchbox'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import PageTitle from '~/components/layout/PageTitle'
 import ProjectsGrid from '~/components/projects/ProjectsGrid'
-import ProjectKeywordFilter from '~/components/projects/ProjectKeywordFilter'
+import ProjectFilter from '~/components/projects/filter'
+import {getResearchDomainInfo, ResearchDomain} from '~/components/projects/filter/projectFilterApi'
 
 type ProjectsIndexPageProps = {
   count: number,
@@ -31,12 +32,13 @@ type ProjectsIndexPageProps = {
   projects: ProjectSearchRpc[],
   search?: string,
   keywords?: string[],
+  domains?: ResearchDomain[]
 }
 
 const pageTitle = `Projects | ${app.title}`
 
 export default function ProjectsIndexPage(
-  {projects=[], count, page, rows, search, keywords}: ProjectsIndexPageProps
+  {projects=[], count, page, rows, search, keywords,domains}: ProjectsIndexPageProps
 ) {
   // use next router (hook is only for browser)
   const router = useRouter()
@@ -45,7 +47,7 @@ export default function ProjectsIndexPage(
   // adjust grid min width for mobile
   const minWidth = smallScreen ? '18rem' : '29rem'
 
-  // console.log('ProjectsIndexPage...projects...', projects)
+  // console.log('ProjectsIndexPage...domains...', domains)
 
   function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
@@ -90,11 +92,12 @@ export default function ProjectsIndexPage(
     router.push(url)
   }
 
-  function handleFilters(keywords:string[]){
+  function handleFilters({keywords,domains}:{keywords: string[],domains:string[]}){
     const url = ssrProjectsUrl({
       // take existing params from url (query)
       ...ssrProjectsParams(router.query),
       keywords,
+      domains,
       // start from first page
       page: 0,
     })
@@ -109,12 +112,13 @@ export default function ProjectsIndexPage(
       <PageTitle title="Projects">
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center lg:ml-4">
-            <ProjectKeywordFilter
-              items={keywords ?? []}
+            <ProjectFilter
+              keywords={keywords ?? []}
+              domains={domains ?? []}
               onApply={handleFilters}
             />
             <Searchbox
-              placeholder={keywords?.length ? 'Find within selection' : 'Find project'}
+              placeholder={keywords?.length || domains?.length ? 'Find within selection' : 'Find project'}
               onSearch={handleSearch}
               defaultValue={search}
             />
@@ -160,27 +164,35 @@ export default function ProjectsIndexPage(
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract from page-query
-  const {search, rows, page, keywords} = ssrProjectsParams(context.query)
+  const {search, rows, page, keywords, domains} = ssrProjectsParams(context.query)
 
   const url = projectListUrl({
     baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
     search,
     keywords,
+    domains,
     order: 'current_state.desc,date_start.desc,title',
     limit: rows,
     offset: rows * page,
   })
 
   // console.log('projects...url...', url)
-  // get project list, we do not pass the token
+  // get project list and domains filter info,
+  // 1. we do not pass the token
   // when token is passed it will return not published items too
-  const projects = await getProjectList({url})
+  // 2. domains filter uses key values for filtering but
+  // we also need labels to show in filter chips
+  const [projects, domainsInfo] = await Promise.all([
+    getProjectList({url}),
+    getResearchDomainInfo(domains)
+  ])
 
   return {
     // pass this to page component as props
     props: {
       search,
       keywords,
+      domains: domainsInfo,
       count: projects.count,
       page,
       rows,

@@ -23,6 +23,12 @@
 
 body{
   font-size: 1rem;
+  /* minimal with to have logo,
+  add button, mobile menu and profile.
+  NOTE ! when changing this value we need to update
+  useDisableScrollLock hook in utils folder too.
+  */
+  min-width: 23rem;
 }
 
 #__next {
@@ -55,11 +61,11 @@ RangeError: Maximum call stack size exceeded
     @apply text-xl;
   }
   a {
-    @apply cursor-pointer no-underline transition duration-100 hover:text-primary;
+    @apply no-underline transition duration-100 cursor-pointer hover:text-primary;
   }
 
   body{
-    @apply text-base-content font-normal;
+    @apply font-normal text-base-content;
   }
 }
 

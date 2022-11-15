@@ -65,54 +65,48 @@ public class Config {
 		return System.getenv("POSTGREST_URL");
 	}
 
+
 //	SURFconext
 	public static String surfconextRedirect() {
-		return System.getenv("NEXT_PUBLIC_SURFCONEXT_REDIRECT");
+		return System.getenv("SURFCONEXT_REDIRECT");
 	}
 
 	public static String surfconextClientId() {
-		return System.getenv("NEXT_PUBLIC_SURFCONEXT_CLIENT_ID");
+		return System.getenv("SURFCONEXT_CLIENT_ID");
 	}
 
 	public static String surfconextWellknown() {
-		return System.getenv("NEXT_PUBLIC_SURFCONEXT_WELL_KNOWN_URL");
+		return System.getenv("SURFCONEXT_WELL_KNOWN_URL");
 	}
 
 	public static String surfconextClientSecret() {
 		return System.getenv("AUTH_SURFCONEXT_CLIENT_SECRET");
 	}
 
-	public static String surfconextTokenUrl() {
-		return System.getenv("AUTH_SURFCONEXT_TOKEN_URL");
+	public static String surfconextScopes() {
+		return System.getenv("SURFCONEXT_SCOPES");
 	}
 
-	public static String surfconextScopes() {
-		return System.getenv("NEXT_PUBLIC_SURFCONEXT_SCOPES");
-	}
 
 //	Helmholtz AAI
 	public static String helmholtzAaiRedirect() {
-		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_REDIRECT");
+		return System.getenv("HELMHOLTZAAI_REDIRECT");
 	}
 
 	public static String helmholtzAaiClientId() {
-		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_CLIENT_ID");
+		return System.getenv("HELMHOLTZAAI_CLIENT_ID");
 	}
 
 	public static String helmholtzAaiWellknown() {
-		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_WELL_KNOWN_URL");
+		return System.getenv("HELMHOLTZAAI_WELL_KNOWN_URL");
 	}
 
 	public static String helmholtzAaiClientSecret() {
 		return System.getenv("AUTH_HELMHOLTZAAI_CLIENT_SECRET");
 	}
 
-	public static String helmholtzAaiTokenUrl() {
-		return System.getenv("AUTH_HELMHOLTZAAI_TOKEN_URL");
-	}
-
 	public static String helmholtzAaiScopes() {
-		return System.getenv("NEXT_PUBLIC_HELMHOLTZAAI_SCOPES");
+		return System.getenv("HELMHOLTZAAI_SCOPES");
 	}
 
 	public static boolean helmholtzAaiAllowExternalUsers() {
@@ -121,29 +115,26 @@ public class Config {
 		);
 	}
 
+
 //	ORCID
 	public static String orcidRedirect() {
-	return System.getenv("NEXT_PUBLIC_ORCID_REDIRECT");
+	return System.getenv("ORCID_REDIRECT");
 }
 
 	public static String orcidClientId() {
-		return System.getenv("NEXT_PUBLIC_ORCID_CLIENT_ID");
+		return System.getenv("ORCID_CLIENT_ID");
 	}
 
 	public static String orcidWellknown() {
-		return System.getenv("NEXT_PUBLIC_ORCID_WELL_KNOWN_URL");
+		return System.getenv("ORCID_WELL_KNOWN_URL");
 	}
 
 	public static String orcidClientSecret() {
 		return System.getenv("AUTH_ORCID_CLIENT_SECRET");
 	}
 
-	public static String orcidTokenUrl() {
-		return System.getenv("AUTH_ORCID_TOKEN_URL");
-	}
-
 	public static String orcidScopes() {
-		return System.getenv("NEXT_PUBLIC_ORCID_SCOPES");
+		return System.getenv("ORCID_SCOPES");
 	}
 
 }

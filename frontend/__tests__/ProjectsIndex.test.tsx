@@ -39,7 +39,8 @@ describe('pages/projects/index.tsx', () => {
         // mocked data
         projects: projectsOverview,
         search: null,
-        keywords: null
+        keywords: null,
+        domains: []
       }
     })
   })

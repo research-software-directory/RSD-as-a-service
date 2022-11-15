@@ -8,6 +8,7 @@ import {rowsPerPageOptions} from '~/config/pagination'
 type baseQueryStringProps = {
   search?: string | null,
   keywords?: string[] | null,
+  domains?: string[] | null,
   order?: string,
   limit?: number,
   offset?: number
@@ -20,7 +21,8 @@ export type PostgrestParams = baseQueryStringProps & {
 type QueryParams={
   // query: ParsedUrlQuery
   search?:string
-  keywords?:string[]
+  keywords?: string[]
+  domains?: string[]
   page?:number,
   rows?:number
 }
@@ -44,7 +46,7 @@ export function ssrProjectsUrl(params: QueryParams) {
 }
 
 function ssrUrl(params: QueryParams, view:string) {
-  const {search, keywords, rows, page} = params
+  const {search, keywords, domains, rows, page} = params
   // console.log('ssrUrl...params...', params)
   let url = `/${view}?`
   if (search) {
@@ -56,6 +58,13 @@ function ssrUrl(params: QueryParams, view:string) {
     // stringify JSON object and encode URI
     url += `&keywords=${encodeURIComponent(JSON.stringify(keywords))}`
   } else if (keywords === null) {
+    // remove filter
+  }
+  // research domains
+  if (domains && domains.length > 0) {
+    // stringify JSON object and encode URI
+    url += `&domains=${encodeURIComponent(JSON.stringify(domains))}`
+  } else if (domains === null) {
     // remove filter
   }
   if (page || page === 0) {
@@ -95,7 +104,7 @@ export function paginationUrlParams({rows=12, page=0}:
  * @returns string
  */
 export function baseQueryString(props: baseQueryStringProps) {
-  const {keywords, order, limit, offset} = props
+  const {keywords,domains,order, limit, offset} = props
   let query
   // console.group('baseQueryString')
   // console.log('keywords...', keywords)
@@ -114,6 +123,19 @@ export function baseQueryString(props: baseQueryStringProps) {
     const keywordsAll = keywords.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to fin
     query = `keywords=cs.%7B${keywordsAll}%7D`
+  }
+  if (typeof domains !== 'undefined' &&
+    domains !== null &&
+    typeof domains === 'object') {
+    // sort and convert research domains array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    const domainsAll = domains.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to fin
+    if (query) {
+      query = `${query}&research_domain=cs.%7B${domainsAll}%7D`
+    } else {
+      query = `research_domain=cs.%7B${domainsAll}%7D`
+    }
   }
   // order
   if (order) {
@@ -135,20 +157,19 @@ export function baseQueryString(props: baseQueryStringProps) {
 }
 
 export function softwareListUrl(props: PostgrestParams) {
-  const {baseUrl, search} = props
+  const {baseUrl, search, keywords} = props
   let query = baseQueryString(props)
 
   if (search) {
     // console.log('softwareListUrl...keywords...', props.keywords)
     const encodedSearch = encodeURIComponent(search)
-    // if keyword filter is not used we search in keywords too!
-    if (typeof props.keywords === 'undefined' || props.keywords===null) {
-      query += `&or=(brand_name.ilike.*${encodedSearch}*,short_statement.ilike.*${encodedSearch}*,keywords.cs.%7B${encodedSearch}%7D)`
-    } else {
-      // search for term in brand_name and short_statement
-      // we use ilike (case INsensitive) and * to indicate partial string match
-      query += `&or=(brand_name.ilike.*${encodedSearch}*,short_statement.ilike.*${encodedSearch}*)`
+    query += `&or=(brand_name.ilike.*${encodedSearch}*,short_statement.ilike.*${encodedSearch}*`
+    // if keyword filter is not used we search in keywords_text too!
+    if (typeof keywords === 'undefined' || keywords === null) {
+      query += `,keywords_text.ilike.*${encodedSearch}*`
     }
+    // close or clause
+    query += ')'
   }
 
   const url = `${baseUrl}/rpc/software_search?${query}`
@@ -158,19 +179,22 @@ export function softwareListUrl(props: PostgrestParams) {
 
 
 export function projectListUrl(props: PostgrestParams) {
-  const {baseUrl, search} = props
+  const {baseUrl, search, keywords, domains} = props
   let query = baseQueryString(props)
 
   if (search) {
     const encodedSearch = encodeURIComponent(search)
-    // if keyword filter is not used we search in keywords too!
-    if (typeof props.keywords === 'undefined' || props.keywords === null) {
-      query += `&or=(title.ilike.*${search}*,subtitle.ilike.*${search}*,keywords.cs.%7B${encodedSearch}%7D)`
-    } else {
-      // search for term in brand_name and short_statement
-      // we use ilike (case INsensitive) and * to indicate partial string match
-      query += `&or=(title.ilike.*${search}*,subtitle.ilike.*${search}*)`
+    query += `&or=(title.ilike.*${encodedSearch}*,subtitle.ilike.*${encodedSearch}*`
+    // if keyword filter is not applied we search in keyword_text too!
+    if (typeof keywords === 'undefined' || keywords === null) {
+      query += `,keywords_text.ilike.*${encodedSearch}*`
     }
+    // if domains filter is not applied we search in research_domain_text too!
+    if (typeof domains === 'undefined' || domains === null) {
+      query += `,research_domain_text.ilike.*${encodedSearch}*`
+    }
+    // close or clause
+    query+=')'
   }
 
   const url = `${baseUrl}/rpc/project_search?${query}`

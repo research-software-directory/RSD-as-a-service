@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import {render, screen, waitForElementToBeRemoved} from '@testing-library/react'
 
 import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
@@ -55,7 +60,8 @@ const dummyProps = {
     'software_cnt': 6,
     'project_cnt': 4,
     'children_cnt': 2,
-    'score': 10
+    'score': 10,
+    'description':null
   },
   isMaintainer: true
 }

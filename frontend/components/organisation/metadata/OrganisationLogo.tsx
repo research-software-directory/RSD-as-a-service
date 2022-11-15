@@ -149,9 +149,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
   if (isMaintainer) {
     return (
       <div className="pt-12 pb-2 flex relative">
-        <div className="">
-          {renderAvatar()}
-        </div>
+        {renderAvatar()}
         <div style={{
           position: 'absolute',
           top: '0rem',
