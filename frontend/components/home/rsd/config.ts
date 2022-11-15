@@ -12,7 +12,7 @@ export const config = {
     },
     signUp: {
       label: 'Sign up to contribute',
-      url: 'https://research-software-directory.github.io/documentation/getting-access.htm',
+      url: 'https://research-software-directory.github.io/documentation/getting-access.html',
       target: '_blank'
     },
     register: {
@@ -32,7 +32,7 @@ export const config = {
     },
     faq: {
       label: 'FAQ',
-      url: 'https://research-software-directory.github.io/documentation/faq.htm',
+      url: 'https://research-software-directory.github.io/documentation/faq.html',
       target: '_blank'
     },
     team: {
