@@ -10,7 +10,6 @@
 
 import {useState} from 'react'
 import Link from 'next/link'
-import {useTheme} from '@mui/material/styles'
 
 import {useAuth} from '~/auth'
 import useLoginProviders from '~/auth/api/useLoginProviders'
@@ -23,7 +22,6 @@ export default function LoginButton() {
   const {session} = useAuth()
   const status = session?.status || 'loading'
   const [open, setOpen] = useState(false)
-  const theme = useTheme()
 
   /* LoginDialog */
   const handleClickOpen = () => { setOpen(true) }

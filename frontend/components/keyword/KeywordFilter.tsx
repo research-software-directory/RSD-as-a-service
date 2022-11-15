@@ -56,7 +56,7 @@ export default function KeywordFilter({items=[], searchApi, onApply}:KeywordFilt
 
   return (
     <>
-      <div className="px-4 py-4 w-[22rem]">
+      <div className="px-4 py-4">
         <h4 className="mb-2">By keyword</h4>
         <FindFilterOptions
           config={{

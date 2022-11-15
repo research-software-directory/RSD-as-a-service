@@ -48,17 +48,18 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
               {organisation.name}
             </SingleLineTitle>
             {
-              organisation.is_tenant && <VerifiedIcon
-                sx={{
-                  position: 'absolute',
-                  right: '0.75rem',
-                  top: '0.75rem',
-                  width: '4rem',
-                  height: '4rem',
-                  opacity: 0.4,
-                  color: 'primary.main'
-                }}
-              />
+              organisation.is_tenant && <span title="Officially registered organisation">
+                <VerifiedIcon
+                  sx={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '0.75rem',
+                    width: '4rem',
+                    height: '4rem',
+                    opacity: 0.4,
+                    color: 'primary.main'
+                  }}
+              /></span>
             }
           </div>
           <div className="flex-1 grid grid-cols-2 md:grid-cols-[1fr,2fr] px-8 mb-4 overflow-hidden">

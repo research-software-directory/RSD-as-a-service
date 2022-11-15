@@ -48,5 +48,16 @@ describe('pages/projects/[slug]/index', () => {
       name: mockedProps.project.title
     })
     expect(heading).toBeInTheDocument()
-   })
+  })
+  it('renders edit button when isMaintainer=true', () => {
+    // set isMaintainer to true
+    mockedProps.isMaintainer=true
+    render(WrappedComponentWithProps(
+      ProjectItemPage,
+      {props: mockedProps}
+    ))
+    const editBtn = screen.getByTestId('edit-button')
+    expect(editBtn).toBeInTheDocument()
+    // screen.debug(editBtn)
+  })
 })

@@ -24,7 +24,7 @@ export default function TagChipFilter({url, label, title}:
       icon={<SearchIcon />}
       clickable
       sx={{
-        maxWidth: '21rem',
+        maxWidth: '19rem',
         borderRadius: '0.125rem',
         textTransform: 'capitalize',
         '& .MuiChip-icon': {
