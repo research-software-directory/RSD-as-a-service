@@ -40,7 +40,7 @@ export default function PersonalSignUp({minWidth = '9rem'}:{minWidth:string}) {
     }
   })
 
-  const [name,affiliation,orcid,role,description] = watch(['name','affiliation','role','orcid','description'])
+  const [name,affiliation,role,orcid,description] = watch(['name','affiliation','role','orcid','description'])
 
   // console.group('Personal Sing Up')
   // console.log('name...', name)
