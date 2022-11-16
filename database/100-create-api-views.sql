@@ -1171,7 +1171,13 @@ $$
 BEGIN
 	SELECT count(id) FROM software INTO software_cnt;
 	SELECT count(id) FROM project INTO project_cnt;
-	SELECT count(id) FROM organisation WHERE parent IS NULL INTO organisation_cnt;
+	SELECT
+		count(id) AS organisation_cnt
+	FROM
+		organisations_overview(true)
+	WHERE
+		organisations_overview.parent IS NULL AND organisations_overview.score>0
+	INTO organisation_cnt;
 	SELECT count(display_name) FROM unique_contributors() INTO contributor_cnt;
 	SELECT count(mention) FROM mention_for_software INTO software_mention_cnt;
 END
