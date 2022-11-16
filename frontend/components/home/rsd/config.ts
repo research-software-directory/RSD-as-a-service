@@ -12,13 +12,15 @@ export const config = {
     },
     signUp: {
       label: 'Sign up to contribute',
-      url: 'https://research-software-directory.github.io/documentation/getting-access.html',
-      target: '_blank'
+      // MOVED to form
+      // url: 'https://research-software-directory.github.io/documentation/getting-access.html',
+      // target: '_blank'
     },
     register: {
-      label: 'Register your organization',
-      url: 'mailto:rsd@esciencecenter.nl?subject=Register organisation',
-      target: '_blank'
+      label: 'Register your organisation',
+      // MOVED to form
+      // url: 'mailto:rsd@esciencecenter.nl?subject=Register organisation',
+      // target: '_blank'
     },
     demo: {
       label: 'Demo',
@@ -50,5 +52,49 @@ export const config = {
       url: 'mailto:rsd@esciencecenter.nl?subject=Question about RSD',
       target: '_blank'
     },
+  }
+}
+
+export const personalSignUp = {
+  notification: [
+    '* Required',
+    'We will use your default email application to send an email to rsd@esciencecenter.nl. Please send us an email directly if this fails.'
+  ],
+  name: {
+    label: 'Your name *'
+  },
+  affiliation: {
+    label: 'Your affiliation *'
+  },
+  role: {
+    label: 'Your professional role'
+  },
+  orcid: {
+    label: 'Your ORCID'
+  },
+  description: {
+    label: 'Any additional information you would like to share about your request, such as a description of the content you would like to contribute.',
+  }
+}
+
+export const organisationSignUp = {
+  notification: [
+    '* Required',
+    'We will use your default email application to send an email to rsd@esciencecenter.nl. Please send us an email directly if this fails.'
+  ],
+  name: {
+    label: 'Name *'
+  },
+  organisation: {
+    label: 'Organisation *'
+  },
+  role: {
+    label: 'Professional role'
+  },
+  // rorId: {
+  //   label: 'ROR id'
+  // },
+  description: {
+    label: 'Any additional information you would like to share about your request such as a link to the website of your organisation.',
   }
 }
