@@ -28,7 +28,7 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
   return (
     <Link
       href={`/organisations/${organisation.rsd_path}`}
-      className="flex flex-col h-full"
+      className="h-full relative"
       passHref
     >
       <article
