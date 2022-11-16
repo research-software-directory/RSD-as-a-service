@@ -76,44 +76,40 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
       <AppHeader/>
 
       {/* Jumbo Banner  */}
-      <div className="mx-auto my-20 relative overflow-x-clip ">
-
-        {/* Jumbo Image*/}
-        <div
-          className="pointer-events-none absolute w-full h-full -top-[170px] md:-top-48 -left-[60px] md:left-[50%] opacity-50 md:opacity-100">
-          <Image src="/images/illustration.webp" width="847" height="760" alt="rsd-illustration"/>
-        </div>
-
-        <div className="w-full p-5 md:p-10 max-w-screen-xl mx-auto">
-          {/* Jumbo Text*/}
-          <div className="w-full md:w-1/2 flex flex-col justify-center"
-               data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
-          >
-            <h1 className="text-5xl font-rsd-titles font-bold">
-              Showing the impact <br/>
-              of research software
-            </h1>
-            <div className="mt-8 text-lg">
-              The<span
-              className="text-transparent font-medium bg-clip-text bg-gradient-to-tr from-[#03A9F1] to-[#09FBD3] px-1">
-                  Research Software Directory
-                </span>
-              is designed to show the impact research software has on research and society. We
-              stimulate the reuse of research software and encourage proper citation of research
-              software to ensure researchers and RSEs get credit for their work. {/*Learn more.*/}
-            </div>
-
-            {/* <div className="flex gap-4 md:gap-10 mt-10 items-center">
-              <GlowingButton text={button.discover.label} url={button.discover.url} target={button.discover.target} />
-            </div> */}
+      <div className="max-w-screen-xl mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr,1fr] gap-[2rem]">
+        {/* Jumbo Text*/}
+        <div className="flex flex-col justify-center"
+              data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
+        >
+          <h1 className="text-5xl font-rsd-titles font-bold">
+            Showing the impact of research software
+          </h1>
+          <div className="mt-8 text-lg">
+            The<span
+            className="text-transparent font-medium bg-clip-text bg-gradient-to-tr from-[#03A9F1] to-[#09FBD3] px-1">
+                Research Software Directory
+              </span>
+            is designed to show the impact research software has on research and society. We
+            stimulate the reuse of research software and encourage proper citation of research
+            software to ensure researchers and RSEs get credit for their work. {/*Learn more.*/}
           </div>
+        </div>
+        {/* Jumbo image */}
+        <div className="relative">
+          <Image
+            src="/images/screenshots.webp"
+            width="877"
+            height="767"
+            layout="intrinsic"
+            alt="rsd-illustration"
+          />
         </div>
       </div>
 
       {/*  Divider  */}
       {/* <LandingPageDivider/> */}
 
-      {/* stats  */}
+      {/* Stats  */}
       <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <div>
           <div className="text-lg">{software_cnt} Software</div>
@@ -144,73 +140,6 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
       <div className="bg-[#111]">
         {/* Arc separator  */}
         <Arc className="w-full text-white dark:text-black -translate-y-1"></Arc>
-
-
-        {/* Feature Cards  - Saved for later */}
-        {/*<div
-          className="w-full max-w-screen-xl mt-6 mx-auto flex-col grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-3 p-2 ">
-          <div className=""
-               data-aos="fade-up" data-aos-duration="400"
-               data-aos-easing="ease-in-out"
-          >
-            <div className={`${styles.card} h-full`}>
-              <div className={styles.cardInside}
-                   style={{backgroundImage: 'url("/images/bg_card.svg")'}}>
-                <div className="flex flex-col justify-center">
-                  <div className="text-3xl font-medium">
-                    Discover
-                  </div>
-                  <div className="text-lg mt-5">
-                    Find
-
-                    <span
-                      className="text-transparent bg-clip-text bg-gradient-to-tr from-blue-500 to-green-400 px-1">
-                  research software
-                </span>
-                    that is relevant to your research
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div data-aos="fade-up" data-aos-delay="50" data-aos-duration="400"
-               data-aos-easing="ease-in-out">
-            <div className={`${styles.card} h-full`}>
-              <div className={styles.cardInside}
-                   style={{backgroundImage: 'url("/images/bg_card.svg")'}}>
-                <div className="flex flex-col justify-center" style={{}}
-                >
-                  <div className="text-3xl font-medium">
-                    Share
-                  </div>
-                  <div className="text-lg mt-5">
-                    Showcase your research software and promote reuse by others.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className=""
-               data-aos="fade-up" data-aos-delay="100" data-aos-duration="400"
-               data-aos-easing="ease-in-out">
-            <div className={`${styles.card} h-full`}>
-              <div className={styles.cardInside}
-                   style={{backgroundImage: 'url("/images/bg_card.svg")'}}>
-                <div className="flex flex-col justify-center">
-                  <div className="text-3xl font-medium">
-                    Impact
-                  </div>
-                  <div className="text-lg mt-5">
-                    Enable developers and research organizations to monitor the impact of their
-                    research software.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>*/}
-
 
         {/* Get started section  */}
         <section className="px-5 md:px-10 py-5 ">
