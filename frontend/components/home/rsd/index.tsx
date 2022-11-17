@@ -84,7 +84,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
               data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
         >
           <h1 className="text-5xl font-rsd-titles font-bold">
-            Showing the impact of research software
+            Show your research software to the world
           </h1>
           <div className="mt-8 text-lg">
             The<span
@@ -196,7 +196,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
           id="our-goals"
           className="p-5 md:p-10 w-full max-w-screen-xl mx-auto">
           <h2
-            className="flex justify-start text-3xl font-rsd-titles font-bold mt-6"
+            className="flex justify-start text-4xl font-rsd-titles font-bold mt-6"
             data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
             Our goals
           </h2>
@@ -270,7 +270,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
             <p className="text-center text-lg mt-5" data-aos="fade"
                data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
               Try out our online demo, or get more detailed information in our documentation and
-              faq.
+              FAQ.
             </p>
 
             <div
@@ -321,7 +321,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
           <p className="text-center text-lg mt-5" data-aos="fade"
              data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
             The Research Software Directory is an open source project initiated by the Netherlands
-            eScience Center. We are always open for improvements and discussions. Feel free to
+            eScience Center and jointly developed with Helmholtz. Feel free to
             contact us or join our effort!
           </p>
 
