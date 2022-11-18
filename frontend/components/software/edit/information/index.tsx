@@ -77,7 +77,7 @@ export default function SoftwareInformation({slug}: {slug: string}) {
         {...register('id', {required:'id is required'})}
       />
       <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4 xl:pl-[3rem]">
+        <div className="py-4 xl:pl-[3rem] overflow-hidden">
           <EditSectionTitle
             title="Software information"
           />
