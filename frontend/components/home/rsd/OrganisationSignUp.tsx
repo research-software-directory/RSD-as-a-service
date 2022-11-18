@@ -103,7 +103,7 @@ export default function OrganisationSignUp({minWidth = '9rem'}:{minWidth:string}
               {config.button.register.label}
             </div>
             <div className="text-sm text-[#B7B7B7] pb-4">
-              You can find more information about registering your organisation in our <a href="https://research-software-directory.github.io/documentation/register-organization.html" target="_blank" rel="noreferrer">documentation</a>.
+              You can find more information about registering your organisation in our <u><a href="https://research-software-directory.github.io/documentation/register-organization.html" target="_blank" rel="noreferrer">documentation</a></u>.
             </div>
             {/* INPUTS */}
             <input type="text"

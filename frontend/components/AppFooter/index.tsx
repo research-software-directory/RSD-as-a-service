@@ -21,8 +21,7 @@ export default function AppFooter () {
       <div className="grid grid-cols-1 gap-8 px-4 md:grid-cols-[2fr,1fr] lg:container lg:mx-auto">
         <div className="pt-8 md:py-8">
           <p className="text-lg">
-            The Research Software Directory aims to promote the impact,
-            the exchange and re-use of research software.
+            The Research Software Directory promotes the impact, re-use and citation of research software.
           </p>
 
           <ContactEmail email={host?.email} />
