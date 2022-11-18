@@ -41,7 +41,7 @@ export default function ProjectDescription(
     return null
   }
   return (
-    <article className="mb-4">
+    <article className="mb-4 overflow-hidden">
       {getImage()}
       <ReactMarkdownWithSettings
         markdown={description}

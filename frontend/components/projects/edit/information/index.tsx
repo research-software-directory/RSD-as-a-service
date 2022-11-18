@@ -82,7 +82,7 @@ export default function EditProjectInformation({slug}: {slug: string}) {
       />
       <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
         {/* middle panel */}
-        <div className="py-4 xl:pl-[3rem]">
+        <div className="py-4 xl:pl-[3rem] overflow-hidden">
           <EditSectionTitle
             title="Project information"
           />
