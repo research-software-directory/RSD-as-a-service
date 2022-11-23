@@ -31,7 +31,7 @@ public class PostgrestAccount implements Account {
 		String subject = openIdInfo.sub();
 		String subjectUrlEncoded = URLEncoder.encode(subject, StandardCharsets.UTF_8);
 		String providerUrlEncoded = URLEncoder.encode(provider.toString(), StandardCharsets.UTF_8);
-		URI queryUri = URI.create(backendUri + "/login_for_account?select=account,name&sub=eq." + subjectUrlEncoded + "&provider=eq." + providerUrlEncoded);
+		URI queryUri = URI.create(backendUri + "/login_for_account?select=id,account,name&sub=eq." + subjectUrlEncoded + "&provider=eq." + providerUrlEncoded);
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String token = jwtCreator.createAdminJwt();
 		String responseLogin = getAsAdmin(queryUri, token);
@@ -40,13 +40,16 @@ public class PostgrestAccount implements Account {
 			throw new RuntimeException("More than one login for subject " + subject + " exists");
 		else if (accountsWithSub.size() == 1) {
 			JsonObject accountInfo = accountsWithSub.get(0).getAsJsonObject();
+			UUID id = UUID.fromString(accountInfo.getAsJsonPrimitive("id").getAsString());
+			updateLoginForAccount(id, openIdInfo, token);
 			UUID account = UUID.fromString(accountInfo.getAsJsonPrimitive("account").getAsString());
-			String name = Utils.jsonElementToString(accountInfo.get("name"));
+			String name = openIdInfo.name();
 			return new AccountInfo(account, name);
 		}
 		else { // create account
 			URI createAccountEndpoint = URI.create(backendUri + "/account");
-			String newAccountId = JsonParser.parseString(postJsonAsAdmin(createAccountEndpoint, "{}", token)).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+			String newAccountJson = postJsonAsAdmin(createAccountEndpoint, "{}", token);
+			String newAccountId = JsonParser.parseString(newAccountJson).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 
 //			create login for account
 			JsonObject loginForAccountData = new JsonObject();
@@ -63,6 +66,19 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
+	private void updateLoginForAccount(UUID id, OpenIdInfo openIdInfo, String token) {
+		JsonObject loginForAccountData = new JsonObject();
+		loginForAccountData.addProperty("name", openIdInfo.name());
+		loginForAccountData.addProperty("email", openIdInfo.email());
+		loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
+		String resultingJson = loginForAccountData.toString();
+
+		String backendUri = Config.backendBaseUrl();
+		URI patchLoginForAccountUri = URI.create(backendUri + "/login_for_account?id=eq." + id.toString());
+
+		patchJsonAsAdmin(patchLoginForAccountUri, resultingJson, token);
+	}
+
 	static String getAsAdmin(URI uri, String token) {
 		HttpRequest request = HttpRequest.newBuilder()
 				.GET()
@@ -77,7 +93,7 @@ public class PostgrestAccount implements Account {
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from the endpoint: " + response.body());
+			throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
 		}
 		return response.body();
 	}
@@ -98,7 +114,28 @@ public class PostgrestAccount implements Account {
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from the endpoint: " + response.body());
+			throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
+		}
+		return response.body();
+	}
+
+	private String patchJsonAsAdmin(URI uri, String json, String token) {
+		HttpRequest request = HttpRequest.newBuilder()
+				.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
+				.uri(uri)
+				.header("Content-Type", "application/json")
+				.header("Prefer", "return=representation")
+				.header("Authorization", "bearer " + token)
+				.build();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<String> response;
+		try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
 		}
 		return response.body();
 	}

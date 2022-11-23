@@ -5,7 +5,6 @@
 
 package nl.esciencecenter.rsd.authentication;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -17,12 +16,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 public class Utils {
-
-	public static String jsonElementToString(JsonElement elementToConvert) {
-		if (elementToConvert == null || elementToConvert.isJsonNull()) return null;
-		if (!elementToConvert.isJsonPrimitive()) return null;
-		return elementToConvert.getAsString();
-	}
 
 	public static URI getTokenUrlFromWellKnownUrl(URI wellKnownUrl) {
 		HttpClient client = HttpClient.newHttpClient();
