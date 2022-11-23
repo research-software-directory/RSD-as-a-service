@@ -19,8 +19,9 @@ describe('dateFn.daysDiff',()=>{
   })
 
   it('returns 0 if date in future',()=>{
-    const date = new Date('2022-11-25')
-    const diff = daysDiff(date)
+    const since = new Date()
+    const plus1 = new Date(since.getTime() + 1000 * 60 * 60)
+    const diff = daysDiff(plus1)
     expect(diff).toBe(0)
   })
 
