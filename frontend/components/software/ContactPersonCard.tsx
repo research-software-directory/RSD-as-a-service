@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,6 +11,7 @@ import Avatar from '@mui/material/Avatar'
 
 import {Contributor} from '../../types/Contributor'
 import {getDisplayName, getDisplayInitials} from '../../utils/getDisplayName'
+import LogoOrcid from '~/assets/logos/logo-orcid.svg'
 
 
 export default function ContactPersonCard({person}: { person: Contributor|null }) {
@@ -62,6 +65,13 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
           <h5 className="py-2">
             {person?.affiliation ?? ''}
           </h5>
+          {person?.orcid && <h5 className="py-2">
+            <a href={'https://orcid.org/' + person.orcid} target="_blank" rel="noreferrer"
+              style={{whiteSpace:'nowrap'}}
+            >
+              <LogoOrcid className="inline max-w-[1.125rem] mr-1" /> {person.orcid}
+            </a>
+          </h5>}
           {renderEmail()}
         </div>
       </div>
