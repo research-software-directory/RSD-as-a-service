@@ -38,7 +38,7 @@ services:
       - 3500
     environment:
       # it needs to be here to use values from .env file
-      - PGRST_DB_URI=postgres://authenticator:${POSTGRES_AUTHENTICATOR_PASSWORD}@database:5432/${POSTGRES_DB}
+      - PGRST_DB_URI=postgres://rsd_authenticator:${POSTGRES_AUTHENTICATOR_PASSWORD}@database:5432/${POSTGRES_DB}
       - PGRST_DB_ANON_ROLE
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT
