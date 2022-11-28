@@ -1,4 +1,6 @@
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -17,35 +19,25 @@ CREATE FUNCTION sanitise_insert_image() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 -- create SHA-1 id based on provided data content
-	NEW.id = encode(digest(NEW.data,'sha1'),'hex');
+	NEW.id = ENCODE(DIGEST(NEW.data, 'sha1'), 'hex');
 	NEW.created_at = LOCALTIMESTAMP;
 	return NEW;
 END
 $$;
 
 CREATE TRIGGER sanitise_insert_image BEFORE INSERT ON image FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_image();
--- NOT SURE ABOUT UPDATE
-CREATE TRIGGER sanitise_update_image BEFORE UPDATE ON image FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_image();
 
--- --------------------------------------
--- RLS
--- --------------------------------------
+CREATE FUNCTION sanitise_update_image() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+-- create SHA-1 id based on provided data content
+	NEW.id = ENCODE(DIGEST(NEW.data, 'sha1'), 'hex');
+	return NEW;
+END
+$$;
 
-ALTER TABLE image ENABLE ROW LEVEL SECURITY;
+CREATE TRIGGER sanitise_update_image BEFORE UPDATE ON image FOR EACH ROW EXECUTE PROCEDURE sanitise_update_image();
 
-CREATE POLICY anyone_can_read ON image FOR SELECT TO web_anon, rsd_user
-	USING (TRUE)
-;
-
-CREATE POLICY rsd_user_all_rights ON image TO rsd_user
-	USING (TRUE)
-	WITH CHECK (TRUE)
-;
-
-CREATE POLICY admin_all_rights ON image TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE)
-;
 
 -- ----------------------------------------
 -- RPC to get image by id => sha-1 of data

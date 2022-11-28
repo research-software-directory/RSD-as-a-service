@@ -146,6 +146,21 @@ CREATE POLICY admin_all_rights ON invite_maintainer_for_organisation TO rsd_admi
 	WITH CHECK (TRUE);
 
 
+-- image
+ALTER TABLE image ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON image FOR SELECT TO web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY rsd_user_all_rights ON image TO rsd_user
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+CREATE POLICY admin_all_rights ON image TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 -- software
 ALTER TABLE software ENABLE ROW LEVEL SECURITY;
 
