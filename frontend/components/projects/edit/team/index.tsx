@@ -13,16 +13,19 @@ import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {TeamMember} from '~/types/Project'
+import {SaveTeamMember, TeamMember} from '~/types/Project'
 import {cfgTeamMembers} from './config'
 import FindMember from './FindMember'
 import {
-  createTeamMember, deleteTeamMemberById,
-  ModalProps, ModalStates, patchTeamMemberPositions, updateTeamMember
+  deleteTeamMemberById, ModalProps, ModalStates,
+  patchTeamMember, patchTeamMemberPositions, postTeamMember
 } from './editTeamMembers'
 import TeamMemberModal from './TeamMemberModal'
 import useTeamMembers from './useTeamMembers'
 import SortableTeamMemberList from './SortableTeamMemberList'
+import {deleteImage, upsertImage} from '~/utils/editImage'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import {TeamMemberProps} from '~/types/Contributor'
 
 type EditMemberModal = ModalProps & {
   member?: TeamMember
@@ -130,41 +133,74 @@ export default function ProjectTeam({slug}: { slug: string }) {
         })
         // renumber remaining members
         await sortTeamMembers(newMembersList)
+        // try to remove member avatar
+        // without waiting for result
+        if (member.avatar_id) {
+          const del = await deleteImage({
+            id: member.avatar_id,
+            token
+          })
+        }
       } else {
         showErrorMessage(`Failed to remove member. ${resp.message}`)
       }
     }
   }
 
-  async function onSubmitMember({data,pos}:{data: TeamMember, pos?: number}) {
-    hideModals()
+  async function onSubmitMember({data, pos}: { data: TeamMember, pos?: number }) {
+    // UPLOAD avatar
+    if (data.avatar_b64 && data.avatar_mime_type) {
+      // split base64 to use only encoded content
+      const b64data = data.avatar_b64.split(',')[1]
+      const upload = await upsertImage({
+        data: b64data,
+        mime_type: data.avatar_mime_type,
+        token
+      })
+      // debugger
+      if (upload.status === 201) {
+        // update data values
+        data.avatar_id = upload.message
+      } else {
+        showErrorMessage(`Failed to upload image. ${upload.message}`)
+        return
+      }
+    }
+    // ensure project id
     if (!data.project) {
       // add project id
       data.project = project.id
     }
-    if (data?.id && typeof pos != 'undefined') {
-      const resp = await updateTeamMember({
-        data,
+    // prepare member object for save (remove helper props)
+    const member:SaveTeamMember = getPropsFromObject(data, TeamMemberProps)
+    // CREATE or UPDATE
+    if (member.id && typeof pos !== 'undefined') {
+      const resp = await patchTeamMember({
+        member,
         token
       })
+      // debugger
       if (resp.status === 200) {
-        // updated record delivered in message
-        const member = resp.message
-        updateLocalState(member,pos)
+        // on success update local state
+        updateLocalState(member, pos)
+        hideModals()
       } else {
         showErrorMessage(`Failed to update member. ${resp.message}`)
       }
     } else {
       // define items postion at the end
-      data.position = members.length + 1
-      const resp = await createTeamMember({
-        data,
+      member.position = members.length + 1
+      const resp = await postTeamMember({
+        member,
         token
       })
+      // debugger
       if (resp.status === 201) {
-        // updated record delivered in message
-        const member = resp.message
+        // get id out of message
+        member.id = resp.message
+        // update local state
         updateLocalState(member)
+        hideModals()
       } else {
         showErrorMessage(`Failed to add member. ${resp.message}`)
       }

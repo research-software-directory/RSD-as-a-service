@@ -4,7 +4,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {rowsPerPageOptions} from '~/config/pagination'
-import {baseQueryString, PostgrestParams, projectListUrl, softwareListUrl, softwareUrl, ssrOrganisationUrl, ssrProjectsUrl} from './postgrestUrl'
+import {
+  baseQueryString, PostgrestParams,
+  projectListUrl, softwareListUrl,
+  ssrSoftwareUrl, ssrOrganisationUrl, ssrProjectsUrl
+} from './postgrestUrl'
 
 describe('baseQueryString', () => {
 
@@ -40,10 +44,10 @@ describe('baseQueryString', () => {
 
 })
 
-describe('softwareUrl', () => {
+describe('ssrSoftwareUrl', () => {
   it('returns software page url with stringified and encoded keywords query parameters', () => {
     const expectUrl = '/software?&keywords=%5B%22filter-1%22%2C%22filter-2%22%5D&page=0&rows=12'
-    const url = softwareUrl({
+    const url = ssrSoftwareUrl({
       keywords: ['filter-1', 'filter-2']
     })
     expect(url).toEqual(expectUrl)
@@ -51,7 +55,7 @@ describe('softwareUrl', () => {
 
   it('returns software page url with search param and page 10', () => {
     const expectUrl = '/software?search=test-search-item&page=10&rows=12'
-    const url = softwareUrl({
+    const url = ssrSoftwareUrl({
       search: 'test-search-item',
       page: 10
     })
@@ -72,7 +76,7 @@ describe('softwareListUrl', () => {
   it('returns postgrest endpoint url with search params', () => {
     const baseUrl = 'http://test-base-url'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/software_search?limit=12&offset=0&or=(brand_name.ilike.*test-search*, short_statement.ilike.*test-search*)`
+    const expectUrl = `${baseUrl}/rpc/software_search?limit=12&offset=0&or=(brand_name.ilike.*test-search*,short_statement.ilike.*test-search*,keywords_text.ilike.*test-search*)`
     const url = softwareListUrl({
       baseUrl,
       // if you change search value then change expectedUrl values too
@@ -93,7 +97,7 @@ describe('softwareListUrl', () => {
   })
 })
 
-describe.only('ssrProjectsUrl', () => {
+describe('ssrProjectsUrl', () => {
   it('returns projects page url with stringified and encoded keywords query parameters', () => {
     const expectUrl = '/projects?&keywords=%5B%22filter-1%22%2C%22filter-2%22%5D&page=0&rows=12'
     const url = ssrProjectsUrl({
@@ -125,7 +129,7 @@ describe('projectListUrl', () => {
   it('returns postgrest endpoint url with search params', () => {
     const baseUrl = 'http://test-base-url'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/project_search?limit=12&offset=0&or=(title.ilike.*test-search*,subtitle.ilike.*test-search*)`
+    const expectUrl = `${baseUrl}/rpc/project_search?limit=12&offset=0&or=(title.ilike.*test-search*,subtitle.ilike.*test-search*,keywords_text.ilike.*test-search*,research_domain_text.ilike.*test-search*)`
     const url = projectListUrl({
       baseUrl,
       // if you change search value then change expectedUrl values too

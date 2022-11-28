@@ -7,7 +7,7 @@ import {useEffect} from 'react'
 
 import AOS from 'aos'
 import Link from 'next/link'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 
 import useRsdSettings from '~/config/useRsdSettings'
 import {config} from './config'
@@ -39,23 +39,26 @@ export type RsdHomeProps = {
 }
 
 function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string, url: string, target?:string, minWidth?:string}) {
-  return <Link href={url} passHref>
-    <a className="flex gap-4 cursor-pointer" target={target}>
-      <div className="relative group">
-        <div
-          className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
-        <div
-          className="flex gap-3 text-black relative px-8 py-3 bg-white ring-1 ring-gray-900/5 rounded leading-none items-center justify-center space-x-2"
-          style={{
-            minWidth
-          }}
-        >
-          <span className="space-y-2 text-xl font-medium whitespace-nowrap">
-            {text}
-          </span>
-        </div>
+  return <Link
+    href={url}
+    className="flex gap-4 cursor-pointer"
+    target={target}
+    passHref
+    >
+    <div className="relative group">
+      <div
+        className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
+      <div
+        className="flex gap-3 text-black relative px-8 py-3 bg-white ring-1 ring-gray-900/5 rounded leading-none items-center justify-center space-x-2"
+        style={{
+          minWidth
+        }}
+      >
+        <span className="space-y-2 text-xl font-medium whitespace-nowrap">
+          {text}
+        </span>
       </div>
-    </a>
+    </div>
   </Link>
 }
 
@@ -108,10 +111,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         </div>
       </div>
 
-      {/*  Divider  */}
-      {/* <LandingPageDivider/> */}
-
-      {/* Stats  */}
+      {/* stats  */}
       <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <div>
           <div className="text-lg">{software_cnt} Software</div>

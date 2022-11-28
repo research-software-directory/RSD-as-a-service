@@ -3,10 +3,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {getImageUrl} from '~/utils/editImage'
+import {getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
 import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
-import {SearchContributor} from '../../../../types/Contributor'
+import {SearchPerson} from '../../../../types/Contributor'
+import ContributorAvatar from '../../ContributorAvatar'
 
-export default function FindContributorItem({option}: { option: AutocompleteOption<SearchContributor> }) {
+export default function FindContributorItem({option}: { option: AutocompleteOption<SearchPerson> }) {
+
+  const displayName = getDisplayName(option.data)
+  const displayInitials = getDisplayInitials(option.data)
 
   function renderSecondRow() {
     const {affiliation,orcid,institution} = option.data
@@ -52,16 +58,23 @@ export default function FindContributorItem({option}: { option: AutocompleteOpti
   }
 
   return (
-    <article className="flex-1">
-      <div className="grid grid-cols-[3fr,1fr] gap-2">
-        <div className="flex items-center">
-          <strong><span className="flex-1">{option.label}</span></strong>
+    <article className="flex-1 flex">
+      <ContributorAvatar
+        avatarUrl={getImageUrl(option.data?.avatar_id ?? null) ?? ''}
+        displayName={displayName ?? ''}
+        displayInitials={displayInitials}
+      />
+      <section className="flex-1">
+        <div className="grid grid-cols-[3fr,1fr] gap-2">
+          <div className="flex items-center">
+            <strong><span className="flex-1">{option.label}</span></strong>
+          </div>
+          <span className="text-right">{option.data?.source}</span>
         </div>
-        <span className="text-right">{option.data?.source}</span>
-      </div>
-      <div className="py-1 text-[0.75rem]">
-        {renderSecondRow()}
-      </div>
+        <div className="py-1 text-[0.75rem]">
+          {renderSecondRow()}
+        </div>
+      </section>
     </article>
   )
 }

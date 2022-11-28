@@ -230,7 +230,9 @@ export async function getContributorsFromDoi(
       is_contact_person: false,
       orcid: useOrcid,
       position: null,
-      id: null
+      id: null,
+      role: null,
+      avatar_id: null
     })
   }
 

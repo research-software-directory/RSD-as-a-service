@@ -261,7 +261,9 @@ function generateSoftwareForSoftware(ids) {
 	return result;
 }
 
-function generateProjects(amount=50) {
+async function generateProjects(amount=50) {
+	const imageIds = await downloadAndGetImages(faker.image.cats, amount);
+
 	const result = [];
 
 	for (let index = 0; index < amount; index++) {
@@ -278,6 +280,7 @@ function generateProjects(amount=50) {
 			grant_id: faker.helpers.replaceSymbols('******'),
 			image_caption: faker.animal.cat(),
 			image_contain: !!faker.helpers.maybe(() => true, {probability: 0.5}),
+			image_id: imageIds[index] ?? null,
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 		});
 	}
@@ -286,7 +289,7 @@ function generateProjects(amount=50) {
 }
 
 async function generateContributors(ids, amount=100) {
-	const base64Images = await downloadImagesAsBase64(faker.image.avatar, amount);
+	const imageIds = await downloadAndGetImages(faker.image.avatar, amount);
 
 	const result = [];
 
@@ -300,8 +303,7 @@ async function generateContributors(ids, amount=100) {
 			affiliation: faker.company.name(),
 			role: faker.name.jobTitle(),
 			orcid: faker.helpers.replaceSymbolWithNumber('####-####-####-####'),
-			avatar_data: base64Images[index],
-			avatar_mime_type: 'image/jpeg',
+			avatar_id: imageIds[index] ?? null,
 		});
 	}
 
@@ -314,23 +316,6 @@ async function generateTeamMembers(ids, amount=100) {
 		contributor['project'] = contributor['software'];
 		delete contributor['software'];
 	});
-	return result;
-}
-
-async function generateImagesForProjects(ids) {
-	const base64Images = await downloadImagesAsBase64(faker.image.cats, ids.length);
-
-	const result = [];
-
-	for (let index = 0; index < ids.length; index++) {
-		if (base64Images[index] === null) continue;
-		result.push({
-			project: ids[index],
-			data: base64Images[index],
-			mime_type: 'image/jpeg',
-		});
-	}
-
 	return result;
 }
 
@@ -352,7 +337,9 @@ function generateUrlsForProjects(ids) {
 	return result;
 }
 
-function generateOrganisations(amount=50) {
+async function generateOrganisations(amount=50) {
+	const imageIds = await downloadAndGetImages(faker.image.business, amount);
+
 	const result = [];
 
 	for (let index = 0; index < amount; index++) {
@@ -367,23 +354,7 @@ function generateOrganisations(amount=50) {
 			ror_id: faker.helpers.replaceSymbols('https://ror.org/********'),
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.3}),
-		});
-	}
-
-	return result;
-}
-
-async function generateLogosForOrganisations(ids) {
-	const base64Images = await downloadImagesAsBase64(faker.image.business, ids.length);
-
-	const result = [];
-
-	for (let index = 0; index < ids.length; index++) {
-		if (base64Images[index] === null) continue;
-		result.push({
-			organisation: ids[index],
-			data: base64Images[index],
-			mime_type: 'image/jpeg',
+			logo_id: imageIds[index] ?? null,
 		});
 	}
 
@@ -442,7 +413,11 @@ function createJWT() {
 }
 
 const token = createJWT();
-const headers = {'Content-Type': 'application/json', 'Authorization': 'bearer ' + token, 'Prefer': 'return=representation'}
+const headers = {
+		'Content-Type': 'application/json',
+		'Authorization': 'bearer ' + token,
+		'Prefer': 'return=representation,resolution=ignore-duplicates'
+	}
 const backendUrl = process.env.POSTGREST_URL || 'http://localhost/api/v1';
 
 async function postToBackend(endpoint, body) {
@@ -461,12 +436,13 @@ async function getFromBackend(endpoint) {
 	return response;
 }
 
-async function downloadImagesAsBase64(urlGenerator, amount) {
-	const imagePromises = [];
+// returns the IDs of the images after they have been posted to the database
+async function downloadAndGetImages(urlGenerator, amount) {
+	const imageAsBase64Promises = [];
 	const timeOuts = [];
 	for (let index = 0; index < amount; index++) {
 		const url = urlGenerator();
-		imagePromises.push(
+		imageAsBase64Promises.push(
 			Promise.race([
 				fetch(url)
 					.then(resp => {clearTimeout(timeOuts[index]); return resp.arrayBuffer()})
@@ -477,7 +453,16 @@ async function downloadImagesAsBase64(urlGenerator, amount) {
 			])
 		);
 	}
-	return await Promise.all(imagePromises);
+	const imagesAsBase64 = await Promise.all(imageAsBase64Promises);
+
+	const imagesWithoutNulls = imagesAsBase64
+		.filter(img => img !== null)
+		.map(base64 => {return {data: base64, mime_type: 'image/jpeg'}});
+
+	const resp = await postToBackend('/image?select=id', imagesWithoutNulls);
+	const idsAsObjects = await resp.json();
+	const ids = idsAsObjects.map(idAsObject => idAsObject.id);
+	return ids
 }
 
 let idsMentions, idsKeywords, idsResearchDomains;
@@ -508,12 +493,11 @@ const softwarePromise = postToBackend('/software', generateSofware())
 		postToBackend('/mention_for_software', generateMentionsForEntity(idsSoftware, idsMentions, 'software'));
 		postToBackend('/software_for_software', generateSoftwareForSoftware(idsSoftware));
 	});
-const projectPromise = postToBackend('/project', generateProjects())
+const projectPromise = postToBackend('/project', await generateProjects())
 	.then(resp => resp.json())
 	.then(async pjArray => {
 		idsProjects = pjArray.map(sw => sw['id']);
 		postToBackend('/team_member', await generateTeamMembers(idsProjects));
-		postToBackend('/image_for_project', await generateImagesForProjects(idsProjects));
 		postToBackend('/url_for_project', generateUrlsForProjects(idsProjects));
 		postToBackend('/keyword_for_project', generateKeywordsForEntity(idsProjects, idsKeywords, 'project'));
 		postToBackend('/output_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));
@@ -521,11 +505,10 @@ const projectPromise = postToBackend('/project', generateProjects())
 		postToBackend('/research_domain_for_project', generateResearchDomainsForProjects(idsProjects, idsResearchDomains));
 		postToBackend('/project_for_project', generateSoftwareForSoftware(idsProjects));
 	});
-const organisationPromise = postToBackend('/organisation', generateOrganisations())
+const organisationPromise = postToBackend('/organisation', await generateOrganisations())
 	.then(resp => resp.json())
 	.then(async orgArray => {
 		idsOrganisations = orgArray.map(org => org['id']);
-		postToBackend('/logo_for_organisation', await generateLogosForOrganisations(idsOrganisations));
 	});
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
 

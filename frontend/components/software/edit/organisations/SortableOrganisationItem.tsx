@@ -10,7 +10,7 @@ import Avatar from '@mui/material/Avatar'
 import BlockIcon from '@mui/icons-material/Block'
 
 import {EditOrganisation} from '../../../../types/Organisation'
-import {getUrlFromLogoId} from '../../../../utils/editOrganisation'
+import {getImageUrl} from '~/utils/editImage'
 import IconOverlay from '~/components/layout/IconOverlay'
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import {useSortable} from '@dnd-kit/sortable'
@@ -111,7 +111,7 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
       <ListItemAvatar>
         <Avatar
           alt={organisation.name ?? ''}
-          src={getUrlFromLogoId(organisation.logo_id) ?? ''}
+          src={getImageUrl(organisation.logo_id) ?? undefined}
           sx={{
             width: '6rem',
             height: '6rem',

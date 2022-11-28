@@ -10,15 +10,15 @@ import useSnackbar from '../../../snackbar/useSnackbar'
 import ContentLoader from '../../../layout/ContentLoader'
 import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
 import {
+  columsForUpdate,
   EditOrganisation,
   SearchOrganisation,
   SoftwareForOrganisation
 } from '../../../../types/Organisation'
 import {
-  deleteOrganisationLogo,
   newOrganisationProps,
-  saveExistingOrganisation,
   searchToEditOrganisation,
+  updateOrganisation,
 } from '../../../../utils/editOrganisation'
 import useParticipatingOrganisations from './useParticipatingOrganisations'
 import {organisationInformation as config} from '../editSoftwareConfig'
@@ -30,7 +30,12 @@ import EditOrganisationModal from './EditOrganisationModal'
 import {getSlugFromString} from '../../../../utils/getSlugFromString'
 import useSoftwareContext from '../useSoftwareContext'
 import SortableOrganisationsList from './SortableOrganisationsList'
-import {addOrganisationToSoftware, deleteOrganisationFromSoftware, patchOrganisationPositions, saveNewOrganisationForSoftware} from './organisationForSoftware'
+import {
+  addOrganisationToSoftware, createOrganisationAndAddToSoftware,
+  deleteOrganisationFromSoftware, patchOrganisationPositions
+} from './organisationForSoftware'
+import {deleteImage, upsertImage} from '~/utils/editImage'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
 export type EditOrganisationModalProps = ModalProps & {
   organisation?: EditOrganisation
@@ -171,44 +176,62 @@ export default function SoftwareOganisations() {
 
   async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number }) {
     try {
-      closeModals()
-      if (typeof pos != 'undefined' && data.id) {
-        // update existing organisation
-        const resp = await saveExistingOrganisation({
-          item: data,
-          token,
-          pos,
-          setState: updateOrganisationInList
+      // UPLOAD LOGO
+      if (data.logo_b64 && data.logo_mime_type) {
+        // split base64 to use only encoded content
+        const b64data = data.logo_b64.split(',')[1]
+        const upload = await upsertImage({
+          data: b64data,
+          mime_type: data.logo_mime_type,
+          token
         })
-        if (resp.status !== 200) {
+        // debugger
+        if (upload.status === 201) {
+          // update data values
+          data.logo_id = upload.message
+          // remove image strings after upload
+          data.logo_b64 = null
+          data.logo_mime_type = null
+        } else {
+          showErrorMessage(`Failed to upload image. ${upload.message}`)
+          return
+        }
+      }
+      if (typeof pos !== 'undefined' && data.id) {
+        // extract data for update
+        const organisation = getPropsFromObject(data,columsForUpdate)
+        // update existing organisation
+        const resp = await updateOrganisation({
+          organisation,
+          token
+        })
+        // debugger
+        if (resp.status === 200) {
+          updateOrganisationInList(data,pos)
+          closeModals()
+        } else {
           showErrorMessage(resp.message)
         }
       } else {
         // create slug for new organisation based on name
         data.slug = getSlugFromString(data.name)
         // create new organisation
-        const resp = await saveNewOrganisationForSoftware({
+        const {status,message} = await createOrganisationAndAddToSoftware({
           item: data,
           software: software?.id ?? '',
           token,
           setState: addOrganisationToList
         })
-        if (resp.status !== 200) {
-          showErrorMessage(resp.message)
+        // debugger
+        if (status === 200) {
+          addOrganisationToList(message)
+          closeModals()
+        } else {
+          showErrorMessage(message)
         }
       }
     } catch (e:any) {
       showErrorMessage(e.message)
-    }
-  }
-
-  async function onDeleteOrganisationLogo(logo_id:string) {
-    const resp = await deleteOrganisationLogo({
-      id: logo_id,
-      token
-    })
-    if (resp.status !== 200) {
-      showErrorMessage(resp.message)
     }
   }
 
@@ -302,7 +325,6 @@ export default function SoftwareOganisations() {
         organisation={modal.edit.organisation}
         onCancel={closeModals}
         onSubmit={saveOrganisation}
-        onDeleteLogo={onDeleteOrganisationLogo}
       />
       <ConfirmDeleteModal
         title="Remove organisation"

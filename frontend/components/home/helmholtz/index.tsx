@@ -15,10 +15,10 @@ import {OrganisationForOverview} from '~/types/Organisation'
 /*! purgecss start ignore */
 // import 'aos/dist/aos.css'
 
-import {getUrlFromLogoId} from '~/utils/editOrganisation'
 import {IconButton} from '@mui/material'
 import {ChevronLeft, ChevronRight} from '@mui/icons-material'
 import {useAuth} from '~/auth'
+import {getImageUrl} from '~/utils/editImage'
 import useOrganisations from './useOrganisations'
 /*! purgecss end ignore */
 
@@ -208,7 +208,7 @@ function ParticipatingOrganisations({organisations}:{organisations:OrganisationF
               <img
                 key={item.name}
                 alt={item.name}
-                src={getUrlFromLogoId(item.logo_id) ?? undefined}
+                src={getImageUrl(item.logo_id) ?? undefined}
                 className="p-10 hover:cursor-pointer"
               />
             </Link>
@@ -318,12 +318,10 @@ export default function HelmholtzHome() {
             <Spotlights spotlights={SPOTLIGHTS} />
             <div className="flex">
               <Link href="/software" passHref>
-              <a>
                 <div
                   className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
                   Browse software
                 </div>
-              </a>
               </Link>
             </div>
           </div>

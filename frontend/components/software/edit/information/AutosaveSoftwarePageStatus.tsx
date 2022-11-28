@@ -43,7 +43,7 @@ export default function AutosaveSoftwarePageStatus() {
         <AlertTitle>Publishing software page</AlertTitle>
         Setting the page status to published will expose the software page to all visitors.
         Unpublished software can be found under <strong>
-          <Link href="/user/software"><a>your profile</a></Link>
+          <Link href="/user/software">your profile</Link>
         </strong> page.
       </Alert>
     </>

@@ -64,11 +64,10 @@ export default function LoginButton() {
   return (
     <Link
       href={providers[0]?.redirectUrl ?? ''}
+      className="whitespace-nowrap ml-2" tabIndex={0}
       passHref
     >
-      <a className="whitespace-nowrap ml-2" tabIndex={0} >
-        Sign in
-      </a>
+      Sign in
     </Link>
   )
 }

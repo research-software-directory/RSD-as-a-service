@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 
-import {getUrlFromLogoId} from '../../../utils/editOrganisation'
+import {getImageUrl} from '~/utils/editImage'
 import {useRouter} from 'next/router'
 
 type UnitListItemProps = {
@@ -91,7 +91,7 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
           passHref>
           <Avatar
             alt={name}
-            src={getUrlFromLogoId(logo_id) ?? ''}
+            src={getImageUrl(logo_id) ?? undefined}
             sx={{
               width: '4rem',
               height: '4rem',
@@ -119,9 +119,7 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
             }}
             passHref
           >
-            <a >
-              {name}
-            </a>
+            {name}
           </Link>
         }
         secondary={getSecondaryLabel()}

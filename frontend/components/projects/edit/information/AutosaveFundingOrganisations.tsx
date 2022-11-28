@@ -8,44 +8,21 @@ import {useState} from 'react'
 
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {EditOrganisation, FundingOrganisation, SearchOrganisation} from '~/types/Organisation'
+import {columsForCreate, SearchOrganisation} from '~/types/Organisation'
 import {createOrganisation, searchForOrganisation} from '~/utils/editOrganisation'
 import {addOrganisationToProject, deleteOrganisationFromProject} from '~/utils/editProject'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import {getSlugFromString} from '~/utils/getSlugFromString'
 import FindOrganisation from '../FindOrganisation'
 import {projectInformation as config} from './config'
 
-function createNewOrganisation(organisation:SearchOrganisation){
-  const newOrganisation: EditOrganisation = {
-    id: organisation.id,
-    parent: organisation.parent,
-    slug: organisation.slug ? organisation.slug : getSlugFromString(organisation.name),
-    // funding organisation without primary maintainer
-    primary_maintainer: organisation.primary_maintainer,
-    name: organisation.name,
-    ror_id: organisation.ror_id,
-    is_tenant: organisation.is_tenant,
-    website: organisation.website,
-    // indicates image already present
-    logo_id: organisation.logo_id,
-    // new image to upload
-    logo_b64: null,
-    logo_mime_type: null,
-    position: null,
-    // funding organisation come from ROR
-    source: organisation.source,
-    description: null
-  }
-  return newOrganisation
-}
-
 type FundingOrganisationProps={
   id:string,
-  items: FundingOrganisation[]
+  items: SearchOrganisation[]
 }
 
 export default function FundingOrganisations({id,items}:FundingOrganisationProps) {
-  const session = useSession()
+  const {token} = useSession()
   const {showErrorMessage,showInfoMessage} = useSnackbar()
   const [organisations,setOrganisations] = useState(items)
 
@@ -54,41 +31,45 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
     const find = organisations.filter(item => item.name === selected.name)
     if (find.length === 0) {
       let resp
-      let organisation
+      // create slug if not present
+      if (selected.slug===null) {
+        selected.slug = getSlugFromString(selected.name)
+      }
       if (selected.id===null){
-        organisation = createNewOrganisation(selected)
+        const organisation = getPropsFromObject(selected,columsForCreate)
+        // createNewOrganisation(selected)
         resp = await createOrganisation({
-          item: organisation,
-          token: session.token
+          organisation,
+          token
         })
         // debugger
         if (resp.status == 201) {
           // we receive organisation id
-          organisation.id = resp.message
+          selected.id = resp.message as string
           // and we add organisation to project
           // as funding organisation
           resp = await addOrganisationToProject({
             project: id,
-            organisation: resp.message,
+            organisation: selected.id,
             role: 'funding',
             position: null,
-            session
+            token
           })
         }
       } else {
-        organisation = createNewOrganisation(selected)
+        // organisation = getPropsFromObject(selected,columsForUpdate)
         resp = await addOrganisationToProject({
           project: id,
-          organisation: organisation.id as string,
+          organisation: selected.id as string,
           role: 'funding',
           position: null,
-          session
+          token
         })
       }
       if (resp.status===200){
         const items = [
           ...organisations,
-          organisation
+          selected
         ]
         setOrganisations(items)
       }else{
@@ -106,7 +87,7 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
         project: id,
         organisation: item.id,
         role: 'funding',
-        token: session.token
+        token
       })
       if (resp.status === 200){
         const items=[

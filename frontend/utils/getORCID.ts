@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {AutocompleteOption} from '../types/AutocompleteOptions'
-import {SearchContributor} from '../types/Contributor'
+import {SearchPerson} from '../types/Contributor'
 import {createJsonHeaders} from './fetchHelpers'
 import {getDisplayName} from './getDisplayName'
 import logger from './logger'
@@ -78,7 +78,7 @@ function buildSearchQuery(searchFor: string) {
 }
 
 
-function buildAutocompleteOptions(data: OrcidRecord[]): AutocompleteOption<SearchContributor>[]{
+function buildAutocompleteOptions(data: OrcidRecord[]): AutocompleteOption<SearchPerson>[]{
   if (!data) return []
 
   const options = data.map(item => {

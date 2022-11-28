@@ -14,13 +14,14 @@ import {useSession} from '~/auth'
 import ImageAsBackground from '~/components/layout/ImageAsBackground'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {EditProject} from '~/types/Project'
-import {getImageUrl} from '~/utils/getProjects'
-import logger from '~/utils/logger'
-import {addImage, deleteImage, updateImage} from '~/utils/editProject'
+import {getImageUrl} from '~/utils/editImage'
 import AutosaveProjectTextField from './AutosaveProjectTextField'
 import AutosaveProjectSwitch from './AutosaveProjectSwitch'
 import {projectInformation as config} from './config'
 import {patchProjectTable} from './patchProjectInfo'
+import {upsertImage,deleteImage} from '~/utils/editImage'
+import {ChangeEvent} from 'react'
+import {handleFileUpload} from '~/utils/handleFileUpload'
 
 export default function AutosaveProjectImage() {
   const {token} = useSession()
@@ -37,57 +38,63 @@ export default function AutosaveProjectImage() {
     let resp
     // split base64 to use only encoded content
     const data = image_b64.split(',')[1]
-    if (form_image_id && form_image_id !== null) {
-      // update image
-      resp = await updateImage({
-        project: form_id,
-        data,
-        mime_type,
+    if (form_image_id) {
+      const patch = await patchProjectTable({
+        id: form_id,
+        data: {
+          image_id: null
+        },
         token
       })
-      await fetch(`/image/rpc/get_project_image?id=${form_id}`, {cache: 'reload'})
-      // @ts-ignore (hard) reload the page, true is for FF
-      location.reload(true)
-    } else {
-      // add new image
-      resp = await addImage({
-        project: form_id,
-        data,
-        mime_type,
-        token
-      })
+      if (patch.status === 200) {
+        // try to remove old image
+        // but don't wait for results
+        const del = await deleteImage({
+          id: form_image_id,
+          token
+        })
+      }
     }
-    if (resp.status === 200) {
+    // add new image to db
+    resp = await upsertImage({
+      data,
+      mime_type,
+      token
+    })
+    if (resp.status !== 201) {
+      showErrorMessage(`Failed to save image. ${resp.message}`)
+      return
+    }
+    const patch = await patchProjectTable({
+      id:form_id,
+      data: {
+        image_id:resp.message
+      },
+      token
+    })
+    if (patch.status === 200) {
       // setValue works while resetField doesn't, not sure why?
-      setValue('image_b64', image_b64 as string)
-      setValue('image_mime_type', mime_type)
+      // setValue('image_b64', image_b64 as string)
+      // setValue('image_mime_type', mime_type)
       // remove id for now
-      setValue('image_id', null)
+      setValue('image_id', resp.message)
+      // debugger
     } else {
       showErrorMessage(`Failed to save image. ${resp.message}`)
     }
   }
 
-  function handleFileUpload({target}:{target: any}) {
-    try {
-      let file = target.files[0]
-      if (typeof file == 'undefined') return
-      // check file size
-      if (file.size > 2097152) {
-        // file is to large > 2MB
-        showWarningMessage('The file is too large. Please select image < 2MB.')
-        return
+  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
+    if (typeof e !== 'undefined') {
+      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+      if (status === 200 && image_b64 && image_mime_type) {
+        // save image
+        saveImage(image_b64,image_mime_type)
+      } else if (status===413) {
+        showWarningMessage(message)
+      } else {
+        showErrorMessage(message)
       }
-      let reader = new FileReader()
-      reader.onloadend = function () {
-        if (reader.result) {
-          // save image
-          saveImage(reader.result as string,file.type)
-        }
-      }
-      reader.readAsDataURL(file)
-    } catch (e:any) {
-      logger(`ProjectImage.handleFileUpload: ${e.message}`,'error')
     }
   }
 
@@ -103,35 +110,34 @@ export default function AutosaveProjectImage() {
 
   async function removeImage() {
     // remove image
-    let resp = await deleteImage({
-      project: form_id,
+    const resp = await patchProjectTable({
+      id: form_id,
+      data: {
+        image_id: null,
+        image_caption: null,
+        image_contain: false
+      },
       token
     })
     if (resp.status === 200) {
       // clear all image values in the form
       if (form_image_b64) setValue('image_b64', null)
       if (form_image_mime_type) setValue('image_mime_type', null)
-      if (form_image_id) setValue('image_id', null)
+      if (form_image_id) {
+        // try to remove old image
+        // but don't wait for results
+        const del = await deleteImage({
+          id: form_image_id,
+          token
+        })
+        setValue('image_id', null)
+      }
+      // reset form values
+      resetField('image_caption', {defaultValue: null})
+      resetField('image_contain', {defaultValue: false})
     } else {
       showErrorMessage(`Failed to remove image. ${resp.message}`)
       return
-    }
-    // reset image attributes
-    // we do not show error message on failure
-    resp = await patchProjectTable({
-      id: form_id,
-      data: {
-        image_caption: null,
-        image_contain: false
-      },
-      token
-    })
-
-    if (resp.status === 200) {
-      resetField('image_caption', {defaultValue: null})
-      resetField('image_contain',{defaultValue:false})
-    } else {
-      logger(`AutosaveProjectImage.patchImageCaption failed. ${resp.message}`,'warn')
     }
   }
 
@@ -210,7 +216,7 @@ export default function AutosaveProjectImage() {
         id="upload-avatar-image"
         type="file"
         accept="image/*"
-        onChange={handleFileUpload}
+        onChange={onFileUpload}
         style={{display:'none'}}
       />
 

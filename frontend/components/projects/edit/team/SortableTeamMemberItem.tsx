@@ -14,6 +14,7 @@ import {combineRoleAndAffiliation, getDisplayInitials, getDisplayName} from '~/u
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import {TeamMember} from '~/types/Project'
 import {useMediaQuery} from '@mui/material'
+import {getImageUrl} from '~/utils/editImage'
 
 type TeamMemberProps = {
   pos: number,
@@ -67,7 +68,7 @@ export default function SortableTeamMemberItem({pos, item, onEdit, onDelete}: Te
       {smallScreen ? null :
         <ListItemAvatar>
           <ContributorAvatar
-            avatarUrl={item.avatar_url ?? ''}
+            avatarUrl={getImageUrl(item.avatar_id) ?? ''}
             displayName={displayName ?? ''}
             displayInitials={displayInitials}
           />

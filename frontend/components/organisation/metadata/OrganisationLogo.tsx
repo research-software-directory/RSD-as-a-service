@@ -3,17 +3,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {ChangeEvent, useEffect, useState} from 'react'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 
 import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
-import {deleteOrganisationLogo, getUrlFromLogoId, uploadOrganisationLogo} from '../../../utils/editOrganisation'
-import logger from '../../../utils/logger'
+import {patchOrganisation} from '../../../utils/editOrganisation'
 import LogoAvatar from '~/components/layout/LogoAvatar'
 import IconButton from '@mui/material/IconButton'
+import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
+import {handleFileUpload} from '~/utils/handleFileUpload'
 
 type OrganisationLogoProps = {
   id: string
@@ -23,116 +24,101 @@ type OrganisationLogoProps = {
   isMaintainer: boolean
 }
 
-type LogoProps = {
-  id: string | null
-  b64: string | null
-  mime_type: string | null
-}
-
 export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
   OrganisationLogoProps) {
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
   // currently shown image
-  // after new upload uses b64 prop
-  const [logo, setLogo] = useState<LogoProps>({
-    id: logo_id,
-    b64: null,
-    mime_type: null
-  })
-  // new to upload image
-  const [upload, setUpload] = useState<LogoProps>({
-    id: null,
-    b64: null,
-    mime_type:null
-  })
+  const [logo, setLogo] = useState<string|null>(null)
 
+  // console.group('OrganisationLogo')
+  // console.log('id...', id)
+  // console.log('name...', name)
+  // console.log('logo_id...', logo_id)
+  // console.log('isMaintainer...', isMaintainer)
+  // console.groupEnd()
+
+  // Update logo when new value
+  // received from parent
   useEffect(() => {
-    if (id) {
-      setLogo({
-        id: logo_id,
-        b64: null,
-        mime_type: null
-      })
-    }
-  },[id,logo_id])
+    if (logo_id) setLogo(logo_id)
+  },[logo_id])
 
-
-  useEffect(() => {
-    let abort = false
-    async function uploadLogo({id, b64, mime_type, token}:
-      {id: string, b64: string, mime_type: string, token: string }) {
-      const resp = await uploadOrganisationLogo({
-        id,
-        // send just b64 data
-        data:b64.split(',')[1],
-        mime_type,
-        token
-      })
-      if (abort) return
-      // update local state
-      setLogo({
-        id,
-        b64,
-        mime_type
-      })
-      // fetch image to reload the cache
-      await fetch(`/image/rpc/get_logo?id=${id}`, {cache: 'reload'})
-      // @ts-ignore (hard) reload the page, true is for FF
-      location.reload(true)
-    }
-    if (upload.id && upload.b64 && upload.mime_type && token) {
-      uploadLogo({
-        id: upload.id,
-        b64: upload.b64,
-        mime_type: upload.mime_type,
-        token
-      })
-    }
-    return ()=>{abort=true}
-  },[upload,token])
-
-  function handleFileUpload({target}:{target: any}) {
-    try {
-      let file = target.files[0]
-      if (typeof file == 'undefined') return
-      // check file size
-      if (file.size > 2097152) {
-        // file is to large > 2MB
-        showWarningMessage('The file is too large. Please select image < 2MB.')
-        return
+  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
+    if (typeof e !== 'undefined') {
+      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+      if (status === 200 && image_b64 && image_mime_type) {
+        addLogo({
+          data: image_b64,
+          mime_type: image_mime_type
+        })
+      } else if (status===413) {
+        showWarningMessage(message)
+      } else {
+        showErrorMessage(message)
       }
-      let reader = new FileReader()
-      reader.onloadend = function () {
-        if (reader.result) {
-          // write to new avatar b64
-          setUpload({
-            id,
-            b64: reader.result as string,
-            mime_type: file.type
+    }
+  }
+
+  async function addLogo({data, mime_type}: { data: string, mime_type: string }) {
+    // split base64 to use only encoded content
+    const b64data = data.split(',')[1]
+    const resp = await upsertImage({
+      data:b64data,
+      mime_type,
+      token
+    })
+    if (resp.status === 201) {
+      // update logo_id reference
+      const patch = await patchOrganisation({
+        data: {
+          id,
+          logo_id: resp.message
+        },
+        token
+      })
+      if (patch.status === 200) {
+        // if we are replacing existing logo
+        if (logo !== null && resp.message &&
+          logo !== resp.message
+        ) {
+          // try to remove old logo from db
+          // do not await for result
+          // NOTE! delete MUST be after pathing organisation
+          // because we are removing logo_id reference
+          deleteImage({
+            id: logo,
+            token
           })
         }
+        setLogo(resp.message)
+      } else {
+        showErrorMessage(`Failed to upload logo. ${resp.message}`)
       }
-      reader.readAsDataURL(file)
-    } catch (e:any) {
-      logger(`handleFileUpload: ${e.message}`,'error')
+    } else {
+      showErrorMessage(`Failed to upload logo. ${resp.message}`)
     }
   }
 
   async function removeLogo() {
-    if (logo.id && token) {
-      const resp = await deleteOrganisationLogo({
-        id: logo.id,
+    if (logo && token) {
+      // remove logo_id from organisation
+      const resp = await patchOrganisation({
+        data: {
+          id,
+          logo_id: null
+        },
         token
       })
-      if (resp.status !== 200) {
-        showErrorMessage(`Failed to remove logo. ${resp.message}`)
-      } else {
-        setLogo({
-          id: null,
-          b64: null,
-          mime_type:null
+      if (resp.status == 200) {
+        // delete logo without check
+        const del = await deleteImage({
+          id: logo,
+          token
         })
+        setLogo(null)
+      } else {
+        showErrorMessage(`Failed to remove logo. ${resp.message}`)
       }
     }
   }
@@ -141,7 +127,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
     return (
       <LogoAvatar
         name={name}
-        src={logo.b64 ?? getUrlFromLogoId(logo.id) ?? undefined}
+        src={getImageUrl(logo) ?? undefined}
       />
     )
   }
@@ -163,7 +149,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
               id="upload-avatar-image"
               type="file"
               accept="image/*"
-              onChange={handleFileUpload}
+              onChange={onFileUpload}
               style={{display:'none'}}
             />
             <IconButton
@@ -179,7 +165,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
           <IconButton
             title="Remove logo"
             // color='primary'
-            disabled={!logo.b64 && !logo.id}
+            disabled={logo===null}
             onClick={removeLogo}
           >
             <DeleteIcon/>

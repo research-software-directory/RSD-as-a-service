@@ -25,7 +25,8 @@ const mockMentionItem = {
   image_url: null,
   // is_featured?: boolean
   mention_type: 'book' as MentionTypeKeys,
-  source: 'crossref'
+  source: 'crossref',
+  note: null
 }
 
 let props:FindMentionProps = {
@@ -77,7 +78,7 @@ it('has working cancel button when freeSolo', async () => {
   expect(loader).not.toBeInTheDocument()
 })
 
-it('shows custom notFound message when freeSolo AND onCreate NOT provided', async () => {
+it('shows custom notFound message when freeSolo=true AND onCreate=undefined', async () => {
   const notFound = 'Tested not found message'
   props.config = {
     ...props.config,
@@ -99,13 +100,15 @@ it('shows custom notFound message when freeSolo AND onCreate NOT provided', asyn
   // input test value
   const searchInput = screen.getByRole('combobox')
   const searchFor = 'test'
-  fireEvent.change(searchInput, {target: {value: searchFor}})
-
   // need to advance all timers for debounce etc...
   // Note! it needs to be wrapped in act
-  await act(() => {
+  act(() => {
+    fireEvent.change(searchInput, {target: {value: searchFor}})
     jest.runOnlyPendingTimers()
   })
+
+  // then wait for loader to be removed
+  await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
 
   // wait for listbox and notFound message
   await waitFor(() => {
@@ -128,13 +131,16 @@ it('does not show Add option when onCreate=undefined', async () => {
   // input test value
   const searchInput = screen.getByRole('combobox')
   const searchFor = 'test'
-  fireEvent.change(searchInput, {target: {value: searchFor}})
 
   // need to advance all timers for debounce etc...
   // Note! it needs to be wrapped in act
-  await act(() => {
+  act(() => {
+    fireEvent.change(searchInput, {target: {value: searchFor}})
     jest.runOnlyPendingTimers()
   })
+
+  // then wait for loader to be removed
+  await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
 
   // select only option in dropdown
   const options = screen.getAllByRole('option')
@@ -158,19 +164,22 @@ it('shows Add option when onCreate defined', async () => {
   // input test value
   const searchInput = screen.getByRole('combobox')
   const searchFor = 'test'
-  fireEvent.change(searchInput, {target: {value: searchFor}})
 
   // need to advance all timers for debounce etc...
   // Note! it needs to be wrapped in act
-  await act(() => {
+  act(() => {
+    fireEvent.change(searchInput, {target: {value: searchFor}})
     jest.runOnlyPendingTimers()
   })
+
+  // then wait for loader to be removed
+  await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
 
   // select only options in dropdown
   const options = screen.getAllByRole('option')
   expect(options.length).toEqual(3)
 
-  // find Add est
+  // find Add test
   const add = screen.getByText(`Add "${searchFor}"`)
   expect(add).toBeInTheDocument()
 
@@ -193,13 +202,17 @@ it('leaves input after selection when reset=false', async () => {
   // input test value
   const searchInput = screen.getByRole('combobox')
   const searchFor = 'test'
-  fireEvent.change(searchInput, {target: {value: searchFor}})
 
   // need to advance all timers for debounce etc...
   // Note! it needs to be wrapped in act
-  await act(() => {
+  act(() => {
+    fireEvent.change(searchInput, {target: {value: searchFor}})
     jest.runOnlyPendingTimers()
   })
+
+  // then wait for loader to be removed
+  // requied for rest of the test to pass
+  await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
 
   // select only option in dropdown
   const options = screen.getAllByRole('option')
@@ -224,13 +237,17 @@ it('removes input after selection when reset=true', async () => {
   // input test value
   const searchInput = screen.getByRole('combobox')
   const searchFor = 'test'
-  fireEvent.change(searchInput, {target: {value: searchFor}})
 
   // need to advance all timers for debounce etc...
   // Note! it needs to be wrapped in act
-  await act(() => {
+  act(() => {
+    fireEvent.change(searchInput, {target: {value: searchFor}})
     jest.runOnlyPendingTimers()
   })
+
+  // then wait for loader to be removed
+  // requied for rest of the test to pass
+  await waitForElementToBeRemoved(() => screen.getByTestId('circular-loader'))
 
   const options = screen.getAllByRole('option')
   expect(options.length).toEqual(2)

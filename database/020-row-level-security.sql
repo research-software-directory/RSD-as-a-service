@@ -146,6 +146,21 @@ CREATE POLICY admin_all_rights ON invite_maintainer_for_organisation TO rsd_admi
 	WITH CHECK (TRUE);
 
 
+-- image
+ALTER TABLE image ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON image FOR SELECT TO web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY rsd_user_all_rights ON image TO rsd_user
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+CREATE POLICY admin_all_rights ON image TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 -- software
 ALTER TABLE software ENABLE ROW LEVEL SECURITY;
 
@@ -306,21 +321,6 @@ CREATE POLICY maintainer_all_rights ON url_for_project TO rsd_user
 CREATE POLICY admin_all_rights ON url_for_project TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
-
-
-ALTER TABLE image_for_project ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON image_for_project FOR SELECT TO web_anon, rsd_user
-	USING (project IN (SELECT id FROM project));
-
-CREATE POLICY maintainer_all_rights ON image_for_project TO rsd_user
-	USING (project IN (SELECT * FROM projects_of_current_maintainer()))
-	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
-
-CREATE POLICY admin_all_rights ON image_for_project TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
 
 -- project relations
 ALTER TABLE team_member ENABLE ROW LEVEL SECURITY;
@@ -515,24 +515,6 @@ CREATE POLICY maintainer_can_insert ON organisation FOR INSERT TO rsd_user
 CREATE POLICY admin_all_rights ON organisation TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
-
-
-ALTER TABLE logo_for_organisation ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON logo_for_organisation FOR SELECT TO web_anon, rsd_user
-	USING (organisation IN (SELECT id FROM organisation));
-
-CREATE POLICY maintainer_insert_non_tenant ON logo_for_organisation FOR INSERT TO rsd_user
-	WITH CHECK (NOT (SELECT is_tenant FROM organisation o WHERE o.id = logo_for_organisation.organisation));
-
-CREATE POLICY maintainer_all_rights ON logo_for_organisation TO rsd_user
-	USING (organisation IN (SELECT * FROM organisations_of_current_maintainer()))
-	WITH CHECK (organisation IN (SELECT * FROM organisations_of_current_maintainer()));
-
-CREATE POLICY admin_all_rights ON logo_for_organisation TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
 
 -- inter relations
 ALTER TABLE software_for_software ENABLE ROW LEVEL SECURITY;

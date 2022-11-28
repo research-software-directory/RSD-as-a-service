@@ -27,13 +27,12 @@ export default function ProjectLinks({links}: { links: ProjectLink[] }) {
               <Link
                 key={link.url}
                 href={link.url}
+                target="_blank"
                 passHref
               >
-                <a target="_blank">
-                  <li className="text-sm py-1">
-                    {link.title}
-                  </li>
-                </a>
+                <li className="text-sm py-1">
+                  {link.title}
+                </li>
               </Link>
             )
           }

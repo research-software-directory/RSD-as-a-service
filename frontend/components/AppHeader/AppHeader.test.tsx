@@ -30,7 +30,7 @@ it('renders AppHeader with header tag', () => {
 
 it('renders AppHeader with 2 searchboxes', () => {
   // has searchbox
-  const search = screen.getAllByRole('searchbox')
+  const search = screen.getAllByTestId('global-search')
   // two searchboxes, one for mobile and one for larger screens?!?
   expect(search).toHaveLength(2)
 })
@@ -38,12 +38,12 @@ it('renders AppHeader with 2 searchboxes', () => {
 it('renders AppHeader with links and logo link', () => {
   // has searchbox
   const links = screen.getAllByRole('link')
-  // menu items + logo link to root
-  expect(links).toHaveLength(menuItems.length + 1)
+  // menu items + logo link + feedback link
+  expect(links).toHaveLength(menuItems.length + 2)
   // screen.debug()
 })
 
-it.only('renders AppHeader with Sign in link', async() => {
+it('renders AppHeader with Sign in link', async() => {
   // has searchbox
   const link = await screen.findByText('Sign in')
   // link should exists

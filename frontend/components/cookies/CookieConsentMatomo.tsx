@@ -60,21 +60,16 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
             <span
               className="w-full block leading-normal text-gray-800 text-md mb-3">We use&nbsp;
               <span className="text-primary">
-                <Link href="/cookies" passHref>
-                <a target="_blank" className="text-primary" rel="noopener noreferrer">
-                     cookies
-                </a></Link>
+                <Link href="/cookies" passHref target="_blank" className="text-primary" rel="noopener noreferrer">
+                  cookies
+                </Link>
               </span> with&nbsp;
-            <Link href="https://matomo.org/">
-                <a target="_blank" className="text-primary" rel="noopener noreferrer">
-                     matomo.org
-                </a>
-              </Link> to provide a better user experience. </span>
+            <Link href="https://matomo.org/" target="_blank" className="text-primary" rel="noopener noreferrer">
+              matomo.org
+            </Link> to provide a better user experience. </span>
           <div className="flex items-center justify-between">
-            <Link href="/cookies" passHref>
-              <a className="text-xs text-gray-400 mr-1 hover:text-gray-800 hover:underline">
-                Read more
-              </a>
+            <Link href="/cookies" passHref className="text-xs text-gray-400 mr-1 hover:text-gray-800 hover:underline">
+              Read more
             </Link>
             <div className="flex gap-4">
               <Button
