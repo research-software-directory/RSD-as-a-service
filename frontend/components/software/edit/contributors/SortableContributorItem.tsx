@@ -38,6 +38,7 @@ export default function SortableContributorItem({pos, item, onEdit, onDelete}: S
 
   return (
     <ListItem
+      data-testid="contributor-item"
       // draggable
       ref={setNodeRef}
       {...attributes}

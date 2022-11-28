@@ -3,15 +3,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: frontend unit and build test
+name: frontend tests
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
   pull_request:
     paths:
-    - "frontend/**"
+      - "frontend/**"
 
 jobs:
-  tests:
+  fe-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

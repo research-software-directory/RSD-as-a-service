@@ -36,8 +36,8 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# test solution
-RUN yarn test
+# unit tests are already runned on PR and push to main
+# RUN yarn test
 
 # build the solution
 RUN yarn build

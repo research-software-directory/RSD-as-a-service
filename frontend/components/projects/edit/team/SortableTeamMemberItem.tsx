@@ -39,6 +39,7 @@ export default function SortableTeamMemberItem({pos, item, onEdit, onDelete}: Te
 
   return (
     <ListItem
+      data-testid="team-member-item"
       // draggable
       ref={setNodeRef}
       {...attributes}

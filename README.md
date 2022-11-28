@@ -51,7 +51,7 @@ docker-compose up
 
 ```
 # Stop all services via the makefile
-make down
+make stop
 # OR directly use docker-compose
 docker-compose down
 ```

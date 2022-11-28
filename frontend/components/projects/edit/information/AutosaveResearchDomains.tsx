@@ -169,6 +169,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
         {
           domains.map((item, pos) => (
             <Chip
+              data-testid="research-domain-chip"
               key={item.key}
               title={item.description}
               label={`${item.key}: ${item.name}`}
@@ -211,6 +212,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
               .map(item => {
               return (
                 <MenuItem
+                  data-testid="select-l1-domain-item"
                   key={item.key}
                   title={item.description}
                   value={item.key}>
@@ -251,6 +253,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
               .map(item => {
               return (
                 <MenuItem
+                  data-testid="select-l2-domain-item"
                   title={item.description}
                   key={item.key}
                   value={item.key}
@@ -295,6 +298,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
               .map(item => {
               return (
                 <MenuItem
+                  data-testid="select-l3-domain-item"
                   title={item.description}
                   key={item.key}
                   value={item.key}
@@ -313,6 +317,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
       </div>
       <div className="flex justify-end py-4">
         <Button
+          data-testid="add-research-domains"
           onClick={addDomains}
           sx={{margin: '0rem 0rem 0.5rem 1rem'}}
           disabled={l1Domains===null}

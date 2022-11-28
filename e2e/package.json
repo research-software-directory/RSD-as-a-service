@@ -1,0 +1,32 @@
+{
+  "name": "rsd-dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "e2e": "playwright test --project=chromium",
+    "e2e:webkit": "playwright test --project=webkit --headed",
+    "e2e:webkit:debug": "PWDEBUG=1 playwright test --project=webkit",
+    "e2e:ff": "playwright test --project=firefox --headed",
+    "e2e:ff:debug": "PWDEBUG=1 playwright test --project=firefox",
+    "e2e:chrome": "playwright test --project=chromium --headed",
+    "e2e:all": "playwright test",
+    "e2e:all:headed": "playwright test --headed",
+    "e2e:show": "playwright test --project=chromium --headed",
+    "e2e:debug": "PWDEBUG=1 playwright test --project=chromium",
+    "e2e:debug:console": "PWDEBUG=console playwright test --project=chromium",
+    "e2e:report": "playwright show-report",
+    "e2e:record": "playwright codegen http://localhost/",
+    "e2e:trace": "playwright test --project=chromium --trace on"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.28.0",
+    "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0"
+  }
+}
