@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -19,7 +21,7 @@ describe('dateFn.daysDiff',()=>{
   })
 
   it('returns 0 if date in future',()=>{
-    const date = new Date('2022-11-25')
+    const date = new Date('2122-11-25')
     const diff = daysDiff(date)
     expect(diff).toBe(0)
   })
