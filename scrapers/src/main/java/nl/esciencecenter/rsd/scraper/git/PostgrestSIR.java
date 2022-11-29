@@ -7,6 +7,7 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
@@ -77,12 +78,12 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			ZonedDateTime licensScrapedAt = jsonLicenseScrapedAt.isJsonNull() ? null : ZonedDateTime.parse(jsonLicenseScrapedAt.getAsString());
 
 			JsonElement jsonCommits = jsonObject.get("commit_history");
-			String commits = jsonCommits.isJsonNull() ? null : jsonCommits.getAsString();
+			String commits = jsonCommits.isJsonNull() ? null : jsonCommits.toString();
 			JsonElement jsonCommitsScrapedAt = jsonObject.get("commit_history_scraped_at");
 			ZonedDateTime commitsScrapedAt = jsonCommitsScrapedAt.isJsonNull() ? null : ZonedDateTime.parse(jsonCommitsScrapedAt.getAsString());
 
 			JsonElement jsonLanguages = jsonObject.get("languages");
-			String languages = jsonLanguages.isJsonNull() ? null : jsonLanguages.getAsString();
+			String languages = jsonLanguages.isJsonNull() ? null : jsonLanguages.toString();
 			JsonElement jsonLanguagesScrapedAt = jsonObject.get("languages_scraped_at");
 			ZonedDateTime languagesScrapedAt = jsonLanguagesScrapedAt.isJsonNull() ? null : ZonedDateTime.parse(jsonLanguagesScrapedAt.getAsString());
 
@@ -109,10 +110,10 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			newDataJson.addProperty("license", repositoryUrlData.license());
 			newDataJson.addProperty("license_scraped_at", repositoryUrlData.licenseScrapedAt() == null ? null : repositoryUrlData.licenseScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 
-			newDataJson.addProperty("commit_history", repositoryUrlData.commitHistory());
+			newDataJson.add("commit_history", repositoryUrlData.commitHistory() == null ? JsonNull.INSTANCE : JsonParser.parseString(repositoryUrlData.commitHistory()));
 			newDataJson.addProperty("commit_history_scraped_at", repositoryUrlData.commitHistoryScrapedAt() == null ? null : repositoryUrlData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 
-			newDataJson.addProperty("languages", repositoryUrlData.languages());
+			newDataJson.add("languages", repositoryUrlData.languages() == null ? JsonNull.INSTANCE : JsonParser.parseString(repositoryUrlData.languages()));
 			newDataJson.addProperty("languages_scraped_at", repositoryUrlData.languagesScrapedAt() == null ? null : repositoryUrlData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 			dataAsJsonArray.add(newDataJson);
 		}
