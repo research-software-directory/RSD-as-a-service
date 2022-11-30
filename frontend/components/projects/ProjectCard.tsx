@@ -59,16 +59,16 @@ export default function ProjectCard(
       href={projectUrl()}
       className={`flex flex-col h-full bg-base-200 text-content ${opacity} hover:bg-secondary hover:text-white`}
       passHref>
-      <article className="flex-1 flex flex-col md:flex-row h-full p-4 gap-4 overflow-hidden">
+      <article className="flex-1 flex flex-col lg:flex-row h-full p-4 gap-4 overflow-hidden">
         <section
           title={subtitle ?? title}
-          className="flex-[3] md:flex-[2] h-full"
+          className="flex-[3] lg:flex-[2] h-full"
           >
           <ImageAsBackground
             alt={title}
             src={getImageUrl(image_id)}
             bgSize={image_contain ? 'contain' : 'cover'}
-            bgPosition={image_contain ? 'center' : 'top center'}
+            bgPosition={image_contain ? 'center' : 'center center'}
             className="flex-1 h-full"
             noImgMsg='no image'
           />

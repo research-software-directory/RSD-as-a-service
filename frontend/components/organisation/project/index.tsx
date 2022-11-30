@@ -5,6 +5,7 @@
 
 import {useEffect} from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import {useTheme} from '@mui/material/styles'
 
 import {useSession} from '~/auth'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
@@ -17,6 +18,7 @@ import {OrganisationComponentsProps} from '../OrganisationNavItems'
 
 export default function OrganisationProjects({organisation, isMaintainer}:OrganisationComponentsProps) {
   const {token} = useSession()
+  const theme = useTheme()
   const {searchFor,page,rows,setCount} = usePaginationWithSearch(`Find project in ${organisation.name}`)
   const {loading, projects, count} = useOrganisationProjects({
     organisation: organisation.id,
@@ -27,9 +29,10 @@ export default function OrganisationProjects({organisation, isMaintainer}:Organi
     isMaintainer
   })
   // use media query hook for small screen logic
-  const smallScreen = useMediaQuery('(max-width:600px)')
-  // adjust grid min width for mobile to 18rem
-  const minWidth = smallScreen ? '18rem' : '28rem'
+  const smallScreen = useMediaQuery(theme.breakpoints.down('md'))
+  // adjust grid for mobile to 18rem
+  const minWidth = smallScreen ? '17rem' : '26rem'
+  const itemHeight = smallScreen ? '26rem' : '17rem'
 
   useEffect(() => {
     if (count && loading === false) {
@@ -46,7 +49,7 @@ export default function OrganisationProjects({organisation, isMaintainer}:Organi
 
   return (
     <FlexibleGridSection
-      height='17rem'
+      height={itemHeight}
       minWidth={minWidth}
       maxWidth='1fr'
       className="gap-[0.125rem] p-[0.125rem] pt-2 pb-12"

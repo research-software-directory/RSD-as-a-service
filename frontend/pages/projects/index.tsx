@@ -11,6 +11,7 @@ import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import {useTheme} from '@mui/material/styles'
 
 import {app} from '~/config/app'
 import {rowsPerPageOptions} from '~/config/pagination'
@@ -42,11 +43,12 @@ export default function ProjectsIndexPage(
 ) {
   // use next router (hook is only for browser)
   const router = useRouter()
+  const theme = useTheme()
   // use media query hook for small screen logic
-  const smallScreen = useMediaQuery('(max-width:600px)')
+  const smallScreen = useMediaQuery(theme.breakpoints.down('lg'))
   // adjust grid width and height for mobile
-  const minWidth = smallScreen ? '18rem' : '29rem'
-  const itemHeight = smallScreen ? '23rem' : '17rem'
+  const minWidth = smallScreen ? '17rem' : '26rem'
+  const itemHeight = smallScreen ? '26rem' : '17rem'
 
   // console.log('ProjectsIndexPage...domains...', domains)
 
