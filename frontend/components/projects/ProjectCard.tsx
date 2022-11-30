@@ -55,14 +55,14 @@ export default function ProjectCard(
   }
 
   return (
-    <Link href={projectUrl()}
+    <Link
+      href={projectUrl()}
       className={`flex flex-col h-full bg-base-200 text-content ${opacity} hover:bg-secondary hover:text-white`}
-      passHref
-    >
-      <article className="flex flex-1 h-full px-4 overflow-hidden">
+      passHref>
+      <article className="flex flex-1 h-full px-4 gap-4 overflow-hidden">
         <section
           title={subtitle ?? title}
-          className="py-4 h-full md:w-[13rem]"
+          className="flex-[2] py-4 h-full"
           >
           <ImageAsBackground
             alt={title}
@@ -73,14 +73,14 @@ export default function ProjectCard(
             noImgMsg='no image'
           />
         </section>
-        <section className="flex flex-col flex-1 py-4 md:pl-6">
+        <section className="flex-[3] flex flex-col py-4">
           <h2
             title={title}
             className={`max-h-[6rem] overflow-clip ${titleMargin}`}>
             {renderIcon()} {title}
           </h2>
 
-          <p className="flex-1 py-4 overflow-auto">
+          <p className="flex-1 my-4 overflow-auto">
             {subtitle}
           </p>
           <div className="flex justify-between text-sm">
