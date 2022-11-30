@@ -29,7 +29,7 @@ export default function OrganisationProjects({organisation, isMaintainer}:Organi
     isMaintainer
   })
   // use media query hook for small screen logic
-  const smallScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const smallScreen = useMediaQuery(theme.breakpoints.down('lg'))
   // adjust grid for mobile to 18rem
   const minWidth = smallScreen ? '17rem' : '26rem'
   const itemHeight = smallScreen ? '26rem' : '17rem'

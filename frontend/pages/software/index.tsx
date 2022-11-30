@@ -10,6 +10,7 @@ import {GetServerSidePropsContext} from 'next/types'
 import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import {useTheme} from '@mui/material/styles'
 
 import {app} from '../../config/app'
 import DefaultLayout from '../../components/layout/DefaultLayout'
@@ -39,10 +40,12 @@ export default function SoftwareIndexPage(
 ) {
   // use next router (hook is only for browser)
   const router = useRouter()
+  const theme = useTheme()
   // use media query hook for small screen logic
-  const smallScreen = useMediaQuery('(max-width:600px)')
-  // adjust grid min width for mobile to 18rem
-  const minWidth = smallScreen ? '18rem' : '26rem'
+  const smallScreen = useMediaQuery(theme.breakpoints.down('lg'))
+  // adjust grid width and height for mobile
+  const minWidth = smallScreen ? '17rem' : '26rem'
+  const itemHeight = smallScreen ? '17em' : '17rem'
 
   // next/previous page button
   function handleTablePageChange(
@@ -141,7 +144,7 @@ export default function SoftwareIndexPage(
       <SoftwareGrid
         className='gap-[0.125rem] p-[0.125rem] pt-4 pb-12'
         grid={{
-          height: '17rem',
+          height: itemHeight,
           minWidth,
           maxWidth:'1fr'
         }}

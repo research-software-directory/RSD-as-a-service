@@ -60,22 +60,23 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
             /></span>
           }
         </div>
-        <div className="flex-1 grid grid-cols-2 md:grid-cols-[1fr,2fr] px-8 mb-4 overflow-hidden">
-          <div className="min-w-[8rem]">
-            <LogoAvatar
-              name={organisation.name ?? ''}
-              src={getImageUrl(organisation.logo_id) ?? undefined}
-              sx={{
-                '& img': {
-                  height: 'auto',
-                  maxHeight: '10rem',
-                  width: 'auto',
-                  maxWidth: '100%'
-                }
-              }}
-            />
-          </div>
-          <div className="flex-1 flex justify-center items-center md:justify-end pl-4">
+        <div className="flex-1 grid gap-8 lg:grid-cols-[2fr,3fr] p-8 overflow-hidden">
+          <LogoAvatar
+            name={organisation.name ?? ''}
+            src={getImageUrl(organisation.logo_id) ?? undefined}
+            sx={{
+              // remove line-height=1
+              lineHeight: 'inherit',
+              fontSize: '4rem',
+              '& img': {
+                height: 'auto',
+                // maxHeight: '10rem',
+                width: 'auto',
+                maxWidth: '100%'
+              }
+            }}
+          />
+          <div className="flex-1 flex justify-center items-end md:justify-end">
             <StatCounter
               label={label}
               value={count}

@@ -91,7 +91,7 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
             {getInitals()}
           </div>
         </div>
-        <p className="flex-1 p-4 overflow-auto max-h-[9.75rem] text-gray-800 group-hover:text-white">
+        <p className="flex-1 p-4 overflow-auto text-gray-800 group-hover:text-white">
           {short_statement}
         </p>
         <div className="flex justify-between p-4 text-sm group-hover:text-white">
