@@ -38,9 +38,9 @@ public class PostgrestSIRTest {
 						"url": "https://www.example.com",
 						"license": "My license",
 						"license_scraped_at": "2022-04-25T14:48:02.911546Z",
-						"commit_history": "Commit history",
+						"commit_history": {"123": 5},
 						"commit_history_scraped_at": "2022-04-25T14:48:02.911546Z",
-						"languages": "Java, JavaScript",
+						"languages": {"Java": 100, "JavaScript": 20},
 						"languages_scraped_at": "2022-04-25T14:48:02.911546Z"
 					}
 				]""";
@@ -55,9 +55,10 @@ public class PostgrestSIRTest {
 		Assertions.assertEquals(CodePlatformProvider.GITHUB, dataToInspect.code_platform());
 		Assertions.assertEquals("My license", dataToInspect.license());
 		Assertions.assertEquals(Month.APRIL, dataToInspect.licenseScrapedAt().getMonth());
-		Assertions.assertEquals("Commit history", dataToInspect.commitHistory());
+		Assertions.assertEquals(5, JsonParser.parseString(dataToInspect.commitHistory()).getAsJsonObject().getAsJsonPrimitive("123").getAsInt());
 		Assertions.assertEquals(2022, dataToInspect.commitHistoryScrapedAt().getYear());
-		Assertions.assertEquals("Java, JavaScript", dataToInspect.languages());
+		Assertions.assertEquals(100, JsonParser.parseString(dataToInspect.languages()).getAsJsonObject().getAsJsonPrimitive("Java").getAsInt());
+		Assertions.assertEquals(20, JsonParser.parseString(dataToInspect.languages()).getAsJsonObject().getAsJsonPrimitive("JavaScript").getAsInt());
 		Assertions.assertEquals(25, dataToInspect.languagesScrapedAt().getDayOfMonth());
 	}
 
@@ -70,7 +71,7 @@ public class PostgrestSIRTest {
 						"url": "https://www.example.com",
 						"license": "My license",
 						"license_scraped_at": "2022-04-25T14:48:02.911546Z",
-						"commit_history": "Commit history",
+						"commit_history": {"123": 5},
 						"commit_history_scraped_at": null,
 						"languages": null,
 						"languages_scraped_at": "2022-04-25T14:48:02.911546Z"
@@ -87,7 +88,7 @@ public class PostgrestSIRTest {
 		Assertions.assertEquals(CodePlatformProvider.GITHUB, dataToInspect.code_platform());
 		Assertions.assertEquals("My license", dataToInspect.license());
 		Assertions.assertEquals(Month.APRIL, dataToInspect.licenseScrapedAt().getMonth());
-		Assertions.assertEquals("Commit history", dataToInspect.commitHistory());
+		Assertions.assertEquals(5, JsonParser.parseString(dataToInspect.commitHistory()).getAsJsonObject().getAsJsonPrimitive("123").getAsInt());
 		Assertions.assertNull(dataToInspect.commitHistoryScrapedAt());
 		Assertions.assertNull(dataToInspect.languages());
 		Assertions.assertEquals(25, dataToInspect.languagesScrapedAt().getDayOfMonth());
@@ -103,7 +104,7 @@ public class PostgrestSIRTest {
 						"url": "https://www.example.com",
 						"license": "My license",
 						"license_scraped_at": "2022-04-25T14:48:02.911546Z",
-						"commit_history": "Commit history",
+						"commit_history": {"123": 5},
 						"commit_history_scraped_at": null,
 						"languages" null
 						"languages_scraped_at": "2022-04-25T14:48:02.911546Z"
@@ -122,7 +123,7 @@ public class PostgrestSIRTest {
 						"software": "Test software",
 						"url": "https://www.example.com",
 						"license_scraped_at": "2022-04-25T14:48:02.911546",
-						"commit_history": "Commit history",
+						"commit_history": {"123": 5},
 						"commit_history_scraped_at": null,
 						"languages" null,
 						"languages_scraped_at": "2022-04-25T14:48:02.911546"
@@ -148,8 +149,8 @@ public class PostgrestSIRTest {
 		Collection<RepositoryUrlData> collectionWithOneEntry = new ArrayList<>();
 		RepositoryUrlData entry = new RepositoryUrlData("My software", "https://www.example.com", CodePlatformProvider.GITHUB,
 				"My license", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"Commit history", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"Java, JavaScript", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"));
+				"{\"123\": 5}", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
+				"{\"Java\": 100, \"JavaScript\": 20}", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"));
 		collectionWithOneEntry.add(entry);
 
 		String json = PostgrestSIR.repositoryUrlDataToJson(collectionWithOneEntry);
@@ -163,9 +164,10 @@ public class PostgrestSIRTest {
 		Assertions.assertEquals("github", entryJson.getAsJsonPrimitive("code_platform").getAsString());
 		Assertions.assertEquals("My license", entryJson.getAsJsonPrimitive("license").getAsString());
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("license_scraped_at").getAsString());
-		Assertions.assertEquals("Commit history", entryJson.getAsJsonPrimitive("commit_history").getAsString());
+		Assertions.assertEquals(5, entryJson.getAsJsonObject("commit_history").getAsJsonPrimitive("123").getAsInt());
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("commit_history_scraped_at").getAsString());
-		Assertions.assertEquals("Java, JavaScript", entryJson.getAsJsonPrimitive("languages").getAsString());
+		Assertions.assertEquals(100, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("Java").getAsInt());
+		Assertions.assertEquals(20, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("JavaScript").getAsInt());
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("languages_scraped_at").getAsString());
 	}
 
@@ -175,7 +177,7 @@ public class PostgrestSIRTest {
 		RepositoryUrlData entry = new RepositoryUrlData("My software", "https://www.example.com", CodePlatformProvider.GITHUB,
 				"My license", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
 				null, ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"Java, JavaScript", null);
+				"{\"Java\": 100, \"JavaScript\": 20}", null);
 		collectionWithOneEntry.add(entry);
 
 		String json = PostgrestSIR.repositoryUrlDataToJson(collectionWithOneEntry);
@@ -191,7 +193,8 @@ public class PostgrestSIRTest {
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("license_scraped_at").getAsString());
 		Assertions.assertTrue(entryJson.get("commit_history").isJsonNull());
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("commit_history_scraped_at").getAsString());
-		Assertions.assertEquals("Java, JavaScript", entryJson.getAsJsonPrimitive("languages").getAsString());
+		Assertions.assertEquals(100, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("Java").getAsInt());
+		Assertions.assertEquals(20, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("JavaScript").getAsInt());
 		Assertions.assertTrue(entryJson.get("languages_scraped_at").isJsonNull());
 	}
 
@@ -201,11 +204,11 @@ public class PostgrestSIRTest {
 		RepositoryUrlData entry1 = new RepositoryUrlData("My software", "https://www.example.com", CodePlatformProvider.GITHUB,
 				"My license", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
 				null, ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"Java, JavaScript", null);
+				"{\"Java\": 100, \"JavaScript\": 20}", null);
 		RepositoryUrlData entry2 = new RepositoryUrlData("My software 2", "https://www.example.com", CodePlatformProvider.GITHUB,
 				"My license", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"Commit history", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"Java, JavaScript", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"));
+				"{\"123\": 5}", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
+				"{\"Java\": 100, \"JavaScript\": 20}", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"));
 		collectionWithOneEntry.add(entry1);
 		collectionWithOneEntry.add(entry2);
 
@@ -222,7 +225,8 @@ public class PostgrestSIRTest {
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("license_scraped_at").getAsString());
 		Assertions.assertTrue(entryJson.get("commit_history").isJsonNull());
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("commit_history_scraped_at").getAsString());
-		Assertions.assertEquals("Java, JavaScript", entryJson.getAsJsonPrimitive("languages").getAsString());
+		Assertions.assertEquals(100, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("Java").getAsInt());
+		Assertions.assertEquals(20, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("JavaScript").getAsInt());
 		Assertions.assertTrue(entryJson.get("languages_scraped_at").isJsonNull());
 		JsonObject entryJson2 = arrayWithOneEntry.get(1).getAsJsonObject();
 		Assertions.assertEquals("My software 2", entryJson2.getAsJsonPrimitive("software").getAsString());
@@ -230,9 +234,10 @@ public class PostgrestSIRTest {
 		Assertions.assertEquals("github", entryJson2.getAsJsonPrimitive("code_platform").getAsString());
 		Assertions.assertEquals("My license", entryJson2.getAsJsonPrimitive("license").getAsString());
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson2.getAsJsonPrimitive("license_scraped_at").getAsString());
-		Assertions.assertEquals("Commit history", entryJson2.getAsJsonPrimitive("commit_history").getAsString());
+		Assertions.assertEquals(5, entryJson2.getAsJsonObject("commit_history").getAsJsonPrimitive("123").getAsInt());
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson2.getAsJsonPrimitive("commit_history_scraped_at").getAsString());
-		Assertions.assertEquals("Java, JavaScript", entryJson2.getAsJsonPrimitive("languages").getAsString());
+		Assertions.assertEquals(100, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("Java").getAsInt());
+		Assertions.assertEquals(20, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("JavaScript").getAsInt());
 		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson2.getAsJsonPrimitive("languages_scraped_at").getAsString());
 	}
 }

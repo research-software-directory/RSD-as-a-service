@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -25,26 +27,26 @@ function calculateStats(languages: ProgramingLanguages) {
       total+=languages[key]
     })
     // calculate stats
-    const stats:any = {}
+    const stats: {language: string, val: number, pct: number}[] = []
     keys.map(key => {
       const pct = Math.round((languages[key] / total) * 100)
-      totPct += pct
-      totVal += languages[key]
       if (pct > 0) {
+        totPct += pct
+        totVal += languages[key]
         totLang.push(key)
-        stats[key] = {
-          val: languages[key],
-          pct
-        }
+        stats.push({language: key, val: languages[key], pct: pct})
       }
     })
+
+    // order stats by percentage before adding 'Other'
+    stats.sort((a, b) => {
+      return a.pct !== b.pct ? b.pct - a.pct : a.language.localeCompare(b.language)
+    })
+
     // do we need Other category?
     if (totPct < 100 && (keys.length - totLang.length > 1)) {
       // add other to stats
-      stats['Other'] = {
-        val: total - totVal,
-        pct: 100 - totPct
-      }
+      stats.push({language: 'Other', val: total - totVal, pct: 100 - totPct})
     }
     return stats
   } catch (e:any) {
@@ -68,14 +70,14 @@ export default function AboutLanguages({languages}: {languages: ProgramingLangua
     </div>
     <ul className="py-1">
       {/* show only stat selection pct > 0*/}
-      {Object?.keys(stats)?.map((key) => {
+      {stats?.map((entry) => {
         return (
-          <li key={key}>
-            {key} <span className="ml-2">{stats[key].pct}%</span>
+          <li key={entry.language}>
+            {entry.language} <span className="ml-2">{entry.pct}%</span>
             <div
               className="bg-primary"
               style={{
-                width: `${stats[key].pct}%`,
+                width: `${entry.pct}%`,
                 height: '0.5rem',
                 opacity: 0.5
               }}>
