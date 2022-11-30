@@ -44,8 +44,9 @@ export default function ProjectsIndexPage(
   const router = useRouter()
   // use media query hook for small screen logic
   const smallScreen = useMediaQuery('(max-width:600px)')
-  // adjust grid min width for mobile
+  // adjust grid width and height for mobile
   const minWidth = smallScreen ? '18rem' : '29rem'
+  const itemHeight = smallScreen ? '23rem' : '17rem'
 
   // console.log('ProjectsIndexPage...domains...', domains)
 
@@ -141,7 +142,7 @@ export default function ProjectsIndexPage(
 
       <ProjectsGrid
         projects={projects}
-        height='17rem'
+        height={itemHeight}
         minWidth={minWidth}
         maxWidth='1fr'
         className="gap-[0.125rem] p-[0.125rem] pt-4 pb-12"

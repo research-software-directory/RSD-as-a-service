@@ -59,10 +59,10 @@ export default function ProjectCard(
       href={projectUrl()}
       className={`flex flex-col h-full bg-base-200 text-content ${opacity} hover:bg-secondary hover:text-white`}
       passHref>
-      <article className="flex flex-1 h-full px-4 gap-4 overflow-hidden">
+      <article className="flex-1 flex flex-col md:flex-row h-full p-4 gap-4 overflow-hidden">
         <section
           title={subtitle ?? title}
-          className="flex-[2] py-4 h-full"
+          className="flex-[3] md:flex-[2] h-full"
           >
           <ImageAsBackground
             alt={title}
@@ -73,7 +73,7 @@ export default function ProjectCard(
             noImgMsg='no image'
           />
         </section>
-        <section className="flex-[3] flex flex-col py-4">
+        <section className="flex-[3] flex flex-col">
           <h2
             title={title}
             className={`max-h-[6rem] overflow-clip ${titleMargin}`}>
