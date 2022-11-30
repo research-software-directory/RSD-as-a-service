@@ -12,12 +12,12 @@ ARG DUNAME=node
 RUN export OUID=$(id -u);\
     if [ $DUID != $OUID ];\
     then usermod -u $DUID $DUNAME &&\
-    find / -user 1000 -ignore_readdir_race -exec chown -h $DUNAME {} \; ;\
+    find / -path /sys -prune -o -user 1000 -ignore_readdir_race -exec chown -h $DUNAME {} \; ;\
     fi
 RUN export OGID=$(id -g);\
     if [ $DGID != $OGID ];\
-    then groupmod -g $DGID $DUNAME &&\
-    find / -group 1000 -ignore_readdir_race -exec chgrp -h $DUNAME {} \; ;\
+    then groupmod -g $DGID $DUNAME || usermod -g $DGID $DUNAME &&\
+    find / -path /sys -prune -o -group 1000 -ignore_readdir_race -exec chgrp -h $DUNAME {} \; ;\
     fi
 USER $DUNAME
 
