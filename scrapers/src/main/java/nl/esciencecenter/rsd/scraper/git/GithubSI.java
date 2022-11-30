@@ -10,6 +10,7 @@ package nl.esciencecenter.rsd.scraper.git;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
@@ -97,6 +98,9 @@ public class GithubSI implements SoftwareInfo {
 			if (e.getStatusCode() == 404) {
 				// Repository does not exist
 				contributions = null;
+			} else if (e.getStatusCode() == 403) {
+				// Forbidden, mostly when the rate limit was exceeded
+				throw new RsdRateLimitException("403 Forbidden. This error occurrs mostly when the API rate limit is exceeded. Error message: " + e.getMessage());
 			} else throw e;
 		}
 		return contributions;
