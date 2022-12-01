@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -6,6 +8,7 @@
 package nl.esciencecenter.rsd.scraper.git;
 
 import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -41,6 +44,9 @@ public class MainCommits {
 						scrapedCommits, scrapedAt,
 						commitData.languages(), commitData.languagesScrapedAt());
 				updatedDataAll.add(updatedData);
+			} catch (RsdRateLimitException e) {
+				System.out.println("Exception when handling data from url " + commitData.url() + ":");
+				e.printStackTrace();
 			} catch (RuntimeException  e) {
 				System.out.println("Exception when handling data from url " + commitData.url() + ":");
 				e.printStackTrace();
@@ -75,6 +81,9 @@ public class MainCommits {
 						scrapedCommits, scrapedAt,
 						commitData.languages(), commitData.languagesScrapedAt());
 				updatedDataAll.add(updatedData);
+			} catch (RsdRateLimitException e) {
+				System.out.println("Exception when handling data from url " + commitData.url() + ":");
+				e.printStackTrace();
 			} catch (RuntimeException e) {
 				System.out.println("Exception when handling data from url " + commitData.url() + ":");
 				e.printStackTrace();

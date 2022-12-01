@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,6 +11,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.io.IOException;
@@ -91,6 +95,7 @@ public class GitLabSI implements SoftwareInfo {
 				System.out.println("An error occurred fetching data from: " + request.uri());
 				throw new RuntimeException(e);
 			}
+			if (response.statusCode() == 429) throw new RsdRateLimitException("API rate limit exceeded for endpoint " + request.uri() + " with response: " + response.body());
 			if (response.statusCode() == 404) return null;
 
 			JsonArray thisPageCommits = JsonParser.parseString(response.body()).getAsJsonArray();
