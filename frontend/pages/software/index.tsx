@@ -23,6 +23,7 @@ import {getSoftwareList} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import SoftwareFilter from '~/components/software/filter'
+import { useAdvicedDimensions } from '~/components/layout/FlexibleGridSection'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -40,13 +41,8 @@ export default function SoftwareIndexPage(
 ) {
   // use next router (hook is only for browser)
   const router = useRouter()
-  const theme = useTheme()
-  // use media query hook for small screen logic
-  const smallScreen = useMediaQuery(theme.breakpoints.down('lg'))
-  // adjust grid width and height for mobile
-  const minWidth = smallScreen ? '17rem' : '26rem'
-  const itemHeight = smallScreen ? '17em' : '17rem'
-
+  const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions('software')
+  
   // next/previous page button
   function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
@@ -146,7 +142,7 @@ export default function SoftwareIndexPage(
         grid={{
           height: itemHeight,
           minWidth,
-          maxWidth:'1fr'
+          maxWidth
         }}
         software={software}
       />

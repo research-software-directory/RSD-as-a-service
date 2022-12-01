@@ -10,8 +10,6 @@ import {useRouter} from 'next/router'
 
 import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import {useTheme} from '@mui/material/styles'
 
 import {app} from '~/config/app'
 import {rowsPerPageOptions} from '~/config/pagination'
@@ -25,6 +23,7 @@ import PageTitle from '~/components/layout/PageTitle'
 import ProjectsGrid from '~/components/projects/ProjectsGrid'
 import ProjectFilter from '~/components/projects/filter'
 import {getResearchDomainInfo, ResearchDomain} from '~/components/projects/filter/projectFilterApi'
+import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 
 type ProjectsIndexPageProps = {
   count: number,
@@ -43,14 +42,7 @@ export default function ProjectsIndexPage(
 ) {
   // use next router (hook is only for browser)
   const router = useRouter()
-  const theme = useTheme()
-  // use media query hook for small screen logic
-  const smallScreen = useMediaQuery(theme.breakpoints.down('lg'))
-  // adjust grid width and height for mobile
-  const minWidth = smallScreen ? '17rem' : '26rem'
-  const itemHeight = smallScreen ? '26rem' : '17rem'
-
-  // console.log('ProjectsIndexPage...domains...', domains)
+  const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions()
 
   function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
@@ -146,7 +138,7 @@ export default function ProjectsIndexPage(
         projects={projects}
         height={itemHeight}
         minWidth={minWidth}
-        maxWidth='1fr'
+        maxWidth={maxWidth}
         className="gap-[0.125rem] p-[0.125rem] pt-4 pb-12"
       />
 

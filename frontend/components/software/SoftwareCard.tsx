@@ -11,6 +11,7 @@ import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined
 import {getTimeAgoSince} from '../../utils/dateFn'
 import FeaturedIcon from '~/components/icons/FeaturedIcon'
 import NotPublishedIcon from '~/components/icons/NotPublishedIcon'
+import CardTitle from '~/components/layout/CardTitle'
 
 export type SoftwareCardType = {
   href: string
@@ -78,14 +79,20 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
       className="flex flex-col h-full"
       passHref>
       {/* anchor tag MUST be first element after Link component */}
-      <article className={`flex-1 flex flex-col bg-base-200 text-content ${opacity} hover:bg-secondary group`}>
+      <article className={`flex-1 flex flex-col bg-base-200 text-content ${opacity} hover:bg-secondary group overflow-hidden`}>
         <div className="relative flex">
-          <h2
+          <CardTitle
             title={brand_name}
-            className="p-4 flex-1 mr-[4rem] overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white"
+            className="p-4 mr-[4rem]"
           >
             {renderPublished()} {brand_name}
-          </h2>
+          </CardTitle>
+          {/* <h2
+            title={brand_name}
+            className="p-4 flex-1 mr-[4rem] group-hover:text-white line-clamp-3 max-h-[7rem]"
+          >
+            {renderPublished()} {brand_name}
+          </h2> */}
           <div
             className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-base text-[1.5rem] absolute top-0 right-0 group-hover:text-secondary">
             {getInitals()}

@@ -10,6 +10,7 @@ import ImageAsBackground from '../layout/ImageAsBackground'
 import {getImageUrl} from '../../utils/editImage'
 import FeaturedIcon from '~/components/icons/FeaturedIcon'
 import NotPublishedIcon from '~/components/icons/NotPublishedIcon'
+import CardTitle from '../layout/CardTitle'
 
 export type ProjectCardProps = {
   slug: string,
@@ -62,7 +63,7 @@ export default function ProjectCard(
       <article className="flex-1 flex flex-col lg:flex-row h-full p-4 gap-4 overflow-hidden">
         <section
           title={subtitle ?? title}
-          className="flex-[3] lg:flex-[2] h-full"
+          className="flex-[3] h-full"
           >
           <ImageAsBackground
             alt={title}
@@ -73,13 +74,18 @@ export default function ProjectCard(
             noImgMsg='no image'
           />
         </section>
-        <section className="flex-[3] flex flex-col">
-          <h2
+        <section className="flex-[4] flex flex-col">
+          <CardTitle
+            title={title}
+            className={titleMargin}
+          >
+            {renderIcon()} {title}
+          </CardTitle>
+          {/* <h2
             title={title}
             className={`max-h-[6rem] overflow-clip ${titleMargin}`}>
             {renderIcon()} {title}
-          </h2>
-
+          </h2> */}
           <p className="flex-1 my-4 overflow-auto">
             {subtitle}
           </p>
