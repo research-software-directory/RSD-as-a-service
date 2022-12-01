@@ -23,7 +23,7 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
   function renderEmail() {
     if (person?.email_address) {
       return (
-        <a className="flex items-center md:items-start"
+        <a className="flex items-start pt-4"
           href={`mailto:${person?.email_address}`}
           target="_blank" rel="noreferrer"
         >
@@ -42,8 +42,7 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
   return (
     <article className="flex flex-col bg-white max-w-md">
       <h3 className="text-center font-medium px-6 py-4 uppercase bg-primary text-white md:text-left">Contact person</h3>
-      <div className="flex flex-col p-6 md:flex-row 2xl:flex-col">
-        {/* <div className="self-center md:mr-8 2xl:mr-0"> */}
+      <div className="flex flex-col p-8 gap-8 md:flex-row 2xl:flex-col">
         <Avatar
           alt={displayName ?? ''}
           src={getImageUrl(person.avatar_id) ?? ''}
@@ -51,8 +50,7 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
             width: '7rem',
             height: '7rem',
             fontSize: '2rem',
-            alignSelf: 'center',
-            marginRight:['0rem','2rem']
+            alignSelf: 'center'
           }}
         >
           {displayName ?
@@ -60,17 +58,23 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
             :null
           }
         </Avatar>
-        {/* </div> */}
-        <div className="flex-1 flex flex-col items-center py-4 md:items-start lg:pt-8">
+        <div className="flex-1 flex flex-col items-start">
           <h4 className="text-primary text-2xl">{displayName}</h4>
-          <h5 className="py-2">
-            {person?.affiliation ?? ''}
+          {person?.role && <h5 className="pt-1">
+            {person?.role}
           </h5>
-          {person?.orcid && <h5 className="py-2">
+          }
+          {
+            person?.affiliation && <h5 className="pt-1">
+              {person?.affiliation}
+            </h5>
+          }
+          {person?.orcid && <h5 className="pt-1">
             <a href={'https://orcid.org/' + person.orcid} target="_blank" rel="noreferrer"
               style={{whiteSpace:'nowrap'}}
             >
-              <LogoOrcid className="inline max-w-[1.125rem] mr-1" /> {person.orcid}
+              <LogoOrcid className="inline max-w-[1.5rem] mr-2" />
+              <span className="align-bottom">{person.orcid}</span>
             </a>
           </h5>}
           {renderEmail()}

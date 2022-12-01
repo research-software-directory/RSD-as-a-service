@@ -8,8 +8,8 @@ import {OrganisationForOverview} from '../../types/Organisation'
 import {getImageUrl} from '~/utils/editImage'
 import StatCounter from '../layout/StatCounter'
 import VerifiedIcon from '@mui/icons-material/Verified'
-import SingleLineTitle from '../layout/SingleLineTitle'
 import LogoAvatar from '../layout/LogoAvatar'
+import CardTitle from '../layout/CardTitle'
 
 export default function OrganisationCard(organisation: OrganisationForOverview) {
 
@@ -34,8 +34,14 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
       <article
         className="flex flex-col border h-full min-h-[16rem] overflow-hidden">
         {/* <h2 className='h-[5rem]'>{organisation.name}</h2> */}
-        <div className="pl-8 flex">
-          <SingleLineTitle
+        <div className="pl-8 pt-8 flex">
+          <CardTitle
+            title={organisation.name}
+            className={`${organisation.is_tenant ? 'mr-[5rem]' : 'mr-[2rem]' }`}
+          >
+            {organisation.name}
+          </CardTitle>
+          {/* <SingleLineTitle
             title={organisation.name}
             sx={{
               padding: '1.5rem 0rem',
@@ -44,14 +50,14 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
             }}
           >
             {organisation.name}
-          </SingleLineTitle>
+          </SingleLineTitle> */}
           {
             organisation.is_tenant && <span title="Officially registered organisation">
               <VerifiedIcon
                 sx={{
                   position: 'absolute',
-                  right: '0.75rem',
-                  top: '0.75rem',
+                  right: '0.5rem',
+                  top: '0.5rem',
                   width: '4rem',
                   height: '4rem',
                   opacity: 0.4,
@@ -60,22 +66,23 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
             /></span>
           }
         </div>
-        <div className="flex-1 grid grid-cols-2 md:grid-cols-[1fr,2fr] px-8 mb-4 overflow-hidden">
-          <div className="min-w-[8rem]">
-            <LogoAvatar
-              name={organisation.name ?? ''}
-              src={getImageUrl(organisation.logo_id) ?? undefined}
-              sx={{
-                '& img': {
-                  height: 'auto',
-                  maxHeight: '10rem',
-                  width: 'auto',
-                  maxWidth: '100%'
-                }
-              }}
-            />
-          </div>
-          <div className="flex-1 flex justify-center items-center md:justify-end pl-4">
+        <div className="flex-1 grid gap-8 lg:grid-cols-[2fr,3fr] p-8 overflow-hidden">
+          <LogoAvatar
+            name={organisation.name ?? ''}
+            src={getImageUrl(organisation.logo_id) ?? undefined}
+            sx={{
+              // remove line-height=1
+              lineHeight: 'inherit',
+              fontSize: '4rem',
+              '& img': {
+                height: 'auto',
+                // maxHeight: '10rem',
+                width: 'auto',
+                maxWidth: '100%'
+              }
+            }}
+          />
+          <div className="flex-1 flex justify-center items-end md:justify-end">
             <StatCounter
               label={label}
               value={count}

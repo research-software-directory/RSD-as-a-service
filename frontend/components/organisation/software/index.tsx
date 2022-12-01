@@ -4,12 +4,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect} from 'react'
-import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {useSession} from '~/auth'
 import useOrganisationSoftware from '../../../utils/useOrganisationSoftware'
 import usePaginationWithSearch from '../../../utils/usePaginationWithSearch'
-import FlexibleGridSection from '~/components/layout/FlexibleGridSection'
+import FlexibleGridSection, {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import SoftwareCard from '~/components/software/SoftwareCard'
 import NoContent from '~/components/layout/NoContent'
 import {OrganisationComponentsProps} from '../OrganisationNavItems'
@@ -17,6 +16,7 @@ import SoftwareCardWithMenu from './SoftwareCardWithMenu'
 
 export default function OrganisationSoftware({organisation, isMaintainer}: OrganisationComponentsProps) {
   const {token} = useSession()
+  const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions('software')
   const {searchFor,page,rows,setCount} = usePaginationWithSearch(`Find software in ${organisation.name}`)
   const {loading, software, count} = useOrganisationSoftware({
     organisation: organisation.id,
@@ -26,10 +26,6 @@ export default function OrganisationSoftware({organisation, isMaintainer}: Organ
     isMaintainer,
     token
   })
-  // use media query hook for small screen logic
-  const smallScreen = useMediaQuery('(max-width:600px)')
-  // adjust grid min width for mobile to 18rem
-  const minWidth = smallScreen ? '18rem' : '26rem'
 
   useEffect(() => {
     if (count && loading === false) {
@@ -47,9 +43,9 @@ export default function OrganisationSoftware({organisation, isMaintainer}: Organ
   return (
     <FlexibleGridSection
       className="gap-[0.125rem] p-[0.125rem] pt-2 pb-12"
-      height='17rem'
+      height={itemHeight}
       minWidth={minWidth}
-      maxWidth='1fr'
+      maxWidth={maxWidth}
     >
       {software.map(item => {
         if (isMaintainer) {

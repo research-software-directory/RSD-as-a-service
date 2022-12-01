@@ -16,7 +16,7 @@ type ImageAsBackgroundProps = {
 }
 
 export default function ImageAsBackground(
-  {src, alt, className, bgSize = 'cover', bgPosition = 'top center',
+  {src, alt, className, bgSize = 'cover', bgPosition = 'center center',
   noImgMsg = 'no image avaliable'}: ImageAsBackgroundProps
 ) {
 

@@ -12,8 +12,10 @@ import ProjectsGrid from '~/components/projects/ProjectsGrid'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
 import useUserProjects from './useUserProjects'
+import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 
-export default function UserProjects({session}: {session: Session}) {
+export default function UserProjects({session}: { session: Session }) {
+  const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions()
   const {searchFor, page, rows, setCount} = usePaginationWithSearch('Filter projects')
   const {loading, projects, count} = useUserProjects({
     searchFor,
@@ -21,7 +23,6 @@ export default function UserProjects({session}: {session: Session}) {
     rows,
     session
   })
-
   useEffect(() => {
     if (count && loading === false) {
       setCount(count)
@@ -31,9 +32,9 @@ export default function UserProjects({session}: {session: Session}) {
   return (
     <ProjectsGrid
       projects={projects}
-      height='17rem'
-      minWidth='26rem'
-      maxWidth='1fr'
+      height={itemHeight}
+      minWidth={minWidth}
+      maxWidth={maxWidth}
       className="gap-[0.125rem] pt-4 pb-12"
     />
   )

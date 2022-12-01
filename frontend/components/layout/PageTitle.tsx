@@ -21,6 +21,11 @@ export const PageTitleSticky = styled('section')(({theme})=>({
     flexWrap: 'wrap',
     position: 'relative'
   },
+  '@media (max-height: 640px)':{
+    flexDirection:'column',
+    flexWrap: 'wrap',
+    position: 'relative'
+  },
 }))
 
 export default function PageTitle({title,children}:{title:string,children?:ReactNode}) {
