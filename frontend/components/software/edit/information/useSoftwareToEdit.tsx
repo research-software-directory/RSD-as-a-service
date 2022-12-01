@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -30,12 +32,14 @@ export async function getSoftwareInfoForEdit({slug, token}: { slug: string, toke
       getLicenseForSoftware(software.id, true, token)
     ]
     // other api requests
-    const [keywords, respLicense] = await Promise.all(requests)
+    const [keywords, respLicense,] = await Promise.all(requests)
 
     const data:EditSoftwareItem = {
       ...software,
       keywords: keywords as KeywordForSoftware[],
-      licenses: prepareLicenses(respLicense as License[])
+      licenses: prepareLicenses(respLicense as License[]),
+      image_b64: null,
+      image_mime_type: null,
     }
 
     return data
