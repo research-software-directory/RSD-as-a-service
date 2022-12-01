@@ -160,6 +160,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         languages={repositoryInfo?.languages}
         repository={repositoryInfo?.url}
         platform={repositoryInfo?.code_platform}
+        image_id={software.image_id}
       />
       {/* Participating organisations */}
       <OrganisationsSection
