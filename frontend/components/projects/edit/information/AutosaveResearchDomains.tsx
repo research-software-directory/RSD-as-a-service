@@ -194,11 +194,11 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
         >
           <InputLabel
             shrink={true}
-            id="select-l1-domain">
+          >
             Level 1
           </InputLabel>
           <Select
-            id="select-l1-domain"
+            data-testid="l1-domain-select"
             value={l1Selected?.key ?? ''}
             onChange={({target}:{target:any}) => {
               selectDomain({
@@ -212,7 +212,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
               .map(item => {
               return (
                 <MenuItem
-                  data-testid="select-l1-domain-item"
+                  data-testid="l1-domain-item"
                   key={item.key}
                   title={item.description}
                   value={item.key}>
@@ -233,12 +233,12 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
         >
           <InputLabel
             shrink={true}
-            id="select-l2-domain">
+          >
             Level 2
           </InputLabel>
 
           <Select
-            id="select-l2-domain"
+            data-testid="l2-domain-select"
             value={l2Selected?.key ?? ''}
             onChange={({target}:{target:any}) => {
               selectDomain({
@@ -253,7 +253,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
               .map(item => {
               return (
                 <MenuItem
-                  data-testid="select-l2-domain-item"
+                  data-testid="l2-domain-item"
                   title={item.description}
                   key={item.key}
                   value={item.key}
@@ -274,13 +274,12 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
           fullWidth
         >
           <InputLabel
-            shrink={true}
-            id="select-l3-domain">
+            shrink={true}>
             Level 3
           </InputLabel>
 
           <Select
-            id="select-l3-domain"
+            data-testid="l3-domain-select"
             value={l3Selected?.key ?? ''}
             onChange={({target}:{target:any}) => {
               selectDomain({
@@ -298,7 +297,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
               .map(item => {
               return (
                 <MenuItem
-                  data-testid="select-l3-domain-item"
+                  data-testid="l3-domain-item"
                   title={item.description}
                   key={item.key}
                   value={item.key}

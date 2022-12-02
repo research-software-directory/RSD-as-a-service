@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {expect, Page} from '@playwright/test'
+import {Organisation} from '../mocks/mockOrganisation'
 import {Person} from '../mocks/mockPerson'
 import {CreateSoftwareProps, MockedSoftware} from '../mocks/mockSoftware'
 import {fillAutosaveInput, generateId, uploadFile} from './utils'
@@ -134,23 +135,37 @@ export async function conceptDoiFeatures(page: Page, conceptDOI: string, doiApi:
   }).click()
 }
 
-export async function openSoftwarePage(page:Page,name:string) {
+export async function openSoftwarePage(page:Page,name?:string) {
   // open edit software page
   const url = '/software'
-  // naviagate to software overview
-  await page.goto(url)
+  // navigate to software overview
+  await page.goto(url, {waitUntil: 'networkidle'})
 
-  // select software
-  const softwareCard = await page.getByRole('link', {
-    name
-  })
+  // validate we have some software cards in the overview
+  const cards = page.getByTestId('software-card-link')
+  expect(await cards.count()).toBeGreaterThan(0)
 
-  // open software view
-  await Promise.all([
-    page.waitForNavigation(),
-    // take first in case more than one created
-    softwareCard.first().click()
-  ])
+  // select project card
+  if (name) {
+    // select software
+    const softwareCard = await page.getByRole('link', {
+      name
+    })
+
+    // open software view
+    await Promise.all([
+      page.waitForNavigation(),
+      // take first in case more than one created
+      softwareCard.first().click()
+    ])
+  } else {
+    // open first item
+    await Promise.all([
+      page.waitForNavigation(),
+      // take first in case more than one created
+      cards.first().click()
+    ])
+  }
 }
 
 export async function openEditSoftwarePage(page, name) {

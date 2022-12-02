@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { Page } from '@playwright/test'
+import {Page} from '@playwright/test'
 import {createMarkdown} from '../helpers/utils'
 import {generateId} from '../helpers/utils'
 
@@ -19,6 +19,20 @@ export type MockedSoftware = typeof mockSoftware.chromium
 export const titleId = generateId()
 
 export const mockSoftware = {
+  chrome: {
+    title: `Test software chrome ${titleId}`,
+    // title: 'Test software chrome 18401',
+    desc: 'Lorem ipsum description',
+    slug: `test-software-chrome-${titleId}`,
+    // slug: 'test-software-chrome-18401',
+    repoUrl: 'https://research-software-directory.github.io/RSD-as-a-service/',
+    // use the label of platform option
+    platform: 'GitHub',
+    doi: '10.5281/zenodo.6379973',
+    // api used for imports
+    doiApi: 'api.datacite.org',
+    markdown: createMarkdown('chrome')
+  },
   chromium: {
     title: `Test software chromium ${titleId}`,
     desc: 'Lorem ipsum description',
@@ -42,6 +56,18 @@ export const mockSoftware = {
     // api used for imports
     doiApi: 'api.datacite.org',
     markdown: createMarkdown('firefox')
+  },
+  msedge: {
+    title: `Test software msedge ${titleId}`,
+    desc: 'Lorem ipsum description',
+    slug: `test-software-msedge-${titleId}`,
+    repoUrl: 'https://research-software-directory.github.io/RSD-as-a-service/',
+    // use the label of platform option
+    platform: 'GitHub',
+    doi: '10.5281/zenodo.6379973',
+    // api used for imports
+    doiApi: 'api.datacite.org',
+    markdown: createMarkdown('msedge')
   },
   webkit: {
     title: `Test software webkit ${titleId}`,

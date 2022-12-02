@@ -17,8 +17,9 @@ RUN npm ci
 # copy all files
 COPY . .
 
+RUN npx playwright install chrome msedge --with-deps
 # install browsers?!? do I need this
 # RUN npx playwright install
 
 # sleep for 10 sec and then run e2e:all script
-CMD npm run e2e:all
+CMD npm run e2e:docker

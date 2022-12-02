@@ -7,7 +7,7 @@ import {expect, Page} from '@playwright/test'
 import {Person} from '../mocks/mockPerson'
 import {MockedProject} from '../mocks/mockProject'
 import {CreateSoftwareProps} from '../mocks/mockSoftware'
-import {fillAutosaveInput, uploadFile} from './utils'
+import {fillAutosaveInput, generateId, uploadFile} from './utils'
 
 export async function createProject({title, desc, slug, page}: CreateSoftwareProps) {
   // get add menu item
@@ -107,10 +107,10 @@ export async function addFundingOrganisation(page: Page, organisation: string) {
     name: organisation
   })
   await Promise.all([
-    // select item
-    option.click(),
     // wait for api update
     page.waitForRequest(/\/project_for_organisation/),
+    // select first matched item
+    option.first().click(),
   ])
 }
 
@@ -142,50 +142,59 @@ export async function createProjectLink(page: Page, {label, url}: { label: strin
 }
 
 export async function addResearchDomain(page) {
+  const random = generateId(100)
   // select add button
   const addBtn = page.getByTestId('add-research-domains')
   // set brakpoint
-  await page.pause()
+  // await page.pause()
   // select first level
-  await Promise.all([
-    page.waitForSelector('[data-testid="select-l1-domain-item"]'),
-    page.getByRole('button', {
-      name: 'Level 1'
-    }).click()
-  ])
-  await page.getByRole('option', {
-    name: 'Life Sciences'
-  }).click()
+  // await page.getByTestId('l1-domain-select').click()
+  await page.getByTestId('l1-domain-select')
+    .getByRole('button')
+    .first()
+    .click()
+  const l1options = page.getByTestId('l1-domain-item')
+  let count = await l1options.count()
+  expect(count).toBeGreaterThan(0)
+  if (random > 50) {
+    await l1options.first().click()
+  } else {
+    await l1options.last().click()
+  }
   // select second level
-  await Promise.all([
-    page.waitForSelector('[data-testid="select-l2-domain-item"]'),
-    page.getByRole('button', {
-      name: 'Level 2'
-    }).click()
-  ])
-  await page.getByRole('option', {
-    name: 'Immunity, Infection and Immunotherapy'
-  }).click()
+  await page.getByTestId('l2-domain-select')
+    .getByRole('button')
+    .first()
+    .click()
+  const l2options = page.getByTestId('l2-domain-item')
+  count = await l2options.count()
+  expect(count).toBeGreaterThan(0)
+  if (random > 50) {
+    await l2options.first().click()
+  } else {
+    await l2options.last().click()
+  }
   // select third level
-  await Promise.all([
-    page.waitForSelector('[data-testid="select-l3-domain-item"]'),
-    page.getByRole('button', {
-      name: 'Level 3'
-    }).click()
-  ])
-  await page.getByRole('option', {
-    name: 'Innate immunity'
-  }).click()
+  await page.getByTestId('l3-domain-select')
+    .getByRole('button')
+    .first()
+    .click()
+  const l3options = page.getByTestId('l3-domain-item')
+  count = await l3options.count()
+  expect(count).toBeGreaterThan(0)
+  if (random > 50) {
+    await l3options.first().click()
+  } else {
+    await l3options.last().click()
+  }
   // add selected domains
   await Promise.all([
+    page.waitForSelector('[data-testid="research-domain-chip"]'),
     addBtn.click(),
-    page.waitForResponse(/\/research_domain_for_project/),
-    page.waitForSelector('[data-testid="research-domain-chip"]')
   ])
   // validate at least 3 or more research domains
   const chips = page.getByTestId('research-domain-chip')
   expect(await chips.count()).toBeGreaterThanOrEqual(3)
-
 }
 
 export async function addKeyword(page: Page, keyword: string) {
@@ -206,25 +215,38 @@ export async function addKeyword(page: Page, keyword: string) {
   ])
 }
 
-export async function openProjectPage(page: Page, name: string) {
+export async function openProjectPage(page: Page, name?: string) {
   // open edit project page
   const url = '/projects'
-  // naviagate to software overview
-  await page.goto(url)
+  // navigate to projects overview
+  await page.goto(url, {waitUntil: 'networkidle'})
 
-  // select software
-  const projectCard = await page.getByRole('link', {
-    name
-  })
+  // validate we have some projects in the overview
+  const cards = page.getByTestId('project-card-link')
+  expect(await cards.count()).toBeGreaterThan(0)
 
-  // open software view
-  await Promise.all([
-    page.waitForNavigation(),
-    // take first in case more than one created
-    projectCard.first().click()
-  ])
+  // select project card
+  if (name) {
+    // we try to find card by name (title)
+    const projectCard = page.getByRole('link', {
+      name
+    })
+    // open software view
+    await Promise.all([
+      page.waitForNavigation(),
+      // take first in case more than one created
+      projectCard.first().click()
+    ])
 
-  return true
+  } else {
+    // open first item
+    await Promise.all([
+      page.waitForNavigation(),
+      // take first in case more than one created
+      cards.first().click()
+    ])
+  }
+
 }
 
 export async function openEditProjectPage(page:Page, name:string) {
@@ -300,7 +322,7 @@ export async function importTeamMemberByOrcid(page: Page, contact: Person) {
   // search for contact
   await Promise.all([
     page.waitForResponse(RegExp(contact.apiUrl)),
-    findContributor.fill(contact.orcid)
+    findContributor.fill(contact.orcid ?? 'Dusan Mijatovic')
   ])
   // set breakpoint
   // await page.pause()

@@ -7,79 +7,116 @@ import {test, expect} from '@playwright/test'
 import {
   createSoftware, editSoftwareInput,
   conceptDoiFeatures,
-  openEditSoftwarePage,
   openEditContributors,
   importContributors,
   editFirstContact,
-  createContact
+  createContact,
 } from '../helpers/software'
 import {mockSoftware} from '../mocks/mockSoftware'
-import {randomPerson} from '../mocks/mockPerson'
-import {openEditPage} from '../helpers/utils'
+import {getRandomPerson} from '../mocks/mockPerson'
+import {
+  addOrganisation, openEditPage,
+  openEditOrganisations
+} from '../helpers/utils'
+import {mockSoftwareOrganisation, Organisation} from '../mocks/mockOrganisation'
 
-// run in serial mode
-test.describe.configure({mode: 'serial'})
-
-test('Create software', async ({page, browserName}) => {
-  // get mock software for the browser
-  const software = mockSoftware[browserName]
-  // start from homepage
-  await page.goto('/')
-  // create software
-  const slug = await createSoftware({
-    page,
-    title: software.title,
-    desc: software.desc,
-    slug: software.slug
+// run tests in serial mode
+// we first need first to create software
+test.describe.serial('Software', async()=> {
+  test('Create software', async ({page}, {project}) => {
+    // get mock software for the browser
+    const software = mockSoftware[project.name]
+    // start from homepage
+    await page.goto('/')
+    // create software
+    const slug = await createSoftware({
+      page,
+      title: software.title,
+      desc: software.desc,
+      slug: software.slug
+    })
+    // expect slug
+    expect(slug).toEqual(software.slug)
   })
-  // expect slug
-  expect(slug).toEqual(software.slug)
-})
 
-test('Edit software info', async ({page, browserName}) => {
-  // get mock software for the browser
-  const software = mockSoftware[browserName]
-  // open edit software page
-  const url = `/software/${software.slug}`
-  await openEditPage(page, url, software.title)
+  test('Add organisations', async ({page}, {project}) => {
+    // get mock software for the browser
+    const software = mockSoftware[project.name]
+    const organisations: Organisation[] = mockSoftwareOrganisation[project.name]
 
-  // edit software values
-  await editSoftwareInput(page, software)
+    // directly open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
 
-  // test DOI imports
-  await conceptDoiFeatures(page, software.doi, software.doiApi)
+    // navigate to organisations section
+    await openEditOrganisations(page)
 
-  // publish the software
-  await page.getByLabel('Published').check()
+    // await page.pause()
 
-  // find view page button
-  const viewPage = page.getByRole('button', {
-    name: 'view page'
+    // create organisations
+    for (const org of organisations) {
+      await addOrganisation(page, org, 'software_for_organisation')
+    }
+
+    const items = page.getByTestId('organisation-list-item')
+    const [count] = await Promise.all([
+      items.count(),
+      page.waitForLoadState('networkidle')
+    ])
+    expect(count).toBeGreaterThanOrEqual(0)
   })
-  // open view page
-  await viewPage.click()
-})
 
-test('Edit contributors', async ({page, browserName}) => {
-  // get mock software for the browser
-  const software = mockSoftware[browserName]
-  const contact = randomPerson[browserName]
+  test('Edit software info', async ({page}, {project}) => {
+    // get mock software for the browser
+    const software = mockSoftware[project.name]
+    // open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
 
-  // open edit software page
-  await openEditSoftwarePage(page, `Test software ${browserName}`)
+    // edit software values
+    await editSoftwareInput(page, software)
 
-  // navigate to contributors section
-  await openEditContributors(page)
+    // test DOI imports
+    await conceptDoiFeatures(page, software.doi, software.doiApi)
 
-  // import contributors
-  if (software.doi) {
-    await importContributors(page)
-  }
+    // publish the software
+    await page.getByLabel('Published').check()
 
-  // edit first contributor
-  await editFirstContact(page)
+    // find view page button
+    const viewPage = page.getByRole('button', {
+      name: 'view page'
+    })
+    // open view page
+    await viewPage.click()
+  })
 
-  // add new contact
-  await createContact(page,contact)
+  test('Edit contributors', async ({page}, {project}) => {
+    // get mock software for the browser
+    const software = mockSoftware[project.name]
+    const contact = getRandomPerson(project.name)
+
+    // open edit software page from software overview
+    // somehow the overview does not shows created software in CI?!?
+    // await openEditSoftwarePage(page, `Test software ${browserName}`)
+
+    // directly open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
+
+    // navigate to contributors section
+    await openEditContributors(page)
+
+    // import contributors
+    if (software.doi) {
+      await importContributors(page)
+    }
+
+    // edit first contributor
+    await editFirstContact(page)
+
+    // add new contact
+    await createContact(page,contact)
+  })
+
 })
 

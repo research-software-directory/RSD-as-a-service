@@ -33,8 +33,8 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   /* Retry 1 */
   retries: 1,
-  /* Run 3 workers in CI and 6 locally */
-  workers: process.env.CI ? 3 : 6,
+  /* Run 1 worker in CI and 6 locally */
+  workers: process.env.CI ? 1 : 6,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', {open: 'never'}]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -43,14 +43,14 @@ const config: PlaywrightTestConfig = {
     actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'http://localhost',
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'retain-on-failure',
+    /* Collect trace. See https://playwright.dev/docs/trace-viewer */
+    trace: 'on',
     // use state to store user specific cookies for all tests
     storageState: './state/localUser.json',
     // browser resolution by default
     viewport: {
-      width: 1600,
-      height: 900
+      width: 1024,
+      height: 768
     },
     // we do not have https during tests
     ignoreHTTPSErrors: true,
@@ -59,26 +59,35 @@ const config: PlaywrightTestConfig = {
   /* Configure projects for major browsers */
   projects: [
     {
+      name: 'chrome',
+      use: {
+        channel: 'chrome'
+      },
+    },
+    {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
       },
     },
-
     {
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox']
       },
     },
-
+    {
+      name: 'msedge',
+      use: {
+        channel: 'msedge',
+      },
+    },
     {
       name: 'webkit',
       use: {
         ...devices['Desktop Safari']
       },
     },
-
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
@@ -90,20 +99,6 @@ const config: PlaywrightTestConfig = {
     //   name: 'Mobile Safari',
     //   use: {
     //     ...devices['iPhone 12'],
-    //   },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: {
-    //     channel: 'msedge',
-    //   },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: {
-    //     channel: 'chrome',
     //   },
     // },
   ],

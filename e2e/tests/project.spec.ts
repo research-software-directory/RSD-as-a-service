@@ -10,81 +10,117 @@ import {
 } from '../helpers/project'
 import {mockProject} from '../mocks/mockProject'
 import {openEditPage, uploadFile} from '../helpers/utils'
-import {randomPerson} from '../mocks/mockPerson'
+import {getDusanMijatovic, getRandomPerson} from '../mocks/mockPerson'
+import {addOrganisation, openEditOrganisations} from '../helpers/utils'
+import {mockProjectOrganisation} from '../mocks/mockOrganisation'
 
-// run in serial mode
-test.describe.configure({mode: 'serial'})
-
-test('Create project', async ({page, browserName}) => {
-  // get mock project for the browser
-  const project = mockProject[browserName]
-  // start from homepage
-  await page.goto('/')
-  // create project
-  const slug = await createProject({
-    page,
-    title: project.title,
-    desc: project.desc,
-    slug: project.slug
+// run tests in serial mode
+// we first need first to create software
+test.describe.serial('Project', async () => {
+  test('Create project', async ({page},{project}) => {
+    // get mock project for the browser
+    const proj = mockProject[project.name]
+    // start from homepage
+    await page.goto('/')
+    // create project
+    const slug = await createProject({
+      page,
+      title: proj.title,
+      desc: proj.desc,
+      slug: proj.slug
+    })
+    // expect slug
+    expect(slug).toEqual(proj.slug)
   })
-  // expect slug
-  expect(slug).toEqual(project.slug)
-})
 
-test('Edit project info', async ({page, browserName}) => {
-  // get mock project for the browser
-  const project = mockProject[browserName]
-  // open project edit page using edit button
-  const url = `/projects/${project.slug}`
-  await openEditPage(page, url, project.title)
+  test('Add organisations', async ({page}, {project}) => {
+    // get mock software for the browser
+    const proj = mockProject[project.name]
+    const organisations = mockProjectOrganisation[project.name]
 
-  // upload file
-  await uploadFile(page, '#upload-avatar-image', project.image.file)
+    // directly open edit software page
+    const url = `/projects/${proj.slug}`
+    await openEditPage(page, url, proj.title)
 
-  // edit project info
-  await editProjectInput(page, project)
+    // navigate to organisations section
+    await openEditOrganisations(page)
 
-  // add funding organisations
-  for (const org of project.fundingOrganisations) {
-    await addFundingOrganisation(page, org)
-  }
-
-  // add links
-  for (const link of project.links) {
-    await createProjectLink(page, link)
-  }
-
-  // add research domain
-  await addResearchDomain(page)
-
-  // add keywords
-  for (const keyword of project.keywords) {
-    await addKeyword(page, keyword)
-  }
-
-  // publish project
-  await page.getByLabel('Published').check()
-
-  // take reference to view page button
-  const viewPage = page.getByRole('button', {
-    name: 'view page'
+    // create organisations
+    for (const org of organisations) {
+      await addOrganisation(page, org, 'project_for_organisation')
+    }
+    // check the count
+    const count = await page.getByTestId('organisation-list-item').count()
+    expect(count).toBeGreaterThanOrEqual(organisations.length)
   })
-  // just click on view page to close
-  await viewPage.click()
+
+  test('Edit project info', async ({page},{project}) => {
+    // get mock project for the browser
+    const proj = mockProject[project.name]
+    // open project edit page using edit button
+    const url = `/projects/${proj.slug}`
+    await openEditPage(page, url, proj.title)
+
+    // upload file
+    await uploadFile(page, '#upload-avatar-image', proj.image.file)
+
+    // edit project info
+    await editProjectInput(page, proj)
+
+    // add funding organisations
+    for (const org of proj.fundingOrganisations) {
+      await addFundingOrganisation(page, org)
+    }
+
+    // add links
+    for (const link of proj.links) {
+      await createProjectLink(page, link)
+    }
+    // set breakpoint
+    // await page.pause()
+    // add research domain
+    await addResearchDomain(page)
+
+    // add keywords
+    for (const keyword of proj.keywords) {
+      await addKeyword(page, keyword)
+    }
+
+    // publish project
+    await page.getByLabel('Published').check()
+
+    // take reference to view page button
+    const viewPage = page.getByRole('button', {
+      name: 'view page'
+    })
+    // just click on view page to close
+    await viewPage.click()
+  })
+
+  test('Edit team members', async ({page},{project}) => {
+    // get mock project for the browser
+    const proj = mockProject[project.name]
+    // get mock software for the browser
+    const contact = getRandomPerson(project.name)
+    const dusan = getDusanMijatovic(project.name)
+
+    // open project edit page using edit button
+    const url = `/projects/${proj.slug}`
+    await openEditPage(page, url, proj.title)
+
+    // open edit project page from overview
+    // it does not allways show items?!?
+    // await openEditProjectPage(page, `Test project ${project.name}`)
+
+    // open edit team members page
+    await openEditTeamPage(page)
+    // create new team member
+    await createTeamMember(page,contact)
+    // import team member from ORCID
+    // uses real name and orcid for validation
+    await importTeamMemberByOrcid(page, dusan)
+  })
+
+
 })
 
-test('Edit team members', async ({page,browserName}) => {
-  // get mock software for the browser
-  const contact = randomPerson[browserName]
-  // open edit software page
-  await openEditProjectPage(page, `Test project ${browserName}`)
-  // open edit team members page
-  await openEditTeamPage(page)
-  // create new team member
-  await createTeamMember(page,contact)
-  // import team member from ORCID
-  // uses real name and orcid for validation
-  contact.name = 'Dusan Mijatovic'
-  contact.orcid = '0000-0002-1898-4461'
-  await importTeamMemberByOrcid(page,contact)
-})

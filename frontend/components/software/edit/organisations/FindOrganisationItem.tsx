@@ -26,10 +26,14 @@ export default function FindOrganisationItem({option}: { option: AutocompleteOpt
   return (
     <article className="flex-1">
       <div className="grid grid-cols-[3fr,1fr] gap-2">
-        <div className="flex items-center">
+        <div
+          data-testid="organisation-list-item-label"
+          className="flex items-center">
           <span className="flex-1">{option.label}</span>
         </div>
-        <span className="text-right">
+        <span
+          data-testid="organisation-list-item-source"
+          className="text-right">
           <strong>{option.data?.source}</strong>
         </span>
       </div>
