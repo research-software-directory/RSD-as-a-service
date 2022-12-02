@@ -206,7 +206,7 @@ export default function AutosaveProjectImage() {
           src={imageUrl()}
           alt={form_image_caption ?? 'image'}
           bgSize={form_image_contain ? 'contain' : 'cover'}
-          bgPosition={form_image_contain ? 'center' : 'top center'}
+          bgPosition={form_image_contain ? 'center' : 'center center'}
           className="w-full h-[23rem]"
           noImgMsg="Click to upload image < 2MB"
         />

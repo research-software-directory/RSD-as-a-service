@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 dv4all
+# SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -38,7 +39,7 @@ services:
       - 3500
     environment:
       # it needs to be here to use values from .env file
-      - PGRST_DB_URI=postgres://rsd_authenticator:${POSTGRES_AUTHENTICATOR_PASSWORD}@database:5432/${POSTGRES_DB}
+      - PGRST_DB_URI=postgres://rsd_authenticator:${POSTGRES_AUTHENTICATOR_PASSWORD}@${POSTGRES_DB_HOST}:${POSTGRES_DB_HOST_PORT}/${POSTGRES_DB}
       - PGRST_DB_ANON_ROLE
       - PGRST_DB_SCHEMA
       - PGRST_SERVER_PORT

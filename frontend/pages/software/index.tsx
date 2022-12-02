@@ -10,6 +10,7 @@ import {GetServerSidePropsContext} from 'next/types'
 import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import {useTheme} from '@mui/material/styles'
 
 import {app} from '../../config/app'
 import DefaultLayout from '../../components/layout/DefaultLayout'
@@ -22,6 +23,7 @@ import {getSoftwareList} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import SoftwareFilter from '~/components/software/filter'
+import { useAdvicedDimensions } from '~/components/layout/FlexibleGridSection'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -39,11 +41,8 @@ export default function SoftwareIndexPage(
 ) {
   // use next router (hook is only for browser)
   const router = useRouter()
-  // use media query hook for small screen logic
-  const smallScreen = useMediaQuery('(max-width:600px)')
-  // adjust grid min width for mobile to 18rem
-  const minWidth = smallScreen ? '18rem' : '26rem'
-
+  const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions('software')
+  
   // next/previous page button
   function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
@@ -141,9 +140,9 @@ export default function SoftwareIndexPage(
       <SoftwareGrid
         className='gap-[0.125rem] p-[0.125rem] pt-4 pb-12'
         grid={{
-          height: '17rem',
+          height: itemHeight,
           minWidth,
-          maxWidth:'1fr'
+          maxWidth
         }}
         software={software}
       />

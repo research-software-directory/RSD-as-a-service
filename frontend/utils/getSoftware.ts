@@ -95,15 +95,17 @@ export async function getRepostoryInfoForSoftware(software: string | undefined, 
         const info: RepositoryInfo = {
           ...data[0],
           // parse JSONB
-          languages: JSON.parse(data[0].languages),
-          commit_history: JSON.parse(data[0].commit_history)
+          // languages: JSON.parse(data[0].languages),
+          languages: data[0].languages,
+          // commit_history: JSON.parse(data[0].commit_history)
+          commit_history: data[0].commit_history
         }
         return info
       }
       return null
     }
   } catch (e: any) {
-    logger(`getSoftwareItem: ${e?.message}`, 'error')
+    logger(`getRepostoryInfoForSoftware: ${e?.message}`, 'error')
     return null
   }
 }

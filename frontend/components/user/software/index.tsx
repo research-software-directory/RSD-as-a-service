@@ -9,8 +9,10 @@ import {Session} from '~/auth'
 import SoftwareGrid from '~/components/software/SoftwareGrid'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import useUserSoftware from './useUserSoftware'
+import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 
-export default function UserSoftware({session}:{session:Session}) {
+export default function UserSoftware({session}: { session: Session }) {
+  const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions('software')
   const {searchFor,page,rows, setCount} = usePaginationWithSearch('Filter software')
   const {loading, software, count} = useUserSoftware({
     searchFor,
@@ -29,9 +31,9 @@ export default function UserSoftware({session}:{session:Session}) {
     <SoftwareGrid
       software={software}
       grid={{
-        height:'17rem',
-        minWidth:'25rem',
-        maxWidth:'1fr'
+        height:itemHeight,
+        minWidth,
+        maxWidth
       }}
       className="gap-[0.125rem] pt-4 pb-12"
     />
