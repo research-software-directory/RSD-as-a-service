@@ -116,6 +116,7 @@ export default function AutosaveRemoteMarkdown({control,rules,options,onSaveFiel
         <ReactMarkdownWithSettings
           className='py-4 px-8'
           markdown={state?.markdown ?? ''}
+          breaks={false}
         />
       )
     }

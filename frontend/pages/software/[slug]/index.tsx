@@ -154,6 +154,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <AboutSection
         brand_name={software.brand_name}
         description={software?.description ?? ''}
+        description_type={software?.description_type}
         keywords={keywords}
         licenses={licenseInfo}
         languages={repositoryInfo?.languages}
