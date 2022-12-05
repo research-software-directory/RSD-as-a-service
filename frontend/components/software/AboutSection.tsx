@@ -14,6 +14,7 @@ import AboutSourceCode from './AboutSourceCode'
 type AboutSectionType = {
   brand_name: string
   description: string
+  description_type: 'link' | 'markdown'
   keywords: KeywordForSoftware[]
   licenses: License[]
   repository: string | null
@@ -23,7 +24,8 @@ type AboutSectionType = {
 
 
 export default function AboutSection({
-  brand_name = '', description = '', keywords, licenses, repository, languages, platform
+  brand_name = '', description = '', keywords, licenses,
+  repository, languages, platform, description_type='markdown'
 }:AboutSectionType) {
 
   if (brand_name==='') return null
@@ -37,6 +39,7 @@ export default function AboutSection({
         <AboutStatement
           brand_name={brand_name}
           description={description}
+          description_type={description_type}
         />
       </div>
       <div className="flex-1">

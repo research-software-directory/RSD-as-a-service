@@ -5,9 +5,13 @@
 
 import ReactMarkdownWithSettings from '../layout/ReactMarkdownWithSettings'
 
+type AboutStatementProps = {
+  brand_name: string,
+  description: string,
+  description_type?: 'link' | 'markdown'
+}
 
-export default function AboutStatement({brand_name = '', description = ''}:
-  { brand_name: string, description: string }) {
+export default function AboutStatement({brand_name = '', description = '', description_type='markdown'}:AboutStatementProps) {
 
   // skip section if no brand_name
   if (brand_name==='' || description==='') return null
@@ -22,6 +26,7 @@ export default function AboutStatement({brand_name = '', description = ''}:
       </h2>
       <ReactMarkdownWithSettings
         markdown={description}
+        breaks={description_type==='markdown'}
       />
     </>
   )
