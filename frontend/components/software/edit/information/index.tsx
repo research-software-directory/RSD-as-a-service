@@ -152,8 +152,6 @@ export default function SoftwareInformation({slug}: {slug: string}) {
           <div className="py-2"></div>
           <AutosaveRepositoryUrl />
           <div className="py-2"></div>
-          <AutosaveSoftwareLogo />
-          <div className="py-2"></div>
           <AutosaveSoftwareMarkdown />
           {/* add white space at the bottom */}
           <div className="xl:py-4"></div>
@@ -162,6 +160,8 @@ export default function SoftwareInformation({slug}: {slug: string}) {
           <AutosaveSoftwarePageStatus />
           <div className="py-4"></div>
           <AutosaveConceptDoi />
+          <div className="py-4"></div>
+          <AutosaveSoftwareLogo />
           <div className="py-4"></div>
           <AutosaveSoftwareKeywords
             software_id={formData.id}

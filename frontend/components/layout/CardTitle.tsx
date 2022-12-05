@@ -11,7 +11,7 @@ type CardTitleProps = {
 
 /**
  * Card title max 3 lines with line clamp
- * @returns 
+ * @returns
  */
 export default function CardTitle({title,children,className=''}:CardTitleProps) {
   return (

@@ -7,18 +7,20 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {ChangeEvent} from 'react'
+import Button from '@mui/material/Button'
+import DeleteIcon from '@mui/icons-material/Delete'
+import {useFormContext} from 'react-hook-form'
+
 import {softwareInformation as config} from '../editSoftwareConfig'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import ImageAsBackground from '~/components/layout/ImageAsBackground'
-import {ChangeEvent} from 'react'
+import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
 import {handleFileUpload} from '~/utils/handleFileUpload'
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {useFormContext} from 'react-hook-form'
 import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
-import {IconButton} from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
 import {patchSoftwareTable} from './patchSoftwareTable'
 
 export default function AutosaveSoftwareLogo() {
@@ -139,22 +141,13 @@ export default function AutosaveSoftwareLogo() {
       return null
     }
     return (
-      <>
-        <div className="flex pt-4">
-          <div className="flex items-center text-primary">
-            <IconButton
-              color="primary"
-              aria-label="remove picture"
-              component="span"
-              title="Delete image"
-              onClick={removeImage}
-            >
-              <DeleteIcon />
-            </IconButton>
-            Delete logo
-          </div>
-        </div>
-      </>
+      <Button
+        startIcon={<DeleteIcon />}
+        onClick={removeImage}
+        aria-label="Delete logo"
+      >
+        Delete logo
+      </Button>
     )
   }
 
@@ -164,23 +157,23 @@ export default function AutosaveSoftwareLogo() {
         title={config.logo.label}
         subtitle={config.logo.help}
       />
-      <div>
-        <label htmlFor='upload-avatar-image'
+
+        <label htmlFor='upload-software-logo'
           style={{cursor: 'pointer'}}
-          title="Click to upload a logo."
+          title="Click to upload a logo"
         >
-          <ImageAsBackground
+          <ImageWithPlaceholder
+            placeholder="Click to upload a logo < 2MB"
             src={imageUrl()}
             alt={'logo'}
             bgSize={'contain'}
-            bgPosition={'center'}
-            className="w-full h-[12rem]"
-            noImgMsg="Click to upload a logo."
+            bgPosition={'left center'}
+            className="w-full h-[9rem]"
           />
         </label>
 
         <input
-          id="upload-avatar-image"
+          id="upload-software-logo"
           type="file"
           accept="image/*"
           onChange={onFileUpload}
@@ -189,7 +182,7 @@ export default function AutosaveSoftwareLogo() {
 
         {renderImageAttributes()}
 
-      </div>
+
     </>
   )
 }
