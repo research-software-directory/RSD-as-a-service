@@ -23,7 +23,7 @@ import {getSoftwareList} from '../../utils/getSoftware'
 import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import SoftwareFilter from '~/components/software/filter'
-import { useAdvicedDimensions } from '~/components/layout/FlexibleGridSection'
+import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -42,7 +42,7 @@ export default function SoftwareIndexPage(
   // use next router (hook is only for browser)
   const router = useRouter()
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions('software')
-  
+
   // next/previous page button
   function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
