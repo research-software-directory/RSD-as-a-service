@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -29,17 +30,16 @@ import PublishingProjectInfo from './PublishingProjectInfo'
 export default function EditProjectInformation({slug}: {slug: string}) {
   const {token,user} = useSession()
   const {loading, setLoading, setProjectInfo} = useProjectContext()
-  const {reset, register, getValues, formState} = useFormContext<EditProject>()
+  const {reset, register, formState, watch} = useFormContext<EditProject>()
   const {project} = useProjectToEdit({
     slug,
     token
   })
-  // form data provided by react-hook-form
-  const formValues = getValues()
   // NOTE! need to "subscribe" to dirty fields state
   // in order to detect first change using isDirty prop
   const {dirtyFields} = formState
-
+  // watch form data changes (we use reset in useEffect)
+  const formData = watch()
   // load form and set copy of project info state
   useEffect(() => {
     if (project && loading===true) {
@@ -90,14 +90,14 @@ export default function EditProjectInformation({slug}: {slug: string}) {
             <>
               <div className="py-2"></div>
               <AutosaveProjectTextField
-                project_id={formValues.id}
+                project_id={formData.id}
                 options={{
                   name: 'slug',
                   label: config.slug.label,
                   useNull: true,
                   defaultValue: project?.slug,
                   helperTextMessage: config.slug.help,
-                  helperTextCnt: `${formValues?.slug?.length || 0}/${config.slug.validation.maxLength.value}`,
+                  helperTextCnt: `${formData?.slug?.length || 0}/${config.slug.validation.maxLength.value}`,
                 }}
                 rules={config.slug.validation}
               />
@@ -109,7 +109,7 @@ export default function EditProjectInformation({slug}: {slug: string}) {
           }
           <div className="py-2"></div>
           <AutosaveProjectTextField
-            project_id={formValues.id}
+            project_id={formData.id}
             rules={config.title.validation}
             options={{
               name: 'title',
@@ -117,12 +117,12 @@ export default function EditProjectInformation({slug}: {slug: string}) {
               useNull: true,
               defaultValue: project?.title,
               helperTextMessage: config.title.help,
-              helperTextCnt: `${formValues?.title?.length || 0}/${config.title.validation.maxLength.value}`,
+              helperTextCnt: `${formData?.title?.length || 0}/${config.title.validation.maxLength.value}`,
             }}
           />
           <div className="py-2"></div>
           <AutosaveProjectTextField
-            project_id={formValues.id}
+            project_id={formData.id}
             options={{
               name: 'subtitle',
               label: config.subtitle.label,
@@ -131,7 +131,7 @@ export default function EditProjectInformation({slug}: {slug: string}) {
               useNull: true,
               defaultValue: project?.subtitle,
               helperTextMessage: config.subtitle.help,
-              helperTextCnt: `${formValues?.subtitle?.length || 0}/${config.subtitle.validation.maxLength.value}`,
+              helperTextCnt: `${formData?.subtitle?.length || 0}/${config.subtitle.validation.maxLength.value}`,
             }}
             rules={config.subtitle.validation}
           />
@@ -142,7 +142,7 @@ export default function EditProjectInformation({slug}: {slug: string}) {
           />
           <AutosaveProjectImage />
           <AutosaveControlledMarkdown
-            id={formValues.id}
+            id={formData.id}
             name="description"
             maxLength={config.description.validation.maxLength.value}
             patchFn={patchProjectTable}
@@ -156,10 +156,10 @@ export default function EditProjectInformation({slug}: {slug: string}) {
             subtitle={config.pageStatus.subtitle}
           />
           <AutosaveProjectSwitch
-            project_id={formValues.id}
+            project_id={formData.id}
             name='is_published'
             label={config.is_published.label}
-            defaultValue={formValues.is_published}
+            defaultValue={formData.is_published}
           />
           <PublishingProjectInfo />
           <div className="py-4"></div>
@@ -173,7 +173,7 @@ export default function EditProjectInformation({slug}: {slug: string}) {
           />
           <div className="py-1"></div>
           <AutosaveProjectTextField
-            project_id={formValues.id}
+            project_id={formData.id}
             options={{
               name:'grant_id',
               label: '',

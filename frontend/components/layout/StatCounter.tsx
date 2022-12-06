@@ -18,7 +18,7 @@ export default function StatCounter({label,value}:{label:string,value:number|und
         >
           {value}
         </div>
-        <div className="text-base-content-secondary">
+        <div>
           {label}
         </div>
       </div>
