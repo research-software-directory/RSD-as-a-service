@@ -517,10 +517,10 @@ BEGIN
 		project.title,
 		project.subtitle,
 		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::varchar
-			WHEN project.date_start > now() THEN 'Starting'::varchar
-			WHEN project.date_end < now() THEN 'Finished'::varchar
-			ELSE 'Running'::varchar
+			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
+			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
+			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+			ELSE 'Running'::VARCHAR
 		END AS current_state,
 		project.date_start,
 		project.updated_at,
@@ -620,10 +620,10 @@ BEGIN
 		project.title,
 		project.subtitle,
 		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::varchar
-			WHEN project.date_start > now() THEN 'Starting'::varchar
-			WHEN project.date_end < now() THEN 'Finished'::varchar
-			ELSE 'Running'::varchar
+			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
+			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
+			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+			ELSE 'Running'::VARCHAR
 		END AS current_state,
 		project.date_start,
 		project.updated_at,
@@ -668,10 +668,10 @@ BEGIN
 		project.title,
 		project.subtitle,
 		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::varchar
-			WHEN project.date_start > now() THEN 'Starting'::varchar
-			WHEN project.date_end < now() THEN 'Finished'::varchar
-			ELSE 'Running'::varchar
+			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
+			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
+			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+			ELSE 'Running'::VARCHAR
 		END AS current_state,
 		project.date_start,
 		project.updated_at,
@@ -1007,10 +1007,10 @@ BEGIN
 		project.title,
 		project.subtitle,
 		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::varchar
-			WHEN project.date_start > now() THEN 'Starting'::varchar
-			WHEN project.date_end < now() THEN 'Finished'::varchar
-			ELSE 'Running'::varchar
+			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
+			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
+			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+			ELSE 'Running'::VARCHAR
 		END AS current_state,
 		project.date_start,
 		project.updated_at,
@@ -1278,10 +1278,10 @@ BEGIN
 		project.title,
 		project.subtitle,
 		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::varchar
-			WHEN project.date_start > now() THEN 'Starting'::varchar
-			WHEN project.date_end < now() THEN 'Finished'::varchar
-			ELSE 'Running'::varchar
+			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
+			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
+			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+			ELSE 'Running'::VARCHAR
 		END AS current_state,
 		project.date_start,
 		project.updated_at,
