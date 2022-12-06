@@ -82,7 +82,7 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
               }
             }}
           />
-          <div className="flex-1 flex justify-center items-end md:justify-end">
+          <div className="flex-1 flex gap-4 justify-between items-center">
             <StatCounter
               label={label}
               value={count}

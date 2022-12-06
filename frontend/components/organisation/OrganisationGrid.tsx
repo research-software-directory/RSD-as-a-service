@@ -5,7 +5,7 @@
 
 import {OrganisationForOverview} from '../../types/Organisation'
 import OrganisationCard from './OrganisationCard'
-import FlexibleGridSection, { useAdvicedDimensions } from '../layout/FlexibleGridSection'
+import FlexibleGridSection, {useAdvicedDimensions} from '../layout/FlexibleGridSection'
 import NoContent from '../layout/NoContent'
 
 // render organisation cards
