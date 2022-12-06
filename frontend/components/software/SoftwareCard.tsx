@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -83,16 +84,10 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
         <div className="relative flex">
           <CardTitle
             title={brand_name}
-            className="p-4 mr-[4rem]"
+            className="m-4 mr-[4rem]"
           >
             {renderPublished()} {brand_name}
           </CardTitle>
-          {/* <h2
-            title={brand_name}
-            className="p-4 flex-1 mr-[4rem] group-hover:text-white line-clamp-3 max-h-[7rem]"
-          >
-            {renderPublished()} {brand_name}
-          </h2> */}
           <div
             className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-base text-[1.5rem] absolute top-0 right-0 group-hover:text-secondary">
             {getInitals()}

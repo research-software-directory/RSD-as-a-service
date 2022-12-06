@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -33,7 +34,6 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
     >
       <article
         className="flex flex-col border h-full min-h-[16rem] overflow-hidden">
-        {/* <h2 className='h-[5rem]'>{organisation.name}</h2> */}
         <div className="pl-8 pt-8 flex">
           <CardTitle
             title={organisation.name}
@@ -41,16 +41,6 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
           >
             {organisation.name}
           </CardTitle>
-          {/* <SingleLineTitle
-            title={organisation.name}
-            sx={{
-              padding: '1.5rem 0rem',
-              // place for verified
-              margin: organisation.is_tenant ? '0rem 6rem 0rem 0rem' : '0rem 2rem 0rem 0rem',
-            }}
-          >
-            {organisation.name}
-          </SingleLineTitle> */}
           {
             organisation.is_tenant && <span title="Officially registered organisation">
               <VerifiedIcon
@@ -66,23 +56,20 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
             /></span>
           }
         </div>
-        <div className="flex-1 grid gap-8 lg:grid-cols-[2fr,3fr] p-8 overflow-hidden">
+        <div className="flex-1 grid gap-8 lg:grid-cols-[1fr,1fr] p-8 overflow-hidden">
           <LogoAvatar
             name={organisation.name ?? ''}
             src={getImageUrl(organisation.logo_id) ?? undefined}
             sx={{
-              // remove line-height=1
-              lineHeight: 'inherit',
               fontSize: '4rem',
               '& img': {
-                height: 'auto',
-                // maxHeight: '10rem',
-                width: 'auto',
-                maxWidth: '100%'
+                objectFit: 'contain',
+                minHeight: '4rem',
+                minWidth: '4rem'
               }
             }}
           />
-          <div className="flex-1 flex gap-4 justify-between items-center">
+          <div className="flex-1 flex gap-8 justify-center items-end">
             <StatCounter
               label={label}
               value={count}
