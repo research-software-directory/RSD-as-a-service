@@ -1,5 +1,6 @@
 -- SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2022 dv4all
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 --
@@ -516,7 +517,8 @@ BEGIN
 		project.title,
 		project.subtitle,
 		CASE
-			WHEN project.date_end IS NULL THEN 'Starting'::varchar
+			WHEN project.date_start IS NULL THEN 'Starting'::varchar
+			WHEN project.date_start > now() IS NULL THEN 'Starting'::varchar
 			WHEN project.date_end < now() THEN 'Finished'::varchar
 			ELSE 'Running'::varchar
 		END AS current_state,
