@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +12,7 @@ import SoftwareKeywords from './SoftwareKeywords'
 import AboutLanguages from './AboutLanguages'
 import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
+import SoftwareLogo from './SoftwareLogo'
 
 type AboutSectionType = {
   brand_name: string
@@ -19,19 +22,30 @@ type AboutSectionType = {
   licenses: License[]
   repository: string | null
   platform: CodePlatform
-  languages: ProgramingLanguages
+  languages: ProgramingLanguages,
+  image_id: string | null
 }
 
 
-export default function AboutSection({
-  brand_name = '', description = '', keywords, licenses,
-  repository, languages, platform, description_type='markdown'
-}:AboutSectionType) {
-
+export default function AboutSection(props:AboutSectionType) {
+  const {
+    brand_name = '', description = '', keywords, licenses,
+    repository, languages, platform, description_type = 'markdown',
+    image_id
+  } = props
   if (brand_name==='') return null
 
   // extract only license text
   const license = licenses?.map(item => item.license)
+
+  function getSoftwareLogo() {
+    if (image_id !== null) {
+      return (
+        <SoftwareLogo image_id={image_id} brand_name={brand_name} />
+      )
+    }
+    return null
+  }
 
   return (
     <PageContainer className="flex flex-col px-4 py-12 lg:flex-row lg:pt-0 lg:pb-12">
@@ -43,6 +57,7 @@ export default function AboutSection({
         />
       </div>
       <div className="flex-1">
+        {getSoftwareLogo()}
         <SoftwareKeywords keywords={keywords || []} />
         <AboutLanguages languages={languages} />
         <AboutLicense license={license || []} />

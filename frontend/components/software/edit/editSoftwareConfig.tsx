@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -81,6 +82,11 @@ export const softwareInformation = {
       // we do not show error message for this one, we use only maxLength value
       maxLength: {value: 10000, message: 'Maximum length is 10000'},
     }
+  },
+  // field for logo upload
+  logo: {
+    label: 'Logo',
+    help: 'Upload a logo of your software.'
   },
   // field for markdown URL
   description_url: {

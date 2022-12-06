@@ -152,7 +152,8 @@ export default function AddSoftwareCard() {
       description_type: 'markdown',
       description_url: null,
       get_started_url: null,
-      concept_doi: null
+      concept_doi: null,
+      image_id: null
     }
     // add software to database
     addSoftware({

@@ -42,6 +42,7 @@ export type NewSoftwareItem = {
   get_started_url: string | null,
   is_published: boolean,
   short_statement: string | null,
+  image_id: string | null,
 }
 
 export type SoftwareTableItem = NewSoftwareItem & {
@@ -86,6 +87,7 @@ export const SoftwarePropsToSave = [
   'description_type',
   'description_url',
   'get_started_url',
+  'image_id',
   'is_published',
   'short_statement'
 ]
@@ -93,6 +95,8 @@ export const SoftwarePropsToSave = [
 export type EditSoftwareItem = SoftwareItem & {
   keywords: KeywordForSoftware[]
   licenses: AutocompleteOption<License>[]
+  image_b64: string | null
+  image_mime_type: string | null
 }
 
 /**
