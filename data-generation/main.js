@@ -8,16 +8,26 @@ import jwt from 'jsonwebtoken';
 
 function generateMentions(amountExtra = 10) {
 	const dois = [
+		'10.1007/978-3-030-55874-1_30',
+		'10.1016/j.future.2018.08.004',
+		'10.1017/9781009085809',
 		'10.1017/S0033291718004038',
-		'10.1186/s12966-019-0834-1',
-		'10.5334/dsj-2022-010',
+		'10.1017/S1368980018001258',
+		'10.1029/2018MS001600',
+		'10.1109/eScience.2016.7870925',
+		'10.1145/2996913.2997005',
 		'10.1175/BAMS-D-19-0337.1',
+		'10.1186/s12966-019-0834-1',
+		'10.1515/itit-2019-0040',
+		'10.4233/uuid:4bb38399-9267-428f-b10a-80b86e101f23',
 		'10.5194/egusphere-egu21-4805',
+		'10.5194/ems2022-105',
 		'10.5194/esd-12-253-2021',
 		'10.5194/gmd-13-4205-2020',
-		'10.1145/2996913.2997005',
-		'10.1016/j.future.2018.08.004',
-		'10.1515/itit-2019-0040',
+		'10.5281/zenodo.1149011',
+		'10.5281/zenodo.4075237',
+		'10.5281/zenodo.5748141',
+		'10.5334/dsj-2022-010',
 	];
 
 	const mentionTypes = [
@@ -79,19 +89,81 @@ function generateMentions(amountExtra = 10) {
 	return result;
 }
 
-function generateSofware(amount=50) {
-	const result = [];
+async function generateSofware(amount=50) {
+	const conceptDois = [
+		'10.5281/zenodo.1034002',
+		'10.5281/zenodo.1043306',
+		'10.5281/zenodo.1043937',
+		'10.5281/zenodo.1045122',
+		'10.5281/zenodo.1045193',
+		'10.5281/zenodo.1051033',
+		'10.5281/zenodo.1051039',
+		'10.5281/zenodo.1051130',
+		'10.5281/zenodo.1064391',
+		'10.5281/zenodo.1083950',
+		'10.5281/zenodo.1145886',
+		'10.5281/zenodo.1149010',
+		'10.5281/zenodo.1162057',
+		'10.5281/zenodo.1435860',
+		'10.5281/zenodo.1436372',
+		'10.5281/zenodo.1436464',
+		'10.5281/zenodo.1462264',
+		'10.5281/zenodo.3234136',
+		'10.5281/zenodo.4050179',
+		'10.5281/zenodo.47756',
+		'10.5281/zenodo.594525',
+		'10.5281/zenodo.594559',
+		'10.5281/zenodo.594690',
+		'10.5281/zenodo.596839',
+		'10.5281/zenodo.597226',
+		'10.5281/zenodo.597238',
+		'10.5281/zenodo.597262',
+		'10.5281/zenodo.597793',
+		'10.5281/zenodo.597984',
+		'10.5281/zenodo.598013',
+		'10.5281/zenodo.598204',
+		'10.5281/zenodo.60031',
+		'10.5281/zenodo.6532349',
+		'10.5281/zenodo.832894',
+		'10.5281/zenodo.909307',
+		'10.5281/zenodo.910447',
+		'10.5281/zenodo.910905',
+		'10.5281/zenodo.926819',
+		'10.5281/zenodo.997272',
+		'10.5281/zenodo.997332',
+	];
 
+	const brandNames = [];
 	for (let index = 0; index < amount; index++) {
 		const brandName = faker.helpers.unique(() =>
 			'software: ' + faker.hacker.adjective() + ' ' + faker.hacker.noun() + ' ' + faker.helpers.replaceSymbolWithNumber('####')
 		);
+		brandNames.push(brandName);
+	}
+
+	let indexToUse = 0;
+	const imageUrlGenerator = () => {
+		const width = faker.mersenne.rand(801,200);
+		const height = faker.mersenne.rand(801,200);
+		const brandName = brandNames[indexToUse];
+		const backgroundColour = faker.color.rgb({prefix: null});
+		const textColour = faker.color.rgb({prefix: null});
+		indexToUse += 1;
+		return `https://via.placeholder.com/${width}x${height}.jpg/${backgroundColour}/${textColour}/?text=${encodeURIComponent(brandName)}`
+	}
+
+	const imageIds = await downloadAndGetImages(imageUrlGenerator, amount);
+
+	const result = [];
+
+	for (let index = 0; index < amount; index++) {
 		result.push({
-			slug: faker.helpers.slugify(brandName),
-			brand_name: brandName,
-			concept_doi: faker.helpers.replaceSymbols('10.*****/*****'),
+			slug: faker.helpers.slugify(brandNames[index]),
+			brand_name: brandNames[index],
+			concept_doi: index < conceptDois.length ? conceptDois[index] : null,
 			description: faker.lorem.paragraphs(4, '\n\n'),
 			get_started_url: faker.internet.url(),
+			image_id: imageIds[index],
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 			short_statement: faker.commerce.productDescription()
 		});
@@ -206,7 +278,7 @@ function generateMentionsForEntity(idsEntity, idsMention, nameEntity) {
 	const result = [];
 
 	for (const idEntity of idsEntity) {
-		const nummerOfMentions = faker.mersenne.rand(4, 0);
+		const nummerOfMentions = faker.mersenne.rand(11, 0);
 		if (nummerOfMentions === 0) continue;
 
 		const mentionIdsToAdd = faker.helpers.arrayElements(idsMention, nummerOfMentions);
@@ -266,16 +338,36 @@ async function generateProjects(amount=50) {
 
 	const result = [];
 
+	const projectStatuses = ['finished', 'running', 'starting'];
+
 	for (let index = 0; index < amount; index++) {
 		const title = faker.helpers.unique(() =>
 			'project: ' + faker.hacker.adjective() + ' ' + faker.hacker.noun()  + ' ' + faker.helpers.replaceSymbolWithNumber('####')
 		);
+
+		const status = faker.helpers.arrayElement(projectStatuses);
+		let dateEnd, dateStart;
+		switch (status) {
+			case 'finished':
+				dateEnd = faker.date.past(2);
+				dateStart = faker.date.past(2, dateEnd);
+				break;
+			case 'running':
+				dateEnd = faker.date.future(2);
+				dateStart = faker.date.past(2);
+				break;
+			case 'starting':
+				dateStart = faker.date.future(2);
+				dateEnd = faker.date.future(2, dateStart);
+				break;
+		}
+
 		result.push({
 			slug: faker.helpers.slugify(title),
 			title: title,
 			subtitle: faker.commerce.productDescription(),
-			date_end: faker.date.future(2),
-			date_start: faker.date.past(2),
+			date_end: dateEnd,
+			date_start: dateStart,
 			description: faker.lorem.paragraphs(5, '\n\n'),
 			grant_id: faker.helpers.replaceSymbols('******'),
 			image_caption: faker.animal.cat(),
@@ -338,20 +430,79 @@ function generateUrlsForProjects(ids) {
 }
 
 async function generateOrganisations(amount=50) {
-	const imageIds = await downloadAndGetImages(faker.image.business, amount);
+	const rorIds = [
+		'https://ror.org/000k1q888',
+		'https://ror.org/006hf6230',
+		'https://ror.org/008pnp284',
+		'https://ror.org/00f9tz983',
+		'https://ror.org/00x7ekv49',
+		'https://ror.org/00za53h95',
+		'https://ror.org/012p63287',
+		'https://ror.org/01460j859',
+		'https://ror.org/014w0fd65',
+		'https://ror.org/016xsfp80',
+		'https://ror.org/018dfmf50',
+		'https://ror.org/01bnjb948',
+		'https://ror.org/01deh9c76',
+		'https://ror.org/01hcx6992',
+		'https://ror.org/01k0v6g02',
+		'https://ror.org/01ryk1543',
+		'https://ror.org/027bh9e22',
+		'https://ror.org/02e2c7k09',
+		'https://ror.org/02e7b5302',
+		'https://ror.org/02en5vm52',
+		'https://ror.org/02jx3x895',
+		'https://ror.org/02jz4aj89',
+		'https://ror.org/02w4jbg70',
+		'https://ror.org/030a5r161',
+		'https://ror.org/031m0hs53',
+		'https://ror.org/041kmwe10',
+		'https://ror.org/04bdffz58',
+		'https://ror.org/04dkp9463',
+		'https://ror.org/04njjy449',
+		'https://ror.org/04qw24q55',
+		'https://ror.org/04s2z4291',
+		'https://ror.org/04x6kq749',
+		'https://ror.org/052578691',
+		'https://ror.org/054hq4w78',
+		'https://ror.org/055d8gs64',
+		'https://ror.org/05dfgh554',
+		'https://ror.org/05jxfge78',
+		'https://ror.org/05kaxyq51',
+		'https://ror.org/05v6zeb66',
+		'https://ror.org/05xvt9f17',
+	];
 
-	const result = [];
-
+	const names = [];
 	for (let index = 0; index < amount; index++) {
 		const name = faker.helpers.unique(() =>
 			faker.company.name()
 		);
+		names.push(name);
+	}
+
+	let indexToUse = 0;
+	const imageUrlGenerator = () => {
+		const width = faker.mersenne.rand(801,200);
+		const height = faker.mersenne.rand(801,200);
+		const name = names[indexToUse];
+		const backgroundColour = faker.color.rgb({prefix: null});
+		const textColour = faker.color.rgb({prefix: null});
+		indexToUse += 1;
+		return `https://via.placeholder.com/${width}x${height}.jpg/${backgroundColour}/${textColour}/?text=${encodeURIComponent(name)}`
+	}
+
+	const imageIds = await downloadAndGetImages(imageUrlGenerator, amount);
+
+	const result = [];
+
+	for (let index = 0; index < amount; index++) {
 		result.push({
 			parent: null,
 			primary_maintainer: null,
-			slug: faker.helpers.slugify(name).toLowerCase().replaceAll(/-{2,}/g, '-'),
-			name: name,
-			ror_id: faker.helpers.replaceSymbols('https://ror.org/********'),
+			slug: faker.helpers.slugify(names[index]).toLowerCase().replaceAll(/-{2,}/g, '-'),
+			name: names[index],
+			ror_id: index < rorIds.length ? rorIds[index] : null,
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.3}),
 			logo_id: imageIds[index] ?? null,
@@ -481,7 +632,7 @@ await Promise.all([mentionsPromise, keywordPromise, researchDomainsPromise])
 	.then(() => console.log('mentions, keywords, research domains done'));
 
 let idsSoftware, idsProjects, idsOrganisations;
-const softwarePromise = postToBackend('/software', generateSofware())
+const softwarePromise = postToBackend('/software', await generateSofware())
 	.then(resp => resp.json())
 	.then(async swArray => {
 		idsSoftware = swArray.map(sw => sw['id']);
