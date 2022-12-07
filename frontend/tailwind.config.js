@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
@@ -72,7 +73,8 @@ module.exports = {
         'base-100':`var(--rsd-base-100,${colors['base-100']})`,
         'base-200':`var(--rsd-base-200,${colors['base-200']})`,
         'base-300':`var(--rsd-base-300,${colors['base-300']})`,
-        'base-content':`var(--rsd-base-content,${colors['base-content']})`,
+        'base-content': `var(--rsd-base-content,${colors['base-content']})`,
+        'base-content-secondary':`var(--rsd-base-content-secondary,${colors['base-content-secondary']})`,
         'base-content-disabled':`var(--rsd-base-content-disabled,${colors['base-content-disabled']})`,
         primary:`var(--rsd-primary,${colors.primary})`,
         'primary-content':`var(--rsd-primary-content,${colors['primary-content']})`,

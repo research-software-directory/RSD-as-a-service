@@ -1,4 +1,5 @@
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 dv4all
@@ -152,8 +153,8 @@ STABLE LANGUAGE plpgsql AS
 $$
 DECLARE
 	current_org UUID := id;
-	route varchar := '';
-	slug varchar;
+	route VARCHAR := '';
+	slug VARCHAR;
 BEGIN
 	WHILE current_org IS NOT NULL LOOP
 		SELECT

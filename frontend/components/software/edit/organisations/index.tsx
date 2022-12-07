@@ -319,22 +319,26 @@ export default function SoftwareOganisations() {
           />
         </section>
       </EditSoftwareSection>
-      <EditOrganisationModal
-        open={modal.edit.open}
-        pos={modal.edit.pos}
-        organisation={modal.edit.organisation}
-        onCancel={closeModals}
-        onSubmit={saveOrganisation}
-      />
-      <ConfirmDeleteModal
-        title="Remove organisation"
-        open={modal.delete.open}
-        body={
-          <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? ''}</strong>?</p>
-        }
-        onCancel={closeModals}
-        onDelete={()=>deleteOrganisation(modal.delete.pos)}
-      />
+      {modal.edit.open &&
+        <EditOrganisationModal
+          open={modal.edit.open}
+          pos={modal.edit.pos}
+          organisation={modal.edit.organisation}
+          onCancel={closeModals}
+          onSubmit={saveOrganisation}
+        />
+      }
+      {modal.delete.open &&
+        <ConfirmDeleteModal
+          title="Remove organisation"
+          open={modal.delete.open}
+          body={
+            <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? ''}</strong>?</p>
+          }
+          onCancel={closeModals}
+          onDelete={()=>deleteOrganisation(modal.delete.pos)}
+        />
+      }
     </>
   )
 }
