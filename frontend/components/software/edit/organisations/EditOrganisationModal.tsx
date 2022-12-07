@@ -20,7 +20,7 @@ import ControlledTextField from '../../../form/ControlledTextField'
 import {EditOrganisation} from '../../../../types/Organisation'
 import {organisationInformation as config} from '../editSoftwareConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
-import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
+import {deleteImage, getImageUrl} from '~/utils/editImage'
 import {handleFileUpload} from '~/utils/handleFileUpload'
 
 type EditOrganisationModalProps = {
@@ -39,7 +39,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<EditOrganisation>({
+  const {handleSubmit, watch, formState, reset, control, register, setValue, trigger} = useForm<EditOrganisation>({
     mode: 'onChange',
     defaultValues: {
       ...organisation
@@ -47,18 +47,34 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
   })
 
   // extract
-  const {isValid, isDirty} = formState
+  const {isValid, isDirty, isSubmitSuccessful} = formState
   const formData = watch()
 
   // console.group('EditOrganisationModal')
   // console.log('formData...', formData)
+  // console.log('errors...', errors)
+  // console.log('isSubmitSuccessful...', isSubmitSuccessful)
   // console.groupEnd()
 
   useEffect(() => {
-    if (organisation) {
-      reset(organisation)
+    setTimeout(() => {
+      // validate name on opening of the form
+      // we validate organisation name because we take it
+      // over from ROR or user input (which might not be valid entry)
+      // it needs to be at the end of the cicle, so we need to use setTimeout
+      trigger('name')
+    }, 0)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      // console.group('EditOrganisationModal')
+      // console.log('reset form...', isSubmitSuccessful)
+      // console.groupEnd()
+      reset()
     }
-  }, [organisation,reset])
+  }, [isSubmitSuccessful,reset])
 
   function handleCancel() {
     // hide
