@@ -79,10 +79,10 @@ dev-frontend: frontend/.env.local
 # run end-to-end test locally
 e2e-tests:
 	docker-compose down --volumes
-	docker-compose build
-	docker-compose up -d
+	docker-compose build --parallel database backend auth frontend nginx swagger
+	docker-compose up --detach database backend auth frontend nginx swagger
 	sleep 10
-	docker-compose -f e2e/docker-compose.yml build
-	docker-compose -f e2e/docker-compose.yml up
+	docker-compose --file e2e/docker-compose.yml build
+	docker-compose --file e2e/docker-compose.yml up
 	docker-compose down
-	docker-compose -f e2e/docker-compose.yml down
+	docker-compose --file e2e/docker-compose.yml down
