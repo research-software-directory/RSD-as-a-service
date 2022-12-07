@@ -1,10 +1,15 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {faker} from '@faker-js/faker';
 import jwt from 'jsonwebtoken';
+import images from './images.js'
+
+console.log("images...", images)
 
 function generateMentions(amountExtra = 10) {
 	const dois = [
