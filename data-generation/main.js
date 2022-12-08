@@ -7,9 +7,9 @@
 
 import {faker} from '@faker-js/faker';
 import jwt from 'jsonwebtoken';
-import images from './images.js'
+import images from './images.js';
+import fs from 'fs/promises';
 
-console.log("images...", images)
 
 function generateMentions(amountExtra = 10) {
 	const dois = [
@@ -146,19 +146,6 @@ async function generateSofware(amount=50) {
 		brandNames.push(brandName);
 	}
 
-	let indexToUse = 0;
-	const imageUrlGenerator = () => {
-		const width = faker.mersenne.rand(801,200);
-		const height = faker.mersenne.rand(801,200);
-		const brandName = brandNames[indexToUse];
-		const backgroundColour = faker.color.rgb({prefix: null});
-		const textColour = faker.color.rgb({prefix: null});
-		indexToUse += 1;
-		return `https://via.placeholder.com/${width}x${height}.jpg/${backgroundColour}/${textColour}/?text=${encodeURIComponent(brandName)}`
-	}
-
-	const imageIds = await downloadAndGetImages(imageUrlGenerator, amount);
-
 	const result = [];
 
 	for (let index = 0; index < amount; index++) {
@@ -168,7 +155,7 @@ async function generateSofware(amount=50) {
 			concept_doi: index < conceptDois.length ? conceptDois[index] : null,
 			description: faker.lorem.paragraphs(4, '\n\n'),
 			get_started_url: faker.internet.url(),
-			image_id: imageIds[index],
+			image_id: localImageIds[index%localImageIds.length],
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 			short_statement: faker.commerce.productDescription()
 		});
@@ -339,8 +326,6 @@ function generateSoftwareForSoftware(ids) {
 }
 
 async function generateProjects(amount=50) {
-	const imageIds = await downloadAndGetImages(faker.image.cats, amount);
-
 	const result = [];
 
 	const projectStatuses = ['finished', 'running', 'starting'];
@@ -377,7 +362,7 @@ async function generateProjects(amount=50) {
 			grant_id: faker.helpers.replaceSymbols('******'),
 			image_caption: faker.animal.cat(),
 			image_contain: !!faker.helpers.maybe(() => true, {probability: 0.5}),
-			image_id: imageIds[index] ?? null,
+			image_id: localImageIds[index%localImageIds.length],
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 		});
 	}
@@ -386,8 +371,6 @@ async function generateProjects(amount=50) {
 }
 
 async function generateContributors(ids, amount=100) {
-	const imageIds = await downloadAndGetImages(faker.image.avatar, amount);
-
 	const result = [];
 
 	for (let index = 0; index < amount; index++) {
@@ -400,7 +383,7 @@ async function generateContributors(ids, amount=100) {
 			affiliation: faker.company.name(),
 			role: faker.name.jobTitle(),
 			orcid: faker.helpers.replaceSymbolWithNumber('####-####-####-####'),
-			avatar_id: imageIds[index] ?? null,
+			avatar_id: localImageIds[index%localImageIds.length],
 		});
 	}
 
@@ -486,19 +469,6 @@ async function generateOrganisations(amount=50) {
 		names.push(name);
 	}
 
-	let indexToUse = 0;
-	const imageUrlGenerator = () => {
-		const width = faker.mersenne.rand(801,200);
-		const height = faker.mersenne.rand(801,200);
-		const name = names[indexToUse];
-		const backgroundColour = faker.color.rgb({prefix: null});
-		const textColour = faker.color.rgb({prefix: null});
-		indexToUse += 1;
-		return `https://via.placeholder.com/${width}x${height}.jpg/${backgroundColour}/${textColour}/?text=${encodeURIComponent(name)}`
-	}
-
-	const imageIds = await downloadAndGetImages(imageUrlGenerator, amount);
-
 	const result = [];
 
 	for (let index = 0; index < amount; index++) {
@@ -510,7 +480,7 @@ async function generateOrganisations(amount=50) {
 			ror_id: index < rorIds.length ? rorIds[index] : null,
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.3}),
-			logo_id: imageIds[index] ?? null,
+			logo_id: localImageIds[index%localImageIds.length],
 		});
 	}
 
@@ -593,6 +563,32 @@ async function getFromBackend(endpoint) {
 }
 
 // returns the IDs of the images after they have been posted to the database
+async function getLocalImageIds(fileNames) {
+	const imageAsBase64Promises = [];
+	for (let index = 0; index < fileNames.length; index++) {
+		const fileName = fileNames[index];
+		imageAsBase64Promises[index] = fs.readFile(fileName, {encoding: 'base64'})
+			.then(base64 => {return {data: base64, mime_type: mimeTypeFromFileName(fileName)}});
+	}
+	const imagesAsBase64 = await Promise.all(imageAsBase64Promises);
+
+	const resp = await postToBackend('/image?select=id', imagesAsBase64);
+	const idsAsObjects = await resp.json();
+	const ids = idsAsObjects.map(idAsObject => idAsObject.id);
+	return ids
+}
+
+function mimeTypeFromFileName(fileName) {
+	if (fileName.endsWith('.png')) {
+		return 'image/png';
+	} else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
+		return 'image/jpg';
+	} else if (fileName.endsWith('.svg')) {
+		return 'image/svg+xml';
+	} else return null;
+}
+
+// returns the IDs of the images after they have been posted to the database
 async function downloadAndGetImages(urlGenerator, amount) {
 	const imageAsBase64Promises = [];
 	const timeOuts = [];
@@ -620,6 +616,8 @@ async function downloadAndGetImages(urlGenerator, amount) {
 	const ids = idsAsObjects.map(idAsObject => idAsObject.id);
 	return ids
 }
+
+const localImageIds = await getLocalImageIds(images);
 
 let idsMentions, idsKeywords, idsResearchDomains;
 const mentionsPromise = postToBackend('/mention', generateMentions())
