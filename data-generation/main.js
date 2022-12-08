@@ -141,7 +141,7 @@ async function generateSofware(amount=50) {
 	const brandNames = [];
 	for (let index = 0; index < amount; index++) {
 		const brandName = faker.helpers.unique(() =>
-			'software: ' + faker.hacker.adjective() + ' ' + faker.hacker.noun() + ' ' + faker.helpers.replaceSymbolWithNumber('####')
+			('Software: ' + faker.random.words(faker.mersenne.rand(31, 1))).substring(0, 200)
 		);
 		brandNames.push(brandName);
 	}
@@ -150,7 +150,7 @@ async function generateSofware(amount=50) {
 
 	for (let index = 0; index < amount; index++) {
 		result.push({
-			slug: faker.helpers.slugify(brandNames[index]),
+			slug: faker.helpers.slugify(brandNames[index]).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''),
 			brand_name: brandNames[index],
 			concept_doi: index < conceptDois.length ? conceptDois[index] : null,
 			description: faker.lorem.paragraphs(4, '\n\n'),
@@ -332,7 +332,7 @@ async function generateProjects(amount=50) {
 
 	for (let index = 0; index < amount; index++) {
 		const title = faker.helpers.unique(() =>
-			'project: ' + faker.hacker.adjective() + ' ' + faker.hacker.noun()  + ' ' + faker.helpers.replaceSymbolWithNumber('####')
+			('Project: ' + faker.random.words(faker.mersenne.rand(31, 1))).substring(0, 200)
 		);
 
 		const status = faker.helpers.arrayElement(projectStatuses);
@@ -353,7 +353,7 @@ async function generateProjects(amount=50) {
 		}
 
 		result.push({
-			slug: faker.helpers.slugify(title),
+			slug: faker.helpers.slugify(title).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''),
 			title: title,
 			subtitle: faker.commerce.productDescription(),
 			date_end: dateEnd,
@@ -464,7 +464,7 @@ async function generateOrganisations(amount=50) {
 	const names = [];
 	for (let index = 0; index < amount; index++) {
 		const name = faker.helpers.unique(() =>
-			faker.company.name()
+			('Organisation: ' + faker.random.words(faker.mersenne.rand(31, 1))).substring(0, 200)
 		);
 		names.push(name);
 	}
@@ -475,7 +475,7 @@ async function generateOrganisations(amount=50) {
 		result.push({
 			parent: null,
 			primary_maintainer: null,
-			slug: faker.helpers.slugify(names[index]).toLowerCase().replaceAll(/-{2,}/g, '-'),
+			slug: faker.helpers.slugify(names[index]).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''),
 			name: names[index],
 			ror_id: index < rorIds.length ? rorIds[index] : null,
 			website: faker.internet.url(),
