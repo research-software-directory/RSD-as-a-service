@@ -32,7 +32,7 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
     // fill in title
     page.locator('#Title').fill(title),
     // wait for response on slug validation
-    page.waitForResponse(`http://localhost/api/v1/project?select=id,slug&slug=eq.${slug}`)
+    page.waitForResponse( RegExp(slug))
   ])
 
   // add subtitle
@@ -40,7 +40,7 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
 
   // get slug
   const inputSlug = await page.getByLabel('The url of this project will be').inputValue()
-  const url = `http://localhost/projects/${inputSlug}/edit`
+  const url = RegExp(`${inputSlug}/edit`)
 
   // click save button
   await Promise.all([

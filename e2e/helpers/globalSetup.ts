@@ -40,11 +40,21 @@ async function globalSetup(config: FullConfig) {
   })
   const page = await browser.newPage()
   // goto to homepage
-  await page.goto(baseURL??'/')
+  await page.goto(baseURL ?? '/')
   // decline tracking
-  await page.getByRole('button', {
-    name: 'Decline'
-  }).click()
+  // const matomoBtn = page.getByRole('button', {
+  //   name: 'Decline'
+  // })
+  // matomo test only on localhost
+  if (baseURL === 'http://localhost') {
+    await page.getByRole('button', {
+      name: 'Decline'
+    }).click()
+  }
+  // decline tracking
+  // await page.getByRole('button', {
+  //   name: 'Decline'
+  // }).click()
   // sign in - we need to do this because we loose cookies
   await loginLocal({
     page,

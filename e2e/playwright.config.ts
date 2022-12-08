@@ -42,15 +42,15 @@ const config: PlaywrightTestConfig = {
     /* Maximum time each action such as `click()` can take. 0 (no limit). */
     actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost',
+    baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost',
     /* Collect trace. See https://playwright.dev/docs/trace-viewer */
     trace: 'on',
     // use state to store user specific cookies for all tests
     storageState: './state/localUser.json',
     // browser resolution by default
     viewport: {
-      width: 1024,
-      height: 768
+      width: 1600,
+      height: 900
     },
     // we do not have https during tests
     ignoreHTTPSErrors: true,

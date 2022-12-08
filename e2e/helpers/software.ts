@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {expect, Page} from '@playwright/test'
-import {Organisation} from '../mocks/mockOrganisation'
 import {Person} from '../mocks/mockPerson'
 import {CreateSoftwareProps, MockedSoftware} from '../mocks/mockSoftware'
 import {fillAutosaveInput, generateId, uploadFile} from './utils'
@@ -30,13 +29,13 @@ export async function createSoftware({title, desc, slug, page}: CreateSoftwarePr
     // fill in software name
     page.getByLabel('Name').fill(title),
     // wait for response on slug validation
-    page.waitForResponse(`http://localhost/api/v1/software?select=id,slug&slug=eq.${slug}`)
+    page.waitForResponse(RegExp(slug))
   ])
   // add description
   await page.getByLabel('Short description').fill(desc)
   // get slug
   const inputSlug = await page.getByLabel('The url of this software will be').inputValue()
-  const url =`http://localhost/software/${inputSlug}/edit`
+  const url = RegExp(`${inputSlug}/edit`)
   // click save button
   await Promise.all([
     page.waitForNavigation({

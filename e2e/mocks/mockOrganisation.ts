@@ -33,9 +33,10 @@ export const mockSoftwareOrganisation = {
       name: 'Gemeente Den Haag'
   }],
   webkit: [{
-      name: 'Erasmus University Rotterdam'
+      name: 'Erasmus University Rotterdam',
+      logo: 'images/erasmus_logo.png'
     },{
-      name: 'GGD Rotterdam- Rijnmond'
+      name: 'GGD Rotterdam-Rijnmond'
   }]
 }
 // we need to use different organisations

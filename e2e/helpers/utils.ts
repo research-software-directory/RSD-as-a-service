@@ -144,6 +144,7 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
     .filter({
       hasText:RegExp(organisation.name)
     })
+    .first()
   const source = await option.getByTestId('organisation-list-item-source').textContent()
 
   if (source === 'RSD') {
