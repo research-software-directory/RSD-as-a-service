@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -103,7 +104,10 @@ export default function FindRelatedProject({project,config,token,onAdd, onCreate
       }
     }
     return (
-      <li {...props} key={option.key}>
+      <li
+        data-testid="related-project-option"
+        key={option.key}
+        {...props} >
         {/* if new option (has input) show label and count  */}
         {option.label}
       </li>
@@ -111,7 +115,9 @@ export default function FindRelatedProject({project,config,token,onAdd, onCreate
   }
 
   return (
-    <section className="flex items-center">
+    <section
+      data-testid="find-related-project"
+      className="flex items-center">
       <AsyncAutocompleteSC
         status={status}
         options={options}

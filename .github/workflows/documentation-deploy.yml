@@ -1,5 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2022 dv4all
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +10,7 @@ name: documentation deploy
 on:
   # trigger deployment on every push to main branch
   push:
-    branches: 
+    branches:
       - main
     paths:
       - "documentation/**"
@@ -16,7 +18,7 @@ on:
 
 jobs:
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v2
@@ -45,13 +47,13 @@ jobs:
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         working-directory: documentation
-        run: 
+        run:
           yarn --frozen-lockfile
 
       # run build script
       - name: Build VuePress site
         working-directory: documentation
-        run: 
+        run:
           yarn docs:build
 
       # please check out the docs of the workflow for more details

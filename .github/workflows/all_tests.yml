@@ -12,7 +12,7 @@ on:
 
 jobs:
   fe-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: "install node v18.5 and cash yarn"
@@ -32,7 +32,7 @@ jobs:
         run: yarn build
 
   api-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: "newman tests with docker-compose"
@@ -43,7 +43,7 @@ jobs:
             --exit-code-from postgrest-tests
 
   scrapers-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: "Maven JUnit tests"
@@ -53,7 +53,7 @@ jobs:
 
   e2e-tests:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3

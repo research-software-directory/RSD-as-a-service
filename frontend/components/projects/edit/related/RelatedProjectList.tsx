@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -85,7 +86,8 @@ export function RelatedProjectItem({project,onDelete}:ProjectItemProps) {
     return null
   }
   return (
-     <ListItem
+    <ListItem
+        data-testid="related-project-item"
         secondaryAction={
           <>
           <IconButton

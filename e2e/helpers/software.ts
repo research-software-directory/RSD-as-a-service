@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -178,12 +179,12 @@ export async function openEditSoftwarePage(page, name) {
   ])
 }
 
-export async function openEditContributors(page) {
-  // open contributors section
-  await page.getByRole('button', {
-    name: 'Contributors Required information'
-  }).click()
-}
+// export async function openEditContributors(page) {
+//   // open contributors section
+//   await page.getByRole('button', {
+//     name: 'Contributors Required information'
+//   }).click()
+// }
 
 export async function importContributors(page) {
   // import contributors
@@ -300,3 +301,30 @@ export async function createContact(page, contact: Person) {
   // validate affiliation
   expect(contributor).toContain(contact.affiliation)
 }
+
+// export async function addMention(page, input){
+//   const findMention = page.locator('#async-autocomplete').first()
+//   // wait for finding
+//   await Promise.all([
+//     findMention.fill(input),
+//     // wait untill options list is shown
+//     page.waitForSelector('#async-autocomplete-listbox')
+//   ])
+
+//   // select first options
+//   const option = page.getByRole('option', {
+//     name: input
+//   })
+
+//   await Promise.all([
+//     option.first().click(),
+//     page.waitForResponse(/\/mention_for_software/)
+//   ])
+
+//   // validate
+//   const mentions = page.getByTestId('mention-item-base').filter({
+//     name: input
+//   })
+//   // we should have at least one item
+//   expect(await mentions.count()).toBeGreaterThan(0)
+// }

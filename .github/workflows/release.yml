@@ -13,7 +13,7 @@ on:
 jobs:
   release_tag:
     name: conventional changelog
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       changelog: ${{steps.changelog.outputs.clean_changelog}}
       tag: ${{steps.changelog.outputs.tag}}
@@ -45,7 +45,7 @@ jobs:
   log_release_tag:
     needs: release_tag
     name: log version output
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: info
         run: |
@@ -146,7 +146,7 @@ jobs:
     if: needs.release_tag.outputs.skipped == 'false'
     needs: [release_tag,auth,database,backend,frontend,nginx,scrapers]
     name: create deployment.zip
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: checkout branch
         # https://github.com/actions/checkout
@@ -195,7 +195,7 @@ jobs:
     if: needs.release_tag.outputs.skipped == 'false'
     needs: [release_tag, deployment_files]
     name: create release draft
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: get deployment.zip
         uses: actions/download-artifact@v3

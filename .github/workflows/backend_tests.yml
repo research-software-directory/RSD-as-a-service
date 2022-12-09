@@ -21,7 +21,7 @@ on:
 
 jobs:
   api-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: "newman tests with docker-compose"

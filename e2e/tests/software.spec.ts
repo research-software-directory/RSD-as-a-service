@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -7,18 +8,21 @@ import {test, expect} from '@playwright/test'
 import {
   createSoftware, editSoftwareInput,
   conceptDoiFeatures,
-  openEditContributors,
   importContributors,
   editFirstContact,
-  createContact,
+  createContact
 } from '../helpers/software'
 import {mockSoftware} from '../mocks/mockSoftware'
 import {getRandomPerson} from '../mocks/mockPerson'
 import {
   addOrganisation, openEditPage,
-  openEditOrganisations
+  openEditSection,
+  addCitation,
+  addRelatedSoftware,
+  addRelatedProject
 } from '../helpers/utils'
 import {mockSoftwareOrganisation, Organisation} from '../mocks/mockOrganisation'
+import { mockCitations } from '../mocks/mockCitations'
 
 // run tests in serial mode
 // we first need first to create software
@@ -49,9 +53,7 @@ test.describe.serial('Software', async()=> {
     await openEditPage(page, url, software.title)
 
     // navigate to organisations section
-    await openEditOrganisations(page)
-
-    // await page.pause()
+    await openEditSection(page,"Organisations")
 
     // create organisations
     for (const org of organisations) {
@@ -104,7 +106,8 @@ test.describe.serial('Software', async()=> {
     await openEditPage(page, url, software.title)
 
     // navigate to contributors section
-    await openEditContributors(page)
+    await openEditSection(page,"Contributors")
+    // await openEditContributors(page)
 
     // import contributors
     if (software.doi) {
@@ -117,6 +120,48 @@ test.describe.serial('Software', async()=> {
     // add new contact
     await createContact(page,contact)
   })
+
+  test("Add mentions", async ({ page }, { project }) => {
+    // get mock software for the browser
+    const software = mockSoftware[project.name]
+    const citations = mockCitations[project.name]
+
+    // directly open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
+
+    // navigate to organisations sectiont
+    await openEditSection(page, "Mentions")
+
+    // add mentions using doi
+    for (const item of citations.dois.mention) {
+      await addCitation(page, item,"mention_for_software")
+    }
+
+    // add mentions using title search
+    // for (const item of mentions.titles) {
+    //   await addMention(page, item)
+    // }
+
+  })
+
+  test("Related items", async ({ page }, { project }) => {
+    const software = mockSoftware[project.name]
+
+    // directly open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
+
+    // await page.pause()
+    // navigate to organisations section
+    await openEditSection(page, "Related topics")
+
+    await addRelatedSoftware(page, "software_for_software")
+
+    await addRelatedProject(page, "software_for_project")
+
+  })
+
 
 })
 

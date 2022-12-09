@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -6,13 +7,16 @@
 import {test, expect} from '@playwright/test'
 import {
   addFundingOrganisation, addKeyword, addResearchDomain,
-  createProject, createProjectLink, createTeamMember, editProjectInput, importTeamMemberByOrcid, openEditProjectPage, openEditTeamPage
+  createProject, createProjectLink, createTeamMember,
+  editProjectInput, importTeamMemberByOrcid,
+  openEditTeamPage
 } from '../helpers/project'
 import {mockProject} from '../mocks/mockProject'
-import {openEditPage, uploadFile} from '../helpers/utils'
+import {addCitation, addRelatedProject, addRelatedSoftware, openEditPage, openEditSection, uploadFile} from '../helpers/utils'
 import {getDusanMijatovic, getRandomPerson} from '../mocks/mockPerson'
-import {addOrganisation, openEditOrganisations} from '../helpers/utils'
+import {addOrganisation} from '../helpers/utils'
 import {mockProjectOrganisation} from '../mocks/mockOrganisation'
+import {mockCitations} from '../mocks/mockCitations'
 
 // run tests in serial mode
 // we first need first to create software
@@ -43,7 +47,7 @@ test.describe.serial('Project', async () => {
     await openEditPage(page, url, proj.title)
 
     // navigate to organisations section
-    await openEditOrganisations(page)
+    await openEditSection(page,'Organisations')
 
     // create organisations
     for (const org of organisations) {
@@ -119,6 +123,59 @@ test.describe.serial('Project', async () => {
     // import team member from ORCID
     // uses real name and orcid for validation
     await importTeamMemberByOrcid(page, dusan)
+  })
+
+  test('Add impact', async ({page}, {project: {name}}) => {
+    // get mock software for the browser
+    const project = mockProject[name]
+    const citations = mockCitations[name]
+
+    // directly open edit software page
+    const url = `/projects/${project.slug}`
+    await openEditPage(page, url, project.title)
+
+    // navigate to organisations sectiont
+    await openEditSection(page, 'Impact')
+
+    // add citations using doi
+    for (const item of citations.dois.impact) {
+      await addCitation(page, item, 'impact_for_project')
+    }
+  })
+
+  test('Add output', async ({page}, {project: {name}}) => {
+    // get mock software for the browser
+    const project = mockProject[name]
+    const citations = mockCitations[name]
+
+    // directly open edit software page
+    const url = `/projects/${project.slug}`
+    await openEditPage(page, url, project.title)
+
+    // navigate to organisations sectiont
+    await openEditSection(page, 'Output')
+
+    // add citations using doi
+    for (const item of citations.dois.output) {
+      await addCitation(page, item, 'output_for_project')
+    }
+  })
+
+  test('Related items', async ({page}, {project: {name}}) => {
+    const project = mockProject[name]
+
+    // directly open edit software page
+    const url = `/projects/${project.slug}`
+    await openEditPage(page, url, project.title)
+
+    // await page.pause()
+    // navigate to organisations section
+    await openEditSection(page, 'Related topics')
+
+    await addRelatedProject(page, 'project_for_project')
+
+    await addRelatedSoftware(page, 'software_for_project')
+
   })
 
 

@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -88,13 +89,24 @@ Second level header here!
 `
 }
 
-export async function openEditOrganisations(page) {
+// export async function openEditOrganisations(page) {
+//   // open contributors section
+//   await Promise.all([
+//     // we need to wait for authentication response to settle
+//     page.waitForLoadState('networkidle'),
+//     page.getByRole('button', {
+//       name: 'Organisations'
+//     }).click()
+//   ])
+// }
+
+export async function openEditSection(page:Page,name:string) {
   // open contributors section
   await Promise.all([
     // we need to wait for authentication response to settle
     page.waitForLoadState('networkidle'),
     page.getByRole('button', {
-      name: 'Organisations'
+      name
     }).click()
   ])
 
@@ -191,4 +203,89 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
   expect(lastText).toContain(organisation.name)
 
   return true
+}
+
+export async function addCitation(page, input:string, waitForResponse:string) {
+  const findMention = page.locator('#async-autocomplete').first()
+  // wait for finding
+  await Promise.all([
+    findMention.fill(input),
+    // wait untill options list is shown
+    page.waitForSelector('#async-autocomplete-listbox')
+  ])
+
+  // select first options
+  const option = page.getByRole('option', {
+    name: input
+  })
+
+  await Promise.all([
+    option.first().click(),
+    page.waitForResponse(RegExp(waitForResponse))
+  ])
+
+  // validate
+  const mentions = page.getByTestId('mention-item-base').filter({
+    name: input
+  })
+  // we should have at least one item
+  expect(await mentions.count()).toBeGreaterThan(0)
+}
+
+export async function addRelatedSoftware(page: Page, waitForResponse:string) {
+  const findSoftware = page
+    .getByTestId('find-related-software')
+    .locator('#async-autocomplete')
+
+  await Promise.all([
+    page.waitForResponse(/software/),
+    findSoftware.fill('software')
+  ])
+
+  // get related options
+  const options = page.getByTestId('related-software-option')
+  const count = await options.count()
+  // initially there will no be items
+  if (count > 0) {
+    // select first item
+    await Promise.all([
+      page.waitForResponse(RegExp(waitForResponse)),
+      options.first().click()
+    ])
+    // if (count > 1) {
+    //   await options.last().click()
+    // }
+    // expect at least one item
+    const items = page.getByTestId('related-software-item')
+    expect(await items.count()).toBeGreaterThan(0)
+  }
+}
+
+export async function addRelatedProject(page: Page, waitForResponse:string) {
+  const findSoftware = page
+    .getByTestId('find-related-project')
+    .locator('#async-autocomplete')
+
+  await Promise.all([
+    page.waitForResponse(/project/),
+    findSoftware.fill('project')
+  ])
+
+  // get related options
+  const options = page.getByTestId('related-project-option')
+  const count = await options.count()
+  // initially there will no be items
+  if (count > 0) {
+    // select first item
+    await Promise.all([
+      page.waitForResponse(RegExp(waitForResponse)),
+      options.first().click()
+    ])
+    // if (count > 1) {
+    //   await options.last().click()
+    // }
+    // expect at least one item
+    const items = page.getByTestId('related-project-item')
+    expect(await items.count()).toBeGreaterThan(0)
+  }
 }

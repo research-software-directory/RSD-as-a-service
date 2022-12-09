@@ -19,7 +19,7 @@ on:
 jobs:
   fair-software:
     name: "fair-software"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       # https://github.com/fair-software/howfairis-github-action
       - name: Measure compliance with fair-software.eu recommendations
