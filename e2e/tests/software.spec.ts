@@ -20,7 +20,8 @@ import {
   openEditSection,
   addCitation,
   addRelatedSoftware,
-  addRelatedProject
+  addRelatedProject,
+  uploadFile
 } from '../helpers/utils'
 import {mockSoftwareOrganisation, Organisation} from '../mocks/mockOrganisation'
 import {mockCitations} from '../mocks/mockCitations'
@@ -79,6 +80,9 @@ test.describe.serial('Software', async()=> {
 
     // edit software values
     await editSoftwareInput(page, software)
+
+    // upload file
+    await uploadFile(page, '#upload-software-logo', software.logo)
 
     // test DOI imports
     await conceptDoiFeatures(page, software.doi, software.doiApi)

@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -31,7 +32,8 @@ export const mockSoftware = {
     doi: '10.5281/zenodo.6379973',
     // api used for imports
     doiApi: 'api.datacite.org',
-    markdown: createMarkdown('chrome')
+    markdown: createMarkdown('chrome'),
+    logo: 'images/dv4all-logo.svg'
   },
   chromium: {
     title: `Test software chromium ${titleId}`,
@@ -43,7 +45,8 @@ export const mockSoftware = {
     doi: '10.5281/zenodo.6379973',
     // api used for imports
     doiApi: 'api.datacite.org',
-    markdown: createMarkdown('chromium')
+    markdown: createMarkdown('chromium'),
+    logo: 'images/abacaxi-fruit-pineapple-svgrepo-com.svg'
   },
   firefox: {
     title: `Test software firefox ${titleId}`,
@@ -55,7 +58,8 @@ export const mockSoftware = {
     doi: '10.5281/zenodo.1217111',
     // api used for imports
     doiApi: 'api.datacite.org',
-    markdown: createMarkdown('firefox')
+    markdown: createMarkdown('firefox'),
+    logo: 'images/amoras-fruit-svgrepo-com.svg'
   },
   msedge: {
     title: `Test software msedge ${titleId}`,
@@ -67,7 +71,8 @@ export const mockSoftware = {
     doi: '10.5281/zenodo.6379973',
     // api used for imports
     doiApi: 'api.datacite.org',
-    markdown: createMarkdown('msedge')
+    markdown: createMarkdown('msedge'),
+    logo: 'images/bee-svgrepo-com.svg'
   },
   webkit: {
     title: `Test software webkit ${titleId}`,
@@ -79,6 +84,7 @@ export const mockSoftware = {
     doi: '10.5281/zenodo.1220113',
     // api used for imports
     doiApi: 'api.datacite.org',
-    markdown: createMarkdown('webkit')
+    markdown: createMarkdown('webkit'),
+    logo: 'images/hibiscus-svgrepo-com.svg'
   }
 }
