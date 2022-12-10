@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -34,7 +35,7 @@ const config: PlaywrightTestConfig = {
   /* Retry 1 */
   retries: 1,
   /* Run 1 worker in CI and 6 locally */
-  workers: process.env.CI ? 1 : 6,
+  workers: process.env.CI ? 2 : 6,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', {open: 'never'}]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -49,8 +50,8 @@ const config: PlaywrightTestConfig = {
     storageState: './state/localUser.json',
     // browser resolution by default
     viewport: {
-      width: 1600,
-      height: 900
+      width: 1366,
+      height: 768
     },
     // we do not have https during tests
     ignoreHTTPSErrors: true,

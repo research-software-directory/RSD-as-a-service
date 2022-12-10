@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -55,7 +56,8 @@ export default function EditTestimonialModal({open, onCancel, onSubmit, testimon
   }
 
   return (
-     <Dialog
+    <Dialog
+      data-testid="edit-testimonial-modal"
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}

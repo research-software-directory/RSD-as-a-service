@@ -27,7 +27,7 @@ export const mockCitations = {
   chromium: {
     dois: {
       mention: [
-        '10.1007/978-3-030-55874-1_30',
+        '10.1055/a-1229-5048',
         '10.1145/2996913.2997005'
       ],
       impact: [
@@ -35,7 +35,7 @@ export const mockCitations = {
         '10.1175/BAMS-D-19-0337.1'
       ],
       output: [
-        '10.1515/itit-2019-0040',
+        '10.31038/jipc.2022213',
         '10.4233/uuid:4bb38399-9267-428f-b10a-80b86e101f23'
       ]
     } ,

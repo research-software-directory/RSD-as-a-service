@@ -206,22 +206,29 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
 }
 
 export async function addCitation(page, input:string, waitForResponse:string) {
-  const findMention = page.locator('#async-autocomplete').first()
-  // wait for finding
+  // clear previous input - if clear btn is visible
+  const clearBtn = await page.getByRole('button', {
+    name: 'Clear'
+  }).first()
+  if (await clearBtn.isVisible()===true) {
+    // clear selection
+    await clearBtn.click()
+  }
+  // start new search
+  const findMention = await page.locator('#async-autocomplete').first()
   await Promise.all([
+    // then wait untill options list is shown
+    page.waitForSelector('#async-autocomplete-listbox'),
     findMention.fill(input),
-    // wait untill options list is shown
-    page.waitForSelector('#async-autocomplete-listbox')
   ])
 
   // select first options
   const option = page.getByRole('option', {
     name: input
   })
-
   await Promise.all([
+    page.waitForResponse(RegExp(waitForResponse)),
     option.first().click(),
-    page.waitForResponse(RegExp(waitForResponse))
   ])
 
   // validate
@@ -230,6 +237,7 @@ export async function addCitation(page, input:string, waitForResponse:string) {
   })
   // we should have at least one item
   expect(await mentions.count()).toBeGreaterThan(0)
+
 }
 
 export async function addRelatedSoftware(page: Page, waitForResponse:string) {
@@ -247,17 +255,27 @@ export async function addRelatedSoftware(page: Page, waitForResponse:string) {
   const count = await options.count()
   // initially there will no be items
   if (count > 0) {
-    // select first item
-    await Promise.all([
-      page.waitForResponse(RegExp(waitForResponse)),
-      options.first().click()
-    ])
-    // if (count > 1) {
-    //   await options.last().click()
-    // }
-    // expect at least one item
-    const items = page.getByTestId('related-software-item')
-    expect(await items.count()).toBeGreaterThan(0)
+    // set breakpoint
+    // await page.pause()
+    // check alredy selected
+    const relatedSoftware = page.getByTestId('related-software-item')
+    const initCnt = await relatedSoftware.count()
+    if (initCnt > 0) {
+      // select last item
+      await Promise.all([
+        page.waitForResponse(RegExp(waitForResponse)),
+        options.last().click()
+      ])
+    } else {
+      // select first item
+      await Promise.all([
+        page.waitForResponse(RegExp(waitForResponse)),
+        options.first().click()
+      ])
+    }
+    // expect item count to be increased
+    const itemsCnt = await relatedSoftware.count()
+    expect(itemsCnt).toBeGreaterThan(initCnt)
   }
 }
 
@@ -276,16 +294,23 @@ export async function addRelatedProject(page: Page, waitForResponse:string) {
   const count = await options.count()
   // initially there will no be items
   if (count > 0) {
-    // select first item
-    await Promise.all([
-      page.waitForResponse(RegExp(waitForResponse)),
-      options.first().click()
-    ])
-    // if (count > 1) {
-    //   await options.last().click()
-    // }
     // expect at least one item
-    const items = page.getByTestId('related-project-item')
-    expect(await items.count()).toBeGreaterThan(0)
+    const relatedProjects = page.getByTestId('related-project-item')
+    const initCnt = await relatedProjects.count()
+    if (initCnt > 0) {
+      // select last item
+      await Promise.all([
+        page.waitForResponse(RegExp(waitForResponse)),
+        options.last().click()
+      ])
+    } else {
+      // select first item
+      await Promise.all([
+        page.waitForResponse(RegExp(waitForResponse)),
+        options.first().click()
+      ])
+    }
+    const itemsCnt = await relatedProjects.count()
+    expect(itemsCnt).toBeGreaterThan(initCnt)
   }
 }

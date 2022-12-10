@@ -7,6 +7,7 @@
 import {expect, Page} from '@playwright/test'
 import {Person} from '../mocks/mockPerson'
 import {CreateSoftwareProps, MockedSoftware} from '../mocks/mockSoftware'
+import {Testimonial} from '../mocks/mockTestimonials'
 import {fillAutosaveInput, generateId, uploadFile} from './utils'
 
 export async function createSoftware({title, desc, slug, page}: CreateSoftwareProps) {
@@ -302,29 +303,42 @@ export async function createContact(page, contact: Person) {
   expect(contributor).toContain(contact.affiliation)
 }
 
-// export async function addMention(page, input){
-//   const findMention = page.locator('#async-autocomplete').first()
-//   // wait for finding
-//   await Promise.all([
-//     findMention.fill(input),
-//     // wait untill options list is shown
-//     page.waitForSelector('#async-autocomplete-listbox')
-//   ])
+export async function addTestimonial(page, item: Testimonial) {
+  // await page.getByRole('button', {name: 'Testimonials Optional information'}).click()
+  const addBtn = page.getByTestId('add-testimonial-btn')
+  // set breakpoint
+  // await page.pause()
+  // ensure button is visible
+  expect(addBtn).toBeVisible()
+  // click add button and wait for modal
+  await Promise.all([
+    page.waitForSelector('#edit-testimonial-modal'),
+    addBtn.click()
+  ])
 
-//   // select first options
-//   const option = page.getByRole('option', {
-//     name: input
-//   })
+  // add values
+  await page.getByLabel('Message').fill(item.message)
+  await page.getByLabel('Source').fill(item.source)
 
-//   await Promise.all([
-//     option.first().click(),
-//     page.waitForResponse(/\/mention_for_software/)
-//   ])
+  // save testimonial
+  const saveBtn = page.getByRole('button', {
+    name: 'Save'
+  })
+  await Promise.all([
+    // save item
+    page.waitForResponse(/testimonial/),
+    // wait for list to appear
+    page.waitForSelector('[data-testid="testimonial-list-item"]'),
+    saveBtn.click()
+  ])
+  // validate list has at least one item
+  const testimonials = page.getByTestId('testimonial-list-item')
+  const count = await testimonials.count()
+  expect(count).toBeGreaterThan(0)
 
-//   // validate
-//   const mentions = page.getByTestId('mention-item-base').filter({
-//     name: input
-//   })
-//   // we should have at least one item
-//   expect(await mentions.count()).toBeGreaterThan(0)
-// }
+  // validate last item is one we added
+  const lastItem = await testimonials
+    .last()
+    .getByTestId('testimonial-list-item-text')
+  expect(await lastItem.textContent()).toContain(item.message)
+}

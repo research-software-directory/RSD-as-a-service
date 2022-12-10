@@ -174,10 +174,12 @@ test.describe.serial('Project', async () => {
 
     await addRelatedProject(page, 'project_for_project')
 
-    await addRelatedSoftware(page, 'software_for_project')
-
+    // add related software only if not added
+    const relatedSoftware = page.getByTestId('related-software-item')
+    const initCnt = await relatedSoftware.count()
+    if (initCnt === 0) {
+      await addRelatedSoftware(page, 'software_for_project')
+    }
   })
-
-
 })
 
