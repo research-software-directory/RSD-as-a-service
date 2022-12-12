@@ -4,11 +4,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
+
+import logger from '~/utils/logger'
 import {IconBtnMenuOption} from '~/components/menu/IconBtnMenuOnAction'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {OrganisationForOverview, SoftwareOfOrganisation} from '~/types/Organisation'
-import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
-import logger from '~/utils/logger'
+import {patchSoftwareForOrganisation} from './patchSoftwareForOrganisation'
 
 export type SoftwareCardWithMenuProps = {
   organisation: OrganisationForOverview,
@@ -19,29 +20,6 @@ export type SoftwareCardWithMenuProps = {
 export type SoftwareMenuAction = {
   type: 'PIN' | 'UNPIN' | 'DENY' | 'APPROVE',
   payload?: string
-}
-
-export async function patchSoftwareForOrganisation({software, organisation, data, token}:
-  { software: string, organisation: string, data: any, token: string }) {
-  try {
-    const query = `software=eq.${software}&organisation=eq.${organisation}`
-    const url = `/api/v1/software_for_organisation?${query}`
-    const resp = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        ...createJsonHeaders(token),
-        'Prefer': 'return=headers-only'
-      },
-      body: JSON.stringify(data)
-    })
-    return extractReturnMessage(resp)
-  } catch (e: any) {
-    // debugger
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
 }
 
 export function useSoftwareCardActions({organisation, item, token}: SoftwareCardWithMenuProps) {

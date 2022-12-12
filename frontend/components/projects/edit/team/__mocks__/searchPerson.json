@@ -1,0 +1,23 @@
+[{
+  "given_names": "John",
+  "family_names": "Doe 80091",
+  "email_address": "test66587@example.com",
+  "orcid": null,
+  "affiliation": "Created by msedge 9866",
+  "institution": ["Created by msedge 9866"],
+  "display_name": "John Doe 80091",
+  "source": "RSD",
+  "avatar_id": "avatar-image-id"
+},{
+  "given_names": "Dusan",
+  "family_names": "Mijatovic",
+  "email_address": null,
+  "orcid": "0000-0002-1898-4461",
+  "affiliation": "Netherlands eScience Center",
+  "institution": [
+    "Netherlands eScience Center"
+  ],
+  "display_name": "Dusan Mijatovic",
+  "source": "ORCID",
+  "avatar_id": null
+}]

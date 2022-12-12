@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1765c5c5-b593-484b-a606-ab7f0a7dc859",
+    "key": "LS9_2",
+    "name": "Applied genetics, gene editing and transgenic organisms",
+    "cnt": 2
+  },
+  {
+    "id": "ab3f2c4a-411b-4a95-9daf-72ae315e576d",
+    "key": "LS9",
+    "name": "Biotechnology and Biosystems Engineering",
+    "cnt": 2
+  },
+  {
+    "id": "57d54f6f-6fd7-491f-87fd-a4400385a0a5",
+    "key": "LS",
+    "name": "Life Sciences",
+    "cnt": 2
+  },
+  {
+    "id": "bbccdade-f98a-4ab2-8537-cb37e8b2656f",
+    "key": "SH6_12",
+    "name": "Social and economic history",
+    "cnt": 1
+  },
+  {
+    "id": "d840e888-e8bf-4bd2-b7ce-120c3bcce896",
+    "key": "SH",
+    "name": "Social Sciences and Humanities",
+    "cnt": 1
+  },
+  {
+    "id": "38dfe5ae-65f8-4bab-9178-7026f73db234",
+    "key": "SH6",
+    "name": "The Study of the Human Past",
+    "cnt": 1
+  }
+]

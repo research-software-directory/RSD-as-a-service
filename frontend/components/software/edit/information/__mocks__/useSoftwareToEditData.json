@@ -1,0 +1,68 @@
+{
+  "id": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2",
+  "slug": "test-software-msedge-76572",
+  "brand_name": "Test software msedge 76572",
+  "concept_doi": "10.5281/zenodo.6379973",
+  "description": "\n## Test software msedge\n\nThis is test software markdown test.\n\n## Second header\nSecond level header here!\n\n",
+  "description_type": "markdown",
+  "description_url": null,
+  "get_started_url": "https://github.com/research-software-directory/RSD-as-a-service",
+  "image_id": "de373aec1a941814e992befe353ddfe486b6b4d1",
+  "is_published": true,
+  "short_statement": "Lorem ipsum description",
+  "repository_url": "https://github.com/research-software-directory/RSD-as-a-service",
+  "repository_platform": "github",
+  "keywords": [
+    {
+      "id": "232042a6-0b00-40b0-b102-ee1c32908447",
+      "keyword": "FAIR Sofware",
+      "software": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2"
+    },
+    {
+      "id": "e4f21a4c-bb63-45ed-a8ce-32db5d992341",
+      "keyword": "Research Software",
+      "software": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2"
+    },
+    {
+      "id": "bb112cf2-51a2-432a-9b05-3089da049524",
+      "keyword": "Software Citation",
+      "software": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2"
+    },
+    {
+      "id": "538dcd2f-dac1-40ae-9eba-710452b7a31d",
+      "keyword": "Software Impact",
+      "software": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2"
+    },
+    {
+      "id": "b0317f1a-c6ce-4afe-bb21-23509c31eb96",
+      "keyword": "Software Reuse",
+      "software": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2"
+    }
+  ],
+  "licenses": [
+    {
+      "key": "Apache-2.0",
+      "label": "Apache-2.0",
+      "data": {
+        "id": "19fb58cc-51ba-40a6-81dc-83894b600069",
+        "software": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2",
+        "license": "Apache-2.0",
+        "created_at": "2022-12-27T19:19:31.583293+00:00",
+        "updated_at": "2022-12-27T19:19:31.583293+00:00"
+      }
+    },
+    {
+      "key": "Open Access",
+      "label": "Open Access",
+      "data": {
+        "id": "a00a8f2c-86f2-4942-8be5-e4b27bf36829",
+        "software": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2",
+        "license": "Open Access",
+        "created_at": "2022-12-27T19:19:31.590167+00:00",
+        "updated_at": "2022-12-27T19:19:31.590167+00:00"
+      }
+    }
+  ],
+  "image_b64": null,
+  "image_mime_type": null
+}

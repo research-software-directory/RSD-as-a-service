@@ -27,6 +27,7 @@ export default function ProjectMaintainer({pos, maintainer, onEdit, onDelete, di
   const displayInitials = getDisplayInitials(splitName(name))
   return (
     <ListItem
+      data-testid="maintainer-list-item"
       key={email}
       secondaryAction={
         <>

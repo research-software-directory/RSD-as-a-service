@@ -8,7 +8,7 @@ import SoftwareItemPage from '../pages/software/[slug]/index'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
 // mock fetch response
-import softwareIndexData from './__fixtures__/softwareIndexData'
+import softwareIndexData from './__mocks__/softwareIndexData'
 
 jest.mock('../utils/getSoftware')
 

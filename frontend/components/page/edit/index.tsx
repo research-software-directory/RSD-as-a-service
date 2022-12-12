@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -62,6 +63,7 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
 
   function onDeletePage(page: MarkdownPage) {
     if (page?.slug && page?.title) {
+      // console.log('onDeletePage...',page)
       setDelModal({
         open: true,
         slug: page.slug,

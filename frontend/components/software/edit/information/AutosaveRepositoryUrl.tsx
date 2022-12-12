@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +15,8 @@ import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
 
-function suggestPlatform(repositoryUrl:string|null){
+function suggestPlatform(repositoryUrl: string | null) {
+  // console.log('repositoryUrl...',repositoryUrl)
   if (repositoryUrl === null) return null
 
   if (repositoryUrl?.includes('github.')) {
@@ -64,6 +66,7 @@ export default function AutosaveRepositoryUrl() {
       // debugger
       if (platform.id === null) {
         const suggestedPlatform = suggestPlatform(repository_url)
+        // console.log('suggestedPlatform...',suggestedPlatform)
         setPlatform({
           id: suggestedPlatform,
           disabled: false,

@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
@@ -26,7 +27,7 @@ const customJestConfig = {
   collectCoverageFrom: [
     './auth/**/*.{js,jsx,ts,tsx}',
     './components/**/*.{js,jsx,ts,tsx}',
-    './pages/**/*.{js,jsx,ts,tsx}',
+    './config/**/*.{js,jsx,ts,tsx}',
     './utils/**/*.{js,jsx,ts,tsx}',
     '!./utils/jest/**'
   ],
@@ -42,7 +43,8 @@ const customJestConfig = {
     // Wildcard module name mapper MUST BE at the botton of this list
     '~/(.*)$': '<rootDir>/$1',
   },
-  // modulePathIgnorePatterns: ['__mocks__', '__fixtures__','utils/jest'],
+  // ignore .next folder
+  modulePathIgnorePatterns: ['.next'],
   // d3 solution that does not work
   // transformIgnorePatterns: ['/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)'],
 }

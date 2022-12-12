@@ -58,6 +58,12 @@ export default function ResearchUnitModal({
   const {isValid, isDirty, errors} = formState
   const formData = watch()
 
+  // console.group('ResearchUnitModal')
+  // console.log('isValid...', isValid)
+  // console.log('isDirty...', isDirty)
+  // console.log('errors...', errors)
+  // console.groupEnd()
+
   useEffect(() => {
       if (typeof location != 'undefined') {
       const baseUrl = location.href.split('?')

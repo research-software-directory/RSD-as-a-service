@@ -1,21 +1,22 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CommitHistory} from '../../types/SoftwareTypes'
-import {getTimeAgoSince} from '../../utils/dateFn'
-import {prepareDataForSoftwarePage} from '../charts/d3LineChart/formatData'
-import NoDataAvailableChart from '../charts/d3LineChart/NoDataAvailableChart'
-import SingleLineChart from '../charts/d3LineChart/SingleLineChart'
+import {CommitHistory} from '~/types/SoftwareTypes'
+import {getTimeAgoSince} from '~/utils/dateFn'
+import {prepareDataForSoftwarePage} from '~/components/charts/d3LineChart/formatData'
+import NoDataAvailableChart from '~/components/charts/d3LineChart/NoDataAvailableChart'
+import SingleLineChart from '~/components/charts/d3LineChart/SingleLineChart'
 
-type CommitsChartProps = {
+export type CommitsChartProps = {
   repository_url: string | null,
-  commit_history: CommitHistory
-  commit_history_scraped_at: string
-  className: string
+  commit_history?: CommitHistory
+  commit_history_scraped_at?: string
+  className?: string
 }
 
 export default function CommitsChart({repository_url, commit_history, commit_history_scraped_at, className}: CommitsChartProps) {
@@ -25,7 +26,7 @@ export default function CommitsChart({repository_url, commit_history, commit_his
     const {lineData, lastCommitDate, totalCountY} = prepareDataForSoftwarePage(commit_history)
     // render
     return (
-      <div className={`flex-1 w-full ${className}`}>
+      <div className={`flex-1 w-full ${className ?? ''}`}>
         <SingleLineChart data={lineData} />
         <div className="software_commitsStat pt-4" id="commitsStat">
           <b>{totalCountY} commits</b> | Last commit <b>&#x2248; {
@@ -49,8 +50,9 @@ export default function CommitsChart({repository_url, commit_history, commit_his
     // we did scraped repo but no commit history exists
     noCommitMessage = 'We cannot display this graph because we cannot read the commit history.'
   }
+
   return (
-    <div className={`flex-1 w-full ${className}`}>
+    <div className={`flex-1 w-full ${className ?? ''}`}>
       <NoDataAvailableChart text={noCommitMessage} />
     </div>
   )

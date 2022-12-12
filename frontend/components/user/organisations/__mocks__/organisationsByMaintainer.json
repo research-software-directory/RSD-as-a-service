@@ -1,0 +1,32 @@
+[
+  {
+    "id": "85991bc8-de38-49fa-96b9-f50cffb32161",
+    "slug": "dutch-research-council",
+    "parent": null,
+    "primary_maintainer": null,
+    "name": "Dutch Research Council",
+    "ror_id": "https://ror.org/04jsz6e67",
+    "website": "http://www.nwo.nl/",
+    "is_tenant": false,
+    "logo_id": "91e3df883c31fb13dd703f132080d686b7e6acee",
+    "software_cnt": 1,
+    "project_cnt": 1,
+    "children_cnt": null,
+    "rsd_path": "dutch-research-council/"
+  },
+  {
+    "id": "57e85ac2-c311-4639-8adc-c332a5ced3b1",
+    "slug": "gbs-leiden",
+    "parent": null,
+    "primary_maintainer": null,
+    "name": "GBS Leiden",
+    "ror_id": "https://ror.org/01h527v58",
+    "website": "http://gbsleiden.com/",
+    "is_tenant": false,
+    "logo_id": "d812a3456ded1bdcdd8efd75b98dcd372c56ca5c",
+    "software_cnt": 1,
+    "project_cnt": 1,
+    "children_cnt": null,
+    "rsd_path": "gbs-leiden/"
+  }
+]

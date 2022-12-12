@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -58,6 +59,11 @@ export default function SoftwareOganisations() {
       open: false
     }
   })
+
+  // console.group('SoftwareOganisations')
+  // console.log('loading...', loading)
+  // console.log('organisations...', organisations)
+  // console.groupEnd()
 
   // if loading show loader
   if (loading) return (
@@ -219,8 +225,7 @@ export default function SoftwareOganisations() {
         const {status,message} = await createOrganisationAndAddToSoftware({
           item: data,
           software: software?.id ?? '',
-          token,
-          setState: addOrganisationToList
+          token
         })
         // debugger
         if (status === 200) {
@@ -277,7 +282,6 @@ export default function SoftwareOganisations() {
 
   async function sortedOrganisations(organisations: EditOrganisation[]) {
     if (organisations.length > 0) {
-      // console.log('sorted organisations...', organisations)
       const resp = await patchOrganisationPositions({
         software: software.id ?? '',
         organisations,

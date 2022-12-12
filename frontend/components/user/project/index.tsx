@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,6 +14,7 @@ import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
 import useUserProjects from './useUserProjects'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
+import ContentLoader from '~/components/layout/ContentLoader'
 
 export default function UserProjects({session}: { session: Session }) {
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions()
@@ -28,6 +30,11 @@ export default function UserProjects({session}: { session: Session }) {
       setCount(count)
     }
   }, [count, loading, setCount])
+
+  // if loading show loader
+  if (loading) return (
+    <ContentLoader />
+  )
 
   return (
     <ProjectsGrid

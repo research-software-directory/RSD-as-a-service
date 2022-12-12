@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -44,6 +45,7 @@ export function getMatomoCookies(req: IncomingMessage) {
  */
 export function getMatomoConsent(req:IncomingMessage) {
   // check for cookies
+  // console.log('getMatomoConsent...', req)
   if (req?.headers?.cookie) {
     const matomo = getMatomoCookies(req)
     if (matomo?.mtm_consent) {

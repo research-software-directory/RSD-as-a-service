@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -133,7 +134,10 @@ export default function FindKeyword({config, onAdd, searchForKeyword, onCreate}:
       }
     }
     return (
-      <li {...props} key={option.key}>
+      <li
+        data-testid="find-keyword-item"
+        {...props}
+        key={option.key}>
         {/* if new option (has input) show label and count  */}
         {option.label} ({option.data.cnt ?? 0})
       </li>

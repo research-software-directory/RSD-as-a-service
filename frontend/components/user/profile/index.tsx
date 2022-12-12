@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +9,7 @@ import {Session} from '~/auth'
 export default function UserProfile({session}: { session: Session }) {
 
   return (
-    <div>
+    <div data-testid="user-profile-section">
       {/* <h1>Your profile</h1> */}
       <div className="py-4">
         <div>Account id</div>

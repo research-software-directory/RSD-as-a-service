@@ -7,7 +7,7 @@ import {render,screen} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
 
 import MentionsSection from './MentionsSection'
-import mentionsData from './__fixtures__/mentionSectionData.json'
+import mentionsData from './__mocks__/mentionSectionData.json'
 
 it('should NOT render mentions section when no data provided',()=>{
   render(WrappedComponentWithProps(MentionsSection))

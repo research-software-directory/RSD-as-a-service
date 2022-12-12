@@ -4,7 +4,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {ParsedUrlQuery} from 'node:querystring'
-import {extractQueryParam} from './extractQueryParam'
+import {
+  extractQueryParam, ssrSoftwareParams,
+  ssrProjectsParams, ssrOrganisationParams
+} from './extractQueryParam'
 
 
 it('extracts rows param from url query', () => {
@@ -61,4 +64,59 @@ it('extracts keywords as array from url query', () => {
     defaultValue: null
   })
   expect(keywords).toEqual(expected)
+})
+
+
+it('extracts ssrSoftwareParams from url query', () => {
+  const query: ParsedUrlQuery = {
+    'search': 'test search',
+    'keywords': '["BAM","FAIR Sofware"]',
+    'page': '0',
+    'rows': '12'
+  }
+  const expected = {
+    search: 'test search',
+    keywords: ['BAM', 'FAIR Sofware'],
+    page: 0,
+    rows: 12
+  }
+  const params = ssrSoftwareParams(query)
+
+  expect(params).toEqual(expected)
+})
+
+it('extracts ssrProjectsParams from url query', () => {
+  const query: ParsedUrlQuery = {
+    'search': 'testing search',
+    'keywords': '["Big data","GPU"]',
+    'domains': '["SH6","LS"]',
+    'page': '1',
+    'rows': '24'
+  }
+  const expected = {
+    search: 'testing search',
+    keywords: ['Big data', 'GPU'],
+    domains: ['SH6', 'LS'],
+    page: 1,
+    rows: 24
+  }
+  const params = ssrProjectsParams(query)
+
+  expect(params).toEqual(expected)
+})
+
+it('extracts ssrOrganisationParams from url query', () => {
+  const query: ParsedUrlQuery = {
+    'search': 'another search',
+    'page': '3',
+    'rows': '48'
+  }
+  const expected = {
+    search: 'another search',
+    page: 3,
+    rows: 48
+  }
+  const params = ssrOrganisationParams(query)
+
+  expect(params).toEqual(expected)
 })

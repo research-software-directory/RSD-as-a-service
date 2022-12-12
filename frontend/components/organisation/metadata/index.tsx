@@ -67,7 +67,6 @@ export default function OrganisationMetadata({organisation, meta, isMaintainer}:
         id={organisation.id}
         logo_id={organisation.logo_id}
         name={organisation.name}
-        website={organisation.website}
         isMaintainer={isMaintainer}
       />
       <RorType meta={meta} />

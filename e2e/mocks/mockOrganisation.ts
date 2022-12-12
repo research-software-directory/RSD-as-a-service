@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
 
 export type Organisation = {
   name: string
@@ -16,7 +20,7 @@ export const mockSoftwareOrganisation = {
       name: 'Vrije Universiteit Amsterdam',
       logo: 'images/vu-logo.svg'
     },{
-      name: 'Delft University of Technology',
+      name: 'Eindhoven University of Technology',
       logo: 'images/tu-delft-logo.jpg'
   }],
   firefox: [{
@@ -28,7 +32,8 @@ export const mockSoftwareOrganisation = {
     }
   ],
   msedge: [{
-      name: 'Gemeente Leiden'
+      name: 'Tottori University',
+      logo: 'images/tattori-logo-eng.png'
     },{
       name: 'Gemeente Den Haag'
   }],
@@ -54,7 +59,7 @@ export const mockProjectOrganisation = {
     name: 'Vrije Universiteit Amsterdam',
     logo: 'images/vu-logo.svg'
   }, {
-    name: 'Delft University of Technology',
+    name: 'Eindhoven University of Technolog',
     logo: 'images/tu-delft-logo.jpg'
   }],
   msedge: [{
@@ -84,11 +89,11 @@ export const fundingOrganisation = {
   ],
   chromium: [
     'Vrije Universiteit Amsterdam',
-    'Delft University of Technology'
+    'Eindhoven University of Technology'
   ],
   firefox: [
     'University of Twente',
-    'Leiden University'
+    'Tottori University'
   ],
   msedge: [
     'Gemeente Leiden',

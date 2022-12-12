@@ -38,9 +38,11 @@ export default function AboutPage({organisation}: OrganisationComponentsProps) {
   // if description is present we return markdown page
   if (organisation.description) {
     return (
-      <section className="pt-2 pb-12">
+      <section
+        data-testid="organisation-about-page"
+        className="pt-2 pb-12">
         <ReactMarkdownWithSettings
-            markdown={organisation?.description}
+          markdown={organisation?.description}
         />
       </section>
     )

@@ -58,6 +58,10 @@ export default function OrganisationPage({organisation,slug,page,ror}:Organisati
   // console.log('organisation...', organisation)
   // console.log('slug....', slug)
   // console.log('page....', page)
+  // console.log('ror....', ror)
+  // console.log('loading....', loading)
+  // console.log('isMaintainer....', isMaintainer)
+  // console.log('pageState....', pageState?.id)
   // console.groupEnd()
 
   function renderStepComponent() {
@@ -91,7 +95,9 @@ export default function OrganisationPage({organisation,slug,page,ror}:Organisati
               meta={ror}
             />
           </div>
-          <div className="flex flex-col min-h-[55rem]">
+          <div
+            data-testid={`organisation-content-${pageState?.id ?? 'loading'}`}
+            className="flex flex-col min-h-[55rem]">
             {renderStepComponent()}
           </div>
         </section>

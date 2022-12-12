@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,6 +23,11 @@ export default function MentionEditSection() {
 
   // do not render if loading
   if (loading) return <ContentLoader />
+
+  // console.group('MentionEditSection')
+  // console.log('settings...', settings)
+  // console.log('mentions...', mentions)
+  // console.groupEnd()
 
   function closeEditModal() {
     // we close modal by calling confirmDelete
@@ -86,7 +92,7 @@ export default function MentionEditSection() {
       />
       <ConfirmDeleteModal
         open={confirmModal.open}
-        title={settings.cofirmDeleteModalTitle}
+        title={settings.confirmDeleteModalTitle}
         body={
           <p>Are you sure you want to remove <strong>{confirmModal?.item?.title ?? 'this item'}</strong>?</p>
         }

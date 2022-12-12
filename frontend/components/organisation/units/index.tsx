@@ -122,6 +122,7 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
 
   async function saveOrganisation({data, pos}:{data: EditOrganisation, pos?: number }) {
     try {
+      // console.log('saveOrganisation...', data)
       // UPLOAD logo
       if (data.logo_b64 && data.logo_mime_type) {
         // split base64 to use only encoded content
@@ -165,6 +166,7 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
           organisation:unit,
           token
         })
+        // console.log('createOrganisation...resp...', resp)
         // debugger
         if (resp.status === 201) {
           data.id = resp.message

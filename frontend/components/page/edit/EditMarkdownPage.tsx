@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -38,7 +39,6 @@ export type EditMarkdownPageProps = {
 
 export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPageProps) {
   const {session: {token}} = useAuth()
-  const [fetch, setFetch] = useState(false)
   const [loading, setLoading] = useState(true)
   const [loadedSlug, setLoadedSlug]=useState<string>()
   const {
@@ -49,7 +49,7 @@ export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPa
   // form data provided by react-hook-form
   const formData = watch()
 
-  const getMarkdown = useCallback(()=>{
+  const getMarkdown = useCallback(() => {
     setLoading(true)
     getMarkdownPage({slug, token, is_published: false})
       .then(resp => {
@@ -61,7 +61,6 @@ export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPa
       .finally(() =>
         setLoading(false)
       )
-    setFetch(false)
   },[slug,token,reset])
 
   useEffect(() => {
@@ -77,19 +76,14 @@ export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPa
     }
   }, [slug, loadedSlug, token, getMarkdown])
 
-  // useEffect(() => {
-  //   // fetch markdown from database
-  //   // on explicit demand ONLY (token refresh fix)
-  //   if (fetch === true && slug !== currentPage) {
-  //     getMarkdown()
-  //   }
-  // },[fetch,currentPage,getMarkdown])
-
   // console.group('EditMarkdownPage')
+  // console.log('loading...', loading)
+  // console.log('token...', token)
   // console.log('isDirty...', isDirty)
   // console.log('isValid...', isValid)
   // console.log('formData...', formData)
-  // console.log('token...', token)
+  // console.log('slug...', slug)
+  // console.log('loadedSlug...', loadedSlug)
   // console.groupEnd()
 
   async function savePage(data: MarkdownPage) {
@@ -132,7 +126,8 @@ export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPa
 
   return (
     <form
-      id={'edit-markdown'}
+      id='edit-markdown'
+      data-testid="edit-markdown-form"
       onSubmit={handleSubmit(savePage)}
       className='flex-1 py-4'>
       {/* hidden inputs */}
@@ -173,7 +168,9 @@ export default function EditMarkdownPage({slug,onDelete,onSubmit}:EditMarkdownPa
             variant="text"
             color="error"
             endIcon={<DeleteIcon />}
-            onClick={() => onDelete(formData)}
+            onClick={() => {
+              onDelete(formData)
+            }}
             sx={{
               marginLeft:'1rem'
             }}

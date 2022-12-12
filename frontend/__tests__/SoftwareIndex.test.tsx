@@ -9,7 +9,7 @@ import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 import {mockResolvedValue} from '../utils/jest/mockFetch'
 
 // mock fetch response
-import softwareItem from './__fixtures__/softwareItem.json'
+import softwareItem from './__mocks__/softwareItem.json'
 import {RsdUser} from '../auth'
 
 const mockedResponse=[softwareItem]

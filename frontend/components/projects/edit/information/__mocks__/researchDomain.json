@@ -1,0 +1,3005 @@
+[
+  {
+    "id": "57d54f6f-6fd7-491f-87fd-a4400385a0a5",
+    "key": "LS",
+    "name": "Life Sciences",
+    "description": "Life Sciences (LS)",
+    "parent": null
+  },
+  {
+    "id": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0",
+    "key": "LS1",
+    "name": "Molecules of Life: Biological Mechanisms, Structures and Functions",
+    "description": "For all organisms: Molecular biology, biochemistry, structural biology, molecular biophysics, synthetic and chemical biology, drug design, innovative methods and modelling (LS1)",
+    "parent": "57d54f6f-6fd7-491f-87fd-a4400385a0a5"
+  },
+  {
+    "id": "43dca2fd-f00d-4bbc-a708-2b109890fd88",
+    "key": "LS1_1",
+    "name": "Macromolecular complexes including interactions involving nucleic acids, proteins, lipids and carbohydrates",
+    "description": "Macromolecular complexes including interactions involving nucleic acids, proteins, lipids and carbohydrates (LS1_1)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "d0933143-0438-44cd-bcb6-d72b3c222d9e",
+    "key": "LS1_10",
+    "name": "Synthetic biology",
+    "description": "Synthetic biology (LS1_10)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "4026a724-d98a-4008-b491-da7486c0af21",
+    "key": "LS1_11",
+    "name": "Chemical biology",
+    "description": "Chemical biology (LS1_11)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "8818741e-594c-4336-80fc-993713dd4c0c",
+    "key": "LS1_12",
+    "name": "Protein design",
+    "description": "Protein design (LS1_12)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "e64afde3-0e2a-44d1-8881-82d67aedb252",
+    "key": "LS1_13",
+    "name": "Early translational research and drug design",
+    "description": "Early translational research and drug design (LS1_13)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "a1825df3-fd4e-45b3-8d8c-b78bc429a971",
+    "key": "LS1_14",
+    "name": "Innovative methods and modelling in molecular, structural and synthetic biology",
+    "description": "Innovative methods and modelling in molecular, structural and synthetic biology (LS1_14)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "d1759061-e171-4471-b695-8b0043c4a7de",
+    "key": "LS1_2",
+    "name": "Biochemistry",
+    "description": "Biochemistry (LS1_2)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "86b10d41-51dd-409b-9445-70f4adbfee84",
+    "key": "LS1_3",
+    "name": "DNA and RNA biology",
+    "description": "DNA and RNA biology (LS1_3)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "a54310d8-f895-40bf-9608-fd8a34cce549",
+    "key": "LS1_4",
+    "name": "Protein biology",
+    "description": "Protein biology (LS1_4)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "554e9c53-7934-42df-adbe-950261650507",
+    "key": "LS1_5",
+    "name": "Lipid biology",
+    "description": "Lipid biology (LS1_5)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "5f8ef5e8-6cda-4b0b-be1f-7ca9219ad023",
+    "key": "LS1_6",
+    "name": "Glycobiology",
+    "description": "Glycobiology (LS1_6)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "70c0809e-100d-42a8-ac2e-5d643fbdc0d8",
+    "key": "LS1_7",
+    "name": "Molecular biophysics, biomechanics, bioenergetics",
+    "description": "Molecular biophysics, biomechanics, bioenergetics (LS1_7)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "7806acfb-1bfc-4f91-83a5-827385b4b003",
+    "key": "LS1_8",
+    "name": "Structural biology",
+    "description": "Structural biology (LS1_8)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "4d21523c-cf59-43e4-b961-3717ef82cd27",
+    "key": "LS1_9",
+    "name": "Molecular mechanisms of signalling processes",
+    "description": "Molecular mechanisms of signalling processes (LS1_9)",
+    "parent": "a580bc44-8983-4f92-aaeb-49b8fd3ab9c0"
+  },
+  {
+    "id": "34f86c30-cad9-4fef-bde0-62d634e96494",
+    "key": "LS2",
+    "name": "Integrative Biology: from Genes and Genomes to Systems",
+    "description": "For all organisms: Genetics, epigenetics, genomics and other ‘omics studies, bioinformatics, systems biology, genetic diseases, gene editing, innovative methods and modelling, ‘omics for personalised medicine (LS2)",
+    "parent": "57d54f6f-6fd7-491f-87fd-a4400385a0a5"
+  },
+  {
+    "id": "79c8c52a-d663-46d4-b243-7a2b60cf5a66",
+    "key": "LS2_1",
+    "name": "Genetics",
+    "description": "Genetics (LS2_1)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "62ff32e5-879c-485f-a16e-ea3f1979720b",
+    "key": "LS2_10",
+    "name": "Glycomics/Lipidomics",
+    "description": "Glycomics/Lipidomics (LS2_10)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "b9aeb5f5-3137-492d-b626-b435baebf64e",
+    "key": "LS2_11",
+    "name": "Bioinformatics and computational biology",
+    "description": "Bioinformatics and computational biology (LS2_11)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "7ae6c767-5967-44df-8455-6e419fe0862a",
+    "key": "LS2_12",
+    "name": "Biostatistics",
+    "description": "Biostatistics (LS2_12)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "e4f75cc5-ca26-4812-abd0-6215f7b096f5",
+    "key": "LS2_13",
+    "name": "Systems biology",
+    "description": "Systems biology (LS2_13)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "6d9da82a-7484-41d5-9af6-b2a46ae00fe4",
+    "key": "LS2_14",
+    "name": "Genetic diseases",
+    "description": "Genetic diseases (LS2_14)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "9b15a4e4-9505-44de-9b0e-5da1edcc5357",
+    "key": "LS2_15",
+    "name": "Integrative biology for personalised medicine",
+    "description": "Integrative biology for personalised medicine (LS2_15)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "0d493d82-da73-4690-b214-50d42f095a4e",
+    "key": "LS2_16",
+    "name": "Innovative methods and modelling in integrative biology",
+    "description": "Innovative methods and modelling in integrative biology (LS2_16)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "e7cae0ef-d779-4c75-b2c5-6ee0e60d11e7",
+    "key": "LS2_2",
+    "name": "Gene editing",
+    "description": "Gene editing (LS2_2)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "daca73da-6f39-4fa4-a922-1912d9686811",
+    "key": "LS2_3",
+    "name": "Epigenetics",
+    "description": "Epigenetics (LS2_3)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "b168a682-4b25-4ffe-88d8-713b4bd0bfe3",
+    "key": "LS2_4",
+    "name": "Gene regulation",
+    "description": "Gene regulation (LS2_4)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "5510b6ca-7068-4e28-809f-4e1561beb6df",
+    "key": "LS2_5",
+    "name": "Genomics",
+    "description": "Genomics (LS2_5)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "4a86768b-c3d3-40cf-8e99-3e64d03244ca",
+    "key": "LS2_6",
+    "name": "Metagenomics",
+    "description": "Metagenomics (LS2_6)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "70c5512f-b120-4b9e-9f57-537984e5502d",
+    "key": "LS2_7",
+    "name": "Transcriptomics",
+    "description": "Transcriptomics (LS2_7)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "053238a0-7640-492c-91be-03c3be907f42",
+    "key": "LS2_8",
+    "name": "Proteomics",
+    "description": "Proteomics (LS2_8)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "1d36c082-8eb5-44b7-8c4b-e364bf4314bd",
+    "key": "LS2_9",
+    "name": "Metabolomics",
+    "description": "Metabolomics (LS2_9)",
+    "parent": "34f86c30-cad9-4fef-bde0-62d634e96494"
+  },
+  {
+    "id": "b4029e57-9717-4047-982d-0ff19df8cafb",
+    "key": "LS3",
+    "name": "Cellular, Developmental and Regenerative Biology",
+    "description": "For all organisms: Structure and function of the cell, cell-cell communication, embryogenesis, tissue differentiation, organogenesis, growth, development, evolution of development, organoids, stem cells, regeneration, therapeutic approaches (LS3)",
+    "parent": "57d54f6f-6fd7-491f-87fd-a4400385a0a5"
+  },
+  {
+    "id": "8b8a40aa-13cb-4dfd-891e-4c6f817d1d40",
+    "key": "LS3_1",
+    "name": "Cell cycle, cell division and growth",
+    "description": "Cell cycle, cell division and growth (LS3_1)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "357efcf6-9f0e-4bda-b59c-018c58db9459",
+    "key": "LS3_10",
+    "name": "Developmental genetics",
+    "description": "Developmental genetics (LS3_10)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "34c134ca-66bc-42e7-928e-664b9546b546",
+    "key": "LS3_11",
+    "name": "Evolution of developmental strategies",
+    "description": "Evolution of developmental strategies (LS3_11)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "0221cd3a-c31b-46fd-9983-b74f7b0d617d",
+    "key": "LS3_12",
+    "name": "Organoids",
+    "description": "Organoids (LS3_12)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "14fd5562-7dc5-458e-bbd5-a4fd7e44e675",
+    "key": "LS3_13",
+    "name": "Stem cells",
+    "description": "Stem cells (LS3_13)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "6e7d7faa-8182-4bca-95df-ce3c3b6322e2",
+    "key": "LS3_14",
+    "name": "Regeneration",
+    "description": "Regeneration (LS3_14)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "236e1196-f5b5-43aa-aa7a-3c8bb9849f8f",
+    "key": "LS3_15",
+    "name": "Development of cell-based therapeutic approaches for tissue regeneration",
+    "description": "Development of cell-based therapeutic approaches for tissue regeneration (LS3_15)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "234631be-a224-44bc-a56a-e9f703ea3566",
+    "key": "LS3_16",
+    "name": "Functional imaging of cells and tissues",
+    "description": "Functional imaging of cells and tissues (LS3_16)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "71a2ffb5-2102-4070-95c7-aca42076af91",
+    "key": "LS3_17",
+    "name": "Theoretical modelling in cellular, developmental and regenerative biology",
+    "description": "Theoretical modelling in cellular, developmental and regenerative biology (LS3_17)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "541a5dbf-8126-4f5f-b31f-772976b1b072",
+    "key": "LS3_2",
+    "name": "Cell senescence, cell death, autophagy, cell ageing",
+    "description": "Cell senescence, cell death, autophagy, cell ageing (LS3_2)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "b46efeaf-a1c8-4443-a758-a6e93c2d62a7",
+    "key": "LS3_3",
+    "name": "Cell behaviour, including control of cell shape, cell migration",
+    "description": "Cell behaviour, including control of cell shape, cell migration (LS3_3)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "e9a38082-da14-4f2f-bb42-f8f2848ffc45",
+    "key": "LS3_4",
+    "name": "Cell junctions, cell adhesion, the extracellular matrix, cell communication",
+    "description": "Cell junctions, cell adhesion, the extracellular matrix, cell communication (LS3_4)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "fd8a587c-75ba-4568-b7c0-2c3b666e0786",
+    "key": "LS3_5",
+    "name": "Cell signalling and signal transduction, exosome biology",
+    "description": "Cell signalling and signal transduction, exosome biology (LS3_5)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "546f7ff5-158c-4a7b-a71c-3913d99ea593",
+    "key": "LS3_6",
+    "name": "Organelle biology and trafficking",
+    "description": "Organelle biology and trafficking (LS3_6)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "405294de-a857-47fd-be86-d24c4ee452f2",
+    "key": "LS3_7",
+    "name": "Mechanobiology of cells, tissues and organs",
+    "description": "Mechanobiology of cells, tissues and organs (LS3_7)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "a07c2181-9574-41a1-be91-cf0a825b4085",
+    "key": "LS3_8",
+    "name": "Embryogenesis, pattern formation, morphogenesis",
+    "description": "Embryogenesis, pattern formation, morphogenesis (LS3_8)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "e170d0a8-14f0-41fc-b87f-fa3f184aa219",
+    "key": "LS3_9",
+    "name": "Cell differentiation, formation of tissues and organs",
+    "description": "Cell differentiation, formation of tissues and organs (LS3_9)",
+    "parent": "b4029e57-9717-4047-982d-0ff19df8cafb"
+  },
+  {
+    "id": "0b775f51-5654-4c55-8768-9fbf77a01439",
+    "key": "LS4",
+    "name": "Physiology in Health, Disease and Ageing",
+    "description": "Organ and tissue physiology, comparative physiology, physiology of ageing, pathophysiology, inter-organ and tissue communication, endocrinology, nutrition, metabolism, interaction with the microbiome, non-communicable diseases including cancer (and except disorders of the nervous system and immunity-related diseases) (LS4)",
+    "parent": "57d54f6f-6fd7-491f-87fd-a4400385a0a5"
+  },
+  {
+    "id": "adef0ad0-5a2c-4a12-8038-12dee12f4cd3",
+    "key": "LS4_1",
+    "name": "Organ and tissue physiology and pathophysiology",
+    "description": "Organ and tissue physiology and pathophysiology (LS4_1)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "a7240a64-95ec-4af3-a324-879a447f296b",
+    "key": "LS4_10",
+    "name": "The cardiovascular system and cardiovascular diseases",
+    "description": "The cardiovascular system and cardiovascular diseases (LS4_10)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "7281f5d6-5f2c-4517-bfe1-9ff789bda07e",
+    "key": "LS4_11",
+    "name": "Haematopoiesis and blood diseases",
+    "description": "Haematopoiesis and blood diseases (LS4_11)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "d9acea3d-57a2-44d2-9846-8a0463ad16a0",
+    "key": "LS4_12",
+    "name": "Cancer",
+    "description": "Cancer (LS4_12)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "f77d0f8e-e27d-40bc-a079-14569d8205e9",
+    "key": "LS4_13",
+    "name": "Other non-communicable diseases (except disorders of the nervous system and immunity-related diseases)",
+    "description": "Other non-communicable diseases (except disorders of the nervous system and immunity-related diseases) (LS4_13)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "2d82f55a-76e4-4ef9-b307-0f81f4780d3a",
+    "key": "LS4_2",
+    "name": "Comparative physiology",
+    "description": "Comparative physiology (LS4_2)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "921ffe70-7c15-44fb-8765-257340ad0195",
+    "key": "LS4_3",
+    "name": "Physiology of ageing",
+    "description": "Physiology of ageing (LS4_3)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "d66975d7-410c-4b49-8653-a65d529d5bcf",
+    "key": "LS4_4",
+    "name": "Endocrinology",
+    "description": "Endocrinology (LS4_4)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "63c4a6cc-8343-44d5-aa7a-d928cf26cb88",
+    "key": "LS4_5",
+    "name": "Non-hormonal mechanisms of inter-organ and tissue communication",
+    "description": "Non-hormonal mechanisms of inter-organ and tissue communication (LS4_5)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "0557ba0e-f8bb-4986-8613-82a22f71d22e",
+    "key": "LS4_6",
+    "name": "Microbiome and host physiology",
+    "description": "Microbiome and host physiology (LS4_6)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "c1fae19a-0ef4-48ac-ac8b-9fd071488667",
+    "key": "LS4_7",
+    "name": "Nutrition and exercise physiology",
+    "description": "Nutrition and exercise physiology (LS4_7)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "60e5c981-d433-4feb-b6a4-feed938bb008",
+    "key": "LS4_8",
+    "name": "Impact of stress (including environmental stress) on physiology",
+    "description": "Impact of stress (including environmental stress) on physiology (LS4_8)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "ef957d1e-38e2-443d-a275-c7c61c87727c",
+    "key": "LS4_9",
+    "name": "Metabolism and metabolic disorders, including diabetes and obesity",
+    "description": "Metabolism and metabolic disorders, including diabetes and obesity (LS4_9)",
+    "parent": "0b775f51-5654-4c55-8768-9fbf77a01439"
+  },
+  {
+    "id": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb",
+    "key": "LS5",
+    "name": "Neuroscience and Disorders of the Nervous System",
+    "description": "Nervous system development, homeostasis and ageing, nervous system function and dysfunction, systems neuroscience and modelling, biological basis of cognitive processes and of behaviour, neurological and mental disorders (LS5)",
+    "parent": "57d54f6f-6fd7-491f-87fd-a4400385a0a5"
+  },
+  {
+    "id": "d8ca9807-3f6f-400c-9c8e-ec60c02faafe",
+    "key": "LS5_1",
+    "name": "Neuronal cells",
+    "description": "Neuronal cells (LS5_1)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "e579ad21-61a9-4546-9178-584b1475fc55",
+    "key": "LS5_10",
+    "name": "Ageing of the nervous system",
+    "description": "Ageing of the nervous system (LS5_10)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "f351d2c1-b9a3-4107-9625-9c0672bb120e",
+    "key": "LS5_11",
+    "name": "Neurological and neurodegenerative disorders",
+    "description": "Neurological and neurodegenerative disorders (LS5_11)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "e9742f6b-4bd2-4768-9e57-c54890826a00",
+    "key": "LS5_12",
+    "name": "Mental disorders",
+    "description": "Mental disorders (LS5_12)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "aff843bf-7735-4348-9063-601c0cdc1080",
+    "key": "LS5_13",
+    "name": "Nervous system injuries and trauma, stroke",
+    "description": "Nervous system injuries and trauma, stroke (LS5_13)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "7b61e856-8317-4400-a7b8-245eb8d5f690",
+    "key": "LS5_14",
+    "name": "Repair and regeneration of the nervous system",
+    "description": "Repair and regeneration of the nervous system (LS5_14)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "6b9fbc93-2474-42e0-a7d9-dc47b5e48757",
+    "key": "LS5_15",
+    "name": "Neuroimmunology, neuroinflammation",
+    "description": "Neuroimmunology, neuroinflammation (LS5_15)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "c115707b-c7a0-4f75-8234-27320a39e94a",
+    "key": "LS5_16",
+    "name": "Systems and computational neuroscience",
+    "description": "Systems and computational neuroscience (LS5_16)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "40b1f018-b6b9-46fe-84ed-99facf2a6a9a",
+    "key": "LS5_17",
+    "name": "Imaging in neuroscience",
+    "description": "Imaging in neuroscience (LS5_17)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "13600553-7b80-4346-a87c-846e70dab3ae",
+    "key": "LS5_18",
+    "name": "Innovative methods and tools for neuroscience",
+    "description": "Innovative methods and tools for neuroscience (LS5_18)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "880fc030-c5d0-4e27-b48d-22723ce707c4",
+    "key": "LS5_2",
+    "name": "Glial cells and neuronal-glial communication",
+    "description": "Glial cells and neuronal-glial communication (LS5_2)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "a76ad137-5c88-4ff1-aebc-ae4812fd2b61",
+    "key": "LS5_3",
+    "name": "Neural development and related disorders",
+    "description": "Neural development and related disorders (LS5_3)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "90d37337-1387-4fb9-afce-0a6237d30a8e",
+    "key": "LS5_4",
+    "name": "Neural stem cells",
+    "description": "Neural stem cells (LS5_4)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "3823b75e-ea63-41b8-93c0-2b0bd7d7f103",
+    "key": "LS5_5",
+    "name": "Neural networks and plasticity",
+    "description": "Neural networks and plasticity (LS5_5)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "a7bd7209-698d-4319-8e88-1c1dd6f99989",
+    "key": "LS5_6",
+    "name": "Neurovascular biology and blood-brain barrier",
+    "description": "Neurovascular biology and blood-brain barrier (LS5_6)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "f16dfee8-4ed9-4e31-b0c0-e9385fe2d22a",
+    "key": "LS5_7",
+    "name": "Sensory systems, sensation and perception, including pain",
+    "description": "Sensory systems, sensation and perception, including pain (LS5_7)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "3bc9213c-97af-4786-ab1f-ffcf9f54631b",
+    "key": "LS5_8",
+    "name": "Neural basis of behaviour",
+    "description": "Neural basis of behaviour (LS5_8)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "463321b6-8c3b-4b96-b754-48de06d627e7",
+    "key": "LS5_9",
+    "name": "Neural basis of cognition",
+    "description": "Neural basis of cognition (LS5_9)",
+    "parent": "17ec35a0-ac07-4ff6-b729-75d5f07acbfb"
+  },
+  {
+    "id": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c",
+    "key": "LS6",
+    "name": "Immunity, Infection and Immunotherapy",
+    "description": "The immune system, related disorders and their mechanisms, biology of infectious agents and infection, biological basis of prevention and treatment of infectious diseases, innovative immunological tools and approaches, including therapies (LS6)",
+    "parent": "57d54f6f-6fd7-491f-87fd-a4400385a0a5"
+  },
+  {
+    "id": "cfd05a83-9abd-4a0f-a3fa-be1b4f78e774",
+    "key": "LS6_1",
+    "name": "Innate immunity",
+    "description": "Innate immunity (LS6_1)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "bf17e4ff-75f5-4a3e-a694-29af3c1bab39",
+    "key": "LS6_10",
+    "name": "Vaccine development",
+    "description": "Vaccine development (LS6_10)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "db410b58-7712-436d-b607-42f432e40cfa",
+    "key": "LS6_11",
+    "name": "Innovative immunological tools and approaches, including therapies",
+    "description": "Innovative immunological tools and approaches, including therapies (LS6_11)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "259128e8-c3ee-40a3-95d8-f55a080016e2",
+    "key": "LS6_2",
+    "name": "Adaptive immunity",
+    "description": "Adaptive immunity (LS6_2)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "372e720a-0daa-4564-b96e-3dbfb59c9d92",
+    "key": "LS6_3",
+    "name": "Regulation of the immune response",
+    "description": "Regulation of the immune response (LS6_3)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "e574ae55-5b1b-4d85-89ae-e3c0433161cf",
+    "key": "LS6_4",
+    "name": "Immune-related diseases",
+    "description": "Immune-related diseases (LS6_4)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "99b866ab-57d5-4423-a307-c428b9fed130",
+    "key": "LS6_5",
+    "name": "Biology of pathogens (e.g. bacteria, viruses, parasites, fungi)",
+    "description": "Biology of pathogens (e.g. bacteria, viruses, parasites, fungi) (LS6_5)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "c579727f-888c-4901-af62-b39672a2f374",
+    "key": "LS6_6",
+    "name": "Infectious diseases",
+    "description": "Infectious diseases (LS6_6)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "bc9efd34-7215-4d8b-ab60-798f998942e9",
+    "key": "LS6_7",
+    "name": "Mechanisms of infection",
+    "description": "Mechanisms of infection (LS6_7)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "ba0a9a0d-e6e9-4dec-983a-2d072b3e354d",
+    "key": "LS6_8",
+    "name": "Biological basis of prevention and treatment of infection",
+    "description": "Biological basis of prevention and treatment of infection (LS6_8)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "ad0e66b4-ba18-4474-821e-47259f1b8e24",
+    "key": "LS6_9",
+    "name": "Antimicrobials, antimicrobial resistance",
+    "description": "Antimicrobials, antimicrobial resistance (LS6_9)",
+    "parent": "5aea23ff-7a23-4acb-b4a5-e6e810142d5c"
+  },
+  {
+    "id": "1704d179-f5e8-4cd0-9ff5-a022b34876d8",
+    "key": "LS7",
+    "name": "Prevention, Diagnosis and Treatment of Human Diseases",
+    "description": "Medical technologies and tools for prevention, diagnosis and treatment of human diseases, therapeutic approaches and interventions, pharmacology, preventative medicine, epidemiology and public health, digital medicine (LS7)",
+    "parent": "57d54f6f-6fd7-491f-87fd-a4400385a0a5"
+  },
+  {
+    "id": "b75bcf37-8858-4b14-aec7-3717813479f3",
+    "key": "LS7_1",
+    "name": "Medical imaging for prevention, diagnosis and monitoring of diseases",
+    "description": "Medical imaging for prevention, diagnosis and monitoring of diseases (LS7_1)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "e8bc3d38-85d6-4089-888f-dca39d2c1180",
+    "key": "LS7_10",
+    "name": "Preventative and prognostic medicine",
+    "description": "Preventative and prognostic medicine (LS7_10)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "c10794ec-6edd-481a-9613-a1f4a923047c",
+    "key": "LS7_11",
+    "name": "Environmental health, occupational medicine",
+    "description": "Environmental health, occupational medicine (LS7_11)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "92ea47ad-088c-4345-be6d-674e5193551c",
+    "key": "LS7_12",
+    "name": "Health care, including care for the ageing population",
+    "description": "Health care, including care for the ageing population (LS7_12)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "e6af89ce-adfb-444d-9675-96dea994d862",
+    "key": "LS7_13",
+    "name": "Palliative medicine",
+    "description": "Palliative medicine (LS7_13)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "535789c3-6732-4d93-a97b-483b551df342",
+    "key": "LS7_14",
+    "name": "Digital medicine, e-medicine, medical applications of artificial intelligence",
+    "description": "Digital medicine, e-medicine, medical applications of artificial intelligence (LS7_14)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "a162a955-63da-4a7f-982f-8d5b75f9e0b7",
+    "key": "LS7_15",
+    "name": "Medical ethics",
+    "description": "Medical ethics (LS7_15)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "a574cf43-16bd-4a44-8588-3b2d7d77ee91",
+    "key": "LS7_2",
+    "name": "Medical technologies and tools (including genetic tools and biomarkers) for prevention, diagnosis, monitoring and treatment of diseases",
+    "description": "Medical technologies and tools (including genetic tools and biomarkers) for prevention, diagnosis, monitoring and treatment of diseases (LS7_2)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "988a28d2-6bd9-49fe-a31b-b59c637dd08f",
+    "key": "LS7_3",
+    "name": "Nanomedicine",
+    "description": "Nanomedicine (LS7_3)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "122c591b-fdc2-47fe-8826-0dc5d35f5392",
+    "key": "LS7_4",
+    "name": "Regenerative medicine",
+    "description": "Regenerative medicine (LS7_4)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "c99fcbb2-8593-41bd-968a-ebea56cebc84",
+    "key": "LS7_5",
+    "name": "Applied gene, cell and immune therapies",
+    "description": "Applied gene, cell and immune therapies (LS7_5)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "b48a825e-9bc4-4944-b99f-184ac1c3de5b",
+    "key": "LS7_6",
+    "name": "Other medical therapeutic interventions, including transplantation",
+    "description": "Other medical therapeutic interventions, including transplantation (LS7_6)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "f4b007a1-5dc4-4b95-8243-a612bb2f26c0",
+    "key": "LS7_7",
+    "name": "Pharmacology and toxicology",
+    "description": "Pharmacology and toxicology (LS7_7)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "cc140be9-91dc-4d88-99ed-96a4ac7cd5fc",
+    "key": "LS7_8",
+    "name": "Effectiveness of interventions, including resistance to therapies",
+    "description": "Effectiveness of interventions, including resistance to therapies (LS7_8)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "c63bc765-1f69-429c-9826-d7a6afb34a70",
+    "key": "LS7_9",
+    "name": "Public health and epidemiology",
+    "description": "Public health and epidemiology (LS7_9)",
+    "parent": "1704d179-f5e8-4cd0-9ff5-a022b34876d8"
+  },
+  {
+    "id": "8b54e08c-b857-41a1-a36a-10c74f5386fa",
+    "key": "LS8",
+    "name": "Environmental Biology, Ecology and Evolution",
+    "description": "For all organisms: Ecology, biodiversity, environmental change, evolutionary biology, behavioural ecology, microbial ecology, marine biology, ecophysiology, theoretical developments and modelling (LS8)",
+    "parent": "57d54f6f-6fd7-491f-87fd-a4400385a0a5"
+  },
+  {
+    "id": "98d13cda-c3c0-40c6-9884-c85f463d11e5",
+    "key": "LS8_1",
+    "name": "Ecosystem and community ecology, macroecology",
+    "description": "Ecosystem and community ecology, macroecology (LS8_1)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "03d89aa5-e949-482d-bfac-18e68909f10d",
+    "key": "LS8_10",
+    "name": "Ecology and evolution of species interactions",
+    "description": "Ecology and evolution of species interactions (LS8_10)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "85220150-b391-41b4-8b8f-c9f861bdcba1",
+    "key": "LS8_11",
+    "name": "Behavioural ecology and evolution",
+    "description": "Behavioural ecology and evolution (LS8_11)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "8842328d-de10-4ba2-b8a0-00b8a6288a48",
+    "key": "LS8_12",
+    "name": "Microbial ecology and evolution",
+    "description": "Microbial ecology and evolution (LS8_12)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "060ba9c4-2029-4387-a34d-5f39afe84455",
+    "key": "LS8_13",
+    "name": "Marine biology and ecology",
+    "description": "Marine biology and ecology (LS8_13)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "e2095690-353d-4db8-847b-7937bd2aa8d1",
+    "key": "LS8_14",
+    "name": "Ecophysiology, from organisms to ecosystems",
+    "description": "Ecophysiology, from organisms to ecosystems (LS8_14)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "8d8fefa9-ba16-4937-bcea-5735c55a45c2",
+    "key": "LS8_15",
+    "name": "Theoretical developments and modelling in environmental biology, ecology, and evolution",
+    "description": "Theoretical developments and modelling in environmental biology, ecology, and evolution (LS8_15)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "a34f6149-c60c-4ab4-ace3-5a47000c8945",
+    "key": "LS8_2",
+    "name": "Biodiversity",
+    "description": "Biodiversity (LS8_2)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "83afc12d-ce13-46f0-87b2-c65b92191602",
+    "key": "LS8_3",
+    "name": "Conservation biology",
+    "description": "Conservation biology (LS8_3)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "d5ff2cc2-006d-4226-b8d0-a5bc3d3f510e",
+    "key": "LS8_4",
+    "name": "Population biology, population dynamics, population genetics",
+    "description": "Population biology, population dynamics, population genetics (LS8_4)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "d18f5131-00c5-4255-a8a1-1805f867bd3c",
+    "key": "LS8_5",
+    "name": "Biological aspects of environmental change, including climate change",
+    "description": "Biological aspects of environmental change, including climate change (LS8_5)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "e7226e0d-32c7-4873-9a99-44c0660833cf",
+    "key": "LS8_6",
+    "name": "Evolutionary ecology",
+    "description": "Evolutionary ecology (LS8_6)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "96804e1b-5786-414b-8dca-ee4f19489896",
+    "key": "LS8_7",
+    "name": "Evolutionary genetics",
+    "description": "Evolutionary genetics (LS8_7)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "adda8bc7-fdbe-4f79-a305-5744399ac2ac",
+    "key": "LS8_8",
+    "name": "Phylogenetics, systematics, comparative biology",
+    "description": "Phylogenetics, systematics, comparative biology (LS8_8)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "815abb87-50a1-4a05-96e2-1dfec44081aa",
+    "key": "LS8_9",
+    "name": "Macroevolution and paleobiology",
+    "description": "Macroevolution and paleobiology (LS8_9)",
+    "parent": "8b54e08c-b857-41a1-a36a-10c74f5386fa"
+  },
+  {
+    "id": "ab3f2c4a-411b-4a95-9daf-72ae315e576d",
+    "key": "LS9",
+    "name": "Biotechnology and Biosystems Engineering",
+    "description": "Biotechnology using all organisms, biotechnology for environment and food applications, applied plant and animal sciences, bioengineering and synthetic biology, biomass and biofuels, biohazards (LS9)",
+    "parent": "57d54f6f-6fd7-491f-87fd-a4400385a0a5"
+  },
+  {
+    "id": "9d61411a-b0d4-4600-be9e-9ca0f187e195",
+    "key": "LS9_1",
+    "name": "Bioengineering for synthetic and chemical biology",
+    "description": "Bioengineering for synthetic and chemical biology (LS9_1)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "a9736c48-7622-4557-ba74-ecb6452c10a9",
+    "key": "LS9_10",
+    "name": "Veterinary and applied animal sciences",
+    "description": "Veterinary and applied animal sciences (LS9_10)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "4ea24ea5-c055-42e5-ba08-e8449c775c9f",
+    "key": "LS9_11",
+    "name": "Biomass production and utilisation, biofuels",
+    "description": "Biomass production and utilisation, biofuels (LS9_11)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "af5f2f92-5282-48cb-ab1f-e29726dfca2c",
+    "key": "LS9_12",
+    "name": "Ecotoxicology, biohazards and biosafety",
+    "description": "Ecotoxicology, biohazards and biosafety (LS9_12)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "1765c5c5-b593-484b-a606-ab7f0a7dc859",
+    "key": "LS9_2",
+    "name": "Applied genetics, gene editing and transgenic organisms",
+    "description": "Applied genetics, gene editing and transgenic organisms (LS9_2)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "b1142716-ee34-40be-b204-bac627aef144",
+    "key": "LS9_3",
+    "name": "Bioengineering of cells, tissues, organs and organisms",
+    "description": "Bioengineering of cells, tissues, organs and organisms (LS9_3)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "c6d0d2e3-f91b-4f75-a1f3-34036d8d21a8",
+    "key": "LS9_4",
+    "name": "Microbial biotechnology and bioengineering",
+    "description": "Microbial biotechnology and bioengineering (LS9_4)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "6fe23076-b52d-41a5-b882-e7e6e24d6d84",
+    "key": "LS9_5",
+    "name": "Food biotechnology and bioengineering",
+    "description": "Food biotechnology and bioengineering (LS9_5)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "9dc71b23-e940-4196-a58a-ecd8c444ed7a",
+    "key": "LS9_6",
+    "name": "Marine biotechnology and bioengineering",
+    "description": "Marine biotechnology and bioengineering (LS9_6)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "d57e5b5c-7757-4515-adbc-92c3b2bae679",
+    "key": "LS9_7",
+    "name": "Environmental biotechnology and bioengineering",
+    "description": "Environmental biotechnology and bioengineering (LS9_7)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "7facb1bc-65b1-4f6d-9b74-5f804b407478",
+    "key": "LS9_8",
+    "name": "Applied plant sciences, plant breeding, agroecology and soil biology",
+    "description": "Applied plant sciences, plant breeding, agroecology and soil biology (LS9_8)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "3acbf816-35fe-4425-8d0f-8e7bc4f63f33",
+    "key": "LS9_9",
+    "name": "Plant pathology and pest resistance",
+    "description": "Plant pathology and pest resistance (LS9_9)",
+    "parent": "ab3f2c4a-411b-4a95-9daf-72ae315e576d"
+  },
+  {
+    "id": "2035573f-d2bf-428f-937e-f2a33694c40f",
+    "key": "PE",
+    "name": "Physical Sciences and Engineering",
+    "description": "Physical Sciences and Engineering (PE)",
+    "parent": null
+  },
+  {
+    "id": "b4017a00-6c42-47f7-9e91-f743da7efdeb",
+    "key": "PE1",
+    "name": "Mathematics",
+    "description": "All areas of mathematics, pure and applied, plus mathematical foundations of computer science,mathematical physics and statistics (PE1)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "e4c66282-53de-4a00-a05f-c68f56c1380d",
+    "key": "PE10",
+    "name": "Earth System Science",
+    "description": "Physical geography, geology, geophysics, atmospheric sciences, oceanography, climatology, cryology, ecology, global environmental change, biogeochemical cycles, natural resources management (PE10)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "4262b322-79ba-4323-b621-33e5e43a3a59",
+    "key": "PE10_1",
+    "name": "Atmospheric chemistry, atmospheric composition, air pollution",
+    "description": "Atmospheric chemistry, atmospheric composition, air pollution (PE10_1)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "226030e5-2eda-4d4b-a7b6-83a10a9b1a1f",
+    "key": "PE10_10",
+    "name": "Mineralogy, petrology, igneous petrology, metamorphic petrology",
+    "description": "Mineralogy, petrology, igneous petrology, metamorphic petrology (PE10_10)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "820d307d-ef9d-454c-9aa8-76c6c7f5d769",
+    "key": "PE10_11",
+    "name": "Geochemistry, cosmochemistry, crystal chemistry, isotope geochemistry, thermodynamics",
+    "description": "Geochemistry, cosmochemistry, crystal chemistry, isotope geochemistry, thermodynamics (PE10_11)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "39177d1c-40d9-40e6-9106-c19c7d55f64e",
+    "key": "PE10_12",
+    "name": "Sedimentology, soil science, palaeontology, earth evolution",
+    "description": "Sedimentology, soil science, palaeontology, earth evolution (PE10_12)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "ea9d1b79-ed35-4e80-bdda-555b073e47a6",
+    "key": "PE10_13",
+    "name": "Physical geography, geomorphology",
+    "description": "Physical geography, geomorphology (PE10_13)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "8f95da63-c9a0-4902-b159-4cd01e78f52e",
+    "key": "PE10_14",
+    "name": "Earth observations from space/remote sensing",
+    "description": "Earth observations from space/remote sensing (PE10_14)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "e90603d7-9659-4edd-88f2-7fc8f24a0cb7",
+    "key": "PE10_15",
+    "name": "Geomagnetism, palaeomagnetism",
+    "description": "Geomagnetism, palaeomagnetism (PE10_15)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "bf46b151-ed0a-42a9-a2b3-56c8692fd3f8",
+    "key": "PE10_16",
+    "name": "Ozone, upper atmosphere, ionosphere",
+    "description": "Ozone, upper atmosphere, ionosphere (PE10_16)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "e239c910-0d26-4cc4-aae5-ff3505741b8a",
+    "key": "PE10_17",
+    "name": "Hydrology, hydrogeology, engineering and environmental geology, water and soil pollution",
+    "description": "Hydrology, hydrogeology, engineering and environmental geology, water and soil pollution (PE10_17)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "cab9cdfb-7cfe-46ab-b383-c65c2c79911a",
+    "key": "PE10_18",
+    "name": "Cryosphere, dynamics of snow and ice cover, sea ice, permafrosts and ice sheets",
+    "description": "Cryosphere, dynamics of snow and ice cover, sea ice, permafrosts and ice sheets (PE10_18)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "c75eb157-857c-4840-9973-faf3ce86688f",
+    "key": "PE10_19",
+    "name": "Planetary geology and geophysics",
+    "description": "Planetary geology and geophysics (PE10_19)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "5d68179b-858a-43eb-9505-3f4b9d06636c",
+    "key": "PE10_2",
+    "name": "Meteorology, atmospheric physics and dynamics",
+    "description": "Meteorology, atmospheric physics and dynamics (PE10_2)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "b2e74d8a-556b-478d-b657-1b9587ffb3aa",
+    "key": "PE10_20",
+    "name": "Geohazards",
+    "description": "Geohazards (PE10_20)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "5e16c8f4-850d-4661-8846-76e974e34021",
+    "key": "PE10_21",
+    "name": "Earth system modelling and interactions",
+    "description": "Earth system modelling and interactions (PE10_21)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "7d230c1c-deb8-42f6-903a-94d7dca6193a",
+    "key": "PE10_3",
+    "name": "Climatology and climate change",
+    "description": "Climatology and climate change (PE10_3)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "ca2e0178-d236-4ef5-bc39-48a3b5920530",
+    "key": "PE10_4",
+    "name": "Terrestrial ecology, land cover change",
+    "description": "Terrestrial ecology, land cover change (PE10_4)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "a3fa9584-0909-47e0-9b9e-abf8fa9dd504",
+    "key": "PE10_5",
+    "name": "Geology, tectonics, volcanology",
+    "description": "Geology, tectonics, volcanology (PE10_5)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "079902de-60b9-4777-8d44-00afd11a97b3",
+    "key": "PE10_6",
+    "name": "Palaeoclimatology, palaeoecology",
+    "description": "Palaeoclimatology, palaeoecology (PE10_6)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "3560788d-d1e9-4580-a1c3-4617ada960a9",
+    "key": "PE10_7",
+    "name": "Physics of earth’s interior, seismology, geodynamics",
+    "description": "Physics of earth’s interior, seismology, geodynamics (PE10_7)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "7515f01e-b905-44ae-bf7d-0213cd7a208a",
+    "key": "PE10_8",
+    "name": "Oceanography (physical, chemical, biological, geological)",
+    "description": "Oceanography (physical, chemical, biological, geological) (PE10_8)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "d27c0bbc-2aee-49cb-a37b-946e6196e3f2",
+    "key": "PE10_9",
+    "name": "Biogeochemistry, biogeochemical cycles, environmental chemistry",
+    "description": "Biogeochemistry, biogeochemical cycles, environmental chemistry (PE10_9)",
+    "parent": "e4c66282-53de-4a00-a05f-c68f56c1380d"
+  },
+  {
+    "id": "bea6e137-0639-45c5-8318-bc3a20d55cc1",
+    "key": "PE1_1",
+    "name": "Logic and foundations",
+    "description": "Logic and foundations (PE1_1)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "12a59bcc-bc06-404d-b934-f8644833afd3",
+    "key": "PE11",
+    "name": "Materials Engineering",
+    "description": "Advanced materials development: performance enhancement, modelling, large-scale preparation,modification, tailoring, optimisation, novel and combined use of materials, etc. (PE11)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "f7dd1b08-6384-46f3-94f7-3db7c6e00d5a",
+    "key": "PE1_10",
+    "name": "ODE and dynamical systems",
+    "description": "ODE and dynamical systems (PE1_10)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "27f4b9a3-74fc-42ee-998e-0808779f7b60",
+    "key": "PE1_11",
+    "name": "Theoretical aspects of partial differential equations",
+    "description": "Theoretical aspects of partial differential equations (PE1_11)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "0142cad9-0f2d-4114-bf90-924b0e931aca",
+    "key": "PE11_1",
+    "name": "Engineering of biomaterials, biomimetic, bioinspired and bio-enabled materials",
+    "description": "Engineering of biomaterials, biomimetic, bioinspired and bio-enabled materials (PE11_1)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "ba7b46a0-8b9e-4d35-a25e-e1c865d00ae3",
+    "key": "PE11_10",
+    "name": "Soft materials engineering, e.g. gels, foams, colloids",
+    "description": "Soft materials engineering, e.g. gels, foams, colloids (PE11_10)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "03797b94-0f3e-44f1-b452-3edebd9d65a7",
+    "key": "PE11_11",
+    "name": "Porous materials engineering, e.g. covalent-organic, metal-organic, porous aromatic frameworks",
+    "description": "Porous materials engineering, e.g. covalent-organic, metal-organic, porous aromatic frameworks (PE11_11)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "65b70b4c-d434-41c5-a3e3-8ee6b0131e57",
+    "key": "PE11_12",
+    "name": "Semi-conducting and magnetic materials engineering",
+    "description": "Semi-conducting and magnetic materials engineering (PE11_12)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "87a7d36b-ce3c-407d-875b-a7e55a35a34c",
+    "key": "PE11_13",
+    "name": "Metamaterials engineering",
+    "description": "Metamaterials engineering (PE11_13)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "28cea4bd-1758-495e-af35-3bb616d4c2a1",
+    "key": "PE11_14",
+    "name": "Computational methods for materials engineering",
+    "description": "Computational methods for materials engineering (PE11_14)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "5bd6a277-9e90-48dd-b4c1-2fe9f524df72",
+    "key": "PE1_12",
+    "name": "Mathematical physics",
+    "description": "Mathematical physics (PE1_12)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "aa634ce7-3031-4a95-a896-3212b56a5cb3",
+    "key": "PE11_2",
+    "name": "Engineering of metals and alloys",
+    "description": "Engineering of metals and alloys (PE11_2)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "ed1c4069-6802-47f0-aabd-16d72ccf6cbb",
+    "key": "PE1_13",
+    "name": "Probability",
+    "description": "Probability (PE1_13)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "1ede450b-3ffa-4189-b18a-1b2df56f6bd0",
+    "key": "PE11_3",
+    "name": "Engineering of ceramics and glasses",
+    "description": "Engineering of ceramics and glasses (PE11_3)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "57764d0d-8f05-40fe-bce0-ab93c1dfc7d9",
+    "key": "PE1_14",
+    "name": "Mathematical statistics",
+    "description": "Mathematical statistics (PE1_14)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "11d48abe-72de-4e8a-b64a-d8861dbb1c6d",
+    "key": "PE11_4",
+    "name": "Engineering of polymers and plastics",
+    "description": "Engineering of polymers and plastics (PE11_4)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "d29c521d-0e60-4530-8549-26bec12c515a",
+    "key": "PE1_15",
+    "name": "Generic statistical methodology and modelling",
+    "description": "Generic statistical methodology and modelling (PE1_15)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "7f7c60c4-86cf-4d46-b2f3-9593c0cdd45f",
+    "key": "PE11_5",
+    "name": "Engineering of composites and hybrid materials",
+    "description": "Engineering of composites and hybrid materials (PE11_5)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "6cd31bee-9b01-4949-9676-71a32167dbcd",
+    "key": "PE1_16",
+    "name": "Discrete mathematics and combinatorics",
+    "description": "Discrete mathematics and combinatorics (PE1_16)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "9814647a-c4c6-4ac7-8882-194d74c4d7c8",
+    "key": "PE11_6",
+    "name": "Engineering of carbon materials",
+    "description": "Engineering of carbon materials (PE11_6)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "353e4f96-4890-487c-9944-eda9189e4573",
+    "key": "PE1_17",
+    "name": "Mathematical aspects of computer science",
+    "description": "Mathematical aspects of computer science (PE1_17)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "d0984052-ba17-4990-bf74-55818a6341cb",
+    "key": "PE11_7",
+    "name": "Engineering of metal oxides",
+    "description": "Engineering of metal oxides (PE11_7)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "04849b29-3090-4380-8218-8fb07e918121",
+    "key": "PE1_18",
+    "name": "Numerical analysis",
+    "description": "Numerical analysis (PE1_18)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "7b47b9e8-8a94-43e5-8054-35f957965c75",
+    "key": "PE11_8",
+    "name": "Engineering of alternative established or emergent materials",
+    "description": "Engineering of alternative established or emergent materials (PE11_8)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "75d69bc8-1dae-4c07-9814-1f55f12fa4e9",
+    "key": "PE1_19",
+    "name": "Scientific computing and data processing",
+    "description": "Scientific computing and data processing (PE1_19)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "660d4eed-c2af-45ee-a6b5-a33b74db9670",
+    "key": "PE11_9",
+    "name": "Nanomaterials engineering, e.g. nanoparticles, nanoporous materials, 1D & 2D nanomaterials",
+    "description": "Nanomaterials engineering, e.g. nanoparticles, nanoporous materials, 1D & 2D nanomaterials (PE11_9)",
+    "parent": "12a59bcc-bc06-404d-b934-f8644833afd3"
+  },
+  {
+    "id": "631ed0c2-284b-4856-ad17-92afd03642e4",
+    "key": "PE1_2",
+    "name": "Algebra",
+    "description": "Algebra (PE1_2)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "e9a32859-42cc-4608-9687-65e904bd58cd",
+    "key": "PE1_20",
+    "name": "Control theory, optimisation and operational research",
+    "description": "Control theory, optimisation and operational research (PE1_20)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "c1bdcc87-9bc5-4733-b2c2-764d2f22f96a",
+    "key": "PE1_21",
+    "name": "Application of mathematics in sciences",
+    "description": "Application of mathematics in sciences (PE1_21)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "24c62ebc-b9ad-4069-b46e-abe7044196ae",
+    "key": "PE1_22",
+    "name": "Application of mathematics in industry and society",
+    "description": "Application of mathematics in industry and society (PE1_22)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "bb5cb33e-282b-4870-a393-83a585f094bc",
+    "key": "PE1_3",
+    "name": "Number theory",
+    "description": "Number theory (PE1_3)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "ca809b30-fd8b-49b0-aa55-f2420fe75970",
+    "key": "PE1_4",
+    "name": "Algebraic and complex geometry",
+    "description": "Algebraic and complex geometry (PE1_4)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "1aaa9bdd-09ad-4531-8213-8419fb15ba03",
+    "key": "PE1_5",
+    "name": "Lie groups, Lie algebras",
+    "description": "Lie groups, Lie algebras (PE1_5)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "bd811cb3-e596-481b-8bfd-fde35d8779d1",
+    "key": "PE1_6",
+    "name": "Geometry and global analysis",
+    "description": "Geometry and global analysis (PE1_6)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "bef14165-853e-460d-9b98-3388fd5c6ca8",
+    "key": "PE1_7",
+    "name": "Topology",
+    "description": "Topology (PE1_7)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "129a7f6a-0605-4319-a75a-809a689677e6",
+    "key": "PE1_8",
+    "name": "Analysis",
+    "description": "Analysis (PE1_8)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "45ca9091-e523-4bf8-a294-b6afca0d837a",
+    "key": "PE1_9",
+    "name": "Operator algebras and functional analysis",
+    "description": "Operator algebras and functional analysis (PE1_9)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "ba560e70-f71a-4b57-b29a-6cc0baad9f39",
+    "key": "PE2",
+    "name": "Fundamental Constituents of Matter",
+    "description": "Particle, nuclear, plasma, atomic, molecular, gas, and optical physics (PE2)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "a0365d48-3229-40d5-a23d-88fa89633b15",
+    "key": "PE2_1",
+    "name": "Theory of fundamental interactions",
+    "description": "Theory of fundamental interactions (PE2_1)",
+    "parent": "b4017a00-6c42-47f7-9e91-f743da7efdeb"
+  },
+  {
+    "id": "27497c42-2253-4f4d-89af-daff6d877088",
+    "key": "PE2_10",
+    "name": "Atomic, molecular physics",
+    "description": "Atomic, molecular physics (PE2_10)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "5dd0aa6b-4c62-4edb-b40b-81cfb98ddb9e",
+    "key": "PE2_11",
+    "name": "Ultra-cold atoms and molecules",
+    "description": "Ultra-cold atoms and molecules (PE2_11)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "c8d8e1d5-460b-484a-86f8-8782e80c3ec1",
+    "key": "PE2_12",
+    "name": "Optics, non-linear optics and nano-optics",
+    "description": "Optics, non-linear optics and nano-optics (PE2_12)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "81a1616a-2d99-4a86-9af1-35519248ac33",
+    "key": "PE2_13",
+    "name": "Quantum optics and quantum information",
+    "description": "Quantum optics and quantum information (PE2_13)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "880e95f5-fe30-4dd0-9d71-12fb3612705b",
+    "key": "PE2_14",
+    "name": "Lasers, ultra-short lasers and laser physics",
+    "description": "Lasers, ultra-short lasers and laser physics (PE2_14)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "9641aeba-cec3-4645-bcae-ed5a8f5046c4",
+    "key": "PE2_15",
+    "name": "Thermodynamics",
+    "description": "Thermodynamics (PE2_15)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "b97613c7-0a52-49f9-9937-33083df14c4b",
+    "key": "PE2_16",
+    "name": "Non-linear physics",
+    "description": "Non-linear physics (PE2_16)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "22238b73-2e64-4afb-b802-af07a5276f5a",
+    "key": "PE2_17",
+    "name": "Metrology and measurement",
+    "description": "Metrology and measurement (PE2_17)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "d393eace-abe0-43b7-b31d-d47dcb7480c6",
+    "key": "PE2_18",
+    "name": "Equilibrium and non-equilibrium statistical mechanics: steady states and dynamics",
+    "description": "Equilibrium and non-equilibrium statistical mechanics: steady states and dynamics (PE2_18)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "f4ddd645-9790-42e5-896c-901358d5da24",
+    "key": "PE2_2",
+    "name": "Phenomenology of fundamental interactions",
+    "description": "Phenomenology of fundamental interactions (PE2_2)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "f9504f8c-8693-4495-89f7-2fea79d3fbb4",
+    "key": "PE2_3",
+    "name": "Experimental particle physics with accelerators",
+    "description": "Experimental particle physics with accelerators (PE2_3)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "e32edb12-24a0-442f-af86-547fe1ff95a6",
+    "key": "PE2_4",
+    "name": "Experimental particle physics without accelerators",
+    "description": "Experimental particle physics without accelerators (PE2_4)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "44c947b0-5691-4808-8db9-65796ba51dc9",
+    "key": "PE2_5",
+    "name": "Classical and quantum physics of gravitational interactions",
+    "description": "Classical and quantum physics of gravitational interactions (PE2_5)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "ecea1049-bcd7-43c4-a309-775dd7ed6713",
+    "key": "PE2_6",
+    "name": "Nuclear, hadron and heavy ion physics",
+    "description": "Nuclear, hadron and heavy ion physics (PE2_6)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "ac92a86b-b3ac-4ca7-901a-9232fcef6894",
+    "key": "PE2_7",
+    "name": "Nuclear and particle astrophysics",
+    "description": "Nuclear and particle astrophysics (PE2_7)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "baa1dcac-b3b8-4159-9a4d-f2b6cecf3be3",
+    "key": "PE2_8",
+    "name": "Gas and plasma physics",
+    "description": "Gas and plasma physics (PE2_8)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "001bfe92-9806-4d58-9d20-8528f42480c1",
+    "key": "PE2_9",
+    "name": "Electromagnetism",
+    "description": "Electromagnetism (PE2_9)",
+    "parent": "ba560e70-f71a-4b57-b29a-6cc0baad9f39"
+  },
+  {
+    "id": "d8e391b6-84e6-4987-8d8a-81b592561a5b",
+    "key": "PE3",
+    "name": "Condensed Matter Physics",
+    "description": "Structure, electronic properties, fluids, nanosciences, biological physics (PE3)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "b11788d2-4443-4037-80ab-d15cfbd20666",
+    "key": "PE3_1",
+    "name": "Structure of solids, material growth and characterisation",
+    "description": "Structure of solids, material growth and characterisation (PE3_1)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "9de25fb7-2023-4dd1-b715-186f12a3d7ca",
+    "key": "PE3_10",
+    "name": "Nanophysics, e.g. nanoelectronics, nanophotonics, nanomagnetism, nanoelectromechanics",
+    "description": "Nanophysics, e.g. nanoelectronics, nanophotonics, nanomagnetism, nanoelectromechanics (PE3_10)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "dbbe5a32-7cab-49d4-bad8-04a15820c017",
+    "key": "PE3_11",
+    "name": "Mesoscopic quantum physics and solid-state quantum technologies",
+    "description": "Mesoscopic quantum physics and solid-state quantum technologies (PE3_11)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "85363947-5f12-4832-9263-092c2054b31d",
+    "key": "PE3_12",
+    "name": "Molecular electronics",
+    "description": "Molecular electronics (PE3_12)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "1b1195a6-5197-4350-8003-7b9f76f6ecbc",
+    "key": "PE3_13",
+    "name": "Structure and dynamics of disordered systems, e.g. soft matter (gels, colloids, liquid crystals), granular matter, liquids, glasses, defects",
+    "description": "Structure and dynamics of disordered systems, e.g. soft matter (gels, colloids, liquid crystals), granular matter, liquids, glasses, defects (PE3_13)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "d82da50c-e4f0-4267-8400-c4fd25bff04e",
+    "key": "PE3_14",
+    "name": "Fluid dynamics (physics)",
+    "description": "Fluid dynamics (physics) (PE3_14)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "c9b038ce-73c6-42be-b1e9-ca15e41678c2",
+    "key": "PE3_15",
+    "name": "Statistical physics: phase transitions, condensed matter systems, models of complex systems, interdisciplinary applications",
+    "description": "Statistical physics: phase transitions, condensed matter systems, models of complex systems, interdisciplinary applications (PE3_15)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "55853fd6-dc56-4262-921a-a49c3a531422",
+    "key": "PE3_16",
+    "name": "Physics of biological systems",
+    "description": "Physics of biological systems (PE3_16)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "bcdc0c70-b43f-4984-9959-2e2c21248a67",
+    "key": "PE3_2",
+    "name": "Mechanical and acoustical properties of condensed matter, lattice dynamics",
+    "description": "Mechanical and acoustical properties of condensed matter, lattice dynamics (PE3_2)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "c68b81f4-6252-44c0-93ec-f3393a60001d",
+    "key": "PE3_3",
+    "name": "Transport properties of condensed matter",
+    "description": "Transport properties of condensed matter (PE3_3)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "b57e24cb-c6db-4b78-a0cd-52e83436cc6d",
+    "key": "PE3_4",
+    "name": "Electronic properties of materials, surfaces, interfaces, nanostructures",
+    "description": "Electronic properties of materials, surfaces, interfaces, nanostructures (PE3_4)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "80a1dae0-986a-4dd2-a2cd-bcb7e952fb77",
+    "key": "PE3_5",
+    "name": "Physical properties of semiconductors and insulators",
+    "description": "Physical properties of semiconductors and insulators (PE3_5)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "a9d4d563-ffff-45fe-a716-430f5ee3005c",
+    "key": "PE3_6",
+    "name": "Macroscopic quantum phenomena, e.g. superconductivity, superfluidity, quantum Hall effect",
+    "description": "Macroscopic quantum phenomena, e.g. superconductivity, superfluidity, quantum Hall effect (PE3_6)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "6c99207e-71d0-482e-be8f-5aabaf7b8e13",
+    "key": "PE3_7",
+    "name": "Spintronics",
+    "description": "Spintronics (PE3_7)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "4d641a5e-07e4-4ec5-8194-9be1d220a5ea",
+    "key": "PE3_8",
+    "name": "Magnetism and strongly correlated systems",
+    "description": "Magnetism and strongly correlated systems (PE3_8)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "fcda1b0b-d979-4446-9bc7-471c33b4c020",
+    "key": "PE3_9",
+    "name": "Condensed matter – beam interactions (photons, electrons, etc.)",
+    "description": "Condensed matter – beam interactions (photons, electrons, etc.) (PE3_9)",
+    "parent": "d8e391b6-84e6-4987-8d8a-81b592561a5b"
+  },
+  {
+    "id": "de1dd208-0af2-44c7-ba4c-805f75ad48d6",
+    "key": "PE4",
+    "name": "Physical and Analytical Chemical Sciences",
+    "description": "Analytical chemistry, chemical theory, physical chemistry/chemical physics (PE4)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "f038a72a-6e80-4e32-8fb7-42993e0db0c1",
+    "key": "PE4_1",
+    "name": "Physical chemistry",
+    "description": "Physical chemistry (PE4_1)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "f7880587-e099-434e-91ff-369eed534573",
+    "key": "PE4_10",
+    "name": "Heterogeneous catalysis",
+    "description": "Heterogeneous catalysis (PE4_10)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "9d6f6814-5eda-4117-ad77-79986c519ba3",
+    "key": "PE4_11",
+    "name": "Physical chemistry of biological systems",
+    "description": "Physical chemistry of biological systems (PE4_11)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "3cc39ac6-7015-4cd1-b57c-5949e7527971",
+    "key": "PE4_12",
+    "name": "Chemical reactions: mechanisms, dynamics, kinetics and catalytic reactions",
+    "description": "Chemical reactions: mechanisms, dynamics, kinetics and catalytic reactions (PE4_12)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "deed9c3d-8e2e-45ec-b50d-21df59d9303d",
+    "key": "PE4_13",
+    "name": "Theoretical and computational chemistry",
+    "description": "Theoretical and computational chemistry (PE4_13)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "0e5c18c6-d6fb-47e4-b5b3-b74cbd4f1da3",
+    "key": "PE4_14",
+    "name": "Radiation and Nuclear chemistry",
+    "description": "Radiation and Nuclear chemistry (PE4_14)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "7e7f2cf1-0298-4e51-b786-49d5baad8166",
+    "key": "PE4_15",
+    "name": "Photochemistry",
+    "description": "Photochemistry (PE4_15)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "9eab9fe6-bde8-4782-8d69-14235a4c2922",
+    "key": "PE4_16",
+    "name": "Corrosion",
+    "description": "Corrosion (PE4_16)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "ac0d4a63-1347-4113-abbe-acc7d76053eb",
+    "key": "PE4_17",
+    "name": "Characterisation methods of materials",
+    "description": "Characterisation methods of materials (PE4_17)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "11b63a25-70d3-489b-9cd3-ebf25e8228a3",
+    "key": "PE4_18",
+    "name": "Environment chemistry",
+    "description": "Environment chemistry (PE4_18)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "74a1b081-f9ea-4910-9b94-7440d1a44b43",
+    "key": "PE4_2",
+    "name": "Spectroscopic and spectrometric techniques",
+    "description": "Spectroscopic and spectrometric techniques (PE4_2)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "e14b7a2c-5bca-41ca-b0ab-666e39f506e6",
+    "key": "PE4_3",
+    "name": "Molecular architecture and Structure",
+    "description": "Molecular architecture and Structure (PE4_3)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "72b6d1d4-6fbd-49ca-a2f4-f1b14d3dd698",
+    "key": "PE4_4",
+    "name": "Surface science and nanostructures",
+    "description": "Surface science and nanostructures (PE4_4)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "f5b3a4a9-b75e-4b18-bf10-5d418a1fadbe",
+    "key": "PE4_5",
+    "name": "Analytical chemistry",
+    "description": "Analytical chemistry (PE4_5)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "5736537f-d456-40d7-ae23-34c85df4b39c",
+    "key": "PE4_6",
+    "name": "Chemical physics",
+    "description": "Chemical physics (PE4_6)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "9895ba1f-8b97-4d0a-aca3-0e1b6720ee0b",
+    "key": "PE4_7",
+    "name": "Chemical instrumentation",
+    "description": "Chemical instrumentation (PE4_7)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "4ff89704-7e9a-4235-8acf-0bf42ecc3404",
+    "key": "PE4_8",
+    "name": "Electrochemistry, electrodialysis, microfluidics, sensors",
+    "description": "Electrochemistry, electrodialysis, microfluidics, sensors (PE4_8)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "3241057b-a8ce-4d01-b2a3-ffe70e7af415",
+    "key": "PE4_9",
+    "name": "Method development in chemistry",
+    "description": "Method development in chemistry (PE4_9)",
+    "parent": "de1dd208-0af2-44c7-ba4c-805f75ad48d6"
+  },
+  {
+    "id": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e",
+    "key": "PE5",
+    "name": "Synthetic Chemistry and Materials",
+    "description": "New materials and new synthetic approaches, structure-properties relations, solid state chemistry, molecular architecture, organic chemistry (PE5)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "627c1045-5489-490e-af00-b8b1353287ee",
+    "key": "PE5_1",
+    "name": "Structural properties of materials",
+    "description": "Structural properties of materials (PE5_1)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "d5598919-072f-43b2-adac-4372c7b10c54",
+    "key": "PE5_10",
+    "name": "Colloid chemistry",
+    "description": "Colloid chemistry (PE5_10)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "d413c1b9-c206-4fc4-af83-25f485190d5d",
+    "key": "PE5_11",
+    "name": "Biological chemistry and chemical biology",
+    "description": "Biological chemistry and chemical biology (PE5_11)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "c75ec048-38d5-4af9-8b5b-33fd7a54a7eb",
+    "key": "PE5_12",
+    "name": "Chemistry of condensed matter",
+    "description": "Chemistry of condensed matter (PE5_12)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "95383fa1-5545-418d-ae3a-0b3b6fc8c255",
+    "key": "PE5_13",
+    "name": "Homogeneous catalysis",
+    "description": "Homogeneous catalysis (PE5_13)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "50124986-ff87-4084-bb08-b21270597fcc",
+    "key": "PE5_14",
+    "name": "Macromolecular chemistry",
+    "description": "Macromolecular chemistry (PE5_14)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "8dd365eb-6e95-437e-b665-8a471e3a9a25",
+    "key": "PE5_15",
+    "name": "Polymer chemistry",
+    "description": "Polymer chemistry (PE5_15)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "bc83556c-1e7d-4832-89b7-0bb1f2558fd4",
+    "key": "PE5_16",
+    "name": "Supramolecular chemistry",
+    "description": "Supramolecular chemistry (PE5_16)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "3b1cf522-19dc-48c2-bbe2-06889febc34e",
+    "key": "PE5_17",
+    "name": "Organic chemistry",
+    "description": "Organic chemistry (PE5_17)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "c012e5f5-9ba3-4518-b07a-e399bbb1f72e",
+    "key": "PE5_18",
+    "name": "Medicinal chemistry",
+    "description": "Medicinal chemistry (PE5_18)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "e5f29332-cd33-4842-b3ec-b275157478f4",
+    "key": "PE5_2",
+    "name": "Solid state materials chemistry",
+    "description": "Solid state materials chemistry (PE5_2)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "d18c3b08-4c0d-4876-bd13-f53da259c427",
+    "key": "PE5_3",
+    "name": "Surface modification",
+    "description": "Surface modification (PE5_3)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "4a821321-a7a6-44d4-a117-1d9848295814",
+    "key": "PE5_4",
+    "name": "Thin films",
+    "description": "Thin films (PE5_4)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "5822fc5d-ac25-4abe-a403-65c1163ef5ce",
+    "key": "PE5_5",
+    "name": "Ionic liquids",
+    "description": "Ionic liquids (PE5_5)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "bf15cfc5-c439-43a2-9176-156fc51d0b91",
+    "key": "PE5_6",
+    "name": "New materials: oxides, alloys, composite, organic-inorganic hybrid, nanoparticles",
+    "description": "New materials: oxides, alloys, composite, organic-inorganic hybrid, nanoparticles (PE5_6)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "30160cf3-9959-4ff9-9b89-df0513d052a2",
+    "key": "PE5_7",
+    "name": "Biomaterials synthesis",
+    "description": "Biomaterials synthesis (PE5_7)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "891c9092-1b3a-428d-a2c1-c06b2c11a922",
+    "key": "PE5_8",
+    "name": "Intelligent materials synthesis – self assembled materials",
+    "description": "Intelligent materials synthesis – self assembled materials (PE5_8)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "6b4c378a-e5c4-45f5-9d34-e331d0d4678b",
+    "key": "PE5_9",
+    "name": "Coordination chemistry",
+    "description": "Coordination chemistry (PE5_9)",
+    "parent": "726ddb20-e741-4c3f-a8c1-1e02a2045d3e"
+  },
+  {
+    "id": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b",
+    "key": "PE6",
+    "name": "Computer Science and Informatics",
+    "description": "Informatics and information systems, computer science, scientific computing, intelligent systems (PE6)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "f5818029-6c07-494b-987e-05f50a495ebd",
+    "key": "PE6_1",
+    "name": "Computer architecture, embedded systems, operating systems",
+    "description": "Computer architecture, embedded systems, operating systems (PE6_1)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "9521ab23-5e43-456d-b5f5-32bdd69d33a8",
+    "key": "PE6_10",
+    "name": "Web and information systems, data management systems, information retrieval and digital libraries, data fusion",
+    "description": "Web and information systems, data management systems, information retrieval and digital libraries, data fusion (PE6_10)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "55e46497-5f15-4755-bf32-0bf3da4a3dff",
+    "key": "PE6_11",
+    "name": "Machine learning, statistical data processing and applications using signal processing ( e.g. speech,image,video)",
+    "description": "Machine learning, statistical data processing and applications using signal processing ( e.g. speech,image,video) (PE6_11)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "c1a7a158-3952-4875-9a78-558f3fc6e951",
+    "key": "PE6_12",
+    "name": "Scientific computing, simulation and modelling tools",
+    "description": "Scientific computing, simulation and modelling tools (PE6_12)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "f49c2efd-bf23-4f82-a6c1-bff94d093956",
+    "key": "PE6_13",
+    "name": "Bioinformatics, bio-inspired computing, and natural computing",
+    "description": "Bioinformatics, bio-inspired computing, and natural computing (PE6_13)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "e45eb219-c4e2-4d7d-9ecd-818ea4e765cd",
+    "key": "PE6_14",
+    "name": "Quantum computing (formal methods, algorithms and other computer science aspects)",
+    "description": "Quantum computing (formal methods, algorithms and other computer science aspects) (PE6_14)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "c821ecfa-4251-4011-98db-ee79f8c22e0c",
+    "key": "PE6_2",
+    "name": "Distributed systems, parallel computing, sensor networks, cyber-physical systems",
+    "description": "Distributed systems, parallel computing, sensor networks, cyber-physical systems (PE6_2)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "85ff799e-bf8b-427c-b0de-45c73c056b89",
+    "key": "PE6_3",
+    "name": "Software engineering, programming languages and systems",
+    "description": "Software engineering, programming languages and systems (PE6_3)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "bac7e89c-08c6-4f4e-8a5b-e77605ba5f15",
+    "key": "PE6_4",
+    "name": "Theoretical computer science, formal methods, automata",
+    "description": "Theoretical computer science, formal methods, automata (PE6_4)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "ab708e1f-6b1d-43a6-b714-7d393c832844",
+    "key": "PE6_5",
+    "name": "Security, privacy, cryptology, quantum cryptography",
+    "description": "Security, privacy, cryptology, quantum cryptography (PE6_5)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "8015f519-a1cb-43d4-b0e0-0bed407d08dc",
+    "key": "PE6_6",
+    "name": "Algorithms and complexity, distributed, parallel and network algorithms, algorithmic game theory",
+    "description": "Algorithms and complexity, distributed, parallel and network algorithms, algorithmic game theory (PE6_6)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "455626bf-ec91-490b-870f-cc910965d8bb",
+    "key": "PE6_7",
+    "name": "Artificial intelligence, intelligent systems, natural language processing",
+    "description": "Artificial intelligence, intelligent systems, natural language processing (PE6_7)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "e8269f1d-ab22-46d7-9ef9-d0b0ab71b395",
+    "key": "PE6_8",
+    "name": "Computer graphics, computer vision, multimedia, computer games",
+    "description": "Computer graphics, computer vision, multimedia, computer games (PE6_8)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "e82337f5-a783-4f75-b3e3-27151992a90e",
+    "key": "PE6_9",
+    "name": "Human computer interaction and interface, visualisation",
+    "description": "Human computer interaction and interface, visualisation (PE6_9)",
+    "parent": "b1cf3cf4-fc8d-4fb0-9e91-e8536528e08b"
+  },
+  {
+    "id": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9",
+    "key": "PE7",
+    "name": "Systems and Communication Engineering",
+    "description": "Electrical, electronic, communication, optical and systems engineering (PE7)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "2de6e1aa-e898-4cc3-949e-87ce6ffa1ff3",
+    "key": "PE7_1",
+    "name": "Control engineering",
+    "description": "Control engineering (PE7_1)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "dc00f9fe-f9cd-42bc-be72-0192f8d52327",
+    "key": "PE7_10",
+    "name": "Robotics",
+    "description": "Robotics (PE7_10)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "203fb637-e01b-444b-8028-bda0cb6dbd04",
+    "key": "PE7_11",
+    "name": "Components and systems for applications (in e.g. medicine, biology, environment)",
+    "description": "Components and systems for applications (in e.g. medicine, biology, environment) (PE7_11)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "40e250f9-cbda-401e-9509-2e02f865a6fc",
+    "key": "PE7_12",
+    "name": "Electrical energy production, distribution, applications",
+    "description": "Electrical energy production, distribution, applications (PE7_12)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "9b834041-6295-42e0-8f84-cfe8ce458e12",
+    "key": "PE7_2",
+    "name": "Electrical engineering: power components and/or systems",
+    "description": "Electrical engineering: power components and/or systems (PE7_2)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "61effbd1-bd27-45cd-bea2-c0d33472d2e6",
+    "key": "PE7_3",
+    "name": "Simulation engineering and modelling",
+    "description": "Simulation engineering and modelling (PE7_3)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "ff02fe32-528d-41e7-96a7-4d7f323a5ba0",
+    "key": "PE7_4",
+    "name": "(Micro- and nano-) systems engineering",
+    "description": "(Micro- and nano-) systems engineering (PE7_4)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "e108c685-1e5f-44cd-813c-a0feb39e7727",
+    "key": "PE7_5",
+    "name": "(Micro- and nano-) electronic, optoelectronic and photonic components",
+    "description": "(Micro- and nano-) electronic, optoelectronic and photonic components (PE7_5)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "e6101718-596a-49fb-9b84-216ce82a1900",
+    "key": "PE7_6",
+    "name": "Communication systems, wireless technology, high-frequency technology",
+    "description": "Communication systems, wireless technology, high-frequency technology (PE7_6)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "7e1bf752-ef7f-43db-94f0-9017fb0a68cb",
+    "key": "PE7_7",
+    "name": "Signal processing",
+    "description": "Signal processing (PE7_7)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "a4c91903-ace7-4f45-b177-f4faa9ab9a94",
+    "key": "PE7_8",
+    "name": "Networks, e.g. communication networks and nodes, Internet of Things, sensor networks, networks of robots",
+    "description": "Networks, e.g. communication networks and nodes, Internet of Things, sensor networks, networks of robots (PE7_8)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "cf900ba7-171e-4d4c-bd53-b6b11b2b9de8",
+    "key": "PE7_9",
+    "name": "Man-machine interfaces",
+    "description": "Man-machine interfaces (PE7_9)",
+    "parent": "340a1bc9-ad70-4749-bb92-3d0702fe0cc9"
+  },
+  {
+    "id": "2300f06b-d612-4836-97bc-e85593132970",
+    "key": "PE8",
+    "name": "Products and Processes Engineering",
+    "description": "Product and process design, chemical, civil, environmental, mechanical, vehicle engineering, energy processes and relevant computational methods (PE8)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "73414d24-0d63-4265-810b-96b929e9a009",
+    "key": "PE8_1",
+    "name": "Aerospace engineering",
+    "description": "Aerospace engineering (PE8_1)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "f8fe507f-a528-473c-a4dd-d09fd5aab80b",
+    "key": "PE8_10",
+    "name": "Manufacturing engineering and industrial design",
+    "description": "Manufacturing engineering and industrial design (PE8_10)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "16a0c81a-e015-4122-850c-3a7b1f2e205f",
+    "key": "PE8_11",
+    "name": "Environmental engineering, e.g. sustainable design, waste and water treatment, recycling, regeneration or recovery of compounds, carbon capture & storage",
+    "description": "Environmental engineering, e.g. sustainable design, waste and water treatment, recycling, regeneration or recovery of compounds, carbon capture & storage (PE8_11)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "bb2d7557-1594-4bbe-ae45-37b0e83976b2",
+    "key": "PE8_12",
+    "name": "Naval/marine engineering",
+    "description": "Naval/marine engineering (PE8_12)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "02b93100-7271-432b-a826-f6ac21a73ff6",
+    "key": "PE8_13",
+    "name": "Industrial bioengineering",
+    "description": "Industrial bioengineering (PE8_13)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "aeff3dea-2069-47cc-94eb-ccce4dd6d283",
+    "key": "PE8_14",
+    "name": "Automotive and rail engineering; multi-/inter-modal transport engineering",
+    "description": "Automotive and rail engineering; multi-/inter-modal transport engineering (PE8_14)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "2c50d81d-2d6c-4066-9d6a-a173de8e8a37",
+    "key": "PE8_2",
+    "name": "Chemical engineering, technical chemistry",
+    "description": "Chemical engineering, technical chemistry (PE8_2)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "6cbedf9a-a3f0-4807-922c-c18b1be3c8c6",
+    "key": "PE8_3",
+    "name": "Civil engineering, architecture, offshore construction, lightweight construction, geotechnics",
+    "description": "Civil engineering, architecture, offshore construction, lightweight construction, geotechnics (PE8_3)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "54cd6bfd-7137-418e-99fb-61ad69c56998",
+    "key": "PE8_4",
+    "name": "Computational engineering",
+    "description": "Computational engineering (PE8_4)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "55f36a05-b3e1-4093-9c8d-9e7310781a4a",
+    "key": "PE8_5",
+    "name": "Fluid mechanics",
+    "description": "Fluid mechanics (PE8_5)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "3bc90766-a7ca-45e9-b42e-6684853f8313",
+    "key": "PE8_6",
+    "name": "Energy processes engineering",
+    "description": "Energy processes engineering (PE8_6)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "a8f47526-214f-4a46-b95c-cdd1c06104cf",
+    "key": "PE8_7",
+    "name": "Mechanical engineering",
+    "description": "Mechanical engineering (PE8_7)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "e9fb8525-1d6c-4f81-80a2-194d3a466737",
+    "key": "PE8_8",
+    "name": "Propulsion engineering, e.g. hydraulic, turbo, piston, hybrid engines",
+    "description": "Propulsion engineering, e.g. hydraulic, turbo, piston, hybrid engines (PE8_8)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "6e39ef24-1b73-4871-8f65-692b030b1340",
+    "key": "PE8_9",
+    "name": "Production technology, process engineering",
+    "description": "Production technology, process engineering (PE8_9)",
+    "parent": "2300f06b-d612-4836-97bc-e85593132970"
+  },
+  {
+    "id": "229e78ee-8a58-4018-af62-196a15c929a6",
+    "key": "PE9",
+    "name": "Universe Sciences",
+    "description": "Astro-physics/-chemistry/-biology; solar system; planetary systems; stellar, galactic and extragalactic astronomy; cosmology; space sciences; astronomical instrumentation and data (PE9)",
+    "parent": "2035573f-d2bf-428f-937e-f2a33694c40f"
+  },
+  {
+    "id": "17a33b10-b9d9-4206-a608-be1213d8e382",
+    "key": "PE9_1",
+    "name": "Solar physics – the Sun and the heliosphere",
+    "description": "Solar physics – the Sun and the heliosphere (PE9_1)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "0df8816a-fa01-457d-8a85-288a82f9a816",
+    "key": "PE9_10",
+    "name": "Relativistic astrophysics and compact objects",
+    "description": "Relativistic astrophysics and compact objects (PE9_10)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "6774ede1-e9ee-46c3-b884-634d6cea867c",
+    "key": "PE9_11",
+    "name": "Gravitational wave astronomy",
+    "description": "Gravitational wave astronomy (PE9_11)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "24f76d7f-0dc9-48bf-b623-10af4d129ed8",
+    "key": "PE9_12",
+    "name": "High-energy and particle astronomy",
+    "description": "High-energy and particle astronomy (PE9_12)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "701d2c95-65f2-404a-a6a9-d2b70fb9eb24",
+    "key": "PE9_13",
+    "name": "Astronomical instrumentation and data, e.g. telescopes, detectors, techniques, archives, analyses",
+    "description": "Astronomical instrumentation and data, e.g. telescopes, detectors, techniques, archives, analyses (PE9_13)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "349f2628-ccb5-4d3d-a22d-499510aa5ccf",
+    "key": "PE9_2",
+    "name": "Solar system science",
+    "description": "Solar system science (PE9_2)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "1ca1f00a-51d2-4fe1-a16e-58a6319f7d9f",
+    "key": "PE9_3",
+    "name": "Exoplanetary science, formation and characterization of extrasolar planets",
+    "description": "Exoplanetary science, formation and characterization of extrasolar planets (PE9_3)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "3ce70019-15b5-41fc-9660-24014aa81174",
+    "key": "PE9_4",
+    "name": "Astrobiology",
+    "description": "Astrobiology (PE9_4)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "40b5cfcc-aca4-4c3e-97dd-3a82b6e73646",
+    "key": "PE9_5",
+    "name": "Interstellar medium and star formation",
+    "description": "Interstellar medium and star formation (PE9_5)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "7b5a0f59-659f-4241-b666-cc2f26ccde6e",
+    "key": "PE9_6",
+    "name": "Stars – stellar physics, stellar systems",
+    "description": "Stars – stellar physics, stellar systems (PE9_6)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "aa55f88b-aeee-467f-ab7c-3c9a3e415a59",
+    "key": "PE9_7",
+    "name": "The Milky Way",
+    "description": "The Milky Way (PE9_7)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "96868cd2-e268-456a-9f21-45b3f41c4f74",
+    "key": "PE9_8",
+    "name": "Galaxies – formation, evolution, clusters",
+    "description": "Galaxies – formation, evolution, clusters (PE9_8)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "e9fb778e-0a2e-465b-b737-65aa366bb75e",
+    "key": "PE9_9",
+    "name": "Cosmology and large-scale structure, dark matter, dark energy",
+    "description": "Cosmology and large-scale structure, dark matter, dark energy (PE9_9)",
+    "parent": "229e78ee-8a58-4018-af62-196a15c929a6"
+  },
+  {
+    "id": "d840e888-e8bf-4bd2-b7ce-120c3bcce896",
+    "key": "SH",
+    "name": "Social Sciences and Humanities",
+    "description": "Social Sciences and Humanities (SH)",
+    "parent": null
+  },
+  {
+    "id": "3a24cece-a25b-4af4-98be-3f679604b161",
+    "key": "SH1",
+    "name": "Individuals, Markets and Organisations",
+    "description": "Economics, finance, management (SH1)",
+    "parent": "d840e888-e8bf-4bd2-b7ce-120c3bcce896"
+  },
+  {
+    "id": "66e38863-9954-4bb1-81b8-6abb9acb48e5",
+    "key": "SH1_1",
+    "name": "Macroeconomics; monetary economics; economic growth",
+    "description": "Macroeconomics; monetary economics; economic growth (SH1_1)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "e5c2c348-3ed4-430e-9955-a21bd1fde035",
+    "key": "SH1_10",
+    "name": "Management; strategy; organisational behaviour",
+    "description": "Management; strategy; organisational behaviour (SH1_10)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "bf27a9b0-c914-4830-84ca-d76e985c7387",
+    "key": "SH1_11",
+    "name": "Human resource management; operations management, marketing",
+    "description": "Human resource management; operations management, marketing (SH1_11)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "f333f99c-4d1d-48bc-b131-bb655a40e997",
+    "key": "SH1_12",
+    "name": "Environmental economics; resource and energy economics; agricultural economics",
+    "description": "Environmental economics; resource and energy economics; agricultural economics (SH1_12)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "023216e0-a956-431b-90e4-b5d64c8bee9b",
+    "key": "SH1_13",
+    "name": "Labour and demographic economics",
+    "description": "Labour and demographic economics (SH1_13)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "fe67e01b-d565-405d-857a-ef477456bb7b",
+    "key": "SH1_14",
+    "name": "Health economics; economics of education",
+    "description": "Health economics; economics of education (SH1_14)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "fc9f3c7e-2384-41b5-8740-d24b7b43295e",
+    "key": "SH1_15",
+    "name": "Public economics; political economics; law and economics",
+    "description": "Public economics; political economics; law and economics (SH1_15)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "33c6448e-770f-4fe2-8848-eb4e18350b26",
+    "key": "SH1_16",
+    "name": "Historical economics; quantitative economic history; institutional economics; economic systems",
+    "description": "Historical economics; quantitative economic history; institutional economics; economic systems (SH1_16)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "b0ffdf5a-8c86-4eb4-8093-9fec5f384c7b",
+    "key": "SH1_2",
+    "name": "International trade; international management; international business; spatial economics",
+    "description": "International trade; international management; international business; spatial economics (SH1_2)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "a89715ea-d59c-4c4c-b51a-065c19dcfe1e",
+    "key": "SH1_3",
+    "name": "Development economics; structural change; political economy of development",
+    "description": "Development economics; structural change; political economy of development (SH1_3)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "fdfdbd57-065a-4b3e-a215-783cc5bfe402",
+    "key": "SH1_4",
+    "name": "Finance; asset pricing; international finance; market microstructure",
+    "description": "Finance; asset pricing; international finance; market microstructure (SH1_4)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "e20c79bb-ca6e-47a4-b9f4-80c61dac744f",
+    "key": "SH1_5",
+    "name": "Corporate finance; banking and financial intermediation; accounting; auditing; insurance",
+    "description": "Corporate finance; banking and financial intermediation; accounting; auditing; insurance (SH1_5)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "6eedf393-15af-40bd-8ac1-5664f22897df",
+    "key": "SH1_6",
+    "name": "Econometrics; operations research",
+    "description": "Econometrics; operations research (SH1_6)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "8831b0ce-17d4-4379-9edc-569276b467d5",
+    "key": "SH1_7",
+    "name": "Behavioural economics; experimental economics; neuro-economics",
+    "description": "Behavioural economics; experimental economics; neuro-economics (SH1_7)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "0ad386f8-e354-49bf-a9e9-235fb81e4b4c",
+    "key": "SH1_8",
+    "name": "Microeconomic theory; game theory; decision theory",
+    "description": "Microeconomic theory; game theory; decision theory (SH1_8)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "d3548c73-2d14-4dc2-8e31-d2287cbf9fca",
+    "key": "SH1_9",
+    "name": "Industrial organisation; entrepreneurship; R&D and innovation",
+    "description": "Industrial organisation; entrepreneurship; R&D and innovation (SH1_9)",
+    "parent": "3a24cece-a25b-4af4-98be-3f679604b161"
+  },
+  {
+    "id": "64a5a944-7f8e-4312-9604-6bb76ef67d11",
+    "key": "SH2",
+    "name": "Institutions, Governance and Legal Systems",
+    "description": "Political science, international relations, law (SH2)",
+    "parent": "d840e888-e8bf-4bd2-b7ce-120c3bcce896"
+  },
+  {
+    "id": "624f955e-c730-4d01-afbf-25b5e372ec5e",
+    "key": "SH2_1",
+    "name": "Political systems, governance",
+    "description": "Political systems, governance (SH2_1)",
+    "parent": "64a5a944-7f8e-4312-9604-6bb76ef67d11"
+  },
+  {
+    "id": "9821f26d-52af-49f6-ba14-070b66c39397",
+    "key": "SH2_2",
+    "name": "Democratisation and social movements",
+    "description": "Democratisation and social movements (SH2_2)",
+    "parent": "64a5a944-7f8e-4312-9604-6bb76ef67d11"
+  },
+  {
+    "id": "23ddc130-c069-4bb7-8f95-1df019ccfa42",
+    "key": "SH2_3",
+    "name": "Conflict resolution, war, peace building, international law",
+    "description": "Conflict resolution, war, peace building, international law (SH2_3)",
+    "parent": "64a5a944-7f8e-4312-9604-6bb76ef67d11"
+  },
+  {
+    "id": "6ff651b1-119e-4abc-b594-a68e01f4727b",
+    "key": "SH2_4",
+    "name": "Legal studies, constitutions, human rights, comparative law",
+    "description": "Legal studies, constitutions, human rights, comparative law (SH2_4)",
+    "parent": "64a5a944-7f8e-4312-9604-6bb76ef67d11"
+  },
+  {
+    "id": "0a15f900-e7ca-49c7-b026-607c2a92741b",
+    "key": "SH2_5",
+    "name": "International relations, global and transnational governance",
+    "description": "International relations, global and transnational governance (SH2_5)",
+    "parent": "64a5a944-7f8e-4312-9604-6bb76ef67d11"
+  },
+  {
+    "id": "d9e6f7a2-23fd-48ef-be8b-296a148389f9",
+    "key": "SH2_6",
+    "name": "Humanitarian assistance and development",
+    "description": "Humanitarian assistance and development (SH2_6)",
+    "parent": "64a5a944-7f8e-4312-9604-6bb76ef67d11"
+  },
+  {
+    "id": "10bc4620-d7b4-4c18-96c4-360513ab8c52",
+    "key": "SH2_7",
+    "name": "Political and legal philosophy",
+    "description": "Political and legal philosophy (SH2_7)",
+    "parent": "64a5a944-7f8e-4312-9604-6bb76ef67d11"
+  },
+  {
+    "id": "6693b4d1-3883-4392-8b9f-2fc3d3b608bb",
+    "key": "SH2_8",
+    "name": "Big data in political and legal studies",
+    "description": "Big data in political and legal studies (SH2_8)",
+    "parent": "64a5a944-7f8e-4312-9604-6bb76ef67d11"
+  },
+  {
+    "id": "ca12e102-8b8a-451a-9f0b-9fa2e3372710",
+    "key": "SH3",
+    "name": "The Social World and Its Diversity",
+    "description": "Sociology, social psychology, social anthropology, education sciences, communication studies (SH3)",
+    "parent": "d840e888-e8bf-4bd2-b7ce-120c3bcce896"
+  },
+  {
+    "id": "3eafc8b8-b7ce-4eaf-9a32-e05028d7d97f",
+    "key": "SH3_1",
+    "name": "Social structure, social mobility, social innovation",
+    "description": "Social structure, social mobility, social innovation (SH3_1)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "ab5f343b-3d71-46c5-8cb1-d04edf4297e1",
+    "key": "SH3_10",
+    "name": "Religious studies, ritual; symbolic representation",
+    "description": "Religious studies, ritual; symbolic representation (SH3_10)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "9a49811d-09cd-4ffb-b21f-0c7efca44ffc",
+    "key": "SH3_11",
+    "name": "Social aspects of teaching and learning, curriculum studies, education and educational policies",
+    "description": "Social aspects of teaching and learning, curriculum studies, education and educational policies (SH3_11)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "eb09a5cc-afe4-4dc3-a50f-cb45269da551",
+    "key": "SH3_12",
+    "name": "Communication and information, networks, media",
+    "description": "Communication and information, networks, media (SH3_12)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "2ffda402-4ec4-4e4a-bfee-a4e5ec5b9c88",
+    "key": "SH3_13",
+    "name": "Digital social research",
+    "description": "Digital social research (SH3_13)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "4bba8747-f3bc-489c-b82e-90f12cecd09f",
+    "key": "SH3_14",
+    "name": "Social studies of science and technology",
+    "description": "Social studies of science and technology (SH3_14)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "18ebd971-631a-444c-9d68-b2e72fbf13db",
+    "key": "SH3_2",
+    "name": "Inequalities, discrimination, prejudice",
+    "description": "Inequalities, discrimination, prejudice (SH3_2)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "6e29a7a4-ed7f-4f7c-a52e-f4e573c36381",
+    "key": "SH3_3",
+    "name": "Aggression and violence, antisocial behaviour, crime",
+    "description": "Aggression and violence, antisocial behaviour, crime (SH3_3)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "f47fd356-4c9d-4793-8f88-f2ff834807d0",
+    "key": "SH3_4",
+    "name": "Social integration, exclusion, prosocial behaviour",
+    "description": "Social integration, exclusion, prosocial behaviour (SH3_4)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "abfb9807-e00c-4123-aec3-5618ad520aa7",
+    "key": "SH3_5",
+    "name": "Attitudes and beliefs",
+    "description": "Attitudes and beliefs (SH3_5)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "95d2e3f0-e814-4784-98ae-c991802fb50a",
+    "key": "SH3_6",
+    "name": "Social influence; power and group behaviour",
+    "description": "Social influence; power and group behaviour (SH3_6)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "aa5b0c19-f1db-4e57-aed1-6014511830da",
+    "key": "SH3_7",
+    "name": "Kinship; diversity and identities, gender, interethnic relations",
+    "description": "Kinship; diversity and identities, gender, interethnic relations (SH3_7)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "e68ea79f-f050-4f43-986e-bbe448566f07",
+    "key": "SH3_8",
+    "name": "Social policies, welfare, work and employment",
+    "description": "Social policies, welfare, work and employment (SH3_8)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "e1b21b73-a8ef-4593-99ab-3b2f86c2eae1",
+    "key": "SH3_9",
+    "name": "Poverty and poverty alleviation",
+    "description": "Poverty and poverty alleviation (SH3_9)",
+    "parent": "ca12e102-8b8a-451a-9f0b-9fa2e3372710"
+  },
+  {
+    "id": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa",
+    "key": "SH4",
+    "name": "The Human Mind and Its Complexity",
+    "description": "Cognitive science, psychology, linguistics, theoretical philosophy (SH4)",
+    "parent": "d840e888-e8bf-4bd2-b7ce-120c3bcce896"
+  },
+  {
+    "id": "918cbf48-d49b-4358-b7d9-f2167e8e6b2c",
+    "key": "SH4_1",
+    "name": "Cognitive basis of human development and education, developmental disorders; comparative cognition",
+    "description": "Cognitive basis of human development and education, developmental disorders; comparative cognition (SH4_1)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "fad31a54-acaf-4948-99b5-594b100de0a1",
+    "key": "SH4_10",
+    "name": "Language typology; historical linguistics",
+    "description": "Language typology; historical linguistics (SH4_10)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "eef99133-d120-489b-98e9-985d71484a96",
+    "key": "SH4_11",
+    "name": "Pragmatics, sociolinguistics, linguistic anthropology, discourse analysis",
+    "description": "Pragmatics, sociolinguistics, linguistic anthropology, discourse analysis (SH4_11)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "7b377467-7ad2-44f5-b2c4-52e2182353e4",
+    "key": "SH4_12",
+    "name": "Philosophy of mind, philosophy of language",
+    "description": "Philosophy of mind, philosophy of language (SH4_12)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "1f7abf3f-9a72-4f7c-8398-f8f96ce97720",
+    "key": "SH4_13",
+    "name": "Philosophy of science, epistemology, logic",
+    "description": "Philosophy of science, epistemology, logic (SH4_13)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "de8b3ae2-3752-43cb-89ec-450b2d8d621f",
+    "key": "SH4_2",
+    "name": "Personality and social cognition; emotion",
+    "description": "Personality and social cognition; emotion (SH4_2)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "61a09b00-45a2-4ded-acfc-0b4006e78f23",
+    "key": "SH4_3",
+    "name": "Clinical and health psychology",
+    "description": "Clinical and health psychology (SH4_3)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "003db303-51e4-4b78-8910-fdebeb2cbc32",
+    "key": "SH4_4",
+    "name": "Neuropsychology",
+    "description": "Neuropsychology (SH4_4)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "794ac8bc-da6a-49f8-a78c-5f6bc202e6a1",
+    "key": "SH4_5",
+    "name": "Attention, perception, action, consciousness",
+    "description": "Attention, perception, action, consciousness (SH4_5)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "872e2e38-7a7e-45a9-93d6-16d10bcf041c",
+    "key": "SH4_6",
+    "name": "Learning, memory; cognition in ageing",
+    "description": "Learning, memory; cognition in ageing (SH4_6)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "b3b6a45c-bdf7-4d18-b979-d6dd1322a535",
+    "key": "SH4_7",
+    "name": "Reasoning, decision-making; intelligence",
+    "description": "Reasoning, decision-making; intelligence (SH4_7)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "656f0681-780f-4470-941b-66fe243ec273",
+    "key": "SH4_8",
+    "name": "Language learning and processing (first and second languages)",
+    "description": "Language learning and processing (first and second languages) (SH4_8)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "affae6fc-bc22-46dc-8819-c3012110398a",
+    "key": "SH4_9",
+    "name": "Theoretical linguistics; computational linguistics",
+    "description": "Theoretical linguistics; computational linguistics (SH4_9)",
+    "parent": "ca8da31e-9d01-4f87-b8fc-0c5a716475aa"
+  },
+  {
+    "id": "5d54094d-a36a-4691-b671-06ca2f127141",
+    "key": "SH5",
+    "name": "Cultures and Cultural Production",
+    "description": "Literary studies, cultural studies, study of the arts, philosophy (SH5)",
+    "parent": "d840e888-e8bf-4bd2-b7ce-120c3bcce896"
+  },
+  {
+    "id": "ccce441f-c88b-4809-aecf-2426149df726",
+    "key": "SH5_1",
+    "name": "Classics, ancient literature and art",
+    "description": "Classics, ancient literature and art (SH5_1)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "979a8235-6c91-4b82-9a95-a9a4f5105be4",
+    "key": "SH5_10",
+    "name": "Ethics and its applications; social philosophy",
+    "description": "Ethics and its applications; social philosophy (SH5_10)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "58e6d95d-95eb-4e11-a70d-177500f8ea3c",
+    "key": "SH5_11",
+    "name": "History of philosophy",
+    "description": "History of philosophy (SH5_11)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "b6a073e8-283d-4015-aa38-d57d0b732ec9",
+    "key": "SH5_12",
+    "name": "Computational modelling and digitisation in the cultural sphere",
+    "description": "Computational modelling and digitisation in the cultural sphere (SH5_12)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "74f474fb-b605-4671-8da6-c61feb3f6ce3",
+    "key": "SH5_2",
+    "name": "Theory and history of literature, comparative literature",
+    "description": "Theory and history of literature, comparative literature (SH5_2)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "ad0e2f5d-cef4-4766-9925-fe9ad42e8d71",
+    "key": "SH5_3",
+    "name": "Philology; text and image studies",
+    "description": "Philology; text and image studies (SH5_3)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "3d40ac9a-3bee-4321-85ca-bf033574d45d",
+    "key": "SH5_4",
+    "name": "Visual and performing arts, film, design and architecture",
+    "description": "Visual and performing arts, film, design and architecture (SH5_4)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "5a88c094-7b82-46e8-a574-34dc5dcbbbdc",
+    "key": "SH5_5",
+    "name": "Music and musicology; history of music",
+    "description": "Music and musicology; history of music (SH5_5)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "46747cc8-1441-4485-9e08-d8c6b5ad166c",
+    "key": "SH5_6",
+    "name": "History of art and architecture, arts-based research",
+    "description": "History of art and architecture, arts-based research (SH5_6)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "fecd6baf-6c51-4a7d-97ef-a9d5c942b5ea",
+    "key": "SH5_7",
+    "name": "Museums, exhibitions, conservation and restoration",
+    "description": "Museums, exhibitions, conservation and restoration (SH5_7)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "113d700c-23e3-4e79-8882-b5fb2bcaf1c5",
+    "key": "SH5_8",
+    "name": "Cultural studies, cultural identities and memories, cultural heritage",
+    "description": "Cultural studies, cultural identities and memories, cultural heritage (SH5_8)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "2eedf2c9-dad5-445f-afe5-7c74473a34e0",
+    "key": "SH5_9",
+    "name": "Metaphysics, philosophical anthropology; aesthetics",
+    "description": "Metaphysics, philosophical anthropology; aesthetics (SH5_9)",
+    "parent": "5d54094d-a36a-4691-b671-06ca2f127141"
+  },
+  {
+    "id": "38dfe5ae-65f8-4bab-9178-7026f73db234",
+    "key": "SH6",
+    "name": "The Study of the Human Past",
+    "description": "Archaeology and history (SH6)",
+    "parent": "d840e888-e8bf-4bd2-b7ce-120c3bcce896"
+  },
+  {
+    "id": "5b6a567e-79e6-41bf-9be5-f0c61211b043",
+    "key": "SH6_1",
+    "name": "Historiography, theory and methods in history, including the analysis of digital data",
+    "description": "Historiography, theory and methods in history, including the analysis of digital data (SH6_1)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "ac9eedbb-b69b-47bb-99c9-9daaf781f5f1",
+    "key": "SH6_10",
+    "name": "Colonial and post-colonial history",
+    "description": "Colonial and post-colonial history (SH6_10)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "18b355b8-66bb-48fb-85e7-4f3b055e0234",
+    "key": "SH6_11",
+    "name": "Global history, transnational history, comparative history, entangled histories",
+    "description": "Global history, transnational history, comparative history, entangled histories (SH6_11)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "bbccdade-f98a-4ab2-8537-cb37e8b2656f",
+    "key": "SH6_12",
+    "name": "Social and economic history",
+    "description": "Social and economic history (SH6_12)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "8242b0b5-6921-4080-8581-d295c9bc2fc7",
+    "key": "SH6_13",
+    "name": "Gender history, cultural history, history of collective identities and memories, history of religions",
+    "description": "Gender history, cultural history, history of collective identities and memories, history of religions (SH6_13)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "08bb952e-4413-44d2-b896-1642f88a8722",
+    "key": "SH6_14",
+    "name": "History of ideas, intellectual history, history of economic thought",
+    "description": "History of ideas, intellectual history, history of economic thought (SH6_14)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "f3c0f61a-2d22-4c1b-8471-2d79509460f3",
+    "key": "SH6_15",
+    "name": "History of science, medicine and technologies",
+    "description": "History of science, medicine and technologies (SH6_15)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "a9a9e95c-cec8-49ba-b6cd-807bb890535a",
+    "key": "SH6_2",
+    "name": "Classical archaeology, history of archaeology, social archaeology",
+    "description": "Classical archaeology, history of archaeology, social archaeology (SH6_2)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "8f01cf04-880c-4aee-bd3c-bb092aa1fe22",
+    "key": "SH6_3",
+    "name": "General archaeology, archaeometry, landscape archaeology",
+    "description": "General archaeology, archaeometry, landscape archaeology (SH6_3)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "e25f1e44-b338-4d5d-b20b-7031065e5643",
+    "key": "SH6_4",
+    "name": "Prehistory, palaeoanthropology, palaeodemography, protohistory, bioarchaeology",
+    "description": "Prehistory, palaeoanthropology, palaeodemography, protohistory, bioarchaeology (SH6_4)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "864651fb-a3cf-4693-8c0b-e323614e2ab9",
+    "key": "SH6_5",
+    "name": "Palaeography and codicology",
+    "description": "Palaeography and codicology (SH6_5)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "0732ad1e-f58e-41c2-874e-0287e34607f3",
+    "key": "SH6_6",
+    "name": "Ancient history",
+    "description": "Ancient history (SH6_6)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "352209f1-4acd-472e-bac4-deb1aec4f839",
+    "key": "SH6_7",
+    "name": "Medieval history",
+    "description": "Medieval history (SH6_7)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "9963176e-de9c-4fb0-b72f-a2f5d0c9de10",
+    "key": "SH6_8",
+    "name": "Early modern history",
+    "description": "Early modern history (SH6_8)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "037a188a-f55f-449d-bd18-7dc1b9ec7fd7",
+    "key": "SH6_9",
+    "name": "Modern and contemporary history",
+    "description": "Modern and contemporary history (SH6_9)",
+    "parent": "38dfe5ae-65f8-4bab-9178-7026f73db234"
+  },
+  {
+    "id": "87147940-1ac2-4565-8d7e-404a9e7f6638",
+    "key": "SH7",
+    "name": "Human Mobility, Environment, and Space",
+    "description": "Human geography, demography, health, sustainability science, territorial planning, spatial analysis (SH7)",
+    "parent": "d840e888-e8bf-4bd2-b7ce-120c3bcce896"
+  },
+  {
+    "id": "85207156-0482-4e70-bbc2-69c7cdc0483f",
+    "key": "SH7_1",
+    "name": "Human, economic and social geography",
+    "description": "Human, economic and social geography (SH7_1)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  },
+  {
+    "id": "21212ce6-7a0c-43cb-bc9e-30bffe6527e8",
+    "key": "SH7_10",
+    "name": "GIS, spatial analysis; big data in geographical studies",
+    "description": "GIS, spatial analysis; big data in geographical studies (SH7_10)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  },
+  {
+    "id": "8292b0c7-c4d9-410f-961f-106fce97a605",
+    "key": "SH7_2",
+    "name": "Migration",
+    "description": "Migration (SH7_2)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  },
+  {
+    "id": "5e934268-0d76-42bb-a8d5-273d8cf85248",
+    "key": "SH7_3",
+    "name": "Population dynamics: households, family and fertility",
+    "description": "Population dynamics: households, family and fertility (SH7_3)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  },
+  {
+    "id": "0a262317-9d03-42f4-9049-0377697af551",
+    "key": "SH7_4",
+    "name": "Social aspects of health, ageing and society",
+    "description": "Social aspects of health, ageing and society (SH7_4)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  },
+  {
+    "id": "afcb2904-307f-4723-9505-b0654334ed13",
+    "key": "SH7_5",
+    "name": "Sustainability sciences, environment and resources",
+    "description": "Sustainability sciences, environment and resources (SH7_5)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  },
+  {
+    "id": "6d97bd34-b6d2-4ace-9e13-4ae0558e2c68",
+    "key": "SH7_6",
+    "name": "Environmental and climate change, societal impact and policy",
+    "description": "Environmental and climate change, societal impact and policy (SH7_6)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  },
+  {
+    "id": "e597551c-969d-490f-83d0-3a125e23c06e",
+    "key": "SH7_7",
+    "name": "Cities; urban, regional and rural studies",
+    "description": "Cities; urban, regional and rural studies (SH7_7)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  },
+  {
+    "id": "295ded84-625b-4737-b6d7-fb9920d6d2b3",
+    "key": "SH7_8",
+    "name": "Land use and planning",
+    "description": "Land use and planning (SH7_8)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  },
+  {
+    "id": "287bb26e-15fc-4a87-b0a2-c21f8ff660a3",
+    "key": "SH7_9",
+    "name": "Energy, transportation and mobility",
+    "description": "Energy, transportation and mobility (SH7_9)",
+    "parent": "87147940-1ac2-4565-8d7e-404a9e7f6638"
+  }
+]

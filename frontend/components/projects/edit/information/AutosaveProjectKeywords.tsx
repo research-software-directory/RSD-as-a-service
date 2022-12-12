@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -29,7 +30,7 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
   const [keywords, setKeywords] = useState(items)
 
   // console.group('ProjectKeywords')
-  // console.log('fields...', fields)
+  // console.log('keywords...', keywords)
   // console.groupEnd()
 
   async function onAdd(selected: Keyword) {
@@ -48,7 +49,7 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
             ...selected,
             project:project_id
           }
-        ].sort((a,b)=>sortOnStrProp(a,b,'keyword'))
+        ].sort((a, b) => sortOnStrProp(a, b, 'keyword'))
         setKeywords(items)
       }else{
         showErrorMessage(`Failed to save keyword. ${resp.message}`)
@@ -121,6 +122,7 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
             className="py-1 pr-1"
           >
             <Chip
+              data-testid="keyword-chip"
               title={field.keyword}
               label={field.keyword}
               onDelete={() => onRemove(pos)}

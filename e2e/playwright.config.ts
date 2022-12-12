@@ -34,7 +34,7 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   /* Retry 1 */
   retries: 1,
-  /* Run 1 worker in CI and 6 locally */
+  /* Run 2 workers in CI and 6 locally */
   workers: process.env.CI ? 2 : 6,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', {open: 'never'}]],

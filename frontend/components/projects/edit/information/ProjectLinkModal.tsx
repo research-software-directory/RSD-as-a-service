@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -143,7 +144,7 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
           rules={config.url_for_project.title.validation}
           options={{
             name: 'title',
-            label: 'Title',
+            label: config.url_for_project.title.placeholder,
             defaultValue: url_for_project?.title ?? '',
             muiProps:{
               autoFocus: true,

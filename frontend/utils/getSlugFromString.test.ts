@@ -40,4 +40,11 @@ it('removes separator char too', () => {
   expect(slug).toEqual(expected)
 })
 
+it('returns null string on missing title', () => {
+  const title = null
+  const slug = getSlugFromString(title as any, '_')
+  const expected = ''
+  expect(slug).toEqual(expected)
+})
+
 

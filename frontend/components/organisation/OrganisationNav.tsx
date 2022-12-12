@@ -46,6 +46,7 @@ export default function OrganisationNav({isMaintainer, organisation}:Organisatio
           }) === true) {
             return (
               <ListItemButton
+                data-testid="organisation-nav-item"
                 key={`step-${pos}`}
                 selected={selected}
                 onClick={() => {
@@ -58,7 +59,7 @@ export default function OrganisationNav({isMaintainer, organisation}:Organisatio
                 }}
               >
                 <ListItemIcon>
-                    {item.icon}
+                  {item.icon}
                 </ListItemIcon>
                 <ListItemText primary={item.label(organisation)} secondary={item.status} />
               </ListItemButton>

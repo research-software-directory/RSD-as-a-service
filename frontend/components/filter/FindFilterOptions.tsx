@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -87,39 +88,10 @@ export default function FindFilterOptions<T extends RequiredData>({
     }
   }
 
-  // function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
-  //   option: AutocompleteOption<T>) {
-  //   // if more than one option we add border at the bottom
-  //   // we assume that first option is Add "new item"
-  //   if (options.length > 1 && onCreate) {
-  //     if (props?.className) {
-  //       props.className+=' mb-2 border-b'
-  //     } else {
-  //       props.className='mb-2 border-b'
-  //     }
-  //   }
-  //   return (
-  //     <li {...props} key={option.key}>
-  //       {/* if new option (has input) show label and count  */}
-  //       <strong>{`Add "${option.label.trim()}"`}</strong>
-  //     </li>
-  //   )
-  // }
-
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
     option: AutocompleteOption<T>,
     state: object) {
-    // console.log('renderOption...', option)
-    // when value is not not found option returns input prop
-    // if (option?.input && onCreate) {
-    //   // if input is over minLength
-    //   if (option?.input.trim().length > config.minLength) {
-    //     // we offer an option to create this entry
-    //     return renderAddOption(props,option)
-    //   } else {
-    //     return null
-    //   }
-    // }
+
     return (
       <li {...props} key={option.key}>
         {/* if new option (has input) show label and count  */}

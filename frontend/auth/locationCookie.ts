@@ -6,10 +6,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export function saveLocationCookie() {
+  // console.log('saveLocationCookie...', location.pathname.toLowerCase())
   // only in browser mode
   if (typeof document == 'undefined') return
   if (typeof location == 'undefined') return
-  // console.log('saveLocationCookie...', location.pathname.toLowerCase())
   // for specific routes
   switch (location.pathname.toLowerCase()) {
     // ingnore these paths

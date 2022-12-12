@@ -21,6 +21,7 @@ export default function EditProjectPage({slug}:{slug:string}) {
 
   // console.group('EditProjectPage')
   // console.log('slug...', slug)
+  // console.log('step...', step)
   // console.groupEnd()
 
   return (

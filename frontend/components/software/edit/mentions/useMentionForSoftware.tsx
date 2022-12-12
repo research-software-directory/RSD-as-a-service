@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,14 +23,14 @@ export default function useMentionForSoftware({software, token}: MentionForSoftw
     async function getImpactFromApi() {
       setLoading(true)
       // TODO! this request is made two times, investigate
-      const mentionsForProject = await getMentionsForSoftware({
+      const mentionsForSoftware = await getMentionsForSoftware({
         software,
         token,
         frontend: true
       })
-      if (mentionsForProject && abort === false) {
+      if (mentionsForSoftware && abort === false) {
         // debugger
-        setMentions(mentionsForProject)
+        setMentions(mentionsForSoftware)
         setLoadedSoftware(software)
         setLoading(false)
       }

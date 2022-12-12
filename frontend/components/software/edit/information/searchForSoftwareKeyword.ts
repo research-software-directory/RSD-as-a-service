@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,28 +38,3 @@ export async function searchForSoftwareKeyword(
   }
 }
 
-export async function searchForSoftwareKeywordExact(
-  {searchFor}: { searchFor: string }
-) {
-  try {
-    const searchForEncoded = encodeURIComponent(searchFor)
-
-    // GET first exact match
-    const url = `/api/v1/rpc/keyword_count_for_software?keyword=eq.${searchForEncoded}&limit=1`
-    const resp = await fetch(url, {
-      method: 'GET'
-    })
-
-    if (resp.status === 200) {
-      const json: Keyword[] = await resp.json()
-      return json
-    }
-
-    // return extractReturnMessage(resp, project ?? '')
-    logger(`searchForSoftwareKeywordExact: ${resp.status} ${resp.statusText}`, 'warn')
-    return []
-  } catch (e: any) {
-    logger(`searchForSoftwareKeywordExact: ${e?.message}`, 'error')
-    return []
-  }
-}

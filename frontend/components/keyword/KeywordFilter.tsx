@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +12,7 @@ type SeachApiProps = {
   searchFor: string
 }
 
-type KeywordFilterProps = {
+export type KeywordFilterProps = {
   items: string[]
   onApply: (items: string[]) => void
   searchApi: ({searchFor}:SeachApiProps)=> Promise<Keyword[]>
@@ -45,7 +46,7 @@ export default function KeywordFilter({items=[], searchApi, onApply}:KeywordFilt
     }
   }
 
-  function itemsToOptions(items:Keyword[]) {
+  function itemsToOptions(items: Keyword[]) {
     const options = items.map(item => ({
       key: item.keyword,
       label: item.keyword,

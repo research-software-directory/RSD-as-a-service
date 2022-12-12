@@ -21,6 +21,7 @@ export default function SelectedFilterItems({items=[], onDelete}: SelectedFilter
             <Fragment key={pos}>
               <span className="text-md">+</span>
               <Chip
+                data-testid="filter-item-chip"
                 title={item}
                 label={item}
                 onDelete={() => onDelete(pos)}
@@ -33,6 +34,7 @@ export default function SelectedFilterItems({items=[], onDelete}: SelectedFilter
         }
         return (
           <Chip
+            data-testid="filter-item-chip"
             title={item}
             key={pos}
             label={item}

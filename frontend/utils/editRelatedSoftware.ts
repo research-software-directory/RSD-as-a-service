@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,11 +28,11 @@ export async function getRelatedSoftwareForSoftware({software, token, frontend}:
       // no items found
       return []
     }
-    logger(`getRelatedToolsForSoftware: ${resp.status} ${resp.statusText} [${url}]`, 'error')
+    logger(`getRelatedSoftwareForSoftware: ${resp.status} ${resp.statusText} [${url}]`, 'error')
     // query not found
     return []
   } catch (e: any) {
-    logger(`getRelatedToolsForSoftware: ${e?.message}`, 'error')
+    logger(`getRelatedSoftwareForSoftware: ${e?.message}`, 'error')
     return []
   }
 }

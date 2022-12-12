@@ -4,9 +4,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useRef, useEffect, useState} from 'react'
+import {useTheme} from '@mui/material'
 import useResizeObserver from './useResizeObserver'
 import drawLineChart from './drawLineChart'
-import {useTheme} from '@mui/material'
 
 export type Point = {
   // date in ms
@@ -21,6 +21,10 @@ export default function SingleLineChart({data = []}: { data: Point[] }) {
   const divRef: any = useRef()
   const [element, setElement] = useState()
   const size = useResizeObserver(element)
+
+  // console.group('SingleLineChart')
+  // console.log('size...', size)
+  // console.groupEnd()
 
   useEffect(() => {
     let abort = false
@@ -44,13 +48,14 @@ export default function SingleLineChart({data = []}: { data: Point[] }) {
   return (
     <div ref={divRef} className="flex-1 overflow-hidden relative">
       <svg
-          ref={svgRef}
-          // requires block to remove 4px space from parent element
-          // automatically added to parent
-          // see https://stackoverflow.com/questions/22300062/svg-and-parent-height-of-svg-different
-          style={{
-            display: 'block'
-          }}
+        data-testid="d3-line-chart"
+        ref={svgRef}
+        // requires block to remove 4px space from parent element
+        // automatically added to parent
+        // see https://stackoverflow.com/questions/22300062/svg-and-parent-height-of-svg-different
+        style={{
+          display: 'block'
+        }}
       ></svg>
     </div>
   )
