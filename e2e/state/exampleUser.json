@@ -1,0 +1,45 @@
+{
+  "cookies": [
+    {
+      "name": "rsd_pathname",
+      "value": "http://localhost/software",
+      "domain": "localhost",
+      "path": "/auth",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "mtm_consent_removed",
+      "value": "1669550932848",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1704110932.887179,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "rsd_token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoicnNkX3VzZXIiLCJpc3MiOiJyc2RfYXV0aCIsIm5hbWUiOiJwcm9mZXNzb3IxIiwiZXhwIjoxNjY5NTU0NTQxLCJhY2NvdW50IjoiZmE0MzdhODMtMTc2My00YzY1LWJjMWMtOWQ3ZDhmODdiMGIzIn0.WEhjOW-FaSzeJ4gqalFgN4Se2HK2oOGJF8sKw0AJe_M",
+      "domain": "localhost",
+      "path": "/",
+      "expires": 1669554541.188048,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost",
+      "localStorage": [
+        {
+          "name": "rsd_cookies_consent",
+          "value": "false"
+        }
+      ]
+    }
+  ]
+}

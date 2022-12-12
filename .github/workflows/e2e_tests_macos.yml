@@ -1,0 +1,50 @@
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+# SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2022 dv4all
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: e2e tests on macos v12
+on:
+  workflow_dispatch:
+    inputs:
+      browser:
+        type: choice
+        description: Select browser
+        options:
+        - chrome
+        - msedge
+        - firefox
+        - webkit
+jobs:
+  macos-v12:
+    timeout-minutes: 30
+    name: ${{inputs.browser}} macos v12
+    runs-on: macos-12
+    steps:
+    - uses: actions/checkout@v3
+    - name: install dependencies
+      working-directory: e2e
+      run: npm ci
+    - name: install browsers
+      working-directory: e2e
+      run: npx playwright install chromium ${{inputs.browser}} --with-deps
+    - name: run e2e tests
+      working-directory: e2e
+      run: npm run e2e:${{inputs.browser}}:dev
+    - uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: macos-playwright-report-${{inputs.browser}}
+        path: playwright-report/
+        retention-days: 30
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: macos browser ${{inputs.browser}} state and .env file
+        path: |
+          e2e/state/
+          .env
+        retention-days: 30

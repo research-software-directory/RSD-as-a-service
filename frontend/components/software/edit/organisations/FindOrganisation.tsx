@@ -61,7 +61,11 @@ export default function FindOrganisation({onAdd, onCreate}:
       }
     }
     return (
-      <li {...props} key={option.key}>
+      <li
+        data-testid="add-organisation-option"
+        key={option.key}
+        {...props}
+      >
         {/* if new option (has input) show label and count  */}
         <strong>{`Add "${option.label}"`}</strong>
       </li>
@@ -82,7 +86,11 @@ export default function FindOrganisation({onAdd, onCreate}:
       }
     }
     return (
-      <li {...props} key={option.key}>
+      <li
+        data-testid="find-organisation-option"
+        key={option.key}
+        {...props}
+      >
         <FindOrganisationItem option={option} />
       </li>
     )

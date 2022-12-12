@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -27,6 +28,7 @@ export default function SortableTestimonialListItem({pos,item,onEdit,onDelete}:S
 
   return (
     <ListItem
+      data-testid="testimonial-list-item"
       // draggable
       ref={setNodeRef}
       {...attributes}
@@ -52,6 +54,7 @@ export default function SortableTestimonialListItem({pos,item,onEdit,onDelete}:S
         <span className='text-[3rem]'>{item?.position}</span>
       </ListItemAvatar>
       <ListItemText
+        data-testid="testimonial-list-item-text"
         primary={item?.message}
         secondary={<span>- {item?.source}</span>}
       />

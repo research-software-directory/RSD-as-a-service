@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -221,11 +222,9 @@ export default function SoftwareTestimonials() {
             subtitle={getTestimonialSubtitle()}
           >
             <Button
+              data-testid="add-testimonial-btn"
               startIcon={<AddIcon />}
               onClick={onAdd}
-              sx={{
-                marginRight:'1rem'
-              }}
             >
               Add
             </Button>

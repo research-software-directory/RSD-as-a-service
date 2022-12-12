@@ -28,12 +28,12 @@ export default function OrganisationCard(organisation: OrganisationForOverview) 
 
   return (
     <Link
+      data-testid="organisation-card-link"
       href={`/organisations/${organisation.rsd_path}`}
       className="h-full relative"
       passHref
     >
-      <article
-        className="flex flex-col border h-full min-h-[16rem] overflow-hidden">
+      <article className="flex flex-col border h-full min-h-[16rem] overflow-hidden">
         <div className="pl-8 pt-8 flex">
           <CardTitle
             title={organisation.name}

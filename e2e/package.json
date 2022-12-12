@@ -1,0 +1,40 @@
+{
+  "name": "rsd-e2e-tests",
+  "version": "1.0.0",
+  "description": "RSD end to end tests with Playwright",
+  "main": "index.js",
+  "scripts": {
+    "e2e": "playwright test --project=chromium --headed",
+    "e2e:all": "playwright test",
+    "e2e:docker": "playwright test --project=chrome --project=firefox --project=msedge",
+    "e2e:webkit": "playwright test --project=webkit --headed",
+    "e2e:webkit:debug": "PWDEBUG=1 playwright test --project=webkit",
+    "e2e:ff": "playwright test --project=firefox --headed",
+    "e2e:ff:debug": "PWDEBUG=1 playwright test --project=firefox",
+    "e2e:chrome": "playwright test --project=chrome --headed",
+    "e2e:msedge": "playwright test --project=msedge --headed",
+    "e2e:debug": "PWDEBUG=1 playwright test --project=chrome",
+    "e2e:debug:console": "PWDEBUG=console playwright test --project=chromium",
+    "e2e:ubuntu": "playwright test --project=chrome --project=firefox",
+    "e2e:ubuntu:show": "playwright test --project=chrome --project=firefox --headed",
+    "e2e:macos": "playwright test --project=chromium --project=webkit",
+    "e2e:windows": "playwright test --project=chrome --project=msedge",
+    "e2e:report": "playwright show-report",
+    "e2e:record": "playwright codegen http://localhost/",
+    "e2e:trace": "playwright test --project=chromium --trace on",
+    "e2e:chrome:dev": "BASE_URL=https://research-software.dev playwright test --project=chromium",
+    "e2e:msedge:dev": "BASE_URL=https://research-software.dev playwright test --project=msedge",
+    "e2e:firefox:dev": "BASE_URL=https://research-software.dev playwright test --project=firefox",
+    "e2e:webkit:dev": "BASE_URL=https://research-software.dev playwright test --project=webkit"
+  },
+  "keywords": [],
+  "author": "Dusan Mijatovic",
+  "license": "Apache 2.0",
+  "devDependencies": {
+    "@playwright/test": "1.28.1",
+    "@types/node": "18.11.11",
+    "@typescript-eslint/eslint-plugin": "5.46.0",
+    "@typescript-eslint/parser": "5.46.0",
+    "eslint": "8.29.0"
+  }
+}

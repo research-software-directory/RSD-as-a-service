@@ -76,7 +76,9 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
   }
 
   return (
-    <Link href={href}
+    <Link
+      data-testid="software-card-link"
+      href={href}
       className="flex flex-col h-full"
       passHref>
       {/* anchor tag MUST be first element after Link component */}

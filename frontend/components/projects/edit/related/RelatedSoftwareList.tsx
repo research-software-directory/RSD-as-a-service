@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -91,27 +92,26 @@ export function RelatedSoftwareItem({software,onDelete}:SoftwareItemProps) {
     return null
   }
   return (
-     <ListItem
-        secondaryAction={
-        <>
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            onClick={onDelete}
-            sx={{marginRight: '0rem'}}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </>
+    <ListItem
+      data-testid="related-software-item"
+      secondaryAction={
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          onClick={onDelete}
+          sx={{marginRight: '0rem'}}
+        >
+          <DeleteIcon />
+        </IconButton>
+      }
+      sx={{
+        height:itemHeight,
+        // this makes space for buttons
+        paddingRight:'5rem',
+        '&:hover': {
+          backgroundColor:'grey.100'
         }
-        sx={{
-          height:itemHeight,
-          // this makes space for buttons
-          paddingRight:'5rem',
-          '&:hover': {
-            backgroundColor:'grey.100'
-          }
-        }}
+      }}
     >
       <ListItemAvatar>
         <Avatar

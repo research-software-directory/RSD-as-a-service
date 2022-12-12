@@ -88,6 +88,7 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
 
   return (
     <ListItem
+      data-testid="organisation-list-item"
       // draggable
       ref={setNodeRef}
       {...attributes}
@@ -128,6 +129,7 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
       </ListItemAvatar>
       {/* {getStatusIcon()} */}
       <ListItemText
+        data-testid="organisation-list-item-text"
         primary={organisation.name}
         secondary={
           <>

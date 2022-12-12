@@ -42,7 +42,7 @@ on:
 jobs:
   build_and_push:
     name: build and push image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       image_build: ${{steps.build_image.outputs.image_build}}
       image_pushed: ${{steps.build_image.outputs.image_pushed}}

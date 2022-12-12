@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 dv4all
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# THIS DOCKER FILE REQUIRES .env FILE
+version: "3.0"
+
+services:
+  tests:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: rsd/e2e-tests:1.0.0
+    volumes:
+      - ./test-results:/app/test-results/
+      - ./playwright-report:/app/playwright-report
+    network_mode: host

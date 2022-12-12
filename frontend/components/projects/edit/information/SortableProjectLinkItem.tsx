@@ -26,6 +26,7 @@ export default function SortableProjectLinksItem({pos, item, onEdit, onDelete}: 
   } = useSortable({id: item.id ?? ''})
   return(
     <ListItem
+      data-testid="project-link-item"
       // draggable
       ref={setNodeRef}
       {...attributes}

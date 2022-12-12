@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -31,6 +32,7 @@ export default function ConfirmDeleteModal({
   // console.groupEnd()
   return (
     <Dialog
+      data-testid="conform-delete-modal"
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}

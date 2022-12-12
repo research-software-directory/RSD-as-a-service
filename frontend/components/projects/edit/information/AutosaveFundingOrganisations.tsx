@@ -112,6 +112,7 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
             className="py-1 pr-1"
           >
             <Chip
+              data-testid="funding-organisation-chip"
               title={item.name}
               label={item.name}
               onDelete={() => onRemoveOgranisation(pos)}

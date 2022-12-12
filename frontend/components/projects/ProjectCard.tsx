@@ -57,6 +57,7 @@ export default function ProjectCard(
 
   return (
     <Link
+      data-testid="project-card-link"
       href={projectUrl()}
       className={`flex flex-col h-full bg-base-200 text-content ${opacity} hover:bg-secondary hover:text-white`}
       passHref>
