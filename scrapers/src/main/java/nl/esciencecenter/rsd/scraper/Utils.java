@@ -1,8 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -173,6 +173,27 @@ public class Utils {
 				.header("Content-Type", "application/json")
 				.header("Authorization", "Bearer " + jwtString)
 				.headers(extraHeaders)
+				.build();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<String> response;
+		try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+		}
+		return response.body();
+	}
+
+	public static String patchAsAdmin(String uri, String json) {
+		String jwtString = adminJwt();
+		HttpRequest request = HttpRequest.newBuilder()
+				.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
+				.uri(URI.create(uri))
+				.header("Content-Type", "application/json")
+				.header("Authorization", "Bearer " + jwtString)
 				.build();
 		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;

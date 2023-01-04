@@ -1,30 +1,23 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.scraper.git;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.time.Month;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.UUID;
 
 public class PostgrestSIRTest {
 
 	@Test
 	void givenEmptyJsonArray_whenParsingJsonData_thenEmptyCollectionReturned() {
 		String emptyArrayJson = "[]";
-		PostgrestSIR postgrestSIR = new PostgrestSIR("", CodePlatformProvider.GITHUB);
 
-		Collection<RepositoryUrlData> result = postgrestSIR.parseJsonData(emptyArrayJson);
+		Collection<BasicRepositoryData> result = PostgrestSIR.parseBasicJsonData(emptyArrayJson);
 
 		Assertions.assertTrue(result.isEmpty());
 	}
@@ -34,210 +27,87 @@ public class PostgrestSIRTest {
 		String arrayWithSingleValidObjectJson = """
 				[
 					{
-						"software": "Test software",
-						"url": "https://www.example.com",
-						"license": "My license",
-						"license_scraped_at": "2022-04-25T14:48:02.911546Z",
-						"commit_history": {"123": 5},
-						"commit_history_scraped_at": "2022-04-25T14:48:02.911546Z",
-						"languages": {"Java": 100, "JavaScript": 20},
-						"languages_scraped_at": "2022-04-25T14:48:02.911546Z"
+						"software": "3a07a021-743e-4adf-a2d9-3c85075fe9cf",
+						"url": "https://www.example.com"
 					}
 				]""";
-		PostgrestSIR postgrestSIR = new PostgrestSIR("", CodePlatformProvider.GITHUB);
 
-		Collection<RepositoryUrlData> result = postgrestSIR.parseJsonData(arrayWithSingleValidObjectJson);
+		Collection<BasicRepositoryData> result = PostgrestSIR.parseBasicJsonData(arrayWithSingleValidObjectJson);
 
 		Assertions.assertEquals(1, result.size());
-		RepositoryUrlData dataToInspect = result.stream().findFirst().get();
-		Assertions.assertEquals("Test software", dataToInspect.software());
+		BasicRepositoryData dataToInspect = result.stream().findFirst().get();
+		Assertions.assertEquals(UUID.fromString("3a07a021-743e-4adf-a2d9-3c85075fe9cf"), dataToInspect.software());
 		Assertions.assertEquals("https://www.example.com", dataToInspect.url());
-		Assertions.assertEquals(CodePlatformProvider.GITHUB, dataToInspect.code_platform());
-		Assertions.assertEquals("My license", dataToInspect.license());
-		Assertions.assertEquals(Month.APRIL, dataToInspect.licenseScrapedAt().getMonth());
-		Assertions.assertEquals(5, JsonParser.parseString(dataToInspect.commitHistory()).getAsJsonObject().getAsJsonPrimitive("123").getAsInt());
-		Assertions.assertEquals(2022, dataToInspect.commitHistoryScrapedAt().getYear());
-		Assertions.assertEquals(100, JsonParser.parseString(dataToInspect.languages()).getAsJsonObject().getAsJsonPrimitive("Java").getAsInt());
-		Assertions.assertEquals(20, JsonParser.parseString(dataToInspect.languages()).getAsJsonObject().getAsJsonPrimitive("JavaScript").getAsInt());
-		Assertions.assertEquals(25, dataToInspect.languagesScrapedAt().getDayOfMonth());
 	}
 
 	@Test
-	void givenValidJsonWithNullData_whenParsingJsonData_thenRecordReturnedWithNulls() {
-		String arrayWithValidDataAndNullsJson = """
+	void givenJsonWithInvalidUuid_whenParsingJsonData_thenExceptionThrown() {
+		String invalidUuidJson = """
 				[
 					{
-						"software": "Test software",
-						"url": "https://www.example.com",
-						"license": "My license",
-						"license_scraped_at": "2022-04-25T14:48:02.911546Z",
-						"commit_history": {"123": 5},
-						"commit_history_scraped_at": null,
-						"languages": null,
-						"languages_scraped_at": "2022-04-25T14:48:02.911546Z"
+						"software": "not-a-UUID",
+						"url": "https://www.example.com"
 					}
 				]""";
-		PostgrestSIR postgrestSIR = new PostgrestSIR("", CodePlatformProvider.GITHUB);
 
-		Collection<RepositoryUrlData> result = postgrestSIR.parseJsonData(arrayWithValidDataAndNullsJson);
-
-		Assertions.assertEquals(1, result.size());
-		RepositoryUrlData dataToInspect = result.stream().findFirst().get();
-		Assertions.assertEquals("Test software", dataToInspect.software());
-		Assertions.assertEquals("https://www.example.com", dataToInspect.url());
-		Assertions.assertEquals(CodePlatformProvider.GITHUB, dataToInspect.code_platform());
-		Assertions.assertEquals("My license", dataToInspect.license());
-		Assertions.assertEquals(Month.APRIL, dataToInspect.licenseScrapedAt().getMonth());
-		Assertions.assertEquals(5, JsonParser.parseString(dataToInspect.commitHistory()).getAsJsonObject().getAsJsonPrimitive("123").getAsInt());
-		Assertions.assertNull(dataToInspect.commitHistoryScrapedAt());
-		Assertions.assertNull(dataToInspect.languages());
-		Assertions.assertEquals(25, dataToInspect.languagesScrapedAt().getDayOfMonth());
+		Assertions.assertThrowsExactly(IllegalArgumentException.class, () -> PostgrestSIR.parseBasicJsonData(invalidUuidJson));
 	}
 
 	@Test
 	void givenInvalidJson_whenParsingJsonData_thenExceptionThrown() {
-//		missing comma after null from languages
+//		missing comma after software UUID
 		String invalidJson = """
 				[
 					{
-						"software": "Test software",
-						"url": "https://www.example.com",
-						"license": "My license",
-						"license_scraped_at": "2022-04-25T14:48:02.911546Z",
-						"commit_history": {"123": 5},
-						"commit_history_scraped_at": null,
-						"languages" null
-						"languages_scraped_at": "2022-04-25T14:48:02.911546Z"
+						"software": "3a07a021-743e-4adf-a2d9-3c85075fe9cf"
+						"url": "https://www.example.com"
 					}
 				]""";
-		PostgrestSIR postgrestSIR = new PostgrestSIR("", CodePlatformProvider.GITHUB);
 
-		Assertions.assertThrows(RuntimeException.class, () -> postgrestSIR.parseJsonData(invalidJson));
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(invalidJson));
 	}
 
 	@Test
 	void givenValidJsonWithMissingFields_whenParsingJsonData_thenExceptionThrown() {
-		String missingLicenseJson = """
+		String missingSoftwareJson = """
 				[
 					{
-						"software": "Test software",
-						"url": "https://www.example.com",
-						"license_scraped_at": "2022-04-25T14:48:02.911546",
-						"commit_history": {"123": 5},
-						"commit_history_scraped_at": null,
-						"languages" null,
-						"languages_scraped_at": "2022-04-25T14:48:02.911546"
+						"url": "https://www.example.com"
 					}
 				]""";
-		PostgrestSIR postgrestSIR = new PostgrestSIR("", CodePlatformProvider.GITHUB);
 
-		Assertions.assertThrows(RuntimeException.class, () -> postgrestSIR.parseJsonData(missingLicenseJson));
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(missingSoftwareJson));
+
+		String missingUrlJson = """
+				[
+					{
+						"software": "3a07a021-743e-4adf-a2d9-3c85075fe9cf"
+					}
+				]""";
+
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(missingUrlJson));
 	}
 
 	@Test
-	void givenEmptyCollection_whenMarshallingToJson_thenEmptyArrayJsonReturned() {
-		Collection<RepositoryUrlData> emptyCollection = Collections.EMPTY_LIST;
+	void givenValidJsonWithNullFields_whenParsingJsonData_thenExceptionThrown() {
+		String nullSoftwareJson = """
+				[
+					{
+						"software": null,
+						"url": "https://www.example.com"
+					}
+				]""";
 
-		String json = PostgrestSIR.repositoryUrlDataToJson(emptyCollection);
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(nullSoftwareJson));
 
-		JsonArray emptyArray = JsonParser.parseString(json).getAsJsonArray();
-		Assertions.assertTrue(emptyArray.isEmpty());
-	}
+		String nullUrlJson = """
+				[
+					{
+						"software": "3a07a021-743e-4adf-a2d9-3c85075fe9cf",
+						"url": null
+					}
+				]""";
 
-	@Test
-	void givenCollectionWithOneEntry_whenMarshallingToJson_thenCorrectJsonStringReturned() {
-		Collection<RepositoryUrlData> collectionWithOneEntry = new ArrayList<>();
-		RepositoryUrlData entry = new RepositoryUrlData("My software", "https://www.example.com", CodePlatformProvider.GITHUB,
-				"My license", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"{\"123\": 5}", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"{\"Java\": 100, \"JavaScript\": 20}", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"));
-		collectionWithOneEntry.add(entry);
-
-		String json = PostgrestSIR.repositoryUrlDataToJson(collectionWithOneEntry);
-
-		JsonArray arrayWithOneEntry = JsonParser.parseString(json).getAsJsonArray();
-		Assertions.assertEquals(1, arrayWithOneEntry.size());
-
-		JsonObject entryJson = arrayWithOneEntry.get(0).getAsJsonObject();
-		Assertions.assertEquals("My software", entryJson.getAsJsonPrimitive("software").getAsString());
-		Assertions.assertEquals("https://www.example.com", entryJson.getAsJsonPrimitive("url").getAsString());
-		Assertions.assertEquals("github", entryJson.getAsJsonPrimitive("code_platform").getAsString());
-		Assertions.assertEquals("My license", entryJson.getAsJsonPrimitive("license").getAsString());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("license_scraped_at").getAsString());
-		Assertions.assertEquals(5, entryJson.getAsJsonObject("commit_history").getAsJsonPrimitive("123").getAsInt());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("commit_history_scraped_at").getAsString());
-		Assertions.assertEquals(100, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("Java").getAsInt());
-		Assertions.assertEquals(20, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("JavaScript").getAsInt());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("languages_scraped_at").getAsString());
-	}
-
-	@Test
-	void givenCollectionWithOneEntryWithNulls_whenMarshallingToJson_thenCorrectJsonStringReturned() {
-		Collection<RepositoryUrlData> collectionWithOneEntry = new ArrayList<>();
-		RepositoryUrlData entry = new RepositoryUrlData("My software", "https://www.example.com", CodePlatformProvider.GITHUB,
-				"My license", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				null, ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"{\"Java\": 100, \"JavaScript\": 20}", null);
-		collectionWithOneEntry.add(entry);
-
-		String json = PostgrestSIR.repositoryUrlDataToJson(collectionWithOneEntry);
-
-		JsonArray arrayWithOneEntry = JsonParser.parseString(json).getAsJsonArray();
-		Assertions.assertEquals(1, arrayWithOneEntry.size());
-
-		JsonObject entryJson = arrayWithOneEntry.get(0).getAsJsonObject();
-		Assertions.assertEquals("My software", entryJson.getAsJsonPrimitive("software").getAsString());
-		Assertions.assertEquals("https://www.example.com", entryJson.getAsJsonPrimitive("url").getAsString());
-		Assertions.assertEquals("github", entryJson.getAsJsonPrimitive("code_platform").getAsString());
-		Assertions.assertEquals("My license", entryJson.getAsJsonPrimitive("license").getAsString());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("license_scraped_at").getAsString());
-		Assertions.assertTrue(entryJson.get("commit_history").isJsonNull());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("commit_history_scraped_at").getAsString());
-		Assertions.assertEquals(100, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("Java").getAsInt());
-		Assertions.assertEquals(20, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("JavaScript").getAsInt());
-		Assertions.assertTrue(entryJson.get("languages_scraped_at").isJsonNull());
-	}
-
-	@Test
-	void givenCollectionWithTwoEntries_whenMarshallingToJson_thenCorrectJsonStringReturned() {
-		Collection<RepositoryUrlData> collectionWithOneEntry = new ArrayList<>();
-		RepositoryUrlData entry1 = new RepositoryUrlData("My software", "https://www.example.com", CodePlatformProvider.GITHUB,
-				"My license", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				null, ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"{\"Java\": 100, \"JavaScript\": 20}", null);
-		RepositoryUrlData entry2 = new RepositoryUrlData("My software 2", "https://www.example.com", CodePlatformProvider.GITHUB,
-				"My license", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"{\"123\": 5}", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"),
-				"{\"Java\": 100, \"JavaScript\": 20}", ZonedDateTime.parse("2022-04-25T14:48:02.911546Z"));
-		collectionWithOneEntry.add(entry1);
-		collectionWithOneEntry.add(entry2);
-
-		String json = PostgrestSIR.repositoryUrlDataToJson(collectionWithOneEntry);
-
-		JsonArray arrayWithOneEntry = JsonParser.parseString(json).getAsJsonArray();
-		Assertions.assertEquals(2, arrayWithOneEntry.size());
-
-		JsonObject entryJson = arrayWithOneEntry.get(0).getAsJsonObject();
-		Assertions.assertEquals("My software", entryJson.getAsJsonPrimitive("software").getAsString());
-		Assertions.assertEquals("https://www.example.com", entryJson.getAsJsonPrimitive("url").getAsString());
-		Assertions.assertEquals("github", entryJson.getAsJsonPrimitive("code_platform").getAsString());
-		Assertions.assertEquals("My license", entryJson.getAsJsonPrimitive("license").getAsString());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("license_scraped_at").getAsString());
-		Assertions.assertTrue(entryJson.get("commit_history").isJsonNull());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson.getAsJsonPrimitive("commit_history_scraped_at").getAsString());
-		Assertions.assertEquals(100, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("Java").getAsInt());
-		Assertions.assertEquals(20, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("JavaScript").getAsInt());
-		Assertions.assertTrue(entryJson.get("languages_scraped_at").isJsonNull());
-		JsonObject entryJson2 = arrayWithOneEntry.get(1).getAsJsonObject();
-		Assertions.assertEquals("My software 2", entryJson2.getAsJsonPrimitive("software").getAsString());
-		Assertions.assertEquals("https://www.example.com", entryJson2.getAsJsonPrimitive("url").getAsString());
-		Assertions.assertEquals("github", entryJson2.getAsJsonPrimitive("code_platform").getAsString());
-		Assertions.assertEquals("My license", entryJson2.getAsJsonPrimitive("license").getAsString());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson2.getAsJsonPrimitive("license_scraped_at").getAsString());
-		Assertions.assertEquals(5, entryJson2.getAsJsonObject("commit_history").getAsJsonPrimitive("123").getAsInt());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson2.getAsJsonPrimitive("commit_history_scraped_at").getAsString());
-		Assertions.assertEquals(100, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("Java").getAsInt());
-		Assertions.assertEquals(20, entryJson.getAsJsonObject("languages").getAsJsonPrimitive("JavaScript").getAsInt());
-		Assertions.assertEquals("2022-04-25T14:48:02.911546Z", entryJson2.getAsJsonPrimitive("languages_scraped_at").getAsString());
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(nullUrlJson));
 	}
 }
