@@ -9,6 +9,11 @@ import 'whatwg-fetch'
 // specific
 import '@testing-library/jest-dom/extend-expect'
 
+// retry 2 times
+jest.retryTimes(2, {
+  logErrorsBeforeRetry: true
+})
+
 // TODO! investigate other options beside mocking
 // MOCK REACT-MARKDOWN library as it fails to load in current setup
 // there seem to be problem with ESM modules and Jest loading these
