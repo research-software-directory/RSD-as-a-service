@@ -22,8 +22,8 @@ public class MainProgrammingLanguages {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository existingLanguagesSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB);
-		Collection<BasicRepositoryData> dataToScrape = existingLanguagesSorted.languagesData(Config.maxRequestsGitLab());
+		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.languagesData(Config.maxRequestsGitLab());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -38,12 +38,12 @@ public class MainProgrammingLanguages {
 
 					String scrapedLanguages = new GitLabSI(apiUrl, projectPath).languages();
 					LanguagesData updatedData = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), scrapedLanguages, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).saveLanguagesData(updatedData);
+					softwareInfoRepository.saveLanguagesData(updatedData);
 				} catch (RuntimeException e) {
 					System.out.println("Exception when handling data from url " + programmingLanguageData.url() + ":");
 					e.printStackTrace();
 					LanguagesData oldDataWithUpdatedAt = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), null, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).saveLanguagesData(oldDataWithUpdatedAt);
+					softwareInfoRepository.saveLanguagesData(oldDataWithUpdatedAt);
 				}
 			});
 			futures[i] = future;
@@ -53,8 +53,8 @@ public class MainProgrammingLanguages {
 	}
 
 	private static void scrapeGithub() {
-		SoftwareInfoRepository existingLanguagesSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB);
-		Collection<BasicRepositoryData> dataToScrape = existingLanguagesSorted.languagesData(Config.maxRequestsGithub());
+		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.languagesData(Config.maxRequestsGithub());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -67,12 +67,12 @@ public class MainProgrammingLanguages {
 
 					String scrapedLanguages = new GithubSI("https://api.github.com", repo).languages();
 					LanguagesData updatedData = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), scrapedLanguages, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).saveLanguagesData(updatedData);
+					softwareInfoRepository.saveLanguagesData(updatedData);
 				} catch (RuntimeException e) {
 					System.out.println("Exception when handling data from url " + programmingLanguageData.url() + ":");
 					e.printStackTrace();
 					LanguagesData oldDataWithUpdatedAt = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), null, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).saveLanguagesData(oldDataWithUpdatedAt);
+					softwareInfoRepository.saveLanguagesData(oldDataWithUpdatedAt);
 				}
 			});
 			futures[i] = future;

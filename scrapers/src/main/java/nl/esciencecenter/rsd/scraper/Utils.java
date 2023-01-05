@@ -20,8 +20,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
 
@@ -216,17 +214,6 @@ public class Utils {
 				.withExpiresAt(new Date(System.currentTimeMillis() + Config.jwtExpirationTime()))
 				.sign(signingAlgorithm);
 		return jwtString;
-	}
-
-	/**
-	 * Collapses a zoned datetime to a week timestamp.
-	 * The week timestamp is the first Sunday at 00:00:00.000 UTC before the submitted date.
-	 * @param date The date to be converted
-	 * @return     Week timestamp in UTC
-	 */
-	public static ZonedDateTime collapseToWeekUTC(ZonedDateTime date) {
-		ZonedDateTime utcDate = date.withZoneSameInstant(ZoneOffset.UTC);
-		return utcDate.minusDays(utcDate.getDayOfWeek().getValue()).withHour(0).withMinute(0).withSecond(0).withNano(0);
 	}
 
 	public static String stringOrNull(JsonElement e) {

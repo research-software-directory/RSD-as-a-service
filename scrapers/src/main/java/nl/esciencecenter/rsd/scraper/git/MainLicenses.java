@@ -22,7 +22,8 @@ public class MainLicenses {
 	}
 
 	private static void scrapeGitLab() {
-		Collection<BasicRepositoryData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITLAB);
+		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.licenseData(Config.maxRequestsGitLab());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -37,12 +38,12 @@ public class MainLicenses {
 
 					String scrapedLicense = new GitLabSI(apiUrl, projectPath).license();
 					LicenseData updatedData = new LicenseData(new BasicRepositoryData(licenseData.software(), null), scrapedLicense, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).saveLicenseData(updatedData);
+					softwareInfoRepository.saveLicenseData(updatedData);
 				} catch (RuntimeException e) {
 					System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 					e.printStackTrace();
 					LicenseData oldDataWithUpdatedAt = new LicenseData(new BasicRepositoryData(licenseData.software(), null), null, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).saveLicenseData(oldDataWithUpdatedAt);
+					softwareInfoRepository.saveLicenseData(oldDataWithUpdatedAt);
 				}
 			});
 			futures[i] = future;
@@ -52,7 +53,8 @@ public class MainLicenses {
 	}
 
 	private static void scrapeGitHub() {
-		Collection<BasicRepositoryData> dataToScrape = getExistingLicenseData(CodePlatformProvider.GITHUB);
+		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.licenseData(Config.maxRequestsGitLab());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -65,32 +67,17 @@ public class MainLicenses {
 
 					String scrapedLicense = new GithubSI("https://api.github.com", repo).license();
 					LicenseData updatedData = new LicenseData(new BasicRepositoryData(licenseData.software(), null), scrapedLicense, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).saveLicenseData(updatedData);
+					softwareInfoRepository.saveLicenseData(updatedData);
 				} catch (RuntimeException e) {
 					System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 					e.printStackTrace();
 					LicenseData oldDataWithUpdatedAt = new LicenseData(new BasicRepositoryData(licenseData.software(), null), null, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).saveLicenseData(oldDataWithUpdatedAt);
+					softwareInfoRepository.saveLicenseData(oldDataWithUpdatedAt);
 				}
 			});
 			futures[i] = future;
 			i++;
 		}
 		CompletableFuture.allOf(futures).join();
-	}
-
-	/**
-	 * Retrieve existing license data from database
-	 * @param codePlatform The code platform as defined by SoftwareInfoRepository.CodePlatformProviders
-	 * @return             Sorted data
-	 */
-	private static Collection<BasicRepositoryData> getExistingLicenseData(CodePlatformProvider codePlatform) {
-		SoftwareInfoRepository existingLicensesSorted = new PostgrestSIR(Config.backendBaseUrl(), codePlatform);
-		int limit = switch (codePlatform) {
-			case GITHUB -> Config.maxRequestsGithub();
-			case GITLAB -> Config.maxRequestsGitLab();
-			default -> throw new IllegalStateException("Unexpected value: " + codePlatform);
-		};
-		return existingLicensesSorted.licenseData(limit);
 	}
 }

@@ -7,5 +7,5 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import java.time.ZonedDateTime;
 
-public record CommitData(BasicRepositoryData basicData, String commitHistory, ZonedDateTime commitHistoryScrapedAt) {
+public record CommitData(BasicRepositoryData basicData, CommitsPerWeek commitHistory, ZonedDateTime commitHistoryScrapedAt) {
 }

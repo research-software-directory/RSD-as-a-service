@@ -1,12 +1,13 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.scraper.git;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
@@ -14,6 +15,7 @@ import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -29,6 +31,7 @@ public class GithubSI implements SoftwareInfo {
 
 	/**
 	 * Returns JSON as a String with the amount of lines written in each language.
+	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/languages
 	 */
 	@Override
 	public String languages() {
@@ -43,6 +46,7 @@ public class GithubSI implements SoftwareInfo {
 
 	/**
 	 * Returns the license string of the repository.
+	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service
 	 */
 	@Override
 	public String license() {
@@ -78,9 +82,11 @@ public class GithubSI implements SoftwareInfo {
 	 *         }, ...
 	 *     ]
 	 * }
+	 *
+	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/stats/contributors
 	 */
 	@Override
-	public String contributions() {
+	public CommitsPerWeek contributions() {
 		String contributions;
 		try {
 			Optional<String> apiCredentials = Config.apiCredentialsGithub();
@@ -100,9 +106,28 @@ public class GithubSI implements SoftwareInfo {
 				contributions = null;
 			} else if (e.getStatusCode() == 403) {
 				// Forbidden, mostly when the rate limit was exceeded
-				throw new RsdRateLimitException("403 Forbidden. This error occurrs mostly when the API rate limit is exceeded. Error message: " + e.getMessage());
+				throw new RsdRateLimitException("403 Forbidden. This error occurs mostly when the API rate limit is exceeded. Error message: " + e.getMessage());
 			} else throw e;
 		}
-		return contributions;
+		return parseCommits(contributions);
+	}
+
+	static CommitsPerWeek parseCommits(String json) {
+		CommitsPerWeek commits = new CommitsPerWeek();
+		JsonArray commitsPerContributor = JsonParser.parseString(json).getAsJsonArray();
+
+		for (JsonElement jsonElement : commitsPerContributor) {
+			JsonArray weeks = jsonElement.getAsJsonObject().getAsJsonArray("weeks");
+			for (JsonElement week : weeks) {
+				long weekTimestamp = week.getAsJsonObject().getAsJsonPrimitive("w").getAsLong();
+				long commitsInWeek = week.getAsJsonObject().getAsJsonPrimitive("c").getAsLong();
+
+				Instant weekInstant = Instant.ofEpochSecond(weekTimestamp);
+
+				commits.addCommits(weekInstant, commitsInWeek);
+			}
+		}
+
+		return commits;
 	}
 }

@@ -35,7 +35,7 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	@Override
 	public Collection<BasicRepositoryData> languagesData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&select=software,url&order=languages_scraped_at.asc.nullsfirst&limit=" + limit);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=languages_scraped_at.asc.nullsfirst&limit=" + limit);
 		return parseBasicJsonData(data);
 	}
 
@@ -47,7 +47,7 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	@Override
 	public Collection<BasicRepositoryData> licenseData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&select=software,url&order=license_scraped_at.asc.nullsfirst&limit=" + limit);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=license_scraped_at.asc.nullsfirst&limit=" + limit);
 		return parseBasicJsonData(data);
 	}
 
@@ -59,7 +59,7 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	@Override
 	public Collection<BasicRepositoryData> commitData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&select=software,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit);
 		return parseBasicJsonData(data);
 	}
 
@@ -105,7 +105,8 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		if (commitData.commitHistory() == null) {
 			json = String.format("{\"commit_history_scraped_at\": \"%s\"}", commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		} else {
-			json = String.format("{\"commit_history\": %s, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistory(), commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+			commitData.commitHistory().addMissingZeros();
+			json = String.format("{\"commit_history\": %s, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistory().toJson(), commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		}
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + commitData.basicData().software().toString(), json);
 	}

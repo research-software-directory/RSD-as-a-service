@@ -25,8 +25,8 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository existingCommitsSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITLAB);
-		Collection<BasicRepositoryData> dataToScrape = existingCommitsSorted.commitData(Config.maxRequestsGitLab());
+		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.commitData(Config.maxRequestsGitLab());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -39,9 +39,9 @@ public class MainCommits {
 					String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-					String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GitLabSI(apiUrl, projectPath), CodePlatformProvider.GITLAB).contributions();
+					CommitsPerWeek scrapedCommits = new GitLabSI(apiUrl, projectPath).contributions();
 					CommitData updatedData = new CommitData(new BasicRepositoryData(commitData.software(), null), scrapedCommits, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).saveCommitData(updatedData);
+					softwareInfoRepository.saveCommitData(updatedData);
 				} catch (RsdRateLimitException e) {
 					System.out.println("Exception when handling data from url " + commitData.url() + ":");
 					e.printStackTrace();
@@ -49,7 +49,7 @@ public class MainCommits {
 					System.out.println("Exception when handling data from url " + commitData.url() + ":");
 					e.printStackTrace();
 					CommitData oldDataWithUpdatedAt = new CommitData(new BasicRepositoryData(commitData.software(), null), null, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB).saveCommitData(oldDataWithUpdatedAt);
+					softwareInfoRepository.saveCommitData(oldDataWithUpdatedAt);
 				}
 			});
 			futures[i] = future;
@@ -59,8 +59,8 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitHub() {
-		SoftwareInfoRepository existingCommitsSorted = new PostgrestSIR(Config.backendBaseUrl(), CodePlatformProvider.GITHUB);
-		Collection<BasicRepositoryData> dataToScrape = existingCommitsSorted.commitData(Config.maxRequestsGithub());
+		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.commitData(Config.maxRequestsGithub());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -71,18 +71,18 @@ public class MainCommits {
 					String repo = repoUrl.replace("https://github.com/", "");
 					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-					String scrapedCommits = new AggregateContributionsPerWeekSIDecorator(new GithubSI("https://api.github.com", repo), CodePlatformProvider.GITHUB).contributions();
+					CommitsPerWeek scrapedCommits = new GithubSI("https://api.github.com", repo).contributions();
 					CommitData updatedData = new CommitData(new BasicRepositoryData(commitData.software(), null), scrapedCommits, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).saveCommitData(updatedData);
+					softwareInfoRepository.saveCommitData(updatedData);
 				} catch (RsdRateLimitException e) {
-					// in case we hit the rate limit, we don't update the sraped_at time, so it gets scraped first next time
+					// in case we hit the rate limit, we don't update the scraped_at time, so it gets scraped first next time
 					System.out.println("Exception when handling data from url " + commitData.url() + ":");
 					e.printStackTrace();
 				} catch (RuntimeException e) {
 					System.out.println("Exception when handling data from url " + commitData.url() + ":");
 					e.printStackTrace();
 					CommitData oldDataWithUpdatedAt = new CommitData(new BasicRepositoryData(commitData.software(), null), null, scrapedAt);
-					new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB).saveCommitData(oldDataWithUpdatedAt);
+					softwareInfoRepository.saveCommitData(oldDataWithUpdatedAt);
 				}
 			});
 			futures[i] = future;
