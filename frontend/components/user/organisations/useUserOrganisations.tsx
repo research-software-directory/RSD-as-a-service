@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +12,7 @@ import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 
-type UserOrganisationProp = {
+export type UserOrganisationProp = {
   searchFor?: string
   page: number,
   rows: number,

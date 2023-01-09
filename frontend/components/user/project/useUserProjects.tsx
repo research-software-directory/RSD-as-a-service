@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +13,7 @@ import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {ProjectOfOrganisation} from '~/types/Organisation'
 
-type UserProjectsProp = {
+export type UserProjectsProp = {
   searchFor?: string
   page: number,
   rows: number,
