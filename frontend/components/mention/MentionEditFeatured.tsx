@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -6,7 +7,6 @@
 import {IconButton} from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-// import UpdateIcon from '@mui/icons-material/Update'
 import {useSession} from '~/auth'
 import {MentionTitle} from './MentionItemBase'
 import {MentionItemProps} from '~/types/Mention'
@@ -21,8 +21,6 @@ type MentionListItem = {
 
 export default function MentionEditFeatured({item}: MentionListItem) {
   const {user} = useSession()
-  // use context methods to pass btn action
-  // const {onUpdate, confirmDelete, setEditModal} = useContext(EditMentionContext)
   const {setEditModal,onUpdate,confirmDelete} = useEditMentionReducer()
 
   function onEdit() {
@@ -47,6 +45,7 @@ export default function MentionEditFeatured({item}: MentionListItem) {
       // manual items without DOI can be edited
       html.push(
         <IconButton
+          data-testid="edit-mention-btn"
           key="edit-button"
           onClick={onEdit}>
             <EditIcon />
@@ -56,6 +55,7 @@ export default function MentionEditFeatured({item}: MentionListItem) {
     // all items can be deleted
     html.push(
       <IconButton
+        data-testid="delete-mention-btn"
         key="delete-button"
         sx={{
           marginLeft:'1rem'

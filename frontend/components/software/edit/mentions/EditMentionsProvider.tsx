@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,7 +23,7 @@ import {useSession} from '~/auth'
 const initalState:EditMentionState = {
   settings: {
     editModalTitle: 'Mention',
-    cofirmDeleteModalTitle: 'Delete mention',
+    confirmDeleteModalTitle: 'Delete mention',
     noItemsComponent:()=><NoMentionItems/>
   },
   loading: true,

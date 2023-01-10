@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -41,8 +42,12 @@ export default function ControlledSelect({name, label, options, control,
       render={({field}) => {
         const {onChange, value} = field
         return (
-          <FormControl variant="standard" sx={sx}>
-            <InputLabel id={`select-${label}`}>
+          <FormControl
+            data-testid="controlled-select"
+            variant="standard" sx={sx}>
+            <InputLabel
+              aria-label={label}
+              id={`select-${label}`}>
               {label}
             </InputLabel>
             <Select
@@ -58,6 +63,7 @@ export default function ControlledSelect({name, label, options, control,
               {options.map(item => {
                 return (
                   <MenuItem
+                    data-testid="controlled-select-item"
                     key={item.value}
                     value={item.value}>
                     {item.label}

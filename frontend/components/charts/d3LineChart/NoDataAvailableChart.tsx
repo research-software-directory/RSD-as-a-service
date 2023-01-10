@@ -1,14 +1,14 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import * as d3 from 'd3'
 import {useRef, useEffect, useState} from 'react'
-import useResizeObserver from './useResizeObserver'
-import {SizeType} from './useResizeObserver'
+import useResizeObserver,{SizeType} from './useResizeObserver'
 import logger from '../../../utils/logger'
 import {useTheme} from '@mui/material'
 
@@ -140,12 +140,14 @@ function drawLine(props: LineChartConfig) {
   return true
 }
 
-export default function NoDataAvailableChart({text}: { text: string | undefined }) {
+function NoDataAvailableChart({text}: { text: string | undefined }) {
   const theme = useTheme()
   const svgRef: any = useRef()
   const divRef: any = useRef()
   const [element, setElement] = useState()
   const size = useResizeObserver(element)
+
+  // console.log('size...', size)
 
   useEffect(() => {
     let abort = false
@@ -156,19 +158,20 @@ export default function NoDataAvailableChart({text}: { text: string | undefined 
   }, [divRef])
 
   useEffect(() => {
-    if (size?.w && size?.h && text) {
+    if (size?.w && size?.h && text && svgRef.current) {
       drawLine({
         dim: {w:size?.w,h:size?.h},
         svgEl: svgRef.current,
-        strokeColor:theme.palette.primary.main,
+        strokeColor: theme.palette.primary.main,
         text
       })
     }
-  },[size?.w, size.h, text,theme.palette.primary.main])
+  },[size?.w, size.h, text, theme.palette.primary.main])
 
   return (
     <div ref={divRef} className="flex-1 overflow-hidden relative">
       <svg
+        data-testid="no-data-chart"
         ref={svgRef}
         // requires block to remove 4px space from parent element
         // automatically added to parent
@@ -180,3 +183,5 @@ export default function NoDataAvailableChart({text}: { text: string | undefined 
     </div>
   )
 }
+
+export default NoDataAvailableChart

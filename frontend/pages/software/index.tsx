@@ -43,6 +43,10 @@ export default function SoftwareIndexPage(
   const router = useRouter()
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions('software')
 
+  // console.group('SoftwareIndexPage')
+  // console.log('query...', router.query)
+  // console.groupEnd()
+
   // next/previous page button
   function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,

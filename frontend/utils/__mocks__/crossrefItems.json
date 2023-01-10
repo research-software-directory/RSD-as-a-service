@@ -1,0 +1,28 @@
+[
+  {
+    "id": "4dc20be7-5b0c-47be-b1b9-c6524186db79",
+    "DOI": "10.1007/978-3-030-55874-1_30",
+    "url": "https://doi.org/10.1007%2F978-3-030-55874-1_30",
+    "title": "Novel Flux Approximation Schemes for Systems of Coupled Advection-Diffusion-Reaction Equations",
+    "authors": "J. van Dijk, R. A. M. van Gestel, C. E. M. Schoutrop, J. H. M. ten Thije Boonkkamp",
+    "publisher": "Springer International Publishing",
+    "publication_year": 2020,
+    "page": "313-321",
+    "image_url": null,
+    "mention_type": "bookSection",
+    "source": "Crossref"
+  },
+  {
+    "id": "5762064c-a03a-4b99-984d-ef2eed055ecc",
+    "DOI": "10.1016/j.future.2018.08.004",
+    "url": "https://doi.org/10.1016%2Fj.future.2018.08.004",
+    "title": "Kernel Tuner: A search-optimizing GPU code auto-tuner",
+    "authors": "Ben van Werkhoven",
+    "publisher": "Elsevier BV",
+    "publication_year": 2019,
+    "page": "347-358",
+    "image_url": null,
+    "mention_type": "journalArticle",
+    "source": "Crossref"
+  }
+]

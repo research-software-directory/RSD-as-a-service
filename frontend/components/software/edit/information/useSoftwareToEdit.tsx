@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -51,10 +52,9 @@ export default function useSoftwareToEdit({slug, token}: {slug: string, token: s
   const [loading, setLoading] = useState(true)
   const [loadedSlug, setLoadedSlug] = useState<string>('')
 
-  // console.group('useEditSoftwareData')
+  // console.group('useSoftwareToEdit')
   // console.log('slug...', slug)
   // console.log('token...', token)
-  // console.log('software...', software)
   // console.log('editSoftware...', editSoftware)
   // console.log('loading...', loading)
   // console.groupEnd()

@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -23,6 +24,7 @@ export default function ImageAsBackground(
   if (!src) {
     return (
       <div
+        data-testid="image-as-background"
         className={`${className} flex flex-col justify-center items-center text-grey-500 rounded-sm`}
       >
         <PhotoSizeSelectActualOutlinedIcon
@@ -37,6 +39,7 @@ export default function ImageAsBackground(
   }
   return (
     <div
+      data-testid="image-as-background"
       role="img"
       style={{
         flex: 1,

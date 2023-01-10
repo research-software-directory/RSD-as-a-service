@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,7 +23,7 @@ import NoOutputItems from './NoOutputItems'
 export const initialState: EditMentionState = {
   settings: {
     editModalTitle: 'Output',
-    cofirmDeleteModalTitle: 'Delete output',
+    confirmDeleteModalTitle: 'Delete output',
     noItemsComponent: () => <NoOutputItems/>
   },
   loading: true,

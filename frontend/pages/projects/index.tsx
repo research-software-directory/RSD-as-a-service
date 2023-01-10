@@ -44,6 +44,10 @@ export default function ProjectsIndexPage(
   const router = useRouter()
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions()
 
+  // console.group('ProjectsIndexPage')
+  // console.log('query...', router.query)
+  // console.groupEnd()
+
   function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,

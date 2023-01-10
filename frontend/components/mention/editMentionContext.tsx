@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,7 +11,7 @@ import NoMentionItems from './NoMentionItems'
 
 export type EditMentionSettings = {
   editModalTitle: string,
-  cofirmDeleteModalTitle: string,
+  confirmDeleteModalTitle: string,
   noItemsComponent:()=>JSX.Element
 }
 
@@ -30,7 +31,7 @@ export type EditOutputContextType = {
 const initalState:EditMentionState = {
   settings: {
     editModalTitle: 'Edit item',
-    cofirmDeleteModalTitle: 'Delete item',
+    confirmDeleteModalTitle: 'Delete item',
     noItemsComponent:()=><NoMentionItems/>
   },
   loading: true,

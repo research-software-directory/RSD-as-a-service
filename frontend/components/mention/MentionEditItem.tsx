@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -46,6 +47,7 @@ export default function MentionEditItem({item, pos}: MentionListItem) {
       // items without DOI can be edited by rsd_admin
       html.push(
         <IconButton
+          data-testid="edit-mention-btn"
           key="edit-button"
           onClick={onEdit}>
             <EditIcon />
@@ -55,6 +57,7 @@ export default function MentionEditItem({item, pos}: MentionListItem) {
     // all items can be deleted
     html.push(
       <IconButton
+        data-testid="delete-mention-btn"
         key="delete-button"
         sx={{
           marginLeft:'1rem'

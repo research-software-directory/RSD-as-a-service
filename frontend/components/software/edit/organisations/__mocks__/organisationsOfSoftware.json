@@ -1,0 +1,30 @@
+[
+  {
+    "id": "91905b30-1f66-47cf-ac7e-466f5abfe616",
+    "slug": "netherlands-escience-center",
+    "primary_maintainer": null,
+    "name": "Netherlands eScience Center",
+    "ror_id": "https://ror.org/00rbjv475",
+    "is_tenant": false,
+    "website": "https://www.esciencecenter.nl/",
+    "rsd_path": "netherlands-escience-center/",
+    "logo_id": "72a4970c6531d96e1178bbac3060d0bb1c159aca",
+    "status": "approved",
+    "position": 1,
+    "software": "d292d958-096d-456e-a144-edfa6e58654d"
+  },
+  {
+    "id": "85991bc8-de38-49fa-96b9-f50cffb32161",
+    "slug": "dutch-research-council",
+    "primary_maintainer": null,
+    "name": "Dutch Research Council",
+    "ror_id": "https://ror.org/04jsz6e67",
+    "is_tenant": false,
+    "website": "http://www.nwo.nl/",
+    "rsd_path": "dutch-research-council/",
+    "logo_id": "91e3df883c31fb13dd703f132080d686b7e6acee",
+    "status": "approved",
+    "position": 2,
+    "software": "d292d958-096d-456e-a144-edfa6e58654d"
+  }
+]

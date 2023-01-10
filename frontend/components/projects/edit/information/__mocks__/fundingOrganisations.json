@@ -1,0 +1,44 @@
+[
+  {
+    "id": "41fba04c-5293-4abf-b3c0-1f96728c6e4f",
+    "parent": null,
+    "slug": "netherlands-escience-center",
+    "primary_maintainer": null,
+    "name": "Netherlands eScience Center",
+    "ror_id": "https: //ror.org/00rbjv475",
+    "is_tenant": false,
+    "website": "http://www.esciencecenter.nl/",
+    "rsd_path": "netherlands-escience-center/",
+    "logo_id": "41fba04c-5293-4abf-b3c0-1f96728c6e4f",
+    "source": "ROR",
+    "description": null
+  },
+  {
+    "id": "c14e31e0-a34f-4631-a5ba-62197e9b586e",
+    "parent": null,
+    "slug": "radboud-university-nijmegen",
+    "primary_maintainer": null,
+    "name": "Radboud University Nijmegen",
+    "ror_id": null,
+    "is_tenant": false,
+    "website": "http://www.ru.nl/",
+    "rsd_path": "radboud-university-nijmegen/",
+    "logo_id": "c14e31e0-a34f-4631-a5ba-62197e9b586e",
+    "source": "RSD",
+    "description": null
+  },
+  {
+    "id": "3c7938c7-57a5-4bbf-b12a-41f0617d19b1",
+    "parent": null,
+    "slug": "vu-university-amsterdam",
+    "primary_maintainer": null,
+    "name": "VU University Amsterdam",
+    "ror_id": "https://ror.org/008xxew50",
+    "is_tenant": false,
+    "website": "http://www.vu.nl/",
+    "rsd_path": "vu-university-amsterdam/",
+    "logo_id": "3c7938c7-57a5-4bbf-b12a-41f0617d19b1",
+    "source": "ROR",
+    "description": null
+  }
+]

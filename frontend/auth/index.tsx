@@ -52,7 +52,12 @@ const AuthContext = createContext(initSession)
 
 // AuthProvider used in _app to share session between all components
 export function AuthProvider(props: any) {
-  const [session, setSession] = useState(props?.session || defaultSession)
+  const [session, setSession] = useState(props?.session ?? defaultSession)
+
+  // console.group('AuthProvider')
+  // console.log('session...', session)
+  // console.log('props...', props)
+  // console.groupEnd()
 
   useEffect(() => {
     // schedule
@@ -96,9 +101,7 @@ export function AuthProvider(props: any) {
       }
     }
   }, [session, setSession])
-  // console.group('AuthProvider')
-  // console.log('session...', session)
-  // console.groupEnd()
+
   return <AuthContext.Provider value={{session, setSession}} {...props}/>
 }
 

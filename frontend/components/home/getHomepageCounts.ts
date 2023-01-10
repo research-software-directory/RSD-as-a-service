@@ -30,7 +30,9 @@ export async function getHomepageCounts(frontend?:boolean) {
     return {
       software_cnt: null,
       project_cnt: null,
-      organisation_cnt: null
+      organisation_cnt: null,
+      contributor_cnt: null,
+      software_mention_cnt: null
     }
   } catch (e:any) {
     // otherwise request failed
@@ -39,7 +41,9 @@ export async function getHomepageCounts(frontend?:boolean) {
     return {
       software_cnt: null,
       project_cnt: null,
-      organisation_cnt: null
+      organisation_cnt: null,
+      contributor_cnt: null,
+      software_mention_cnt: null
     }
   }
 }

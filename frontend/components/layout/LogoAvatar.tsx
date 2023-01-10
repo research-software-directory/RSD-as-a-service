@@ -15,6 +15,7 @@ type LogoAvatarProps = {
 export default function LogoAvatar({name,src,sx,...props}:LogoAvatarProps) {
   return (
     <Avatar
+      data-testid="logo-avatar"
       alt={name}
       src={src}
       sx={{

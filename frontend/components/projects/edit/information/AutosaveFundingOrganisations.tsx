@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -21,7 +22,7 @@ type FundingOrganisationProps={
   items: SearchOrganisation[]
 }
 
-export default function FundingOrganisations({id,items}:FundingOrganisationProps) {
+export default function AutosaveFundingOrganisations({id,items}:FundingOrganisationProps) {
   const {token} = useSession()
   const {showErrorMessage,showInfoMessage} = useSnackbar()
   const [organisations,setOrganisations] = useState(items)
@@ -35,6 +36,7 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
       if (selected.slug===null) {
         selected.slug = getSlugFromString(selected.name)
       }
+      // console.log('onAddOrganisation...', selected)
       if (selected.id===null){
         const organisation = getPropsFromObject(selected,columsForCreate)
         // createNewOrganisation(selected)
@@ -80,7 +82,7 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
     }
   }
 
-  async function onRemoveOgranisation(pos:number) {
+  async function onRemoveOgranisation(pos: number) {
     const item = organisations[pos]
     if(item.id){
       const resp = await deleteOrganisationFromProject({
@@ -89,6 +91,7 @@ export default function FundingOrganisations({id,items}:FundingOrganisationProps
         role: 'funding',
         token
       })
+
       if (resp.status === 200){
         const items=[
           ...organisations.slice(0,pos),

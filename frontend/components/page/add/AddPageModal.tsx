@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -8,6 +9,11 @@
 
 import {useEffect, useState} from 'react'
 import Button from '@mui/material/Button'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 
 import {useForm} from 'react-hook-form'
 
@@ -20,11 +26,6 @@ import {addConfig as config} from './addConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {MarkdownPage, validPageSlug} from '../useMarkdownPages'
 import {addMarkdownPage} from '../saveMarkdownPage'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
 
 const initialState = {
   loading: false,
@@ -53,7 +54,7 @@ export default function AddPageModal({open,onCancel,onSuccess,pos}:AddPageModalP
   const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initialState)
-  const {register, handleSubmit, watch, formState, setError, setValue, clearErrors, reset} = useForm<AddPageForm>({
+  const {register, handleSubmit, watch, formState, setError, setValue, reset} = useForm<AddPageForm>({
     mode: 'onChange',
     defaultValues: {
       slug:'',

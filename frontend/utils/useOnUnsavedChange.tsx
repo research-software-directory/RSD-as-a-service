@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -38,7 +39,7 @@ function onWebsiteChange(e: any, warning: string) {
 }
 
 
-export default function useUnsavedChanges({isDirty, isValid, warning, dirtyFields}:
+export default function useOnUnsavedChange({isDirty, isValid, warning, dirtyFields}:
   { isDirty: boolean, isValid: boolean, warning:string, dirtyFields?:{} }) {
   const router = useRouter()
   useEffect(() => {

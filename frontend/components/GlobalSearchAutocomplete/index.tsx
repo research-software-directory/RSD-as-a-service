@@ -21,6 +21,7 @@ type Props = {
 }
 
 export default function GlobalSearchAutocomplete(props: Props) {
+  const {session} = useAuth()
   const router = useRouter()
   const [isOpen, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState('')
@@ -29,7 +30,12 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const [searchResults, setSearchResults] = useState<GlobalSearchResults[]>([])
 
   const lastValue = useDebounce(inputValue, 150)
-  const {session} = useAuth()
+
+  // console.group('GlobalSearchAutocomplete')
+  // console.log('inputValue...', inputValue)
+  // console.log('lastValue...', lastValue)
+  // console.log('searchResults...',searchResults)
+  // console.groupEnd()
 
   useEffect(() => {
     if (inputValue === '') {
@@ -147,6 +153,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
 
         {isOpen &&
           <div
+            data-testid="global-search-list"
             className="shadow-xl absolute top-[50px] w-full left-0 bg-white text-black py-2 rounded-sm"
             style={{
               maxHeight: '50vh',
@@ -159,6 +166,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
               </div>}
             {searchResults.map((item, index) =>
               <div key={index}
+                data-testid="global-search-list-item"
                 className={`${selected === index ? 'bg-base-200' : ''} flex gap-2 p-2 cursor-pointer transition justify-between items-center`}
                 onClick={handleClick}
                 onMouseEnter={() => setSelected(index)}

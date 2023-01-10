@@ -47,27 +47,30 @@ export async function extractReturnMessage(resp: Response, dataId?: string) {
         `
     }
   }
-  // extract error message
-  const json: ApiErrorMsg = await resp.json()
+  // extract custom PostgREST error message
+  let errMsg: string|null = null
+  if (resp.json) {
+    const json = await resp.json()
+    errMsg = json.message
+  }
   if ([409].includes(resp.status)) {
     return {
       status: resp.status,
       message: `
           ${resp.statusText}:
-          ${json.message ?? 'duplicate key value violates unique constraint.'}
+          ${errMsg ?? 'duplicate key value violates unique constraint.'}
         `
     }
   }
-  if (json.message) {
+  if (errMsg) {
     return {
       status: resp.status,
-      message: json.message
+      message: errMsg
     }
   }
   return {
     status: resp.status,
     message: `
-        Failed to save changes.
         ${resp.statusText}.
         Please contact site administrators.
       `

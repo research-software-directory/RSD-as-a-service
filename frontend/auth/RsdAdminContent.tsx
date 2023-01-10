@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -27,7 +28,7 @@ export default function RsdAdminContent({children}:{children:any}) {
   if (status === 'authenticated' &&
     session.token &&
     session.user?.role === 'rsd_admin') {
-    logger('RsdAdminContent...authenticated user...not protected section', 'info')
+    logger('RsdAdminContent...authenticated user...protected section', 'info')
     return children
   }
 

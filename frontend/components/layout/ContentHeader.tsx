@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {GoBackLink} from '~/components/GoBackButton'
+import {GoBackLink} from '~/components/GoBackLink'
 import useRsdSettings from '~/config/useRsdSettings'
 
 type ContentHeaderProps = {

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -88,8 +88,8 @@ export const mockProject = {
     desc: 'Lorem ipsum description',
     slug: `test-project-msedge-${titleId}`,
     image: {
-      file: 'images/pexels-814499-1920.jpg',
-      caption: 'Grey bridge and trees by Martin Damboldt (www.pexels)'
+      file: 'images/pexels-6054896-1920.jpg',
+      caption: 'A leopard lying down on the ground (www.pexels)'
     },
     startDate: '2020-12-01',
     endDate: '2022-01-01',

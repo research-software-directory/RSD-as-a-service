@@ -40,8 +40,11 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
     )
   }
   const rsdUrl = `${baseUrl[0]}/${slug}`
-  // slugs.push(slug)
-  // console.log('router...', router)
+
+  // console.group('UnitItem')
+  // console.log('isMaintainer...', isMaintainer)
+  // console.groupEnd()
+
   function getSecondaryActions() {
     if (isMaintainer) {
       return (
@@ -75,15 +78,16 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
   }
 
   return (
-     <ListItem
-        secondaryAction={getSecondaryActions()}
-        sx={{
-          // this makes space for buttons
-          paddingRight:'7.5rem',
-          '&:hover': {
-            backgroundColor:'grey.100'
-          }
-        }}
+    <ListItem
+      data-testid="research-unit-item"
+      secondaryAction={getSecondaryActions()}
+      sx={{
+        // this makes space for buttons
+        paddingRight:'7.5rem',
+        '&:hover': {
+          backgroundColor:'grey.100'
+        }
+      }}
     >
       <ListItemAvatar>
         <Link

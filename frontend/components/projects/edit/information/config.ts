@@ -8,6 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export const projectInformation = {
+  sectionTitle: 'Project information',
   slug: {
     label: 'RSD path',
     help: 'Use letters, numbers and dash "-". Other characters are not allowed.',

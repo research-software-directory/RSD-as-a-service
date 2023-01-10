@@ -6,7 +6,7 @@
 /* eslint-disable @next/next/no-img-element */
 import PhotoSizeSelectActualOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActualOutlined'
 
-type ImageWithPlaceholderProps = {
+export type ImageWithPlaceholderProps = {
   src: string | null | undefined
   alt: string,
   className?: string,
@@ -15,15 +15,15 @@ type ImageWithPlaceholderProps = {
   placeholder?: string
 }
 
-export default function ImageWithPlaceholder(
-  {src, alt, className, bgSize = 'contain', bgPosition = 'center',
-  placeholder}: ImageWithPlaceholderProps
+export default function ImageWithPlaceholder({
+  src, alt, className, bgSize = 'contain', bgPosition = 'center', placeholder
+}: ImageWithPlaceholderProps
 ) {
 
   if (!src) {
     return (
       <div
-        className={`${className} flex flex-col justify-center items-center text-grey-500 rounded-sm`}
+        className={`flex flex-col justify-center items-center text-grey-500 rounded-sm ${className ?? ''}`}
       >
         <PhotoSizeSelectActualOutlinedIcon
           sx={{

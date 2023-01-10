@@ -13,6 +13,7 @@ import SoftwareCard from '~/components/software/SoftwareCard'
 import NoContent from '~/components/layout/NoContent'
 import {OrganisationComponentsProps} from '../OrganisationNavItems'
 import SoftwareCardWithMenu from './SoftwareCardWithMenu'
+import ContentLoader from '~/components/layout/ContentLoader'
 
 export default function OrganisationSoftware({organisation, isMaintainer}: OrganisationComponentsProps) {
   const {token} = useSession()
@@ -32,6 +33,9 @@ export default function OrganisationSoftware({organisation, isMaintainer}: Organ
       setCount(count)
     }
   },[count,loading,setCount])
+
+  // show loader
+  if (loading===true) return <ContentLoader />
 
   if (software.length === 0
     && loading === false) {

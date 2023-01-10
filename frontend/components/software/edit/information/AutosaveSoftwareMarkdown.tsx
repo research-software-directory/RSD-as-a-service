@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,19 +29,19 @@ export default function AutosaveSoftwareMarkdown() {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {register, control, resetField, watch, setValue} = useFormContext()
-  const {field: {value: description}, fieldState: {isDirty:dirtyDesc, error: errDescription}} = useController({
+  const {fieldState: {isDirty:dirtyDesc, error: errDescription}} = useController({
     control,
     name: 'description'
   })
-  const {field: {value: description_url}, fieldState: {error: errDescriptionUrl}} = useController({
+  const {fieldState: {error: errDescriptionUrl}} = useController({
     control,
     name: 'description_url'
   })
 
   const [
-    id, brand_name, description_type
+    id, brand_name, description_type, description, description_url
   ] = watch([
-    'id','brand_name', 'description_type'
+    'id','brand_name','description_type','description','description_url'
   ])
 
   // console.group('AutosaveSoftwareMarkdown')
@@ -48,11 +49,12 @@ export default function AutosaveSoftwareMarkdown() {
   // console.log('description...', description)
   // console.log('description_type...', description_type)
   // console.log('description_url...', description_url)
-  // console.log('dirtyFields...', dirtyFields)
+  // console.log('dirtyDesc...', dirtyDesc)
   // console.log('isValid...', isValid)
   // console.groupEnd()
 
   function shouldSave({name, value}: SaveInfo) {
+    // console.log('shouldSave...', name, value)
     if (name === 'description_type') {
       // when changing type we need to check
       // if the values provided are valid before saving
@@ -73,7 +75,9 @@ export default function AutosaveSoftwareMarkdown() {
 
   async function saveSoftwareInfo({name, value}: SaveInfo) {
     // validate
-    if (shouldSave({name, value}) === false) return
+    const save = shouldSave({name, value})
+    // console.log('saveSoftwareInfo...save...',save)
+    if ( save === false) return
     // collect data to save
     const data = {
       description_type,
@@ -110,6 +114,7 @@ export default function AutosaveSoftwareMarkdown() {
   }
 
   function saveDescription(e: FocusEventHandler<HTMLTextAreaElement>) {
+    // console.log('saveDescription...dirtyDesc...',dirtyDesc)
     // we do not save when error or no change
     if (dirtyDesc===false || errDescription) return
     // cast types

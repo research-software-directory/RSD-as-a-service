@@ -4,8 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
-import {Session, useSession} from '..'
-import isMaintainerOfOrganisation, {getMaintainerOrganisations} from './isMaintainerOfOrganisation'
+import {useSession} from '..'
+import isMaintainerOfOrganisation from './isMaintainerOfOrganisation'
 
 type UseOrganisationMaintainerProps = {
   organisation: string
@@ -15,6 +15,13 @@ export default function useOrganisationMaintainer({organisation}: UseOrganisatio
   const {user,token,status} = useSession()
   const [isMaintainer, setIsMaintainer] = useState(false)
   const [loading, setLoading] = useState(true)
+
+  // console.group('useOrganisationMaintainer')
+  // console.log('organisation...', organisation)
+  // console.log('status...', status)
+  // console.log('loading...', loading)
+  // console.log('1.isMaintainer...', isMaintainer)
+  // console.groupEnd()
 
   useEffect(() => {
     let abort = false
@@ -39,7 +46,8 @@ export default function useOrganisationMaintainer({organisation}: UseOrganisatio
       } else {
         organisationMaintainer()
       }
-    } else if (isMaintainer===true) {
+    } else if (status !== 'authenticated' && isMaintainer === true) {
+      // console.log('Set back to false')
       // set (back) to false
       setIsMaintainer(false)
     } else if (status!=='loading'){
@@ -51,33 +59,5 @@ export default function useOrganisationMaintainer({organisation}: UseOrganisatio
   return {
     loading,
     isMaintainer
-  }
-}
-
-// returns a list of organisation ids (uuid) that this token is maintainer of
-export function useMaintainerOfOrganisations({token}: { token: string }) {
-  const [organisations, setOrganisations] = useState<string[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    let abort = false
-    async function maintainerOfOrganisations() {
-      const resp = await getMaintainerOrganisations({
-        token,
-        frontend:true
-      })
-      if (abort) return
-      setOrganisations(resp)
-      setLoading(false)
-    }
-    if (token) {
-      maintainerOfOrganisations()
-    }
-    return ()=>{abort=true}
-  }, [token])
-
-  return {
-    loading,
-    organisations
   }
 }

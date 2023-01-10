@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -22,7 +23,11 @@ export default function SubmitButtonWithListener({disabled,formId}: SubmitButton
     if (event.key == 'Enter' && event.ctrlKey && disabled===false) {
       btnRef.current.click()
     }
-  },[disabled])
+  }, [disabled])
+
+  // console.group('SubmitButtonWithListener')
+  // console.log('disabled...', disabled)
+  // console.groupEnd()
 
   useEffect(() => {
     window.addEventListener('keydown', handleCtrlEnter)

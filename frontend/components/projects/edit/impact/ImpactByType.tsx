@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,6 +23,9 @@ export default function ImpactByType() {
 
   // console.group('ImpactByType')
   // console.log('impactCnt...', impactCnt)
+  // console.log('loading...', loading)
+  // console.log('project...', project)
+  // console.log('token...', token)
   // console.groupEnd()
 
   if (loading) {
@@ -39,7 +43,7 @@ export default function ImpactByType() {
       </EditSectionTitle>
       <div className="py-2" />
       <Alert severity="info">
-      Here you can add results of the project which had impact on others.
+        Here you can add results of the project which had impact on others.
         This could be papers by others re-using your software or data,
         articles or videos in the press describing the results, policy
         documents based on these results, etc.

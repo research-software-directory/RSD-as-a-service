@@ -19,6 +19,7 @@ export function getPropsFromObject(data: any, props: string[], useNull: boolean 
         newData[prop]=null
       } else {
         logger(`Property [${prop}] not present in data object`, 'warn')
+        return newData[prop] = undefined
       }
     })
     return newData

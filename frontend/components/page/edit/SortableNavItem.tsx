@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -26,6 +27,7 @@ export default function SortableNavItem({item, selected, index, onSelect}: Dragg
 
   return (
     <ListItem
+      data-testid="sortable-nav-item"
       // draggable
       ref={setNodeRef}
       {...attributes}

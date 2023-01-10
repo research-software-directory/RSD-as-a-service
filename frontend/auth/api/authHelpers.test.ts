@@ -4,7 +4,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
-import {getEncodedClaims, getRedirectUrl, getAuthorisationEndpoint, claims, RedirectToProps} from './authHelpers'
+import {
+  getEncodedClaims, getRedirectUrl,
+  getAuthorisationEndpoint, claims, RedirectToProps,
+  claimProjectMaintainerInvite,
+  claimSoftwareMaintainerInvite,
+  claimOrganisationMaintainerInvite
+} from './authHelpers'
 
 // based on return values from test surfconext endpoint
 const mockWellKnowResp = {
@@ -40,7 +46,19 @@ const mockProps: RedirectToProps = {
   claims
 }
 
+// mock console log
+// global.console = {
+//   ...global.console,
+//   error: jest.fn(),
+//   warn: jest.fn(),
+//   log: jest.fn()
+// }
+
 const expectedClaims = encodeURIComponent(JSON.stringify(claims))
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
 
 it('encodeUrlClaims', () => {
   const encodedClaims = getEncodedClaims(claims)
@@ -59,4 +77,237 @@ it('returns authorization_endpoint', async() => {
   mockResolvedValueOnce(mockWellKnowResp)
   const authorization_endpoint = await getAuthorisationEndpoint('mockedWellKnowEndpoint')
   expect(authorization_endpoint).toEqual(mockWellKnowResp.authorization_endpoint)
+})
+
+// ------------------------------------
+// claimProjectMaintainerInvite
+// ------------------------------------
+
+it('claimProjectMaintainerInvite returns success', async() => {
+  const expectedInfo = {
+    slug: 'test-slug',
+    title:'Test project title'
+  }
+  // mock response
+  mockResolvedValueOnce(expectedInfo)
+  // claim maintainer invite
+  const response = await claimProjectMaintainerInvite({
+    id: 'project-test-id',
+    token: 'TEST_TOKEN'
+  })
+
+  expect(response).toEqual({
+    error: null,
+    projectInfo: expectedInfo
+  })
+
+})
+
+it('claimProjectMaintainerInvite returns error', async () => {
+  const expectedError = {
+    status: 500,
+    message: 'This is custom error message'
+  }
+  // mock response
+  mockResolvedValueOnce({message:expectedError.message}, {
+    status: expectedError.status
+  })
+  // claim maintainer invite
+  const response = await claimProjectMaintainerInvite({
+    id: 'project-test-id',
+    token: 'TEST_TOKEN'
+  })
+  // validate expected error returned
+  expect(response).toEqual({
+    error: expectedError,
+    projectInfo: null
+  })
+})
+
+it('claimProjectMaintainerInvite calls expected endpoint', async () => {
+  const expectedError = {
+    status: 500,
+    message: 'This is custom error message'
+  }
+  const expectedUrl = '/api/v1/rpc/accept_invitation_project'
+  const expectedId = 'project-invite-test-id'
+  // mock response
+  mockResolvedValueOnce({message: expectedError.message}, {
+    status: expectedError.status
+  })
+
+  // claim maintainer invite
+  const response = await claimProjectMaintainerInvite({
+    id: expectedId,
+    token: 'TEST_TOKEN',
+    frontend: true
+  })
+
+  // validate api call
+  expect(global.fetch).toBeCalledTimes(1)
+  expect(global.fetch).toBeCalledWith(expectedUrl,{
+    body: `{"invitation":"${expectedId}"}`,
+    headers: {
+      'Accept': 'application/vnd.pgrst.object + json',
+      'Authorization': 'Bearer TEST_TOKEN',
+      'Content-Type': 'application/json'
+    },
+    method: 'POST'
+  })
+})
+
+
+// ------------------------------------
+// claimSoftwareMaintainerInvite
+// ------------------------------------
+
+it('claimSoftwareMaintainerInvite returns success', async () => {
+  const expectedInfo = {
+    slug: 'test-slug',
+    title: 'Test software title'
+  }
+  // mock response
+  mockResolvedValueOnce(expectedInfo)
+  // claim maintainer invite
+  const response = await claimSoftwareMaintainerInvite({
+    id: 'software-invite-test-id',
+    token: 'TEST_TOKEN'
+  })
+
+  expect(response).toEqual({
+    error: null,
+    softwareInfo: expectedInfo
+  })
+
+})
+
+it('claimSoftwareMaintainerInvite returns error', async () => {
+  const expectedError = {
+    status: 500,
+    message: 'This is custom error message'
+  }
+  // mock response
+  mockResolvedValueOnce({message: expectedError.message}, {
+    status: expectedError.status
+  })
+  // claim maintainer invite
+  const response = await claimSoftwareMaintainerInvite({
+    id: 'software-invite-test-id',
+    token: 'TEST_TOKEN'
+  })
+  // validate expected error returned
+  expect(response).toEqual({
+    error: expectedError,
+    softwareInfo: null
+  })
+})
+
+it('claimSoftwareMaintainerInvite calls expected endpoint', async () => {
+  const expectedError = {
+    status: 500,
+    message: 'This is custom error message'
+  }
+  const expectedUrl = '/api/v1/rpc/accept_invitation_software'
+  const expectedId = 'project-invite-test-id'
+  // mock response
+  mockResolvedValueOnce({message: expectedError.message}, {
+    status: expectedError.status
+  })
+
+  // claim maintainer invite
+  const response = await claimSoftwareMaintainerInvite({
+    id: expectedId,
+    token: 'TEST_TOKEN',
+    frontend: true
+  })
+
+  // validate api call
+  expect(global.fetch).toBeCalledTimes(1)
+  expect(global.fetch).toBeCalledWith(expectedUrl, {
+    body: `{"invitation":"${expectedId}"}`,
+    headers: {
+      'Accept': 'application/vnd.pgrst.object + json',
+      'Authorization': 'Bearer TEST_TOKEN',
+      'Content-Type': 'application/json'
+    },
+    method: 'POST'
+  })
+})
+
+
+// ------------------------------------
+// claimOrganisationMaintainerInvite
+// ------------------------------------
+
+it('claimOrganisationMaintainerInvite returns success', async () => {
+  const expectedInfo = {
+    slug: 'test-slug',
+    title: 'Test organisation title'
+  }
+  // mock response
+  mockResolvedValueOnce(expectedInfo)
+  // claim maintainer invite
+  const response = await claimOrganisationMaintainerInvite({
+    id: 'organisation-invite-test-id',
+    token: 'TEST_TOKEN'
+  })
+
+  expect(response).toEqual({
+    error: null,
+    organisationInfo: expectedInfo
+  })
+
+})
+
+it('claimOrganisationMaintainerInvite returns error', async () => {
+  const expectedError = {
+    status: 500,
+    message: 'This is custom error message'
+  }
+  // mock response
+  mockResolvedValueOnce({message: expectedError.message}, {
+    status: expectedError.status
+  })
+  // claim maintainer invite
+  const response = await claimOrganisationMaintainerInvite({
+    id: 'organisation-invite-test-id',
+    token: 'TEST_TOKEN'
+  })
+  // validate expected error returned
+  expect(response).toEqual({
+    error: expectedError,
+    organisationInfo: null
+  })
+})
+
+it('claimOrganisationMaintainerInvite calls expected endpoint', async () => {
+  const expectedError = {
+    status: 500,
+    message: 'This is custom error message'
+  }
+  const expectedUrl = '/api/v1/rpc/accept_invitation_organisation'
+  const expectedId = 'project-invite-test-id'
+  // mock response
+  mockResolvedValueOnce({message: expectedError.message}, {
+    status: expectedError.status
+  })
+
+  // claim maintainer invite
+  const response = await claimOrganisationMaintainerInvite({
+    id: expectedId,
+    token: 'TEST_TOKEN',
+    frontend: true
+  })
+
+  // validate api call
+  expect(global.fetch).toBeCalledTimes(1)
+  expect(global.fetch).toBeCalledWith(expectedUrl, {
+    body: `{"invitation":"${expectedId}"}`,
+    headers: {
+      'Accept': 'application/vnd.pgrst.object + json',
+      'Authorization': 'Bearer TEST_TOKEN',
+      'Content-Type': 'application/json'
+    },
+    method: 'POST'
+  })
 })

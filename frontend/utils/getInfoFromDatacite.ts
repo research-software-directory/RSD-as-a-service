@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -165,12 +166,12 @@ export async function getContributorsFromDoi(
   let allPersons: DatacitePerson[] = []
 
   if ('creators' in doiData) {
-    allPersons = doiData['creators']
+    allPersons = doiData['creators'] as any
   }
 
   if ('contributors' in doiData) {
     const contributors = itemsNotInReferenceList({
-      list: doiData['contributors'],
+      list: doiData['contributors'] as any,
       referenceList: allPersons,
       key: 'name'
     })
@@ -250,7 +251,7 @@ export async function getKeywordsFromDoi(doiId: string | null | undefined) {
     return []
   }
 
-  const allSubjects: DataciteSubject[] = doiData['subjects']
+  const allSubjects: DataciteSubject[] = doiData['subjects'] as any
   const keywords = []
 
   for (const subject of allSubjects) {
@@ -273,7 +274,7 @@ export async function getLicensesFromDoi(doiId: string | null | undefined) {
     return []
   }
 
-  const allLicenses: DataciteRightsList = doiData['rightsList']
+  const allLicenses: DataciteRightsList = doiData['rightsList'] as any
   const spdxLicenses = []
 
   for (const license of allLicenses) {

@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,7 +30,11 @@ export default function UserPages({section,counts}:UserPagesProps) {
   const {session} = useAuth()
   const [pageSection, setPageSection] = useState<UserMenuProps>(userMenu[section])
   const pageTitle = `${session.user?.name} | ${app.title}`
-  // console.log('section...', section)
+
+  // console.group("UserPages")
+  // console.log('pageSection...', pageSection)
+  // console.log('pageTitle...', pageTitle)
+  // console.groupEnd()
 
   useEffect(() => {
     let abort:boolean=false

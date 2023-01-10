@@ -8,7 +8,7 @@ import {render, screen} from '@testing-library/react'
 import {mockResolvedValue} from '../utils/jest/mockFetch'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
-import projectsOverview from './__fixtures__/projectsOverview.json'
+import projectsOverview from './__mocks__/projectsOverview.json'
 
 import ProjectsIndexPage, {getServerSideProps} from '../pages/projects/index'
 import {RsdUser} from '../auth'

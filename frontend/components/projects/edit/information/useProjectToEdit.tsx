@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -77,7 +78,7 @@ async function getProjectInfoForEdit({slug,token}:
 export default function useProjectToEdit({slug,token}:
   {slug:string,token:string,reload?:boolean}) {
   const [project, setProject] = useState<EditProject>()
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [loadedSlug, setLoadedSlug] = useState<string>('')
 
   // console.group('useProjectToEdit')

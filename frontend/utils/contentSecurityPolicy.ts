@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -91,42 +92,43 @@ export function setContentSecurityPolicyHeader(res?: ServerResponse<IncomingMess
  * I decided to use nonce approach only because it is sufficient and simpler.
  * 2022-10-08 Dusan
  */
-type ShaContentSecurityProps = {
-  // source code as string
-  source: string,
-  // create nonce and provide the value for the refference
-  withNonce?: boolean
-}
-export function shaContentSecurity({source, withNonce = true}: ShaContentSecurityProps) {
-  // create hash
-  const hash = hashSourceCode(source)
-  let nonce
-  // append default, monitoring scripts and dev script
-  let scriptSrc = `${sharedScript} ${monitoringScripts()} ${devScript()} ${hash}`
-  // add nonce
-  if (withNonce) {
-    nonce = crypto.randomUUID()
-    scriptSrc += ` 'nonce-${nonce}'`
-  }
-  // combine shared policies with dynamic script policy
-  const policy = `${sharedPolicy.replace(/\s{2,}/g, ' ').trim()} ${scriptSrc}`
-  // console.log('shaContentSecurity...', policy)
-  return {
-    policy,
-    nonce
-  }
-}
 
-// Create sha256 hash from the source code
-function hashSourceCode(src: string) {
-  if (src) {
-    const hash = crypto
-      .createHash('sha256')
-      .update(src)
-      .digest('base64')
+// type ShaContentSecurityProps = {
+//   // source code as string
+//   source: string,
+//   // create nonce and provide the value for the refference
+//   withNonce?: boolean
+// }
+// export function shaContentSecurity({source, withNonce = true}: ShaContentSecurityProps) {
+//   // create hash
+//   const hash = hashSourceCode(source)
+//   let nonce
+//   // append default, monitoring scripts and dev script
+//   let scriptSrc = `${sharedScript} ${monitoringScripts()} ${devScript()} ${hash}`
+//   // add nonce
+//   if (withNonce) {
+//     nonce = crypto.randomUUID()
+//     scriptSrc += ` 'nonce-${nonce}'`
+//   }
+//   // combine shared policies with dynamic script policy
+//   const policy = `${sharedPolicy.replace(/\s{2,}/g, ' ').trim()} ${scriptSrc}`
+//   // console.log('shaContentSecurity...', policy)
+//   return {
+//     policy,
+//     nonce
+//   }
+// }
 
-    return `'sha256-${hash}'`
-  }
-  return ''
-}
+// // Create sha256 hash from the source code
+// function hashSourceCode(src: string) {
+//   if (src) {
+//     const hash = crypto
+//       .createHash('sha256')
+//       .update(src)
+//       .digest('base64')
+
+//     return `'sha256-${hash}'`
+//   }
+//   return ''
+// }
 

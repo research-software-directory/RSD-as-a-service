@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import logger from './logger'
 
 type HandleFileUploadResponse = {
@@ -6,6 +11,9 @@ type HandleFileUploadResponse = {
   image_b64: string|null,
   image_mime_type: string|null
 }
+
+// max file size ~ 2MB
+export const maxFileSize = 2097152
 
 export function handleFileUpload({target}: { target: any }): Promise<HandleFileUploadResponse>{
   return new Promise((res, rej) => {
@@ -26,7 +34,7 @@ export function handleFileUpload({target}: { target: any }): Promise<HandleFileU
         image_mime_type: null
       })
       // check file size
-      if (file.size > 2097152) {
+      if (file.size > maxFileSize) {
         res({
           status: 413,
           message: 'The file is too large. Please select image < 2MB.',

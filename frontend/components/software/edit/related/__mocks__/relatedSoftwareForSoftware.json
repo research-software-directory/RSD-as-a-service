@@ -1,0 +1,22 @@
+[
+  {
+    "id": "0df11624-1742-4fb5-a7cf-8fe81afa16a7",
+    "slug": "test-software-firefox-67931",
+    "brand_name": "Test software firefox 67931",
+    "short_statement": "Lorem ipsum description",
+    "updated_at": "2023-01-04T15:18:44.480783+00:00",
+    "contributor_cnt": 6,
+    "mention_cnt": 2,
+    "is_published": true
+  },
+  {
+    "id": "2930a586-6781-4091-af8e-7411f9be76d4",
+    "slug": "test-software-msedge-87606",
+    "brand_name": "Test software msedge 87606",
+    "short_statement": "Lorem ipsum description",
+    "updated_at": "2023-01-04T15:18:38.86024+00:00",
+    "contributor_cnt": 10,
+    "mention_cnt": 2,
+    "is_published": true
+  }
+]

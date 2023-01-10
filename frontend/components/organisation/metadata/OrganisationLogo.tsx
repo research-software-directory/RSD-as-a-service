@@ -20,7 +20,6 @@ type OrganisationLogoProps = {
   id: string
   logo_id: string | null
   name: string
-  website: string | null
   isMaintainer: boolean
 }
 
@@ -35,6 +34,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
   // console.log('id...', id)
   // console.log('name...', name)
   // console.log('logo_id...', logo_id)
+  // console.log('logo...', logo)
   // console.log('isMaintainer...', isMaintainer)
   // console.groupEnd()
 
@@ -68,6 +68,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
       mime_type,
       token
     })
+    // console.log('addLogo...resp...', resp)
     if (resp.status === 201) {
       // update logo_id reference
       const patch = await patchOrganisation({
@@ -84,7 +85,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
         ) {
           // try to remove old logo from db
           // do not await for result
-          // NOTE! delete MUST be after pathing organisation
+          // NOTE! delete MUST be after patching organisation
           // because we are removing logo_id reference
           deleteImage({
             id: logo,
@@ -110,7 +111,8 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
         },
         token
       })
-      if (resp.status == 200) {
+      // console.log('removeLogo...',resp)
+      if (resp.status === 200) {
         // delete logo without check
         const del = await deleteImage({
           id: logo,
@@ -146,6 +148,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
             title="Click to upload an image"
           >
             <input
+              data-testid="organisation-logo-input"
               id="upload-avatar-image"
               type="file"
               accept="image/*"

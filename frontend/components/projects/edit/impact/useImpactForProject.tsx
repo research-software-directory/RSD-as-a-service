@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -51,7 +52,9 @@ export default function useImpactForProject({project, token}: ImpactForProjectPr
 
   // console.group('useImpactForProject')
   // console.log('loading...', loading)
+  // console.log('project...', project)
   // console.log('impactCnt...', mentions.length)
+  // console.log('loadedProject...', loadedProject)
   // console.groupEnd()
 
   return {

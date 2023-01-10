@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -22,7 +23,7 @@ import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
 const initalState:EditMentionState = {
   settings: {
     editModalTitle: 'Impact',
-    cofirmDeleteModalTitle: 'Delete impact item',
+    confirmDeleteModalTitle: 'Delete impact item',
     noItemsComponent:()=><NoImpactItems/>
   },
   loading: true,

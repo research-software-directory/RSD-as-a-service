@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {SearchOrganisation, OrganisationRole, Status} from './Organisation'
-import {Person, SearchPerson} from './Contributor'
+import {Person} from './Contributor'
 
 export type NewProject = {
   slug: string
@@ -119,8 +120,6 @@ export type KeywordForProject = {
   id: string | null
   project: string
   keyword: string
-  // passed to save function
-  action?: 'add' | 'create'
   // passed to save function for updating form value with uuid
   pos?: number
 }

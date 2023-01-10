@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,9 +32,9 @@ const config: PlaywrightTestConfig = {
   // fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry 1 */
-  retries: 1,
-  /* Run 1 worker in CI and 6 locally */
+  /* Retry 2 */
+  retries: 2,
+  /* Run 2 workers in CI and 6 locally */
   workers: process.env.CI ? 2 : 6,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', {open: 'never'}]],

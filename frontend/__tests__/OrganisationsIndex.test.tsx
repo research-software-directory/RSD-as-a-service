@@ -6,7 +6,7 @@
 import {render, screen} from '@testing-library/react'
 
 import {mockResolvedValue} from '../utils/jest/mockFetch'
-import organisationsOverview from './__fixtures__/organisationsOverview.json'
+import organisationsOverview from './__mocks__/organisationsOverview.json'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
 import OrganisationIndexPage,{getServerSideProps} from '../pages/organisations/index'

@@ -9,13 +9,12 @@ import {useState} from 'react'
 
 import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
-import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {maintainers as config} from '~/components/projects/edit/maintainers/config'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import useOrganisationMaintainers, {
-  deleteMaintainerFromOrganisation, MaintainerOfOrganisation
+  deleteMaintainerFromOrganisation
 } from './useOrganisationMaintainers'
 import OrganisationMaintainerLink from './OrganisationMaintainerLink'
 import {OrganisationForOverview} from '~/types/Organisation'
@@ -37,7 +36,6 @@ export default function OrganisationMaintainers({organisation, isMaintainer}:
     organisation: organisation.id ?? '',
     token
   })
-  // const [organisationMaintainers, setOrganisationMaintaners] = useState<MaintainerOfOrganisation[]>(maintainers)
   const [modal, setModal] = useState<DeleteModal>({
     open: false
   })

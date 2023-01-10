@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,8 +10,8 @@ import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import logger from '~/utils/logger'
 
-export async function createOrganisationAndAddToSoftware({item, token, software, setState}:
-  { item: EditOrganisation, token: string, software: string, setState: (item: EditOrganisation) => void }) {
+export async function createOrganisationAndAddToSoftware({item, token, software}:
+  { item: EditOrganisation, token: string, software: string}) {
   // extract props we need for createOrganisation
   const organisation = getPropsFromObject(item, columsForCreate)
   // create new organisation
@@ -54,7 +55,7 @@ export async function createOrganisationAndAddToSoftware({item, token, software,
 }
 
 export async function addOrganisationToSoftware({software, organisation, position, token}:
-  { software: string, organisation: string, position: number|null, token: string }) {
+  { software: string, organisation: string, position: number | null, token: string }) {
   // 2a. determine status - default is approved
   let status: SoftwareForOrganisation['status'] = 'approved'
   // 2b. register participating organisation for this software

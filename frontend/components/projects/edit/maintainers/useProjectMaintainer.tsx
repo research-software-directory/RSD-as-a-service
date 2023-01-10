@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -107,7 +108,6 @@ export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfProj
     return []
   }
 }
-
 
 export async function deleteMaintainerFromProject({maintainer,project,token,frontend=true}:
   {maintainer:string,project:string,token:string,frontend?:boolean}) {

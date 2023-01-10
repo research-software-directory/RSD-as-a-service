@@ -12,7 +12,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 
 import AboutOrganisation from './about'
 import OrganisationSoftware from './software'
-import OrganisationProjects from './project'
+import OrganisationProjects from './projects'
 import OrganisationUnits from './units'
 import OrganisationMaintainers from './maintainers'
 import OrganisationSettings from './settings'

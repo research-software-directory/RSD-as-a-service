@@ -32,6 +32,7 @@ export default function ControlledSwitch({label, name,
           <FormControlLabel
             control={
               <Switch
+                data-testid="controlled-switch"
                 checked={value}
                 onChange={({target}) => {
                   onChange(target.checked)
