@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-SPDX-FileCopyrightText: 2021 - 2022 dv4all
+SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2021 - 2023 dv4all
 SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 
@@ -109,13 +109,20 @@ For authentication we use custom module which integrates with our auth service. 
 
 ## Unit testing
 
-For unit testing we use [react testing library](https://testing-library.com/docs/react-testing-library/intro/).
+For unit testing we use [jest](https://jestjs.io/docs/getting-started) and [react testing library](https://testing-library.com/docs/react-testing-library/intro/).
 There are several practices that the React Testing Library promotes:
 
 - Avoid testing internal component state
 - Testing how a component renders
 
 The setup is performed according to [official Next documentation](https://nextjs.org/docs/testing#setting-up-jest-with-the-rust-compiler). We use rust compiler instead of babel setup.
+
+### Unit testing scripts
+
+- `yarn test:watch`: to run test in watch mode. The tests will be runned on each change in the test/component file(s)
+- `yarn test:coverage`: to run tests and show the test coverage report. This script is used in GH action.
+- `yarn test:memlimit`: for minimal memory consumption. When basic test scripts **yarn test** and **yarn test:coverage** causing the memory overflow on your machine use this script to limit the number of concurrent workers and memory usage.
+- `yarn test:memory`: for examining memory usage during the tests. In node version 18 (and 16) some changes are made in V8 engine memory management that cause the memory leaks when running tests with Jest. See [issue](https://github.com/facebook/jest/issues/11956)
 
 ### Setup steps performed
 

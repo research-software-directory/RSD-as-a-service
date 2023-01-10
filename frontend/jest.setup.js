@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
@@ -80,3 +80,10 @@ window.scrollTo = jest.fn()
 
 // TOKEN
 // process.env.PGRST_JWT_SECRET='reallyreallyreallyreallyverysafe'
+
+afterEach(() => {
+  // call node garbage collection after each test is performed.
+  // In node v18/v16 there seem to be a change in memory management that causes memory leaks
+  // when running tests in Jest. We manually call garbage collection after each test to reduce memory use.
+  global.gc && global.gc()
+})
