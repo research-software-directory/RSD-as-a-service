@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,16 +7,15 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
 
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PostgrestSIR implements SoftwareInfoRepository {
 
@@ -34,10 +33,10 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	 * @return      The data corresponding to the git repositories of which the programming languages data were scraped the longest time ago
 	 */
 	@Override
-	public Collection<RepositoryUrlData> languagesData(int limit) {
+	public Collection<BasicRepositoryData> languagesData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&order=languages_scraped_at.asc.nullsfirst&limit=" + limit);
-		return parseJsonData(data);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=languages_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseBasicJsonData(data);
 	}
 
 	/**
@@ -46,10 +45,10 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	 * @return      The data corresponding to the git repositories of which the license data were scraped the longest time ago
 	 */
 	@Override
-	public Collection<RepositoryUrlData> licenseData(int limit) {
+	public Collection<BasicRepositoryData> licenseData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&order=license_scraped_at.asc.nullsfirst&limit=" + limit);
-		return parseJsonData(data);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=license_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseBasicJsonData(data);
 	}
 
 	/**
@@ -58,65 +57,57 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	 * @return      The data corresponding to the git repositories of which the commit data were scraped the longest time ago
 	 */
 	@Override
-	public Collection<RepositoryUrlData> commitData(int limit) {
+	public Collection<BasicRepositoryData> commitData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "/repository_url?" + filter + "&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit);
-		return parseJsonData(data);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseBasicJsonData(data);
 	}
 
-	Collection<RepositoryUrlData> parseJsonData(String data) {
+	static Collection<BasicRepositoryData> parseBasicJsonData(String data) {
 		JsonArray dataInArray = JsonParser.parseString(data).getAsJsonArray();
-		Collection<RepositoryUrlData> result = new ArrayList<>();
+		Collection<BasicRepositoryData> result = new ArrayList<>();
 		for (JsonElement element : dataInArray) {
 			JsonObject jsonObject = element.getAsJsonObject();
-			String software = jsonObject.getAsJsonPrimitive("software").getAsString();
+			String softwareUuid = jsonObject.getAsJsonPrimitive("software").getAsString();
+			UUID software = UUID.fromString(softwareUuid);
 			String url = jsonObject.getAsJsonPrimitive("url").getAsString();
 
-			JsonElement jsonLicence = jsonObject.get("license");
-			String license = jsonLicence.isJsonNull() ? null : jsonLicence.getAsString();
-			JsonElement jsonLicenseScrapedAt = jsonObject.get("license_scraped_at");
-			ZonedDateTime licensScrapedAt = jsonLicenseScrapedAt.isJsonNull() ? null : ZonedDateTime.parse(jsonLicenseScrapedAt.getAsString());
-
-			JsonElement jsonCommits = jsonObject.get("commit_history");
-			String commits = jsonCommits.isJsonNull() ? null : jsonCommits.toString();
-			JsonElement jsonCommitsScrapedAt = jsonObject.get("commit_history_scraped_at");
-			ZonedDateTime commitsScrapedAt = jsonCommitsScrapedAt.isJsonNull() ? null : ZonedDateTime.parse(jsonCommitsScrapedAt.getAsString());
-
-			JsonElement jsonLanguages = jsonObject.get("languages");
-			String languages = jsonLanguages.isJsonNull() ? null : jsonLanguages.toString();
-			JsonElement jsonLanguagesScrapedAt = jsonObject.get("languages_scraped_at");
-			ZonedDateTime languagesScrapedAt = jsonLanguagesScrapedAt.isJsonNull() ? null : ZonedDateTime.parse(jsonLanguagesScrapedAt.getAsString());
-
-			result.add(new RepositoryUrlData(software, url, codePlatform, license, licensScrapedAt, commits, commitsScrapedAt, languages, languagesScrapedAt));
+			result.add(new BasicRepositoryData(software, url));
 		}
 		return result;
 	}
 
 	@Override
-	public void save(Collection<RepositoryUrlData> data) {
-		String json = repositoryUrlDataToJson(data);
-		Utils.postAsAdmin(backendUrl, json, "Prefer", "resolution=merge-duplicates");
+	public void saveLicenseData(LicenseData licenseData) {
+		String json;
+		if (licenseData.license() == null) {
+			json = String.format("{\"license_scraped_at\": \"%s\"}", licenseData.licenseScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		} else {
+			json = String.format("{\"license\": \"%s\", \"license_scraped_at\": \"%s\"}", licenseData.license(), licenseData.licenseScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		}
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + licenseData.basicData().software().toString(), json);
 	}
 
-	static String repositoryUrlDataToJson(Collection<RepositoryUrlData> data) {
-		JsonArray dataAsJsonArray = new JsonArray();
-		for (RepositoryUrlData repositoryUrlData : data) {
-			JsonObject newDataJson = new JsonObject();
-//			we have to add all existing columns, otherwise PostgREST will not do the UPSERT
-			newDataJson.addProperty("software", repositoryUrlData.software());
-			newDataJson.addProperty("url", repositoryUrlData.url());
-			newDataJson.addProperty("code_platform", repositoryUrlData.code_platform().name().toLowerCase());
-
-			newDataJson.addProperty("license", repositoryUrlData.license());
-			newDataJson.addProperty("license_scraped_at", repositoryUrlData.licenseScrapedAt() == null ? null : repositoryUrlData.licenseScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-
-			newDataJson.add("commit_history", repositoryUrlData.commitHistory() == null ? JsonNull.INSTANCE : JsonParser.parseString(repositoryUrlData.commitHistory()));
-			newDataJson.addProperty("commit_history_scraped_at", repositoryUrlData.commitHistoryScrapedAt() == null ? null : repositoryUrlData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-
-			newDataJson.add("languages", repositoryUrlData.languages() == null ? JsonNull.INSTANCE : JsonParser.parseString(repositoryUrlData.languages()));
-			newDataJson.addProperty("languages_scraped_at", repositoryUrlData.languagesScrapedAt() == null ? null : repositoryUrlData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-			dataAsJsonArray.add(newDataJson);
+	@Override
+	public void saveLanguagesData(LanguagesData languagesData) {
+		String json;
+		if (languagesData.languages() == null) {
+			json = String.format("{\"languages_scraped_at\": \"%s\"}", languagesData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		} else {
+			json = String.format("{\"languages\": %s, \"languages_scraped_at\": \"%s\"}", languagesData.languages(), languagesData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		}
-		return dataAsJsonArray.toString();
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + languagesData.basicData().software().toString(), json);
+	}
+
+	@Override
+	public void saveCommitData(CommitData commitData) {
+		String json;
+		if (commitData.commitHistory() == null) {
+			json = String.format("{\"commit_history_scraped_at\": \"%s\"}", commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		} else {
+			commitData.commitHistory().addMissingZeros();
+			json = String.format("{\"commit_history\": %s, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistory().toJson(), commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		}
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + commitData.basicData().software().toString(), json);
 	}
 }

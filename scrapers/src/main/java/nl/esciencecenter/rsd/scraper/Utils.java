@@ -1,8 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -20,8 +20,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
 
@@ -187,6 +185,27 @@ public class Utils {
 		return response.body();
 	}
 
+	public static String patchAsAdmin(String uri, String json) {
+		String jwtString = adminJwt();
+		HttpRequest request = HttpRequest.newBuilder()
+				.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
+				.uri(URI.create(uri))
+				.header("Content-Type", "application/json")
+				.header("Authorization", "Bearer " + jwtString)
+				.build();
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<String> response;
+		try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
+		}
+		return response.body();
+	}
+
 	private static String adminJwt() {
 		String signingSecret = Config.jwtSigningSecret();
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
@@ -195,17 +214,6 @@ public class Utils {
 				.withExpiresAt(new Date(System.currentTimeMillis() + Config.jwtExpirationTime()))
 				.sign(signingAlgorithm);
 		return jwtString;
-	}
-
-	/**
-	 * Collapses a zoned datetime to a week timestamp.
-	 * The week timestamp is the first Sunday at 00:00:00.000 UTC before the submitted date.
-	 * @param date The date to be converted
-	 * @return     Week timestamp in UTC
-	 */
-	public static ZonedDateTime collapseToWeekUTC(ZonedDateTime date) {
-		ZonedDateTime utcDate = date.withZoneSameInstant(ZoneOffset.UTC);
-		return utcDate.minusDays(utcDate.getDayOfWeek().getValue()).withHour(0).withMinute(0).withSecond(0).withNano(0);
 	}
 
 	public static String stringOrNull(JsonElement e) {

@@ -1,7 +1,7 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
@@ -20,6 +19,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.ZonedDateTime;
 
 public class GitLabSI implements SoftwareInfo {
 	public String projectPath;
@@ -51,7 +51,7 @@ public class GitLabSI implements SoftwareInfo {
 	 * Returns the license of a project. If GitLab detects the license, an SPDX identifier will be
 	 * returned. If the license could not be detected, returns "Other". API endpoint:
 	 * https://docs.gitlab.com/ee/api/projects.html#get-single-project NOTE: A GraphQL request here
-	 * might be more effficient since less data would be sent.
+	 * might be more efficient since less data would be sent.
 	 *
 	 * @return The license
 	 */
@@ -73,12 +73,12 @@ public class GitLabSI implements SoftwareInfo {
 	 * https://docs.gitlab.com/ee/api/graphql/reference/#commit=
 	 *
 	 * @return String representing a JSON array with the defined metadata (id, committed_date).
+	 *
+	 * Example URL: https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell/repository/commits?per_page=100&order=default&page=1
 	 */
 	@Override
-	public String contributions() {
-		// Transfer only required metadata.
-		String[] transferredMetadata = {"id", "committed_date"};
-		JsonArray allCommits = new JsonArray();
+	public CommitsPerWeek contributions() {
+		CommitsPerWeek commits = new CommitsPerWeek();
 		String page = "1";
 		boolean done = false;
 		while (!done) {
@@ -98,22 +98,25 @@ public class GitLabSI implements SoftwareInfo {
 			if (response.statusCode() == 429) throw new RsdRateLimitException("API rate limit exceeded for endpoint " + request.uri() + " with response: " + response.body());
 			if (response.statusCode() == 404) return null;
 
-			JsonArray thisPageCommits = JsonParser.parseString(response.body()).getAsJsonArray();
-			JsonArray relevantData = new JsonArray();
-			for (JsonElement element : thisPageCommits) {
-				JsonObject currentCommit = element.getAsJsonObject();
-				JsonObject commitData = new JsonObject();
-				for (String metaDatum : transferredMetadata) {
-					commitData.add(metaDatum, currentCommit.get(metaDatum));
-				}
-				relevantData.add(commitData);
-			}
-			allCommits.addAll(relevantData);
+			String body = response.body();
+			parseCommitPage(body, commits);
 
 			page = response.headers().firstValue("x-next-page").get();
-			done = page.length() == 0 ? true : false;
+			done = page.length() == 0;
 		}
-		return allCommits.toString();
+		return commits;
+	}
+
+	static void parseCommitPage(String json, CommitsPerWeek commitsToFill) {
+		JsonArray thisPageCommits = JsonParser.parseString(json).getAsJsonArray();
+
+		for (JsonElement element : thisPageCommits) {
+			JsonObject currentCommit = element.getAsJsonObject();
+			String timeString = currentCommit.getAsJsonPrimitive("committed_date").getAsString();
+			ZonedDateTime time = ZonedDateTime.parse(timeString);
+
+			commitsToFill.addCommits(time, 1);
+		}
 	}
 
 }
