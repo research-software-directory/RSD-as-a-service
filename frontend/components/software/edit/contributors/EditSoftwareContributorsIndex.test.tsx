@@ -21,11 +21,13 @@ import mockSearchPerson from '~/components/projects/edit/team/__mocks__/searchPe
 // MOCK getContributorsForSoftware
 const mockGetContributorsForSoftware = jest.fn(props => Promise.resolve([] as any))
 const mockPostContributor = jest.fn(props => Promise.resolve([] as any))
+const mockPatchContributor = jest.fn(props => Promise.resolve([] as any))
 const mockdeleteContributorsById = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/editContributors', () => ({
   ...jest.requireActual('~/utils/editContributors'),
   getContributorsForSoftware: jest.fn(props => mockGetContributorsForSoftware(props)),
   postContributor: jest.fn(props => mockPostContributor(props)),
+  patchContributor: jest.fn(props => mockPatchContributor(props)),
   deleteContributorsById: jest.fn(props => mockdeleteContributorsById(props)),
 }))
 
@@ -47,6 +49,14 @@ const mockGetContributorsFromDoi = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/getInfoFromDatacite', () => ({
   getContributorsFromDoi: jest.fn((...props)=>mockGetContributorsFromDoi(props))
 }))
+
+// MOCK deleteImage
+const mockDeleteImage = jest.fn(props => Promise.resolve('OK'))
+jest.mock('~/utils/editImage', () => ({
+  ...jest.requireActual('~/utils/editImage'),
+  deleteImage: jest.fn(props=>mockDeleteImage(props))
+}))
+
 
 describe('frontend/components/software/edit/contributors/index.tsx', () => {
   beforeEach(() => {
@@ -223,8 +233,11 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     const saveBtn = screen.getByRole('button', {
       name: 'Save'
     })
-    expect(saveBtn).toBeEnabled()
-    fireEvent.click(saveBtn)
+
+    await waitFor(() => {
+      expect(saveBtn).toBeEnabled()
+      fireEvent.click(saveBtn)
+    })
 
     // validate api call
     await waitFor(() => {
@@ -301,7 +314,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
       concept_doi: ''
     }
 
-    // resolve no contributors
+    // resolve contributors
     mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
 
     render(
@@ -341,4 +354,155 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     })
   })
 
+  it('can remove avatar', async () => {
+    // mock software context state
+    editSoftwareState.software = {
+      id: 'test-software-id',
+      slug: 'test-software-slug',
+      brand_name: 'Test software title',
+      concept_doi: ''
+    }
+    const editedMember = {
+      ...mockContributors[0],
+      // we remove avatar id
+      avatar_id: null,
+      // software id received from software context
+      software: editSoftwareState.software.id
+    }
+    // mock no members
+    mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
+    // mock patch contributor response
+    mockPatchContributor.mockResolvedValueOnce({
+      status: 200,
+      message:'OK'
+    })
+
+    // render component
+    render(
+      <WithAppContext options={{session: mockSession}}>
+        <WithSoftwareContext state={editSoftwareState}>
+          <SoftwareContributors />
+        </WithSoftwareContext>
+      </WithAppContext>
+    )
+    // wait for loader to be removed
+    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // get all members
+    const members = screen.getAllByTestId('contributor-item')
+    // edit first member
+    const editBtn = within(members[0]).getByTestId('EditIcon')
+    fireEvent.click(editBtn)
+
+    const modal = screen.getByRole('dialog')
+
+    // click on remove image
+    const removeImage = within(modal).getByRole('button', {
+      name: 'remove'
+    })
+
+    await waitFor(() => {
+      expect(removeImage).toBeEnabled()
+      fireEvent.click(removeImage)
+    })
+
+    // save
+    const saveBtn = within(modal).getByRole('button', {
+      name:'Save'
+    })
+
+    await waitFor(() => {
+      expect(saveBtn).toBeEnabled()
+      fireEvent.click(saveBtn)
+    })
+
+    await waitFor(() => {
+      // confirm patch contributor called
+      expect(mockPatchContributor).toBeCalledTimes(1)
+      expect(mockPatchContributor).toBeCalledWith({
+        contributor: editedMember,
+        token: mockSession.token
+      })
+      // validate delete image called
+      expect(mockDeleteImage).toBeCalledTimes(1)
+      expect(mockDeleteImage).toBeCalledWith({
+        'id': mockContributors[0].avatar_id,
+        'token': mockSession.token,
+      })
+    })
+  })
+
+  it('can CANCEL remove avatar (change)', async () => {
+    // mock software context state
+    editSoftwareState.software = {
+      id: 'test-software-id',
+      slug: 'test-software-slug',
+      brand_name: 'Test software title',
+      concept_doi: ''
+    }
+    const editedMember = {
+      ...mockContributors[0],
+      // we remove avatar id
+      avatar_id: null,
+      // software id received from software context
+      software: editSoftwareState.software.id
+    }
+    // mock no members
+    mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
+    // mock patch contributor response
+    mockPatchContributor.mockResolvedValueOnce({
+      status: 200,
+      message: 'OK'
+    })
+
+    // render component
+    render(
+      <WithAppContext options={{session: mockSession}}>
+        <WithSoftwareContext state={editSoftwareState}>
+          <SoftwareContributors />
+        </WithSoftwareContext>
+      </WithAppContext>
+    )
+    // wait for loader to be removed
+    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // get all members
+    const members = screen.getAllByTestId('contributor-item')
+    // edit first member
+    const editBtn = within(members[0]).getByTestId('EditIcon')
+    fireEvent.click(editBtn)
+
+    const modal = screen.getByRole('dialog')
+
+    // click on remove image
+    const removeImage = within(modal).getByRole('button', {
+      name: 'remove'
+    })
+    await waitFor(() => {
+      expect(removeImage).toBeEnabled()
+      fireEvent.click(removeImage)
+    })
+
+    // save
+    const saveBtn = within(modal).getByRole('button', {
+      name:'Save'
+    })
+    // validate save is enabled
+    await waitFor(() => {
+      expect(saveBtn).toBeEnabled()
+    })
+
+    // cancel
+    const cancelBtn = within(modal).getByRole('button', {
+      name:'Cancel'
+    })
+    fireEvent.click(cancelBtn)
+
+    await waitFor(() => {
+      // validate modal hidden
+      expect(modal).not.toBeVisible()
+      // confirm patch contributor is NOT called
+      expect(mockPatchContributor).toBeCalledTimes(0)
+      // delete image NOT called
+      expect(mockDeleteImage).toBeCalledTimes(0)
+    })
+  })
 })

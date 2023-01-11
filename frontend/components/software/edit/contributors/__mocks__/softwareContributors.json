@@ -1,5 +1,18 @@
 [
   {
+    "id": "45138b9b-42ef-4364-a9eb-a3bbe9ad050e",
+    "is_contact_person": false,
+    "email_address": "test1862@example.com",
+    "family_names": "Doe 33483",
+    "given_names": "John",
+    "affiliation": "Created by msedge 8350",
+    "role": "Senior Developer 12547",
+    "orcid": null,
+    "avatar_id": "f312b64a21770404f839beffdda250ea2acf7f2c",
+    "position": 10,
+    "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
+  },
+  {
     "id": "e79a09de-228e-478c-933b-ea61d20fe7d9",
     "is_contact_person": true,
     "email_address": "test7505@examle.com",
@@ -114,19 +127,6 @@
     "orcid": "0000-0001-7579-216X",
     "avatar_id": null,
     "position": 9,
-    "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
-  },
-  {
-    "id": "45138b9b-42ef-4364-a9eb-a3bbe9ad050e",
-    "is_contact_person": false,
-    "email_address": "test1862@example.com",
-    "family_names": "Doe 33483",
-    "given_names": "John",
-    "affiliation": "Created by msedge 8350",
-    "role": "Senior Developer 12547",
-    "orcid": null,
-    "avatar_id": "f312b64a21770404f839beffdda250ea2acf7f2c",
-    "position": 10,
     "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
   }
 ]

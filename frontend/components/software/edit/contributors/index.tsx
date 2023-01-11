@@ -12,13 +12,12 @@ import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import {Contributor, ContributorProps, SaveContributor} from '~/types/Contributor'
+import {Contributor, SaveContributor} from '~/types/Contributor'
 import {
-  deleteContributorsById, patchContributor,
-  patchContributorPositions, postContributor,
+  deleteContributorsById,
+  patchContributorPositions,
 } from '~/utils/editContributors'
 import {getDisplayName} from '~/utils/getDisplayName'
-import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import EditContributorModal from './EditContributorModal'
 import FindContributor, {Name} from './FindContributor'
 import EditSoftwareSection from '../../../layout/EditSection'
@@ -29,7 +28,7 @@ import GetContributorsFromDoi from './GetContributorsFromDoi'
 import useSoftwareContext from '../useSoftwareContext'
 import useSoftwareContributors from './useSoftwareContributors'
 import SortableContributorsList from './SortableContributorsList'
-import {deleteImage, upsertImage} from '~/utils/editImage'
+import {deleteImage} from '~/utils/editImage'
 
 type EditContributorModal = ModalProps & {
   contributor?: Contributor
@@ -37,7 +36,7 @@ type EditContributorModal = ModalProps & {
 
 export default function SoftwareContributors() {
   const {token} = useSession()
-  const {showErrorMessage,showSuccessMessage} = useSnackbar()
+  const {showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()
   const {loading,contributors,setContributors} = useSoftwareContributors()
   const [modal, setModal] = useState<ModalStates<EditContributorModal>>({
@@ -93,7 +92,13 @@ export default function SoftwareContributors() {
   }
 
   function loadContributorIntoModal(contributor: Contributor,pos?:number) {
-    if (contributor) {
+    if (contributor && software?.id) {
+      // load software.id
+      contributor.software = software?.id
+      if (typeof pos==='undefined') {
+        // this is new member and we need to add position
+        contributor.position = contributors.length + 1
+      }
       // show modal and pass data
       setModal({
         edit: {
@@ -114,60 +119,10 @@ export default function SoftwareContributors() {
     loadContributorIntoModal(contributor,pos)
   }
 
-  async function onSubmitContributor({data, pos}:{data:Contributor,pos?: number}) {
-     // UPLOAD avatar
-    if (data.avatar_b64 && data.avatar_mime_type) {
-      // split base64 to use only encoded content
-      const b64data = data.avatar_b64.split(',')[1]
-      const upload = await upsertImage({
-        data: b64data,
-        mime_type: data.avatar_mime_type,
-        token
-      })
-      // debugger
-      if (upload.status === 201) {
-        // update data values
-        data.avatar_id = upload.message
-      } else {
-        showErrorMessage(`Failed to upload image. ${upload.message}`)
-        return
-      }
-    }
-    // ensure software id
-    if (!data.software && software.id) {
-      data.software = software.id
-    }
-    // prepare member object for save (remove helper props)
-    const contributor:SaveContributor = getPropsFromObject(data, ContributorProps)
-    // if id present we update
-    if (contributor?.id && typeof pos !== 'undefined') {
-      const resp = await patchContributor({
-        contributor,
-        token
-      })
-      if (resp.status === 200) {
-        updateContributorList({data:contributor,pos})
-        hideModals()
-      } else {
-        showErrorMessage(`Failed to update ${getDisplayName(data)}. Error: ${resp.message}`)
-      }
-    } else {
-      // this is completely new contributor we need to add to DB
-      contributor.position = contributors.length + 1
-      const resp = await postContributor({
-        contributor,
-        token
-      })
-      if (resp.status === 201) {
-        // id of created record is provided in returned in message
-        contributor.id = resp.message
-        // update contributors list
-        updateContributorList({data: contributor})
-        hideModals()
-      } else {
-        showErrorMessage(`Failed to add ${getDisplayName(contributor)}. Error: ${resp.message}`)
-      }
-    }
+  function onSubmitContributor({contributor, pos}:{contributor:SaveContributor,pos?: number}) {
+    // update contributors list
+    updateContributorList({data: contributor,pos})
+    hideModals()
   }
 
   function onDeleteContributor(pos:number) {
@@ -285,32 +240,36 @@ export default function SoftwareContributors() {
           }
         </section>
       </EditSoftwareSection>
-      <EditContributorModal
-        open={modal.edit.open}
-        pos={modal.edit.pos}
-        contributor={modal.edit.contributor}
-        onCancel={() => {
-          setModal({
-            edit:{open:false},
-            delete:{open:false}
-          })
-        }}
-        onSubmit={onSubmitContributor}
-      />
-      <ConfirmDeleteModal
-        open={modal.delete.open}
-        title="Remove contributor"
-        body={
-          <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? 'No name'}</strong>?</p>
-        }
-        onCancel={() => {
-          setModal({
-            edit:{open:false},
-            delete:{open:false}
-          })
-        }}
-        onDelete={()=>deleteContributor(modal.delete.pos)}
-      />
+      {modal.edit.open &&
+        <EditContributorModal
+          open={modal.edit.open}
+          pos={modal.edit.pos}
+          contributor={modal.edit.contributor}
+          onCancel={() => {
+            setModal({
+              edit:{open:false},
+              delete:{open:false}
+            })
+          }}
+          onSubmit={onSubmitContributor}
+        />
+      }
+      {modal.delete.open &&
+        <ConfirmDeleteModal
+          open={modal.delete.open}
+          title="Remove contributor"
+          body={
+            <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? 'No name'}</strong>?</p>
+          }
+          onCancel={() => {
+            setModal({
+              edit:{open:false},
+              delete:{open:false}
+            })
+          }}
+          onDelete={()=>deleteContributor(modal.delete.pos)}
+        />
+      }
     </>
   )
 }
