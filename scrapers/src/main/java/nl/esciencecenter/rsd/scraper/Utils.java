@@ -31,8 +31,9 @@ public class Utils {
 
 	/**
 	 * Urlencode a string.
+	 *
 	 * @param value The string to be encoded
-	 * @return      The urlencoded string.
+	 * @return The urlencoded string.
 	 */
 	public static String urlEncode(String value) {
 		return URLEncoder.encode(value, StandardCharsets.UTF_8);
@@ -41,9 +42,10 @@ public class Utils {
 	/**
 	 * Performs a GET request with given headers and returns the response body
 	 * as a String.
+	 *
 	 * @param uri     The encoded URI
 	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
-	 * @return        The response as a String.
+	 * @return The response as a String.
 	 */
 	public static String get(String uri, String... headers) {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
@@ -66,45 +68,29 @@ public class Utils {
 		return response.body();
 	}
 
-	public static String getWithRetryOn202(int retries, long timeoutMillis, String uri, String... headers) {
-		if (retries < 0) retries = 0;
-
-		String result = null;
-		for (int tryNumber = 0; tryNumber < retries + 1; tryNumber++) {
-			HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
-					.GET()
-					.uri(URI.create(uri));
-			if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
-				httpRequestBuilder.headers(headers);
-			}
-			HttpRequest request = httpRequestBuilder.build();
-			HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
-			HttpResponse<String> response;
-			try {
-				response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			} catch (IOException | InterruptedException e) {
-				throw new RuntimeException(e);
-			}
-			if (response.statusCode() == 202) {
-				try {
-					Thread.sleep(timeoutMillis);
-				} catch (InterruptedException e) {
-					throw new RuntimeException(e);
-				}
-			} else if (response.statusCode() == 200) {
-				result = response.body();
-				break;
-			} else {
-				throw new RsdResponseException(response.statusCode(), "Error fetching data from endpoint " + uri + " with response: " + response.body());
-			}
+	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) {
+		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
+				.GET()
+				.uri(URI.create(uri));
+		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
+			httpRequestBuilder.headers(headers);
 		}
-		return result;
+		HttpRequest request = httpRequestBuilder.build();
+		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+		HttpResponse<String> response;
+		try {
+			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			return response;
+		} catch (IOException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
 	 * Retrieve data from PostgREST as an admin user and retrieve the response body.
-	 * @param uri  The URI
-	 * @return     Returns the content of the HTTP response
+	 *
+	 * @param uri The URI
+	 * @return Returns the content of the HTTP response
 	 */
 	public static String getAsAdmin(String uri) {
 		String jwtString = adminJwt();
@@ -130,10 +116,11 @@ public class Utils {
 	/**
 	 * Performs a POST request with given headers and returns the response body
 	 * as a String.
-	 * @param uri           The URI
-	 * @param body          the request body as a string
-	 * @param extraHeaders  Additional headers (amount must be multiple of two)
-	 * @return              The response body as a string
+	 *
+	 * @param uri          The URI
+	 * @param body         the request body as a string
+	 * @param extraHeaders Additional headers (amount must be multiple of two)
+	 * @return The response body as a string
 	 */
 	public static String post(String uri, String body, String... extraHeaders) {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
@@ -158,10 +145,11 @@ public class Utils {
 
 	/**
 	 * Post data to the database.
-	 * @param uri           The URI
-	 * @param json          JSON as a string containing the values
-	 * @param extraHeaders  Additional headers (amount must be multiple of two)
-	 * @return              ???
+	 *
+	 * @param uri          The URI
+	 * @param json         JSON as a string containing the values
+	 * @param extraHeaders Additional headers (amount must be multiple of two)
+	 * @return ???
 	 */
 	public static String postAsAdmin(String uri, String json, String... extraHeaders) {
 		String jwtString = adminJwt();

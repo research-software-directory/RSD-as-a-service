@@ -69,7 +69,14 @@ public class CommitsPerWeekTest {
 
 	@Test
 	void givenInstance_whenValidOperations_thenCorrectJsonProduced() {
+		Gson gson = new GsonBuilder()
+				.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, typeOfT, context) -> Instant.ofEpochSecond(Long.parseLong(json.getAsString())))
+				.create();
+		TypeToken<Map<Instant, Long>> mapTypeToken = new TypeToken<>(){};
 		CommitsPerWeek commitsPerWeek = new CommitsPerWeek();
+
+		Map<Instant, Long> shouldBeEmptyMap = gson.fromJson(commitsPerWeek.toJson(), mapTypeToken.getType());
+		Assertions.assertTrue(shouldBeEmptyMap.isEmpty());
 
 		Instant sundayMidnight1 = Instant.ofEpochSecond(1670716800);
 		commitsPerWeek.addCommits(sundayMidnight1, 10);
@@ -81,11 +88,8 @@ public class CommitsPerWeekTest {
 		Instant sundayMidnight2 = sundayMidnight1.plus(Period.ofWeeks(5));
 		commitsPerWeek.addCommits(sundayMidnight2, 5);
 
-		Gson gson = new GsonBuilder()
-				.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, typeOfT, context) -> Instant.ofEpochSecond(Long.parseLong(json.getAsString())))
-				.create();
 
-		Map<Instant, Long> dataFromJson = gson.fromJson(commitsPerWeek.toJson(), new TypeToken<Map<Instant, Long>>(){}.getType());
+		Map<Instant, Long> dataFromJson = gson.fromJson(commitsPerWeek.toJson(), mapTypeToken.getType());
 		Assertions.assertEquals(2, dataFromJson.size());
 		Assertions.assertEquals(40, dataFromJson.get(sundayMidnight1));
 		Assertions.assertEquals(5, dataFromJson.get(sundayMidnight2));
