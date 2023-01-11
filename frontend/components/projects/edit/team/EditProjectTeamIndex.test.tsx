@@ -219,8 +219,13 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     const saveBtn = screen.getByRole('button', {
       name: 'Save'
     })
-    expect(saveBtn).toBeEnabled()
-    fireEvent.click(saveBtn)
+
+    await waitFor(() => {
+      // validate save is enabled
+      expect(saveBtn).toBeEnabled()
+      // click save
+      fireEvent.click(saveBtn)
+    })
 
     // validate api call
     await waitFor(() => {
@@ -302,6 +307,144 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
           'token': mockSession.token,
         })
       }
+    })
+  })
+
+  it('can remove avatar', async () => {
+    const editedMember = {
+      ...mockTeamMembers[0],
+      // we remove avatar id
+      avatar_id: null,
+      // we use project id from context
+      project: editProjectState.project.id
+    }
+    // mock no members
+    mockGetTeamForProject.mockResolvedValueOnce(mockTeamMembers)
+    // mock patch
+    mockPatchTeamMember.mockResolvedValueOnce({
+      status: 200,
+      message: 'OK'
+    })
+
+    // render component
+    render(
+      <WithAppContext options={{session: mockSession}}>
+        <WithProjectContext state={editProjectState}>
+          <ProjectTeam slug="test-slug"/>
+        </WithProjectContext>
+      </WithAppContext>
+    )
+    // wait for loader to be removed
+    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // get all members
+    const members = screen.getAllByTestId('team-member-item')
+    // edit first member
+    const editBtn = within(members[0]).getByTestId('EditIcon')
+    fireEvent.click(editBtn)
+
+    const modal = screen.getByRole('dialog')
+
+    // click on remove image
+    const removeImage = within(modal).getByRole('button', {
+      name: 'remove'
+    })
+
+    await waitFor(() => {
+      expect(removeImage).toBeEnabled()
+      fireEvent.click(removeImage)
+    })
+
+    // save
+    const saveBtn = within(modal).getByRole('button', {
+      name:'Save'
+    })
+
+    await waitFor(() => {
+      expect(saveBtn).toBeEnabled()
+      fireEvent.click(saveBtn)
+    })
+
+    await waitFor(() => {
+      // confirm member patched called
+      expect(mockPatchTeamMember).toBeCalledTimes(1)
+      expect(mockPatchTeamMember).toBeCalledWith({
+        member: editedMember,
+        token: mockSession.token
+      })
+      // validate delete image called
+      expect(mockDeleteImage).toBeCalledTimes(1)
+      expect(mockDeleteImage).toBeCalledWith({
+        'id': mockTeamMembers[0].avatar_id,
+        'token': mockSession.token,
+      })
+    })
+  })
+  it('can CANCEL remove avatar (change)', async () => {
+    const editedMember = {
+      ...mockTeamMembers[0],
+      // we remove avatar id
+      avatar_id: null,
+      // we use project id from context
+      project: editProjectState.project.id
+    }
+    // mock no members
+    mockGetTeamForProject.mockResolvedValueOnce(mockTeamMembers)
+    // mock patch
+    mockPatchTeamMember.mockResolvedValueOnce({
+      status: 200,
+      message: 'OK'
+    })
+
+    // render component
+    render(
+      <WithAppContext options={{session: mockSession}}>
+        <WithProjectContext state={editProjectState}>
+          <ProjectTeam slug="test-slug" />
+        </WithProjectContext>
+      </WithAppContext>
+    )
+    // wait for loader to be removed
+    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // get all members
+    const members = screen.getAllByTestId('team-member-item')
+    // edit first member
+    const editBtn = within(members[0]).getByTestId('EditIcon')
+    fireEvent.click(editBtn)
+
+    const modal = screen.getByRole('dialog')
+
+    // click on remove image
+    const removeImage = within(modal).getByRole('button', {
+      name: 'remove'
+    })
+
+    await waitFor(() => {
+      expect(removeImage).toBeEnabled()
+      fireEvent.click(removeImage)
+    })
+
+    // save
+    const saveBtn = within(modal).getByRole('button', {
+      name: 'Save'
+    })
+
+    await waitFor(() => {
+      expect(saveBtn).toBeEnabled()
+    })
+
+    // cancel
+    const cancelBtn = within(modal).getByRole('button', {
+      name:'Cancel'
+    })
+    fireEvent.click(cancelBtn)
+
+    await waitFor(() => {
+      // validate modal hidden
+      expect(modal).not.toBeVisible()
+      // confirm patch contributor is NOT called
+      expect(mockPatchTeamMember).toBeCalledTimes(0)
+      // delete image NOT called
+      expect(mockDeleteImage).toBeCalledTimes(0)
     })
   })
 })
