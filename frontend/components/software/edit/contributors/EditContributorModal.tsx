@@ -88,26 +88,10 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
 
   async function replaceImage(avatar_b64:string, avatar_mime_type:string) {
     if (formData.id && formData.avatar_id) {
-      // remove refrence to avatar first
-      const patch = await patchContributor({
-        contributor: {
-          id: formData.id,
-          avatar_id: null
-        },
-        token
-      })
-      // debugger
-      if (patch.status !== 200) {
-        showErrorMessage('Failed to remove image')
-        return
-      }
-      // then try to remove avatar from db
-      // without waiting for result
-      const del = await deleteImage({
-        id: formData.avatar_id,
-        token
-      })
-      // remove id in the form too
+      // mark old image for deletion
+      // we will remove it on Save
+      setRemoveAvatar(formData.avatar_id)
+      // and remove id in the form too
       setValue('avatar_id', null)
     }
     // write new logo to logo_b64
