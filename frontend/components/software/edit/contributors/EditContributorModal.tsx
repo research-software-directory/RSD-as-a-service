@@ -226,6 +226,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                 />
               </label>
               <input
+                data-testid="upload-avatar-input"
                 id="upload-avatar-image"
                 type="file"
                 accept="image/*"

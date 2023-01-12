@@ -125,6 +125,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
         mime_type: data.avatar_mime_type,
         token
       })
+
       // debugger
       if (upload.status === 201) {
         // update data values
@@ -226,6 +227,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
                 />
               </label>
               <input
+                data-testid="upload-avatar-input"
                 id="upload-avatar-image"
                 type="file"
                 accept="image/*"

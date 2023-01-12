@@ -50,11 +50,27 @@ jest.mock('~/utils/getInfoFromDatacite', () => ({
   getContributorsFromDoi: jest.fn((...props)=>mockGetContributorsFromDoi(props))
 }))
 
-// MOCK deleteImage
+// MOCK editImage methods
 const mockDeleteImage = jest.fn(props => Promise.resolve('OK'))
+const mockUpsertImage = jest.fn(props => Promise.resolve({
+  status: 201,
+  message: 'uploaded-image-id'
+}))
 jest.mock('~/utils/editImage', () => ({
   ...jest.requireActual('~/utils/editImage'),
-  deleteImage: jest.fn(props=>mockDeleteImage(props))
+  deleteImage: jest.fn(props => mockDeleteImage(props)),
+  upsertImage: jest.fn(props => mockUpsertImage(props))
+}))
+
+// MOCK handleFileUpload
+const mockHandleFileUpload = jest.fn(props => Promise.resolve({
+  status: 200,
+  message: 'OK',
+  image_b64: 'png,base64-encoded-image-content',
+  image_mime_type: 'image/png'
+}))
+jest.mock('~/utils/handleFileUpload', () => ({
+  handleFileUpload: jest.fn(props=>mockHandleFileUpload(props))
 }))
 
 
@@ -439,13 +455,6 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
       brand_name: 'Test software title',
       concept_doi: ''
     }
-    const editedMember = {
-      ...mockContributors[0],
-      // we remove avatar id
-      avatar_id: null,
-      // software id received from software context
-      software: editSoftwareState.software.id
-    }
     // mock no members
     mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
     // mock patch contributor response
@@ -505,4 +514,96 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
       expect(mockDeleteImage).toBeCalledTimes(0)
     })
   })
+
+  it('can replace avatar image', async () => {
+    const oldAvatarId = mockContributors[0].avatar_id
+    const newAvatarId = 'new-avatar-test-id-with-length-10-or-more'
+    const fileToUpload = 'test-file-name.png'
+    const base64data = 'base64-encoded-image-content'
+    const fileType = 'image/png'
+    // mock software context state
+    editSoftwareState.software = {
+      id: 'test-software-id',
+      slug: 'test-software-slug',
+      brand_name: 'Test software title',
+      concept_doi: ''
+    }
+    const editedMember = {
+      ...mockContributors[0],
+      // we have new avatar id
+      avatar_id: newAvatarId,
+      // software id received from software context
+      software: editSoftwareState.software.id
+    }
+    // mock no members
+    mockGetContributorsForSoftware.mockResolvedValueOnce(mockContributors)
+    // mock patch
+    mockPatchContributor.mockResolvedValueOnce({
+      status: 200,
+      message: 'OK'
+    })
+    // mock image upload
+    mockUpsertImage.mockResolvedValueOnce({
+      status: 201,
+      message: newAvatarId
+    })
+
+    // render component
+    render(
+      <WithAppContext options={{session: mockSession}}>
+        <WithSoftwareContext state={editSoftwareState}>
+          <SoftwareContributors />
+        </WithSoftwareContext>
+      </WithAppContext>
+    )
+    // wait for loader to be removed
+    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // get all members
+    const members = screen.getAllByTestId('contributor-item')
+    // edit first member
+    const editBtn = within(members[0]).getByTestId('EditIcon')
+    fireEvent.click(editBtn)
+
+    const modal = screen.getByRole('dialog')
+
+    // simulate upload action
+    const imageInput:any = within(modal).getByTestId('upload-avatar-input')
+    // set file to upload
+    fireEvent.change(imageInput, {target: {file: fileToUpload}})
+
+    // expect file upload to be called
+    expect(mockHandleFileUpload).toBeCalledTimes(1)
+
+    // save
+    const saveBtn = within(modal).getByRole('button', {
+      name: 'Save'
+    })
+    await waitFor(() => {
+      expect(saveBtn).toBeEnabled()
+      fireEvent.click(saveBtn)
+    })
+
+    await waitFor(() => {
+      // validate new avatar upload
+      expect(mockUpsertImage).toBeCalledTimes(1)
+      expect(mockUpsertImage).toBeCalledWith({
+        'data': base64data,
+        'mime_type': fileType,
+        'token': mockSession.token,
+      })
+      // confirm member patched called
+      expect(mockPatchContributor).toBeCalledTimes(1)
+      expect(mockPatchContributor).toBeCalledWith({
+        contributor: editedMember,
+        token: mockSession.token
+      })
+      // validate delete image called
+      expect(mockDeleteImage).toBeCalledTimes(1)
+      expect(mockDeleteImage).toBeCalledWith({
+        'id': oldAvatarId,
+        'token': mockSession.token,
+      })
+    })
+  })
+
 })
