@@ -15,6 +15,7 @@ import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
@@ -87,29 +88,42 @@ public class GithubSI implements SoftwareInfo {
 	 */
 	@Override
 	public CommitsPerWeek contributions() {
-		String contributions;
-		try {
-			Optional<String> apiCredentials = Config.apiCredentialsGithub();
+		Optional<String> apiCredentials = Config.apiCredentialsGithub();
+		HttpResponse<String> httpResponse = null;
+		for (int i = 0; i < 2; i++) {
 			if (apiCredentials.isPresent()) {
-				contributions = Utils.getWithRetryOn202(1, 3000, baseApiUrl + "/repos/" + repo + "/stats/contributors", "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
+				httpResponse = Utils.getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/stats/contributors", "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
 			} else {
-				contributions = Utils.getWithRetryOn202(1, 3000, baseApiUrl + "/repos/" + repo + "/stats/contributors");
+				httpResponse = Utils.getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/stats/contributors");
 			}
 
-			if (contributions != null && contributions.equals("")) {
-				// Repository exists, but no contributions yet, empty list is more appropriate
-				contributions = "[]";
+			if (httpResponse.statusCode() != 202) break;
+			try {
+				Thread.sleep(3000L);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
 			}
-		} catch (RsdResponseException e) {
-			if (e.getStatusCode() == 404) {
-				// Repository does not exist
-				contributions = null;
-			} else if (e.getStatusCode() == 403) {
-				// Forbidden, mostly when the rate limit was exceeded
-				throw new RsdRateLimitException("403 Forbidden. This error occurs mostly when the API rate limit is exceeded. Error message: " + e.getMessage());
-			} else throw e;
 		}
-		return parseCommits(contributions);
+
+		int status = httpResponse.statusCode();
+		if (status == 404) {
+			System.out.println("Commit history not found at " + httpResponse.uri().toString());
+			return null;
+		} else if (status == 204) {
+			// empty commit history
+			return new CommitsPerWeek();
+		} else if (status == 403) {
+			throw new RsdRateLimitException("403 Forbidden. This error occurs mostly when the API rate limit is exceeded. Error message: " + httpResponse.body());
+		} else if (status == 202) {
+			// response not ready yet
+			return null;
+		} else if (status != 200){
+			throw new RsdResponseException(status,
+					"Unexpected response from " + httpResponse.uri().toString() + " with status code " + status + " and body " + httpResponse.body());
+		} else {
+			String contributionsJson = httpResponse.body();
+			return parseCommits(contributionsJson);
+		}
 	}
 
 	static CommitsPerWeek parseCommits(String json) {
