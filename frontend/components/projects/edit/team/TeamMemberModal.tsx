@@ -1,11 +1,12 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent, useEffect} from 'react'
+import {ChangeEvent, useEffect, useState} from 'react'
 import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
@@ -15,7 +16,7 @@ import {useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth'
 import {getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
-import {TeamMember} from '~/types/Project'
+import {SaveTeamMember, TeamMember} from '~/types/Project'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
@@ -24,13 +25,15 @@ import ControlledAffiliation from '~/components/form/ControlledAffiliation'
 import {cfgTeamMembers as config} from './config'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {handleFileUpload} from '~/utils/handleFileUpload'
-import {deleteImage, getImageUrl} from '~/utils/editImage'
-import {patchTeamMember} from './editTeamMembers'
+import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
+import {patchTeamMember, postTeamMember} from './editTeamMembers'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import {TeamMemberProps} from '~/types/Contributor'
 
 type TeamMemberModalProps = {
   open: boolean,
   onCancel: () => void,
-  onSubmit: ({data, pos}: { data: TeamMember, pos?: number }) => void,
+  onSubmit: ({member, pos}: { member: SaveTeamMember, pos?: number }) => void,
   member?: TeamMember,
   pos?: number
 }
@@ -41,6 +44,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
+  const [removeAvatar, setRemoveAvatar] = useState<null|string>(null)
   const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<TeamMember>({
     mode: 'onChange',
     defaultValues: {
@@ -85,26 +89,10 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
 
   async function replaceImage(avatar_b64:string, avatar_mime_type:string) {
     if (formData.id && formData.avatar_id) {
-      // remove refrence to avatar first
-      const patch = await patchTeamMember({
-        member: {
-          id: formData.id,
-          avatar_id: null
-        },
-        token
-      })
-      // debugger
-      if (patch.status !== 200) {
-        showErrorMessage('Failed to remove image')
-        return
-      }
-      // then try to remove avatar from db
-      // without waiting for result
-      const del = await deleteImage({
-        id: formData.avatar_id,
-        token
-      })
-      // remove id in the form too
+      // mark old image for deletion
+      // we will remove it on Save
+      setRemoveAvatar(formData.avatar_id)
+      // and remove id in the form too
       setValue('avatar_id', null)
     }
     // write new logo to logo_b64
@@ -113,34 +101,78 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
     setValue('avatar_mime_type', avatar_mime_type, {shouldDirty: true})
   }
 
-   async function deleteAvatar() {
-     if (formData.id && formData.avatar_id) {
-      // remove refrence to avatar first
-      const patch = await patchTeamMember({
-        member: {
-          id: formData.id,
-          avatar_id: null
-        },
-        token
-      })
-      // debugger
-      if (patch.status !== 200) {
-        showErrorMessage('Failed to remove image')
-        return
-      }
-      // then try to remove avatar from db
-      // without waiting for result
-      const del = await deleteImage({
-        id: formData.avatar_id,
-        token
-      })
+  function deleteAvatar() {
+    if (formData.id && formData.avatar_id) {
+      // mark image for deletion
+      setRemoveAvatar(formData.avatar_id)
       // update form
       setValue('avatar_id', null, {shouldDirty: true,shouldValidate:true})
      } else {
       // just remove uploaded image from form
-      // because it is not save yet to DB
+      // because it is not saved yet to DB
       setValue('avatar_b64', null)
       setValue('avatar_mime_type', null, {shouldDirty: true})
+    }
+  }
+
+  async function onSave(data: TeamMember) {
+    // UPLOAD avatar
+    if (data.avatar_b64 && data.avatar_mime_type) {
+      // split base64 to use only encoded content
+      const b64data = data.avatar_b64.split(',')[1]
+      const upload = await upsertImage({
+        data: b64data,
+        mime_type: data.avatar_mime_type,
+        token
+      })
+
+      // debugger
+      if (upload.status === 201) {
+        // update data values
+        data.avatar_id = upload.message
+      } else {
+        showErrorMessage(`Failed to upload image. ${upload.message}`)
+        return
+      }
+    }
+    // prepare member object for save (remove helper props)
+    const member:SaveTeamMember = getPropsFromObject(data, TeamMemberProps)
+    // CREATE or UPDATE
+    if (member.id && typeof pos !== 'undefined') {
+      const resp = await patchTeamMember({
+        member,
+        token
+      })
+      // debugger
+      if (resp.status === 200) {
+        if (removeAvatar) {
+          // try to remove avatar from db
+          // without waiting for result
+          deleteImage({
+            id: removeAvatar,
+            token
+          })
+        }
+        // pass member to parent
+        onSubmit({member, pos})
+      } else {
+        showErrorMessage(`Failed to update member. ${resp.message}`)
+      }
+    } else {
+      // new team member we need to add
+      const resp = await postTeamMember({
+        member,
+        token
+      })
+      // debugger
+      if (resp.status === 201) {
+        // get id out of message
+        member.id = resp.message
+        // pass member to parent
+        onSubmit({member, pos})
+      } else {
+        showErrorMessage(`Failed to add member. ${resp.message}`)
+      }
     }
   }
 
@@ -162,7 +194,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
       </DialogTitle>
       <form
         id={formId}
-        onSubmit={handleSubmit((data: TeamMember) => onSubmit({data, pos}))}
+        onSubmit={handleSubmit((data: TeamMember) => onSave(data))}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -195,6 +227,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
                 />
               </label>
               <input
+                data-testid="upload-avatar-input"
                 id="upload-avatar-image"
                 type="file"
                 accept="image/*"

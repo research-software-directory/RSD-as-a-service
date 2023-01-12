@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,15 +18,13 @@ import {SaveTeamMember, TeamMember} from '~/types/Project'
 import {cfgTeamMembers} from './config'
 import FindMember from './FindMember'
 import {
-  deleteTeamMemberById, ModalProps, ModalStates,
-  patchTeamMember, patchTeamMemberPositions, postTeamMember
+  deleteTeamMemberById, ModalProps,
+  ModalStates, patchTeamMemberPositions,
 } from './editTeamMembers'
 import TeamMemberModal from './TeamMemberModal'
 import useTeamMembers from './useTeamMembers'
 import SortableTeamMemberList from './SortableTeamMemberList'
-import {deleteImage, upsertImage} from '~/utils/editImage'
-import {getPropsFromObject} from '~/utils/getPropsFromObject'
-import {TeamMemberProps} from '~/types/Contributor'
+import {deleteImage} from '~/utils/editImage'
 
 type EditMemberModal = ModalProps & {
   member?: TeamMember
@@ -83,7 +82,13 @@ export default function ProjectTeam({slug}: { slug: string }) {
   }
 
   function onEditMember(member: TeamMember,pos?:number) {
-    if (member) {
+    if (member && project.id) {
+      // add project id
+      member.project = project.id
+      if (typeof pos==='undefined') {
+        // this is new member and we need to add position
+        member.position = members.length + 1
+      }
       // show modal and pass data
       setModal({
         edit: {
@@ -147,64 +152,10 @@ export default function ProjectTeam({slug}: { slug: string }) {
     }
   }
 
-  async function onSubmitMember({data, pos}: { data: TeamMember, pos?: number }) {
-    // UPLOAD avatar
-    if (data.avatar_b64 && data.avatar_mime_type) {
-      // split base64 to use only encoded content
-      const b64data = data.avatar_b64.split(',')[1]
-      const upload = await upsertImage({
-        data: b64data,
-        mime_type: data.avatar_mime_type,
-        token
-      })
-      // debugger
-      if (upload.status === 201) {
-        // update data values
-        data.avatar_id = upload.message
-      } else {
-        showErrorMessage(`Failed to upload image. ${upload.message}`)
-        return
-      }
-    }
-    // ensure project id
-    if (!data.project) {
-      // add project id
-      data.project = project.id
-    }
-    // prepare member object for save (remove helper props)
-    const member:SaveTeamMember = getPropsFromObject(data, TeamMemberProps)
-    // CREATE or UPDATE
-    if (member.id && typeof pos !== 'undefined') {
-      const resp = await patchTeamMember({
-        member,
-        token
-      })
-      // debugger
-      if (resp.status === 200) {
-        // on success update local state
-        updateLocalState(member, pos)
-        hideModals()
-      } else {
-        showErrorMessage(`Failed to update member. ${resp.message}`)
-      }
-    } else {
-      // define items postion at the end
-      member.position = members.length + 1
-      const resp = await postTeamMember({
-        member,
-        token
-      })
-      // debugger
-      if (resp.status === 201) {
-        // get id out of message
-        member.id = resp.message
-        // update local state
-        updateLocalState(member)
-        hideModals()
-      } else {
-        showErrorMessage(`Failed to add member. ${resp.message}`)
-      }
-    }
+  function onSubmitMember({member, pos}: { member: SaveTeamMember, pos?: number }) {
+    // update local state
+    updateLocalState(member, pos)
+    hideModals()
   }
 
   async function sortTeamMembers(members: TeamMember[]) {
@@ -258,32 +209,36 @@ export default function ProjectTeam({slug}: { slug: string }) {
         </div>
       </EditSection>
 
-      <TeamMemberModal
-        open={modal.edit.open}
-        pos={modal.edit.pos}
-        member={modal.edit.member}
-        onCancel={() => {
-          setModal({
-            edit:{open:false},
-            delete:{open:false}
-          })
-        }}
-        onSubmit={onSubmitMember}
-      />
-      <ConfirmDeleteModal
-        open={modal.delete.open}
-        title="Remove team member"
-        body={
-          <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? 'No name'}</strong>?</p>
-        }
-        onCancel={() => {
-          setModal({
-            edit:{open:false},
-            delete:{open:false}
-          })
-        }}
-        onDelete={()=>deleteMember(modal.delete.pos ?? 0)}
-      />
+      {modal.edit.open &&
+        <TeamMemberModal
+          open={modal.edit.open}
+          pos={modal.edit.pos}
+          member={modal.edit.member}
+          onCancel={() => {
+            setModal({
+              edit:{open:false},
+              delete:{open:false}
+            })
+          }}
+          onSubmit={onSubmitMember}
+        />
+      }
+      {modal.delete.open &&
+        <ConfirmDeleteModal
+          open={modal.delete.open}
+          title="Remove team member"
+          body={
+            <p>Are you sure you want to remove <strong>{modal.delete.displayName ?? 'No name'}</strong>?</p>
+          }
+          onCancel={() => {
+            setModal({
+              edit:{open:false},
+              delete:{open:false}
+            })
+          }}
+          onDelete={()=>deleteMember(modal.delete.pos ?? 0)}
+        />
+      }
     </>
   )
 }

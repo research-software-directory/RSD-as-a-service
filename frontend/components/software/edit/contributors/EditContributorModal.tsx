@@ -1,11 +1,12 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent, useEffect} from 'react'
+import {ChangeEvent, useEffect, useState} from 'react'
 import {
   Button, Dialog, DialogActions, DialogContent,
   DialogTitle, useMediaQuery
@@ -15,7 +16,7 @@ import {useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth'
 import useSnackbar from '../../../snackbar/useSnackbar'
-import {Contributor} from '../../../../types/Contributor'
+import {Contributor, ContributorProps, SaveContributor} from '../../../../types/Contributor'
 import ControlledTextField from '../../../form/ControlledTextField'
 import ControlledSwitch from '../../../form/ControlledSwitch'
 import ContributorAvatar from '../../ContributorAvatar'
@@ -24,13 +25,14 @@ import {getDisplayInitials, getDisplayName} from '../../../../utils/getDisplayNa
 import ControlledAffiliation from '~/components/form/ControlledAffiliation'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {handleFileUpload} from '~/utils/handleFileUpload'
-import {deleteImage, getImageUrl} from '~/utils/editImage'
-import {patchContributor} from '~/utils/editContributors'
+import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
+import {patchContributor, postContributor} from '~/utils/editContributors'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
 type EditContributorModalProps = {
   open: boolean,
   onCancel: () => void,
-  onSubmit: ({data, pos}: { data: Contributor, pos?: number }) => void,
+  onSubmit: ({contributor, pos}: { contributor: SaveContributor, pos?: number }) => void,
   contributor?: Contributor,
   pos?: number
 }
@@ -41,6 +43,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   const {token} = useSession()
   const {showWarningMessage,showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
+  const [removeAvatar, setRemoveAvatar] = useState<null|string>(null)
   const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Contributor>({
     mode: 'onChange',
     defaultValues: {
@@ -57,11 +60,11 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   // console.log('isValid...', isValid)
   // console.groupEnd()
 
-  useEffect(() => {
-    if (contributor) {
-      reset(contributor)
-    }
-  }, [contributor,reset])
+  // useEffect(() => {
+  //   if (contributor) {
+  //     reset(contributor)
+  //   }
+  // }, [contributor,reset])
 
   function handleCancel() {
     // reset form
@@ -85,26 +88,10 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
 
   async function replaceImage(avatar_b64:string, avatar_mime_type:string) {
     if (formData.id && formData.avatar_id) {
-      // remove refrence to avatar first
-      const patch = await patchContributor({
-        contributor: {
-          id: formData.id,
-          avatar_id: null
-        },
-        token
-      })
-      // debugger
-      if (patch.status !== 200) {
-        showErrorMessage('Failed to remove image')
-        return
-      }
-      // then try to remove avatar from db
-      // without waiting for result
-      const del = await deleteImage({
-        id: formData.avatar_id,
-        token
-      })
-      // remove id in the form too
+      // mark old image for deletion
+      // we will remove it on Save
+      setRemoveAvatar(formData.avatar_id)
+      // and remove id in the form too
       setValue('avatar_id', null)
     }
     // write new logo to logo_b64
@@ -113,34 +100,78 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
     setValue('avatar_mime_type', avatar_mime_type, {shouldDirty: true})
   }
 
-   async function deleteAvatar() {
-    if (formData.id && formData.avatar_id) {
-      // remove reference to avatar first
-      const patch = await patchContributor({
-        contributor: {
-          id: formData.id,
-          avatar_id: null
-        },
-        token
-      })
-      // debugger
-      if (patch.status !== 200) {
-        showErrorMessage('Failed to remove image')
-        return
-      }
-      // then try to remove avatar from db
-      // without waiting for result
-      const del = await deleteImage({
-        id: formData.avatar_id,
-        token
-      })
+  function deleteAvatar() {
+     if (formData.id && formData.avatar_id) {
+      // mark image for deletion
+      setRemoveAvatar(formData.avatar_id)
       // update form
-      setValue('avatar_id', null, {shouldDirty:true,shouldValidate:true})
+      setValue('avatar_id', null, {shouldDirty:true, shouldValidate:true})
      } else {
       // just remove uploaded image from form
       // because it is not save yet to DB
       setValue('avatar_b64', null)
       setValue('avatar_mime_type', null, {shouldDirty: true})
+    }
+  }
+
+  async function onSave(data: Contributor) {
+    // UPLOAD avatar
+    if (data.avatar_b64 && data.avatar_mime_type) {
+      // split base64 to use only encoded content
+      const b64data = data.avatar_b64.split(',')[1]
+      const upload = await upsertImage({
+        data: b64data,
+        mime_type: data.avatar_mime_type,
+        token
+      })
+      // debugger
+      if (upload.status === 201) {
+        // update data values
+        data.avatar_id = upload.message
+        data.avatar_b64 = null,
+        data.avatar_mime_type = null
+      } else {
+        showErrorMessage(`Failed to upload image. ${upload.message}`)
+        return
+      }
+    }
+
+    // prepare data object for save (remove helper props)
+    const contributor: SaveContributor = getPropsFromObject(data, ContributorProps)
+    // if id present we update
+    if (contributor?.id && typeof pos !== 'undefined') {
+      const resp = await patchContributor({
+        contributor,
+        token
+      })
+      if (resp.status === 200) {
+        if (removeAvatar) {
+          // try to remove avatar from db
+          // without waiting for result
+          deleteImage({
+            id: removeAvatar,
+            token
+          })
+        }
+        // call submit to pass data and close modal
+        onSubmit({contributor, pos})
+      } else {
+        showErrorMessage(`Failed to update ${getDisplayName(data)}. Error: ${resp.message}`)
+      }
+    } else {
+      // this is completely new contributor we need to add to DB
+      const resp = await postContributor({
+        contributor,
+        token
+      })
+      if (resp.status === 201) {
+        // id of created record is provided in returned in message
+        contributor.id = resp.message
+        // call submit to pass data and close modal
+        onSubmit({contributor,pos})
+      } else {
+        showErrorMessage(`Failed to add ${getDisplayName(contributor)}. Error: ${resp.message}`)
+      }
     }
   }
 
@@ -162,7 +193,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
       </DialogTitle>
       <form
         id={formId}
-        onSubmit={handleSubmit((data: Contributor) => onSubmit({data, pos}))}
+        onSubmit={handleSubmit((data: Contributor) => onSave(data))}
         autoComplete="off"
       >
         {/* hidden inputs */}
@@ -195,6 +226,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                 />
               </label>
               <input
+                data-testid="upload-avatar-input"
                 id="upload-avatar-image"
                 type="file"
                 accept="image/*"

@@ -11,7 +11,7 @@ import '@testing-library/jest-dom/extend-expect'
 
 // retry 2 times
 jest.retryTimes(2, {
-  logErrorsBeforeRetry: true
+  logErrorsBeforeRetry: false
 })
 
 // TODO! investigate other options beside mocking
