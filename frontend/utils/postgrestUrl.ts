@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +10,7 @@ type baseQueryStringProps = {
   search?: string | null,
   keywords?: string[] | null,
   domains?: string[] | null,
+  prog_lang?: string[] | null,
   order?: string,
   limit?: number,
   offset?: number
@@ -21,8 +23,9 @@ export type PostgrestParams = baseQueryStringProps & {
 type QueryParams={
   // query: ParsedUrlQuery
   search?:string
-  keywords?: string[]
-  domains?: string[]
+  keywords?:string[]
+  domains?:string[],
+  prog_lang?:string[],
   page?:number,
   rows?:number
 }
@@ -45,33 +48,70 @@ export function ssrProjectsUrl(params: QueryParams) {
   return url
 }
 
+type BuildUrlQueryProps = {
+  query: string
+  param: string
+  value: string[]|string|undefined
+}
+
+function buildUrlQuery({query, param, value}: BuildUrlQueryProps) {
+  // if there is no value we return "" for query=no query
+  if (typeof value === 'undefined' || value === '') return query
+
+  // handle string value
+  if (typeof value === 'string') {
+    if (query) {
+      query += `&${param}=${encodeURIComponent(value)}`
+    } else {
+      query = `${param}=${encodeURIComponent(value)}`
+    }
+  } else if (Array.isArray(value)===true && value?.length > 0) {
+    // arrays are stringified
+    if (query) {
+      query += `&${param}=${encodeURIComponent(JSON.stringify(value))}`
+    } else {
+      query = `${param}=${encodeURIComponent(JSON.stringify(value))}`
+    }
+  }
+  // return build query
+  return query
+}
+
+
 function ssrUrl(params: QueryParams, view:string) {
-  const {search, keywords, domains, rows, page} = params
+  const {search, keywords, domains, prog_lang, rows, page} = params
   // console.log('ssrUrl...params...', params)
   let url = `/${view}?`
-  if (search) {
-    url += `search=${encodeURIComponent(search)}`
-  } else if (search === '') {
-    //remove search query
-  }
-  if (keywords && keywords.length > 0) {
-    // stringify JSON object and encode URI
-    url += `&keywords=${encodeURIComponent(JSON.stringify(keywords))}`
-  } else if (keywords === null) {
-    // remove filter
-  }
+  let query = ''
+  // search
+  query = buildUrlQuery({
+    query,
+    param: 'search',
+    value: search
+  })
+  //keywords
+  query = buildUrlQuery({
+    query,
+    param: 'keywords',
+    value: keywords
+  })
   // research domains
-  if (domains && domains.length > 0) {
-    // stringify JSON object and encode URI
-    url += `&domains=${encodeURIComponent(JSON.stringify(domains))}`
-  } else if (domains === null) {
-    // remove filter
-  }
+  query = buildUrlQuery({
+    query,
+    param: 'domains',
+    value: domains
+  })
+  // programming languages
+  query = buildUrlQuery({
+    query,
+    param: 'prog_lang',
+    value: prog_lang
+  })
   if (page || page === 0) {
-    url += `&page=${page}`
+    url += `page=${page}`
   } else {
     // default
-    url += '&page=0'
+    url += 'page=0'
   }
   if (rows) {
     url += `&rows=${rows}`
@@ -79,6 +119,9 @@ function ssrUrl(params: QueryParams, view:string) {
     url += '&rows=12'
   }
   // debugger
+  if (query!=='') {
+    return `${url}&${query}`
+  }
   return url
 }
 
@@ -104,10 +147,12 @@ export function paginationUrlParams({rows=12, page=0}:
  * @returns string
  */
 export function baseQueryString(props: baseQueryStringProps) {
-  const {keywords,domains,order, limit, offset} = props
+  const {keywords, domains, prog_lang,order,limit,offset} = props
   let query
   // console.group('baseQueryString')
   // console.log('keywords...', keywords)
+  // console.log('domains...', domains)
+  // console.log('prog_lang...', prog_lang)
   // console.log('order...', order)
   // console.log('limit...', limit)
   // console.log('offset...', offset)
@@ -121,7 +166,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     // and it needs to be enclosed in {} uri encoded see
     // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
     const keywordsAll = keywords.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
-    // use cs. command to fin
+    // use cs. command to find
     query = `keywords=cs.%7B${keywordsAll}%7D`
   }
   if (typeof domains !== 'undefined' &&
@@ -130,11 +175,27 @@ export function baseQueryString(props: baseQueryStringProps) {
     // sort and convert research domains array to comma separated string
     // we need to sort because search is on ARRAY field in pgSql
     const domainsAll = domains.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
-    // use cs. command to fin
+    // use cs. command to find
     if (query) {
       query = `${query}&research_domain=cs.%7B${domainsAll}%7D`
     } else {
       query = `research_domain=cs.%7B${domainsAll}%7D`
+    }
+  }
+  if (typeof prog_lang !== 'undefined' &&
+    prog_lang !== null &&
+    typeof prog_lang === 'object') {
+    // sort and convert prog_lang array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    // and all prog_lang should be present (AND).
+    // and it needs to be enclosed in {} uri encoded see
+    // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
+    const languagesAll = prog_lang.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to find
+    if (query) {
+      query = `${query}&prog_lang=cs.%7B${languagesAll}%7D`
+    } else {
+      query = `prog_lang=cs.%7B${languagesAll}%7D`
     }
   }
   // order

@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -66,17 +67,29 @@ it('extracts keywords as array from url query', () => {
   expect(keywords).toEqual(expected)
 })
 
+it('returns defaultValue when param not in url query', () => {
+  const query: ParsedUrlQuery = {}
+  const rows = extractQueryParam({
+    query,
+    param: 'rows',
+    defaultValue: 12,
+    castToType: 'number'
+  })
+  expect(rows).toEqual(12)
+})
 
 it('extracts ssrSoftwareParams from url query', () => {
   const query: ParsedUrlQuery = {
     'search': 'test search',
     'keywords': '["BAM","FAIR Sofware"]',
+    'prog_lang': '["Python","C++"]',
     'page': '0',
     'rows': '12'
   }
   const expected = {
     search: 'test search',
     keywords: ['BAM', 'FAIR Sofware'],
+    prog_lang: ['Python','C++'],
     page: 0,
     rows: 12
   }

@@ -1,6 +1,6 @@
 -- SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
--- SPDX-FileCopyrightText: 2021 - 2022 dv4all
--- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+-- SPDX-FileCopyrightText: 2021 - 2023 dv4all
+-- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 --
@@ -134,6 +134,48 @@ BEGIN
 END
 $$;
 
+-- programming language counts for software
+-- used in software filter - language dropdown
+CREATE FUNCTION prog_lang_cnt_for_software() RETURNS TABLE (
+	prog_lang TEXT,
+	cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		JSONB_OBJECT_KEYS(languages) AS "prog_lang",
+		COUNT(software) AS cnt
+	FROM
+		repository_url
+	GROUP BY
+		JSONB_OBJECT_KEYS(languages)
+	;
+END
+$$;
+
+-- programming language filter for software
+-- used by software_search func
+CREATE FUNCTION prog_lang_filter_for_software() RETURNS TABLE (
+	software UUID,
+	prog_lang TEXT[]
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		repository_url.software,
+		(SELECT
+			ARRAY_AGG(p_lang)
+		  FROM
+		  	JSONB_OBJECT_KEYS(repository_url.languages) p_lang
+		) AS "prog_lang"
+	FROM
+		repository_url
+	;
+END
+$$;
+
 -- SOFTWARE OVERVIEW LIST FOR SEARCH
 -- WITH COUNTS and KEYWORDS for filtering
 CREATE FUNCTION software_search() RETURNS TABLE (
@@ -145,8 +187,9 @@ CREATE FUNCTION software_search() RETURNS TABLE (
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT,
 	is_published BOOLEAN,
-	keywords citext[],
-	keywords_text TEXT
+	keywords CITEXT[],
+	keywords_text TEXT,
+	prog_lang TEXT[]
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -161,7 +204,8 @@ BEGIN
 		count_software_mentions.mention_cnt,
 		software.is_published,
 		keyword_filter_for_software.keywords,
-		keyword_filter_for_software.keywords_text
+		keyword_filter_for_software.keywords_text,
+		prog_lang_filter_for_software.prog_lang
 	FROM
 		software
 	LEFT JOIN
@@ -170,9 +214,12 @@ BEGIN
 		count_software_mentions() ON software.id=count_software_mentions.software
 	LEFT JOIN
 		keyword_filter_for_software() ON software.id=keyword_filter_for_software.software
+	LEFT JOIN
+		prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
 	;
 END
 $$;
+
 
 -- RELATED SOFTWARE LIST WITH COUNTS
 CREATE FUNCTION related_software_for_software(software_id UUID) RETURNS TABLE (

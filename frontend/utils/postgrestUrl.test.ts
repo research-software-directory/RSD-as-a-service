@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,6 +26,20 @@ describe('baseQueryString', () => {
     expect(url).toEqual(expected)
   })
 
+  it('make custom encoded domains url query string', () => {
+    const domains = ['filter-1', 'filter-2']
+    const expected = 'research_domain=cs.%7B\"filter-1\",\"filter-2\"%7D&limit=12&offset=0'
+    const url = baseQueryString({domains})
+    expect(url).toEqual(expected)
+  })
+
+  it('make custom encoded prog_lang url query string', () => {
+    const prog_lang = ['filter-1', 'filter-2']
+    const expected = 'prog_lang=cs.%7B\"filter-1\",\"filter-2\"%7D&limit=12&offset=0'
+    const url = baseQueryString({prog_lang})
+    expect(url).toEqual(expected)
+  })
+
   it('makes url query string with order', () => {
     const order = 'pass,any,order,you will'
     const expected = `order=${order}&limit=${rowsPerPageOptions[0]}&offset=0`
@@ -46,15 +61,23 @@ describe('baseQueryString', () => {
 
 describe('ssrSoftwareUrl', () => {
   it('returns software page url with stringified and encoded keywords query parameters', () => {
-    const expectUrl = '/software?&keywords=%5B%22filter-1%22%2C%22filter-2%22%5D&page=0&rows=12'
+    const expectUrl = '/software?page=0&rows=12&keywords=%5B%22filter-1%22%2C%22filter-2%22%5D'
     const url = ssrSoftwareUrl({
       keywords: ['filter-1', 'filter-2']
     })
     expect(url).toEqual(expectUrl)
   })
 
+  it('returns software page url with stringified and encoded prog_lang query parameters', () => {
+    const expectUrl = '/software?page=0&rows=12&prog_lang=%5B%22filter-1%22%2C%22filter-2%22%5D'
+    const url = ssrSoftwareUrl({
+      prog_lang: ['filter-1', 'filter-2']
+    })
+    expect(url).toEqual(expectUrl)
+  })
+
   it('returns software page url with search param and page 10', () => {
-    const expectUrl = '/software?search=test-search-item&page=10&rows=12'
+    const expectUrl = '/software?page=10&rows=12&search=test-search-item'
     const url = ssrSoftwareUrl({
       search: 'test-search-item',
       page: 10
@@ -99,15 +122,23 @@ describe('softwareListUrl', () => {
 
 describe('ssrProjectsUrl', () => {
   it('returns projects page url with stringified and encoded keywords query parameters', () => {
-    const expectUrl = '/projects?&keywords=%5B%22filter-1%22%2C%22filter-2%22%5D&page=0&rows=12'
+    const expectUrl = '/projects?page=0&rows=12&keywords=%5B%22filter-1%22%2C%22filter-2%22%5D'
     const url = ssrProjectsUrl({
       keywords: ['filter-1', 'filter-2']
     })
     expect(url).toEqual(expectUrl)
   })
 
+  it('returns projects page url with stringified and encoded research_domain query parameters', () => {
+    const expectUrl = '/projects?page=0&rows=12&domains=%5B%22filter-1%22%2C%22filter-2%22%5D'
+    const url = ssrProjectsUrl({
+      domains: ['filter-1', 'filter-2']
+    })
+    expect(url).toEqual(expectUrl)
+  })
+
   it('returns projects page url with search param and page 10', () => {
-    const expectUrl = '/projects?search=test-search-item&page=10&rows=12'
+    const expectUrl = '/projects?page=10&rows=12&search=test-search-item'
     const url = ssrProjectsUrl({
       search: 'test-search-item',
       page: 10
@@ -148,11 +179,22 @@ describe('projectListUrl', () => {
     } as PostgrestParams)
     expect(url).toEqual(expectUrl)
   })
+
+  it('returns postgrest endpoint url with research_domain params', () => {
+    const baseUrl = 'http://test-base-url'
+    // if you change values then change expectedUrl values too
+    const expectUrl = `${baseUrl}/rpc/project_search?research_domain=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
+    const url = projectListUrl({
+      baseUrl,
+      domains: ['test-filter']
+    } as PostgrestParams)
+    expect(url).toEqual(expectUrl)
+  })
 })
 
 describe('ssrOrganisationUrl', () => {
   it('returns organisations page url with stringified and encoded keywords query parameters', () => {
-    const expectUrl = '/organisations?&keywords=%5B%22filter-1%22%2C%22filter-2%22%5D&page=0&rows=12'
+    const expectUrl = '/organisations?page=0&rows=12&keywords=%5B%22filter-1%22%2C%22filter-2%22%5D'
     const url = ssrOrganisationUrl({
       keywords: ['filter-1', 'filter-2']
     })
@@ -160,7 +202,7 @@ describe('ssrOrganisationUrl', () => {
   })
 
   it('returns organisations page url with search param and page 10', () => {
-    const expectUrl = '/organisations?search=test-search-item&page=10&rows=12'
+    const expectUrl = '/organisations?page=10&rows=12&search=test-search-item'
     const url = ssrOrganisationUrl({
       search: 'test-search-item',
       page: 10

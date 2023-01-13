@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import type {GetServerSidePropsContext} from 'next'
 import {ParsedUrlQuery} from 'querystring'
 import logger from './logger'
 
 export function extractQueryParam({query,param,castToType='string',defaultValue}:{
-  query: ParsedUrlQuery, param: string, castToType?: ('string' | 'number' | 'date' | 'csv-to-array' |'json-encoded'),
+  query: ParsedUrlQuery, param: string, castToType?: ('string' | 'number' | 'json-encoded'),
   defaultValue:any
 }){
   try{
@@ -18,13 +18,8 @@ export function extractQueryParam({query,param,castToType='string',defaultValue}
       switch (castToType){
         case 'number':
           return parseInt(rawVal?.toString())
-        case 'date':
-          return new Date(rawVal?.toString())
         case 'string':
           return rawVal?.toString()
-        case 'csv-to-array':
-          const parsed = rawVal.toString().split(',')
-          return parsed
         case 'json-encoded':
           const json = JSON.parse(decodeURI(rawVal.toString()))
           return json
@@ -43,8 +38,8 @@ export function extractQueryParam({query,param,castToType='string',defaultValue}
 
 export function ssrSoftwareParams(query: ParsedUrlQuery) {
   // console.group('ssrSoftwareParams')
-  // console.log('query...', ctx.query)
-  // console.log('params...', ctx.params)
+  // console.log('query...', query)
+
   const rows = extractQueryParam({
     query,
     param: 'rows',
@@ -69,12 +64,19 @@ export function ssrSoftwareParams(query: ParsedUrlQuery) {
     castToType: 'json-encoded',
     defaultValue: null
   })
+  const prog_lang = extractQueryParam({
+    query,
+    param: 'prog_lang',
+    castToType: 'json-encoded',
+    defaultValue: null
+  })
   // console.log('keywords...', keywords)
   // console.log('keywords...', typeof keywords)
   // console.groupEnd()
   return {
     search,
     keywords,
+    prog_lang,
     rows,
     page,
   }

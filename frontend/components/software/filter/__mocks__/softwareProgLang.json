@@ -1,0 +1,86 @@
+[
+  {
+    "prog_lang": "Shell",
+    "cnt": 23
+  },
+  {
+    "prog_lang": "Python",
+    "cnt": 18
+  },
+  {
+    "prog_lang": "CSS",
+    "cnt": 12
+  },
+  {
+    "prog_lang": "Dockerfile",
+    "cnt": 9
+  },
+  {
+    "prog_lang": "HTML",
+    "cnt": 7
+  },
+  {
+    "prog_lang": "GLSL",
+    "cnt": 7
+  },
+  {
+    "prog_lang": "TeX",
+    "cnt": 7
+  },
+  {
+    "prog_lang": "JavaScript",
+    "cnt": 7
+  },
+  {
+    "prog_lang": "Haskell",
+    "cnt": 5
+  },
+  {
+    "prog_lang": "Lua",
+    "cnt": 5
+  },
+  {
+    "prog_lang": "Makefile",
+    "cnt": 4
+  },
+  {
+    "prog_lang": "R",
+    "cnt": 3
+  },
+  {
+    "prog_lang": "Ruby",
+    "cnt": 2
+  },
+  {
+    "prog_lang": "C++",
+    "cnt": 2
+  },
+  {
+    "prog_lang": "Swift",
+    "cnt": 2
+  },
+  {
+    "prog_lang": "Dart",
+    "cnt": 2
+  },
+  {
+    "prog_lang": "PLpgSQL",
+    "cnt": 2
+  },
+  {
+    "prog_lang": "CMake",
+    "cnt": 2
+  },
+  {
+    "prog_lang": "Go",
+    "cnt": 2
+  },
+  {
+    "prog_lang": "Java",
+    "cnt": 2
+  },
+  {
+    "prog_lang": "TypeScript",
+    "cnt": 2
+  }
+]

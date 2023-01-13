@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -58,6 +59,12 @@ export function mockResolvedValueOnce(data: any, options?: any) {
       ...options,
       json: () => Promise.resolve(data)
     })
+  })
+}
+
+export function mockRejectedValueOnce(reason?: any) {
+  (global.fetch as any).mockImplementationOnce(() => {
+    return Promise.reject(reason)
   })
 }
 
