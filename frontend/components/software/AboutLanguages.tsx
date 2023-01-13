@@ -1,11 +1,15 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Code from '@mui/icons-material/Code'
+import SearchIcon from '@mui/icons-material/Search'
+import Link from 'next/link'
+import {ssrSoftwareUrl} from '~/utils/postgrestUrl'
 import {ProgramingLanguages} from '../../types/SoftwareTypes'
 import logger from '../../utils/logger'
 
@@ -71,9 +75,22 @@ export default function AboutLanguages({languages}: {languages: ProgramingLangua
     <ul className="py-1">
       {/* show only stat selection pct > 0*/}
       {stats?.map((entry) => {
+        const url = ssrSoftwareUrl({prog_lang: [entry.language]})
         return (
           <li key={entry.language}>
-            {entry.language} <span className="ml-2">{entry.pct}%</span>
+            <div className="flex justify-between">
+              <span>{entry.language} {entry.pct}%</span>
+              <Link
+                title={`Click to filter for software using ${entry.language}`}
+                href={url}
+                passHref
+              >
+                <SearchIcon sx={{
+                  marginRight: '0.5rem',
+                  color:'text.secondary'
+                }} />
+              </Link>
+            </div>
             <div
               className="bg-primary"
               style={{
