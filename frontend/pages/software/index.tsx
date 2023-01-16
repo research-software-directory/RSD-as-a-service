@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,8 +10,6 @@ import {useRouter} from 'next/router'
 import {GetServerSidePropsContext} from 'next/types'
 import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import {useTheme} from '@mui/material/styles'
 
 import {app} from '../../config/app'
 import DefaultLayout from '../../components/layout/DefaultLayout'
@@ -30,6 +29,7 @@ type SoftwareIndexPageProps = {
   page: number,
   rows: number,
   keywords?: string[],
+  prog_lang?: string[],
   software: SoftwareListItem[],
   search?: string,
 }
@@ -37,7 +37,7 @@ type SoftwareIndexPageProps = {
 const pageTitle = `Software | ${app.title}`
 
 export default function SoftwareIndexPage(
-  {software=[], count, page, rows, keywords, search}: SoftwareIndexPageProps
+  {software=[], count, page, rows, keywords, prog_lang, search}: SoftwareIndexPageProps
 ) {
   // use next router (hook is only for browser)
   const router = useRouter()
@@ -94,11 +94,12 @@ export default function SoftwareIndexPage(
     router.push(url)
   }
 
-  function handleFilters(keywords: string[]){
+  function handleFilters({keywords,prog_lang}:{keywords:string[],prog_lang:string[]}){
     const url = ssrSoftwareUrl({
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
       keywords,
+      prog_lang,
       // start from first page
       page: 0,
     })
@@ -119,7 +120,8 @@ export default function SoftwareIndexPage(
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center">
             <SoftwareFilter
-              items={keywords ?? []}
+              keywords={keywords ?? []}
+              prog_lang={prog_lang ?? []}
               onApply={handleFilters}
             />
             <Searchbox
@@ -168,12 +170,13 @@ export default function SoftwareIndexPage(
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   // extract params from page-query
-  const {search, keywords, rows, page} = ssrSoftwareParams(context.query)
+  const {search, keywords, prog_lang, rows, page} = ssrSoftwareParams(context.query)
   // construct postgREST api url with query params
   const url = softwareListUrl({
     baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
     search,
     keywords,
+    prog_lang,
     order: 'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast',
     limit: rows,
     offset: rows * page,
@@ -191,6 +194,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     props: {
       search,
       keywords,
+      prog_lang,
       count: software.count,
       page,
       rows,

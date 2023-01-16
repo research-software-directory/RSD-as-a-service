@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,32 +10,51 @@ import AlertTitle from '@mui/material/AlertTitle'
 
 import FilterPopover from '~/components/filter/FilterPopover'
 import KeywordFilter from '~/components/keyword/KeywordFilter'
-import {findSoftwareWithKeyword} from './keywordForSoftware'
+import ProgrammingLanguageFilter from './ProgrammingLanguageFilter'
+import {searchForKeyword,searchForProgrammingLanguage} from './softwareFilterApi'
 
-type KeywordFilterProps = {
-  items?: string[]
-  onApply: (items: string[]) => void
+export type SoftwareFilterProps = {
+  keywords: string[],
+  prog_lang: string[],
+  onApply: ({keywords,prog_lang}:{keywords: string[],prog_lang: string[] }) => void
 }
 
 /**
  * Keywords filter component. It receives array of keywords and returns
  * array of selected tags to use in filter using onSelect callback function
  */
-export default function SoftwareFilter({items = [], onApply}: KeywordFilterProps) {
-  const [selectedKeywords, setSelectedKeywords] = useState(items)
+export default function SoftwareFilter({keywords = [], prog_lang=[], onApply}: SoftwareFilterProps) {
+  const [selectedKeywords, setSelectedKeywords] = useState(keywords)
+  const [selectedLanguages, setSelectedLanguages] = useState(prog_lang)
+  const selectedItems = [
+    ...selectedKeywords,
+    ...selectedLanguages
+  ]
 
   function onClear() {
     setSelectedKeywords([])
-    onApply([])
+    setSelectedLanguages([])
+    onApply({keywords:[],prog_lang:[]})
   }
 
-  function handleApply(items: string[]) {
-    setSelectedKeywords(items)
-    onApply(items)
+  function applyKeywords(keywords: string[]) {
+    setSelectedKeywords(keywords)
+    onApply({
+      keywords,
+      prog_lang: selectedLanguages
+    })
+  }
+
+  function applyLanguages(prog_lang: string[]) {
+    setSelectedLanguages(prog_lang)
+    onApply({
+      keywords: selectedKeywords,
+      prog_lang
+    })
   }
 
   function renderMessage() {
-    if (selectedKeywords.length === 0) {
+    if (selectedItems.length === 0) {
       return (
         <Alert severity="info" sx={{margin: '1rem'}}>
           <AlertTitle sx={{fontWeight: 500}}>No filter active</AlertTitle>
@@ -48,15 +68,20 @@ export default function SoftwareFilter({items = [], onApply}: KeywordFilterProps
   return (
     <FilterPopover
       title="Filter software"
-      filterTooltip={`Filter: ${selectedKeywords.length > 0 ? selectedKeywords.join(' + ') : 'None'}`}
-      badgeContent={selectedKeywords.length}
-      disableClear={selectedKeywords.length === 0}
+      filterTooltip={`Filter: ${selectedItems.length > 0 ? selectedItems.join(' + ') : 'None'}`}
+      badgeContent={selectedItems.length}
+      disableClear={selectedItems.length === 0}
       onClear={onClear}
     >
       <KeywordFilter
         items={selectedKeywords}
-        searchApi={findSoftwareWithKeyword}
-        onApply={handleApply}
+        searchApi={searchForKeyword}
+        onApply={applyKeywords}
+      />
+      <ProgrammingLanguageFilter
+        items={selectedLanguages}
+        searchApi={searchForProgrammingLanguage}
+        onApply={applyLanguages}
       />
       {renderMessage()}
     </FilterPopover>
