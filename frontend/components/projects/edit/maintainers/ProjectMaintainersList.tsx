@@ -1,11 +1,12 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import List from '@mui/material/List'
+import {useSession} from '~/auth'
 import logger from '~/utils/logger'
 
 import ProjectMaintainer from './ProjectMaintainer'
@@ -17,6 +18,7 @@ type ProjectMaintainerListProps = {
 }
 
 export default function ProjectMaintainersList({maintainers,onDelete}:ProjectMaintainerListProps) {
+  const {user} = useSession()
 
   if (maintainers.length === 0) {
     return (
@@ -31,6 +33,17 @@ export default function ProjectMaintainersList({maintainers,onDelete}:ProjectMai
     logger('onEdit...NOT SUPPORTED FOR MAINTAINERS','info')
   }
 
+  function isDeleteDisabled() {
+    // we allow rsd_admin to remove last mantainer too
+    if (user?.role === 'rsd_admin' && maintainers?.length > 0) {
+      return false
+    } else if (maintainers?.length > 1) {
+      // common maintainer can remove untill the last mantainer
+      return false
+    }
+    return true
+  }
+
   function renderList() {
     return maintainers.map((item, pos) => {
       return (
@@ -41,7 +54,7 @@ export default function ProjectMaintainersList({maintainers,onDelete}:ProjectMai
           onEdit={onEdit}
           onDelete={onDelete}
           // disable delete when last maintainer
-          disableDelete={maintainers?.length < 2}
+          disableDelete={isDeleteDisabled()}
         />
       )
     })
