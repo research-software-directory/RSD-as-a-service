@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +9,7 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import PersonIcon from '@mui/icons-material/Person'
 import SettingsIcon from '@mui/icons-material/Settings'
+import StyleOutlinedIcon from '@mui/icons-material/StyleOutlined'
 
 import AboutOrganisation from './about'
 import OrganisationSoftware from './software'
@@ -17,6 +18,7 @@ import OrganisationUnits from './units'
 import OrganisationMaintainers from './maintainers'
 import OrganisationSettings from './settings'
 import {OrganisationForOverview} from '~/types/Organisation'
+import SoftwareReleases from './releases'
 
 export type OrganisationComponentsProps = {
   organisation: OrganisationForOverview,
@@ -60,6 +62,15 @@ export const organisationMenu: OrganisationMenuProps[] = [
     status: 'Participating organisation',
     isVisible: (props) => true,
     showSearch: true
+  },
+  {
+    id:'releases',
+    label:({release_cnt})=>`Releases (${release_cnt ?? 0})`,
+    icon: <StyleOutlinedIcon />,
+    component: (props) => <SoftwareReleases {...props} />,
+    status: 'Software releases',
+    isVisible: (props) => true,
+    showSearch: false
   },
   {
     id:'projects',
