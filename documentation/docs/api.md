@@ -7,7 +7,9 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # API
 
-We use PostgREST for the API, see the [documentation](https://postgrest.org/en/v9.0/api.html) on how to use the API. 
+We use PostgREST for the API, see the [documentation](https://postgrest.org/en/v10.0/api.html) on how to use the API. 
+
+You can also visit the [Swagger UI here](https://research-software-directory.org/swagger/)
 
 The database diagram for [release 1.1.0](https://github.com/research-software-directory/RSD-as-a-service/releases/tag/v1.1.0) is as follows: 
 
