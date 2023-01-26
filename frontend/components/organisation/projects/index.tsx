@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,6 +16,7 @@ import ProjectCardWithMenu from './ProjectCardWithMenu'
 import ProjectCard from '~/components/projects/ProjectCard'
 import {OrganisationComponentsProps} from '../OrganisationNavItems'
 import ContentLoader from '~/components/layout/ContentLoader'
+import UserAgrementModal from '~/components/user/UserAgreementModal'
 
 export default function OrganisationProjects({organisation, isMaintainer}:OrganisationComponentsProps) {
   const {token} = useSession()
@@ -57,6 +60,7 @@ export default function OrganisationProjects({organisation, isMaintainer}:Organi
       maxWidth={maxWidth}
       className="gap-[0.125rem] p-[0.125rem] pt-2 pb-12"
     >
+      <UserAgrementModal />
       {projects.map(item => {
         if (isMaintainer) {
           return (

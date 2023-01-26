@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +12,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
+import SettingsIcon from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
 
 import {MenuItemType} from './menuItems'
@@ -38,6 +41,12 @@ const userMenuItems: MenuItemType[] = [
     type: 'divider',
     label: 'divider1'
   }, {
+    role:['rsd_admin','rsd_user'],
+    type: 'link',
+    label: 'Profile settings',
+    path: '/user/settings',
+    icon: <SettingsIcon />
+  }, {
     role:['rsd_admin'],
     type: 'link',
     label: 'Administration',
@@ -50,7 +59,7 @@ const userMenuItems: MenuItemType[] = [
     path: '/admin/orcid-whitelist',
     icon: <PlaylistAddCheckIcon />
   }, {
-    role:['rsd_admin'],
+    role:['rsd_admin','rsd_user'],
     type: 'divider',
     label: 'divider2'
   }, {

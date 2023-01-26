@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +13,7 @@ import {app} from '../../../../config/app'
 import DefaultLayout from '../../../../components/layout/DefaultLayout'
 import {EditProjectProvider} from '~/components/projects/edit/editProjectContext'
 import EditProjectPage from '~/components/projects/edit/EditProjectPage'
+import UserAgrementModal from '~/components/user/UserAgreementModal'
 
 const pageTitle = `Edit project | ${app.title}`
 
@@ -30,6 +33,7 @@ export default function ProjectEditPage() {
       <Head>
         <title>{pageTitle}</title>
       </Head>
+      <UserAgrementModal />
       {/* form provider to share isValid, isDirty states in the header */}
       <FormProvider {...methods}>
         {/* edit project context is share project info between pages */}

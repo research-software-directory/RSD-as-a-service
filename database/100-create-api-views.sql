@@ -3,6 +3,8 @@
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -1547,3 +1549,19 @@ END
 $$;
 
 
+-- Check whether user agreed on Terms of Service and read the Privacy Statement
+CREATE FUNCTION user_agreements_stored(account_id UUID) RETURNS BOOLEAN LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN (
+		SELECT (
+			account.agree_terms = TRUE AND
+			account.notice_privacy_statement = TRUE
+		)
+		FROM
+			account
+		WHERE
+			account.id = account_id
+	);
+END
+$$;
