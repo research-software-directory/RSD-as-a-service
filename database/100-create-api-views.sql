@@ -1,4 +1,4 @@
--- SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -437,6 +437,30 @@ BEGIN
 END
 $$;
 
+-- Software releases count by organisation
+CREATE FUNCTION release_cnt_by_organisation() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	release_cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN RETURN QUERY
+	SELECT
+		organisations_of_software.id,
+		organisations_of_software.slug,
+		COUNT("release_content".id) AS release_cnt
+	FROM
+		"release"
+	INNER JOIN
+		release_content ON release_content.release_id="release".id
+	INNER JOIN
+		organisations_of_software("release".software) ON "release".software = organisations_of_software.software
+	GROUP BY
+		organisations_of_software.id,organisations_of_software.slug
+	;
+END
+$$;
+
 -- Organisations overview
 -- we pass public param to count functions to get public/private count
 -- public count is default,
@@ -455,6 +479,7 @@ CREATE FUNCTION organisations_overview(public BOOLEAN DEFAULT TRUE) RETURNS TABL
 	software_cnt BIGINT,
 	project_cnt BIGINT,
 	children_cnt BIGINT,
+	release_cnt BIGINT,
 	score BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
@@ -474,6 +499,7 @@ BEGIN
 		software_count_by_organisation.software_cnt,
 		project_count_by_organisation.project_cnt,
 		children_count_by_organisation.children_cnt,
+		release_cnt_by_organisation.release_cnt,
 		(
 			COALESCE(software_count_by_organisation.software_cnt,0) +
 			COALESCE(project_count_by_organisation.project_cnt,0)
@@ -488,6 +514,8 @@ BEGIN
 		project_count_by_organisation(public) ON project_count_by_organisation.organisation = organisation.id
 	LEFT JOIN
 		children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
+	LEFT JOIN
+		release_cnt_by_organisation() ON release_cnt_by_organisation.id = organisation.id
 	;
 END
 $$;
@@ -1477,3 +1505,45 @@ BEGIN RETURN QUERY
 		display_name ASC;
 END
 $$;
+
+-- Software releases
+-- release info is scraped from Zenodo
+-- one software belongs to multiple organisations
+CREATE FUNCTION software_release() RETURNS TABLE (
+	software_id UUID,
+	software_slug VARCHAR,
+	software_name VARCHAR,
+	release_doi CITEXT,
+	release_tag VARCHAR,
+	release_date DATE,
+	release_year INT,
+	release_info VARCHAR,
+	organisation_slug VARCHAR[]
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN RETURN QUERY
+	SELECT
+		software.id AS software_id,
+		software.slug AS software_slug,
+		software.brand_name AS software_name,
+		release_content.doi AS release_doi,
+		release_content.tag AS release_tag,
+		release_content.date_published AS release_date,
+		DATE_PART('year',release_content.date_published)::INT AS release_year,
+		release_content.schema_dot_org AS release_info,
+		ARRAY_AGG(organisations_of_software.slug) AS organisation_slug
+	FROM
+		release_content
+	LEFT JOIN
+		"release" ON "release".id = release_content.release_id
+	LEFT JOIN
+		software ON software.id = "release".software
+	INNER JOIN
+		organisations_of_software(software.id) ON software.id = organisations_of_software.software
+	GROUP BY
+		software.id,release_content.doi,release_content.tag,release_content.date_published,release_content.schema_dot_org
+	;
+END
+$$;
+
+
