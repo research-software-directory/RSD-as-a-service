@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
 --
@@ -383,7 +383,10 @@ CREATE POLICY admin_all_rights ON research_domain_for_project TO rsd_admin
 ALTER TABLE mention ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON mention FOR SELECT TO rsd_web_anon, rsd_user
-	USING (id IN (SELECT mention FROM mention_for_software) OR id IN (SELECT mention FROM output_for_project) OR id IN (SELECT mention FROM impact_for_project));
+	USING (id IN (SELECT mention FROM mention_for_software)
+		OR id IN (SELECT mention FROM output_for_project)
+		OR id IN (SELECT mention FROM impact_for_project)
+		OR id IN (SELECT mention_id FROM release_version));
 
 CREATE POLICY maintainer_can_read ON mention FOR SELECT TO rsd_user
 	USING (TRUE);
@@ -455,15 +458,15 @@ CREATE POLICY admin_all_rights ON release TO rsd_admin
 	WITH CHECK (TRUE);
 
 
-ALTER TABLE release_content ENABLE ROW LEVEL SECURITY;
+ALTER TABLE release_version ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON release_content FOR SELECT TO rsd_web_anon, rsd_user
-	USING (release_id IN (SELECT id FROM release));
+CREATE POLICY anyone_can_read ON release_version FOR SELECT TO rsd_web_anon, rsd_user
+	USING (release_id IN (SELECT software FROM release));
 
-CREATE POLICY maintainer_select ON release_content FOR SELECT TO rsd_user
-	USING (release_id IN (SELECT id FROM release));
+CREATE POLICY maintainer_select ON release_version FOR SELECT TO rsd_user
+	USING (release_id IN (SELECT software FROM release));
 
-CREATE POLICY admin_all_rights ON release_content TO rsd_admin
+CREATE POLICY admin_all_rights ON release_version TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 

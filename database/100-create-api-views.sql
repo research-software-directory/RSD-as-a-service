@@ -1,8 +1,8 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
--- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
@@ -450,15 +450,15 @@ BEGIN RETURN QUERY
 	SELECT
 		organisations_of_software.id,
 		organisations_of_software.slug,
-		COUNT("release_content".id) AS release_cnt
+		COUNT(*) AS release_cnt
 	FROM
 		"release"
 	INNER JOIN
-		release_content ON release_content.release_id="release".id
+		release_version ON release_version.release_id="release".software
 	INNER JOIN
 		organisations_of_software("release".software) ON "release".software = organisations_of_software.software
 	GROUP BY
-		organisations_of_software.id,organisations_of_software.slug
+		organisations_of_software.id, organisations_of_software.slug
 	;
 END
 $$;
@@ -1518,8 +1518,8 @@ CREATE FUNCTION software_release() RETURNS TABLE (
 	release_doi CITEXT,
 	release_tag VARCHAR,
 	release_date DATE,
-	release_year INT,
-	release_info VARCHAR,
+	release_year SMALLINT,
+	release_authors VARCHAR,
 	organisation_slug VARCHAR[]
 ) LANGUAGE plpgsql STABLE AS
 $$
@@ -1528,22 +1528,24 @@ BEGIN RETURN QUERY
 		software.id AS software_id,
 		software.slug AS software_slug,
 		software.brand_name AS software_name,
-		release_content.doi AS release_doi,
-		release_content.tag AS release_tag,
-		release_content.date_published AS release_date,
-		DATE_PART('year',release_content.date_published)::INT AS release_year,
-		release_content.schema_dot_org AS release_info,
+		mention.doi AS release_doi,
+		mention.version AS release_tag,
+		mention.publication_date AS release_date,
+		mention.publication_year AS release_year,
+		mention.authors AS release_authors,
 		ARRAY_AGG(organisations_of_software.slug) AS organisation_slug
 	FROM
-		release_content
-	LEFT JOIN
-		"release" ON "release".id = release_content.release_id
-	LEFT JOIN
+		release_version
+	INNER JOIN
+		"release" ON "release".software = release_version.release_id
+	INNER JOIN
 		software ON software.id = "release".software
 	INNER JOIN
+		mention ON mention.id = release_version.mention_id
+	LEFT JOIN
 		organisations_of_software(software.id) ON software.id = organisations_of_software.software
 	GROUP BY
-		software.id,release_content.doi,release_content.tag,release_content.date_published,release_content.schema_dot_org
+		software_id, release_doi, release_tag, release_date, release_year, release_authors
 	;
 END
 $$;

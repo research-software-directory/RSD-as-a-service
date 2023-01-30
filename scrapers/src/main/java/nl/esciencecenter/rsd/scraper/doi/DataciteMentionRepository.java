@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,13 +13,17 @@ import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class DataciteMentionRepository implements MentionRepository {
@@ -34,11 +38,18 @@ public class DataciteMentionRepository implements MentionRepository {
 			        resourceTypeGeneral
 			      }
 			      version
+			      relatedIdentifiers {
+			        relatedIdentifier
+			        relatedIdentifierType
+			      }
 			      titles(first: 1) {
 			        title
 			      }
 			      publisher
 			      publicationYear
+			      dates {
+			        date
+			      }
 			      creators {
 			        givenName
 			        familyName
@@ -53,6 +64,7 @@ public class DataciteMentionRepository implements MentionRepository {
 
 	private static final Map<String, MentionType> dataciteTypeMap;
 	private static final Map<String, MentionType> dataciteTextTypeMap;
+	private static final Pattern URL_TREE_TAG_PATTERN = Pattern.compile("/tree/([^/]+)$");
 
 	static {
 //		https://schema.datacite.org/meta/kernel-4.4/
@@ -105,7 +117,7 @@ public class DataciteMentionRepository implements MentionRepository {
 		JsonObject root = JsonParser.parseString(json).getAsJsonObject();
 		JsonArray worksJson = root.getAsJsonObject("data").getAsJsonObject("works").getAsJsonArray("nodes");
 		Collection<MentionRecord> mentions = new ArrayList<>();
-		Set<String> usedDois = new HashSet<>();
+		Set<String> usedDois = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 		for (JsonElement work : worksJson) {
 			try {
 //				Sometimes, DataCite gives back two of the same results for one DOI, e.g. for 10.4122/1.1000000817,
@@ -142,6 +154,11 @@ public class DataciteMentionRepository implements MentionRepository {
 
 		result.publisher = Utils.stringOrNull(work.get("publisher"));
 		result.publicationYear = Utils.integerOrNull(work.get("publicationYear"));
+		JsonArray dates = work.getAsJsonArray("dates");
+		if (!dates.isEmpty()) {
+			result.publicationDate = LocalDate.parse(dates.get(0).getAsJsonObject().getAsJsonPrimitive("date").getAsString());
+		}
+
 		String dataciteResourceTypeGeneral = Utils.stringOrNull(work.getAsJsonObject("types").get("resourceTypeGeneral"));
 		if (dataciteResourceTypeGeneral != null && dataciteResourceTypeGeneral.equals("Text")) {
 			String dataciteResourceType = Utils.stringOrNull(work.getAsJsonObject("types").get("resourceType"));
@@ -151,6 +168,23 @@ public class DataciteMentionRepository implements MentionRepository {
 			result.mentionType = dataciteTypeMap.getOrDefault(dataciteResourceTypeGeneral, MentionType.other);
 		}
 		result.source = "DataCite";
+		result.version = Utils.stringOrNull(work.get("version"));
+		// if the version is null, we can often get the version from a linked Git URL which ends in "/tree/{tag}"
+		if (result.version == null) {
+			JsonArray relatedIdentifiers = work.getAsJsonArray("relatedIdentifiers");
+			for (JsonElement relatedIdentifier : relatedIdentifiers) {
+				String relatedIdentifierString = Utils.stringOrNull(relatedIdentifier.getAsJsonObject().get("relatedIdentifier"));
+				String relatedIdentifierType = Utils.stringOrNull(relatedIdentifier.getAsJsonObject().get("relatedIdentifierType"));
+				if (relatedIdentifierString != null && relatedIdentifierType != null && relatedIdentifierType.equals("URL")) {
+					Matcher tagMatcher = URL_TREE_TAG_PATTERN.matcher(relatedIdentifierString);
+					if (tagMatcher.find()) {
+						result.version = tagMatcher.group(1);
+						break;
+					}
+				}
+			}
+		}
+
 		result.scrapedAt = Instant.now();
 		return result;
 	}
@@ -180,7 +214,7 @@ public class DataciteMentionRepository implements MentionRepository {
 	}
 
 	@Override
-	public void save(Collection<MentionRecord> mentions) {
+	public Map<String, UUID> save(Collection<MentionRecord> mentions) {
 		throw new UnsupportedOperationException();
 	}
 

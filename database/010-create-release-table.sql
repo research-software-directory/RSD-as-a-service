@@ -1,101 +1,39 @@
--- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
 
 CREATE TABLE release (
-	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	software UUID REFERENCES software (id) UNIQUE NOT NULL,
-	is_citable BOOLEAN,
-	latest_schema_dot_org VARCHAR,
-	releases_scraped_at TIMESTAMPTZ,
-	created_at TIMESTAMPTZ NOT NULL,
-	updated_at TIMESTAMPTZ NOT NULL
+	software UUID REFERENCES software (id) PRIMARY KEY,
+	releases_scraped_at TIMESTAMPTZ
 );
 
 
-CREATE FUNCTION sanitise_insert_release() RETURNS TRIGGER LANGUAGE plpgsql AS
-$$
-BEGIN
-	NEW.id = gen_random_uuid();
-	NEW.created_at = LOCALTIMESTAMP;
-	NEW.updated_at = NEW.created_at;
-	return NEW;
-END
-$$;
-
-CREATE TRIGGER sanitise_insert_release BEFORE INSERT ON release FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_release();
-
-
-CREATE FUNCTION sanitise_update_release() RETURNS TRIGGER LANGUAGE plpgsql AS
-$$
-BEGIN
-	NEW.id = OLD.id;
-	NEW.created_at = OLD.created_at;
-	NEW.updated_at = LOCALTIMESTAMP;
-	return NEW;
-END
-$$;
-
-CREATE TRIGGER sanitise_update_release BEFORE UPDATE ON release FOR EACH ROW EXECUTE PROCEDURE sanitise_update_release();
+CREATE TABLE release_version (
+	release_id UUID REFERENCES release (software),
+	mention_id UUID REFERENCES mention (id),
+	PRIMARY KEY (release_id, mention_id)
+);
 
 
 CREATE FUNCTION software_join_release() RETURNS TABLE (
 	software_id UUID,
 	slug VARCHAR,
 	concept_doi CITEXT,
-	release_id UUID,
+	versioned_dois CITEXT[],
 	releases_scraped_at TIMESTAMPTZ
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	RETURN QUERY SELECT software.id AS software_id, software.slug, software.concept_doi, release.id AS release_id, release.releases_scraped_at FROM software LEFT JOIN RELEASE ON software.id = RELEASE.software;
+	RETURN QUERY
+		SELECT software.id AS software_id, software.slug, software.concept_doi, ARRAY_AGG(mention.doi), release.releases_scraped_at
+		FROM software
+		LEFT JOIN release ON software.id = release.software
+		LEFT JOIN release_version ON release_version.release_id = release.software
+		LEFT JOIN mention ON release_version.mention_id = mention.id
+		GROUP BY software.id, software.slug, software.concept_doi, release.software, release.releases_scraped_at;
 	RETURN;
 END
 $$;
-
-
-CREATE TYPE citability AS ENUM (
-	'doi-only',
-	'full'
-);
-
-CREATE TABLE release_content (
-	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	release_id UUID REFERENCES release (id) NOT NULL,
-	citability citability NOT NULL,
-	date_published DATE NOT NULL,
-	doi CITEXT NOT NULL UNIQUE CHECK (doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(doi) <= 255),
-	tag VARCHAR NOT NULL,
-	url VARCHAR NOT NULL,
-	bibtex VARCHAR,
-	cff VARCHAR,
-	codemeta VARCHAR,
-	endnote VARCHAR,
-	ris VARCHAR,
-	schema_dot_org VARCHAR
-);
-
-
-CREATE FUNCTION sanitise_insert_release_content() RETURNS TRIGGER LANGUAGE plpgsql AS
-$$
-BEGIN
-	NEW.id = gen_random_uuid();
-	return NEW;
-END
-$$;
-
-CREATE TRIGGER sanitise_insert_release_content BEFORE INSERT ON release_content FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_release_content();
-
-
-CREATE FUNCTION sanitise_update_release_content() RETURNS TRIGGER LANGUAGE plpgsql AS
-$$
-BEGIN
-	NEW.id = OLD.id;
-	return NEW;
-END
-$$;
-
-CREATE TRIGGER sanitise_update_release_content BEFORE UPDATE ON release_content FOR EACH ROW EXECUTE PROCEDURE sanitise_update_release_content();
