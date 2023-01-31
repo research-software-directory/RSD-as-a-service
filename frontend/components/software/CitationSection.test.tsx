@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -35,7 +35,7 @@ describe('with dummy data',()=>{
 
   it('should render first release doi',()=>{
     // get doi from dummy data
-    const firstDoi = citationInfo.release_content[0].doi
+    const firstDoi = citationInfo[0].release_doi
     // find it
     const doi = screen.getByText(firstDoi)
     // assert

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +7,7 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {extractParam, Error} from '~/utils/apiHelpers'
 import logger from '../../../../utils/logger'
+import {citationOptions} from '~/components/software/citationFormats'
 
 type Data = {
   name: string,
@@ -23,24 +24,40 @@ export default async function handler(
 ){
   try{
     // extract query parameters
-    const id = extractParam(req,'id')
+    const doi = extractParam(req,'doi')
     const format = extractParam(req,'f')
-    const type = extractParam(req, 't')
     const name = extractParam(req, 'n')
 
+    // validate download format
+    if (citationOptions.hasOwnProperty(format) === false) {
+      logger(`NextApi.v1.cite: uknown format ${format}`, 'error')
+      // query not found
+      res.status(400).json({
+        message: `Download format ${format} NOT SUPPORTED!`
+      })
+    }
+
+    const contentType = citationOptions[format].contentType
+
+    // console.log('contentType...',contentType)
+
     // make request to postgREST api
-    const url = `${process.env.POSTGREST_URL}/release_content?select=${format}&id=eq.${id}`
-    const resp = await fetch(url,{method:'GET'})
+    const url = `https://doi.org/${doi}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': contentType
+      }
+    })
 
     // send reponse back
     if (resp.status===200){
-      const data:any[] = await resp.json()
-      const content = data[0][format]
+      const data:any = await resp.text()
       // add reponse headers
       res.setHeader('Content-Disposition',`attachment; filename=${name}`)
-      res.setHeader('Content-Type',type)
+      res.setHeader('Content-Type', contentType)
       // send content
-      res.status(200).send(content)
+      res.status(200).send(data)
     } else if (resp.status===404){
       logger(`NextApi.v1.cite: 404 [${url}]`,'error')
       // query not found
