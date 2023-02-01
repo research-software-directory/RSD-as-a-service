@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,7 +28,7 @@ export default function SortableTeamMemberList({members, onEdit, onDelete, onSor
 		return (
 		  <Alert severity="warning" sx={{marginTop:'0.5rem'}}>
         <AlertTitle sx={{fontWeight:500}}>No team members</AlertTitle>
-        Add team member using <strong>search form!</strong>
+        Add team member using the <strong>search form!</strong>
 		  </Alert>
 		)
 	}
