@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -43,9 +43,13 @@ const userMenuItems: MenuItemType[] = [
   }, {
     role:['rsd_admin','rsd_user'],
     type: 'link',
-    label: 'Profile settings',
+    label: 'My settings',
     path: '/user/settings',
     icon: <SettingsIcon />
+  }, {
+    role:['rsd_admin'],
+    type: 'divider',
+    label: 'divider2'
   }, {
     role:['rsd_admin'],
     type: 'link',
@@ -61,7 +65,7 @@ const userMenuItems: MenuItemType[] = [
   }, {
     role:['rsd_admin','rsd_user'],
     type: 'divider',
-    label: 'divider2'
+    label: 'divider3'
   }, {
     role:['rsd_admin','rsd_user'],
     label: 'Logout',

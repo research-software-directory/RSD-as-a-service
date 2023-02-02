@@ -54,7 +54,8 @@ export default function OrganisationSoftware({organisation, isMaintainer}: Organ
       minWidth={minWidth}
       maxWidth={maxWidth}
     >
-      <UserAgrementModal />
+      {/* Only when maintainer */}
+      {isMaintainer && <UserAgrementModal />}
       {software.map(item => {
         if (isMaintainer) {
           return(

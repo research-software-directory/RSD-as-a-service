@@ -60,7 +60,8 @@ export default function OrganisationProjects({organisation, isMaintainer}:Organi
       maxWidth={maxWidth}
       className="gap-[0.125rem] p-[0.125rem] pt-2 pb-12"
     >
-      <UserAgrementModal />
+      {/* Only when maintainer */}
+      {isMaintainer && <UserAgrementModal />}
       {projects.map(item => {
         if (isMaintainer) {
           return (

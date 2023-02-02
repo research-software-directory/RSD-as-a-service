@@ -37,7 +37,7 @@ type EditOrganisationModal = {
   organisation?: EditOrganisation
 }
 
-export default function ResearchUnits({organisation}: OrganisationComponentsProps) {
+export default function ResearchUnits({organisation,isMaintainer}: OrganisationComponentsProps) {
   const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {units, setUnits, loading} = useOrganisationUnits({
@@ -221,7 +221,8 @@ export default function ResearchUnits({organisation}: OrganisationComponentsProp
 
   return (
     <section className="flex-1 flex flex-col">
-      <UserAgrementModal />
+      {/* Only when maintainer */}
+      {isMaintainer && <UserAgrementModal />}
       <section className="flex justify-between py-4">
         <h2>Research Units ({units.length ?? 0})</h2>
         {renderAddBtn()}
