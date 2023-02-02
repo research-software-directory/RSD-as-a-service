@@ -9,10 +9,9 @@ import useRsdSettings from '~/config/useRsdSettings'
 import Link from 'next/link'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import {useFormContext} from 'react-hook-form'
-import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
-import logger from '~/utils/logger'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {useSession} from '~/auth'
+import {patchAccountTable} from './patchAccountTable'
 
 type UserAgreementFormProps = {
   agreeTerms: boolean,
@@ -96,32 +95,4 @@ export default function UserAgreementForm({agreeTerms, noticePrivacyStatement, s
       </div>
     </form>
   )
-}
-
-type PatchAccountTableProps = {
-  account: string,
-  data: {
-    [key:string]: any
-  },
-  token: string
-}
-
-export async function patchAccountTable({account, data, token}: PatchAccountTableProps) {
-  try {
-    const url = `/api/v1/account?id=eq.${account}`
-    const resp = await fetch(url, {
-      method: 'PATCH',
-      headers: {
-        ...createJsonHeaders(token)
-      },
-      body: JSON.stringify(data)
-    })
-    return extractReturnMessage(resp, account)
-  } catch (e: any) {
-    logger(`patchAccountTable failed ${e.message}`, 'error')
-    return {
-      status: 500,
-      message: e.message
-    }
-  }
 }

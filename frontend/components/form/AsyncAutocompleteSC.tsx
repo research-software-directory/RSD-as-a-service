@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -10,7 +10,9 @@
 
 import {useState, ReactNode, HTMLAttributes, SyntheticEvent, useEffect} from 'react'
 import Autocomplete, {AutocompleteChangeReason, AutocompleteInputChangeReason, AutocompleteRenderOptionState} from '@mui/material/Autocomplete'
-import {CircularProgress, FilterOptionsState, TextField} from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
+import {FilterOptionsState} from '@mui/material/useAutocomplete'
+import TextField from '@mui/material/TextField'
 
 import {useDebounce} from '~/utils/useDebounce'
 

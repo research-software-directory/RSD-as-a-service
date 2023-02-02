@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
@@ -10,7 +10,7 @@ import * as d3 from 'd3'
 import {useRef, useEffect, useState} from 'react'
 import useResizeObserver,{SizeType} from './useResizeObserver'
 import logger from '../../../utils/logger'
-import {useTheme} from '@mui/material'
+import useTheme from '@mui/material/styles/useTheme'
 
 export type Point = {x: number, y: number}
 

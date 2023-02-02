@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +9,9 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import OrganisationProjects from './index'
 import mockOrganisation from '../__mocks__/mockOrganisation'
 import mockProjects from './__mocks__/mockProjects.json'
+
+// mock user agreement call
+jest.mock('~/components/user/settings/fetchAgreementStatus')
 
 const mockProps = {
   organisation: mockOrganisation,

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +9,7 @@ import {
 } from '@dnd-kit/core'
 import {restrictToParentElement, restrictToVerticalAxis} from '@dnd-kit/modifiers'
 import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
-import {List} from '@mui/material'
+import List from '@mui/material/List'
 
 type RequiredProps = {
   id: string | null,

@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -17,6 +18,8 @@ import mockProjectToEdit from '~/components/projects/edit/information/__mocks__/
 // MOCKS
 // we mock default providers used in page header
 jest.mock('~/auth/api/useLoginProviders')
+// mock user agreement call
+jest.mock('~/components/user/settings/fetchAgreementStatus')
 
 // MOCK isMaintainerOf
 const mockIsMaintainer = jest.fn(props => Promise.resolve(false))

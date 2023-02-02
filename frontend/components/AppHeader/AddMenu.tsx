@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +10,8 @@ import MenuItem from '@mui/material/MenuItem'
 import AddIcon from '@mui/icons-material/Add'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
-import {IconButton, ListItemIcon} from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
 import CaretIcon from '~/components/icons/caret.svg'
 import useDisableScrollLock from '~/utils/useDisableScrollLock'
 

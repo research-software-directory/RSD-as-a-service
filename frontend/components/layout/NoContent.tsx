@@ -1,13 +1,15 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useRef, useState} from 'react'
 import styled from '@emotion/styled'
 import DoDisturbIcon from '@mui/icons-material/DoDisturb'
-import {Box, Theme} from '@mui/material'
+import Box from '@mui/material/Box'
+import {Theme} from '@mui/material/styles/createTheme'
 import Slide from '@mui/material/Slide'
+
 
 const NoContentText = styled('h2')(({theme}:{theme?:Theme}) => ({
   fontWeight: 500,

@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -22,7 +22,7 @@ import OrganisationMaintainerLink from './OrganisationMaintainerLink'
 import {OrganisationForOverview} from '~/types/Organisation'
 import OrganisationMaintainersList from './OrganisationMaintainersList'
 import ProtectedOrganisationPage from '../ProtectedOrganisationPage'
-import UserAgrementModal from '~/components/user/UserAgreementModal'
+import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
 
 type DeleteModal = {
   open: boolean,

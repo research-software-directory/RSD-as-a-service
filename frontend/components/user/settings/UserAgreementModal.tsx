@@ -7,21 +7,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
-import {
-  Button,
-  Dialog, DialogActions, DialogContent,
-  DialogTitle, useMediaQuery
-} from '@mui/material'
+import {useRouter} from 'next/router'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import CheckIcon from '@mui/icons-material/Check'
 import InfoIcon from '@mui/icons-material/Info'
 
 import {useSession} from '~/auth'
-import UserAgreementForm, {patchAccountTable} from './settings/UserAgreementForm'
+import UserAgreementForm from './UserAgreementForm'
 import {FormProvider, useForm} from 'react-hook-form'
-import {useGetUserAgreementStatus} from './settings/useGetUserAgreementStatus'
+import {useGetUserAgreementStatus} from './useGetUserAgreementStatus'
 import {UserSettingsType} from '~/types/SoftwareTypes'
-import {useRouter} from 'next/router'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import {patchAccountTable} from './patchAccountTable'
 
 export default function UserAgrementModal() {
   const {token,user} = useSession()
@@ -60,7 +62,7 @@ export default function UserAgrementModal() {
 
   return (
     <Dialog
-      data-testid="conform-delete-modal"
+      data-testid="user-agreement-modal"
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}

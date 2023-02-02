@@ -32,6 +32,16 @@
     "no-multi-spaces": [
       "warn"
     ],
-    "no-multiple-empty-lines": "warn"
+    "no-multiple-empty-lines": "warn",
+    // use direct imports on material-ui to improve
+    // performance in unit tests with jest
+    // see https://blog.bitsrc.io/why-is-my-jest-suite-so-slow-2a4859bb9ac0
+    "no-restricted-imports": [
+      "warn",
+      {
+        "name": "@mui/material",
+        "message": "Please use \"import foo from '@mui/material/foo'\" instead."
+      }
+    ]
   }
 }

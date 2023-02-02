@@ -1,8 +1,9 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import DownloadIcon from '@mui/icons-material/Download'
 
@@ -16,7 +17,6 @@ import {postContributor} from '~/utils/editContributors'
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {getDisplayName} from '~/utils/getDisplayName'
-import {CircularProgress} from '@mui/material'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
 type GetContributorsFromDoiProps = {
