@@ -56,8 +56,12 @@ export default function UserAgrementModal() {
     })
   }
 
-  function onClose() {
-    setOpen(false)
+  function onClose(event?:any,reason?:'backdropClick' | 'escapeKeyDown') {
+    if (typeof reason==='undefined') {
+      // we do not close modal on backdrop click or escape key
+      // only when user clicks on Cancel button the reason is undefined
+      setOpen(false)
+    }
   }
 
   return (
@@ -97,6 +101,7 @@ export default function UserAgrementModal() {
             />
           </FormProvider>
         }
+        <p>You may view or modify your agreement at any time in your profile settings.</p>
       </DialogContent>
 
         <DialogActions sx={{

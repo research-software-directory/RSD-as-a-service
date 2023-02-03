@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -113,7 +113,9 @@ export async function openEditSection(page:Page,name:string) {
 }
 
 export async function addOrganisation(page, organisation: Organisation, apiUrl) {
-  const findOrganisation = page.getByLabel('Find or add organisation')
+
+  // const findOrganisation = page.getByLabel('Find or add organisation')
+  const findOrganisation = page.getByRole('combobox', {name: 'Find or add organisation'})
 
   // check if no organisation message is present
   const alert = await page.getByRole('alert')
@@ -154,7 +156,7 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
   const options = page.getByTestId('find-organisation-option')
   const option = await options
     .filter({
-      hasText:RegExp(organisation.name)
+      hasText:RegExp(organisation.name,'i')
     })
     .first()
   const source = await option.getByTestId('organisation-list-item-source').textContent()
@@ -222,19 +224,26 @@ export async function addCitation(page, input:string, waitForResponse:string) {
     findMention.fill(input),
   ])
 
-  // select first options
-  const option = page.getByRole('option', {
-    name: input
-  })
+  // get list
+  const listbox = page.locator('#async-autocomplete-listbox')
+  // select all options
+  const options = listbox.getByRole('option')
+  const option = await options
+    .filter({
+      hasText: RegExp(input,'i')
+    })
+    .first()
+
   await Promise.all([
     page.waitForResponse(RegExp(waitForResponse)),
-    option.first().click(),
+    option.click(),
   ])
 
   // validate
-  const mentions = page.getByTestId('mention-item-base').filter({
-    name: input
-  })
+  const mentions = page.getByTestId('mention-item-base')
+    .filter({
+      hasText: RegExp(input,'i')
+    })
   // we should have at least one item
   expect(await mentions.count()).toBeGreaterThan(0)
 
