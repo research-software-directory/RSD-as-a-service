@@ -1,18 +1,57 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 /**
  * Citation file formats supported by RSD
- * These items are used by
  */
-export const citationFormats = [
-  {label:'BibTex',format:'bibtex',contentType:'application/x-bibtex',ext:'bib'},
-  {label:'EndNote',format:'endnote',contentType:'text/plain',ext:'enw'},
-  {label:'RIS',format:'ris',contentType:'application/x-research-info-systems',ext:'ris'},
-  {label:'CodeMeta',format:'codemeta',contentType:'application/json',ext:'json'},
-  {label:'Citation File Format',format:'cff',contentType:'text/yaml',ext:'cff'}
-]
 
-export type CitationFormatType = typeof citationFormats[0]
+// type DownloadFormat = 'bibtex' | 'codemeta' | 'jats' | 'ris' | 'apa' | 'mla'
+
+export type CitationDownloadFormat = {
+  [key: string]: {
+    label: string
+    contentType: string
+    ext: string
+  }
+}
+
+export const citationOptions: CitationDownloadFormat = {
+  bibtex: {
+    label: 'BibTex',
+    contentType: 'application/x-bibtex',
+    ext: 'bib'
+  },
+  codemeta: {
+    label: 'CodeMeta',
+    contentType: 'application/vnd.codemeta.ld+json',
+    ext: 'codemeta.json'
+  },
+  citeproc: {
+    label: 'CSL-JSON',
+    contentType: 'application/vnd.citationstyles.csl+json',
+    ext: 'csl.json'
+  },
+  apa: {
+    label: 'CSL-APA',
+    contentType: 'text/x-bibliography;style=apa',
+    ext: 'apa.txt'
+  },
+  mla: {
+    label: 'CSL-MLA',
+    contentType: 'text/x-bibliography;style=mla',
+    ext: 'mla.txt'
+  },
+  jats: {
+    label: 'JATS',
+    contentType: 'application/vnd.jats+xml',
+    ext: 'jats.xml'
+  },
+  ris: {
+    label: 'RIS',
+    contentType: 'application/x-research-info-systems',
+    ext: 'ris'
+  },
+}
+

@@ -45,7 +45,7 @@ export default function ReleaseItem({release}: { release: SoftwareReleaseInfo })
             >
             <Chip
               title="Link to DOI page"
-              label={release.release_tag}
+              label={release.release_tag ?? 'v?.?.?'}
               icon={<OpenInNewIcon />}
               size="small"
               clickable
@@ -64,8 +64,8 @@ export default function ReleaseItem({release}: { release: SoftwareReleaseInfo })
             </Link>
           </div>
           {/* authors, contributors */}
-          {release.person.length > 0 ?
-            <div className="text-sm text-base-content-secondary pt-1">{ release.person.join(', ')}</div>
+          {release.release_authors.length > 0 ?
+            <div className="text-sm text-base-content-secondary pt-1">{ release.release_authors}</div>
             : null
           }
           {/* DOI */}

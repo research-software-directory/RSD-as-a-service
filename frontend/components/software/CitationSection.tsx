@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,39 +11,46 @@ import PageContainer from '../layout/PageContainer'
 import CiteDropdown from './CiteDropdown'
 import CitationDoi from './CitationDoi'
 import CitationDownload from './CitationDownload'
-import {SoftwareCitationInfo,SoftwareCitationContent} from '../../types/SoftwareCitation'
+// import {SoftwareCitationInfo,SoftwareCitationContent} from '../../types/SoftwareCitation'
+import {SoftwareReleaseInfo} from '../organisation/releases/useSoftwareReleases'
 
 export default function CitationSection({citationInfo,concept_doi}:
-  {citationInfo:SoftwareCitationInfo, concept_doi:string|null}) {
+  {citationInfo:SoftwareReleaseInfo[]|null, concept_doi:string|null}) {
   const [version, setVersion]=useState('')
-  const [citation, setCitation] = useState<SoftwareCitationContent>()
+  const [citation, setCitation] = useState<SoftwareReleaseInfo>()
 
   useEffect(()=>{
     // select first option by default
-    if (citationInfo?.release_content?.length > 0){
+    if (citationInfo && citationInfo.length > 0){
       setVersion('0')
-      setCitation(citationInfo?.release_content[0])
+      setCitation(citationInfo[0])
     }
   },[citationInfo])
 
-  // do not render section if no data or not citable
-  if (!citationInfo || citationInfo.is_citable === false) {
+  // do not render section if no release data
+  if (typeof citationInfo==='undefined' || citationInfo===null || citationInfo.length===0) {
     // only return spacer
     return (
       <section className="py-4"></section>
     )
   }
   // prepare release versions
-  const versions = citationInfo?.release_content?.map((item,pos)=>{
-    return {label:item.tag,value:`${pos}`}
+  const versions = citationInfo?.map((item, pos) => {
+    if (item?.release_tag) {
+      return {label:item?.release_tag,value:`${pos}`}
+    } else {
+      return {label: item.release_doi,value:`${pos}`}
+    }
   })
 
   function onVersionChange({target}:{target:SelectChangeEvent['target']}){
     const pos = parseInt(target?.value)
-    const cite = citationInfo?.release_content[pos]
-    // update local state
-    setVersion(target?.value)
-    setCitation(cite)
+    if (citationInfo) {
+      const cite = citationInfo[pos]
+      // update local state
+      setVersion(target?.value)
+      setCitation(cite)
+    }
   }
 
   // render section
@@ -68,12 +75,9 @@ export default function CitationSection({citationInfo,concept_doi}:
           }
         </div>
         <div className="flex-[3] flex flex-col justify-between md:px-4">
-          <CitationDoi doi={citation?.doi ?? concept_doi ?? ''} />
-          { // only when citability full
-            citation?.citability==='full' ?
-            <CitationDownload citation={citation} />
-            :null
-          }
+          <CitationDoi doi={citation?.release_doi ?? concept_doi ?? ''} />
+          {/* NOTE! temporarly dissabled  */}
+          <CitationDownload doi={citation?.release_doi ?? concept_doi ?? ''} />
         </div>
         </DarkThemeSection>
       </article>

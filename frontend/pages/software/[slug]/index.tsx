@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -51,18 +51,18 @@ import {
   KeywordForSoftware, License, RepositoryInfo,
   SoftwareItem, SoftwareListItem
 } from '~/types/SoftwareTypes'
-import {SoftwareCitationInfo} from '~/types/SoftwareCitation'
 import {Contributor} from '~/types/Contributor'
 import {Testimonial} from '~/types/Testimonial'
 import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
 import NoContent from '~/components/layout/NoContent'
+import {SoftwareReleaseInfo} from '~/components/organisation/releases/useSoftwareReleases'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
   software: SoftwareItem
-  citationInfo: SoftwareCitationInfo
+  citationInfo: SoftwareReleaseInfo[]
   keywords: KeywordForSoftware[]
   licenseInfo: License[]
   repositoryInfo: RepositoryInfo
@@ -104,7 +104,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...repositoryInfo...', repositoryInfo)
+  // console.log('SoftwareIndexPage...citationInfo...', citationInfo)
   return (
     <>
       {/* Page Head meta tags */}

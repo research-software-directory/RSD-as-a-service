@@ -1,16 +1,16 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
-import {SoftwareCitationInfo} from '../types/SoftwareCitation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
-import {createJsonHeaders} from './fetchHelpers'
+import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
+import {SoftwareReleaseInfo} from '~/components/organisation/releases/useSoftwareReleases'
 
 /*
  * Software list for the software overview page
@@ -141,33 +141,33 @@ export async function getTagsWithCount(){
 
 /**
  * CITATIONS
- * @param uuid
- * @returns SoftwareCitationInfo
+ * @param uuid as software_id
+ * @returns SoftwareReleaseInfo[]
  */
 
 export async function getCitationsForSoftware(uuid:string,token?:string){
   try{
-    // this request is always perfomed from backend
-    // the release content is order by date_published
-    const url = `${process.env.POSTGREST_URL}/release?select=*,release_content(*)&software=eq.${uuid}&release_content.order=date_published.desc`
+    // the releases are order by date descending
+    const query = `software_id=eq.${uuid}&order=release_date.desc`
+    const url = `${getBaseUrl()}/rpc/software_release?${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
     })
     if (resp.status===200){
-      const data: SoftwareCitationInfo[] = await resp.json()
-      // console.log('data...', data)
+      const data: SoftwareReleaseInfo[] = await resp.json()
       if (data.length > 0) {
-        return data[0]
+        return data
       }
       return null
     } else if (resp.status===404){
-      logger(`getReleasesForSoftware: 404 [${url}]`,'error')
+      logger(`getCitationsForSoftware: 404 [${url}]`,'error')
       // query not found
       return null
     }
+    return null
   }catch(e:any){
-    logger(`getReleasesForSoftware: ${e?.message}`,'error')
+    logger(`getCitationsForSoftware: ${e?.message}`,'error')
     return null
   }
 }
