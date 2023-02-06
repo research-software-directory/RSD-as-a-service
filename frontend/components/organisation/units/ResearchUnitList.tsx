@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,7 +7,8 @@
  * UnitsList component is adjusted OrganisationsList component
  * from (/components/software/organisations/)
  */
-import {Alert, AlertTitle} from '@mui/material'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 import List from '@mui/material/List'
 import {OrganisationForOverview} from '../../../types/Organisation'
 

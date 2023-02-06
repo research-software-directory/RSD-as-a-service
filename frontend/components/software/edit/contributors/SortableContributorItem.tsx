@@ -1,8 +1,9 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import useMediaQuery from '@mui/material/useMediaQuery'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
@@ -13,7 +14,7 @@ import ContributorAvatar from '~/components/software/ContributorAvatar'
 import {combineRoleAndAffiliation, getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import {Contributor} from '~/types/Contributor'
-import {useMediaQuery} from '@mui/material'
+
 import {getImageUrl} from '~/utils/editImage'
 
 type SortableContributorItemProps = {

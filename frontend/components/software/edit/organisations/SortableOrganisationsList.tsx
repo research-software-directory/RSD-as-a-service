@@ -1,9 +1,11 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Alert, AlertTitle} from '@mui/material'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+
 import SortableList from '~/components/layout/SortableList'
 import {EditOrganisation} from '../../../../types/Organisation'
 import SortableOrganisationItem from './SortableOrganisationItem'
@@ -14,7 +16,6 @@ type OrganisationListProps = {
   onDelete: (pos: number) => void
   onSorted: (organisation:EditOrganisation[])=>void
 }
-
 
 export default function SortableOrganisationsList({organisations,onEdit,onDelete,onSorted}:OrganisationListProps) {
 

@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -8,8 +9,12 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 import UserPages from '../pages/user/[section]'
 
+// MOCK user agreement call
+jest.mock('~/components/user/settings/fetchAgreementStatus')
+
+// MOCKS
 const mockProps = {
-  section: 'profile',
+  section: 'software',
   counts: {
     software_cnt: 0,
     project_cnt: 0,
@@ -36,7 +41,7 @@ describe('pages/user/[section].tsx', () => {
   })
 
   it('renders user nav items', () => {
-    mockProps.section = 'profile'
+    mockProps.section = 'software'
     render(
       <WithAppContext options={{session:mockSession}}>
         <UserPages {...mockProps} />
@@ -47,8 +52,8 @@ describe('pages/user/[section].tsx', () => {
     expect(navItems.length).toEqual(4)
   })
 
-  it('renders user profile section', async() => {
-    mockProps.section = 'profile'
+  it('renders user settings section', async() => {
+    mockProps.section = 'settings'
     render(
       <WithAppContext options={{session:mockSession}}>
         <UserPages {...mockProps} />
@@ -65,6 +70,18 @@ describe('pages/user/[section].tsx', () => {
 
   it('renders user software section', async() => {
     mockProps.section = 'software'
+
+    const {container} = render(
+      <WithAppContext options={{session:mockSession}}>
+        <UserPages {...mockProps} />
+      </WithAppContext>
+    )
+
+    const loader = screen.getByRole('progressbar')
+  })
+
+  it('renders user projects section', async() => {
+    mockProps.section = 'projects'
 
     const {container} = render(
       <WithAppContext options={{session:mockSession}}>

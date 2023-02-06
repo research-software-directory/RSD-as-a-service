@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useRef, useEffect, useState} from 'react'
-import {useTheme} from '@mui/material'
+import useTheme from '@mui/material/styles/useTheme'
 import useResizeObserver from './useResizeObserver'
 import drawLineChart from './drawLineChart'
 

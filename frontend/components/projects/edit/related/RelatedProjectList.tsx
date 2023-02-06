@@ -4,7 +4,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Alert, AlertTitle} from '@mui/material'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'

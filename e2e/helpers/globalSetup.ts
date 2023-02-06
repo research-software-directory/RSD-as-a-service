@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,7 +32,7 @@ async function globalSetup(config: FullConfig) {
   // extract from configuration (there is always one project in array)
   // global use is stored in the root but it cannot be accessed directly?
   const {baseURL, storageState} = config.projects[0].use
-  console.log('globalSetup...timeout...', config.projects[0].timeout)
+  // console.log('globalSetup...timeout...', config.projects[0].timeout)
   // launch chromium browser
   // set headles = false if you want to see/debug
   const browser = await chromium.launch({

@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,8 +16,8 @@ export const mockCitations = {
         '10.1016/j.future.2018.08.004'
       ],
       output: [
-        '10.1017/S0033291718004038',
-        '10.1017/S1368980018001258',
+        '10.1017/s0033291718004038',
+        '10.1017/s1368980018001258',
       ]
     },
     titles: [

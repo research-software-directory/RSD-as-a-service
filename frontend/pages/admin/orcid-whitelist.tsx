@@ -1,24 +1,29 @@
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useEffect, useState} from 'react'
 import Head from 'next/head'
-
-import {app} from '../../config/app'
-import RsdAdminContent from '~/auth/RsdAdminContent'
-import DefaultLayout from '~/components/layout/DefaultLayout'
+import Link from '@mui/material/Link'
+import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
+import ListItemText from '@mui/material/ListItemText'
+import TextField from '@mui/material/TextField'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
+
+import {useSession} from '~/auth'
+import {app} from '../../config/app'
+import RsdAdminContent from '~/auth/RsdAdminContent'
+import DefaultLayout from '~/components/layout/DefaultLayout'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {useSession} from '~/auth'
-import {useEffect, useState} from 'react'
-import Link from '@mui/material/Link'
-import {Button, CircularProgress, ListItemText, TextField} from '@mui/material'
 import {PageTitleSticky} from '~/components/layout/PageTitle'
 
 export default function OrcidWitelistPage() {

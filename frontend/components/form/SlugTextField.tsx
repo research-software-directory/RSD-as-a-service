@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import MuiTextField, {TextFieldProps} from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
-import {styled} from '@mui/material/styles'
-import {CircularProgress} from '@mui/material'
+import styled from '@mui/material/styles/styled'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const TextField = styled(MuiTextField)(({theme}) => ({
   width: '100%',

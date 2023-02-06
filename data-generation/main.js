@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -491,7 +491,7 @@ function generateMetaPages() {
 	const result = [];
 
 	const titles = ['Terms of Service', 'Privacy Statement'];
-	const slugs = ['tos', 'privacy'];
+	const slugs = ['terms-of-service', 'privacy-statement'];
 	for (let index = 0; index < titles.length; index++) {
 		result.push({
 			title: titles[index],

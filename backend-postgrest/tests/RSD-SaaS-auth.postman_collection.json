@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "37d981a4-d5ef-4bbd-9eb8-b46165fe8452",
+		"_postman_id": "cac10210-f65f-4bcd-a437-cfad2270c9b2",
 		"name": "RSD-SaaS-auth",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -84,6 +84,130 @@
 					],
 					"path": [
 						"account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post login_for_account admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"account\": \"{{account_id}}\",\n    \"provider\": \"my_provider\",\n    \"sub\": \"sub\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/login_for_account",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"login_for_account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post login_for_account 2 admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"\tpm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"account\": \"{{account_id_2}}\",\n    \"provider\": \"my_provider\",\n    \"sub\": \"sub2\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/login_for_account",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"login_for_account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user agreement false",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.equal(\"false\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"account_id\": \"{{account_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/rpc/user_agreements_stored",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"rpc",
+						"user_agreements_stored"
 					]
 				}
 			},
@@ -180,6 +304,215 @@
 					],
 					"path": [
 						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post software user not agreed ToS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"\tpm.response.to.have.status(400);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"slug\": \"test-slug-user\",\n\t\"brand_name\": \"Test software user\",\n\t\"is_published\": true,\n\t\"short_statement\": \"Test software for testing\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/software",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "patch user accept terms user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"agree_terms\": true,\n    \"notice_privacy_statement\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/account?id=eq.{{account_id}}",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"account"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "eq.{{account_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "patch user accept terms user 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_user_2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"agree_terms\": true,\n    \"notice_privacy_statement\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/account?id=eq.{{account_id_2}}",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"account"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "eq.{{account_id_2}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user agreement true",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.equal(\"true\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"account_id\": \"{{account_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{backend_url}}/rpc/user_agreements_stored",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"rpc",
+						"user_agreements_stored"
 					]
 				}
 			},
@@ -2153,6 +2486,44 @@
 					],
 					"path": [
 						"software"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete all login_for_account admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"\tpm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check size deleted accounts\", function () {",
+							"\tconst jsonData = pm.response.json();",
+							"\tpm.expect(jsonData.length).to.be.above(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{backend_url}}/login_for_account",
+					"host": [
+						"{{backend_url}}"
+					],
+					"path": [
+						"login_for_account"
 					]
 				}
 			},

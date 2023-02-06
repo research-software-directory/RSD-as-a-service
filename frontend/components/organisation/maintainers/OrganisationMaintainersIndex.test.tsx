@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +9,9 @@ import {defaultSession} from '~/auth'
 
 import OrganisationMaintainers from './index'
 import mockOrganisation from '../__mocks__/mockOrganisation'
+
+// MOCK user agreement call
+jest.mock('~/components/user/settings/fetchAgreementStatus')
 
 const mockMaintainerOfOrganisation=jest.fn<Promise<any[]>,any[]>((props)=>Promise.resolve([]))
 jest.mock('./getMaintainersOfOrganisation', () => ({
@@ -71,7 +74,7 @@ describe('frontend/components/organisation/maintainers/index.tsx', () => {
     })
   })
 
-  it('shows 403 when user is not organisation maintainer', async() => {
+  it('shows 403 when user is not organisation maintainer', async () => {
     // user is authenticated
     defaultSession.status = 'authenticated'
     defaultSession.token = 'test-token'
@@ -83,12 +86,12 @@ describe('frontend/components/organisation/maintainers/index.tsx', () => {
       </WithAppContext>
     )
     const msg403 = await screen.findByRole('heading', {
-      name:'403'
+      name: '403'
     })
     expect(msg403).toBeInTheDocument()
   })
 
-  it('shows "No maintainers" message', async() => {
+  it('shows "No maintainers" message', async () => {
     // user is authenticated
     defaultSession.status = 'authenticated'
     defaultSession.token = 'test-token'
@@ -109,7 +112,7 @@ describe('frontend/components/organisation/maintainers/index.tsx', () => {
 
   it('shows maintainer list item', async () => {
     // MOCK maintainers call
-    const dummyRawMaintainers= [{
+    const dummyRawMaintainers = [{
       'maintainer': 'a050aaf3-9c46-490c-ade3-aeeb6a05b1d1',
       'name': ['Jordan Ross Belfort'],
       'email': ['Jordan.Belfort@harvard-example.edu'],
@@ -130,7 +133,7 @@ describe('frontend/components/organisation/maintainers/index.tsx', () => {
       </WithAppContext>
     )
 
-    await waitForElementToBeRemoved(()=>screen.getByRole('progressbar'))
+    await waitForElementToBeRemoved(() => screen.getByRole('progressbar'))
 
     const maintainer = await screen.findByText(dummyRawMaintainers[0].name[0])
     expect(maintainer).toBeInTheDocument()
@@ -194,4 +197,5 @@ describe('frontend/components/organisation/maintainers/index.tsx', () => {
     const maintainerItem = screen.getAllByTestId('maintainer-list-item')
     expect(maintainerItem.length).toEqual(mockMaintainers.length)
   })
+
 })

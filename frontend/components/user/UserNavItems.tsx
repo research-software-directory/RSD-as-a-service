@@ -1,16 +1,18 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
-import PersonIcon from '@mui/icons-material/Person'
 import BusinessIcon from '@mui/icons-material/Business'
+import SettingsIcon from '@mui/icons-material/Settings'
 
-import UserProfile from './profile'
+import UserSettings from './settings'
 import UserSoftware from './software'
 import UserProjects from './project'
 import Organisations from './organisations'
@@ -29,14 +31,6 @@ export type UserMenuItems = {
 }
 
 export const userMenu:UserMenuItems = {
-  profile:{
-    id:'profile',
-    label:()=>'Profile',
-    icon: <PersonIcon />,
-    component: (props?) => <UserProfile {...props} />,
-    status: 'User profile info',
-    showSearch: false
-  },
   software:{
     id:'software',
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
@@ -61,4 +55,12 @@ export const userMenu:UserMenuItems = {
     status: 'Departments or institutions you maintain',
     showSearch: true
   },
+  settings:{
+    id:'settings',
+    label: () => 'Settings',
+    icon: <SettingsIcon />,
+    component: (props?) => <UserSettings {...props} />,
+    status: 'Your profile settings',
+    showSearch: false
+ }
 }

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,9 +8,13 @@ import {expect, Page} from '@playwright/test'
 import {Person} from '../mocks/mockPerson'
 import {CreateSoftwareProps, MockedSoftware} from '../mocks/mockSoftware'
 import {Testimonial} from '../mocks/mockTestimonials'
+import {acceptUserAgreement} from './userAgreement'
 import {fillAutosaveInput, generateId, uploadFile} from './utils'
 
 export async function createSoftware({title, desc, slug, page}: CreateSoftwareProps) {
+  // accept user agreement first
+  // await acceptUserAgreementInSettings(page)
+
   // get add menu item
   const addMenu = page.getByTestId('add-menu-button')
   const newSoftware = page.getByRole('menuitem', {
@@ -23,9 +27,15 @@ export async function createSoftware({title, desc, slug, page}: CreateSoftwarePr
   await addMenu.click()
   // open add software page
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForURL('**/software/add',{
+      waitUntil: 'networkidle'
+    }),
     newSoftware.click()
   ])
+
+  // accept user agreement if modal present
+  await acceptUserAgreement(page)
+
   // add name
   await Promise.all([
     // fill in software name
@@ -40,8 +50,7 @@ export async function createSoftware({title, desc, slug, page}: CreateSoftwarePr
   const url = RegExp(`${inputSlug}/edit`)
   // click save button
   await Promise.all([
-    page.waitForNavigation({
-      url,
+    page.waitForURL(url,{
       waitUntil: 'networkidle'
     }),
     saveBtn.click()
@@ -254,7 +263,8 @@ export async function editFirstContact(page) {
 }
 
 export async function createContact(page, contact: Person) {
-  const findContributor = page.getByLabel('Find or add contributor')
+  // find contributor input
+  const findContributor = page.getByRole('combobox', {name: 'Find or add contributor'})
   // search for contact
   await Promise.all([
     page.waitForResponse(RegExp(contact.apiUrl)),

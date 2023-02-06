@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,6 +30,7 @@ export default function ControlledSwitch({label, name,
         // console.log('ControlledSwitch.value...', value)
         return (
           <FormControlLabel
+            data-testid="controlled-switch-label"
             control={
               <Switch
                 data-testid="controlled-switch"
