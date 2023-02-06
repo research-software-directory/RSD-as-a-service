@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -99,7 +100,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // shows no members alert message
-    const noMembersAlert = screen.getByRole('alert')
+    const noMembersAlert = screen.getByTestId('no-team-member-alert')
     const noMembersMsg = within(noMembersAlert).getByText('No team members')
     expect(noMembersMsg).toBeInTheDocument()
   })

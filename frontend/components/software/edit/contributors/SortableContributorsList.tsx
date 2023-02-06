@@ -23,7 +23,9 @@ export default function SortableContributorsList({contributors, onEdit, onDelete
 
   if (contributors.length === 0) {
     return (
-      <Alert severity="warning" sx={{marginTop:'0.5rem'}}>
+      <Alert
+        data-testid="no-contributor-alert"
+        severity="warning" sx={{marginTop: '0.5rem'}}>
         <AlertTitle sx={{fontWeight:500}}>No contributors</AlertTitle>
         Add contributors using the <strong>search form!</strong>
       </Alert>
