@@ -1,5 +1,7 @@
 -- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +10,8 @@ CREATE FUNCTION check_user_agreement_on_action() RETURNS TRIGGER LANGUAGE plpgsq
 $$
 BEGIN
 	IF
-		CURRENT_USER <> 'rsd_admin' AND
+		CURRENT_USER <> 'rsd_admin' AND NOT
+		(SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) AND
 		(SELECT * FROM user_agreements_stored(uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'))) = FALSE
 	THEN
 		RAISE EXCEPTION USING MESSAGE = 'You need to agree to our Terms of Service and the Privacy Statement before proceeding. Please open your user profile settings to agree.';
