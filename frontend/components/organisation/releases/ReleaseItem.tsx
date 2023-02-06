@@ -45,7 +45,7 @@ export default function ReleaseItem({release}: { release: SoftwareReleaseInfo })
             >
             <Chip
               title="Link to DOI page"
-              label={release.release_tag}
+              label={release.release_tag ?? 'v?.?.?'}
               icon={<OpenInNewIcon />}
               size="small"
               clickable

@@ -12,7 +12,7 @@ export type SoftwareReleaseInfo = {
   software_slug: string
   software_name: string
   release_doi: string
-  release_tag: string
+  release_tag: string | null
   release_date: string
   release_year: number
   release_authors: string
