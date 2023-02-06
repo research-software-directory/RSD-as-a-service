@@ -19,7 +19,7 @@ export default function UserSettings() {
   const [agreeTerms, setAgreeTerms] = useState<boolean>(false)
   const [noticePrivacy, setNoticePrivacy] = useState<boolean>(false)
 
-  const userInfo = useGetUserAgreementStatus(token, user?.account ?? '', setAgreeTerms, setNoticePrivacy)
+  const userInfo = useGetUserAgreementStatus(token, user, setAgreeTerms, setNoticePrivacy)
 
   const methods = useForm<UserSettingsType>({
     mode: 'onChange',

@@ -6,18 +6,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
+import {RsdUser} from '~/auth'
 import {UserSettingsType} from '~/types/SoftwareTypes'
 import {fetchAgreementStatus} from './fetchAgreementStatus'
 
-export function useGetUserAgreementStatus(token: string, account: string, setAgreeTerms?: any, setNoticePrivacy?: any, setOpen?: any) {
+export function useGetUserAgreementStatus(token: string, user:RsdUser|null, setAgreeTerms?: any, setNoticePrivacy?: any, setOpen?: any) {
   const [userInfo, setUserInfo] = useState<UserSettingsType>()
 
   useEffect(() => {
     async function getUser() {
-      const respData = await fetchAgreementStatus(token, account)
+      const respData = await fetchAgreementStatus(token, user?.account ?? '')
       if (respData.status === 200 && typeof(respData.data) !== 'undefined') {
         setUserInfo(respData.data)
-        if (typeof(setOpen) === 'function' && (respData.data.agree_terms === false || respData.data.notice_privacy_statement === false)) {
+        if (typeof (setOpen) === 'function' &&
+          (respData.data.agree_terms === false || respData.data.notice_privacy_statement === false)
+          // rsd_admin does not need to accept UA
+            && user?.role !== 'rsd_admin') {
           setOpen(true)
         }
         if (
@@ -29,9 +33,9 @@ export function useGetUserAgreementStatus(token: string, account: string, setAgr
         }
       }
     }
-    if (token && account) {
+    if (token && user && user?.account) {
       getUser()
     }
-  }, [token, account, setAgreeTerms, setNoticePrivacy, setOpen])
+  }, [token, user, setAgreeTerms, setNoticePrivacy, setOpen])
   return userInfo
 }

@@ -82,7 +82,35 @@ it('does not render modal when terms accepted', async() => {
   expect(modal).toBe(null)
 })
 
+it('does not render modal when role rsd_admin', async () => {
+  // role is rsd_admin
+  if (mockSession.user && mockSession.user.role) {
+    mockSession.user.role = 'rsd_admin'
+  }
+
+  mockFetchAgreementStatus.mockResolvedValueOnce({
+    status: 200,
+    data: {
+      agree_terms: false,
+      notice_privacy_statement: false
+    }
+  })
+
+  render(
+    <WithAppContext options={{session: mockSession}}>
+      <UserAgrementModal />
+    </WithAppContext>
+  )
+
+  const modal = await screen.queryByTestId('user-agreement-modal')
+  expect(modal).toBe(null)
+})
+
 it('accepts TOS via modal and calls patch account', async() => {
+  // role is rsd_admin
+  if (mockSession.user && mockSession.user.role) {
+    mockSession.user.role = 'rsd_user'
+  }
 
   mockFetchAgreementStatus.mockResolvedValueOnce({
     status: 200,
