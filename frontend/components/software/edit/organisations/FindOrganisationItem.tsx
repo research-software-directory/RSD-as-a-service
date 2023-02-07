@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +26,7 @@ export default function FindOrganisationItem({option}: { option: AutocompleteOpt
   }
 
   return (
-    <article className="flex-1">
+    <article className="flex-1" title={option.data.parent_names}>
       <div className="grid grid-cols-[3fr,1fr] gap-2">
         <div
           data-testid="organisation-list-item-label"
