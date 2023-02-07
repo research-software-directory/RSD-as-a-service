@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -29,6 +30,7 @@ import useSoftwareContext from '../useSoftwareContext'
 import useSoftwareContributors from './useSoftwareContributors'
 import SortableContributorsList from './SortableContributorsList'
 import {deleteImage} from '~/utils/editImage'
+import ContributorPrivacyHint from '~/components/layout/ContributorPrivacyHint'
 
 type EditContributorModal = ModalProps & {
   contributor?: Contributor
@@ -221,6 +223,7 @@ export default function SoftwareContributors() {
             title={config.findContributor.title}
             subtitle={config.findContributor.subtitle}
           />
+          <ContributorPrivacyHint />
           <FindContributor
             software={software?.id ?? ''}
             onAdd={loadContributorIntoModal}

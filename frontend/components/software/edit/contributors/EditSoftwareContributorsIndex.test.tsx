@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -101,7 +102,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     // shows no members alert message
-    const noContributorsAlert = screen.getByRole('alert')
+    const noContributorsAlert = screen.getByTestId('no-contributor-alert')
     const noContributorsMsg = within(noContributorsAlert).getByText('No contributors')
     expect(noContributorsMsg).toBeInTheDocument()
   })

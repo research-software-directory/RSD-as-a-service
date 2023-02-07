@@ -2,7 +2,9 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,6 +27,7 @@ import TeamMemberModal from './TeamMemberModal'
 import useTeamMembers from './useTeamMembers'
 import SortableTeamMemberList from './SortableTeamMemberList'
 import {deleteImage} from '~/utils/editImage'
+import ContributorPrivacyHint from '~/components/layout/ContributorPrivacyHint'
 
 type EditMemberModal = ModalProps & {
   member?: TeamMember
@@ -201,6 +204,7 @@ export default function ProjectTeam({slug}: { slug: string }) {
             title={cfgTeamMembers.find.title}
             subtitle={cfgTeamMembers.find.subtitle}
           />
+          <ContributorPrivacyHint />
           <FindMember
             project={project.id}
             token={token}
