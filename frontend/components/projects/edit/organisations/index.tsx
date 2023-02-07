@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -65,7 +65,7 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
     })
     // check if present by ror_id
     const found = organisations.find(item => item.ror_id === addOrganisation.ror_id)
-    if (found) {
+    if (addOrganisation.ror_id && found) {
       showInfoMessage(`${item.name} is already in the collection (based on ror_id).`)
       return
     }
