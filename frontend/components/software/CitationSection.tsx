@@ -66,7 +66,7 @@ export default function CitationSection({citationInfo,concept_doi}:
           {
             versions?.length > 0 ?
               <CiteDropdown
-                label="Choose a version:"
+                label="Software version:"
                 options={versions}
                 value={version}
                 onChange={onVersionChange}

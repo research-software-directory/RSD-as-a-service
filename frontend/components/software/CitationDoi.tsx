@@ -1,12 +1,15 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState, useContext} from 'react'
+import Link from 'next/link'
 import Button from '@mui/material/Button'
 import CopyIcon from '@mui/icons-material/ContentCopy'
-import {copyToClipboard,canCopyToClipboard} from '../../utils/copyToClipboard'
+import LinkIcon from '@mui/icons-material/Link'
+
+import {copyToClipboard, canCopyToClipboard} from '../../utils/copyToClipboard'
 import snackbarContext from '../snackbar/MuiSnackbarContext'
 import Box from '@mui/material/Box'
 
@@ -46,16 +49,25 @@ export default function CitationDoi({doi}:{doi:string}) {
     <div className="py-4 md:pb-8">
       <h3 className="text-sm pb-1">DOI:</h3>
       <div className="flex flex-col md:flex-row items-center">
-        <Box
-          sx={{
-            flex: 1,
-            width: '100%',
-            padding: '1rem',
-            backgroundColor:'secondary.light'
-          }}
-        >
-          {doi}
-        </Box>
+        <Link
+          href={`https://doi.org/${doi}`}
+          target="_blank"
+          className="w-full"
+          >
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              padding: '1rem 0.5rem',
+              backgroundColor:'secondary.light'
+            }}
+          >
+            {doi}
+            <LinkIcon />
+          </Box>
+        </Link>
         <Button
           disabled={!canCopy}
           startIcon={<CopyIcon/>}
@@ -68,7 +80,7 @@ export default function CitationDoi({doi}:{doi:string}) {
           }}
           onClick={toClipboard}
         >
-          Copy to clipboard
+          Copy DOI
         </Button>
       </div>
     </div>
