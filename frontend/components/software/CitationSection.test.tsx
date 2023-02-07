@@ -49,19 +49,19 @@ describe('with dummy data',()=>{
     expect(dropwdowns.length).toEqual(2)
   })
 
-  it('should have "Copy to clipboard" button',()=>{
+  it('should have "Copy DOI" button',()=>{
     // find it
     const copyButton = screen.getByRole('button',{
-      name:'Copy to clipboard'
+      name:'Copy DOI'
     })
     // assert
     expect(copyButton).toBeInTheDocument()
   })
 
-  it('should have "Download file" button initialy disabled',()=>{
+  it('should have "Download citation" button initialy disabled',()=>{
     // find it
     const downloadButton = screen.getByRole('button',{
-      name:'Download file'
+      name:'Download citation'
     })
     // assert
     // it exists

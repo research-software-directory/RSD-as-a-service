@@ -57,7 +57,7 @@ export default function CitationDownload({doi}: {doi:string}) {
             p:2,
           }}
         >
-          Download file
+          Download citation
         </Button>
       )
     }
@@ -76,7 +76,7 @@ export default function CitationDownload({doi}: {doi:string}) {
         href={`/api/fe/cite/?doi=${encodeURI(doi)}&f=${selected}&n=${encodeURI(fileName)}`}
         download={fileName}
       >
-        Download file
+        Download citation
       </Button>
     )
   }
