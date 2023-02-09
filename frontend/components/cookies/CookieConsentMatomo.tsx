@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,7 @@ import {Matomo} from './nodeCookies'
 import {useMatomoConsent} from './useCookieConsent'
 import Link from 'next/link'
 import CookieTwoToneIcon from '@mui/icons-material/CookieTwoTone'
+import logger from '~/utils/logger'
 
 type CookieConsentMatomoProps = {
   matomo: Matomo,
@@ -31,10 +32,16 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
   // console.log('route...', route)
   // console.log('open...', open)
   // console.groupEnd()
+
   useEffect(() => {
-    if (localStorage) {
-      const cookieConsent = localStorage.getItem('rsd_cookies_consent')
-      setOpen(cookieConsent === null && matomo.id !== null && matomo.consent === null && route !== '/cookies')
+    try {
+      if (localStorage) {
+        const cookieConsent = localStorage.getItem('rsd_cookies_consent')
+        setOpen(cookieConsent === null && matomo.id !== null && matomo.consent === null && route !== '/cookies')
+      }
+    } catch (e: any) {
+      // just show info log
+      logger(`CookieConsentMatomo.useEffect...${e.message}`,'info')
     }
   },[matomo.id,matomo.consent,route])
 
