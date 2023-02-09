@@ -1,7 +1,7 @@
+-- SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
--- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -96,7 +96,7 @@ $$;
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
 
 -- including the parent itself
-CREATE OR REPLACE FUNCTION list_child_organisations(parent_id UUID) RETURNS TABLE (organisation_id UUID) STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION list_child_organisations(parent_id UUID) RETURNS TABLE (organisation_id UUID) STABLE LANGUAGE plpgsql AS
 $$
 DECLARE child_organisations UUID[];
 DECLARE search_child_organisations UUID[];
@@ -147,7 +147,8 @@ $$;
 CREATE FUNCTION organisation_route(
 	IN id UUID,
 	OUT organisation UUID,
-	OUT rsd_path VARCHAR
+	OUT rsd_path VARCHAR,
+	OUT parent_names VARCHAR
 )
 STABLE LANGUAGE plpgsql AS
 $$
@@ -155,20 +156,24 @@ DECLARE
 	current_org UUID := id;
 	route VARCHAR := '';
 	slug VARCHAR;
+	names VARCHAR :=  '';
+	current_name VARCHAR;
 BEGIN
 	WHILE current_org IS NOT NULL LOOP
 		SELECT
 			organisation.slug,
-			organisation.parent
+			organisation.parent,
+			organisation.name
 		FROM
 			organisation
 		WHERE
 			organisation.id = current_org
-		INTO slug, current_org;
+		INTO slug, current_org, current_name;
 --	combine paths in reverse order
-		route := CONCAT(slug,'/',route);
+		route := CONCAT(slug, '/', route);
+		names := CONCAT(current_name, ' -> ', names);
 	END LOOP;
-	SELECT id, route INTO organisation,rsd_path;
+	SELECT id, route, LEFT(names, -4) INTO organisation, rsd_path, parent_names;
 	RETURN;
 END
 $$;
