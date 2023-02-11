@@ -16,39 +16,23 @@ export type SoftwareReleaseInfo = {
   release_date: string
   release_year: number
   release_authors: string
-  organisation_slug: string[]
 }
 
-export type SoftwareReleasedByYear = {
-  [key: string]: SoftwareReleaseInfo[]
+export type ReleaseCountByYear = {
+  release_year: number
+  release_cnt: number
 }
 
 type UseSoftwareReleaseProps = {
-  organisation_slug: string,
+  organisation_id: string,
+  release_year?: string,
   token: string
 }
 
-
-function softwareReleaseByYear(data: SoftwareReleaseInfo[]) {
-  const releaseByYear:SoftwareReleasedByYear = {}
-
-  data.forEach(item => {
-    if (releaseByYear.hasOwnProperty(item.release_year.toString())===false) {
-      // create new key
-      releaseByYear[item.release_year.toString()] = []
-    }
-    // parse info
-    // item.release_info = JSON.parse(item.release_info)
-    releaseByYear[item.release_year.toString()].push(item)
-  })
-
-  return releaseByYear
-}
-
-async function getReleasesForOrganisation({organisation_slug, token}:UseSoftwareReleaseProps) {
+async function getReleasesForOrganisation({organisation_id,release_year,token}:UseSoftwareReleaseProps) {
   try {
-    const query = `organisation_slug=cs.{${organisation_slug}}&order=release_date.desc`
-    const url = `${getBaseUrl()}/rpc/software_release?${query}`
+    const query = `organisation_id=${organisation_id}&release_year=eq.${release_year}&order=release_date.desc`
+    const url = `${getBaseUrl()}/rpc/releases_by_organisation?${query}`
     // make request
     const resp = await fetch(url, {
       method: 'GET',
@@ -59,7 +43,7 @@ async function getReleasesForOrganisation({organisation_slug, token}:UseSoftware
 
     if (resp.status === 200) {
       const data:SoftwareReleaseInfo[] = await resp.json()
-      return softwareReleaseByYear(data)
+      return data
     }
     // some other errors
     logger(`getReleasesForOrganisation...${resp.status} ${resp.statusText}`)
@@ -70,10 +54,9 @@ async function getReleasesForOrganisation({organisation_slug, token}:UseSoftware
   }
 }
 
-export default function useSoftwareRelease({organisation_slug, token}:UseSoftwareReleaseProps) {
+export default function useSoftwareRelease({organisation_id,release_year,token}:UseSoftwareReleaseProps) {
   const [loading, setLoading] = useState(true)
-  const [releases, setReleases] = useState<SoftwareReleasedByYear>()
-
+  const [releases, setReleases] = useState<SoftwareReleaseInfo[]>([])
 
   // console.group('useSoftwareRelease')
   // console.log('loading...', loading)
@@ -86,17 +69,18 @@ export default function useSoftwareRelease({organisation_slug, token}:UseSoftwar
     async function getReleases() {
       setLoading(true)
       // make request
-      const releases = await getReleasesForOrganisation({organisation_slug, token})
+      const releases = await getReleasesForOrganisation({organisation_id,release_year,token})
       // update releases
       if (releases) setReleases(releases)
+      // set loading is done
       setLoading(false)
     }
 
-    if (organisation_slug) {
+    if (organisation_id && release_year) {
       getReleases()
     }
 
-  },[organisation_slug,token])
+  },[organisation_id,release_year,token])
 
   return {
     loading,

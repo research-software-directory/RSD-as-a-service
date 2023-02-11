@@ -439,26 +439,83 @@ BEGIN
 END
 $$;
 
+-- Software releases
+-- release info is scraped from Zenodo
+-- one software belongs to multiple organisations
+-- INCLUDES releases of children organisations
+-- USES DISTINCT to avoid duplicated entries
+CREATE FUNCTION releases_by_organisation(organisation_id UUID) RETURNS TABLE (
+	software_id UUID,
+	software_slug VARCHAR,
+	software_name VARCHAR,
+	release_doi CITEXT,
+	release_tag VARCHAR,
+	release_date DATE,
+	release_year SMALLINT,
+	release_authors VARCHAR
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN RETURN QUERY
+	SELECT DISTINCT
+		software.id AS software_id,
+		software.slug AS software_slug,
+		software.brand_name AS software_name,
+		mention.doi AS release_doi,
+		mention.version AS release_tag,
+		mention.publication_date AS release_date,
+		mention.publication_year AS release_year,
+		mention.authors AS release_authors
+	FROM
+		release_version
+	INNER JOIN
+		"release" ON "release".software = release_version.release_id
+	INNER JOIN
+		software ON software.id = "release".software
+	INNER JOIN
+		mention ON mention.id = release_version.mention_id
+	LEFT JOIN
+		organisations_of_software(software.id) ON software.id = organisations_of_software.software
+	WHERE
+--	INCLUDE children organisation releases
+		organisations_of_software.id IN (
+			SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id)
+		)
+;
+END
+$$;
+
 -- Software releases count by organisation
-CREATE FUNCTION release_cnt_by_organisation() RETURNS TABLE (
+-- DEPENDS ON releases_by_organisation RPC
+CREATE FUNCTION release_cnt_by_organisation(organisation_id UUID) RETURNS TABLE (
 	id UUID,
-	slug VARCHAR,
 	release_cnt BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN RETURN QUERY
 	SELECT
-		organisations_of_software.id,
-		organisations_of_software.slug,
-		COUNT(*) AS release_cnt
+		organisation_id AS id,
+		COUNT(releases_by_organisation.release_doi) AS release_cnt
 	FROM
-		"release"
-	INNER JOIN
-		release_version ON release_version.release_id="release".software
-	INNER JOIN
-		organisations_of_software("release".software) ON "release".software = organisations_of_software.software
+		releases_by_organisation(organisation_id)
+	;
+END
+$$;
+
+-- Software releases count per YEAR by organisation
+-- DEPENDS ON releases_by_organisation RPC
+CREATE FUNCTION release_cnt_by_year(organisation_id UUID) RETURNS TABLE (
+	release_year SMALLINT,
+	release_cnt BIGINT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN RETURN QUERY
+	SELECT
+		releases_by_organisation.release_year,
+		COUNT(releases_by_organisation.release_doi) AS release_cnt
+	FROM
+		releases_by_organisation(organisation_id)
 	GROUP BY
-		organisations_of_software.id, organisations_of_software.slug
+		releases_by_organisation.release_year
 	;
 END
 $$;
@@ -519,7 +576,7 @@ BEGIN
 	LEFT JOIN
 		children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
 	LEFT JOIN
-		release_cnt_by_organisation() ON release_cnt_by_organisation.id = organisation.id
+		release_cnt_by_organisation(organisation.id) ON release_cnt_by_organisation.id = organisation.id
 	;
 END
 $$;
@@ -563,7 +620,10 @@ BEGIN
 		count_software_countributors() ON software.id=count_software_countributors.software
 	LEFT JOIN
 		count_software_mentions() ON software.id=count_software_mentions.software
-	WHERE software_for_organisation.organisation IN (SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id))
+	WHERE
+		software_for_organisation.organisation IN (
+			SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id)
+		)
 	;
 END
 $$;
@@ -1510,49 +1570,6 @@ BEGIN RETURN QUERY
 END
 $$;
 
--- Software releases
--- release info is scraped from Zenodo
--- one software belongs to multiple organisations
-CREATE FUNCTION software_release() RETURNS TABLE (
-	software_id UUID,
-	software_slug VARCHAR,
-	software_name VARCHAR,
-	release_doi CITEXT,
-	release_tag VARCHAR,
-	release_date DATE,
-	release_year SMALLINT,
-	release_authors VARCHAR,
-	organisation_slug VARCHAR[]
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN RETURN QUERY
-	SELECT
-		software.id AS software_id,
-		software.slug AS software_slug,
-		software.brand_name AS software_name,
-		mention.doi AS release_doi,
-		mention.version AS release_tag,
-		mention.publication_date AS release_date,
-		mention.publication_year AS release_year,
-		mention.authors AS release_authors,
-		ARRAY_AGG(organisations_of_software.slug) AS organisation_slug
-	FROM
-		release_version
-	INNER JOIN
-		"release" ON "release".software = release_version.release_id
-	INNER JOIN
-		software ON software.id = "release".software
-	INNER JOIN
-		mention ON mention.id = release_version.mention_id
-	LEFT JOIN
-		organisations_of_software(software.id) ON software.id = organisations_of_software.software
-	GROUP BY
-		software_id, release_doi, release_tag, release_date, release_year, release_authors
-	;
-END
-$$;
-
-
 -- Check whether user agreed on Terms of Service and read the Privacy Statement
 CREATE FUNCTION user_agreements_stored(account_id UUID) RETURNS BOOLEAN LANGUAGE plpgsql STABLE AS
 $$
@@ -1569,3 +1586,4 @@ BEGIN
 	);
 END
 $$;
+
