@@ -244,8 +244,9 @@ export async function addCitation(page, input:string, waitForResponse:string) {
     .filter({
       hasText: RegExp(input,'i')
     })
+  const count = await mentions.count()
   // we should have at least one item
-  expect(await mentions.count()).toBeGreaterThan(0)
+  expect(count).toBeGreaterThan(0)
 
 }
 

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -83,10 +83,11 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
       secondaryAction={getSecondaryActions()}
       sx={{
         // this makes space for buttons
-        paddingRight:'7.5rem',
-        '&:hover': {
-          backgroundColor:'grey.100'
-        }
+        paddingRight: '7.5rem',
+        // disable hover color change to avoid click confusion
+        // '&:hover': {
+        //   backgroundColor:'grey.100'
+        // }
       }}
     >
       <ListItemAvatar>
