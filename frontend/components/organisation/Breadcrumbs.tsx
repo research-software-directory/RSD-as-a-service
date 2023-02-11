@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,6 @@ export type SlugInfo = {
   label: string,
   path: string | null
 }
-
 
 export default function Breadcrumbs({segments}:
   {segments: SlugInfo[] }) {
@@ -25,18 +24,20 @@ export default function Breadcrumbs({segments}:
       if (item.path) {
         html.push(
           <Link
+            title={item.label}
             href={item.path}
             key={item.path ?? item.label}
-            className="uppercase text-xs tracking-widest"
+            className="uppercase text-xs tracking-widest max-w-xs"
           >
-            {item.label}
+            <div className="line-clamp-1 overflow-hidden max-w-[20rem] break-all">{item.label}</div>
           </Link>
         )
       } else {
         html.push(
           <div
             key={item.label}
-            className="uppercase text-xs tracking-widest"
+            title={item.label}
+            className="uppercase text-xs tracking-widest line-clamp-1 overflow-hidden max-w-[20rem] break-all"
           >
             <strong>{item.label}</strong>
           </div>
@@ -48,12 +49,13 @@ export default function Breadcrumbs({segments}:
   }
 
   return (
-     <MuiBreadcrumbs
-        separator={
-          <NavigateNextIcon fontSize="small" />
-        }
-        aria-label="breadcrumb"
-      >
+    <MuiBreadcrumbs
+      maxItems={3}
+      separator={
+        <NavigateNextIcon fontSize="small" />
+      }
+      aria-label="breadcrumb"
+    >
       {renderSegments()}
     </MuiBreadcrumbs>
   )
