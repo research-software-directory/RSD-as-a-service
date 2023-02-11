@@ -227,7 +227,7 @@ export default function ResearchUnits({organisation,isMaintainer}: OrganisationC
         <h2>Research Units ({units.length ?? 0})</h2>
         {renderAddBtn()}
       </section>
-      <section className="py-8">
+      <section>
         {renderUnitList()}
       </section>
       <ResearchUnitModal
