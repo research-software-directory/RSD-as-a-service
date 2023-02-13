@@ -142,32 +142,39 @@ export async function getTagsWithCount(){
 /**
  * CITATIONS
  * @param uuid as software_id
- * @returns SoftwareReleaseInfo[]
+ * @returns SoftwareVersion[] | null
  */
 
-export async function getCitationsForSoftware(uuid:string,token?:string){
+export type SoftwareVersion = {
+  doi: string,
+  version: string,
+  publication_date: string
+}
+
+export async function getReleasesForSoftware(uuid:string,token?:string){
   try{
-    // the releases are order by date descending
-    const query = `software_id=eq.${uuid}&order=release_date.desc`
-    const url = `${getBaseUrl()}/rpc/software_release?${query}`
+    // the releases are ordered by date descending
+    const query = `select=release(mention(doi,version,publication_date))&id=eq.${uuid}&release.mention.order=publication_date.desc`
+    const url = `${getBaseUrl()}/software?${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
     })
     if (resp.status===200){
-      const data: SoftwareReleaseInfo[] = await resp.json()
-      if (data.length > 0) {
-        return data
+      const data: any[] = await resp.json()
+      if (data.length === 1) {
+        const releases: SoftwareVersion[] = data[0]['release']['mention']
+        return releases
       }
       return null
     } else if (resp.status===404){
-      logger(`getCitationsForSoftware: 404 [${url}]`,'error')
+      logger(`getSoftwareVersions: 404 [${url}]`,'error')
       // query not found
       return null
     }
     return null
   }catch(e:any){
-    logger(`getCitationsForSoftware: ${e?.message}`,'error')
+    logger(`getSoftwareVersions: ${e?.message}`,'error')
     return null
   }
 }

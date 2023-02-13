@@ -439,11 +439,10 @@ BEGIN
 END
 $$;
 
--- Software releases
--- release info is scraped from Zenodo
+-- Software releases by organisation
+-- release info is scraped from concept DOI
 -- one software belongs to multiple organisations
 -- INCLUDES releases of children organisations
--- USES DISTINCT to avoid duplicated entries
 CREATE FUNCTION releases_by_organisation(organisation_id UUID) RETURNS TABLE (
 	software_id UUID,
 	software_slug VARCHAR,
@@ -466,20 +465,17 @@ BEGIN RETURN QUERY
 		mention.publication_year AS release_year,
 		mention.authors AS release_authors
 	FROM
-		release_version
+		list_child_organisations(organisation_id)
 	INNER JOIN
-		"release" ON "release".software = release_version.release_id
+		software_for_organisation ON list_child_organisations.organisation_id = software_for_organisation.organisation
 	INNER JOIN
-		software ON software.id = "release".software
+		software ON software.id = software_for_organisation.software
+	INNER JOIN
+		"release" ON "release".software = software.id
+	INNER JOIN
+		release_version ON release_version.release_id = "release".software
 	INNER JOIN
 		mention ON mention.id = release_version.mention_id
-	LEFT JOIN
-		organisations_of_software(software.id) ON software.id = organisations_of_software.software
-	WHERE
---	INCLUDE children organisation releases
-		organisations_of_software.id IN (
-			SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id)
-		)
 ;
 END
 $$;
