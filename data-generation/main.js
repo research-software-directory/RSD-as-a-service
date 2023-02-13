@@ -140,8 +140,9 @@ async function generateSofware(amount=50) {
 
 	const brandNames = [];
 	for (let index = 0; index < amount; index++) {
+		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
 		const brandName = faker.helpers.unique(() =>
-			('Software: ' + faker.random.words(faker.mersenne.rand(31, 1))).substring(0, 200)
+			('Software: ' + faker.random.words(faker.mersenne.rand(maxWords, 1))).substring(0, 200)
 		);
 		brandNames.push(brandName);
 	}
@@ -331,8 +332,9 @@ async function generateProjects(amount=50) {
 	const projectStatuses = ['finished', 'running', 'starting'];
 
 	for (let index = 0; index < amount; index++) {
+		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
 		const title = faker.helpers.unique(() =>
-			('Project: ' + faker.random.words(faker.mersenne.rand(31, 1))).substring(0, 200)
+			('Project: ' + faker.random.words(faker.mersenne.rand(maxWords, 1))).substring(0, 200)
 		);
 
 		const status = faker.helpers.arrayElement(projectStatuses);
@@ -463,8 +465,9 @@ async function generateOrganisations(amount=50) {
 
 	const names = [];
 	for (let index = 0; index < amount; index++) {
+		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
 		const name = faker.helpers.unique(() =>
-			('Organisation: ' + faker.random.words(faker.mersenne.rand(31, 1))).substring(0, 200)
+			('Organisation: ' + faker.random.words(faker.mersenne.rand(maxWords, 1))).substring(0, 200)
 		);
 		names.push(name);
 	}
