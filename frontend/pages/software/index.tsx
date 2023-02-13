@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
@@ -23,6 +23,7 @@ import {ssrSoftwareParams} from '../../utils/extractQueryParam'
 import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import SoftwareFilter from '~/components/software/filter'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
+import PageMeta from '~/components/seo/PageMeta'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -35,6 +36,7 @@ type SoftwareIndexPageProps = {
 }
 
 const pageTitle = `Software | ${app.title}`
+const pageDesc = 'The list of research software registerd in the Research Software Directory.'
 
 export default function SoftwareIndexPage(
   {software=[], count, page, rows, keywords, prog_lang, search}: SoftwareIndexPageProps
@@ -113,9 +115,11 @@ export default function SoftwareIndexPage(
 
   return (
     <DefaultLayout>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
+      {/* Page Head meta tags */}
+      <PageMeta
+        title={pageTitle}
+        description={pageDesc}
+      />
       <PageTitle title="Software">
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center">

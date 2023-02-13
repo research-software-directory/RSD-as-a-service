@@ -62,7 +62,7 @@ export default function AppHeader() {
       <div
         className="flex-1 flex flex-col px-4 xl:flex-row items-start lg:container lg:mx-auto">
         <div className="w-full flex-1 flex items-center justify-between">
-          <Link href="/" passHref className="hover:text-inherit">
+          <Link href="/" passHref className="hover:text-inherit" aria-label="Link to home page">
             <LogoApp className="hidden 2xl:block"/>
             <LogoAppSmall className="block 2xl:hidden"/>
           </Link>

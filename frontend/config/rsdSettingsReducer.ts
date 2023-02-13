@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -19,7 +19,7 @@ export type RsdSettingsState = {
 
 export type RsdHost = {
   name: string,
-  email?: string,
+  email: string,
   website?: string,
   logo_url?: string,
   feedback?: {
@@ -60,10 +60,10 @@ export type RsdSettingsAction = {
 
 export type RsdSettingsDispatch = (action: RsdSettingsAction)=>void
 
-export const defaultRsdSettings = {
+export const defaultRsdSettings: RsdSettingsState = {
   host: {
     name: 'rsd',
-    email: 'rsd@esciencecenter.nl',
+    email: 'rsd@esciencecenter.nl'
   },
   embed: false,
   theme: defaultSettings.theme,

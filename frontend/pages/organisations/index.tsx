@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,6 +20,7 @@ import {rowsPerPageOptions} from '../../config/pagination'
 import {ssrOrganisationParams} from '../../utils/extractQueryParam'
 import {getOrganisationsList} from '../../utils/getOrganisations'
 import OrganisationsGrid from '../../components/organisation/OrganisationGrid'
+import PageMeta from '~/components/seo/PageMeta'
 
 type OrganisationsIndexPageProps = {
   count: number,
@@ -30,6 +31,7 @@ type OrganisationsIndexPageProps = {
 }
 
 const pageTitle = `Organisations | ${app.title}`
+const pageDesc = 'The list of organisations participating in the development of research software registerd in the Research Software Directory.'
 
 export default function OrganisationsIndexPage({
   organisations = [], count, page, rows, search
@@ -84,10 +86,12 @@ export default function OrganisationsIndexPage({
   }
 
   return (
-     <DefaultLayout>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
+    <DefaultLayout>
+      {/* Page Head meta tags */}
+      <PageMeta
+        title={pageTitle}
+        description={pageDesc}
+      />
       <PageTitle title="Organisations">
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center lg:ml-4">
