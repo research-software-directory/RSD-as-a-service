@@ -78,7 +78,8 @@ CREATE FUNCTION check_user_agreement_on_delete_action() RETURNS TRIGGER LANGUAGE
 $$
 BEGIN
 	IF
-		CURRENT_USER <> 'rsd_admin' AND
+		CURRENT_USER <> 'rsd_admin' AND NOT
+		(SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) AND
 		(SELECT * FROM user_agreements_stored(uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'))) = FALSE
 	THEN
 		RAISE EXCEPTION USING MESSAGE = 'You need to agree to our Terms of Service and the Privacy Statement before proceeding. Please open your user profile settings to agree.';
