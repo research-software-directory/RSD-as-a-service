@@ -41,8 +41,9 @@ export default function AboutPage({organisation}: OrganisationComponentsProps) {
     return (
       <section
         data-testid="organisation-about-page"
-        className="pt-2 pb-12">
+        className="pt-2">
         <ReactMarkdownWithSettings
+          className="pt-4"
           markdown={organisation?.description}
         />
       </section>

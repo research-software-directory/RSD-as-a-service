@@ -7,7 +7,7 @@ import {render,screen} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
 
 import CitationSection from './CitationSection'
-import citationInfo from './__mocks__/softwareCitationInfo.json'
+import releases from './__mocks__/softwareReleases.json'
 
 
 it('should NOT render citation section when no data provided',()=>{
@@ -21,7 +21,7 @@ describe('with dummy data',()=>{
   beforeEach(()=>{
     // render citation section with parent context and dummy data
     render(WrappedComponentWithProps(CitationSection, {
-      props: {citationInfo}
+      props: {releases}
     }))
   })
 
@@ -35,7 +35,7 @@ describe('with dummy data',()=>{
 
   it('should render first release doi',()=>{
     // get doi from dummy data
-    const firstDoi = citationInfo[0].release_doi
+    const firstDoi = releases[0].doi
     // find it
     const doi = screen.getByText(firstDoi)
     // assert

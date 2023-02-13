@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -81,7 +81,6 @@ export default function OrganisationPage({organisation,slug,page,ror}:Organisati
         <OrganisationTitle
           title={organisation.name}
           slug={slug}
-          showSearch={pageState?.showSearch ?? false}
         />
         <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
           <div>
@@ -97,7 +96,7 @@ export default function OrganisationPage({organisation,slug,page,ror}:Organisati
           </div>
           <div
             data-testid={`organisation-content-${pageState?.id ?? 'loading'}`}
-            className="flex flex-col min-h-[55rem]">
+            className="flex flex-col relative md:min-h-[55rem] md:pb-8">
             {renderStepComponent()}
           </div>
         </section>

@@ -1,13 +1,10 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {PageTitleSticky} from '../layout/PageTitle'
 import Breadcrumbs, {SlugInfo} from './Breadcrumbs'
-
-import Searchbox from '../../components/search/Searchbox'
-import Pagination from '../../components/pagination/Pagination'
 
 function createSegments(slug: string[]) {
   const segments:SlugInfo[] = [{
@@ -34,36 +31,21 @@ function createSegments(slug: string[]) {
   return segments
 }
 
-export default function OrganisationTitle({title, slug, showSearch=false}:
-  { title: string, slug: string[],showSearch?:boolean}) {
-
-  function renderSearch() {
-    if (showSearch===true) {
-      return (
-        <>
-          <Searchbox />
-          <Pagination />
-        </>
-      )
-    }
-    return null
-  }
+export default function OrganisationTitle({title, slug}:
+  { title: string, slug: string[]}) {
 
   return (
     <PageTitleSticky
-      style={{padding:'1rem 0rem 2rem 0rem'}}
+      style={{padding:'1rem 0rem'}}
     >
-      <div className="flex-1">
-        <h1 className="flex-1 w-full md:mt-4">{title}</h1>
-        <div className="w-full mb-4 md:mb-0">
-          <Breadcrumbs
-            segments={createSegments(slug)}
-          />
-        </div>
+
+      <h1 className="flex-1 w-full md:mt-4 md:mb-2">{title}</h1>
+      <div className="w-full mb-4 md:mb-0">
+        <Breadcrumbs
+          segments={createSegments(slug)}
+        />
       </div>
-      <div className="xl:flex xl:items-center text-center">
-        {renderSearch()}
-      </div>
+
     </PageTitleSticky>
   )
 }

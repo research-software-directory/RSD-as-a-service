@@ -11,42 +11,41 @@ import PageContainer from '../layout/PageContainer'
 import CiteDropdown from './CiteDropdown'
 import CitationDoi from './CitationDoi'
 import CitationDownload from './CitationDownload'
-// import {SoftwareCitationInfo,SoftwareCitationContent} from '../../types/SoftwareCitation'
-import {SoftwareReleaseInfo} from '../organisation/releases/useSoftwareReleases'
+import {SoftwareVersion} from '~/utils/getSoftware'
 
-export default function CitationSection({citationInfo,concept_doi}:
-  {citationInfo:SoftwareReleaseInfo[]|null, concept_doi:string|null}) {
+export default function CitationSection({releases,concept_doi}:
+  {releases:SoftwareVersion[]|null, concept_doi:string|null}) {
   const [version, setVersion]=useState('')
-  const [citation, setCitation] = useState<SoftwareReleaseInfo>()
+  const [citation, setCitation] = useState<SoftwareVersion>()
 
   useEffect(()=>{
     // select first option by default
-    if (citationInfo && citationInfo.length > 0){
+    if (releases && releases.length > 0){
       setVersion('0')
-      setCitation(citationInfo[0])
+      setCitation(releases[0])
     }
-  },[citationInfo])
+  },[releases])
 
   // do not render section if no release data
-  if (typeof citationInfo==='undefined' || citationInfo===null || citationInfo.length===0) {
+  if (typeof releases==='undefined' || releases===null || releases.length===0) {
     // only return spacer
     return (
       <section className="py-4"></section>
     )
   }
   // prepare release versions
-  const versions = citationInfo?.map((item, pos) => {
-    if (item?.release_tag) {
-      return {label:item?.release_tag,value:`${pos}`}
+  const versions = releases?.map((item, pos) => {
+    if (item?.version) {
+      return {label:item?.version,value:`${pos}`}
     } else {
-      return {label: item.release_doi,value:`${pos}`}
+      return {label: item.doi,value:`${pos}`}
     }
   })
 
   function onVersionChange({target}:{target:SelectChangeEvent['target']}){
     const pos = parseInt(target?.value)
-    if (citationInfo) {
-      const cite = citationInfo[pos]
+    if (releases) {
+      const cite = releases[pos]
       // update local state
       setVersion(target?.value)
       setCitation(cite)
@@ -75,9 +74,9 @@ export default function CitationSection({citationInfo,concept_doi}:
           }
         </div>
         <div className="flex-[3] flex flex-col justify-between md:px-4">
-          <CitationDoi doi={citation?.release_doi ?? concept_doi ?? ''} />
+          <CitationDoi doi={citation?.doi ?? concept_doi ?? ''} />
           {/* NOTE! temporarly dissabled  */}
-          <CitationDownload doi={citation?.release_doi ?? concept_doi ?? ''} />
+          <CitationDownload doi={citation?.doi ?? concept_doi ?? ''} />
         </div>
         </DarkThemeSection>
       </article>

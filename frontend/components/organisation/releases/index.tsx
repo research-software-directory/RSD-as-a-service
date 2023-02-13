@@ -3,54 +3,73 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useEffect} from 'react'
+import {useRouter} from 'next/router'
+
 import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
-import {OrganisationComponentsProps} from '../OrganisationNavItems'
-import useSoftwareRelease from './useSoftwareReleases'
-import ReleaseYear from './ReleaseYear'
 import NoContent from '~/components/layout/NoContent'
+import {OrganisationComponentsProps} from '../OrganisationNavItems'
+import ReleaseYear from './ReleaseList'
 import ReleaseNavButton from './ReleaseNavButton'
 import ScrollToTopButton from './ScrollToTopButton'
+import useReleaseCount from './useReleaseCount'
 
 export default function SoftwareReleases({organisation, isMaintainer}: OrganisationComponentsProps) {
   const {token} = useSession()
-  const {loading, releases} = useSoftwareRelease({
-    organisation_slug: organisation.slug,
+  const router = useRouter()
+  const {loading, countsByYear} = useReleaseCount({
+    organisation_id: organisation.id,
     token
   })
-  // extact year keys in descending order
-  const years = Object.keys(releases ?? {}).sort((a,b)=>parseInt(b) - parseInt(a))
+  const release_year = router.query['release_year']
 
   // console.group('SoftwareReleases')
   // console.log('loading...', loading)
   // console.log('releases...', releases)
   // console.log('years...', years)
+  // console.log('countsByYear...', countsByYear)
   // console.groupEnd()
 
+  useEffect(() => {
+    if (countsByYear &&
+      countsByYear.length > 0 &&
+      typeof release_year === 'undefined') {
+      // only if no release_year query param
+      router.push({
+        query: {
+          ...router.query,
+          release_year: countsByYear[0].release_year
+        }
+      })
+    }
+  // we ignore router dependency
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[countsByYear,release_year])
+
   // show loader
-  if (loading===true) return <ContentLoader />
-  // no content
-  if (typeof releases === 'undefined') return <NoContent />
-  if (years.length === 0) return <NoContent />
+  if (loading === true) return <ContentLoader />
+  if (countsByYear?.length === 0) return <NoContent />
+
   // releases per year
   return (
-    <section className="relative">
-      <h2 className="py-2">Releases per year</h2>
+    <>
+      <h2 className="pt-4">Releases per year</h2>
       <nav id="period_nav"
-        className="flex flex-wrap justify-start items-center mb-4"
+        className="flex flex-wrap justify-start items-center my-4"
         style={{gap: '0.5rem 0.25rem'}}>
-        {years
-          .map(year => {
-            return <ReleaseNavButton key={year} year={year} release_cnt={releases[year].length} />
+        {countsByYear && countsByYear
+          .map(count => {
+            return <ReleaseNavButton
+              key={count.release_year}
+              year={count.release_year.toString()}
+              release_cnt={count.release_cnt} />
           })
         }
       </nav>
-      {years
-        .map(year => {
-          return <ReleaseYear key={year} year={year} releases={releases[year]} />
-        })}
+      {/* Release items of selected year */}
+      <ReleaseYear organisation_id={organisation.id} />
       <ScrollToTopButton minOffset={200} />
-      <div className="py-8"></div>
-    </section>
+    </>
   )
 }
