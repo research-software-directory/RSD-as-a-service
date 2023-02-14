@@ -184,7 +184,7 @@ services:
   #----------------------------------------------
   data-generation:
     build: ./data-generation
-    image: rsd/generation:1.0.3
+    image: rsd/generation:1.1.0
     environment:
       # it needs to be here to use values from .env file
       - PGRST_JWT_SECRET
