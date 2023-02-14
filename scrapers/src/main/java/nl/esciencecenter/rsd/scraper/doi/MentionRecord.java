@@ -19,6 +19,7 @@ public class MentionRecord {
 	String publisher;
 	Integer publicationYear;
 	LocalDate publicationDate;
+	String journal;
 	String page;
 	URI imageUrl;
 	MentionType mentionType;
