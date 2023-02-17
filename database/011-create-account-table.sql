@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
 -- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -12,9 +12,9 @@ CREATE TABLE account (
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL,
 	agree_terms BOOLEAN DEFAULT FALSE NOT NULL,
-	agree_terms_updated_at TIMESTAMPTZ NOT NULL,
+	agree_terms_updated_at TIMESTAMPTZ,
 	notice_privacy_statement BOOLEAN DEFAULT FALSE NOT NULL,
-	notice_privacy_statement_updated_at TIMESTAMPTZ NOT NULL
+	notice_privacy_statement_updated_at TIMESTAMPTZ
 );
 
 CREATE FUNCTION sanitise_insert_account() RETURNS TRIGGER LANGUAGE plpgsql AS
