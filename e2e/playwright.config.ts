@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,7 +34,7 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   /* Retry 2 */
   retries: 2,
-  /* Run 2 workers in CI and 6 locally */
+  /* Run 2 worker in CI and 6 locally */
   workers: process.env.CI ? 2 : 6,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', {open: 'never'}]],
@@ -45,13 +45,13 @@ const config: PlaywrightTestConfig = {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost',
     /* Collect trace. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on',
+    trace: process.env.CI ? 'on-first-retry' : 'on',
     // use state to store user specific cookies for all tests
     storageState: './state/localUser.json',
     // browser resolution by default
     viewport: {
-      width: 1366,
-      height: 768
+      width: 1280,
+      height: 720
     },
     // we do not have https during tests
     ignoreHTTPSErrors: true,
