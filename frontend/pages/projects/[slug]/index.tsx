@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,7 +32,7 @@ import ContentHeader from '~/components/layout/ContentHeader'
 import AppFooter from '~/components/AppFooter'
 import PageMeta from '~/components/seo/PageMeta'
 import OgMetaTags from '~/components/seo/OgMetaTags'
-import CanoncialUrl from '~/components/seo/CanonicalUrl'
+import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import ProjectInfo from '~/components/projects/ProjectInfo'
 import OrganisationsSection from '~/components/software/OrganisationsSection'
 import ProjectMentions from '~/components/projects/ProjectMentions'
@@ -57,17 +57,10 @@ export interface ProjectPageProps extends ScriptProps{
 }
 
 export default function ProjectPage(props: ProjectPageProps) {
-  const [resolvedUrl, setResolvedUrl] = useState('')
   const {slug, project, isMaintainer, organisations,
     researchDomains, keywords, links, output, impact, team,
     relatedSoftware, relatedProjects
   } = props
-
-  useEffect(() => {
-    if (typeof location != 'undefined') {
-      setResolvedUrl(location.href)
-    }
-  }, [])
 
   if (!project?.title){
     return <NoContent />
@@ -84,11 +77,8 @@ export default function ProjectPage(props: ProjectPageProps) {
       <OgMetaTags
         title={project?.title}
         description={project?.description ?? ''}
-        url={resolvedUrl}
       />
-      <CanoncialUrl
-        canonicalUrl={resolvedUrl}
-      />
+      <CanonicalUrl/>
       <AppHeader />
       <EditPageButton
         title="Edit project"

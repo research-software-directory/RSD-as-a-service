@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +10,7 @@ export default function ProjectLinks({links}: { links: ProjectLink[] }) {
   if (!links || links?.length === 0) {
     return (
       <div>
-        <h4 className="text-primary py-4">Project links</h4>
+        <div className="text-primary py-4">Project links</div>
         <i>Not specified</i>
       </div>
     )
@@ -18,22 +18,23 @@ export default function ProjectLinks({links}: { links: ProjectLink[] }) {
 
   return (
     <div>
-      <h4 className="text-primary py-4">Project links</h4>
+      <div className="text-primary py-4">Project links</div>
       <ul>
       {
         links.map(link => {
           if (link.url) {
             return (
-              <Link
-                key={link.url}
-                href={link.url}
-                target="_blank"
-                passHref
-              >
-                <li className="text-sm py-1">
+              <li key={link.url} className="text-sm py-1">
+                <Link
+                  href={link.url}
+                  target="_blank"
+                  passHref
+                >
+
                   {link.title}
-                </li>
-              </Link>
+
+                </Link>
+              </li>
             )
           }
         })

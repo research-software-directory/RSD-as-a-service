@@ -25,6 +25,7 @@ import ProjectFilter from '~/components/projects/filter'
 import {getResearchDomainInfo, ResearchDomain} from '~/components/projects/filter/projectFilterApi'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
+import CanonicalUrl from '~/components/seo/CanonicalUrl'
 
 type ProjectsIndexPageProps = {
   count: number,
@@ -113,6 +114,7 @@ export default function ProjectsIndexPage(
         title={pageTitle}
         description={pageDesc}
       />
+      <CanonicalUrl/>
       <PageTitle title="Projects">
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center lg:ml-4">

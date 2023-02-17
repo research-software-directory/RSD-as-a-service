@@ -123,11 +123,8 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <OgMetaTags
         title={software?.brand_name}
         description={software.short_statement ?? ''}
-        url={resolvedUrl}
       />
-      <CanoncialUrl
-        canonicalUrl={resolvedUrl}
-      />
+      <CanoncialUrl />
       <AppHeader />
       {/* Edit page button only when maintainer */}
       <EditPageButton

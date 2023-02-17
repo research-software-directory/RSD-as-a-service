@@ -14,7 +14,7 @@ export default function ReleaseNavButton({year, release_cnt}: ReleaseNavProps) {
   const router = useRouter()
   const release_year = router.query['release_year']
   let styles = {
-    opacity: 0.5
+    opacity: 0.6
   }
   if (release_year && release_year === year) {
     styles = {

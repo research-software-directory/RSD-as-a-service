@@ -8,7 +8,10 @@
       "enabled": true,
       "url": "rsd@esciencecenter.nl",
       "issues_page_url": "https://github.com/research-software-directory/RSD-as-a-service/issues"
-    }
+    },
+    "login_info_url": "https://research-software-directory.github.io/documentation/getting-access.html",
+    "terms_of_service_url": "/page/terms-of-service/",
+    "privacy_statement_url": "/page/privacy-statement/"
   },
   "links": [
     {
@@ -17,7 +20,7 @@
       "target": "_self"
     },
     {
-      "label": "Documentation",
+      "label": "User Documentation",
       "url": "https://research-software-directory.github.io/documentation",
       "target": "_blank"
     },
@@ -42,11 +45,11 @@
         "base-content": "rgba(34,36,37,1)",
         "base-content-secondary": "rgba(34,36,37,0.7)",
         "base-content-disabled": "rgba(34,36,37,0.45)",
-        "primary": "#01ad83",
+        "primary": "#006649",
         "primary-content": "#fff",
         "secondary": "#000",
         "secondary-content": "#fff",
-        "accent": "#73095d",
+        "accent": "#01ad83",
         "accent-content": "#fff",
         "error": "#e53935",
         "error-content": "#fff",
