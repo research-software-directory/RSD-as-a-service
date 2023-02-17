@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,6 +24,7 @@ import ProjectsGrid from '~/components/projects/ProjectsGrid'
 import ProjectFilter from '~/components/projects/filter'
 import {getResearchDomainInfo, ResearchDomain} from '~/components/projects/filter/projectFilterApi'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
+import PageMeta from '~/components/seo/PageMeta'
 
 type ProjectsIndexPageProps = {
   count: number,
@@ -36,6 +37,8 @@ type ProjectsIndexPageProps = {
 }
 
 const pageTitle = `Projects | ${app.title}`
+const pageDesc = 'The list of research projects registerd in the Research Software Directory.'
+
 
 export default function ProjectsIndexPage(
   {projects=[], count, page, rows, search, keywords,domains}: ProjectsIndexPageProps
@@ -105,9 +108,11 @@ export default function ProjectsIndexPage(
 
   return (
     <DefaultLayout>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
+      {/* Page Head meta tags */}
+      <PageMeta
+        title={pageTitle}
+        description={pageDesc}
+      />
       <PageTitle title="Projects">
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center lg:ml-4">

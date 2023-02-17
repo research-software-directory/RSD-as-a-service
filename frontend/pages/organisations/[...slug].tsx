@@ -21,6 +21,7 @@ import {OrganisationForOverview} from '../../types/Organisation'
 import {SearchProvider} from '../../components/search/SearchContext'
 import {PaginationProvider} from '../../components/pagination/PaginationContext'
 import {getOrganisationMetadata, RORItem} from '~/utils/getROR'
+import PageMeta from '~/components/seo/PageMeta'
 
 export type OrganisationPageProps = {
   organisation: OrganisationForOverview,
@@ -73,9 +74,11 @@ export default function OrganisationPage({organisation,slug,page,ror}:Organisati
 
   return (
     <DefaultLayout>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
+      {/* Page Head meta tags */}
+      <PageMeta
+        title={`${organisation?.name} | ${app.title}`}
+        description={organisation.description ?? `The organisation participates in RSD with ${organisation.software_cnt} registered software item(s).`}
+      />
       <SearchProvider>
       <PaginationProvider>
         <OrganisationTitle
