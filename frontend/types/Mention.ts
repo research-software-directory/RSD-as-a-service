@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -18,6 +18,7 @@ export type MentionType = {
 }
 
 // as in mention table
+// if you update this type, also update the field 'mentionColumns' below
 export type MentionItemProps = {
   id: string | null
   doi: string | null
@@ -26,6 +27,7 @@ export type MentionItemProps = {
   authors: string | null
   publisher: string | null
   publication_year: number | null
+  journal: string | null
   page: string | null
   // url to external image
   image_url: string | null
@@ -34,6 +36,8 @@ export type MentionItemProps = {
   source: string
   note: string | null
 }
+
+export const mentionColumns ='id,doi,url,title,authors,publisher,publication_year,journal,page,image_url,mention_type,source,note'
 
 export type MentionByType = {
   [key in MentionTypeKeys]?: MentionItemProps[]
@@ -50,4 +54,3 @@ export type MentionForProject = MentionItemProps & {
   impact_for_project?: any[]
 }
 
-export const mentionColumns ='id,doi,url,title,authors,publisher,publication_year,page,image_url,mention_type,source,note'

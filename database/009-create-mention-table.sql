@@ -35,6 +35,7 @@ CREATE TABLE mention (
 	publisher VARCHAR(255),
 	publication_year SMALLINT,
 	publication_date DATE,
+	journal VARCHAR(500),
 	page VARCHAR(50),
 	image_url VARCHAR(500) CHECK (image_url ~ '^https?://'),
 	mention_type mention_type NOT NULL,

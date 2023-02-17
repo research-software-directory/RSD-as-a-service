@@ -1,12 +1,13 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.scraper.doi;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
@@ -68,7 +69,7 @@ public class CrossrefMention implements Mention {
 	@Override
 	public MentionRecord mentionData() {
 		StringBuilder url = new StringBuilder("https://api.crossref.org/works/" + Utils.urlEncode(doi));
-		Config.crossrefContactEmail().ifPresent(email -> url.append("?mailto=" + email));
+		Config.crossrefContactEmail().ifPresent(email -> url.append("?mailto=").append(email));
 		String responseJson = Utils.get(url.toString());
 		JsonObject jsonTree = JsonParser.parseString(responseJson).getAsJsonObject();
 		MentionRecord result = new MentionRecord();
@@ -97,6 +98,13 @@ public class CrossrefMention implements Mention {
 			result.publicationYear = Utils.integerOrNull(workJson.getAsJsonObject("published").getAsJsonArray("date-parts").get(0).getAsJsonArray().get(0));
 		} catch (RuntimeException e) {
 //			year not found, we leave it at null, nothing to do
+		}
+		if (workJson.getAsJsonArray("container-title").size() > 0) {
+			JsonArray journalTitles = workJson.getAsJsonArray("container-title");
+			result.journal = journalTitles.get(0).getAsString();
+			for (int i = 1; i < journalTitles.size(); i++) {
+				result.journal += ", " + journalTitles.get(i).getAsString();
+			}
 		}
 		result.page = Utils.stringOrNull(workJson.get("page"));
 		result.mentionType = crossrefTypeMap.getOrDefault(Utils.stringOrNull(workJson.get("type")), MentionType.other);

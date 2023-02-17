@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -62,6 +64,7 @@ export default function MentionItemBase({item,pos,nav,type,role='find'}:MentionI
         publisher={item?.publisher}
         page={item?.page}
         publication_year={item.publication_year}
+        journal = {item.journal}
         className="text-sm"
       />
       <MentionDoi

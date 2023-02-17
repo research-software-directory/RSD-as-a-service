@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -48,9 +48,20 @@ export const mentionModal = {
   },
   publisher: {
     label: 'Publisher',
-    help: 'Name of publisher, journal, website...',
+    help: 'Name of publisher',
     validation: {
       required: false
+    }
+  },
+  journal: {
+    label: 'Journal',
+    help: 'Name of journal, book series, website...',
+    validation: {
+      required: false,
+      maxLength: {
+        value: 500,
+        message: 'Maximum length is 500'
+      }
     }
   },
   page: {
