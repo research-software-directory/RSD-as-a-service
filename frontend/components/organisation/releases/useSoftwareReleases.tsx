@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -31,7 +33,7 @@ type UseSoftwareReleaseProps = {
 
 async function getReleasesForOrganisation({organisation_id,release_year,token}:UseSoftwareReleaseProps) {
   try {
-    const query = `organisation_id=${organisation_id}&release_year=eq.${release_year}&order=release_date.desc`
+    const query = `organisation_id=eq.${organisation_id}&release_year=eq.${release_year}&order=release_date.desc`
     const url = `${getBaseUrl()}/rpc/releases_by_organisation?${query}`
     // make request
     const resp = await fetch(url, {

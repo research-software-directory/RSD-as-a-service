@@ -443,7 +443,8 @@ $$;
 -- release info is scraped from concept DOI
 -- one software belongs to multiple organisations
 -- INCLUDES releases of children organisations
-CREATE FUNCTION releases_by_organisation(organisation_id UUID) RETURNS TABLE (
+CREATE FUNCTION releases_by_organisation() RETURNS TABLE (
+	organisation_id UUID,
 	software_id UUID,
 	software_slug VARCHAR,
 	software_name VARCHAR,
@@ -455,7 +456,8 @@ CREATE FUNCTION releases_by_organisation(organisation_id UUID) RETURNS TABLE (
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN RETURN QUERY
-	SELECT DISTINCT
+	SELECT
+		organisation.id AS organisation_id,
 		software.id AS software_id,
 		software.slug AS software_slug,
 		software.brand_name AS software_name,
@@ -465,7 +467,9 @@ BEGIN RETURN QUERY
 		mention.publication_year AS release_year,
 		mention.authors AS release_authors
 	FROM
-		list_child_organisations(organisation_id)
+		organisation
+	CROSS JOIN
+		list_child_organisations(organisation.id)
 	INNER JOIN
 		software_for_organisation ON list_child_organisations.organisation_id = software_for_organisation.organisation
 	INNER JOIN
@@ -482,17 +486,21 @@ $$;
 
 -- Software releases count by organisation
 -- DEPENDS ON releases_by_organisation RPC
-CREATE FUNCTION release_cnt_by_organisation(organisation_id UUID) RETURNS TABLE (
-	id UUID,
+CREATE FUNCTION release_cnt_by_organisation() RETURNS TABLE (
+	organisation_id UUID,
 	release_cnt BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN RETURN QUERY
 	SELECT
-		organisation_id AS id,
-		COUNT(releases_by_organisation.release_doi) AS release_cnt
+		releases_by_organisation.organisation_id AS organisation_id,
+		COUNT(releases_by_organisation.*) AS release_cnt
 	FROM
-		releases_by_organisation(organisation_id)
+		organisation
+	INNER JOIN
+		releases_by_organisation() ON releases_by_organisation.organisation_id = organisation.id
+	GROUP BY
+		releases_by_organisation.organisation_id
 	;
 END
 $$;
@@ -507,9 +515,11 @@ $$
 BEGIN RETURN QUERY
 	SELECT
 		releases_by_organisation.release_year,
-		COUNT(releases_by_organisation.release_doi) AS release_cnt
+		COUNT(releases_by_organisation.*) AS release_cnt
 	FROM
-		releases_by_organisation(organisation_id)
+		releases_by_organisation()
+	WHERE
+		releases_by_organisation.organisation_id = release_cnt_by_year.organisation_id
 	GROUP BY
 		releases_by_organisation.release_year
 	;
@@ -572,7 +582,7 @@ BEGIN
 	LEFT JOIN
 		children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
 	LEFT JOIN
-		release_cnt_by_organisation(organisation.id) ON release_cnt_by_organisation.id = organisation.id
+		release_cnt_by_organisation() ON release_cnt_by_organisation.organisation_id = organisation.id
 	;
 END
 $$;
