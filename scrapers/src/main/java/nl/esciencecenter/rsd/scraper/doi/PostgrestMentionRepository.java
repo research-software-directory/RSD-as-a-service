@@ -19,7 +19,7 @@ import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
 import java.time.Instant;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class PostgrestMentionRepository implements MentionRepository {
 		return new GsonBuilder()
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, typeOfT, context) -> Instant.parse(json.getAsString()))
-				.registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, typeOfT, context) -> LocalDate.parse(json.getAsString()))
+				.registerTypeAdapter(ZonedDateTime.class, (JsonDeserializer<ZonedDateTime>) (json, typeOfT, context) -> ZonedDateTime.parse(json.getAsString()))
 				.registerTypeAdapter(URI.class, (JsonDeserializer<URI>) (json, typeOfT, context) -> {
 					try {
 						return URI.create(json.getAsString());
@@ -69,7 +69,7 @@ public class PostgrestMentionRepository implements MentionRepository {
 				.serializeNulls()
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-				.registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+				.registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
 				.create().toJson(mentions);
 		String response = Utils.postAsAdmin(Config.backendBaseUrl() + "/mention?on_conflict=doi&select=doi,id", scrapedMentionsJson, "Prefer", "resolution=merge-duplicates,return=representation");
 

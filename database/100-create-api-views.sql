@@ -450,7 +450,7 @@ CREATE FUNCTION releases_by_organisation() RETURNS TABLE (
 	software_name VARCHAR,
 	release_doi CITEXT,
 	release_tag VARCHAR,
-	release_date DATE,
+	release_date TIMESTAMPTZ,
 	release_year SMALLINT,
 	release_authors VARCHAR
 ) LANGUAGE plpgsql STABLE AS
@@ -463,7 +463,7 @@ BEGIN RETURN QUERY
 		software.brand_name AS software_name,
 		mention.doi AS release_doi,
 		mention.version AS release_tag,
-		mention.publication_date AS release_date,
+		mention.doi_registration_date AS release_date,
 		mention.publication_year AS release_year,
 		mention.authors AS release_authors
 	FROM

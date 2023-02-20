@@ -7,7 +7,7 @@ package nl.esciencecenter.rsd.scraper.doi;
 
 import java.net.URI;
 import java.time.Instant;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class MentionRecord {
@@ -18,7 +18,7 @@ public class MentionRecord {
 	String authors;
 	String publisher;
 	Integer publicationYear;
-	LocalDate publicationDate;
+	ZonedDateTime doiRegistrationDate;
 	String journal;
 	String page;
 	URI imageUrl;

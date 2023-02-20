@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -148,13 +148,13 @@ export async function getTagsWithCount(){
 export type SoftwareVersion = {
   doi: string,
   version: string,
-  publication_date: string
+  doi_registration_date: string
 }
 
 export async function getReleasesForSoftware(uuid:string,token?:string){
   try{
     // the releases are ordered by date descending
-    const query = `select=release(mention(doi,version,publication_date))&id=eq.${uuid}&release.mention.order=publication_date.desc`
+    const query = `select=release(mention(doi,version,doi_registration_date))&id=eq.${uuid}&release.mention.order=doi_registration_date.desc`
     const url = `${getBaseUrl()}/software?${query}`
     const resp = await fetch(url, {
       method: 'GET',
@@ -162,19 +162,19 @@ export async function getReleasesForSoftware(uuid:string,token?:string){
     })
     if (resp.status===200){
       const data: any[] = await resp.json()
-      if (data.length === 1) {
+      if (data.length === 1 && data[0]?.release?.mention) {
         const releases: SoftwareVersion[] = data[0]['release']['mention']
         return releases
       }
       return null
     } else if (resp.status===404){
-      logger(`getSoftwareVersions: 404 [${url}]`,'error')
+      logger(`getReleasesForSoftware: 404 [${url}]`,'error')
       // query not found
       return null
     }
     return null
   }catch(e:any){
-    logger(`getSoftwareVersions: ${e?.message}`,'error')
+    logger(`getReleasesForSoftware: ${e?.message}`,'error')
     return null
   }
 }

@@ -42,9 +42,7 @@ public class DataCiteReleaseRepository {
 			          }
 			          publisher
 			          publicationYear
-			          dates {
-			            date
-			          }
+			          registered
 			          creators {
 			            givenName
 			            familyName
