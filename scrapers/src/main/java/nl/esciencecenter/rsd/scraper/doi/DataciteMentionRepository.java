@@ -13,7 +13,7 @@ import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
 import java.time.Instant;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,9 +47,7 @@ public class DataciteMentionRepository implements MentionRepository {
 			      }
 			      publisher
 			      publicationYear
-			      dates {
-			        date
-			      }
+			      registered
 			      creators {
 			        givenName
 			        familyName
@@ -154,9 +152,9 @@ public class DataciteMentionRepository implements MentionRepository {
 
 		result.publisher = Utils.stringOrNull(work.get("publisher"));
 		result.publicationYear = Utils.integerOrNull(work.get("publicationYear"));
-		JsonArray dates = work.getAsJsonArray("dates");
-		if (!dates.isEmpty()) {
-			result.publicationDate = LocalDate.parse(dates.get(0).getAsJsonObject().getAsJsonPrimitive("date").getAsString());
+		String doiRegistrationDateString = Utils.stringOrNull(work.get("registered"));
+		if (doiRegistrationDateString != null) {
+			result.doiRegistrationDate = ZonedDateTime.parse(doiRegistrationDateString);
 		}
 
 		String dataciteResourceTypeGeneral = Utils.stringOrNull(work.getAsJsonObject("types").get("resourceTypeGeneral"));

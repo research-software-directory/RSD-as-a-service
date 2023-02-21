@@ -29,12 +29,12 @@ CREATE TYPE mention_type AS ENUM (
 CREATE TABLE mention (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	doi CITEXT UNIQUE CHECK (doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(doi) <= 255),
+	doi_registration_date TIMESTAMPTZ,
 	url VARCHAR(500) CHECK (url ~ '^https?://'),
 	title VARCHAR(500) NOT NULL,
 	authors VARCHAR(15000),
 	publisher VARCHAR(255),
 	publication_year SMALLINT,
-	publication_date DATE,
 	journal VARCHAR(500),
 	page VARCHAR(50),
 	image_url VARCHAR(500) CHECK (image_url ~ '^https?://'),
