@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -25,7 +25,7 @@ export default function MentionItemFeatured({mention}: { mention: MentionItemPro
       <article className="mb-8 md:flex">
         <ImageAsBackground className="flex-1 h-[17rem]" src={mention.image_url} alt={mention.title ?? 'image'} />
         <div className="flex flex-col py-4 px-0 md:py-0 md:px-6 md:flex-1 lg:flex-[2] text-primary-content">
-            <h3 className="text-[2rem] mb-4 text-primary leading-10">
+            <h3 className="text-[2rem] mb-4 text-accent leading-10">
               {mention.title}
             </h3>
           {/* <div>By {mention.authors}</div> */}

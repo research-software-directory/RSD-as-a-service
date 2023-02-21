@@ -14,7 +14,7 @@ export default function ReleaseItem({release}: { release: SoftwareReleaseInfo })
     <article className="py-2">
       <div className="flex gap-4">
         {/* release date */}
-        <div className="text-base-content-disabled whitespace-nowrap font-mono tracking-tighter text-sm leading-6">{
+        <div className="text-base-content-secondary whitespace-nowrap font-mono tracking-tighter text-sm leading-6">{
           releaseDate.toLocaleDateString(undefined, {
             day: '2-digit',
             month: 'short',

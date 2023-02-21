@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,7 +52,7 @@ export default function ProjectStatus({date_start, date_end}: ProjectStatusProps
 
   return (
     <div>
-      <h4 className="text-primary pb-4">Status</h4>
+      <div className="text-primary pb-4">Status</div>
       <div className="mb-2 w-full h-2 bg-base-300 rounded-md overflow-hidden relative">
         <div
           data-testid="progress-bar-value"

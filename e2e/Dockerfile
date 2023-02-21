@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/playwright:v1.30.0-focal
 # create working dir
 WORKDIR /app
 
-# copy package.json first - for chaching
+# copy package.json first - for caching
 COPY package.json package-lock.json ./
 
 # install all dependencies
@@ -19,9 +19,7 @@ RUN npm ci
 # copy all files
 COPY . .
 
-RUN npx playwright install chrome msedge --with-deps
-# install browsers?!? do I need this
-# RUN npx playwright install
+RUN npx playwright install chromium chrome firefox --with-deps
 
-# sleep for 10 sec and then run e2e:all script
+# run e2e:docker script
 CMD npm run e2e:docker

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,7 @@ export default function ContactEmail({email}:{email?:string}) {
       <div className="mt-8">
         {/* <div className="mt-4 text-lg">Questions or comments?</div> */}
         <a href={`mailto:${email}`}
-          className="flex text-primary hover:text-primary-content"
+          className="flex text-accent hover:text-accent-content"
         >
           <Mail className="mr-2"/> {email}
         </a>

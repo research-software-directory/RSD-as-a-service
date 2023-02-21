@@ -6,7 +6,7 @@
 export default function UnderlinedTitle({title}: { title: string }) {
   return (
     <>
-      <div className="pt-2 text-base-content-disabled">{title}</div>
+      <div className="pt-2 text-base-content-secondary">{title}</div>
       <hr className="pb-2" />
     </>
   )

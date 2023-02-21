@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -115,27 +115,27 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
       <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <div>
           <div className="text-lg">{software_cnt} Software</div>
-          <div className="opacity-40">packages registered</div>
+          <div className="opacity-50">packages registered</div>
         </div>
 
         <div>
           <div className="text-lg">{project_cnt} Projects</div>
-          <div className="opacity-40">registered</div>
+          <div className="opacity-50">registered</div>
         </div>
 
         <div>
           <div className="text-lg">{organisation_cnt} Organisations</div>
-          <div className="opacity-40">contributed</div>
+          <div className="opacity-50">contributed</div>
         </div>
 
         <div>
           <div className="text-lg">{contributor_cnt} Contributors</div>
-          <div className="opacity-40">to research software</div>
+          <div className="opacity-50">to research software</div>
         </div>
 
         <div>
           <div className="text-lg">{software_mention_cnt} Mentions</div>
-          <div className="opacity-40">of research software</div>
+          <div className="opacity-50">of research software</div>
         </div>
       </div>
 

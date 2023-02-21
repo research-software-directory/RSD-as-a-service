@@ -24,6 +24,7 @@ import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
 import SoftwareFilter from '~/components/software/filter'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
+import CanonicalUrl from '~/components/seo/CanonicalUrl'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -120,6 +121,8 @@ export default function SoftwareIndexPage(
         title={pageTitle}
         description={pageDesc}
       />
+      {/* canonical url meta tag */}
+      <CanonicalUrl/>
       <PageTitle title="Software">
         <div className="md:flex flex-wrap justify-end">
           <div className="flex items-center">

@@ -1,8 +1,8 @@
-# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 - 2023 dv4all
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 # SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-# SPDX-FileCopyrightText: 2022 dv4all
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -39,22 +39,34 @@ jobs:
         node-version: 18.5
         cache: 'npm'
         cache-dependency-path: e2e/package-lock.json
+    - name: get playwright version
+      id: playwright-version
+      working-directory: e2e
+      run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
+    - name: cache playwright binaries
+      uses: actions/cache@v3
+      id: playwright-cache
+      with:
+        path: |
+          ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
     - name: install dependencies
       working-directory: e2e
       run: npm ci
     - name: install browsers
       working-directory: e2e
       run: npx playwright install chromium chrome firefox --with-deps
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
     - name: build rsd
       working-directory: .
       run: |
         cp e2e/.env.e2e .env
-        docker-compose build --parallel database backend auth frontend nginx swagger
+        docker-compose build --parallel database backend auth frontend nginx
     - name: start rsd
       working-directory: .
       run: |
-        docker-compose up --detach database backend auth frontend nginx swagger
-        sleep 10
+        docker-compose up --detach database backend auth frontend nginx
+        sleep 5
     - name: run e2e tests
       working-directory: e2e
       run: npm run e2e:ubuntu
