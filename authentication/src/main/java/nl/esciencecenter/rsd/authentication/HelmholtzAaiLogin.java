@@ -44,27 +44,24 @@ public class HelmholtzAaiLogin implements Login {
 
 	private final String code;
 	private final String redirectUrl;
-	static final String DEFAULT_ORGANISATION = "Unknown";
+	static final String DEFAULT_ORGANISATION = "Helmholtz";
 
 	// See https://hifis.net/doc/helmholtz-aai/list-of-vos/#vos-representing-helmholtz-centres
-	static private final Collection<String> knownHgfOrganisations = Set.<String>of(new String[] {
+	static private final Collection<String> knownHgfOrganisations = Set.<String>of(
 		"AWI", "CISPA", "DESY", "DKFZ", "DLR", "DZNE", "FZJ", "GEOMAR", "GFZ", "GSI", "hereon", "HMGU", "HZB", "KIT", "MDC", "UFZ"
-	});
+	);
 
 	public HelmholtzAaiLogin(String code, String redirectUrl) {
 		this.code = Objects.requireNonNull(code);
 		this.redirectUrl = Objects.requireNonNull(redirectUrl);
 	}
 
-	static String getOrganisationFromEntitlements(
-		JSONArray entitlements,
-		boolean allowExternal
-	) {
+	static String getOrganisationFromEntitlements(JSONArray entitlements) {
 		if (entitlements == null || entitlements.isEmpty()) {
-			return allowExternal ? DEFAULT_ORGANISATION : null;
+			return null;
 		}
 
-		String returnOrganisation = DEFAULT_ORGANISATION;
+		String returnOrganisation;
 		ArrayList<String> organisationsDelivered = new ArrayList<String>();
 		boolean helmholtzmemberFound = false;
 
@@ -113,8 +110,7 @@ public class HelmholtzAaiLogin implements Login {
 			}
 		}
 
-		if (!helmholtzmemberFound && !allowExternal) {
-			// deny login
+		if (!helmholtzmemberFound) {
 			return null;
 		}
 
@@ -200,15 +196,12 @@ public class HelmholtzAaiLogin implements Login {
 		}
 
 		JSONArray entitlements = (JSONArray) userInfo.getClaim("eduperson_entitlement");
-		String organisation = getOrganisationFromEntitlements(
-			entitlements,
-			Config.helmholtzAaiAllowExternalUsers()
-		);
+		String organisation = getOrganisationFromEntitlements(entitlements);
 
-		if (organisation == null) {
-			// login denied by missing entitlements
-			// or external providers are not allowed
-			throw new RsdAuthenticationException("You are not allowed to login");
+		if (organisation == null && !Config.helmholtzAaiAllowExternalUsers()) {
+			// Login denied because no HGF organisation could be found in eduperson_entitlements
+			// and because social IdPs are not allowed
+			throw new RsdAuthenticationException("You are not allowed to login.");
 		}
 
 		return new OpenIdInfo(
