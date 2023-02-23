@@ -12,7 +12,7 @@ import useRsdSettings from '~/config/useRsdSettings'
 export default function ContributorPrivacyHint() {
   const {host} = useRsdSettings()
   return (
-    <Alert severity="info" sx={{marginTop:'0.5rem'}}>
+    <Alert severity="info" sx={{marginTop:'1rem'}}>
       Before adding an individual, make sure to ask for their permission to appear in the RSD. Please see our <strong><u><Link href={host?.terms_of_service_url ?? ''} target="_blank">Terms of Service</Link></u></strong> for more information.
     </Alert>
   )

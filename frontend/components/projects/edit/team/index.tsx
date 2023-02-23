@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -204,12 +204,12 @@ export default function ProjectTeam({slug}: { slug: string }) {
             title={cfgTeamMembers.find.title}
             subtitle={cfgTeamMembers.find.subtitle}
           />
-          <ContributorPrivacyHint />
           <FindMember
             project={project.id}
             token={token}
             onAdd={onEditMember}
           />
+          <ContributorPrivacyHint />
         </div>
       </EditSection>
 
