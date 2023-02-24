@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -142,7 +142,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
         </div>
         <input className="px-2 pl-8 py-2 bg-transparent rounded-sm border border-white border-opacity-50 focus:outline-0 w-full focus:bg-white focus:text-black duration-200"
           data-testid="global-search"
-          placeholder="Search in RSD or jump to..."
+          placeholder="Search or jump to..."
           autoComplete="off"
           value={inputValue}
           onChange={handleChange}
