@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,7 +35,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 public class HelmholtzAaiLogin implements Login {
 
@@ -42,23 +46,31 @@ public class HelmholtzAaiLogin implements Login {
 	private final String redirectUrl;
 	static final String DEFAULT_ORGANISATION = "Helmholtz";
 
+	// See https://hifis.net/doc/helmholtz-aai/list-of-vos/#vos-representing-helmholtz-centres
+	static private final Collection<String> knownHgfOrganisations = Set.<String>of(
+		"AWI", "CISPA", "DESY", "DKFZ", "DLR", "DZNE", "FZJ", "GEOMAR", "GFZ", "GSI", "hereon", "HMGU", "HZB", "KIT", "MDC", "UFZ"
+	);
+
 	public HelmholtzAaiLogin(String code, String redirectUrl) {
 		this.code = Objects.requireNonNull(code);
 		this.redirectUrl = Objects.requireNonNull(redirectUrl);
 	}
 
-	static String getOrganisationFromEntitlements(
-		JSONArray entitlements,
-		boolean allowExternal
-	) {
+	static String getOrganisationFromEntitlements(JSONArray entitlements) {
 		if (entitlements == null || entitlements.isEmpty()) {
-			return allowExternal ? DEFAULT_ORGANISATION : null;
+			return null;
 		}
 
-		String organisation = DEFAULT_ORGANISATION;
+		String returnOrganisation;
+		ArrayList<String> organisationsDelivered = new ArrayList<String>();
 		boolean helmholtzmemberFound = false;
 
+		// Collect all organisations delivered, because the home organisation
+		// must not be the first one in the list. This assumes that a person
+		// is only member of one organisation
+		String organisation;
 		for (Object element : entitlements.toArray()) {
+			organisation = null;
 			String ent = element.toString();
 
 			// we expect this for logins from Helmholtz centres
@@ -72,6 +84,7 @@ public class HelmholtzAaiLogin implements Login {
 			if (ent.matches("urn:geant:helmholtz\\.de:group:.*")) {
 				String withoutHash = ent;
 
+				// remove everything behind the hash
 				if (ent.contains("#")) {
 					String[] splitHash = ent.split("#");
 
@@ -93,17 +106,27 @@ public class HelmholtzAaiLogin implements Login {
 
 				// get organisation from last element
 				organisation = splitGroup[splitGroup.length - 1];
+				organisationsDelivered.add(organisation);
 			}
 		}
 
-		if (!helmholtzmemberFound && !allowExternal) {
-			// deny login
+		if (!helmholtzmemberFound) {
 			return null;
 		}
 
+		// Detect whether one of the delivered organisations is in the list of known HGF centres
+		organisationsDelivered.retainAll(knownHgfOrganisations);
+		if (organisationsDelivered.size() == 0) {
+			// No known HGF organisation could be found
+			returnOrganisation = DEFAULT_ORGANISATION;
+		} else {
+			// Always return the first element in the list, even if there were multiple centres found
+			returnOrganisation = organisationsDelivered.get(0);
+		};
+
 		// else: we either return the found the Helmholtz centre name
 		// or the default organisation
-		return organisation;
+		return returnOrganisation;
 	}
 
 	@Override
@@ -173,15 +196,12 @@ public class HelmholtzAaiLogin implements Login {
 		}
 
 		JSONArray entitlements = (JSONArray) userInfo.getClaim("eduperson_entitlement");
-		String organisation = getOrganisationFromEntitlements(
-			entitlements,
-			Config.helmholtzAaiAllowExternalUsers()
-		);
+		String organisation = getOrganisationFromEntitlements(entitlements);
 
-		if (organisation == null) {
-			// login denied by missing entitlements
-			// or external providers are not allowed
-			throw new RsdAuthenticationException("You are not allowed to login");
+		if (organisation == null && !Config.helmholtzAaiAllowExternalUsers()) {
+			// Login denied because no HGF organisation could be found in eduperson_entitlements
+			// and because social IdPs are not allowed
+			throw new RsdAuthenticationException("You are not allowed to login.");
 		}
 
 		return new OpenIdInfo(
