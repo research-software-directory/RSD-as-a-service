@@ -97,7 +97,6 @@ services:
       - PGRST_JWT_SECRET
       - RSD_AUTH_URL
       - RSD_AUTH_PROVIDERS
-      - HOTJAR_ID
       - MATOMO_URL
       - MATOMO_ID
       - SURFCONEXT_CLIENT_ID
@@ -212,7 +211,6 @@ services:
       - PGRST_JWT_SECRET
       - RSD_AUTH_URL
       - RSD_AUTH_PROVIDERS
-      - HOTJAR_ID
       - MATOMO_URL
       - MATOMO_ID
       - SURFCONEXT_CLIENT_ID
