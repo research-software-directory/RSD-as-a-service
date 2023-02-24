@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -64,7 +66,7 @@ export default function ReleaseItem({release}: { release: SoftwareReleaseInfo })
             </Link>
           </div>
           {/* authors, contributors */}
-          {release.release_authors.length > 0 ?
+          {release.release_authors?.length > 0 ?
             <div className="text-sm text-base-content-secondary pt-1">{ release.release_authors}</div>
             : null
           }

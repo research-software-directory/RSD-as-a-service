@@ -9,5 +9,6 @@ COPY ./package.json /usr/app
 RUN npm install
 COPY ./img /usr/app/img
 COPY ./images.js /usr/app
+COPY ./dois.js /usr/app
 COPY ./main.js /usr/app
 CMD npx wait-on --timeout 10000 $POSTGREST_URL && node main.js
