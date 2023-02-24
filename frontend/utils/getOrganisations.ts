@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,7 +16,8 @@ import {paginationUrlParams} from './postgrestUrl'
 export function organisationListUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
   // by default order is on software count and name
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&score=gt.0&order=is_tenant.desc,score.desc.nullslast,name.asc`
+  const selectList = 'parent,name,website,is_tenant,rsd_path,logo_id,software_cnt,project_cnt,score'
+  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&score=gt.0&order=is_tenant.desc,score.desc.nullslast,name.asc&select=${selectList}`
   // add search params
   if (search) {
     url += `&or=(name.ilike.*${search}*, website.ilike.*${search}*)`
