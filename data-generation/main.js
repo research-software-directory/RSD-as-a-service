@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -269,7 +271,7 @@ function generateSoftwareForSoftware(ids) {
 	for (let index = 0; index < ids.length; index++) {
 		const numberOfRelatedSoftware = faker.mersenne.rand(5, 0);
 		if (numberOfRelatedSoftware === 0) continue;
- 
+
 		const origin = ids[index];
 		const idsWithoutOrigin = ids.filter(id => id !== origin);
 		const idsRelation = faker.helpers.arrayElements(idsWithoutOrigin, numberOfRelatedSoftware);
@@ -573,6 +575,46 @@ async function downloadAndGetImages(urlGenerator, amount) {
 	const ids = idsAsObjects.map(idAsObject => idAsObject.id);
 	return ids
 }
+
+async function postAccountsToBackend(amount=50) {
+	return postToBackend('/account', new Array(amount).fill({}));
+}
+
+// Generate one login_for_account per given account
+function generateLoginForAccount(accountIds) {
+	const homeOrganisations = [null];
+	for (let i=0; i < 10; i++) {
+		homeOrganisations.push("Organisation for " + faker.word.noun());
+	}
+	const providers = [
+		"ipd1",
+		"idp2",
+		"idp3",
+		"ip4"
+	];
+
+	const login_for_accounts = [];
+	accountIds.forEach(accountId => {
+		let firstName = faker.name.firstName();
+		let givenName = faker.name.lastName();
+		login_for_accounts.push({
+			account: accountId,
+			name: firstName + ' ' + givenName,
+			email: faker.internet.email(firstName, givenName),
+			sub: faker.random.alphaNumeric(30),
+			provider: faker.helpers.arrayElement(providers),
+			home_organisation: faker.helpers.arrayElement(homeOrganisations)
+		});
+	})
+	return login_for_accounts;
+}
+
+await postAccountsToBackend(100)
+	.then(() => getFromBackend('/account'))
+	.then(res => res.json())
+	.then(jsonAccounts => jsonAccounts.map(a => a.id))
+	.then(async accountIds => postToBackend('/login_for_account', generateLoginForAccount(accountIds)))
+	.then(() => console.log('accounts, login_for_accounts done'));
 
 const localImageIds = await getLocalImageIds(images);
 
