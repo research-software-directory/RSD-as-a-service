@@ -1561,3 +1561,13 @@ BEGIN
 END
 $$;
 
+-- Display amount of users per home_organisation
+CREATE VIEW user_count_per_home_organisation AS
+	SELECT
+		home_organisation,
+		COUNT(*)
+	FROM
+		login_for_account
+	GROUP BY
+		home_organisation
+	;
