@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -58,35 +58,41 @@ export function sortBySearchFor(itemA: any, itemB: any, prop: string, searchFor:
   const valA:string = itemA[prop]
   const valB:string = itemB[prop]
 
+  // exact match
   if (
-    valA.toLowerCase().startsWith(searchFor.toLowerCase()) === true &&
-    valB.toLowerCase().startsWith(searchFor.toLowerCase()) === false
+    valA.toLowerCase() == searchFor.toLowerCase()
   ) {
     return -1
   }
 
   if (
-    valA.toLowerCase().startsWith(searchFor.toLowerCase()) === false &&
-    valB.toLowerCase().startsWith(searchFor.toLowerCase()) === true
+    valB.toLowerCase() == searchFor.toLowerCase()
   ) {
     return 1
   }
 
-  if (
-    valA.toLowerCase().includes(searchFor.toLowerCase()) === true &&
-    valB.toLowerCase().includes(searchFor.toLowerCase()) === false
-  ) {
+  // get position of term, -1 = not found
+  const posA = valA.toLowerCase().indexOf(searchFor.toLowerCase())
+  const posB = valB.toLowerCase().indexOf(searchFor.toLowerCase())
+
+  // both items contain the term
+  if (posA > -1 && posB > -1) {
+    // found in A closer to left
+    if (posA < posB) return -1
+    // found in B closer to left
+    return 1
+  }
+  // found only in A
+  if (posA > -1 && posB === -1) {
     return -1
   }
-
-  if (
-    valA.toLowerCase().includes(searchFor.toLowerCase()) === false &&
-    valB.toLowerCase().includes(searchFor.toLowerCase()) === true
-  ) {
+  // found only in B
+  if (posA === -1 && posB > -1) {
+    // found in B
     return 1
   }
 
-  // values are equal
+  // no change of order
   return 0
 }
 

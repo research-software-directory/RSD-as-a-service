@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,6 +30,7 @@ const orderSearchFor = [
   {id: 1, name: 'defg', amount: 96.5, datum: '2020-12-15'},
   {id: 1, name: 'efgh', amount: 94, datum: '2020-12-7'},
   {id: 1, name: 'fghi', amount: 89, datum: '2018-11-1'},
+  {id: 1, name: 'cd', amount: 98, datum: '2019-12-26'},
 ]
 
 describe('sortFn',()=>{
@@ -71,15 +72,20 @@ describe('sortFn',()=>{
   })
 
   it('order by searchFor', () => {
-    const resp = orderSearchFor.sort((a, b) => sortBySearchFor(a, b, 'name', 'c'))
+    const resp = orderSearchFor.sort((a, b) => sortBySearchFor(a, b, 'name', 'cd'))
     const first = resp[0]
     const second = resp[1]
     const third = resp[2]
-    // first if starts with
-    expect(first.name).toEqual('cdef')
-    // second and third contain it
-    expect(second.name).toEqual('abcd')
+    const fourth = resp[3]
+
+    // first exact match
+    expect(first.name).toEqual('cd')
+    // second starts with
+    expect(second.name).toEqual('cdef')
+    // third contains it closer to left then fourth
     expect(third.name).toEqual('bcde')
+    // fourth contains it further to left then third
+    expect(fourth.name).toEqual('abcd')
   })
 
 })
