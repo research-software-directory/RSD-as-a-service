@@ -59,18 +59,12 @@ export function getUserMenuItems(
       type: 'link',
       label: 'Administration',
       active: ['rsd_admin'].includes(role),
-      path: '/admin/pages',
+      path: '/admin/public-pages',
       icon: <ManageAccountsIcon />
-    }, {
-      type: 'link',
-      label: 'ORCID whitelist',
-      active: orcidEnabled && ['rsd_admin'].includes(role),
-      path: '/admin/orcid-whitelist',
-      icon: <PlaylistAddCheckIcon />
     }, {
       type: 'divider',
       label: 'divider3',
-      active: ['rsd_admin'].includes(role)
+      active: ['rsd_admin','rsd_user'].includes(role),
     }, {
       label: 'Logout',
       active: ['rsd_admin', 'rsd_user'].includes(role),

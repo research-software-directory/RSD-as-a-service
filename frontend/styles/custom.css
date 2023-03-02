@@ -1,6 +1,6 @@
 /*
- * SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
- * SPDX-FileCopyrightText: 2022 dv4all
+ * SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+ * SPDX-FileCopyrightText: 2022 - 2023 dv4all
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -56,7 +56,7 @@ body {
 }
 
 #nprogress .bar {
-  background: var(--rsd-primary,'red');
+  background: var(--rsd-accent,'orange');
 
   position: fixed;
   z-index: 1031;
@@ -74,7 +74,7 @@ body {
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px var(--rsd-primary,'red'), 0 0 5px var(--rsd-primary,'red');
+  box-shadow: 0 0 10px var(--rsd-accent,'orange'), 0 0 5px var(--rsd-accent,'orange');
   opacity: 1.0;
   transform: rotate(3deg) translate(0px, -4px);
 }

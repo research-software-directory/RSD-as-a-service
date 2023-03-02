@@ -33,7 +33,7 @@ export default function ConfirmDeleteModal({
   // console.groupEnd()
   return (
     <Dialog
-      data-testid="conform-delete-modal"
+      data-testid="confirm-delete-modal"
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}

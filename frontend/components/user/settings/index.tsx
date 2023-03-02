@@ -12,18 +12,23 @@ import {useSession} from '~/auth'
 import {UserSettingsType} from '~/types/SoftwareTypes'
 import {useGetUserAgreementStatus} from './useGetUserAgreementStatus'
 import UserAgreementForm from './UserAgreementForm'
+import RemoveAccount from './RemoveAccount'
 
 export default function UserSettings() {
   const {token,user} = useSession()
-
   const [agreeTerms, setAgreeTerms] = useState<boolean>(false)
   const [noticePrivacy, setNoticePrivacy] = useState<boolean>(false)
-
   const userInfo = useGetUserAgreementStatus(token, user, setAgreeTerms, setNoticePrivacy)
+  const disableRemove = agreeTerms===false || noticePrivacy===false
 
   const methods = useForm<UserSettingsType>({
     mode: 'onChange',
   })
+
+  // console.group('UserSettings')
+  // console.log('userInfo...', userInfo)
+  // console.log('disableRemove...', disableRemove)
+  // console.groupEnd()
 
   return (
     <div data-testid="user-profile-section">
@@ -50,6 +55,9 @@ export default function UserSettings() {
             setNoticePrivacy={setNoticePrivacy}
           />
         </FormProvider>
+      }
+      {user?.account &&
+        <RemoveAccount disabled={disableRemove ?? true} />
       }
     </div>
   )
