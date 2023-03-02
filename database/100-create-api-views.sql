@@ -32,7 +32,7 @@ BEGIN
 	LEFT JOIN
 		(SELECT
 				keyword_for_software.keyword,
-				count(keyword_for_software.keyword) AS cnt
+				COUNT(keyword_for_software.keyword) AS cnt
 			FROM
 				keyword_for_software
 			GROUP BY keyword_for_software.keyword
@@ -169,8 +169,8 @@ BEGIN
 		repository_url.software,
 		(SELECT
 			ARRAY_AGG(p_lang)
-		  FROM
-		  	JSONB_OBJECT_KEYS(repository_url.languages) p_lang
+		FROM
+			JSONB_OBJECT_KEYS(repository_url.languages) p_lang
 		) AS "prog_lang"
 	FROM
 		repository_url
@@ -274,7 +274,7 @@ END
 $$;
 
 -- UNIQUE contributor display_names
-CREATE OR REPLACE FUNCTION unique_contributors() RETURNS TABLE (
+CREATE FUNCTION unique_contributors() RETURNS TABLE (
 	display_name TEXT,
 	affiliation VARCHAR,
 	orcid VARCHAR,
@@ -353,34 +353,23 @@ $$;
 CREATE FUNCTION software_count_by_organisation(public BOOLEAN DEFAULT TRUE) RETURNS TABLE (
 	organisation UUID,
 	software_cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	IF (public) THEN
-		RETURN QUERY
-		SELECT
-			list_parent_organisations.organisation_id,
-			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
-		FROM
-			software_for_organisation
-		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
-		WHERE
-			software_for_organisation.status = 'approved' AND
-			software IN (
-				SELECT id FROM software WHERE is_published=TRUE
-			)
-		GROUP BY list_parent_organisations.organisation_id;
-	ELSE
-		RETURN QUERY
-		SELECT
-			list_parent_organisations.organisation_id,
-			COUNT(DISTINCT software_for_organisation.software) AS software_cnt
-		FROM
-			software_for_organisation
-		CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
-		GROUP BY list_parent_organisations.organisation_id;
-	END IF;
-END
+SELECT
+	list_parent_organisations.organisation_id,
+	COUNT(DISTINCT software_for_organisation.software) AS software_cnt
+FROM
+	software_for_organisation
+CROSS JOIN list_parent_organisations(software_for_organisation.organisation)
+WHERE
+		(NOT public)
+	OR
+		(
+			software_for_organisation.status = 'approved'
+		AND
+		 	software IN (SELECT id FROM software WHERE is_published)
+		)
+GROUP BY list_parent_organisations.organisation_id;
 $$;
 
 -- Project count by organisation
@@ -389,54 +378,40 @@ $$;
 CREATE FUNCTION project_count_by_organisation(public BOOLEAN DEFAULT TRUE) RETURNS TABLE (
 	organisation UUID,
 	project_cnt BIGINT
-)LANGUAGE plpgsql STABLE AS
+)LANGUAGE sql STABLE AS
 $$
-BEGIN
-	IF (public) THEN
-		RETURN QUERY
-		SELECT
-			list_parent_organisations.organisation_id,
-			COUNT(DISTINCT project_for_organisation.project) AS project_cnt
-		FROM
-			project_for_organisation
-		CROSS JOIN list_parent_organisations(project_for_organisation.organisation)
-		WHERE
-			status = 'approved' AND
-			project IN (
-				SELECT id FROM project WHERE is_published=TRUE
-			)
-		GROUP BY list_parent_organisations.organisation_id;
-	ELSE
-		RETURN QUERY
-		SELECT
-			list_parent_organisations.organisation_id,
-			COUNT(DISTINCT project_for_organisation.project) AS project_cnt
-		FROM
-			project_for_organisation
-		CROSS JOIN list_parent_organisations(project_for_organisation.organisation)
-		GROUP BY list_parent_organisations.organisation_id;
-	END IF;
-END
+SELECT
+	list_parent_organisations.organisation_id,
+	COUNT(DISTINCT project_for_organisation.project) AS project_cnt
+FROM
+	project_for_organisation
+CROSS JOIN list_parent_organisations(project_for_organisation.organisation)
+WHERE
+		(NOT public)
+	OR
+		(
+			status = 'approved'
+		AND
+			project IN (SELECT id FROM project WHERE is_published)
+		)
+GROUP BY list_parent_organisations.organisation_id;
 $$;
 
 -- Direct children count by organisation
 CREATE FUNCTION children_count_by_organisation() RETURNS TABLE (
 	parent UUID,
 	children_cnt BIGINT
-)LANGUAGE plpgsql STABLE AS
+)LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
-	SELECT
-		organisation.parent, COUNT(*) AS children_cnt
-	FROM
-		organisation
-	WHERE
-		organisation.parent IS NOT NULL
-	GROUP BY
-		organisation.parent
-	;
-END
+SELECT
+	organisation.parent, COUNT(*) AS children_cnt
+FROM
+	organisation
+WHERE
+	organisation.parent IS NOT NULL
+GROUP BY
+	organisation.parent
+;
 $$;
 
 -- Software releases by organisation
@@ -453,35 +428,33 @@ CREATE FUNCTION releases_by_organisation() RETURNS TABLE (
 	release_date TIMESTAMPTZ,
 	release_year SMALLINT,
 	release_authors VARCHAR
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN RETURN QUERY
-	SELECT
-		organisation.id AS organisation_id,
-		software.id AS software_id,
-		software.slug AS software_slug,
-		software.brand_name AS software_name,
-		mention.doi AS release_doi,
-		mention.version AS release_tag,
-		mention.doi_registration_date AS release_date,
-		mention.publication_year AS release_year,
-		mention.authors AS release_authors
-	FROM
-		organisation
-	CROSS JOIN
-		list_child_organisations(organisation.id)
-	INNER JOIN
-		software_for_organisation ON list_child_organisations.organisation_id = software_for_organisation.organisation
-	INNER JOIN
-		software ON software.id = software_for_organisation.software
-	INNER JOIN
-		"release" ON "release".software = software.id
-	INNER JOIN
-		release_version ON release_version.release_id = "release".software
-	INNER JOIN
-		mention ON mention.id = release_version.mention_id
+SELECT
+	organisation.id AS organisation_id,
+	software.id AS software_id,
+	software.slug AS software_slug,
+	software.brand_name AS software_name,
+	mention.doi AS release_doi,
+	mention.version AS release_tag,
+	mention.doi_registration_date AS release_date,
+	mention.publication_year AS release_year,
+	mention.authors AS release_authors
+FROM
+	organisation
+CROSS JOIN
+	list_child_organisations(organisation.id)
+INNER JOIN
+	software_for_organisation ON list_child_organisations.organisation_id = software_for_organisation.organisation
+INNER JOIN
+	software ON software.id = software_for_organisation.software
+INNER JOIN
+	"release" ON "release".software = software.id
+INNER JOIN
+	release_version ON release_version.release_id = "release".software
+INNER JOIN
+	mention ON mention.id = release_version.mention_id
 ;
-END
 $$;
 
 -- Software releases count by organisation
@@ -489,20 +462,18 @@ $$;
 CREATE FUNCTION release_cnt_by_organisation() RETURNS TABLE (
 	organisation_id UUID,
 	release_cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN RETURN QUERY
-	SELECT
-		releases_by_organisation.organisation_id AS organisation_id,
-		COUNT(releases_by_organisation.*) AS release_cnt
-	FROM
-		organisation
-	INNER JOIN
-		releases_by_organisation() ON releases_by_organisation.organisation_id = organisation.id
-	GROUP BY
-		releases_by_organisation.organisation_id
-	;
-END
+SELECT
+	releases_by_organisation.organisation_id AS organisation_id,
+	COUNT(releases_by_organisation.*) AS release_cnt
+FROM
+	organisation
+INNER JOIN
+	releases_by_organisation() ON releases_by_organisation.organisation_id = organisation.id
+GROUP BY
+	releases_by_organisation.organisation_id
+;
 $$;
 
 -- Software releases count per YEAR by organisation
@@ -547,44 +518,41 @@ CREATE FUNCTION organisations_overview(public BOOLEAN DEFAULT TRUE) RETURNS TABL
 	children_cnt BIGINT,
 	release_cnt BIGINT,
 	score BIGINT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
-	SELECT
-		organisation.id,
-		organisation.slug,
-		organisation.parent,
-		organisation.primary_maintainer,
-		organisation.name,
-		organisation.ror_id,
-		organisation.website,
-		organisation.is_tenant,
-		organisation_route.rsd_path,
-		organisation_route.parent_names,
-		organisation.logo_id,
-		software_count_by_organisation.software_cnt,
-		project_count_by_organisation.project_cnt,
-		children_count_by_organisation.children_cnt,
-		release_cnt_by_organisation.release_cnt,
-		(
-			COALESCE(software_count_by_organisation.software_cnt,0) +
-			COALESCE(project_count_by_organisation.project_cnt,0)
-		) as score
-	FROM
-		organisation
-	LEFT JOIN
-		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
-	LEFT JOIN
-		software_count_by_organisation(public) ON software_count_by_organisation.organisation = organisation.id
-	LEFT JOIN
-		project_count_by_organisation(public) ON project_count_by_organisation.organisation = organisation.id
-	LEFT JOIN
-		children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
-	LEFT JOIN
-		release_cnt_by_organisation() ON release_cnt_by_organisation.organisation_id = organisation.id
-	;
-END
+SELECT
+	organisation.id,
+	organisation.slug,
+	organisation.parent,
+	organisation.primary_maintainer,
+	organisation.name,
+	organisation.ror_id,
+	organisation.website,
+	organisation.is_tenant,
+	organisation_route.rsd_path,
+	organisation_route.parent_names,
+	organisation.logo_id,
+	software_count_by_organisation.software_cnt,
+	project_count_by_organisation.project_cnt,
+	children_count_by_organisation.children_cnt,
+	release_cnt_by_organisation.release_cnt,
+	(
+		COALESCE(software_count_by_organisation.software_cnt,0) +
+		COALESCE(project_count_by_organisation.project_cnt,0)
+	) as score
+FROM
+	organisation
+LEFT JOIN
+	organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
+LEFT JOIN
+	software_count_by_organisation(public) ON software_count_by_organisation.organisation = organisation.id
+LEFT JOIN
+	project_count_by_organisation(public) ON project_count_by_organisation.organisation = organisation.id
+LEFT JOIN
+	children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
+LEFT JOIN
+	release_cnt_by_organisation() ON release_cnt_by_organisation.organisation_id = organisation.id
+;
 $$;
 
 -- Software info by organisation
@@ -958,7 +926,7 @@ BEGIN
 	LEFT JOIN
 		(SELECT
 				keyword_for_project.keyword,
-				count(keyword_for_project.keyword) AS cnt
+				COUNT(keyword_for_project.keyword) AS cnt
 			FROM
 				keyword_for_project
 			GROUP BY keyword_for_project.keyword
@@ -1018,7 +986,7 @@ $$;
 
 -- UNIQUE LIST OF TEAM MEMBERS
 -- used in Find
-CREATE OR REPLACE FUNCTION unique_team_members() RETURNS TABLE (
+CREATE FUNCTION unique_team_members() RETURNS TABLE (
 	display_name TEXT,
 	affiliation VARCHAR,
 	orcid VARCHAR,
@@ -1321,17 +1289,17 @@ CREATE FUNCTION homepage_counts(
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
-	SELECT count(id) FROM software INTO software_cnt;
-	SELECT count(id) FROM project INTO project_cnt;
+	SELECT COUNT(id) FROM software INTO software_cnt;
+	SELECT COUNT(id) FROM project INTO project_cnt;
 	SELECT
-		count(id) AS organisation_cnt
+		COUNT(id) AS organisation_cnt
 	FROM
-		organisations_overview(true)
+		organisations_overview(TRUE)
 	WHERE
 		organisations_overview.parent IS NULL AND organisations_overview.score>0
 	INTO organisation_cnt;
-	SELECT count(display_name) FROM unique_contributors() INTO contributor_cnt;
-	SELECT count(mention) FROM mention_for_software INTO software_mention_cnt;
+	SELECT COUNT(display_name) FROM unique_contributors() INTO contributor_cnt;
+	SELECT COUNT(mention) FROM mention_for_software INTO software_mention_cnt;
 END
 $$;
 
@@ -1468,7 +1436,7 @@ BEGIN
 	LEFT JOIN
 		(SELECT
 				research_domain_for_project.research_domain,
-				count(research_domain_for_project.research_domain) AS cnt
+				COUNT(research_domain_for_project.research_domain) AS cnt
 			FROM
 				research_domain_for_project
 			GROUP BY research_domain_for_project.research_domain
@@ -1477,8 +1445,8 @@ BEGIN
 END
 $$;
 
---	GLOBAL SEARCH
---  we use search_text to concatenate all values to use
+-- GLOBAL SEARCH
+-- we use search_text to concatenate all values to use
 CREATE FUNCTION global_search() RETURNS TABLE(
 	slug VARCHAR,
 	name VARCHAR,

@@ -80,7 +80,7 @@ CREATE TABLE mention_for_software (
 );
 
 
-CREATE OR REPLACE FUNCTION search_mentions_for_software(software_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION search_mentions_for_software(software_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
 $$
 BEGIN
 	RETURN QUERY SELECT * FROM mention
@@ -111,7 +111,7 @@ CREATE TABLE impact_for_project (
 );
 
 
-CREATE OR REPLACE FUNCTION search_impact_for_project(project_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION search_impact_for_project(project_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
 $$
 BEGIN
 	RETURN QUERY SELECT * FROM mention
@@ -126,7 +126,7 @@ END
 $$;
 
 
-CREATE OR REPLACE FUNCTION search_output_for_project(project_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION search_output_for_project(project_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
 $$
 BEGIN
 	RETURN QUERY SELECT * FROM mention

@@ -95,38 +95,35 @@ $$;
 
 CREATE TRIGGER sanitise_update_organisation BEFORE UPDATE ON organisation FOR EACH ROW EXECUTE PROCEDURE sanitise_update_organisation();
 
+
 -- including the parent itself
-CREATE FUNCTION list_child_organisations(parent_id UUID) RETURNS TABLE (organisation_id UUID, organisation_name VARCHAR) STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION list_child_organisations(parent_id UUID) RETURNS TABLE (organisation_id UUID, organisation_name VARCHAR) STABLE LANGUAGE sql AS
 $$
-DECLARE child_organisations UUID[];
-DECLARE child_names VARCHAR[];
-DECLARE search_child_organisations UUID[]; -- used as a stack
-DECLARE current_organisation UUID;
-BEGIN
--- depth-first search to find all child organisations
-	search_child_organisations = search_child_organisations || parent_id;
-	WHILE CARDINALITY(search_child_organisations) > 0 LOOP
-		current_organisation = search_child_organisations[CARDINALITY(search_child_organisations)];
-		child_organisations = child_organisations || current_organisation;
-		child_names = child_names || (SELECT name FROM organisation WHERE id = current_organisation);
-		search_child_organisations = trim_array(search_child_organisations, 1);
-		search_child_organisations = search_child_organisations || (SELECT ARRAY(SELECT organisation.id FROM organisation WHERE parent = current_organisation));
-	END LOOP;
-	RETURN QUERY SELECT * FROM UNNEST(child_organisations, child_names);
-END
+WITH RECURSIVE search_tree(id, name) AS (
+		SELECT o.id, o.name
+		FROM organisation o WHERE id = parent_id
+	UNION ALL
+		SELECT o.id, o.name
+		FROM organisation o, search_tree st
+		WHERE o.parent = st.id
+)
+SELECT * FROM search_tree;
 $$;
 
-CREATE FUNCTION list_parent_organisations(id UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE plpgsql AS
+
+CREATE FUNCTION list_parent_organisations(id UUID) RETURNS TABLE (slug VARCHAR, organisation_id UUID) STABLE LANGUAGE sql AS
 $$
-DECLARE current_org UUID = id;
-BEGIN
-	WHILE current_org IS NOT NULL LOOP
-		RETURN QUERY SELECT organisation.slug, organisation.id FROM organisation WHERE organisation.id = current_org;
-		SELECT organisation.parent FROM organisation WHERE organisation.id = current_org INTO current_org;
-	END LOOP;
-	RETURN;
-END
+WITH RECURSIVE search_tree(slug, organisation_id, parent) AS (
+		SELECT o.slug, o.id, o.parent
+		FROM organisation o WHERE o.id = list_parent_organisations.id
+	UNION ALL
+		SELECT o.slug, o.id, o.parent
+		FROM organisation o, search_tree st
+		WHERE o.id = st.parent
+)
+SELECT slug, organisation_id FROM search_tree;
 $$;
+
 
 CREATE FUNCTION slug_to_organisation(full_slug VARCHAR) RETURNS UUID STABLE LANGUAGE plpgsql AS
 $$
@@ -146,36 +143,19 @@ $$;
 
 -- ORGANISATION route / path for all organisations
 -- we combine slugs of all parent organisation into route
-CREATE FUNCTION organisation_route(
-	IN id UUID,
-	OUT organisation UUID,
-	OUT rsd_path VARCHAR,
-	OUT parent_names VARCHAR
-)
-STABLE LANGUAGE plpgsql AS
+CREATE FUNCTION organisation_route(id UUID) RETURNS TABLE (
+	organisation UUID,
+	rsd_path VARCHAR,
+	parent_names VARCHAR
+) STABLE LANGUAGE sql AS
 $$
-DECLARE
-	current_org UUID := id;
-	route VARCHAR := '';
-	slug VARCHAR;
-	names VARCHAR :=  '';
-	current_name VARCHAR;
-BEGIN
-	WHILE current_org IS NOT NULL LOOP
-		SELECT
-			organisation.slug,
-			organisation.parent,
-			organisation.name
-		FROM
-			organisation
-		WHERE
-			organisation.id = current_org
-		INTO slug, current_org, current_name;
---	combine paths in reverse order
-		route := CONCAT(slug, '/', route);
-		names := CONCAT(current_name, ' -> ', names);
-	END LOOP;
-	SELECT id, route, LEFT(names, -4) INTO organisation, rsd_path, parent_names;
-	RETURN;
-END
+WITH RECURSIVE search_tree(slug, name, organisation_id, parent, reverse_depth) AS (
+		SELECT o.slug, o.name, o.id, o.parent, 1
+		FROM organisation o WHERE o.id = organisation_route.id
+	UNION ALL
+		SELECT o.slug, o.name, o.id, o.parent, st.reverse_depth + 1
+		FROM organisation o, search_tree st
+		WHERE o.id = st.parent
+)
+SELECT organisation_route.id, STRING_AGG(slug, '/' ORDER BY reverse_depth DESC), STRING_AGG(name, ' -> ' ORDER BY reverse_depth DESC) FROM search_tree;
 $$;
