@@ -80,7 +80,7 @@ dev-frontend: frontend/.env.local
 e2e-tests:
 	docker-compose down --volumes
 	docker-compose build --parallel database backend auth frontend nginx
-	docker-compose up --detach database backend auth frontend nginx
+	docker-compose up --detach --scale scrapers=0
 	sleep 10
 	docker-compose --file e2e/docker-compose.yml build
 	docker-compose --file e2e/docker-compose.yml up

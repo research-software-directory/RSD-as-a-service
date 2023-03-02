@@ -19,7 +19,7 @@ RUN npm ci
 # copy all files
 COPY . .
 
-RUN npx playwright install chromium chrome firefox --with-deps
+RUN npx playwright install chromium chrome firefox msedge --with-deps
 
 # run e2e:docker script
 CMD npm run e2e:docker
