@@ -58,6 +58,7 @@ export default function MentionEditList({title, type, items}: MentionSectionList
       >
         <Badge
           badgeContent={items.length ?? null}
+          max={999}
           color="primary"
           sx={{
             '& .MuiBadge-badge': {
