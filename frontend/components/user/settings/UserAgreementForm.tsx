@@ -5,6 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
+
 import useRsdSettings from '~/config/useRsdSettings'
 import Link from 'next/link'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
@@ -23,9 +25,9 @@ type UserAgreementFormProps = {
 
 export default function UserAgreementForm({agreeTerms, noticePrivacyStatement, showTitle=true, setAgreeTerms, setNoticePrivacy}: UserAgreementFormProps) {
   const {host} = useRsdSettings()
+  const {token, user} = useSession()
   const {control} = useFormContext()
   const {showErrorMessage} = useSnackbar()
-  const {token,user} = useSession()
 
   async function saveTermsAgreement(value: boolean) {
     const resp = await patchAccountTable({
@@ -71,7 +73,7 @@ export default function UserAgreementForm({agreeTerms, noticePrivacyStatement, s
         {showTitle &&
           <h2>User agreements</h2>
         }
-        <div className="py-2">To be able to contribute to the RSD, we need to know that you agree to our Terms of Service, and that you have read the Privacy Statement. Please check all of the points below to proceed:</div>
+        <div className="py-4">To be able to contribute to the RSD, we need to know that you agree to our Terms of Service, and that you have read the Privacy Statement. Please check all of the points below to proceed:</div>
         <div>
           <ControlledSwitch
             defaultValue={agreeTerms}

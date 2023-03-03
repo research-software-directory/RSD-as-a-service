@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,7 +7,7 @@ import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next'
 
 import {app} from '~/config/app'
-import {ssrMarkdownPage} from '~/components/page/useMarkdownPages'
+import {ssrMarkdownPage} from '~/components/admin/pages/useMarkdownPages'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import MarkdownPage from '~/components/layout/MarkdownPage'

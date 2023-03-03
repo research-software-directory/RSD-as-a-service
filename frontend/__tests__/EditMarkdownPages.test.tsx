@@ -1,12 +1,13 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
-import AdminMarkdownPages from '../pages/admin/pages'
+import AdminMarkdownPages from '../pages/admin/public-pages'
 
 const mockProps = {
   links:[]
