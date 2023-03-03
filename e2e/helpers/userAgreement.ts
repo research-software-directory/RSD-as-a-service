@@ -47,8 +47,7 @@ export async function acceptUserAgreement(page: Page) {
   const checkboxes = await uaModal.getByTestId('controlled-switch-label').all()
 
   if (checkboxes.length > 0) {
-    await page.pause()
-
+    // await page.pause()
     // check/accept all options
     for (const checkbox of checkboxes) {
       if (await checkbox.isChecked() === false) {
