@@ -75,7 +75,7 @@ export default function RsdUsersList() {
               Are you sure you want to delete the account <strong>{modal?.account?.id}</strong>?
             </p>
             <p className="mt-4">
-              The owner will lose access to all pages they maintained and all unused maintainer invites they created will be deleted.
+              The owner will lose access to all pages they maintain and all unused maintainer invites they have created will be deleted.
             </p>
           </>
         }

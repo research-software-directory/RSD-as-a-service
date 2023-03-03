@@ -22,7 +22,7 @@ type RemoveAccountProps = {
 function RemoveAccountBody(props:any) {
   return (
     <p {...props}>
-      All data related to your account will be deleted: <strong>you won&apos;t be able to edit software, projects and organisations that you were a maintainer of</strong>. All unused maintainer invitations created by you will be deleted. The software, project and organisation pages will not be removed from the RSD.
+      Your account will be deleted. You will no longer be able to edit software, projects and organisations that you are a maintainer of. All unused maintainer invitations created by you will be deleted. The software, project and organisation pages you currently maintain <strong>will not be removed</strong> from the RSD.
     </p>
   )
 }
@@ -43,7 +43,7 @@ function RemoveAccountAlert({disabled}: { disabled: boolean }) {
   // show alert about what will be removed
   return (
     <Alert severity="warning" sx={{marginTop:'0.5rem'}}>
-      <AlertTitle sx={{fontWeight:500}}>Removing your RSD account</AlertTitle>
+      <AlertTitle sx={{fontWeight:500}}>This will remove your RSD account</AlertTitle>
       <RemoveAccountBody />
     </Alert>
   )
