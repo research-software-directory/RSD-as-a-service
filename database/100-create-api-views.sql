@@ -430,7 +430,7 @@ CREATE FUNCTION releases_by_organisation() RETURNS TABLE (
 	release_authors VARCHAR
 ) LANGUAGE sql STABLE AS
 $$
-SELECT
+SELECT DISTINCT
 	organisation.id AS organisation_id,
 	software.id AS software_id,
 	software.slug AS software_slug,
