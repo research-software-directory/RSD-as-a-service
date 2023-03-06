@@ -206,6 +206,7 @@ function applyThemeConfig({colors, action, typography}: ThemeConfig) {
       button: {
         fontWeight: 400,
         letterSpacing: '0.125rem',
+        textTransform: 'none' // Remove default for capitalized buttons
       },
       // change headers typography
       h1: {
