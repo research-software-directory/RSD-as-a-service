@@ -205,7 +205,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
                   disabled={!formData.logo_b64 && !formData.logo_id}
                   onClick={deleteLogo}
                 >
-                  remove <DeleteIcon/>
+                  Remove <DeleteIcon/>
                 </Button>
               </div>
             </div>

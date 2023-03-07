@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,7 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
+import AddIcon from '@mui/icons-material/Add'
 
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -317,6 +318,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
       <div className="flex justify-end py-4">
         <Button
           data-testid="add-research-domains"
+          startIcon={<AddIcon />}
           onClick={addDomains}
           sx={{margin: '0rem 0rem 0.5rem 1rem'}}
           disabled={l1Domains===null}

@@ -244,7 +244,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
                   disabled={!formData.avatar_b64 && !formData.avatar_id}
                   onClick={deleteAvatar}
                 >
-                  remove <DeleteIcon/>
+                  Remove <DeleteIcon/>
                 </Button>
               </div>
             </div>
