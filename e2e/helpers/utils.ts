@@ -240,14 +240,15 @@ export async function addCitation(page, input:string, waitForResponse:string) {
   ])
 
   // validate
-  const mentions = page.getByTestId('mention-item-base')
+  const mentions = await page.getByTestId('mention-item-base')
     .filter({
       hasText: RegExp(input,'i')
     })
+
   const count = await mentions.count()
+  // console.log('Count...', count)
   // we should have at least one item
   expect(count).toBeGreaterThan(0)
-
 }
 
 export async function addRelatedSoftware(page: Page, waitForResponse:string) {

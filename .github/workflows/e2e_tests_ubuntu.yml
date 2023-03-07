@@ -6,7 +6,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: e2e tests firefox
+name: e2e tests ubuntu
 on:
   # only manual run
   workflow_dispatch:
@@ -32,14 +32,14 @@ jobs:
       with:
         path: |
           ~/.cache/ms-playwright
-        key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+        key: ${{runner.os}}-playwright-${{env.PLAYWRIGHT_VERSION}}
     - name: install dependencies
       working-directory: e2e
       run: npm ci
     - name: install browsers
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
       working-directory: e2e
       run: npx playwright install chromium chrome firefox --with-deps
-      if: steps.playwright-cache.outputs.cache-hit != 'true'
     - name: build rsd
       working-directory: .
       run: |

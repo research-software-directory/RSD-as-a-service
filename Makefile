@@ -85,4 +85,4 @@ e2e-tests:
 	docker-compose --file e2e/docker-compose.yml build
 	docker-compose --file e2e/docker-compose.yml up
 	docker-compose down
-	docker-compose --file e2e/docker-compose.yml down
+	docker-compose --file e2e/docker-compose.yml down --volumes
