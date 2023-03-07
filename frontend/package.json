@@ -26,7 +26,7 @@
     "@mui/icons-material": "5.10.9",
     "@mui/material": "5.10.12",
     "@tailwindcss/line-clamp": "0.4.2",
-    "@tailwindcss/typography": "0.5.7",
+    "@tailwindcss/typography": "0.5.9",
     "aos": "2.3.4",
     "cookie": "0.5.0",
     "d3": "7.8.2",
@@ -35,11 +35,11 @@
     "nprogress": "0.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "7.39.1",
-    "react-markdown": "8.0.3",
+    "react-hook-form": "7.43.5",
+    "react-markdown": "8.0.5",
     "remark-breaks": "^3.0.2",
     "remark-gfm": "3.0.1",
-    "sharp": "0.31.2"
+    "sharp": "0.31.3"
   },
   "devDependencies": {
     "@svgr/webpack": "6.5.1",
