@@ -43,8 +43,8 @@
   },
   "devDependencies": {
     "@svgr/webpack": "6.5.1",
-    "@testing-library/jest-dom": "5.16.5",
-    "@testing-library/react": "13.4.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
     "@types/aos": "3.0.4",
     "@types/cookie": "0.5.1",
     "@types/d3": "7.4.0",

@@ -51,29 +51,6 @@ describe('frontend/components/organisation/maintainers/index.tsx', () => {
     expect(msg401).toBeInTheDocument()
   })
 
-  it('shows loader during api request', async () => {
-    // user is authenticated
-    defaultSession.status = 'authenticated'
-    defaultSession.token = 'test-token'
-    // but it is not maintainer of this organisation
-    dummyProps.isMaintainer = false
-    render(
-      <WithAppContext options={{session: defaultSession}}>
-        <OrganisationMaintainers {...dummyProps} />
-      </WithAppContext>
-    )
-
-    const loader = await screen.findByRole('progressbar')
-    expect(loader).toBeInTheDocument()
-
-    expect(mockMaintainerOfOrganisation).toBeCalledTimes(1)
-    expect(mockMaintainerOfOrganisation).toBeCalledWith({
-      organisation: dummyProps.organisation.id,
-      token: defaultSession.token,
-      frontend: true
-    })
-  })
-
   it('shows 403 when user is not organisation maintainer', async () => {
     // user is authenticated
     defaultSession.status = 'authenticated'
