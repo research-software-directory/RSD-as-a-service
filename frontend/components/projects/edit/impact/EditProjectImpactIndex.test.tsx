@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -180,7 +180,7 @@ describe('frontend/components/project/edit/impact/index.tsx', () => {
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const addBtn = screen.getByRole('button', {
-      name:'add'
+      name:'Add'
     })
     expect(addBtn).toBeInTheDocument()
 

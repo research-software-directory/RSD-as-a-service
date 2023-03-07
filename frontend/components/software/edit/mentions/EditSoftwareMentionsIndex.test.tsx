@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
@@ -194,7 +195,7 @@ describe('frontend/components/software/edit/maintainers/index.tsx', () => {
 
     // hit add button
     const addBtn = screen.getByRole('button', {
-      name:'add'
+      name:'Add'
     })
     fireEvent.click(addBtn)
 

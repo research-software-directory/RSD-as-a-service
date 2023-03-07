@@ -363,7 +363,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     // click on remove image
     const removeImage = within(modal).getByRole('button', {
-      name: 'remove'
+      name: 'Remove'
     })
 
     await waitFor(() => {
@@ -425,7 +425,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
 
     // click on remove image
     const removeImage = within(modal).getByRole('button', {
-      name: 'remove'
+      name: 'Remove'
     })
 
     await waitFor(() => {
