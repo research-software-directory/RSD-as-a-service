@@ -1571,3 +1571,16 @@ CREATE VIEW user_count_per_home_organisation AS
 	GROUP BY
 		home_organisation
 	;
+
+
+-- Return the number of accounts since specified time stamp
+CREATE FUNCTION new_accounts_count_since_timestamp(timestmp TIMESTAMPTZ) RETURNS INTEGER
+LANGUAGE sql SECURITY DEFINER STABLE AS
+$$
+SELECT
+	COUNT(account.created_at)
+FROM
+	account
+WHERE
+	created_at > timestmp;
+$$;
