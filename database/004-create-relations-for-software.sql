@@ -32,6 +32,57 @@ CREATE TABLE repository_url (
 );
 
 
+CREATE TYPE package_manager_type AS ENUM (
+	'anaconda',
+	'cran',
+	'dockerhub',
+	'maven',
+	'npm',
+	'pypi',
+	'other'
+);
+
+CREATE TABLE package_manager (
+	id UUID PRIMARY KEY,
+	software UUID references software (id) NOT NULL,
+	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
+	package_manager package_manager_type NOT NULL DEFAULT 'other',
+	download_count BIGINT,
+	download_count_scraped_at TIMESTAMPTZ,
+	reverse_dependency_count INTEGER,
+	reverse_dependency_count_scraped_at TIMESTAMPTZ,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
+);
+
+CREATE FUNCTION sanitise_insert_package_manager() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = gen_random_uuid();
+	NEW.created_at = LOCALTIMESTAMP;
+	NEW.updated_at = NEW.created_at;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_package_manager BEFORE INSERT ON package_manager FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_package_manager();
+
+
+CREATE FUNCTION sanitise_update_package_manager() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = OLD.id;
+	NEW.software = old.software;
+	NEW.url = old.url;
+	NEW.created_at = OLD.created_at;
+	NEW.updated_at = LOCALTIMESTAMP;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_package_manager BEFORE UPDATE ON package_manager FOR EACH ROW EXECUTE PROCEDURE sanitise_update_package_manager();
+
+
 
 CREATE TABLE license_for_software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
