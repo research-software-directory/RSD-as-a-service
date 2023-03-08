@@ -10,7 +10,7 @@
 import {faker} from '@faker-js/faker';
 import jwt from 'jsonwebtoken';
 import images from './images.js';
-import {conceptDois, dois} from './dois.js';
+import {conceptDois, dois, packageManagerLinks} from './real-data.js';
 import fs from 'fs/promises';
 
 
@@ -174,6 +174,23 @@ function generateRepositoryUrls(ids) {
 			software: ids[index],
 			url: repoUrl,
 			code_platform: codePlatform,
+		});
+	}
+
+	return result;
+}
+
+function generatePackageManagers(softwareIds) {
+	const result = [];
+
+	for (let index = 0; index < softwareIds.length; index++) {
+		// first assign each package manager entry to one software, then randomly assing package manager entries to the remaining ids
+		const packageManagerLink = index < packageManagerLinks.length ? packageManagerLinks[index] : faker.helpers.arrayElement(packageManagerLinks);
+
+		result.push({
+			software: softwareIds[index],
+			url: packageManagerLink.url,
+			package_manager: packageManagerLink.type,
 		});
 	}
 
@@ -633,15 +650,17 @@ const researchDomainsPromise = getFromBackend('/research_domain?select=id')
 await Promise.all([mentionsPromise, keywordPromise, researchDomainsPromise])
 	.then(() => console.log('mentions, keywords, research domains done'));
 
-let idsSoftware, idsFakeSoftware, idsProjects, idsOrganisations;
+let idsSoftware, idsFakeSoftware, idsRealSoftware, idsProjects, idsOrganisations;
 const softwarePromise = postToBackend('/software', await generateSofware())
 	.then(resp => resp.json())
 	.then(async swArray => {
 		idsSoftware = swArray.map(sw => sw['id']);
 		idsFakeSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Software')).map(sw => sw['id']);
+		idsRealSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Real software')).map(sw => sw['id']);
 		postToBackend('/contributor', await generateContributors(idsSoftware));
 		postToBackend('/testimonial', generateTestimonials(idsSoftware));
 		postToBackend('/repository_url', generateRepositoryUrls(idsSoftware));
+		postToBackend('/package_manager', generatePackageManagers(idsRealSoftware));
 		postToBackend('/license_for_software', generateLincensesForSoftware(idsSoftware));
 		postToBackend('/keyword_for_software', generateKeywordsForEntity(idsSoftware, idsKeywords, 'software'));
 		postToBackend('/mention_for_software', generateMentionsForEntity(idsSoftware, idsMentions, 'software'));
