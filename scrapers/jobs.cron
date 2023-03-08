@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: CC-BY-4.0
 #
 */6 * * * * /usr/local/openjdk-18/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.git.MainProgrammingLanguages > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
+*/6 * * * * /usr/local/openjdk-18/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.package_manager.MainPackageManager > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
 2-59/6 * * * * /usr/local/openjdk-18/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.git.MainBasicData > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
 4-59/6 * * * * /usr/local/openjdk-18/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.git.MainCommits > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
 1-59/6 * * * * /usr/local/openjdk-18/bin/java -cp /usr/myjava/scrapers.jar nl.esciencecenter.rsd.scraper.doi.MainReleases > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
