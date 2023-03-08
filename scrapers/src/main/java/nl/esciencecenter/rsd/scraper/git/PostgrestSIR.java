@@ -63,6 +63,13 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		return parseBasicJsonData(data);
 	}
 
+	@Override
+	public Collection<BasicRepositoryData> statsData(int limit) {
+		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=stats_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseBasicJsonData(data);
+	}
+
 	static Collection<BasicRepositoryData> parseBasicJsonData(String data) {
 		JsonArray dataInArray = JsonParser.parseString(data).getAsJsonArray();
 		Collection<BasicRepositoryData> result = new ArrayList<>();
@@ -109,5 +116,20 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			json = String.format("{\"commit_history\": %s, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistory().toJson(), commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		}
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + commitData.basicData().software().toString(), json);
+	}
+
+	@Override
+	public void saveStatsData(StatsDatabaseData statsDatabaseData) {
+		String json;
+		if (statsDatabaseData.statsData() == null) {
+			json = String.format("{\"stats_scraped_at\": \"%s\"}", statsDatabaseData.statsScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		} else {
+			json = String.format("{\"star_count\": %s, \"fork_count\": %s, \"open_issue_count\": %s, \"stats_scraped_at\": \"%s\"}",
+					statsDatabaseData.statsData().starCount,
+					statsDatabaseData.statsData().forkCount,
+					statsDatabaseData.statsData().openIssueCount,
+					statsDatabaseData.statsScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		}
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + statsDatabaseData.basicData().software().toString(), json);
 	}
 }

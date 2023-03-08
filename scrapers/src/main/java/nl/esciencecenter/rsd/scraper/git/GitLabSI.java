@@ -107,6 +107,13 @@ public class GitLabSI implements SoftwareInfo {
 		return commits;
 	}
 
+	@Override
+	public StatsData stats() {
+		String response = Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath));
+
+		return parseStats(response);
+	}
+
 	static void parseCommitPage(String json, CommitsPerWeek commitsToFill) {
 		JsonArray thisPageCommits = JsonParser.parseString(json).getAsJsonArray();
 
@@ -117,6 +124,16 @@ public class GitLabSI implements SoftwareInfo {
 
 			commitsToFill.addCommits(time, 1);
 		}
+	}
+
+	static StatsData parseStats(String json) {
+		StatsData result = new StatsData();
+		JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+
+		result.starCount = jsonObject.getAsJsonPrimitive("star_count").getAsLong();
+		result.forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
+
+		return result;
 	}
 
 }

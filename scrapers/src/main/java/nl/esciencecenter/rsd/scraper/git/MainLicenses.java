@@ -54,7 +54,7 @@ public class MainLicenses {
 
 	private static void scrapeGitHub() {
 		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
-		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.licenseData(Config.maxRequestsGitLab());
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.licenseData(Config.maxRequestsGithub());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;

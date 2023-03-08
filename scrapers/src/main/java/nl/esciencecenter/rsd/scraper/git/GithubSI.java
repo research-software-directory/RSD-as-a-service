@@ -9,6 +9,7 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
@@ -126,6 +127,19 @@ public class GithubSI implements SoftwareInfo {
 		}
 	}
 
+	@Override
+	public StatsData stats() {
+		Optional<String> apiCredentials = Config.apiCredentialsGithub();
+		String response;
+		if (apiCredentials.isPresent()) {
+			response = Utils.get(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
+		}
+		else {
+			response = Utils.get(baseApiUrl + "/repos/" + repo);
+		}
+		return parseStats(response);
+	}
+
 	static CommitsPerWeek parseCommits(String json) {
 		CommitsPerWeek commits = new CommitsPerWeek();
 		JsonArray commitsPerContributor = JsonParser.parseString(json).getAsJsonArray();
@@ -143,5 +157,16 @@ public class GithubSI implements SoftwareInfo {
 		}
 
 		return commits;
+	}
+
+	static StatsData parseStats(String json) {
+		StatsData result = new StatsData();
+		JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+
+		result.starCount = jsonObject.getAsJsonPrimitive("stargazers_count").getAsLong();
+		result.forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
+		result.openIssueCount = jsonObject.getAsJsonPrimitive("open_issues_count").getAsInt();
+
+		return result;
 	}
 }

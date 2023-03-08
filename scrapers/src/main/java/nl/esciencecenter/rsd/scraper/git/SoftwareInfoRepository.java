@@ -15,9 +15,13 @@ public interface SoftwareInfoRepository {
 
 	Collection<BasicRepositoryData> commitData(int limit);
 
+	Collection<BasicRepositoryData> statsData(int limit);
+
 	void saveLicenseData(LicenseData licenseData);
 
 	void saveLanguagesData(LanguagesData languagesData);
 
 	void saveCommitData(CommitData languagesData);
+
+	void saveStatsData(StatsDatabaseData statsDatabaseData);
 }

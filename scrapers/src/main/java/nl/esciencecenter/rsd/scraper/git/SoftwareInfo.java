@@ -12,4 +12,6 @@ public interface SoftwareInfo {
 	String license();
 
 	CommitsPerWeek contributions();
+
+	StatsData stats();
 }
