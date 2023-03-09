@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +26,7 @@ export default function AppFooter () {
             The Research Software Directory promotes the impact, re-use and citation of research software.
           </p>
 
-          <ContactEmail email={host?.email} />
+          <ContactEmail email={host?.email} headers={host?.emailHeaders} />
           <div className="py-4"></div>
           <OrganisationLogo host={host} />
         </div>
