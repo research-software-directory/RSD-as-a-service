@@ -20,6 +20,7 @@ export type RsdSettingsState = {
 export type RsdHost = {
   name: string,
   email: string,
+  emailHeaders?: string[],
   website?: string,
   logo_url?: string,
   feedback?: {
