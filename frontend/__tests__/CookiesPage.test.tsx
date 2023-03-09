@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +7,9 @@ import {render,screen} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
 import CookiesPage from '../pages/cookies'
+
+// we mock default providers too
+jest.mock('~/auth/api/useLoginProviders')
 
 it('renders cookies page with title Cookies', async() => {
   const props = {

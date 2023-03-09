@@ -64,7 +64,7 @@ jest.mock('~/utils/getOrganisations', () => ({
 // required when AppHeader component is used
 jest.mock('~/auth/api/useLoginProviders')
 
-describe('frontend/pages/organisations/[...slug]', () => {
+describe('pages/organisations/[...slug].tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
