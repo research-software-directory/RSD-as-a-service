@@ -242,8 +242,9 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
                   // color='primary'
                   disabled={!formData.avatar_b64 && !formData.avatar_id}
                   onClick={deleteAvatar}
+                  endIcon={<DeleteIcon/>}
                 >
-                  remove <DeleteIcon/>
+                  Remove
                 </Button>
               </div>
             </div>

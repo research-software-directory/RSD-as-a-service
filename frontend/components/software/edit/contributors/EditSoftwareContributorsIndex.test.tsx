@@ -414,7 +414,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
 
     // click on remove image
     const removeImage = within(modal).getByRole('button', {
-      name: 'remove'
+      name: 'Remove'
     })
 
     await waitFor(() => {
@@ -484,7 +484,7 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
 
     // click on remove image
     const removeImage = within(modal).getByRole('button', {
-      name: 'remove'
+      name: 'Remove'
     })
     await waitFor(() => {
       expect(removeImage).toBeEnabled()

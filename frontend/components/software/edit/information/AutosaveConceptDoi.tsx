@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -43,7 +43,7 @@ export default function AutosaveConceptDoi() {
         token
       })
       if (resp?.status !== 200) {
-        showErrorMessage(`Failed to update concept doi. ${resp?.message}`)
+        showErrorMessage(`Failed to update concept DOI. ${resp?.message}`)
       } else {
         // debugger
         resetField('concept_doi', {
@@ -63,12 +63,12 @@ export default function AutosaveConceptDoi() {
         <Button
           startIcon={<UpdateIcon />}
           onClick={updateConceptDoi}
-          title={'Update Concept DOI'}
+          title={'Update concept DOI'}
           sx={{
             marginTop:'1rem'
           }}
         >
-          update concept doi
+          Update concept DOI
         </Button>
       )
     }

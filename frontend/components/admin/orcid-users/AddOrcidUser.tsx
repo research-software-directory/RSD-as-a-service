@@ -4,6 +4,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Button from '@mui/material/Button'
+import AddIcon from '@mui/icons-material/Add'
+
 import TextField from '@mui/material/TextField'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 
@@ -25,7 +27,12 @@ export default function AddOrcidUser({onSubmitOrcid}:{onSubmitOrcid:Function}) {
           inputProps={{pattern: '^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$'}}
           required
         />
-        <Button variant="text" type='submit'>Add user</Button>
+        <Button
+          startIcon={<AddIcon />}
+          variant="text"
+          type='submit'>
+          Add
+        </Button>
       </form>
     </div>
   )

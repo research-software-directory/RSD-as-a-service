@@ -224,11 +224,12 @@ export default function ResearchUnitModal({
               <div className="flex pt-4">
                 <Button
                   title="Remove image"
+                  endIcon={<DeleteIcon/>}
                   // color='primary'
                   disabled={!formData.logo_b64 && !formData.logo_id}
                   onClick={deleteLogo}
                 >
-                  remove <DeleteIcon/>
+                  Remove
                 </Button>
               </div>
             </div>

@@ -204,8 +204,9 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
                   // color='primary'
                   disabled={!formData.logo_b64 && !formData.logo_id}
                   onClick={deleteLogo}
+                  endIcon={<DeleteIcon/>}
                 >
-                  remove <DeleteIcon/>
+                  Remove
                 </Button>
               </div>
             </div>
