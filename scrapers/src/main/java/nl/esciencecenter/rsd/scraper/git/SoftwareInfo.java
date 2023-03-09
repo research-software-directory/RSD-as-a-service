@@ -7,11 +7,9 @@ package nl.esciencecenter.rsd.scraper.git;
 
 public interface SoftwareInfo {
 
+	BasicGitData basicData();
+
 	String languages();
 
-	String license();
-
 	CommitsPerWeek contributions();
-
-	StatsData stats();
 }

@@ -32,6 +32,23 @@ public class GithubSI implements SoftwareInfo {
 	}
 
 	/**
+	 * Returns the basic data of the repository.
+	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service
+	 */
+	@Override
+	public BasicGitData basicData() {
+		Optional<String> apiCredentials = Config.apiCredentialsGithub();
+		String response;
+		if (apiCredentials.isPresent()) {
+			response = Utils.get(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
+		}
+		else {
+			response = Utils.get(baseApiUrl + "/repos/" + repo);
+		}
+		return parseBasicData(response);
+	}
+
+	/**
 	 * Returns JSON as a String with the amount of lines written in each language.
 	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/languages
 	 */
@@ -44,24 +61,6 @@ public class GithubSI implements SoftwareInfo {
 		else {
 			return Utils.get(baseApiUrl + "/repos/" + repo + "/languages");
 		}
-	}
-
-	/**
-	 * Returns the license string of the repository.
-	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service
-	 */
-	@Override
-	public String license() {
-		Optional<String> apiCredentials = Config.apiCredentialsGithub();
-		String repoData;
-		if (apiCredentials.isPresent()) {
-			repoData = Utils.get(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
-		}
-		else {
-			repoData = Utils.get(baseApiUrl + "/repos/" + repo);
-		}
-		JsonElement jsonLicense = JsonParser.parseString(repoData).getAsJsonObject().get("license");
-		return jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().getAsJsonPrimitive("spdx_id").getAsString();
 	}
 
 	/**
@@ -127,19 +126,6 @@ public class GithubSI implements SoftwareInfo {
 		}
 	}
 
-	@Override
-	public StatsData stats() {
-		Optional<String> apiCredentials = Config.apiCredentialsGithub();
-		String response;
-		if (apiCredentials.isPresent()) {
-			response = Utils.get(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
-		}
-		else {
-			response = Utils.get(baseApiUrl + "/repos/" + repo);
-		}
-		return parseStats(response);
-	}
-
 	static CommitsPerWeek parseCommits(String json) {
 		CommitsPerWeek commits = new CommitsPerWeek();
 		JsonArray commitsPerContributor = JsonParser.parseString(json).getAsJsonArray();
@@ -159,10 +145,12 @@ public class GithubSI implements SoftwareInfo {
 		return commits;
 	}
 
-	static StatsData parseStats(String json) {
-		StatsData result = new StatsData();
+	static BasicGitData parseBasicData(String json) {
+		BasicGitData result = new BasicGitData();
 		JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
 
+		JsonElement jsonLicense = jsonObject.get("license");
+		result.license = jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().getAsJsonPrimitive("spdx_id").getAsString();
 		result.starCount = jsonObject.getAsJsonPrimitive("stargazers_count").getAsLong();
 		result.forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
 		result.openIssueCount = jsonObject.getAsJsonPrimitive("open_issues_count").getAsInt();

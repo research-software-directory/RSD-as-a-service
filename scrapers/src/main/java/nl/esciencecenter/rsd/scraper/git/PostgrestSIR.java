@@ -40,18 +40,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	}
 
 	/**
-	 * Fetch license data from PostgREST
-	 * @param limit The number of rows requested from PostgREST
-	 * @return      The data corresponding to the git repositories of which the license data were scraped the longest time ago
-	 */
-	@Override
-	public Collection<BasicRepositoryData> licenseData(int limit) {
-		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=license_scraped_at.asc.nullsfirst&limit=" + limit);
-		return parseBasicJsonData(data);
-	}
-
-	/**
 	 * Fetch commit data from PostgREST
 	 * @param limit The number of rows requested from PostgREST
 	 * @return      The data corresponding to the git repositories of which the commit data were scraped the longest time ago
@@ -63,10 +51,15 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		return parseBasicJsonData(data);
 	}
 
+	/**
+	 * Fetch basic data from PostgREST
+	 * @param limit The number of rows requested from PostgREST
+	 * @return      The data corresponding to the git repositories of which the basic data were scraped the longest time ago
+	 */
 	@Override
 	public Collection<BasicRepositoryData> statsData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=stats_scraped_at.asc.nullsfirst&limit=" + limit);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" + limit);
 		return parseBasicJsonData(data);
 	}
 
@@ -82,17 +75,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			result.add(new BasicRepositoryData(software, url));
 		}
 		return result;
-	}
-
-	@Override
-	public void saveLicenseData(LicenseData licenseData) {
-		String json;
-		if (licenseData.license() == null) {
-			json = String.format("{\"license_scraped_at\": \"%s\"}", licenseData.licenseScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		} else {
-			json = String.format("{\"license\": \"%s\", \"license_scraped_at\": \"%s\"}", licenseData.license(), licenseData.licenseScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		}
-		Utils.patchAsAdmin(backendUrl + "?software=eq." + licenseData.basicData().software().toString(), json);
 	}
 
 	@Override
@@ -119,17 +101,16 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	}
 
 	@Override
-	public void saveStatsData(StatsDatabaseData statsDatabaseData) {
-		String json;
-		if (statsDatabaseData.statsData() == null) {
-			json = String.format("{\"stats_scraped_at\": \"%s\"}", statsDatabaseData.statsScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		} else {
-			json = String.format("{\"star_count\": %s, \"fork_count\": %s, \"open_issue_count\": %s, \"stats_scraped_at\": \"%s\"}",
-					statsDatabaseData.statsData().starCount,
-					statsDatabaseData.statsData().forkCount,
-					statsDatabaseData.statsData().openIssueCount,
-					statsDatabaseData.statsScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+	public void saveBasicData(BasicGitDatabaseData basicData) {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("basic_data_scraped_at", basicData.dataScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		if (basicData.statsData() != null) {
+			jsonObject.addProperty("license", basicData.statsData().license);
+			jsonObject.addProperty("star_count", basicData.statsData().starCount);
+			jsonObject.addProperty("fork_count", basicData.statsData().forkCount);
+			jsonObject.addProperty("open_issue_count", basicData.statsData().openIssueCount);
 		}
-		Utils.patchAsAdmin(backendUrl + "?software=eq." + statsDatabaseData.basicData().software().toString(), json);
+
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + basicData.basicData().software().toString(), jsonObject.toString());
 	}
 }

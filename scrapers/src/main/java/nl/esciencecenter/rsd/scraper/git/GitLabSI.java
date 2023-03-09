@@ -37,6 +37,20 @@ public class GitLabSI implements SoftwareInfo {
 	}
 
 	/**
+	 * Returns the basic data of a project. If GitLab detects the license, an SPDX identifier will be
+	 * returned. If the license could not be detected, returns "Other". API endpoint:
+	 * https://docs.gitlab.com/ee/api/projects.html#get-single-project NOTE: A GraphQL request here
+	 * might be more efficient since less data would be sent.
+	 *
+	 * @return The basic data
+	 */
+	@Override
+	public BasicGitData basicData() {
+		String response = Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "?license=True");
+		return parseBasicData(response);
+	}
+
+	/**
 	 * Returns the languages used in a project with percentage values. Uses the API Endpoint
 	 * https://docs.gitlab.com/ee/api/projects.html#languages GET /projects/:id/languages
 	 *
@@ -45,23 +59,6 @@ public class GitLabSI implements SoftwareInfo {
 	@Override
 	public String languages() {
 		return Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/languages");
-	}
-
-	/**
-	 * Returns the license of a project. If GitLab detects the license, an SPDX identifier will be
-	 * returned. If the license could not be detected, returns "Other". API endpoint:
-	 * https://docs.gitlab.com/ee/api/projects.html#get-single-project NOTE: A GraphQL request here
-	 * might be more efficient since less data would be sent.
-	 *
-	 * @return The license
-	 */
-	@Override
-	public String license() {
-		String repoInfo =
-				Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "?license=True");
-		JsonElement jsonLicense = JsonParser.parseString(repoInfo).getAsJsonObject().get("license");
-		return jsonLicense.isJsonNull() ? null
-				: jsonLicense.getAsJsonObject().get("name").getAsString();
 	}
 
 	/**
@@ -107,13 +104,6 @@ public class GitLabSI implements SoftwareInfo {
 		return commits;
 	}
 
-	@Override
-	public StatsData stats() {
-		String response = Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath));
-
-		return parseStats(response);
-	}
-
 	static void parseCommitPage(String json, CommitsPerWeek commitsToFill) {
 		JsonArray thisPageCommits = JsonParser.parseString(json).getAsJsonArray();
 
@@ -126,10 +116,12 @@ public class GitLabSI implements SoftwareInfo {
 		}
 	}
 
-	static StatsData parseStats(String json) {
-		StatsData result = new StatsData();
+	static BasicGitData parseBasicData(String json) {
+		BasicGitData result = new BasicGitData();
 		JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
 
+		JsonElement jsonLicense = jsonObject.get("license");
+		result.license =  jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().get("name").getAsString();
 		result.starCount = jsonObject.getAsJsonPrimitive("star_count").getAsLong();
 		result.forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
 

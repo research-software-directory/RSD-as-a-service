@@ -5,7 +5,8 @@
 
 package nl.esciencecenter.rsd.scraper.git;
 
-public class StatsData {
+public class BasicGitData {
+	public String license;
 	public Long starCount;
 	public Integer forkCount;
 	public Integer openIssueCount;

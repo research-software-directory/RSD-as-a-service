@@ -11,17 +11,13 @@ public interface SoftwareInfoRepository {
 
 	Collection<BasicRepositoryData> languagesData(int limit);
 
-	Collection<BasicRepositoryData> licenseData(int limit);
-
 	Collection<BasicRepositoryData> commitData(int limit);
 
 	Collection<BasicRepositoryData> statsData(int limit);
-
-	void saveLicenseData(LicenseData licenseData);
 
 	void saveLanguagesData(LanguagesData languagesData);
 
 	void saveCommitData(CommitData languagesData);
 
-	void saveStatsData(StatsDatabaseData statsDatabaseData);
+	void saveBasicData(BasicGitDatabaseData basicData);
 }

@@ -12,13 +12,13 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class MainStats {
+public class MainBasicData {
 
 	public static void main(String[] args) {
-		System.out.println("Start scraping Git stats");
+		System.out.println("Start scraping basic Git data");
 		scrapeGitHub();
 		scrapeGitLab();
-		System.out.println("Done scraping Git stats");
+		System.out.println("Done scraping basic Git data");
 	}
 
 	private static void scrapeGitHub() {
@@ -34,14 +34,14 @@ public class MainStats {
 					String repo = repoUrl.replace("https://github.com/", "");
 					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-					StatsData scrapedStats = new GithubSI("https://api.github.com", repo).stats();
-					StatsDatabaseData updatedData = new StatsDatabaseData(new BasicRepositoryData(licenseData.software(), null), scrapedStats, scrapedAt);
-					softwareInfoRepository.saveStatsData(updatedData);
+					BasicGitData scrapedBasicData = new GithubSI("https://api.github.com", repo).basicData();
+					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(new BasicRepositoryData(licenseData.software(), null), scrapedBasicData, scrapedAt);
+					softwareInfoRepository.saveBasicData(updatedData);
 				} catch (RuntimeException e) {
 					System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 					e.printStackTrace();
-					StatsDatabaseData onlyUpdatedAt = new StatsDatabaseData(new BasicRepositoryData(licenseData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveStatsData(onlyUpdatedAt);
+					BasicGitDatabaseData onlyUpdatedAt = new BasicGitDatabaseData(new BasicRepositoryData(licenseData.software(), null), null, scrapedAt);
+					softwareInfoRepository.saveBasicData(onlyUpdatedAt);
 				}
 			});
 			futures[i] = future;
@@ -65,14 +65,14 @@ public class MainStats {
 					String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-					StatsData scrapedStats = new GitLabSI(apiUrl, projectPath).stats();
-					StatsDatabaseData updatedData = new StatsDatabaseData(new BasicRepositoryData(licenseData.software(), null), scrapedStats, scrapedAt);
-					softwareInfoRepository.saveStatsData(updatedData);
+					BasicGitData scrapedBasicData = new GitLabSI(apiUrl, projectPath).basicData();
+					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(new BasicRepositoryData(licenseData.software(), null), scrapedBasicData, scrapedAt);
+					softwareInfoRepository.saveBasicData(updatedData);
 				} catch (RuntimeException e) {
 					System.out.println("Exception when handling data from url " + licenseData.url() + ":");
 					e.printStackTrace();
-					StatsDatabaseData onlyUpdatedAt = new StatsDatabaseData(new BasicRepositoryData(licenseData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveStatsData(onlyUpdatedAt);
+					BasicGitDatabaseData onlyUpdatedAt = new BasicGitDatabaseData(new BasicRepositoryData(licenseData.software(), null), null, scrapedAt);
+					softwareInfoRepository.saveBasicData(onlyUpdatedAt);
 				}
 			});
 			futures[i] = future;
