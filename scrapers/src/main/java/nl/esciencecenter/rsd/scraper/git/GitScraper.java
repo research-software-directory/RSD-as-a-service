@@ -5,7 +5,7 @@
 
 package nl.esciencecenter.rsd.scraper.git;
 
-public interface SoftwareInfo {
+public interface GitScraper {
 
 	BasicGitData basicData();
 

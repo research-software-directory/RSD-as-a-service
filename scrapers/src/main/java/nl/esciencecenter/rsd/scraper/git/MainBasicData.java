@@ -22,7 +22,7 @@ public class MainBasicData {
 	}
 
 	private static void scrapeGitHub() {
-		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
 		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.statsData(Config.maxRequestsGithub());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
@@ -34,7 +34,7 @@ public class MainBasicData {
 					String repo = repoUrl.replace("https://github.com/", "");
 					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-					BasicGitData scrapedBasicData = new GithubSI("https://api.github.com", repo).basicData();
+					BasicGitData scrapedBasicData = new GithubScraper("https://api.github.com", repo).basicData();
 					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(new BasicRepositoryData(licenseData.software(), null), scrapedBasicData, scrapedAt);
 					softwareInfoRepository.saveBasicData(updatedData);
 				} catch (RuntimeException e) {
@@ -51,7 +51,7 @@ public class MainBasicData {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
 		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.statsData(Config.maxRequestsGithub());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
@@ -65,7 +65,7 @@ public class MainBasicData {
 					String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-					BasicGitData scrapedBasicData = new GitLabSI(apiUrl, projectPath).basicData();
+					BasicGitData scrapedBasicData = new GitlabScraper(apiUrl, projectPath).basicData();
 					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(new BasicRepositoryData(licenseData.software(), null), scrapedBasicData, scrapedAt);
 					softwareInfoRepository.saveBasicData(updatedData);
 				} catch (RuntimeException e) {

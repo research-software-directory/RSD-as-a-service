@@ -21,12 +21,12 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
-public class GithubSI implements SoftwareInfo {
+public class GithubScraper implements GitScraper {
 
 	private final String baseApiUrl;
 	private final String repo;
 
-	public GithubSI(String baseApiUrl, String repo) {
+	public GithubScraper(String baseApiUrl, String repo) {
 		this.baseApiUrl = Objects.requireNonNull(baseApiUrl);
 		this.repo = Objects.requireNonNull(repo);
 	}

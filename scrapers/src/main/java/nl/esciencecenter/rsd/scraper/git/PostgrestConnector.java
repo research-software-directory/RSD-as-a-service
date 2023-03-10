@@ -17,12 +17,12 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
-public class PostgrestSIR implements SoftwareInfoRepository {
+public class PostgrestConnector {
 
 	private final String backendUrl;
 	private final CodePlatformProvider codePlatform;
 
-	public PostgrestSIR(String backendUrl, CodePlatformProvider codePlatform) {
+	public PostgrestConnector(String backendUrl, CodePlatformProvider codePlatform) {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
 		this.codePlatform = Objects.requireNonNull(codePlatform);
 	}
@@ -32,7 +32,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	 * @param limit The number of rows requested from PostgREST
 	 * @return      The data corresponding to the git repositories of which the programming languages data were scraped the longest time ago
 	 */
-	@Override
 	public Collection<BasicRepositoryData> languagesData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=languages_scraped_at.asc.nullsfirst&limit=" + limit);
@@ -44,7 +43,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	 * @param limit The number of rows requested from PostgREST
 	 * @return      The data corresponding to the git repositories of which the commit data were scraped the longest time ago
 	 */
-	@Override
 	public Collection<BasicRepositoryData> commitData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit);
@@ -56,7 +54,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	 * @param limit The number of rows requested from PostgREST
 	 * @return      The data corresponding to the git repositories of which the basic data were scraped the longest time ago
 	 */
-	@Override
 	public Collection<BasicRepositoryData> statsData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" + limit);
@@ -77,7 +74,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		return result;
 	}
 
-	@Override
 	public void saveLanguagesData(LanguagesData languagesData) {
 		String json;
 		if (languagesData.languages() == null) {
@@ -88,7 +84,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + languagesData.basicData().software().toString(), json);
 	}
 
-	@Override
 	public void saveCommitData(CommitData commitData) {
 		String json;
 		if (commitData.commitHistory() == null) {
@@ -100,7 +95,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + commitData.basicData().software().toString(), json);
 	}
 
-	@Override
 	public void saveBasicData(BasicGitDatabaseData basicData) {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("basic_data_scraped_at", basicData.dataScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));

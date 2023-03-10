@@ -25,7 +25,7 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
 		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.commitData(Config.maxRequestsGitLab());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
@@ -39,7 +39,7 @@ public class MainCommits {
 					String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-					CommitsPerWeek scrapedCommits = new GitLabSI(apiUrl, projectPath).contributions();
+					CommitsPerWeek scrapedCommits = new GitlabScraper(apiUrl, projectPath).contributions();
 					CommitData updatedData = new CommitData(new BasicRepositoryData(commitData.software(), null), scrapedCommits, scrapedAt);
 					softwareInfoRepository.saveCommitData(updatedData);
 				} catch (RsdRateLimitException e) {
@@ -59,7 +59,7 @@ public class MainCommits {
 	}
 
 	private static void scrapeGitHub() {
-		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
 		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.commitData(Config.maxRequestsGithub());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
@@ -71,7 +71,7 @@ public class MainCommits {
 					String repo = repoUrl.replace("https://github.com/", "");
 					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-					CommitsPerWeek scrapedCommits = new GithubSI("https://api.github.com", repo).contributions();
+					CommitsPerWeek scrapedCommits = new GithubScraper("https://api.github.com", repo).contributions();
 					CommitData updatedData = new CommitData(new BasicRepositoryData(commitData.software(), null), scrapedCommits, scrapedAt);
 					softwareInfoRepository.saveCommitData(updatedData);
 				} catch (RsdRateLimitException e) {

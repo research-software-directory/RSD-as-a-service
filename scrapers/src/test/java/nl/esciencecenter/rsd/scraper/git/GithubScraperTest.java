@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class GithubSITest {
+public class GithubScraperTest {
 	private final String apiUrl = "https://api.github.com";
 	private final String repo = "research-software-directory/RSD-as-a-service";
 	private final String repoEmpty = "cmeessen/empty";
 	private final String repoNonEx = "research-software-directory/does-not-exist";
 
-	private final GithubSI githubScraper = new GithubSI(apiUrl, repo);
-	private final GithubSI githubScraperEmpty = new GithubSI(apiUrl, repoEmpty);
-	private final GithubSI githubScraperNonEx = new GithubSI(apiUrl, repoNonEx);
+	private final GithubScraper githubScraper = new GithubScraper(apiUrl, repo);
+	private final GithubScraper githubScraperEmpty = new GithubScraper(apiUrl, repoEmpty);
+	private final GithubScraper githubScraperNonEx = new GithubScraper(apiUrl, repoNonEx);
 
 	@Disabled
 	@Test
@@ -33,7 +33,7 @@ public class GithubSITest {
 	@Disabled
 	@Test
 	void license() {
-		Assertions.assertEquals("Apache-2.0", githubScraper.license());
+		Assertions.assertEquals("Apache-2.0", githubScraper.basicData().license);
 	}
 
 	@Disabled

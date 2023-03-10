@@ -21,7 +21,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.ZonedDateTime;
 
-public class GitLabSI implements SoftwareInfo {
+public class GitlabScraper implements GitScraper {
 	public String projectPath;
 	public String apiUri;
 
@@ -31,7 +31,7 @@ public class GitLabSI implements SoftwareInfo {
 	 * @param gitLabApiUrl The API Url without version, e.g. https://<gitlab_instance_url>/api
 	 * @param projectPath The full path to the project
 	 */
-	public GitLabSI(String gitLabApiUrl, String projectPath) {
+	public GitlabScraper(String gitLabApiUrl, String projectPath) {
 		this.projectPath = projectPath;
 		this.apiUri = gitLabApiUrl + "/v4";
 	}
