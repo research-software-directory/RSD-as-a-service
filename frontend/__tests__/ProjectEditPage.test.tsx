@@ -38,7 +38,7 @@ const mockUnobserve = jest.fn()
 window.IntersectionObserver = jest.fn(() => ({
   observe: mockObserve,
   unobserve: mockUnobserve,
-}))
+} as any))
 
 
 describe('pages/projects/[slug]/edit/index.tsx', () => {

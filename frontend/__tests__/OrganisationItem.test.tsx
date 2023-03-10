@@ -64,7 +64,7 @@ jest.mock('~/utils/getOrganisations', () => ({
 // required when AppHeader component is used
 jest.mock('~/auth/api/useLoginProviders')
 
-describe('frontend/pages/organisations/[...slug]', () => {
+describe('pages/organisations/[...slug].tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -112,8 +112,6 @@ describe('frontend/pages/organisations/[...slug]', () => {
     // we need to await for all events to run
     const softwarePage = screen.getByTestId('organisation-content-software')
     expect(softwarePage).toBeInTheDocument()
-    // wait software section loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // validate api call
     expect(mockSoftwareForOrganisation).toBeCalledTimes(1)
     // validate all cards shown by testId
@@ -142,8 +140,6 @@ describe('frontend/pages/organisations/[...slug]', () => {
     // we need to await for all events to run
     const projectsPage = screen.getByTestId('organisation-content-projects')
     expect(projectsPage).toBeInTheDocument()
-    // wait projects section loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // validate api call
     expect(mockProjectsForOrganisation).toBeCalledTimes(1)
     // validate all cards shown by testId

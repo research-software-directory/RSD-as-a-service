@@ -18,7 +18,7 @@ jest.mock('~/utils/useOnUnsavedChange')
 // we mock default providers too
 jest.mock('~/auth/api/useLoginProviders')
 
-describe('pages/admin/pages', () => {
+describe('pages/admin/public-pages.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })

@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
-import SoftwareIndexPage, {getServerSideProps} from '../pages/software/index'
+import SoftwareIndexPage from '../pages/software/index'
 import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 import {mockResolvedValue} from '../utils/jest/mockFetch'
 
@@ -25,22 +25,7 @@ describe('pages/software/index.tsx', () => {
       statusText:'OK',
     })
   })
-  // Testing getServerSideProps does not add any value here I think
-  // it('getServerSideProps returns mocked values in the props', async () => {
-  //   const resp = await getServerSideProps()
-  //   expect(resp).toEqual({
-  //     props:{
-  //       // count is extracted from response header
-  //       count:200,
-  //       // default query param values
-  //       page:0,
-  //       rows:12,
-  //       // mocked data
-  //       software: mockedResponse,
-  //       tags: undefined,
-  //     }
-  //   })
-  // })
+
   it('renders heading with the title Software', async() => {
     render(WrappedComponentWithProps(
       SoftwareIndexPage, {
