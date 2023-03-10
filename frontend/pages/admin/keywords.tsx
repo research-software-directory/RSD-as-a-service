@@ -10,11 +10,14 @@ import {app} from '../../config/app'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import AdminPageWithNav from '~/components/admin/AdminPageWithNav'
 import {adminPages} from '~/components/admin/AdminNav'
-import KeywordsPage from '~/components/admin/keywords/KeywordsPage'
+import KeywordsPage from '~/components/admin/keywords/index'
+import {SearchProvider} from '~/components/search/SearchContext'
+import {PaginationProvider} from '~/components/pagination/PaginationContext'
+
 
 const pageTitle = `${adminPages['keywords'].title} | Admin page | ${app.title}`
 
-export default function AdminKeywords(props:any) {
+export default function AdminKeywordsPage(props:any) {
 
   // console.group('AdminKeywords')
   // console.log('keywords...', keywords)
@@ -26,7 +29,11 @@ export default function AdminKeywords(props:any) {
         <title>{pageTitle}</title>
       </Head>
       <AdminPageWithNav title={adminPages['keywords'].title}>
-        <KeywordsPage {...props} />
+        <SearchProvider>
+          <PaginationProvider>
+            <KeywordsPage {...props} />
+          </PaginationProvider>
+        </SearchProvider>
       </AdminPageWithNav>
     </DefaultLayout>
   )
