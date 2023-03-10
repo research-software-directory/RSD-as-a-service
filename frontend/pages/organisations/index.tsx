@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {MouseEvent, ChangeEvent} from 'react'
-import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination'
@@ -15,7 +14,7 @@ import DefaultLayout from '../../components/layout/DefaultLayout'
 import PageTitle from '../../components/layout/PageTitle'
 import Searchbox from '../../components/form/Searchbox'
 import {ssrOrganisationUrl} from '../../utils/postgrestUrl'
-import {OrganisationForOverview} from '../../types/Organisation'
+import {OrganisationList} from '../../types/Organisation'
 import {rowsPerPageOptions} from '../../config/pagination'
 import {ssrOrganisationParams} from '../../utils/extractQueryParam'
 import {getOrganisationsList} from '../../utils/getOrganisations'
@@ -26,7 +25,7 @@ type OrganisationsIndexPageProps = {
   count: number,
   page: number,
   rows: number,
-  organisations: OrganisationForOverview[],
+  organisations: OrganisationList[],
   search?: string,
 }
 

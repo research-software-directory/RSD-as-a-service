@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {getMaintainerOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
-import {Organisation, OrganisationForOverview, ProjectOfOrganisation, SoftwareOfOrganisation} from '../types/Organisation'
+import {Organisation, OrganisationForOverview, OrganisationList, ProjectOfOrganisation, SoftwareOfOrganisation} from '../types/Organisation'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import logger from './logger'
@@ -15,8 +15,9 @@ import {paginationUrlParams} from './postgrestUrl'
 
 export function organisationListUrl({search, rows = 12, page = 0}:
   { search: string | undefined, rows: number, page: number }) {
-  // by default order is on software count and name
-  const selectList = 'parent,name,website,is_tenant,rsd_path,logo_id,software_cnt,project_cnt,score'
+  // NOTE 1! selectList need to include all colums used in filtering
+  // NOTE 2! ensure selectList uses identical props as defined in OrganisationList type
+  const selectList = 'id,parent,name,website,is_tenant,rsd_path,logo_id,software_cnt,project_cnt,score'
   let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&score=gt.0&order=is_tenant.desc,score.desc.nullslast,name.asc&select=${selectList}`
   // add search params
   if (search) {
@@ -46,7 +47,7 @@ export async function getOrganisationsList({search, rows, page, token}:
     })
 
     if ([200,206].includes(resp.status)) {
-      const json = await resp.json()
+      const json: OrganisationList[] = await resp.json()
       return {
         count: extractCountFromHeader(resp.headers),
         data: json
