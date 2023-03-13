@@ -107,4 +107,14 @@ public class PostgrestConnector {
 
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + basicData.basicData().software().toString(), jsonObject.toString());
 	}
+
+	public void saveContributorCount(ContributorDatabaseData contributorData) {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("contributor_count_scraped_at", contributorData.dataScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		if (contributorData.contributorCount() != null) {
+			jsonObject.addProperty("contributor_count", contributorData.contributorCount());
+		}
+
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + contributorData.basicData().software().toString(), jsonObject.toString());
+	}
 }

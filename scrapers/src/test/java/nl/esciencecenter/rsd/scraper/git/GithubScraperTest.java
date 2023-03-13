@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class GithubScraperTest {
 	private final String apiUrl = "https://api.github.com";
 	private final String repo = "research-software-directory/RSD-as-a-service";
@@ -55,5 +57,22 @@ public class GithubScraperTest {
 	void contributionsNonEx() {
 		final CommitsPerWeek contributionsNonEx = githubScraperNonEx.contributions();
 		// Assertions.assertNull(contributionsNonEx);
+	}
+
+	@Test
+	void givenListWithLastPageHeader_whenParsing_thenCorrectPageReturned() {
+		List<String> singleLinkList = List.of("<https://api.github.com/repositories/413814951/contributors?per_page=1&page=2>; rel=\"next\", <https://api.github.com/repositories/413814951/contributors?per_page=1&page=9>; rel=\"last\"");
+
+		String[] lastPageData = GithubScraper.lastPageFromLinkHeader(singleLinkList);
+		Assertions.assertEquals(2, lastPageData.length);
+		Assertions.assertEquals("https://api.github.com/repositories/413814951/contributors?per_page=1&page=9", lastPageData[0]);
+		Assertions.assertEquals("9", lastPageData[1]);
+	}
+
+	@Test
+	void givenListWithoutLastPage_whenParsing_thenExceptionThrown() {
+		List<String> singleLinkList = List.of("invalid");
+
+		Assertions.assertThrows(RuntimeException.class, () -> GithubScraper.lastPageFromLinkHeader(singleLinkList));
 	}
 }

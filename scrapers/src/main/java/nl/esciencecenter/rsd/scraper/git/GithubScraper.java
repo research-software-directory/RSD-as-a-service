@@ -18,13 +18,17 @@ import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.http.HttpResponse;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GithubScraper implements GitScraper {
 
 	private final String baseApiUrl;
 	private final String repo;
+	private static final Pattern LINK_PATTERN = Pattern.compile("<([^>]+page=(\\d+)[^>]*)>; rel=\"([^\"]+)\"");
 
 	public GithubScraper(String baseApiUrl, String repo) {
 		this.baseApiUrl = Objects.requireNonNull(baseApiUrl);
@@ -91,11 +95,7 @@ public class GithubScraper implements GitScraper {
 		Optional<String> apiCredentials = Config.apiCredentialsGithub();
 		HttpResponse<String> httpResponse = null;
 		for (int i = 0; i < 2; i++) {
-			if (apiCredentials.isPresent()) {
-				httpResponse = Utils.getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/stats/contributors", "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
-			} else {
-				httpResponse = Utils.getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/stats/contributors");
-			}
+			httpResponse = getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/stats/contributors");
 
 			if (httpResponse.statusCode() != 202) break;
 			try {
@@ -123,6 +123,33 @@ public class GithubScraper implements GitScraper {
 		} else {
 			String contributionsJson = httpResponse.body();
 			return parseCommits(contributionsJson);
+		}
+	}
+
+	@Override
+	public Integer contributorCount() {
+		// we request one contributor per page and just extract the number of pages from the headers
+		// see https://docs.github.com/en/rest/guides/using-pagination-in-the-rest-api?apiVersion=2022-11-28
+		HttpResponse<String> httpResponse = getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/contributors?per_page=1");
+
+		int status = httpResponse.statusCode();
+		if (status == 404) {
+			throw new RsdResponseException(404, "No response found at " + httpResponse.uri());
+		} else if (status == 403) {
+			throw new RsdRateLimitException("403 Forbidden. This error occurs mostly when the API rate limit is exceeded. Error message: " + httpResponse.body());
+		} else if (status != 200){
+			throw new RsdResponseException(status,
+					"Unexpected response from " + httpResponse.uri().toString() + " with status code " + status + " and body " + httpResponse.body());
+		} else {
+			List<String> linkHeaders = httpResponse.headers().allValues("link");
+			String[] lastPageData = lastPageFromLinkHeader(linkHeaders);
+			if (lastPageData != null) {
+				int lastPageNumber = Integer.parseInt(lastPageData[1]);
+				return lastPageNumber;
+			} else {
+				// this was the first page, return the size of the array (either 0 or 1)
+				return JsonParser.parseString(httpResponse.body()).getAsJsonArray().size();
+			}
 		}
 	}
 
@@ -156,5 +183,30 @@ public class GithubScraper implements GitScraper {
 		result.openIssueCount = jsonObject.getAsJsonPrimitive("open_issues_count").getAsInt();
 
 		return result;
+	}
+
+	// return an object with the URL of the last page and the number of the last page respectively
+	static String[] lastPageFromLinkHeader(List<String> links) {
+		if (links.isEmpty()) return null;
+
+		for (String link : links) {
+			Matcher matcher = LINK_PATTERN.matcher(link);
+			while (matcher.find()) {
+				String relation = matcher.group(3);
+				if (relation.equals("last")) return new String[] {matcher.group(1), matcher.group(2)};
+			}
+		}
+
+		throw new RuntimeException("No last page found");
+	}
+
+	static HttpResponse<String> getAsHttpResponse(String url) {
+		Optional<String> apiCredentials = Config.apiCredentialsGithub();
+		if (apiCredentials.isPresent()) {
+			return Utils.getAsHttpResponse(url, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
+		}
+		else {
+			return Utils.getAsHttpResponse(url);
+		}
 	}
 }

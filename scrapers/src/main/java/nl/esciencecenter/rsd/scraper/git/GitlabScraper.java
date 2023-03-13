@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.io.IOException;
@@ -102,6 +103,18 @@ public class GitlabScraper implements GitScraper {
 			done = page.length() == 0;
 		}
 		return commits;
+	}
+
+	@Override
+	public Integer contributorCount() {
+		HttpResponse<String> httpResponse = Utils.getAsHttpResponse(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/repository/contributors");
+
+		if (httpResponse.statusCode() == 429) throw new RsdRateLimitException("API rate limit exceeded for endpoint " + httpResponse.uri() + " with response: " + httpResponse.body());
+		if (httpResponse.statusCode() == 404) throw new RsdResponseException(404, "No response found at " + httpResponse.uri());
+
+		// see https://docs.gitlab.com/ee/api/rest/index.html#other-pagination-headers
+		String totalItemsHeader = httpResponse.headers().firstValue("x-total").get();
+		return Integer.parseInt(totalItemsHeader);
 	}
 
 	static void parseCommitPage(String json, CommitsPerWeek commitsToFill) {

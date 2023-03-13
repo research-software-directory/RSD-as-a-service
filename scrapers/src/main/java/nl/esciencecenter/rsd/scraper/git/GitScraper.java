@@ -12,4 +12,6 @@ public interface GitScraper {
 	String languages();
 
 	CommitsPerWeek contributions();
+
+	Integer contributorCount();
 }
