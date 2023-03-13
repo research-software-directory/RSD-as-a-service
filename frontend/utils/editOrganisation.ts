@@ -1,9 +1,9 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ import {
   SearchOrganisation
 } from '../types/Organisation'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
-import {getImageUrl} from './editImage'
+import {deleteImage, getImageUrl} from './editImage'
 import {findInROR} from './getROR'
 import {getSlugFromString} from './getSlugFromString'
 import {itemsNotInReferenceList} from './itemsNotInReferenceList'
@@ -223,7 +223,7 @@ export async function patchOrganisation({data, token}:
 }
 
 export async function deleteOrganisation({uuid,logo_id, token}:
-  { uuid: string, logo_id:string|null, token: string }) {
+  { uuid: string, logo_id: string|null, token: string }) {
   try {
     // delete organisation
     const url = `/api/v1/organisation?id=eq.${uuid}`
@@ -233,8 +233,22 @@ export async function deleteOrganisation({uuid,logo_id, token}:
         ...createJsonHeaders(token)
       }
     })
-    // debugger
-    return extractReturnMessage(resp)
+    if ([200, 204].includes(resp.status) === true && logo_id) {
+      //try to remove image
+      // try to remove old image
+      // but don't wait for results
+      const del = await deleteImage({
+        id: logo_id,
+        token
+      })
+      return {
+        status: 200,
+        message: 'OK'
+      }
+    } else {
+      // debugger
+      return extractReturnMessage(resp)
+    }
   } catch (e: any) {
     return {
       status: 500,
@@ -306,7 +320,7 @@ export function searchToEditOrganisation({item, account, position}:
 
 type NewOrganisation = {
   name: string
-  position: number
+  position?: number
   primary_maintainer: string | null
   role?: OrganisationRole
   is_tenant?: boolean
@@ -321,7 +335,7 @@ export function newOrganisationProps(props: NewOrganisation) {
     is_tenant: props?.is_tenant ?? false,
     slug: null,
     ror_id: null,
-    position: props.position,
+    position: props.position ?? null,
     logo_b64: null,
     logo_mime_type: null,
     logo_id: null,

@@ -18,7 +18,7 @@ export function organisationListUrl({search, rows = 12, page = 0}:
   // NOTE 1! selectList need to include all colums used in filtering
   // NOTE 2! ensure selectList uses identical props as defined in OrganisationList type
   const selectList = 'id,parent,name,website,is_tenant,rsd_path,logo_id,software_cnt,project_cnt,score'
-  let url = `${process.env.POSTGREST_URL}/rpc/organisations_overview?parent=is.null&score=gt.0&order=is_tenant.desc,score.desc.nullslast,name.asc&select=${selectList}`
+  let url = `${getBaseUrl()}/rpc/organisations_overview?parent=is.null&score=gt.0&order=is_tenant.desc,score.desc.nullslast,name.asc&select=${selectList}`
   // add search params
   if (search) {
     url += `&or=(name.ilike.*${search}*, website.ilike.*${search}*)`
