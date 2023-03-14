@@ -1593,21 +1593,18 @@ CREATE FUNCTION keyword_cnt() RETURNS TABLE (
 	keyword CITEXT,
 	software_cnt BIGINT,
 	projects_cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql SECURITY DEFINER STABLE AS
 $$
-BEGIN
-	RETURN QUERY
-	SELECT
-		keyword.id,
-		keyword.value AS keyword,
-		keyword_count_for_software.cnt AS software_cnt,
-		keyword_count_for_projects.cnt AS projects_cnt
-	FROM
-		keyword
-	LEFT JOIN
-		keyword_count_for_software() ON keyword.value = keyword_count_for_software.keyword
-	LEFT JOIN
-		keyword_count_for_projects() ON keyword.value = keyword_count_for_projects.keyword
-	;
-END
+SELECT
+	keyword.id,
+	keyword.value AS keyword,
+	keyword_count_for_software.cnt AS software_cnt,
+	keyword_count_for_projects.cnt AS projects_cnt
+FROM
+	keyword
+LEFT JOIN
+	keyword_count_for_software() ON keyword.value = keyword_count_for_software.keyword
+LEFT JOIN
+	keyword_count_for_projects() ON keyword.value = keyword_count_for_projects.keyword
+;
 $$;
