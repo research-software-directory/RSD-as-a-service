@@ -104,7 +104,7 @@ export default function KeywordTable({loading, keywords, searchFor, deleteKeywor
             className="text-sm text-base-content-disabled py-2"
             colSpan={3}
           >
-            * Click on the keyword to edit
+            * Click on the keyword to edit. Use escape key to cancel changes.
           </td>
         </tr>
       </tfoot>

@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
 import {patchKeyword} from './apiKeywords'
 
 type KeywordEditProps = {
@@ -12,6 +13,7 @@ type KeywordEditProps = {
 }
 
 export default function KeywordEdit({id, keyword, token}: KeywordEditProps) {
+  const [value,setValue] = useState(keyword)
 
   async function updateKeyword(value: string) {
     // console.log('updateKeyword...', id, value)
@@ -24,9 +26,16 @@ export default function KeywordEdit({id, keyword, token}: KeywordEditProps) {
 
   return (
     <input
-      style={{padding: '0.25rem', width:'100%'}}
+      className="p-1 w-full focus:bg-base-300 text-warning-content"
       type="text"
-      defaultValue={keyword}
+      value={value}
+      onChange={({target})=>setValue(target.value)}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          console.log('Cancel change')
+          setValue(keyword)
+        }
+      }}
       onBlur={({target}) => {
         if (target.value !== keyword) {
           updateKeyword(target.value)
