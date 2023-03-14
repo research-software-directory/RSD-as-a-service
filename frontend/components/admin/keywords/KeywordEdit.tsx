@@ -32,7 +32,6 @@ export default function KeywordEdit({id, keyword, token}: KeywordEditProps) {
       onChange={({target})=>setValue(target.value)}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
-          console.log('Cancel change')
           setValue(keyword)
         }
       }}

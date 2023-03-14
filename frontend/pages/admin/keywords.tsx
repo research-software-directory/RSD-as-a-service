@@ -16,6 +16,14 @@ import {PaginationProvider} from '~/components/pagination/PaginationContext'
 
 const pageTitle = `${adminPages['keywords'].title} | Admin page | ${app.title}`
 
+const pagination = {
+  count: 0,
+  page: 0,
+  rows: 12,
+  rowsOptions: [12,24,48],
+  labelRowsPerPage:'Per page'
+}
+
 export default function AdminKeywordsPage(props:any) {
 
   // console.group('AdminKeywordsPage')
@@ -29,7 +37,7 @@ export default function AdminKeywordsPage(props:any) {
       </Head>
       <AdminPageWithNav title={adminPages['keywords'].title}>
         <SearchProvider>
-          <PaginationProvider>
+          <PaginationProvider pagination={pagination}>
             <KeywordsPage {...props} />
           </PaginationProvider>
         </SearchProvider>
