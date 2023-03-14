@@ -13,7 +13,10 @@
   },
   "languages_scraped_at": "2022-12-13T10:42:02.93632+00:00",
   "license": "Apache-2.0",
-  "license_scraped_at": "2022-12-13T10:38:03.414054+00:00",
+  "star_count": 123,
+  "fork_count": 42,
+  "open_issue_count": 67,
+  "basic_data_scraped_at": "2022-12-13T10:38:03.414054+00:00",
   "commit_history": {
     "1486857600": 8,
     "1487462400": 11,

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -24,10 +24,13 @@ export type RepositoryUrl = {
   code_platform: CodePlatform,
   // options fields used to reset values on update
   // these are filled by scrapers
+  license?: string | null,
+  star_count?: number | null,
+  fork_count?: number | null,
+  open_issue_count?: number | null,
+  basic_data_scraped_at?: string | null,
   languages?: string | null,
   languages_scraped_at?: string | null,
-  license?: string | null,
-  license_scraped_at?: string | null,
   commit_history?: string | null,
   commit_history_scraped_at?: string | null
 }
