@@ -71,7 +71,7 @@ export default function AppHeader() {
 
           {/* Large menu*/}
           <div
-            className="justify-center xl:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
+            className="justify-center xl:justify-start hidden lg:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
             {menuItems.map(item =>
               <Link key={item.path} href={item.path || ''} className={`${activePath === item.path ? 'nav-active' : ''}`}>
                 {item.label}
@@ -81,7 +81,6 @@ export default function AppHeader() {
 
           <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
 
-
             {/* FEEDBACK panel */}
             <div className="hidden md:block">
               {host.feedback?.enabled
@@ -90,16 +89,11 @@ export default function AppHeader() {
               }
             </div>
 
-
-            {/* EDIT button MOVED TO PAGE TITLE */}
-            {/* {editButton ? editButton : null} */}
-
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
 
-
             {/* Responsive menu */}
-            <div className="flex items-center md:hidden">
+            <div className="flex items-center lg:hidden">
               <IconButton
                 size="large"
                 title="Menu"
@@ -136,23 +130,20 @@ export default function AppHeader() {
                     </Link>
                   </MenuItem>
                 )}
-                <li>
-                  {host.feedback?.enabled
-                    ? <FeedbackPanelButton feedback_email={host.feedback.url} issues_page_url={host.feedback.issues_page_url} />
-                    : null
-                  }
-                </li>
+                {/* {host.feedback?.enabled &&
+                  <MenuItem key={'feedback'}>
+                    <FeedbackPanelButton feedback_email={host.feedback.url} issues_page_url={host.feedback.issues_page_url} />
+                  </MenuItem>
+                } */}
               </Menu>
             </div>
 
             {/* LOGIN / USER MENU */}
             <LoginButton/>
 
-
           </div>
           <JavascriptSupportWarning/>
         </div>
-
 
         <GlobalSearchAutocomplete className="xl:hidden mt-4"/>
       </div>

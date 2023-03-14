@@ -1,20 +1,23 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Tooltip} from '@mui/material'
 import Link from 'next/link'
-import CardTitle from '../layout/CardTitle'
+import Tooltip from '@mui/material/Tooltip'
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
 import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined'
+
+import CardTitle from '../layout/CardTitle'
 import FeaturedIcon from '~/components/icons/FeaturedIcon'
 import NotPublishedIcon from '~/components/icons/NotPublishedIcon'
 import HighlightsCardLogo from './HighlightsCardLogo'
 import {SoftwareListItem} from '~/types/SoftwareTypes'
 import {getTimeAgoSince} from '~/utils/dateFn'
 
-export default function HighlightsCard({id, slug, brand_name, short_statement, is_featured,
+export default function HighlightsCard({slug, brand_name, short_statement, is_featured,
   updated_at, mention_cnt, contributor_cnt, is_published, image_id}:SoftwareListItem) {
   const href = `/software/${slug}`
   // const colors = is_featured ? 'bg-base-300 text-content' : 'bg-base-200 text-content'

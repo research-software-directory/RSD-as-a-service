@@ -2,10 +2,18 @@
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Head from 'next/head'
+
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import TextField from '@mui/material/TextField'
 
 import {app} from '../../config/app'
 import RsdAdminContent from '~/auth/RsdAdminContent'
@@ -15,7 +23,6 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useSession} from '~/auth'
 import {useEffect, useState} from 'react'
-import {Button, IconButton, List, ListItem, TextField} from '@mui/material'
 import {PageTitleSticky} from '~/components/layout/PageTitle'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import useRsdSettings from '~/config/useRsdSettings'

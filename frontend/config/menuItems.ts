@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -25,5 +25,5 @@ export const menuItems:MenuItemType[] = [
   {path:'/software', label:'Software'},
   {path: '/projects', label: 'Projects'},
   {path: '/organisations', label: 'Organisations'},
-  {path: '/highlights', label: 'Highlights', active: RsdSettings.host.highlights?.appHeaderEntry || false},
+  {path: '/highlights', label: 'Highlights', active: RsdSettings.host.highlights?.appHeaderEntry || false}
 ]

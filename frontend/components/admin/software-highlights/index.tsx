@@ -9,14 +9,14 @@ import {useSession} from '~/auth'
 import Pagination from '~/components/pagination/Pagination'
 import Searchbox from '~/components/search/Searchbox'
 import PaginationContext from '~/components/pagination/PaginationContext'
-import OrganisationsAdminList from './OrganisationsAdminList'
-import AddOrganisation from './AddOrganisation'
-import {useOrganisations} from './apiOrganisation'
+import {useSoftwareHighlights} from './apiSoftwareHighlights'
+import AddSoftwareHighlights from './AddSoftwareHighlights'
+import SoftwareHighlightsList from './SoftwareHighlightsList'
 
-export default function OrganisationAdminPage() {
+export default function AdminSoftwareHighlight() {
   const {token} = useSession()
   const {pagination:{count}} = useContext(PaginationContext)
-  const {organisations, loading, addOrganisation, removeOrganisation} = useOrganisations(token)
+  const {highlights, loading, addHighlight, deleteHighlight} = useSoftwareHighlights(token)
 
   // console.group('OrganisationAdminPage')
   // console.log('organisations...', organisations)
@@ -26,20 +26,22 @@ export default function OrganisationAdminPage() {
     <section className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-8">
       <div>
         <h2 className="flex pr-4 pb-4 justify-between">
-          <span>RSD organisations</span>
+          <span>Defined software highlights</span>
           <span>{count}</span>
         </h2>
         <div className="flex flex-wrap items-center justify-end">
           <Searchbox />
           <Pagination />
         </div>
-        <OrganisationsAdminList
+        <SoftwareHighlightsList
+          highlights={highlights}
           loading={loading}
-          organisations={organisations}
-          onDeleteOrganisation={removeOrganisation}
+          onDeleteHighlight={deleteHighlight}
         />
       </div>
-      <AddOrganisation onAddOrganisationToRsd={addOrganisation} />
+      <AddSoftwareHighlights
+        onAddSoftware={addHighlight}
+      />
     </section>
   )
 }

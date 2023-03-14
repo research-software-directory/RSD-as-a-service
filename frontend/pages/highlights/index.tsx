@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -27,8 +27,6 @@ import {defaultHighlightsSettings} from '~/config/rsdSettingsReducer'
 import {getParticipatingOrganisations} from '~/utils/editOrganisation'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import HighlightsGrid from '~/components/highlights/HighlightsGrid'
-import SoftwareEditPage from 'pages/software/[slug]/edit'
-
 
 type SoftwareHighlightsIndexPageProps = {
   count: number,
@@ -41,7 +39,7 @@ type SoftwareHighlightsIndexPageProps = {
 }
 
 export default function SoftwareHighlightsIndexPage(
-  {software=[], count, page, rows, keywords, search, organisations}: SoftwareHighlightsIndexPageProps
+  {software=[], count, page, rows, organisations}: SoftwareHighlightsIndexPageProps
 ) {
   const {host} = useRsdSettings()
   const highlightsSettings = host.highlights || defaultHighlightsSettings

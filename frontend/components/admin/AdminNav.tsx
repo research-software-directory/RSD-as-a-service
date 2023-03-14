@@ -16,6 +16,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import SpellcheckIcon from '@mui/icons-material/Spellcheck'
 import DomainAddIcon from '@mui/icons-material/DomainAdd'
+import FluorescentIcon from '@mui/icons-material/Fluorescent'
 
 export const adminPages = {
   pages:{
@@ -23,6 +24,18 @@ export const adminPages = {
     subtitle: 'Manage markdown pages',
     icon: <DescriptionIcon />,
     path: '/admin/public-pages',
+  },
+  softwareHighlights:{
+    title: 'Software highlights',
+    subtitle: 'Manage software highlights',
+    icon: <FluorescentIcon />,
+    path: '/admin/software-highlights',
+  },
+  organisations:{
+    title: 'Organisations',
+    subtitle: 'Manage organisation entries',
+    icon: <DomainAddIcon />,
+    path: '/admin/organisations',
   },
   orcid:{
     title: 'ORCID users',
@@ -36,24 +49,13 @@ export const adminPages = {
     icon: <PersonRemoveIcon />,
     path: '/admin/rsd-users',
   },
-  organisations:{
-    title: 'Organisations',
-    subtitle: 'Manage organisation entries',
-    icon: <DomainAddIcon />,
-    path: '/admin/organisations',
-  },
   keywords:{
     title: 'Keywords',
     subtitle: 'Manage keyword entries',
     icon: <SpellcheckIcon />,
     path: '/admin/keywords',
   },
-  softwareDomains:{
-    title: 'Software domains',
-    subtitle: 'Manage software domains',
-    icon: <PlaylistAddIcon />,
-    path: '/admin/software-domains',
-  },
+
 }
 
 // extract page types from the object
