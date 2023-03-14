@@ -4,19 +4,29 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Head from 'next/head'
-import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '../../config/app'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import AdminPageWithNav from '~/components/admin/AdminPageWithNav'
 import {adminPages} from '~/components/admin/AdminNav'
-import KeywordsPage from '~/components/admin/keywords/KeywordsPage'
+import KeywordsPage from '~/components/admin/keywords/index'
+import {SearchProvider} from '~/components/search/SearchContext'
+import {PaginationProvider} from '~/components/pagination/PaginationContext'
+
 
 const pageTitle = `${adminPages['keywords'].title} | Admin page | ${app.title}`
 
-export default function AdminKeywords(props:any) {
+const pagination = {
+  count: 0,
+  page: 0,
+  rows: 12,
+  rowsOptions: [12,24,48],
+  labelRowsPerPage:'Per page'
+}
 
-  // console.group('AdminKeywords')
+export default function AdminKeywordsPage(props:any) {
+
+  // console.group('AdminKeywordsPage')
   // console.log('keywords...', keywords)
   // console.groupEnd()
 
@@ -26,30 +36,34 @@ export default function AdminKeywords(props:any) {
         <title>{pageTitle}</title>
       </Head>
       <AdminPageWithNav title={adminPages['keywords'].title}>
-        <KeywordsPage {...props} />
+        <SearchProvider>
+          <PaginationProvider pagination={pagination}>
+            <KeywordsPage {...props} />
+          </PaginationProvider>
+        </SearchProvider>
       </AdminPageWithNav>
     </DefaultLayout>
   )
 }
 
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-export async function getServerSideProps(context:GetServerSidePropsContext) {
-  try{
-    const {req} = context
-    const token = req?.cookies['rsd_token']
+// export async function getServerSideProps(context:GetServerSidePropsContext) {
+//   try{
+//     const {req} = context
+//     const token = req?.cookies['rsd_token']
 
-    // get links to all pages server side
-    // const links = await getPageLinks({is_published: false, token})
+//     // get links to all pages server side
+//     // const links = await getPageLinks({is_published: false, token})
 
-    return {
-      // passed to the page component as props
-      props: {
-        keywords:[]
-      },
-    }
-  }catch(e){
-    return {
-      notFound: true,
-    }
-  }
-}
+//     return {
+//       // passed to the page component as props
+//       props: {
+//         keywords:[]
+//       },
+//     }
+//   }catch(e){
+//     return {
+//       notFound: true,
+//     }
+//   }
+// }

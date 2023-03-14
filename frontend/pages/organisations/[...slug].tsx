@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '../../config/app'

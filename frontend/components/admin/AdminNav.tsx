@@ -42,18 +42,18 @@ export const adminPages = {
     icon: <DomainAddIcon />,
     path: '/admin/organisations',
   },
+  keywords:{
+    title: 'Keywords',
+    subtitle: 'Manage keyword entries',
+    icon: <SpellcheckIcon />,
+    path: '/admin/keywords',
+  },
   softwareDomains:{
     title: 'Software domains',
     subtitle: 'Manage software domains',
     icon: <PlaylistAddIcon />,
     path: '/admin/software-domains',
   },
-  keywords:{
-    title: 'Keywords',
-    subtitle: 'Manage keyword entries',
-    icon: <SpellcheckIcon />,
-    path: '/admin/keywords',
-  }
 }
 
 // extract page types from the object

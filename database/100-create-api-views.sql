@@ -1584,3 +1584,27 @@ FROM
 WHERE
 	created_at > timestmp;
 $$;
+
+
+-- Keywords use by software and projects
+-- DEPENDS ON FUNCTIONS keyword_count_for_software and keyword_count_for_projects
+CREATE FUNCTION keyword_cnt() RETURNS TABLE (
+	id UUID,
+	keyword CITEXT,
+	software_cnt BIGINT,
+	projects_cnt BIGINT
+) LANGUAGE sql SECURITY DEFINER STABLE AS
+$$
+SELECT
+	keyword.id,
+	keyword.value AS keyword,
+	keyword_count_for_software.cnt AS software_cnt,
+	keyword_count_for_projects.cnt AS projects_cnt
+FROM
+	keyword
+LEFT JOIN
+	keyword_count_for_software() ON keyword.value = keyword_count_for_software.keyword
+LEFT JOIN
+	keyword_count_for_projects() ON keyword.value = keyword_count_for_projects.keyword
+;
+$$;

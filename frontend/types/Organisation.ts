@@ -150,3 +150,16 @@ export type ProjectOfOrganisation = {
   status: Status
   keywords: string[]
 }
+
+export type OrganisationList = {
+  id:string
+  parent: string | null
+  name: string
+  website: string | null
+  is_tenant: boolean
+  rsd_path: string
+  logo_id: string | null,
+  software_cnt: number,
+  project_cnt: number,
+  score: number
+}

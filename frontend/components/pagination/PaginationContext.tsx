@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -33,7 +33,7 @@ const PaginationContext = createContext<PaginationContextProps>({
 })
 
 export function PaginationProvider(props: any) {
-  const [pagination, setPagination] = useState(initState)
+  const [pagination, setPagination] = useState(props?.pagination ?? initState)
 
   // console.group('PaginationProvider')
   // console.log('pagination...', pagination)

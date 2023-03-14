@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Head from 'next/head'
-import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '../../config/app'
 import DefaultLayout from '~/components/layout/DefaultLayout'
@@ -17,11 +16,9 @@ import {PaginationProvider} from '~/components/pagination/PaginationContext'
 const pageTitle = `${adminPages['accounts'].title} | Admin page | ${app.title}`
 
 export default function AdminRsdUsersPage() {
-
   // console.group('AdminRsdUsersPage')
   // console.log('pageTitle...', pageTitle)
   // console.groupEnd()
-
   return (
     <DefaultLayout>
       <Head>
