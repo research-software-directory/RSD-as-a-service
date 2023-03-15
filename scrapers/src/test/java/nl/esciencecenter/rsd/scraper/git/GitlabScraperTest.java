@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
-public class GitLabSITest {
+public class GitlabScraperTest {
 	private final String baseApiUrl = "https://git.gfz-potsdam.de/api";
 	private final String repo = "swc-bb/swc-templates/swc-l/python";
-	private final GitLabSI scraper = new GitLabSI(baseApiUrl, repo);
+	private final GitlabScraper scraper = new GitlabScraper(baseApiUrl, repo);
 
 	@Disabled
 	@Test
@@ -27,7 +27,7 @@ public class GitLabSITest {
 	@Disabled
 	@Test
 	void license() {
-		Assertions.assertEquals("MIT License", scraper.license());
+		Assertions.assertEquals("MIT License", scraper.basicData().license);
 	}
 
 	@Disabled
@@ -35,7 +35,7 @@ public class GitLabSITest {
 	void licenseDoesNotExist() {
 		// unlicensed projects should return null
 		// we need to find a suitable project or create a mocked interface
-		Assertions.assertEquals(null, scraper.license());
+		Assertions.assertEquals(null, scraper.basicData().license);
 	}
 
 	@Disabled

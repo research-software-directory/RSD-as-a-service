@@ -5,11 +5,13 @@
 
 package nl.esciencecenter.rsd.scraper.git;
 
-public interface SoftwareInfo {
+public interface GitScraper {
+
+	BasicGitData basicData();
 
 	String languages();
 
-	String license();
-
 	CommitsPerWeek contributions();
+
+	Integer contributorCount();
 }

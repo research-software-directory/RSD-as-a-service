@@ -17,12 +17,12 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
-public class PostgrestSIR implements SoftwareInfoRepository {
+public class PostgrestConnector {
 
 	private final String backendUrl;
 	private final CodePlatformProvider codePlatform;
 
-	public PostgrestSIR(String backendUrl, CodePlatformProvider codePlatform) {
+	public PostgrestConnector(String backendUrl, CodePlatformProvider codePlatform) {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
 		this.codePlatform = Objects.requireNonNull(codePlatform);
 	}
@@ -32,22 +32,9 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	 * @param limit The number of rows requested from PostgREST
 	 * @return      The data corresponding to the git repositories of which the programming languages data were scraped the longest time ago
 	 */
-	@Override
 	public Collection<BasicRepositoryData> languagesData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=languages_scraped_at.asc.nullsfirst&limit=" + limit);
-		return parseBasicJsonData(data);
-	}
-
-	/**
-	 * Fetch license data from PostgREST
-	 * @param limit The number of rows requested from PostgREST
-	 * @return      The data corresponding to the git repositories of which the license data were scraped the longest time ago
-	 */
-	@Override
-	public Collection<BasicRepositoryData> licenseData(int limit) {
-		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=license_scraped_at.asc.nullsfirst&limit=" + limit);
 		return parseBasicJsonData(data);
 	}
 
@@ -56,10 +43,20 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 	 * @param limit The number of rows requested from PostgREST
 	 * @return      The data corresponding to the git repositories of which the commit data were scraped the longest time ago
 	 */
-	@Override
 	public Collection<BasicRepositoryData> commitData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseBasicJsonData(data);
+	}
+
+	/**
+	 * Fetch basic data from PostgREST
+	 * @param limit The number of rows requested from PostgREST
+	 * @return      The data corresponding to the git repositories of which the basic data were scraped the longest time ago
+	 */
+	public Collection<BasicRepositoryData> statsData(int limit) {
+		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" + limit);
 		return parseBasicJsonData(data);
 	}
 
@@ -77,18 +74,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		return result;
 	}
 
-	@Override
-	public void saveLicenseData(LicenseData licenseData) {
-		String json;
-		if (licenseData.license() == null) {
-			json = String.format("{\"license_scraped_at\": \"%s\"}", licenseData.licenseScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		} else {
-			json = String.format("{\"license\": \"%s\", \"license_scraped_at\": \"%s\"}", licenseData.license(), licenseData.licenseScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		}
-		Utils.patchAsAdmin(backendUrl + "?software=eq." + licenseData.basicData().software().toString(), json);
-	}
-
-	@Override
 	public void saveLanguagesData(LanguagesData languagesData) {
 		String json;
 		if (languagesData.languages() == null) {
@@ -99,7 +84,6 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + languagesData.basicData().software().toString(), json);
 	}
 
-	@Override
 	public void saveCommitData(CommitData commitData) {
 		String json;
 		if (commitData.commitHistory() == null) {
@@ -109,5 +93,28 @@ public class PostgrestSIR implements SoftwareInfoRepository {
 			json = String.format("{\"commit_history\": %s, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistory().toJson(), commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		}
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + commitData.basicData().software().toString(), json);
+	}
+
+	public void saveBasicData(BasicGitDatabaseData basicData) {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("basic_data_scraped_at", basicData.dataScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		if (basicData.statsData() != null) {
+			jsonObject.addProperty("license", basicData.statsData().license);
+			jsonObject.addProperty("star_count", basicData.statsData().starCount);
+			jsonObject.addProperty("fork_count", basicData.statsData().forkCount);
+			jsonObject.addProperty("open_issue_count", basicData.statsData().openIssueCount);
+		}
+
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + basicData.basicData().software().toString(), jsonObject.toString());
+	}
+
+	public void saveContributorCount(ContributorDatabaseData contributorData) {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("contributor_count_scraped_at", contributorData.dataScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		if (contributorData.contributorCount() != null) {
+			jsonObject.addProperty("contributor_count", contributorData.contributorCount());
+		}
+
+		Utils.patchAsAdmin(backendUrl + "?software=eq." + contributorData.basicData().software().toString(), jsonObject.toString());
 	}
 }

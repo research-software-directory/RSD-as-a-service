@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -18,12 +18,17 @@ CREATE TABLE repository_url (
 	software UUID references software (id) PRIMARY KEY,
 	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
 	code_platform platform_type NOT NULL DEFAULT 'other',
+	license VARCHAR(200),
+	star_count BIGINT,
+	fork_count INTEGER,
+	open_issue_count INTEGER,
+	basic_data_scraped_at TIMESTAMPTZ,
 	languages JSONB,
 	languages_scraped_at TIMESTAMPTZ,
-	license VARCHAR(200),
-	license_scraped_at TIMESTAMPTZ,
 	commit_history JSONB,
-	commit_history_scraped_at TIMESTAMPTZ
+	commit_history_scraped_at TIMESTAMPTZ,
+	contributor_count INTEGER,
+	contributor_count_scraped_at TIMESTAMPTZ
 );
 
 

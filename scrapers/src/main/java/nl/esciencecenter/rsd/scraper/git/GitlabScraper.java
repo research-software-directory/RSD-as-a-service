@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.ZonedDateTime;
 
-public class GitLabSI implements SoftwareInfo {
+public class GitlabScraper implements GitScraper {
 	public String projectPath;
 	public String apiUri;
 
@@ -31,9 +32,23 @@ public class GitLabSI implements SoftwareInfo {
 	 * @param gitLabApiUrl The API Url without version, e.g. https://<gitlab_instance_url>/api
 	 * @param projectPath The full path to the project
 	 */
-	public GitLabSI(String gitLabApiUrl, String projectPath) {
+	public GitlabScraper(String gitLabApiUrl, String projectPath) {
 		this.projectPath = projectPath;
 		this.apiUri = gitLabApiUrl + "/v4";
+	}
+
+	/**
+	 * Returns the basic data of a project. If GitLab detects the license, an SPDX identifier will be
+	 * returned. If the license could not be detected, returns "Other". API endpoint:
+	 * https://docs.gitlab.com/ee/api/projects.html#get-single-project NOTE: A GraphQL request here
+	 * might be more efficient since less data would be sent.
+	 *
+	 * @return The basic data
+	 */
+	@Override
+	public BasicGitData basicData() {
+		String response = Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "?license=True");
+		return parseBasicData(response);
 	}
 
 	/**
@@ -45,23 +60,6 @@ public class GitLabSI implements SoftwareInfo {
 	@Override
 	public String languages() {
 		return Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/languages");
-	}
-
-	/**
-	 * Returns the license of a project. If GitLab detects the license, an SPDX identifier will be
-	 * returned. If the license could not be detected, returns "Other". API endpoint:
-	 * https://docs.gitlab.com/ee/api/projects.html#get-single-project NOTE: A GraphQL request here
-	 * might be more efficient since less data would be sent.
-	 *
-	 * @return The license
-	 */
-	@Override
-	public String license() {
-		String repoInfo =
-				Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "?license=True");
-		JsonElement jsonLicense = JsonParser.parseString(repoInfo).getAsJsonObject().get("license");
-		return jsonLicense.isJsonNull() ? null
-				: jsonLicense.getAsJsonObject().get("name").getAsString();
 	}
 
 	/**
@@ -107,6 +105,18 @@ public class GitLabSI implements SoftwareInfo {
 		return commits;
 	}
 
+	@Override
+	public Integer contributorCount() {
+		HttpResponse<String> httpResponse = Utils.getAsHttpResponse(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/repository/contributors");
+
+		if (httpResponse.statusCode() == 429) throw new RsdRateLimitException("API rate limit exceeded for endpoint " + httpResponse.uri() + " with response: " + httpResponse.body());
+		if (httpResponse.statusCode() == 404) throw new RsdResponseException(404, "No response found at " + httpResponse.uri());
+
+		// see https://docs.gitlab.com/ee/api/rest/index.html#other-pagination-headers
+		String totalItemsHeader = httpResponse.headers().firstValue("x-total").get();
+		return Integer.parseInt(totalItemsHeader);
+	}
+
 	static void parseCommitPage(String json, CommitsPerWeek commitsToFill) {
 		JsonArray thisPageCommits = JsonParser.parseString(json).getAsJsonArray();
 
@@ -117,6 +127,18 @@ public class GitLabSI implements SoftwareInfo {
 
 			commitsToFill.addCommits(time, 1);
 		}
+	}
+
+	static BasicGitData parseBasicData(String json) {
+		BasicGitData result = new BasicGitData();
+		JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+
+		JsonElement jsonLicense = jsonObject.get("license");
+		result.license =  jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().get("name").getAsString();
+		result.starCount = jsonObject.getAsJsonPrimitive("star_count").getAsLong();
+		result.forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
+
+		return result;
 	}
 
 }

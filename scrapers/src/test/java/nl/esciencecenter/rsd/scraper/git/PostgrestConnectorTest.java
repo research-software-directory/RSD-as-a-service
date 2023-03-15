@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.UUID;
 
-public class PostgrestSIRTest {
+public class PostgrestConnectorTest {
 
 	@Test
 	void givenEmptyJsonArray_whenParsingJsonData_thenEmptyCollectionReturned() {
 		String emptyArrayJson = "[]";
 
-		Collection<BasicRepositoryData> result = PostgrestSIR.parseBasicJsonData(emptyArrayJson);
+		Collection<BasicRepositoryData> result = PostgrestConnector.parseBasicJsonData(emptyArrayJson);
 
 		Assertions.assertTrue(result.isEmpty());
 	}
@@ -32,7 +32,7 @@ public class PostgrestSIRTest {
 					}
 				]""";
 
-		Collection<BasicRepositoryData> result = PostgrestSIR.parseBasicJsonData(arrayWithSingleValidObjectJson);
+		Collection<BasicRepositoryData> result = PostgrestConnector.parseBasicJsonData(arrayWithSingleValidObjectJson);
 
 		Assertions.assertEquals(1, result.size());
 		BasicRepositoryData dataToInspect = result.stream().findFirst().get();
@@ -50,7 +50,7 @@ public class PostgrestSIRTest {
 					}
 				]""";
 
-		Assertions.assertThrowsExactly(IllegalArgumentException.class, () -> PostgrestSIR.parseBasicJsonData(invalidUuidJson));
+		Assertions.assertThrowsExactly(IllegalArgumentException.class, () -> PostgrestConnector.parseBasicJsonData(invalidUuidJson));
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class PostgrestSIRTest {
 					}
 				]""";
 
-		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(invalidJson));
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestConnector.parseBasicJsonData(invalidJson));
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class PostgrestSIRTest {
 					}
 				]""";
 
-		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(missingSoftwareJson));
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestConnector.parseBasicJsonData(missingSoftwareJson));
 
 		String missingUrlJson = """
 				[
@@ -85,7 +85,7 @@ public class PostgrestSIRTest {
 					}
 				]""";
 
-		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(missingUrlJson));
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestConnector.parseBasicJsonData(missingUrlJson));
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class PostgrestSIRTest {
 					}
 				]""";
 
-		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(nullSoftwareJson));
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestConnector.parseBasicJsonData(nullSoftwareJson));
 
 		String nullUrlJson = """
 				[
@@ -108,6 +108,6 @@ public class PostgrestSIRTest {
 					}
 				]""";
 
-		Assertions.assertThrows(RuntimeException.class, () -> PostgrestSIR.parseBasicJsonData(nullUrlJson));
+		Assertions.assertThrows(RuntimeException.class, () -> PostgrestConnector.parseBasicJsonData(nullUrlJson));
 	}
 }

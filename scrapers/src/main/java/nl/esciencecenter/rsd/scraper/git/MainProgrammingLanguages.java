@@ -22,7 +22,7 @@ public class MainProgrammingLanguages {
 	}
 
 	private static void scrapeGitLab() {
-		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
 		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.languagesData(Config.maxRequestsGitLab());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
@@ -36,7 +36,7 @@ public class MainProgrammingLanguages {
 					String projectPath = repoUrl.replace("https://" + hostname + "/", "");
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
-					String scrapedLanguages = new GitLabSI(apiUrl, projectPath).languages();
+					String scrapedLanguages = new GitlabScraper(apiUrl, projectPath).languages();
 					LanguagesData updatedData = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), scrapedLanguages, scrapedAt);
 					softwareInfoRepository.saveLanguagesData(updatedData);
 				} catch (RuntimeException e) {
@@ -53,7 +53,7 @@ public class MainProgrammingLanguages {
 	}
 
 	private static void scrapeGithub() {
-		SoftwareInfoRepository softwareInfoRepository = new PostgrestSIR(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
 		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.languagesData(Config.maxRequestsGithub());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
@@ -65,7 +65,7 @@ public class MainProgrammingLanguages {
 					String repo = repoUrl.replace("https://github.com/", "");
 					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-					String scrapedLanguages = new GithubSI("https://api.github.com", repo).languages();
+					String scrapedLanguages = new GithubScraper("https://api.github.com", repo).languages();
 					LanguagesData updatedData = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), scrapedLanguages, scrapedAt);
 					softwareInfoRepository.saveLanguagesData(updatedData);
 				} catch (RuntimeException e) {
