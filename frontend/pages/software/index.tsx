@@ -25,6 +25,7 @@ import SoftwareFilter from '~/components/software/filter'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
+import {getBaseUrl} from '~/utils/fetchHelpers'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -180,7 +181,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   const {search, keywords, prog_lang, rows, page} = ssrSoftwareParams(context.query)
   // construct postgREST api url with query params
   const url = softwareListUrl({
-    baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
+    baseUrl: getBaseUrl(),
     search,
     keywords,
     prog_lang,
