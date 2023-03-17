@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-SPDX-FileCopyrightText: 2021 - 2022 dv4all
+SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2021 - 2023 dv4all
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -170,10 +170,11 @@ const rsdTheme = {
     keys: ["xs", "sm", "md", "lg", "xl"],
     values: {
       xs: 0,
-      sm: 600,
-      md: 900,
-      lg: 1200,
-      xl: 1536,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      '2xl':1536
     },
     unit: "px",
   },
