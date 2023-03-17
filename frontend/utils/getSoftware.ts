@@ -5,12 +5,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import logger from './logger'
 import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
-import logger from './logger'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
-import {SoftwareReleaseInfo} from '~/components/organisation/releases/useSoftwareReleases'
 
 /*
  * Software list for the software overview page
