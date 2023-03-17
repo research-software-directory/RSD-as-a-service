@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -72,7 +72,7 @@ User Agent: ${navigator.userAgent}`
       <div className="block md:hidden">
         <Divider/>
         <button className="flex md:hidden hover:bg-gray-100 hover:text-primary w-full py-2 px-4"
-                onClick={handleClickOpen}>
+          onClick={handleClickOpen}>
           Send feedback
         </button>
       </div>
