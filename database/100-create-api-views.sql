@@ -1,10 +1,9 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2023 dv4all
--- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
+-- SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -174,6 +173,52 @@ BEGIN
 		) AS "prog_lang"
 	FROM
 		repository_url
+	;
+END
+$$;
+
+-- SOFTWARE OVERVIEW LIST FOR SEARCH
+-- WITH COUNTS and KEYWORDS for filtering
+CREATE FUNCTION software_search() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	image_id VARCHAR,
+	updated_at TIMESTAMPTZ,
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT,
+	is_published BOOLEAN,
+	keywords CITEXT[],
+	keywords_text TEXT,
+	prog_lang TEXT[]
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		software.id,
+		software.slug,
+		software.brand_name,
+		software.short_statement,
+		software.image_id,
+		software.updated_at,
+		count_software_countributors.contributor_cnt,
+		count_software_mentions.mention_cnt,
+		software.is_published,
+		keyword_filter_for_software.keywords,
+		keyword_filter_for_software.keywords_text,
+		prog_lang_filter_for_software.prog_lang
+	FROM
+		software
+	LEFT JOIN
+		count_software_countributors() ON software.id=count_software_countributors.software
+	LEFT JOIN
+		count_software_mentions() ON software.id=count_software_mentions.software
+	LEFT JOIN
+		keyword_filter_for_software() ON software.id=keyword_filter_for_software.software
+	LEFT JOIN
+		prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
 	;
 END
 $$;
@@ -1380,7 +1425,6 @@ CREATE VIEW user_count_per_home_organisation AS
 		home_organisation
 	;
 
-
 -- Return the number of accounts since specified time stamp
 CREATE FUNCTION new_accounts_count_since_timestamp(timestmp TIMESTAMPTZ) RETURNS INTEGER
 LANGUAGE sql SECURITY DEFINER STABLE AS
@@ -1392,7 +1436,6 @@ FROM
 WHERE
 	created_at > timestmp;
 $$;
-
 
 -- Keywords use by software and projects
 -- DEPENDS ON FUNCTIONS keyword_count_for_software and keyword_count_for_projects
@@ -1447,4 +1490,41 @@ ORDER BY
 	COUNT(*)
 DESC LIMIT
 	1;
+;
+$$;
+
+-- Get a list of all software highlights with latest highlights first
+CREATE FUNCTION software_for_highlight() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	image_id VARCHAR,
+	is_published BOOLEAN,
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT,
+	"position" INTEGER,
+	updated_at TIMESTAMPTZ
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	software.id,
+	software.slug,
+	software.brand_name,
+	software.short_statement,
+	software.image_id,
+	software.is_published,
+	count_software_countributors.contributor_cnt,
+	count_software_mentions.mention_cnt,
+	software_highlight.position,
+	software_highlight.updated_at
+FROM
+	software
+INNER JOIN
+	software_highlight ON software.id=software_highlight.software
+LEFT JOIN
+	count_software_countributors() ON software.id=count_software_countributors.software
+LEFT JOIN
+	count_software_mentions() ON software.id=count_software_mentions.software
+;
 $$;
