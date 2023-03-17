@@ -5,12 +5,12 @@
 
 import {useContext} from 'react'
 
+import {useSession} from '~/auth'
 import Pagination from '~/components/pagination/Pagination'
 import Searchbox from '~/components/search/Searchbox'
 import PaginationContext from '~/components/pagination/PaginationContext'
 import OrganisationsAdminList from './OrganisationsAdminList'
 import AddOrganisation from './AddOrganisation'
-import {useSession} from '~/auth'
 import {useOrganisations} from './apiOrganisation'
 
 export default function OrganisationAdminPage() {
