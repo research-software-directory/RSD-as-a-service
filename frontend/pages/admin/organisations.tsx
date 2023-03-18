@@ -15,6 +15,14 @@ import {PaginationProvider} from '~/components/pagination/PaginationContext'
 
 const pageTitle = `${adminPages['organisations'].title} | Admin page | ${app.title}`
 
+const pagination = {
+  count: 0,
+  page: 0,
+  rows: 6,
+  rowsOptions: [6,12,24],
+  labelRowsPerPage:'Per page'
+}
+
 export default function AdminOrganisationsPage() {
 
   // console.group('AdminOrganisationsPage')
@@ -28,7 +36,7 @@ export default function AdminOrganisationsPage() {
       </Head>
       <AdminPageWithNav title={adminPages['organisations'].title}>
         <SearchProvider>
-          <PaginationProvider>
+          <PaginationProvider pagination={pagination}>
             <OrganisationsPage />
           </PaginationProvider>
         </SearchProvider>

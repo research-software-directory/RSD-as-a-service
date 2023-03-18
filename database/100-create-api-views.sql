@@ -273,35 +273,6 @@ BEGIN
 END
 $$;
 
--- UNIQUE contributor display_names
--- DISCONTINUED on 28-3-2023
--- CREATE FUNCTION unique_contributors() RETURNS TABLE (
--- 	display_name TEXT,
--- 	affiliation VARCHAR,
--- 	orcid VARCHAR,
--- 	given_names VARCHAR,
--- 	family_names VARCHAR,
--- 	email_address VARCHAR,
--- 	avatar_id VARCHAR
--- ) LANGUAGE plpgsql STABLE AS
--- $$
--- BEGIN
--- 	RETURN QUERY
--- 		SELECT DISTINCT
--- 		(CONCAT(c.given_names,' ',c.family_names)) AS display_name,
--- 		c.affiliation,
--- 		c.orcid,
--- 		c.given_names,
--- 		c.family_names,
--- 		c.email_address,
--- 		c.avatar_id
--- 	FROM
--- 		contributor c
--- 	ORDER BY
--- 		display_name ASC;
--- END
--- $$;
-
 -- Participating organisations by software
 -- requires software UUID
 CREATE FUNCTION organisations_of_software(software_id UUID) RETURNS TABLE (
@@ -985,35 +956,6 @@ INNER JOIN
 END
 $$;
 
--- UNIQUE LIST OF TEAM MEMBERS
--- DISCONTINUED on 28-3-2023
--- CREATE FUNCTION unique_team_members() RETURNS TABLE (
--- 	display_name TEXT,
--- 	affiliation VARCHAR,
--- 	orcid VARCHAR,
--- 	given_names VARCHAR,
--- 	family_names VARCHAR,
--- 	email_address VARCHAR,
--- 	avatar_id VARCHAR
--- ) LANGUAGE plpgsql STABLE AS
--- $$
--- BEGIN
--- 	RETURN QUERY
--- 		SELECT DISTINCT
--- 			(CONCAT(c.given_names,' ',c.family_names)) AS display_name,
--- 			c.affiliation,
--- 			c.orcid,
--- 			c.given_names,
--- 			c.family_names,
--- 			c.email_address,
--- 			c.avatar_id
--- 		FROM
--- 			team_member c
--- 		ORDER BY
--- 			display_name ASC;
--- END
--- $$;
-
 -- Software maintainers list with basic personal info
 -- used in the software maintainer list
 CREATE FUNCTION maintainers_of_software(software_id UUID) RETURNS TABLE (
@@ -1056,7 +998,6 @@ BEGIN
 	RETURN;
 END
 $$;
-
 
 -- SOFTWARE BY MAINTAINER
 -- NOTE! one software is shown multiple times in this view
@@ -1505,47 +1446,6 @@ BEGIN RETURN QUERY
 		organisation
 ;
 END
-$$;
-
--- ALL unique persons in RSD (contributors and team members) with their roles
--- TO BE USED IN SEARCH from 23-3-2023
--- NOTE! UNION takes care of duplicate entries
-CREATE FUNCTION unique_person_entries() RETURNS TABLE (
-	display_name TEXT,
-	affiliation VARCHAR,
-	orcid VARCHAR,
-	given_names VARCHAR,
-	family_names VARCHAR,
-	email_address VARCHAR,
-	"role" VARCHAR,
-	avatar_id VARCHAR
-) LANGUAGE sql STABLE AS
-$$
-SELECT DISTINCT
-	(CONCAT(contributor.given_names,' ',contributor.family_names)) AS display_name,
-	contributor.affiliation,
-	contributor.orcid,
-	contributor.given_names,
-	contributor.family_names,
-	contributor.email_address,
-	contributor.role,
-	contributor.avatar_id
-FROM
-	contributor
-UNION
-SELECT DISTINCT
-	(CONCAT(team_member.given_names,' ',team_member.family_names)) AS display_name,
-	team_member.affiliation,
-	team_member.orcid,
-	team_member.given_names,
-	team_member.family_names,
-	team_member.email_address,
-	team_member.role,
-	team_member.avatar_id
-FROM
-	team_member
-ORDER BY
-	display_name ASC;
 $$;
 
 -- Check whether user agreed on Terms of Service and read the Privacy Statement
