@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,10 +7,14 @@ import {useCallback, useContext} from 'react'
 
 import editSoftwareContext, {SoftwareInfo} from './editSoftwareContext'
 import {EditSoftwareActionType} from './editSoftwareReducer'
-import {EditSoftwarePageProps} from './editSoftwareSteps'
+import {EditSoftwarePageProps} from './editSoftwarePages'
 
 export default function useSoftwareContext() {
   const {state,dispatch} = useContext(editSoftwareContext)
+
+  // console.group('useSoftwareContext')
+  // console.log('state...', state)
+  // console.groupEnd()
 
   const setSoftwareInfo = useCallback((software: SoftwareInfo)=>{
     dispatch({
@@ -19,10 +23,10 @@ export default function useSoftwareContext() {
     })
   },[dispatch])
 
-  const setEditStep = useCallback((step: EditSoftwarePageProps)=>{
+  const setEditPage = useCallback((page: EditSoftwarePageProps)=>{
     dispatch({
-      type: EditSoftwareActionType.SET_EDIT_STEP,
-      payload: step
+      type: EditSoftwareActionType.SET_EDIT_PAGE,
+      payload: page
     })
   },[dispatch])
 
@@ -60,7 +64,7 @@ export default function useSoftwareContext() {
   return {
     ...state,
     setSoftwareInfo,
-    setEditStep,
+    setEditPage,
     setLoading,
     setFormState,
     setSoftwareSlug,

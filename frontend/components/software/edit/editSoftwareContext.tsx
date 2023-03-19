@@ -1,39 +1,37 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {createContext, useReducer} from 'react'
 
-import {editSoftwarePage, EditSoftwarePageProps} from './editSoftwareSteps'
+import {editSoftwarePage, EditSoftwarePageProps} from './editSoftwarePages'
 import {EditSoftwareAction, editSoftwareReducer} from './editSoftwareReducer'
 
 export type SoftwareInfo = {
-  id: string | null,
-  slug: string | null,
+  id: string,
+  slug: string,
   brand_name: string,
   concept_doi: string | null,
 }
 
 export type EditSoftwareState = {
-  step: EditSoftwarePageProps
+  page: EditSoftwarePageProps
   software: SoftwareInfo
-  loading: boolean
 }
 
 export const initialState = {
-  step: editSoftwarePage[0],
+  page: editSoftwarePage[0],
   software: {
     id: '',
     slug: '',
     brand_name:'',
     concept_doi: '',
-  },
-  loading: true
+  }
 }
 
 export type EditSoftwareContextProps = {

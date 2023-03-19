@@ -1,0 +1,62 @@
+[
+  {
+    "id": "0c9fcd31-55f1-456b-ac76-866245b96091",
+    "keyword": "Machine learning",
+    "cnt": 36
+  },
+  {
+    "id": "b9b823ea-3546-419d-a254-50178a11c4d5",
+    "keyword": "Visualization",
+    "cnt": 36
+  },
+  {
+    "id": "f5d43af5-95d4-4fa3-87df-1176b388ece1",
+    "keyword": "High performance computing",
+    "cnt": 35
+  },
+  {
+    "id": "7f4ceaa2-d7d6-4b9b-afb5-e2f0cee71ffb",
+    "keyword": "Inter-operability & linked data",
+    "cnt": 35
+  },
+  {
+    "id": "f9cdfd66-c3e8-4429-98d0-e5e9bc841801",
+    "keyword": "Multi-scale & multi model simulations",
+    "cnt": 35
+  },
+  {
+    "id": "60d1c759-a15d-4e5e-bbf6-bd5f805f95ca",
+    "keyword": "Workflow technologies",
+    "cnt": 35
+  },
+  {
+    "id": "361d7661-240c-42fa-b24d-9014a094fe35",
+    "keyword": "Big data",
+    "cnt": 34
+  },
+  {
+    "id": "9f0e5c69-7598-4d71-abf7-f9264bdc2fa0",
+    "keyword": "Image processing",
+    "cnt": 33
+  },
+  {
+    "id": "5bbe5cf7-86c0-4d7d-a52c-9168ca2695b3",
+    "keyword": "Text analysis & natural language processing",
+    "cnt": 31
+  },
+  {
+    "id": "1a3a7f17-1dc3-4136-8585-156df4bba729",
+    "keyword": "GPU",
+    "cnt": 30
+  },
+  {
+    "id": "16261554-304a-4488-9adf-3289559ca193",
+    "keyword": "Optimized data handling",
+    "cnt": 29
+  },
+  {
+    "id": "1843eef2-607d-4683-bcb1-863e3688a845",
+    "keyword": "Real time data analysis",
+    "cnt": 29
+  }
+]

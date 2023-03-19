@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +15,7 @@ export enum EditSoftwareActionType {
   SET_SOFTWARE_TITLE = 'SET_SOFTWARE_TITLE',
   SET_SOFTWARE_SLUG = 'SET_SOFTWARE_SLUG',
   SET_SOFTWARE_INFO = 'SET_SOFTWARE_INFO',
-  SET_EDIT_STEP = 'SET_EDIT_STEP',
+  SET_EDIT_PAGE = 'SET_EDIT_PAGE',
   SET_LOADING = 'SET_LOADING',
   UPDATE_STATE = 'UPDATE_STATE',
 }
@@ -26,7 +26,7 @@ export function editSoftwareReducer(state: EditSoftwareState = initialState, act
   // console.log('action...', action)
   // console.groupEnd()
   switch (action.type) {
-    case EditSoftwareActionType.SET_EDIT_STEP:
+    case EditSoftwareActionType.SET_EDIT_PAGE:
       return {
         ...state,
         // default values

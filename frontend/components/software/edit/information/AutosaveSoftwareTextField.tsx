@@ -1,3 +1,9 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import {useRouter} from 'next/router'
 import {useFormContext} from 'react-hook-form'
 import {useSession} from '~/auth'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
@@ -13,6 +19,7 @@ export type AutosaveProjectInfoProps = {
 }
 
 export default function AutosaveSoftwareTextField({software_id,options,rules}:AutosaveProjectInfoProps) {
+  const router = useRouter()
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {setSoftwareTitle, setSoftwareSlug} = useSoftwareContext()
@@ -42,13 +49,16 @@ export default function AutosaveSoftwareTextField({software_id,options,rules}:Au
         defaultValue:value
       })
       // update shared state
-      updateSharedProjectInfo(value)
+      updateSharedInfo(value)
     }
   }
 
-  function updateSharedProjectInfo(value:string) {
+  function updateSharedInfo(value:string) {
     if (options.name === 'slug') {
+      // update software slug
       setSoftwareSlug(value)
+      // reload page
+      router.push(`/software/${value}/edit/information`)
     }
     if (options.name === 'brand_name') {
       setSoftwareTitle(value)

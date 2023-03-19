@@ -5,42 +5,46 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
-import Head from 'next/head'
+import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '~/config/app'
-import DefaultLayout from '~/components/layout/DefaultLayout'
-import {EditSoftwareProvider} from '~/components/software/edit/editSoftwareContext'
-import EditSoftwarePage from '~/components/software/edit/EditSoftwarePage'
-import {FormProvider, useForm} from 'react-hook-form'
-import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
-
 const pageTitle = `Edit software | ${app.title}`
 
 export default function SoftwareEditPage() {
-  const router = useRouter()
-  const slug = router.query['slug']
-  const methods = useForm({
-    mode:'onChange'
-  })
+  // const router = useRouter()
+  // const slug = router.query['slug']
+  // const methods = useForm({
+  //   mode:'onChange'
+  // })
 
-  // console.group('SoftwareEditPage')
-  // console.log('slug...', slug)
-  // console.log('pageState...', pageState)
-  // console.groupEnd()
+  // return (
+  //   <DefaultLayout>
+  //     <Head>
+  //       <title>{pageTitle}</title>
+  //     </Head>
+  //     <UserAgrementModal />
+  //     {/* form provider to share isValid, isDirty states in the header */}
+  //     <FormProvider {...methods}>
+  //       <EditSoftwareProvider>
+  //         <EditSoftwarePage slug={slug?.toString() ?? ''} />
+  //       </EditSoftwareProvider>
+  //     </FormProvider>
+  //   </DefaultLayout>
+  // )
+}
 
-  return (
-    <DefaultLayout>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
-      <UserAgrementModal />
-      {/* form provider to share isValid, isDirty states in the header */}
-      <FormProvider {...methods}>
-        <EditSoftwareProvider>
-          <EditSoftwarePage slug={slug?.toString() ?? ''} />
-        </EditSoftwareProvider>
-      </FormProvider>
-    </DefaultLayout>
-  )
+// REDIRECT to /edit/information location (default edit page)
+// fetching data server side
+// see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
+export async function getServerSideProps(context:GetServerSidePropsContext) {
+  const {params} = context
+
+  const slug = params?.slug?.toString() ?? ''
+  // Redirect to /edit/information location as default
+  return {
+    redirect: {
+      destination: `/software/${slug}/edit/information`,
+      permanent: false,
+    },
+  }
 }
