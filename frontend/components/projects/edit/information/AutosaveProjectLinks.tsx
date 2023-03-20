@@ -87,20 +87,23 @@ export default function AutosaveProjectLinks({project_id, url_for_project}: Proj
     }
   }
 
-  async function sortedLinks(links: ProjectLink[]) {
+  async function sortedLinks(newList: ProjectLink[]) {
     // patch only if there are items left
-    if (links.length > 0) {
+    if (newList.length > 0) {
+      setLinks(newList)
       const resp = await patchProjectLinkPositions({
-        links,
+        links:newList,
         token
       })
-      if (resp.status === 200) {
+      if (resp.status !== 200) {
+        // revert back
         setLinks(links)
-      } else {
+        // show error message
         showErrorMessage(`Failed to update project link positions. ${resp.message}`)
       }
     } else {
-      setLinks(links)
+      // reset links
+      setLinks([])
     }
   }
 

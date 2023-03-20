@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ type SortableProjectLinksListProps = {
 
 export default function SortableProjectLinksList({links,onEdit,onDelete,onSorted}:SortableProjectLinksListProps) {
 
-  function onRenderItem(item:ProjectLink,index?:number) {
+  function onRenderItem(item:ProjectLink,index:number) {
     return <SortableProjectLinksItem
       key={item.id ?? index}
       pos={index ?? 0}

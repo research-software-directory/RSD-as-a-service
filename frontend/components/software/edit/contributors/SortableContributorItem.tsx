@@ -4,18 +4,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import useMediaQuery from '@mui/material/useMediaQuery'
-import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 
-import {useSortable} from '@dnd-kit/sortable'
-import {CSS} from '@dnd-kit/utilities'
 import ContributorAvatar from '~/components/software/ContributorAvatar'
 import {combineRoleAndAffiliation, getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
-import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import {Contributor} from '~/types/Contributor'
 
 import {getImageUrl} from '~/utils/editImage'
+import SortableListItem from '~/components/layout/SortableListItem'
 
 type SortableContributorItemProps = {
   pos: number,
@@ -26,43 +23,24 @@ type SortableContributorItemProps = {
 
 export default function SortableContributorItem({pos, item, onEdit, onDelete}: SortableContributorItemProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
-  const {
-    attributes,listeners,setNodeRef,
-    transform,transition,isDragging
-  } = useSortable({id: item.id ?? ''})
-
   const displayName = getDisplayName(item)
   const displayInitials = getDisplayInitials(item)
   const primaryText = item.is_contact_person ?
     <><span>{displayName}</span><span className="text-primary"> (contact person)</span></>
     : displayName
 
-  return (
-    <ListItem
+   return (
+    <SortableListItem
       data-testid="contributor-item"
-      // draggable
-      ref={setNodeRef}
-      {...attributes}
-      secondaryAction={
-        <SortableListItemActions
-          pos={pos}
-          listeners={listeners}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      }
+      key={item.id}
+      pos={pos}
+      item={item}
+      onEdit={onEdit}
+      onDelete={onDelete}
       sx={{
-        // this makes space for buttons
-        paddingRight:'11rem',
         '&:hover': {
           backgroundColor:'grey.100'
         },
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-        backgroundColor: isDragging ? 'grey.100' : 'paper',
-        zIndex: isDragging ? 9:0,
-        cursor: isDragging ? 'move' : 'default'
       }}
     >
       {smallScreen ? null :
@@ -75,6 +53,6 @@ export default function SortableContributorItem({pos, item, onEdit, onDelete}: S
         </ListItemAvatar>
       }
       <ListItemText primary={primaryText} secondary={combineRoleAndAffiliation(item)} />
-    </ListItem>
+    </SortableListItem>
   )
 }

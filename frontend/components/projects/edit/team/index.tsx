@@ -161,20 +161,24 @@ export default function ProjectTeam({slug}: { slug: string }) {
     hideModals()
   }
 
-  async function sortTeamMembers(members: TeamMember[]) {
+  async function sortTeamMembers(newList: TeamMember[]) {
     // patch only if there are items left
-    if (members.length > 0) {
+    if (newList.length > 0) {
+      // apply ui change first to avoid lag
+      setMembers(newList)
+      // patch db
       const resp = await patchTeamMemberPositions({
-        members,
+        members:newList,
         token
       })
-      if (resp.status === 200) {
+      if (resp.status !== 200) {
+        // revert back in case of failure
         setMembers(members)
-      } else {
         showErrorMessage(`Failed to update team positions. ${resp.message}`)
       }
     } else {
-      setMembers(members)
+      // clear list
+      setMembers([])
     }
   }
 

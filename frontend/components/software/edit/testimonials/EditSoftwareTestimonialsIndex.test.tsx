@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -209,6 +210,11 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
       status: 200,
       message: 'OK'
     })
+    // mock patch respose
+    mockPatchTestimonialPositions.mockResolvedValueOnce({
+      status: 200,
+      message: 'OK'
+    })
 
     render(
       <WithAppContext options={{session: mockSession}}>
@@ -249,9 +255,11 @@ describe('frontend/components/software/edit/testimonials/index.tsx', () => {
       })
       // validate patch testimonial positions called
       expect(mockPatchTestimonialPositions).toBeCalledTimes(1)
+    })
 
+    await waitFor(async() => {
       // validate item removed from list
-      const remained = screen.getAllByTestId('testimonial-list-item')
+      const remained = await screen.findAllByTestId('testimonial-list-item')
       expect(remained.length).toEqual(testimonials.length - 1)
     })
   })

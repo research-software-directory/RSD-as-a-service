@@ -163,11 +163,13 @@ describe('frontend/components/admin/pages/edit/index.tsx', () => {
       // validate update positions api called
       expect(mockUpdatePositions).toBeCalledTimes(1)
       expect(mockUpdatePositions).toBeCalledWith({
-        'positions':[
+        'items':[
          {
-           'id': 'test-id-2',
-           'position': 1,
-           'slug': 'test-slug-2',
+          'id': 'test-id-2',
+          'position': 1,
+          'title': 'Test title 2',
+          'slug': 'test-slug-2',
+          'is_published': false
          },
        ],
        'token': mockSession.token,

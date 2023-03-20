@@ -20,7 +20,7 @@ import {
 } from '~/utils/editContributors'
 import {getDisplayName} from '~/utils/getDisplayName'
 import EditContributorModal from './EditContributorModal'
-import FindContributor, {Name} from './FindContributor'
+import FindContributor from './FindContributor'
 import EditSoftwareSection from '../../../layout/EditSection'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {contributorInformation as config} from '../editSoftwareConfig'
@@ -153,8 +153,6 @@ export default function SoftwareContributors() {
         const ids = [contributor.id]
         const resp = await deleteContributorsById({ids, token})
         if (resp.status === 200) {
-          // show notification
-          // showSuccessMessage(`Removed ${getDisplayName(contributor)} from ${pageState.software.brand_name}`)
           removeFromContributorList(pos)
         } else {
           showErrorMessage(`Failed to remove ${getDisplayName(contributor)}. Error: ${resp.message}`)
@@ -187,19 +185,23 @@ export default function SoftwareContributors() {
     sortedContributors(list)
   }
 
-  async function sortedContributors(contributors: Contributor[]) {
-    if (contributors.length > 0) {
+  async function sortedContributors(newList: Contributor[]) {
+    if (newList.length > 0) {
+      // update ui first
+      setContributors(newList)
+      // update db
       const resp = await patchContributorPositions({
-        contributors,
+        contributors:newList,
         token
       })
-      if (resp.status === 200) {
+      if (resp.status !== 200) {
+        // revert back
         setContributors(contributors)
-      } else {
+        // show error message
         showErrorMessage(`Failed to update contributor positions. ${resp.message}`)
       }
     } else {
-      setContributors(contributors)
+      setContributors([])
     }
   }
 

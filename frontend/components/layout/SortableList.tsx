@@ -11,18 +11,18 @@ import {restrictToParentElement, restrictToVerticalAxis} from '@dnd-kit/modifier
 import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import List from '@mui/material/List'
 
-type RequiredProps = {
+export type RequiredListProps = {
   id: string | null,
   position: number | null
 }
 
-type SortableListProps<T extends RequiredProps>={
+type SortableListProps<T extends RequiredListProps>={
   items:T[],
   onSorted: (items: T[]) => void
-  onRenderItem:(item:T,index?:number) => JSX.Element
+  onRenderItem:(item:T,index:number) => JSX.Element
 }
 
-export default function SortableList<T extends RequiredProps>({
+export default function SortableList<T extends RequiredListProps>({
   items, onSorted, onRenderItem}: SortableListProps<T>) {
   const sensors = useSensors(
     useSensor(TouchSensor),

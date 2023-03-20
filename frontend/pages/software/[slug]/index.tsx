@@ -233,7 +233,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // testimonials
       getTestimonialsForSoftware({software:software.id,frontend: false,token}),
       // contributors
-      getContributorsForSoftware({software:software.id,frontend:false,token}),
+      getContributorsForSoftware({software:software.id,token}),
       // relatedTools
       getRelatedSoftwareForSoftware({software: software.id, frontend: false, token}),
       // relatedProjects

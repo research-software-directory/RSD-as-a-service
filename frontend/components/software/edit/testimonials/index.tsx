@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -49,6 +49,11 @@ export default function SoftwareTestimonials() {
   if (loading) return (
     <ContentLoader />
   )
+
+  // console.group("SoftwareTestimonials")
+  // console.log('testimonials...', testimonials)
+  // console.log("loading...", loading)
+  // console.groupEnd()
 
   function updateTestimonialList({data, pos}: { data: Testimonial, pos?: number }) {
     if (typeof pos == 'number') {
@@ -163,46 +168,43 @@ export default function SoftwareTestimonials() {
     const testimonial = testimonials[pos]
     if (testimonial?.id) {
       const resp = await deleteTestimonialById({id: testimonial?.id ?? '', token})
+      // console.log('deleteTestimonial...resp...', resp)
       // debugger
       if (resp.status === 200) {
-        // showSuccessMessage("Removed teste")
-        removeFromTestimonialList(pos)
+        // remove item from the list
+        const list = [
+          ...testimonials.slice(0, pos),
+          ...testimonials.slice(pos+1)
+        ].map((item,pos) => {
+          item.position = pos + 1
+          return item
+        })
+        // patch testimonials
+        await sortedTestimonials(list)
       } else {
         showErrorMessage(`Failed to remove testimonial! Error: ${resp.message}`)
       }
     }
   }
 
-  function removeFromTestimonialList(pos: number) {
-    // remove item from the list
-    const list = [
-      ...testimonials.slice(0, pos),
-      ...testimonials.slice(pos+1)
-    ].map((item,pos) => {
-      item.position = pos + 1
-      return item
-    })
-
-    // update list
-    setTestimonials(list)
-    // save new positions to db
-    if (list.length > 0) patchPositions(list)
-  }
-
-  function onSorted(items: Testimonial[]) {
-    // set updated items
-    patchPositions(items)
-    setTestimonials(items)
-  }
-
-  /**
-   * We patch the position prop of items.
-   * @param data
-   */
-  async function patchPositions(data:Testimonial[]) {
-    const resp = await patchTestimonialPositions({testimonials:data, token})
-    if (resp.status !== 200) {
-      showErrorMessage(`Failed to update testimonial positions! Error: ${resp.message}`)
+  async function sortedTestimonials(newList: Testimonial[]) {
+    if (newList.length > 0) {
+      // update ui first
+      setTestimonials(newList)
+      // update db
+      const resp = await patchTestimonialPositions({
+        testimonials: newList,
+        token
+      })
+      if (resp.status !== 200) {
+        // revert back
+        setTestimonials(testimonials)
+        // show error
+        showErrorMessage(`Failed to update testimonial positions! Error: ${resp.message}`)
+      }
+    } else {
+      // reset list
+      setTestimonials([])
     }
   }
 
@@ -233,7 +235,7 @@ export default function SoftwareTestimonials() {
             items={testimonials}
             onEdit={onEdit}
             onDelete={onDelete}
-            onSorted={onSorted}
+            onSorted={sortedTestimonials}
           />
         </div>
       </EditSoftwareSection>

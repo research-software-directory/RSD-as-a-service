@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -280,20 +280,25 @@ export default function SoftwareOganisations() {
     await sortedOrganisations(newList)
   }
 
-  async function sortedOrganisations(organisations: EditOrganisation[]) {
-    if (organisations.length > 0) {
+  async function sortedOrganisations(newList: EditOrganisation[]) {
+    if (newList.length > 0) {
+      // update ui first
+      setOrganisations(newList)
+      // update db
       const resp = await patchOrganisationPositions({
         software: software.id ?? '',
-        organisations,
+        organisations:newList,
         token
       })
-      if (resp.status === 200) {
+      if (resp.status !== 200) {
+        // revert back
         setOrganisations(organisations)
-      } else {
+        // show error
         showErrorMessage(`Failed to update organisation positions. ${resp.message}`)
       }
     } else {
-      setOrganisations(organisations)
+      // reset list
+      setOrganisations([])
     }
   }
 

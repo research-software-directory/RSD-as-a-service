@@ -46,12 +46,12 @@ export default function SortableNav({selected, links, onSelect, onSorted}: Pages
    * @param index
    * @returns JSX.Element
    */
-  function renderListItem(item: RsdLink, index?: number) {
+  function renderListItem(item: RsdLink, index: number) {
     return (
        <SortableNavItem
         key={item.id}
         item={item}
-        index={index ?? 1}
+        index={index}
         selected={selected}
         onSelect={onNavigation}
       />

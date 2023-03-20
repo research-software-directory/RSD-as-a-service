@@ -4,6 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {RsdLink} from '~/config/rsdSettingsReducer'
 import {createJsonHeaders, extractErrorMessages, extractReturnMessage} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {MarkdownPage} from './useMarkdownPages'
@@ -63,16 +64,11 @@ export async function saveMarkdownPage({page,token}:{page:MarkdownPage,token:str
   }
 }
 
-type PositionData = {
-  id: string
-  slug: string
-  position: number
-}
-export async function updatePagePositions({positions,token}:{positions:PositionData[],token:string}) {
+export async function updatePagePositions({items,token}:{items:RsdLink[],token:string}) {
   try {
     const updates:Promise<any>[] = []
     // add promises to array
-    positions.forEach(item => {
+    items.forEach(item => {
       updates.push(
         patchMarkdownData({
           id: item.id,

@@ -1,7 +1,7 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -273,21 +273,22 @@ export default function ProjectOrganisations({slug}: { slug: string }) {
     await sortedOrganisations(newList)
   }
 
-  async function sortedOrganisations(organisations: EditOrganisation[]) {
-    if (organisations.length > 0) {
+  async function sortedOrganisations(newList: EditOrganisation[]) {
+    if (newList.length > 0) {
+      // first update ui
+      setOrganisations(newList)
       // console.log('sorted organisations...', organisations)
       const resp = await patchOrganisationPositions({
         project: project.id,
-        organisations,
+        organisations:newList,
         token
       })
-      if (resp.status === 200) {
+      if (resp.status !== 200) {
         setOrganisations(organisations)
-      } else {
         showErrorMessage(`Failed to update organisation positions. ${resp.message}`)
       }
     } else {
-      setOrganisations(organisations)
+      setOrganisations([])
     }
   }
 
