@@ -315,9 +315,9 @@ async function generateProjects(amount=500) {
 		result.push({
 			slug: faker.helpers.slugify(title).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''), // removes double dashes and trailing dashes
 			title: title,
-			subtitle: faker.commerce.productDescription(),
-			date_end: dateEnd,
-			date_start: dateStart,
+			subtitle: faker.helpers.maybe(() => faker.commerce.productDescription(), {probability: 0.9}) ?? null,
+			date_end: faker.helpers.maybe(() => dateEnd, {probability: 0.9}) ?? null,
+			date_start: faker.helpers.maybe(() => dateStart, {probability: 0.9}) ?? null,
 			description: faker.lorem.paragraphs(5, '\n\n'),
 			grant_id: faker.helpers.replaceSymbols('******'),
 			image_caption: faker.animal.cat(),
