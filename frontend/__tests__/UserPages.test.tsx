@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -49,7 +51,7 @@ describe('pages/user/[section].tsx', () => {
     )
 
     const navItems = screen.getAllByTestId('user-nav-item')
-    expect(navItems.length).toEqual(4)
+    expect(navItems.length).toEqual(5)
   })
 
   it('renders user settings section', async() => {
