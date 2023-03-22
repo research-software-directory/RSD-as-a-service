@@ -13,6 +13,7 @@ import ThreePIcon from '@mui/icons-material/ThreeP'
 import ShareIcon from '@mui/icons-material/Share'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ContentLoader from '~/components/layout/ContentLoader'
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 
 // import SoftwareInformation from './information'
 // import SoftwareContributors from './contributors'
@@ -30,6 +31,9 @@ const SoftwareContributors = dynamic(() => import('./contributors'),{
   loading: ()=><ContentLoader />
 })
 const SoftwareOgranisations = dynamic(() => import('./organisations'),{
+  loading: ()=><ContentLoader />
+})
+const PackageManagers = dynamic(() => import('./package-managers'),{
   loading: ()=><ContentLoader />
 })
 const SoftwareMentions = dynamic(() => import('./mentions'),{
@@ -59,43 +63,43 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
     icon: <InfoIcon />,
     render: () => <SoftwareInformation />,
     status: 'Required information'
-  },
-  {
+  },{
     id: 'contributors',
     label: 'Contributors',
     icon: <Diversity1Icon />,
     render: () => <SoftwareContributors />,
     status: 'Required information'
-  },
-  {
+  },{
     id: 'organisations',
     label: 'Organisations',
     icon: <FactoryIcon />,
     render: () => <SoftwareOgranisations />,
     status: 'Optional information'
-  },
-  {
+  },{
     id: 'mentions',
     label: 'Mentions',
     icon: <AddCommentIcon />,
     render: () => <SoftwareMentions />,
     status: 'Optional information'
-  },
-  {
+  },{
     id: 'testimonials',
     label: 'Testimonials',
     icon: <ThreePIcon />,
     render: () => <SoftwareTestimonials />,
     status: 'Optional information'
-  },
-  {
-    id: 'related-software',
+  },{
+    id: 'package-managers',
+    label: 'Package managers',
+    icon: <HomeRepairServiceIcon />,
+    render: () => <PackageManagers />,
+    status: 'Optional information'
+  },{
+    id: 'related-topics',
     label: 'Related topics',
     icon: <ShareIcon />,
     render: () => <RelatedTopics />,
     status: 'Optional information'
-  },
-  {
+  },{
     id: 'maintainers',
     label: 'Maintainers',
     icon: <PersonAddIcon />,

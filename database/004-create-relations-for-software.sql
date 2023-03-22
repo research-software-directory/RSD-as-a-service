@@ -1,9 +1,9 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
--- SPDX-FileCopyrightText: 2022 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -51,6 +51,7 @@ CREATE TABLE package_manager (
 	download_count_scraped_at TIMESTAMPTZ,
 	reverse_dependency_count INTEGER,
 	reverse_dependency_count_scraped_at TIMESTAMPTZ,
+	position INTEGER,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
@@ -67,13 +68,13 @@ $$;
 
 CREATE TRIGGER sanitise_insert_package_manager BEFORE INSERT ON package_manager FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_package_manager();
 
-
+-- We do not allow update of url
 CREATE FUNCTION sanitise_update_package_manager() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
 	NEW.id = OLD.id;
 	NEW.software = old.software;
-	NEW.url = old.url;
+	-- NEW.url = old.url;
 	NEW.created_at = OLD.created_at;
 	NEW.updated_at = LOCALTIMESTAMP;
 	return NEW;
@@ -131,7 +132,7 @@ CREATE TABLE contributor (
 	role VARCHAR(200),
 	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
 	position INTEGER,
-	avatar_id VARCHAR(40) REFERENCES image(id),	
+	avatar_id VARCHAR(40) REFERENCES image(id),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
