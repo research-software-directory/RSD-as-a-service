@@ -1608,3 +1608,35 @@ LEFT JOIN
 	keyword_count_for_projects() ON keyword.value = keyword_count_for_projects.keyword
 ;
 $$;
+
+--  Suggest a platform type based on the input of other users in the RSD
+CREATE FUNCTION suggest_platform(hostname VARCHAR(200)) RETURNS platform_type
+LANGUAGE SQL STABLE AS
+$$
+SELECT
+	code_platform
+FROM
+	(
+		SELECT
+			url,
+			code_platform
+		FROM
+			repository_url
+	) AS sub
+WHERE
+	(
+		-- Returns the hostname of sub.url
+		SELECT
+			TOKEN
+		FROM
+			ts_debug(sub.url)
+		WHERE
+			alias = 'host'
+	) = hostname
+GROUP BY
+	sub.code_platform
+ORDER BY
+	COUNT(*)
+DESC LIMIT
+	1;
+$$;
