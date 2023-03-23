@@ -20,7 +20,7 @@ import ContentLoader from '../../../layout/ContentLoader'
 import ConfirmDeleteModal from '../../../layout/ConfirmDeleteModal'
 
 import EditTestimonialModal from './EditTestimonialModal'
-import EditSoftwareSection from '../../../layout/EditSection'
+import EditSection from '../../../layout/EditSection'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {ModalProps,ModalStates} from '../editSoftwareTypes'
 
@@ -217,7 +217,7 @@ export default function SoftwareTestimonials() {
 
   return (
     <section className="flex-1">
-      <EditSoftwareSection>
+      <EditSection>
         <div className="py-4">
           <EditSectionTitle
             title="Testimonials"
@@ -238,7 +238,7 @@ export default function SoftwareTestimonials() {
             onSorted={sortedTestimonials}
           />
         </div>
-      </EditSoftwareSection>
+      </EditSection>
       <EditTestimonialModal
         open={modal.edit.open}
         pos={modal.edit.pos}

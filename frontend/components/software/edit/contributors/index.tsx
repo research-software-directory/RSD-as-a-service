@@ -21,7 +21,7 @@ import {
 import {getDisplayName} from '~/utils/getDisplayName'
 import EditContributorModal from './EditContributorModal'
 import FindContributor from './FindContributor'
-import EditSoftwareSection from '../../../layout/EditSection'
+import EditSection from '../../../layout/EditSection'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {ModalProps, ModalStates} from '../editSoftwareTypes'
@@ -207,7 +207,7 @@ export default function SoftwareContributors() {
 
   return (
     <>
-      <EditSoftwareSection className='md:flex md:flex-col-reverse md:justify-end xl:pl-[3rem] xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
+      <EditSection className='md:flex md:flex-col-reverse md:justify-end xl:pl-[3rem] xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
         <section className="py-4">
           <h2 className="flex pr-4 pb-4 justify-between">
             <span>Contributors</span>
@@ -244,7 +244,7 @@ export default function SoftwareContributors() {
             </div>
           }
         </section>
-      </EditSoftwareSection>
+      </EditSection>
       {modal.edit.open &&
         <EditContributorModal
           open={modal.edit.open}
