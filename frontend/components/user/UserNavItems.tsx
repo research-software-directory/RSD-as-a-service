@@ -7,17 +7,36 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import dynamic from 'next/dynamic'
+
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import SettingsIcon from '@mui/icons-material/Settings'
 import TableViewIcon from '@mui/icons-material/TableView'
 
-import UserSettings from './settings'
-import UserSoftware from './software'
-import UserProjects from './project'
-import Organisations from './organisations'
-import Link from '@mui/material/Link'
+import ContentLoader from '../layout/ContentLoader'
+
+// dynamically import user pages
+const UserSettings = dynamic(() => import('./settings'),{
+  loading: ()=><ContentLoader />
+})
+
+const UserSoftware = dynamic(() => import('./software'),{
+  loading: ()=><ContentLoader />
+})
+
+const UserProjects = dynamic(() => import('./project'),{
+  loading: ()=><ContentLoader />
+})
+
+const Organisations = dynamic(() => import('./organisations'),{
+  loading: ()=><ContentLoader />
+})
+
+const ProjectQuality = dynamic(() => import('./project-quality'),{
+  loading: ()=><ContentLoader />
+})
 
 export type UserMenuProps = {
   id: string,
@@ -53,7 +72,7 @@ export const userMenu:UserMenuItems = {
     id:'project-quality',
     label: () => 'Project quality overview',
     icon: <TableViewIcon />,
-    component: (props?) => <></>,
+    component: (props?) => <ProjectQuality {...props} />,
     status: 'Overview of the completeness of project pages you maintain',
     showSearch: false
   },
