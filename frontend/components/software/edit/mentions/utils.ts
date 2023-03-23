@@ -15,8 +15,8 @@ export function extractSearchTerm(query: string): {term: string, type: 'doi' | '
   try {
     new URL(query)
     return {term: query, type: 'url'}
-  } catch (error) {
-    if (error instanceof TypeError) return {term: query, type: 'title'}
+  } catch (error: any) {
+    if (error.constructor.name === 'TypeError') return {term: query, type: 'title'}
     else throw error
   }
 }

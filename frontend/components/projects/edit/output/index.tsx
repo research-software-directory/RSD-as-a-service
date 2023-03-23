@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +12,7 @@ import FindOutput from './FindOutput'
 import AddOutput from './AddOutput'
 import EditOutputProvider from './EditOutputProvider'
 import useProjectContext from '../useProjectContext'
+import BulkImport from '~/components/mention/BulkImport'
 
 export default function ProjectOutput() {
   const {token} = useSession()
@@ -30,6 +33,7 @@ export default function ProjectOutput() {
           <div className="py-4"></div>
           <AddOutput />
           <div className="py-4"></div>
+          <BulkImport table="output_for_project" entityId={project.id!}></BulkImport>
         </div>
       </EditSection>
     </EditOutputProvider>

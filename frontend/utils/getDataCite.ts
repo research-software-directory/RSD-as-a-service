@@ -48,6 +48,46 @@ function graphQLDoiQuery(doi:string) {
   return gql
 }
 
+function graphQLDoisQuery(dois: string[]) {
+  const doisString = dois.map(doi => `"${doi}"`).join(',')
+  const gql = `{
+    works(ids: [${doisString}], first: 10000) {
+      nodes {
+        doi,
+        type,
+        types{
+          resourceType
+        },
+        sizes,
+        version,
+        titles(first: 1){
+          title
+        },
+        descriptions(first:1){
+          description
+        },
+        publisher,
+        publicationYear,
+        creators{
+          givenName,
+            familyName,
+            affiliation{
+            name
+          }
+        },
+        contributors{
+          givenName,
+            familyName,
+            affiliation{
+            name
+          }
+        }
+      }
+    }
+  }`
+  return gql
+}
+
 function gqlConceptDoiQuery(doi: string) {
   const gql =`{
     software(id:"${doi}"){
@@ -147,7 +187,7 @@ export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
   return mention
 }
 
-export async function getDataciteItemsByDoiGraphQL(doi: string) {
+export async function getDataciteItemByDoiGraphQL(doi: string) {
   try {
     const query = graphQLDoiQuery(doi)
     const url = 'https://api.datacite.org/graphql'
@@ -167,6 +207,39 @@ export async function getDataciteItemsByDoiGraphQL(doi: string) {
       return {
         status:200,
         message:json.data.work
+      }
+    }
+    const error = await extractReturnMessage(resp)
+    return error
+  } catch (e: any) {
+    logger(`getDataciteItemsByDoiGraphQL: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+export async function getDataciteItemsByDoiGraphQL(dois: string[]) {
+  try {
+    const query = graphQLDoisQuery(dois)
+    const url = 'https://api.datacite.org/graphql'
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: createJsonHeaders(),
+      body: JSON.stringify({
+        operationName: null,
+        variables:{},
+        query
+      })
+    })
+
+    if (resp.status === 200) {
+      const json = await resp.json()
+      return {
+        status:200,
+        message:json.data.works.nodes
       }
     }
     const error = await extractReturnMessage(resp)

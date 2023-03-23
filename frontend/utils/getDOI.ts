@@ -1,10 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {MentionItemProps} from '~/types/Mention'
 import {crossrefItemToMentionItem, getCrossrefItemByDoi} from './getCrossref'
-import {dataCiteGraphQLItemToMentionItem, getDataciteItemsByDoiGraphQL} from './getDataCite'
+import {dataCiteGraphQLItemToMentionItem, getDataciteItemByDoiGraphQL, getDataciteItemsByDoiGraphQL} from './getDataCite'
 import logger from './logger'
 
 type DoiRA = {
@@ -64,14 +67,72 @@ async function getItemFromCrossref(doi: string) {
   return resp
 }
 
+export async function getItemsFromCrossref(dois: string[]): Promise<MentionItemProps[]> {
+  if (dois.length === 0) return []
+
+  // debugger
+  const mentions: MentionItemProps[] = []
+  // The Crossref API has a rate limit of 50 requests per second.
+  // We will make 40 requests per second to be on the save side.
+  const amountOfBatches = Math.ceil(dois.length / 40)
+  // An array of promises that resolve when all requests have resolved
+  const promises: Promise<void>[] = []
+
+  for (let batch = 0; batch < amountOfBatches; batch++) {
+    const lowerIndex = batch * 40
+    const upperIndex = Math.min((batch + 1) * 40, dois.length)
+    for (let index = lowerIndex; index < upperIndex; index++) {
+      const doi = dois[index]
+      const promise = new Promise((res, rej) => {
+        setTimeout(res, 1000 * batch)
+      }).then(async () => {
+        const mentionResult = await getItemFromCrossref(doi)
+        if (mentionResult.status === 200) {
+          mentions.push(mentionResult.message)
+        }
+      })
+
+      promises.push(promise)
+    }
+  }
+
+  await Promise.allSettled(promises)
+
+  return mentions
+}
+
 async function getItemFromDatacite(doi: string) {
-  const resp = await getDataciteItemsByDoiGraphQL(doi)
+  const resp = await getDataciteItemByDoiGraphQL(doi)
 
   if (resp.status === 200) {
     const mention = dataCiteGraphQLItemToMentionItem(resp.message)
     return {
       status: 200,
       message: mention
+    }
+  }
+  // return error message
+  return resp
+}
+
+export async function getItemsFromDatacite(dois: string[]) {
+  if (dois.length === 0) {
+    return {
+      status: 200,
+      message: []
+    }
+  }
+  const resp = await getDataciteItemsByDoiGraphQL(dois)
+
+  if (resp.status === 200) {
+    const mentions: MentionItemProps[] = []
+    for (const dataciteMention of resp.message) {
+      const mention = dataCiteGraphQLItemToMentionItem(dataciteMention)
+      mentions.push(mention)
+    }
+    return {
+      status: 200,
+      message: mentions
     }
   }
   // return error message

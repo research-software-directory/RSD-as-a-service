@@ -12,7 +12,7 @@ import {makeDoiRedirectUrl} from './getDOI'
 import logger from './logger'
 
 
-function addPoliteEmail(url:string) {
+export function addPoliteEmail(url:string) {
   const mailto = process.env.CROSSREF_CONTACT_EMAIL
   // console.log('addPoliteEmail...',mailto)
   if (mailto) {
@@ -69,18 +69,17 @@ export function crossrefItemToMentionItem(item: CrossrefSelectItem) {
 
 export async function getCrossrefItemByDoi(doi: string) {
   try {
-    const filter = `filter=doi:${doi}`
-    const url = `https://api.crossref.org/works?${filter}`
+    const url = `https://api.crossref.org/works/${doi}`
 
     const resp = await fetch(url)
 
     if (resp.status === 200) {
       const json: CrossrefResponse = await resp.json()
       // if found return item
-      if (json.message.items.length > 0) {
+      if (json.message) {
         return {
           status: 200,
-          message: json.message.items[0]
+          message: json.message
         }
       } else {
         return {
@@ -99,6 +98,7 @@ export async function getCrossrefItemByDoi(doi: string) {
     }
   }
 }
+
 
 export async function getCrossrefItemsByTitle(title: string) {
   try {
