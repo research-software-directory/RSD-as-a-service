@@ -30,7 +30,7 @@ export const packageManagerSettings = {
   maven: {
     name: 'Maven',
     icon: '/images/apache-maven-logo.svg',
-    hostname: ['maven.apache.org','repo.maven.apache.org']
+    hostname: ['mvnrepository.com']
   },
   npm: {
     name: 'NPM',
