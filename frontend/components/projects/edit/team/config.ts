@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,7 +32,7 @@ export const cfgTeamMembers = {
   },
   family_names: {
     label: 'Last name / Family name(s)',
-    help: 'Family names including "de/van/van den"',
+    help: 'Family names incl. "de/van/van den"',
     validation: {
       required: 'Family name is required',
       minLength: {value: 2, message: 'Minimum length is 2'},

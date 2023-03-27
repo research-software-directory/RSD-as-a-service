@@ -24,7 +24,6 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import ContributorAvatar from '~/components/software/ContributorAvatar'
-import ControlledAffiliation from '~/components/form/ControlledAffiliation'
 import {cfgTeamMembers as config} from './config'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {handleFileUpload} from '~/utils/handleFileUpload'
@@ -193,7 +192,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
         color: 'primary.main',
         fontWeight: 500
       }}>
-        Team member
+        Edit team member
       </DialogTitle>
       <form
         id={formId}
@@ -219,8 +218,8 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
           <section className="grid grid-cols-[1fr,2fr] gap-8">
             <div>
               <label htmlFor="upload-avatar-image"
-                  style={{cursor:'pointer'}}
-                  title="Click to upload an image"
+                style={{cursor:'pointer'}}
+                title="Click to upload an image"
                 >
                 <ContributorAvatar
                   size={8}
@@ -294,17 +293,17 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
             />
 
             <ControlledTextField
-                options={{
-                  name: 'orcid',
-                  label: config.orcid.label,
-                  useNull: true,
-                  defaultValue: member?.orcid,
-                  helperTextMessage: config.orcid.help,
-                  // helperTextCnt: `${formData?.orcid?.length || 0}/${config.orcid.validation.maxLength.value}`,
-                }}
-                control={control}
-                rules={config.orcid.validation}
-              />
+              options={{
+                name: 'orcid',
+                label: config.orcid.label,
+                useNull: true,
+                defaultValue: member?.orcid,
+                helperTextMessage: config.orcid.help,
+                // helperTextCnt: `${formData?.orcid?.length || 0}/${config.orcid.validation.maxLength.value}`,
+              }}
+              control={control}
+              rules={config.orcid.validation}
+            />
 
             <ControlledTextField
               control={control}
@@ -318,14 +317,17 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
               }}
               rules={config.role.validation}
             />
-            <ControlledAffiliation
-              name= 'affiliation'
-              label={config.affiliation.label}
-              affiliation={member?.affiliation ?? ''}
-              institution={member?.institution ?? null}
+            <ControlledTextField
               control={control}
+              options={{
+                name: 'affiliation',
+                label: config.affiliation.label,
+                useNull: true,
+                defaultValue: member?.affiliation,
+                helperTextMessage: config.affiliation.help,
+                helperTextCnt: `${formData?.affiliation?.length || 0}/${config.affiliation.validation.maxLength.value}`,
+              }}
               rules={config.affiliation.validation}
-              helperTextMessage={config.affiliation.help}
             />
           </section>
           <section>

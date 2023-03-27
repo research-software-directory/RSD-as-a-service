@@ -23,7 +23,7 @@ import {
   deleteTeamMemberById, ModalProps,
   ModalStates, patchTeamMemberPositions,
 } from './editTeamMembers'
-import TeamMemberModal from './TeamMemberModal'
+import EditTeamMemberModal from './EditTeamMemberModal'
 import useTeamMembers from './useTeamMembers'
 import SortableTeamMemberList from './SortableTeamMemberList'
 import {deleteImage} from '~/utils/editImage'
@@ -84,7 +84,7 @@ export default function ProjectTeam({slug}: { slug: string }) {
     }
   }
 
-  function onEditMember(member: TeamMember,pos?:number) {
+  function onEditMember(member: SaveTeamMember,pos?:number) {
     if (member && project.id) {
       // add project id
       member.project = project.id
@@ -210,15 +210,16 @@ export default function ProjectTeam({slug}: { slug: string }) {
           />
           <FindMember
             project={project.id}
-            token={token}
-            onAdd={onEditMember}
+            position={members.length + 1}
+            onEdit={onEditMember}
+            onSubmit={onSubmitMember}
           />
           <ContributorPrivacyHint />
         </div>
       </EditSection>
 
       {modal.edit.open &&
-        <TeamMemberModal
+        <EditTeamMemberModal
           open={modal.edit.open}
           pos={modal.edit.pos}
           member={modal.edit.member}

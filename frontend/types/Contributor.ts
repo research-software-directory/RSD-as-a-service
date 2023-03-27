@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -46,6 +46,7 @@ export type Contributor = Person & {
   avatar_mime_type?: string | null
 }
 
+export type SourceType = 'RSD' | 'ORCID'
 
 export type SearchPerson = {
   given_names: string
@@ -57,7 +58,7 @@ export type SearchPerson = {
   // ORCID delivers array of institutions
   institution?: string[] | null
   display_name?: string | null
-  source: 'RSD' | 'ORCID'
+  source: SourceType
   // RSD entry provides avatar
   avatar_id?: string | null
 }

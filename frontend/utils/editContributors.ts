@@ -12,8 +12,6 @@
 import logger from './logger'
 import {Contributor, ContributorProps, PatchPerson, SaveContributor} from '../types/Contributor'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
-import {findRSDPerson} from './findRSDPerson'
-import {getORCID} from './getORCID'
 
 export async function getContributorsForSoftware({software, token}:
   { software: string, token?: string}) {
@@ -42,29 +40,6 @@ export async function getContributorsForSoftware({software, token}:
     }
   } catch (e: any) {
     logger(`getContributorsForSoftware: ${e?.message}`, 'error')
-    return []
-  }
-}
-
-
-export async function searchForContributor({searchFor, token, frontend}:
-  { searchFor: string, token?: string, frontend?: boolean }) {
-  try {
-
-    const [rsdContributor, orcidOptions] = await Promise.all([
-      findRSDPerson({searchFor, token, frontend}),
-      getORCID({searchFor})
-    ])
-
-    const options = [
-      ...rsdContributor,
-      ...orcidOptions
-    ]
-
-    return options
-
-  } catch (e: any) {
-    logger(`searchForContributor: ${e?.message}`, 'error')
     return []
   }
 }

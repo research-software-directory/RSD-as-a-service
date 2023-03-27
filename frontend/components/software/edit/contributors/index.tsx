@@ -226,8 +226,10 @@ export default function SoftwareContributors() {
             subtitle={config.findContributor.subtitle}
           />
           <FindContributor
-            software={software?.id ?? ''}
-            onAdd={loadContributorIntoModal}
+            software={software.id}
+            position={contributors.length + 1}
+            onEdit={loadContributorIntoModal}
+            onSubmit={onSubmitContributor}
           />
           <ContributorPrivacyHint />
           {

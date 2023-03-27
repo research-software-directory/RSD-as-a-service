@@ -9,11 +9,11 @@ import {fireEvent, render, screen, waitFor, waitForElementToBeRemoved, within} f
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithProjectContext} from '~/utils/jest/WithProjectContext'
 
-import ProjectTeam from './index'
 import editProjectState from '../__mocks__/editProjectState'
 import mockTeamMembers from './__mocks__/teamMembers.json'
-import mockSearchPerson from './__mocks__/searchPerson.json'
+import mockSearchOptions from '~/components/person/__mocks__/searchForPersonOptions.json'
 import {cfgTeamMembers as config} from './config'
+import ProjectTeam from './index'
 
 // MOCK getTeamForProject
 const mockGetTeamForProject = jest.fn(props => Promise.resolve([] as any))
@@ -21,17 +21,10 @@ jest.mock('~/utils/getProjects', () => ({
   getTeamForProject: jest.fn(props=>mockGetTeamForProject(props))
 }))
 
-// MOCK findRSDPerson
-const mockFindRSDPerson = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/findRSDPerson', () => ({
-  findRSDPerson: jest.fn(props=>mockFindRSDPerson(props))
-}))
-
-// MOCK getORCID
-const mockGetORCID = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/getORCID', () => ({
-  ...jest.requireActual('~/utils/getORCID'),
-  getORCID: jest.fn(props=>mockGetORCID(props))
+// MOCK searchForPerson
+const mockSearchForPerson = jest.fn(props => Promise.resolve([] as any))
+jest.mock('~/components/person/searchForPerson', () => ({
+  searchForPerson: jest.fn(props=>mockSearchForPerson(props))
 }))
 
 // MOCK postTeamMember
@@ -136,21 +129,9 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     const searchMember = `${newPerson.given_names} ${newPerson.family_names}`
     // mock no members
     mockGetTeamForProject.mockResolvedValueOnce([])
-    // mock search options returned
-    mockFindRSDPerson.mockResolvedValueOnce([{
-      key: mockSearchPerson[0].display_name,
-      label: mockSearchPerson[0].display_name,
-      data: {
-        ...mockSearchPerson[0]
-      }
-    }])
-    mockGetORCID.mockResolvedValueOnce([{
-      key: mockSearchPerson[1].display_name,
-      label: mockSearchPerson[1].display_name,
-      data: {
-        ...mockSearchPerson[1]
-      }
-    }])
+    // mock searchForPerson response
+    mockSearchForPerson.mockResolvedValueOnce(mockSearchOptions)
+    // mock post response
     mockPostTeamMember.mockResolvedValueOnce({
       status: 201,
       message: memberId
@@ -175,19 +156,13 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     // find all options
     const options = await screen.findAllByRole('option')
     // we always offer add option
-    expect(options.length).toEqual(mockSearchPerson.length + 1)
+    expect(options.length).toEqual(mockSearchOptions.length + 1)
 
     // validate search called with proper param
-    expect(mockFindRSDPerson).toBeCalledTimes(1)
-    expect(mockFindRSDPerson).toBeCalledWith({
-      'frontend': true,
+    expect(mockSearchForPerson).toBeCalledTimes(1)
+    expect(mockSearchForPerson).toBeCalledWith({
       'searchFor': searchMember,
       'token': mockSession.token,
-    })
-
-    expect(mockGetORCID).toBeCalledTimes(1)
-    expect(mockGetORCID).toBeCalledWith({
-      'searchFor': searchMember
     })
 
     // select first option: "Add"
