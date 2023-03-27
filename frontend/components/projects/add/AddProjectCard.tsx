@@ -1,8 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 import {useForm} from 'react-hook-form'
 
-import {useAuth} from '../../../auth'
+import {useSession} from '../../../auth'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 import SlugTextField from '../../form/SlugTextField'
 import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
@@ -33,26 +33,21 @@ const initalState = {
 type AddProjectForm = {
   slug: string,
   project_title: string,
-  project_subtitle: string,
+  project_subtitle: string|null,
 }
 
 let lastValidatedSlug = ''
 const formId='add-project-card-form'
 
 export default function AddProjectCard() {
-  const {session} = useAuth()
+  const {token} = useSession()
   const router = useRouter()
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initalState)
   const {register, handleSubmit, watch, formState, setError, setValue} = useForm<AddProjectForm>({
-    mode: 'onChange',
-    defaultValues: {
-      slug:'',
-      project_title: '',
-      project_subtitle:''
-    }
+    mode: 'onChange'
   })
   const {errors, isValid, isDirty} = formState
   // watch for data change in the form
@@ -101,7 +96,7 @@ export default function AddProjectCard() {
   useEffect(() => {
     async function validateSlug() {
       setValidating(true)
-      const isUsed = await validProjectItem(slug, session?.token)
+      const isUsed = await validProjectItem(slug, token)
       if (isUsed === true) {
         const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
         setError('slug',{type:'validate',message})
@@ -109,10 +104,10 @@ export default function AddProjectCard() {
       lastValidatedSlug = slug
       setValidating(false)
     }
-    if (slug !== lastValidatedSlug) {
+    if (slug && token && slug !== lastValidatedSlug) {
       validateSlug()
     }
-  },[slug,session?.token,setError])
+  },[slug,token,setError])
 
 
   function handleCancel() {
@@ -121,7 +116,6 @@ export default function AddProjectCard() {
   }
 
   function onSubmit(data: AddProjectForm) {
-    const {token} = session
     // set flags
     if (token && data) {
       setState({
@@ -130,7 +124,8 @@ export default function AddProjectCard() {
         error:''
       })
     }
-    // console.log('AddProjectCard.onSubmit...', data)
+    // ensure null value
+    if (data.project_subtitle==='') data.project_subtitle=null
     // create data object
     const project: NewProject = {
       slug: data.slug,

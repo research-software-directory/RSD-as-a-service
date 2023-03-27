@@ -5,10 +5,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {render,screen,fireEvent,waitFor,waitForElementToBeRemoved,act} from '@testing-library/react'
-import {WrappedComponentWithProps} from '../../../utils/jest/WrappedComponents'
+import {render,screen,fireEvent,waitFor,act, waitForElementToBeRemoved} from '@testing-library/react'
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
-import {Session} from '../../../auth/'
 import AddSoftwareCard from './AddSoftwareCard'
 import {addConfig} from './addConfig'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
@@ -16,7 +15,7 @@ import {getSlugFromString} from '../../../utils/getSlugFromString'
 const mockAddSoftware = jest.fn((props)=>Promise.resolve({status: 201, message: props}))
 const mockValidSoftwareItem = jest.fn((slug,token) => {
   // console.log('validProjectItem...props...',slug,token)
-  return new Promise((res, rej) => {
+   return new Promise((res, rej) => {
     setTimeout(() => {
       res(false)
     }, 10)
@@ -40,8 +39,23 @@ jest.mock('next/router', () => ({
   })
 }))
 
+// USE FAKE TIMERS
+jest.useFakeTimers()
+// CLEAR ALL MOCKS before each test
+beforeEach(() => {
+  jest.clearAllMocks()
+})
+// CLEAR all pending timers
+afterEach(() => {
+  jest.runOnlyPendingTimers()
+})
+
 it('render card with title', async () => {
-  render(WrappedComponentWithProps(AddSoftwareCard))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddSoftwareCard />
+    </WithAppContext>
+  )
   const title = await screen.queryByText(addConfig.title)
   await act(() => {
     expect(title).toBeInTheDocument()
@@ -49,20 +63,27 @@ it('render card with title', async () => {
 })
 
 it('card has textbox with Name that can be entered', async() => {
-  render(WrappedComponentWithProps(AddSoftwareCard))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddSoftwareCard />
+    </WithAppContext>
+  )
   const name = screen.getByRole<HTMLInputElement>('textbox', {name: 'Name'})
   expect(name).toBeInTheDocument()
 
   // accepts test value
   const inputValue = 'Test software name'
   fireEvent.change(name, {target: {value: inputValue}})
-  await act(() => {
-    expect(name.value).toEqual(inputValue)
-  })
+  // validate
+  expect(name.value).toEqual(inputValue)
 })
 
 it('card has textbox with Short description that can be entered', async() => {
-  render(WrappedComponentWithProps(AddSoftwareCard))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddSoftwareCard />
+    </WithAppContext>
+  )
   const desc = screen.getByRole<HTMLInputElement>('textbox', {name: 'Short description'})
   expect(desc).toBeInTheDocument()
   // accepts test value
@@ -74,7 +95,11 @@ it('card has textbox with Short description that can be entered', async() => {
 })
 
 it('card has cancel and submit buttons', async() => {
-  render(WrappedComponentWithProps(AddSoftwareCard))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddSoftwareCard />
+    </WithAppContext>
+  )
   const submit = screen.getByRole('button',{name:'Save'})
   expect(submit).toBeInTheDocument()
   // accepts test value
@@ -86,7 +111,11 @@ it('card has cancel and submit buttons', async() => {
 
 it('goes back on cancel', async() => {
   // render
-  render(WrappedComponentWithProps(AddSoftwareCard))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddSoftwareCard />
+    </WithAppContext>
+  )
   // accepts test value
   const cancel = screen.getByRole('button', {name: 'Cancel'})
   expect(cancel).toBeInTheDocument()
@@ -102,16 +131,13 @@ it('validate, save and redirect', async () => {
   // test values
   const inputName = 'Test software name'
   const inputValue = 'Test software description'
-  const session:Session = {
-    user: null,
-    token: 'TEST_TOKEN',
-    status: 'authenticated'
-  }
   const slug = getSlugFromString(inputName)
   // render
-  render(WrappedComponentWithProps(AddSoftwareCard,{
-    session
-  }))
+  render(
+    <WithAppContext options={{session: mockSession}}>
+      <AddSoftwareCard />
+    </WithAppContext>
+  )
 
   const name = screen.getByRole<HTMLInputElement>('textbox', {name: 'Name'})
   expect(name).toBeInTheDocument()
@@ -123,18 +149,24 @@ it('validate, save and redirect', async () => {
   fireEvent.change(name, {target: {value: inputName}})
   fireEvent.change(desc, {target: {value: inputValue}})
 
+  // confirm slug validation in progress
+  const loader = await screen.findByTestId('slug-circular-progress')
+  expect(loader).toBeInTheDocument()
+  // confirm that loader is removed
+  await waitForElementToBeRemoved(loader)
+
   // validate slug
   await waitFor(() => {
     expect(mockValidSoftwareItem).toHaveBeenCalledTimes(1)
-    expect(mockValidSoftwareItem).toHaveBeenCalledWith(slug, session.token)
+    expect(mockValidSoftwareItem).toHaveBeenCalledWith(slug, mockSession.token)
   })
 
   // save
   const save = screen.getByRole('button', {name: 'Save'})
   expect(save).toBeInTheDocument()
   expect(name.value).toEqual(inputName)
-  // expect(desc.value).toEqual(inputValue)
-
+  expect(desc.value).toEqual(inputValue)
+  expect(save).toBeEnabled()
   // submit button
   fireEvent.submit(save)
 
@@ -142,7 +174,7 @@ it('validate, save and redirect', async () => {
     // calling add software
     expect(mockAddSoftware).toHaveBeenCalledTimes(1)
     expect(mockAddSoftware).toHaveBeenCalledWith({
-      'software':{
+      'software': {
         'brand_name': inputName,
         'concept_doi': null,
         'description': null,

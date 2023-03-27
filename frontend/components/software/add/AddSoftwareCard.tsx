@@ -6,7 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
@@ -14,7 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 import {useForm} from 'react-hook-form'
 
-import {useAuth} from '../../../auth'
+import {useSession} from '../../../auth'
 import TextFieldWithCounter from '../../form/TextFieldWithCounter'
 import SlugTextField from '../../form/SlugTextField'
 import ContentInTheMiddle from '../../layout/ContentInTheMiddle'
@@ -25,7 +25,6 @@ import {useDebounce} from '~/utils/useDebounce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
-import {editSoftwarePage} from '../edit/editSoftwarePages'
 
 const initalState = {
   loading: false,
@@ -42,19 +41,14 @@ let lastValidatedSlug = ''
 const formId = 'add-software-form'
 
 export default function AddSoftwareCard() {
-  const {session} = useAuth()
+  const {token} = useSession()
   const router = useRouter()
   const [baseUrl, setBaseUrl] = useState('')
   const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initalState)
   const {register, handleSubmit, watch, formState, setValue,setError} = useForm<AddSoftwareForm>({
-    mode: 'onChange',
-    defaultValues: {
-      slug:'',
-      brand_name: '',
-      short_statement: null
-    }
+    mode: 'onChange'
   })
   const {errors, isValid} = formState
   // watch for data change in the form
@@ -114,8 +108,9 @@ export default function AddSoftwareCard() {
    */
   useEffect(() => {
     async function validateSlug() {
+      if (slug===null) return
       setValidating(true)
-      const isUsed = await validSoftwareItem(slug, session?.token)
+      const isUsed = await validSoftwareItem(slug, token)
       if (isUsed === true) {
         const message = `${slug} is already taken. Use letters, numbers and dash "-" to modify slug value.`
         setError('slug',{type:'validate',message})
@@ -123,10 +118,10 @@ export default function AddSoftwareCard() {
       lastValidatedSlug = slug
       setValidating(false)
     }
-    if (slug !== lastValidatedSlug) {
+    if (slug && token && slug !== lastValidatedSlug) {
       validateSlug()
     }
-  },[slug,session?.token,setError])
+  },[slug,token,setError])
 
   function handleCancel() {
     // on cancel we send user back to prevous page
@@ -134,46 +129,51 @@ export default function AddSoftwareCard() {
   }
 
   function onSubmit(data: AddSoftwareForm) {
-    const {token} = session
     // set flags
-    if (token && data) {
+    if (token && data.slug && data.brand_name) {
       setState({
-        ...state,
         loading: true,
         error:''
       })
-    }
-    // create data object
-    const software:NewSoftwareItem = {
-      brand_name: data.brand_name,
-      short_statement: data.short_statement,
-      slug: data.slug,
-      is_published: false,
-      description: null,
-      description_type: 'markdown',
-      description_url: null,
-      get_started_url: null,
-      concept_doi: null,
-      image_id: null
-    }
-    // add software to database
-    addSoftware({
-      software,
-      token
-    }).then(resp => {
-      if (resp.status === 201) {
-        // redirect to edit page
-        // and remove software/add route from the history
-        router.replace(`/software/${software.slug}/edit`)
-      } else {
-        // show error
-        setState({
-          ...state,
-          loading: false,
-          error: `Failed to add software. Error: ${resp.message}`
-        })
+      // unsure null value used when empty string
+      if (data.short_statement==='') data.short_statement=null
+      // create data object
+      const software:NewSoftwareItem = {
+        brand_name: data.brand_name,
+        slug: data.slug,
+        short_statement: data.short_statement,
+        is_published: false,
+        description: null,
+        description_type: 'markdown',
+        description_url: null,
+        get_started_url: null,
+        concept_doi: null,
+        image_id: null
       }
-    })
+      // add software to database
+      addSoftware({
+        software,
+        token
+      }).then(resp => {
+        if (resp.status === 201) {
+          // redirect to edit page
+          // and remove software/add route from the history
+          router.replace(`/software/${software.slug}/edit`)
+        } else {
+          // show error
+          setState({
+            ...state,
+            loading: false,
+            error: `Failed to add software. Error: ${resp.message}`
+          })
+        }
+      })
+    } else {
+      setState({
+        loading: false,
+        error:'Missing required information'
+      })
+    }
   }
 
   function renderDialogText() {
@@ -231,7 +231,7 @@ export default function AddSoftwareCard() {
           <div className="py-4"></div>
           <TextFieldWithCounter
             options={{
-              multiline:true,
+              multiline: true,
               rows:5,
               error: errors?.short_statement?.message !== undefined,
               label: config.short_statement.label,
