@@ -17,7 +17,7 @@ export const packageManagerSettings = {
   anaconda: {
     name: 'Anaconda',
     icon: '/images/anaconda-logo-96.svg',
-    hostname: ['www.anaconda.com','anaconda.com','anaconda.org']
+    hostname: ['anaconda.org']
   },
   cran: {
     name: 'CRAN',
