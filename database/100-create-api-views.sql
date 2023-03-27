@@ -1139,6 +1139,7 @@ BEGIN
 END
 $$;
 
+
 -- ORGANISATIONS BY MAINTAINER
 -- NOTE! each organisation is shown multiple times in this view
 -- we filter this view at least by user acount (maintainer_id uuid) on primary_maintainer or maintainer
