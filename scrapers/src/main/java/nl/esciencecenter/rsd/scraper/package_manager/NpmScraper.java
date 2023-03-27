@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class NpmScraper implements PackageManagerScraper {
 
 	private final String packageName;
-	private static final Pattern urlPattern = Pattern.compile("https://www.npmjs.com/package/(.+?)/?");
+	private static final Pattern urlPattern = Pattern.compile("https://www\\.npmjs\\.com/package/(.+?)/?");
 
 	public NpmScraper(String url) {
 		Objects.requireNonNull(url);

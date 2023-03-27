@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -60,8 +62,8 @@ export default function PackageManagerItem({pos, item, onDelete, onEdit}: Packag
             }
             {
               item.reverse_dependency_count_scraped_at ?
-                <span className="ml-4">Dependencies: {item.reverse_dependencies_count ?? 0}</span>
-              : <span className="ml-4">Dependencies: no info</span>
+                <span className="ml-4">Dependents: {item.reverse_dependency_count ?? 0}</span>
+              : <span className="ml-4">Dependents: no info</span>
             }
           </>
         }

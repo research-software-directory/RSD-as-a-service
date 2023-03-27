@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class CranScraper implements PackageManagerScraper {
 
 	private final String packageName;
-	private static final Pattern urlPattern = Pattern.compile("https://cran.r-project.org/web/packages/([^/]+)(/index.html/?)?");
+	private static final Pattern urlPattern = Pattern.compile("https://cran\\.r-project\\.org/web/packages/([^/]+)(/index\\.html/?)?");
 
 	public CranScraper(String url) {
 		Objects.requireNonNull(url);
