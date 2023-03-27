@@ -1,17 +1,13 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ListItem from '@mui/material/ListItem'
-
-import {useSortable} from '@dnd-kit/sortable'
-import {CSS} from '@dnd-kit/utilities'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemText from '@mui/material/ListItemText'
 import {Testimonial} from '~/types/Testimonial'
-import SortableListItemActions from '~/components/layout/SortableListItemActions'
+import SortableListItem from '~/components/layout/SortableListItem'
 
 export type SortableTestimonialItem = {
   pos: number,
@@ -21,33 +17,18 @@ export type SortableTestimonialItem = {
 }
 
 export default function SortableTestimonialListItem({pos,item,onEdit,onDelete}:SortableTestimonialItem){
-  const {
-    attributes,listeners,setNodeRef,
-    transform,transition,isDragging
-  } = useSortable({id:item.id ?? ''})
-
   return (
-    <ListItem
+    <SortableListItem
       data-testid="testimonial-list-item"
-      // draggable
-      ref={setNodeRef}
-      {...attributes}
-      secondaryAction={
-        <SortableListItemActions
-          pos={pos}
-          listeners={listeners}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      }
+      key={item.id}
+      pos={pos}
+      item={item}
+      onEdit={onEdit}
+      onDelete={onDelete}
       sx={{
-        paddingRight:'11rem',
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-        backgroundColor: isDragging ? 'grey.100' : 'paper',
-        zIndex: isDragging ? 9:0,
-        cursor: isDragging ? 'move' : 'default'
+        '&:hover': {
+          backgroundColor:'grey.100'
+        },
       }}
     >
       <ListItemAvatar>
@@ -58,6 +39,6 @@ export default function SortableTestimonialListItem({pos,item,onEdit,onDelete}:S
         primary={item?.message}
         secondary={<span>- {item?.source}</span>}
       />
-    </ListItem>
+    </SortableListItem>
   )
 }

@@ -1,10 +1,9 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState, useRef} from 'react'
-import {useController, useFormContext} from 'react-hook-form'
 
 import StickyHeader from '../../layout/StickyHeader'
 import useStickyHeaderBorder from '~/components/layout/useStickyHeaderBorder'
@@ -13,13 +12,10 @@ import ViewPageButton from '~/components/layout/ViewPageButton'
 
 export default function EditSoftwareStickyHeader() {
   const {software} = useSoftwareContext()
-  const {control} = useFormContext()
-  const {field:{value:slug},fieldState:{error:slugError}} = useController({
-    name: 'slug',
-    control
-  })
+
   const headerRef = useRef(null)
   const [classes, setClasses] = useState('')
+
   // add border when header is at the top of the page
   const {el} = useStickyHeaderBorder({
     headerRef, setClasses
@@ -34,8 +30,8 @@ export default function EditSoftwareStickyHeader() {
       </h1>
       <ViewPageButton
         title={`View ${software?.brand_name ?? 'software page'}`}
-        url={`/software/${slug}`}
-        disabled={typeof slugError !=='undefined'}
+        url={`/software/${software.slug}`}
+        disabled={typeof software ==='undefined'}
       />
     </StickyHeader>
   )

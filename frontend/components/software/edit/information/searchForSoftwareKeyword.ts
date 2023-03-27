@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
@@ -18,8 +18,14 @@ export async function searchForSoftwareKeyword(
   try {
     const searchForEncoded = encodeURIComponent(searchFor)
     const baseUrl = getBaseUrl()
+    let query = ''
+    if (searchForEncoded) {
+      query = `keyword=ilike.*${searchForEncoded}*&order=cnt.desc.nullslast,keyword.asc&limit=30`
+    } else {
+      query = 'order=cnt.desc.nullslast,keyword.asc&limit=30'
+    }
     // GET top 30 matches
-    const url = `${baseUrl}/rpc/keyword_count_for_software?keyword=ilike.*${searchForEncoded}*&order=cnt.desc.nullslast,keyword.asc&limit=30`
+    const url = `${baseUrl}/rpc/keyword_count_for_software?${query}`
     const resp = await fetch(url, {
       method: 'GET'
     })
@@ -28,7 +34,6 @@ export async function searchForSoftwareKeyword(
       const json: Keyword[] = await resp.json()
       return json
     }
-
     // return extractReturnMessage(resp, project ?? '')
     logger(`searchForSoftwareKeyword: ${resp.status} ${resp.statusText}`, 'warn')
     return []

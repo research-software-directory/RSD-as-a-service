@@ -28,10 +28,10 @@ export default function SortableOrganisationsList({organisations,onEdit,onDelete
     )
   }
 
-  function onRenderItem(item:EditOrganisation,index?:number) {
+  function onRenderItem(item:EditOrganisation,index:number) {
     return <SortableOrganisationItem
       key={item.id ?? index}
-      pos={index ?? 0}
+      pos={index}
       organisation={item}
       onEdit={onEdit}
       onDelete={onDelete}

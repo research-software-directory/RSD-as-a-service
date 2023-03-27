@@ -1,9 +1,9 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
--- SPDX-FileCopyrightText: 2022 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -30,6 +30,58 @@ CREATE TABLE repository_url (
 	contributor_count INTEGER,
 	contributor_count_scraped_at TIMESTAMPTZ
 );
+
+
+CREATE TYPE package_manager_type AS ENUM (
+	'anaconda',
+	'cran',
+	'dockerhub',
+	'maven',
+	'npm',
+	'pypi',
+	'other'
+);
+
+CREATE TABLE package_manager (
+	id UUID PRIMARY KEY,
+	software UUID references software (id) NOT NULL,
+	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
+	package_manager package_manager_type NOT NULL DEFAULT 'other',
+	download_count BIGINT,
+	download_count_scraped_at TIMESTAMPTZ,
+	reverse_dependency_count INTEGER,
+	reverse_dependency_count_scraped_at TIMESTAMPTZ,
+	position INTEGER,
+	created_at TIMESTAMPTZ NOT NULL,
+	updated_at TIMESTAMPTZ NOT NULL
+);
+
+CREATE FUNCTION sanitise_insert_package_manager() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = gen_random_uuid();
+	NEW.created_at = LOCALTIMESTAMP;
+	NEW.updated_at = NEW.created_at;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_package_manager BEFORE INSERT ON package_manager FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_package_manager();
+
+-- We do not allow update of url
+CREATE FUNCTION sanitise_update_package_manager() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.id = OLD.id;
+	NEW.software = old.software;
+	-- NEW.url = old.url;
+	NEW.created_at = OLD.created_at;
+	NEW.updated_at = LOCALTIMESTAMP;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_package_manager BEFORE UPDATE ON package_manager FOR EACH ROW EXECUTE PROCEDURE sanitise_update_package_manager();
 
 
 
@@ -80,7 +132,7 @@ CREATE TABLE contributor (
 	role VARCHAR(200),
 	orcid VARCHAR(19) CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$'),
 	position INTEGER,
-	avatar_id VARCHAR(40) REFERENCES image(id),	
+	avatar_id VARCHAR(40) REFERENCES image(id),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );

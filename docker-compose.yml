@@ -140,6 +140,7 @@ services:
       - MAX_REQUESTS_DOI
       - CROSSREF_CONTACT_EMAIL
       - ENABLE_OAIPMH_SCRAPER
+      - LIBRARIES_IO_ACCESS_TOKEN
     depends_on:
       - database
       - backend

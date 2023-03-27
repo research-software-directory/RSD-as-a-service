@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -23,7 +23,7 @@ import {
 } from '../../../../utils/editOrganisation'
 import useParticipatingOrganisations from './useParticipatingOrganisations'
 import {organisationInformation as config} from '../editSoftwareConfig'
-import EditSoftwareSection from '../../../layout/EditSection'
+import EditSection from '../../../layout/EditSection'
 import {ModalProps, ModalStates} from '../editSoftwareTypes'
 import EditSectionTitle from '../../../layout/EditSectionTitle'
 import FindOrganisation from './FindOrganisation'
@@ -280,26 +280,31 @@ export default function SoftwareOganisations() {
     await sortedOrganisations(newList)
   }
 
-  async function sortedOrganisations(organisations: EditOrganisation[]) {
-    if (organisations.length > 0) {
+  async function sortedOrganisations(newList: EditOrganisation[]) {
+    if (newList.length > 0) {
+      // update ui first
+      setOrganisations(newList)
+      // update db
       const resp = await patchOrganisationPositions({
         software: software.id ?? '',
-        organisations,
+        organisations:newList,
         token
       })
-      if (resp.status === 200) {
+      if (resp.status !== 200) {
+        // revert back
         setOrganisations(organisations)
-      } else {
+        // show error
         showErrorMessage(`Failed to update organisation positions. ${resp.message}`)
       }
     } else {
-      setOrganisations(organisations)
+      // reset list
+      setOrganisations([])
     }
   }
 
   return (
     <>
-      <EditSoftwareSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:pl-[3rem] xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]">
+      <EditSection className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:pl-[3rem] xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]">
         <section className="py-4">
           <h2 className="flex pr-4 pb-4 justify-between">
             <span>{config.title}</span>
@@ -322,7 +327,7 @@ export default function SoftwareOganisations() {
             onCreate={onCreateOrganisation}
           />
         </section>
-      </EditSoftwareSection>
+      </EditSection>
       {modal.edit.open &&
         <EditOrganisationModal
           open={modal.edit.open}

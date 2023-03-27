@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,8 +11,7 @@ import {
   SoftwarePropsToSave, SoftwareItemFromDB
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
-import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
-import {EditOrganisation} from '~/types/Organisation'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
 
 export async function addSoftware({software, token}:
   { software: NewSoftwareItem, token: string}) {
@@ -50,20 +49,18 @@ export async function addSoftware({software, token}:
   }
 }
 
-export async function getSoftwareToEdit({slug, token, baseUrl}:
-  { slug: string, token: string, baseUrl?: string }) {
+export async function getSoftwareToEdit({slug, token}:
+  { slug: string, token: string }) {
   try {
     // GET
     const select = '*,repository_url!left(url,code_platform)'
-    const url = baseUrl
-      ? `${baseUrl}/software?select=${select}&slug=eq.${slug}`
-      : `/api/v1/software?select=${select}&slug=eq.${slug}`
+    const url = `${getBaseUrl()}/software?select=${select}&slug=eq.${slug}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token),
     })
     if (resp.status === 200) {
-      const data:SoftwareItemFromDB[] = await resp.json()
+      const data: SoftwareItemFromDB[] = await resp.json()
       // fix repositoryUrl
       const software: SoftwareItem = getPropsFromObject(data[0], SoftwarePropsToSave)
       // repository url should at least be http://a.b
@@ -77,7 +74,7 @@ export async function getSoftwareToEdit({slug, token, baseUrl}:
       return software
     }
   } catch (e: any) {
-    logger(`getSoftwareItem: ${e?.message}`, 'error')
+    logger(`getSoftwareToEdit: ${e?.message}`, 'error')
   }
 }
 

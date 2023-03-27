@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,13 +15,13 @@ import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelper
 import {findRSDPerson} from './findRSDPerson'
 import {getORCID} from './getORCID'
 
-export async function getContributorsForSoftware({software, token, frontend}:
-  { software: string, token?: string, frontend?: boolean }) {
+export async function getContributorsForSoftware({software, token}:
+  { software: string, token?: string}) {
   try {
     // use standardized list of columns
     const columns = ContributorProps.join(',')
     // , avatar_data
-    const query = `contributor?select=${columns}&software=eq.${software}&order=position,given_names.asc`
+    const query = `contributor?select=${columns}&software=eq.${software}&order=position.asc,given_names.asc`
     const baseUrl = getBaseUrl()
     const url = `${baseUrl}/${query}`
 

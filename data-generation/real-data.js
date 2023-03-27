@@ -69,4 +69,19 @@ const dois = [
 	'10.5334/dsj-2022-010',
 ];
 
-export {conceptDois, dois};
+const packageManagerLinks = [
+	{url: 'https://anaconda.org/conda-forge/parcels/', type: 'anaconda'},
+	{url: 'https://anaconda.org/conda-forge/numpy/', type: 'anaconda'},
+	{url: 'https://cran.r-project.org/web/packages/GGIR/index.html', type: 'cran'},
+	{url: 'https://cran.r-project.org/web/packages/readr/index.html', type: 'cran'},
+	{url: 'https://hub.docker.com/r/djrobstep/migra', type: 'dockerhub'},
+	{url: 'https://hub.docker.com/_/postgres', type: 'dockerhub'},
+	{url: 'https://mvnrepository.com/artifact/nl.esciencecenter.xenon/xenon', type: 'maven'},
+	{url: 'https://mvnrepository.com/artifact/io.javalin/javalin', type: 'maven'},
+	{url: 'https://www.npmjs.com/package/@lxcat/schema', type: 'npm'},
+	{url: 'https://www.npmjs.com/package/jest', type: 'npm'},
+	{url: 'https://pypi.org/project/cffconvert/', type: 'pypi'},
+	{url: 'https://pypi.org/project/flask', type: 'pypi'},
+]
+
+export {conceptDois, dois, packageManagerLinks};

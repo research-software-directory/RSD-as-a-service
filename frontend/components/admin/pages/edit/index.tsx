@@ -131,29 +131,18 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
     })
   }
 
-  function onChangePagePostion(items: RsdLink[]) {
-    patchPositions(items)
-  }
-
-  async function patchPositions(items: RsdLink[]) {
-    const patchPosition = items.map(item => {
-        return {
-          id: item.id,
-          slug: item.slug,
-          position: item.position
-        }
-      })
-    updatePagePositions({
-        positions: patchPosition,
-        token:session.token
-      }).then(resp => {
-        if (resp.status !== 200) {
-          logger(`Failed to patch page positions. ${resp.status}: ${resp?.message}`)
-        }
-        setNavItems(items)
-      }).catch((e: any) => {
-        logger(`Failed to patch page positions. Error: ${e?.message}`)
-      })
+  async function patchPositions(newList: RsdLink[]) {
+    // update ui first
+    setNavItems(newList)
+    const resp = await updatePagePositions({
+      items: newList,
+      token:session.token
+    })
+    if (resp.status !== 200) {
+      // revert back
+      setNavItems(navItems)
+      showErrorMessage(`Failed to update page positions. ${resp?.message}`)
+    }
   }
 
   return (
@@ -177,7 +166,7 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
           links={navItems}
           selected={selected}
           onSelect={(item) => setSelected(item.slug)}
-          onSorted={onChangePagePostion}
+          onSorted={patchPositions}
           onDelete={onDeletePage}
           onSubmit={onSavePage}
         />

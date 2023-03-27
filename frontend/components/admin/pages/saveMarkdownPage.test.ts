@@ -90,10 +90,10 @@ it('saveMarkdownPage', async () => {
 
 it('updatePagePositions/patchMarkdownData', async() => {
   const params = {
-    positions: [
-      {id: 'test-id-1', slug: 'test-slug-1', position: 1},
-      {id: 'test-id-2', slug: 'test-slug-2', position: 2},
-      {id: 'test-id-3', slug: 'test-slug-3', position: 3},
+    items: [
+      {id: 'test-id-1', title:'test title 1',slug: 'test-slug-1', position: 1},
+      {id: 'test-id-2', title: 'test title 2',slug: 'test-slug-2', position: 2},
+      {id: 'test-id-3', title: 'test title 3', slug: 'test-slug-3', position: 3},
     ],
     token: 'TEST-TOKEN'
   }

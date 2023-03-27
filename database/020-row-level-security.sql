@@ -218,6 +218,20 @@ CREATE POLICY admin_all_rights ON repository_url TO rsd_admin
 	WITH CHECK (TRUE);
 
 
+ALTER TABLE package_manager ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON package_manager FOR SELECT TO rsd_web_anon, rsd_user
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON package_manager TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON package_manager TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 ALTER TABLE license_for_software ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON license_for_software FOR SELECT TO rsd_web_anon, rsd_user

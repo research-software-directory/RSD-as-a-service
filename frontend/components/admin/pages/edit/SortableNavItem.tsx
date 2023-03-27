@@ -34,7 +34,7 @@ export default function SortableNavItem({item, selected, index, onSelect}: Dragg
       selected={item.slug === selected}
       onClick={() => onSelect(item)}
       sx={{
-        transform: CSS.Transform.toString(transform),
+        transform: CSS.Translate.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
         zIndex: isDragging ? 9:0,

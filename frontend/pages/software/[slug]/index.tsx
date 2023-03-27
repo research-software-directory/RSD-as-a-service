@@ -58,6 +58,7 @@ import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
 import NoContent from '~/components/layout/NoContent'
+import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -129,7 +130,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       {/* Edit page button only when maintainer */}
       <EditPageButton
         title="Edit software"
-        url={`${slug}/edit`}
+        url={`${slug}/edit/information`}
         isMaintainer={isMaintainer}
         variant="text"
       />
@@ -232,7 +233,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // testimonials
       getTestimonialsForSoftware({software:software.id,frontend: false,token}),
       // contributors
-      getContributorsForSoftware({software:software.id,frontend:false,token}),
+      getContributorsForSoftware({software:software.id,token}),
       // relatedTools
       getRelatedSoftwareForSoftware({software: software.id, frontend: false, token}),
       // relatedProjects

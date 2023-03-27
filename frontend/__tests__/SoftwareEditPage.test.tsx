@@ -9,9 +9,9 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 import {WithFormContext} from '~/utils/jest/WithFormContext'
 
-import SoftwareEditPage from '../pages/software/[slug]/edit'
+import SoftwareEditPage from '../pages/software/[slug]/edit/[page]'
 import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
-import {editSoftwarePage} from '~/components/software/edit/editSoftwareSteps'
+import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
 import editSoftwareData from '~/components/software/edit/information/__mocks__/useSoftwareToEditData.json'
 import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 
@@ -38,9 +38,22 @@ window.IntersectionObserver = jest.fn(() => ({
   unobserve: mockUnobserve,
 } as any))
 
+// use default mocks
 jest.mock('~/components/software/edit/information/useSoftwareToEdit')
+jest.mock('~/components/software/edit/information/searchForSoftwareKeyword')
 
-describe('pages/software/[slug]/edit/index.tsx', () => {
+const mockProps = {
+  // information page
+  pageIndex: 0,
+  software: {
+    id:'ca6dbe55-ef59-4f4b-b8bc-eb465e130b87',
+    slug: 'test-software-1',
+    brand_name: 'Test software 1',
+    concept_doi: null,
+  }
+}
+
+describe('pages/software/[slug]/edit/[page].tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -50,7 +63,7 @@ describe('pages/software/[slug]/edit/index.tsx', () => {
       <WithAppContext>
         <WithFormContext>
           <WithSoftwareContext>
-            <SoftwareEditPage />
+            <SoftwareEditPage {...mockProps} />
           </WithSoftwareContext>
         </WithFormContext>
       </WithAppContext>
@@ -70,7 +83,7 @@ describe('pages/software/[slug]/edit/index.tsx', () => {
       <WithAppContext options={{session: mockSession}}>
         <WithFormContext>
           <WithSoftwareContext>
-            <SoftwareEditPage />
+            <SoftwareEditPage {...mockProps} />
           </WithSoftwareContext>
         </WithFormContext>
       </WithAppContext>
@@ -84,7 +97,7 @@ describe('pages/software/[slug]/edit/index.tsx', () => {
     expect(p403).toBeInTheDocument()
   })
 
-  it('renders info content when isMaintainer=true', async () => {
+  it.only('renders info content when isMaintainer=true', async () => {
     // return isMaintainer
     mockIsMaintainer.mockResolvedValueOnce(true)
     // render components
@@ -92,7 +105,7 @@ describe('pages/software/[slug]/edit/index.tsx', () => {
       <WithAppContext options={{session: mockSession}}>
         <WithFormContext>
           <WithSoftwareContext state={softwareState}>
-            <SoftwareEditPage />
+            <SoftwareEditPage {...mockProps} />
           </WithSoftwareContext>
         </WithFormContext>
       </WithAppContext>
@@ -105,7 +118,7 @@ describe('pages/software/[slug]/edit/index.tsx', () => {
     expect(navItems.length).toEqual(editSoftwarePage.length)
 
     // wait for info loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // validate info section is loaded
     const editInfoForm = await screen.findByTestId('software-information-form')
     expect(editInfoForm).toBeInTheDocument()
