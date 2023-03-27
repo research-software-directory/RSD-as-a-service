@@ -1,7 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -15,9 +17,10 @@ import {useEffect, useState} from 'react'
 import {addToRepositoryTable, deleteFromRepositoryTable} from '~/utils/editSoftware'
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
+import {getBaseUrl} from '~/utils/fetchHelpers'
+import logger from '~/utils/logger'
 
-
-function suggestPlatform(repositoryUrl: string | null) {
+async function suggestPlatform(repositoryUrl: string | null) {
   // console.log('repositoryUrl...',repositoryUrl)
   if (repositoryUrl === null) return null
 
@@ -30,7 +33,26 @@ function suggestPlatform(repositoryUrl: string | null) {
   if (repositoryUrl?.includes('bitbucket.')) {
     return 'bitbucket'
   }
-  // debugger
+
+  try {
+    const repositoryUrlDomain =new URL(repositoryUrl)
+    const baseUrl = getBaseUrl()
+    const resp = await fetch(
+      `${baseUrl}/rpc/suggest_platform`,
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({hostname: repositoryUrlDomain.host})
+      })
+    if (resp.status === 200) {
+      const platform_type = await resp.json()
+      if ( platform_type !== null){
+        return platform_type
+      }
+    }
+  } catch (e: any) {
+    logger(`suggestPlatform: ${e?.message}`, 'error')
+  }
   return 'other'
 }
 
@@ -52,6 +74,7 @@ export default function AutosaveRepositoryUrl() {
     disabled: repository_platform===null,
     helperText: 'Suggestion'
   })
+  const [suggestedPlatform, setSuggestedPlatform] = useState<CodePlatform>()
 
   const options = {
     name: 'repository_url',
@@ -65,15 +88,22 @@ export default function AutosaveRepositoryUrl() {
   // SUGGEST platform based on
   useEffect(() => {
     if (typeof urlError == 'undefined' && repository_url) {
+      // Do nothing if the host name is not complete
+      if (! /^https?:\/\/\S+\//.test(repository_url)) {
+        return
+      }
       // debugger
       if (platform.id === null) {
-        const suggestedPlatform = suggestPlatform(repository_url)
-        // console.log('suggestedPlatform...',suggestedPlatform)
-        setPlatform({
-          id: suggestedPlatform,
-          disabled: false,
-          helperText: 'Suggestion'
-        })
+        suggestPlatform(repository_url).then(
+          (suggestion) => {
+            setSuggestedPlatform(suggestion)
+            setPlatform({
+              id: suggestion,
+              disabled: false,
+              helperText: 'Suggestion'
+            })
+          }
+        )
       }
     } else if (urlError) {
       // debugger
@@ -106,7 +136,6 @@ export default function AutosaveRepositoryUrl() {
       data.url = value
     } else if (name === 'repository_platform') {
       // compare to suggested platform
-      const suggestedPlatform = suggestPlatform(repository_url)
       let helperText = 'Selected'
       if (suggestedPlatform === value) {
         helperText = 'Suggested'
