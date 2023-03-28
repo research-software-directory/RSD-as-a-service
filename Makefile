@@ -45,11 +45,6 @@ install: clean
 clean:
 	docker compose down --volumes
 
-
-dev:
-	docker compose up --scale scrapers=0 --detach
-	make -j 2 dev-docs dev-frontend # Run concurrently
-
 stop:
 	docker compose down
 
@@ -73,7 +68,10 @@ frontend/.env.local: .env
 	sed -i 's/POSTGREST_URL=http:\/\/backend:3500/POSTGREST_URL=http:\/\/localhost\/api\/v1/g' frontend/.env.local
 	sed -i 's/RSD_AUTH_URL=http:\/\/auth:7000/RSD_AUTH_URL=http:\/\/localhost\/auth/g' frontend/.env.local
 
-dev-frontend: frontend/.env.local
+dev: frontend/.env.local
+	docker compose build # build all services
+	docker compose up --scale data-generation=1 --scale scrapers=0 --scale frontend=0 --detach
+	# open http://localhost:3000 to see the application running
 	cd frontend && yarn dev
 
 # run end-to-end test locally
