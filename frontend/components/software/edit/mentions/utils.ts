@@ -16,7 +16,11 @@ export function extractSearchTerm(query: string): {term: string, type: 'doi' | '
     new URL(query)
     return {term: query, type: 'url'}
   } catch (error: any) {
-    if (error.constructor.name === 'TypeError') return {term: query, type: 'title'}
+    if (error.constructor.name === 'TypeError') {
+      // remove double spaces:
+      query = query.replaceAll(/\s+/g, ' ')
+      return {term: query, type: 'title'}
+    }
     else throw error
   }
 }
