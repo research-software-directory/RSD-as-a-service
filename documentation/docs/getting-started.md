@@ -14,7 +14,12 @@ SPDX-License-Identifier: CC-BY-4.0
 
 To run the application locally you need to install the following dependencies:
 
-*   Docker
+* [Docker](https://docs.docker.com/get-docker/)
+* [`yarn`](https://yarnpkg.com)
+* `make`
+  * Available in most Linux distributions.
+  * Often also in MacOS systems but, if not, you can get it by installing the command line tools with `xcode-select --install`.
+  * For Windows, you can install it via [`chocolatey`](https://community.chocolatey.org/packages/make).
 
 ## Get Started
 
