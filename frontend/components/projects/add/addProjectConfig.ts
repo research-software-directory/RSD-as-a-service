@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,7 +21,6 @@ export const addConfig = {
     label: 'Subtitle',
     help: 'Provide short description of your project to use as page subtitle.',
     validation: {
-      // required: 'Name is required',
       minLength: {value: 3, message: 'Minimum length is 3'},
       maxLength: {value: 300, message: 'Maximum length is 300'},
     }

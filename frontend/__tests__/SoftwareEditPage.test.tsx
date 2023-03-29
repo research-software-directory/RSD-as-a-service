@@ -97,7 +97,7 @@ describe('pages/software/[slug]/edit/[page].tsx', () => {
     expect(p403).toBeInTheDocument()
   })
 
-  it.only('renders info content when isMaintainer=true', async () => {
+  it('renders info content when isMaintainer=true', async () => {
     // return isMaintainer
     mockIsMaintainer.mockResolvedValueOnce(true)
     // render components

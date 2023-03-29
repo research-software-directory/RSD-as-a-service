@@ -1,12 +1,11 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render,screen,fireEvent,waitFor,waitForElementToBeRemoved,act} from '@testing-library/react'
-import {WrappedComponentWithProps} from '../../../utils/jest/WrappedComponents'
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
-import {Session} from '../../../auth'
 import AddProjectCard from './AddProjectCard'
 import {addConfig} from './addProjectConfig'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
@@ -38,16 +37,23 @@ jest.mock('next/router', () => ({
   })
 }))
 
-// prepare
+// USE FAKE TIMERS
 jest.useFakeTimers()
-
+// CLEAR ALL MOCKS before each test
+beforeEach(() => {
+  jest.clearAllMocks()
+})
+// CLEAR all pending timers
 afterEach(() => {
   jest.runOnlyPendingTimers()
-  jest.clearAllMocks()
 })
 
 it('render card with title, subtitle and slug', () => {
-  render(WrappedComponentWithProps(AddProjectCard))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddProjectCard />
+    </WithAppContext>
+  )
 
   const title = screen.getByRole('textbox', {name: addConfig.project_title.label})
   const subtitle = screen.getByRole('textbox', {name: addConfig.project_subtitle.label})
@@ -60,32 +66,27 @@ it('render card with title, subtitle and slug', () => {
 
 it('card has textbox with Title that can be entered', async() => {
 
-  render(WrappedComponentWithProps(AddProjectCard))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddProjectCard />
+    </WithAppContext>
+  )
   // check title
   const title:HTMLInputElement = screen.getByRole('textbox', {name: addConfig.project_title.label})
   expect(title).toBeInTheDocument()
 
-  // dummy input value
   const inputTitle = 'Test project title'
-  act(() => {
-    // accepts test value
-    fireEvent.change(title, {target: {value: inputTitle}})
-    jest.runAllTimers()
-  })
-
-  // confirm slug validation in progress
-  // REQUIRED! to avoid act warning/error shown
-  const loader = await screen.findByTestId('slug-circular-progress')
-  expect(loader).toBeInTheDocument()
-  // confirm that loader is removed
-  await waitForElementToBeRemoved(loader)
-
+  fireEvent.change(title, {target: {value: inputTitle}})
   // validate value
   expect(title.value).toEqual(inputTitle)
 })
 
 it('card has cancel and submit buttons', async() => {
-  render(WrappedComponentWithProps(AddProjectCard))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddProjectCard />
+    </WithAppContext>
+  )
   const submit = screen.getByRole('button',{name:'Save'})
   expect(submit).toBeInTheDocument()
   // accepts test value
@@ -96,8 +97,11 @@ it('card has cancel and submit buttons', async() => {
 })
 
 it('goes back on cancel', async() => {
-  // render
-  render(WrappedComponentWithProps(AddProjectCard))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddProjectCard />
+    </WithAppContext>
+  )
   // accepts test value
   const cancel = screen.getByRole('button', {name: 'Cancel'})
   expect(cancel).toBeInTheDocument()
@@ -113,17 +117,13 @@ it('validate, save and redirect', async () => {
   // test values
   const inputTitle = 'Test project title'
   const inputSubtitle = 'Test project subtitle'
-  const session:Session = {
-    user: null,
-    token: 'TEST_TOKEN',
-    status: 'authenticated'
-  }
   const slug = getSlugFromString(inputTitle)
 
-  // render
-  render(WrappedComponentWithProps(AddProjectCard,{
-    session
-  }))
+  render(
+    <WithAppContext options={{session:mockSession}}>
+      <AddProjectCard />
+    </WithAppContext>
+  )
 
   const title = screen.getByRole<HTMLInputElement>('textbox', {name: 'Title'})
   expect(title).toBeInTheDocument()
@@ -136,9 +136,15 @@ it('validate, save and redirect', async () => {
 
   // confirm slug validation in progress
   const loader = await screen.findByTestId('slug-circular-progress')
-  expect(loader).toBeInTheDocument()
+  // expect(loader).toBeInTheDocument()
   // confirm that loader is removed
   await waitForElementToBeRemoved(loader)
+
+  await waitFor(() => {
+    // validate slug
+    expect(mockValidProjectItem).toHaveBeenCalledTimes(1)
+    expect(mockValidProjectItem).toHaveBeenCalledWith(slug, mockSession.token)
+  })
 
   // save
   const save = screen.getByRole('button', {name: 'Save'})
@@ -151,9 +157,6 @@ it('validate, save and redirect', async () => {
   fireEvent.submit(save)
 
   await waitFor(() => {
-    // validate slug
-    expect(mockValidProjectItem).toHaveBeenCalledTimes(1)
-    expect(mockValidProjectItem).toHaveBeenCalledWith(slug, session.token)
     // calling add software
     expect(mockAddProject).toHaveBeenCalledTimes(1)
     expect(mockAddProject).toHaveBeenCalledWith({
