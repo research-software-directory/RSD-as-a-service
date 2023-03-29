@@ -19,8 +19,14 @@ SPDX-License-Identifier: CC-BY-4.0
 [![GitHub license](https://img.shields.io/badge/license-Apache--2.0%20-blue.svg)](https://github.com/research-software-directory/RSD-as-a-service/blob/main/LICENSE)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8F%20%20%E2%97%8B-orange)](https://fair-software.eu)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6336/badge)](https://bestpractices.coreinfrastructure.org/projects/6336)
-![All tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/tests_main.yml/badge.svg)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+![Frontend tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/frontend_tests.yml/badge.svg)
+![Backend tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/backend_tests.yml/badge.svg)
+![Scraper tests](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/scrapers_tests.yml/badge.svg)
+![E2E tests Ubuntu](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/e2e_tests_ubuntu.yml/badge.svg)
+![E2E tests Firefox](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/e2e_tests_firefox.yml/badge.svg)
+![E2E tests Chrome](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/e2e_tests_chrome.yml/badge.svg)
+![E2E tests MacOS](https://github.com/research-software-directory/RSD-as-a-service/actions/workflows/e2e_tests_macos.yml/badge.svg)
 
 ## Our mission: To promote the visibility, impact and reuse of research software
 
