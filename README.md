@@ -30,13 +30,14 @@ This repo contains the new RSD-as-a-service implementation
 
 ### Building from source code
 
-1. Before installing the dependencies ensure that you have Docker and docker-compose locally.
-2. Set the required environment variables:
+1. Before installing the dependencies ensure that you have `Docker` and `docker-compose` locally.
+2. You will also need `make` and [`yarn`](https://yarnpkg.com) to automate the configuration and installation process.
+3. Set the required environment variables:
    Copy the file `.env.example` to `.env` file at the root of the project
    and fill the secrets and passwords. Check if the secrets are correct.
    The `Makefile` will take care about creating an appropriate `frontend/.env.local`
    from the `.env` file.
-3. Run `make install` to install all dependencies and build the docker images.
+4. Run `make install` to install all dependencies and build the docker images.
 
 ### Running the services
 
