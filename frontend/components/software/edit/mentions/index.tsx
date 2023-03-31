@@ -13,6 +13,7 @@ import FindSoftwareMention from './FindSoftwareMention'
 import AddMention from './AddMention'
 import useSoftwareContext from '../useSoftwareContext'
 import BulkImport from '~/components/mention/BulkImport'
+import BulkImportMentions from './BulkImportMentions'
 
 export default function SoftwareMentions() {
   const {token} = useSession()
@@ -33,7 +34,7 @@ export default function SoftwareMentions() {
           <div className="py-4"></div>
           <AddMention />
           <div className="py-4"></div>
-          <BulkImport table="mention_for_software" entityId={software.id!}></BulkImport>
+          <BulkImportMentions/>
         </div>
       </EditSection>
     </EditMentionsProvider>

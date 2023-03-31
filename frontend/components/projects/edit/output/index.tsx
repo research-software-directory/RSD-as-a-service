@@ -12,7 +12,7 @@ import FindOutput from './FindOutput'
 import AddOutput from './AddOutput'
 import EditOutputProvider from './EditOutputProvider'
 import useProjectContext from '../useProjectContext'
-import BulkImport from '~/components/mention/BulkImport'
+import BulkImportOutput from './BulkImportOutput'
 
 export default function ProjectOutput() {
   const {token} = useSession()
@@ -33,7 +33,7 @@ export default function ProjectOutput() {
           <div className="py-4"></div>
           <AddOutput />
           <div className="py-4"></div>
-          <BulkImport table="output_for_project" entityId={project.id!}></BulkImport>
+          <BulkImportOutput/>
         </div>
       </EditSection>
     </EditOutputProvider>

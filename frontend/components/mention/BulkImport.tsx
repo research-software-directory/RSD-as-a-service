@@ -21,8 +21,9 @@ import {createJsonHeaders} from '~/utils/fetchHelpers'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
-export default function BulkImport({table, entityId}: {table: 'mention_for_software' | 'output_for_project' | 'impact_for_project', entityId: string}) {
+export default function BulkImport({table, entityId, onAdded}: {table: 'mention_for_software' | 'output_for_project' | 'impact_for_project', entityId: string, onAdded: Function}) {
 	const [dialogOpen, setDialogOpen] = useState<boolean>(false)
 	const [inputEnabled, setInbutEnabled] = useState<boolean>(true)
 	const [submitEnabled, setSubmitEnabled] = useState<boolean>(false)
@@ -31,6 +32,7 @@ export default function BulkImport({table, entityId}: {table: 'mention_for_softw
   const {session} = useAuth()
   const token = session.token
   const {showSuccessMessage} = useSnackbar()
+  const smallScreen: boolean = useMediaQuery('(max-width:768px)')
 
   type SearchResult = {
     status: 'valid' | 'invalidDoi' | 'doiNotFound' |'unsupportedRA' | 'unknown',
@@ -118,6 +120,7 @@ export default function BulkImport({table, entityId}: {table: 'mention_for_softw
     setSubmitEnabled(false)
     setSearchResults(null)
     setLines([])
+    onAdded()
     } catch (error) {
       setSubmitEnabled(true)
       throw error
@@ -246,20 +249,38 @@ export default function BulkImport({table, entityId}: {table: 'mention_for_softw
     setSubmitEnabled(true)
   }
 
+  if (smallScreen) return null
 
 	return (
     <>
         <Button onClick={() => setDialogOpen(true)}>
           Bulk add mentions
         </Button>
-        <Dialog maxWidth='md' sx={{minWidth: '40rem'}} open={dialogOpen} onClose={() => closeDialog()}>
+        <Dialog
+          maxWidth='md'
+          sx={{
+            minWidth: '40rem',
+            '.MuiPaper-root': {
+              width: '50vw',
+              height: '80vh'
+            }
+          }}
+          open={dialogOpen}
+          onClose={() => closeDialog()}
+        >
         {searchResults === null &&
           <>
             <DialogTitle>
               Bulk import mentions
             </DialogTitle>
             <DialogContent sx={{minWidth: '40rem'}}>
-              <TextField sx={{margin: '1rem', width: '90%'}} label="Paste one DOI per line in the textbox (max 75):" defaultValue={lines.join('\n')} multiline disabled={!inputEnabled} onChange={event => readInput(event)}>
+              <TextField
+                sx={{margin: '1rem' , width: '90%'}}
+                label="Paste one DOI per line in the textbox (max 75):"
+                defaultValue={lines.join('\n')} multiline disabled={!inputEnabled}
+                onChange={event => readInput(event)}
+                rows={22}
+              >
               </TextField>
             </DialogContent>
             <DialogActions>
@@ -272,27 +293,47 @@ export default function BulkImport({table, entityId}: {table: 'mention_for_softw
         {searchResults !== null &&
           <>
             <DialogTitle>
-              Results
+              Results ({searchResults.size})
             </DialogTitle>
             <DialogContent>
               <List>
                 {Array.from(searchResults.keys()).map(doi => {
                   const result = searchResults.get(doi)!
-                  if (result?.status === 'valid') {
-                    const mention = searchResults.get(doi)?.mention!
-                    return (
-                      <ListItem key = {doi}>
-                        <ListItemText primary={`${doi}: ${mention.title}, ${mention.authors}, ${result.source}`}></ListItemText>
-                        <Switch defaultChecked={result.include} onChange={() => {result.include = !result.include}} />
-                      </ListItem>
-                    )
-                  } else {
-                    return (
-                      <ListItem key = {doi}>
-                        <ListItemText primary={`Error for ${doi}: ${generateErrorMessage(result)}`} sx={{color: 'red'}}></ListItemText>
-                      </ListItem>
-                    )
-                  }
+                  const mention = searchResults.get(doi)?.mention!
+                  return (
+                    <ListItem key = {doi}
+                    secondaryAction={
+                      <Switch
+                        disabled={result?.status !== 'valid'}
+                        defaultChecked={result.include}
+                        onChange={() => {result.include = !result.include}}
+                      />
+                    }
+                    sx={{
+                      paddingRight:'5rem',
+                      '&:hover': {
+                        backgroundColor:'grey.100'
+                      },
+                    }}
+                    >
+                      <ListItemText
+                        primary={
+                          <a href={`https://doi.org/${doi}`} target="_blank">
+                            {doi}
+                          </a>
+                        }
+                        secondary={
+                          result?.status === 'valid' ?
+                          <>
+                            <span className="text-secondary">{mention.title}</span><br/>
+                            <span>{mention.authors}</span><br/>
+                            <span>Source: {result.source}</span>
+                          </>
+                          :<span className="text-error">{generateErrorMessage(result)}</span>
+                        }
+                      />
+                    </ListItem>
+                  )
                 })}
               </List>
             </DialogContent>
