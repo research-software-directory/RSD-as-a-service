@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,21 +12,20 @@ import {getDisplayName} from './getDisplayName'
 import logger from './logger'
 import {sortOnStrProp} from './sortFn'
 
-const exampleResponse = {
-  'orcid-id': '0000-0001-6067-6529',
-  'given-names': 'Dusan',
-  'family-names': 'Pejakovic',
-  'credit-name': null,
-  'other-name': [],
-  'email': [],
-  'institution-name': [
-    'Gordon and Betty Moore Foundation',
-    'SRI International',
-    'The Ohio State University'
-  ]
+export type OrcidRecord = {
+  'orcid-id': string,
+  'given-names': string,
+  'family-names': string,
+  'other-name': string[],
+  'email': string[],
+  'institution-name': string[]
 }
 
-export type OrcidRecord = typeof exampleResponse
+type OrcidExpandedSearchResponse = {
+  'expanded-result': OrcidRecord[]
+  'num-found': number
+}
+
 
 const baseUrl = 'https://pub.orcid.org/v3.0/expanded-search/'
 const orcidRegex = /^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$/
@@ -35,7 +34,36 @@ export function isOrcid(stringToCheck: string): boolean {
   return stringToCheck.match(orcidRegex) !== null
 }
 
-export async function getORCID({searchFor}: { searchFor: string }) {
+// DISABLED on 28-3-2023
+// export async function getORCID({searchFor}: { searchFor: string }) {
+//   try {
+//     const rows = '&start=0&rows=50'
+//     const query = buildSearchQuery(searchFor)
+//     const url = `${baseUrl}?${query}${rows}`
+//     // make request
+//     const resp = await fetch(url, {
+//       headers: {
+//         // pass json request in the header
+//         ...createJsonHeaders(undefined),
+//       }
+//     })
+
+//     if (resp.status === 200) {
+//       const json: OrcidExpandedSearchResponse = await resp.json()
+//       const options = buildAutocompleteOptions(json['expanded-result'])
+//       // debugger
+//       return options
+//     }
+//     logger(`getORCID FAILED: ${resp.status}: ${resp.statusText}`,'warn')
+//     // we return nothing
+//     return []
+//   } catch (e: any) {
+//     logger(`getORCID: ${e?.message}`, 'error')
+//     return []
+//   }
+// }
+
+export async function searchORCID({searchFor}: { searchFor: string }) {
   try {
     const rows = '&start=0&rows=50'
     const query = buildSearchQuery(searchFor)
@@ -49,16 +77,15 @@ export async function getORCID({searchFor}: { searchFor: string }) {
     })
 
     if (resp.status === 200) {
-      const json:any = await resp.json()
-      const options = buildAutocompleteOptions(json['expanded-result'])
-      // debugger
-      return options
+      const json: OrcidExpandedSearchResponse = await resp.json()
+      if (json['num-found']===0) return []
+      return json['expanded-result']
     }
-    logger(`getORCID FAILED: ${resp.status}: ${resp.statusText}`,'warn')
+    logger(`searchORCID FAILED: ${resp.status}: ${resp.statusText}`, 'warn')
     // we return nothing
     return []
   } catch (e: any) {
-    logger(`getORCID: ${e?.message}`, 'error')
+    logger(`searchORCID: ${e?.message}`, 'error')
     return []
   }
 }

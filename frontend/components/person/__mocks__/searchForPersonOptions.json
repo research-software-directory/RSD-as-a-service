@@ -1,0 +1,40 @@
+[
+  {
+    "key": "0000-0002-1898-4461",
+    "label": "Dusan Mijatovic",
+    "data": {
+      "orcid": "0000-0002-1898-4461",
+      "display_name": "Dusan Mijatovic",
+      "given_names": "Dusan",
+      "family_names": "Mijatovic",
+      "email_options": [
+        "d.mijatovic@dv4all.nl",
+        "d.mijatovic@interview.com",
+        "mijatovic1970@gmail.com"
+      ],
+      "role_options": [
+        "Frontend developer",
+        "Developer",
+        "Project Manager",
+        "Private",
+        "CEO"
+      ],
+      "affiliation_options": [
+        "Netherlands eScience Center",
+        "dv4all",
+        "Interview NSS",
+        "Mijatovic Inc"
+      ],
+      "avatar_options": [
+        "dd13598980db80acf967777daca29cbb3c992700",
+        "33b80acfebb94a005d09d84152391251de8b4ccd",
+        "f312b64a21770404f839beffdda250ea2acf7f2c",
+        "f20bca596dbb9fe4a89e93b1d00e5e5febad12db"
+      ],
+      "sources": [
+        "ORCID",
+        "RSD"
+      ]
+    }
+  }
+]

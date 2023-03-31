@@ -273,34 +273,6 @@ BEGIN
 END
 $$;
 
--- UNIQUE contributor display_names
-CREATE FUNCTION unique_contributors() RETURNS TABLE (
-	display_name TEXT,
-	affiliation VARCHAR,
-	orcid VARCHAR,
-	given_names VARCHAR,
-	family_names VARCHAR,
-	email_address VARCHAR,
-	avatar_id VARCHAR
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-		SELECT DISTINCT
-		(CONCAT(c.given_names,' ',c.family_names)) AS display_name,
-		c.affiliation,
-		c.orcid,
-		c.given_names,
-		c.family_names,
-		c.email_address,
-		c.avatar_id
-	FROM
-		contributor c
-	ORDER BY
-		display_name ASC;
-END
-$$;
-
 -- Participating organisations by software
 -- requires software UUID
 CREATE FUNCTION organisations_of_software(software_id UUID) RETURNS TABLE (
@@ -984,35 +956,6 @@ INNER JOIN
 END
 $$;
 
--- UNIQUE LIST OF TEAM MEMBERS
--- used in Find
-CREATE FUNCTION unique_team_members() RETURNS TABLE (
-	display_name TEXT,
-	affiliation VARCHAR,
-	orcid VARCHAR,
-	given_names VARCHAR,
-	family_names VARCHAR,
-	email_address VARCHAR,
-	avatar_id VARCHAR
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-		SELECT DISTINCT
-			(CONCAT(c.given_names,' ',c.family_names)) AS display_name,
-			c.affiliation,
-			c.orcid,
-			c.given_names,
-			c.family_names,
-			c.email_address,
-			c.avatar_id
-		FROM
-			team_member c
-		ORDER BY
-			display_name ASC;
-END
-$$;
-
 -- Software maintainers list with basic personal info
 -- used in the software maintainer list
 CREATE FUNCTION maintainers_of_software(software_id UUID) RETURNS TABLE (
@@ -1055,7 +998,6 @@ BEGIN
 	RETURN;
 END
 $$;
-
 
 -- SOFTWARE BY MAINTAINER
 -- NOTE! one software is shown multiple times in this view
@@ -1299,10 +1241,11 @@ BEGIN
 	WHERE
 		organisations_overview.parent IS NULL AND organisations_overview.score>0
 	INTO organisation_cnt;
-	SELECT COUNT(display_name) FROM unique_contributors() INTO contributor_cnt;
+	SELECT COUNT(DISTINCT(orcid,given_names,family_names)) FROM contributor INTO contributor_cnt;
 	SELECT COUNT(mention) FROM mention_for_software INTO software_mention_cnt;
 END
 $$;
+
 
 -- Keywords grouped by project
 -- We use keywords array for filtering
@@ -1502,46 +1445,6 @@ BEGIN RETURN QUERY
 	FROM
 		organisation
 ;
-END
-$$;
-
--- ALL unique persons in RSD (contributors and team members)
--- TO BE USED IN SEARCH
--- NOTE! UNION takes care of duplicate entries
-CREATE FUNCTION unique_persons() RETURNS TABLE (
-	display_name TEXT,
-	affiliation VARCHAR,
-	orcid VARCHAR,
-	given_names VARCHAR,
-	family_names VARCHAR,
-	email_address VARCHAR,
-	avatar_id VARCHAR
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN RETURN QUERY
-	SELECT
-		unique_contributors.display_name,
-		unique_contributors.affiliation,
-		unique_contributors.orcid,
-		unique_contributors.given_names,
-		unique_contributors.family_names,
-		unique_contributors.email_address,
-		unique_contributors.avatar_id
-	FROM
-		unique_contributors()
-	UNION
-	SELECT
-		unique_team_members.display_name,
-		unique_team_members.affiliation,
-		unique_team_members.orcid,
-		unique_team_members.given_names,
-		unique_team_members.family_names,
-		unique_team_members.email_address,
-		unique_team_members.avatar_id
-	FROM
-		unique_team_members()
-	ORDER BY
-		display_name ASC;
 END
 $$;
 

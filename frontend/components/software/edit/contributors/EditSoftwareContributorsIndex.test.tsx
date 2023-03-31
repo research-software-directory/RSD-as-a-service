@@ -17,7 +17,7 @@ import {contributorInformation as config} from '../editSoftwareConfig'
 
 // MOCKS
 import mockContributors from './__mocks__/softwareContributors.json'
-import mockSearchPerson from '~/components/projects/edit/team/__mocks__/searchPerson.json'
+import mockSearchOptions from '~/components/person/__mocks__/searchForPersonOptions.json'
 
 // MOCK getContributorsForSoftware
 const mockGetContributorsForSoftware = jest.fn(props => Promise.resolve([] as any))
@@ -33,16 +33,22 @@ jest.mock('~/utils/editContributors', () => ({
 }))
 
 // MOCK findRSDPerson
-const mockFindRSDPerson = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/findRSDPerson', () => ({
-  findRSDPerson: jest.fn(props=>mockFindRSDPerson(props))
-}))
+// const mockFindRSDPerson = jest.fn(props => Promise.resolve([] as any))
+// jest.mock('~/utils/findRSDPerson', () => ({
+//   findRSDPerson: jest.fn(props=>mockFindRSDPerson(props))
+// }))
 
 // MOCK getORCID
-const mockGetORCID = jest.fn(props => Promise.resolve([] as any))
-jest.mock('~/utils/getORCID', () => ({
-  ...jest.requireActual('~/utils/getORCID'),
-  getORCID: jest.fn(props=>mockGetORCID(props))
+// const mockGetORCID = jest.fn(props => Promise.resolve([] as any))
+// jest.mock('~/utils/getORCID', () => ({
+//   ...jest.requireActual('~/utils/getORCID'),
+//   getORCID: jest.fn(props=>mockGetORCID(props))
+// }))
+
+// MOCK searchForPerson
+const mockSearchForPerson = jest.fn(props => Promise.resolve([] as any))
+jest.mock('~/components/person/searchForPerson', () => ({
+  searchForPerson: jest.fn(props=>mockSearchForPerson(props))
 }))
 
 // MOCK getContributorsFromDoi
@@ -152,20 +158,8 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     // resolve no contributors
     mockGetContributorsForSoftware.mockResolvedValueOnce([])
     // mock search options returned
-    mockFindRSDPerson.mockResolvedValueOnce([{
-      key: mockSearchPerson[0].display_name,
-      label: mockSearchPerson[0].display_name,
-      data: {
-        ...mockSearchPerson[0]
-      }
-    }])
-    mockGetORCID.mockResolvedValueOnce([{
-      key: mockSearchPerson[1].display_name,
-      label: mockSearchPerson[1].display_name,
-      data: {
-        ...mockSearchPerson[1]
-      }
-    }])
+    mockSearchForPerson.mockResolvedValueOnce(mockSearchOptions)
+    // mock post response
     mockPostContributor.mockResolvedValueOnce({
       status: 201,
       message: memberId
@@ -189,19 +183,13 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     // find all options
     const options = await screen.findAllByRole('option')
     // we always offer add option
-    expect(options.length).toEqual(mockSearchPerson.length + 1)
+    expect(options.length).toEqual(mockSearchOptions.length + 1)
 
     // validate search called with proper param
-    expect(mockFindRSDPerson).toBeCalledTimes(1)
-    expect(mockFindRSDPerson).toBeCalledWith({
-      'frontend': true,
+    expect(mockSearchForPerson).toBeCalledTimes(1)
+    expect(mockSearchForPerson).toBeCalledWith({
       searchFor,
       'token': mockSession.token,
-    })
-
-    expect(mockGetORCID).toBeCalledTimes(1)
-    expect(mockGetORCID).toBeCalledWith({
-      searchFor
     })
 
     // select first option: "Add"

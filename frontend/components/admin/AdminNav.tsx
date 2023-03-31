@@ -16,6 +16,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import SpellcheckIcon from '@mui/icons-material/Spellcheck'
 import DomainAddIcon from '@mui/icons-material/DomainAdd'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
 export const adminPages = {
   pages:{
@@ -36,7 +37,13 @@ export const adminPages = {
     icon: <PersonRemoveIcon />,
     path: '/admin/rsd-users',
   },
-  organisations:{
+  contributors:{
+    title: 'RSD contributors',
+    subtitle: 'Manage RSD contributors',
+    icon: <AccountCircleIcon />,
+    path: '/admin/rsd-contributors',
+  },
+  organisations: {
     title: 'Organisations',
     subtitle: 'Manage organisation entries',
     icon: <DomainAddIcon />,

@@ -15,6 +15,14 @@ import {PaginationProvider} from '~/components/pagination/PaginationContext'
 
 const pageTitle = `${adminPages['accounts'].title} | Admin page | ${app.title}`
 
+const pagination = {
+  count: 0,
+  page: 0,
+  rows: 12,
+  rowsOptions: [12,24,48],
+  labelRowsPerPage:'Per page'
+}
+
 export default function AdminRsdUsersPage() {
   // console.group('AdminRsdUsersPage')
   // console.log('pageTitle...', pageTitle)
@@ -26,7 +34,7 @@ export default function AdminRsdUsersPage() {
       </Head>
       <AdminPageWithNav title={adminPages['accounts'].title}>
         <SearchProvider>
-          <PaginationProvider>
+          <PaginationProvider pagination={pagination}>
             <RsdUsersPage />
           </PaginationProvider>
         </SearchProvider>

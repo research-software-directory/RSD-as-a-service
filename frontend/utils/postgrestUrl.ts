@@ -1,10 +1,23 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {rowsPerPageOptions} from '~/config/pagination'
+
+export type OrderByProps<T, K extends keyof T> = {
+  column: K,
+  direction: 'asc' | 'desc'
+}
+
+export type ApiParams<T, K extends keyof T> = {
+  token: string,
+  page: number
+  rows: number
+  searchFor?: string
+  orderBy?: OrderByProps<T,K>
+}
 
 type baseQueryStringProps = {
   search?: string | null,

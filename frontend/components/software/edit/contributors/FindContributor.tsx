@@ -1,20 +1,22 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {HTMLAttributes, useState} from 'react'
 
-import {Contributor, SearchPerson} from '../../../../types/Contributor'
-import {searchForContributor} from '../../../../utils/editContributors'
-import FindContributorItem from './FindContributorItem'
-import {splitName} from '../../../../utils/getDisplayName'
+import {useSession} from '~/auth'
+import {SaveContributor} from '~/types/Contributor'
+import {splitName} from '~/utils/getDisplayName'
+import {isOrcid} from '~/utils/getORCID'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import AsyncAutocompleteSC,{AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
-import {isOrcid} from '~/utils/getORCID'
-import {useSession} from '~/auth'
+import {searchForPerson} from '~/components/person/searchForPerson'
+import {AggregatedPerson} from '~/components/person/groupByOrcid'
+import AggregatedPersonOption from '~/components/person/AggregatedPersonOption'
+import AggregatedContributorModal, {NewRsdContributor} from './AggregatedContributorModal'
 
 export type Name = {
   given_names: string
@@ -23,12 +25,22 @@ export type Name = {
 
 type FindContributorProps = {
   software: string,
-  onAdd: (item: Contributor) => void
+  position: number,
+  onEdit: (Contributor: SaveContributor) => void
+  // for submitting "aggregated person"
+  onSubmit: ({contributor}: { contributor: SaveContributor }) => void
 }
 
-export default function FindContributor({onAdd, software}:FindContributorProps) {
+type ModalState = {
+  open: boolean,
+  contributor?: NewRsdContributor
+}
+
+
+export default function FindContributor({software,position,onEdit,onSubmit}:FindContributorProps) {
   const {token} = useSession()
-  const [options, setOptions] = useState<AutocompleteOption<SearchPerson>[]>([])
+  const [modal, setModal] = useState<ModalState>()
+  const [options, setOptions] = useState<AutocompleteOption<AggregatedPerson>[]>([])
   const [status, setStatus] = useState<{
     loading: boolean,
     foundFor: string | undefined
@@ -39,13 +51,12 @@ export default function FindContributor({onAdd, software}:FindContributorProps) 
 
   async function searchContributor(searchFor: string) {
     setStatus({loading:true,foundFor:undefined})
-    const resp = await searchForContributor({
+    const resp = await searchForPerson({
       searchFor,
-      token,
-      frontend:true
+      token
     })
     // set options
-    setOptions(resp ?? [])
+    setOptions(resp)
     // stop loading
     setStatus({
       loading: false,
@@ -53,42 +64,53 @@ export default function FindContributor({onAdd, software}:FindContributorProps) 
     })
   }
 
-  function addContributor(selected:AutocompleteOption<SearchPerson>) {
+  function onAddPerson(selected:AutocompleteOption<AggregatedPerson>) {
     if (selected && selected.data) {
-      onAdd({
+      const contributor: NewRsdContributor = {
         ...selected.data,
-        id: null,
-        software: '',
+        software,
         is_contact_person: false,
+        selected_avatar: null,
+        avatar_id: null,
+        avatar_b64: null,
+        avatar_mime_type: null,
         role: null,
-        position: null,
-        // RSD entries could have avatar
-        avatar_id: selected.data.avatar_id ?? null
+        position
+      }
+       // debugger
+      setModal({
+        open: true,
+        contributor
       })
     }
   }
 
-  function createNewContributor(newInputValue: string) {
+  function onAddContributor(contributor: SaveContributor) {
+    // close modal
+    setModal({open: false})
+    // pass info
+    onSubmit({contributor})
+  }
+
+  function createContributor(newInputValue: string) {
     const name = splitName(newInputValue)
-    // onCreate(name)
-    onAdd({
+    // add new contributor
+    onEdit({
       id: null,
       software,
       is_contact_person: false,
-      ...name,
       email_address: null,
       affiliation: null,
       role: null,
       orcid: null,
       avatar_id: null,
-      avatar_mime_type: null,
-      avatar_b64: null,
-      position: null
+      position,
+      ...name
     })
   }
 
   function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<SearchPerson>) {
+    option: AutocompleteOption<AggregatedPerson>) {
     // if more than one option we add border at the bottom
     // we assume that first option is Add "new item"
     if (options.length > 1) {
@@ -107,7 +129,7 @@ export default function FindContributor({onAdd, software}:FindContributorProps) 
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<SearchPerson>) {
+    option: AutocompleteOption<AggregatedPerson>) {
     // console.log('renderOption...', option)
     // when value is not found option returns input prop
     if (option?.input) {
@@ -122,7 +144,7 @@ export default function FindContributor({onAdd, software}:FindContributorProps) 
 
     return (
       <li {...props} key={Math.random().toString()}>
-        <FindContributorItem option={option} />
+        <AggregatedPersonOption option={option} />
       </li>
     )
   }
@@ -133,8 +155,8 @@ export default function FindContributor({onAdd, software}:FindContributorProps) 
         status={status}
         options={options}
         onSearch={searchContributor}
-        onAdd={addContributor}
-        onCreate={createNewContributor}
+        onAdd={onAddPerson}
+        onCreate={createContributor}
         onRenderOption={renderOption}
         config={{
           freeSolo: true,
@@ -146,6 +168,14 @@ export default function FindContributor({onAdd, software}:FindContributorProps) 
           reset: true
         }}
       />
+        {modal && modal.open && modal.contributor &&
+        <AggregatedContributorModal
+          open={modal.open}
+          contributor={modal.contributor}
+          onCancel={() => setModal({open: false})}
+          onSubmit={onAddContributor}
+        />
+      }
     </section>
   )
 }

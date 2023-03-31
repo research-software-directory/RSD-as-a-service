@@ -25,7 +25,6 @@ import ControlledSwitch from '../../../form/ControlledSwitch'
 import ContributorAvatar from '../../ContributorAvatar'
 import {contributorInformation as config} from '../editSoftwareConfig'
 import {getDisplayInitials, getDisplayName} from '../../../../utils/getDisplayName'
-import ControlledAffiliation from '~/components/form/ControlledAffiliation'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {handleFileUpload} from '~/utils/handleFileUpload'
 import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
@@ -62,12 +61,6 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   // console.log('isDirty...', isDirty)
   // console.log('isValid...', isValid)
   // console.groupEnd()
-
-  // useEffect(() => {
-  //   if (contributor) {
-  //     reset(contributor)
-  //   }
-  // }, [contributor,reset])
 
   function handleCancel() {
     // reset form
@@ -317,14 +310,17 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
               }}
               rules={config.role.validation}
             />
-            <ControlledAffiliation
-              name='affiliation'
-              label={config.affiliation.label}
-              affiliation={contributor?.affiliation ?? ''}
-              institution={contributor?.institution ?? null}
+            <ControlledTextField
               control={control}
+              options={{
+                name: 'affiliation',
+                label: config.affiliation.label,
+                useNull: true,
+                defaultValue: contributor?.affiliation,
+                helperTextMessage: config.affiliation.help,
+                helperTextCnt: `${formData?.affiliation?.length || 0}/${config.affiliation.validation.maxLength.value}`,
+              }}
               rules={config.affiliation.validation}
-              helperTextMessage={config.affiliation.help}
             />
           </section>
           <section>
