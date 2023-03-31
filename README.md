@@ -31,7 +31,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 ## Our mission: To promote the visibility, impact and reuse of research software
 
-This repo contains the new RSD-as-a-service implementation
+This repo contains the new RSD-as-a-service implementation. The service can be found at: https://research-software-directory.org  
 
 ## How to build and run the RSD
 
