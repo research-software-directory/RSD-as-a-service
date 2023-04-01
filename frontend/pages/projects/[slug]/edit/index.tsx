@@ -5,42 +5,24 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
-import Head from 'next/head'
-import {useForm, FormProvider} from 'react-hook-form'
-
-import {app} from '../../../../config/app'
-import DefaultLayout from '../../../../components/layout/DefaultLayout'
-import {EditProjectProvider} from '~/components/projects/edit/editProjectContext'
-import EditProjectPage from '~/components/projects/edit/EditProjectPage'
-import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
-
-const pageTitle = `Edit project | ${app.title}`
+import {GetServerSidePropsContext} from 'next/types'
 
 export default function ProjectEditPage() {
-  const methods = useForm({
-    mode:'onChange'
-  })
-  const router = useRouter()
-  const slug = router.query['slug']
+  // REDIRECT to /edit/information location (default edit page)
+}
 
-  // console.group('ProjectEditPage')
-  // console.log('slug...', slug)
-  // console.groupEnd()
+// REDIRECT to /edit/information location (default edit page)
+// fetching data server side
+// see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
+export async function getServerSideProps(context:GetServerSidePropsContext) {
+  const {params} = context
 
-  return (
-    <DefaultLayout>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
-      <UserAgrementModal />
-      {/* form provider to share isValid, isDirty states in the header */}
-      <FormProvider {...methods}>
-        {/* edit project context is share project info between pages */}
-        <EditProjectProvider>
-          <EditProjectPage slug={slug?.toString() ?? ''} />
-        </EditProjectProvider>
-      </FormProvider>
-    </DefaultLayout>
-  )
+  const slug = params?.slug?.toString() ?? ''
+  // Redirect to /edit/information location as default
+  return {
+    redirect: {
+      destination: `/projects/${slug}/edit/information`,
+      permanent: false,
+    },
+  }
 }

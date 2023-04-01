@@ -128,7 +128,7 @@ export default function UserAgrementModal() {
             }
             onClick={onClose}
           >
-            OK
+            Accept
           </Button>
         </DialogActions>
 

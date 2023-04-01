@@ -140,14 +140,14 @@ export default function AddProjectCard() {
       grant_id: null,
       image_id: null
     }
-    // add software to database
+    // add project to database
     addProject({
       project,
       token
     }).then(resp => {
       if (resp.status === 201) {
         // redirect to edit page
-        // and remove software/add route from the history
+        // and remove projects/add route from the history
         router.replace(`/projects/${project.slug}/edit`)
       } else {
         // show error

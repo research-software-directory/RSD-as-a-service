@@ -34,7 +34,7 @@ import SortableOrganisationsList from '~/components/software/edit/organisations/
 import {upsertImage} from '~/utils/editImage'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
-export default function ProjectOrganisations({slug}: { slug: string }) {
+export default function ProjectOrganisations() {
   const {token,user} = useSession()
   const {showErrorMessage,showInfoMessage} = useSnackbar()
   const {project} = useProjectContext()

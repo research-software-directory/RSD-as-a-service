@@ -28,13 +28,15 @@ import useTeamMembers from './useTeamMembers'
 import SortableTeamMemberList from './SortableTeamMemberList'
 import {deleteImage} from '~/utils/editImage'
 import ContributorPrivacyHint from '~/components/layout/ContributorPrivacyHint'
+import useProjectContext from '../useProjectContext'
 
 type EditMemberModal = ModalProps & {
   member?: TeamMember
 }
 
-export default function ProjectTeam({slug}: { slug: string }) {
+export default function ProjectTeam() {
   const {showErrorMessage} = useSnackbar()
+  const {project:{slug}} = useProjectContext()
   const {token,loading,project,members,setMembers} = useTeamMembers({slug})
   const [modal, setModal] = useState<ModalStates<EditMemberModal>>({
     edit: {
