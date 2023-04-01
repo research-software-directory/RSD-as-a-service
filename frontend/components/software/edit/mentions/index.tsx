@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -12,7 +12,6 @@ import MentionByType from './MentionByType'
 import FindSoftwareMention from './FindSoftwareMention'
 import AddMention from './AddMention'
 import useSoftwareContext from '../useSoftwareContext'
-import BulkImport from '~/components/mention/BulkImport'
 import BulkImportMentions from './BulkImportMentions'
 
 export default function SoftwareMentions() {
@@ -32,9 +31,9 @@ export default function SoftwareMentions() {
         <div className="pt-4 pb-8">
           <FindSoftwareMention />
           <div className="py-4"></div>
-          <AddMention />
-          <div className="py-4"></div>
           <BulkImportMentions/>
+          <div className="py-4"></div>
+          <AddMention />
         </div>
       </EditSection>
     </EditMentionsProvider>

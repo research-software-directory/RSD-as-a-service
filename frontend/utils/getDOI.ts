@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -12,7 +12,8 @@ import logger from './logger'
 
 type DoiRA = {
   DOI: string,
-  RA: string
+  // not returned if invalid DOI
+  RA?: string
 }
 
 export async function getDoiRA(doi: string) {
@@ -29,6 +30,25 @@ export async function getDoiRA(doi: string) {
     }
   } catch (e: any) {
     logger(`getDoiRA: ${e?.message}`, 'error')
+  }
+}
+
+export async function getDoiRAList(doiList: string[]) {
+  try {
+    const query = doiList.map(item => encodeURIComponent(item)).join(',')
+    const url = `https://doi.org/doiRA/${query}`
+    const resp = await fetch(url)
+    // debugger
+    if (resp.status === 200) {
+      const json: DoiRA[] = await resp.json()
+      // extract
+      return json
+    }
+    logger(`getDoiRAList failed ${resp.status} ${resp.statusText}`)
+    return []
+  } catch (e: any) {
+    logger(`getDoiRA: ${e?.message}`, 'error')
+    return []
   }
 }
 
@@ -67,7 +87,7 @@ async function getItemFromCrossref(doi: string) {
   return resp
 }
 
-export async function getItemsFromCrossref(dois: string[]): Promise<MentionItemProps[]> {
+export async function getItemsFromCrossref(dois: string[]){
   if (dois.length === 0) return []
 
   // debugger
@@ -116,27 +136,23 @@ async function getItemFromDatacite(doi: string) {
 }
 
 export async function getItemsFromDatacite(dois: string[]) {
+  const mentions: MentionItemProps[] = []
   if (dois.length === 0) {
-    return {
-      status: 200,
-      message: []
-    }
+    return mentions
   }
   const resp = await getDataciteItemsByDoiGraphQL(dois)
 
   if (resp.status === 200) {
-    const mentions: MentionItemProps[] = []
     for (const dataciteMention of resp.message) {
       const mention = dataCiteGraphQLItemToMentionItem(dataciteMention)
       mentions.push(mention)
     }
-    return {
-      status: 200,
-      message: mentions
-    }
+    return mentions
   }
   // return error message
-  return resp
+  // return resp
+  logger(`getItemsFromDatacite...failed...${resp.status} ${resp.message}`)
+  return mentions
 }
 
 export async function getMentionByDoi(doi: string) {

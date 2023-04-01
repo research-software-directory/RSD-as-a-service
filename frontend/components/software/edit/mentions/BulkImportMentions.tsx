@@ -1,16 +1,18 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useSession} from '~/auth'
-import BulkImport from '~/components/mention/BulkImport'
+import ImportMentions from '~/components/mention/ImportMentions/index'
+import ImportMentionsInfo from '~/components/mention/ImportMentions/ImportMentionsInfo'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
-import useProjectContext from '~/components/projects/edit/useProjectContext'
-import {getImpactForProject} from '~/utils/getProjects'
 import useSoftwareContext from '../useSoftwareContext'
 import {getMentionsForSoftware} from '~/utils/editMentions'
-
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {cfgMention as config} from './config'
 
 export default function BulkImportMentions() {
   const {software} = useSoftwareContext()
@@ -23,6 +25,22 @@ export default function BulkImportMentions() {
     setMentions(data)
     setLoading(false)
   }
-
-  return <BulkImport table="mention_for_software" entityId={software.id!} onAdded={reloadMentions}></BulkImport>
+  return (
+    <>
+      <div className="flex justify-between items-center">
+        <div className="pr-2">
+          <EditSectionTitle
+            title={config.builkImport.title}
+            // subtitle={config.builkImport.subtitle}
+          />
+        </div>
+        <ImportMentions
+          table="mention_for_software"
+          entityId={software.id!}
+          onSuccess={reloadMentions} />
+      </div>
+      <div className="px-4"></div>
+      <ImportMentionsInfo />
+    </>
+  )
 }

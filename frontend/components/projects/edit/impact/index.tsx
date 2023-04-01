@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -24,16 +24,16 @@ export default function ProjectImpact() {
 
   return (
     <EditImpactProvider token={token} project={project.id}>
-      <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="pt-4 pb-8 xl:pl-[3rem]">
+      <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:gap-[3rem]'>
+        <div className="pt-4 pb-8">
           <ImpactByType />
         </div>
         <div className="pt-4 pb-8">
           <FindImpact />
           <div className="py-4"></div>
-          <AddImpact />
-          <div className="py-4"></div>
           <BulkImportImpact/>
+          <div className="py-4"></div>
+          <AddImpact />
         </div>
       </EditSection>
     </EditImpactProvider>

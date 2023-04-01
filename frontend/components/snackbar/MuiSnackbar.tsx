@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,7 +34,13 @@ export default function MuiSnackbar({options, setSnackbar}:PageSnackbarType){
       anchorOrigin={anchor}
       autoHideDuration={duration}
       onClose={handleClose}
-      TransitionComponent={slideTransition}>
+      TransitionComponent={slideTransition}
+      sx={{
+        //fix fullscreen mobile modal buttons
+        //modal has lower z-index than snackbar
+        position: open ? 'fixed' : 'inherit'
+      }}
+    >
       <Alert severity={severity}
         elevation={6}
         variant="filled"

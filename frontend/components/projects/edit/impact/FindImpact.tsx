@@ -1,15 +1,15 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useAuth} from '~/auth'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import FindMention from '~/components/mention/FindMention'
+import FindMentionInfo from '~/components/mention/FindMentionInfo'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
-import AddExistingPublicationInfo from '~/components/software/edit/mentions/AddExistingPublicationInfo'
 import {MentionItemProps} from '~/types/Mention'
 import {getMentionByDoiFromRsd} from '~/utils/editMentions'
 import {getMentionByDoi} from '~/utils/getDOI'
@@ -17,13 +17,11 @@ import useProjectContext from '../useProjectContext'
 import {cfgImpact as config} from './config'
 import {findPublicationByTitle} from './impactForProjectApi'
 import {extractSearchTerm} from '~/components/software/edit/mentions/utils'
-import useSnackbar from '~/components/snackbar/useSnackbar'
 
 export default function FindImpact() {
   const {session: {token}} = useAuth()
   const {onAdd} = useEditMentionReducer()
   const {project} = useProjectContext()
-  const {showErrorMessage} = useSnackbar()
 
   async function findPublication(searchFor: string) {
     const searchData = extractSearchTerm(searchFor)
@@ -45,7 +43,7 @@ export default function FindImpact() {
         return [resp.message as MentionItemProps]
       }
       return []
-    } else if (searchData.type === 'title') {
+    } else{
       searchFor = searchData.term
       // find by title
       const mentions = await findPublicationByTitle({
@@ -54,9 +52,6 @@ export default function FindImpact() {
         token
       })
       return mentions
-    } else {
-      showErrorMessage('The URL does not contain a DOI')
-      return []
     }
   }
 
@@ -80,7 +75,7 @@ export default function FindImpact() {
           reset: false
         }}
       />
-      <AddExistingPublicationInfo />
+      <FindMentionInfo />
     </>
   )
 }

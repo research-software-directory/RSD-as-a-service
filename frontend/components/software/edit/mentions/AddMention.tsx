@@ -27,7 +27,7 @@ export default function AddMention() {
         <div>
           <EditSectionTitle
             title={config.newItem.title}
-            subtitle={config.newItem.subtitle}
+            // subtitle={config.newItem.subtitle}
           />
         </div>
         <div className="px-4"></div>

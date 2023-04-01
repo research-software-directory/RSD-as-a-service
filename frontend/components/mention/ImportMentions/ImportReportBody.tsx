@@ -1,0 +1,179 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import {useEffect, useState} from 'react'
+
+import List from '@mui/material/List'
+import Button from '@mui/material/Button'
+import DialogContent from '@mui/material/DialogContent'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import Switch from '@mui/material/Switch'
+import PostAddIcon from '@mui/icons-material/PostAdd'
+
+import {DoiBulkImportReport} from './apiImportMentions'
+import {SearchResult} from '.'
+import BuilkDialogTitle from './ImportDialogTitle'
+import BulkDialogActions from './ImportDialogActions'
+
+type BulkImportReportBodyProps = {
+  initialResults: DoiBulkImportReport
+  onCancel: () => void
+  onImport: (searchResults:SearchResult[]) => void
+}
+
+export default function ImportReportBody({initialResults,onCancel,onImport}: BulkImportReportBodyProps) {
+  const [validCnt, setValidCnt] = useState(0)
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([])
+
+  // console.group('BuilkImportReportBody')
+  // console.log('initialResults...', initialResults)
+  // console.log('validCnt...', validCnt)
+  // console.groupEnd()
+
+  useEffect(() => {
+    let validItems = 0
+    const results:SearchResult[] = []
+    if (initialResults) {
+      // convert Map to array of results
+      initialResults.forEach((result) => {
+        // console.log('result...', result)
+        // console.log('key...', key)
+        if (result?.status === 'valid' && result?.include === true) validItems++
+        results.push(result)
+      })
+    }
+    // debugger
+    setValidCnt(validItems)
+    setSearchResults(results)
+  }, [initialResults])
+
+  function toggleSelection(index:number) {
+    // copy array
+    const newList = [
+      ...searchResults
+    ]
+    // toggle value
+    newList[index].include = !newList[index].include
+    let validItems = 0
+    if (newList) {
+      newList.forEach((result) => {
+        if (result?.status === 'valid' &&
+          result?.include === true) {
+          validItems++
+        }
+      })
+    }
+    // debugger
+    setValidCnt(validItems)
+    // save new values
+    setSearchResults(newList)
+  }
+
+  function generateErrorMessage(result: SearchResult){
+    switch (result.status) {
+      case 'invalidDoi':
+        return 'Not a valid DOI'
+      case 'doiNotFound':
+        return 'DOI not found'
+      case 'unsupportedRA':
+        return 'Registration agent (RA) is not supported'
+      case 'alredyImported':
+        return 'This publication is already imported'
+      default:
+        return 'Unknown error'
+    }
+  }
+
+  function startImport() {
+    // select items with include flag and mention item
+    const selection = searchResults
+      .filter(result => result.include && result.mention)
+    // pass selection to parent
+    onImport(selection)
+  }
+
+  function renderListItems() {
+    const html: any[] = []
+    // nothing to report
+    if (searchResults === null) return html
+    // render report
+    searchResults.forEach((result,index) => {
+      // console.log('result...', result)
+      // console.log('key...', key)
+      html.push(
+        <ListItem
+          key={result.doi}
+          secondaryAction={
+            <Switch
+              disabled={result?.status !== 'valid'}
+              checked={result.include}
+              onChange={()=>toggleSelection(index)}
+            />
+          }
+          sx={{
+            paddingRight: '5rem',
+            '&:hover': {
+              backgroundColor: 'grey.100'
+            },
+          }}
+        >
+          <ListItemText
+            primary={
+              result?.mention ?
+                <a href={`https://doi.org/${result.mention.doi}`} target="_blank">
+                  {result.mention.doi}
+                </a>
+              : <span>{result.doi}</span>
+            }
+            secondary={
+              result?.mention ?
+                <>
+                  <span className="text-secondary">{result?.mention.title}</span><br />
+                  <span>{result.mention.authors}</span><br />
+                  <span>Source: {result.source}</span>
+                </>
+                : <span className="text-error">{generateErrorMessage(result)}</span>
+            }
+          />
+        </ListItem>
+      )
+    })
+    // debugger
+    return html
+  }
+
+  return (
+    <>
+      <BuilkDialogTitle
+        title={`Selection report (${validCnt} of ${searchResults?.length ?? 0} items)`}
+      />
+      <DialogContent>
+        <List>
+          {renderListItems()}
+        </List>
+      </DialogContent>
+      <BulkDialogActions>
+        <Button
+          tabIndex={1}
+          onClick={onCancel}
+          color="secondary"
+          sx={{marginRight:'2rem'}}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          endIcon={<PostAddIcon />}
+          tabIndex={0}
+          disabled={validCnt===0}
+          onClick={startImport}
+        >
+          Import
+        </Button>
+      </BulkDialogActions>
+    </>
+  )
+}
