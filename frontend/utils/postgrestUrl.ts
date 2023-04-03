@@ -24,6 +24,7 @@ type baseQueryStringProps = {
   keywords?: string[] | null,
   domains?: string[] | null,
   prog_lang?: string[] | null,
+  licenses?: string[] | null,
   order?: string,
   limit?: number,
   offset?: number
@@ -33,31 +34,33 @@ export type PostgrestParams = baseQueryStringProps & {
   baseUrl:string
 }
 
-type QueryParams={
+export type QueryParams={
   // query: ParsedUrlQuery
   search?:string
+  order?: string,
   keywords?:string[]
   domains?:string[],
-  prog_lang?:string[],
+  prog_lang?: string[],
+  licenses?: string[],
   page?:number,
   rows?:number
 }
 
 export function ssrSoftwareUrl(params:QueryParams){
   const view = 'software'
-  const url = ssrUrl(params, view)
+  const url = buildFilterUrl(params, view)
   return url
 }
 
 export function ssrOrganisationUrl(params: QueryParams) {
   const view = 'organisations'
-  const url = ssrUrl(params,view)
+  const url = buildFilterUrl(params,view)
   return url
 }
 
 export function ssrProjectsUrl(params: QueryParams) {
   const view = 'projects'
-  const url = ssrUrl(params, view)
+  const url = buildFilterUrl(params, view)
   return url
 }
 
@@ -91,11 +94,12 @@ function buildUrlQuery({query, param, value}: BuildUrlQueryProps) {
 }
 
 
-function ssrUrl(params: QueryParams, view:string) {
-  const {search, keywords, domains, prog_lang, rows, page} = params
-  // console.log('ssrUrl...params...', params)
+export function buildFilterUrl(params: QueryParams, view:string) {
+  const {search,order, keywords, domains, licenses, prog_lang, rows, page} = params
+  // console.log('buildFilterUrl...params...', params)
   let url = `/${view}?`
   let query = ''
+
   // search
   query = buildUrlQuery({
     query,
@@ -119,6 +123,18 @@ function ssrUrl(params: QueryParams, view:string) {
     query,
     param: 'prog_lang',
     value: prog_lang
+  })
+  // licenses
+  query = buildUrlQuery({
+    query,
+    param: 'licenses',
+    value: licenses
+  })
+  // sortBy
+  query = buildUrlQuery({
+    query,
+    param: 'order',
+    value: order
   })
   if (page || page === 0) {
     url += `page=${page}`
@@ -160,7 +176,7 @@ export function paginationUrlParams({rows=12, page=0}:
  * @returns string
  */
 export function baseQueryString(props: baseQueryStringProps) {
-  const {keywords, domains, prog_lang,order,limit,offset} = props
+  const {keywords, domains, prog_lang,licenses,order,limit,offset} = props
   let query
   // console.group('baseQueryString')
   // console.log('keywords...', keywords)
@@ -209,6 +225,20 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `${query}&prog_lang=cs.%7B${languagesAll}%7D`
     } else {
       query = `prog_lang=cs.%7B${languagesAll}%7D`
+    }
+  }
+  //
+  if (typeof licenses !== 'undefined' &&
+    licenses !== null &&
+    typeof licenses === 'object') {
+    // sort and convert research domains array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    const licensesAll = licenses.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to find
+    if (query) {
+      query = `${query}&licenses=cs.%7B${licensesAll}%7D`
+    } else {
+      query = `licenses=cs.%7B${licensesAll}%7D`
     }
   }
   // order
