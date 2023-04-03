@@ -79,6 +79,38 @@ export async function getMentionByDoiFromRsd({doi,token}:{doi: string, token: st
 }
 
 
+export async function getMentionsByDoiFromRsd({dois,token}:{dois: string[], token: string}) {
+  try {
+    const doisJoined: string = dois
+      .map(doi => encodeURIComponent(doi))
+      .map(encodedDoi => `doi.eq.%22${encodedDoi}%22`)
+      .join(',')
+    // we need to encode DOI because it supports "exotic" values
+    const url = `/api/v1/mention?select=${mentionColumns}&or=(${doisJoined})`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      },
+    })
+    if (resp.status === 200) {
+      const json = await resp.json()
+      return {
+        status: 200,
+        message: json
+      }
+    }
+    return extractReturnMessage(resp)
+  } catch (e:any) {
+    logger(`getDoiFromRsd: ${e?.message}`, 'error')
+    return {
+      status: 500,
+      message: e?.message
+    }
+  }
+}
+
+
 export function clasifyMentionsByType(mentions: MentionItemProps[]) {
   let mentionByType: MentionByType = {}
   let featuredMentions: MentionItemProps[] = []
