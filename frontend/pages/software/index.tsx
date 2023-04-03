@@ -25,7 +25,6 @@ import SoftwareFilter from '~/components/software/filter'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import {sortBySearchFor} from '~/utils/sortFn'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -187,7 +186,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     prog_lang,
     order: search ? undefined : 'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast,brand_name.asc',
     limit: rows,
-    offset: rows * page,
+    offset: rows && page ? rows * page : undefined,
   })
 
   // console.log('software...url...', url)
@@ -200,9 +199,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // see params of SoftwareIndexPage function
   return {
     props: {
-      search,
-      keywords,
-      prog_lang,
+      search: search ?? null,
+      keywords: keywords ?? null,
+      prog_lang: prog_lang ?? null,
       count: software.count,
       page,
       rows,

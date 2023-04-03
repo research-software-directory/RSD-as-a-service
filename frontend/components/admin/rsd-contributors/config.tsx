@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -116,7 +117,7 @@ export function createColumns(token: string) {
         url=`/projects/${data.slug}/edit/team`
       }
       return (
-        <a href={url} target="_blank">
+        <a href={url} target="_blank" rel="noreferrer">
           <LaunchIcon sx={{marginRight:'0.25rem'}} fontSize="small"/>
           {data.origin === 'contributor' ? 'Software' : 'Project'}
         </a>
