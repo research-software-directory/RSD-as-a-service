@@ -69,7 +69,7 @@ export const editProjectPage: EditProjectPageProps[] = [
     status: 'Required information'
   },
   {
-    id: 'organisation',
+    id: 'organisations',
     label: 'Organisations',
     icon: <FactoryIcon />,
     render: () => <ProjectOrganisations />,
