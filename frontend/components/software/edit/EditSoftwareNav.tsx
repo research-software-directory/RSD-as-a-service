@@ -28,7 +28,6 @@ export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string
               selected={item.id === pageId ?? false}
               onClick={() => {
                 const location = `/software/${slug}/edit/${item.id}`
-                // onChangeStep(pos)
                 router.push(location)
               }}
             >

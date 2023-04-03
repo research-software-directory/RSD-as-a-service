@@ -9,7 +9,7 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithFormContext} from '~/utils/jest/WithFormContext'
 import {WithProjectContext} from '~/utils/jest/WithProjectContext'
 
-import ProjectEditPage from '../pages/projects/[slug]/edit/index'
+import ProjectEditPage from '../pages/projects/[slug]/edit/[page]'
 import {editProjectSteps} from '~/components/projects/edit/editProjectSteps'
 import editProjectState from '~/components/projects/edit/__mocks__/editProjectState'
 import {projectInformation as config} from '~/components/projects/edit/information/config'
@@ -41,6 +41,16 @@ window.IntersectionObserver = jest.fn(() => ({
 } as any))
 
 
+const mockProps = {
+  // information page
+  pageIndex: 0,
+  project: {
+    id:'ca6dbe55-ef59-4f4b-b8bc-eb465e130b87',
+    slug: 'test-software-1',
+    title: 'Test project 1'
+  }
+}
+
 describe('pages/projects/[slug]/edit/index.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -52,7 +62,7 @@ describe('pages/projects/[slug]/edit/index.tsx', () => {
       <WithAppContext>
         <WithFormContext>
           <WithProjectContext>
-            <ProjectEditPage />
+            <ProjectEditPage {...mockProps} />
           </WithProjectContext>
         </WithFormContext>
       </WithAppContext>
@@ -72,7 +82,7 @@ describe('pages/projects/[slug]/edit/index.tsx', () => {
       <WithAppContext options={{session: mockSession}}>
         <WithFormContext>
           <WithProjectContext>
-            <ProjectEditPage />
+            <ProjectEditPage {...mockProps} />
           </WithProjectContext>
         </WithFormContext>
       </WithAppContext>
@@ -94,7 +104,7 @@ describe('pages/projects/[slug]/edit/index.tsx', () => {
       <WithAppContext options={{session: mockSession}}>
         <WithFormContext>
           <WithProjectContext state={editProjectState}>
-            <ProjectEditPage />
+            <ProjectEditPage {...mockProps} />
           </WithProjectContext>
         </WithFormContext>
       </WithAppContext>

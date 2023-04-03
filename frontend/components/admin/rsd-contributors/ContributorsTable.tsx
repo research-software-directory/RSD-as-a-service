@@ -30,7 +30,7 @@ export default function ContributorsTable() {
   const [orderBy, setOrderBy] = useState<OrderByProps<RsdContributor, keyof RsdContributor>>(initalOrder)
   const {loading, columns, contributors} = useContributors({token,orderBy})
 
-  if (contributors.length === 0) {
+  if (contributors.length === 0 && loading==false) {
     return (
       <section className="flex-1">
         <Alert severity="warning"

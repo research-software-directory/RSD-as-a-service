@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -11,30 +11,30 @@ import Head from 'next/head'
 import {app} from '~/config/app'
 import ProtectedContent from '~/auth/ProtectedContent'
 import DefaultLayout from '~/components/layout/DefaultLayout'
-import {EditSoftwareProvider, SoftwareInfo} from '~/components/software/edit/editSoftwareContext'
+import {EditProjectProvider, ProjectInfo} from '~/components/projects/edit/editProjectContext'
 import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
-import {getSoftwareToEdit} from '~/utils/editSoftware'
-import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
-import EditSoftwareStickyHeader from '~/components/software/edit/EditSoftwareStickyHeader'
-import EditSoftwareNav from '~/components/software/edit/EditSoftwareNav'
+import {editProjectPage} from '~/components/projects/edit/editProjectPages'
+import EditProjectNav from '~/components/projects/edit/EditProjectNav'
 import ContentLoader from '~/components/layout/ContentLoader'
+import {getProjectItem} from '~/utils/getProjects'
+import EditProjectStickyHeader from '~/components/projects/edit/EditProjectStickyHeader'
 
-const pageTitle = `Edit software | ${app.title}`
+const pageTitle = `Edit project | ${app.title}`
 
-type SoftwareEditPageProps = {
+type ProjectEditPageProps = {
   pageIndex: number
-  software: SoftwareInfo
+  project: ProjectInfo
 }
 
-export default function SoftwareEditPages({pageIndex,software}:SoftwareEditPageProps) {
+export default function ProjectEditPage({pageIndex,project}:ProjectEditPageProps) {
   const state = {
-    page: editSoftwarePage[pageIndex],
-    software
+    page: editProjectPage[pageIndex],
+    project
   }
 
-  // console.group('SoftwareEditPages')
+  // console.group('ProjectEditPage')
   // console.log('pageIndex...', pageIndex)
-  // console.log('state...', state)
+  // console.log('project...', project)
   // console.groupEnd()
 
   function renderPageComponent() {
@@ -49,21 +49,21 @@ export default function SoftwareEditPages({pageIndex,software}:SoftwareEditPageP
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <ProtectedContent slug={software.slug}>
+      <ProtectedContent slug={project.slug} pageType="project">
         <UserAgrementModal />
-        <EditSoftwareProvider state={state}>
-          <EditSoftwareStickyHeader />
+        {/* edit project context is share project info between pages */}
+        <EditProjectProvider state={state}>
+          <EditProjectStickyHeader />
           <section className="md:flex">
-            <EditSoftwareNav slug={software.slug} pageId={state.page.id} />
+            <EditProjectNav slug={project.slug} pageId={state.page.id}/>
             {/* Here we load main component of each step */}
             {renderPageComponent()}
           </section>
-        </EditSoftwareProvider>
+        </EditProjectProvider>
       </ProtectedContent>
     </DefaultLayout>
   )
 }
-
 
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
@@ -71,22 +71,22 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   const {params, req: {cookies}} = context
   // extract rsd_token
   const token = cookies['rsd_token'] ?? ''
-  // get software slug
+  // get project slug
   const slug = params?.slug?.toString() ?? ''
   // get page id
   const page = params?.page?.toString() ?? ''
 
-  const editSoftware = await getSoftwareToEdit({slug, token})
+  const editProject = await getProjectItem({slug, token})
 
-  // software not found in DB
-  if (typeof editSoftware === 'undefined') {
+  // project not found in DB
+  if (typeof editProject === 'undefined') {
     return {
       notFound: true,
     }
   }
 
-  let pageIndex = editSoftwarePage.findIndex(p => p.id === page)
-  // Edit software page not found in defs
+  let pageIndex = editProjectPage.findIndex(p => p.id === page)
+  // Edit project page not found in defs
   if (pageIndex===-1) {
     return {
       notFound: true,
@@ -94,15 +94,14 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   }
 
   // will be passed as props to page
-  // see params of SoftwareEditPages function
+  // see params of ProjectEditPageProps function
   return {
     props: {
       pageIndex,
-      software: {
-        id: editSoftware.id,
-        slug: editSoftware.slug,
-        brand_name: editSoftware.brand_name,
-        concept_doi: editSoftware.concept_doi,
+      project: {
+        id: editProject.id,
+        slug: editProject.slug,
+        title: editProject.title
       }
     },
   }

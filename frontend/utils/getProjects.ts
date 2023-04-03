@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +15,7 @@ import {
 import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
 import {getImageUrl} from './editImage'
 import {extractCountFromHeader} from './extractCountFromHeader'
-import {createJsonHeaders} from './fetchHelpers'
+import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import logger from './logger'
 
 export async function getProjectList({url, token}: { url: string, token?: string }) {
@@ -52,15 +52,13 @@ export async function getProjectList({url, token}: { url: string, token?: string
 }
 
 //used by view and edit pages
-export async function getProjectItem({slug,token,frontend = false}:
-  {slug: string, token: string, frontend: boolean}) {
+export async function getProjectItem({slug,token}:
+  {slug: string, token: string}) {
   try{
     // get project by slug
     const query = `project?slug=eq.${slug}`
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url=`/api/v1/${query}`
-    }
+    let url = `${getBaseUrl()}/${query}`
+
     const resp = await fetch(url, {
       method: 'GET',
       headers: {

@@ -113,7 +113,7 @@ export function createColumns(token: string) {
       // software by default
       let url=`/software/${data.slug}/edit/contributors`
       if (data.origin === 'team_member') {
-        url=`/projects/${data.slug}/edit`
+        url=`/projects/${data.slug}/edit/team`
       }
       return (
         <a href={url} target="_blank">

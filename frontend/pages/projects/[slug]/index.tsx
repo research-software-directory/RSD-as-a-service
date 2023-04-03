@@ -3,7 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
 import {ScriptProps} from 'next/script'
 
 import {app} from '~/config/app'
@@ -82,7 +81,7 @@ export default function ProjectPage(props: ProjectPageProps) {
       <AppHeader />
       <EditPageButton
         title="Edit project"
-        url={`${slug}/edit`}
+        url={`${slug}/edit/information`}
         isMaintainer={isMaintainer}
         variant="text"
       />
@@ -145,7 +144,7 @@ export async function getServerSideProps(context:any) {
     const userInfo = getAccountFromToken(token)
     const slug = params?.slug?.toString()
     // console.log('getServerSideProps...userInfo...', userInfo)
-    const project = await getProjectItem({slug: params?.slug, token, frontend: false})
+    const project = await getProjectItem({slug: params?.slug, token})
     if (typeof project == 'undefined'){
     // returning this value
     // triggers 404 page on frontend

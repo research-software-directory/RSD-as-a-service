@@ -7,30 +7,8 @@
 
 import {GetServerSidePropsContext} from 'next/types'
 
-import {app} from '~/config/app'
-const pageTitle = `Edit software | ${app.title}`
-
 export default function SoftwareEditPage() {
-  // const router = useRouter()
-  // const slug = router.query['slug']
-  // const methods = useForm({
-  //   mode:'onChange'
-  // })
-
-  // return (
-  //   <DefaultLayout>
-  //     <Head>
-  //       <title>{pageTitle}</title>
-  //     </Head>
-  //     <UserAgrementModal />
-  //     {/* form provider to share isValid, isDirty states in the header */}
-  //     <FormProvider {...methods}>
-  //       <EditSoftwareProvider>
-  //         <EditSoftwarePage slug={slug?.toString() ?? ''} />
-  //       </EditSoftwareProvider>
-  //     </FormProvider>
-  //   </DefaultLayout>
-  // )
+  // REDIRECT to /edit/information location (default edit page)
 }
 
 // REDIRECT to /edit/information location (default edit page)
