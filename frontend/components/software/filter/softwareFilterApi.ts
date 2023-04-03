@@ -35,7 +35,7 @@ export async function searchForKeyword(
   }
 }
 
-export type ProgramminLanguage = {
+export type ProgrammingLanguage = {
   prog_lang: string
   cnt: number
 }
@@ -53,7 +53,7 @@ export async function searchForProgrammingLanguage({searchFor}:
       method: 'GET'
     })
     if (resp.status === 200) {
-      const json: ProgramminLanguage[] = await resp.json()
+      const json: ProgrammingLanguage[] = await resp.json()
       if (json.length > 0) {
         return json
       }

@@ -79,6 +79,10 @@ body {
   transform: rotate(3deg) translate(0px, -4px);
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Remove these to get rid of the spinner */
 /* WE DO NOT USE SPINNER - ONLY PROGRESS BAR AT THE TOP */
 /* #nprogress .spinner {
