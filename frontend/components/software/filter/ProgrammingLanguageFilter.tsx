@@ -5,7 +5,7 @@
 
 import SelectedFilterItems from '~/components/filter/SelectedFilterItems'
 import FindFilterOptions from '~/components/filter/FindFilterOptions'
-import {ProgramminLanguage} from './softwareFilterApi'
+import {ProgrammingLanguage} from './softwareFilterApi'
 
 
 type SeachApiProps = {
@@ -15,7 +15,7 @@ type SeachApiProps = {
 type ResearchDomainFilterProps = {
   items?: string[]
   onApply: (items: string[]) => void
-  searchApi: ({searchFor}:SeachApiProps)=> Promise<ProgramminLanguage[]>
+  searchApi: ({searchFor}:SeachApiProps)=> Promise<ProgrammingLanguage[]>
 }
 
 export default function ProgrammingLanguageFilter({items=[], searchApi, onApply}:ResearchDomainFilterProps) {
@@ -29,7 +29,7 @@ export default function ProgrammingLanguageFilter({items=[], searchApi, onApply}
     onApply(newList)
   }
 
-  function onAdd(item: ProgramminLanguage) {
+  function onAdd(item: ProgrammingLanguage) {
     const find = items.find(lang => lang.toLowerCase() === item.prog_lang.toLowerCase())
     // new item
     if (typeof find == 'undefined') {
@@ -42,7 +42,7 @@ export default function ProgrammingLanguageFilter({items=[], searchApi, onApply}
     }
   }
 
-  function itemsToOptions(items: ProgramminLanguage[]) {
+  function itemsToOptions(items: ProgrammingLanguage[]) {
     const options = items.map(item => ({
       key: item.prog_lang,
       label: item.prog_lang,

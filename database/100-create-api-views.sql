@@ -177,52 +177,39 @@ BEGIN
 END
 $$;
 
--- SOFTWARE OVERVIEW LIST FOR SEARCH
--- WITH COUNTS and KEYWORDS for filtering
-CREATE FUNCTION software_search() RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	brand_name VARCHAR,
-	short_statement VARCHAR,
-	image_id VARCHAR,
-	updated_at TIMESTAMPTZ,
-	contributor_cnt BIGINT,
-	mention_cnt BIGINT,
-	is_published BOOLEAN,
-	keywords CITEXT[],
-	keywords_text TEXT,
-	prog_lang TEXT[]
-) LANGUAGE plpgsql STABLE AS
+-- license counts for software
+-- used in software filter - license dropdown
+CREATE FUNCTION license_cnt_for_software() RETURNS TABLE (
+	license VARCHAR,
+	cnt BIGINT
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
-	SELECT
-		software.id,
-		software.slug,
-		software.brand_name,
-		software.short_statement,
-		software.image_id,
-		software.updated_at,
-		count_software_countributors.contributor_cnt,
-		count_software_mentions.mention_cnt,
-		software.is_published,
-		keyword_filter_for_software.keywords,
-		keyword_filter_for_software.keywords_text,
-		prog_lang_filter_for_software.prog_lang
-	FROM
-		software
-	LEFT JOIN
-		count_software_countributors() ON software.id=count_software_countributors.software
-	LEFT JOIN
-		count_software_mentions() ON software.id=count_software_mentions.software
-	LEFT JOIN
-		keyword_filter_for_software() ON software.id=keyword_filter_for_software.software
-	LEFT JOIN
-		prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
-	;
-END
+SELECT
+	license_for_software.license,
+	COUNT(license_for_software.license) AS cnt
+FROM
+	license_for_software
+GROUP BY
+	license_for_software.license
+;
 $$;
 
+-- license filter for software
+-- used by software_search func
+CREATE FUNCTION license_filter_for_software() RETURNS TABLE (
+	software UUID,
+	licenses VARCHAR[]
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	license_for_software.software,
+	ARRAY_AGG(license_for_software.license)
+FROM
+	license_for_software
+GROUP BY
+	license_for_software.software
+;
+$$;
 
 -- RELATED SOFTWARE LIST WITH COUNTS
 CREATE FUNCTION related_software_for_software(software_id UUID) RETURNS TABLE (
@@ -1490,41 +1477,5 @@ ORDER BY
 	COUNT(*)
 DESC LIMIT
 	1;
-;
-$$;
-
--- Get a list of all software highlights with latest highlights first
-CREATE FUNCTION software_for_highlight() RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	brand_name VARCHAR,
-	short_statement VARCHAR,
-	image_id VARCHAR,
-	is_published BOOLEAN,
-	contributor_cnt BIGINT,
-	mention_cnt BIGINT,
-	"position" INTEGER,
-	updated_at TIMESTAMPTZ
-) LANGUAGE sql STABLE AS
-$$
-SELECT
-	software.id,
-	software.slug,
-	software.brand_name,
-	software.short_statement,
-	software.image_id,
-	software.is_published,
-	count_software_countributors.contributor_cnt,
-	count_software_mentions.mention_cnt,
-	software_highlight.position,
-	software_highlight.updated_at
-FROM
-	software
-INNER JOIN
-	software_highlight ON software.id=software_highlight.software
-LEFT JOIN
-	count_software_countributors() ON software.id=count_software_countributors.software
-LEFT JOIN
-	count_software_mentions() ON software.id=count_software_mentions.software
 ;
 $$;

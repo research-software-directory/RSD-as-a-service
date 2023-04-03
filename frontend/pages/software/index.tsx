@@ -25,7 +25,6 @@ import SoftwareFilter from '~/components/software/filter'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import {sortBySearchFor} from '~/utils/sortFn'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -187,7 +186,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     prog_lang,
     order: search ? undefined : 'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast,brand_name.asc',
     limit: rows,
-    offset: rows * page,
+    offset: rows && page ? rows * page : undefined,
   })
 
   // console.log('software...url...', url)
@@ -196,24 +195,17 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // when token is passed it will return not published items too
   const software = await getSoftwareList({url})
 
-  // order returned selection by best match on search term
-  // NOTE! this is not complete database order, only items of returned page
-  let data = software.data
-  if (search && data.length > 0) {
-    data = data.sort((a, b) => sortBySearchFor(a, b, 'brand_name', search))
-  }
-
   // will be passed as props to page
   // see params of SoftwareIndexPage function
   return {
     props: {
-      search,
-      keywords,
-      prog_lang,
+      search: search ?? null,
+      keywords: keywords ?? null,
+      prog_lang: prog_lang ?? null,
       count: software.count,
       page,
       rows,
-      software: data,
+      software: software.data,
     },
   }
 }
