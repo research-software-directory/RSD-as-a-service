@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -46,7 +47,7 @@ export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoft
     // remove items already in hightlights
     const software = itemsNotInReferenceList({
       list: resp.data ?? [],
-      referenceList: highlights ?? [],
+      referenceList: highlights as any as SoftwareListItem[] ?? [],
       key: 'id'
     })
 

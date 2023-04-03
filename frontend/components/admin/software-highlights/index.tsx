@@ -1,19 +1,16 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext} from 'react'
-
 import {useSession} from '~/auth'
-import PaginationContext from '~/components/pagination/PaginationContext'
 import {useSoftwareHighlights} from './apiSoftwareHighlights'
 import AddSoftwareHighlights from './AddSoftwareHighlights'
 import SortableHighlightsList from './SortableHighlightList'
 
 export default function AdminSoftwareHighlight() {
   const {token} = useSession()
-  const {pagination:{count}} = useContext(PaginationContext)
   const {highlights, loading, addHighlight, sortHighlights, deleteHighlight} = useSoftwareHighlights(token)
 
   // console.group('OrganisationAdminPage')
@@ -27,7 +24,6 @@ export default function AdminSoftwareHighlight() {
           <span>Highlights</span>
           <span>{highlights.length}</span>
         </h2>
-
         <SortableHighlightsList
           highlights={highlights}
           loading={loading}
