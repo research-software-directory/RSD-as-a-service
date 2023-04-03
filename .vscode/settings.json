@@ -23,7 +23,7 @@
   "editor.quickSuggestions": {
     "strings": true
   },
-  "tailwindCSS.includeLanguages":{
+  "tailwindCSS.includeLanguages": {
     "plaintext": "html"
   },
   "[java]": {
@@ -39,5 +39,13 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
     "editor.detectIndentation": false
-  }
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
 }

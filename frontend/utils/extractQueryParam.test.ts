@@ -1,6 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -83,13 +82,17 @@ it('extracts ssrSoftwareParams from url query', () => {
     'search': 'test search',
     'keywords': '["BAM","FAIR Sofware"]',
     'prog_lang': '["Python","C++"]',
+    'licenses': '["MIT","GPL-2.0-or-later"]',
+    'order': 'test-order',
     'page': '0',
     'rows': '12'
   }
   const expected = {
     search: 'test search',
     keywords: ['BAM', 'FAIR Sofware'],
-    prog_lang: ['Python','C++'],
+    prog_lang: ['Python', 'C++'],
+    licenses: ['MIT', 'GPL-2.0-or-later'],
+    order: 'test-order',
     page: 0,
     rows: 12
   }
