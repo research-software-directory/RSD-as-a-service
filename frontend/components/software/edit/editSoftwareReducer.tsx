@@ -15,6 +15,7 @@ export enum EditSoftwareActionType {
   SET_SOFTWARE_TITLE = 'SET_SOFTWARE_TITLE',
   SET_SOFTWARE_SLUG = 'SET_SOFTWARE_SLUG',
   SET_SOFTWARE_INFO = 'SET_SOFTWARE_INFO',
+  SET_SOFTWARE_DOI = 'SET_SOFTWARE_DOI',
   SET_EDIT_PAGE = 'SET_EDIT_PAGE',
   SET_LOADING = 'SET_LOADING',
   UPDATE_STATE = 'UPDATE_STATE',
@@ -56,6 +57,14 @@ export function editSoftwareReducer(state: EditSoftwareState = initialState, act
         software: {
           ...state.software,
           slug: action.payload
+        }
+      }
+    case EditSoftwareActionType.SET_SOFTWARE_DOI:
+      return {
+        ...state,
+        software: {
+          ...state.software,
+          concept_doi: action.payload
         }
       }
     case EditSoftwareActionType.SET_LOADING: {

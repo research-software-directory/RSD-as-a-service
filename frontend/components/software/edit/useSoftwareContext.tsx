@@ -59,6 +59,13 @@ export default function useSoftwareContext() {
       type: EditSoftwareActionType.SET_SOFTWARE_TITLE,
       payload: title
     })
+  }, [dispatch])
+
+  const setConceptDoi = useCallback((doi: string)=>{
+    dispatch({
+      type: EditSoftwareActionType.SET_SOFTWARE_DOI,
+      payload: doi
+    })
   },[dispatch])
 
   return {
@@ -68,6 +75,7 @@ export default function useSoftwareContext() {
     setLoading,
     setFormState,
     setSoftwareSlug,
-    setSoftwareTitle
+    setSoftwareTitle,
+    setConceptDoi
   }
 }

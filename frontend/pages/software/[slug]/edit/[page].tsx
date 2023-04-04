@@ -35,6 +35,7 @@ export default function SoftwareEditPages({pageIndex,software}:SoftwareEditPageP
   // console.group('SoftwareEditPages')
   // console.log('pageIndex...', pageIndex)
   // console.log('state...', state)
+  // console.log('software...', software)
   // console.groupEnd()
 
   function renderPageComponent() {
