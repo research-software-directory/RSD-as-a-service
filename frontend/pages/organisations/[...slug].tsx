@@ -71,12 +71,19 @@ export default function OrganisationPage({organisation,slug,page,ror}:Organisati
     }
   }
 
+  function getMetaDescription() {
+    // use organisation (short) description if available
+    if (organisation.description) return organisation.description
+    // else generate description message
+    return `${organisation?.name ?? 'The organisation'} participates in the RSD with ${organisation.software_cnt ?? 0} software package(s) and ${organisation.project_cnt ?? 0} project(s).`
+  }
+
   return (
     <DefaultLayout>
       {/* Page Head meta tags */}
       <PageMeta
         title={`${organisation?.name} | ${app.title}`}
-        description={organisation.description ?? `The organisation participates in RSD with ${organisation.software_cnt} registered software item(s).`}
+        description={getMetaDescription()}
       />
       <SearchProvider>
       <PaginationProvider>
