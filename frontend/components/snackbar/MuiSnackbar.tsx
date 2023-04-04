@@ -28,6 +28,8 @@ export default function MuiSnackbar({options, setSnackbar}:PageSnackbarType){
     }
   }
 
+  if (open === false) return null
+
   return (
     <Snackbar
       open={open}
@@ -35,11 +37,6 @@ export default function MuiSnackbar({options, setSnackbar}:PageSnackbarType){
       autoHideDuration={duration}
       onClose={handleClose}
       TransitionComponent={slideTransition}
-      sx={{
-        //fix fullscreen mobile modal buttons
-        //modal has lower z-index than snackbar
-        position: open ? 'fixed' : 'inherit'
-      }}
     >
       <Alert severity={severity}
         elevation={6}

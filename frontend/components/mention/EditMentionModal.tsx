@@ -127,7 +127,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
         <DialogContent
           sx={{
             width: ['100%'],
-            padding: '1rem 1.5rem 2.5rem'
+            padding: '1rem 1.5rem'
           }}>
           <ControlledTextField
             control={control}
@@ -261,8 +261,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             rules={config.note.validation}
           />
           <Alert severity="warning" sx={{marginTop: '1.5rem'}}>
-            {/* <AlertTitle sx={{fontWeight: 500}}>Validate entered information</AlertTitle> */}
-            Please double check the data because this entry <strong>cannot be edited after it has been created</strong>.
+            The information can not be edited after creation.
           </Alert>
         </DialogContent>
         <DialogActions sx={{
