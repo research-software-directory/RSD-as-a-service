@@ -10,13 +10,13 @@ import Head from 'next/head'
 
 import {app} from '~/config/app'
 import ProtectedContent from '~/auth/ProtectedContent'
+import {getProjectItem} from '~/utils/getProjects'
 import DefaultLayout from '~/components/layout/DefaultLayout'
-import {EditProjectProvider, ProjectInfo} from '~/components/projects/edit/editProjectContext'
+import ContentLoader from '~/components/layout/ContentLoader'
 import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
+import {EditProjectProvider, ProjectInfo} from '~/components/projects/edit/editProjectContext'
 import {editProjectPage} from '~/components/projects/edit/editProjectPages'
 import EditProjectNav from '~/components/projects/edit/EditProjectNav'
-import ContentLoader from '~/components/layout/ContentLoader'
-import {getProjectItem} from '~/utils/getProjects'
 import EditProjectStickyHeader from '~/components/projects/edit/EditProjectStickyHeader'
 
 const pageTitle = `Edit project | ${app.title}`
@@ -54,7 +54,7 @@ export default function ProjectEditPage({pageIndex,project}:ProjectEditPageProps
         {/* edit project context is share project info between pages */}
         <EditProjectProvider state={state}>
           <EditProjectStickyHeader />
-          <section className="md:flex">
+          <section className="md:flex gap-[3rem]">
             <EditProjectNav slug={project.slug} pageId={page.id}/>
             {/* Here we load main component of each step */}
             {renderPageComponent()}

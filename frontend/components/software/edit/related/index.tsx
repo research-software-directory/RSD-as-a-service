@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -17,7 +17,7 @@ export default function RelatedSoftwareItems() {
     // Not sure if Suspense works in this context
     <Suspense fallback={<ContentLoader />}>
       <EditSection className='xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4 xl:pl-[3rem]">
+        <div className="py-4">
           <RelatedSoftwareForSoftware />
         </div>
         <div className="py-4 xl:my-0">

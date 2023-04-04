@@ -10,14 +10,14 @@ import Head from 'next/head'
 
 import {app} from '~/config/app'
 import ProtectedContent from '~/auth/ProtectedContent'
+import {getSoftwareToEdit} from '~/utils/editSoftware'
 import DefaultLayout from '~/components/layout/DefaultLayout'
+import ContentLoader from '~/components/layout/ContentLoader'
 import {EditSoftwareProvider, SoftwareInfo} from '~/components/software/edit/editSoftwareContext'
 import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
-import {getSoftwareToEdit} from '~/utils/editSoftware'
 import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
 import EditSoftwareStickyHeader from '~/components/software/edit/EditSoftwareStickyHeader'
 import EditSoftwareNav from '~/components/software/edit/EditSoftwareNav'
-import ContentLoader from '~/components/layout/ContentLoader'
 
 const pageTitle = `Edit software | ${app.title}`
 
@@ -55,7 +55,7 @@ export default function SoftwareEditPages({pageIndex,software}:SoftwareEditPageP
         <UserAgrementModal />
         <EditSoftwareProvider state={state}>
           <EditSoftwareStickyHeader />
-          <section className="md:flex">
+          <section className="md:flex gap-[3rem]">
             <EditSoftwareNav slug={software.slug} pageId={page.id} />
             {/* Here we load main component of each step */}
             {renderPageComponent()}

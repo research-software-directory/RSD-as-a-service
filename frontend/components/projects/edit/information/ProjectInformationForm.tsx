@@ -54,7 +54,7 @@ export default function ProjectInformationForm({editProject}: { editProject: Edi
       />
       <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
         {/* middle panel */}
-        <div className="py-4 xl:pl-[3rem] overflow-hidden">
+        <div className="py-4 overflow-hidden">
           <EditSectionTitle
             title={config.sectionTitle}
           />

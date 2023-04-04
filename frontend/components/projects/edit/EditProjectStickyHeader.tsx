@@ -6,7 +6,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState, useRef} from 'react'
-import {useController, useFormContext} from 'react-hook-form'
 
 import StickyHeader from '../../layout/StickyHeader'
 import useStickyHeaderBorder from '~/components/layout/useStickyHeaderBorder'
@@ -25,7 +24,7 @@ export default function EditProjectStickyHeader() {
   })
 
   return (
-    <StickyHeader className={`flex items-start xl:items-center gap-4 py-4 w-full bg-white ${classes}`}>
+    <StickyHeader className={`bg-white ${classes}`}>
       <h1
         ref={headerRef}
         className="flex-1 xl:text-4xl">
