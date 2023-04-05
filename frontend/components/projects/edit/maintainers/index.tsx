@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,8 +29,8 @@ type DeleteModal = {
 export default function ProjectMaintainers() {
   const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {loading:loadProject, setLoading, project} = useProjectContext()
-  const {loading:loadMaintainers,maintainers} = useProjectMaintainers({
+  const {project} = useProjectContext()
+  const {loading,maintainers} = useProjectMaintainers({
     project: project.id,
     token
   })
@@ -41,16 +41,14 @@ export default function ProjectMaintainers() {
 
   useEffect(() => {
     let abort = false
-    if (loadMaintainers === false &&
+    if (loading === false &&
       abort === false) {
       setProjectMaintaners(maintainers)
-      setLoading(false)
     }
     return () => { abort = true }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[maintainers,loadMaintainers])
+  },[maintainers,loading])
 
-  if (loadProject || loadMaintainers) {
+  if (loading) {
     return (
       <ContentLoader />
     )

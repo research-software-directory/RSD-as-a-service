@@ -7,7 +7,6 @@ import {useCallback, useContext} from 'react'
 
 import editSoftwareContext, {SoftwareInfo} from './editSoftwareContext'
 import {EditSoftwareActionType} from './editSoftwareReducer'
-import {EditSoftwarePageProps} from './editSoftwarePages'
 
 export default function useSoftwareContext() {
   const {state,dispatch} = useContext(editSoftwareContext)
@@ -23,29 +22,12 @@ export default function useSoftwareContext() {
     })
   },[dispatch])
 
-  const setEditPage = useCallback((page: EditSoftwarePageProps)=>{
+  const setEditPage = useCallback((pageIndex: number)=>{
     dispatch({
-      type: EditSoftwareActionType.SET_EDIT_PAGE,
-      payload: page
+      type: EditSoftwareActionType.SET_EDIT_PAGE_INDEX,
+      payload: pageIndex
     })
   },[dispatch])
-
-  const setLoading = useCallback((loading: boolean)=>{
-    dispatch({
-      type: EditSoftwareActionType.SET_LOADING,
-      payload: loading
-    })
-  },[dispatch])
-
-  const setFormState = useCallback(({isDirty,isValid}:{isDirty:boolean,isValid:boolean})=>{
-    dispatch({
-      type: EditSoftwareActionType.UPDATE_STATE,
-      payload: {
-        isDirty,
-        isValid,
-      }
-    })
-  }, [dispatch])
 
   const setSoftwareSlug = useCallback((slug: string)=>{
     dispatch({
@@ -72,8 +54,6 @@ export default function useSoftwareContext() {
     ...state,
     setSoftwareInfo,
     setEditPage,
-    setLoading,
-    setFormState,
     setSoftwareSlug,
     setSoftwareTitle,
     setConceptDoi

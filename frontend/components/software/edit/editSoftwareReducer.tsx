@@ -16,7 +16,7 @@ export enum EditSoftwareActionType {
   SET_SOFTWARE_SLUG = 'SET_SOFTWARE_SLUG',
   SET_SOFTWARE_INFO = 'SET_SOFTWARE_INFO',
   SET_SOFTWARE_DOI = 'SET_SOFTWARE_DOI',
-  SET_EDIT_PAGE = 'SET_EDIT_PAGE',
+  SET_EDIT_PAGE_INDEX = 'SET_EDIT_PAGE_INDEX',
   SET_LOADING = 'SET_LOADING',
   UPDATE_STATE = 'UPDATE_STATE',
 }
@@ -27,13 +27,10 @@ export function editSoftwareReducer(state: EditSoftwareState = initialState, act
   // console.log('action...', action)
   // console.groupEnd()
   switch (action.type) {
-    case EditSoftwareActionType.SET_EDIT_PAGE:
+    case EditSoftwareActionType.SET_EDIT_PAGE_INDEX:
       return {
         ...state,
-        // default values
-        loading: true,
-        // new step
-        step: action.payload,
+        pageIndex: action.payload
       }
     case EditSoftwareActionType.SET_SOFTWARE_INFO:
       return {
@@ -67,12 +64,6 @@ export function editSoftwareReducer(state: EditSoftwareState = initialState, act
           concept_doi: action.payload
         }
       }
-    case EditSoftwareActionType.SET_LOADING: {
-      return {
-        ...state,
-        loading: action.payload
-      }
-    }
     case EditSoftwareActionType.UPDATE_STATE:
       return {
         ...state,

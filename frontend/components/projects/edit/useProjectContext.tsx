@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,7 +7,6 @@ import {useCallback, useContext} from 'react'
 
 import editProjectContext, {ProjectInfo} from './editProjectContext'
 import {EditProjectActionType} from './editProjectReducer'
-import {EditProjectStep} from './editProjectSteps'
 
 export default function useProjectContext() {
   const {state, dispatch} = useContext(editProjectContext)
@@ -19,19 +18,12 @@ export default function useProjectContext() {
     })
   },[dispatch])
 
-  const setEditStep = useCallback((step: EditProjectStep)=>{
+  const setEditPage = useCallback((pageIndex: number)=>{
     dispatch({
-      type: EditProjectActionType.SET_EDIT_STEP,
-      payload: step
+      type: EditProjectActionType.SET_EDIT_PAGE_INDEX,
+      payload: pageIndex
     })
   },[dispatch])
-
-  const setLoading = useCallback((loading: boolean)=>{
-    dispatch({
-      type: EditProjectActionType.SET_LOADING,
-      payload: loading
-    })
-  }, [dispatch])
 
   const setProjectSlug = useCallback((slug: string) => {
     dispatch({
@@ -48,13 +40,10 @@ export default function useProjectContext() {
   },[dispatch])
 
   return {
-    step: state.step,
-    project: state.project,
-    loading: state.loading,
+    ...state,
     setProjectInfo,
     setProjectTitle,
     setProjectSlug,
-    setEditStep,
-    setLoading,
+    setEditPage
   }
 }

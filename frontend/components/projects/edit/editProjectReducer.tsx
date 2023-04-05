@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +10,8 @@ export enum EditProjectActionType {
   SET_PROJECT_TITLE = 'SET_PROJECT_TITLE',
   SET_PROJECT_SLUG = 'SET_PROJECT_SLUG',
   SET_PROJECT_INFO = 'SET_PROJECT_INFO',
-  SET_EDIT_STEP = 'SET_EDIT_STEP',
+  UPDATE_STATE = 'UPDATE_STATE',
+  SET_EDIT_PAGE_INDEX = 'SET_EDIT_PAGE_INDEX',
   SET_LOADING = 'SET_LOADING'
 }
 
@@ -25,13 +26,10 @@ export function editProjectReducer(state: EditProjectState, action: Action) {
   // console.log('action...', action)
   // console.groupEnd()
   switch (action.type) {
-    case EditProjectActionType.SET_EDIT_STEP:
+    case EditProjectActionType.SET_EDIT_PAGE_INDEX:
       return {
         ...state,
-        // default values
-        loading: true,
-        // new step
-        step: action.payload,
+        pageIndex: action.payload
       }
     case EditProjectActionType.SET_PROJECT_INFO:
       return {
@@ -57,10 +55,10 @@ export function editProjectReducer(state: EditProjectState, action: Action) {
           title: action.payload
         }
       }
-    case EditProjectActionType.SET_LOADING: {
+    case EditProjectActionType.UPDATE_STATE: {
       return {
         ...state,
-        loading: action.payload
+        ...action.payload
       }
     }
     default:
