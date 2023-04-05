@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -154,7 +155,6 @@ describe('frontend/components/software/edit/organisations/index.tsx', () => {
       // validate search organisation called
       expect(mockSearchForOrganisation).toBeCalledTimes(1)
       expect(mockSearchForOrganisation).toBeCalledWith({
-        'frontend': true,
         'searchFor': newOrganisation.name,
       })
     })

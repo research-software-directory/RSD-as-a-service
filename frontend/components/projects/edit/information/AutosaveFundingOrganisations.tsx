@@ -14,7 +14,7 @@ import {createOrganisation, searchForOrganisation} from '~/utils/editOrganisatio
 import {addOrganisationToProject, deleteOrganisationFromProject} from '~/utils/editProject'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import {getSlugFromString} from '~/utils/getSlugFromString'
-import FindOrganisation from '../FindOrganisation'
+import FindFundingOrganisation from './FindFundingOrganisation'
 import {projectInformation as config} from './config'
 
 type FundingOrganisationProps={
@@ -124,7 +124,7 @@ export default function AutosaveFundingOrganisations({id,items}:FundingOrganisat
         )
       })}
       </div>
-      <FindOrganisation
+      <FindFundingOrganisation
         config={{
           freeSolo: false,
           minLength: config.funding_organisations.validation.minLength,

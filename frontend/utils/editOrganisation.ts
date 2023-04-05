@@ -16,20 +16,21 @@ import {
   PatchOrganisation,
   SearchOrganisation
 } from '../types/Organisation'
-import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
 import {deleteImage, getImageUrl} from './editImage'
 import {findInROR} from './getROR'
 import {getSlugFromString} from './getSlugFromString'
 import {itemsNotInReferenceList} from './itemsNotInReferenceList'
 import logger from './logger'
+import {sortBySearchFor} from './sortFn'
 
-export async function searchForOrganisation({searchFor, token, frontend}:
-  { searchFor: string, token?: string, frontend?: boolean }) {
+export async function searchForOrganisation({searchFor, token}:
+  { searchFor: string, token?: string}) {
   try {
     // make requests to RSD and ROR
     const rorOptions = await findInROR({searchFor})
     const rorIdsFound: string[] = rorOptions.map(rorResult => rorResult.key)
-    const rsdOptions = await findRSDOrganisation({searchFor, token, frontend, rorIds: rorIdsFound})
+    const rsdOptions = await findRSDOrganisation({searchFor, token, rorIds: rorIdsFound})
     // create options collection
     const options = [
       ...rsdOptions,
@@ -38,7 +39,7 @@ export async function searchForOrganisation({searchFor, token, frontend}:
         referenceList: rsdOptions,
         key: 'key'
       })
-    ]
+    ].sort((a, b) => sortBySearchFor(a, b, 'label', searchFor))
     // return all options
     return options
   } catch (e: any) {
@@ -47,20 +48,68 @@ export async function searchForOrganisation({searchFor, token, frontend}:
   }
 }
 
-export async function fetchRSDOrganisations({searchFor, rorIds, token, frontend}:
-  { searchFor: string, rorIds: string[], token?: string, frontend?: boolean }) {
+// export async function fetchRSDOrganisations({searchFor, rorIds, token}:
+//   { searchFor: string, rorIds: string[], token?: string}) {
+//   try {
+//     // select only columns required for SearchOrganisation (avoid quering counts)
+//     const columns = ['id', 'slug', 'parent', 'primary_maintainer', 'name', 'ror_id', 'is_tenant', 'website', 'logo_id', 'description']
+
+//     let query = `select=${columns.join(',')}`
+
+//     if (rorIds.length) {
+//       const rorIdsCommaSeparated = rorIds.join(',')
+//       query += `&or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*,ror_id.in.(${rorIdsCommaSeparated}))&limit=20`
+//     } else {
+//       query += `&or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*)&limit=20`
+//     }
+
+//     const url = `${getBaseUrl()}/rpc/organisations_overview?${query}`
+
+//     const resp = await fetch(url, {
+//       method: 'GET',
+//       headers: {
+//         ...createJsonHeaders(token),
+//       }
+//     })
+//     if (resp.status === 200) {
+//       const data: Organisation[] = await resp.json()
+//       const options: AutocompleteOption<SearchOrganisation>[] = data.map(item => {
+//         return {
+//           key: item?.ror_id ?? item?.slug ?? item.name,
+//           label: item.name ?? '',
+//           data: {
+//             ...item,
+//             source: 'RSD'
+//           },
+//         }
+//       })
+//       return options
+//     }
+//     logger(`fetchRSDOrganisations ERROR: ${resp?.status} ${resp?.statusText}`, 'error')
+//     return []
+//   } catch (e: any) {
+//     logger(`fetchRSDOrganisations: ${e?.message}`, 'error')
+//     return []
+//   }
+// }
+
+export async function findRSDOrganisation({searchFor, token, rorIds}:
+  { searchFor: string, token?: string, rorIds: string[] }){
   try {
-    let query
+    // select only columns required for SearchOrganisation (avoid quering counts)
+    const columns = ['id', 'slug', 'name', 'ror_id', 'website', 'is_tenant', 'logo_id', 'primary_maintainer','parent','parent_names']
+
+    let query = `select=${columns.join(',')}`
+
     if (rorIds.length) {
       const rorIdsCommaSeparated = rorIds.join(',')
-      query = `rpc/organisations_overview?or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*,ror_id.in.(${rorIdsCommaSeparated}))&limit=20`
+      query += `&or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*,ror_id.in.(${rorIdsCommaSeparated}))&limit=20`
     } else {
-      query = `rpc/organisations_overview?or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*)&limit=20`
+      query += `&or=(name.ilike.*${searchFor}*,website.ilike.*${searchFor}*)&limit=20`
     }
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
+
+    const url = `${getBaseUrl()}/rpc/organisations_overview?${query}`
+
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
@@ -71,7 +120,6 @@ export async function fetchRSDOrganisations({searchFor, rorIds, token, frontend}
       const data: Organisation[] = await resp.json()
       const options: AutocompleteOption<SearchOrganisation>[] = data.map(item => {
         return {
-          // we use slug as primary key and ROR id as alternative
           key: item?.ror_id ?? item?.slug ?? item.name,
           label: item.name ?? '',
           data: {
@@ -82,20 +130,8 @@ export async function fetchRSDOrganisations({searchFor, rorIds, token, frontend}
       })
       return options
     }
-    logger(`fetchRSDOrganisations ERROR: ${resp?.status} ${resp?.statusText}`, 'error')
+    logger(`findRSDOrganisation ERROR: ${resp?.status} ${resp?.statusText}`, 'error')
     return []
-  } catch (e: any) {
-    logger(`fetchRSDOrganisations: ${e?.message}`, 'error')
-    return []
-  }
-}
-
-export async function findRSDOrganisation({searchFor, token, frontend, rorIds}:
-  { searchFor: string, token?: string, frontend?: boolean, rorIds: string[] }){
-  try {
-    // search for term in name, website and rorIds
-    const fetchResults = await fetchRSDOrganisations({searchFor, rorIds, token, frontend})
-    return fetchResults
   } catch (e:any) {
     logger(`findRSDOrganisation: ${e?.message}`, 'error')
     return []

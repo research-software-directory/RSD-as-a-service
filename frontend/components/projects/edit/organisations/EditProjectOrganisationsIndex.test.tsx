@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -73,7 +74,7 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectOrganisations slug="test-slug" />
+          <ProjectOrganisations />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -94,7 +95,7 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectOrganisations slug="test-slug" />
+          <ProjectOrganisations />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -129,7 +130,7 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectOrganisations slug="test-slug" />
+          <ProjectOrganisations />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -147,7 +148,6 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
       // validate search organisation called
       expect(mockSearchForOrganisation).toBeCalledTimes(1)
       expect(mockSearchForOrganisation).toBeCalledWith({
-        'frontend': true,
         'searchFor': searchFor,
       })
     })
@@ -225,7 +225,7 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectOrganisations slug="test-slug" />
+          <ProjectOrganisations />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -271,7 +271,7 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectOrganisations slug="test-slug" />
+          <ProjectOrganisations />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -310,7 +310,7 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectOrganisations slug="test-slug" />
+          <ProjectOrganisations />
         </WithProjectContext>
       </WithAppContext>
     )

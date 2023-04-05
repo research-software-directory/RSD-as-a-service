@@ -48,8 +48,8 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
       label: item.name,
       data: {
         id: null,
-        parent: null,
         slug,
+        parent: null,
         primary_maintainer: null,
         name: item.name,
         ror_id: item.id,
