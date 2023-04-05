@@ -22,7 +22,7 @@ export default function AutosaveSoftwareTextField({software_id,options,rules}:Au
   const router = useRouter()
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {setSoftwareTitle, setSoftwareSlug} = useSoftwareContext()
+  const {setSoftwareTitle, setSoftwareSlug, setConceptDoi} = useSoftwareContext()
   const {control, resetField} = useFormContext()
 
   async function saveSoftwareInfo({name, value}: OnSaveProps) {
@@ -62,6 +62,9 @@ export default function AutosaveSoftwareTextField({software_id,options,rules}:Au
     }
     if (options.name === 'brand_name') {
       setSoftwareTitle(value)
+    }
+    if (options.name === 'concept_doi') {
+      setConceptDoi(value)
     }
   }
 

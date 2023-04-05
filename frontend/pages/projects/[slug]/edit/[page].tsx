@@ -28,18 +28,18 @@ type ProjectEditPageProps = {
 
 export default function ProjectEditPage({pageIndex,project}:ProjectEditPageProps) {
   const state = {
-    page: editProjectPage[pageIndex],
+    pageIndex,
     project
   }
-
+  const page = editProjectPage[pageIndex]
   // console.group('ProjectEditPage')
   // console.log('pageIndex...', pageIndex)
   // console.log('project...', project)
   // console.groupEnd()
 
   function renderPageComponent() {
-    if (state.page) {
-      return state.page.render()
+    if (page) {
+      return page.render()
     }
     return <ContentLoader />
   }
@@ -55,7 +55,7 @@ export default function ProjectEditPage({pageIndex,project}:ProjectEditPageProps
         <EditProjectProvider state={state}>
           <EditProjectStickyHeader />
           <section className="md:flex">
-            <EditProjectNav slug={project.slug} pageId={state.page.id}/>
+            <EditProjectNav slug={project.slug} pageId={page.id}/>
             {/* Here we load main component of each step */}
             {renderPageComponent()}
           </section>

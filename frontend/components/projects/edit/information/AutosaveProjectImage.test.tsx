@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,10 +8,10 @@ import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithFormContext} from '~/utils/jest/WithFormContext'
 import {WithProjectContext} from '~/utils/jest/WithProjectContext'
-import {EditProjectState} from '../editProjectContext'
 
 import AutosaveProjectImage from './AutosaveProjectImage'
 import {projectInformation as config} from './config'
+import projectState from '../__mocks__/editProjectState'
 
 // MOCKS
 const mockPatchProjectTable = jest.fn(props => Promise.resolve({
@@ -40,17 +41,6 @@ const mockHandleFileUpload = jest.fn(props => Promise.resolve({
 jest.mock('~/utils/handleFileUpload', () => ({
   handleFileUpload: jest.fn(props=>mockHandleFileUpload(props))
 }))
-
-// MOCK project state
-const projectState: EditProjectState = {
-  step: undefined,
-  project: {
-    id: 'test-id',
-    slug: 'test-slug',
-    title: 'Test project'
-  },
-  loading: true
-}
 
 beforeEach(() => {
   jest.clearAllMocks()

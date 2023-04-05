@@ -28,18 +28,20 @@ type SoftwareEditPageProps = {
 
 export default function SoftwareEditPages({pageIndex,software}:SoftwareEditPageProps) {
   const state = {
-    page: editSoftwarePage[pageIndex],
+    pageIndex,
     software
   }
+  const page = editSoftwarePage[pageIndex]
 
   // console.group('SoftwareEditPages')
   // console.log('pageIndex...', pageIndex)
   // console.log('state...', state)
+  // console.log('software...', software)
   // console.groupEnd()
 
   function renderPageComponent() {
-    if (state.page) {
-      return state.page.render()
+    if (page) {
+      return page.render()
     }
     return <ContentLoader />
   }
@@ -54,7 +56,7 @@ export default function SoftwareEditPages({pageIndex,software}:SoftwareEditPageP
         <EditSoftwareProvider state={state}>
           <EditSoftwareStickyHeader />
           <section className="md:flex">
-            <EditSoftwareNav slug={software.slug} pageId={state.page.id} />
+            <EditSoftwareNav slug={software.slug} pageId={page.id} />
             {/* Here we load main component of each step */}
             {renderPageComponent()}
           </section>
