@@ -59,7 +59,7 @@ export async function acceptUserAgreement(page: Page) {
     }
 
     // get OK button
-    const okBtn = uaModal.getByRole('button', {name: 'OK'})
+    const okBtn = uaModal.getByRole('button', {name: 'Accept'})
     // we need to wait a bit for state to change
     okBtn.waitFor({state:'visible'})
     expect(await okBtn.isEnabled()).toBe(true)
