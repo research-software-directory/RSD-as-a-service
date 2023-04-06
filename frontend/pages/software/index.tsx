@@ -5,26 +5,27 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {MouseEvent, ChangeEvent} from 'react'
-import Head from 'next/head'
 import {useRouter} from 'next/router'
 import {GetServerSidePropsContext} from 'next/types'
 import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
 
-import {app} from '../../config/app'
-import DefaultLayout from '../../components/layout/DefaultLayout'
-import PageTitle from '../../components/layout/PageTitle'
-import Searchbox from '../../components/form/Searchbox'
-import SoftwareGrid from '../../components/software/SoftwareGrid'
-import {SoftwareListItem} from '../../types/SoftwareTypes'
-import {rowsPerPageOptions} from '../../config/pagination'
-import {getSoftwareList} from '../../utils/getSoftware'
-import {ssrSoftwareParams} from '../../utils/extractQueryParam'
-import {softwareListUrl,ssrSoftwareUrl} from '../../utils/postgrestUrl'
+import {app} from '~/config/app'
+import DefaultLayout from '~/components/layout/DefaultLayout'
+import PageTitle from '~/components/layout/PageTitle'
+import Searchbox from '~/components/form/Searchbox'
+import SoftwareGrid from '~/components/software/SoftwareGrid'
+import {SoftwareListItem} from '~/types/SoftwareTypes'
+import {rowsPerPageOptions} from '~/config/pagination'
+import {getSoftwareList} from '~/utils/getSoftware'
+import {ssrSoftwareParams} from '~/utils/extractQueryParam'
+import {softwareListUrl,ssrSoftwareUrl} from '~/utils/postgrestUrl'
+import {getBaseUrl} from '~/utils/fetchHelpers'
 import SoftwareFilter from '~/components/software/filter'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
+import {sortBySearchFor} from '~/utils/sortFn'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -180,11 +181,11 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   const {search, keywords, prog_lang, rows, page} = ssrSoftwareParams(context.query)
   // construct postgREST api url with query params
   const url = softwareListUrl({
-    baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
+    baseUrl: getBaseUrl(),
     search,
     keywords,
     prog_lang,
-    order: 'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast',
+    order: search ? undefined : 'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast,brand_name.asc',
     limit: rows,
     offset: rows * page,
   })
@@ -194,6 +195,13 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // get software list, we do not pass the token
   // when token is passed it will return not published items too
   const software = await getSoftwareList({url})
+
+  // order returned selection by best match on search term
+  // NOTE! this is not complete database order, only items of returned page
+  let data = software.data
+  if (search && data.length > 0) {
+    data = data.sort((a, b) => sortBySearchFor(a, b, 'brand_name', search))
+  }
 
   // will be passed as props to page
   // see params of SoftwareIndexPage function
@@ -205,7 +213,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       count: software.count,
       page,
       rows,
-      software: software.data,
+      software: data,
     },
   }
 }

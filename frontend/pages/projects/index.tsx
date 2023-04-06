@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {MouseEvent, ChangeEvent} from 'react'
-import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next'
 import {useRouter} from 'next/router'
 
@@ -17,6 +16,7 @@ import {ProjectSearchRpc} from '~/types/Project'
 import {getProjectList} from '~/utils/getProjects'
 import {ssrProjectsParams} from '~/utils/extractQueryParam'
 import {projectListUrl, ssrProjectsUrl} from '~/utils/postgrestUrl'
+import {getBaseUrl} from '~/utils/fetchHelpers'
 import Searchbox from '~/components/form/Searchbox'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import PageTitle from '~/components/layout/PageTitle'
@@ -26,6 +26,7 @@ import {getResearchDomainInfo, ResearchDomain} from '~/components/projects/filte
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
+import {sortBySearchFor} from '~/utils/sortFn'
 
 type ProjectsIndexPageProps = {
   count: number,
@@ -39,7 +40,6 @@ type ProjectsIndexPageProps = {
 
 const pageTitle = `Projects | ${app.title}`
 const pageDesc = 'The list of research projects registerd in the Research Software Directory.'
-
 
 export default function ProjectsIndexPage(
   {projects=[], count, page, rows, search, keywords,domains}: ProjectsIndexPageProps
@@ -173,16 +173,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const {search, rows, page, keywords, domains} = ssrProjectsParams(context.query)
 
   const url = projectListUrl({
-    baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
+    baseUrl: getBaseUrl(),
     search,
     keywords,
     domains,
-    order: 'current_state.desc,date_start.desc,title',
+    // when search is used the order is already applied in the rpc
+    order: search ? undefined : 'current_state.desc,date_start.desc,title',
     limit: rows,
     offset: rows * page,
   })
 
-  // console.log('projects...url...', url)
   // get project list and domains filter info,
   // 1. we do not pass the token
   // when token is passed it will return not published items too

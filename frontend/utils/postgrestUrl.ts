@@ -231,47 +231,43 @@ export function baseQueryString(props: baseQueryStringProps) {
 }
 
 export function softwareListUrl(props: PostgrestParams) {
-  const {baseUrl, search, keywords} = props
+  const {baseUrl, search} = props
   let query = baseQueryString(props)
 
   if (search) {
     // console.log('softwareListUrl...keywords...', props.keywords)
     const encodedSearch = encodeURIComponent(search)
-    query += `&or=(brand_name.ilike.*${encodedSearch}*,short_statement.ilike.*${encodedSearch}*`
-    // if keyword filter is not used we search in keywords_text too!
-    if (typeof keywords === 'undefined' || keywords === null) {
-      query += `,keywords_text.ilike.*${encodedSearch}*`
-    }
-    // close or clause
-    query += ')'
+    // search query is performed in software_search RPC
+    // we search in title,subtitle,slug,keywords_text and prog_lang
+    // check rpc in 105-project-views.sql for exact filtering
+    query += `&search=${encodedSearch}`
+
+    const url = `${baseUrl}/rpc/software_search?${query}`
+    // console.log('softwareListUrl...', url)
+    return url
   }
 
-  const url = `${baseUrl}/rpc/software_search?${query}`
+  const url = `${baseUrl}/rpc/software_overview?${query}`
   // console.log('softwareListUrl...', url)
   return url
 }
 
 
 export function projectListUrl(props: PostgrestParams) {
-  const {baseUrl, search, keywords, domains} = props
+  const {baseUrl, search} = props
   let query = baseQueryString(props)
 
   if (search) {
     const encodedSearch = encodeURIComponent(search)
-    query += `&or=(title.ilike.*${encodedSearch}*,subtitle.ilike.*${encodedSearch}*`
-    // if keyword filter is not applied we search in keyword_text too!
-    if (typeof keywords === 'undefined' || keywords === null) {
-      query += `,keywords_text.ilike.*${encodedSearch}*`
-    }
-    // if domains filter is not applied we search in research_domain_text too!
-    if (typeof domains === 'undefined' || domains === null) {
-      query += `,research_domain_text.ilike.*${encodedSearch}*`
-    }
-    // close or clause
-    query+=')'
-  }
+    // search query is performed in project_search RPC
+    // we search in title,subtitle,slug,keywords_text and research domains_text
+    // check rpc in 105-project-views.sql for exact filtering
+    query += `&search=${encodedSearch}`
 
-  const url = `${baseUrl}/rpc/project_search?${query}`
-  // console.log('projectListUrl...',url)
+    const url = `${baseUrl}/rpc/project_search?${query}`
+    return url
+  }
+  // if search term is not used we use different RPC (more performant)
+  const url = `${baseUrl}/rpc/project_overview?${query}`
   return url
 }

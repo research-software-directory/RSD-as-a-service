@@ -1,7 +1,138 @@
+-- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2023 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
+
+-- PROJECT OVERVIEW LIST
+-- WITH KEYWORDS and research domain for filtering
+CREATE FUNCTION project_overview() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	current_state VARCHAR,
+	date_start DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_contain BOOLEAN,
+	image_id VARCHAR,
+	keywords citext[],
+	keywords_text TEXT,
+	research_domain VARCHAR[],
+	research_domain_text TEXT
+) LANGUAGE plpgsql STABLE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		project.id,
+		project.slug,
+		project.title,
+		project.subtitle,
+		CASE
+			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
+			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
+			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+			ELSE 'Running'::VARCHAR
+		END AS current_state,
+		project.date_start,
+		project.updated_at,
+		project.is_published,
+		project.image_contain,
+		project.image_id,
+		keyword_filter_for_project.keywords,
+		keyword_filter_for_project.keywords_text,
+		research_domain_filter_for_project.research_domain,
+		research_domain_filter_for_project.research_domain_text
+	FROM
+		project
+	LEFT JOIN
+		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
+	LEFT JOIN
+		research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
+	;
+END
+$$;
+
+-- PROJECT OVERVIEW LIST FOR SEARCH
+-- WITH KEYWORDS and research domain for filtering
+CREATE FUNCTION project_search(search VARCHAR) RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	current_state VARCHAR,
+	date_start DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_contain BOOLEAN,
+	image_id VARCHAR,
+	keywords citext[],
+	keywords_text TEXT,
+	research_domain VARCHAR[],
+	research_domain_text TEXT
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	project.id,
+	project.slug,
+	project.title,
+	project.subtitle,
+	CASE
+		WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
+		WHEN project.date_start > now() THEN 'Starting'::VARCHAR
+		WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+		ELSE 'Running'::VARCHAR
+	END AS current_state,
+	project.date_start,
+	project.updated_at,
+	project.is_published,
+	project.image_contain,
+	project.image_id,
+	keyword_filter_for_project.keywords,
+	keyword_filter_for_project.keywords_text,
+	research_domain_filter_for_project.research_domain,
+	research_domain_filter_for_project.research_domain_text
+FROM
+	project
+LEFT JOIN
+	keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
+LEFT JOIN
+	research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
+WHERE
+	project.title ILIKE CONCAT('%', search, '%')
+	OR
+	project.slug ILIKE CONCAT('%', search, '%')
+	OR
+	project.subtitle ILIKE CONCAT('%', search, '%')
+	OR
+	keyword_filter_for_project.keywords_text ILIKE CONCAT('%', search, '%')
+	OR
+	research_domain_filter_for_project.research_domain_text ILIKE CONCAT('%', search, '%')
+ORDER BY
+	CASE
+		WHEN title ILIKE search THEN 0
+		WHEN title ILIKE CONCAT(search, '%') THEN 1
+		WHEN title ILIKE CONCAT('%', search, '%') THEN 2
+		ELSE 3
+	END,
+	CASE
+		WHEN slug ILIKE search THEN 0
+		WHEN slug ILIKE CONCAT(search, '%') THEN 1
+		WHEN slug ILIKE CONCAT('%', search, '%') THEN 2
+		ELSE 3
+	END,
+	CASE
+		WHEN subtitle ILIKE search THEN 0
+		WHEN subtitle ILIKE CONCAT(search, '%') THEN 1
+		WHEN subtitle ILIKE CONCAT('%', search, '%') THEN 2
+		ELSE 3
+	END
+;
+$$;
+
 
 CREATE FUNCTION count_project_team_members() RETURNS TABLE (
 	project UUID,

@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -87,31 +87,32 @@ describe('ssrSoftwareUrl', () => {
 })
 
 describe('softwareListUrl', () => {
-  it('returns postgrest endpoint url when only baseUrl provided', () => {
+  it('returns overview rpc endpoint url when only baseUrl provided', () => {
     const baseUrl = 'http://test-base-url'
-    const expectUrl = `${baseUrl}/rpc/software_search?limit=12&offset=0`
+    const expectUrl = `${baseUrl}/rpc/software_overview?limit=12&offset=0`
     const url = softwareListUrl({
       baseUrl
     } as PostgrestParams)
     expect(url).toEqual(expectUrl)
   })
 
-  it('returns postgrest endpoint url with search params', () => {
+  it('returns search rpc endpoint url with search params', () => {
     const baseUrl = 'http://test-base-url'
+    const searchTerm = 'test-search'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/software_search?limit=12&offset=0&or=(brand_name.ilike.*test-search*,short_statement.ilike.*test-search*,keywords_text.ilike.*test-search*)`
+    const expectUrl = `${baseUrl}/rpc/software_search?limit=12&offset=0&search=${searchTerm}`
     const url = softwareListUrl({
       baseUrl,
       // if you change search value then change expectedUrl values too
-      search: 'test-search'
+      search: searchTerm
     } as PostgrestParams)
     expect(url).toEqual(expectUrl)
   })
 
-  it('returns postgrest endpoint url with keywords params', () => {
+  it('returns overview rpc endpoint url with keywords params', () => {
     const baseUrl = 'http://test-base-url'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/software_search?keywords=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
+    const expectUrl = `${baseUrl}/rpc/software_overview?keywords=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
     const url = softwareListUrl({
       baseUrl,
       keywords: ['test-filter']
@@ -148,31 +149,32 @@ describe('ssrProjectsUrl', () => {
 })
 
 describe('projectListUrl', () => {
-  it('returns postgrest endpoint url when only baseUrl provided', () => {
+  it('returns overview rpc endpoint url when only baseUrl provided', () => {
     const baseUrl = 'http://test-base-url'
-    const expectUrl = `${baseUrl}/rpc/project_search?limit=12&offset=0`
+    const expectUrl = `${baseUrl}/rpc/project_overview?limit=12&offset=0`
     const url = projectListUrl({
       baseUrl
     } as PostgrestParams)
     expect(url).toEqual(expectUrl)
   })
 
-  it('returns postgrest endpoint url with search params', () => {
+  it('returns search rpc endpoint url with search param', () => {
     const baseUrl = 'http://test-base-url'
+    const searchTerm = 'test-search'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/project_search?limit=12&offset=0&or=(title.ilike.*test-search*,subtitle.ilike.*test-search*,keywords_text.ilike.*test-search*,research_domain_text.ilike.*test-search*)`
+    const expectUrl = `${baseUrl}/rpc/project_search?limit=12&offset=0&search=${searchTerm}`
     const url = projectListUrl({
       baseUrl,
       // if you change search value then change expectedUrl values too
-      search: 'test-search'
+      search: searchTerm
     } as PostgrestParams)
     expect(url).toEqual(expectUrl)
   })
 
-  it('returns postgrest endpoint url with keywords params', () => {
+  it('returns overview rpc endpoint url with keywords params', () => {
     const baseUrl = 'http://test-base-url'
     // if you change search value then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/project_search?keywords=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
+    const expectUrl = `${baseUrl}/rpc/project_overview?keywords=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
     const url = projectListUrl({
       baseUrl,
       keywords: ['test-filter']
@@ -180,10 +182,10 @@ describe('projectListUrl', () => {
     expect(url).toEqual(expectUrl)
   })
 
-  it('returns postgrest endpoint url with research_domain params', () => {
+  it('returns overview rpc endpoint url with research_domain params', () => {
     const baseUrl = 'http://test-base-url'
     // if you change values then change expectedUrl values too
-    const expectUrl = `${baseUrl}/rpc/project_search?research_domain=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
+    const expectUrl = `${baseUrl}/rpc/project_overview?research_domain=cs.%7B\"test-filter\"%7D&limit=12&offset=0`
     const url = projectListUrl({
       baseUrl,
       domains: ['test-filter']
