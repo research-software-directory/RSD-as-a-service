@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 - 2023 dv4all
+# SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +12,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: rsd/e2e-tests:1.0.1
+    image: rsd/e2e-tests:1.1.0
     volumes:
       - ./test-results:/app/test-results/
       - ./playwright-report:/app/playwright-report

@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,7 +18,6 @@ import {getRandomPerson} from '../mocks/mockPerson'
 import {
   addOrganisation, openEditPage,
   openEditSection,
-  addCitation,
   addRelatedSoftware,
   addRelatedProject,
   uploadFile
@@ -26,6 +25,7 @@ import {
 import {mockSoftwareOrganisation, Organisation} from '../mocks/mockOrganisation'
 import {mockCitations} from '../mocks/mockCitations'
 import {mockTestimonial} from '../mocks/mockTestimonials'
+import {addCitation} from '../helpers/citations'
 
 // run tests in serial mode
 // we first need first to create software

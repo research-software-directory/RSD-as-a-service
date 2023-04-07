@@ -1,6 +1,7 @@
 <!--
-SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-SPDX-FileCopyrightText: 2021 - 2022 dv4all
+SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2021 - 2023 dv4all
+SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 
 SPDX-License-Identifier: Apache-2.0
 SPDX-License-Identifier: CC-BY-4.0
@@ -93,4 +94,26 @@ npm -i -D @types/node
 npx playwright install --with-deps
 # install linter
 npm install -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+```
+
+## Generating mention requests
+
+When adding references to research publications for software (mentions) and projects (input/output) RSD needs to make api calls to doi.org, crossref and datacite api's. These calls prove to be "heavy" and less reliable when executed as e2e tests in CI.
+
+To improve e2e tests reliabilty and reduce dependency on external api availablity the json response can be generated once and then reused during test. The json data is saved in mocks/data folder. The files contain DOI in the name.
+
+### How to generate data files
+
+The specific tests are created for generating json files. These test files are in generate folder.
+
+1. **Start RSD**
+
+```bash
+docker-compose up -d
+```
+
+2. **Start generate project in headed mode**
+
+```bash
+npm run e2e:generate
 ```

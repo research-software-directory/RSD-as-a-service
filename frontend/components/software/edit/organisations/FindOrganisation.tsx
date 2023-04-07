@@ -36,11 +36,22 @@ export default function FindOrganisation({onAdd, onCreate}:
     })
   }
 
+  function clearSearch() {
+    // reset
+    setStatus({
+      loading: false,
+      foundFor: undefined
+    })
+    setOptions([])
+  }
+
   function onAddOrganisation(selected:AutocompleteOption<SearchOrganisation>) {
     if (selected && selected.data) {
       onAdd({
         ...selected.data
       })
+      // reset
+      clearSearch()
     }
   }
 
@@ -105,6 +116,7 @@ export default function FindOrganisation({onAdd, onCreate}:
         onAdd={onAddOrganisation}
         onCreate={createOrganisation}
         onRenderOption={renderOption}
+        onClear={clearSearch}
         config={{
           freeSolo: true,
           minLength: config.findOrganisation.validation.minLength,
