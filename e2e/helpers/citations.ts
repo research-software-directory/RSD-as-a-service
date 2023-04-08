@@ -1,13 +1,16 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {expect} from '@playwright/test'
+/* eslint-disable @typescript-eslint/no-var-requires */
 
-const fs = require('fs/promises')
+import {expect} from '@playwright/test'
+import fs from 'fs/promises'
 
 export async function addCitation(page, input: string, waitForResponse: string) {
+  await page.pause()
   // clear previous input - if clear btn is visible
   const clearBtn = await page.getByRole('button', {
     name: 'Clear'
@@ -23,14 +26,15 @@ export async function addCitation(page, input: string, waitForResponse: string) 
   const findMention = await page.locator('#async-autocomplete').first()
   await Promise.all([
     // then wait untill options list is shown
-    page.waitForSelector('#async-autocomplete-listbox'),
+    // page.waitForSelector('#async-autocomplete-listbox'),
+    // change to wait untill network traffic settles
+    page.waitForLoadState('networkidle'),
+    // page.waitForSelector('#async-autocomplete-option-1'),
     findMention.fill(input),
   ])
 
-  // get list
-  const listbox = page.locator('#async-autocomplete-listbox')
   // select all options
-  const options = listbox.getByRole('option')
+  const options = page.getByTestId('find-mention-option')
   const option = await options
     .filter({
       hasText: RegExp(input, 'i')
@@ -38,20 +42,22 @@ export async function addCitation(page, input: string, waitForResponse: string) 
     .first()
 
   await Promise.all([
-    page.waitForResponse(RegExp(waitForResponse)),
+    page.waitForResponse(RegExp(waitForResponse, 'i')),
+    page.waitForLoadState('domcontentloaded'),
     option.click(),
   ])
 
-  // validate
-  const mentions = await page.getByTestId('mention-item-base')
+  // validate mention item added
+  const count = await page.getByTestId('mention-item-base')
     .filter({
       hasText: RegExp(input, 'i')
     })
-
-  const count = await mentions.count()
+    .count()
   // console.log('Count...', count)
-  // we should have at least one item
-  expect(count).toBeGreaterThan(0)
+  // stop here
+  // await page.pause()
+  // we should have our item in list
+  expect(count).toEqual(1)
 }
 
 

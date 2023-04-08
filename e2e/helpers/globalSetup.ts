@@ -5,6 +5,7 @@
 
 import {chromium, FullConfig} from '@playwright/test'
 import {loginLocal,user} from './login'
+import {acceptUserAgreementInSettings} from './userAgreement'
 
 /**
  * We remove secure flag from all cookies because
@@ -41,6 +42,7 @@ async function globalSetup(config: FullConfig) {
   const page = await browser.newPage()
   // goto to homepage
   await page.goto(baseURL ?? '/')
+
   // matomo test only on localhost
   if (baseURL === 'http://localhost') {
     await page.getByRole('button', {
@@ -52,6 +54,11 @@ async function globalSetup(config: FullConfig) {
     page,
     username: user.name
   })
+
+  // accept user agreement to avoid UA modal in
+  // create/edit tests
+  // await acceptUserAgreementInSettings(page)
+
   const state = await page.context().storageState()
   const fixedCookies = fixCookiesProps(state.cookies)
   // console.log('fixedCookies...', fixedCookies)

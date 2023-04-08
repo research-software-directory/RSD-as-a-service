@@ -164,14 +164,14 @@ export async function openSoftwarePage(page:Page,name?:string) {
 
     // open software view
     await Promise.all([
-      page.waitForNavigation(),
+      page.waitForLoadState('domcontentloaded'),
       // take first in case more than one created
       softwareCard.first().click()
     ])
   } else {
     // open first item
     await Promise.all([
-      page.waitForNavigation(),
+      page.waitForLoadState('domcontentloaded'),
       // take first in case more than one created
       cards.first().click()
     ])
@@ -184,17 +184,10 @@ export async function openEditSoftwarePage(page, name) {
   // open edit software
   const editButton = page.getByTestId('edit-button')
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForLoadState('domcontentloaded'),
     editButton.click()
   ])
 }
-
-// export async function openEditContributors(page) {
-//   // open contributors section
-//   await page.getByRole('button', {
-//     name: 'Contributors Required information'
-//   }).click()
-// }
 
 export async function importContributors(page) {
   // import contributors

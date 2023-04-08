@@ -75,7 +75,7 @@ export default function FindImpact() {
               minLength: config.findMention.validation.minLength,
               label: config.findMention.label,
               help: config.findMention.help,
-              reset: false
+              reset: true
             }}
           />
         </div>

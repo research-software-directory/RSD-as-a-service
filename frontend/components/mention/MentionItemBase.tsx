@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -42,7 +42,9 @@ export default function MentionItemBase({item,pos,nav,type,role='find'}:MentionI
   }
   return (
     <article
-      data-testid="mention-item-base" className="flex-1">
+      data-testid="mention-item-base"
+      className="flex-1"
+    >
       {renderPublicationType()}
       <div className="flex-1 flex items-baseline">
         <MentionTitle

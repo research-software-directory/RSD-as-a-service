@@ -8,13 +8,18 @@ export type Organisation = {
   logo?:string
 }
 
+// NOTE! Because tests run in parallel you need
+// to ensure organisation adding "collisions"
+// eq. when 2 tests try to add same organisation to RSD
+// so far using unique organisations on each test works best
+
 export const mockSoftwareOrganisation = {
   chrome: [{
-      name: 'Netherlands eScience Center',
-      logo: 'images/nlescience.png'
+      name: 'Massachusetts Institute of Technology',
+      logo: 'images/mit-logo.png'
     },{
-      name: 'Dutch Research Council',
-      logo: 'images/nwo-logo.svg'
+      name: 'GBS Leiden',
+      logo: 'images/gbs-leiden-logo.png'
     }],
   chromium: [{
       name: 'Vrije Universiteit Amsterdam',
@@ -44,23 +49,24 @@ export const mockSoftwareOrganisation = {
       name: 'GGD Rotterdam-Rijnmond'
   }]
 }
+
 // we need to use different organisations
 // to avoid collision of two proceses
 // creating new organisation at the same time
 export const mockProjectOrganisation = {
-  chromium: [{
-    name: 'Netherlands eScience Center',
-    logo: 'images/nlescience.png'
-  }, {
-    name: 'Dutch Research Council',
-    logo: 'images/nwo-logo.svg'
-  }],
   chrome: [{
     name: 'Vrije Universiteit Amsterdam',
     logo: 'images/vu-logo.svg'
   }, {
     name: 'Eindhoven University of Technolog',
     logo: 'images/tu-delft-logo.jpg'
+  }],
+  chromium: [{
+    name: 'Netherlands eScience Center',
+    logo: 'images/nlescience.png'
+  }, {
+    name: 'Dutch Research Council',
+    logo: 'images/nwo-logo.svg'
   }],
   msedge: [{
     name: 'Massachusetts Institute of Technology',

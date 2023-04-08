@@ -248,7 +248,7 @@ export async function openProjectPage(page: Page, name?: string) {
     })
     // open software view
     await Promise.all([
-      page.waitForNavigation(),
+      page.waitForLoadState('domcontentloaded'),
       // take first in case more than one created
       projectCard.first().click()
     ])
@@ -256,7 +256,7 @@ export async function openProjectPage(page: Page, name?: string) {
   } else {
     // open first item
     await Promise.all([
-      page.waitForNavigation(),
+      page.waitForLoadState('domcontentloaded'),
       // take first in case more than one created
       cards.first().click()
     ])
@@ -270,7 +270,7 @@ export async function openEditProjectPage(page:Page, name:string) {
   // open edit software
   const editButton = page.getByTestId('edit-button')
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForLoadState('domcontentloaded'),
     editButton.click()
   ])
 }
