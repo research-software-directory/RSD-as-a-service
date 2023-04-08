@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -55,8 +55,8 @@ export function AuthProvider(props: any) {
   const [session, setSession] = useState(props?.session ?? defaultSession)
 
   // console.group('AuthProvider')
-  // console.log('session...', session)
-  // console.log('props...', props)
+  // console.log('session.user..', session?.user)
+  // console.log('props.session.user...', props?.session?.user)
   // console.groupEnd()
 
   useEffect(() => {

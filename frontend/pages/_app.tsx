@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 //
@@ -47,18 +47,8 @@ nprogress.configure({showSpinner: false})
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
-// Matomo cached settings passed via getInitialProps
-// Note! getInitalProps does not always run server side
-// so we keep the last obtained values in this object
-const matomo: Matomo = {
-  // extract matomo if from env and
-  id: process.env.MATOMO_ID || null,
-  consent: null
-}
+// used to register SPA route changes
 const setCustomUrl = initMatomoCustomUrl()
-// init session, it is loaded by getInitialProps
-// when running in SSR mode (req,res are present)
-let session: Session | null = null
 // ProgressBar at the top
 // listen to route change and drive nprogress status
 // it's taken out of RsdApp to be initialized only once
@@ -174,6 +164,17 @@ function RsdApp(props: MuiAppProps) {
 RsdApp.getInitialProps = async(appContext:AppContext) => {
   const appProps = await App.getInitialProps(appContext)
   const {req, res} = appContext.ctx
+  // init session, it is loaded by getInitialProps
+  // when running in SSR mode (req,res are present)
+  let session: Session | null = null
+  // Matomo cached settings passed via getInitialProps
+  // Note! getInitalProps does not always run server side
+  // so we keep the last obtained values in this object
+  const matomo: Matomo = {
+    // extract matomo if from env and
+    id: process.env.MATOMO_ID || null,
+    consent: null
+  }
   // extract user session from cookies and
   // matomo consent if matomo is used (id)
   // only in SSR mode (req && res present)
