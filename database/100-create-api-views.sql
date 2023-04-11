@@ -157,7 +157,7 @@ END
 $$;
 
 -- programming language filter for software
--- used by software_search func
+-- used by software_overview func
 CREATE FUNCTION prog_lang_filter_for_software() RETURNS TABLE (
 	software UUID,
 	prog_lang TEXT[]
@@ -174,50 +174,6 @@ BEGIN
 		) AS "prog_lang"
 	FROM
 		repository_url
-	;
-END
-$$;
-
--- SOFTWARE OVERVIEW LIST FOR SEARCH
--- WITH COUNTS and KEYWORDS for filtering
-CREATE FUNCTION software_search() RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	brand_name VARCHAR,
-	short_statement VARCHAR,
-	updated_at TIMESTAMPTZ,
-	contributor_cnt BIGINT,
-	mention_cnt BIGINT,
-	is_published BOOLEAN,
-	keywords CITEXT[],
-	keywords_text TEXT,
-	prog_lang TEXT[]
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		software.id,
-		software.slug,
-		software.brand_name,
-		software.short_statement,
-		software.updated_at,
-		count_software_countributors.contributor_cnt,
-		count_software_mentions.mention_cnt,
-		software.is_published,
-		keyword_filter_for_software.keywords,
-		keyword_filter_for_software.keywords_text,
-		prog_lang_filter_for_software.prog_lang
-	FROM
-		software
-	LEFT JOIN
-		count_software_countributors() ON software.id=count_software_countributors.software
-	LEFT JOIN
-		count_software_mentions() ON software.id=count_software_mentions.software
-	LEFT JOIN
-		keyword_filter_for_software() ON software.id=keyword_filter_for_software.software
-	LEFT JOIN
-		prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
 	;
 END
 $$;
@@ -1307,58 +1263,6 @@ BEGIN
 END
 $$;
 
-
--- PROJECT OVERVIEW LIST FOR SEARCH
--- WITH KEYWORDS and research domain for filtering
-CREATE FUNCTION project_search() RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	title VARCHAR,
-	subtitle VARCHAR,
-	current_state VARCHAR,
-	date_start DATE,
-	updated_at TIMESTAMPTZ,
-	is_published BOOLEAN,
-	image_contain BOOLEAN,
-	image_id VARCHAR,
-	keywords citext[],
-	keywords_text TEXT,
-	research_domain VARCHAR[],
-	research_domain_text TEXT
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		project.id,
-		project.slug,
-		project.title,
-		project.subtitle,
-		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
-			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
-			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-			ELSE 'Running'::VARCHAR
-		END AS current_state,
-		project.date_start,
-		project.updated_at,
-		project.is_published,
-		project.image_contain,
-		project.image_id,
-		keyword_filter_for_project.keywords,
-		keyword_filter_for_project.keywords_text,
-		research_domain_filter_for_project.research_domain,
-		research_domain_filter_for_project.research_domain_text
-	FROM
-		project
-	LEFT JOIN
-		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
-	LEFT JOIN
-		research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
-	;
-END
-$$;
-
 -- RESEARCH DOMAIN count used in project filter
 -- to show used research domains with count
 CREATE FUNCTION research_domain_count_for_projects() RETURNS TABLE (
@@ -1402,34 +1306,34 @@ $$
 BEGIN RETURN QUERY
 	-- SOFTWARE search item
 	SELECT
-		software_search.slug,
-		software_search.brand_name AS name,
+		software_overview.slug,
+		software_overview.brand_name AS name,
 		'software' AS "source",
-		software_search.is_published,
+		software_overview.is_published,
 		CONCAT_WS(
 			' ',
-			software_search.brand_name,
-			software_search.short_statement,
-			software_search.keywords_text
+			software_overview.brand_name,
+			software_overview.short_statement,
+			software_overview.keywords_text
 		) AS search_text
 	FROM
-		software_search()
+		software_overview()
 	UNION
 	-- PROJECT search item
 	SELECT
-		project_search.slug,
-		project_search.title AS name,
+		project_overview.slug,
+		project_overview.title AS name,
 		'projects' AS "source",
-		project_search.is_published,
+		project_overview.is_published,
 		CONCAT_WS(
 			' ',
-			project_search.title,
-			project_search.subtitle,
-			project_search.keywords_text,
-			project_search.research_domain_text
+			project_overview.title,
+			project_overview.subtitle,
+			project_overview.keywords_text,
+			project_overview.research_domain_text
 		) AS search_text
 	FROM
-		project_search()
+		project_overview()
 	UNION
 	-- ORGANISATION search item
 	SELECT
