@@ -44,7 +44,7 @@ export type EditOrganisationModalProps = ModalProps & {
 
 export default function SoftwareOganisations() {
   const {token,user} = useSession()
-  const {showErrorMessage} = useSnackbar()
+  const {showInfoMessage,showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()
   const {loading, organisations, setOrganisations} = useParticipatingOrganisations({
     software: software?.id ?? '',
@@ -71,6 +71,12 @@ export default function SoftwareOganisations() {
   )
 
   async function onAddOrganisation(item: SearchOrganisation) {
+    // check if present by ror_id
+    const found = organisations.find(org => org.ror_id === item.ror_id)
+    if (item.ror_id && found) {
+      showInfoMessage(`${item.name} is already in the collection (based on ror_id).`)
+      return
+    }
     // add default values
     const addOrganisation: EditOrganisation = searchToEditOrganisation({
       item,

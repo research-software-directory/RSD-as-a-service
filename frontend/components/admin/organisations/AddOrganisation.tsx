@@ -123,7 +123,7 @@ export default function AddOrganisation({onAddOrganisationToRsd}:AddOrganisation
         key={option.key}
         {...props}
       >
-        <FindOrganisationItem option={option} />
+        <FindOrganisationItem {...option.data} />
       </li>
     )
   }

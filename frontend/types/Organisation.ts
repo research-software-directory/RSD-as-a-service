@@ -43,14 +43,24 @@ export type Organisation = CoreOrganisationProps & {
 }
 
 // adding source
-export type SearchOrganisation = Organisation & {
+export type SearchOrganisation = {
+  id: string | null
+  slug: string | null
+  name: string,
+  ror_id: string | null
+  website: string | null,
+  is_tenant: boolean
+  logo_id: string | null
+  primary_maintainer?: string | null
+  parent: string | null
+  parent_names?: string
   source: OrganisationSource
 }
 
 // extending with other props for software edit page
 export type EditOrganisation = SearchOrganisation & {
   role?: OrganisationRole,
-  position: number|null
+  position: number | null
   // new image to upload
   logo_b64: string | null
   logo_mime_type: string | null

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,8 +8,8 @@ import {HTMLAttributes, useState} from 'react'
 import AsyncAutocompleteSC, {
   AsyncAutocompleteConfig, AutocompleteOption
 } from '~/components/form/AsyncAutocompleteSC'
-import {SearchOrganisation} from '../../../types/Organisation'
-import FindOrganisationItem from '../../software/edit/organisations/FindOrganisationItem'
+import {SearchOrganisation} from '../../../../types/Organisation'
+import FindOrganisationItem from '../../../software/edit/organisations/FindOrganisationItem'
 
 type SearchForOrganisationProps = {
   searchFor: string,
@@ -94,7 +94,7 @@ export default function FindOrganisation({config,onAdd,onCreate,searchForOrganis
     }
     return (
       <li {...props} key={option.key}>
-        <FindOrganisationItem option={option} />
+        <FindOrganisationItem {...option.data} />
       </li>
     )
   }

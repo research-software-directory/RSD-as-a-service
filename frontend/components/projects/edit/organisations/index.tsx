@@ -57,18 +57,18 @@ export default function ProjectOrganisations() {
   // console.groupEnd()
 
   async function onAddOrganisation(item: SearchOrganisation) {
+    // check if present by ror_id
+    const found = organisations.find(org => org.ror_id === item.ror_id)
+    if (item.ror_id && found) {
+      showInfoMessage(`${item.name} is already in the collection (based on ror_id).`)
+      return
+    }
     // add default values
     const addOrganisation: EditOrganisation = searchToEditOrganisation({
       item,
       account: user?.account,
       position: organisations.length + 1
     })
-    // check if present by ror_id
-    const found = organisations.find(item => item.ror_id === addOrganisation.ror_id)
-    if (addOrganisation.ror_id && found) {
-      showInfoMessage(`${item.name} is already in the collection (based on ror_id).`)
-      return
-    }
     if (item.source === 'ROR') {
       // show edit modal
       setModal({
@@ -80,11 +80,11 @@ export default function ProjectOrganisations() {
           open:false
         }
       })
-    } else if (item.source === 'RSD') {
+    } else if (item.source === 'RSD' && addOrganisation.id) {
       // we add organisation directly
       const resp = await addOrganisationToProject({
-        project: project.id ?? '',
-        organisation: addOrganisation.id ?? '',
+        project: project.id,
+        organisation: addOrganisation.id,
         role: 'participating',
         position: addOrganisation.position,
         token

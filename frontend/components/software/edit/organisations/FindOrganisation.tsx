@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,8 +25,7 @@ export default function FindOrganisation({onAdd, onCreate}:
   async function searchOrganisation(searchFor: string) {
     setStatus({loading:true,foundFor:undefined})
     const resp = await searchForOrganisation({
-      searchFor,
-      frontend:true
+      searchFor
     })
     // set options
     setOptions(resp ?? [])
@@ -75,7 +74,7 @@ export default function FindOrganisation({onAdd, onCreate}:
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
     option: AutocompleteOption<SearchOrganisation>,
     state: object) {
-    // when value is not not found option returns input prop
+    // when value is not found option returns input prop
     if (option?.input) {
       // if input is over minLength
       if (option?.input.length > config.findOrganisation.validation.minLength) {
@@ -88,10 +87,11 @@ export default function FindOrganisation({onAdd, onCreate}:
     return (
       <li
         data-testid="find-organisation-option"
-        key={option.key}
         {...props}
+        // overwrite props.key
+        key={option.key}
       >
-        <FindOrganisationItem option={option} />
+        <FindOrganisationItem {...option.data} />
       </li>
     )
   }
