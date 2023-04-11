@@ -5,20 +5,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {findMention} from '~/components/mention/config'
-import {cfgImpact} from '~/components/projects/edit/impact/config'
+import config from '~/components/mention/ImportMentions/config'
 
 export const cfgMention = {
   title: 'Mentions',
   findMention: {
     ...findMention,
-    title: 'Add mention'
+    title: 'Add mentions'
   },
+  doiInput: config.doiInput,
   builkImport: {
-    title: 'Import publications',
-    subtitle: cfgImpact.builkImport.subtitle
+    title: 'Import',
   },
   newItem: {
-    title: 'New mention without DOI',
-    subtitle: 'Use add button to create new item without DOI'
+    title: 'Create',
   }
 }

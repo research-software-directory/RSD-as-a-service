@@ -6,11 +6,10 @@
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
-import AddNewItemInfo from '~/components/software/edit/mentions/AddNewItemInfo'
 import {newMentionItem} from '~/utils/editMentions'
 import {cfgImpact as config} from './config'
+import CreateMentionInfoPanel from '~/components/mention/CreateMentionInfoPanel'
 
 export default function AddImpact() {
   const {setEditModal} = useEditMentionReducer()
@@ -22,21 +21,17 @@ export default function AddImpact() {
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <div>
-          <EditSectionTitle
-            title={config.newItem.title}
-            // subtitle={config.newItem.subtitle}
-          />
-        </div>
-        <div className="px-4"></div>
+    <h3 className="pt-4 pb-2 text-lg">{config.newItem.title}</h3>
+    <CreateMentionInfoPanel>
+      <div className="pt-4">
         <Button
+          variant="contained"
           startIcon={<AddIcon />}
           onClick={onNewImpact}>
-          Add
+          Create
         </Button>
       </div>
-      <AddNewItemInfo />
+    </CreateMentionInfoPanel>
     </>
   )
 }

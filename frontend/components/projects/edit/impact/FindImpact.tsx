@@ -6,17 +6,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useAuth} from '~/auth'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import FindMention from '~/components/mention/FindMention'
-import FindMentionInfo from '~/components/mention/FindMentionInfo'
-import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {MentionItemProps} from '~/types/Mention'
 import {getMentionByDoiFromRsd} from '~/utils/editMentions'
 import {getMentionByDoi} from '~/utils/getDOI'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import FindMention from '~/components/mention/FindMention'
+import FindMentionInfoPanel from '~/components/mention/FindMentionInfoPanel'
+import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
+import {extractSearchTerm} from '~/components/software/edit/mentions/utils'
 import useProjectContext from '../useProjectContext'
 import {cfgImpact as config} from './config'
 import {findPublicationByTitle} from './impactForProjectApi'
-import {extractSearchTerm} from '~/components/software/edit/mentions/utils'
 
 export default function FindImpact() {
   const {session: {token}} = useAuth()
@@ -59,23 +59,27 @@ export default function FindImpact() {
     <>
       <EditSectionTitle
         title={config.findMention.title}
-        subtitle={config.findMention.subtitle}
+        // subtitle={config.findMention.subtitle}
       />
-      <FindMention
-        onAdd={onAdd}
-        // do not use onCreate option,
-        // use dedicated button instead
-        // onCreate={onCreateImpact}
-        searchFn={findPublication}
-        config={{
-          freeSolo: true,
-          minLength: config.findMention.validation.minLength,
-          label: config.findMention.label,
-          help: config.findMention.help,
-          reset: false
-        }}
-      />
-      <FindMentionInfo />
+      <h3 className="pt-4 pb-2 text-lg">Search</h3>
+      <FindMentionInfoPanel>
+        <div className="pt-4 overflow-hidden">
+          <FindMention
+            onAdd={onAdd}
+            // do not use onCreate option,
+            // use dedicated button instead
+            // onCreate={onCreateImpact}
+            searchFn={findPublication}
+            config={{
+              freeSolo: true,
+              minLength: config.findMention.validation.minLength,
+              label: config.findMention.label,
+              help: config.findMention.help,
+              reset: false
+            }}
+          />
+        </div>
+      </FindMentionInfoPanel>
     </>
   )
 }

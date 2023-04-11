@@ -6,15 +6,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useSession} from '~/auth'
+import {getMentionsForSoftware} from '~/utils/editMentions'
 import ImportMentions from '~/components/mention/ImportMentions/index'
-import ImportMentionsInfo from '~/components/mention/ImportMentions/ImportMentionsInfo'
+import ImportMentionsInfoPanel from '~/components/mention/ImportMentions/ImportMentionsInfoPanel'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import useSoftwareContext from '../useSoftwareContext'
-import {getMentionsForSoftware} from '~/utils/editMentions'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {cfgMention as config} from './config'
 
-export default function BulkImportMentions() {
+export default function ImportSoftwareMentions() {
   const {software} = useSoftwareContext()
   const {setMentions, setLoading} = useEditMentionReducer()
   const {token} = useSession()
@@ -25,22 +24,18 @@ export default function BulkImportMentions() {
     setMentions(data)
     setLoading(false)
   }
+
   return (
     <>
-      <div className="flex justify-between items-center">
-        <div className="pr-2">
-          <EditSectionTitle
-            title={config.builkImport.title}
-            // subtitle={config.builkImport.subtitle}
-          />
-        </div>
+    <h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
+    <ImportMentionsInfoPanel>
+      <div className="pt-4">
         <ImportMentions
           table="mention_for_software"
           entityId={software.id!}
           onSuccess={reloadMentions} />
       </div>
-      <div className="px-4"></div>
-      <ImportMentionsInfo />
+    </ImportMentionsInfoPanel>
     </>
   )
 }

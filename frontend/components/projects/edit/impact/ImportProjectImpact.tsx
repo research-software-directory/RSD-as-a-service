@@ -6,15 +6,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useSession} from '~/auth'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import ImportMentions from '~/components/mention/ImportMentions/index'
-import ImportMentionsInfo from '~/components/mention/ImportMentions/ImportMentionsInfo'
+import ImportMentionsInfoPanel from '~/components/mention/ImportMentions/ImportMentionsInfoPanel'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import useProjectContext from '~/components/projects/edit/useProjectContext'
 import {getImpactForProject} from '~/utils/getProjects'
 import {cfgImpact as config} from './config'
 
-export default function BulkImportImpact() {
+export default function ImportProjectImpact() {
   const {project} = useProjectContext()
   const {setMentions, setLoading} = useEditMentionReducer()
   const {token} = useSession()
@@ -28,20 +27,15 @@ export default function BulkImportImpact() {
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <div className="pr-2">
-          <EditSectionTitle
-            title={config.builkImport.title}
-            // subtitle={config.builkImport.subtitle}
-          />
-        </div>
+    <h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
+    <ImportMentionsInfoPanel>
+      <div className="pt-4">
         <ImportMentions
           table="impact_for_project"
           entityId={project.id!}
           onSuccess={reloadImpact} />
       </div>
-      <div className="px-4"></div>
-      <ImportMentionsInfo />
+    </ImportMentionsInfoPanel>
     </>
   )
 }

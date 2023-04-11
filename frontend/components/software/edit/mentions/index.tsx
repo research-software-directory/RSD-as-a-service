@@ -12,7 +12,7 @@ import MentionByType from './MentionByType'
 import FindSoftwareMention from './FindSoftwareMention'
 import AddMention from './AddMention'
 import useSoftwareContext from '../useSoftwareContext'
-import BulkImportMentions from './BulkImportMentions'
+import ImportSoftwareMentions from './ImportSoftwareMentions'
 
 export default function SoftwareMentions() {
   const {token} = useSession()
@@ -30,9 +30,7 @@ export default function SoftwareMentions() {
         </div>
         <div className="pt-4 pb-8">
           <FindSoftwareMention />
-          <div className="py-4"></div>
-          <BulkImportMentions/>
-          <div className="py-4"></div>
+          <ImportSoftwareMentions/>
           <AddMention />
         </div>
       </EditSection>

@@ -8,17 +8,16 @@ import Alert from '@mui/material/Alert'
 
 import config from './config'
 
-export default function ImportMentionsInfo() {
+export default function ImportMentionsInfoPanel({children}:{children:any}) {
   return (
     <Alert
       severity="info"
-      sx={{
-        marginTop:'1rem'
-      }}
+      icon={false}
     >
     {/* <AlertTitle>Import publications using DOI list</AlertTitle> */}
-      Import up to {config.doiInput.maxRows} publications providing a <strong>list of
-      DOI&apos;s</strong>. All metadata will be imported automatically.
+      Import up to {config.doiInput.maxRows} publications providing a list of
+      DOI&apos;s. All metadata will be imported automatically.
+      { children }
     </Alert>
   )
 }

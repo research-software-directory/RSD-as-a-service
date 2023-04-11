@@ -1,17 +1,17 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionByType, MentionTypeKeys} from '~/types/Mention'
 
 export const findMention={
-  title: 'Add publication',
-  subtitle: 'We search in Crossref, DataCite and RSD databases',
+  // title: 'Add publication',
+  // subtitle: 'We search in Crossref, DataCite and RSD databases',
   label: 'Search by DOI or publication title',
-  help: 'Provide a valid DOI or the title of the publication',
+  help: 'Valid DOI or at least first 2 letters of publication title',
   validation: {
     // custom validation rule, not in use by react-hook-form
     minLength: 2,

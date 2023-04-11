@@ -110,6 +110,7 @@ export default function BulkImport({table, entityId, onSuccess}:ImportMentionsPr
 	return (
     <>
       <Button
+        variant="contained"
         onClick={() => setDialogOpen(true)}
         startIcon={<PostAddIcon />}
       >

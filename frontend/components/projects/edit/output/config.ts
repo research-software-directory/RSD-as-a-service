@@ -13,11 +13,9 @@ export const cfgOutput = {
     title: 'Add output'
   },
   builkImport: {
-    title: 'Import publications',
-    subtitle: cfgImpact.builkImport.subtitle
+    title: 'Import',
   },
   newItem: {
-    title: 'New item without DOI',
-    subtitle: 'Use add button to create new item without DOI'
+    title: 'Create',
   }
 }

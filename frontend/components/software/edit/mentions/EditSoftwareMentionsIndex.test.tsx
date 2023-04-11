@@ -195,7 +195,7 @@ describe('frontend/components/software/edit/maintainers/index.tsx', () => {
 
     // hit add button
     const addBtn = screen.getByRole('button', {
-      name:'Add'
+      name:'Create'
     })
     fireEvent.click(addBtn)
 

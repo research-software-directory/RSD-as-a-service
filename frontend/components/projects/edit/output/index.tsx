@@ -12,7 +12,7 @@ import FindOutput from './FindOutput'
 import AddOutput from './AddOutput'
 import EditOutputProvider from './EditOutputProvider'
 import useProjectContext from '../useProjectContext'
-import BulkImportOutput from './BulkImportOutput'
+import ImportProjectOutput from './ImportProjectOutput'
 
 export default function ProjectOutput() {
   const {token} = useSession()
@@ -30,9 +30,7 @@ export default function ProjectOutput() {
         </div>
         <div className="pt-4 pb-8">
           <FindOutput />
-          <div className="py-4"></div>
-          <BulkImportOutput/>
-          <div className="py-4"></div>
+          <ImportProjectOutput/>
           <AddOutput />
         </div>
       </EditSection>

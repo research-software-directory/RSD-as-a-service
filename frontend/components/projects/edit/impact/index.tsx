@@ -12,7 +12,7 @@ import ImpactByType from './ImpactByType'
 import FindImpact from './FindImpact'
 import AddImpact from './AddImpact'
 import useProjectContext from '../useProjectContext'
-import BulkImportImpact from './BulkImportImpact'
+import BulkImportImpact from './ImportProjectImpact'
 
 export default function ProjectImpact() {
   const {token} = useSession()
@@ -30,9 +30,7 @@ export default function ProjectImpact() {
         </div>
         <div className="pt-4 pb-8">
           <FindImpact />
-          <div className="py-4"></div>
           <BulkImportImpact/>
-          <div className="py-4"></div>
           <AddImpact />
         </div>
       </EditSection>

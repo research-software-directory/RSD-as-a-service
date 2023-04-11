@@ -10,16 +10,11 @@ export const cfgImpact = {
   findMention: {
     ...findMention,
     title: 'Add impact',
-    // subtitle: 'We search in Crossref, DataCite and RSD databases',
-    // label: 'Search by DOI or publication title',
-    // help: 'Provide a valid DOI or the title of the publication',
   },
   builkImport: {
-    title: 'Import publications',
-    subtitle: 'Import multiple publications at once using a DOI list'
+    title: 'Import',
   },
   newItem: {
-    title: 'New item without DOI',
-    subtitle: 'Use add button to create new item without DOI'
+    title: 'Create',
   }
 }
