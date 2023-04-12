@@ -46,12 +46,11 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
 
   // get slug
   const inputSlug = await page.getByLabel('The url of this project will be').inputValue()
-  const url = RegExp(`${inputSlug}/edit`)
+  const url = RegExp(`${inputSlug}/edit/information`)
 
   // click save button
   await Promise.all([
-    page.waitForNavigation({
-      url,
+    page.waitForURL(url,{
       waitUntil: 'networkidle'
     }),
     saveBtn.click()

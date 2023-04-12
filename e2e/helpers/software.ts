@@ -47,7 +47,7 @@ export async function createSoftware({title, desc, slug, page}: CreateSoftwarePr
   await page.getByLabel('Short description').fill(desc)
   // get slug
   const inputSlug = await page.getByLabel('The url of this software will be').inputValue()
-  const url = RegExp(`${inputSlug}/edit`)
+  const url = RegExp(`${inputSlug}/edit/information`)
   // click save button
   await Promise.all([
     page.waitForURL(url,{
