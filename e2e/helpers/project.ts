@@ -205,11 +205,12 @@ export async function addResearchDomain(page) {
   // add selected domains
   await Promise.all([
     page.waitForSelector('[data-testid="research-domain-chip"]'),
+    page.waitForResponse(/\/research_domain_for_project/),
     addBtn.click(),
   ])
   // validate at least 3 or more research domains
-  const chips = page.getByTestId('research-domain-chip')
-  expect(await chips.count()).toBeGreaterThanOrEqual(3)
+  count = await page.getByTestId('research-domain-chip').count()
+  expect(count).toBeGreaterThanOrEqual(3)
 }
 
 export async function addKeyword(page: Page, keyword: string) {

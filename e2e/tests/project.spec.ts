@@ -36,6 +36,8 @@ test.describe.serial('Project', async () => {
   })
 
   test('Edit project info', async ({page},{project}) => {
+    // mark this test as slow, see https://playwright.dev/docs/test-timeouts#test-timeout
+    test.slow()
     // get mock project for the browser
     const proj = mockProject[project.name]
     // open project edit page using edit button

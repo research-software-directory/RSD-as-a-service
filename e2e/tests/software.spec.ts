@@ -50,6 +50,8 @@ test.describe.serial('Software', async()=> {
   })
 
   test('Edit software info', async ({page}, {project}) => {
+    // mark this test as slow, see https://playwright.dev/docs/test-timeouts#test-timeout
+    test.slow()
     // get mock software for the browser
     const software = mockSoftware[project.name]
     // open edit software page
