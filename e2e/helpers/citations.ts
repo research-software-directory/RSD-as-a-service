@@ -48,16 +48,19 @@ export async function addCitation(page, input: string, waitForResponse: string) 
   ])
 
   // validate mention item added
-  const count = await page.getByTestId('mention-item-base')
-    .filter({
-      hasText: RegExp(input, 'i')
-    })
-    .count()
-  // console.log('Count...', count)
-  // stop here
-  // await page.pause()
-  // we should have our item in list
-  expect(count).toEqual(1)
+  // retry untill test pass
+  await expect(async () => {
+    const count = await page.getByTestId('mention-item-base')
+      .filter({
+        hasText: RegExp(input, 'i')
+      })
+      .count()
+    // console.log('Count...', count)
+    // stop here
+    // await page.pause()
+    // we should have our item in list
+    expect(count).toEqual(1)
+  }).toPass()
 }
 
 
