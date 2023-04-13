@@ -1,8 +1,8 @@
+# SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-# SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 dv4all
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -24,7 +24,7 @@ services:
       - POSTGRES_AUTHENTICATOR_PASSWORD=simplepassword
     volumes:
       # persist data in named docker volume
-      # to remove use: docker-compose down --volumes
+      # to remove use: docker compose down --volumes
       # to inspect use: docker volume ls
       - pgdb-test:/var/lib/postgresql/data/
     networks:
@@ -69,7 +69,7 @@ services:
 networks:
   net-test:
 
-# named volumes can be managed easier using docker-compose
+# named volumes can be managed easier using docker compose
 # volume should have name rsd-as-a-service_pgdb
 volumes:
   pgdb-test:

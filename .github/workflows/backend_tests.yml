@@ -1,6 +1,6 @@
+# SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-# SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 dv4all
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -24,9 +24,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - name: "newman tests with docker-compose"
+      - name: "newman tests with docker compose"
         working-directory: backend-postgrest/tests
         run: |
-          docker-compose up \
+          docker compose up \
             --abort-on-container-exit \
             --exit-code-from postgrest-tests

@@ -2,6 +2,8 @@
 SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2021 - 2023 dv4all
 SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 
 SPDX-License-Identifier: Apache-2.0
 SPDX-License-Identifier: CC-BY-4.0
@@ -13,28 +15,28 @@ The project uses Playwright for end-to-end tests.
 
 ## Running end to end tests
 
-Use `make e2e-test` from the root. It will perform all docker-compose tasks and run all tests.
+Use `make e2e-test` from the root. It will perform all docker compose tasks and run all tests.
 
 To run using the separate steps:
 
-- Run RSD on the localhost using docker-compose
+- Run RSD on the localhost using docker compose
 
 ```bash
 # build
-docker-compose build
+docker compose build
 # start in detached
-docker-compose up -d
+docker compose up --detach
 ```
 
-- Run e2e tests using docker-compose from e2e folder
+- Run e2e tests using docker compose from e2e folder
 
 ```bash
 # navigate to e2e folder
 cd e2e
 # build tests
-docker-compose build
+docker compose build
 # start tests
-docker-compose up
+docker compose up
 ```
 
 ## View test report
@@ -109,7 +111,7 @@ The specific tests are created for generating json files. These test files are i
 1. **Start RSD**
 
 ```bash
-docker-compose up -d
+docker compose up --detach
 ```
 
 2. **Start generate project in headed mode**

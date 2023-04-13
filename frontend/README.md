@@ -3,6 +3,8 @@ SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2021 - 2023 dv4all
 SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -21,7 +23,7 @@ Based on the features in the legacy application and the current requirements we 
 
 - intall dependencies `yarn install`
 - create `.env.local` file. Use `.env.example` from the project root as template.
-- run all app modules `docker-compose up`
+- run all app modules `docker compose up`
 - open another terminal and run `yarn dev` to start frontend in development mode
 
 ### Frontend dev mode via Docker
@@ -40,8 +42,8 @@ Alternatively you can run
 # Export your user and group ids to the variables so Docker will correctly build the frontend-dev container. This is required only if you build the container
 export DUID=$(id -u)
 export DGID=$(id -g)
-docker-compose build frontend-dev
-docker-compose up --scale frontend=0 --scale frontend-dev=1 --scale scrapers=0
+docker compose build frontend-dev
+docker compose up --scale frontend=0 --scale frontend-dev=1 --scale scrapers=0
 ```
 
 ### Environment variables

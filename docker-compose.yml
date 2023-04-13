@@ -27,7 +27,7 @@ services:
       - POSTGRES_AUTHENTICATOR_PASSWORD
     volumes:
       # persist data in named docker volume
-      # to remove use: docker-compose down --volumes
+      # to remove use: docker compose down --volumes
       # to inspect use: docker volume ls
       - pgdb:/var/lib/postgresql/data/
     networks:
@@ -243,7 +243,7 @@ services:
 networks:
   net:
 
-# named volumes can be managed easier using docker-compose
+# named volumes can be managed easier using docker compose
 # volume should have name rsd-as-a-service_pgdb
 volumes:
   pgdb:
