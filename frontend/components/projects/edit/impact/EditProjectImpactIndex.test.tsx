@@ -180,7 +180,7 @@ describe('frontend/components/project/edit/impact/index.tsx', () => {
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const addBtn = screen.getByRole('button', {
-      name:'Add'
+      name:'Create'
     })
     expect(addBtn).toBeInTheDocument()
 

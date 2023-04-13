@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -12,7 +12,7 @@ import FindOutput from './FindOutput'
 import AddOutput from './AddOutput'
 import EditOutputProvider from './EditOutputProvider'
 import useProjectContext from '../useProjectContext'
-import BulkImportOutput from './BulkImportOutput'
+import ImportProjectOutput from './ImportProjectOutput'
 
 export default function ProjectOutput() {
   const {token} = useSession()
@@ -24,16 +24,14 @@ export default function ProjectOutput() {
 
   return (
     <EditOutputProvider token={token} project={project.id}>
-      <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="pt-4 pb-8 xl:pl-[3rem]">
+      <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:gap-[3rem]'>
+        <div className="pt-4 pb-8">
           <OutputByType />
         </div>
         <div className="pt-4 pb-8">
           <FindOutput />
-          <div className="py-4"></div>
+          <ImportProjectOutput/>
           <AddOutput />
-          <div className="py-4"></div>
-          <BulkImportOutput/>
         </div>
       </EditSection>
     </EditOutputProvider>

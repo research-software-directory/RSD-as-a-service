@@ -97,7 +97,7 @@ export default function ProjectMaintainers() {
   return (
     <>
       <EditSection className='xl:grid xl:grid-cols-[1fr,1fr] xl:px-0 xl:gap-[3rem]'>
-        <div className="py-4 xl:pl-[3rem]">
+        <div className="py-4">
           <EditSectionTitle
             title={config.title}
           />

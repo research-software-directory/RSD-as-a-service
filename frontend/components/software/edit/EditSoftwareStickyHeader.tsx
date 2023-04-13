@@ -12,7 +12,6 @@ import ViewPageButton from '~/components/layout/ViewPageButton'
 
 export default function EditSoftwareStickyHeader() {
   const {software} = useSoftwareContext()
-
   const headerRef = useRef(null)
   const [classes, setClasses] = useState('')
 
@@ -22,7 +21,7 @@ export default function EditSoftwareStickyHeader() {
   })
 
   return (
-    <StickyHeader className={`flex items-start xl:items-center gap-4 py-4 w-full bg-white ${classes}`}>
+    <StickyHeader className={`bg-white ${classes}`}>
       <h1
         ref={headerRef}
         className="flex-1 xl:text-4xl">
