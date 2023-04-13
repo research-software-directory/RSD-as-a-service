@@ -26,7 +26,6 @@ export async function acceptUserAgreementInSettings(page: Page) {
   expect(checkboxes.length).toBeGreaterThan(0)
   // const checkboxes = await page.getByTestId('controlled-switch-label').all()
   // expect(checkboxes.length).toBeGreaterThan(0)
-
   // check/accept all options
   for (const checkbox of checkboxes) {
     await checkbox.check()
@@ -60,8 +59,9 @@ export async function acceptUserAgreement(page: Page) {
 
     // get OK button
     const okBtn = uaModal.getByRole('button', {name: 'Accept'})
-    // we need to wait a bit for state to change
-    okBtn.waitFor({state:'visible'})
+
+    // we need to wait for state to change
+    await okBtn.waitFor({state:'visible'})
     expect(await okBtn.isEnabled()).toBe(true)
 
     // click OK button

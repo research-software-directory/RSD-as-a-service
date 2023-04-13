@@ -1,9 +1,10 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Page} from '@playwright/test'
+import {Page, expect} from '@playwright/test'
 
 type LocalLogin = {
   page: Page,
@@ -67,8 +68,6 @@ export async function loginToRsdUsingSurf({
   await Promise.all([
     // click to login button
     loginBtn.click(),
-    // wait for navigation
-    page.waitForNavigation(),
     // wait untill all network calls done
     page.waitForLoadState('networkidle')
   ])
@@ -97,7 +96,6 @@ export async function loginLocal({
   await Promise.all([
     // click to login button
     loginBtn.click(),
-    page.waitForNavigation(),
     // wait untill all network calls done
     page.waitForLoadState('networkidle')
   ])
@@ -105,7 +103,25 @@ export async function loginLocal({
   return true
 }
 
+export async function logoutUser(page: Page) {
+  // logout user if exists
+  const userBtnCnt = await page.getByTestId('user-menu-button').count()
+  if (userBtnCnt > 0) {
+    await page.getByTestId('user-menu-button').click()
+    await page.getByRole('menuitem', {name: 'Logout'}).click()
+  }
+}
 
-export async function navigateToProfilePage({page}: { page: Page }) {
+export async function validateUserName(page: Page, name: string, debug=false) {
+  // validate user name
   await page.getByTestId('user-menu-button').click()
+  await page.getByRole('menuitem', {name: 'My settings'}).click()
+  // get user name
+  const userName = await page.getByTestId('user-settings-username').innerText()
+  // we stop here (need to be in debug mode)
+  if (debug === true && userName !== name) {
+    await page.pause()
+  }
+  // validate user name
+  expect(userName).toEqual(name)
 }

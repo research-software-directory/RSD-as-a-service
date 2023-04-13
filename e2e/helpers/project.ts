@@ -46,12 +46,11 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
 
   // get slug
   const inputSlug = await page.getByLabel('The url of this project will be').inputValue()
-  const url = RegExp(`${inputSlug}/edit`)
+  const url = RegExp(`${inputSlug}/edit/information`)
 
   // click save button
   await Promise.all([
-    page.waitForNavigation({
-      url,
+    page.waitForURL(url,{
       waitUntil: 'networkidle'
     }),
     saveBtn.click()
@@ -205,11 +204,12 @@ export async function addResearchDomain(page) {
   // add selected domains
   await Promise.all([
     page.waitForSelector('[data-testid="research-domain-chip"]'),
+    page.waitForResponse(/\/research_domain_for_project/),
     addBtn.click(),
   ])
   // validate at least 3 or more research domains
-  const chips = page.getByTestId('research-domain-chip')
-  expect(await chips.count()).toBeGreaterThanOrEqual(3)
+  count = await page.getByTestId('research-domain-chip').count()
+  expect(count).toBeGreaterThanOrEqual(3)
 }
 
 export async function addKeyword(page: Page, keyword: string) {
@@ -248,7 +248,7 @@ export async function openProjectPage(page: Page, name?: string) {
     })
     // open software view
     await Promise.all([
-      page.waitForNavigation(),
+      page.waitForLoadState('domcontentloaded'),
       // take first in case more than one created
       projectCard.first().click()
     ])
@@ -256,7 +256,7 @@ export async function openProjectPage(page: Page, name?: string) {
   } else {
     // open first item
     await Promise.all([
-      page.waitForNavigation(),
+      page.waitForLoadState('domcontentloaded'),
       // take first in case more than one created
       cards.first().click()
     ])
@@ -270,7 +270,7 @@ export async function openEditProjectPage(page:Page, name:string) {
   // open edit software
   const editButton = page.getByTestId('edit-button')
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForLoadState('domcontentloaded'),
     editButton.click()
   ])
 }

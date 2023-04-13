@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -89,17 +89,6 @@ Second level header here!
 `
 }
 
-// export async function openEditOrganisations(page) {
-//   // open contributors section
-//   await Promise.all([
-//     // we need to wait for authentication response to settle
-//     page.waitForLoadState('networkidle'),
-//     page.getByRole('button', {
-//       name: 'Organisations'
-//     }).click()
-//   ])
-// }
-
 export async function openEditSection(page:Page,name:string) {
   // open contributors section
   await Promise.all([
@@ -187,7 +176,7 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
         'img'
       )
     }
-    // save new contact
+    // save new organisation
     const saveBtn = page.getByRole('button', {
       name: 'Save'
     })
@@ -205,50 +194,6 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
   expect(lastText).toContain(organisation.name)
 
   return true
-}
-
-export async function addCitation(page, input:string, waitForResponse:string) {
-  // clear previous input - if clear btn is visible
-  const clearBtn = await page.getByRole('button', {
-    name: 'Clear'
-  }).first()
-  if (await clearBtn.isVisible()===true) {
-    // clear selection
-    await clearBtn.click()
-  }
-  // start new search
-  const findMention = await page.locator('#async-autocomplete').first()
-  await Promise.all([
-    // then wait untill options list is shown
-    page.waitForSelector('#async-autocomplete-listbox'),
-    findMention.fill(input),
-  ])
-
-  // get list
-  const listbox = page.locator('#async-autocomplete-listbox')
-  // select all options
-  const options = listbox.getByRole('option')
-  const option = await options
-    .filter({
-      hasText: RegExp(input,'i')
-    })
-    .first()
-
-  await Promise.all([
-    page.waitForResponse(RegExp(waitForResponse)),
-    option.click(),
-  ])
-
-  // validate
-  const mentions = await page.getByTestId('mention-item-base')
-    .filter({
-      hasText: RegExp(input,'i')
-    })
-
-  const count = await mentions.count()
-  // console.log('Count...', count)
-  // we should have at least one item
-  expect(count).toBeGreaterThan(0)
 }
 
 export async function addRelatedSoftware(page: Page, waitForResponse:string) {

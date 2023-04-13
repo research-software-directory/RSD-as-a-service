@@ -32,10 +32,10 @@ const config: PlaywrightTestConfig = {
   // fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry 2 */
-  retries: 2,
+  /* Retry 2 in CI and 0 locally */
+  retries: process.env.CI ? 3 : 1,
   /* Run 2 worker in CI and 6 locally */
-  workers: process.env.CI ? 2 : 6,
+  // workers: process.env.CI ? 2 : 6,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', {open: 'never'}]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -88,6 +88,14 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices['Desktop Safari']
       },
+    },
+    {
+      // project to generate local json data for mentions
+      name: 'generate',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+      testDir: './generate',
     },
     /* Test against mobile viewports. */
     // {

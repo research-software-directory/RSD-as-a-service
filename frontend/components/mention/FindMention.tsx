@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -121,6 +121,10 @@ export default function FindMention({config, onAdd, searchFn, onCreate}: FindMen
   function onAddMention(selected: AutocompleteOption<MentionItemProps>) {
     if (selected && selected.data) {
       onAdd(selected.data)
+      if (config.reset === true) {
+        // clear everything
+        onCancel()
+      }
     }
   }
 
@@ -178,7 +182,11 @@ export default function FindMention({config, onAdd, searchFn, onCreate}: FindMen
       return renderAddOption(props,option)
     }
     return (
-      <li {...props} key={option.key}>
+      <li
+        data-testid="find-mention-option"
+        {...props}
+        key={option.key}
+      >
         <MentionItemBase
           item={option.data}
           nav={

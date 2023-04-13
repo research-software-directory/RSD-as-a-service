@@ -62,8 +62,8 @@ describe('pages/user/[section].tsx', () => {
       </WithAppContext>
     )
 
-    // profile page
-    const profile = await screen.findByTestId('user-profile-section')
+    // settings page
+    const settings = await screen.findByTestId('user-settings-section')
     // shows user account
     if (mockSession.user?.account) {
       const userId = screen.getByText(RegExp(mockSession.user?.account))

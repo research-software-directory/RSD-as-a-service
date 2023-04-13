@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 # SPDX-FileCopyrightText: 2022 - 2023 dv4all
-# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 #
 # SPDX-License-Identifier: Apache-2.0
 
 # ensure same version is used in package.json for local testing
-FROM mcr.microsoft.com/playwright:v1.31.0-focal
+FROM mcr.microsoft.com/playwright:v1.32.0-focal
 
 # create working dir
 WORKDIR /app

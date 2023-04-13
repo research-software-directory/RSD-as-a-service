@@ -31,7 +31,7 @@ export default function UserSettings() {
   // console.groupEnd()
 
   return (
-    <div data-testid="user-profile-section">
+    <div data-testid="user-settings-section">
       <h2>Your profile properties</h2>
       <div className="py-4">
         <div>Account id</div>
@@ -39,7 +39,7 @@ export default function UserSettings() {
       </div>
       <div className="py-4">
         <div>Name</div>
-        {user?.name ?? ''}
+        <span data-testid="user-settings-username">{user?.name ?? ''}</span>
       </div>
       <div className="py-4">
         <div>Role</div>

@@ -11,7 +11,6 @@ import BlockIcon from '@mui/icons-material/Block'
 
 import {EditOrganisation} from '../../../../types/Organisation'
 import {getImageUrl} from '~/utils/editImage'
-import IconOverlay from '~/components/layout/IconOverlay'
 import SortableListItemActions from '~/components/layout/SortableListItemActions'
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
@@ -66,26 +65,6 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
     )
   }
 
-  function getStatusIcon() {
-    if (organisation.status !== 'approved') {
-      return (
-        <IconOverlay
-          title="Affiliation denied by organisation"
-          // className="absolute flex items-center w-[2rem] h-[6rem] bg-error"
-        >
-          <BlockIcon
-            sx={{
-              width: '100%',
-              height: '100%',
-              color: 'error.main'
-            }}
-          />
-        </IconOverlay>
-      )
-    }
-    return null
-  }
-
   return (
     <ListItem
       data-testid="organisation-list-item"
@@ -116,7 +95,7 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
           sx={{
             width: '6rem',
             height: '6rem',
-            fontSize: '3rem',
+            fontSize: '2rem',
             marginRight: '1rem',
             '& img': {
               height:'auto'
@@ -127,10 +106,13 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
           {organisation.name.slice(0,3)}
         </Avatar>
       </ListItemAvatar>
-      {/* {getStatusIcon()} */}
       <ListItemText
         data-testid="organisation-list-item-text"
-        primary={organisation.name}
+        primary={
+          <a href={`/organisations/${organisation.slug}`} target="_blank">
+            {organisation.name}
+          </a>
+        }
         secondary={
           <>
             <span>{organisation.website}</span>

@@ -76,7 +76,7 @@ export default function FindSoftwareMention() {
               minLength: config.findMention.validation.minLength,
               label: config.findMention.label,
               help: config.findMention.help,
-              reset: false
+              reset: true
             }}
           />
         </div>
