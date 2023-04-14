@@ -55,7 +55,7 @@ jobs:
       run: npm ci
     - name: install browsers
       working-directory: e2e
-      run: npx playwright install chromium chrome firefox --with-deps
+      run: npx playwright install chromium chrome --with-deps
       if: steps.playwright-cache.outputs.cache-hit != 'true'
     - name: build rsd
       working-directory: .
@@ -65,7 +65,7 @@ jobs:
     - name: start rsd
       working-directory: .
       run: |
-        docker-compose up --detach --scale scrapers=0
+        docker-compose up --detach database backend auth frontend nginx swagger
         sleep 5
     - name: run e2e tests in chrome
       working-directory: e2e
