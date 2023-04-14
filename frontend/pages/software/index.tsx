@@ -196,13 +196,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
   // when token is passed it will return not published items too
   const software = await getSoftwareList({url})
 
-  // order returned selection by best match on search term
-  // NOTE! this is not complete database order, only items of returned page
-  let data = software.data
-  if (search && data.length > 0) {
-    data = data.sort((a, b) => sortBySearchFor(a, b, 'brand_name', search))
-  }
-
   // will be passed as props to page
   // see params of SoftwareIndexPage function
   return {
@@ -213,7 +206,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       count: software.count,
       page,
       rows,
-      software: data,
+      software: software.data,
     },
   }
 }
