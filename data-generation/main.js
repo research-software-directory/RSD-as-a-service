@@ -336,7 +336,7 @@ async function generateProjects(amount=500) {
 			date_end: faker.helpers.maybe(() => dateEnd, {probability: 0.9}) ?? null,
 			date_start: faker.helpers.maybe(() => dateStart, {probability: 0.9}) ?? null,
 			description: faker.lorem.paragraphs(5, '\n\n'),
-			grant_id: faker.helpers.replaceSymbols('******'),
+			grant_id: faker.helpers.maybe(() => faker.helpers.replaceSymbols('******'), {probability: 0.8}) ?? null,
 			image_caption: faker.animal.cat(),
 			image_contain: !!faker.helpers.maybe(() => true, {probability: 0.5}),
 			image_id: localImageIds[index%localImageIds.length],
