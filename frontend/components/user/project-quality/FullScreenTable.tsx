@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
@@ -31,7 +32,7 @@ export default function FullScreenTable({children,onClose}: FullScreenTableProps
         fontWeight: 500
       }}>
         <div className="flex justify-between">
-          <h2>Project quality overview</h2>
+          <h2>Project metadata overview</h2>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>

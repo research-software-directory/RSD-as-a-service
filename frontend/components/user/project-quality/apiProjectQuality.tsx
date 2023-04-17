@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,13 +15,16 @@ export type ProjectQualityProps = {
   title: string,
   has_subtitle: boolean,
   is_published: boolean,
-  has_start_date: boolean,
-  has_end_date: boolean,
+  date_start: string | null,
+  date_end: string | null,
+  grant_id: string | null,
   has_image: boolean,
   has_contact_person: boolean,
   team_member_cnt: number,
   participating_org_cnt: number,
   funding_org_cnt: number,
+  software_cnt: number,
+  project_cnt: number,
   keyword_cnt: number,
   research_domain_cnt: number,
   impact_cnt: number,
@@ -30,17 +35,20 @@ export type ProjectQualityProps = {
 export type ProjectQualityKeys = keyof ProjectQualityProps
 
 const realLabels = new Map<string, SortableTableProperties>()
-  realLabels.set('title', {'label': 'Title', 'type': 'link',sx:{minWidth:'14rem'}})
-  realLabels.set('score', {'label': 'Complete', 'type': 'pct'})
+  realLabels.set('title', {'label': 'Title', 'type': 'link', sx:{minWidth:'14rem'}})
+  realLabels.set('score', {'label': 'Metadata score', 'type': 'pct'})
   realLabels.set('has_subtitle', {'label': 'Subtitle', 'type': 'boolean'})
   realLabels.set('is_published', {'label': 'Published', 'type': 'boolean'})
-  realLabels.set('has_start_date', {'label': 'Start date', 'type': 'boolean'})
-  realLabels.set('has_end_date', {'label': 'End date', 'type': 'boolean'})
+  realLabels.set('date_start', {'label': 'Start date', 'type': 'text', sx:{'whiteSpace': 'nowrap'}})
+  realLabels.set('date_end', {'label': 'End date', 'type': 'text', sx:{'whiteSpace': 'nowrap'}})
+  realLabels.set('grant_id', {'label': 'Grant ID', 'type': 'text'})
   realLabels.set('has_image', {'label': 'Image', 'type': 'boolean'})
   realLabels.set('has_contact_person', {'label': 'Contact person', 'type': 'boolean'})
   realLabels.set('team_member_cnt', {'label': 'Team members', 'type': 'number'})
   realLabels.set('participating_org_cnt', {'label': 'Participating organisations', 'type': 'number'})
   realLabels.set('funding_org_cnt', {'label': 'Funding organisations', 'type': 'number'})
+  realLabels.set('software_cnt', {'label': 'Related software', 'type': 'number'})
+  realLabels.set('project_cnt', {'label': 'Related projects', 'type': 'number'})
   realLabels.set('keyword_cnt', {'label': 'Keywords', 'type': 'number'})
   realLabels.set('research_domain_cnt', {'label': 'Research domains', 'type': 'number'})
   realLabels.set('impact_cnt', {'label': 'Impact', 'type': 'number'})
@@ -80,16 +88,15 @@ function calculateScore(element:ProjectQualityProps) {
 
   const keys = Object.keys(element) as ProjectQualityKeys[]
   keys.forEach((key) => {
+    if (key === 'title' || key === 'slug' || key === 'score') return
     const value = element[key]
-    if (typeof value !== 'undefined' && (value === true || (Number.isInteger(value) && value > 0))){
+    if (typeof value !== 'undefined' && (value === true || (Number.isInteger(value) && value as number > 0) || typeof value === 'string')){
       score += 1
     }
-    if (value === true || value===false || Number.isInteger(value)){
-      kpiCount +=1
-    }
+    kpiCount +=1
   })
 
-  if (kpiCount===0) return 0
+  if (kpiCount === 0) return 0
   return Math.round((score/kpiCount)*100)
 }
 

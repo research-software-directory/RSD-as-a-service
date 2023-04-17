@@ -103,11 +103,11 @@ export default function SortableTable({metadata, initialData, initialOrder=''}: 
         if (item[metadataKey] === true) return <CheckIcon sx={{color:'success.main'}} />
         else if (item[metadataKey] === false) return <CloseIcon sx={{color:'error.main'}} />
         else return <QuestionMarkIcon sx={{color: 'info.main'}} />
-      case 'text': return item[metadataKey]
+      case 'text': return item[metadataKey] === null ? <CloseIcon sx={{color:'error.main'}} /> : item[metadataKey]
       case 'pct':
         const value = item[metadataKey]
         return `${Math.round(value as number)}%`
-      case 'number': return item[metadataKey]
+      case 'number': return item[metadataKey] as number > 0 ? item[metadataKey] : <CloseIcon sx={{color:'error.main'}} />
       case 'link':
         const href = `/projects/${item['slug']}/edit`
         return <Link href={href} target="_blank">{item[metadataKey]}</Link>
@@ -129,10 +129,19 @@ export default function SortableTable({metadata, initialData, initialOrder=''}: 
     if (type === 'boolean' || type === 'number' || type === 'pct') {
       data.sort((a, b) => nowAscending ? a[label] - b[label] : b[label] - a[label])
     } else {
-      data.sort((a, b) => nowAscending ? a[label].localeCompare(b[label]) : b[label].localeCompare(a[label]))
+      data.sort((a, b) => compareStringNullsAware(a[label], b[label], nowAscending))
     }
     setAscending(nowAscending)
     setSortColumn(label)
     setData(data)
+  }
+
+  function compareStringNullsAware(s1: string | null, s2: string | null, ascending: boolean): number {
+    if (s1 === null && s2 === null) return 0
+
+    if (s1 === null && s2 !== null) return ascending ? -1 : 1
+    if (s1 !== null && s2 === null) return !ascending ? -1 : 1
+
+    return ascending ? s1!.localeCompare(s2!) : s2!.localeCompare(s1!)
   }
 }
