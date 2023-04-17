@@ -15,7 +15,7 @@ version: "3.0"
 services:
   database:
     build: ./database
-    image: rsd/database:2.0.1
+    image: rsd/database:2.0.2
     ports:
     # enable connection from outside (development mode)
      - "5432:5432"
@@ -52,7 +52,7 @@ services:
 
   auth:
     build: ./authentication
-    image: rsd/auth:1.2.1
+    image: rsd/auth:1.2.2
     expose:
       - 7000
     environment:
