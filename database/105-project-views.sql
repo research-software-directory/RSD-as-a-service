@@ -281,3 +281,50 @@ LEFT JOIN
 WHERE
 	CASE WHEN show_all IS TRUE THEN TRUE ELSE project.id IN (SELECT * FROM projects_of_current_maintainer()) END;
 $$;
+
+-- RELATED PROJECTS for project_id
+-- use bi-directional linking: project_id used as origin or relation
+CREATE FUNCTION related_projects_for_project(project_id UUID) RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	current_state VARCHAR,
+	date_start DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_contain BOOLEAN,
+	image_id VARCHAR,
+	status relation_status,
+	origin UUID,
+	relation UUID
+) LANGUAGE sql STABLE AS
+$$
+SELECT DISTINCT ON (project.id)
+	project.id,
+	project.slug,
+	project.title,
+	project.subtitle,
+	CASE
+		WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
+		WHEN project.date_start > now() THEN 'Starting'::VARCHAR
+		WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+		ELSE 'Running'::VARCHAR
+	END AS current_state,
+	project.date_start,
+	project.updated_at,
+	project.is_published,
+	project.image_contain,
+	project.image_id,
+	project_for_project.status,
+	project_for_project.origin,
+	project_for_project.relation
+FROM
+	project
+INNER JOIN
+	project_for_project ON
+		(project.id = project_for_project.relation AND project_for_project.origin = project_id)
+		OR
+		(project.id = project_for_project.origin AND project_for_project.relation = project_id)
+;
+$$;

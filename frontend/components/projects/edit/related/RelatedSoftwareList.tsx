@@ -109,9 +109,9 @@ export function RelatedSoftwareItem({software,onDelete}:SoftwareItemProps) {
         minHeight:itemHeight,
         // this makes space for buttons
         paddingRight:'5rem',
-        '&:hover': {
-          backgroundColor:'grey.100'
-        }
+        // '&:hover': {
+        //   backgroundColor:'grey.100'
+        // }
       }}
     >
       <ListItemAvatar>

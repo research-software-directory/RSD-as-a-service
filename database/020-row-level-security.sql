@@ -596,13 +596,13 @@ CREATE POLICY maintainer_can_read ON project_for_project FOR SELECT TO rsd_user
 	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY maintainer_insert ON project_for_project FOR INSERT TO rsd_user
-	WITH CHECK (status = 'approved' AND (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM organisations_of_current_maintainer())));
+	WITH CHECK (status = 'approved' AND (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM projects_of_current_maintainer())));
 
 CREATE POLICY maintainer_update ON project_for_project FOR UPDATE TO rsd_user
-	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM organisations_of_current_maintainer()));
+	USING (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY maintainer_delete ON project_for_project FOR DELETE TO rsd_user
-	USING (status = 'approved' AND (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM organisations_of_current_maintainer())));
+	USING (status = 'approved' AND (origin IN (SELECT * FROM projects_of_current_maintainer()) OR relation IN (SELECT * FROM projects_of_current_maintainer())));
 
 CREATE POLICY admin_all_rights ON project_for_project TO rsd_admin
 	USING (TRUE)

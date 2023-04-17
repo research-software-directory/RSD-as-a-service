@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,18 +11,19 @@ import {getRelatedProjectsForProject} from '~/utils/getProjects'
 import {addRelatedProject, deleteRelatedProject} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
-import {SearchProject} from '~/types/Project'
+import {CurrentState, RelatedProjectForProject, SearchProject} from '~/types/Project'
 import FindRelatedProject from './FindRelatedProject'
 import useProjectContext from '../useProjectContext'
 import RelatedProjectList from './RelatedProjectList'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {Status} from '~/types/Organisation'
+import {extractErrorMessages} from '~/utils/fetchHelpers'
 
 export default function RelatedProjectsForProject() {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {project} = useProjectContext()
-  const [relatedProject, setRelatedProject] = useState<SearchProject[]>()
+  const [relatedProject, setRelatedProject] = useState<RelatedProjectForProject[]>()
   const [loadedProject, setLoadedProject] = useState('')
 
   useEffect(() => {
@@ -72,7 +73,13 @@ export default function RelatedProjectsForProject() {
           ...relatedProject,
           {
             ...selected,
-            status
+            origin: project.id,
+            relation: selected.id,
+            status,
+            // these are not relevant but required in type
+            date_start: null,
+            updated_at: null,
+            current_state: 'running' as CurrentState
           }
         ].sort((a, b) => sortOnStrProp(a, b, 'title'))
         setRelatedProject(newList)
@@ -85,13 +92,25 @@ export default function RelatedProjectsForProject() {
     // remove(pos)
     const related = relatedProject[pos]
     if (related) {
-      const resp = await deleteRelatedProject({
-        origin: project.id,
-        relation: related.id,
-        token
-      })
-      if (resp.status !== 200) {
-        showErrorMessage(`Failed to remove related project. ${resp.message}`)
+      // delete relation in both directions
+      const promises = [
+        deleteRelatedProject({
+          origin: related.origin,
+          relation: related.relation,
+          token
+        }),
+        deleteRelatedProject({
+          origin: related.relation,
+          relation: related.origin,
+          token
+        })
+      ]
+      const responses = await Promise.all(promises)
+      const errors = extractErrorMessages(responses)
+      // return result
+      if (errors.length > 0) {
+        // return first error for now
+        showErrorMessage(`Failed to remove related project. ${errors[0].message}`)
       } else {
         const newList = [
           ...relatedProject.slice(0, pos),

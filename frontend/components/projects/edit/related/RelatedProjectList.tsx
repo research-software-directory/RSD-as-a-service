@@ -15,16 +15,25 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import LockIcon from '@mui/icons-material/Lock'
 
-import {SearchProject} from '~/types/Project'
 import {maxText} from '~/utils/maxText'
+import {getImageUrl} from '~/utils/editImage'
+import {Status} from '~/types/Organisation'
+
+type RelatedProjectProps = {
+  slug: string
+  title: string
+  subtitle: string | null
+  image_id: string | null
+  status: Status
+}
 
 type ProjectListProps = {
-  projects: SearchProject[] | undefined
+  projects: RelatedProjectProps[] | undefined
   onRemove:(pos:number)=>void
 }
 
 type ProjectItemProps = {
-  project: SearchProject
+  project: RelatedProjectProps
   onDelete:()=>void
 }
 
@@ -66,7 +75,7 @@ export default function RelatedProjectList({projects,onRemove}:ProjectListProps)
   )
 }
 
-export function RelatedProjectItem({project,onDelete}:ProjectItemProps) {
+export function RelatedProjectItem({project, onDelete}: ProjectItemProps) {
   function getStatusIcon() {
     if (project.status !== 'approved') {
       return (
@@ -88,32 +97,32 @@ export function RelatedProjectItem({project,onDelete}:ProjectItemProps) {
   }
   return (
     <ListItem
-        data-testid="related-project-item"
-        secondaryAction={
-          <>
-          <IconButton
-            edge="end"
-            aria-label="delete"
-            onClick={onDelete}
-            sx={{marginRight: '0rem'}}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </>
-        }
+      data-testid="related-project-item"
+      secondaryAction={
+        <>
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          onClick={onDelete}
+          sx={{marginRight: '0rem'}}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </>
+      }
       sx={{
-          minHeight:itemHeight,
-          // this makes space for buttons
-          paddingRight:'5rem',
-          '&:hover': {
-            backgroundColor:'grey.100'
-          }
-        }}
+        minHeight:itemHeight,
+        // this makes space for buttons
+        paddingRight:'5rem',
+        // '&:hover': {
+        //   backgroundColor:'grey.100'
+        // }
+      }}
     >
       <ListItemAvatar>
         <Avatar
           alt={project.title}
-          // src={getImageUrl(project.image_id) ?? ''}
+          src={getImageUrl(project.image_id) ?? ''}
           sx={{
             width: '4rem',
             height: '4rem',
