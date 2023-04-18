@@ -72,7 +72,7 @@ export default function OrganisationCardV2({organisation}: { organisation: Organ
               /></span>
           } */}
 
-        <div className="flex gap-8 items-end justify text-center mb-2">
+        <div className="flex gap-8 items-end text-center mb-2">
 
           {/* Counter */}
           <div>
