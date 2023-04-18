@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,7 +28,7 @@ export default function SoftwareMentionsSection({mentions}: { mentions: MentionF
         <DarkThemeSection>
         <h2
           data-testid="software-mentions-section-title"
-          className="pb-8 text-[2rem] text-white">
+          className="pb-8 text-[2rem] text-base-100">
           Mentions
         </h2>
         <section>

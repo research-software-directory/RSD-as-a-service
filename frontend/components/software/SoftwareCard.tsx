@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -91,14 +91,14 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
             {renderPublished()} {brand_name}
           </CardTitle>
           <div
-            className="flex w-[4rem] h-[4rem] justify-center items-center bg-white text-base text-[1.5rem] absolute top-0 right-0 group-hover:text-secondary">
+            className="flex w-[4rem] h-[4rem] justify-center items-center bg-base-100 text-base text-[1.5rem] absolute top-0 right-0 group-hover:text-secondary">
             {getInitals()}
           </div>
         </div>
-        <p className="flex-1 p-4 overflow-auto text-gray-800 group-hover:text-white">
+        <p className="flex-1 p-4 overflow-auto text-base-800 group-hover:text-base-100">
           {short_statement}
         </p>
-        <div className="flex justify-between p-4 text-sm group-hover:text-white">
+        <div className="flex justify-between p-4 text-sm group-hover:text-base-100">
           <span className="last-update">
             Updated {getTimeAgoSince(today, updated_at)}
           </span>

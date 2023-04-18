@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,7 +20,7 @@ type SignUpOrganisation = {
   description: string
 }
 
-const inputClasses='mb-4 placeholder:text-gray-500 outline-0 p-2 w-full text-sm bg-transparent text-white border border-gray-600 rounded-sm'
+const inputClasses='mb-4 placeholder:text-base-500 outline-0 p-2 w-full text-sm bg-transparent text-base-100 border border-base-600 rounded-sm'
 
 export default function OrganisationSignUp({minWidth = '9rem'}:{minWidth:string}) {
   const theme = useTheme()
@@ -78,9 +78,9 @@ export default function OrganisationSignUp({minWidth = '9rem'}:{minWidth:string}
       >
         <div className="relative group">
           <div
-            className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
+            className="absolute -inset-1 bg-gradient-to-r from-glow-start to-glow-end rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
           <div
-            className="flex gap-3 text-black relative px-8 py-3 bg-white ring-1 ring-gray-900/5 rounded leading-none items-center justify-center space-x-2"
+            className="flex gap-3 text-base-900 relative px-8 py-3 bg-base-100 ring-1 ring-base-800 rounded leading-none items-center justify-center space-x-2"
             style={{
               minWidth
             }}
@@ -99,7 +99,7 @@ export default function OrganisationSignUp({minWidth = '9rem'}:{minWidth:string}
       >
         <div className="h-full w-full bg-[#232323] p-6">
           <div className="mx-auto">
-            <div className="text-white text-xl mb-4">
+            <div className="text-base-100 text-xl mb-4">
               {config.button.register.label}
             </div>
             <div className="text-sm text-[#B7B7B7] pb-4">
@@ -140,7 +140,7 @@ export default function OrganisationSignUp({minWidth = '9rem'}:{minWidth:string}
             {/* NAVIGATION */}
             <div className="flex justify-end items-center gap-4 my-2">
               <button
-                className="text-sm text-white border border-gray-500 text-opacity-60 rounded px-4 py-1 hover:opacity-90 active:opacity-95"
+                className="text-sm text-base-100 border border-base-500 text-opacity-60 rounded px-4 py-1 hover:opacity-90 active:opacity-95"
                 onClick={closeAndReset}>
                 Cancel
               </button>
@@ -148,7 +148,7 @@ export default function OrganisationSignUp({minWidth = '9rem'}:{minWidth:string}
                 role="button"
                 type="submit"
                 onClick={closeAndReset}
-                className="text-sm text-white hover:text-white bg-primary px-4 py-1 rounded hover:opacity-90 active:opacity-95"
+                className="text-sm text-base-100 hover:text-base-100 bg-primary px-4 py-1 rounded hover:opacity-90 active:opacity-95"
                 target="_blank"
                 rel="noreferrer"
                 href={`mailto:${host.email}?subject=${encodeURIComponent(config.button.register.label)}&body=${mailBody()}`}

@@ -55,7 +55,7 @@ export default function CitationSection({releases,concept_doi}:
   // render section
   return (
     <PageContainer className='lg:px-4'>
-      <article className="flex flex-col min-h-[16rem] px-4 py-8 bg-secondary text-white md:flex-row lg:py-10 lg:px-16 lg:translate-y-[-3rem]">
+      <article className="flex flex-col min-h-[16rem] px-4 py-8 bg-secondary text-base-100 md:flex-row lg:py-10 lg:px-16 lg:translate-y-[-3rem]">
         <DarkThemeSection>
         <div className="flex-1 flex flex-col justify-between">
           <h2 className='py-4'

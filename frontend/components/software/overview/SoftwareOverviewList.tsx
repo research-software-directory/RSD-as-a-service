@@ -33,7 +33,7 @@ export default function SoftwareOverviewList({software = []}: { software: Softwa
               <img
                 src={`${getImageUrl(item.image_id) ?? ''}`}
                 alt={`Cover image for ${item.brand_name}`}
-                className="w-12 text-base-content-disabled p-2 object-contain"
+                className="w-12 max-h-[3.5rem] text-base-content-disabled p-2 object-contain object-center"
               />
               :
               <div

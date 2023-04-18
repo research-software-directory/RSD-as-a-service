@@ -39,8 +39,8 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
   }
 
   return (
-    <article className="flex flex-col bg-white max-w-md">
-      <h3 className="text-center font-medium px-6 py-4 uppercase bg-primary text-white md:text-left">Contact person</h3>
+    <article className="flex flex-col bg-base-100 max-w-md">
+      <h3 className="text-center font-medium px-6 py-4 uppercase bg-primary text-base-100 md:text-left">Contact person</h3>
       <div className="flex flex-col p-8 gap-8 md:flex-row 2xl:flex-col">
         <Avatar
           alt={displayName ?? ''}

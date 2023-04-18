@@ -13,7 +13,7 @@ export default function KeywordList({keywords=[], visibleNumberOfKeywords = 3}: 
   if (!keywords || keywords.length===0) return null
 
   return (
-    <ul className="flex flex-wrap items-start gap-2 text-gray-600 text-sm mt-4">
+    <ul className="flex flex-wrap items-start gap-2 text-base-700 text-sm mt-4">
       {// limits the keywords to 'visibleNumberOfKeywords' per software.
         keywords?.slice(0, visibleNumberOfKeywords)
           .map((keyword:string, index: number) => (

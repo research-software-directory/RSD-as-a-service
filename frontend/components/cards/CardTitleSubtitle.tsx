@@ -15,7 +15,7 @@ export default function CardTitleSubtitle({title,subtitle}:CardTitleSubtitleProp
       {title}
     </h2>
     <div className="py-2">
-      <p className="text-gray-600 line-clamp-3 break-words">
+      <p className="text-base-700 line-clamp-3 break-words">
         {subtitle}
       </p>
     </div>
