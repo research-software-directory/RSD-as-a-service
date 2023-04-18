@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -43,7 +43,7 @@ export default function ProjectMentions({output=[], impact=[]}: MentionsSectionP
       <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
         <h2
           data-testid="project-impact-section-title"
-          className="pb-8 text-[2rem] text-white">
+          className="pb-8 text-[2rem] text-base-100">
           Impact
         </h2>
         <div>
@@ -79,7 +79,7 @@ export default function ProjectMentions({output=[], impact=[]}: MentionsSectionP
       <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
         <h2
           data-testid="project-output-section-title"
-          className="pb-8 text-[2rem] text-white">
+          className="pb-8 text-[2rem] text-base-100">
           Output
         </h2>
         <div>

@@ -41,7 +41,7 @@ export default function OrganisationCardV2({organisation}: { organisation: Organ
       passHref
     >
       {/* Organization card content */}
-      <div className="transition bg-white shadow-md hover:shadow-lg
+      <div className="transition bg-base-100 shadow-md hover:shadow-lg
                       rounded-lg hover:cursor-pointer select-none w-full p-4">
 
         <img

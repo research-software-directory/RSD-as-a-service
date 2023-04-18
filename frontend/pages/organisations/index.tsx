@@ -87,7 +87,7 @@ export default function OrganisationsIndexPage({
   }
 
   return (
-    <div className="bg-gray-100">
+    <div className="bg-base-200">
       <AppHeader />
 
       <div className="py-4 flex-1 flex flex-col px-4 lg:container lg:mx-auto">

@@ -24,7 +24,7 @@ export default function EditProjectStickyHeader() {
   })
 
   return (
-    <StickyHeader className={`bg-white ${classes}`}>
+    <StickyHeader className={`bg-base-100 ${classes}`}>
       <h1
         ref={headerRef}
         className="flex-1 xl:text-4xl">

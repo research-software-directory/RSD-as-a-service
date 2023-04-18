@@ -33,7 +33,7 @@ export default function ImageWithPlaceholder({
     }
     return (
       <div
-        className={`flex flex-col justify-center items-center text-grey-500 rounded-sm ${className ?? ''}`}
+        className={`flex flex-col justify-center items-center text-base-500 rounded-sm ${className ?? ''}`}
       >
         <PhotoSizeSelectActualOutlinedIcon
           sx={{

@@ -27,7 +27,7 @@ export default function HighlightsCard({item}:SoftwareCardProps){
       key={item.id}
       href={`/software/${item.slug}`}
       className="hover:text-inherit">
-      <div className="flex-shrink-0 transition bg-white shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex flex-col sm:flex-row w-[20rem] sm:w-full" >
+      <div className="flex-shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex flex-col sm:flex-row w-[20rem] sm:w-full" >
         {/* Cover image */}
         {
           item.image_id &&

@@ -15,7 +15,7 @@ export default function FilterHeader({filterCnt,resetFilters}:FilterHeaderProps)
     <div className="flex justify-between">
       <div className="flex justify-center items-center gap-2 mr-12">
         <span
-          className="rounded-full bg-gray-100 h-8 w-8 flex items-center justify-center font-semibold">
+          className="rounded-full bg-base-200 h-8 w-8 flex items-center justify-center font-semibold">
           {filterCnt}
         </span>
         {filterCnt===1 ? 'Filter' : 'Filters'}
