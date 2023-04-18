@@ -10,7 +10,6 @@ import {SoftwareListItem} from '~/types/SoftwareTypes'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
-import {paginationUrlParams} from '~/utils/postgrestUrl'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
 export type SoftwareHighlight = SoftwareListItem & {

@@ -18,7 +18,7 @@ type SearchInputProps = {
 export default function SearchInput({
   placeholder,
   onSearch,
-  delay = 400,
+  delay = 700,
   defaultValue = ''
 }: SearchInputProps) {
   const [state, setState] = useState({
