@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -176,10 +177,14 @@ describe('frontend/components/projects/edit/related/index.tsx', () => {
     // return mocked values
     mockGetRelatedProjectsForProject.mockResolvedValueOnce(mockRelatedProjects)
     mockGetRelatedSoftwareForProject.mockResolvedValueOnce([])
-    mockDeleteRelatedProject.mockResolvedValueOnce({
-      status: 200,
-      message:'OK'
-    })
+    mockDeleteRelatedProject
+      .mockResolvedValueOnce({
+        status: 200,
+        message:'OK'
+      }).mockResolvedValueOnce({
+        status: 200,
+        message:'OK'
+      })
     // render
     render(
       <WithAppContext options={{session: mockSession}}>
@@ -199,10 +204,16 @@ describe('frontend/components/projects/edit/related/index.tsx', () => {
     fireEvent.click(delBtn)
 
     await waitFor(() => {
-      expect(mockDeleteRelatedProject).toBeCalledTimes(1)
+      // delete (possible) 2 entries/references
+      expect(mockDeleteRelatedProject).toBeCalledTimes(2)
       expect(mockDeleteRelatedProject).toBeCalledWith({
-        'origin': editProjectState.project.id,
-        'relation': mockRelatedProjects[0].id,
+        'origin': mockRelatedProjects[0].origin,
+        'relation': mockRelatedProjects[0].relation,
+        'token': mockSession.token,
+      })
+      expect(mockDeleteRelatedProject).toBeCalledWith({
+        'origin': mockRelatedProjects[0].relation,
+        'relation': mockRelatedProjects[0].origin,
         'token': mockSession.token,
       })
       // validate remaining items

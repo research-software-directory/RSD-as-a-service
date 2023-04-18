@@ -331,7 +331,7 @@ export async function getRelatedProjectsForProject({project, token, frontend, ap
   { project: string, token?: string, frontend?: boolean, approved?: boolean, order?:string }) {
   try {
     // construct api url based on request source
-    let query = `rpc/related_projects_for_project?origin_id=${project}`
+    let query = `rpc/related_projects_for_project?project_id=${project}`
     if (order) {
       query += `&order=${order}`
     } else {
@@ -402,7 +402,7 @@ export async function searchForRelatedProjectByTitle({project, searchFor, token}
     if (project) {
       query += `&id=neq.${project}`
     }
-    const url = `/api/v1/project?select=id,slug,title,subtitle${query}`
+    const url = `/api/v1/project?select=id,slug,title,subtitle,image_id${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)

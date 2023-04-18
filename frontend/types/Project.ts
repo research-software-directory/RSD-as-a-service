@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -97,19 +97,20 @@ export type SearchProject = {
   id: string
   slug: string
   title: string
-  subtitle: string
+  subtitle: string | null
   status: Status
+  image_id: string | null
 }
 
 export type RelatedProject = SearchProject & {
   current_state: CurrentState
   date_start: string | null
   updated_at: string | null
-  image_id: string | null
 }
 
 export type RelatedProjectForProject = RelatedProject & {
   origin: string
+  relation: string
 }
 
 export type RelatedProjectForSoftware = RelatedProject & {
