@@ -695,5 +695,5 @@ await postToBackend('/release', idsSoftware.map(id => ({software: id})))
 	.then(() => console.log('releases done'));
 
 console.log('Done');
-// This is unfortunately needed, because when using docker-compose, the node process might hang for a long time
+// This is unfortunately needed, because when using docker compose, the node process might hang for a long time
 process.exit(0);

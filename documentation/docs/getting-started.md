@@ -1,9 +1,9 @@
 <!--
+SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -39,7 +39,7 @@ The RSD-as-a-Service project is a divided into different services included in th
 
 ### Environment variables
 
-The environment variables should be stored in a .env file, which is automatically loaded by docker-compose. To validate loading of env variables use `docker-compose config`. More info about the use of environment variables in docker-compose is available at [official documentation](https://docs.docker.com/compose/environment-variables/)
+The environment variables should be stored in a .env file, which is automatically loaded by docker compose. To validate loading of env variables use `docker compose config`. More info about the use of environment variables in docker compose is available at [official documentation](https://docs.docker.com/compose/environment-variables/)
 
 *   copy the file `.env.example` to `.env` file at the root of the project
 
@@ -53,16 +53,16 @@ cp .env.example .env
 
 ```bash
 # from project root dir
-docker-compose build
+docker compose build
 ```
 
 ## Running locally
 
-Run the command `docker-compose up`.
+Run the command `docker compose up`.
 
 ```bash
 # from project root dir
-docker-compose up
+docker compose up
 ```
 
 The application can be viewed at http://localhost
@@ -131,7 +131,7 @@ Any file `markdown file` added indie the `docs` folder will be available on buil
 To clear the database, if the database structure has changed or you need to run data migration again, run the command:
 
 ```bash
-docker-compose down --volumes
+docker compose down --volumes
 ```
 
 ## Tech Stack

@@ -1,9 +1,9 @@
 <!--
 SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2021 - 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
 SPDX-FileCopyrightText: 2021 - 2022 dv4all
+SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 SPDX-FileCopyrightText: 2021 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -37,7 +37,7 @@ This repo contains the new RSD-as-a-service implementation. The service can be f
 
 ### Building from source code
 
-1. Before installing the dependencies ensure that you have `Docker` and `docker-compose` locally.
+1. Before installing the dependencies ensure that you have `docker` and `docker compose` V2 (see the [documentation of Docker Compose](https://docs.docker.com/compose/compose-v2/)) locally.
 2. You will also need `make` and [`yarn`](https://yarnpkg.com) to automate the configuration and installation process.
 3. Set the required environment variables:
    Copy the file `.env.example` to `.env` file at the root of the project
@@ -51,8 +51,8 @@ This repo contains the new RSD-as-a-service implementation. The service can be f
 ```
 # Start the containers via the make file
 make start
-# OR directly use docker-compose
-docker-compose up
+# OR directly use docker compose
+docker compose up
 ```
 
 ### Stopping the services
@@ -60,8 +60,8 @@ docker-compose up
 ```
 # Stop all services via the makefile
 make stop
-# OR directly use docker-compose
-docker-compose down
+# OR directly use docker compose
+docker compose down
 ```
 
 ## Developing the frontend
@@ -71,8 +71,8 @@ You can run frontend in development mode as docker a service (called frontend-de
 ```
 # Run frontend development using docker at http://localhost:3000
 make frontend-docker
-# OR use docker-compose directly
-docker-compose up --scale frontend=0 --scale scrapers=0 --scale frontend-dev=1
+# OR use docker compose directly
+docker compose up --scale frontend=0 --scale scrapers=0 --scale frontend-dev=1
 ```
 
 It is possible to directly run the frontend too (without using a docker container). You must then have NodeJS installed, preferably v18.
@@ -82,7 +82,7 @@ It is possible to directly run the frontend too (without using a docker containe
 make install
 # Run the frontend and the documentation on localhost:3000 and localhost:3030
 make dev
-# Stop all services with `docker-compose down`
+# Stop all services with `docker compose down`
 make down
 ```
 

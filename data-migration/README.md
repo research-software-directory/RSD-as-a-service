@@ -1,13 +1,13 @@
 <!--
-SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2022 dv4all
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-#DEPRECATED
+# DEPRECATED
 This script is now deprecated and should not be used anymore.
 
 # Data migration
