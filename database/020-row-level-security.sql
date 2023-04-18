@@ -511,9 +511,11 @@ CREATE POLICY admin_all_rights ON account TO rsd_admin
 
 ALTER TABLE login_for_account ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY maintainer_all_rights ON login_for_account TO rsd_user
-	USING (account IN (SELECT id FROM account))
-	WITH CHECK (account IN (SELECT id FROM account));
+CREATE POLICY maintainer_select ON login_for_account FOR SELECT TO rsd_user
+	USING (account IN (SELECT id FROM account));
+
+CREATE POLICY maintainer_delete ON login_for_account FOR DELETE TO rsd_user
+	USING (account IN (SELECT id FROM account));
 
 CREATE POLICY admin_all_rights ON login_for_account TO rsd_admin
 	USING (TRUE)
