@@ -151,6 +151,57 @@ GROUP BY
 $$;
 
 
+CREATE FUNCTION count_project_related_software() RETURNS TABLE (
+	project UUID,
+	software_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	software_for_project.project,
+	COUNT(software_for_project.software)
+FROM
+	software_for_project
+WHERE
+	software_for_project.status = 'approved'
+GROUP BY
+	software_for_project.project;
+$$;
+
+
+CREATE FUNCTION count_project_related_projects() RETURNS TABLE (
+	project UUID,
+	project_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	id,
+	COUNT(DISTINCT relations)
+FROM
+(
+	SELECT
+		project_for_project.origin AS id,
+		UNNEST(ARRAY_AGG(project_for_project.relation)) AS relations
+	FROM
+		project_for_project
+	WHERE
+		project_for_project.status = 'approved'
+	GROUP BY
+		project_for_project.origin
+	UNION ALL
+	SELECT
+		project_for_project.relation AS id,
+		UNNEST(ARRAY_AGG(project_for_project.origin)) AS relations
+	FROM
+		project_for_project
+	WHERE
+		project_for_project.status = 'approved'
+	GROUP BY
+		project_for_project.relation
+) AS cnts
+GROUP BY id;
+$$;
+
+
 CREATE FUNCTION count_project_organisations() RETURNS TABLE (
 	project UUID,
 	participating_org_cnt INTEGER,
@@ -235,13 +286,16 @@ CREATE FUNCTION project_quality(show_all BOOLEAN DEFAULT FALSE) RETURNS TABLE (
 	title VARCHAR,
 	has_subtitle BOOLEAN,
 	is_published BOOLEAN,
-	has_start_date BOOLEAN,
-	has_end_date BOOLEAN,
+	date_start DATE,
+	date_end DATE,
+	grant_id VARCHAR,
 	has_image BOOLEAN,
 	team_member_cnt INTEGER,
 	has_contact_person BOOLEAN,
 	participating_org_cnt INTEGER,
 	funding_org_cnt INTEGER,
+	software_cnt INTEGER,
+	project_cnt INTEGER,
 	keyword_cnt INTEGER,
 	research_domain_cnt INTEGER,
 	impact_cnt INTEGER,
@@ -253,13 +307,16 @@ SELECT
 	project.title,
 	project.subtitle IS NOT NULL,
 	project.is_published,
-	project.date_start IS NOT NULL,
-	project.date_end IS NOT NULL,
+	project.date_start,
+	project.date_end,
+	project.grant_id,
 	project.image_id IS NOT NULL,
 	COALESCE(count_project_team_members.team_member_cnt, 0),
 	COALESCE(count_project_team_members.has_contact_person, FALSE),
 	COALESCE(count_project_organisations.participating_org_cnt, 0),
 	COALESCE(count_project_organisations.funding_org_cnt, 0),
+	COALESCE(count_project_related_software.software_cnt, 0),
+	COALESCE(count_project_related_projects.project_cnt, 0),
 	COALESCE(count_project_keywords.keyword_cnt, 0),
 	COALESCE(count_project_research_domains.research_domain_cnt, 0),
 	COALESCE(count_project_impact.impact_cnt, 0),
@@ -270,6 +327,10 @@ LEFT JOIN
 	count_project_team_members() ON project.id = count_project_team_members.project
 LEFT JOIN
 	count_project_organisations() ON project.id = count_project_organisations.project
+LEFT JOIN
+	count_project_related_software() ON project.id = count_project_related_software.project
+LEFT JOIN
+	count_project_related_projects() ON project.id = count_project_related_projects.project
 LEFT JOIN
 	count_project_keywords() ON project.id = count_project_keywords.project
 LEFT JOIN

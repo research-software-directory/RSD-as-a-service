@@ -70,7 +70,7 @@ export const userMenu:UserMenuItems = {
   },
   'project-quality':{
     id:'project-quality',
-    label: () => 'Project quality overview',
+    label: () => 'Project metadata overview',
     icon: <TableViewIcon />,
     component: (props?) => <ProjectQuality {...props} />,
     status: 'Overview of the completeness of project pages you maintain',
