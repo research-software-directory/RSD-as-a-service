@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -31,7 +31,7 @@ export default function ProjectDescription(
             bgPosition={image_contain ? 'center' : 'top center'}
             className="w-full h-[12rem] sm:h-[20rem] md:h-[25rem] lg:h-[30rem]"
           />
-          <div className="text-sm text-grey-600 mt-2 mb-4"
+          <div className="text-sm text-base-600 mt-2 mb-4"
             style={{wordBreak: 'break-word'}}>
             {image_caption}
           </div>

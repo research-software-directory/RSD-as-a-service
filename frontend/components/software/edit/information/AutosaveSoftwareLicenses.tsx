@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
@@ -160,7 +160,7 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
       <li {...props} key={option.key}>
         {/* if new option (has input) show label and count  */}
         {option.data?.deprecated ?
-          <span className="text-grey-500">{option.label} (DEPRECATED)</span>
+          <span className="text-base-500">{option.label} (DEPRECATED)</span>
           : <span>{option.label}</span>
         }
       </li>

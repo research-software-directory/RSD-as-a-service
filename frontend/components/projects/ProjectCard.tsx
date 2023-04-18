@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -59,7 +59,7 @@ export default function ProjectCard(
     <Link
       data-testid="project-card-link"
       href={projectUrl()}
-      className={`flex flex-col h-full bg-base-200 text-content ${opacity} hover:bg-secondary hover:text-white`}
+      className={`flex flex-col h-full bg-base-200 text-content ${opacity} hover:bg-secondary hover:text-base-100`}
       passHref>
       <article className="flex-1 flex flex-col lg:flex-row h-full p-4 gap-4 overflow-hidden">
         <section

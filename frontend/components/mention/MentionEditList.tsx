@@ -85,7 +85,7 @@ export default function MentionEditList({title, type, items}: MentionSectionList
         {
           items.map((item, pos) => {
             return (
-              <li key={item.id ?? pos} className="p-4 hover:bg-base-200 hover:text-black">
+              <li key={item.id ?? pos} className="p-4 hover:bg-base-200 hover:text-base-900">
                 <MentionEditItem
                   pos={pos + 1}
                   item={item}
