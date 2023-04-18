@@ -21,19 +21,22 @@ export const SoftwareCard = ({item, direction}:SoftwareCardProps) => {
   const isHorizontal = !!direction
 
   return (
-    <Link href={'/software/'+item.slug} key={item.id} className="hover:text-inherit">
+    <Link href={`/software/${item.slug}`} key={item.id} className="hover:text-inherit">
       <div className={`flex-shrink-0 transition bg-white shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none ${isHorizontal ? 'flex flex-col sm:flex-row w-[20rem] sm:w-full' : 'flex-col'}`} >
         {/* Cover image */}
-        <img
-          className={`
-            object-cover
-            ${isHorizontal
-              ? 'w-full rounded-tr-lg rounded-tl-lg   sm:rounded-bl-lg sm:rounded-tl-lg sm:rounded-tr-none sm:w-[20rem] sm:h-[20rem]'
-              : 'w-full rounded-tr-lg rounded-tl-lg'
-            }`}
+        {
+          item.image_id &&
+          <img
+            className={`
+              object-cover
+              ${isHorizontal
+                ? 'w-full rounded-tr-lg rounded-tl-lg   sm:rounded-bl-lg sm:rounded-tl-lg sm:rounded-tr-none sm:w-[20rem] sm:h-[20rem]'
+                : 'w-full rounded-tr-lg rounded-tl-lg'
+              }`}
           src={`${getImageUrl(item.image_id) ?? ''}`}
           alt={`Cover image for ${item.brand_name}`}
           />
+        }
 
         {/* Card content */}
         <div className={`flex flex-col p-4 ${isHorizontal ? 'max-w-[350px]' : ''}`}>
