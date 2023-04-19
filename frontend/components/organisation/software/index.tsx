@@ -11,10 +11,11 @@ import {OrganisationComponentsProps} from '../OrganisationNavItems'
 import SearchAndPagination from '../SearchAndPagination'
 import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
 import OrganisationSoftwareCards from './OrganisationSoftwareCards'
+import Pagination from '@mui/material/Pagination'
 
 export default function OrganisationSoftware({organisation, isMaintainer}: OrganisationComponentsProps) {
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions('software')
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch(`Find software in ${organisation.name}`)
+  const {searchFor,page,rows,count,setCount,setPage} = usePaginationWithSearch(`Find software in ${organisation.name}`)
 
   return (
     <>
@@ -37,6 +38,15 @@ export default function OrganisationSoftware({organisation, isMaintainer}: Organ
           isMaintainer={isMaintainer}
         />
       </FlexibleGridSection>
+      <div className="flex flex-wrap justify-center">
+        <Pagination
+          size="large"
+          shape="rounded"
+          count={Math.ceil(count/rows)}
+          page={page + 1}
+          onChange={(e:any,page:number)=>setPage(page-1)}
+        />
+      </div>
     </>
   )
 }

@@ -9,10 +9,12 @@ import {OrganisationComponentsProps} from '../OrganisationNavItems'
 import SearchAndPagination from '../SearchAndPagination'
 import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
 import OrganisationProjectCards from './OrganisationProjectsCards'
+import Pagination from '@mui/material/Pagination'
 
 export default function OrganisationProjects({organisation, isMaintainer}:OrganisationComponentsProps) {
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions()
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch(`Find project in ${organisation.name}`)
+  const {searchFor,page,rows,count,setCount,setPage} = usePaginationWithSearch(`Find project in ${organisation.name}`)
+  const pageCount = Math.ceil(count/rows)
 
   return (
     <>
@@ -35,6 +37,17 @@ export default function OrganisationProjects({organisation, isMaintainer}:Organi
           isMaintainer={isMaintainer}
         />
       </FlexibleGridSection>
+      <div className="flex flex-wrap justify-center">
+        {pageCount > 1 &&
+          <Pagination
+            size="large"
+            shape="rounded"
+            count={pageCount}
+            page={page + 1}
+            onChange={(e:any,page:number)=>setPage(page-1)}
+          />
+        }
+      </div>
     </>
   )
 }

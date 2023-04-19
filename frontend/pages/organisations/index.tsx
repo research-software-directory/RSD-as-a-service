@@ -117,7 +117,7 @@ export default function OrganisationsIndexPage({
         organisations={organisations}
       />
 
-      <div className="flex flex-wrap justify-center mb-5">
+      <div className="flex flex-wrap justify-center mb-8">
         <Pagination
           count={Math.ceil(count/rows)}
           page={page + 1}

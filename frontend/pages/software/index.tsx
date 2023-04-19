@@ -161,7 +161,7 @@ export default function SoftwareIndexPage(
         software={software}
       />
 
-      <div className="flex flex-wrap justify-center mb-5">
+      <div className="flex flex-wrap justify-center mb-8">
         <Pagination
           count={Math.ceil(count/rows)}
           page={page + 1}
