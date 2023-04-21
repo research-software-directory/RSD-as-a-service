@@ -153,7 +153,7 @@ export default function ProjectsIndexPage(
         className="gap-[0.125rem] p-[0.125rem] pt-4 pb-12"
       />
 
-      <div className="flex flex-wrap justify-center mb-5">
+      <div className="flex flex-wrap justify-center mb-8">
         <Pagination
           count={Math.ceil(count/rows)}
           page={page + 1}

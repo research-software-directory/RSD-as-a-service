@@ -18,7 +18,7 @@ type OrganisationSoftwareGridProps = {
   page:number
   rows:number
   isMaintainer: boolean
-  setCount:(count:number)=>void
+  setCount: (count: number) => void
 }
 
 export default function OrganisationSoftwareCards(props: OrganisationSoftwareGridProps) {

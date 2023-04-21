@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -61,6 +61,13 @@ export default function usePaginationWithSearch(placeholder:string) {
     }
   }
 
+  function setPage(page: number) {
+    setPagination({
+      ...pagination,
+      page
+    })
+  }
+
   return {
     searchFor: search,
     // when navigating between sections we need to reset page to 0
@@ -69,7 +76,8 @@ export default function usePaginationWithSearch(placeholder:string) {
     rows: pagination.rows,
     count: pagination.count,
     setSearchInput,
-    setPagination,
-    setCount
+    // setPagination,
+    setCount,
+    setPage
   }
 }
