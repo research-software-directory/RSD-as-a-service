@@ -33,10 +33,10 @@ export default function useSoftwareOverview() {
   const [licenses, setLicenses] = useState<License[]>([])
   const [licensesList, setLicensesList] = useState<License[]>([])
 
-  const [software, setSoftware] = useState<{ count: number, items: SoftwareListItem[] }>({
-    count: 0,
-    items: []
-  })
+  // const [software, setSoftware] = useState<{ count: number, items: SoftwareListItem[] }>({
+  //   count: 0,
+  //   items: []
+  // })
 
   useEffect(() => {
     if (baseUrl) {
@@ -123,41 +123,41 @@ export default function useSoftwareOverview() {
     }
   }, [licensesList, router.query])
 
-  useEffect(() => {
-    let orderBy
-    // extract params from page-query
-    const {search, keywords, prog_lang, licenses, order, page} = ssrSoftwareParams(router.query)
-    // update components based on query params
-    if (order) {
-      setOrderBy(order)
-      orderBy=`${order}.desc.nullslast`
-    }
-    if (search) {
-      setSearch(search)
-    }
+  // useEffect(() => {
+  //   let orderBy
+  //   // extract params from page-query
+  //   const {search, keywords, prog_lang, licenses, order, page} = ssrSoftwareParams(router.query)
+  //   // update components based on query params
+  //   if (order) {
+  //     setOrderBy(order)
+  //     orderBy=`${order}.desc.nullslast`
+  //   }
+  //   if (search) {
+  //     setSearch(search)
+  //   }
 
-    //build api url
-    const url = softwareListUrl({
-      baseUrl,
-      search,
-      keywords,
-      licenses,
-      order:orderBy,
-      prog_lang,
-      limit: 24,
-      offset: 24 * (page ?? 0)
-    })
+  //   //build api url
+  //   const url = softwareListUrl({
+  //     baseUrl,
+  //     search,
+  //     keywords,
+  //     licenses,
+  //     order:orderBy,
+  //     prog_lang,
+  //     limit: 24,
+  //     offset: 24 * (page ?? 0)
+  //   })
 
-    // get software list from api
-    getSoftwareList({url})
-      .then(resp => {
-        setSoftware({
-          count: resp.count ?? 0,
-          items: resp.data ?? []
-        })
-      })
+  //   // get software list from api
+  //   getSoftwareList({url})
+  //     .then(resp => {
+  //       setSoftware({
+  //         count: resp.count ?? 0,
+  //         items: resp.data ?? []
+  //       })
+  //     })
 
-  }, [router.query, baseUrl])
+  // }, [router.query, baseUrl])
 
 
   function handleQueryChange(key: string, value: string | string[]) {
@@ -167,7 +167,7 @@ export default function useSoftwareOverview() {
       [key]: value,
     }
     if (key !== 'page') {
-      params['page'] = 0
+      params['page'] = 1
       params['rows'] = 24
     }
 
@@ -176,34 +176,35 @@ export default function useSoftwareOverview() {
     router.push(url)
   }
 
-  function getFilterCount() {
-    let count = 0
-    if (orderBy !== '') count++
-    if (keywords.length > 0) count++
-    if (languages.length > 0) count++
-    if (licenses.length > 0) count++
-    if (search !== '') count++
-    return count
-  }
+  // function getFilterCount() {
+  //   let count = 0
+  //   if (orderBy !== '') count++
+  //   if (keywords.length > 0) count++
+  //   if (languages.length > 0) count++
+  //   if (licenses.length > 0) count++
+  //   if (search !== '') count++
+  //   return count
+  // }
 
   function resetFilters() {
     // return pathname without filters/query
-    router.replace(router.pathname, undefined, {shallow: true})
+    // router.replace(router.pathname, undefined, {shallow: true})
+    router.push(router.pathname)
   }
 
   return {
-    orderBy,
-    keywords,
+    // orderBy,
+    // keywords,
     keywordsList,
-    languages,
+    // languages,
     languagesList,
-    licenses,
+    // licenses,
     licensesList,
-    software,
-    search,
+    // software,
+    // search,
     setOrderBy,
     handleQueryChange,
-    getFilterCount,
+    // getFilterCount,
     resetFilters
   }
 }
