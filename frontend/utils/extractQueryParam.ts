@@ -59,7 +59,7 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
   const page:number = extractQueryParam({
     query,
     param: 'page',
-    defaultValue: 0,
+    defaultValue: 1,
     castToType:'number'
   })
   const search:string = extractQueryParam({
