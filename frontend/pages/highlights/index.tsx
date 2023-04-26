@@ -4,36 +4,38 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
-
-import useMediaQuery from '@mui/material/useMediaQuery'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import Pagination from '@mui/material/Pagination'
-import Button from '@mui/material/Button'
-
-import SoftwareFiltersPanel from '~/components/software/overview/SoftwareFiltersPanel'
-import SearchInput from '~/components/software/overview/SearchInput'
-import SoftwareHighlights from '~/components/software/highlights/SoftwareHighlights'
-import OverviewPageBackground from '~/components/software/overview/PageBackground'
-import SoftwareOverviewGrid from '~/components/software/overview/SoftwareOverviewGrid'
-import MainContent from '~/components/layout/MainContent'
-import AppHeader from '~/components/AppHeader'
-import AppFooter from '~/components/AppFooter'
-import SoftwareFilters from '~/components/software/overview/filters/index'
-import useSoftwareOverview from '~/components/software/overview/useSoftwareOverview'
+import {useEffect, useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Pagination from '@mui/material/Pagination'
+
+import {app} from '~/config/app'
+import {getBaseUrl} from '~/utils/fetchHelpers'
 import {softwareListUrl} from '~/utils/postgrestUrl'
 import {getSoftwareList} from '~/utils/getSoftware'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {SoftwareListItem} from '~/types/SoftwareTypes'
+import MainContent from '~/components/layout/MainContent'
+import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/AppFooter'
+import SoftwareFiltersPanel from '~/components/software/overview/SoftwareFiltersPanel'
+import SoftwareHighlights from '~/components/software/highlights/SoftwareHighlights'
+import OverviewPageBackground from '~/components/software/overview/PageBackground'
+import SearchSection, {LayoutType} from '~/components/software/overview/SearchSection'
+import useSoftwareParams from '~/components/software/overview/useSoftwareParams'
+import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
+import SoftwareFilters from '~/components/software/overview/filters/index'
 import {
   KeywordFilterOption, LanguagesFilterOption, LicensesFilterOption,
   softwareKeywordsFilter, softwareLanguagesFilter,
   softwareLicesesFilter
 } from '~/components/software/overview/filters/softwareFiltersApi'
+import FilterModal from '~/components/software/overview/filters/FilterModal'
+import PageMeta from '~/components/seo/PageMeta'
+import CanonicalUrl from '~/components/seo/CanonicalUrl'
+import {getUserSettings, setDocumentCookie} from '~/components/software/overview/userSettings'
+import {SoftwareHighlight, getSoftwareHighlights} from '~/components/admin/software-highlights/apiSoftwareHighlights'
+
 
 type SoftwareHighlightsPageProps = {
   search?: string
@@ -47,42 +49,48 @@ type SoftwareHighlightsPageProps = {
   page: number,
   rows: number,
   count: number,
+  layout: LayoutType,
   software: SoftwareListItem[],
+  highlights: SoftwareHighlight[]
 }
+
+const pageTitle = `Software | ${app.title}`
+const pageDesc = 'The list of research software registerd in the Research Software Directory.'
 
 export default function SoftwareHighlightsPage({
   search, keywords,
   prog_lang, licenses,
   order, page, rows,
-  count, software,
+  count, layout,
   keywordsList, languagesList,
-  licensesList
-}:SoftwareHighlightsPageProps) {
-  // const router = useRouter()
+  licensesList, software, highlights
+}: SoftwareHighlightsPageProps) {
+  const [view, setView] = useState<LayoutType>('masonry')
   const smallScreen = useMediaQuery('(max-width:640px)')
-  // const page = router.query.page ? parseInt(router.query.page as string) + 1 : 1
-  const {
-    handleQueryChange, resetFilters,setOrderBy
-  } = useSoftwareOverview()
+  const {handleQueryChange, resetFilters} = useSoftwareParams()
 
   const [modal,setModal] = useState(false)
   const numPages = Math.ceil(count / rows)
+  const filterCnt = getFilterCount()
 
-  console.group('SoftwareHighlightsPage')
+  // console.group('SoftwareHighlightsPage')
   // console.log('search...', search)
   // console.log('keywords...', keywords)
-  console.log('keywordsList...', keywordsList)
   // console.log('prog_lang...', prog_lang)
-  console.log('languagesList...', languagesList)
   // console.log('licenses...', licenses)
-  console.log('licensesList...', licensesList)
   // console.log('order...', order)
-  // console.log('page...', page)
-  // console.log('rows...', rows)
-  // console.log('count...', count)
+  // console.log('layout...', layout)
+  // console.log('view...', view)
   // console.log('software...', software)
-  // console.log('smallScreen...', smallScreen)
-  console.groupEnd()
+  // console.log('highlights...', highlights)
+  // console.groupEnd()
+
+  // Update view state based on layout value from cookie
+  useEffect(() => {
+    if (layout) {
+      setView(layout)
+    }
+  },[layout])
 
   function getFilterCount() {
     let count = 0
@@ -94,142 +102,111 @@ export default function SoftwareHighlightsPage({
     return count
   }
 
+  function setLayout(view: LayoutType) {
+    // update local view
+    setView(view)
+    // save to cookie
+    setDocumentCookie(view,'rsd_page_layout')
+  }
+
   return (
-    <OverviewPageBackground>
-      <AppHeader />
-      {/* Software Highlights Carousel */}
-      <SoftwareHighlights />
-      {/* Main page body */}
-      <MainContent className='pb-12'>
-        {/* All software */}
-        <h1 className="my-4 text-2xl">
-          All software
-        </h1>
-        {/* Filter panel & content panel */}
-        <div className="flex-1 flex w-full my-4 gap-8">
-          {/* Filters panel large screen */}
-          {smallScreen===false &&
-            <SoftwareFiltersPanel>
-              <SoftwareFilters
-                keywords={keywords ?? []}
-                keywordsList={keywordsList}
-                languages={prog_lang ?? []}
-                languagesList={languagesList}
-                licenses={licenses ?? []}
-                licensesList={licensesList}
-                orderBy={order ?? ''}
-                setOrderBy={setOrderBy}
-                getFilterCount={getFilterCount}
+    <>
+      {/* Page Head meta tags */}
+      <PageMeta
+        title={pageTitle}
+        description={pageDesc}
+      />
+      {/* canonical url meta tag */}
+      <CanonicalUrl />
+      <OverviewPageBackground>
+        {/* App header */}
+        <AppHeader />
+        {/* Software Highlights Carousel */}
+        <SoftwareHighlights highlights={highlights} />
+        {/* Main page body */}
+        <MainContent className='pb-12'>
+          {/* Page title */}
+          <h1
+            className="my-4 text-2xl"
+            id="list-top"
+          >
+            All software
+          </h1>
+          {/* Page grid with 2 sections: left filter panel and main content */}
+          <div className="flex-1 flex w-full my-4 gap-8">
+            {/* Filters panel large screen */}
+            {smallScreen===false &&
+              <SoftwareFiltersPanel>
+                <SoftwareFilters
+                  keywords={keywords ?? []}
+                  keywordsList={keywordsList}
+                  languages={prog_lang ?? []}
+                  languagesList={languagesList}
+                  licenses={licenses ?? []}
+                  licensesList={licensesList}
+                  orderBy={order ?? ''}
+                  filterCnt={filterCnt}
+                  resetFilters={resetFilters}
+                  handleQueryChange={handleQueryChange}
+                />
+              </SoftwareFiltersPanel>
+            }
+            {/* Search & main content section */}
+            <div className="flex-1">
+              <SearchSection
+                page={page}
+                rows={rows}
+                count={count}
+                search={search}
+                placeholder={keywords?.length ? 'Find within selection' : 'Find software'}
+                layout={view}
                 resetFilters={resetFilters}
+                setView={setLayout}
+                setModal={setModal}
                 handleQueryChange={handleQueryChange}
               />
-            </SoftwareFiltersPanel>
-          }
-          {/* Search & card grid section */}
-          <div className="flex-1">
-            <SearchInput
-              placeholder={keywords?.length ? 'Find within selection' : 'Find software'}
-              onSearch={(search: string) => handleQueryChange('search', search)}
-              defaultValue={search ?? ''}
-            />
-            {/* Filter button for mobile */}
-            {smallScreen === true &&
-              <Button
-                onClick={() => setModal(true)}
-                variant="outlined"
-                sx={{
-                  marginTop:'1rem'
-                }}
-              >
-                Filters
-              </Button>
-            }
-            <div className="text-sm opacity-70 py-4">
-              page {page ?? 1} of {count} results.
-              {/* Only show when filters are applied, and not just sorted */}
-              {
-                (order !== '' && getFilterCount() > 1) || (order === '' && getFilterCount() > 0) && <a onClick={() => { resetFilters() }} className="underline pl-2">Clear filters</a>
-              }
-            </div>
-            {/* Software Cards Grid */}
-            <SoftwareOverviewGrid
-              software={software}
-            />
-            {/* Pagination */}
-            <div className="flex justify-center mt-10">
-              {numPages > 1 &&
-                <Pagination
-                  count={numPages}
-                  page={page}
-                  onChange={(_, page) => {
-                    // api uses 0 index
-                    // const param = (page - 1).toString()
-                    handleQueryChange('page',page.toString())
-                  }}
-                />
-              }
+              {/* Software content: cards or list */}
+              <SoftwareOverviewContent
+                layout={view}
+                software={software}
+              />
+              {/* Pagination */}
+              <div className="flex justify-center mt-8">
+                {numPages > 1 &&
+                  <Pagination
+                    count={numPages}
+                    page={page}
+                    onChange={(_, page) => {
+                      handleQueryChange('page',page.toString())
+                    }}
+                  />
+                }
+              </div>
             </div>
           </div>
-        </div>
-      </MainContent>
-      <AppFooter />
-      {/* MODAL filter for mobile */}
+        </MainContent>
+        <AppFooter />
+      </OverviewPageBackground>
+      {/* filter for mobile */}
       {
         smallScreen===true &&
-        <Dialog
-          fullScreen={smallScreen}
+        <FilterModal
           open={modal}
-          aria-labelledby="filters-panel"
-          aria-describedby="filters-panel-responsive"
-        >
-          <DialogTitle sx={{
-            fontSize: '1.5rem',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
-            color: 'primary.main',
-            fontWeight: 500
-          }}>
-            Filters
-          </DialogTitle>
-          <DialogContent>
-            <div className="flex p-8 shadow rounded-md flex-col gap-8">
-              <SoftwareFilters
-                keywords={keywords ?? []}
-                keywordsList={keywordsList}
-                languages={prog_lang ?? []}
-                languagesList={languagesList}
-                licenses={licenses ?? []}
-                licensesList={licensesList}
-                orderBy={order ?? ''}
-                setOrderBy={setOrderBy}
-                getFilterCount={getFilterCount}
-                resetFilters={resetFilters}
-                handleQueryChange={handleQueryChange}
-              />
-            </div>
-          </DialogContent>
-          <DialogActions sx={{
-            padding: '1rem 1.5rem',
-            borderTop: '1px solid',
-            borderColor: 'divider'
-          }}>
-            <Button
-              onClick={()=>setModal(false)}
-              color="secondary"
-              sx={{marginRight:'2rem'}}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={()=>setModal(false)}
-              color="primary"
-            >
-              Apply
-            </Button>
-          </DialogActions>
-        </Dialog>
+          keywords={keywords ?? []}
+          keywordsList={keywordsList}
+          prog_lang={prog_lang ?? []}
+          languagesList={languagesList}
+          licenses={licenses ?? []}
+          licensesList={licensesList}
+          order={order ?? ''}
+          // setOrderBy={setOrderBy}
+          filterCnt={filterCnt}
+          resetFilters={resetFilters}
+          handleQueryChange={handleQueryChange}
+          setModal={setModal}
+        />
       }
-    </OverviewPageBackground>
+    </>
   )
 }
 
@@ -239,44 +216,56 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let orderBy, offset=0
   // extract params from page-query
   const {search, keywords, prog_lang, licenses, order, rows, page} = ssrSoftwareParams(context.query)
+  // extract user settings from cookie
+  const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
+  // default rows values comes from user settings
+  let page_rows = rsd_page_rows
+
   if (order) {
     orderBy=`${order}.desc.nullslast`
   }
+  // if rows && page are provided as query params
   if (rows && page) {
-    offset = rows * (page-1)
+    offset = rows * (page - 1)
+    // use rows provided as param
+    page_rows = rows
   }
   // construct postgREST api url with query params
   const url = softwareListUrl({
-    baseUrl: process.env.POSTGREST_URL || 'http://localhost:3500',
+    baseUrl: getBaseUrl(),
     search,
     keywords,
     licenses,
     prog_lang,
     order: orderBy,
-    limit: rows,
+    limit: page_rows,
     offset
   })
 
   // console.log('software...url...', url)
   // console.log('search...', search)
+  // console.log('page_rows...', page_rows)
 
-  // get software list, we do not pass the token
-  // when token is passed it will return not published items too
-  // const software = await getSoftwareList({url})
-
+  // get software items AND filter options
   const [
     software,
     keywordsList,
     languagesList,
-    licensesList
+    licensesList,
+    {highlights}
   ] = await Promise.all([
     getSoftwareList({url}),
     softwareKeywordsFilter({search, keywords, prog_lang, licenses}),
     softwareLanguagesFilter({search, keywords, prog_lang, licenses}),
     softwareLicesesFilter({search, keywords, prog_lang, licenses}),
+    getSoftwareHighlights({
+      page: 0,
+      // get max. 20 items
+      rows: 20,
+      orderBy: 'position'
+    })
   ])
 
-  // console.log('getServerSideProps...keywordsList...', keywordsList)
   // is passed as props to page
   // see params of page function
   return {
@@ -289,10 +278,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       licenses,
       licensesList,
       page,
-      rows,
       order,
+      rows: page_rows,
+      layout: rsd_page_layout,
       count: software.count,
       software: software.data,
+      highlights
     },
   }
 }

@@ -10,11 +10,10 @@ import Select from '@mui/material/Select'
 
 type OrderByProps = {
   orderBy: string
-  setOrderBy: (order:string)=>void
   handleQueryChange: (key: string, value: string | string[]) => void
 }
 
-export default function OrderBy({orderBy,setOrderBy,handleQueryChange}:OrderByProps) {
+export default function OrderBy({orderBy,handleQueryChange}:OrderByProps) {
   return (
     <FormControl fullWidth size="small">
       <InputLabel id="demo-simple-select-label">Order by</InputLabel>
@@ -24,7 +23,7 @@ export default function OrderBy({orderBy,setOrderBy,handleQueryChange}:OrderByPr
         value={orderBy}
         label="Order by"
         onChange={(e) => {
-          setOrderBy(e.target.value)
+          // setOrderBy(e.target.value)
           handleQueryChange('order', e.target.value)
         }}
       >

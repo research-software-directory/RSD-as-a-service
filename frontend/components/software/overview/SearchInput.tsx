@@ -52,14 +52,22 @@ export default function SearchInput({
   return (
     <TextField
       size="small"
-      // variant="outlined"
+      // variant="filled"
       type="text"
       placeholder={placeholder}
       value={state.value}
       onChange={({target}) => setState({value: target.value, wait: false})}
       sx={{
-        width: '100%',
-        backgroundColor:'background.paper'
+        // width: '100%',
+        flex: 1,
+        margin: '0rem 0.5rem 0rem 0rem',
+        backgroundColor: 'background.paper',
+        '.MuiInputBase-root': {
+          flex: 1
+        },
+        '.MuiOutlinedInput-notchedOutline': {
+          border: 0
+        }
       }}
     />
   )

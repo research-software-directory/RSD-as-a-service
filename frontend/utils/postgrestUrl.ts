@@ -67,7 +67,7 @@ export function ssrProjectsUrl(params: QueryParams) {
 type BuildUrlQueryProps = {
   query: string
   param: string
-  value: string[]|string|undefined
+  value: string[]|string|number|undefined
 }
 
 function buildUrlQuery({query, param, value}: BuildUrlQueryProps) {
@@ -81,12 +81,18 @@ function buildUrlQuery({query, param, value}: BuildUrlQueryProps) {
     } else {
       query = `${param}=${encodeURIComponent(value)}`
     }
-  } else if (Array.isArray(value)===true && value?.length > 0) {
+  } else if (Array.isArray(value) === true && (value as any)?.length > 0) {
     // arrays are stringified
     if (query) {
       query += `&${param}=${encodeURIComponent(JSON.stringify(value))}`
     } else {
       query = `${param}=${encodeURIComponent(JSON.stringify(value))}`
+    }
+  } else if (typeof value === 'number') {
+    if (query) {
+      query += `&${param}=${encodeURIComponent(value)}`
+    } else {
+      query = `${param}=${encodeURIComponent(value)}`
     }
   }
   // return build query
@@ -136,20 +142,21 @@ export function buildFilterUrl(params: QueryParams, view:string) {
     param: 'order',
     value: order
   })
-  if (page || page === 0) {
-    url += `page=${page}`
-  } else {
-    // default
-    url += 'page=0'
-  }
-  if (rows) {
-    url += `&rows=${rows}`
-  } else {
-    url += '&rows=12'
-  }
+  // page
+  query = buildUrlQuery({
+    query,
+    param: 'page',
+    value: page
+  })
+  // rows
+  query = buildUrlQuery({
+    query,
+    param: 'rows',
+    value: rows
+  })
   // debugger
   if (query!=='') {
-    return `${url}&${query}`
+    return `${url}${query}`
   }
   return url
 }
