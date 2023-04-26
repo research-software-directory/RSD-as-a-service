@@ -1,20 +1,28 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {SoftwareListItem} from '~/types/SoftwareTypes'
-import {SoftwareCard} from './SoftwareCard'
+import SoftwareGridCard from './SoftwareGridCard'
+import FlexibleGridSection from '~/components/layout/FlexibleGridSection'
 
-export default function SoftwareOverviewGrid({software=[]}: { software:SoftwareListItem[]}) {
+export default function SoftwareOverviewGrid({software = []}: { software: SoftwareListItem[] }) {
+  const grid={
+    height: '28rem',
+    minWidth: '19rem',
+    maxWidth: '1fr'
+  }
+
   return (
-    <div className="w-full md:columns-2 lg:columns-3 gap-8">
-      {/* xl:columns-4 */}
-      {software.map((item, index) => (
-        <div key={index} className="mb-8 break-inside-avoid">
-          <SoftwareCard item={item}/>
-        </div>
+    <FlexibleGridSection
+      className="mt-4 gap-8"
+      {...grid}
+    >
+      {software.map((item) => (
+        <SoftwareGridCard key={item.id} item={item}/>
       ))}
-    </div>
+    </FlexibleGridSection>
   )
 }

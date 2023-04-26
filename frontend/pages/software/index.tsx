@@ -25,6 +25,7 @@ import SoftwareFilter from '~/components/software/filter'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
+import {getUserSettings} from '~/components/software/overview/userSettings'
 
 type SoftwareIndexPageProps = {
   count: number,
@@ -178,6 +179,8 @@ export default function SoftwareIndexPage(
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   // extract params from page-query
   const {search, keywords, prog_lang, rows, page} = ssrSoftwareParams(context.query)
+  // extract user settings from cookie
+  const {rsd_page_rows} = getUserSettings(context.req)
   // construct postgREST api url with query params
   const url = softwareListUrl({
     baseUrl: getBaseUrl(),
@@ -185,7 +188,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     keywords,
     prog_lang,
     order: search ? undefined : 'mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,updated_at.desc.nullslast,brand_name.asc',
-    limit: rows,
+    limit: rows ?? rsd_page_rows,
     offset: rows && page ? rows * page : undefined,
   })
 
@@ -204,7 +207,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       prog_lang: prog_lang ?? null,
       count: software.count,
       page,
-      rows,
+      rows: rows ?? rsd_page_rows,
       software: software.data,
     },
   }

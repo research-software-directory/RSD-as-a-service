@@ -53,7 +53,7 @@ export function ssrSoftwareParams(query: ParsedUrlQuery): SoftwareParams {
   const rows:number = extractQueryParam({
     query,
     param: 'rows',
-    defaultValue: 12,
+    defaultValue: undefined,
     castToType:'number'
   })
   const page:number = extractQueryParam({
@@ -111,7 +111,7 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
   const rows:number = extractQueryParam({
     query,
     param: 'rows',
-    defaultValue: 12,
+    defaultValue: undefined,
     castToType: 'number'
   })
   const page = extractQueryParam({
