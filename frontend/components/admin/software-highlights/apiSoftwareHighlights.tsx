@@ -17,9 +17,9 @@ export type SoftwareHighlight = SoftwareListItem & {
 }
 
 type getHighlightsApiParams = {
-  token: string,
   page: number
   rows: number
+  token?: string,
   searchFor?: string
   orderBy?: string
 }
