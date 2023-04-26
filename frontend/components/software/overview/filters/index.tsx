@@ -27,8 +27,7 @@ type SoftwareFilterPanelProps = {
   licenses: string[]
   licensesList: LicensesFilterOption[]
   orderBy: string,
-  setOrderBy: (order:string)=>void
-  getFilterCount: () => number
+  filterCnt: number,
   resetFilters: () => void
   handleQueryChange: (key: string, value: string | string[]) => void
 }
@@ -40,22 +39,21 @@ export default function SoftwareFilters({
   languagesList,
   licenses,
   licensesList,
+  filterCnt,
   handleQueryChange,
-  orderBy, setOrderBy,
-  getFilterCount,
+  orderBy,
   resetFilters
 }:SoftwareFilterPanelProps) {
 
   return (
     <>
       <FilterHeader
-        filterCnt={getFilterCount()}
+        filterCnt={filterCnt}
         resetFilters={resetFilters}
       />
       {/* Order by */}
       <OrderBy
         orderBy={orderBy}
-        setOrderBy={setOrderBy}
         handleQueryChange={handleQueryChange}
       />
       {/* Keywords */}

@@ -40,10 +40,9 @@ function buildSoftwareFilter({search, keywords, prog_lang, licenses}: SoftwareFi
   if (licenses) {
     filter['license_filter'] = licenses
   }
-  console.group('buildSoftwareFilter')
-  console.log('filter...', filter)
-  console.groupEnd()
-
+  // console.group('buildSoftwareFilter')
+  // console.log('filter...', filter)
+  // console.groupEnd()
   return filter
 }
 
