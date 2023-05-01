@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,19 +28,24 @@ export default function ValidateConceptDoi({doi, onUpdate}: ValidateConceptDoiPr
     const info = await getSoftwareVersionInfoForDoi(doi)
     if (info?.status === 200) {
       const {software} = info.data
-      if (software.versionOfCount === 0) {
+      const conceptDoi = extractConceptDoiOrNull(software)
+      if (conceptDoi === null) {
         showSuccessMessage(`The DOI ${doi} is a valid Concept DOI`)
-      } else if (software.versionOfCount === 1) {
-        const concept = software.versionOf.nodes[0].doi
-        if (concept) {
-          onUpdate(concept)
-        }
-        showWarningMessage(`This is a version DOI. The Concept DOI is ${concept}`)
+      } else {
+        onUpdate(conceptDoi)
+        showWarningMessage(`This is a version DOI. The Concept DOI is ${conceptDoi}`)
       }
     } else {
       showErrorMessage(`Failed to retrieve info for DOI: ${doi}. ${info?.message ?? ''}`)
     }
     setLoading(false)
+  }
+
+  function extractConceptDoiOrNull(dataciteWork: any) {
+    for (const relatedIdentifier of dataciteWork.relatedIdentifiers) {
+      if(relatedIdentifier.relationType === 'IsVersionOf' && relatedIdentifier.relatedIdentifierType === 'DOI' && relatedIdentifier.relatedIdentifier) return relatedIdentifier.relatedIdentifier
+    }
+    return null
   }
 
   function renderStartIcon() {

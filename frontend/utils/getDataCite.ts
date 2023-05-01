@@ -91,13 +91,10 @@ function graphQLDoisQuery(dois: string[]) {
 function gqlConceptDoiQuery(doi: string) {
   const gql =`{
     software(id:"${doi}"){
-      doi,
-      versionCount,
-      versionOfCount,
-      versionOf{
-        nodes{
-          doi
-        }
+      relatedIdentifiers {
+        relationType
+        relatedIdentifierType
+        relatedIdentifier
       }
     }
   }`
