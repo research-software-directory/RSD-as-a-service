@@ -15,6 +15,9 @@ import RsdAdminSection from './RsdAdminSection'
 import ProtectedOrganisationPage from '../ProtectedOrganisationPage'
 import AutosaveOrganisationTextField from './AutosaveOrganisationTextField'
 import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
+import AutosaveControlledMarkdown from '~/components/form/AutosaveControlledMarkdown'
+import {patchOrganisationTable} from './updateOrganisationSettings'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
 
 const formId='organisation-settings-form'
 
@@ -30,7 +33,7 @@ export default function OrganisationSettings({organisation, isMaintainer}:
     watch, register, formState
   } = methods
   // const {isValid, isDirty} = formState
-  const [name,website]=watch(['name','website'])
+  const [id,name,website]=watch(['id','name','website'])
 
   // console.group('OrganisationSettings')
   // console.log('isDirty...', isDirty)
@@ -94,6 +97,17 @@ export default function OrganisationSettings({organisation, isMaintainer}:
         <RsdAdminSection />
         : null
       }
+      {/* About page section */}
+      <EditSectionTitle
+        title={config.description.title}
+        subtitle={config.description.subtitle}
+      />
+      <AutosaveControlledMarkdown
+        id={id}
+        name="description"
+        maxLength={config.description.validation.maxLength.value}
+        patchFn={patchOrganisationTable}
+      />
     </form>
     </FormProvider>
     </ProtectedOrganisationPage>
