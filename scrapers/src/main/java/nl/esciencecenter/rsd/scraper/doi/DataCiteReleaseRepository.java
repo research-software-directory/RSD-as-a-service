@@ -21,37 +21,14 @@ public class DataCiteReleaseRepository {
 
 	private static final String QUERY_UNFORMATTED = """
 			query {
-			  works(ids: [%s]) {
+			  works(ids: [%s], first: 10000) {
 			    nodes {
 			      doi
 			      versionOfCount
-			      versions(first: 10000) {
-			        nodes {
-			          doi
-			          types {
-			            resourceType
-			            resourceTypeGeneral
-			          }
-			          version
-			          relatedIdentifiers {
-			            relatedIdentifier
-			            relatedIdentifierType
-			          }
-			          titles(first: 1) {
-			            title
-			          }
-			          publisher
-			          publicationYear
-			          registered
-			          creators {
-			            givenName
-			            familyName
-			          }
-			          contributors {
-			            givenName
-			            familyName
-			          }
-			        }
+			      relatedIdentifiers {
+			        relationType
+			        relatedIdentifierType
+			        relatedIdentifier
 			      }
 			    }
 			  }
@@ -69,6 +46,8 @@ public class DataCiteReleaseRepository {
 	}
 
 	Map<String, Collection<MentionRecord>> parseJson(String json) {
+		DataciteMentionRepository dataciteMentionRepository = new DataciteMentionRepository();
+
 		JsonObject root = JsonParser.parseString(json).getAsJsonObject();
 		JsonArray worksJson = root.getAsJsonObject("data").getAsJsonObject("works").getAsJsonArray("nodes");
 		Map<String, Collection<MentionRecord>> releasesPerConceptDoi = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -76,18 +55,26 @@ public class DataCiteReleaseRepository {
 			try {
 				JsonObject workObject = work.getAsJsonObject();
 				String conceptDoi = workObject.getAsJsonPrimitive("doi").getAsString();
-				Integer verionOfCount = Utils.integerOrNull(workObject.get("versionOfCount"));
-				if (verionOfCount == null || verionOfCount.intValue() != 0) {
+				Integer versionOfCount = Utils.integerOrNull(workObject.get("versionOfCount"));
+				if (versionOfCount == null || versionOfCount.intValue() != 0) {
 					System.out.println("%s is not a concept DOI".formatted(conceptDoi));
 					continue;
 				}
 
-				Collection<MentionRecord> versionedMentions = new ArrayList<>();
-				JsonArray versionedMentionsJson = workObject.getAsJsonObject("versions").getAsJsonArray("nodes");
-				versionedMentionsJson.forEach(versionedMentionJson -> {
-					MentionRecord versionedMention = DataciteMentionRepository.parseWork(versionedMentionJson.getAsJsonObject());
-					versionedMentions.add(versionedMention);
-				});
+				Collection<String> versionDois = new ArrayList<>();
+				JsonArray relatedIdentifiers = workObject.getAsJsonArray("relatedIdentifiers");
+				for (JsonElement relatedIdentifier : relatedIdentifiers) {
+					JsonObject relatedIdentifierObject = relatedIdentifier.getAsJsonObject();
+					String relationType = relatedIdentifierObject.getAsJsonPrimitive("relationType").getAsString();
+					if (relationType == null || !relationType.equals("HasVersion")) continue;
+
+					String relatedIdentifierType = relatedIdentifierObject.getAsJsonPrimitive("relatedIdentifierType").getAsString();
+					if (relatedIdentifierType == null || !relatedIdentifierType.equals("DOI")) continue;
+
+					String relatedIdentifierDoi = relatedIdentifierObject.getAsJsonPrimitive("relatedIdentifier").getAsString();
+					versionDois.add(relatedIdentifierDoi);
+				}
+				Collection<MentionRecord> versionedMentions = dataciteMentionRepository.mentionData(versionDois);
 
 				releasesPerConceptDoi.put(conceptDoi, versionedMentions);
 			} catch (RuntimeException e) {
