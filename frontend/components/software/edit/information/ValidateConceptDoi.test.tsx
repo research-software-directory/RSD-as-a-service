@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -59,12 +61,23 @@ it('shows valid concept DOI message', async() => {
   // mock response for valid Concept DOI
   mockGetSoftwareVersionInfoForDoi.mockResolvedValueOnce({
     status: 200,
-    data: {
-      software: {
-        versionOfCount: 0
+    'data': {
+      'software': {
+        'relatedIdentifiers': [
+          {
+            'relationType': 'IsSupplementTo',
+            'relatedIdentifierType': 'URL',
+            'relatedIdentifier': 'https://github.com/UtrechtUniversity/animal-sounds/tree/v0.0.1-alpha'
+          },
+          {
+            'relationType': 'HasVersion',
+            'relatedIdentifierType': 'DOI',
+            'relatedIdentifier': '10.5281/zenodo.7137567'
+          }
+        ]
       }
     }
-  })
+})
   // render
   render(
     <MuiSnackbarProvider>
@@ -84,18 +97,24 @@ it('shows valid concept DOI message', async() => {
 it('shows version DOI message and suggest concept DOI', async() => {
   // provide DOI
   mockProps.doi = '10.1017/9781009085809'
-  const conceptDOI = '10.1017/9781009085801'
+  const conceptDOI = '10.5281/zenodo.7137566'
   // mock response for valid Concept DOI
   mockGetSoftwareVersionInfoForDoi.mockResolvedValueOnce({
     status: 200,
-    data: {
-      software: {
-        versionOfCount: 1,
-        versionOf: {
-          nodes: [
-            {doi:conceptDOI}
-          ]
-        }
+    'data': {
+      'software': {
+        'relatedIdentifiers': [
+          {
+            'relationType': 'IsSupplementTo',
+            'relatedIdentifierType': 'URL',
+            'relatedIdentifier': 'https://github.com/UtrechtUniversity/animal-sounds/tree/v0.0.1-alpha'
+          },
+          {
+            'relationType': 'IsVersionOf',
+            'relatedIdentifierType': 'DOI',
+            'relatedIdentifier': '10.5281/zenodo.7137566'
+          }
+        ]
       }
     }
   })

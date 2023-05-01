@@ -19,6 +19,14 @@ type ValidateConceptDoiProps = {
   onUpdate:(doi:string)=>void
 }
 
+type DataciteWorkType = {
+  relatedIdentifiers: {
+    relationType: string,
+    relatedIdentifierType: string,
+    relatedIdentifier: string,
+  }[]
+}
+
 export default function ValidateConceptDoi({doi, onUpdate}: ValidateConceptDoiProps) {
   const {showErrorMessage,showSuccessMessage, showWarningMessage} = useSnackbar()
   const [loading, setLoading] = useState(false)
@@ -41,7 +49,7 @@ export default function ValidateConceptDoi({doi, onUpdate}: ValidateConceptDoiPr
     setLoading(false)
   }
 
-  function extractConceptDoiOrNull(dataciteWork: any) {
+  function extractConceptDoiOrNull(dataciteWork: DataciteWorkType) {
     for (const relatedIdentifier of dataciteWork.relatedIdentifiers) {
       if(relatedIdentifier.relationType === 'IsVersionOf' && relatedIdentifier.relatedIdentifierType === 'DOI' && relatedIdentifier.relatedIdentifier) return relatedIdentifier.relatedIdentifier
     }
