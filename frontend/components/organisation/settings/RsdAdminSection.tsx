@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -78,18 +78,8 @@ export default function AdminSection() {
         defaultValue={is_tenant}
         onSave={saveIsTenant}
       />
-      <div className="py-2"></div>
-      <EditSectionTitle
-        title={config.description.title}
-        subtitle={config.description.subtitle}
-      />
-      <AutosaveControlledMarkdown
-        id={id}
-        name="description"
-        maxLength={config.description.validation.maxLength.value}
-        patchFn={patchOrganisationTable}
-      />
-      <div className="py-8"></div>
+      {/* additional spacing for About page */}
+      <div className="py-4"></div>
     </>
   )
 }
