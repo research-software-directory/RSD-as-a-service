@@ -30,7 +30,7 @@ public class DataciteMentionRepository implements MentionRepository {
 
 	private static final String QUERY_UNFORMATTED = """
 			query {
-			  works(ids: [%s]) {
+			  works(ids: [%s], first: 10000) {
 			    nodes {
 			      doi
 			      types {
