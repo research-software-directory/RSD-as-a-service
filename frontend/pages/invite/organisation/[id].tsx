@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -99,9 +99,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (resp.organisationInfo?.id) {
       // get organisation path to link to in the message
       const slug = await getRsdPathForOrganisation({
-        uuid: resp.organisationInfo?.id,
-        token,
-        frontend:false
+        uuid: resp.organisationInfo.id,
+        token
       })
 
       if (slug.status === 200) {
@@ -118,7 +117,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       // error from second request
       return {
         props: {
-          error: slug
+          error: slug.message
         }
       }
     }

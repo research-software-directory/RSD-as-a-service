@@ -293,22 +293,22 @@ export async function deleteOrganisation({uuid,logo_id, token}:
   }
 }
 
-export async function getRsdPathForOrganisation({uuid,token,frontend = false}:
-  {uuid: string, token?: string, frontend?: boolean}) {
+export async function getRsdPathForOrganisation({uuid,token}:
+  {uuid: string, token?: string}) {
   try {
     const query = `rpc/organisation_route?id=${uuid}`
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url =`/api/v1/${query}`
-    }
+    let url = `${getBaseUrl()}/${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
-        ...createJsonHeaders(token)
+        ...createJsonHeaders(token),
+        // request single object item
+        'Accept': 'application/vnd.pgrst.object+json'
       }
     })
+
     if (resp.status === 200) {
-      const json: {organisation: string, rsd_path: string} = await resp.json()
+      const json: { organisation: string, rsd_path: string, parent_names:string } = await resp.json()
       return {
         status: 200,
         message: json.rsd_path
