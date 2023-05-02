@@ -53,6 +53,8 @@ services:
   auth:
     build: ./authentication
     image: rsd/auth:1.2.2
+    ports:
+      - 5005:5005
     expose:
       - 7000
     environment:
@@ -83,6 +85,13 @@ services:
       - backend
     networks:
       - net
+    entrypoint:
+      [
+        "java",
+        "-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n",
+        "-cp", "auth.jar",
+        "nl.esciencecenter.rsd.authentication.Main"
+      ]
 
   frontend:
     build:
