@@ -466,8 +466,8 @@ async function generateOrganisations(amount=500) {
 function generateMetaPages() {
 	const result = [];
 
-	const titles = ['Terms of Service', 'Privacy Statement'];
-	const slugs = ['terms-of-service', 'privacy-statement'];
+	const titles = ['About', 'Terms of Service', 'Privacy Statement'];
+	const slugs = ['about', 'terms-of-service', 'privacy-statement'];
 	for (let index = 0; index < titles.length; index++) {
 		result.push({
 			title: titles[index],
