@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,6 +40,45 @@ public class Main {
 			}
 		}
 
+		return false;
+	}
+
+	public static boolean userInAaiAllowList(OpenIdInfo info) {
+		String allowList = Config.helmholtzAaiAllowList();
+
+		if (!Config.helmholtzAaiUseAllowList() || allowList == null || allowList.length() == 0) {
+			return false;
+		}
+
+		if (info == null || info.email() == null || info.email().length() == 0) {
+			throw new Error("Unexpected parameters for 'userInAaiAllowList'");
+		}
+
+		String[] allowed = allowList.split(";");
+
+		for (String s : allowed) {
+			if (s.equalsIgnoreCase(info.email())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static boolean aaiUserIsAllowed(OpenIdInfo helmholtzInfo) {
+		if (Config.helmholtzAaiAllowExternalUsers()) {
+			return true;
+		}
+		if (helmholtzInfo.organisation() == null) {
+			if (Config.helmholtzAaiUseAllowList() && userInAaiAllowList(helmholtzInfo)) {
+				return true;
+			} else if (Config.helmholtzAaiUseAllowList()) {
+				throw new RsdAuthenticationException("Your email address (" + helmholtzInfo.email() + ") is not in the allow list.");
+			}
+		} else {
+			// User is in HGF organisation
+			return true;
+		}
 		return false;
 	}
 
@@ -87,8 +127,8 @@ public class Main {
 				String redirectUrl = Config.helmholtzAaiRedirect();
 				OpenIdInfo helmholtzInfo = new HelmholtzAaiLogin(code, redirectUrl).openidInfo();
 
-				if (!userIsAllowed(helmholtzInfo)) {
-					throw new RsdAuthenticationException("Your email address (" + helmholtzInfo.email() + ") is not whitelisted.");
+				if (!aaiUserIsAllowed(helmholtzInfo)) {
+					throw new RsdAuthenticationException("You are not allowed to log in.");
 				}
 
 				AccountInfo accountInfo = new PostgrestAccount().account(helmholtzInfo, OpenidProvider.helmholtz);

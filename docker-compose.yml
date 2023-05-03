@@ -2,8 +2,8 @@
 # SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2021 - 2023 dv4all
-# SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-# SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+# SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
@@ -53,6 +53,8 @@ services:
   auth:
     build: ./authentication
     image: rsd/auth:1.2.2
+    ports:
+      - 5005:5005
     expose:
       - 7000
     environment:
@@ -69,6 +71,8 @@ services:
       - HELMHOLTZAAI_REDIRECT
       - HELMHOLTZAAI_WELL_KNOWN_URL
       - HELMHOLTZAAI_SCOPES
+      - HELMHOLTZAAI_USE_ALLOW_LIST
+      - HELMHOLTZAAI_ALLOW_LIST
       - ORCID_CLIENT_ID
       - ORCID_REDIRECT
       - ORCID_WELL_KNOWN_URL
@@ -83,6 +87,13 @@ services:
       - backend
     networks:
       - net
+    entrypoint:
+      [
+        "java",
+        "-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n",
+        "-cp", "auth.jar",
+        "nl.esciencecenter.rsd.authentication.Main"
+      ]
 
   frontend:
     build:

@@ -1,5 +1,6 @@
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +8,7 @@ package nl.esciencecenter.rsd.authentication;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +19,9 @@ import org.mockito.Mockito;
 public class MainTest {
 	OpenIdInfo userinfo = new OpenIdInfo(
 		"12345", "User Name", "user@example.com", "Example User"
+	);
+	OpenIdInfo userinfoNullOrganisation = new OpenIdInfo(
+		"12345", "User Name", "user@example.com", null
 	);
 	static MockedStatic<Config> utilities;
 
@@ -56,5 +61,26 @@ public class MainTest {
 			"test@example.com;example@example.com"
 		);
 		assertFalse(Main.userIsAllowed(userinfo));
+	}
+
+	@Test
+	void testAaiAllowListDisabled() {
+		utilities.when(Config::helmholtzAaiUseAllowList).thenReturn(false);
+		assertFalse(Main.aaiUserIsAllowed(userinfoNullOrganisation));
+		assertTrue(Main.aaiUserIsAllowed(userinfo));
+	}
+
+	@Test
+	void testAaiAllowListEnabled() {
+		utilities.when(Config::helmholtzAaiUseAllowList).thenReturn(true);
+		utilities.when(Config::helmholtzAaiAllowList).thenReturn(null);
+		assertThrowsExactly(
+			RsdAuthenticationException.class,
+			() -> Main.aaiUserIsAllowed(userinfoNullOrganisation),
+			 "Your email address (user@example.com) is not in the allow list."
+		);
+		utilities.when(Config::helmholtzAaiAllowList).thenReturn("user@example.com");
+		assertTrue(Main.aaiUserIsAllowed(userinfoNullOrganisation));
+		assertTrue(Main.aaiUserIsAllowed(userinfo));
 	}
 }

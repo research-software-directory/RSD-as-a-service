@@ -195,14 +195,18 @@ public class HelmholtzAaiLogin implements Login {
 			throw new RuntimeException(e);
 		}
 
-		JSONArray entitlements = (JSONArray) userInfo.getClaim("eduperson_entitlement");
-		String organisation = getOrganisationFromEntitlements(entitlements);
-
-		if (organisation == null && !Config.helmholtzAaiAllowExternalUsers()) {
-			// Login denied because no HGF organisation could be found in eduperson_entitlements
-			// and because social IdPs are not allowed
-			throw new RsdAuthenticationException("You are not allowed to login.");
+		JSONArray entitlements = new JSONArray();
+		Object edupersonClaim = userInfo.getClaim("eduperson_entitlement");
+		if (edupersonClaim instanceof JSONArray) {
+			entitlements = (JSONArray) edupersonClaim;
+		} else if (edupersonClaim instanceof String) {
+			entitlements.appendElement(edupersonClaim);
+		} else if (edupersonClaim == null) {
+			entitlements.appendElement("");
+		} else {
+			throw new RuntimeException("Unexpected return type of eduperson_entitlement.");
 		}
+		String organisation = getOrganisationFromEntitlements(entitlements);
 
 		return new OpenIdInfo(
 			userInfo.getSubject().toString(),
