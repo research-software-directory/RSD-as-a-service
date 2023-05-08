@@ -1,7 +1,7 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -25,6 +25,7 @@ import {organisationInformation as config} from '../editSoftwareConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {deleteImage, getImageUrl} from '~/utils/editImage'
 import {handleFileUpload} from '~/utils/handleFileUpload'
+import {Alert, AlertTitle} from '@mui/material'
 
 type EditOrganisationModalProps = {
   open: boolean,
@@ -242,6 +243,12 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
               />
             </div>
           </section>
+          <Alert
+          severity="info"
+        >
+          <AlertTitle>Do you have a logo?</AlertTitle>
+          You are the first to reference this organisation and can add a logo now. After clicking on &quot;Save&quot;, logos can only by added by organisation maintainers.
+        </Alert>
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',
