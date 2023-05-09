@@ -103,7 +103,7 @@ export default function SearchSection({
       </div>
       <div className="flex justify-between items-center px-1 py-2">
         <div className="text-sm opacity-70">
-          page {page ?? 1} of {count} results.
+          Page {page ?? 1} of {count} results
         </div>
         {/* Filter button for mobile */}
         {smallScreen === true &&
