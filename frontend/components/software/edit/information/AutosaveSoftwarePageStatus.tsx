@@ -1,13 +1,14 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
+
 import Link from 'next/link'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
 import EditSectionTitle from '../../../layout/EditSectionTitle'
-import AutosaveControlledSwitch from './AutosaveControlledSwitch'
+import AutosaveSoftwareSwitch from './AutosaveSoftwareSwitch'
 import {softwareInformation as config} from '../editSoftwareConfig'
 import {useFormContext} from 'react-hook-form'
 
@@ -27,7 +28,7 @@ export default function AutosaveSoftwarePageStatus() {
         subtitle={config.pageStatus.subtitle}
       />
       <div className="flex">
-        <AutosaveControlledSwitch
+        <AutosaveSoftwareSwitch
           software_id={id}
           name='is_published'
           label={config.is_published.label}
