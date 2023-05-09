@@ -5,11 +5,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {HighlightsCarousel} from './HighlightsCarousel'
-import useSoftwareHighlights from './useSoftwareHighlights'
+import {SoftwareHighlight} from '~/components/admin/software-highlights/apiSoftwareHighlights'
 
-export default function SoftwareHighlights() {
-  const {highlights} = useSoftwareHighlights()
-
+export default function SoftwareHighlights({highlights}: { highlights: SoftwareHighlight[] }) {
   // console.group('SoftwareHighlights')
   // console.log('loading...', loading)
   // console.log('highlights...', highlights)

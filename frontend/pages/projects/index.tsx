@@ -27,6 +27,7 @@ import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import {sortBySearchFor} from '~/utils/sortFn'
+import {getUserSettings} from '~/components/software/overview/userSettings'
 
 type ProjectsIndexPageProps = {
   count: number,
@@ -171,6 +172,8 @@ export default function ProjectsIndexPage(
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract from page-query
   const {search, rows, page, keywords, domains} = ssrProjectsParams(context.query)
+  // extract user settings from cookie
+  const {rsd_page_rows} = getUserSettings(context.req)
 
   const url = projectListUrl({
     baseUrl: getBaseUrl(),
@@ -179,8 +182,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     domains,
     // when search is used the order is already applied in the rpc
     order: search ? undefined : 'current_state.desc,date_start.desc,title',
-    limit: rows,
-    offset: rows * page,
+    limit: rows ?? rsd_page_rows,
+    offset: rows && page ? rows * page : undefined,
   })
 
   // get project list and domains filter info,
@@ -193,6 +196,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     getResearchDomainInfo(domains)
   ])
 
+  // console.log('projects...url...', url)
+
   return {
     // pass this to page component as props
     props: {
@@ -201,7 +206,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       domains: domainsInfo,
       count: projects.count,
       page,
-      rows,
+      rows: rows ?? rsd_page_rows,
       projects: projects.data,
     },
   }
