@@ -3,8 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-/* eslint-disable @next/next/no-img-element */
-
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import Link from 'next/link'
