@@ -3,7 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-/* eslint-disable @next/next/no-img-element */
 import {ChangeEvent} from 'react'
 import {UseFormSetValue, UseFormWatch} from 'react-hook-form'
 
