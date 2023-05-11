@@ -4,7 +4,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import {SoftwareListItem} from '~/types/SoftwareTypes'
 import {getImageUrl} from '~/utils/editImage'
