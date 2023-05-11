@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
@@ -7,7 +6,6 @@
 
 import Link from 'next/link'
 import {getImageUrl} from '~/utils/editImage'
-import StatCounter from '~/components/layout/StatCounter'
 
 export type OrganisationCardProps = {
   id: string,
