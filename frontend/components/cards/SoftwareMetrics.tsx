@@ -31,7 +31,7 @@ export default function SoftwareMetrics({contributor_cnt,mention_cnt,downloads}:
       {(downloads && downloads > 0) &&
         <div className="flex gap-2 items-center">
           <DownloadsIcon />
-          <span className="text-sm">34K</span>
+          <span className="text-sm">{downloads}</span>
         </div>
       }
     </div>

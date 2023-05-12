@@ -11,12 +11,13 @@ import FlexibleGridSection from '~/components/layout/FlexibleGridSection'
 export default function SoftwareOverviewGrid({software = []}: { software: SoftwareListItem[] }) {
   const grid={
     height: '28rem',
-    minWidth: '19rem',
+    minWidth: '18rem',
     maxWidth: '1fr'
   }
 
   return (
     <FlexibleGridSection
+      data-testid="software-overview-grid"
       className="mt-4 gap-8"
       {...grid}
     >

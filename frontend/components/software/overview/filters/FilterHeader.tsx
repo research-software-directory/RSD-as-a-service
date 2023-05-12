@@ -18,7 +18,7 @@ export default function FilterHeader({filterCnt,resetFilters}:FilterHeaderProps)
           className="rounded-full bg-gray-100 h-8 w-8 flex items-center justify-center font-semibold">
           {filterCnt}
         </span>
-        Filters
+        {filterCnt===1 ? 'Filter' : 'Filters'}
       </div>
 
       <Button

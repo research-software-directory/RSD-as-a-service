@@ -4,9 +4,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// TODO! examine what can be removed
-import {Keyword} from '~/components/keyword/FindKeyword'
-import {ProgrammingLanguage} from '../../filter/softwareFilterApi'
 import FilterHeader from './FilterHeader'
 import OrderBy from './OrderBy'
 import KeywordsFilter from './KeywordsFilter'

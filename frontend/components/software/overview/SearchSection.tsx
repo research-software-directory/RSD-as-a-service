@@ -9,12 +9,13 @@ import ViewQuiltIcon from '@mui/icons-material/ViewQuilt'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import useMediaQuery from '@mui/material/useMediaQuery'
-
-import SearchInput from './SearchInput'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
+
+import {rowsPerPageOptions} from '~/config/pagination'
+import SearchInput from './SearchInput'
 import {setDocumentCookie} from './userSettings'
 
 export type LayoutType = 'list'|'grid'|'masonry'
@@ -25,7 +26,7 @@ type SearchSectionProps = {
   count: number
   placeholder: string
   layout: LayoutType
-  search?: string
+  search?: string | null
   resetFilters: () => void
   setModal: (modal: boolean) => void
   setView: (view:LayoutType)=>void
@@ -39,7 +40,7 @@ export default function SearchSection({
 }: SearchSectionProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
   return (
-    <section>
+    <section data-testid="search-section">
       <div className="flex border rounded-md shadow-sm bg-base-100 p-2">
         <SearchInput
           placeholder={placeholder}
@@ -47,6 +48,7 @@ export default function SearchSection({
           defaultValue={search ?? ''}
         />
         <ToggleButtonGroup
+          data-testid="card-layout-options"
           orientation="horizontal"
           value={layout}
           size="small"
@@ -78,9 +80,8 @@ export default function SearchSection({
           }}
           title={`Show ${rows} items on page`}
         >
-          {/* <InputLabel id="select-rows-label">Items</InputLabel> */}
           <Select
-            id="demo-select-rows"
+            id="select-rows"
             labelId="select-rows-label"
             variant="outlined"
             value={rows ?? 12}
@@ -95,9 +96,8 @@ export default function SearchSection({
               border: '1px solid #fff'
             }}
           >
-            <MenuItem value={12}>12</MenuItem>
-            <MenuItem value={24}>24</MenuItem>
-            <MenuItem value={48}>48</MenuItem>
+            {/* load page options from config */}
+            {rowsPerPageOptions.map(item => <MenuItem key={item} value={item}>{item}</MenuItem>) }
           </Select>
         </FormControl>
       </div>

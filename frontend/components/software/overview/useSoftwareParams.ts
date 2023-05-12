@@ -28,7 +28,7 @@ export default function useSoftwareParams() {
       params['rows'] = getDocumentCookie('rsd_page_rows',12)
     }
     // construct url with all query params
-    const url = buildFilterUrl(params, 'highlights')
+    const url = buildFilterUrl(params, 'software')
     if (key === 'page') {
       // when changin page we scroll to top
       router.push(url, url, {scroll: true})
