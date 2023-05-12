@@ -8,6 +8,8 @@ import {useEffect, useState} from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import {LicensesFilterOption} from './softwareFiltersApi'
+import FilterTitle from './FilterTitle'
+import FilterOption from './FilterOption'
 
 
 type LicensesFilterProps = {
@@ -32,10 +34,10 @@ export default function LicensesFilter({licenses,licensesList,handleQueryChange}
 
   return (
     <div>
-      <div className="flex justify-between items-center">
-        <div className="font-semibold">Licenses</div>
-        <div className="text-sm opacity-60">{licensesList.length}</div>
-      </div>
+      <FilterTitle
+        title="Licenses"
+        count={licensesList.length ?? ''}
+      />
       <Autocomplete
         className="mt-4"
         value={selected}
@@ -50,10 +52,12 @@ export default function LicensesFilter({licenses,licensesList,handleQueryChange}
         defaultValue={[]}
         filterSelectedOptions
         renderOption={(props, option) => (
-          <li className="flex items-center w-full content-between" {...props} >
-            <div className="flex-1 text-sm">{option.license}</div>
-            <div className="text-xs opacity-60">({option.license_cnt})</div>
-          </li>
+          <FilterOption
+            key={option.license}
+            props={props}
+            label={option.license}
+            count={option.license_cnt}
+          />
         )}
         renderInput={(params) => (
           <TextField {...params} placeholder="Licenses"/>
