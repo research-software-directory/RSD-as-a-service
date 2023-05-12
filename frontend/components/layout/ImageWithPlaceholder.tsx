@@ -12,22 +12,33 @@ export type ImageWithPlaceholderProps = {
   bgSize?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down',
   bgPosition?: string
   placeholder?: string
+  width?: string
+  height?: string
+  type?: 'gradient' | 'icon'
 }
 
 export default function ImageWithPlaceholder({
-  src, alt, className, bgSize = 'contain', bgPosition = 'center', placeholder
+  src, alt, className, bgSize = 'contain', bgPosition = 'center', placeholder,
+  width = '4rem', height = '4rem', type='icon'
 }: ImageWithPlaceholderProps
 ) {
 
   if (!src) {
+    if (type === 'gradient') {
+      return (
+        <div
+          className="w-full bg-gradient-to-br from-base-300 from-0% via-base-100 via-70% to-base-100"
+        />
+      )
+    }
     return (
       <div
         className={`flex flex-col justify-center items-center text-grey-500 rounded-sm ${className ?? ''}`}
       >
         <PhotoSizeSelectActualOutlinedIcon
           sx={{
-            width: '4rem',
-            height: '4rem'
+            width,
+            height
           }}
         />
         <div className="uppercase text-center">{placeholder}</div>

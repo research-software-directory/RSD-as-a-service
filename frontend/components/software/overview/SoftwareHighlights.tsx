@@ -4,7 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {HighlightsCarousel} from './HighlightsCarousel'
+import {HighlightsCarousel} from '../highlights/HighlightsCarousel'
 import {SoftwareHighlight} from '~/components/admin/software-highlights/apiSoftwareHighlights'
 
 export default function SoftwareHighlights({highlights}: { highlights: SoftwareHighlight[] }) {
