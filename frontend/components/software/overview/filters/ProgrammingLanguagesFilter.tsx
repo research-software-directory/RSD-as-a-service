@@ -7,8 +7,9 @@ import {useEffect, useState} from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 
-import {ProgrammingLanguage} from '../../filter/softwareFilterApi'
 import {LanguagesFilterOption} from './softwareFiltersApi'
+import FilterTitle from './FilterTitle'
+import FilterOption from './FilterOption'
 
 type ProgrammingLanguagesFilterProps = {
   prog_lang: string[],
@@ -32,10 +33,10 @@ export default function ProgrammingLanguagesFilter({prog_lang,languagesList,hand
 
   return (
     <div>
-      <div className="flex justify-between items-center">
-        <div className="font-semibold">Program languages</div>
-        <div className="text-sm  opacity-60">{languagesList.length}</div>
-      </div>
+      <FilterTitle
+        title="Program languages"
+        count={languagesList.length ?? ''}
+      />
       <Autocomplete
         className="mt-4"
         value={selected}
@@ -50,15 +51,12 @@ export default function ProgrammingLanguagesFilter({prog_lang,languagesList,hand
         defaultValue={[]}
         filterSelectedOptions
         renderOption={(props, option) => (
-          <li className="flex w-full items-center content-between" {...props} >
-            <div className="text-sm flex-1">{
-              option.prog_language
-            }</div>
-            <div className="text-xs opacity-60">({
-              option.prog_language_cnt
-            })
-            </div>
-          </li>
+          <FilterOption
+            key={option.prog_language}
+            props={props}
+            label={option.prog_language}
+            count={option.prog_language_cnt}
+          />
         )}
         renderInput={(params) => (
           <TextField {...params} placeholder="Program languages"/>

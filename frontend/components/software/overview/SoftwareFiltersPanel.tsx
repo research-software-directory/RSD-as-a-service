@@ -6,7 +6,9 @@
 
 export default function SoftwareFiltersPanel({children}: { children: any }) {
   return (
-    <div className="flex bg-base-100 p-4 shadow rounded-md flex-col gap-8 w-[17rem]">
+    <div
+      data-testid="software-filters-panel"
+      className="flex bg-base-100 p-4 shadow rounded-md flex-col gap-8 w-[17rem]">
       {children}
     </div>
   )

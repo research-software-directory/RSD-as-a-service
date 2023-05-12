@@ -52,7 +52,6 @@ export default function SearchInput({
   return (
     <TextField
       size="small"
-      // variant="filled"
       type="text"
       placeholder={placeholder}
       value={state.value}

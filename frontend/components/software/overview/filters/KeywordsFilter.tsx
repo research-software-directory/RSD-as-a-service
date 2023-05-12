@@ -8,6 +8,8 @@ import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 
 import {KeywordFilterOption} from './softwareFiltersApi'
+import FilterTitle from './FilterTitle'
+import FilterOption from './FilterOption'
 
 type KeywordsFilterProps = {
   keywords: string[],
@@ -38,10 +40,10 @@ export default function KeywordsFilter({keywords,keywordsList,handleQueryChange}
 
   return (
     <div>
-      <div className="flex justify-between items-center">
-        <div className="font-semibold">Keywords</div>
-        <div className="text-sm opacity-60">{keywordsList.length}</div>
-      </div>
+      <FilterTitle
+        title="Keywords"
+        count={keywordsList.length ?? ''}
+      />
       <Autocomplete
         className="mt-4"
         value={selected}
@@ -56,15 +58,12 @@ export default function KeywordsFilter({keywords,keywordsList,handleQueryChange}
         defaultValue={[]}
         filterSelectedOptions
         renderOption={(props, option) => (
-          <li className="flex w-full items-center content-between" {...props} >
-            <div className="text-sm flex-1">{
-              option.keyword
-            }</div>
-            <div className="text-xs opacity-60">({
-              option.keyword_cnt
-            })
-            </div>
-          </li>
+          <FilterOption
+            key={option.keyword}
+            props={props}
+            label={option.keyword}
+            count={option.keyword_cnt}
+          />
         )}
         renderInput={(params) => (
           <TextField {...params} placeholder="Keywords"/>

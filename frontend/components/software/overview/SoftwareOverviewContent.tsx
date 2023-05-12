@@ -8,6 +8,7 @@ import {LayoutType} from './SearchSection'
 import SoftwareOverviewMasonry from './SoftwareOverviewMasonry'
 import SoftwareOverviewGrid from './SoftwareOverviewGrid'
 import SoftwareOverviewList from './SoftwareOverviewList'
+import NoContent from '~/components/layout/NoContent'
 
 type SoftwareOverviewContentProps = {
   layout: LayoutType
@@ -15,6 +16,10 @@ type SoftwareOverviewContentProps = {
 }
 
 export default function SoftwareOverviewContent({layout, software}: SoftwareOverviewContentProps) {
+
+  if (!software || software.length === 0) {
+    return <NoContent />
+  }
 
   if (layout === 'masonry') {
     // Masenory grid layout
