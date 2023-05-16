@@ -43,12 +43,14 @@ export default function AutosaveProjectSwitch({project_id,name,label,defaultValu
         defaultValue:value
       })
     } else {
-      showErrorMessage(`Failed to save ${name}. ${resp?.message}`)
+      showErrorMessage(`Failed to save ${label.toLowerCase()}. ${resp?.message}`)
       // On error we reset value to defaultValue/original value
       // to let user know that update failed
-      resetField(name, {
-        defaultValue
-      })
+      setTimeout(() => {
+        resetField(name, {
+          defaultValue
+        })
+      },100)
     }
   }
 
