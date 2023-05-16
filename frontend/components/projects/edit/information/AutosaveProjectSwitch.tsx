@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -43,7 +43,14 @@ export default function AutosaveProjectSwitch({project_id,name,label,defaultValu
         defaultValue:value
       })
     } else {
-      showErrorMessage(`Failed to save ${name}. ${resp?.message}`)
+      showErrorMessage(`Failed to save ${label.toLowerCase()}. ${resp?.message}`)
+      // On error we reset value to defaultValue/original value
+      // to let user know that update failed
+      setTimeout(() => {
+        resetField(name, {
+          defaultValue
+        })
+      },100)
     }
   }
 
