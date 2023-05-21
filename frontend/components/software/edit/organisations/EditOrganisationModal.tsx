@@ -28,6 +28,7 @@ import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {organisationInformation as config} from '../editSoftwareConfig'
 
+
 type EditOrganisationModalProps = {
   open: boolean,
   onCancel: () => void,
