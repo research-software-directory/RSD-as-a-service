@@ -15,6 +15,8 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import DeleteIcon from '@mui/icons-material/Delete'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 import {useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth'
@@ -25,7 +27,7 @@ import {organisationInformation as config} from '../editSoftwareConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {deleteImage, getImageUrl} from '~/utils/editImage'
 import {handleFileUpload} from '~/utils/handleFileUpload'
-import {Alert, AlertTitle} from '@mui/material'
+
 
 type EditOrganisationModalProps = {
   open: boolean,
