@@ -35,7 +35,7 @@ import {
   addOrganisationToSoftware, createOrganisationAndAddToSoftware,
   deleteOrganisationFromSoftware, patchOrganisationPositions
 } from './organisationForSoftware'
-import {deleteImage, upsertImage} from '~/utils/editImage'
+import {upsertImage} from '~/utils/editImage'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 
 export type EditOrganisationModalProps = ModalProps & {
