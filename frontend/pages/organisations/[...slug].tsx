@@ -34,7 +34,6 @@ export default function OrganisationPage({organisation,slug,page,ror}:Organisati
   const {loading, isMaintainer} = useOrganisationMaintainer({
     organisation: organisation.id
   })
-  const pageTitle = `${organisation.name} | ${app.title}`
 
   useEffect(() => {
     if (page && page!=='') {

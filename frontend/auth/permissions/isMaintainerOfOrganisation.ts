@@ -1,19 +1,18 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createJsonHeaders} from '../../utils/fetchHelpers'
+import {createJsonHeaders, getBaseUrl} from '../../utils/fetchHelpers'
 import logger from '../../utils/logger'
 
 type IsMaintainerOfOrganisationProps = {
   organisation: string
   account?: string
   token?: string
-  frontend?: boolean
 }
 
-export async function isMaintainerOfOrganisation({organisation, account, token, frontend}: IsMaintainerOfOrganisationProps) {
+export async function isMaintainerOfOrganisation({organisation, account, token}: IsMaintainerOfOrganisationProps) {
   try {
     if (typeof account == 'undefined' ||
     typeof token == 'undefined') {
@@ -21,8 +20,7 @@ export async function isMaintainerOfOrganisation({organisation, account, token, 
       return false
     }
     const organisations = await getMaintainerOrganisations({
-      token,
-      frontend
+      token
     })
     // debugger
     if (organisations.length > 0) {
@@ -37,17 +35,14 @@ export async function isMaintainerOfOrganisation({organisation, account, token, 
   }
 }
 
-export async function getMaintainerOrganisations({token, frontend = true}:
-  {token: string, frontend?: boolean}) {
+export async function getMaintainerOrganisations({token}:
+  {token: string}) {
   try {
     // without token api request is not needed
     if (!token) return []
     // build url
     const query = 'rpc/organisations_of_current_maintainer'
-    let url = `/api/v1/${query}`
-    if (frontend===false) {
-      url = `${process.env.POSTGREST_URL}/${query}`
-    }
+    let url = `${getBaseUrl()}/${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)

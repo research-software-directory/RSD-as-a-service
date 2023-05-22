@@ -77,8 +77,7 @@ export async function getOrganisationBySlug({slug, token}:
     const [uuid, maintainerOf] = await Promise.all([
       getOrganisationIdForSlug({slug, token}),
       getMaintainerOrganisations({
-        token,
-        frontend: false
+        token
       })
     ])
     // if no uuid return

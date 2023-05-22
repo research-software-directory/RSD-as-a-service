@@ -28,8 +28,7 @@ async function getParticipatingOrganisationsForSoftware({software, token, accoun
     promises.push(isMaintainerOfOrganisation({
       organisation: item.id,
       account,
-      token,
-      frontend: true
+      token
     }))
     // extract only needed props
     const organisation: EditOrganisation = {
