@@ -40,6 +40,7 @@ export type Organisation = CoreOrganisationProps & {
   // about page content created by maintainer
   description: string | null
   parent_names?: string
+  rsd_path?: string
 }
 
 // adding source
@@ -54,6 +55,7 @@ export type SearchOrganisation = {
   primary_maintainer?: string | null
   parent: string | null
   parent_names?: string
+  rsd_path?: string
   source: OrganisationSource
 }
 
@@ -68,6 +70,8 @@ export type EditOrganisation = SearchOrganisation & {
   status?: Status
   // only maintainers can edit values
   canEdit?: boolean
+  // used for children to have complete rsd_path
+  rsd_path?: string
 }
 
 export type PatchOrganisation = {

@@ -65,6 +65,13 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
     )
   }
 
+  function getRSDLink() {
+    if (organisation.rsd_path) {
+      return `/organisations/${organisation.rsd_path}`
+    }
+    return `/organisations/${organisation.slug}`
+  }
+
   return (
     <ListItem
       data-testid="organisation-list-item"
@@ -109,7 +116,7 @@ export default function SortableOrganisationsItem({organisation, pos, onEdit, on
       <ListItemText
         data-testid="organisation-list-item-text"
         primary={
-          <a href={`/organisations/${organisation.slug}`} target="_blank">
+          <a href={getRSDLink()} target="_blank">
             {organisation.name}
           </a>
         }
