@@ -1,8 +1,8 @@
+-- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2022 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
--- SPDX-FileCopyrightText: 2022 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -157,5 +157,5 @@ WITH RECURSIVE search_tree(slug, name, organisation_id, parent, reverse_depth) A
 		FROM organisation o, search_tree st
 		WHERE o.id = st.parent
 )
-SELECT organisation_route.id, STRING_AGG(slug, '/' ORDER BY reverse_depth DESC), STRING_AGG(name, ' -> ' ORDER BY reverse_depth DESC) FROM search_tree;
+SELECT organisation_route.id, STRING_AGG(slug, '/' ORDER BY reverse_depth DESC), STRING_AGG(name, ' > ' ORDER BY reverse_depth DESC) FROM search_tree;
 $$;

@@ -10,7 +10,7 @@ import {expect} from '@playwright/test'
 import fs from 'fs/promises'
 
 export async function addCitation(page, input: string, waitForResponse: string) {
-  await page.pause()
+  // await page.pause()
   // clear previous input - if clear btn is visible
   const clearBtn = await page.getByRole('button', {
     name: 'Clear'
