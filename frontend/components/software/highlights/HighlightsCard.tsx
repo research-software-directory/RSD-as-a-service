@@ -32,7 +32,7 @@ export default function HighlightsCard({item}:SoftwareCardProps){
         {
           item.image_id &&
           <img
-            className="object-contain object-left w-full rounded-tr-lg rounded-tl-lg sm:rounded-bl-lg sm:rounded-tl-lg sm:rounded-tr-none sm:w-[20rem] sm:h-[20rem]"
+            className="object-contain object-left w-full rounded-tr-lg rounded-tl-lg sm:rounded-bl-lg sm:rounded-tl-lg sm:rounded-tr-none sm:w-max-[20rem] sm:h-[20rem]"
             src={`${getImageUrl(item.image_id) ?? ''}`}
             alt={`Cover image for ${item.brand_name}`}
           />
