@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,9 +26,11 @@ export default function OrganisationItem({rsd_path, name, website, logo_url}: Pa
     return (
       <Link href={url}
         title={name}
-        className="flex items-center" rel="noreferrer"
+        className="flex flex-col items-center" rel="noreferrer"
         passHref>
         {renderLogo()}
+        {/* show name only for research units */}
+        {rsd_path.includes('/',2)===true ? name : null}
       </Link>
     )
   }
