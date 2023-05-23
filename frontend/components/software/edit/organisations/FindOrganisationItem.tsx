@@ -27,11 +27,13 @@ export default function FindOrganisationItem({...org}:FindOrganisationItemProps)
       data-testid="organisation-list-item"
       // information used by e2e tests
       data-source={org.source}
+      className="flex-1"
+      title={org.parent_names}
     >
       <div>
         {org.name}
       </div>
-      <div className="text-sm text-base-content-secondary">
+      <div className="text-sm text-base-content-disabled">
         {
           path &&
           <div>{path}</div>
