@@ -15,37 +15,35 @@ type FindOrganisationItemProps = {
 
 export default function FindOrganisationItem({...org}:FindOrganisationItemProps) {
 
-  function renderSecondRow() {
-    return (
-      <div className="grid grid-cols-[4fr,3fr] gap-2">
-        <div className="break-all" >{
-          org.website ??
-          <span className="text-base-content-disabled">website url missing</span>
-        }</div>
-        <div className="pl-4 text-right">{
-          org.ror_id ??
-          <span className="text-base-content-disabled">ror_id missing</span>
-        }</div>
-      </div>
-    )
+  // show path only if different from name (multiple levels)
+  let path:string = org.parent_names ?? ''
+  if (org.parent_names?.toLowerCase() === org.name.toLowerCase()) {
+    path = ''
   }
 
   return (
-    <article className="flex-1" title={org.parent_names}>
-      <div className="grid grid-cols-[3fr,1fr] gap-2">
-        <div
-          data-testid="organisation-list-item-label"
-          className="flex items-center">
-          <span className="flex-1">{org.name}</span>
-        </div>
-        <span
-          data-testid="organisation-list-item-source"
-          className="text-right">
-          <strong>{org.source}</strong>
-        </span>
+    <article
+      // information used by e2e tests
+      data-testid="organisation-list-item"
+      // information used by e2e tests
+      data-source={org.source}
+    >
+      <div>
+        {org.name}
       </div>
-      <div className="py-1 text-[0.75rem]">
-        {renderSecondRow()}
+      <div className="text-sm text-base-content-secondary">
+        {
+          path &&
+          <div>{path}</div>
+        }
+        {
+          org.website &&
+          <div>{org.website}</div>
+        }
+        {
+          org.ror_id &&
+          <div>{org.ror_id}</div>
+        }
       </div>
     </article>
   )

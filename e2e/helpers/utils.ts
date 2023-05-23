@@ -148,7 +148,9 @@ export async function addOrganisation(page, organisation: Organisation, apiUrl) 
       hasText:RegExp(organisation.name,'i')
     })
     .first()
-  const source = await option.getByTestId('organisation-list-item-source').textContent()
+
+  // get source information
+  const source = await option.getByTestId('organisation-list-item').getAttribute('data-source')
 
   if (source === 'RSD') {
     await Promise.all([
