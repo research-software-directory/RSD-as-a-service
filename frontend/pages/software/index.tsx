@@ -27,7 +27,7 @@ import SoftwareFiltersPanel from '~/components/software/overview/SoftwareFilters
 import SoftwareHighlights from '~/components/software/overview/SoftwareHighlights'
 import OverviewPageBackground from '~/components/software/overview/PageBackground'
 import SearchSection, {LayoutType} from '~/components/software/overview/SearchSection'
-import useSoftwareParams from '~/components/software/overview/useSoftwareParams'
+import useSoftwareOverviewParams from '~/components/software/overview/useSoftwareOverviewParams'
 import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
 import SoftwareFilters from '~/components/software/overview/filters/index'
 import {
@@ -69,13 +69,13 @@ export default function SoftwareOverviewPage({
 }: SoftwareOverviewProps) {
   const [view, setView] = useState<LayoutType>('masonry')
   const smallScreen = useMediaQuery('(max-width:640px)')
-  const {handleQueryChange, resetFilters} = useSoftwareParams()
+  const {handleQueryChange, resetFilters} = useSoftwareOverviewParams()
 
   const [modal,setModal] = useState(false)
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
 
-  // console.group('SoftwareHighlightsPage')
+  // console.group('SoftwareOverviewPage')
   // console.log('search...', search)
   // console.log('keywords...', keywords)
   // console.log('prog_lang...', prog_lang)
@@ -134,7 +134,7 @@ export default function SoftwareOverviewPage({
         <MainContent className='pb-12'>
           {/* Page title */}
           <h1
-            className="my-4 text-2xl"
+            className="my-4"
             id="list-top"
             role="heading"
           >
@@ -207,7 +207,6 @@ export default function SoftwareOverviewPage({
           licenses={licenses ?? []}
           licensesList={licensesList}
           order={order ?? ''}
-          // setOrderBy={setOrderBy}
           filterCnt={filterCnt}
           resetFilters={resetFilters}
           handleQueryChange={handleQueryChange}
@@ -226,20 +225,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const {search, keywords, prog_lang, licenses, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
   const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
-  // default rows values comes from user settings
-  let page_rows = rsd_page_rows
+  // use url param if present else user settings
+  let page_rows = rows ?? rsd_page_rows
+  // calculate offset when page & rows present
+  if (page_rows && page) {
+    offset = page_rows * (page - 1)
+  }
 
   if (order) {
     // extract order direction from definitions
     const orderInfo = softwareOrderOptions.find(item=>item.key===order)
     if (orderInfo) orderBy=`${order}.${orderInfo.direction}`
   }
-  // if rows && page are provided as query params
-  if (rows && page) {
-    offset = rows * (page - 1)
-    // use rows provided as param
-    page_rows = rows
-  }
+
   // construct postgREST api url with query params
   const url = softwareListUrl({
     baseUrl: getBaseUrl(),

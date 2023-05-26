@@ -6,11 +6,12 @@
 
 import {useRouter} from 'next/router'
 
+import {rowsPerPageOptions} from '~/config/pagination'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
-import {QueryParams, buildFilterUrl} from '~/utils/postgrestUrl'
+import {QueryParams, ssrSoftwareUrl} from '~/utils/postgrestUrl'
 import {getDocumentCookie} from './userSettings'
 
-export default function useSoftwareParams() {
+export default function useSoftwareOverviewParams() {
   const router = useRouter()
 
   function handleQueryChange(key: string, value: string | string[]) {
@@ -25,10 +26,10 @@ export default function useSoftwareParams() {
     }
     if (typeof params['rows'] === 'undefined' || params['rows']===null) {
       // extract from cookie or use default
-      params['rows'] = getDocumentCookie('rsd_page_rows',12)
+      params['rows'] = getDocumentCookie('rsd_page_rows', rowsPerPageOptions[0])
     }
     // construct url with all query params
-    const url = buildFilterUrl(params, 'software')
+    const url = ssrSoftwareUrl(params)
     if (key === 'page') {
       // when changin page we scroll to top
       router.push(url, url, {scroll: true})
@@ -39,6 +40,7 @@ export default function useSoftwareParams() {
   }
 
   function resetFilters() {
+    // remove params from url and keep scroll position
     router.push(router.pathname, router.pathname, {scroll: false})
   }
 

@@ -117,7 +117,7 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
   const page = extractQueryParam({
     query,
     param: 'page',
-    defaultValue: 0,
+    defaultValue: 1,
     castToType: 'number'
   })
   const search = extractQueryParam({
@@ -150,13 +150,13 @@ export function ssrOrganisationParams(query: ParsedUrlQuery) {
   const rows = extractQueryParam({
     query,
     param: 'rows',
-    defaultValue: 12,
+    defaultValue: undefined,
     castToType: 'number'
   })
   const page = extractQueryParam({
     query,
     param: 'page',
-    defaultValue: 0,
+    defaultValue: 1,
     castToType: 'number'
   })
   const search = extractQueryParam({

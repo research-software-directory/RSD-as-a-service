@@ -17,23 +17,9 @@ export type OrganisationCardProps = {
   project_cnt: number | null
 }
 
-export default function OrganisationCardV2({organisation}: { organisation: OrganisationCardProps }) {
-
-
-  function getCountAndLabel() {
-    const count = organisation.software_cnt ?? 0
-    let label = 'software packages'
-    if (organisation?.software_cnt === 1) label = 'software package'
-    return {
-      count,
-      label
-    }
-  }
-
-  const {count, label} = getCountAndLabel()
+export default function OrganisationCard({organisation}: { organisation: OrganisationCardProps }) {
 
   return (
-
     <Link
       data-testid="organisation-card-link"
       href={`/organisations/${organisation.rsd_path}`}

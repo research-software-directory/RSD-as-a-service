@@ -26,8 +26,8 @@ import {getResearchDomainInfo, ResearchDomain} from '~/components/projects/filte
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import {sortBySearchFor} from '~/utils/sortFn'
-import {getUserSettings} from '~/components/software/overview/userSettings'
+import {getUserSettings, setDocumentCookie} from '~/components/software/overview/userSettings'
+import useProjectOverviewParams from '~/components/projects/overview/useProjectOverviewParams'
 
 type ProjectsIndexPageProps = {
   count: number,
@@ -48,52 +48,31 @@ export default function ProjectsIndexPage(
   // use next router (hook is only for browser)
   const router = useRouter()
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions()
+  const {handleQueryChange} = useProjectOverviewParams()
+  const numPages = Math.ceil(count / rows)
 
   // console.group('ProjectsIndexPage')
   // console.log('query...', router.query)
   // console.groupEnd()
 
   function handleTablePageChange(
-    event: MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ){
-    const url = ssrProjectsUrl({
-      // take existing params from url (query)
-      ...ssrProjectsParams(router.query),
-      page: newPage,
-    })
-    router.push(url)
-  }
-
-  function handlePaginationChange(
-    event: ChangeEvent<unknown>,
+    _: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) {
-    // Pagination component starts counting from 1, but we need to start from 0
-    handleTablePageChange(event as any, newPage - 1)
+    // Pagination component starts counting from 0, but we need to start from 1
+    handleQueryChange('page',(newPage + 1).toString())
   }
 
   function handleChangeRowsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ){
-    const url = ssrProjectsUrl({
-      // take existing params from url (query)
-      ...ssrProjectsParams(router.query),
-      // reset to first page
-      page: 0,
-      rows: parseInt(event.target.value),
-    })
-    router.push(url)
+  ) {
+    handleQueryChange('rows',event.target.value)
+    // save to cookie
+    setDocumentCookie(event.target.value,'rsd_page_rows')
   }
 
-  function handleSearch(searchFor:string){
-    const url = ssrProjectsUrl({
-      ...ssrProjectsParams(router.query),
-      search: searchFor,
-      // start from first page
-      page: 0,
-    })
-    router.push(url)
+  function handleSearch(searchFor: string) {
+    handleQueryChange('search',searchFor)
   }
 
   function handleFilters({keywords,domains}:{keywords: string[],domains:string[]}){
@@ -103,7 +82,7 @@ export default function ProjectsIndexPage(
       keywords,
       domains,
       // start from first page
-      page: 0,
+      page: 1,
     })
     router.push(url)
   }
@@ -133,8 +112,8 @@ export default function ProjectsIndexPage(
           <TablePagination
             component="nav"
             count={count}
-            page={page}
-            labelRowsPerPage="Per page"
+            page={page-1}
+            labelRowsPerPage="Items"
             onPageChange={handleTablePageChange}
             rowsPerPage={rows}
             rowsPerPageOptions={rowsPerPageOptions}
@@ -154,15 +133,17 @@ export default function ProjectsIndexPage(
         className="gap-[0.125rem] p-[0.125rem] pt-4 pb-12"
       />
 
-      <div className="flex flex-wrap justify-center mb-8">
-        <Pagination
-          count={Math.ceil(count/rows)}
-          page={page + 1}
-          onChange={handlePaginationChange}
-          size="large"
-          shape="rounded"
-        />
-      </div>
+      {numPages > 1 &&
+        <div className="flex flex-wrap justify-center mb-8">
+          <Pagination
+            count={numPages}
+            page={page}
+            onChange={(_, page) => {
+              handleQueryChange('page',page.toString())
+            }}
+          />
+        </div>
+      }
     </DefaultLayout>
   )
 }
@@ -170,10 +151,17 @@ export default function ProjectsIndexPage(
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  let offset=0
   // extract from page-query
   const {search, rows, page, keywords, domains} = ssrProjectsParams(context.query)
   // extract user settings from cookie
   const {rsd_page_rows} = getUserSettings(context.req)
+  // use url param if present else user settings
+  let page_rows = rows ?? rsd_page_rows
+  // calculate offset when page & rows present
+  if (page_rows && page) {
+    offset = page_rows * (page - 1)
+  }
 
   const url = projectListUrl({
     baseUrl: getBaseUrl(),
@@ -182,9 +170,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     domains,
     // when search is used the order is already applied in the rpc
     order: search ? undefined : 'current_state.desc,date_start.desc,title',
-    limit: rows ?? rsd_page_rows,
-    offset: rows && page ? rows * page : undefined,
+    limit: page_rows,
+    offset
   })
+
+  // console.log('projects...url...', url)
+  // console.log('rows...', rows)
+  // console.log('page...', page)
+  // console.log('page_rows...', page_rows)
+  // console.log('offset...', offset)
 
   // get project list and domains filter info,
   // 1. we do not pass the token
@@ -196,8 +190,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     getResearchDomainInfo(domains)
   ])
 
-  // console.log('projects...url...', url)
-
   return {
     // pass this to page component as props
     props: {
@@ -206,7 +198,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       domains: domainsInfo,
       count: projects.count,
       page,
-      rows: rows ?? rsd_page_rows,
+      rows: page_rows,
       projects: projects.data,
     },
   }
