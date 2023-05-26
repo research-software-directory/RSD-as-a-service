@@ -5,135 +5,6 @@
 --
 -- SPDX-License-Identifier: Apache-2.0
 
--- PROJECT OVERVIEW LIST
--- WITH KEYWORDS and research domain for filtering
-CREATE FUNCTION project_overview() RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	title VARCHAR,
-	subtitle VARCHAR,
-	current_state VARCHAR,
-	date_start DATE,
-	updated_at TIMESTAMPTZ,
-	is_published BOOLEAN,
-	image_contain BOOLEAN,
-	image_id VARCHAR,
-	keywords citext[],
-	keywords_text TEXT,
-	research_domain VARCHAR[],
-	research_domain_text TEXT
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		project.id,
-		project.slug,
-		project.title,
-		project.subtitle,
-		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
-			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
-			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-			ELSE 'Running'::VARCHAR
-		END AS current_state,
-		project.date_start,
-		project.updated_at,
-		project.is_published,
-		project.image_contain,
-		project.image_id,
-		keyword_filter_for_project.keywords,
-		keyword_filter_for_project.keywords_text,
-		research_domain_filter_for_project.research_domain,
-		research_domain_filter_for_project.research_domain_text
-	FROM
-		project
-	LEFT JOIN
-		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
-	LEFT JOIN
-		research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
-	;
-END
-$$;
-
--- PROJECT OVERVIEW LIST FOR SEARCH
--- WITH KEYWORDS and research domain for filtering
-CREATE FUNCTION project_search(search VARCHAR) RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	title VARCHAR,
-	subtitle VARCHAR,
-	current_state VARCHAR,
-	date_start DATE,
-	updated_at TIMESTAMPTZ,
-	is_published BOOLEAN,
-	image_contain BOOLEAN,
-	image_id VARCHAR,
-	keywords citext[],
-	keywords_text TEXT,
-	research_domain VARCHAR[],
-	research_domain_text TEXT
-) LANGUAGE sql STABLE AS
-$$
-SELECT
-	project.id,
-	project.slug,
-	project.title,
-	project.subtitle,
-	CASE
-		WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
-		WHEN project.date_start > now() THEN 'Starting'::VARCHAR
-		WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-		ELSE 'Running'::VARCHAR
-	END AS current_state,
-	project.date_start,
-	project.updated_at,
-	project.is_published,
-	project.image_contain,
-	project.image_id,
-	keyword_filter_for_project.keywords,
-	keyword_filter_for_project.keywords_text,
-	research_domain_filter_for_project.research_domain,
-	research_domain_filter_for_project.research_domain_text
-FROM
-	project
-LEFT JOIN
-	keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
-LEFT JOIN
-	research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
-WHERE
-	project.title ILIKE CONCAT('%', search, '%')
-	OR
-	project.slug ILIKE CONCAT('%', search, '%')
-	OR
-	project.subtitle ILIKE CONCAT('%', search, '%')
-	OR
-	keyword_filter_for_project.keywords_text ILIKE CONCAT('%', search, '%')
-	OR
-	research_domain_filter_for_project.research_domain_text ILIKE CONCAT('%', search, '%')
-ORDER BY
-	CASE
-		WHEN title ILIKE search THEN 0
-		WHEN title ILIKE CONCAT(search, '%') THEN 1
-		WHEN title ILIKE CONCAT('%', search, '%') THEN 2
-		ELSE 3
-	END,
-	CASE
-		WHEN slug ILIKE search THEN 0
-		WHEN slug ILIKE CONCAT(search, '%') THEN 1
-		WHEN slug ILIKE CONCAT('%', search, '%') THEN 2
-		ELSE 3
-	END,
-	CASE
-		WHEN subtitle ILIKE search THEN 0
-		WHEN subtitle ILIKE CONCAT(search, '%') THEN 1
-		WHEN subtitle ILIKE CONCAT('%', search, '%') THEN 2
-		ELSE 3
-	END
-;
-$$;
-
-
 CREATE FUNCTION count_project_team_members() RETURNS TABLE (
 	project UUID,
 	team_member_cnt INTEGER,
@@ -387,5 +258,251 @@ INNER JOIN
 		(project.id = project_for_project.relation AND project_for_project.origin = project_id)
 		OR
 		(project.id = project_for_project.origin AND project_for_project.relation = project_id)
+;
+$$;
+
+-- AGGREGATE participating organisations per project for project_overview RPC
+-- use only TOP LEVEL organisations (paren IS NULL)
+CREATE FUNCTION project_participating_organisations() RETURNS TABLE (
+	project UUID,
+	organisations VARCHAR[]
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	project_for_organisation.project,
+	ARRAY_AGG(organisation.name) AS organisations
+FROM
+	organisation
+INNER JOIN
+	project_for_organisation ON organisation.id = project_for_organisation.organisation
+WHERE
+	project_for_organisation.role = 'participating' AND organisation.parent IS NULL
+GROUP BY
+	project_for_organisation.project
+;
+$$;
+
+
+-- PROJECT OVERVIEW LIST
+-- WHEN FILTERING/SEARCH IS NOT USED
+CREATE FUNCTION project_overview() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	date_start DATE,
+	date_end DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_contain BOOLEAN,
+	image_id VARCHAR,
+	keywords citext[],
+	keywords_text TEXT,
+	research_domain VARCHAR[],
+	research_domain_text TEXT,
+	participating_organisations VARCHAR[],
+	impact_cnt INTEGER,
+	output_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	project.id,
+	project.slug,
+	project.title,
+	project.subtitle,
+	project.date_start,
+	project.date_end,
+	project.updated_at,
+	project.is_published,
+	project.image_contain,
+	project.image_id,
+	keyword_filter_for_project.keywords,
+	keyword_filter_for_project.keywords_text,
+	research_domain_filter_for_project.research_domain,
+	research_domain_filter_for_project.research_domain_text,
+	project_participating_organisations.organisations AS participating_organisations,
+	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
+	COALESCE(count_project_output.output_cnt, 0) AS output_cnt
+FROM
+	project
+LEFT JOIN
+	keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
+LEFT JOIN
+	research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
+LEFT JOIN
+	project_participating_organisations() ON project.id=project_participating_organisations.project
+LEFT JOIN
+	count_project_impact() ON project.id = count_project_impact.project
+LEFT JOIN
+	count_project_output() ON project.id = count_project_output.project
+;
+$$;
+
+-- PROJECT OVERVIEW LIST FOR SEARCH
+-- WITH keywords, research domain and participating organisations for filtering
+CREATE FUNCTION project_search(search VARCHAR) RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	date_start DATE,
+	date_end DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_contain BOOLEAN,
+	image_id VARCHAR,
+	keywords citext[],
+	keywords_text TEXT,
+	research_domain VARCHAR[],
+	research_domain_text TEXT,
+	participating_organisations VARCHAR[],
+	impact_cnt INTEGER,
+	output_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	project.id,
+	project.slug,
+	project.title,
+	project.subtitle,
+	project.date_start,
+	project.date_end,
+	project.updated_at,
+	project.is_published,
+	project.image_contain,
+	project.image_id,
+	keyword_filter_for_project.keywords,
+	keyword_filter_for_project.keywords_text,
+	research_domain_filter_for_project.research_domain,
+	research_domain_filter_for_project.research_domain_text,
+	project_participating_organisations.organisations AS participating_organisations,
+	COALESCE(count_project_impact.impact_cnt, 0),
+	COALESCE(count_project_output.output_cnt, 0)
+FROM
+	project
+LEFT JOIN
+	keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
+LEFT JOIN
+	research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
+LEFT JOIN
+	project_participating_organisations() ON project.id=project_participating_organisations.project
+LEFT JOIN
+	count_project_impact() ON project.id = count_project_impact.project
+LEFT JOIN
+	count_project_output() ON project.id = count_project_output.project
+WHERE
+	project.title ILIKE CONCAT('%', search, '%')
+	OR
+	project.slug ILIKE CONCAT('%', search, '%')
+	OR
+	project.subtitle ILIKE CONCAT('%', search, '%')
+	OR
+	keyword_filter_for_project.keywords_text ILIKE CONCAT('%', search, '%')
+	OR
+	research_domain_filter_for_project.research_domain_text ILIKE CONCAT('%', search, '%')
+ORDER BY
+	CASE
+		WHEN title ILIKE search THEN 0
+		WHEN title ILIKE CONCAT(search, '%') THEN 1
+		WHEN title ILIKE CONCAT('%', search, '%') THEN 2
+		ELSE 3
+	END,
+	CASE
+		WHEN slug ILIKE search THEN 0
+		WHEN slug ILIKE CONCAT(search, '%') THEN 1
+		WHEN slug ILIKE CONCAT('%', search, '%') THEN 2
+		ELSE 3
+	END,
+	CASE
+		WHEN subtitle ILIKE search THEN 0
+		WHEN subtitle ILIKE CONCAT(search, '%') THEN 1
+		WHEN subtitle ILIKE CONCAT('%', search, '%') THEN 2
+		ELSE 3
+	END
+;
+$$;
+
+-- REACTIVE KEYWORD FILTER WITH COUNTS FOR PROJECTS
+-- PROVIDES AVAILABLE KEYWORDS FOR APPLIED FILTERS
+CREATE FUNCTION project_keywords_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	research_domain_filter VARCHAR[] DEFAULT '{}',
+	organisation_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	keyword CITEXT,
+	keyword_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(keywords) AS keyword,
+	COUNT(id) AS keyword_cnt
+FROM
+	project_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(research_domain, '{}') @> research_domain_filter
+	AND
+	COALESCE(participating_organisations, '{}') @> organisation_filter
+GROUP BY
+	keyword
+;
+$$;
+
+
+-- REACTIVE RESEARCH DOMAIN FILTER WITH COUNTS FOR PROJECTS
+-- PROVIDES AVAILABLE DOMAINS FOR APPLIED FILTERS
+CREATE FUNCTION project_domains_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	research_domain_filter VARCHAR[] DEFAULT '{}',
+	organisation_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	domain VARCHAR,
+	domain_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(research_domain) AS domain,
+	COUNT(id) AS domain_cnt
+FROM
+	project_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(research_domain, '{}') @> research_domain_filter
+	AND
+	COALESCE(participating_organisations, '{}') @> organisation_filter
+GROUP BY
+	domain
+;
+$$;
+
+-- REACTIVE PARTICIPATING ORGANISATIONS FILTER WITH COUNTS FOR PROJECTS
+-- PROVIDES AVAILABLE DOMAINS FOR APPLIED FILTERS
+CREATE FUNCTION project_participating_organisations_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	research_domain_filter VARCHAR[] DEFAULT '{}',
+	organisation_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	organisation VARCHAR,
+	organisation_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(participating_organisations) AS organisation,
+	COUNT(id) AS organisation_cnt
+FROM
+	project_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(research_domain, '{}') @> research_domain_filter
+	AND
+	COALESCE(participating_organisations, '{}') @> organisation_filter
+GROUP BY
+	organisation
 ;
 $$;

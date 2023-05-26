@@ -4,9 +4,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import FilterHeader from './FilterHeader'
-import OrderBy from './OrderBy'
-import KeywordsFilter from './KeywordsFilter'
+import FilterHeader from '~/components/layout/filter/FilterHeader'
+import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
+import OrderSoftwareBy from './OrderSoftwareBy'
+import SoftwareKeywordsFilter from './SoftwareKeywordsFilter'
 import ProgrammingLanguagesFilter from './ProgrammingLanguagesFilter'
 import LicensesFilter from './LicensesFilter'
 import {KeywordFilterOption, LanguagesFilterOption,LicensesFilterOption} from './softwareFiltersApi'
@@ -16,7 +17,7 @@ export type LicenseWithCount = {
   cnt: number;
 }
 
-type SoftwareFilterPanelProps = {
+type SoftwareFilterProps = {
   keywords: string[]
   keywordsList: KeywordFilterOption[]
   languages: string[]
@@ -24,9 +25,7 @@ type SoftwareFilterPanelProps = {
   licenses: string[]
   licensesList: LicensesFilterOption[]
   orderBy: string,
-  filterCnt: number,
-  resetFilters: () => void
-  handleQueryChange: (key: string, value: string | string[]) => void
+  filterCnt: number
 }
 
 export default function SoftwareFilters({
@@ -37,39 +36,41 @@ export default function SoftwareFilters({
   licenses,
   licensesList,
   filterCnt,
-  handleQueryChange,
-  orderBy,
-  resetFilters
-}:SoftwareFilterPanelProps) {
+  orderBy
+}:SoftwareFilterProps) {
+  const {resetFilters} = useSoftwareOverviewParams()
+
+  function clearDisabled() {
+    if (filterCnt && filterCnt > 0) return false
+    if (orderBy) return false
+    return true
+  }
 
   return (
     <>
       <FilterHeader
         filterCnt={filterCnt}
+        disableClear={clearDisabled()}
         resetFilters={resetFilters}
       />
       {/* Order by */}
-      <OrderBy
+      <OrderSoftwareBy
         orderBy={orderBy}
-        handleQueryChange={handleQueryChange}
       />
       {/* Keywords */}
-      <KeywordsFilter
+      <SoftwareKeywordsFilter
         keywords={keywords}
         keywordsList={keywordsList}
-        handleQueryChange={handleQueryChange}
       />
       {/* Programme Languages */}
       <ProgrammingLanguagesFilter
         prog_lang={languages}
         languagesList={languagesList}
-        handleQueryChange={handleQueryChange}
       />
       {/* Licenses */}
       <LicensesFilter
         licenses={licenses}
         licensesList={licensesList}
-        handleQueryChange={handleQueryChange}
       />
     </>
   )

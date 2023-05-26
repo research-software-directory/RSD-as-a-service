@@ -10,6 +10,7 @@ import ContributorAvatar from '~/components/software/ContributorAvatar'
 import {Column} from '~/components/table/EditableTable'
 import {getImageUrl} from '~/utils/editImage'
 import {patchPerson, RsdContributor} from './apiContributors'
+import {getDisplayInitials} from '~/utils/getDisplayName'
 
 export function createColumns(token: string) {
   const columns: Column<RsdContributor, keyof RsdContributor>[] = [{
@@ -25,8 +26,11 @@ export function createColumns(token: string) {
       return (
         <ContributorAvatar
           avatarUrl={getImageUrl(data.avatar_id) ?? ''}
-          displayName={''}
-          displayInitials={''}
+          displayName={data.family_names}
+          displayInitials={getDisplayInitials({
+            given_names: data.given_names,
+            family_names: data.family_names
+          })}
         />
       )
     }

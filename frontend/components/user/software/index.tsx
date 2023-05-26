@@ -7,11 +7,11 @@
 import {useEffect} from 'react'
 
 import {Session} from '~/auth'
-import SoftwareGrid from '~/components/software/SoftwareGrid'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
-import useUserSoftware from './useUserSoftware'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import ContentLoader from '~/components/layout/ContentLoader'
+import useUserSoftware from './useUserSoftware'
+import SoftwareGrid from './SoftwareGrid'
 
 export default function UserSoftware({session}: { session: Session }) {
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions('software')

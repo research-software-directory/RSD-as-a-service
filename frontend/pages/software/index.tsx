@@ -15,18 +15,19 @@ import {getSoftwareList} from '~/utils/getSoftware'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {SoftwareListItem} from '~/types/SoftwareTypes'
 import MainContent from '~/components/layout/MainContent'
+import FiltersPanel from '~/components/layout/filter/FiltersPanel'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
+
 import {
   SoftwareHighlight,
   getSoftwareHighlights
 } from '~/components/admin/software-highlights/apiSoftwareHighlights'
-import SoftwareFiltersPanel from '~/components/software/overview/SoftwareFiltersPanel'
 import SoftwareHighlights from '~/components/software/overview/SoftwareHighlights'
 import OverviewPageBackground from '~/components/software/overview/PageBackground'
-import SearchSection, {LayoutType} from '~/components/software/overview/SearchSection'
+import SoftwareSearchSection from '~/components/software/overview/search/SoftwareSearchSection'
 import useSoftwareOverviewParams from '~/components/software/overview/useSoftwareOverviewParams'
 import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
 import SoftwareFilters from '~/components/software/overview/filters/index'
@@ -35,9 +36,11 @@ import {
   softwareKeywordsFilter, softwareLanguagesFilter,
   softwareLicesesFilter
 } from '~/components/software/overview/filters/softwareFiltersApi'
-import FilterModal from '~/components/software/overview/filters/FilterModal'
+import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
 import {getUserSettings, setDocumentCookie} from '~/components/software/overview/userSettings'
-import {softwareOrderOptions} from '~/components/software/overview/filters/OrderBy'
+import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
+import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+
 
 type SoftwareOverviewProps = {
   search?: string | null
@@ -69,7 +72,7 @@ export default function SoftwareOverviewPage({
 }: SoftwareOverviewProps) {
   const [view, setView] = useState<LayoutType>('masonry')
   const smallScreen = useMediaQuery('(max-width:640px)')
-  const {handleQueryChange, resetFilters} = useSoftwareOverviewParams()
+  const {handleQueryChange} = useSoftwareOverviewParams()
 
   const [modal,setModal] = useState(false)
   const numPages = Math.ceil(count / rows)
@@ -92,7 +95,7 @@ export default function SoftwareOverviewPage({
   // console.log('highlights...', highlights)
   // console.groupEnd()
 
-  // Update view state based on layout value from cookie
+  // Update view state based on layout value
   useEffect(() => {
     if (layout) {
       setView(layout)
@@ -134,7 +137,7 @@ export default function SoftwareOverviewPage({
         <MainContent className='pb-12'>
           {/* Page title */}
           <h1
-            className="my-4"
+            className="mt-8"
             id="list-top"
             role="heading"
           >
@@ -144,7 +147,7 @@ export default function SoftwareOverviewPage({
           <div className="flex-1 flex w-full my-4 gap-8">
             {/* Filters panel large screen */}
             {smallScreen===false &&
-              <SoftwareFiltersPanel>
+              <FiltersPanel>
                 <SoftwareFilters
                   keywords={keywords ?? []}
                   keywordsList={keywordsList}
@@ -154,26 +157,22 @@ export default function SoftwareOverviewPage({
                   licensesList={licensesList}
                   orderBy={order ?? ''}
                   filterCnt={filterCnt}
-                  resetFilters={resetFilters}
-                  handleQueryChange={handleQueryChange}
                 />
-              </SoftwareFiltersPanel>
+              </FiltersPanel>
             }
             {/* Search & main content section */}
             <div className="flex-1">
-              <SearchSection
+              <SoftwareSearchSection
                 page={page}
                 rows={rows}
                 count={count}
                 search={search}
                 placeholder={keywords?.length ? 'Find within selection' : 'Find software'}
                 layout={view}
-                resetFilters={resetFilters}
                 setView={setLayout}
                 setModal={setModal}
-                handleQueryChange={handleQueryChange}
               />
-              {/* Software content: cards or list */}
+              {/* Software content: masonry, cards or list */}
               <SoftwareOverviewContent
                 layout={view}
                 software={software}
@@ -198,7 +197,7 @@ export default function SoftwareOverviewPage({
       {/* filter for mobile */}
       {
         smallScreen===true &&
-        <FilterModal
+        <SoftwareFiltersModal
           open={modal}
           keywords={keywords ?? []}
           keywordsList={keywordsList}
@@ -208,8 +207,6 @@ export default function SoftwareOverviewPage({
           licensesList={licensesList}
           order={order ?? ''}
           filterCnt={filterCnt}
-          resetFilters={resetFilters}
-          handleQueryChange={handleQueryChange}
           setModal={setModal}
         />
       }

@@ -7,10 +7,11 @@ import {render, screen, within} from '@testing-library/react'
 import {WithAppContext} from '~/utils/jest/WithAppContext'
 
 import SoftwareOverviewPage from '../pages/software/index'
-import {LayoutType} from '~/components/software/overview/SearchSection'
+import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 
 // mocked data & props
 import mockData from './__mocks__/softwareOverviewData.json'
+
 const mockProps = {
   search:null,
   keywords:null,
@@ -62,7 +63,7 @@ describe('pages/software/index.tsx', () => {
       </WithAppContext>
     )
     // get reference to filter panel
-    const panel = screen.getByTestId('software-filters-panel')
+    const panel = screen.getByTestId('filters-panel')
     // find order by testid
     const order = within(panel).getByTestId('filters-order-by')
     // should have 3 filters

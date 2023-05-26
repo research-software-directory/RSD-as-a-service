@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {SoftwareListItem} from '~/types/SoftwareTypes'
-import SoftwareMasonryCard from './SoftwareMasonryCard'
+import SoftwareMasonryCard from './cards/SoftwareMasonryCard'
 
 export default function SoftwareOverviewMasonry({software=[]}: { software:SoftwareListItem[]}) {
   return (

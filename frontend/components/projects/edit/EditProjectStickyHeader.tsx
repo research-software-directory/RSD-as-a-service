@@ -33,7 +33,8 @@ export default function EditProjectStickyHeader() {
       <ViewPageButton
         title={`View ${project?.title ?? 'project page'}`}
         url={`/projects/${project.slug}`}
-        disabled={typeof project ==='undefined'}
+        disabled={typeof project === 'undefined'}
+        label="View Project"
       />
     </StickyHeader>
   )

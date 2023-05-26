@@ -31,7 +31,7 @@ export default function SoftwareOptionFound({option}: { option: AutocompleteOpti
           sx={{
             width: '4rem',
             height: '4rem',
-            fontSize: '2rem',
+            fontSize: '1.5rem',
             marginRight: '1rem',
             '& img': {
               height:'auto'

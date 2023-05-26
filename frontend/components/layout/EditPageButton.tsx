@@ -55,6 +55,7 @@ export default function EditPageButton({title, url, isMaintainer, variant}: Edit
             right: {
               lg:'1rem'
             },
+            textTransform:'capitalize'
             // minWidth: '6rem'
           }}
           onClick={() => {
@@ -62,7 +63,8 @@ export default function EditPageButton({title, url, isMaintainer, variant}: Edit
             router.push(url)
           }}
         >
-          Edit page
+          {/* Edit page */}
+          {title}
         </Button>
       </PageContainer>
     )

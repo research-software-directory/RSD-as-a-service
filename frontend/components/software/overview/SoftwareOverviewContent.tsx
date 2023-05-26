@@ -4,11 +4,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {SoftwareListItem} from '~/types/SoftwareTypes'
-import {LayoutType} from './SearchSection'
+import NoContent from '~/components/layout/NoContent'
+import {LayoutType} from './search/ViewToggleGroup'
+import SoftwareOverviewList from './list/SoftwareOverviewList'
 import SoftwareOverviewMasonry from './SoftwareOverviewMasonry'
 import SoftwareOverviewGrid from './SoftwareOverviewGrid'
-import SoftwareOverviewList from './SoftwareOverviewList'
-import NoContent from '~/components/layout/NoContent'
 
 type SoftwareOverviewContentProps = {
   layout: LayoutType

@@ -135,26 +135,6 @@ BEGIN
 END
 $$;
 
--- programming language counts for software
--- used in software filter - language dropdown
-CREATE FUNCTION prog_lang_cnt_for_software() RETURNS TABLE (
-	prog_lang TEXT,
-	cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		JSONB_OBJECT_KEYS(languages) AS "prog_lang",
-		COUNT(software) AS cnt
-	FROM
-		repository_url
-	GROUP BY
-		JSONB_OBJECT_KEYS(languages)
-	;
-END
-$$;
-
 -- programming language filter for software
 -- used by software_overview func
 CREATE FUNCTION prog_lang_filter_for_software() RETURNS TABLE (
@@ -175,23 +155,6 @@ BEGIN
 		repository_url
 	;
 END
-$$;
-
--- license counts for software
--- used in software filter - license dropdown
-CREATE FUNCTION license_cnt_for_software() RETURNS TABLE (
-	license VARCHAR,
-	cnt BIGINT
-) LANGUAGE sql STABLE AS
-$$
-SELECT
-	license_for_software.license,
-	COUNT(license_for_software.license) AS cnt
-FROM
-	license_for_software
-GROUP BY
-	license_for_software.license
-;
 $$;
 
 -- license filter for software
@@ -1244,36 +1207,6 @@ BEGIN
 		research_domain ON research_domain.id = research_domain_for_project.research_domain
 	GROUP BY research_domain_for_project.project
 ;
-END
-$$;
-
--- RESEARCH DOMAIN count used in project filter
--- to show used research domains with count
-CREATE FUNCTION research_domain_count_for_projects() RETURNS TABLE (
-	id UUID,
-	key VARCHAR,
-	name VARCHAR,
-	cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		research_domain.id,
-		research_domain.key,
-		research_domain.name,
-		research_domain_count.cnt
-	FROM
-		research_domain
-	LEFT JOIN
-		(SELECT
-				research_domain_for_project.research_domain,
-				COUNT(research_domain_for_project.research_domain) AS cnt
-			FROM
-				research_domain_for_project
-			GROUP BY research_domain_for_project.research_domain
-		) AS research_domain_count ON research_domain.id = research_domain_count.research_domain
-	;
 END
 $$;
 

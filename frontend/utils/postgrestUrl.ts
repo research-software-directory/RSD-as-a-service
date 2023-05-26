@@ -25,6 +25,7 @@ type baseQueryStringProps = {
   domains?: string[] | null,
   prog_lang?: string[] | null,
   licenses?: string[] | null,
+  organisations?: string[] | null,
   order?: string,
   limit?: number,
   offset?: number
@@ -42,6 +43,7 @@ export type QueryParams={
   domains?:string[],
   prog_lang?: string[],
   licenses?: string[],
+  organisations?: string[],
   page?:number,
   rows?:number
 }
@@ -101,7 +103,11 @@ function buildUrlQuery({query, param, value}: BuildUrlQueryProps) {
 
 
 export function buildFilterUrl(params: QueryParams, view:string) {
-  const {search,order, keywords, domains, licenses, prog_lang, rows, page} = params
+  const {
+    search, order, keywords, domains,
+    licenses, prog_lang, organisations,
+    rows, page
+  } = params
   // console.log('buildFilterUrl...params...', params)
   let url = `/${view}?`
   let query = ''
@@ -135,6 +141,12 @@ export function buildFilterUrl(params: QueryParams, view:string) {
     query,
     param: 'licenses',
     value: licenses
+  })
+  // organisations
+  query = buildUrlQuery({
+    query,
+    param: 'organisations',
+    value: organisations
   })
   // sortBy
   query = buildUrlQuery({
@@ -183,7 +195,7 @@ export function paginationUrlParams({rows=12, page=0}:
  * @returns string
  */
 export function baseQueryString(props: baseQueryStringProps) {
-  const {keywords, domains, prog_lang,licenses,order,limit,offset} = props
+  const {keywords,domains,prog_lang,licenses,organisations,order,limit,offset} = props
   let query
   // console.group('baseQueryString')
   // console.log('keywords...', keywords)
@@ -234,18 +246,29 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `prog_lang=cs.%7B${languagesAll}%7D`
     }
   }
-  //
   if (typeof licenses !== 'undefined' &&
     licenses !== null &&
     typeof licenses === 'object') {
-    // sort and convert research domains array to comma separated string
-    // we need to sort because search is on ARRAY field in pgSql
+    // sort and convert array to comma separated string
     const licensesAll = licenses.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     if (query) {
       query = `${query}&licenses=cs.%7B${licensesAll}%7D`
     } else {
       query = `licenses=cs.%7B${licensesAll}%7D`
+    }
+  }
+  if (typeof organisations !== 'undefined' &&
+    organisations !== null &&
+    typeof organisations === 'object') {
+    // sort and convert array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    const organisationsAll = organisations.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to find
+    if (query) {
+      query = `${query}&participating_organisations=cs.%7B${organisationsAll}%7D`
+    } else {
+      query = `participating_organisations=cs.%7B${organisationsAll}%7D`
     }
   }
   // order

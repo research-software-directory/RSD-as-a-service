@@ -28,7 +28,6 @@ export default function ProjectDescription(
             src={image}
             alt={image_caption ?? 'image'}
             bgSize={image_contain ? 'contain' : 'cover'}
-            bgPosition={image_contain ? 'center' : 'top center'}
             className="w-full h-[12rem] sm:h-[20rem] md:h-[25rem] lg:h-[30rem]"
           />
           <div className="text-sm text-base-600 mt-2 mb-4"

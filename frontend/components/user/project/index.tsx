@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
@@ -9,12 +9,11 @@
 import {useEffect} from 'react'
 
 import {Session} from '~/auth'
-import ProjectsGrid from '~/components/projects/ProjectsGrid'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
-
-import useUserProjects from './useUserProjects'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import ContentLoader from '~/components/layout/ContentLoader'
+import ProjectsGrid from './ProjectsGrid'
+import useUserProjects from './useUserProjects'
 
 export default function UserProjects({session}: { session: Session }) {
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions()

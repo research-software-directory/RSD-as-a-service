@@ -8,16 +8,17 @@ import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 
 import {LanguagesFilterOption} from './softwareFiltersApi'
-import FilterTitle from './FilterTitle'
-import FilterOption from './FilterOption'
+import FilterTitle from '../../../layout/filter/FilterTitle'
+import FilterOption from '../../../layout/filter/FilterOption'
+import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 
 type ProgrammingLanguagesFilterProps = {
   prog_lang: string[],
-  languagesList: LanguagesFilterOption[],
-  handleQueryChange: (key: string, value: string | string[]) => void
+  languagesList: LanguagesFilterOption[]
 }
 
-export default function ProgrammingLanguagesFilter({prog_lang,languagesList,handleQueryChange}:ProgrammingLanguagesFilterProps) {
+export default function ProgrammingLanguagesFilter({prog_lang, languagesList}: ProgrammingLanguagesFilterProps) {
+  const {handleQueryChange} = useSoftwareOverviewParams()
   const [selected, setSelected] = useState<LanguagesFilterOption[]>([])
 
   useEffect(() => {

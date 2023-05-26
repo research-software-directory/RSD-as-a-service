@@ -9,11 +9,12 @@ import {useRouter} from 'next/router'
 
 type ViewButtonProps = {
   title: string,
-  url: string
-  disabled: boolean
+  url: string,
+  disabled: boolean,
+  label: string
 }
 
-export default function ViewPageButton({title,url,disabled}:ViewButtonProps) {
+export default function ViewPageButton({title,label,url,disabled}:ViewButtonProps) {
   const router = useRouter()
   return (
     <Button
@@ -21,7 +22,8 @@ export default function ViewPageButton({title,url,disabled}:ViewButtonProps) {
       variant="text"
       startIcon={<ArticleOutlinedIcon />}
       sx={{
-        minWidth: '6rem'
+        minWidth: '6rem',
+        textTransform:'capitalize'
       }}
       onClick={() => {
         // const slug = router.query['slug']
@@ -29,7 +31,8 @@ export default function ViewPageButton({title,url,disabled}:ViewButtonProps) {
       }}
       disabled={disabled}
     >
-      View page
+      {/* View page */}
+      {label ?? title}
     </Button>
   )
 }

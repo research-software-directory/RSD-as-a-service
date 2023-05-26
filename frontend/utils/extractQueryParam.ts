@@ -137,12 +137,26 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
     castToType: 'json-encoded',
     defaultValue: null
   })
+  const organisations = extractQueryParam({
+    query,
+    param: 'organisations',
+    castToType: 'json-encoded',
+    defaultValue: null
+  })
+  const order: string = extractQueryParam({
+    query,
+    param: 'order',
+    castToType: 'string',
+    defaultValue: null
+  })
   return {
     search,
+    order,
     rows,
     page,
     keywords,
-    domains
+    domains,
+    organisations
   }
 }
 

@@ -106,6 +106,8 @@ it('extracts ssrProjectsParams from url query', () => {
     'search': 'testing search',
     'keywords': '["Big data","GPU"]',
     'domains': '["SH6","LS"]',
+    'organisations':'["Organisation 1","Organisation 2"]',
+    'order': 'impact_cnt',
     'page': '1',
     'rows': '24'
   }
@@ -113,6 +115,8 @@ it('extracts ssrProjectsParams from url query', () => {
     search: 'testing search',
     keywords: ['Big data', 'GPU'],
     domains: ['SH6', 'LS'],
+    organisations: ['Organisation 1','Organisation 2'],
+    order: 'impact_cnt',
     page: 1,
     rows: 24
   }

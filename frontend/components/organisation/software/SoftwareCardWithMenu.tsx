@@ -1,12 +1,12 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import styled from '@mui/system/styled'
 import BlockIcon from '@mui/icons-material/Block'
 
-import SoftwareCard from '~/components/software/SoftwareCard'
+import SoftwareCard from '~/components/user/software/SoftwareCard'
 import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
 import IconOverlay from '~/components/layout/IconOverlay'
 import {SoftwareCardWithMenuProps, useSoftwareCardActions} from './useSoftwareCardActions'

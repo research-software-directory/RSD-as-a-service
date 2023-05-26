@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import PhotoSizeSelectActualOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActualOutlined'
+import useValidateImageSrc from '~/utils/useValidateImageSrc'
 
 export type ImageWithPlaceholderProps = {
   src: string | null | undefined
@@ -22,8 +23,9 @@ export default function ImageWithPlaceholder({
   width = '4rem', height = '4rem', type='icon'
 }: ImageWithPlaceholderProps
 ) {
+  const validImg = useValidateImageSrc(src)
 
-  if (!src) {
+  if (!src || validImg===false) {
     if (type === 'gradient') {
       return (
         <div

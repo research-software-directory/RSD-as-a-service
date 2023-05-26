@@ -148,7 +148,6 @@ export default function AppHeader() {
             {/* LOGIN / USER MENU */}
             <LoginButton/>
 
-
           </div>
           <JavascriptSupportWarning/>
         </div>

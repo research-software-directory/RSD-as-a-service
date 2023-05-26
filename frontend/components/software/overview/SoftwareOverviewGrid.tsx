@@ -5,25 +5,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {SoftwareListItem} from '~/types/SoftwareTypes'
-import SoftwareGridCard from './SoftwareGridCard'
-import FlexibleGridSection from '~/components/layout/FlexibleGridSection'
+import SoftwareGridCard from './cards/SoftwareGridCard'
 
 export default function SoftwareOverviewGrid({software = []}: { software: SoftwareListItem[] }) {
-  const grid={
-    height: '28rem',
-    minWidth: '18rem',
-    maxWidth: '1fr'
-  }
-
   return (
-    <FlexibleGridSection
+    <section
       data-testid="software-overview-grid"
-      className="mt-4 gap-8"
-      {...grid}
+      className="mt-4 grid gap-8 lg:grid-cols-2 xl:grid-cols-3 auto-rows-[28rem]"
     >
       {software.map((item) => (
         <SoftwareGridCard key={item.id} item={item}/>
       ))}
-    </FlexibleGridSection>
+    </section>
   )
 }

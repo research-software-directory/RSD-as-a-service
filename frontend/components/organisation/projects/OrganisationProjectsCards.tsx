@@ -5,10 +5,10 @@
 
 import {useEffect} from 'react'
 import {useSession} from '~/auth'
+import {OrganisationForOverview} from '~/types/Organisation'
 import ContentLoader from '~/components/layout/ContentLoader'
 import NoContent from '~/components/layout/NoContent'
-import ProjectCard from '~/components/projects/ProjectCard'
-import {OrganisationForOverview} from '~/types/Organisation'
+import ProjectCard from '~/components/user/project/ProjectCard'
 import ProjectCardWithMenu from './ProjectCardWithMenu'
 import useOrganisationProjects from './useOrganisationProjects'
 

@@ -4,7 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {HighlightsCarousel} from '../highlights/HighlightsCarousel'
+import {HighlightsCarousel} from './highlights/HighlightsCarousel'
 import {SoftwareHighlight} from '~/components/admin/software-highlights/apiSoftwareHighlights'
 
 export default function SoftwareHighlights({highlights}: { highlights: SoftwareHighlight[] }) {
@@ -17,7 +17,7 @@ export default function SoftwareHighlights({highlights}: { highlights: SoftwareH
   if (highlights.length===0) return null
 
   return (
-    <div className="py-8">
+    <div className="mt-8">
       <HighlightsCarousel items={highlights} />
     </div>
   )

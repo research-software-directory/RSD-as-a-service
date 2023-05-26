@@ -30,7 +30,8 @@ export default function EditSoftwareStickyHeader() {
       <ViewPageButton
         title={`View ${software?.brand_name ?? 'software page'}`}
         url={`/software/${software.slug}`}
-        disabled={typeof software ==='undefined'}
+        disabled={typeof software === 'undefined'}
+        label="View software"
       />
     </StickyHeader>
   )

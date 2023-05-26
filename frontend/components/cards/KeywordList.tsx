@@ -13,13 +13,14 @@ export default function KeywordList({keywords=[], visibleNumberOfKeywords = 3}: 
   if (!keywords || keywords.length===0) return null
 
   return (
-    <ul className="flex flex-wrap items-start gap-2 text-base-700 text-sm mt-4">
+    <ul className="flex flex-wrap items-start gap-2 text-base-content text-xs">
       {// limits the keywords to 'visibleNumberOfKeywords' per software.
         keywords?.slice(0, visibleNumberOfKeywords)
           .map((keyword:string, index: number) => (
             <li
+              title={keyword}
               key={index}
-              className="bg-base-200 p-1 m-0 rounded"
+              className="bg-base-200 px-2 py-1 rounded capitalize line-clamp-1"
             >{keyword}</li>
           ))}
 
@@ -27,7 +28,7 @@ export default function KeywordList({keywords=[], visibleNumberOfKeywords = 3}: 
         (keywords?.length > 0)
         && (keywords?.length > visibleNumberOfKeywords)
         && (keywords?.length - visibleNumberOfKeywords > 0)
-        && `+ ${keywords?.length - visibleNumberOfKeywords}`
+        && <li>{`+ ${keywords?.length - visibleNumberOfKeywords}`}</li>
       }
     </ul>
   )

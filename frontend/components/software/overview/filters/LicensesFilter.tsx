@@ -8,17 +8,18 @@ import {useEffect, useState} from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import {LicensesFilterOption} from './softwareFiltersApi'
-import FilterTitle from './FilterTitle'
-import FilterOption from './FilterOption'
+import FilterTitle from '../../../layout/filter/FilterTitle'
+import FilterOption from '../../../layout/filter/FilterOption'
+import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 
 
 type LicensesFilterProps = {
   licenses: string[],
   licensesList: LicensesFilterOption[],
-  handleQueryChange: (key: string, value: string | string[]) => void
 }
 
-export default function LicensesFilter({licenses,licensesList,handleQueryChange}:LicensesFilterProps) {
+export default function LicensesFilter({licenses, licensesList}: LicensesFilterProps) {
+  const {handleQueryChange} = useSoftwareOverviewParams()
   const [selected, setSelected] = useState<LicensesFilterOption[]>([])
 
   useEffect(() => {

@@ -68,7 +68,7 @@ export default function SortableHighlightItem({pos, item, onEdit, onDelete}: Hig
             sx={{
               width: '4rem',
               height: '4rem',
-              fontSize: '3rem',
+              fontSize: '1.5rem',
               marginRight: '1rem',
               '& img': {
                 height:'auto'
