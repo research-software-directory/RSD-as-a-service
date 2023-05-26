@@ -6,10 +6,10 @@
 
 import Link from 'next/link'
 import {getImageUrl} from '~/utils/editImage'
-import StatCounter from '../layout/StatCounter'
+import StatCounter from '~/components/layout/StatCounter'
 import VerifiedIcon from '@mui/icons-material/Verified'
-import LogoAvatar from '../layout/LogoAvatar'
-import CardTitle from '../layout/CardTitle'
+import LogoAvatar from '~/components/layout/LogoAvatar'
+import CardTitle from '~/components/layout/CardTitle'
 
 type OrganisationCardProps = {
   name: string,

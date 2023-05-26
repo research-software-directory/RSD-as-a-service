@@ -6,6 +6,7 @@
 import {IncomingMessage} from 'http'
 import cookie from 'cookie'
 import logger from '~/utils/logger'
+import {rowsPerPageOptions} from '~/config/pagination'
 
 /**
  * Extract user settings cookies
@@ -21,12 +22,12 @@ export function getUserSettings(req: IncomingMessage) {
     // validate and decode
     return {
       rsd_page_layout: cookies?.rsd_page_layout ?? 'masonry',
-      rsd_page_rows: parseInt(cookies?.rsd_page_rows ?? 12)
+      rsd_page_rows: parseInt(cookies?.rsd_page_rows ?? rowsPerPageOptions[0])
     }
   } else {
     return {
       rsd_page_layout: 'masonry',
-      rsd_page_rows: 12
+      rsd_page_rows: rowsPerPageOptions[0]
     }
   }
 }

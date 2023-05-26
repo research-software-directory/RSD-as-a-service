@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,7 +32,7 @@ describe('pages/organisations/index.tsx', () => {
         // count is extracted from response header
         count:200,
         // default query param values
-        page:0,
+        page:1,
         rows:12,
         // mocked data
         organisations: organisationsOverview,

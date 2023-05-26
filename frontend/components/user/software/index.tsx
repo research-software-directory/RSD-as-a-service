@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,7 +12,6 @@ import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import useUserSoftware from './useUserSoftware'
 import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
 import ContentLoader from '~/components/layout/ContentLoader'
-import NoContent from '~/components/layout/NoContent'
 
 export default function UserSoftware({session}: { session: Session }) {
   const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions('software')

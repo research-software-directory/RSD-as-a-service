@@ -61,7 +61,7 @@ export default function ProgrammingLanguagesFilter({prog_lang,languagesList,hand
         renderInput={(params) => (
           <TextField {...params} placeholder="Program languages"/>
         )}
-        onChange={(event, newValue) => {
+        onChange={(_, newValue) => {
           // extract values into string[] for url query
           const queryFilter = newValue.map(item => item.prog_language)
           // update query url
