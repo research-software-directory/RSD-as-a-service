@@ -31,7 +31,7 @@ public interface PackageManagerScraper {
 				.followRedirects(HttpClient.Redirect.NORMAL)
 				.build();
 		HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-				.timeout(Duration.ofSeconds(10))
+				.timeout(Duration.ofSeconds(30))
 				.build();
 		try {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
