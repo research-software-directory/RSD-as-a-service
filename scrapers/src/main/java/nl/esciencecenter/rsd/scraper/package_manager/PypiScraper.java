@@ -40,7 +40,7 @@ public class PypiScraper implements PackageManagerScraper {
 				.followRedirects(HttpClient.Redirect.NORMAL)
 				.build();
 		HttpRequest request = HttpRequest.newBuilder(URI.create("https://api.pepy.tech/api/v2/projects/" + packageName))
-				.timeout(Duration.ofSeconds(5))
+				.timeout(Duration.ofSeconds(30))
 				.build();
 		try {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

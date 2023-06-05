@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.time.ZonedDateTime;
 
 public class GitlabScraper implements GitScraper {
@@ -83,6 +84,7 @@ public class GitlabScraper implements GitScraper {
 			HttpRequest request = HttpRequest.newBuilder().GET()
 					.uri(URI.create(apiUri + "/projects/" + Utils.urlEncode(projectPath)
 							+ "/repository/commits?per_page=100&order=default&page=" + page))
+					.timeout(Duration.ofSeconds(30))
 					.build();
 			HttpClient client =
 					HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();

@@ -44,7 +44,7 @@ public class DockerHubScraper implements PackageManagerScraper {
 				.followRedirects(HttpClient.Redirect.NORMAL)
 				.build();
 		HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-				.timeout(Duration.ofSeconds(10))
+				.timeout(Duration.ofSeconds(30))
 				.build();
 		String json;
 		try {

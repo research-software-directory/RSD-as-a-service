@@ -20,6 +20,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 
@@ -50,6 +51,7 @@ public class Utils {
 	public static String get(String uri, String... headers) {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.GET()
+				.timeout(Duration.ofSeconds(30))
 				.uri(URI.create(uri));
 		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
 			httpRequestBuilder.headers(headers);
@@ -71,6 +73,7 @@ public class Utils {
 	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.GET()
+				.timeout(Duration.ofSeconds(30))
 				.uri(URI.create(uri));
 		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
 			httpRequestBuilder.headers(headers);
@@ -97,6 +100,7 @@ public class Utils {
 		HttpRequest request = HttpRequest.newBuilder()
 				.GET()
 				.uri(URI.create(uri))
+				.timeout(Duration.ofSeconds(30))
 				.header("Authorization", "Bearer " + jwtString)
 				.build();
 		HttpClient client = HttpClient.newHttpClient();
@@ -125,6 +129,7 @@ public class Utils {
 	public static String post(String uri, String body, String... extraHeaders) {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(body))
+				.timeout(Duration.ofSeconds(30))
 				.uri(URI.create(uri));
 		if (extraHeaders != null && extraHeaders.length > 0 && extraHeaders.length % 2 == 0) {
 			httpRequestBuilder.headers(extraHeaders);
@@ -156,6 +161,7 @@ public class Utils {
 		HttpRequest request = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(URI.create(uri))
+				.timeout(Duration.ofSeconds(30))
 				.header("Content-Type", "application/json")
 				.header("Authorization", "Bearer " + jwtString)
 				.headers(extraHeaders)
@@ -178,6 +184,7 @@ public class Utils {
 		HttpRequest request = HttpRequest.newBuilder()
 				.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
 				.uri(URI.create(uri))
+				.timeout(Duration.ofSeconds(30))
 				.header("Content-Type", "application/json")
 				.header("Authorization", "Bearer " + jwtString)
 				.build();
