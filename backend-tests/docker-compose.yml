@@ -1,0 +1,75 @@
+# SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+# SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+# SPDX-FileCopyrightText: 2022 dv4all
+#
+# SPDX-License-Identifier: Apache-2.0
+
+version: "3.0"
+
+services:
+  database:
+    container_name: database-test
+    build: ../database
+    image: rsd/database-test:1.0.0
+    ports:
+      # enable connection from outside
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=rsd-db
+      - POSTGRES_USER=rsd
+      - POSTGRES_PASSWORD=securepassword
+      - POSTGRES_AUTHENTICATOR_PASSWORD=simplepassword
+    volumes:
+      # persist data in named docker volume
+      # to remove use: docker compose down --volumes
+      # to inspect use: docker volume ls
+      - pgdb-test:/var/lib/postgresql/data/
+    networks:
+      - net-test
+
+  backend:
+    container_name: backend-postgrest-test
+    build: ../backend-postgrest
+    image: rsd/backend-postgrest-test:1.0.0
+    ports:
+      # enable connection from outside
+      - "3500:3500"
+    environment:
+      - PGRST_DB_URI=postgres://rsd_authenticator:simplepassword@database:5432/rsd-db
+      - PGRST_DB_ANON_ROLE=rsd_web_anon
+      - PGRST_DB_SCHEMA=public
+      - PGRST_SERVER_PORT=3500
+      - PGRST_JWT_SECRET=normally_this_is_a_secret_string_that_none_knows_BUT_this_is_just_a_test
+    depends_on:
+      - "database"
+    networks:
+      - net-test
+
+  postgrest-tests:
+    container_name: postgrest-tests
+    build:
+      context: .
+      # dockerfile to use for build
+      dockerfile: ./Dockerfile
+    image: rsd/postgrest-tests:1.0.0
+    environment:
+      - PGRST_JWT_SECRET=normally_this_is_a_secret_string_that_none_knows_BUT_this_is_just_a_test
+      - POSTGREST_URL=http://backend:3500
+    depends_on:
+      - "database"
+      - "backend"
+    networks:
+      - net-test
+
+# define name for docker network
+# it should have name: rsd-as-a-service_net-test
+networks:
+  net-test:
+
+# named volumes can be managed easier using docker compose
+# volume should have name rsd-as-a-service_pgdb
+volumes:
+  pgdb-test:

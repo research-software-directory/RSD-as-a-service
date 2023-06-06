@@ -86,3 +86,9 @@ e2e-tests:
 	docker compose --file e2e/docker-compose.yml up
 	docker compose down
 	docker compose --file e2e/docker-compose.yml down --volumes
+
+run-backend-tests:
+	docker compose --file backend-tests/docker-compose.yml down --volumes
+	docker compose --file backend-tests/docker-compose.yml build --parallel
+	docker compose --file backend-tests/docker-compose.yml up --exit-code-from postgrest-tests
+	docker compose --file backend-tests/docker-compose.yml down --volumes

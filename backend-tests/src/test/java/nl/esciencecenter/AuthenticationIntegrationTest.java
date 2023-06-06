@@ -15,6 +15,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -50,10 +55,28 @@ public class AuthenticationIntegrationTest {
 	}
 
 	@BeforeAll
+	static void checkBackendAvailable() throws InterruptedException {
+		URI backendUri = URI.create(System.getenv("POSTGREST_URL"));
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder(backendUri).build();
+		int maxTries = 30;
+		for (int i = 1; i <= maxTries; i++) {
+			try {
+				client.send(request, HttpResponse.BodyHandlers.discarding());
+				System.out.println("Attempt %d/%d to connect to the backend on %s succeeded, continuing with the tests".formatted(i, maxTries,backendUri));
+				return;
+			} catch (IOException e) {
+				System.out.println("Attempt %d/%d to connect to the backend on %s failed, trying again in 1 second".formatted(i, maxTries,backendUri));
+				Thread.sleep(1000);
+			}
+		}
+		throw new RuntimeException("Unable to make connection to the backend with URI: " + backendUri);
+	}
+
+	@BeforeAll
 	static void setupRestAssured() {
-		RestAssured.port = 80;
-		RestAssured.baseURI = "http://localhost";
-		RestAssured.basePath = "api/v1";
+		String backendUri = System.getenv("POSTGREST_URL");
+		RestAssured.baseURI = backendUri;
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
 		String secret = System.getenv("PGRST_JWT_SECRET");
