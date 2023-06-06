@@ -7,6 +7,10 @@ SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
+# Deprecated
+This folder is deprecated in favor of using the tests in the folder `backend-tests`.
+This folder is kept here to see which old tests were used, but might be deleted in the future.
+
 # Research Software Directory (RSD) - PostgREST tests
 
 This service can automatically be build and started with `docker compose`. It does not work in conjunction with the `data-migration` service. It also assumes that the database is empty at the start.
