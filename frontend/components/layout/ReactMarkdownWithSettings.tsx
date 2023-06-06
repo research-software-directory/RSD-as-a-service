@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,7 @@ export default function ReactMarkdownWithSettings({markdown, className, breaks=t
 
   return (
     <ReactMarkdown
-      className={`prose max-w-none prose-h1:text-3xl prose-headings:font-normal ${className ?? ''}`}
+      className={`prose max-w-none prose-h1:text-3xl prose-headings:font-normal prose-code:before:hidden prose-code:after:hidden ${className ?? ''}`}
       linkTarget="_blank"
       skipHtml={true}
       remarkPlugins={plugins}
