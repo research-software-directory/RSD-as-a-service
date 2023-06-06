@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,10 +11,11 @@ import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/Autosa
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {patchOrganisationTable} from './updateOrganisationSettings'
+import {OrganisationForOverview} from '~/types/Organisation'
 
 export type AutosaveProjectInfoProps = {
   organisation_id: string
-  options: ControlledTextFieldOptions
+  options: ControlledTextFieldOptions<OrganisationForOverview>
   rules?: any
 }
 
@@ -21,7 +24,7 @@ export default function AutosaveOrganisationTextField({organisation_id,options,r
   const {showErrorMessage} = useSnackbar()
   const {control, resetField} = useFormContext()
 
-  async function saveSoftwareInfo({name, value}: OnSaveProps) {
+  async function saveSoftwareInfo({name, value}: OnSaveProps<OrganisationForOverview>) {
     // patch project table
     const resp = await patchOrganisationTable({
       id: organisation_id,

@@ -1,27 +1,29 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useController} from 'react-hook-form'
 import ControlledTextField, {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 
-export type OnSaveProps = {
-  name: string,
+export type OnSaveProps<T> = {
+  name: keyof T,
   value: string
 }
 
-export type AutosaveControlledTextField = {
+export type AutosaveControlledTextField<T> = {
   control: any
-  options: ControlledTextFieldOptions
+  options: ControlledTextFieldOptions<T>
   rules?: any
-  onSaveField: ({name,value}: OnSaveProps) => void
+  onSaveField: ({name,value}: OnSaveProps<T>) => void
 }
 
-export default function AutosaveControlledTextField({control,options,rules,onSaveField}:AutosaveControlledTextField) {
+export default function AutosaveControlledTextField<T>({control,options,rules,onSaveField}:AutosaveControlledTextField<T>) {
   const {field:{value},fieldState:{isDirty,error}} = useController({
     control,
-    name: options.name
+    name: options.name.toString()
   })
 
   // add onBlur fn to muiProps
