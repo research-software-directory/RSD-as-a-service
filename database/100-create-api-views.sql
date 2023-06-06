@@ -1300,6 +1300,9 @@ BEGIN RETURN QUERY
 		) AS search_text
 	FROM
 		organisation
+	WHERE
+	-- ONLY TOP LEVEL ORGANISATIONS
+		organisation.parent IS NULL
 ;
 END
 $$;
