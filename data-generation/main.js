@@ -453,9 +453,11 @@ async function generateOrganisations(amount=500) {
 			primary_maintainer: null,
 			slug: faker.helpers.slugify(names[index]).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''), // removes double dashes and trailing dashes
 			name: names[index],
+			short_description: faker.helpers.maybe(() => faker.commerce.productDescription(), {probability: 0.8}) ?? null,
 			ror_id: index < rorIds.length ? rorIds[index] : null,
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.05}),
+			country: faker.helpers.maybe(() => faker.address.country(), {probability: 0.8}) ?? null,
 			logo_id: localImageIds[index%localImageIds.length],
 		});
 	}
