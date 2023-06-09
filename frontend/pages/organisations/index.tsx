@@ -1,25 +1,31 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {MouseEvent, ChangeEvent} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
-import {useRouter} from 'next/router'
 import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
 
 import {app} from '../../config/app'
-import DefaultLayout from '../../components/layout/DefaultLayout'
 import PageTitle from '../../components/layout/PageTitle'
 import Searchbox from '../../components/form/Searchbox'
-import {ssrOrganisationUrl} from '../../utils/postgrestUrl'
 import {OrganisationList} from '../../types/Organisation'
 import {rowsPerPageOptions} from '../../config/pagination'
 import {ssrOrganisationParams} from '../../utils/extractQueryParam'
 import {getOrganisationsList} from '../../utils/getOrganisations'
-import OrganisationsGrid from '../../components/organisation/OrganisationGrid'
 import PageMeta from '~/components/seo/PageMeta'
+import AppFooter from '~/components/AppFooter'
+import AppHeader from '~/components/AppHeader'
+import {getUserSettings, setDocumentCookie} from '~/components/software/overview/userSettings'
+import useOrganisationOverviewParams from '~/components/organisation/overview/useOrganisationOverviewParams'
+import OrganisationGrid from '~/components/organisation/overview/OrganisationGrid'
+import OverviewPageBackground from '~/components/software/overview/PageBackground'
+import CanonicalUrl from '~/components/seo/CanonicalUrl'
+import MainContent from '~/components/layout/MainContent'
 
 type OrganisationsIndexPageProps = {
   count: number,
@@ -30,103 +36,98 @@ type OrganisationsIndexPageProps = {
 }
 
 const pageTitle = `Organisations | ${app.title}`
-const pageDesc = 'The list of organisations participating in the development of research software registerd in the Research Software Directory.'
+const pageDesc = 'List of organizations involved in the development of research software.'
 
 export default function OrganisationsIndexPage({
   organisations = [], count, page, rows, search
-}: OrganisationsIndexPageProps){
-  // use next router (hook is only for browser)
-  const router = useRouter()
+}: OrganisationsIndexPageProps) {
+  const {handleQueryChange} = useOrganisationOverviewParams()
+  const numPages = Math.ceil(count / rows)
 
   // next/previous page button
   function handleTablePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
-  ){
-    const url = ssrOrganisationUrl({
-      // take existing params from url (query)
-      ...ssrOrganisationParams(router.query),
-      page: newPage,
-    })
-    router.push(url)
-  }
-
-  function handlePaginationChange(
-    event: ChangeEvent<unknown>,
-    newPage: number,
   ) {
-    // Pagination component starts counting from 1, but we need to start from 0
-    handleTablePageChange(event as any, newPage - 1)
+    // Pagination component starts counting from 0, but we need to start from 1
+    handleQueryChange('page',(newPage + 1).toString())
   }
-
   // change number of cards per page
   function handleItemsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ){
-    const url = ssrOrganisationUrl({
-      // take existing params from url (query)
-      ...ssrOrganisationParams(router.query),
-      // reset to first page
-      page: 0,
-      rows: parseInt(event.target.value),
-    })
-    router.push(url)
+  ) {
+    handleQueryChange('rows', event.target.value)
+    // save to cookie
+    setDocumentCookie(event.target.value,'rsd_page_rows')
   }
 
-  function handleSearch(searchFor:string){
-    const url = ssrOrganisationUrl({
-      // take existing params from url (query)
-      ...ssrOrganisationParams(router.query),
-      search: searchFor,
-      // start from first page
-      page: 0,
-    })
-    router.push(url)
+  function handleSearch(searchFor: string) {
+    handleQueryChange('search',searchFor)
   }
 
   return (
-    <DefaultLayout>
+    <>
       {/* Page Head meta tags */}
       <PageMeta
         title={pageTitle}
         description={pageDesc}
       />
-      <PageTitle title="Organisations">
-        <div className="md:flex flex-wrap justify-end">
-          <div className="flex items-center lg:ml-4">
-            <Searchbox
-              placeholder='Find organisation'
-              onSearch={handleSearch}
-              defaultValue={search}
-            />
+      {/* canonical url meta tag */}
+      <CanonicalUrl />
+
+      <OverviewPageBackground>
+        <AppHeader />
+
+        <MainContent className="py-4">
+          {/* Page title with search and pagination */}
+          <div className="px-4 rounded-lg bg-base-100 sticky top-0 border border-base-200">
+            <PageTitle title="Organisations">
+              <div className="md:flex flex-wrap justify-end">
+                <div className="flex items-center lg:ml-4">
+                  <Searchbox
+                    placeholder='Find organisation'
+                    onSearch={handleSearch}
+                    defaultValue={search}
+                  />
+                </div>
+                <TablePagination
+                  component="nav"
+                  count={count}
+                  // uses 0 based index
+                  page={page>0 ? page-1 : 0}
+                  labelRowsPerPage="Items"
+                  onPageChange={handleTablePageChange}
+                  rowsPerPage={rows}
+                  rowsPerPageOptions={rowsPerPageOptions}
+                  onRowsPerPageChange={handleItemsPerPage}
+                />
+              </div>
+            </PageTitle>
           </div>
-          <TablePagination
-            component="nav"
-            count={count}
-            page={page}
-            labelRowsPerPage="Per page"
-            onPageChange={handleTablePageChange}
-            rowsPerPage={rows}
-            rowsPerPageOptions={rowsPerPageOptions}
-            onRowsPerPageChange={handleItemsPerPage}
+
+          {/* Organizations cards */}
+          <OrganisationGrid
+            organisations={organisations}
           />
-        </div>
-      </PageTitle>
 
-      <OrganisationsGrid
-        organisations={organisations}
-      />
+          {/* Pagination */}
+          {numPages > 1 &&
+            <div className="flex flex-wrap justify-center mb-10">
+              <Pagination
+                count={numPages}
+                page={page}
+                onChange={(_, page) => {
+                  handleQueryChange('page',page.toString())
+                }}
+              />
+            </div>
+          }
+        </MainContent>
 
-      <div className="flex flex-wrap justify-center mb-8">
-        <Pagination
-          count={Math.ceil(count/rows)}
-          page={page + 1}
-          onChange={handlePaginationChange}
-          size="large"
-          shape="rounded"
-        />
-      </div>
-    </DefaultLayout>
+        {/* App footer */}
+        <AppFooter />
+      </OverviewPageBackground >
+    </>
   )
 }
 
@@ -139,11 +140,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const {req} = context
   const {search, rows, page} = ssrOrganisationParams(context.query)
   const token = req?.cookies['rsd_token']
+  // extract user settings from cookie
+  const {rsd_page_rows} = getUserSettings(context.req)
+  // use url param if present else user settings
+  let page_rows = rows ?? rsd_page_rows
+
+  // console.log('rows...', rows)
+  // console.log('page...', page)
+  // console.log('page_rows...', page_rows)
 
   const {count, data} = await getOrganisationsList({
     search,
-    rows,
-    page,
+    rows: page_rows,
+    // api uses 0 based index
+    page: page>0 ? page-1 : 0,
     token,
   })
 
@@ -154,7 +164,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       search,
       count,
       page,
-      rows,
+      rows: page_rows,
       organisations: data,
     }
   }
