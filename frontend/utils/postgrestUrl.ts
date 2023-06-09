@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,6 +26,8 @@ type baseQueryStringProps = {
   keywords?: string[] | null,
   domains?: string[] | null,
   prog_lang?: string[] | null,
+  licenses?: string[] | null,
+  organisations?: string[] | null,
   order?: string,
   limit?: number,
   offset?: number
@@ -33,38 +37,41 @@ export type PostgrestParams = baseQueryStringProps & {
   baseUrl:string
 }
 
-type QueryParams={
+export type QueryParams={
   // query: ParsedUrlQuery
   search?:string
+  order?: string,
   keywords?:string[]
   domains?:string[],
-  prog_lang?:string[],
+  prog_lang?: string[],
+  licenses?: string[],
+  organisations?: string[],
   page?:number,
   rows?:number
 }
 
 export function ssrSoftwareUrl(params:QueryParams){
   const view = 'software'
-  const url = ssrUrl(params, view)
+  const url = buildFilterUrl(params, view)
   return url
 }
 
 export function ssrOrganisationUrl(params: QueryParams) {
   const view = 'organisations'
-  const url = ssrUrl(params,view)
+  const url = buildFilterUrl(params,view)
   return url
 }
 
 export function ssrProjectsUrl(params: QueryParams) {
   const view = 'projects'
-  const url = ssrUrl(params, view)
+  const url = buildFilterUrl(params, view)
   return url
 }
 
 type BuildUrlQueryProps = {
   query: string
   param: string
-  value: string[]|string|undefined
+  value: string[]|string|number|undefined
 }
 
 function buildUrlQuery({query, param, value}: BuildUrlQueryProps) {
@@ -78,12 +85,18 @@ function buildUrlQuery({query, param, value}: BuildUrlQueryProps) {
     } else {
       query = `${param}=${encodeURIComponent(value)}`
     }
-  } else if (Array.isArray(value)===true && value?.length > 0) {
+  } else if (Array.isArray(value) === true && (value as any)?.length > 0) {
     // arrays are stringified
     if (query) {
       query += `&${param}=${encodeURIComponent(JSON.stringify(value))}`
     } else {
       query = `${param}=${encodeURIComponent(JSON.stringify(value))}`
+    }
+  } else if (typeof value === 'number') {
+    if (query) {
+      query += `&${param}=${encodeURIComponent(value)}`
+    } else {
+      query = `${param}=${encodeURIComponent(value)}`
     }
   }
   // return build query
@@ -91,11 +104,16 @@ function buildUrlQuery({query, param, value}: BuildUrlQueryProps) {
 }
 
 
-function ssrUrl(params: QueryParams, view:string) {
-  const {search, keywords, domains, prog_lang, rows, page} = params
-  // console.log('ssrUrl...params...', params)
+export function buildFilterUrl(params: QueryParams, view:string) {
+  const {
+    search, order, keywords, domains,
+    licenses, prog_lang, organisations,
+    rows, page
+  } = params
+  // console.log('buildFilterUrl...params...', params)
   let url = `/${view}?`
   let query = ''
+
   // search
   query = buildUrlQuery({
     query,
@@ -120,20 +138,39 @@ function ssrUrl(params: QueryParams, view:string) {
     param: 'prog_lang',
     value: prog_lang
   })
-  if (page || page === 0) {
-    url += `page=${page}`
-  } else {
-    // default
-    url += 'page=0'
-  }
-  if (rows) {
-    url += `&rows=${rows}`
-  } else {
-    url += '&rows=12'
-  }
+  // licenses
+  query = buildUrlQuery({
+    query,
+    param: 'licenses',
+    value: licenses
+  })
+  // organisations
+  query = buildUrlQuery({
+    query,
+    param: 'organisations',
+    value: organisations
+  })
+  // sortBy
+  query = buildUrlQuery({
+    query,
+    param: 'order',
+    value: order
+  })
+  // page
+  query = buildUrlQuery({
+    query,
+    param: 'page',
+    value: page
+  })
+  // rows
+  query = buildUrlQuery({
+    query,
+    param: 'rows',
+    value: rows
+  })
   // debugger
   if (query!=='') {
-    return `${url}&${query}`
+    return `${url}${query}`
   }
   return url
 }
@@ -160,7 +197,7 @@ export function paginationUrlParams({rows=12, page=0}:
  * @returns string
  */
 export function baseQueryString(props: baseQueryStringProps) {
-  const {keywords, domains, prog_lang,order,limit,offset} = props
+  const {keywords,domains,prog_lang,licenses,organisations,order,limit,offset} = props
   let query
   // console.group('baseQueryString')
   // console.log('keywords...', keywords)
@@ -209,6 +246,31 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `${query}&prog_lang=cs.%7B${languagesAll}%7D`
     } else {
       query = `prog_lang=cs.%7B${languagesAll}%7D`
+    }
+  }
+  if (typeof licenses !== 'undefined' &&
+    licenses !== null &&
+    typeof licenses === 'object') {
+    // sort and convert array to comma separated string
+    const licensesAll = licenses.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to find
+    if (query) {
+      query = `${query}&licenses=cs.%7B${licensesAll}%7D`
+    } else {
+      query = `licenses=cs.%7B${licensesAll}%7D`
+    }
+  }
+  if (typeof organisations !== 'undefined' &&
+    organisations !== null &&
+    typeof organisations === 'object') {
+    // sort and convert array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    const organisationsAll = organisations.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    // use cs. command to find
+    if (query) {
+      query = `${query}&participating_organisations=cs.%7B${organisationsAll}%7D`
+    } else {
+      query = `participating_organisations=cs.%7B${organisationsAll}%7D`
     }
   }
   // order

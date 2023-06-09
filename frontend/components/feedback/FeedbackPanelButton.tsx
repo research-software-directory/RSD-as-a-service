@@ -1,5 +1,7 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -71,8 +73,8 @@ User Agent: ${navigator.userAgent}`
       {/*If  mobile size */}
       <div className="block md:hidden">
         <Divider/>
-        <button className="flex md:hidden hover:bg-gray-100 hover:text-primary w-full py-2 px-4"
-                onClick={handleClickOpen}>
+        <button className="flex md:hidden w-full py-2 px-4"
+          onClick={handleClickOpen}>
           Send feedback
         </button>
       </div>
@@ -83,14 +85,14 @@ User Agent: ${navigator.userAgent}`
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <div className="h-full w-full bg-[#232323] p-5 ">
+        <div className="h-full w-full bg-base-700 p-5 ">
           <div className="mx-auto max-w-[500px]">
-            <div className="text-white text-xl mb-4">
+            <div className="text-base-100 text-xl mb-4">
               Send Feedback
             </div>
             <textarea
               autoFocus
-              className="placeholder:text-gray-500 outline-0 p-2 w-full h-28 text-sm bg-transparent text-white border border-gray-600 rounded"
+              className="placeholder:text-base-500 outline-0 p-2 w-full h-28 text-sm bg-base-700 text-base-100 border border-base-600 rounded"
               placeholder="Ideas on how to improve this page or report an issue?" value={text}
               onChange={e => setText(e.target.value)}>
           </textarea>
@@ -106,13 +108,13 @@ User Agent: ${navigator.userAgent}`
 
             <div className="flex justify-end gap-4 w-full my-2">
               <button
-                className="text-sm text-white border border-gray-500 text-opacity-60 rounded px-3 py-1 hover:opacity-90 active:opacity-95"
+                className="text-sm text-base-200 border border-base-400 opacity-60 rounded px-3 py-1 hover:opacity-90 active:opacity-95"
                 onClick={closeAndClean}>
                 Cancel
               </button>
               <a
                 onClick={closeAndClean}
-                className="text-sm text-white hover:text-white bg-primary px-3 py-1 rounded hover:opacity-90 active:opacity-95"
+                className="text-sm text-base-100 hover:text-base-100 bg-primary px-3 py-1 rounded hover:opacity-90 active:opacity-95"
                 target="_blank"
                 rel="noreferrer"
                 href={`mailto:${feedback_email}?subject=${encodeURIComponent('Feedback about the RSD')}&body=${mailBody()}`}

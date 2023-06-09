@@ -1,4 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,6 +12,7 @@ import ContributorAvatar from '~/components/software/ContributorAvatar'
 import {Column} from '~/components/table/EditableTable'
 import {getImageUrl} from '~/utils/editImage'
 import {patchPerson, RsdContributor} from './apiContributors'
+import {getDisplayInitials} from '~/utils/getDisplayName'
 
 export function createColumns(token: string) {
   const columns: Column<RsdContributor, keyof RsdContributor>[] = [{
@@ -24,8 +28,11 @@ export function createColumns(token: string) {
       return (
         <ContributorAvatar
           avatarUrl={getImageUrl(data.avatar_id) ?? ''}
-          displayName={''}
-          displayInitials={''}
+          displayName={data.family_names}
+          displayInitials={getDisplayInitials({
+            given_names: data.given_names,
+            family_names: data.family_names
+          })}
         />
       )
     }
@@ -116,7 +123,7 @@ export function createColumns(token: string) {
         url=`/projects/${data.slug}/edit/team`
       }
       return (
-        <a href={url} target="_blank">
+        <a href={url} target="_blank" rel="noreferrer">
           <LaunchIcon sx={{marginRight:'0.25rem'}} fontSize="small"/>
           {data.origin === 'contributor' ? 'Software' : 'Project'}
         </a>

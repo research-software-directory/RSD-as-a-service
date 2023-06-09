@@ -1,9 +1,10 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -300,6 +301,15 @@ function generateSoftwareForSoftware(ids) {
 		}
 	}
 
+	return result;
+}
+
+function generateSoftwareHighlights(ids) {
+	const result = [];
+	for (let index = 0; index < ids.length; index++) {
+		const isHighlight = !!faker.helpers.maybe(() => true, {probability: 0.3});
+		if (isHighlight === true) result.push({software: ids[index]})
+	}
 	return result;
 }
 
@@ -667,6 +677,7 @@ const softwarePromise = postToBackend('/software', await generateSofware())
 		postToBackend('/keyword_for_software', generateKeywordsForEntity(idsSoftware, idsKeywords, 'software'));
 		postToBackend('/mention_for_software', generateMentionsForEntity(idsSoftware, idsMentions, 'software'));
 		postToBackend('/software_for_software', generateSoftwareForSoftware(idsSoftware));
+		postToBackend('/software_highlight', generateSoftwareHighlights(idsSoftware.slice(0,10)));
 	});
 const projectPromise = postToBackend('/project', await generateProjects())
 	.then(resp => resp.json())
