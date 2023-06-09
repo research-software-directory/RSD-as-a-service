@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
-
-/* eslint-disable @next/next/no-img-element */
 
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
@@ -287,18 +287,18 @@ export default function HelmholtzHome() {
   }
 
   return (
-     <div className="bg-white" data-testid="rsd-helmholtz-home">
+     <div className="bg-base-100" data-testid="rsd-helmholtz-home">
 
         <AppHeader/>
 
         {/* Head and claim */}
         <div className="bg-secondary bg-landing-page mb-10">
-          <div className="flex flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-screen-xl text-white">
+          <div className="flex flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-screen-xl text-base-100">
             <div className="min-w-min flex flex-col">
               <LogoHelmholtz width="220" />
               <div className="pt-1 pb-12">Research for grand challenges.</div>
               {/* <a onClick={handleClickOpen}>
-                <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
+                <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-base-100 text-center font-medium text-2xl py-4 px-6 rounded-sm">
                   Add your software
                 </div>
               </a> */}
@@ -319,7 +319,7 @@ export default function HelmholtzHome() {
             <div className="flex">
               <Link href="/software" passHref>
                 <div
-                  className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
+                  className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-base-100 text-center font-medium text-2xl py-4 px-6 rounded-sm">
                   Browse software
                 </div>
               </Link>
@@ -328,7 +328,7 @@ export default function HelmholtzHome() {
         </div>
 
         {/* Software meta repository */}
-        <div className="conainer mx-auto my-10 max-w-screen-xl text-white bg-secondary">
+        <div className="conainer mx-auto my-10 max-w-screen-xl text-base-100 bg-secondary">
           <div
             id="backgroundContainer"
             className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75 relative"
@@ -375,11 +375,11 @@ export default function HelmholtzHome() {
               <div className='text-center text-2xl py-4'>
                 <div className="pb-4">For Research Software Engineers</div>
                 <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">
-                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-white bg-promote">
+                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-base-100 bg-promote">
                     <div className="group-hover:hidden text-4xl">Promote</div>
                     <div className="hidden group-hover:block justify-center m-2">Increase the impact of your software by reaching a broader audience</div>
                   </div>
-                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-white bg-reference">
+                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-base-100 bg-reference">
                     <div className="group-hover:hidden text-4xl">Impact</div>
                     <div className="hidden group-hover:block justify-center m-2">Gain acknowledgement by proper citation of your code</div>
                   </div>
@@ -388,11 +388,11 @@ export default function HelmholtzHome() {
               <div className='text-center text-2xl my-4'>
                 <div className="mb-4">For Researchers</div>
                 <div className="grid gridl-cols-1 sm:grid-cols-2 gap-8 pt-4">
-                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-white bg-discover">
+                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-base-100 bg-discover">
                     <div className="group-hover:hidden text-4xl">Discover</div>
                     <div className="hidden group-hover:block justify-center m-2">Discover software relevant to your research interest</div>
                   </div>
-                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-white bg-cite">
+                  <div className="aspect-video grid place-items-center bg-center bg-cover group text-base-100 bg-cite">
                     <div className="group-hover:hidden text-4xl">Cite</div>
                     <div className="hidden group-hover:block justify-center m-2">Version specific bibliography supports correct software citation</div>
                   </div>
@@ -400,7 +400,7 @@ export default function HelmholtzHome() {
               </div>
               <div className="">
                 <a onClick={handleClickOpen}>
-                  <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-white text-center font-medium text-2xl py-4 px-6 rounded-sm">
+                  <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-base-100 text-center font-medium text-2xl py-4 px-6 rounded-sm">
                     Add your software
                   </div>
                 </a>

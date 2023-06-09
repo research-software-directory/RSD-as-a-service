@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-/* eslint-disable @next/next/no-img-element */
 import EmailIcon from '@mui/icons-material/Email'
 import Avatar from '@mui/material/Avatar'
 import {getImageUrl} from '~/utils/editImage'
@@ -40,8 +40,8 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
   }
 
   return (
-    <article className="flex flex-col bg-white max-w-md">
-      <h3 className="text-center font-medium px-6 py-4 uppercase bg-primary text-white md:text-left">Contact person</h3>
+    <article className="flex flex-col bg-base-100 max-w-md">
+      <h3 className="text-center font-medium px-6 py-4 uppercase bg-primary text-base-100 md:text-left">Contact person</h3>
       <div className="flex flex-col p-8 gap-8 md:flex-row 2xl:flex-col">
         <Avatar
           alt={displayName ?? ''}

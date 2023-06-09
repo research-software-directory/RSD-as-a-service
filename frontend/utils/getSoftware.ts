@@ -2,15 +2,15 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import logger from './logger'
 import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
-import logger from './logger'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
-import {SoftwareReleaseInfo} from '~/components/organisation/releases/useSoftwareReleases'
 
 /*
  * Software list for the software overview page

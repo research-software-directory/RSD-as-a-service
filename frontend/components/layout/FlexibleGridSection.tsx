@@ -1,5 +1,7 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -54,10 +56,10 @@ export const FlexibleGridSection = styled('section', {
     // gridGap: '1rem',
     flexWrap: 'wrap',
     // padding: '1rem 0rem 1rem 0rem',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
     // borderBottom: `1px solid ${theme.palette.divider}`,
-    backgroundColor: theme.palette.background.paper,
-    overflow: 'auto'
+    // backgroundColor: theme.palette.background.paper,
+    // overflow: 'auto'
   }
   if (height) {
     // dynamic grid-auto-rows
