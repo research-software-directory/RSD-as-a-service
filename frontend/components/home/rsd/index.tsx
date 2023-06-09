@@ -50,9 +50,9 @@ function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string,
     >
     <div className="relative group">
       <div
-        className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
+        className="absolute -inset-1 bg-gradient-to-r from-glow-start to-glow-end rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
       <div
-        className="flex gap-3 text-black relative px-8 py-3 bg-white ring-1 ring-gray-900/5 rounded leading-none items-center justify-center space-x-2"
+        className="flex gap-3 text-base-900 relative px-8 py-3 bg-base-100 ring-1 rounded leading-none items-center justify-center space-x-2"
         style={{
           minWidth
         }}
@@ -79,7 +79,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
   }, [])
 
   return (
-    <div className="bg-white dark:bg-black dark:text-white" data-testid="rsd-home-page">
+    <div className="bg-base-100 dark:bg-base-900 dark:text-base-100" data-testid="rsd-home-page">
       {/* Header  */}
       <AppHeader/>
 
@@ -143,9 +143,9 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         </div>
       </div>
 
-      <div className="bg-[#111]">
+      <div className="bg-base-800">
         {/* Arc separator  */}
-        <Arc className="w-full text-white dark:text-black -translate-y-1"></Arc>
+        <Arc className="w-full text-base-100 dark:text-base-900 -translate-y-1"></Arc>
 
         {/* Get started section  */}
         <section

@@ -1,11 +1,12 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2023 dv4all
--- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
+-- SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -137,26 +138,6 @@ BEGIN
 END
 $$;
 
--- programming language counts for software
--- used in software filter - language dropdown
-CREATE FUNCTION prog_lang_cnt_for_software() RETURNS TABLE (
-	prog_lang TEXT,
-	cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		JSONB_OBJECT_KEYS(languages) AS "prog_lang",
-		COUNT(software) AS cnt
-	FROM
-		repository_url
-	GROUP BY
-		JSONB_OBJECT_KEYS(languages)
-	;
-END
-$$;
-
 -- programming language filter for software
 -- used by software_overview func
 CREATE FUNCTION prog_lang_filter_for_software() RETURNS TABLE (
@@ -179,6 +160,22 @@ BEGIN
 END
 $$;
 
+-- license filter for software
+-- used by software_search func
+CREATE FUNCTION license_filter_for_software() RETURNS TABLE (
+	software UUID,
+	licenses VARCHAR[]
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	license_for_software.software,
+	ARRAY_AGG(license_for_software.license)
+FROM
+	license_for_software
+GROUP BY
+	license_for_software.software
+;
+$$;
 
 -- RELATED SOFTWARE LIST WITH COUNTS
 CREATE FUNCTION related_software_for_software(software_id UUID) RETURNS TABLE (
@@ -1217,36 +1214,6 @@ BEGIN
 END
 $$;
 
--- RESEARCH DOMAIN count used in project filter
--- to show used research domains with count
-CREATE FUNCTION research_domain_count_for_projects() RETURNS TABLE (
-	id UUID,
-	key VARCHAR,
-	name VARCHAR,
-	cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		research_domain.id,
-		research_domain.key,
-		research_domain.name,
-		research_domain_count.cnt
-	FROM
-		research_domain
-	LEFT JOIN
-		(SELECT
-				research_domain_for_project.research_domain,
-				COUNT(research_domain_for_project.research_domain) AS cnt
-			FROM
-				research_domain_for_project
-			GROUP BY research_domain_for_project.research_domain
-		) AS research_domain_count ON research_domain.id = research_domain_count.research_domain
-	;
-END
-$$;
-
 -- GLOBAL SEARCH
 -- we use search_text to concatenate all values to use
 CREATE FUNCTION global_search() RETURNS TABLE(
@@ -1337,7 +1304,6 @@ CREATE VIEW user_count_per_home_organisation AS
 		home_organisation
 	;
 
-
 -- Return the number of accounts since specified time stamp
 CREATE FUNCTION new_accounts_count_since_timestamp(timestmp TIMESTAMPTZ) RETURNS INTEGER
 LANGUAGE sql SECURITY DEFINER STABLE AS
@@ -1349,7 +1315,6 @@ FROM
 WHERE
 	created_at > timestmp;
 $$;
-
 
 -- Keywords use by software and projects
 -- DEPENDS ON FUNCTIONS keyword_count_for_software and keyword_count_for_projects
@@ -1404,4 +1369,5 @@ ORDER BY
 	COUNT(*)
 DESC LIMIT
 	1;
+;
 $$;

@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -62,7 +64,7 @@ export default function OrganisationItem({item, onDelete}: OrganisationItemProps
           sx={{
             width: '4rem',
             height: '4rem',
-            fontSize: '2rem',
+            fontSize: '1.5rem',
             marginRight: '1rem',
             '& img': {
               height:'auto'

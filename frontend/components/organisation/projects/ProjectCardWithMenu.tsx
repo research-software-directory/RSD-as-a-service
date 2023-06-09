@@ -1,16 +1,18 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
 import styled from '@mui/system/styled'
 import BlockIcon from '@mui/icons-material/Block'
 
-import ProjectCard from '~/components/projects/ProjectCard'
 import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
 import IconOverlay from '~/components/layout/IconOverlay'
 import {ProjectCardWithMenuProps, useProjectCardActions} from './useProjectCardActions'
-import {useState} from 'react'
+import ProjectCard from '~/components/user/project/ProjectCard'
 
 type StyledNavProps = {
   is_featured: boolean

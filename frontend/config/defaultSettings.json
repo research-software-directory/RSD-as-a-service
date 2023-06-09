@@ -2,6 +2,7 @@
   "host": {
     "name": "rsd",
     "email": "rsd@esciencecenter.nl",
+    "emailHeaders": [],
     "logo_url": "/images/logo-escience.svg",
     "website": "https://www.esciencecenter.nl",
     "feedback": {
@@ -42,6 +43,12 @@
         "base-100": "#fff",
         "base-200": "#eeeeee",
         "base-300": "#dcdcdc",
+        "base-400": "#bdbdbd",
+        "base-500": "#9e9e9e",
+        "base-600": "#757575",
+        "base-700": "#232323",
+        "base-800": "#111",
+        "base-900": "#000",
         "base-content": "rgba(34,36,37,1)",
         "base-content-secondary": "rgba(34,36,37,0.7)",
         "base-content-disabled": "rgba(34,36,37,0.45)",
@@ -58,7 +65,9 @@
         "info": "#0288d1",
         "info-content": "#000",
         "success": "#2e7d32",
-        "success-content": "#fff"
+        "success-content": "#fff",
+        "glow-start": "#db2777",
+        "glow-end": "#9333ea"
       },
       "action": {
         "active": "rgba(0, 0, 0, 0.54)",
@@ -79,6 +88,12 @@
         "base-100": "#0a0a0a",
         "base-200": "#151515",
         "base-300": "#2a2a2a",
+        "base-400": "#757575",
+        "base-500": "#9e9e9e",
+        "base-600": "#bdbdbd",
+        "base-700": "#dcdcdc",
+        "base-800": "#eeeeee",
+        "base-900": "#fff",
         "base-content": "rgba(255,255,255,0.87)",
         "base-content-secondary": "rgba(255,255,255,0.7)",
         "base-content-disabled": "rgba(255,255,255,0.45)",
@@ -95,7 +110,9 @@
         "info": "#0288d1",
         "info-content": "#000",
         "success": "#2e7d32",
-        "success-content": "#fff"
+        "success-content": "#fff",
+        "glow-start": "#db2777",
+        "glow-end": "#9333ea"
       },
       "action": {
         "active": "rgba(255, 255, 255, 0.54)",

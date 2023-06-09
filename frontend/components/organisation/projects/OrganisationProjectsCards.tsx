@@ -1,14 +1,16 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect} from 'react'
 import {useSession} from '~/auth'
+import {OrganisationForOverview} from '~/types/Organisation'
 import ContentLoader from '~/components/layout/ContentLoader'
 import NoContent from '~/components/layout/NoContent'
-import ProjectCard from '~/components/projects/ProjectCard'
-import {OrganisationForOverview} from '~/types/Organisation'
+import ProjectCard from '~/components/user/project/ProjectCard'
 import ProjectCardWithMenu from './ProjectCardWithMenu'
 import useOrganisationProjects from './useOrganisationProjects'
 

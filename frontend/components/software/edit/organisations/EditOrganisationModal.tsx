@@ -2,7 +2,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,6 +29,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {organisationInformation as config} from '../editSoftwareConfig'
+
 
 type EditOrganisationModalProps = {
   open: boolean,
