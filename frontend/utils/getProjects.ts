@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +11,7 @@ import {mentionColumns, MentionForProject, MentionItemProps} from '~/types/Menti
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, ProjectSearchRpc, RelatedProjectForProject,
+  ProjectLink, ProjectListItem, RelatedProjectForProject,
   ResearchDomain, SearchProject, TeamMember
 } from '~/types/Project'
 import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
@@ -29,7 +31,7 @@ export async function getProjectList({url, token}: { url: string, token?: string
     })
 
     if ([200, 206].includes(resp.status)) {
-      const json: ProjectSearchRpc[] = await resp.json()
+      const json: ProjectListItem[] = await resp.json()
       // set
       return {
         count: extractCountFromHeader(resp.headers),

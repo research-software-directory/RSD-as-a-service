@@ -1,6 +1,7 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -83,13 +84,17 @@ it('extracts ssrSoftwareParams from url query', () => {
     'search': 'test search',
     'keywords': '["BAM","FAIR Sofware"]',
     'prog_lang': '["Python","C++"]',
+    'licenses': '["MIT","GPL-2.0-or-later"]',
+    'order': 'test-order',
     'page': '0',
     'rows': '12'
   }
   const expected = {
     search: 'test search',
     keywords: ['BAM', 'FAIR Sofware'],
-    prog_lang: ['Python','C++'],
+    prog_lang: ['Python', 'C++'],
+    licenses: ['MIT', 'GPL-2.0-or-later'],
+    order: 'test-order',
     page: 0,
     rows: 12
   }
@@ -103,6 +108,8 @@ it('extracts ssrProjectsParams from url query', () => {
     'search': 'testing search',
     'keywords': '["Big data","GPU"]',
     'domains': '["SH6","LS"]',
+    'organisations':'["Organisation 1","Organisation 2"]',
+    'order': 'impact_cnt',
     'page': '1',
     'rows': '24'
   }
@@ -110,6 +117,8 @@ it('extracts ssrProjectsParams from url query', () => {
     search: 'testing search',
     keywords: ['Big data', 'GPU'],
     domains: ['SH6', 'LS'],
+    organisations: ['Organisation 1','Organisation 2'],
+    order: 'impact_cnt',
     page: 1,
     rows: 24
   }
