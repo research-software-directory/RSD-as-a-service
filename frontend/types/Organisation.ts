@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -39,6 +40,7 @@ export type Organisation = CoreOrganisationProps & {
   id: string | null
   // about page content created by maintainer
   description: string | null
+  short_description?: string | null
   parent_names?: string
   rsd_path?: string
 }

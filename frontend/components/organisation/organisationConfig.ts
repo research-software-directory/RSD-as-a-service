@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -31,6 +33,14 @@ export const organisationInformation = {
         value: /^https?:\/\/.+\..+/,
         message: 'Url should start with http(s):// and have at least one dot (.)'
       }
+    }
+  },
+  short_description: {
+    label: 'Short description',
+    help: 'Short text used in the organisation card',
+    validation: {
+      minLength: {value: 6, message: 'Minimum length is 6'},
+      maxLength: {value: 300, message: 'Maximum length is 300'},
     }
   },
   slug: {

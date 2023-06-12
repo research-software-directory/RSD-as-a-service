@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,8 +12,6 @@ import {organisationInformation as config} from '../organisationConfig'
 import AutosaveOrganisationTextField from './AutosaveOrganisationTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {patchOrganisationTable} from './updateOrganisationSettings'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import AutosaveControlledMarkdown from '~/components/form/AutosaveControlledMarkdown'
 
 export default function AdminSection() {
   const {token} = useSession()
@@ -44,7 +44,7 @@ export default function AdminSection() {
 
   return (
     <>
-      <section className="grid grid-cols-[1fr,1fr] gap-8 pt-4">
+      <section className="grid grid-cols-[1fr,1fr] gap-8">
         <AutosaveOrganisationTextField
           organisation_id={id}
           options={{
