@@ -1,9 +1,10 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -60,8 +61,8 @@ export async function orcidInfo() {
       name: 'ORCID',
       redirectUrl,
       html: `
-        Sign in with ORCID is supported <strong>only for persons invited by the RSD administrators</strong>.
-        <strong><a href="mailto:rsd@esciencecenter.nl?subject=${encodeURIComponent('Login with ORCID')}" target="_blank">Contact us</a></strong> if you wish to login with your ORCID.
+        Sign in with ORCID is supported <strong>only for persons approved by the RSD administrators</strong>.
+        Contact us on rsd@esciencecenter.nl if you wish to login with your ORCID.
       `
     }
   }
