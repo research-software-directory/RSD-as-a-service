@@ -1,9 +1,10 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -59,10 +60,8 @@ export async function surfconextInfo() {
     return {
       name: 'SURFconext',
       redirectUrl,
-      html: `<p>Sign in with SURFconext is for <strong>Dutch Institutions who enabled the 
-      RSD service</strong> in the <a href="https://dashboard.surfconext.nl/apps/9514/oidc10_rp/about" target = "_new">
-      SURFconext IdP dashboard</a>.
-      </p>`
+      html: `Sign in with SURFconext is for <strong>Dutch Institutions</strong> who enabled the
+      RSD service in the SURFconext IdP dashboard.`
     }
   }
   return null
