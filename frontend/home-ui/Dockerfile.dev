@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+# SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+FROM node:18.5-buster-slim
+
+#  Change the user and group id of the node user to the specified ids
+ARG DUID=1000
+ARG DGID=1000
+ARG DUNAME=node
+RUN export OUID=$(id -u);\
+    if [ $DUID != $OUID ];\
+    then usermod -u $DUID $DUNAME &&\
+    find / -path /sys -prune -o -user 1000 -ignore_readdir_race -exec chown -h $DUNAME {} \; ;\
+    fi
+RUN export OGID=$(id -g);\
+    if [ $DGID != $OGID ];\
+    then groupmod -g $DGID $DUNAME || usermod -g $DGID $DUNAME &&\
+    find / -path /sys -prune -o -group 1000 -ignore_readdir_race -exec chgrp -h $DUNAME {} \; ;\
+    fi
+USER $DUNAME
+
+WORKDIR /app
+
+VOLUME [ "/app" ]
+
+EXPOSE 3000
+
+CMD [ "sh", "-c", "yarn install ; yarn dev:docker" ]

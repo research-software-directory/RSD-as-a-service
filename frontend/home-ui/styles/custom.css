@@ -1,0 +1,134 @@
+/*
+ * SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+ * SPDX-FileCopyrightText: 2022 - 2023 dv4all
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* NOTE!
+
+1. you cannot define class with the same name as tailwind utility classes you will get following error::after
+error - ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[2].oneOf[8].use[1]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[2].oneOf[8].use[2]!./styles/global.css
+RangeError: Maximum call stack size exceeded
+
+2. all CSS in custom is imported before tailwind functions are applied afaik, in other words, you won't be able to overwrite tailwind  classes by defining new classes in this file.
+
+*/
+
+/* -------------------------------------
+  custom scrollbar
+---------------------------------------*/
+body {
+  /* fix jumping scrollbar */
+  overflow: overlay;
+  --scrollbar-thumb: #e4e4e7;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+/* track */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+
+/* ----------------------------------------------
+  nprogress styles
+  orginates from 'nprogress/nprogress.css'
+------------------------------------------------*/
+/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: var(--rsd-accent,'orange');
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px var(--rsd-accent,'orange'), 0 0 5px var(--rsd-accent,'orange');
+  opacity: 1.0;
+  transform: rotate(3deg) translate(0px, -4px);
+}
+
+/* Remove these to get rid of the spinner */
+/* WE DO NOT USE SPINNER - ONLY PROGRESS BAR AT THE TOP */
+/* #nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+  animation: nprogress-spinner 400ms linear infinite;
+}
+
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+
+.nprogress-custom-parent #nprogress .spinner,
+.nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+
+@-webkit-keyframes nprogress-spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+} */

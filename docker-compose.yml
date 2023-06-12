@@ -95,13 +95,57 @@ services:
         "nl.esciencecenter.rsd.authentication.Main"
       ]
 
-  frontend:
+  # homepage container
+  home-ui:
     build:
-      context: ./frontend
+      context: ./frontend/home-ui
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:1.18.1
+    image: rsd/home-ui:2.0.0
+    environment:
+      # it uses values from .env file
+      - POSTGREST_URL
+      - PGRST_JWT_SECRET
+      - RSD_AUTH_URL
+      - RSD_AUTH_PROVIDERS
+      - MATOMO_URL
+      - MATOMO_ID
+      - SURFCONEXT_CLIENT_ID
+      - SURFCONEXT_REDIRECT
+      - SURFCONEXT_WELL_KNOWN_URL
+      - SURFCONEXT_SCOPES
+      - SURFCONEXT_RESPONSE_MODE
+      - HELMHOLTZAAI_CLIENT_ID
+      - HELMHOLTZAAI_REDIRECT
+      - HELMHOLTZAAI_WELL_KNOWN_URL
+      - HELMHOLTZAAI_SCOPES
+      - HELMHOLTZAAI_RESPONSE_MODE
+      - ORCID_CLIENT_ID
+      - ORCID_REDIRECT
+      - ORCID_WELL_KNOWN_URL
+      - ORCID_SCOPES
+    expose:
+      - 3000
+    depends_on:
+      - database
+      - backend
+      - auth
+    # volumes:
+    #   - ./deployment/hmz/styles:/app/public/styles
+    #   - ./deployment/hmz/data:/app/public/data
+    #   - ./deployment/hmz/images:/app/public/images
+    networks:
+      - net
+
+  # core = other frontend pages than the homepage
+  core-ui:
+    build:
+      context: ./frontend/core-ui
+      # dockerfile to use for build
+      dockerfile: Dockerfile
+    # update version number to correspond to frontend/package.json
+    image: rsd/core-ui:2.0.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -179,7 +223,8 @@ services:
       - database
       - backend
       - auth
-      - frontend
+      - core-ui
+      - home-ui
       - swagger
     networks:
       - net
@@ -204,53 +249,55 @@ services:
     deploy:
       replicas: 0
 
-  frontend-dev:
-    build:
-      context: ./frontend
-      # dockerfile to use for build
-      dockerfile: Dockerfile.dev
-      args:
-        - DUID
-        - DGID
-    # update version number to correspond to frontend/package.json
-    image: rsd/frontend-dev:1.18.1
-    ports:
-      - "3000:3000"
-      - "9229:9229"
-    environment:
-      # it uses values from .env file
-      - POSTGREST_URL
-      - PGRST_JWT_SECRET
-      - RSD_AUTH_URL
-      - RSD_AUTH_PROVIDERS
-      - MATOMO_URL
-      - MATOMO_ID
-      - SURFCONEXT_CLIENT_ID
-      - SURFCONEXT_REDIRECT
-      - SURFCONEXT_WELL_KNOWN_URL
-      - SURFCONEXT_SCOPES
-      - SURFCONEXT_RESPONSE_MODE
-      - HELMHOLTZAAI_CLIENT_ID
-      - HELMHOLTZAAI_REDIRECT
-      - HELMHOLTZAAI_WELL_KNOWN_URL
-      - HELMHOLTZAAI_SCOPES
-      - HELMHOLTZAAI_RESPONSE_MODE
-    depends_on:
-      - database
-      - backend
-      - auth
-    volumes:
-      - ./frontend:/app
-      # - ./deployment/hmz/styles:/app/public/styles
-      # - ./deployment/hmz/data:/app/public/data
-      # - ./deployment/hmz/images:/app/public/images
-    networks:
-      - net
-    deploy:
-      replicas: 0
+# TODO! check with Helmholtz how to approach this?
+# frontend-dev:
+#   build:
+#     context: ./frontend
+#     # dockerfile to use for build
+#     dockerfile: Dockerfile.dev
+#     args:
+#       - DUID
+#       - DGID
+#   # update version number to correspond to frontend/package.json
+#   image: rsd/frontend-dev:1.18.1
+#   ports:
+#     - "3000:3000"
+#     - "9229:9229"
+#   environment:
+#     # it uses values from .env file
+#     - POSTGREST_URL
+#     - PGRST_JWT_SECRET
+#     - RSD_AUTH_URL
+#     - RSD_AUTH_PROVIDERS
+#     - MATOMO_URL
+#     - MATOMO_ID
+#     - SURFCONEXT_CLIENT_ID
+#     - SURFCONEXT_REDIRECT
+#     - SURFCONEXT_WELL_KNOWN_URL
+#     - SURFCONEXT_SCOPES
+#     - SURFCONEXT_RESPONSE_MODE
+#     - HELMHOLTZAAI_CLIENT_ID
+#     - HELMHOLTZAAI_REDIRECT
+#     - HELMHOLTZAAI_WELL_KNOWN_URL
+#     - HELMHOLTZAAI_SCOPES
+#     - HELMHOLTZAAI_RESPONSE_MODE
+#   depends_on:
+#     - database
+#     - backend
+#     - auth
+#   volumes:
+#     - ./frontend:/app
+#     # - ./deployment/hmz/styles:/app/public/styles
+#     # - ./deployment/hmz/data:/app/public/data
+#     # - ./deployment/hmz/images:/app/public/images
+#   networks:
+#     - net
+#   deploy:
+#     replicas: 0
 
 # define name for docker network
 # it should have name: rsd-as-a-service_net
+
 networks:
   net:
 

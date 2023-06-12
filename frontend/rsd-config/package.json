@@ -1,0 +1,11 @@
+{
+  "name":"@rsd/config",
+  "files":[
+    "jest.config.js",
+    "jest.setup.js",
+    "tailwind.config.js",
+    "defaultSettings.json",
+    "next.rewrites.js",
+    "next.headers.js"
+  ]
+}

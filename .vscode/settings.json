@@ -1,7 +1,7 @@
 {
   // required to indicate that eslint project is not in the root
   "eslint.workingDirectories": [
-    "./frontend",
+    "./frontend/**",
   ],
   // FORMAT ON SAVE for VSC
   // based on this acticle https://www.aleksandrhovhannisyan.com/blog/format-code-on-save-vs-code-eslint/
