@@ -1,10 +1,14 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useFormContext} from 'react-hook-form'
+
 import {useSession} from '~/auth'
+import {EditProject} from '~/types/Project'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -13,7 +17,7 @@ import {patchProjectTable} from './patchProjectInfo'
 
 export type AutosaveProjectInfoProps = {
   project_id: string
-  options: ControlledTextFieldOptions
+  options: ControlledTextFieldOptions<EditProject>
   rules?: any
 }
 
@@ -23,7 +27,7 @@ export default function AutosaveProjectTextField({project_id,options,rules}:Auto
   const {setProjectTitle, setProjectSlug} = useProjectContext()
   const {control, resetField} = useFormContext()
 
-  async function saveProjectInfo({name, value}: OnSaveProps) {
+  async function saveProjectInfo({name, value}: OnSaveProps<EditProject>) {
     // patch project table
     const resp = await patchProjectTable({
       id: project_id,
@@ -40,10 +44,10 @@ export default function AutosaveProjectTextField({project_id,options,rules}:Auto
     // console.groupEnd()
 
     if (resp?.status !== 200) {
-      showErrorMessage(`Failed to save ${options.name}. ${resp?.message}`)
+      showErrorMessage(`Failed to save ${options.name.toString()}. ${resp?.message}`)
     } else {
       // debugger
-      resetField(options.name, {
+      resetField(options.name.toString(), {
         defaultValue:value
       })
       // update shared state

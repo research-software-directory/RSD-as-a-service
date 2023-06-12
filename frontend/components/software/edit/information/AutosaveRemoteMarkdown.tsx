@@ -2,24 +2,28 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState,useEffect} from 'react'
 import {useWatch,useFormState} from 'react-hook-form'
+
+import {EditSoftwareItem} from '~/types/SoftwareTypes'
+import {getRemoteMarkdown} from '~/utils/getSoftware'
+import {useDebounceValid} from '~/utils/useDebounce'
 import ReactMarkdownWithSettings from '~/components/layout/ReactMarkdownWithSettings'
 import PageErrorMessage from '~/components/layout/PageErrorMessage'
-import {getRemoteMarkdown} from '~/utils/getSoftware'
 import ContentLoader from '~/components/layout/ContentLoader'
-import {useDebounceValid} from '~/utils/useDebounce'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 
 type AutosaveRemoteMarkdownProps = {
   control: any,
   rules: any,
-  options: ControlledTextFieldOptions,
-  onSaveField: ({name,value}: OnSaveProps) => void
+  options: ControlledTextFieldOptions<EditSoftwareItem>,
+  onSaveField: ({name,value}: OnSaveProps<EditSoftwareItem>) => void
 }
 
 export default function AutosaveRemoteMarkdown({control,rules,options,onSaveField}: AutosaveRemoteMarkdownProps) {

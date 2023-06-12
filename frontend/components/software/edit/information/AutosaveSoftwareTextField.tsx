@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -6,6 +8,7 @@
 import {useRouter} from 'next/router'
 import {useFormContext} from 'react-hook-form'
 import {useSession} from '~/auth'
+import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'
@@ -14,7 +17,7 @@ import {patchSoftwareTable} from './patchSoftwareTable'
 
 export type AutosaveProjectInfoProps = {
   software_id: string
-  options: ControlledTextFieldOptions
+  options: ControlledTextFieldOptions<EditSoftwareItem>
   rules?: any
 }
 
@@ -25,7 +28,7 @@ export default function AutosaveSoftwareTextField({software_id,options,rules}:Au
   const {setSoftwareTitle, setSoftwareSlug, setConceptDoi} = useSoftwareContext()
   const {control, resetField} = useFormContext()
 
-  async function saveSoftwareInfo({name, value}: OnSaveProps) {
+  async function saveSoftwareInfo({name, value}: OnSaveProps<EditSoftwareItem>) {
     // patch project table
     const resp = await patchSoftwareTable({
       id: software_id,

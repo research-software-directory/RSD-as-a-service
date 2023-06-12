@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,8 +11,8 @@ import {Controller} from 'react-hook-form'
 import TextField, {TextFieldProps} from '@mui/material/TextField'
 import HelperTextWithCounter from './HelperTextWithCounter'
 
-export type ControlledTextFieldOptions = {
-  name: string,
+export type ControlledTextFieldOptions<T> = {
+  name: keyof T,
   autofocus?:boolean
   autoComplete?: string
   multiline?: boolean
@@ -29,13 +30,13 @@ export type ControlledTextFieldOptions = {
   muiProps?: TextFieldProps
 }
 
-export type ControlledTextFieldProps = {
-  options: ControlledTextFieldOptions,
+export type ControlledTextFieldProps<T> = {
+  options: ControlledTextFieldOptions<T>,
   control: any,
   rules?: any
 }
 
-export default function ControlledTextField({options, control, rules}:ControlledTextFieldProps) {
+export default function ControlledTextField<T>({options, control, rules}:ControlledTextFieldProps<T>) {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
@@ -48,20 +49,22 @@ export default function ControlledTextField({options, control, rules}:Controlled
 
   return (
     <Controller
-      name={options.name}
+      name={options.name.toString()}
       defaultValue={options?.defaultValue}
       rules={rules}
       control={control}
       render={({field,fieldState}) => {
         const {onChange,value} = field
         const {error} = fieldState
-          // console.group(`ControlledTextField...${options.name}`)
-          // console.log('error...',error)
-          // console.log('value...', value)
-          // console.groupEnd()
+        // if (error) {
+        //   console.group(`ControlledTextField...${options.name.toString()}`)
+        //   console.log('error...',error)
+        //   console.log('value...', value)
+        //   console.groupEnd()
+        // }
         return (
           <TextField
-            id={options.name ?? `input-${Math.floor(Math.random()*10000)}`}
+            id={options.name.toString() ?? `input-${Math.floor(Math.random()*10000)}`}
             inputRef={inputRef}
             disabled={options?.disabled ?? false}
             autoComplete={options?.autoComplete ?? 'off'}
