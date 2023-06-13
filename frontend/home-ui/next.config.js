@@ -10,8 +10,13 @@
 
 const rewritesConfig = require('./next.rewrites')
 const securityHeaders = require('./next.headers')
+const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
+  // just updates link to assets (css,js etc)
+  // assetPrefix: isProd ? '/home' : undefined,
+  // updates links and image paths too!
+  basePath: '/home',
   // create standalone output to use in docker image
   // and achieve minimal image size (see Dockerfile)
   output: 'standalone',

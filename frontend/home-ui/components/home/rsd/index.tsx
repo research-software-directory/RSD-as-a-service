@@ -41,11 +41,10 @@ export type RsdHomeProps = {
 }
 
 function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string, url: string, target?:string, minWidth?:string}) {
-  return <Link
+  return <a
     href={url}
     className="flex gap-4 cursor-pointer"
     target={target}
-    passHref
     >
     <div className="relative group">
       <div
@@ -61,7 +60,7 @@ function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string,
         </span>
       </div>
     </div>
-  </Link>
+  </a>
 }
 
 function LandingPageDivider() {
@@ -103,11 +102,11 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         </div>
         {/* Jumbo image */}
         <div className="relative">
-          <Image
+          <img
             src="/images/screenshots.webp"
             width="877"
             height="767"
-            layout="intrinsic"
+            // layout="intrinsic"
             alt="rsd-illustration"
           />
         </div>
@@ -256,11 +255,10 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
           id="learn-more"
           className="p-5 md:p-10 grid gap-12 grid-cols-1 sm:grid-cols-2 max-w-screen-xl mt-20 mx-auto">
           <div className="relative">
-            <Image
+            <img
               src="/images/learnMore.webp"
               width="1920"
               height="830"
-              layout="responsive"
               alt="rsd learn more illustration"
             />
           </div>

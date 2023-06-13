@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import MenuIcon from '@mui/icons-material/Menu'
-import Link from 'next/link'
+
 // local dependencies (project components)
 import {useAuth} from '~/auth'
 import {menuItems} from '~/config/menuItems'
@@ -63,10 +63,10 @@ export default function AppHeader() {
       <div
         className="flex-1 flex flex-col px-4 xl:flex-row items-start lg:container lg:mx-auto">
         <div className="w-full flex-1 flex items-center justify-between">
-          <Link href="/" passHref className="hover:text-inherit" aria-label="Link to home page">
+          <a href="/" className="hover:text-inherit" aria-label="Link to home page">
             <LogoApp className="hidden 2xl:block"/>
             <LogoAppSmall className="block 2xl:hidden"/>
-          </Link>
+          </a>
 
           <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
 
@@ -74,9 +74,9 @@ export default function AppHeader() {
           <div
             className="justify-center xl:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
             {menuItems.map(item =>
-              <Link key={item.path} href={item.path || ''} className={`${activePath === item.path ? 'nav-active' : ''}`}>
+              <a key={item.path} href={item.path || ''} className={`${activePath === item.path ? 'nav-active' : ''}`}>
                 {item.label}
-              </Link>
+              </a>
             )}
           </div>
 
@@ -132,9 +132,9 @@ export default function AppHeader() {
               >
                 {menuItems.map(item =>
                   <MenuItem onClick={handleCloseResponsiveMenu} key={item.path}>
-                    <Link href={item.path || ''} className={`${activePath === item.path && 'nav-active'}`}>
+                    <a href={item.path || ''} className={`${activePath === item.path && 'nav-active'}`}>
                       {item.label}
-                    </Link>
+                    </a>
                   </MenuItem>
                 )}
                 <li>
@@ -148,7 +148,6 @@ export default function AppHeader() {
 
             {/* LOGIN / USER MENU */}
             <LoginButton/>
-
 
           </div>
           <JavascriptSupportWarning/>

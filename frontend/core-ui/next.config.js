@@ -9,6 +9,7 @@
 /** @type {import('next').NextConfig} */
 
 const rewritesConfig = require('./next.rewrites')
+const redirectsConfig = require('./next.redirects')
 const securityHeaders = require('./next.headers')
 
 module.exports = {
@@ -25,6 +26,8 @@ module.exports = {
   },
   // only in development
   rewrites: async () => rewritesConfig,
+  // only in production (/ => /home)
+  redirects: async() => redirectsConfig,
 
   async headers() {
     return [

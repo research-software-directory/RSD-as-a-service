@@ -42,6 +42,8 @@
         "name": "@mui/material",
         "message": "Please use \"import foo from '@mui/material/foo'\" instead."
       }
-    ]
+    ],
+    "@next/next/no-html-link-for-pages": "warn",
+    "@next/next/no-img-element": "off"
   }
 }
