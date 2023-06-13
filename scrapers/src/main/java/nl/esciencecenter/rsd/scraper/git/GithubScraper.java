@@ -42,14 +42,19 @@ public class GithubScraper implements GitScraper {
 	@Override
 	public BasicGitData basicData() {
 		Optional<String> apiCredentials = Config.apiCredentialsGithub();
-		String response;
+		HttpResponse<String> response;
 		if (apiCredentials.isPresent()) {
-			response = Utils.get(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
+			response = Utils.getAsHttpResponse(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
 		}
 		else {
-			response = Utils.get(baseApiUrl + "/repos/" + repo);
+			response = Utils.getAsHttpResponse(baseApiUrl + "/repos/" + repo);
 		}
-		return parseBasicData(response);
+		return switch (response.statusCode()) {
+			case 200 -> parseBasicData(response.body());
+			case 404 -> throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+			case 403 -> throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
+			default -> throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
+		};
 	}
 
 	/**
@@ -58,13 +63,13 @@ public class GithubScraper implements GitScraper {
 	 */
 	@Override
 	public String languages() {
-		Optional<String> apiCredentials = Config.apiCredentialsGithub();
-		if (apiCredentials.isPresent()) {
-			return Utils.get(baseApiUrl + "/repos/" + repo + "/languages", "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
-		}
-		else {
-			return Utils.get(baseApiUrl + "/repos/" + repo + "/languages");
-		}
+		HttpResponse<String> response = getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/languages");
+		return switch (response.statusCode()) {
+			case 404 -> throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+			case 403 -> throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
+			case 200 -> response.body();
+			default -> throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
+		};
 	}
 
 	/**
@@ -92,7 +97,6 @@ public class GithubScraper implements GitScraper {
 	 */
 	@Override
 	public CommitsPerWeek contributions() {
-		Optional<String> apiCredentials = Config.apiCredentialsGithub();
 		HttpResponse<String> httpResponse = null;
 		for (int i = 0; i < 2; i++) {
 			httpResponse = getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/stats/contributors");
@@ -107,19 +111,17 @@ public class GithubScraper implements GitScraper {
 
 		int status = httpResponse.statusCode();
 		if (status == 404) {
-			System.out.println("Commit history not found at " + httpResponse.uri().toString());
-			return null;
+			throw new RsdResponseException(status, httpResponse.uri(), httpResponse.body(), "Not found, is the repository URL correct?");
 		} else if (status == 204) {
 			// empty commit history
 			return new CommitsPerWeek();
 		} else if (status == 403) {
-			throw new RsdRateLimitException("403 Forbidden. This error occurs mostly when the API rate limit is exceeded. Error message: " + httpResponse.body());
+			throw new RsdRateLimitException(403, httpResponse.uri(), httpResponse.body(), "Rate limit for GitHub probably reached");
 		} else if (status == 202) {
 			// response not ready yet
 			return null;
 		} else if (status != 200){
-			throw new RsdResponseException(status,
-					"Unexpected response from " + httpResponse.uri().toString() + " with status code " + status + " and body " + httpResponse.body());
+			throw new RsdResponseException(status, httpResponse.uri(), httpResponse.body(), "Unexpected response");
 		} else {
 			String contributionsJson = httpResponse.body();
 			return parseCommits(contributionsJson);
@@ -134,12 +136,11 @@ public class GithubScraper implements GitScraper {
 
 		int status = httpResponse.statusCode();
 		if (status == 404) {
-			throw new RsdResponseException(404, "No response found at " + httpResponse.uri());
+			throw new RsdResponseException(404, httpResponse.uri(), httpResponse.body(), "Not found, is the repository URL correct?");
 		} else if (status == 403) {
-			throw new RsdRateLimitException("403 Forbidden. This error occurs mostly when the API rate limit is exceeded. Error message: " + httpResponse.body());
+			throw new RsdRateLimitException(403, httpResponse.uri(), httpResponse.body(), "Rate limit for GitHub probably reached");
 		} else if (status != 200){
-			throw new RsdResponseException(status,
-					"Unexpected response from " + httpResponse.uri().toString() + " with status code " + status + " and body " + httpResponse.body());
+			throw new RsdResponseException(status, httpResponse.uri(), httpResponse.body(), "Unexpected response");
 		} else {
 			List<String> linkHeaders = httpResponse.headers().allValues("link");
 			String[] lastPageData = lastPageFromLinkHeader(linkHeaders);

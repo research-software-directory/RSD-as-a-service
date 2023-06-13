@@ -22,12 +22,16 @@ CREATE TABLE repository_url (
 	star_count BIGINT,
 	fork_count INTEGER,
 	open_issue_count INTEGER,
+	basic_data_last_error VARCHAR(500),
 	basic_data_scraped_at TIMESTAMPTZ,
 	languages JSONB,
+	languages_last_error VARCHAR(500),
 	languages_scraped_at TIMESTAMPTZ,
 	commit_history JSONB,
+	commit_history_last_error VARCHAR(500),
 	commit_history_scraped_at TIMESTAMPTZ,
 	contributor_count INTEGER,
+	contributor_count_last_error VARCHAR(500),
 	contributor_count_scraped_at TIMESTAMPTZ
 );
 
@@ -48,8 +52,10 @@ CREATE TABLE package_manager (
 	url VARCHAR(200) NOT NULL CHECK (url ~ '^https?://'),
 	package_manager package_manager_type NOT NULL DEFAULT 'other',
 	download_count BIGINT,
+	download_count_last_error VARCHAR(500),
 	download_count_scraped_at TIMESTAMPTZ,
 	reverse_dependency_count INTEGER,
+	reverse_dependency_count_last_error VARCHAR(500),
 	reverse_dependency_count_scraped_at TIMESTAMPTZ,
 	position INTEGER,
 	created_at TIMESTAMPTZ NOT NULL,

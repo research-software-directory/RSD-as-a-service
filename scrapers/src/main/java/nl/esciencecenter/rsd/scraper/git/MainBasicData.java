@@ -6,6 +6,9 @@
 package nl.esciencecenter.rsd.scraper.git;
 
 import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -35,13 +38,17 @@ public class MainBasicData {
 					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
 					BasicGitData scrapedBasicData = new GithubScraper("https://api.github.com", repo).basicData();
-					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(new BasicRepositoryData(basicData.software(), null), scrapedBasicData, scrapedAt);
+					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(basicData, scrapedBasicData, scrapedAt);
 					softwareInfoRepository.saveBasicData(updatedData);
+				} catch (RsdRateLimitException e) {
+					Utils.saveExceptionInDatabase("GitHub basic data scraper", "repository_url", basicData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("GitHub basic data scraper", "repository_url", basicData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
 				} catch (RuntimeException e) {
-					System.out.println("Exception when handling data from url " + basicData.url() + ":");
-					e.printStackTrace();
-					BasicGitDatabaseData onlyUpdatedAt = new BasicGitDatabaseData(new BasicRepositoryData(basicData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveBasicData(onlyUpdatedAt);
+					Utils.saveExceptionInDatabase("GitHub basic data scraper", "repository_url", basicData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
 				}
 			});
 			futures[i] = future;
@@ -66,13 +73,17 @@ public class MainBasicData {
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
 					BasicGitData scrapedBasicData = new GitlabScraper(apiUrl, projectPath).basicData();
-					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(new BasicRepositoryData(basicData.software(), null), scrapedBasicData, scrapedAt);
+					BasicGitDatabaseData updatedData = new BasicGitDatabaseData(basicData, scrapedBasicData, scrapedAt);
 					softwareInfoRepository.saveBasicData(updatedData);
+				} catch (RsdRateLimitException e) {
+					Utils.saveExceptionInDatabase("GitLab basic data scraper", "repository_url", basicData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("GitLab basic data scraper", "repository_url", basicData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
 				} catch (RuntimeException e) {
-					System.out.println("Exception when handling data from url " + basicData.url() + ":");
-					e.printStackTrace();
-					BasicGitDatabaseData onlyUpdatedAt = new BasicGitDatabaseData(new BasicRepositoryData(basicData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveBasicData(onlyUpdatedAt);
+					Utils.saveExceptionInDatabase("GitLab basic data scraper", "repository_url", basicData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
 				}
 			});
 			futures[i] = future;

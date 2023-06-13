@@ -7,6 +7,7 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
@@ -29,8 +30,9 @@ public class PostgrestConnector {
 
 	/**
 	 * Fetch programming languages data from PostgREST
+	 *
 	 * @param limit The number of rows requested from PostgREST
-	 * @return      The data corresponding to the git repositories of which the programming languages data were scraped the longest time ago
+	 * @return The data corresponding to the git repositories of which the programming languages data were scraped the longest time ago
 	 */
 	public Collection<BasicRepositoryData> languagesData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
@@ -40,8 +42,9 @@ public class PostgrestConnector {
 
 	/**
 	 * Fetch commit data from PostgREST
+	 *
 	 * @param limit The number of rows requested from PostgREST
-	 * @return      The data corresponding to the git repositories of which the commit data were scraped the longest time ago
+	 * @return The data corresponding to the git repositories of which the commit data were scraped the longest time ago
 	 */
 	public Collection<BasicRepositoryData> commitData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
@@ -51,8 +54,9 @@ public class PostgrestConnector {
 
 	/**
 	 * Fetch basic data from PostgREST
+	 *
 	 * @param limit The number of rows requested from PostgREST
-	 * @return      The data corresponding to the git repositories of which the basic data were scraped the longest time ago
+	 * @return The data corresponding to the git repositories of which the basic data were scraped the longest time ago
 	 */
 	public Collection<BasicRepositoryData> statsData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
@@ -81,41 +85,36 @@ public class PostgrestConnector {
 	}
 
 	public void saveLanguagesData(LanguagesData languagesData) {
-		String json;
-		if (languagesData.languages() == null) {
-			json = String.format("{\"languages_scraped_at\": \"%s\"}", languagesData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		} else {
-			json = String.format("{\"languages\": %s, \"languages_scraped_at\": \"%s\"}", languagesData.languages(), languagesData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		}
+		String json = String.format("{\"languages_last_error\": null, \"languages\": %s, \"languages_scraped_at\": \"%s\"}", languagesData.languages(), languagesData.languagesScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + languagesData.basicData().software().toString(), json);
 	}
 
 	public void saveCommitData(CommitData commitData) {
 		String json;
 		if (commitData.commitHistory() == null) {
-			json = String.format("{\"commit_history_scraped_at\": \"%s\"}", commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+			json = String.format("{\"commit_history_last_error\": null, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		} else {
 			commitData.commitHistory().addMissingZeros();
-			json = String.format("{\"commit_history\": %s, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistory().toJson(), commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+			json = String.format("{\"commit_history_last_error\": null, \"commit_history\": %s, \"commit_history_scraped_at\": \"%s\"}", commitData.commitHistory().toJson(), commitData.commitHistoryScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		}
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + commitData.basicData().software().toString(), json);
 	}
 
 	public void saveBasicData(BasicGitDatabaseData basicData) {
 		JsonObject jsonObject = new JsonObject();
+		jsonObject.add("basic_data_last_error", JsonNull.INSTANCE);
 		jsonObject.addProperty("basic_data_scraped_at", basicData.dataScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		if (basicData.statsData() != null) {
-			jsonObject.addProperty("license", basicData.statsData().license);
-			jsonObject.addProperty("star_count", basicData.statsData().starCount);
-			jsonObject.addProperty("fork_count", basicData.statsData().forkCount);
-			jsonObject.addProperty("open_issue_count", basicData.statsData().openIssueCount);
-		}
+		jsonObject.addProperty("license", basicData.statsData().license);
+		jsonObject.addProperty("star_count", basicData.statsData().starCount);
+		jsonObject.addProperty("fork_count", basicData.statsData().forkCount);
+		jsonObject.addProperty("open_issue_count", basicData.statsData().openIssueCount);
 
 		Utils.patchAsAdmin(backendUrl + "?software=eq." + basicData.basicData().software().toString(), jsonObject.toString());
 	}
 
 	public void saveContributorCount(ContributorDatabaseData contributorData) {
 		JsonObject jsonObject = new JsonObject();
+		jsonObject.add("contributor_count_last_error", JsonNull.INSTANCE);
 		jsonObject.addProperty("contributor_count_scraped_at", contributorData.dataScrapedAt().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		if (contributorData.contributorCount() != null) {
 			jsonObject.addProperty("contributor_count", contributorData.contributorCount());

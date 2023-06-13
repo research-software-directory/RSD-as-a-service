@@ -36,10 +36,11 @@ public interface PackageManagerScraper {
 		try {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			return switch (response.statusCode()) {
-				case 429 -> throw new RsdRateLimitException("Rate limit reached for libraries.io");
+				case 429 -> throw new RsdRateLimitException(429, request.uri(), response.body(), "Rate limit reached for libraries.io");
+				case 404 -> throw new RsdResponseException(404, request.uri(), response.body(), "Not found, is the URL correct?");
 				case 200 -> response.body();
 				default ->
-						throw new RsdResponseException(response.statusCode(), "Unexpected response from " + response.uri() + ": " + response.body());
+						throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 			};
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);

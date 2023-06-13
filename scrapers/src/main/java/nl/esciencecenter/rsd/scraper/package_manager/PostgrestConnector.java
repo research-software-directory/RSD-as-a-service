@@ -43,18 +43,8 @@ public class PostgrestConnector {
 		Utils.patchAsAdmin(backendUrl + "?id=eq." + id, json);
 	}
 
-	public void saveDownloadScrapedAtOnly(UUID id, ZonedDateTime scrapedAt) {
-		String json = "{\"download_count_scraped_at\": \"%s\"}".formatted(scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		Utils.patchAsAdmin(backendUrl + "?id=eq." + id, json);
-	}
-
 	public void saveReverseDependencyCount(UUID id, Integer count, ZonedDateTime scrapedAt) {
 		String json = "{\"reverse_dependency_count\": %s, \"reverse_dependency_count_scraped_at\": \"%s\"}".formatted(count, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-		Utils.patchAsAdmin(backendUrl + "?id=eq." + id, json);
-	}
-
-	public void saveReverseDependencyScrapedAtOnly(UUID id, ZonedDateTime scrapedAt) {
-		String json = "{\"reverse_dependency_count_scraped_at\": \"%s\"}".formatted(scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		Utils.patchAsAdmin(backendUrl + "?id=eq." + id, json);
 	}
 
