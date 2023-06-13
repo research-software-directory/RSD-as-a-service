@@ -4,6 +4,7 @@
 -- SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -435,6 +436,7 @@ CREATE FUNCTION organisations_overview(public BOOLEAN DEFAULT TRUE) RETURNS TABL
 	parent UUID,
 	primary_maintainer UUID,
 	name VARCHAR,
+	short_description VARCHAR,
 	ror_id VARCHAR,
 	website VARCHAR,
 	is_tenant BOOLEAN,
@@ -454,6 +456,7 @@ SELECT
 	organisation.parent,
 	organisation.primary_maintainer,
 	organisation.name,
+	organisation.short_description,
 	organisation.ror_id,
 	organisation.website,
 	organisation.is_tenant,

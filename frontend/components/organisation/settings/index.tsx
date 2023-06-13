@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -33,7 +35,7 @@ export default function OrganisationSettings({organisation, isMaintainer}:
     watch, register, formState
   } = methods
   // const {isValid, isDirty} = formState
-  const [id,name,website]=watch(['id','name','website'])
+  const [id,name,website,short_description]=watch(['id','name','website','short_description'])
 
   // console.group('OrganisationSettings')
   // console.log('isDirty...', isDirty)
@@ -59,38 +61,50 @@ export default function OrganisationSettings({organisation, isMaintainer}:
       <input type="hidden"
         {...register('parent')}
       />
-      <section className="flex justify-between align-center">
-        <h2>Settings</h2>
-      </section>
-      <div className="flex pt-8"></div>
-        <section className="grid grid-cols-[1fr,1fr] gap-8">
-          <AutosaveOrganisationTextField
-            organisation_id={organisation.id}
-            options={{
-              name: 'name',
-              label: config.name.label,
-              useNull: true,
-              defaultValue: name,
-              helperTextMessage: config.name.help,
-              helperTextCnt: `${name?.length || 0}/${config.name.validation.maxLength.value}`,
-            }}
-            rules={config.name.validation}
-          />
-          <RorIdWithUpdate />
-        </section>
-        <div className="py-4"></div>
+
+      <h2 className="pb-8">Settings</h2>
+
+      <section className="grid grid-cols-[1fr,1fr] gap-8">
         <AutosaveOrganisationTextField
           organisation_id={organisation.id}
           options={{
-            name: 'website',
-            label: config.website.label,
+            name: 'name',
+            label: config.name.label,
             useNull: true,
-            defaultValue: website,
-            helperTextMessage: config.website.help,
-            helperTextCnt: `${website?.length || 0}/${config.website.validation.maxLength.value}`,
+            defaultValue: name,
+            helperTextMessage: config.name.help,
+            helperTextCnt: `${name?.length || 0}/${config.name.validation.maxLength.value}`,
           }}
-          rules={config.website.validation}
+          rules={config.name.validation}
         />
+        <RorIdWithUpdate />
+      </section>
+      <div className="py-4"></div>
+      <AutosaveOrganisationTextField
+        organisation_id={organisation.id}
+        options={{
+          name: 'website',
+          label: config.website.label,
+          useNull: true,
+          defaultValue: website,
+          helperTextMessage: config.website.help,
+          helperTextCnt: `${website?.length || 0}/${config.website.validation.maxLength.value}`,
+        }}
+        rules={config.website.validation}
+        />
+      <div className="py-4"></div>
+      <AutosaveOrganisationTextField
+        organisation_id={organisation.id}
+        options={{
+          name: 'short_description',
+          label: config.short_description.label,
+          useNull: true,
+          defaultValue: short_description,
+          helperTextMessage: config.short_description.help,
+          helperTextCnt: `${short_description?.length || 0}/${config.short_description.validation.maxLength.value}`,
+        }}
+        rules={config.short_description.validation}
+      />
       <div className="py-4"></div>
       {/* RSD admin section */}
       {user?.role === 'rsd_admin' ?
