@@ -8,25 +8,27 @@
 name: backend tests
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
       - "backend-postgrest/**"
       - "database/**"
+      - "backend-tests/**"
   pull_request:
     paths:
       - "backend-postgrest/**"
       - "database/**"
+      - "backend-tests/**"
 
 jobs:
   api-tests:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - name: "newman tests with docker compose"
-        working-directory: backend-postgrest/tests
+      - name: "backend tests with docker compose"
+        working-directory: backend-tests
         run: |
           docker compose up \
-            --abort-on-container-exit \
             --exit-code-from postgrest-tests
