@@ -7,18 +7,21 @@
 
 type CardTitleSubtitleProps = {
   title: string
-  subtitle:string
+  subtitle: string
 }
 
 export default function CardTitleSubtitle({title,subtitle}:CardTitleSubtitleProps) {
   return (
     <>
-    <h2 className="text-xl font-medium line-clamp-1 my-1">
+      <h2
+        title={title}
+        className="text-xl font-medium line-clamp-1 my-1"
+      >
       {title}
-    </h2>
-    <p className="text-base-700 line-clamp-3 break-words my-2">
-      {subtitle}
-    </p>
+      </h2>
+      <p className="text-base-700 line-clamp-3 break-words my-2">
+        {subtitle}
+      </p>
     </>
   )
 }

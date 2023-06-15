@@ -171,6 +171,8 @@ export type OrganisationList = {
   id:string
   parent: string | null
   name: string
+  short_description: string | null
+  country: string | null
   website: string | null
   is_tenant: boolean
   rsd_path: string
