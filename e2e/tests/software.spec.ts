@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -70,12 +72,8 @@ test.describe.serial('Software', async()=> {
     // publish the software
     await page.getByLabel('Published').check()
 
-    // find view page button
-    const viewPage = page.getByRole('button', {
-      name: 'view page'
-    })
     // open view page
-    await viewPage.click()
+    await page.getByTestId('view-page-button').click()
   })
 
   test('Edit contributors', async ({page}, {project}) => {

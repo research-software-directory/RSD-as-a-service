@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import NoContent from '~/components/layout/NoContent'
-import OrganisationCard, {OrganisationCardProps} from './OrganisationCard'
+import OrganisationCard, {OrganisationCardProps} from './card/OrganisationCard'
 
 export type OrganisationGridProps = {
   organisations: OrganisationCardProps[]
@@ -19,13 +19,15 @@ export default function OrganisationGrid({organisations}: OrganisationGridProps)
   }
 
   return (
-    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 my-12">
+    <section
+      data-testid="organisation-overview-grid"
+      className="my-12 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-[27rem]">
       {organisations.map((organisation) => (
         <OrganisationCard
           key={organisation.id}
           organisation={organisation}
         />
       ))}
-    </div>
+    </section>
   )
 }
