@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -74,7 +76,7 @@ export default function SoftwareOganisations() {
     // check if present by ror_id
     const found = organisations.find(org => org.ror_id === item.ror_id)
     if (item.ror_id && found) {
-      showInfoMessage(`${item.name} is already in the collection (based on ror_id).`)
+      showInfoMessage(`${item.name} is already in the collection (based on ROR ID).`)
       return
     }
     // add default values

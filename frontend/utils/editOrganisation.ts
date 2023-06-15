@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -75,7 +76,8 @@ export async function findRSDOrganisation({searchFor, token, rorIds}:
       const data: Organisation[] = await resp.json()
       const options: AutocompleteOption<SearchOrganisation>[] = data.map(item => {
         return {
-          key: item?.rsd_path ?? item?.ror_id ?? item?.slug ?? item.name,
+          // use ror_id as primary key in order to deduplicate against ROR api response
+          key: item?.ror_id ?? item?.rsd_path ?? item?.slug ?? item.name,
           label: item.name ?? '',
           data: {
             ...item,
