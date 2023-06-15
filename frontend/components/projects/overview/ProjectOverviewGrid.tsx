@@ -9,13 +9,7 @@
 import {ProjectListItem} from '~/types/Project'
 import ProjectGridCard from './cards/ProjectGridCard'
 
-export default function SoftwareOverviewGrid({projects = []}: { projects: ProjectListItem[] }) {
-  const grid={
-    height: '30rem',
-    minWidth: '18rem',
-    maxWidth: '1fr'
-  }
-
+export default function ProjectOverviewGrid({projects = []}: { projects: ProjectListItem[] }) {
   return (
     <section
       data-testid="project-overview-grid"

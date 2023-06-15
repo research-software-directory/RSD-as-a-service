@@ -17,6 +17,8 @@ import ProjectMetrics from './ProjectMetrics'
 import ProjectDuration from './ProjectDuration'
 import PeriodProgressBar from '~/components/charts/progress/PeriodProgressBar'
 import ResearchDomainTitle from './ResearchDomainTitle'
+import CardImageFrame from '~/components/cards/CardImageFrame'
+import CardContentFrame from '~/components/cards/CardContentFrame'
 
 type ProjectCardProps = {
   item: ProjectListItem
@@ -34,7 +36,7 @@ export default function ProjectGridCard({item}:ProjectCardProps){
       {/* Card content */}
       <div className="flex flex-col h-full transition overflow-hidden bg-base-100 shadow-md hover:shadow-lg rounded-md" >
         {/* Cover image */}
-        <div className="h-[37%] flex overflow-hidden relative bg-base-100">
+        <CardImageFrame>
           <ImageWithPlaceholder
             src={`${getImageUrl(item.image_id) ?? ''}`}
             alt={`Logo for ${item.title}`}
@@ -42,9 +44,9 @@ export default function ProjectGridCard({item}:ProjectCardProps){
             className={`w-full text-base-content-disabled ${item.image_contain ? 'p-4':''}`}
             bgSize={item.image_contain ? 'contain' : 'cover'}
           />
-        </div>
+        </CardImageFrame>
         {/* Card body */}
-        <div className="h-[63%] flex flex-col p-4">
+        <CardContentFrame>
           <ResearchDomainTitle
             domains={item.research_domain ?? []}
           />
@@ -86,7 +88,7 @@ export default function ProjectGridCard({item}:ProjectCardProps){
               output_cnt={item.output_cnt ?? 0}
             />
           </div>
-        </div>
+        </CardContentFrame>
       </div>
     </Link>
   )

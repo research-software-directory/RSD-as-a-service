@@ -20,6 +20,7 @@ export default function ViewPageButton({title,label,url,disabled}:ViewButtonProp
   const router = useRouter()
   return (
     <Button
+      data-testid="view-page-button"
       title={title}
       variant="text"
       startIcon={<ArticleOutlinedIcon />}
