@@ -7,13 +7,18 @@
 
 import {render, screen} from '@testing-library/react'
 
+import OrganisationsOverviewPage, {getServerSideProps} from '../pages/organisations/index'
 import {mockResolvedValue} from '../utils/jest/mockFetch'
+
+import {WithAppContext} from '~/utils/jest/WithAppContext'
 import organisationsOverview from './__mocks__/organisationsOverview.json'
-import {WrappedComponentWithProps} from '../utils/jest/WrappedComponents'
 
-import OrganisationIndexPage,{getServerSideProps} from '../pages/organisations/index'
-import {RsdUser} from '../auth'
-
+const mockProps = {
+  count: 408,
+  page: 1,
+  rows: 12,
+  organisations: organisationsOverview as any
+}
 
 describe('pages/organisations/index.tsx', () => {
   beforeEach(() => {
@@ -43,49 +48,40 @@ describe('pages/organisations/index.tsx', () => {
     })
   })
 
-  it('renders heading with the title Organisations', async() => {
-    render(WrappedComponentWithProps(
-      OrganisationIndexPage, {
-        props: {
-          count:200,
-          page:0,
-          rows:12,
-          organisations:organisationsOverview,
-        },
-        // user session
-        session:{
-          status: 'missing',
-          token: 'test-token',
-          user: {name:'Test user'} as RsdUser
-        }
-      }
-    ))
+  it('renders heading with the title Organisations', async () => {
+    render(
+      <WithAppContext>
+        <OrganisationsOverviewPage {...mockProps} />
+      </WithAppContext>
+    )
+
     const heading = await screen.findByRole('heading',{
       name: 'Organisations'
     })
     expect(heading).toBeInTheDocument()
   })
 
-  it('renders organisation name as card header h2', async() => {
-    render(WrappedComponentWithProps(
-      OrganisationIndexPage, {
-        props:{
-          count:3,
-          page:0,
-          rows:12,
-          organisations: organisationsOverview,
-        },
-        // user session
-        session:{
-          status: 'missing',
-          token: 'test-token',
-          user: {name:'Test user'} as RsdUser
-        }
-      }
-    ))
+  it('renders (24) grid cards', async () => {
+    mockProps.rows = 24
+    render(
+      <WithAppContext>
+        <OrganisationsOverviewPage {...mockProps} />
+      </WithAppContext>
+    )
+    const cards = screen.getAllByTestId('organisation-card-link')
+    expect(cards.length).toEqual(mockProps.organisations.length)
+  })
+
+  it('renders first organisation name', async() => {
+    render(
+      <WithAppContext>
+        <OrganisationsOverviewPage {...mockProps} />
+      </WithAppContext>
+    )
 
     const name = organisationsOverview[0].name
     const card = await screen.findByText(name)
     expect(card).toBeInTheDocument()
   })
+
 })
