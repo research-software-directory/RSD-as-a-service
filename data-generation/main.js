@@ -10,7 +10,7 @@
 
 import {faker} from '@faker-js/faker';
 import jwt from 'jsonwebtoken';
-import images from './images.js';
+import {images, logos} from './images.js';
 import {conceptDois, dois, packageManagerLinks} from './real-data.js';
 import fs from 'fs/promises';
 
@@ -118,7 +118,7 @@ async function generateSofware(amount=500) {
 			concept_doi: index < conceptDois.length ? conceptDois[index] : null,
 			description: faker.lorem.paragraphs(4, '\n\n'),
 			get_started_url: faker.internet.url(),
-			image_id: localImageIds[index%localImageIds.length],
+			image_id: localImageIds[index % localImageIds.length],
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 			short_statement: faker.commerce.productDescription()
 		});
@@ -350,7 +350,7 @@ async function generateProjects(amount=500) {
 			grant_id: faker.helpers.maybe(() => faker.helpers.replaceSymbols('******'), {probability: 0.8}) ?? null,
 			image_caption: faker.animal.cat(),
 			image_contain: !!faker.helpers.maybe(() => true, {probability: 0.5}),
-			image_id: localImageIds[index%localImageIds.length],
+			image_id: localImageIds[index % localImageIds.length],
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 		});
 	}
@@ -371,7 +371,7 @@ async function generateContributors(ids, amount=1000) {
 			affiliation: faker.company.name(),
 			role: faker.name.jobTitle(),
 			orcid: faker.helpers.replaceSymbolWithNumber('####-####-####-####'),
-			avatar_id: localImageIds[index%localImageIds.length],
+			avatar_id: localImageIds[index % localImageIds.length],
 		});
 	}
 
@@ -469,7 +469,7 @@ async function generateOrganisations(amount=500) {
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.05}),
 			country: faker.helpers.maybe(() => faker.address.country(), {probability: 0.8}) ?? null,
-			logo_id: localImageIds[index%localImageIds.length],
+			logo_id: localLogoIds[index % localLogoIds.length],
 		});
 	}
 
@@ -647,6 +647,7 @@ await postAccountsToBackend(100)
 	.then(() => console.log('accounts, login_for_accounts done'));
 
 const localImageIds = await getLocalImageIds(images);
+const localLogoIds = await getLocalImageIds(logos);
 
 let idsMentions, idsKeywords, idsResearchDomains;
 const mentionsPromise = postToBackend('/mention', generateMentions())
