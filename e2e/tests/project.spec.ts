@@ -1,20 +1,27 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {test, expect} from '@playwright/test'
 import {
-  addFundingOrganisation, addKeyword, addResearchDomain,
-  createProject, createProjectLink, createTeamMember, editProjectInput, importTeamMemberByOrcid, openEditTeamPage
+  addKeyword, addResearchDomain,
+  createProject, createProjectLink, createTeamMember, editProjectInput,
+  importTeamMemberByOrcid, openEditTeamPage
 } from '../helpers/project'
 import {mockProject} from '../mocks/mockProject'
-import {addOrganisation, addRelatedProject, addRelatedSoftware, openEditPage, openEditSection, uploadFile} from '../helpers/utils'
+import {
+  addRelatedProject, addRelatedSoftware,
+  openEditPage, openEditSection, uploadFile
+} from '../helpers/utils'
 import {getDusanMijatovic, getRandomPerson} from '../mocks/mockPerson'
 import {mockCitations} from '../mocks/mockCitations'
 import {addCitation} from '../helpers/citations'
 import {mockProjectOrganisation} from '../mocks/mockOrganisation'
+import {addFundingOrganisation, addOrganisation} from '../helpers/organisations'
 
 // run tests in serial mode
 // we first need first to create software
@@ -72,12 +79,8 @@ test.describe.serial('Project', async () => {
     // publish project
     await page.getByLabel('Published').check()
 
-    // take reference to view page button
-    const viewPage = page.getByRole('button', {
-      name: 'view page'
-    })
-    // just click on view page to close
-    await viewPage.click()
+    // open view page
+    await page.getByTestId('view-page-button').click()
   })
 
   test('Edit team members', async ({page}, {project}) => {

@@ -27,7 +27,7 @@ import OverviewPageBackground from '~/components/software/overview/PageBackgroun
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import MainContent from '~/components/layout/MainContent'
 
-type OrganisationsIndexPageProps = {
+type OrganisationsOverviewPageProps = {
   count: number,
   page: number,
   rows: number,
@@ -38,11 +38,18 @@ type OrganisationsIndexPageProps = {
 const pageTitle = `Organisations | ${app.title}`
 const pageDesc = 'List of organizations involved in the development of research software.'
 
-export default function OrganisationsIndexPage({
+export default function OrganisationsOverviewPage({
   organisations = [], count, page, rows, search
-}: OrganisationsIndexPageProps) {
+}: OrganisationsOverviewPageProps) {
   const {handleQueryChange} = useOrganisationOverviewParams()
   const numPages = Math.ceil(count / rows)
+
+  // console.group('OrganisationsOverviewPage')
+  // console.log('search...', search)
+  // console.log('page...', page)
+  // console.log('rows...', rows)
+  // console.log('organisations...', organisations)
+  // console.groupEnd()
 
   // next/previous page button
   function handleTablePageChange(
@@ -80,7 +87,7 @@ export default function OrganisationsIndexPage({
 
         <MainContent className="py-4">
           {/* Page title with search and pagination */}
-          <div className="px-4 rounded-lg bg-base-100 sticky top-0 border border-base-200">
+          <div className="px-4 rounded-lg bg-base-100 lg:sticky top-0 border border-base-200 z-[9]">
             <PageTitle title="Organisations">
               <div className="md:flex flex-wrap justify-end">
                 <div className="flex items-center lg:ml-4">
