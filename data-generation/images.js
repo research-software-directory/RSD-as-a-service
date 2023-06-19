@@ -28,7 +28,7 @@ export const images = [
 	'img/supportmale-svgrepo-com.svg'
 ];
 
-export const logos = [
+export const organisationLogos = [
 	'img/logos/AMOLF.jpg',
 	'img/logos/Amsterdamuniversitylogo.svg',
 	'img/logos/Eindhoven_University_of_Technology_logo_new.png',
@@ -38,4 +38,17 @@ export const logos = [
 	'img/logos/Radboud_Universiteit.jpg',
 	'img/logos/Sron-Logo_kleur_RGB.jpg',
 	'img/logos/UniversiteitLeidenLogo.svg'
+];
+
+export const softwareLogos = [
+	'img/software/Apache_Airavata_Logo.svg',
+	'img/software/Apache_Camel_Logo.svg',
+	'img/software/Apache_kafka.svg',
+	'img/software/Apache_Kylin_logo.svg',
+	'img/software/GNU_Compiler_Collection_logo.svg',
+	'img/software/ibis-logo.png',
+	'img/software/JavaGAT.png',
+	'img/software/manta_flipped.jpg',
+	'img/software/Tux.svg',
+	'img/software/Xenon_logo.svg'
 ];
