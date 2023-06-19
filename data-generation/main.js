@@ -10,7 +10,7 @@
 
 import {faker} from '@faker-js/faker';
 import jwt from 'jsonwebtoken';
-import {images, logos} from './images.js';
+import {images, organisationLogos, softwareLogos} from './images.js';
 import {conceptDois, dois, packageManagerLinks} from './real-data.js';
 import fs from 'fs/promises';
 
@@ -119,7 +119,8 @@ async function generateSofware(amount=500) {
 			get_started_url: faker.internet.url(),
 			image_id: localImageIds[index % localImageIds.length],
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
-			short_statement: faker.commerce.productDescription()
+			short_statement: faker.commerce.productDescription(),
+			image_id: localSoftwareLogoIds[index % localSoftwareLogoIds.length],
 		});
 	}
 
@@ -468,7 +469,7 @@ async function generateOrganisations(amount=500) {
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.05}),
 			country: faker.helpers.maybe(() => faker.address.country(), {probability: 0.8}) ?? null,
-			logo_id: localLogoIds[index % localLogoIds.length],
+			logo_id: localOrganisationLogoIds[index % localOrganisationLogoIds.length],
 		});
 	}
 
@@ -646,7 +647,8 @@ await postAccountsToBackend(100)
 	.then(() => console.log('accounts, login_for_accounts done'));
 
 const localImageIds = await getLocalImageIds(images);
-const localLogoIds = await getLocalImageIds(logos);
+const localOrganisationLogoIds = await getLocalImageIds(organisationLogos);
+const localSoftwareLogoIds = await getLocalImageIds(softwareLogos);
 
 let idsMentions, idsKeywords, idsResearchDomains;
 const mentionsPromise = postToBackend('/mention', generateMentions())
