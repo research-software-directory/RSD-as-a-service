@@ -118,10 +118,9 @@ async function generateSofware(amount=500) {
 			concept_doi: index < conceptDois.length ? conceptDois[index] : null,
 			description: faker.lorem.paragraphs(4, '\n\n'),
 			get_started_url: faker.internet.url(),
-			image_id: localImageIds[index % localImageIds.length],
+			image_id: faker.helpers.maybe(() => localSoftwareLogoIds[index % localSoftwareLogoIds.length], {probability: 0.8}) ?? null,
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 			short_statement: faker.commerce.productDescription(),
-			image_id: localSoftwareLogoIds[index % localSoftwareLogoIds.length],
 			closed_source: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 		});
 	}
@@ -352,7 +351,7 @@ async function generateProjects(amount=500) {
 			grant_id: faker.helpers.maybe(() => faker.helpers.replaceSymbols('******'), {probability: 0.8}) ?? null,
 			image_caption: faker.animal.cat(),
 			image_contain: !!faker.helpers.maybe(() => true, {probability: 0.5}),
-			image_id: localImageIds[index % localImageIds.length],
+			image_id: faker.helpers.maybe(() => localImageIds[index % localImageIds.length], {probability: 0.8}) ?? null,
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 		});
 	}
@@ -471,7 +470,7 @@ async function generateOrganisations(amount=500) {
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.05}),
 			country: faker.helpers.maybe(() => faker.address.country(), {probability: 0.8}) ?? null,
-			logo_id: localOrganisationLogoIds[index % localOrganisationLogoIds.length],
+			logo_id: faker.helpers.maybe(() => localOrganisationLogoIds[index % localOrganisationLogoIds.length], {probability: 0.8}) ?? null,
 		});
 	}
 
