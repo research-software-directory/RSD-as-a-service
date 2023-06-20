@@ -16,7 +16,7 @@ export const HighlightsCarousel = ({items=[]}: {items:SoftwareHighlight[]}) => {
   // card size + margin
   const cardMovement: number = 680
   const divRef =useRef<HTMLDivElement>(null)
-  const [distance, setDistance] = useState(500)
+  const [distance, setDistance] = useState(0)
 
   // Keep track of the current scroll position of the carousel.
   const [scrollPosition, setScrollPosition] = useState(0)
