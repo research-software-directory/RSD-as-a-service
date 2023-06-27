@@ -4,8 +4,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: EUPL-1.2
 
 /**
  * Types used in software pages (view/add/edit)
@@ -114,6 +116,26 @@ export type KeywordForSoftware = {
   action?: 'add' | 'create'
   // passed to save function for updating form value with uuid
   pos?: number
+}
+
+/**
+ * Categories
+ */
+
+export type CategoryID = string
+
+export type CategoryPath = CategoryID[]
+
+export type CategoryEntry = {
+  id: CategoryID
+  parent: CategoryID | null
+  short_name: string
+  name: string
+}
+
+export type CategoriesForSoftware = {
+  paths: CategoryPath[]
+  category_entries: Record<CategoryID, CategoryEntry>
 }
 
 /**

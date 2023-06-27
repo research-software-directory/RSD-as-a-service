@@ -2,8 +2,11 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: EUPL-1.2
 
 import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
@@ -204,6 +207,29 @@ export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token
   }catch(e:any){
     logger(`getKeywordsForSoftware: ${e?.message}`,'error')
     return null
+  }
+}
+
+export async function getCategoriesForSoftware(software_id: string, token?: string) {
+  return {
+    paths: [
+      [1, 2],
+      [10, 11],
+    ],
+    category_entries: {
+      1: {
+        id: 1, parent: null, short_name: "Research fields", name: "Research fields"
+      },
+      2: {
+        id: 2, parent: 1, short_name: "Energy", name: "Energy"
+      },
+      10: {
+        id: 10, parent: null, short_name: "POF IV", name: "Program-oriented Funding IV"
+      },
+      11: {
+        id: 11, parent: 10, short_name: "Energy System Design", name: "Energy System Design (Energy)"
+      },
+    }
   }
 }
 

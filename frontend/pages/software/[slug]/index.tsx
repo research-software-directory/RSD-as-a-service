@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: EUPL-1.2
 
 import {useEffect, useState} from 'react'
 import {GetServerSidePropsContext} from 'next'
@@ -37,6 +39,7 @@ import {
   getRemoteMarkdown,
   ContributorMentionCount,
   getKeywordsForSoftware,
+  getCategoriesForSoftware,
   getRelatedProjectsForSoftware,
   getReleasesForSoftware,
   SoftwareVersion,
@@ -49,6 +52,7 @@ import {getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
 import {getMentionsForSoftware} from '~/utils/editMentions'
 import {getParticipatingOrganisations} from '~/utils/editOrganisation'
 import {
+  CategoriesForSoftware,
   KeywordForSoftware, License, RepositoryInfo,
   SoftwareItem, SoftwareListItem
 } from '~/types/SoftwareTypes'
@@ -65,6 +69,7 @@ interface SoftwareIndexData extends ScriptProps{
   software: SoftwareItem
   releases: SoftwareVersion[]
   keywords: KeywordForSoftware[]
+  categories: CategoriesForSoftware
   licenseInfo: License[]
   repositoryInfo: RepositoryInfo
   softwareIntroCounts: ContributorMentionCount
@@ -82,7 +87,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   const [author, setAuthor] = useState('')
   // extract data from props
   const {
-    software, releases, keywords,
+    software, releases, keywords, categories,
     licenseInfo, repositoryInfo, softwareIntroCounts,
     mentions, testimonials, contributors,
     relatedSoftware, relatedProjects, isMaintainer,
@@ -105,7 +110,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...releases...', releases)
+   console.log('SoftwareIndexPage...releases...', categories)
   return (
     <>
       {/* Page Head meta tags */}
@@ -154,6 +159,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         description={software?.description ?? ''}
         description_type={software?.description_type}
         keywords={keywords}
+        categories={categories}
         licenses={licenseInfo}
         languages={repositoryInfo?.languages}
         repository={repositoryInfo?.url}
@@ -222,6 +228,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       getReleasesForSoftware(software.id,token),
       // keywords
       getKeywordsForSoftware(software.id,false,token),
+      // categories
+      getCategoriesForSoftware(software.id, false, token),
       // licenseInfo
       getLicenseForSoftware(software.id, false, token),
       // repositoryInfo: url, languages and commits
@@ -246,6 +254,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const [
       releases,
       keywords,
+      categories,
       licenseInfo,
       repositoryInfo,
       softwareIntroCounts,
@@ -264,6 +273,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         software,
         releases,
         keywords,
+        categories,
         licenseInfo,
         repositoryInfo,
         softwareIntroCounts,

@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: EUPL-1.2
 
-import {License, ProgramingLanguages, CodePlatform, KeywordForSoftware} from '../../types/SoftwareTypes'
+import {License, ProgramingLanguages, CodePlatform, KeywordForSoftware, CategoriesForSoftware} from '../../types/SoftwareTypes'
 import PageContainer from '../layout/PageContainer'
 import AboutStatement from './AboutStatement'
 import SoftwareKeywords from './SoftwareKeywords'
@@ -13,23 +14,25 @@ import AboutLanguages from './AboutLanguages'
 import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
 import SoftwareLogo from './SoftwareLogo'
+import SoftwareCategries from './SoftwareCategories'
 
 type AboutSectionType = {
   brand_name: string
   description: string
   description_type: 'link' | 'markdown'
   keywords: KeywordForSoftware[]
+  categories: CategoriesForSoftware
   licenses: License[]
   repository: string | null
   platform: CodePlatform
-  languages: ProgramingLanguages,
+  languages: ProgramingLanguages
   image_id: string | null
 }
 
 
 export default function AboutSection(props:AboutSectionType) {
   const {
-    brand_name = '', description = '', keywords, licenses,
+    brand_name = '', description = '', keywords, categories, licenses,
     repository, languages, platform, description_type = 'markdown',
     image_id
   } = props
@@ -58,6 +61,7 @@ export default function AboutSection(props:AboutSectionType) {
       </div>
       <div className="flex-1">
         {getSoftwareLogo()}
+        <SoftwareCategries categories={categories} />
         <SoftwareKeywords keywords={keywords || []} />
         <AboutLanguages languages={languages} platform={platform} />
         <AboutLicense license={license || []} />
