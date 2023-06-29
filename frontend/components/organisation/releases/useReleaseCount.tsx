@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,7 +15,7 @@ export type ReleaseCountByYear = {
 }
 
 type UseSoftwareReleaseProps = {
-  organisation_id: string,
+  organisation_id?: string,
   token: string
 }
 

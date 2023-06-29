@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +25,7 @@ import {
 import {MentionItemProps} from '~/types/Mention'
 import {Person} from '~/types/Contributor'
 import {ProjectOrganisationProps} from '~/types/Organisation'
-import {SoftwareListItem} from '~/types/SoftwareTypes'
+import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import AppHeader from '~/components/AppHeader'
 import EditPageButton from '~/components/layout/EditPageButton'
 import PageContainer from '~/components/layout/PageContainer'
@@ -51,7 +53,7 @@ export interface ProjectPageProps extends ScriptProps{
   output: MentionItemProps[],
   impact: MentionItemProps[],
   team: Person[],
-  relatedSoftware: SoftwareListItem[],
+  relatedSoftware: SoftwareOverviewItemProps[],
   relatedProjects: RelatedProject[]
 }
 

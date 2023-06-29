@@ -13,8 +13,6 @@ import ViewToggleGroup, {LayoutType} from './ViewToggleGroup'
 import SelectRows from './SelectRows'
 import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 
-// export type LayoutType = 'list'|'grid'|'masonry'
-
 type SearchSectionProps = {
   page: number
   rows: number

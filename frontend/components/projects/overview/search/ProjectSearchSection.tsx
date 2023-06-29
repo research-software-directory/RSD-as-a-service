@@ -13,8 +13,6 @@ import SelectRows from '~/components/software/overview/search/SelectRows'
 import ViewToggleGroup, {ProjectLayoutType} from './ViewToggleGroup'
 import useProjectOverviewParams from '../useProjectOverviewParams'
 
-// export type LayoutType = 'list'|'grid'|'masonry'
-
 type SearchSectionProps = {
   page: number
   rows: number
@@ -27,7 +25,7 @@ type SearchSectionProps = {
 }
 
 
-export default function SoftwareSearchSection({
+export default function ProjectSearchSection({
   search, placeholder, page, rows, count, layout,
   setView, setModal
 }: SearchSectionProps) {

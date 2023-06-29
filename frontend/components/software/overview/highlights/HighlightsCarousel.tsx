@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Jesus Garcia Gonzalez (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Jesus Garcia Gonzalez (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -74,7 +74,7 @@ export const HighlightsCarousel = ({items=[]}: {items:SoftwareHighlight[]}) => {
         {items.map(highlight => (
           <div key={highlight.id}
           className="snap-center flex-shrink-0 hover:scale-[101%] transition duration-500">
-            <HighlightsCard item={highlight}/>
+            <HighlightsCard {...highlight}/>
           </div>
         ))
       }

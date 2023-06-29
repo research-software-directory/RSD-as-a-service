@@ -35,7 +35,7 @@ export default function SoftwareMetrics({contributor_cnt, mention_cnt, downloads
 
 
   return (
-    <div className="flex gap-5">
+    <>
       <Tooltip title={contributorsMessage()} placement="top">
         <div className="flex gap-2 items-center">
           <ContributorIcon />
@@ -55,6 +55,6 @@ export default function SoftwareMetrics({contributor_cnt, mention_cnt, downloads
           <span className="text-sm">{downloads}</span>
         </div>
       }
-    </div>
+    </>
   )
 }

@@ -14,6 +14,7 @@ import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
 import CardImageFrame from '~/components/cards/CardImageFrame'
 import CardContentFrame from '~/components/cards/CardContentFrame'
 import CountryLabel from './CountryLabel'
+import TenantStatus from './TenantStatus'
 
 export type OrganisationCardProps = {
   id: string,
@@ -37,8 +38,7 @@ export default function OrganisationCard({organisation}: { organisation: Organis
       passHref
     >
       {/* Organization card content */}
-      <div className="flex flex-col transition overflow-hidden bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer select-none w-full">
-
+      <div className="flex flex-col transition overflow-hidden bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer select-none w-full relative">
         <CardImageFrame>
           <ImageWithPlaceholder
             src={`${getImageUrl(organisation.logo_id) ?? ''}`}
@@ -48,6 +48,7 @@ export default function OrganisationCard({organisation}: { organisation: Organis
             bgSize={'contain'}
           />
         </CardImageFrame>
+        <TenantStatus is_tenant={organisation.is_tenant} />
         <CardContentFrame>
           <div className="flex-1">
             <CountryLabel country={organisation.country} />
@@ -56,22 +57,7 @@ export default function OrganisationCard({organisation}: { organisation: Organis
               subtitle={organisation.short_description ?? ''}
             />
           </div>
-          {/*
-            //  Organization tenant, hidden until we have a beeter use case
-              organisation.is_tenant && <span title="Officially registered organisation">
-                <VerifiedIcon
-                  sx={{
-                    position: 'absolute',
-                    right: '0.5rem',
-                    top: '0.5rem',
-                    width: '1rem',
-                    height: '1rem',
-                    opacity: 0.4,
-                    color: 'primary.main'
-                  }}
-                /></span>
-          */}
-          <div className="flex gap-8 items-end text-center">
+          <div className="flex gap-8 justify-evenly text-center">
             <OrganisationCardMetrics
               software_cnt={organisation.software_cnt}
               project_cnt={organisation.project_cnt}

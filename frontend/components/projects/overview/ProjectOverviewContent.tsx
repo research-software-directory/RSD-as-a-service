@@ -5,35 +5,67 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import NoContent from '~/components/layout/NoContent'
-import {ProjectLayoutType} from './search/ViewToggleGroup'
-import ProjectOverviewGrid from './ProjectOverviewGrid'
-import ProjectOverviewList from './list/ProjectOverviewList'
+import Link from 'next/link'
 import {ProjectListItem} from '~/types/Project'
+import NoContent from '~/components/layout/NoContent'
+import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
+import {ProjectLayoutType} from './search/ViewToggleGroup'
+import ProjectOverviewList from './list/ProjectOverviewList'
+import ProjectCardContent from './cards/ProjectCardContent'
+import ProjectOverviewGrid from './cards/ProjectOverviewGrid'
+import ProjectListItemContent from './list/ProjectListItemContent'
 
-type SoftwareOverviewContentProps = {
+type ProjectOverviewContentProps = {
   layout: ProjectLayoutType
-  projects:ProjectListItem[]
+  projects: ProjectListItem[]
 }
 
-export default function SoftwareOverviewContent({layout, projects}: SoftwareOverviewContentProps) {
+export default function ProjectOverviewContent({layout, projects}: ProjectOverviewContentProps) {
 
   if (!projects || projects.length === 0) {
     return <NoContent />
   }
 
-  if (layout === 'grid') {
+  if (layout === 'list') {
     return (
-      <ProjectOverviewGrid
-        projects={projects}
-      />
+      <ProjectOverviewList>
+        {projects.map(item => {
+          return (
+            <OverviewListItem
+              key={item.id}
+            >
+              <Link
+                data-testid="project-list-item"
+                key={item.id}
+                href={`/projects/${item.slug}`}
+                className='flex-1 flex hover:text-inherit'
+              >
+                <ProjectListItemContent {...item} />
+              </Link>
+            </OverviewListItem>
+          )
+        })}
+      </ProjectOverviewList>
     )
   }
-
-  // LIST overview as default
+  // GRID as default
   return (
-    <ProjectOverviewList
-      projects={projects}
-    />
+    <ProjectOverviewGrid>
+      {projects.map(item => {
+        return (
+          <Link
+            key={item.id}
+            data-testid="project-grid-card"
+            href={`/projects/${item.slug}`}
+            className="h-full hover:text-inherit"
+          >
+            <ProjectCardContent
+              visibleKeywords={3}
+              {...item}
+            />
+          </Link>
+        )
+      })}
+    </ProjectOverviewGrid>
   )
 }

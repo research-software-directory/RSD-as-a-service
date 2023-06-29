@@ -11,11 +11,11 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
 import ListItemText from '@mui/material/ListItemText'
 
-import {SoftwareListItem} from '~/types/SoftwareTypes'
+import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import {getImageUrl} from '~/utils/editImage'
 
-export default function SoftwareOptionFound({option}: { option: AutocompleteOption<SoftwareListItem> }) {
+export default function SoftwareOptionFound({option}: { option: AutocompleteOption<SoftwareOverviewItemProps> }) {
 
   const {brand_name, contributor_cnt, mention_cnt, image_id, is_published} = option.data
 

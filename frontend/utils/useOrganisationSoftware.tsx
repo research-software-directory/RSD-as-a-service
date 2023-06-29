@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
 import {SoftwareOfOrganisation} from '../types/Organisation'
-import {getSoftwareForOrganisation, OrganisationApiParams} from './getOrganisations'
+import {getSoftwareForOrganisation, OrganisationApiParams} from '../components/organisation/apiOrganisations'
 
 type State = {
   count: number,

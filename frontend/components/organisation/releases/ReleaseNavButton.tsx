@@ -1,37 +1,31 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
-
 type ReleaseNavProps = {
-  year: string,
+  year: number,
+  selected: boolean
   release_cnt: number
+  onSelectYear: (year:number)=>void
 }
 
-export default function ReleaseNavButton({year, release_cnt}: ReleaseNavProps) {
-  const router = useRouter()
-  const release_year = router.query['release_year']
+export default function ReleaseNavButton({year,selected,release_cnt,onSelectYear}: ReleaseNavProps) {
+  // const router = useRouter()
+  // const release_year = router.query['release_year']
   let styles = {
     opacity: 0.6
   }
-  if (release_year && release_year === year) {
+  if (selected) {
     styles = {
       opacity: 1
     }
   }
 
   function navigateToYear() {
-    // do nothing if release_year already set
-    if (release_year && release_year === year) return
-    // change query
-    router.push({
-      query: {
-        ...router.query,
-        release_year: year
-      }
-    })
+    onSelectYear(year)
   }
 
   return (

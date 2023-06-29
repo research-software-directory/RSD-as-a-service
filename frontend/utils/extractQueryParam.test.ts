@@ -7,7 +7,7 @@
 
 import {ParsedUrlQuery} from 'node:querystring'
 import {
-  extractQueryParam, ssrSoftwareParams,
+  decodeQueryParam, ssrSoftwareParams,
   ssrProjectsParams, ssrOrganisationParams
 } from './extractQueryParam'
 
@@ -16,7 +16,7 @@ it('extracts rows param from url query', () => {
   const query: ParsedUrlQuery = {
     rows: '12'
   }
-  const rows = extractQueryParam({
+  const rows = decodeQueryParam({
     query,
     param: 'rows',
     defaultValue: 12,
@@ -29,7 +29,7 @@ it('extracts page param from url query', () => {
   const query: ParsedUrlQuery = {
     page: '1'
   }
-  const page = extractQueryParam({
+  const page = decodeQueryParam({
     query,
     param: 'page',
     defaultValue: 0,
@@ -44,7 +44,7 @@ it('extracts search param from url query', () => {
   const query: ParsedUrlQuery = {
     search: expected
   }
-  const search = extractQueryParam({
+  const search = decodeQueryParam({
     query,
     param: 'search',
     defaultValue: null,
@@ -59,7 +59,7 @@ it('extracts keywords as array from url query', () => {
   const query: ParsedUrlQuery = {
     keywords: encoded
   }
-  const keywords = extractQueryParam({
+  const keywords = decodeQueryParam({
     query,
     param: 'keywords',
     castToType: 'json-encoded',
@@ -70,7 +70,7 @@ it('extracts keywords as array from url query', () => {
 
 it('returns defaultValue when param not in url query', () => {
   const query: ParsedUrlQuery = {}
-  const rows = extractQueryParam({
+  const rows = decodeQueryParam({
     query,
     param: 'rows',
     defaultValue: 12,

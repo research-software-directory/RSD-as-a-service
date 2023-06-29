@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,6 +16,7 @@ export type IconBtnMenuOption<T> = {
   type: 'divider' | 'action'
   key: string,
   label: string,
+  icon?: JSX.Element,
   action: T
   disabled?: boolean,
 }
@@ -22,11 +25,16 @@ export type IconBtnMenuOnActionProps<T> = {
   options: IconBtnMenuOption<T>[]
   onAction: (action:T) => void
   IconComponent?: any
+  sx?: any
 }
 
-export default function IconBtnMenuOnAction({options, onAction,
+export default function IconBtnMenuOnAction({
+  options,
+  onAction,
   // default icon is MoreVericalIcon
-  IconComponent = MoreVertIcon}: IconBtnMenuOnActionProps<any>) {
+  IconComponent = MoreVertIcon,
+  sx
+}: IconBtnMenuOnActionProps<any>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
@@ -56,7 +64,8 @@ export default function IconBtnMenuOnAction({options, onAction,
             <MenuItem
               data-testid="icon-menu-option"
               key={item.label}
-              onClick={()=>handleAction(item.action)}>
+              onClick={() => handleAction(item.action)}>
+              {item.icon ? <span className="mr-2">{item.icon}</span> : null}
               {item.label}
             </MenuItem>
           )
@@ -75,9 +84,7 @@ export default function IconBtnMenuOnAction({options, onAction,
         aria-haspopup="true"
         aria-expanded={open ? 'true' : 'false'}
         onClick={handleClick}
-        sx={{
-          color: 'inherit'
-        }}
+        sx={sx}
       >
         <IconComponent/>
       </IconButton>

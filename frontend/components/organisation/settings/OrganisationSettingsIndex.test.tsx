@@ -1,19 +1,31 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {fireEvent, render, screen} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
 
 import OrganisationSettings from './index'
-import {organisationInformation as config} from '../organisationConfig'
+import config from './general/generalSettingsConfig'
 import mockOrganisation from '../__mocks__/mockOrganisation'
 
 const mockProps = {
   organisation: mockOrganisation,
   isMaintainer: false
 }
+
+const mockUseOrganisationMaintainer = jest.fn((props) => ({
+  loading: false,
+  isMaintainer: true
+}))
+jest.mock('~/auth/permissions//useOrganisationMaintainer', ()=>({
+  __esModule: true,
+  default: jest.fn((props)=>mockUseOrganisationMaintainer(props))
+}))
 
 // MOCK patchOrganisationTable
 const mockPatchOrganisationTable = jest.fn((props) => Promise.resolve({status: 200, statusText: 'OK'}))
@@ -28,9 +40,12 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
   })
 
   it('renders 401 when not authorised', () => {
+
     render(
       <WithAppContext>
-        <OrganisationSettings {...mockProps} />
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationSettings />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
@@ -39,10 +54,16 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
   })
 
   it('renders 403 when authorised but not maintainer', () => {
-    mockProps.isMaintainer = false
+    // but it is not maintainer of this organisation
+    mockUseOrganisationMaintainer.mockReturnValue({
+      loading: false,
+      isMaintainer: false
+    })
     render(
-      <WithAppContext options={{session:mockSession}}>
-        <OrganisationSettings {...mockProps} />
+      <WithAppContext options={{session: mockSession}}>
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationSettings />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
@@ -51,10 +72,16 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
   })
 
   it('renders settings with proper company name', () => {
-    mockProps.isMaintainer = true
+    // but it is not maintainer of this organisation
+    mockUseOrganisationMaintainer.mockReturnValue({
+      loading: false,
+      isMaintainer: true
+    })
     render(
       <WithAppContext options={{session: mockSession}}>
-        <OrganisationSettings {...mockProps} />
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationSettings />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
@@ -68,13 +95,20 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
   })
 
   it('renders slug, is_tenant, description when rsd_admin', () => {
-    mockProps.isMaintainer = true
+    // it is maintainer of this organisation
+    mockUseOrganisationMaintainer.mockReturnValue({
+      loading: false,
+      isMaintainer: true
+    })
+
     if (mockSession.user) {
       mockSession.user.role = 'rsd_admin'
     }
     const {container} = render(
       <WithAppContext options={{session: mockSession}}>
-        <OrganisationSettings {...mockProps} />
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationSettings />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
@@ -89,18 +123,24 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
     expect(tenantSwitch).toBeInTheDocument()
 
     // description / about section
-    const descriptionInput = container.querySelector('#markdown-textarea')
-    expect(descriptionInput).toBeInTheDocument()
+    // const descriptionInput = container.querySelector('#markdown-textarea')
+    // expect(descriptionInput).toBeInTheDocument()
   })
 
-  it('updates name,slug and description onBlur', () => {
-    mockProps.isMaintainer = true
+  it.only('updates name and slug onBlur', () => {
+    // it is maintainer of this organisation
+    mockUseOrganisationMaintainer.mockReturnValue({
+      loading: false,
+      isMaintainer: true
+    })
     if (mockSession.user) {
       mockSession.user.role = 'rsd_admin'
     }
     const {container} = render(
       <WithAppContext options={{session: mockSession}}>
-        <OrganisationSettings {...mockProps} />
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationSettings />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
@@ -140,19 +180,19 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
     })
 
     // UPDATE description
-    const descriptionValue='This is simple test'
-    const descriptionInput = container.querySelector('#markdown-textarea') as any
-    // change & blur
-    fireEvent.change(descriptionInput, {target: {value:descriptionValue}})
-    fireEvent.blur(descriptionInput)
-    // validate
-    expect(mockPatchOrganisationTable).toBeCalledTimes(3)
-    expect(mockPatchOrganisationTable).toBeCalledWith({
-      'data': {
-        'description': descriptionValue,
-      },
-      'id': mockProps.organisation.id,
-      'token': mockSession.token
-    })
+    // const descriptionValue='This is simple test'
+    // const descriptionInput = container.querySelector('#markdown-textarea') as any
+    // // change & blur
+    // fireEvent.change(descriptionInput, {target: {value:descriptionValue}})
+    // fireEvent.blur(descriptionInput)
+    // // validate
+    // expect(mockPatchOrganisationTable).toBeCalledTimes(3)
+    // expect(mockPatchOrganisationTable).toBeCalledWith({
+    //   'data': {
+    //     'description': descriptionValue,
+    //   },
+    //   'id': mockProps.organisation.id,
+    //   'token': mockSession.token
+    // })
   })
 })

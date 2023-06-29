@@ -8,13 +8,13 @@
 
 import {useCallback, useEffect, useState} from 'react'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {SoftwareListItem} from '~/types/SoftwareTypes'
+import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
-export type SoftwareHighlight = SoftwareListItem & {
+export type SoftwareHighlight = SoftwareOverviewItemProps & {
   position: number | null
 }
 

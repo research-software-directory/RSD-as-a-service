@@ -10,7 +10,7 @@ import {useRouter} from 'next/router'
 import {rowsPerPageOptions} from '~/config/pagination'
 import {ssrProjectsParams} from '~/utils/extractQueryParam'
 import {QueryParams, ssrProjectsUrl} from '~/utils/postgrestUrl'
-import {getDocumentCookie} from '~/components/software/overview/userSettings'
+import {getDocumentCookie} from '~/utils/userSettings'
 
 
 export default function useProjectOverviewParams() {
@@ -32,6 +32,7 @@ export default function useProjectOverviewParams() {
     }
     // construct url with all query params
     const url = ssrProjectsUrl(params)
+    // debugger
     if (key === 'page') {
       // when changin page we scroll to top
       router.push(url, url, {scroll: true})

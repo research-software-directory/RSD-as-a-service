@@ -5,14 +5,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import FilterHeader from '~/components/layout/filter/FilterHeader'
+import FilterHeader from '~/components/filter/FilterHeader'
 
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
 import useProjectOverviewParams from '../useProjectOverviewParams'
-import ProjectKeywordsFilter, {KeywordFilterOption} from './ProjectKeywordsFilter'
-import ResearchDomainFilter, {ResearchDomainOption} from './ResearchDomainFilter'
+import ProjectKeywordsFilter from './ProjectKeywordsFilter'
+import ProjectResearchDomainFilter from './ProjectResearchDomainFilter'
 import OrderProjectsBy from './OrderProjectsBy'
-import OrganisationFilter, {OrganisationOption} from './OrganisationFilter'
-
+import ProjectOrganisationsFilter, {OrganisationOption} from './ProjectOrganisationsFilter'
 
 type ProjectFiltersProps = {
   orderBy: string
@@ -62,12 +63,12 @@ export default function ProjectFilters({
         keywordsList={keywordsList}
       />
       {/* Research domains */}
-      <ResearchDomainFilter
+      <ProjectResearchDomainFilter
         domains={domains}
         domainsList={domainsList}
       />
-      {/* Research domains */}
-      <OrganisationFilter
+      {/* Participating organisations */}
+      <ProjectOrganisationsFilter
         organisations={organisations}
         organisationsList={organisationsList}
       />
