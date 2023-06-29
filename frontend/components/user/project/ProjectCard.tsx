@@ -20,10 +20,10 @@ export type ProjectCardProps = {
   subtitle: string | null,
   image_id: string | null,
   updated_at: string | null,
-  current_state: 'Starting' | 'Running' | 'Finished',
+  current_state?: 'Starting' | 'Running' | 'Finished',
   is_featured?: boolean,
   is_published?: boolean,
-  image_contain?: boolean,
+  image_contain?: boolean | null,
   menuSpace?: boolean,
 }
 

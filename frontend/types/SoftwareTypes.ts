@@ -65,7 +65,7 @@ export type SoftwareItemFromDB = SoftwareTableItem & {
   repository_url: RepositoryUrl
 }
 
-export type SoftwareListItem = {
+export type SoftwareOverviewItemProps = {
   id:string
   slug:string
   brand_name: string
@@ -77,7 +77,7 @@ export type SoftwareListItem = {
   image_id: string | null
   keywords: string[],
   prog_lang: string[],
-  liceses: string,
+  licenses: string,
   downloads?: number
 }
 

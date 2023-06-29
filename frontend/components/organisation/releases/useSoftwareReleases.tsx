@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
@@ -26,7 +27,7 @@ export type ReleaseCountByYear = {
 }
 
 type UseSoftwareReleaseProps = {
-  organisation_id: string,
+  organisation_id?: string,
   release_year?: string,
   token: string
 }
@@ -62,8 +63,8 @@ export default function useSoftwareRelease({organisation_id,release_year,token}:
 
   // console.group('useSoftwareRelease')
   // console.log('loading...', loading)
+  // console.log('organisation_id...', organisation_id)
   // console.log('releases...', releases)
-  // console.log('organisation_slug...', organisation_slug)
   // console.log('token...', token)
   // console.groupEnd()
 

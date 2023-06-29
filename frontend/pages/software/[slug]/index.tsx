@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -50,7 +52,7 @@ import {getMentionsForSoftware} from '~/utils/editMentions'
 import {getParticipatingOrganisations} from '~/utils/editOrganisation'
 import {
   KeywordForSoftware, License, RepositoryInfo,
-  SoftwareItem, SoftwareListItem
+  SoftwareItem, SoftwareOverviewItemProps
 } from '~/types/SoftwareTypes'
 import {Contributor} from '~/types/Contributor'
 import {Testimonial} from '~/types/Testimonial'
@@ -71,7 +73,7 @@ interface SoftwareIndexData extends ScriptProps{
   mentions: MentionItemProps[]
   testimonials: Testimonial[]
   contributors: Contributor[]
-  relatedSoftware: SoftwareListItem[]
+  relatedSoftware: SoftwareOverviewItemProps[]
   relatedProjects: RelatedProject[]
   isMaintainer: boolean,
   organisations: ParticipatingOrganisationProps[],

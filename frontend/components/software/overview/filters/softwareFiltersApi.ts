@@ -5,14 +5,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
 type SoftwareFilterProps = {
-  search?: string
-  keywords?: string[]
-  prog_lang?: string[]
-  licenses?: string[]
+  search?: string | null
+  keywords?: string[] | null
+  prog_lang?: string[] | null
+  licenses?: string[] | null
 }
 
 type SoftwareFilterApiProps = {
@@ -22,16 +25,10 @@ type SoftwareFilterApiProps = {
   license_filter?: string[]
 }
 
-export type KeywordFilterOption = {
-  keyword: string
-  keyword_cnt: number
-}
-
-
-function buildSoftwareFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
+export function buildSoftwareFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
   const filter: SoftwareFilterApiProps={}
   if (search) {
-    filter['search_filter']=search
+    filter['search_filter'] = search
   }
   if (keywords) {
     filter['keyword_filter'] = keywords
@@ -85,11 +82,6 @@ export async function softwareKeywordsFilter({search, keywords, prog_lang, licen
   }
 }
 
-export type LanguagesFilterOption = {
-  prog_language: string
-  prog_language_cnt: number
-}
-
 export async function softwareLanguagesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
   try {
     const query = 'rpc/software_languages_filter?order=prog_language'
@@ -124,12 +116,6 @@ export async function softwareLanguagesFilter({search, keywords, prog_lang, lice
     logger(`softwareLanguagesFilter: ${e?.message}`, 'error')
     return []
   }
-}
-
-
-export type LicensesFilterOption = {
-  license: string
-  license_cnt: number
 }
 
 export async function softwareLicesesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {

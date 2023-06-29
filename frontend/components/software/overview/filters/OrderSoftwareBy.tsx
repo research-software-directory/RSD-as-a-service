@@ -5,11 +5,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
 import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
+import OrderBy from '~/components/filter/OrderBy'
 
 export const softwareOrderOptions = [
   {key: 'contributor_cnt', label: 'Contributors', direction:'desc.nullslast'},
@@ -24,25 +21,10 @@ type OrderByProps = {
 export default function OrderSoftwareBy({orderBy}: OrderByProps) {
   const {handleQueryChange} = useSoftwareOverviewParams()
   return (
-    <FormControl
-      data-testid="filters-order-by"
-      fullWidth
-      size="small"
-    >
-      <InputLabel id="order-by-label">Order by</InputLabel>
-      <Select
-        labelId="order-by-label"
-        id="select-order-by"
-        value={orderBy}
-        label="Order by"
-        onChange={(e) => {
-          handleQueryChange('order', e.target.value)
-        }}
-      >
-        {
-          softwareOrderOptions.map(option => <MenuItem key={option.key} value={option.key}>{option.label}</MenuItem>)
-        }
-      </Select>
-    </FormControl>
+    <OrderBy
+      order={orderBy}
+      options={softwareOrderOptions}
+      handleQueryChange={handleQueryChange}
+    />
   )
 }

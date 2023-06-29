@@ -7,7 +7,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
-import {SoftwareListItem} from '~/types/SoftwareTypes'
 import {getImageUrl} from '~/utils/editImage'
 import KeywordList from '~/components/cards/KeywordList'
 import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
@@ -15,11 +14,23 @@ import ProgrammingLanguageList from '~/components/software/overview/cards/Progra
 import SoftwareMetrics from '~/components/software/overview/cards/SoftwareMetrics'
 import useValidateImageSrc from '~/utils/useValidateImageSrc'
 
-type SoftwareCardProps = {
-  item: SoftwareListItem
+type HighlightsCardProps = {
+  id:string
+  slug:string
+  brand_name: string
+  short_statement: string
+  // updated_at: string | null
+  contributor_cnt: number | null
+  mention_cnt: number | null
+  // is_published: boolean
+  image_id: string | null
+  keywords: string[],
+  prog_lang: string[],
+  licenses: string,
+  downloads?: number
 }
 
-export default function HighlightsCard({item}: SoftwareCardProps) {
+export default function HighlightsCard(item: HighlightsCardProps) {
   const imgSrc = getImageUrl(item.image_id ?? null)
   const validImg = useValidateImageSrc(imgSrc)
 
@@ -65,11 +76,13 @@ export default function HighlightsCard({item}: SoftwareCardProps) {
               visibleNumberOfProgLang={visibleNumberOfProgLang}
             />
             {/* Metrics */}
-            <SoftwareMetrics
-              contributor_cnt={item.contributor_cnt}
-              mention_cnt={item.mention_cnt}
-              downloads={item.downloads}
-            />
+            <div className="flex gap-4">
+              <SoftwareMetrics
+                contributor_cnt={item.contributor_cnt}
+                mention_cnt={item.mention_cnt}
+                downloads={item.downloads}
+              />
+            </div>
           </div>
         </div>
       </div>

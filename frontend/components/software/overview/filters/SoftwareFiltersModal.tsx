@@ -9,10 +9,12 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import SoftwareFilters from './index'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import {KeywordFilterOption, LanguagesFilterOption, LicensesFilterOption} from './softwareFiltersApi'
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
+import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import SoftwareFilters from './index'
 
 type SoftwareFiltersModalProps = {
   open: boolean,

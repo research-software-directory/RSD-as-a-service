@@ -22,11 +22,13 @@ import AppFooter from '~/components/AppFooter'
 import MainContent from '~/components/layout/MainContent'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import {getUserSettings, setDocumentCookie} from '~/components/software/overview/userSettings'
+import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
 import useProjectOverviewParams from '~/components/projects/overview/useProjectOverviewParams'
-import OverviewPageBackground from '~/components/software/overview/PageBackground'
-import FiltersPanel from '~/components/layout/filter/FiltersPanel'
-import {KeywordFilterOption} from '~/components/software/overview/filters/softwareFiltersApi'
+import PageBackground from '~/components/layout/PageBackground'
+import FiltersPanel from '~/components/filter/FiltersPanel'
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {OrganisationOption} from '~/components/filter/OrganisationsFilter'
+import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import {
@@ -35,12 +37,11 @@ import {
   projectParticipatingOrganisationsFilter
 } from '~/components/projects/overview/filters/projectFiltersApi'
 import {projectOrderOptions} from '~/components/projects/overview/filters/OrderProjectsBy'
-import {ResearchDomainOption} from '~/components/projects/overview/filters/ResearchDomainFilter'
-import {OrganisationOption} from '~/components/projects/overview/filters/OrganisationFilter'
 import ProjectFilters from '~/components/projects/overview/filters/ProjectFilters'
 import ProjectSearchSection from '~/components/projects/overview/search/ProjectSearchSection'
 import ProjectOverviewContent from '~/components/projects/overview/ProjectOverviewContent'
 import ProjectFiltersModal from '~/components/projects/overview/filters/ProjectFiltersModal'
+
 
 export type ProjectOverviewPageProps = {
   search?: string | null
@@ -127,7 +128,7 @@ export default function ProjectsOverviewPage({
         description={pageDesc}
       />
       <CanonicalUrl />
-      <OverviewPageBackground>
+      <PageBackground>
         {/* App header */}
         <AppHeader />
         <MainContent className='pb-12'>
@@ -140,7 +141,7 @@ export default function ProjectsOverviewPage({
             All projects
           </h1>
           {/* Page grid with 2 sections: left filter panel and main content */}
-          <div className="flex-1 flex w-full my-4 gap-8">
+          <div className="flex-1 grid md:grid-cols-[2fr,3fr] lg:grid-cols-[1fr,3fr] xl:grid-cols-[1fr,4fr] my-4 gap-8">
             {/* Filters panel large screen */}
             {smallScreen===false &&
               <FiltersPanel>
@@ -189,7 +190,7 @@ export default function ProjectsOverviewPage({
           </div>
         </MainContent>
         <AppFooter />
-      </OverviewPageBackground>
+      </PageBackground>
       {/* filter for mobile */}
       {
         smallScreen===true &&

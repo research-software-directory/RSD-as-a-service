@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
-import UnderlinedTitle from './UnderlinedTitle'
 
 export type LinksProps = {
   title: string,
@@ -18,31 +19,18 @@ export default function Links({links=[]}:{links:LinksProps[]}) {
 
     return (
       <>
-        <UnderlinedTitle title='Links' />
-        <ul>
         {links.map(item => {
           return (
-            <li
-              key={item.url}
-              style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                margin: '0.5rem 0rem'
-              }}
-            >
             <Link
               key={item.url}
               href={item.url}
               passHref
               target="_blank"
             >
-              {item.icon} {item.title}
+              <div className="flex gap-2">{item.icon} {item.title}</div>
             </Link>
-            </li>
           )
         })}
-        </ul>
       </>
     )
   } catch (e) {
