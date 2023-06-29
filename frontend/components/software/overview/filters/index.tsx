@@ -6,13 +6,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import FilterHeader from '~/components/layout/filter/FilterHeader'
+import FilterHeader from '~/components/filter/FilterHeader'
+import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 import OrderSoftwareBy from './OrderSoftwareBy'
 import SoftwareKeywordsFilter from './SoftwareKeywordsFilter'
-import ProgrammingLanguagesFilter from './ProgrammingLanguagesFilter'
-import LicensesFilter from './LicensesFilter'
-import {KeywordFilterOption, LanguagesFilterOption,LicensesFilterOption} from './softwareFiltersApi'
+import SoftwareLanguagesFilter from './SoftwareLanguagesFilter'
+import SoftwareLicensesFilter from './SoftwareLicensesFilter'
 
 export type LicenseWithCount = {
   license: string;
@@ -65,12 +67,12 @@ export default function SoftwareFilters({
         keywordsList={keywordsList}
       />
       {/* Programme Languages */}
-      <ProgrammingLanguagesFilter
+      <SoftwareLanguagesFilter
         prog_lang={languages}
         languagesList={languagesList}
       />
       {/* Licenses */}
-      <LicensesFilter
+      <SoftwareLicensesFilter
         licenses={licenses}
         licensesList={licensesList}
       />

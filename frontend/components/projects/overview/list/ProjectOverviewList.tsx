@@ -6,16 +6,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ProjectListItem} from '~/types/Project'
-import ProjectOverviewListItem from './ProjectOverviewListItem'
-
-export default function ProjectOverviewList({projects = []}: { projects: ProjectListItem[] }) {
+export default function ProjectOverviewList({children}: { children: JSX.Element | JSX.Element[]}) {
   return (
     <section
       data-testid="project-overview-list"
-      className="flex-1 mt-2"
+      className="flex-1 flex flex-col gap-2 mt-2"
     >
-      {projects.map(item => <ProjectOverviewListItem key={item.id} item={item}/>)}
+      {children}
     </section>
   )
 }

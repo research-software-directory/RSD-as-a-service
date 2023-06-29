@@ -8,7 +8,7 @@
 
 import {HTMLAttributes, useState} from 'react'
 
-import {SoftwareListItem} from '~/types/SoftwareTypes'
+import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {getBaseUrl} from '~/utils/fetchHelpers'
 import {getSoftwareList} from '~/utils/getSoftware'
 import {softwareListUrl} from '~/utils/postgrestUrl'
@@ -24,7 +24,7 @@ type AddSoftwareHighlightsProps = {
 }
 
 export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoftwareHighlightsProps) {
-  const [options, setOptions] = useState<AutocompleteOption<SoftwareListItem>[]>([])
+  const [options, setOptions] = useState<AutocompleteOption<SoftwareOverviewItemProps>[]>([])
   const [status, setStatus] = useState<{
     loading: boolean,
     foundFor: string | undefined
@@ -49,7 +49,7 @@ export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoft
     // remove items already in hightlights
     const software = itemsNotInReferenceList({
       list: resp.data ?? [],
-      referenceList: highlights as any as SoftwareListItem[] ?? [],
+      referenceList: highlights as any as SoftwareOverviewItemProps[] ?? [],
       key: 'id'
     })
 
@@ -68,7 +68,7 @@ export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoft
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<SoftwareListItem>,
+    option: AutocompleteOption<SoftwareOverviewItemProps>,
     state: object) {
     // when value is not not found option returns input prop
     if (option?.input) {
@@ -86,7 +86,7 @@ export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoft
     )
   }
 
-  function onAdd(selected:AutocompleteOption<SoftwareListItem>) {
+  function onAdd(selected:AutocompleteOption<SoftwareOverviewItemProps>) {
     if (selected && selected.data) {
       onAddSoftware(selected.data.id)
     }

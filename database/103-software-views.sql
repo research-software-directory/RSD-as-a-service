@@ -155,7 +155,7 @@ SELECT
 	software.image_id,
 	software.updated_at,
 	software.is_published,
-	count_software_countributors.contributor_cnt,
+	count_software_contributors.contributor_cnt,
 	count_software_mentions.mention_cnt,
 	keyword_filter_for_software.keywords,
 	keyword_filter_for_software.keywords_text,
@@ -167,7 +167,7 @@ FROM
 INNER JOIN
 	software_highlight ON software.id=software_highlight.software
 LEFT JOIN
-	count_software_countributors() ON software.id=count_software_countributors.software
+	count_software_contributors() ON software.id=count_software_contributors.software
 LEFT JOIN
 	count_software_mentions() ON software.id=count_software_mentions.software
 LEFT JOIN

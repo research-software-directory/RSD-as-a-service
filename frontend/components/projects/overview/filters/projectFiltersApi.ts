@@ -7,15 +7,15 @@
 
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
-import {KeywordFilterOption} from './ProjectKeywordsFilter'
-import {ResearchDomainOption} from './ResearchDomainFilter'
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
 
 export type ResearchDomainInfo = {
   key: string,
   name: string,
 }
 
-type DomainsFilterOption = {
+export type DomainsFilterOption = {
   domain: string,
   domain_cnt: number
 }
@@ -25,11 +25,11 @@ type ParicipatingOrganisationFilterOption = {
   organisation_cnt: string
 }
 
-type ProjectFilterProps = {
-  search?: string
-  keywords?: string[]
-  domains?: string[]
-  organisations?: string[]
+export type ProjectFilterProps = {
+  search?: string | null
+  keywords?: string[] | null
+  domains?: string[] | null
+  organisations?: string[] | null
 }
 
 type ProjectFilterApiProps = {
@@ -39,7 +39,7 @@ type ProjectFilterApiProps = {
   organisation_filter?: string[]
 }
 
-function buildProjectFilter({search, keywords, domains, organisations}: ProjectFilterProps) {
+export function buildProjectFilter({search, keywords, domains, organisations}: ProjectFilterProps) {
   const filter: ProjectFilterApiProps = {}
   if (search) {
     filter['search_filter'] = search
@@ -71,7 +71,7 @@ export async function projectKeywordsFilter({search, keywords, domains, organisa
       organisations
     })
 
-    // console.group('softwareKeywordsFilter')
+    // console.group('projectKeywordsFilter')
     // console.log('filter...', JSON.stringify(filter))
     // console.log('url...', url)
     // console.groupEnd()

@@ -9,7 +9,7 @@ import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-import {setDocumentCookie} from '../userSettings'
+import {setDocumentCookie} from '../../../../utils/userSettings'
 import {rowsPerPageOptions} from '~/config/pagination'
 
 type SelectRowsProps = {
@@ -17,7 +17,11 @@ type SelectRowsProps = {
   handleQueryChange: (key: string, value: string | string[]) => void
 }
 
-export default function SelectRows({rows,handleQueryChange}:SelectRowsProps) {
+export default function SelectRows({rows, handleQueryChange}: SelectRowsProps) {
+  // console.group('SelectRows')
+  // console.log('rows...',rows)
+  // console.log('rowsPerPageOptions...', rowsPerPageOptions)
+  // console.groupEnd()
   return (
     <FormControl
       size="small"
@@ -35,7 +39,7 @@ export default function SelectRows({rows,handleQueryChange}:SelectRowsProps) {
         id="select-rows"
         labelId="select-rows-label"
         variant="outlined"
-        value={rows ?? 12}
+        value={rows}
         // label="Items"
         onChange={({target}) =>{
           // console.log('rows...', target.value)

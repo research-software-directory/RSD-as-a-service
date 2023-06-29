@@ -11,9 +11,9 @@ import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import {ResearchDomainOption} from './ResearchDomainFilter'
-import {OrganisationOption} from './OrganisationFilter'
-import {KeywordFilterOption} from './ProjectKeywordsFilter'
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
+import {OrganisationOption} from './ProjectOrganisationsFilter'
 import ProjectFilters from './ProjectFilters'
 
 type ProjectFiltersModalProps = {
@@ -29,7 +29,7 @@ type ProjectFiltersModalProps = {
   setModal:(open:boolean)=>void
 }
 
-export default function SoftwareFiltersModal({
+export default function ProjectFiltersModal({
   open, keywords, keywordsList,
   domains, domainsList,
   organisations, organisationsList,

@@ -53,9 +53,9 @@ export type ProjectListItem = {
   is_published: boolean
   image_id: string | null
   image_contain: boolean
-  keywords: string[]
-  research_domain: string[]
-  participating_organisations: string[]
+  keywords: string[] | null
+  research_domain: string[] | null
+  participating_organisations?: string[]
   impact_cnt: number | null
   output_cnt: number | null
 }

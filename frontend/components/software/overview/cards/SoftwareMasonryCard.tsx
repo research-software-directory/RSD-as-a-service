@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
-import {SoftwareListItem} from '~/types/SoftwareTypes'
+import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {getImageUrl} from '~/utils/editImage'
 import useValidateImageSrc from '~/utils/useValidateImageSrc'
 import KeywordList from '~/components/cards/KeywordList'
@@ -16,7 +16,7 @@ import ProgrammingLanguageList from './ProgrammingLanguageList'
 import SoftwareMetrics from './SoftwareMetrics'
 
 type SoftwareCardProps = {
-  item: SoftwareListItem
+  item: SoftwareOverviewItemProps
 }
 
 export default function SoftwareMasonryCard({item}:SoftwareCardProps){
