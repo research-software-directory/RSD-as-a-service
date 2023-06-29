@@ -6,7 +6,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 type KeywordListProps = {
-  keywords?: string[]
+  keywords?: string[] | null
   visibleNumberOfKeywords?: number
 }
 

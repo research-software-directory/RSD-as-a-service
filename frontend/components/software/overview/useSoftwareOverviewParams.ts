@@ -11,7 +11,7 @@ import {useRouter} from 'next/router'
 import {rowsPerPageOptions} from '~/config/pagination'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {QueryParams, ssrSoftwareUrl} from '~/utils/postgrestUrl'
-import {getDocumentCookie} from './userSettings'
+import {getDocumentCookie} from '../../../utils/userSettings'
 
 export default function useSoftwareOverviewParams() {
   const router = useRouter()

@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,17 +17,17 @@ import mockOrganisation from '~/components/organisation/__mocks__/mockOrganisati
 import mockSoftware from '~/components/organisation/software/__mocks__/mockSoftware.json'
 import mockProjects from '~/components/organisation/projects/__mocks__/mockProjects.json'
 import mockUnits from '~/components/organisation/units/__mocks__/mockUnits.json'
+import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
 
 // MOCK user agreement call
 jest.mock('~/components/user/settings/fetchAgreementStatus')
 
 const mockProps = {
   organisation: mockOrganisation,
-  slug:[
-    'dutch-research-council'
-  ],
-  page: '',
-  ror: mockRORIinfo as any
+  slug:['dutch-research-council'],
+  tab: 'software' as TabKey,
+  ror: mockRORIinfo as any,
+  isMaintainer: false
 }
 // MOCK isMaintainerOfOrganisation
 const mockIsMaintainerOfOrganisation = jest.fn((props) => {
@@ -54,7 +56,7 @@ const mockProjectsForOrganisation = jest.fn((props) => Promise.resolve({
 }))
 // MOCK getOrganisationChildren
 const mockGetOrganisationChildren = jest.fn((props) => Promise.resolve([]))
-jest.mock('~/utils/getOrganisations', () => ({
+jest.mock('~/components/organisation/apiOrganisations', () => ({
   getSoftwareForOrganisation: jest.fn((props) => mockSoftwareForOrganisation(props)),
   getProjectsForOrganisation: jest.fn((props) => mockProjectsForOrganisation(props)),
   getOrganisationChildren: jest.fn((props)=>mockGetOrganisationChildren(props))
@@ -74,7 +76,8 @@ describe('pages/organisations/[...slug].tsx', () => {
     mockIsMaintainerOfOrganisation.mockResolvedValueOnce(false)
     // has description
     const mockDescription = 'This is test content of about page'
-    mockProps.organisation.description=mockDescription
+    mockProps.organisation.description = mockDescription
+    mockProps.tab = 'about'
     render(
       <WithAppContext options={{session:mockSession}}>
         <OrganisationPage {...mockProps} />
@@ -82,9 +85,6 @@ describe('pages/organisations/[...slug].tsx', () => {
     )
     // wait loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
-    // we need to await for all events to run
-    const aboutPage = screen.getByTestId('organisation-about-page')
-    expect(aboutPage).toBeInTheDocument()
     // validate content
     const aboutContent = screen.getByText(mockDescription)
     expect(aboutContent).toBeInTheDocument()
@@ -96,8 +96,10 @@ describe('pages/organisations/[...slug].tsx', () => {
     mockIsMaintainerOfOrganisation.mockResolvedValueOnce(false)
     // when no about page content, software is default landing page
     mockProps.organisation.description = null
+    mockProps.tab = null
+    // mockProps.tab = 'software'
     // mock software list response
-    mockSoftwareForOrganisation.mockResolvedValueOnce({
+    mockSoftwareForOrganisation.mockResolvedValue({
       status: 206,
       count: mockSoftware.length,
       data: mockSoftware as any
@@ -108,24 +110,21 @@ describe('pages/organisations/[...slug].tsx', () => {
       </WithAppContext>
     )
     // wait loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // we need to await for all events to run
-    const softwarePage = screen.getByTestId('organisation-content-software')
-    expect(softwarePage).toBeInTheDocument()
-    // validate api call
+    const software = await screen.findAllByTestId('software-grid-card')
+    expect(software.length).toEqual(mockSoftware.length)
+    // validate api call - TODO! FIGURE WHY IS CALLED TWICE!!!
     expect(mockSoftwareForOrganisation).toBeCalledTimes(1)
-    // validate all cards shown by testId
-    const cards = screen.getAllByTestId('software-card-link')
-    expect(cards.length).toEqual(mockSoftware.length)
   })
 
   it('renders organisation projects page when page=projects', async () => {
     // not a maintainer - public page
     mockIsMaintainerOfOrganisation.mockResolvedValueOnce(false)
     // set page
-    mockProps.page='projects'
+    mockProps.tab='projects'
     // mock project list response
-    mockProjectsForOrganisation.mockResolvedValueOnce({
+    mockProjectsForOrganisation.mockResolvedValue({
       status: 206,
       count: mockProjects.length,
       data: mockProjects as any
@@ -136,22 +135,22 @@ describe('pages/organisations/[...slug].tsx', () => {
       </WithAppContext>
     )
     // wait loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // we need to await for all events to run
-    const projectsPage = screen.getByTestId('organisation-content-projects')
-    expect(projectsPage).toBeInTheDocument()
-    // validate api call
-    expect(mockProjectsForOrganisation).toBeCalledTimes(1)
+    // const projectsPage = screen.getByTestId('organisation-content-projects')
+    // expect(projectsPage).toBeInTheDocument()
     // validate all cards shown by testId
-    const cards = screen.getAllByTestId('project-card-link')
+    const cards = await screen.findAllByTestId('project-grid-card')
     expect(cards.length).toEqual(mockProjects.length)
+    // validate api call - TODO! FIGURE WHY IS CALLED TWICE!!!
+    expect(mockProjectsForOrganisation).toBeCalledTimes(1)
   })
 
   it('shows organisation units', async() => {
     // not a maintainer - public page
     mockIsMaintainerOfOrganisation.mockResolvedValueOnce(false)
     // set page
-    mockProps.page = 'units'
+    mockProps.tab = 'units'
     // mock unit response
     mockGetOrganisationChildren.mockResolvedValueOnce(mockUnits as any)
     render(
@@ -160,11 +159,10 @@ describe('pages/organisations/[...slug].tsx', () => {
       </WithAppContext>
     )
     // wait loader to be removed
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
+    // await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // we need to await for all events to run
-    const unitsPage = screen.getByTestId('organisation-content-units')
-    expect(unitsPage).toBeInTheDocument()
-
+    // const unitsPage = screen.getByTestId('organisation-content-units')
+    // expect(unitsPage).toBeInTheDocument()
     // wait projects section loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 

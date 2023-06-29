@@ -9,15 +9,10 @@ import {useEffect, useState} from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 
-import FilterTitle from '../../../layout/filter/FilterTitle'
-import FilterOption from '../../../layout/filter/FilterOption'
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import FilterTitle from '~/components/filter/FilterTitle'
+import FilterOption from '~/components/filter/FilterOption'
 import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
-
-export type KeywordFilterOption = {
-  keyword: string
-  keyword_cnt: number
-}
-
 
 type SoftwareKeywordsFilterProps = {
   keywords: string[],

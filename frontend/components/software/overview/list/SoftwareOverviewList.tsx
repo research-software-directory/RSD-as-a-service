@@ -6,17 +6,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {SoftwareListItem} from '~/types/SoftwareTypes'
-import SoftwareOverviewListItem from './SoftwareOverviewListItem'
-
-export default function SoftwareOverviewList({software = []}: { software: SoftwareListItem[] }) {
-
+export default function SoftwareOverviewList({children}: { children: JSX.Element | JSX.Element[] }) {
   return (
     <section
       data-testid="software-overview-list"
-      className="flex-1 mt-2"
+      className="flex-1 flex flex-col gap-2 mt-2"
     >
-      {software.map(item => <SoftwareOverviewListItem key={item.id} item={item}/>)}
+      {children}
     </section>
   )
 }

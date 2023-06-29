@@ -10,7 +10,7 @@ import {useRouter} from 'next/router'
 import {rowsPerPageOptions} from '~/config/pagination'
 import {ssrOrganisationParams} from '~/utils/extractQueryParam'
 import {QueryParams, ssrOrganisationUrl} from '~/utils/postgrestUrl'
-import {getDocumentCookie} from '~/components/software/overview/userSettings'
+import {getDocumentCookie} from '~/utils/userSettings'
 
 
 export default function useOrganisationOverviewParams() {
