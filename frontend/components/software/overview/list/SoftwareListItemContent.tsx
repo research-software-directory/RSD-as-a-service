@@ -37,7 +37,7 @@ export default function SoftwareListItemContent(item:SoftwareOverviewListItemPro
         />
         :
         <div
-          className="w-12 self-stretch bg-gradient-to-br from-base-300 from-0% via-base-100 via-70% to-base-100"
+          className="w-12 self-stretch bg-gradient-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
         />
       }
       <div className="flex flex-col md:flex-row gap-3 flex-1 py-2">
