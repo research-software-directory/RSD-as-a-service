@@ -26,8 +26,7 @@ const typography = defaultSettings.theme.typography
 module.exports = {
   darkMode: 'class',
   plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/line-clamp'),
+    require('@tailwindcss/typography')
   ],
   content: [
     './auth/**/*.{js,ts,jsx,tsx}',
