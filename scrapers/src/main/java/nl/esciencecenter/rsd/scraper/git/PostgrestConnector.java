@@ -36,7 +36,7 @@ public class PostgrestConnector {
 	 */
 	public Collection<BasicRepositoryData> languagesData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=languages_scraped_at.asc.nullsfirst&limit=" + limit);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=languages_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("languages_scraped_at"));
 		return parseBasicJsonData(data);
 	}
 
@@ -48,7 +48,7 @@ public class PostgrestConnector {
 	 */
 	public Collection<BasicRepositoryData> commitData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("commit_history_scraped_at"));
 		return parseBasicJsonData(data);
 	}
 
@@ -60,13 +60,13 @@ public class PostgrestConnector {
 	 */
 	public Collection<BasicRepositoryData> statsData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" + limit);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("basic_data_scraped_at"));
 		return parseBasicJsonData(data);
 	}
 
 	public Collection<BasicRepositoryData> contributorData(int limit) {
 		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=contributor_count_scraped_at.asc.nullsfirst&limit=" + limit);
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=contributor_count_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("contributor_count_scraped_at"));
 		return parseBasicJsonData(data);
 	}
 

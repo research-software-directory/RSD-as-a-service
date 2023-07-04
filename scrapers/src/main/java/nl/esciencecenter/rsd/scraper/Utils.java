@@ -291,4 +291,9 @@ public class Utils {
 	public static Integer integerOrNull(JsonElement e) {
 		return e == null || !e.isJsonPrimitive() ? null : e.getAsInt();
 	}
+
+	public static String atLeastOneHourAgoFilter(String scrapedAtColumnName) {
+		String oneHourAgoEncoded = urlEncode(ZonedDateTime.now().minusHours(1).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		return "or=(%s.is.null,%s.lte.%s)".formatted(scrapedAtColumnName, scrapedAtColumnName, oneHourAgoEncoded);
+	}
 }
