@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {expect, Page} from '@playwright/test'
-import {Person} from '../mocks/mockPerson'
+import {listenForOrcidCalls, Person} from '../mocks/mockPerson'
 import {CreateSoftwareProps, MockedSoftware} from '../mocks/mockSoftware'
 import {Testimonial} from '../mocks/mockTestimonials'
 import {acceptUserAgreement} from './userAgreement'
@@ -258,6 +260,10 @@ export async function editFirstContact(page) {
 export async function createContact(page, contact: Person) {
   // find contributor input
   const findContributor = page.getByRole('combobox', {name: 'Find or add contributor'})
+
+  // fake api calls
+  await listenForOrcidCalls(page)
+
   // search for contact
   await Promise.all([
     page.waitForResponse(RegExp(contact.apiUrl)),

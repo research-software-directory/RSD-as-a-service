@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {expect, Page} from '@playwright/test'
-import {Person} from '../mocks/mockPerson'
+import {listenForOrcidCalls, Person} from '../mocks/mockPerson'
 import {MockedProject} from '../mocks/mockProject'
 import {CreateSoftwareProps} from '../mocks/mockSoftware'
 import {acceptUserAgreement} from './userAgreement'
@@ -97,35 +99,6 @@ export async function editProjectInput(page: Page, mockProject: MockedProject) {
     element: grantId,
     value: mockProject.grantId
   })
-}
-
-export async function addFundingOrganisation(page: Page, organisation: string) {
-  const fundingInput = page.getByRole('combobox', {name: 'Find funding organisation'})
-
-  // await page.pause()
-  await Promise.all([
-    page.waitForResponse(/api.ror.org\/organizations/),
-    page.waitForLoadState('networkidle'),
-    fundingInput.fill(organisation)
-  ])
-
-  // await page.pause()
-  // get list
-  const listbox = page.locator('#async-autocomplete-listbox')
-  // select all options
-  const options = listbox.getByRole('option')
-  const option = await options
-    .filter({
-      hasText: RegExp(organisation,'i')
-    })
-    .first()
-
-  await Promise.all([
-    // select first option
-    option.click(),
-    // wait for api update
-    page.waitForRequest(/\/project_for_organisation/)
-  ])
 }
 
 export async function createProjectLink(page: Page, {label, url}: { label: string, url: string }) {
@@ -285,6 +258,8 @@ export async function openEditTeamPage(page: Page) {
 export async function createTeamMember(page, contact: Person) {
   // const findContributor = page.getByLabel('Find or add team member')
   const findContributor = page.getByRole('combobox', {name: 'Find or add team member'})
+  // fake api response
+  await listenForOrcidCalls(page)
   // search for contact
   await Promise.all([
     page.waitForResponse(RegExp(contact.apiUrl)),
@@ -336,7 +311,8 @@ export async function createTeamMember(page, contact: Person) {
 export async function importTeamMemberByOrcid(page: Page, contact: Person) {
   // const findContributor = page.getByLabel('Find or add team member')
   const findContributor = page.getByRole('combobox', {name: 'Find or add team member'})
-
+  // fake api response
+  await listenForOrcidCalls(page)
   // search for contact
   await Promise.all([
     page.waitForResponse(RegExp(contact.apiUrl)),
@@ -349,6 +325,8 @@ export async function importTeamMemberByOrcid(page: Page, contact: Person) {
     page.waitForSelector('[role="dialog"]'),
     page.getByRole('option').first().click()
   ])
+  // add email
+  await page.getByLabel('Email').fill(contact.email)
   // save imported contact
   const saveBtn = page.getByRole('button', {
     name: 'Save'

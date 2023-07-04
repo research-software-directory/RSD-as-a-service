@@ -18,7 +18,6 @@ import {
 import {mockSoftware} from '../mocks/mockSoftware'
 import {getRandomPerson} from '../mocks/mockPerson'
 import {
-  addOrganisation,
   addRelatedProject,
   addRelatedSoftware,
   openEditPage,
@@ -29,6 +28,7 @@ import {Organisation, mockSoftwareOrganisation} from '../mocks/mockOrganisation'
 import {mockCitations} from '../mocks/mockCitations'
 import {addCitation} from '../helpers/citations'
 import {mockTestimonial} from '../mocks/mockTestimonials'
+import {addOrganisation} from '../helpers/organisations'
 
 // run tests in serial mode
 // we first need to create software
