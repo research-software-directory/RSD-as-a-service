@@ -85,8 +85,9 @@ export async function getOrganisationBySlug({slug, token}:
         token
       })
     ])
-    // if no uuid return
-    if (typeof uuid == 'undefined') return undefined
+    // if no uuid return undefined
+    // console.log('getOrganisationBySlug...uuid...', uuid)
+    if (typeof uuid === 'undefined' || uuid === null) return undefined
     // is this user maintainer of this organisation
     const isMaintainer = maintainerOf.includes(uuid)
     const [organisation, description] = await Promise.all([
@@ -110,26 +111,31 @@ export async function getOrganisationBySlug({slug, token}:
 }
 
 export async function getOrganisationIdForSlug({slug, token, frontend=false}:
-  { slug: string[], token: string, frontend?:boolean }) {
-  const path = slug.join('/')
-  let url = `${process.env.POSTGREST_URL}/rpc/slug_to_organisation`
-  if (frontend) {
-    url = '/api/v1/rpc/slug_to_organisation'
-  }
+  { slug: string[], token: string, frontend?: boolean }) {
+  try {
+    const path = slug.join('/')
+    let url = `${process.env.POSTGREST_URL}/rpc/slug_to_organisation`
+    if (frontend) {
+      url = '/api/v1/rpc/slug_to_organisation'
+    }
 
-  let resp = await fetch(url, {
-    method: 'POST',
-    headers: {
-      ...createJsonHeaders(token),
-    },
-    body: JSON.stringify({
-      'full_slug': path
+    let resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createJsonHeaders(token),
+      },
+      body: JSON.stringify({
+        'full_slug': path
+      })
     })
-  })
-  // cannot find organisation by slug
-  if (resp.status !== 200) return undefined
-  const uuid:string = await resp.json()
-  return uuid
+    // cannot find organisation by slug
+    if (resp.status !== 200) return undefined
+    const uuid:string = await resp.json()
+    return uuid
+  } catch (e:any) {
+    logger(`getOrganisationIdForSlug: ${e?.message}`, 'error')
+    return undefined
+  }
 }
 
 
