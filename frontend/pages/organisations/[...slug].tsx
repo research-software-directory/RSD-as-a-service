@@ -112,6 +112,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       slug: params?.slug as string[] ?? [],
       token: req?.cookies['rsd_token'] ?? ''
     })
+    // console.log('organisation...', organisation)
     if (typeof organisation == 'undefined'){
       // returning notFound triggers 404 page
       return {
