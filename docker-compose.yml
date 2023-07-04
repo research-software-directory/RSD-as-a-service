@@ -102,7 +102,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:1.18.1
+    image: rsd/frontend:2.0.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -214,7 +214,7 @@ services:
         - DUID
         - DGID
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend-dev:1.18.1
+    image: rsd/frontend-dev:2.0.0
     ports:
       - "3000:3000"
       - "9229:9229"
