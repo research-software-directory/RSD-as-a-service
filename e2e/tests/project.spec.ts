@@ -8,15 +8,20 @@
 
 import {test, expect} from '@playwright/test'
 import {
-  addFundingOrganisation, addKeyword, addResearchDomain,
-  createProject, createProjectLink, createTeamMember, editProjectInput, importTeamMemberByOrcid, openEditTeamPage
+  addKeyword, addResearchDomain,
+  createProject, createProjectLink, createTeamMember, editProjectInput,
+  importTeamMemberByOrcid, openEditTeamPage
 } from '../helpers/project'
 import {mockProject} from '../mocks/mockProject'
-import {addOrganisation, addRelatedProject, addRelatedSoftware, openEditPage, openEditSection, uploadFile} from '../helpers/utils'
+import {
+  addRelatedProject, addRelatedSoftware,
+  openEditPage, openEditSection, uploadFile
+} from '../helpers/utils'
 import {getDusanMijatovic, getRandomPerson} from '../mocks/mockPerson'
 import {mockCitations} from '../mocks/mockCitations'
 import {addCitation} from '../helpers/citations'
 import {mockProjectOrganisation} from '../mocks/mockOrganisation'
+import {addFundingOrganisation, addOrganisation} from '../helpers/organisations'
 
 // run tests in serial mode
 // we first need first to create software
