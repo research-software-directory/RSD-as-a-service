@@ -60,6 +60,12 @@ public class PostgrestConnector {
 		return parseBasicJsonData(data);
 	}
 
+	public Collection<BasicRepositoryData> contributorData(int limit) {
+		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=contributor_count_scraped_at.asc.nullsfirst&limit=" + limit);
+		return parseBasicJsonData(data);
+	}
+
 	static Collection<BasicRepositoryData> parseBasicJsonData(String data) {
 		JsonArray dataInArray = JsonParser.parseString(data).getAsJsonArray();
 		Collection<BasicRepositoryData> result = new ArrayList<>();
