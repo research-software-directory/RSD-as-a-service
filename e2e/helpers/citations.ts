@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -7,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 import {expect} from '@playwright/test'
-import fs from 'fs/promises'
+import {generateFileName, saveFile} from './save'
 
 export async function addCitation(page, input: string, waitForResponse: string) {
   // await page.pause()
@@ -20,7 +22,7 @@ export async function addCitation(page, input: string, waitForResponse: string) 
     await clearBtn.click()
   }
 
-  await listenToApiCalls(page,input)
+  await listenForDoiCalls(page,input)
 
   // start new search
   const findMention = await page.locator('#async-autocomplete').first()
@@ -64,27 +66,27 @@ export async function addCitation(page, input: string, waitForResponse: string) 
 }
 
 
-async function listenToApiCalls(page,input:string) {
+async function listenForDoiCalls(page,input:string) {
   // monitor api calls
   // console.log('input...', input)
   await page.route(`https://doi.org/doiRA/${input}`, async route => {
     // const url = route.request().url()
     // console.log('doi.org...url...', url)
-    const filename = `mocks/data/doi_${input.replaceAll('/', '_').replaceAll('.', '_') }.json`
+    const filename = `mocks/data/doi_${generateFileName(input)}.json`
     // mock route response with local data file
     await route.fulfill({path:filename})
   })
   await page.route(`https://api.crossref.org/works/${input}`, async route => {
     // const url = route.request().url()
     // console.log('crossref...url...', url)
-    const filename = `mocks/data/crossref_${input.replaceAll('/', '_').replaceAll('.', '_')}.json`
+    const filename = `mocks/data/crossref_${generateFileName(input)}.json`
     // mock route response with local data file
     await route.fulfill({path: filename})
   })
   await page.route('https://api.datacite.org/graphql', async route => {
     // const url = route.request().url()
     // console.log('datacite...url...', url)
-    const filename = `mocks/data/datacite_${input.replaceAll('/', '_').replaceAll('.', '_')}.json`
+    const filename = `mocks/data/datacite_${generateFileName(input)}.json`
     // mock route response with local data file
     await route.fulfill({path: filename})
   })
@@ -147,7 +149,7 @@ export async function generateJsonFromApiCalls(page, input: string) {
     const resp = await route.fetch()
     const json = await resp.json()
     // generate filename
-    const filename = `mocks/data/doi_${input.replaceAll('/', '_').replaceAll('.', '_')}.json`
+    const filename = `mocks/data/doi_${generateFileName(input)}.json`
     // save json
     saveFile(filename, JSON.stringify(json))
     // continue
@@ -159,7 +161,7 @@ export async function generateJsonFromApiCalls(page, input: string) {
     const resp = await route.fetch()
     const json = await resp.json()
     // generate filename
-    const filename = `mocks/data/crossref_${input.replaceAll('/', '_').replaceAll('.', '_')}.json`
+    const filename = `mocks/data/crossref_${generateFileName(input)}.json`
     // save json
     saveFile(filename, JSON.stringify(json))
     // continue
@@ -171,19 +173,10 @@ export async function generateJsonFromApiCalls(page, input: string) {
     const resp = await route.fetch()
     const json = await resp.json()
     // generate filename
-    const filename = `mocks/data/datacite_${input.replaceAll('/', '_').replaceAll('.', '_')}.json`
+    const filename = `mocks/data/datacite_${generateFileName(input)}.json`
     // save json
     saveFile(filename, JSON.stringify(json))
     // continue
     route.continue()
   })
-}
-
-async function saveFile(filename: string, data: string) {
-  try {
-    console.log('save file...', filename)
-    fs.writeFile(filename, data)
-  } catch (e) {
-    console.log(`saveFile...failed...${e.message}`)
-  }
 }
