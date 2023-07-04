@@ -1,52 +1,92 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
-import FlexibleGridSection, {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
-import {OrganisationComponentsProps} from '../OrganisationNavItems'
-import SearchAndPagination from '../SearchAndPagination'
-import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
-import OrganisationProjectCards from './OrganisationProjectsCards'
+import {useState,useEffect, useRef} from 'react'
 import Pagination from '@mui/material/Pagination'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
-export default function OrganisationProjects({organisation, isMaintainer}:OrganisationComponentsProps) {
-  const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions()
-  const {searchFor,page,rows,count,setCount,setPage} = usePaginationWithSearch(`Find project in ${organisation.name}`)
-  const pageCount = Math.ceil(count/rows)
+import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
+import FiltersPanel from '~/components/filter/FiltersPanel'
+import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import {setDocumentCookie} from '~/utils/userSettings'
+import useOrganisationContext from '../context/useOrganisationContext'
+import {useUserSettings} from '../context/UserSettingsContext'
+import OrgProjectFilters from './filters/OrgProjectFilters'
+import useOrganisationProjects from './useOrganisationProjects'
+import OrgSearchProjectSection from './search/OrgSearchProjectSection'
+import useProjectParams from './useProjectParams'
+import useQueryChange from './useQueryChange'
+import OrganisationProjectsOverview from './OrganisationProjectsOverview'
+
+export default function OrganisationProjects() {
+  const smallScreen = useMediaQuery('(max-width:767px)')
+  const {isMaintainer} = useOrganisationContext()
+  const {handleQueryChange} = useQueryChange()
+  const {page, rows} = useProjectParams()
+  const {rsd_page_layout} = useUserSettings()
+  // if masonry we change to grid
+  const initView = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
+  const {projects, count, loading} = useOrganisationProjects()
+  const [view, setView] = useState<ProjectLayoutType>(initView ?? 'grid')
+  const numPages = Math.ceil(count / rows)
+
+  // console.group('OrganisationProjects')
+  // console.log('projects...',projects)
+  // console.log('view...', view)
+  // console.log('count...', count)
+  // console.log('isMaintainer...',isMaintainer)
+  // console.groupEnd()
+
+  function setLayout(view: ProjectLayoutType) {
+    // update local view
+    setView(view)
+    // save to cookie
+    setDocumentCookie(view,'rsd_page_layout')
+  }
+
 
   return (
     <>
-      <SearchAndPagination title="Projects" />
-      {/* Only when maintainer */}
       {isMaintainer && <UserAgrementModal />}
-      {/* Project grid */}
-      <FlexibleGridSection
-        height={itemHeight}
-        minWidth={minWidth}
-        maxWidth={maxWidth}
-        className="gap-[0.125rem] p-[0.125rem] pt-2 pb-12"
-      >
-        <OrganisationProjectCards
-          organisation={organisation}
-          setCount={setCount}
-          searchFor={searchFor}
-          page={page}
-          rows={rows}
-          isMaintainer={isMaintainer}
-        />
-      </FlexibleGridSection>
-      <div className="flex flex-wrap justify-center">
-        {pageCount > 1 &&
-          <Pagination
-            size="large"
-            shape="rounded"
-            count={pageCount}
-            page={page + 1}
-            onChange={(e:any,page:number)=>setPage(page-1)}
-          />
+      {/* Page grid with 2 sections: left filter panel and main content */}
+      <div className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-4 mb-12">
+        {/* Filters panel large screen */}
+        {smallScreen === false &&
+          <FiltersPanel>
+            <OrgProjectFilters />
+          </FiltersPanel>
         }
+        {/* Search & main content section */}
+        <div className="flex-1">
+          <OrgSearchProjectSection
+            count={count}
+            layout={view}
+            setView={setLayout}
+          />
+          {/* Project overview/content */}
+          <OrganisationProjectsOverview
+            layout={view}
+            projects={projects}
+            loading={loading}
+            rows={rows}
+          />
+          {/* Pagination */}
+          {numPages > 1 &&
+            <div className="flex flex-wrap justify-center mt-8">
+              <Pagination
+                count={numPages}
+                page={page}
+                onChange={(_, page) => {
+                  handleQueryChange('page',page.toString())
+                }}
+              />
+            </div>
+          }
+        </div>
       </div>
     </>
   )

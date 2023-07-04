@@ -15,31 +15,32 @@ import {getBaseUrl} from '~/utils/fetchHelpers'
 import {softwareListUrl} from '~/utils/postgrestUrl'
 import {getSoftwareList} from '~/utils/getSoftware'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
-import {SoftwareListItem} from '~/types/SoftwareTypes'
+import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import MainContent from '~/components/layout/MainContent'
-import FiltersPanel from '~/components/layout/filter/FiltersPanel'
+import PageBackground from '~/components/layout/PageBackground'
+import FiltersPanel from '~/components/filter/FiltersPanel'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
+import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import {
   SoftwareHighlight,
   getSoftwareHighlights
 } from '~/components/admin/software-highlights/apiSoftwareHighlights'
 import SoftwareHighlights from '~/components/software/overview/SoftwareHighlights'
-import OverviewPageBackground from '~/components/software/overview/PageBackground'
 import SoftwareSearchSection from '~/components/software/overview/search/SoftwareSearchSection'
 import useSoftwareOverviewParams from '~/components/software/overview/useSoftwareOverviewParams'
 import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
 import SoftwareFilters from '~/components/software/overview/filters/index'
 import {
-  KeywordFilterOption, LanguagesFilterOption, LicensesFilterOption,
   softwareKeywordsFilter, softwareLanguagesFilter,
   softwareLicesesFilter
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
-import {getUserSettings, setDocumentCookie} from '~/components/software/overview/userSettings'
+import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
 import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 
@@ -57,7 +58,7 @@ type SoftwareOverviewProps = {
   rows: number,
   count: number,
   layout: LayoutType,
-  software: SoftwareListItem[],
+  software: SoftwareOverviewItemProps[],
   highlights: SoftwareHighlight[]
 }
 
@@ -130,7 +131,7 @@ export default function SoftwareOverviewPage({
       />
       {/* canonical url meta tag */}
       <CanonicalUrl />
-      <OverviewPageBackground>
+      <PageBackground>
         {/* App header */}
         <AppHeader />
         {/* Software Highlights Carousel */}
@@ -146,7 +147,7 @@ export default function SoftwareOverviewPage({
             All software
           </h1>
           {/* Page grid with 2 sections: left filter panel and main content */}
-          <div className="flex-1 flex w-full my-4 gap-8">
+          <div className="flex-1 grid md:grid-cols-[2fr,3fr] lg:grid-cols-[1fr,3fr] xl:grid-cols-[1fr,4fr] my-4 gap-8">
             {/* Filters panel large screen */}
             {smallScreen===false &&
               <FiltersPanel>
@@ -195,7 +196,7 @@ export default function SoftwareOverviewPage({
           </div>
         </MainContent>
         <AppFooter />
-      </OverviewPageBackground>
+      </PageBackground>
       {/* filter for mobile */}
       {
         smallScreen===true &&

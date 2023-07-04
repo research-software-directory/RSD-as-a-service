@@ -7,6 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {rowsPerPageOptions} from '~/config/pagination'
+import {encodeUrlQuery} from './extractQueryParam'
 
 export type OrderByProps<T, K extends keyof T> = {
   column: K,
@@ -39,15 +40,15 @@ export type PostgrestParams = baseQueryStringProps & {
 
 export type QueryParams={
   // query: ParsedUrlQuery
-  search?:string
-  order?: string,
-  keywords?:string[]
-  domains?:string[],
-  prog_lang?: string[],
-  licenses?: string[],
-  organisations?: string[],
-  page?:number,
-  rows?:number
+  search?:string | null
+  order?: string | null,
+  keywords?:string[] | null
+  domains?:string[] | null,
+  prog_lang?: string[] | null,
+  licenses?: string[] | null,
+  organisations?: string[] | null,
+  page?:number | null,
+  rows?:number | null
 }
 
 export function ssrSoftwareUrl(params:QueryParams){
@@ -68,41 +69,6 @@ export function ssrProjectsUrl(params: QueryParams) {
   return url
 }
 
-type BuildUrlQueryProps = {
-  query: string
-  param: string
-  value: string[]|string|number|undefined
-}
-
-function buildUrlQuery({query, param, value}: BuildUrlQueryProps) {
-  // if there is no value we return "" for query=no query
-  if (typeof value === 'undefined' || value === '') return query
-
-  // handle string value
-  if (typeof value === 'string') {
-    if (query) {
-      query += `&${param}=${encodeURIComponent(value)}`
-    } else {
-      query = `${param}=${encodeURIComponent(value)}`
-    }
-  } else if (Array.isArray(value) === true && (value as any)?.length > 0) {
-    // arrays are stringified
-    if (query) {
-      query += `&${param}=${encodeURIComponent(JSON.stringify(value))}`
-    } else {
-      query = `${param}=${encodeURIComponent(JSON.stringify(value))}`
-    }
-  } else if (typeof value === 'number') {
-    if (query) {
-      query += `&${param}=${encodeURIComponent(value)}`
-    } else {
-      query = `${param}=${encodeURIComponent(value)}`
-    }
-  }
-  // return build query
-  return query
-}
-
 
 export function buildFilterUrl(params: QueryParams, view:string) {
   const {
@@ -115,55 +81,55 @@ export function buildFilterUrl(params: QueryParams, view:string) {
   let query = ''
 
   // search
-  query = buildUrlQuery({
+  query = encodeUrlQuery({
     query,
     param: 'search',
     value: search
   })
   //keywords
-  query = buildUrlQuery({
+  query = encodeUrlQuery({
     query,
     param: 'keywords',
     value: keywords
   })
   // research domains
-  query = buildUrlQuery({
+  query = encodeUrlQuery({
     query,
     param: 'domains',
     value: domains
   })
   // programming languages
-  query = buildUrlQuery({
+  query = encodeUrlQuery({
     query,
     param: 'prog_lang',
     value: prog_lang
   })
   // licenses
-  query = buildUrlQuery({
+  query = encodeUrlQuery({
     query,
     param: 'licenses',
     value: licenses
   })
   // organisations
-  query = buildUrlQuery({
+  query = encodeUrlQuery({
     query,
     param: 'organisations',
     value: organisations
   })
   // sortBy
-  query = buildUrlQuery({
+  query = encodeUrlQuery({
     query,
     param: 'order',
     value: order
   })
   // page
-  query = buildUrlQuery({
+  query = encodeUrlQuery({
     query,
     param: 'page',
     value: page
   })
   // rows
-  query = buildUrlQuery({
+  query = encodeUrlQuery({
     query,
     param: 'rows',
     value: rows
@@ -193,8 +159,6 @@ export function paginationUrlParams({rows=12, page=0}:
 
 /**
  * Provides basic url query string for postgrest endpoints
- * @param '{keywords[], order, limit, offset}'
- * @returns string
  */
 export function baseQueryString(props: baseQueryStringProps) {
   const {keywords,domains,prog_lang,licenses,organisations,order,limit,offset} = props

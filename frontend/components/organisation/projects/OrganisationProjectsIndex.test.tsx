@@ -1,10 +1,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {fireEvent, render, screen, waitForElementToBeRemoved} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
 
 import OrganisationProjects from './index'
 import mockOrganisation from '../__mocks__/mockOrganisation'
@@ -19,13 +22,19 @@ const mockProps = {
 }
 
 // MOCK getProjectsForOrganisation
-const mockProjectsForOrganisation = jest.fn((props) => Promise.resolve({
-  status: 206,
+// const mockProjectsForOrganisation = jest.fn((props) => Promise.resolve({
+//   status: 206,
+//   count: 0,
+//   data: []
+// }))
+const mockUseOrganisationProjects = jest.fn((props) => ({
+  loading: false,
   count: 0,
-  data: []
+  projects: []
 }))
-jest.mock('~/utils/getOrganisations', () => ({
-  getProjectsForOrganisation: jest.fn((props)=>mockProjectsForOrganisation(props))
+jest.mock('~/components/organisation/projects/useOrganisationProjects', () => ({
+  __esModule: true,
+  default: jest.fn((props)=>mockUseOrganisationProjects(props))
 }))
 
 // MOCK patchProjectForOrganisation
@@ -47,52 +56,50 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
   it('shows no items icon when no data', async() => {
     render(
       <WithAppContext>
-        <OrganisationProjects {...mockProps} />
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationProjects />
+        </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
     const icon = screen.getByTestId('DoDisturbIcon')
     expect(icon).toBeInTheDocument()
   })
 
   it('shows project cards', async() => {
-    mockProjectsForOrganisation.mockResolvedValueOnce({
-      status: 206,
+    mockUseOrganisationProjects.mockReturnValueOnce({
+      loading: false,
       count: mockProjects.length,
-      data: mockProjects as any
+      projects: mockProjects as any
     })
     render(
       <WithAppContext>
-        <OrganisationProjects {...mockProps} />
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationProjects />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
-
-    const projects = screen.getAllByTestId('project-card-link')
+    const projects = screen.getAllByTestId('project-grid-card')
     expect(projects.length).toEqual(mockProjects.length)
   })
 
   it('shows project cards with menu', async () => {
     mockProps.isMaintainer=true
-    mockProjectsForOrganisation.mockResolvedValueOnce({
-      status: 206,
+    mockUseOrganisationProjects.mockReturnValueOnce({
+      loading: false,
       count: mockProjects.length,
-      data: mockProjects as any
+      projects: mockProjects as any
     })
 
     render(
       <WithAppContext>
-        <OrganisationProjects {...mockProps} />
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationProjects />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
-    //
-    const projects = screen.getAllByTestId('project-card-link')
-    expect(projects.length).toEqual(mockProjects.length)
     // get menu icons
     const moreIcon = screen.getAllByTestId('MoreVertIcon')
     expect(moreIcon.length).toEqual(mockProjects.length)
@@ -100,19 +107,20 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
 
   it('maintainer can PIN project', async () => {
     mockProps.isMaintainer=true
-    mockProjectsForOrganisation.mockResolvedValueOnce({
-      status: 206,
+    mockUseOrganisationProjects.mockReturnValueOnce({
+      loading: false,
       count: mockProjects.length,
-      data: mockProjects as any
+      projects: mockProjects as any
     })
 
     render(
-      <WithAppContext options={{session:mockSession}}>
-        <OrganisationProjects {...mockProps} />
+      <WithAppContext options={{session: mockSession}}>
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationProjects />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // get menu icons
     const moreIcons = screen.getAllByTestId('MoreVertIcon')
     expect(moreIcons.length).toEqual(mockProjects.length)
@@ -142,19 +150,19 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
   it('maintainer can UNPIN project', async () => {
     mockProps.isMaintainer = true
     mockProjects[0].is_featured = true
-    mockProjectsForOrganisation.mockResolvedValueOnce({
-      status: 206,
+    mockUseOrganisationProjects.mockReturnValueOnce({
+      loading: false,
       count: mockProjects.length,
-      data: mockProjects as any
+      projects: mockProjects as any
     })
 
     render(
-      <WithAppContext options={{session:mockSession}}>
-        <OrganisationProjects {...mockProps} />
+      <WithAppContext options={{session: mockSession}}>
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationProjects />
+        </WithOrganisationContext>
       </WithAppContext>
     )
-
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // get menu icons
     const moreIcons = screen.getAllByTestId('MoreVertIcon')
     expect(moreIcons.length).toEqual(mockProjects.length)
@@ -183,19 +191,20 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
 
   it('maintainer can DENY project affiliation', async () => {
     mockProps.isMaintainer=true
-    mockProjectsForOrganisation.mockResolvedValueOnce({
-      status: 206,
+    mockUseOrganisationProjects.mockReturnValueOnce({
+      loading: false,
       count: mockProjects.length,
-      data: mockProjects as any
+      projects: mockProjects as any
     })
 
     render(
-      <WithAppContext options={{session:mockSession}}>
-        <OrganisationProjects {...mockProps} />
+      <WithAppContext options={{session: mockSession}}>
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationProjects />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // get menu icons
     const moreIcons = screen.getAllByTestId('MoreVertIcon')
     expect(moreIcons.length).toEqual(mockProjects.length)
@@ -205,7 +214,7 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
 
     // select deny project menu option
     const actionBtn = screen.getByRole('menuitem', {
-      name: 'Deny affiliation'
+      name: 'Block affiliation'
     })
     // deny second project
     fireEvent.click(actionBtn)
@@ -222,22 +231,23 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
     })
   })
 
-  it('maintainer can APPROVE denied project affiliation', async () => {
+  it('maintainer can ALLOW project affiliation', async () => {
     mockProps.isMaintainer = true
     mockProjects[1].status = 'rejected_by_relation'
-    mockProjectsForOrganisation.mockResolvedValueOnce({
-      status: 206,
+    mockUseOrganisationProjects.mockReturnValueOnce({
+      loading: false,
       count: mockProjects.length,
-      data: mockProjects as any
+      projects: mockProjects as any
     })
 
     render(
-      <WithAppContext options={{session:mockSession}}>
-        <OrganisationProjects {...mockProps} />
+      <WithAppContext options={{session: mockSession}}>
+        <WithOrganisationContext {...mockProps}>
+          <OrganisationProjects />
+        </WithOrganisationContext>
       </WithAppContext>
     )
 
-    await waitForElementToBeRemoved(screen.getByRole('progressbar'))
     // get menu icons
     const moreIcons = screen.getAllByTestId('MoreVertIcon')
     expect(moreIcons.length).toEqual(mockProjects.length)
@@ -247,7 +257,7 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
 
     // select approve project menu option
     const actionBtn = screen.getByRole('menuitem', {
-      name: 'Approve affiliation'
+      name: 'Allow affiliation'
     })
     // approve second project
     fireEvent.click(actionBtn)

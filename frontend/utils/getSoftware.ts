@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from './logger'
-import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
+import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
@@ -27,7 +27,7 @@ export async function getSoftwareList({url,token}:{url:string,token?:string }){
     })
 
     if ([200,206].includes(resp.status)){
-      const json: SoftwareListItem[] = await resp.json()
+      const json: SoftwareOverviewItemProps[] = await resp.json()
       // set
       return {
         count: extractCountFromHeader(resp.headers),

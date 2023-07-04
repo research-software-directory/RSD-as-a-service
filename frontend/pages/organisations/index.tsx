@@ -16,14 +16,14 @@ import Searchbox from '../../components/form/Searchbox'
 import {OrganisationList} from '../../types/Organisation'
 import {rowsPerPageOptions} from '../../config/pagination'
 import {ssrOrganisationParams} from '../../utils/extractQueryParam'
-import {getOrganisationsList} from '../../utils/getOrganisations'
+import {getOrganisationsList} from '../../components/organisation/apiOrganisations'
 import PageMeta from '~/components/seo/PageMeta'
 import AppFooter from '~/components/AppFooter'
 import AppHeader from '~/components/AppHeader'
-import {getUserSettings, setDocumentCookie} from '~/components/software/overview/userSettings'
+import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
 import useOrganisationOverviewParams from '~/components/organisation/overview/useOrganisationOverviewParams'
 import OrganisationGrid from '~/components/organisation/overview/OrganisationGrid'
-import OverviewPageBackground from '~/components/software/overview/PageBackground'
+import PageBackground from '~/components/layout/PageBackground'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import MainContent from '~/components/layout/MainContent'
 
@@ -82,7 +82,7 @@ export default function OrganisationsOverviewPage({
       {/* canonical url meta tag */}
       <CanonicalUrl />
 
-      <OverviewPageBackground>
+      <PageBackground>
         <AppHeader />
 
         <MainContent className="py-4">
@@ -133,7 +133,7 @@ export default function OrganisationsOverviewPage({
 
         {/* App footer */}
         <AppFooter />
-      </OverviewPageBackground >
+      </PageBackground >
     </>
   )
 }

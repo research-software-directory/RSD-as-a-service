@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,6 +12,8 @@ import {createSoftware} from '../helpers/software'
 import {mockCitations} from '../mocks/mockCitations'
 import {openEditPage, openEditSection} from '../helpers/utils'
 import {saveCitation} from '../helpers/citations'
+import {mockSoftwareOrganisation} from '../mocks/mockOrganisation'
+import {saveOrganisation} from '../helpers/organisations'
 
 // run tests in serial mode
 // we first need first to create software
@@ -52,6 +56,25 @@ test.describe.serial('Software', async () => {
       for (const item of citations.dois.mention) {
         await saveCitation(page, item, 'mention_for_software')
       }
+    }
+  })
+
+  test('Generate organisations', async ({page}) => {
+    // get mock software for the browser
+    const proj = mockSoftware['chrome']
+    const organisations = mockSoftwareOrganisation['chrome'].map(item => item.name)
+
+    // directly open edit page
+    const url = `/software/${proj.slug}`
+    await openEditPage(page, url, proj.title)
+
+    // navigate to organisations section
+    await openEditSection(page, 'Organisations')
+
+    // create organisations
+    for (const org of organisations) {
+      const saved = await saveOrganisation(page, org)
+      expect(saved).toBeTruthy()
     }
   })
 })

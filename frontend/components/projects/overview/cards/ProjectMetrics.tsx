@@ -32,7 +32,7 @@ export default function ProjectMetrics({impact_cnt, output_cnt}: ProjectMetricsP
   }
 
   return (
-    <div className="flex gap-5">
+    <>
       <Tooltip title={impactCntMessage()} placement="top">
         <div className="flex gap-2 items-center">
           <ImpactIcon />
@@ -45,6 +45,6 @@ export default function ProjectMetrics({impact_cnt, output_cnt}: ProjectMetricsP
           <span className="text-sm">{output_cnt || 0}</span>
         </div>
       </Tooltip>
-    </div>
+    </>
   )
 }

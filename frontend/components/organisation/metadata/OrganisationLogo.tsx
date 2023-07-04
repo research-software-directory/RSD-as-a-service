@@ -1,32 +1,33 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent, useEffect, useState} from 'react'
-
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
+import {useEffect, useState} from 'react'
 
 import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import {patchOrganisation} from '../../../utils/editOrganisation'
 import LogoAvatar from '~/components/layout/LogoAvatar'
-import IconButton from '@mui/material/IconButton'
 import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
-import {handleFileUpload} from '~/utils/handleFileUpload'
+import OrganisationLogoMenu from './OrganisationLogoMenu'
+import useOrganisationContext from '../context/useOrganisationContext'
 
 type OrganisationLogoProps = {
-  id: string
-  logo_id: string | null
-  name: string
   isMaintainer: boolean
 }
 
-export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
-  OrganisationLogoProps) {
+export type ImageDataProps = {
+  data: string,
+  mime_type: string
+}
+
+export default function OrganisationLogo({isMaintainer}:OrganisationLogoProps) {
   const {token} = useSession()
-  const {showWarningMessage,showErrorMessage} = useSnackbar()
+  const {id,name,logo_id} = useOrganisationContext()
+  const {showErrorMessage} = useSnackbar()
   // currently shown image
   const [logo, setLogo] = useState<string|null>(null)
 
@@ -44,23 +45,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
     if (logo_id) setLogo(logo_id)
   },[logo_id])
 
-  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
-    if (typeof e !== 'undefined') {
-      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
-      if (status === 200 && image_b64 && image_mime_type) {
-        addLogo({
-          data: image_b64,
-          mime_type: image_mime_type
-        })
-      } else if (status===413) {
-        showWarningMessage(message)
-      } else {
-        showErrorMessage(message)
-      }
-    }
-  }
-
-  async function addLogo({data, mime_type}: { data: string, mime_type: string }) {
+  async function addLogo({data, mime_type}: ImageDataProps) {
     // split base64 to use only encoded content
     const b64data = data.split(',')[1]
     const resp = await upsertImage({
@@ -69,7 +54,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
       token
     })
     // console.log('addLogo...resp...', resp)
-    if (resp.status === 201) {
+    if (resp.status === 201 && id) {
       // update logo_id reference
       const patch = await patchOrganisation({
         data: {
@@ -102,7 +87,7 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
   }
 
   async function removeLogo() {
-    if (logo && token) {
+    if (logo && token && id) {
       // remove logo_id from organisation
       const resp = await patchOrganisation({
         data: {
@@ -125,58 +110,28 @@ export default function OrganisationLogo({id,name,logo_id,isMaintainer}:
     }
   }
 
-  function renderAvatar() {
-    return (
+  return (
+    <>
       <LogoAvatar
-        name={name}
+        name={name ?? ''}
         src={getImageUrl(logo) ?? undefined}
-      />
-    )
-  }
+        sx={{
+          backgroundColor: logo ? 'inherit' : 'text.disabled',
+          height: '10rem',
+          'img': {
+            objectFit: 'contain',
+            objectPosition: 'center'
+          }
+        }}
+        />
+      {isMaintainer &&
+        <OrganisationLogoMenu
+          logo={logo}
+          onAddLogo={addLogo}
+          onRemoveLogo={removeLogo}
+        />
+      }
+    </>
+  )
 
-  if (isMaintainer) {
-    return (
-      <div className="pt-12 pb-2 flex relative">
-        {renderAvatar()}
-        <div style={{
-          position: 'absolute',
-          top: '0rem',
-          right: '0rem'
-        }}>
-          <label htmlFor="upload-avatar-image"
-            // style={{cursor:'pointer'}}
-            title="Click to upload an image"
-          >
-            <input
-              data-testid="organisation-logo-input"
-              id="upload-avatar-image"
-              type="file"
-              accept="image/*"
-              onChange={onFileUpload}
-              style={{display:'none'}}
-            />
-            <IconButton
-              title="Change logo"
-              component="span"
-              sx={{
-                marginRight:'0.25rem'
-              }}
-              >
-              <EditIcon />
-            </IconButton>
-          </label>
-          <IconButton
-            title="Remove logo"
-            // color='primary'
-            disabled={logo===null}
-            onClick={removeLogo}
-          >
-            <DeleteIcon/>
-          </IconButton>
-        </div>
-      </div>
-    )
-  }
-
-  return renderAvatar()
 }
