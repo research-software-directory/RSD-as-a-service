@@ -5,8 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import CaretIcon from '~/components/icons/caret.svg'
-import * as React from 'react'
+// import * as React from 'react'
 import {useState} from 'react'
 import {MailOutlineOutlined} from '@mui/icons-material'
 import Dialog from '@mui/material/Dialog'
@@ -15,6 +14,7 @@ import {useTheme} from '@mui/material/styles'
 import LinkIcon from '@mui/icons-material/Link'
 import WebIcon from '@mui/icons-material/Web'
 import Divider from '@mui/material/Divider'
+import CaretIcon from '~/components/icons/caret.svg'
 import getBrowser from '~/utils/getBrowser'
 
 export default function FeedbackPanelButton({feedback_email, issues_page_url, closeFeedbackPanel}:
@@ -124,9 +124,7 @@ User Agent: ${navigator.userAgent}`
             </div>
             <div className="text-sm mt-8 mb-6 text-[#B7B7B7]">
               We will send your feedback using your default email application,
-              or you can open a new <a className="text-primary"
-                                       href={issues_page_url}
-                                       target="_blank" rel="noreferrer">
+              or you can open a new <a className="text-primary" href={issues_page_url} target="_blank" rel="noreferrer">
               issue</a>
             </div>
           </div>

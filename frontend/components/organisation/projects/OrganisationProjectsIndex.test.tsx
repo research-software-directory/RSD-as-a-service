@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {fireEvent, render, screen, waitForElementToBeRemoved} from '@testing-library/react'
+import {fireEvent, render, screen} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
 

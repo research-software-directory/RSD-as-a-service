@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,7 +12,6 @@ import {WithFormContext} from '~/utils/jest/WithFormContext'
 import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 
 import AutosaveSoftwareMarkdown from './AutosaveSoftwareMarkdown'
-import {softwareInformation as config} from '../editSoftwareConfig'
 
 // MOCK patchSoftwareTable
 const mockPatchSoftwareTable = jest.fn(props => Promise.resolve('OK'))

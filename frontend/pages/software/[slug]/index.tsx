@@ -60,7 +60,6 @@ import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
 import NoContent from '~/components/layout/NoContent'
-import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string

@@ -6,12 +6,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 type RorLocationProps = {
-  name: string,
   city: string | null
   country: string | null
 }
 
-export default function RorLocation({name, city, country}: RorLocationProps) {
+export default function RorLocation({city, country}: RorLocationProps) {
   try {
 
     if (city === null && country === null) return null

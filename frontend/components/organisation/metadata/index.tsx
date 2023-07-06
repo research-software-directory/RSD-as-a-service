@@ -97,7 +97,6 @@ export default function OrganisationMetadata({ror_info}: OrganisationMetadataPro
             {name}
           </h1>
           <RorLocation
-            name={name ?? ''}
             city={ror_info?.addresses[0].city ?? null}
             country={ror_info?.country.country_name ?? country ?? null}
           />

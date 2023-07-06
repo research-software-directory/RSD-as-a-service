@@ -6,7 +6,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import {useRouter} from 'next/router'
 
 import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -20,7 +19,6 @@ import ScrollToTopButton from './ScrollToTopButton'
 import useReleaseCount from './useReleaseCount'
 
 export default function SoftwareReleases() {
-  const router = useRouter()
   const {token} = useSession()
   const {id} = useOrganisationContext()
   const {loading, countsByYear} = useReleaseCount({

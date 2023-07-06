@@ -6,8 +6,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CurrentState} from './Project'
-
 // based on ENUMS defined in 012-inter-relation-tables.sql
 export type Status = 'rejected_by_origin' | 'rejected_by_relation' | 'approved'
 export type OrganisationRole = 'participating' | 'funding' | 'hosting'

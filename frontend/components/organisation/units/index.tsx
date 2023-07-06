@@ -14,7 +14,6 @@ import Button from '@mui/material/Button'
 
 import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
-import ContentLoader from '../../layout/ContentLoader'
 import {
   columsForCreate, columsForUpdate, CoreOrganisationProps,
   EditOrganisation, Organisation, OrganisationForOverview
