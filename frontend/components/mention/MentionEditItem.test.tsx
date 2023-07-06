@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,6 +40,7 @@ const mockItem:MentionItemProps = {
   publisher: 'test publisher here',
   publication_year: 2020,
   page: '100-200',
+  journal: null,
   // url to external image
   image_url: null,
   mention_type: 'bookSection',
@@ -82,6 +85,7 @@ it('dispatch confirmDelete on delete click', () => {
         'doi': null,
         'id': 'test-id-1',
         'image_url': null,
+        'journal': null,
         'mention_type': 'bookSection',
         'note': 'This is test note',
         'page': '100-200',
@@ -130,6 +134,7 @@ it('edit action for rsd_admin when no doi', () => {
         'doi': null,
         'id': 'test-id-1',
         'image_url': null,
+        'journal': null,
         'mention_type': 'bookSection',
         'note': 'This is test note',
         'page': '100-200',

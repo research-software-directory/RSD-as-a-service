@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -7,9 +9,6 @@ import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import {Controller} from 'react-hook-form'
-import InputAdornment from '@mui/material/InputAdornment'
-import {useState} from 'react'
-import IconButton from '@mui/material/IconButton'
 
 type ControlledAutocompleteProps = {
   name: string,
@@ -40,13 +39,6 @@ export default function ControlledAutocomplete({
             freeSolo={true}
             multiple={false}
             options={options}
-            // open={open}
-            // onOpen={() => {
-            //   setOpen(true)
-            // }}
-            // onClose={() => {
-            //   setOpen(false)
-            // }}
             onInputChange={(e, value) => {
               // debugger
               if (value === '') onChange(null)
@@ -58,25 +50,6 @@ export default function ControlledAutocomplete({
             }}
             popupIcon={<KeyboardArrowDownIcon />}
             renderInput={(params) => {
-              // if (options && options.length > 0) {
-              //   return (
-              //     <TextField
-              //       {...params}
-              //       label={label}
-              //       variant="standard"
-              //       helperText={helperTextMessage}
-              //       onFocus={()=>setOpen(true)}
-              //       InputProps={{
-              //         endAdornment: <InputAdornment
-              //           position="end">
-              //           <IconButton onClick={()=>setOpen(true)}>
-              //             <KeyboardArrowDownIcon />
-              //           </IconButton>
-              //         </InputAdornment>,
-              //       }}
-              //     />
-              //   )
-              // }
               return (
                 <TextField
                   {...params}
@@ -84,10 +57,6 @@ export default function ControlledAutocomplete({
                   variant="standard"
                   error={error ? true: false}
                   helperText={error?.message ?? helperTextMessage ?? ''}
-                  // onFocus={()=>setOpen(true)}
-                  // InputProps={{
-                  //   endAdornment: <InputAdornment position="end"><KeyboardArrowDownIcon /></InputAdornment>,
-                  // }}
                 />
               )
             }}

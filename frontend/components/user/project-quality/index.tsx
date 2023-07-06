@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
@@ -8,7 +9,6 @@
 import {useState} from 'react'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
-import IconButton from '@mui/material/IconButton'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 
 import {useSession} from '~/auth'

@@ -1,0 +1,33 @@
+{
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/*.tests.{js,jsx,ts,tsx}",
+    "**/*.test.{js,jsx,ts,tsx}",
+    "**/*.spec.{js,jsx,ts,tsx}",
+    "**/tests/**",
+    "**/__tests__/**",
+    "**/*.d.ts",
+    "**/coverage/**",
+    "**/__mocks__/**",
+    "utils/jest/**"
+  ],
+  "ignoreUnimported": [
+    "jest.config.js",
+    "jest.setup.js",
+    "next.config.js",
+    "next.headers.js",
+    "next.rewrites.js",
+    "postcss.config.js",
+    "tailwind.config.js"
+  ],
+  "ignoreUnused": [
+    "next",
+    "react",
+    "react-dom",
+    "@tailwindcss/typography",
+    "sharp"
+  ],
+  "ignoreUnresolved": [
+    "pages/api/fe/auth"
+  ]
+}
