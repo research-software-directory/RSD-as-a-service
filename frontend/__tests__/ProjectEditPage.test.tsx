@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,7 +12,7 @@ import {WithFormContext} from '~/utils/jest/WithFormContext'
 import {WithProjectContext} from '~/utils/jest/WithProjectContext'
 
 import ProjectEditPage from '../pages/projects/[slug]/edit/[page]'
-import {editProjectSteps} from '~/components/projects/edit/editProjectSteps'
+import {editProjectPage} from '~/components/projects/edit/editProjectPages'
 import editProjectState from '~/components/projects/edit/__mocks__/editProjectState'
 import {projectInformation as config} from '~/components/projects/edit/information/config'
 import mockProjectToEdit from '~/components/projects/edit/information/__mocks__/useProjectToEditData.json'
@@ -114,7 +116,7 @@ describe('pages/projects/[slug]/edit/index.tsx', () => {
 
     //validate all nav items shown
     const navItems = screen.getAllByTestId('edit-project-nav-item')
-    expect(navItems.length).toEqual(editProjectSteps.length)
+    expect(navItems.length).toEqual(editProjectPage.length)
 
     // wait for info loader to be removed
     // await waitForElementToBeRemoved(screen.getByRole('progressbar'))

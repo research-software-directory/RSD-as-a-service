@@ -3,6 +3,7 @@ SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2021 - 2023 dv4all
 SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 
@@ -151,15 +152,7 @@ import "@testing-library/jest-dom/extend-expect";
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
+### Learn More
 
 To learn more about Next.js, take a look at the following resources:
 
@@ -168,7 +161,7 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Major version updates
+## Updates and upgrades
 
 Upgrading minor version changes can be usally done using `yarn outdated` and `yarn upgrade`. Major updates are more demanding and might require changes in the source code.
 
@@ -204,4 +197,86 @@ yarn add -D @testing-library/react @testing-library/jest-dom jest jest-environme
 yarn add cookie
 # type
 yarn add -D @types/cookie
+```
+
+## Maintenance
+
+For the maintenance we use [unimported](https://github.com/smeijer/unimported#readme). It will show a list of unused files and dependencies. Additional exclude definitions, specific to this project, are in `unimportedrc.json`. Unimported is able to identify next and use pages folder as entry points.
+
+```bash
+# execute in the frontend folder
+npx unimported
+```
+
+- Removing unused files:
+Based on report validate that file are unused/not needed. To validate always run `yarn test` and `yarn build` to confirm that test are working and application can be build
+
+- Example report
+
+```bash
+RSD-as-a-service/frontend$ npx unimported
+
+       summary               unimported v1.29.2 (next)
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       entry file 1        : ./pages/_app.tsx
+       entry file 2        : ./pages/_document.tsx
+       entry file 3        : ./pages/admin/keywords.tsx
+       entry file 4        : ./pages/admin/orcid-users.tsx
+       entry file 5        : ./pages/admin/organisations.tsx
+       entry file 6        : ./pages/admin/public-pages.tsx
+       entry file 7        : ./pages/admin/rsd-contributors.tsx
+       entry file 8        : ./pages/admin/rsd-users.tsx
+       entry file 9        : ./pages/admin/software-highlights.tsx
+       entry file 10       : ./pages/api/fe/auth/helmholtzaai.ts
+       entry file 11       : ./pages/api/fe/auth/index.ts
+       entry file 12       : ./pages/api/fe/auth/local.ts
+       entry file 13       : ./pages/api/fe/auth/orcid.ts
+       entry file 14       : ./pages/api/fe/auth/surfconext.ts
+       entry file 15       : ./pages/api/fe/cite/index.ts
+       entry file 16       : ./pages/api/fe/index.ts
+       entry file 17       : ./pages/api/fe/mention/impact.ts
+       entry file 18       : ./pages/api/fe/mention/output.ts
+       entry file 19       : ./pages/api/fe/mention/software.ts
+       entry file 20       : ./pages/api/fe/token/refresh.ts
+       entry file 21       : ./pages/cookies.tsx
+       entry file 22       : ./pages/index.tsx
+       entry file 23       : ./pages/invite/organisation/[id].tsx
+       entry file 24       : ./pages/invite/project/[id].tsx
+       entry file 25       : ./pages/invite/software/[id].tsx
+       entry file 26       : ./pages/login/failed.tsx
+       entry file 27       : ./pages/login/local.tsx
+       entry file 28       : ./pages/logout.tsx
+       entry file 29       : ./pages/organisations/[...slug].tsx
+       entry file 30       : ./pages/organisations/index.tsx
+       entry file 31       : ./pages/page/[slug].tsx
+       entry file 32       : ./pages/projects/[slug]/edit/[page].tsx
+       entry file 33       : ./pages/projects/[slug]/edit/index.tsx
+       entry file 34       : ./pages/projects/[slug]/index.tsx
+       entry file 35       : ./pages/projects/add.tsx
+       entry file 36       : ./pages/projects/index.tsx
+       entry file 37       : ./pages/robots.txt.tsx
+       entry file 38       : ./pages/sitemap/organisations.xml.tsx
+       entry file 39       : ./pages/sitemap/projects.xml.tsx
+       entry file 40       : ./pages/sitemap/software.xml.tsx
+       entry file 41       : ./pages/software/[slug]/edit/[page].tsx
+       entry file 42       : ./pages/software/[slug]/edit/index.tsx
+       entry file 43       : ./pages/software/[slug]/index.tsx
+       entry file 44       : ./pages/software/add.tsx
+       entry file 45       : ./pages/software/index.tsx
+       entry file 46       : ./pages/user/[section].tsx
+
+       unresolved imports  : 0
+       unused dependencies : 0
+       unimported files    : 5
+
+
+─────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+     │ 5 unimported files
+─────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ components/admin/organisations/OrganisationsPage.tsx
+   2 │ components/projects/edit/editProjectSteps.tsx
+   3 │ utils/nextRouterWithLink.ts
+   4 │ utils/useMentionsForSoftware.tsx
+   5 │ utils/useOrganisationSoftware.tsx
+─────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ```
