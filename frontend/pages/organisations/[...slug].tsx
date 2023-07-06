@@ -107,34 +107,27 @@ export default function OrganisationPage({
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
     const {params, req, query} = context
+    // extract user settings from cookie
+    const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
+    // extract user id from session
+    const user = getUserFromToken(req?.cookies['rsd_token'] ?? null)
     // find organisation by slug
-    const organisation = await getOrganisationBySlug({
+    const resp = await getOrganisationBySlug({
       slug: params?.slug as string[] ?? [],
-      token: req?.cookies['rsd_token'] ?? ''
+      token: req?.cookies['rsd_token'],
+      user
     })
     // console.log('organisation...', organisation)
-    if (typeof organisation == 'undefined'){
+    if (typeof resp == 'undefined'){
       // returning notFound triggers 404 page
       return {
         notFound: true,
       }
     }
-    // extract user settings from cookie
-    const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
-    // extract user id from session
-    const user = getUserFromToken(req?.cookies['rsd_token'] ?? null)
+    // extract data from response
+    const {organisation,isMaintainer} = resp
     // make maintainer and ror requests
-    const [
-      isMaintainer,
-      ror
-    ] = await Promise.all([
-      isOrganisationMaintainer({
-        organisation: organisation?.id ?? '',
-        user,
-        token: req?.cookies['rsd_token']
-      }),
-      getOrganisationMetadata(organisation.ror_id ?? null)
-    ])
+    const ror = await getOrganisationMetadata(organisation.ror_id ?? null)
     return {
       // passed to the page component as props
       props: {
