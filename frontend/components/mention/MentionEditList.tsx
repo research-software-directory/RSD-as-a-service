@@ -10,16 +10,15 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Badge from '@mui/material/Badge'
-import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
+import {MentionItemProps} from '~/types/Mention'
 import MentionEditItem from './MentionEditItem'
 
 type MentionSectionListProps = {
   title: string
-  type: MentionTypeKeys,
   items: MentionItemProps[]
 }
 
-export default function MentionEditList({title, type, items}: MentionSectionListProps) {
+export default function MentionEditList({title, items}: MentionSectionListProps) {
     // do not render accordion/section if no items
   if (!items || items.length===0) return null
   // debugger

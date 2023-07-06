@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -23,7 +24,7 @@ type MentionListItem = {
 
 export default function MentionEditFeatured({item}: MentionListItem) {
   const {user} = useSession()
-  const {setEditModal,onUpdate,confirmDelete} = useEditMentionReducer()
+  const {setEditModal,confirmDelete} = useEditMentionReducer()
 
   function onEdit() {
     setEditModal(item)
@@ -31,19 +32,7 @@ export default function MentionEditFeatured({item}: MentionListItem) {
 
   function renderButtons() {
     const html = []
-
-    if (item.doi) {
-      // WE do not allow update of mentions with DOI from FE
-      // Dusan 2022-10-19
-      // html.push(
-      //   <IconButton
-      //     key="update-button"
-      //     title={`Update from DOI: ${item.doi}`}
-      //     onClick={() => onUpdate(item)}>
-      //       <UpdateIcon />
-      //   </IconButton>
-      // )
-    } else if (user?.role==='rsd_admin') {
+    if (user?.role==='rsd_admin') {
       // manual items without DOI can be edited
       html.push(
         <IconButton
