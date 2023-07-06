@@ -35,8 +35,7 @@ export default function useOrganisationUnits() {
       setLoading(true)
       const units: OrganisationForOverview[] = await getOrganisationChildren({
         uuid: id ?? '',
-        token,
-        frontend:true
+        token
       })
       // abort
       if (abort) return

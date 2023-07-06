@@ -25,7 +25,7 @@ CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
 	output_cnt INTEGER
 ) LANGUAGE sql STABLE AS
 $$
-SELECT
+SELECT DISTINCT ON (project.id)
 	project.id,
 	project.slug,
 	project.title,
@@ -89,7 +89,7 @@ CREATE FUNCTION projects_by_organisation_search(
 	output_cnt INTEGER
 ) LANGUAGE sql STABLE AS
 $$
-SELECT
+SELECT DISTINCT ON (project.id)
 	project.id,
 	project.slug,
 	project.title,
@@ -136,6 +136,7 @@ WHERE
 		research_domain_filter_for_project.research_domain_text ILIKE CONCAT('%', search, '%')
 	)
 ORDER BY
+	project.id,
 	CASE
 		WHEN title ILIKE search THEN 0
 		WHEN title ILIKE CONCAT(search, '%') THEN 1
