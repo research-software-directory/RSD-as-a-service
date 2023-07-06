@@ -6,7 +6,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {RsdUser} from '~/auth'
 import {getMaintainerOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
+import {isOrganisationMaintainer} from '~/auth/permissions/useOrganisationMaintainer'
 import {
   Organisation, OrganisationForOverview,
   OrganisationList, ProjectOfOrganisation,
@@ -74,35 +76,37 @@ export async function getOrganisationsList({search, rows, page, token}:
   }
 }
 
-export async function getOrganisationBySlug({slug, token}:
-  { slug: string[], token: string }) {
+export async function getOrganisationBySlug({slug,user,token}:
+  { slug: string[], user:RsdUser|null, token?: string}) {
   try {
     // resolve slug to id and
-    // get list of organisation uuid's this user is mantainer of
-    const [uuid, maintainerOf] = await Promise.all([
-      getOrganisationIdForSlug({slug, token}),
-      getMaintainerOrganisations({
-        token
-      })
-    ])
+    const uuid = await getOrganisationIdForSlug({slug, token})
     // if no uuid return undefined
     // console.log('getOrganisationBySlug...uuid...', uuid)
     if (typeof uuid === 'undefined' || uuid === null) return undefined
     // is this user maintainer of this organisation
-    const isMaintainer = maintainerOf.includes(uuid)
+    const isMaintainer = await isOrganisationMaintainer({
+      organisation: uuid,
+      user,
+      token
+    })
+    // console.log('getOrganisationBySlug...isMaintainer...', isMaintainer)
+    // get organisation data
     const [organisation, description] = await Promise.all([
       getOrganisationById({
         uuid,
         token,
-        frontend: false,
         isMaintainer
       }),
-      getOrganisationDescription({uuid,token})
+      getOrganisationDescription({uuid, token})
     ])
     // return consolidate organisation
     return {
-      ...organisation,
-      description
+      organisation: {
+        ...organisation,
+        description
+      },
+      isMaintainer
     }
   } catch (e:any) {
     logger(`getOrganisationBySlug: ${e?.message}`, 'error')
@@ -111,7 +115,7 @@ export async function getOrganisationBySlug({slug, token}:
 }
 
 export async function getOrganisationIdForSlug({slug, token, frontend=false}:
-  { slug: string[], token: string, frontend?: boolean }) {
+  { slug: string[], token?: string, frontend?: boolean }) {
   try {
     const path = slug.join('/')
     let url = `${process.env.POSTGREST_URL}/rpc/slug_to_organisation`
@@ -139,18 +143,16 @@ export async function getOrganisationIdForSlug({slug, token, frontend=false}:
 }
 
 
-export async function getOrganisationById({uuid,token,frontend=false,isMaintainer=false}:
-  {uuid: string, token: string, frontend?: boolean, isMaintainer?:boolean}) {
+export async function getOrganisationById({uuid,token,isMaintainer=false}:
+  {uuid: string, token?: string, isMaintainer?:boolean}) {
   let query = `rpc/organisations_overview?id=eq.${uuid}`
   if (isMaintainer) {
     //if user is maintainer of this organisation
     //we request the counts of all items incl. denied and not published
     query +='&public=false'
   }
-  let url = `${process.env.POSTGREST_URL}/${query}`
-  if (frontend) {
-    url = `/api/v1/${query}`
-  }
+  const url = `${getBaseUrl()}/${query}`
+  // console.log('getOrganisationById...url...', url)
   const resp = await fetch(url, {
     method: 'GET',
     headers: {
@@ -169,13 +171,11 @@ export async function getOrganisationById({uuid,token,frontend=false,isMaintaine
   return undefined
 }
 
-export async function getOrganisationChildren({uuid, token,frontend=false}:
-  { uuid: string, token: string, frontend?: boolean }) {
+export async function getOrganisationChildren({uuid, token}:
+  { uuid: string, token: string}) {
   const query = `rpc/organisations_overview?parent=eq.${uuid}&order=name.asc`
-  let url = `${process.env.POSTGREST_URL}/${query}`
-  if (frontend) {
-    url = `/api/v1/${query}`
-  }
+  let url = `${getBaseUrl()}/${query}`
+
   const resp = await fetch(url, {
     method: 'GET',
     headers: {
@@ -192,8 +192,8 @@ export async function getOrganisationChildren({uuid, token,frontend=false}:
   return []
 }
 
-export async function getOrganisationDescription({uuid, token}: { uuid: string, token: string }) {
-  const query = `organisation?id=eq.${uuid}`
+export async function getOrganisationDescription({uuid, token}: { uuid: string, token?: string }) {
+  const query = `organisation?id=eq.${uuid}&select=description`
   const url = `${getBaseUrl()}/${query}`
   // console.log('url...', url)
   const resp = await fetch(url, {

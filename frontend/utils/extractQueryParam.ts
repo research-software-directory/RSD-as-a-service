@@ -101,7 +101,7 @@ export function decodeQueryParam({query,param,castToType='string',defaultValue}:
           logger(`decodeQueryParam: query param ${param} NOT a string. Returning defaultValue`, 'warn')
           return defaultValue
         case 'string':
-          return rawVal?.toString()
+          return decodeURIComponent(rawVal?.toString())
         case 'json-encoded':
           if (typeof rawVal === 'string') {
             const json = decodeJsonParam(rawVal,defaultValue)
