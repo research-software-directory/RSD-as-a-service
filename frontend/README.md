@@ -205,7 +205,7 @@ For the maintenance we use [unimported](https://github.com/smeijer/unimported#re
 
 ```bash
 # execute in the frontend folder
-npx unimported
+yarn unimported
 ```
 
 - Removing unused files:
