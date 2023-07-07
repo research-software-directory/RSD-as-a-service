@@ -1,15 +1,11 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {addValueToObjectArray, groupByOrcid} from './groupByOrcid'
-
-
-describe('groupByOrcid', () => {
-
-})
-
+import {addValueToObjectArray} from './groupByOrcid'
 
 describe('AddValueToObjectArray', () => {
   it('add string value from source into a target array', () => {

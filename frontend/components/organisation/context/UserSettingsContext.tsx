@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createContext, useContext, useState} from 'react'
+import {createContext, useContext} from 'react'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 
 type UserSettingsContextProps = {
