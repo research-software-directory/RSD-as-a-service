@@ -4,6 +4,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,11 +29,17 @@ export type RepositoryUrl = {
   star_count?: number | null,
   fork_count?: number | null,
   open_issue_count?: number | null,
+  basic_data_last_error?: string | null,
   basic_data_scraped_at?: string | null,
   languages?: string | null,
+  languages_last_error?: string | null,
   languages_scraped_at?: string | null,
   commit_history?: string | null,
-  commit_history_scraped_at?: string | null
+  commit_history_last_error?: string | null,
+  commit_history_scraped_at?: string | null,
+  contributor_count?: number | null,
+  contributor_count_last_error?: string | null,
+  contributor_count_scraped_at?: string | null
 }
 
 export type NewSoftwareItem = {
