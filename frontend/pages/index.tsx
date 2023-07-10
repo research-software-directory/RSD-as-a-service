@@ -9,12 +9,13 @@
 import {app} from '~/config/app'
 import {getHomepageCounts} from '~/components/home/getHomepageCounts'
 import HelmholtzHome from '~/components/home/helmholtz'
+import ImperialCollegeHome from '~/components/home/imperial'
 import RsdHome,{RsdHomeProps} from '~/components/home/rsd'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import useRsdSettings from '~/config/useRsdSettings'
 
-type HomeProps = {
+export type HomeProps = {
   counts: RsdHomeProps
 }
 
@@ -24,10 +25,31 @@ const pageDesc = 'The Research Software Directory is designed to show the impact
 export default function Home({counts}: HomeProps) {
   const {host} = useRsdSettings()
 
-  // console.log('host...', host)
-  if (host && host.name.toLowerCase() === 'helmholtz') {
-    return <HelmholtzHome />
+  console.log('host...', host)
+
+  if (host && host.name) {
+    switch (host.name.toLocaleLowerCase()) {
+      case 'helmholtz':
+        return <HelmholtzHome />
+      case 'imperial':
+        return <ImperialCollegeHome counts={counts} />
+      default:
+        // RSD default homepage
+        return (
+          <>
+            {/* Page Head meta tags */}
+            <PageMeta
+              title={pageTitle}
+              description={pageDesc}
+            />
+            {/* canonical url meta tag */}
+            <CanonicalUrl/>
+            <RsdHome {...counts} />
+          </>
+        )
+    }
   }
+  // RSD default home page
   return (
     <>
       {/* Page Head meta tags */}

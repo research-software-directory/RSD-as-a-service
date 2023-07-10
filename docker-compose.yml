@@ -6,6 +6,7 @@
 # SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -241,9 +242,9 @@ services:
       - auth
     volumes:
       - ./frontend:/app
-      # - ./deployment/hmz/styles:/app/public/styles
-      # - ./deployment/hmz/data:/app/public/data
-      # - ./deployment/hmz/images:/app/public/images
+      - ./deployment/imperial/styles:/app/public/styles
+      - ./deployment/imperial/data:/app/public/data
+      - ./deployment/imperial/images:/app/public/images
     networks:
       - net
     deploy:
