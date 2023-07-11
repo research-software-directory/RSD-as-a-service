@@ -65,8 +65,8 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
             {/* Metrics */}
             <div className="flex gap-4">
               <SoftwareMetrics
-                contributor_cnt={item.contributor_cnt}
-                mention_cnt={item.mention_cnt}
+                contributor_cnt={item.contributor_cnt ?? 0}
+                mention_cnt={item.mention_cnt ?? 0}
                 downloads={item.downloads}
               />
             </div>
