@@ -124,8 +124,6 @@ export type KeywordForSoftware = {
 
 export type CategoryID = string
 
-export type CategoryPath = CategoryID[]
-
 export type CategoryEntry = {
   id: CategoryID
   parent: CategoryID | null
@@ -133,10 +131,9 @@ export type CategoryEntry = {
   name: string
 }
 
-export type CategoriesForSoftware = {
-  paths: CategoryPath[]
-  category_entries: Record<CategoryID, CategoryEntry>
-}
+export type CategoryPath = CategoryEntry[]
+
+export type CategoriesForSoftware = CategoryPath[]
 
 /**
  * LiCENSES

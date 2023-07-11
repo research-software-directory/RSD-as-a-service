@@ -3,11 +3,12 @@ import CategoryIcon from '@mui/icons-material/Category'
 import { CategoriesForSoftware, CategoryID } from '../../types/SoftwareTypes'
 import TagChipFilter from '../layout/TagChipFilter'
 import { ssrSoftwareUrl } from '~/utils/postgrestUrl'
+import logger from '../../utils/logger'
 
-const interleave = <T,>(arr: T[], value: T) => arr.reduce((result, element, index, array) => {
+const interleave = <T,>(arr: T[], createElement: (index: number) => T) => arr.reduce((result, element, index, array) => {
     result.push(element);
     if (index < array.length - 1) {
-      result.push(value);
+      result.push(createElement(index));
     }
     return result;
   }, [] as T[]);
@@ -17,17 +18,17 @@ const interleave = <T,>(arr: T[], value: T) => arr.reduce((result, element, inde
 export default function SoftwareCategries({ categories }: { categories: CategoriesForSoftware }) {
 
   function renderItems() {
-    if (categories.paths.length === 0) {
+    logger(JSON.stringify(categories))
+    if (categories.length === 0) {
       return (
-        <i>No keywords avaliable</i>
+        <i>No categories assigned</i>
       )
     }
     return (
       <div className="py-1">
-        {categories.paths.map((path, index) => {
-          //const url = ssrSoftwareUrl({ keywords: [item.keyword] })
-          const x = path.map((cat_id: CategoryID) => <span>{categories.category_entries[cat_id].short_name}</span>)
-          return <span className='px-2 mb-2 bg-neutral-100 inline-block'>{interleave(x, <span className="px-2">::</span>)}</span>
+        {categories.map((path, index) => {
+          const chunks = path.map((category) => <span key={category.id}>{category.short_name}</span>)
+          return <div key={index} className='mb-2'><span className='px-2 py-1 bg-neutral-100'>{interleave(chunks, (index) => <span key={index} className="px-2">::</span>)}</span></div>
         })}
       </div>
     )

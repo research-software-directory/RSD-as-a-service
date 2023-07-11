@@ -210,7 +210,34 @@ export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token
   }
 }
 
+function prepareQueryURL(path:string, params:Record<string, string>) {
+  // FIXME: database URL?
+  const baseURL = 'http://localhost:3000/api/v1' // process.env.POSTGREST_URL // getBaseUrl()
+  logger(`prepareQueryURL baseURL:${baseURL}`)
+  return `${baseURL}${path}?`+ Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&')
+}
+
 export async function getCategoriesForSoftware(software_id: string, token?: string) {
+  try {
+    const url = prepareQueryURL('/rpc/category_paths_by_software_expanded', { software_id })
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data = await resp.json()
+      logger(`getCategoriesForSoftware response: ${JSON.stringify(data)}`)
+      return data || []  // FIXME: this should be handled by backend!
+    } else if (resp.status === 404) {
+      logger(`getCategoriesForSoftware: 404 [${url}]`, 'error')
+      // query not found
+      return null
+    }
+  } catch (e: any) {
+    logger(`getCategoriesForSoftware: ${e?.message}`, 'error')
+    return null
+  }
+
   return {
     paths: [
       [1, 2],
