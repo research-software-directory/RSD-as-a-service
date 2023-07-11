@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import ContentContainer from '~/components/layout/ContentContainer'
 import {HighlightsCarousel} from './highlights/HighlightsCarousel'
 import {SoftwareHighlight} from '~/components/admin/software-highlights/apiSoftwareHighlights'
 
@@ -20,6 +21,13 @@ export default function SoftwareHighlights({highlights}: { highlights: SoftwareH
 
   return (
     <div className="mt-8">
+      <ContentContainer>
+        <div
+          className="text-3xl"
+        >
+          Software Highlights
+        </div>
+      </ContentContainer>
       <HighlightsCarousel items={highlights} />
     </div>
   )
