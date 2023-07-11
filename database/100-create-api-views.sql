@@ -97,7 +97,7 @@ $$;
 
 
 -- COUNT contributors per software
-CREATE FUNCTION count_software_countributors() RETURNS TABLE (software UUID, contributor_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+CREATE FUNCTION count_software_contributors() RETURNS TABLE (software UUID, contributor_cnt BIGINT) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
 	RETURN QUERY SELECT
@@ -127,11 +127,11 @@ CREATE FUNCTION count_software_contributors_mentions() RETURNS TABLE (id UUID, c
 $$
 BEGIN
 	RETURN QUERY SELECT
-		software.id, count_software_countributors.contributor_cnt, count_software_mentions.mention_cnt
+		software.id, count_software_contributors.contributor_cnt, count_software_mentions.mention_cnt
 	FROM
 		software
 	LEFT JOIN
-		count_software_countributors() AS count_software_countributors ON software.id=count_software_countributors.software
+		count_software_contributors() AS count_software_contributors ON software.id=count_software_contributors.software
 	LEFT JOIN
 		count_software_mentions() AS count_software_mentions ON software.id=count_software_mentions.software;
 END
@@ -200,13 +200,13 @@ BEGIN
 		software.brand_name,
 		software.short_statement,
 		software.updated_at,
-		count_software_countributors.contributor_cnt,
+		count_software_contributors.contributor_cnt,
 		count_software_mentions.mention_cnt,
 		software.is_published
 	FROM
 		software
 	LEFT JOIN
-		count_software_countributors() ON software.id=count_software_countributors.software
+		count_software_contributors() ON software.id=count_software_contributors.software
 	LEFT JOIN
 		count_software_mentions() ON software.id=count_software_mentions.software
 	INNER JOIN
@@ -513,7 +513,7 @@ BEGIN
 		software.is_published,
 		software_for_organisation.is_featured,
 		software_for_organisation.status,
-		count_software_countributors.contributor_cnt,
+		count_software_contributors.contributor_cnt,
 		count_software_mentions.mention_cnt,
 		software.updated_at,
 		software_for_organisation.organisation
@@ -522,7 +522,7 @@ BEGIN
 	LEFT JOIN
 		software_for_organisation ON software.id=software_for_organisation.software
 	LEFT JOIN
-		count_software_countributors() ON software.id=count_software_countributors.software
+		count_software_contributors() ON software.id=count_software_contributors.software
 	LEFT JOIN
 		count_software_mentions() ON software.id=count_software_mentions.software
 	WHERE
@@ -708,14 +708,14 @@ BEGIN
 		software.brand_name,
 		software.short_statement,
 		software.updated_at,
-		count_software_countributors.contributor_cnt,
+		count_software_contributors.contributor_cnt,
 		count_software_mentions.mention_cnt,
 		software.is_published,
 		software_for_project.status
 	FROM
 		software
 	LEFT JOIN
-		count_software_countributors() ON software.id=count_software_countributors.software
+		count_software_contributors() ON software.id=count_software_contributors.software
 	LEFT JOIN
 		count_software_mentions() ON software.id=count_software_mentions.software
 	INNER JOIN
@@ -933,12 +933,12 @@ BEGIN
 		software.short_statement,
 		software.is_published,
 		software.updated_at,
-		count_software_countributors.contributor_cnt,
+		count_software_contributors.contributor_cnt,
 		count_software_mentions.mention_cnt
 	FROM
 		software
 	LEFT JOIN
-		count_software_countributors() ON software.id=count_software_countributors.software
+		count_software_contributors() ON software.id=count_software_contributors.software
 	LEFT JOIN
 		count_software_mentions() ON software.id=count_software_mentions.software
 	INNER JOIN
