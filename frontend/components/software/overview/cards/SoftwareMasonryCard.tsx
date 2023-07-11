@@ -63,11 +63,13 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
               visibleNumberOfProgLang={visibleNumberOfProgLang}
             />
             {/* Metrics */}
-            <SoftwareMetrics
-              contributor_cnt={item.contributor_cnt}
-              mention_cnt={item.mention_cnt}
-              downloads={item.downloads}
-            />
+            <div className="flex gap-4">
+              <SoftwareMetrics
+                contributor_cnt={item.contributor_cnt}
+                mention_cnt={item.mention_cnt}
+                downloads={item.downloads}
+              />
+            </div>
           </div>
         </div>
       </div>
