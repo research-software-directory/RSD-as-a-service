@@ -18,6 +18,7 @@ import AutosaveRepositoryUrl from './AutosaveRepositoryUrl'
 import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
 import AutosaveSoftwareMarkdown from './AutosaveSoftwareMarkdown'
 import AutosaveSoftwareLogo from './AutosaveSoftwareLogo'
+import AutosaveSoftwareCategories from './AutosaveSoftwareCategories'
 
 type SoftwareInformationFormProviderProps = {
   editSoftware: EditSoftwareItem
@@ -139,6 +140,11 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
             <AutosaveConceptDoi />
             <div className="py-4"></div>
             <AutosaveSoftwareLogo />
+            <div className="py-4"></div>
+            <AutosaveSoftwareCategories
+              softwareId={formData.id}
+              categories={formData.categories}
+              />
             <div className="py-4"></div>
             <AutosaveSoftwareKeywords
               software_id={formData.id}

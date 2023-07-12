@@ -10,7 +10,7 @@ import {useEffect, useState} from 'react'
 import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
 import {EditSoftwareItem, KeywordForSoftware, License} from '../../../../types/SoftwareTypes'
 import {getSoftwareToEdit} from '../../../../utils/editSoftware'
-import {getKeywordsForSoftware, getLicenseForSoftware} from '../../../../utils/getSoftware'
+import {getCategoriesForSoftware, getKeywordsForSoftware, getLicenseForSoftware} from '../../../../utils/getSoftware'
 
 function prepareLicenses(rawLicense: License[]=[]) {
   const license:AutocompleteOption<License>[] = rawLicense?.map((item: any) => {
@@ -30,14 +30,16 @@ export async function getSoftwareInfoForEdit({slug, token}: { slug: string, toke
   if (software) {
     const requests = [
       getKeywordsForSoftware(software.id, true, token),
-      getLicenseForSoftware(software.id, true, token)
-    ]
+      getCategoriesForSoftware(software.id, token),
+      getLicenseForSoftware(software.id, true, token),
+    ] as const
     // other api requests
-    const [keywords, respLicense,] = await Promise.all(requests)
+    const [keywords, categories, respLicense] = await Promise.all(requests)
 
     const data:EditSoftwareItem = {
       ...software,
       keywords: keywords as KeywordForSoftware[],
+      categories,
       licenses: prepareLicenses(respLicense as License[]),
       image_b64: null,
       image_mime_type: null,

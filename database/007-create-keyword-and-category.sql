@@ -108,17 +108,22 @@ $$
   SELECT json_agg(row_to_json) AS path FROM (SELECT row_to_json(category_path(category_id))) AS cats;
 $$;
 
+
 CREATE FUNCTION category_paths_by_software_expanded(software_id UUID)
 RETURNS JSON
 LANGUAGE SQL STABLE AS
 $$
   WITH
   cat_ids AS
-    (select category_id FROM category_for_software AS c4s WHERE c4s.software_id = software_id),
-  paths AS
-    (select category_path_expanded(category_id) AS path FROM cat_ids)
-  SELECT json_agg(path) AS result FROM paths;
+    (SELECT category_id FROM category_for_software AS c4s WHERE c4s.software_id = software_id),
+  paths as
+    (SELECT category_path_expanded(category_id) AS path FROM cat_ids)
+  SELECT
+    CASE WHEN EXISTS(SELECT 1 FROM cat_ids) THEN (SELECT json_agg(path) FROM paths)
+    ELSE '[]'::json
+    END as result
 $$;
+
 
 CREATE FUNCTION available_categories_expanded()
 RETURNS JSON
@@ -126,12 +131,17 @@ LANGUAGE SQL STABLE AS
 $$
   WITH
   cat_ids AS
-    (SELECT id AS category_id FROM category AS node WHERE NOT EXISTS (SELECT * FROM category AS sub WHERE node.id = sub.parent)),
+    (SELECT id AS category_id FROM category AS node WHERE NOT EXISTS (SELECT 1 FROM category AS sub WHERE node.id = sub.parent)),
   paths AS
     (SELECT category_path_expanded(category_id) AS path FROM cat_ids)
-  SELECT json_agg(path) AS result FROM paths;
-$$;
+  SELECT
+    CASE WHEN EXISTS(SELECT 1 FROM cat_ids) THEN (SELECT json_agg(path) AS result FROM paths)
+    ELSE '[]'::json
+    END
+$$
 
 
 -- TODO:
--- check return value for empty result
+-- check read/write access rights writing category_for_software table
+-- anybody is allowed to write keywords?
+-- sort category paths

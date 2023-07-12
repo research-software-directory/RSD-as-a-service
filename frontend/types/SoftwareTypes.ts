@@ -99,6 +99,7 @@ export const SoftwarePropsToSave = [
 
 export type EditSoftwareItem = SoftwareItem & {
   keywords: KeywordForSoftware[]
+  categories: CategoryPath[]
   licenses: AutocompleteOption<License>[]
   image_b64: string | null
   image_mime_type: string | null

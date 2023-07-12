@@ -8,7 +8,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: EUPL-1.2
 
-import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
+import {CategoriesForSoftware, CategoryID, CategoryPath, KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
@@ -212,12 +212,13 @@ export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token
 
 function prepareQueryURL(path:string, params:Record<string, string>) {
   // FIXME: database URL?
-  const baseURL = 'http://localhost:3000/api/v1' // process.env.POSTGREST_URL // getBaseUrl()
+  //const baseURL = 'http://localhost:3000/api/v1' // process.env.POSTGREST_URL // getBaseUrl()
+  const baseURL = getBaseUrl()
   logger(`prepareQueryURL baseURL:${baseURL}`)
   return `${baseURL}${path}?`+ Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&')
 }
 
-export async function getCategoriesForSoftware(software_id: string, token?: string) {
+export async function getCategoriesForSoftware(software_id: string, token?: string): Promise<CategoriesForSoftware> {
   try {
     const url = prepareQueryURL('/rpc/category_paths_by_software_expanded', { software_id })
     const resp = await fetch(url, {
@@ -227,38 +228,73 @@ export async function getCategoriesForSoftware(software_id: string, token?: stri
     if (resp.status === 200) {
       const data = await resp.json()
       logger(`getCategoriesForSoftware response: ${JSON.stringify(data)}`)
-      return data || []  // FIXME: this should be handled by backend!
+      return data
     } else if (resp.status === 404) {
       logger(`getCategoriesForSoftware: 404 [${url}]`, 'error')
-      // query not found
-      return null
     }
   } catch (e: any) {
     logger(`getCategoriesForSoftware: ${e?.message}`, 'error')
+  }
+  return []
+}
+
+export async function getAvailableCategories(): Promise<CategoryPath[]> {
+  try {
+    const url = prepareQueryURL('/rpc/available_categories_expanded', { })
+    const resp = await fetch(url, {
+      method: 'GET',
+    })
+    if (resp.status === 200) {
+      const data = await resp.json()
+      // logger(`getAvailableCategories response: ${JSON.stringify(data)}`)
+      return data
+    } else if (resp.status === 404) {
+      logger(`getAvailableCategories: 404 [${url}]`, 'error')
+    }
+  } catch (e: any) {
+    logger(`getAvailableCategories: ${e?.message}`, 'error')
+  }
+  return []
+}
+
+// FIXME: proper location?
+// FIXME: add return type
+export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token) {
+  const url = '/api/v1/category_for_software'
+  const data = { software_id: softwareId, category_id: categoryId }
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      ...createJsonHeaders(token),
+      //'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify(data),
+  })
+  logger(`addCategoryToSoftware: resp: ${resp}`)
+  console.log(resp)
+  if (resp.ok) {
     return null
   }
-
-  return {
-    paths: [
-      [1, 2],
-      [10, 11],
-    ],
-    category_entries: {
-      1: {
-        id: 1, parent: null, short_name: "Research fields", name: "Research fields"
-      },
-      2: {
-        id: 2, parent: 1, short_name: "Energy", name: "Energy"
-      },
-      10: {
-        id: 10, parent: null, short_name: "POF IV", name: "Program-oriented Funding IV"
-      },
-      11: {
-        id: 11, parent: 10, short_name: "Energy System Design", name: "Energy System Design (Energy)"
-      },
-    }
-  }
+  throw new Error(`API returned: ${resp.status} ${resp.statusText}`)
 }
+export async function deleteCategoryToSoftware(softwareId: string, categoryId: CategoryID, token) {
+  const url = `/api/v1/category_for_software?software_id=eq.${softwareId}&category_id=eq.${categoryId}`
+
+  const resp = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      ...createJsonHeaders(token),
+    },
+  })
+  logger(`addCategoryToSoftware: resp: ${resp}`)
+  console.log(resp)
+  if (resp.ok) {
+    return null
+  }
+  throw new Error(`API returned: ${resp.status} ${resp.statusText}`)
+}
+
 
 /**
  * LICENSE

@@ -273,6 +273,21 @@ CREATE POLICY admin_all_rights ON testimonial TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
+-- categories for software
+ALTER TABLE category_for_software ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON category_for_software FOR SELECT TO rsd_web_anon, rsd_user
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON category_for_software TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON category_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 -- keywords
 ALTER TABLE keyword ENABLE ROW LEVEL SECURITY;
 

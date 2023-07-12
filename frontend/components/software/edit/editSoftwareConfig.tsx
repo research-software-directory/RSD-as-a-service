@@ -124,6 +124,10 @@ export const softwareInformation = {
   is_published: {
     label: 'Published',
   },
+  categories: {
+    title: 'Categories',
+    subtitle: 'Assign default categories.',
+  },
   keywords: {
     title: 'Keywords',
     subtitle: 'Find, add or import using concept DOI.',
