@@ -58,6 +58,10 @@ public class Config {
 		return rsdAuthProviders().contains("ORCID");
 	}
 
+	public static boolean isImperialEnabled() {
+		return rsdAuthProviders().contains("IMPERIAL");
+	}
+
 	public static String userMailWhitelist() {
 		return System.getenv("RSD_AUTH_USER_MAIL_WHITELIST");
 	}
@@ -146,6 +150,27 @@ public class Config {
 
 	public static String orcidScopes() {
 		return System.getenv("ORCID_SCOPES");
+	}
+
+//	IMPERIAL
+	public static String imperialRedirect() {
+		return System.getenv("IMPERIAL_REDIRECT");
+	}
+
+	public static String imperialClientId() {
+		return System.getenv("IMPERIAL_CLIENT_ID");
+	}
+
+	public static String imperialWellknown() {
+		return System.getenv("IMPERIAL_WELL_KNOWN_URL");
+	}
+
+	public static String imperialClientSecret() {
+		return System.getenv("AUTH_IMPERIAL_CLIENT_SECRET");
+	}
+
+	public static String imperialScopes() {
+		return System.getenv("IMPERIAL_SCOPES");
 	}
 
 }

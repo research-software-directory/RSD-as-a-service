@@ -19,6 +19,7 @@ import {surfconextInfo} from './surfconext'
 import {helmholtzInfo} from './helmholtzaai'
 import {localInfo} from './local'
 import {orcidInfo} from './orcid'
+import {imperialInfo} from './imperial'
 import logger from '~/utils/logger'
 
 export type ApiError = {
@@ -46,6 +47,8 @@ async function getRedirectInfo(provider: string) {
       return localInfo()
     case 'orcid':
       return orcidInfo()
+    case 'imperial':
+      return imperialInfo()
     default:
       const message = `${provider} NOT SUPPORTED, check your spelling`
       logger(`api/fe/auth/providers: ${message}`, 'error')

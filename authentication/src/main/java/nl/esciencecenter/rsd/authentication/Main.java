@@ -151,6 +151,18 @@ public class Main {
 			});
 		}
 
+		if (Config.isImperialEnabled()) {
+			app.get("/login/imperial", ctx -> {
+				String code = ctx.queryParam("code");
+				String redirectUrl = Config.imperialRedirect();
+				OpenIdInfo imperialInfo = new ImperialLogin(code, redirectUrl).openidInfo();
+				AccountInfo accountInfo = new PostgrestAccount().account(imperialInfo, OpenidProvider.imperial);
+				String email = imperialInfo.email();
+				boolean isAdmin = isAdmin(email);
+				createAndSetToken(ctx, accountInfo, isAdmin);
+			});
+		}
+
 		app.get("/refresh", ctx -> {
 			try {
 				String tokenToVerify = ctx.cookie("rsd_token");

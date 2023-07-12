@@ -9,5 +9,6 @@ public enum OpenidProvider {
 	local,
 	surfconext,
 	helmholtz,
-	orcid
+	orcid,
+	imperial
 }

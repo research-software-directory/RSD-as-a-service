@@ -51,7 +51,7 @@ export function getRedirectUrl(props: RedirectToProps) {
     '&scope=' + props.scope +
     '&response_type=code' +
     '&response_mode=' + props.response_mode +
-    '&prompt=login+consent' +
+    '&prompt=login' +
     '&claims=' + getEncodedClaims(claims)
   return redirectUrl
 }
