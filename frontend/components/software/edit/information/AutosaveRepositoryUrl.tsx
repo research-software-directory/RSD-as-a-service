@@ -127,11 +127,17 @@ export default function AutosaveRepositoryUrl() {
       star_count: null,
       fork_count: null,
       open_issue_count: null,
+      basic_data_last_error: null,
       basic_data_scraped_at: null,
       languages: null,
+      languages_last_error: null,
       languages_scraped_at: null,
       commit_history: null,
-      commit_history_scraped_at: null
+      commit_history_last_error: null,
+      commit_history_scraped_at: null,
+      contributor_count: null,
+      contributor_count_last_error: null,
+      contributor_count_scraped_at: null
     }
     if (name === 'repository_url') {
       data.url = value

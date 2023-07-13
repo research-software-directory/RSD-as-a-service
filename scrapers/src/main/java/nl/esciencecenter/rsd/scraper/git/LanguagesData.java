@@ -7,5 +7,9 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import java.time.ZonedDateTime;
 
-public record LanguagesData(BasicRepositoryData basicData, String languages, ZonedDateTime languagesScrapedAt) {
+public record LanguagesData(
+		BasicRepositoryData basicData,
+		String languages,
+		ZonedDateTime languagesScrapedAt
+) {
 }

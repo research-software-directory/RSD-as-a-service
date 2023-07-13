@@ -9,6 +9,8 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -40,16 +42,17 @@ public class MainCommits {
 					if (projectPath.endsWith("/")) projectPath = projectPath.substring(0, projectPath.length() - 1);
 
 					CommitsPerWeek scrapedCommits = new GitlabScraper(apiUrl, projectPath).contributions();
-					CommitData updatedData = new CommitData(new BasicRepositoryData(commitData.software(), null), scrapedCommits, scrapedAt);
+					CommitData updatedData = new CommitData(commitData, scrapedCommits, scrapedAt);
 					softwareInfoRepository.saveCommitData(updatedData);
 				} catch (RsdRateLimitException e) {
-					System.out.println("Exception when handling data from url " + commitData.url() + ":");
-					e.printStackTrace();
+					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", null, null);
+				} catch (RsdResponseException  e) {
+					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				} catch (RuntimeException  e) {
-					System.out.println("Exception when handling data from url " + commitData.url() + ":");
-					e.printStackTrace();
-					CommitData oldDataWithUpdatedAt = new CommitData(new BasicRepositoryData(commitData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveCommitData(oldDataWithUpdatedAt);
+					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}
 			});
 			futures[i] = future;
@@ -72,17 +75,18 @@ public class MainCommits {
 					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
 					CommitsPerWeek scrapedCommits = new GithubScraper("https://api.github.com", repo).contributions();
-					CommitData updatedData = new CommitData(new BasicRepositoryData(commitData.software(), null), scrapedCommits, scrapedAt);
+					CommitData updatedData = new CommitData(commitData, scrapedCommits, scrapedAt);
 					softwareInfoRepository.saveCommitData(updatedData);
 				} catch (RsdRateLimitException e) {
 					// in case we hit the rate limit, we don't update the scraped_at time, so it gets scraped first next time
-					System.out.println("Exception when handling data from url " + commitData.url() + ":");
-					e.printStackTrace();
+					Utils.saveExceptionInDatabase("GitHub commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("GitHub commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				} catch (RuntimeException e) {
-					System.out.println("Exception when handling data from url " + commitData.url() + ":");
-					e.printStackTrace();
-					CommitData oldDataWithUpdatedAt = new CommitData(new BasicRepositoryData(commitData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveCommitData(oldDataWithUpdatedAt);
+					Utils.saveExceptionInDatabase("GitHub commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}
 			});
 			futures[i] = future;

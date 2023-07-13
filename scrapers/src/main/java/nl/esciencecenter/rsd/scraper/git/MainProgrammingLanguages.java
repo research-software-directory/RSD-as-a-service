@@ -6,6 +6,9 @@
 package nl.esciencecenter.rsd.scraper.git;
 
 import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -39,11 +42,15 @@ public class MainProgrammingLanguages {
 					String scrapedLanguages = new GitlabScraper(apiUrl, projectPath).languages();
 					LanguagesData updatedData = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), scrapedLanguages, scrapedAt);
 					softwareInfoRepository.saveLanguagesData(updatedData);
+				} catch (RsdRateLimitException e) {
+					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				} catch (RuntimeException e) {
-					System.out.println("Exception when handling data from url " + programmingLanguageData.url() + ":");
-					e.printStackTrace();
-					LanguagesData oldDataWithUpdatedAt = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveLanguagesData(oldDataWithUpdatedAt);
+					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				}
 			});
 			futures[i] = future;
@@ -68,11 +75,15 @@ public class MainProgrammingLanguages {
 					String scrapedLanguages = new GithubScraper("https://api.github.com", repo).languages();
 					LanguagesData updatedData = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), scrapedLanguages, scrapedAt);
 					softwareInfoRepository.saveLanguagesData(updatedData);
+				} catch (RsdRateLimitException e) {
+					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				} catch (RuntimeException e) {
-					System.out.println("Exception when handling data from url " + programmingLanguageData.url() + ":");
-					e.printStackTrace();
-					LanguagesData oldDataWithUpdatedAt = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveLanguagesData(oldDataWithUpdatedAt);
+					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				}
 			});
 			futures[i] = future;

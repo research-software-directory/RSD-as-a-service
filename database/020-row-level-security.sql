@@ -675,3 +675,11 @@ CREATE POLICY anyone_can_read ON oaipmh FOR SELECT TO rsd_web_anon, rsd_user
 CREATE POLICY admin_all_rights ON oaipmh TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
+
+
+-- backend logs
+ALTER TABLE backend_log ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY admin_all_rights ON backend_log TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);

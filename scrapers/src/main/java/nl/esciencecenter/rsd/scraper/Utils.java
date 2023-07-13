@@ -12,8 +12,11 @@ package nl.esciencecenter.rsd.scraper;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -21,8 +24,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 
 public class Utils {
 
@@ -65,7 +71,7 @@ public class Utils {
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
-			throw new RsdResponseException(response.statusCode(), "Error fetching data from endpoint " + uri + " with response: " + response.body());
+			throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 		}
 		return response.body();
 	}
@@ -158,14 +164,14 @@ public class Utils {
 	 */
 	public static String postAsAdmin(String uri, String json, String... extraHeaders) {
 		String jwtString = adminJwt();
-		HttpRequest request = HttpRequest.newBuilder()
+		HttpRequest.Builder builder = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(URI.create(uri))
 				.timeout(Duration.ofSeconds(30))
 				.header("Content-Type", "application/json")
-				.header("Authorization", "Bearer " + jwtString)
-				.headers(extraHeaders)
-				.build();
+				.header("Authorization", "Bearer " + jwtString);
+		if (extraHeaders != null && extraHeaders.length > 0) builder.headers(extraHeaders);
+		HttpRequest request = builder.build();
 		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
 		try {
@@ -177,6 +183,73 @@ public class Utils {
 			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
 		}
 		return response.body();
+	}
+
+	private static JsonObject basicData(String serviceName, String tableName, UUID referenceId, Exception e) {
+		String message = e.getMessage();
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter printWriter = new PrintWriter(stringWriter);
+		e.printStackTrace(printWriter);
+		printWriter.flush();
+		String stackTrace = stringWriter.toString();
+
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("service_name", serviceName);
+		jsonObject.addProperty("table_name", tableName);
+		jsonObject.addProperty("reference_id", referenceId != null ? referenceId.toString() : null);
+		jsonObject.addProperty("message", message);
+		jsonObject.addProperty("stack_trace", stackTrace);
+
+		return jsonObject;
+	}
+
+	public static void saveExceptionInDatabase(String serviceName, String tableName, UUID referenceId, Exception e) {
+		JsonObject logData = basicData(serviceName, tableName, referenceId, e);
+
+		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
+	}
+
+	public static void saveExceptionInDatabase(String serviceName, String tableName, UUID referenceId, RsdResponseException e) {
+		JsonObject logData = basicData(serviceName, tableName, referenceId, e);
+
+		JsonObject other = new JsonObject();
+		other.addProperty("status_code", e.statusCode);
+		other.addProperty("URI", e.uri != null ? e.uri.toString() : null);
+		other.addProperty("response_body", e.body);
+
+		logData.add("other_data", other);
+
+		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
+	}
+
+	public static void saveExceptionInDatabase(String serviceName, String tableName, UUID referenceId, RsdRateLimitException e) {
+		JsonObject logData = basicData(serviceName, tableName, referenceId, e);
+
+		JsonObject other = new JsonObject();
+		other.addProperty("status_code", e.statusCode);
+		other.addProperty("URI", e.uri != null ? e.uri.toString() : null);
+		other.addProperty("response_body", e.body);
+
+		logData.add("other_data", other);
+
+		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
+	}
+
+	public static void saveErrorMessageInDatabase(String message, String tableName, String columnName, String primaryKey, String primaryKeyName, ZonedDateTime scrapedAt, String scapedAtName) {
+		JsonObject body = new JsonObject();
+		body.addProperty(columnName, message);
+
+		if (scrapedAt != null && scapedAtName != null) {
+			body.addProperty(scapedAtName, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		}
+
+		String uri = createPatchUri(Config.backendBaseUrl(), tableName, primaryKey, primaryKeyName);
+
+		patchAsAdmin(uri, body.toString());
+	}
+
+	static String createPatchUri(String baseuri, String tableName, String primaryKey, String primaryKeyName) {
+		return "%s/%s?%s=eq.%s".formatted(baseuri, tableName, primaryKeyName, primaryKey);
 	}
 
 	public static String patchAsAdmin(String uri, String json) {
@@ -217,5 +290,10 @@ public class Utils {
 
 	public static Integer integerOrNull(JsonElement e) {
 		return e == null || !e.isJsonPrimitive() ? null : e.getAsInt();
+	}
+
+	public static String atLeastOneHourAgoFilter(String scrapedAtColumnName) {
+		String oneHourAgoEncoded = urlEncode(ZonedDateTime.now().minusHours(1).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		return "or=(%s.is.null,%s.lte.%s)".formatted(scrapedAtColumnName, scrapedAtColumnName, oneHourAgoEncoded);
 	}
 }

@@ -7,6 +7,8 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -24,7 +26,7 @@ public class MainContributors {
 
 	private static void scrapeGitHub() {
 		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITHUB);
-		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.statsData(Config.maxRequestsGithub());
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.contributorData(Config.maxRequestsGithub());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -40,13 +42,14 @@ public class MainContributors {
 					softwareInfoRepository.saveContributorCount(updatedData);
 				} catch (RsdRateLimitException e) {
 					// in case we hit the rate limit, we don't update the scraped_at time, so it gets scraped first next time
-					System.out.println("Exception when handling data from url " + contributorData.url() + ":");
-					e.printStackTrace();
+					Utils.saveExceptionInDatabase("GitHub contributor scraper", "repository_url", contributorData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("GitHub contributor scraper", "repository_url", contributorData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
 				} catch (RuntimeException e) {
-					System.out.println("Exception when handling data from url " + contributorData.url() + ":");
-					e.printStackTrace();
-					ContributorDatabaseData onlyUpdatedAt = new ContributorDatabaseData(new BasicRepositoryData(contributorData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveContributorCount(onlyUpdatedAt);
+					Utils.saveExceptionInDatabase("GitHub contributor scraper", "repository_url", contributorData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
 				}
 			});
 			futures[i] = future;
@@ -57,7 +60,7 @@ public class MainContributors {
 
 	private static void scrapeGitLab() {
 		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.GITLAB);
-		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.statsData(Config.maxRequestsGithub());
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.contributorData(Config.maxRequestsGithub());
 		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
 		ZonedDateTime scrapedAt = ZonedDateTime.now();
 		int i = 0;
@@ -75,13 +78,14 @@ public class MainContributors {
 					softwareInfoRepository.saveContributorCount(updatedData);
 				} catch (RsdRateLimitException e) {
 					// in case we hit the rate limit, we don't update the scraped_at time, so it gets scraped first next time
-					System.out.println("Exception when handling data from url " + contributorData.url() + ":");
-					e.printStackTrace();
+					Utils.saveExceptionInDatabase("GitLab contributor scraper", "repository_url", contributorData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("GitLab contributor scraper", "repository_url", contributorData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
 				} catch (RuntimeException e) {
-					System.out.println("Exception when handling data from url " + contributorData.url() + ":");
-					e.printStackTrace();
-					ContributorDatabaseData onlyUpdatedAt = new ContributorDatabaseData(new BasicRepositoryData(contributorData.software(), null), null, scrapedAt);
-					softwareInfoRepository.saveContributorCount(onlyUpdatedAt);
+					Utils.saveExceptionInDatabase("GitLab contributor scraper", "repository_url", contributorData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
 				}
 			});
 			futures[i] = future;

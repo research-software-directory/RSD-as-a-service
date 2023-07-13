@@ -52,7 +52,7 @@ public class DockerHubScraper implements PackageManagerScraper {
 			json = switch (response.statusCode()) {
 				case 200 -> response.body();
 				default ->
-						throw new RsdResponseException(response.statusCode(), "Unexpected response from " + response.uri() + ": " + response.body());
+						throw new RsdResponseException(response.statusCode(), request.uri(), response.body(), "Unexpected response");
 			};
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);

@@ -95,8 +95,8 @@ public class GitlabScraper implements GitScraper {
 				System.out.println("An error occurred fetching data from: " + request.uri());
 				throw new RuntimeException(e);
 			}
-			if (response.statusCode() == 429) throw new RsdRateLimitException("API rate limit exceeded for endpoint " + request.uri() + " with response: " + response.body());
-			if (response.statusCode() == 404) return null;
+			if (response.statusCode() == 429) throw new RsdRateLimitException(429, response.uri(), response.body(), "API rate limit reached for GitLab");
+			if (response.statusCode() == 404) throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
 
 			String body = response.body();
 			parseCommitPage(body, commits);
@@ -111,8 +111,8 @@ public class GitlabScraper implements GitScraper {
 	public Integer contributorCount() {
 		HttpResponse<String> httpResponse = Utils.getAsHttpResponse(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/repository/contributors");
 
-		if (httpResponse.statusCode() == 429) throw new RsdRateLimitException("API rate limit exceeded for endpoint " + httpResponse.uri() + " with response: " + httpResponse.body());
-		if (httpResponse.statusCode() == 404) throw new RsdResponseException(404, "No response found at " + httpResponse.uri());
+		if (httpResponse.statusCode() == 429) throw new RsdRateLimitException(429, httpResponse.uri(), httpResponse.body(), "Rate limit reached for GitLab");
+		if (httpResponse.statusCode() == 404) throw new RsdResponseException(404, httpResponse.uri(), httpResponse.body(), "Not found, is the repository URL correct?");
 
 		// see https://docs.gitlab.com/ee/api/rest/index.html#other-pagination-headers
 		String totalItemsHeader = httpResponse.headers().firstValue("x-total").get();
