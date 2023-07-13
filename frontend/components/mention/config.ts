@@ -235,6 +235,12 @@ export const mentionType = {
     singular: 'Newspaper article',
     manual: true
   },
+  poster: {
+    key: 'poster',
+    plural: 'Posters',
+    singular: 'Poster',
+    manual: true
+  },
   presentation: {
     key: 'presentation',
     plural: 'Presentations',

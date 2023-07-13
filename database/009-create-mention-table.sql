@@ -17,6 +17,7 @@ CREATE TYPE mention_type AS ENUM (
 	'journalArticle',
 	'magazineArticle',
 	'newspaperArticle',
+	'poster',
 	'presentation',
 	'report',
 	'thesis',
