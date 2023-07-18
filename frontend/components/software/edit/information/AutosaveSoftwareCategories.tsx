@@ -68,9 +68,9 @@ export default function AutosaveSoftwareCategories({ softwareId, categories: cat
       />
       <div className="py-2">
         <div className="mt-1">Assigned:</div>
-        <SoftwareCategories categories={categories} onClick={onDelete} />
+        <SoftwareCategories categories={categories} onClick={onDelete} buttonTitle="delete"/>
         <div className="mt-1">Add more:</div>
-        <SoftwareCategories categories={availableCategories} onClick={onAdd} />
+        <SoftwareCategories categories={availableCategories} onClick={onAdd} buttonTitle="add"/>
       </div>
       {/*
       {keywords.map((item, pos) => {

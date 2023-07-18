@@ -4,6 +4,7 @@ import { CategoriesForSoftware, CategoryID, CategoryPath } from '../../types/Sof
 import TagChipFilter from '../layout/TagChipFilter'
 import { ssrSoftwareUrl } from '~/utils/postgrestUrl'
 import logger from '../../utils/logger'
+import React from 'react'
 
 const interleave = <T,>(arr: T[], createElement: (index: number) => T) => arr.reduce((result, element, index, array) => {
   result.push(element);
@@ -21,10 +22,15 @@ export type SelectedCategory = {
 
 type SoftwareCategoriesProps = {
   categories: CategoryPath[]
+} & ({
   onClick?: (props: SelectedCategory) => void
-}
+  buttonTitle: string
+} | {
+  onClick: never
+  buttonTitle: never
+})
 
-export function SoftwareCategories({ categories, onClick }: SoftwareCategoriesProps) {
+export function SoftwareCategories({ categories, buttonTitle, onClick }: SoftwareCategoriesProps) {
   if (categories.length === 0) {
     return (
       <i>No categories</i>
@@ -45,13 +51,20 @@ export function SoftwareCategories({ categories, onClick }: SoftwareCategoriesPr
 
   return <div className="py-1">
     {categories.map((path, index) => {
-      const chunks = path.map((category) => <span key={category.id}>{category.short_name}</span>)
+      const chunks = path.map((category) => (
+        <span key={category.id} className="group">
+          {category.short_name}
+          {!onClick && <span className="absolute hidden group-hover:flex px-2 py-2 bg-white border ">{category.name}</span>}
+        </span>
+      ))
+
       return (
-        <div key={index} className='mb-2'>
-          <span className='px-2 py-1 bg-neutral-100'>
+        <div key={index} className={"mb-2" + (onClick?" hover:bg-neutral-100":"")}>
+          <span className='px-2 py-1 bg-neutral-100 inline-block'>
             {interleave(chunks, (index) => <span key={index} className="px-2">::</span>)}
           </span>
-          {onClick && <span className="ml-2" onClick={onClickHandler} data-idx={index}>click</span>}
+
+          {onClick && <span className="ml-2 float-right" onClick={onClickHandler} data-idx={index}>{buttonTitle}</span>}
         </div>
         )
     })}

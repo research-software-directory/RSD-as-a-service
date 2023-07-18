@@ -68,10 +68,19 @@ VALUES
 
 CREATE TABLE category (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	parent UUID references category,
-	short_name varchar not null unique,
-	name varchar not null unique
+	parent UUID REFERENCES category DEFAULT NULL,
+	short_name VARCHAR NOT NULL,
+	name VARCHAR NOT NULL
+	-- We need postgresql 15 for "NULLS NOT DISTINCT" :(
+	-- UNIQUE NULLS NOT DISTINCT (parent, short_name),
+	-- UNIQUE NULLS NOT DISTINCT (parent, name)
 );
+-- workaround: for postgrsql <15 for "NULLS NOT DISTINCT"
+CREATE UNIQUE INDEX category_parent_short_name_key1 ON category (parent, short_name) WHERE parent IS NOT NULL;
+CREATE UNIQUE INDEX category_parent_short_name_key2 ON category (short_name) WHERE parent IS NULL;
+CREATE UNIQUE INDEX category_parent_name_key1 ON category (parent, name) WHERE parent IS NOT NULL;
+CREATE UNIQUE INDEX category_parent_name_key2 ON category (name) WHERE parent IS NULL;
+-- workaround END
 
 CREATE TABLE category_for_software (
 	software_id UUID references software (id),
@@ -84,28 +93,28 @@ RETURNS TABLE (like category)
 LANGUAGE SQL STABLE AS
 $$
 	WITH RECURSIVE cat_path AS (
-        SELECT *, 1 AS r_index
-          FROM category WHERE id = category_id
-        UNION ALL
-	    SELECT category.*, cat_path.r_index+1
-          FROM category
-          JOIN cat_path
-          ON category.id = cat_path.parent
+		SELECT *, 1 AS r_index
+			FROM category WHERE id = category_id
+	UNION ALL
+		SELECT category.*, cat_path.r_index+1
+			FROM category
+			JOIN cat_path
+		ON category.id = cat_path.parent
 	)
--- TODO: How can we reverse the output rows without injecting a new column
--- Now we have to list all columns of `category` explicitely
--- Want to have something like `* without 'r_index''`
+	-- TODO: How can we reverse the output rows without injecting a new column
+	-- Now we have to list all columns of `category` explicitely
+	-- I want to have something like `* without 'r_index'` to be independant from modifications of `category`
 	SELECT id, parent, short_name, name
 	FROM cat_path
 	ORDER BY r_index DESC;
 $$;
 
--- returns a list of `category` entries from tree root to `category_id`
+-- returns a list of `category` entries traversing from the tree root to entry with `category_id`
 CREATE FUNCTION category_path_expanded(category_id UUID)
 RETURNS JSON
 LANGUAGE SQL STABLE AS
 $$
-  SELECT json_agg(row_to_json) AS path FROM (SELECT row_to_json(category_path(category_id))) AS cats;
+	SELECT json_agg(row_to_json) AS path FROM (SELECT row_to_json(category_path(category_id))) AS cats;
 $$;
 
 
@@ -113,15 +122,15 @@ CREATE FUNCTION category_paths_by_software_expanded(software_id UUID)
 RETURNS JSON
 LANGUAGE SQL STABLE AS
 $$
-  WITH
-  cat_ids AS
-    (SELECT category_id FROM category_for_software AS c4s WHERE c4s.software_id = software_id),
-  paths as
-    (SELECT category_path_expanded(category_id) AS path FROM cat_ids)
-  SELECT
-    CASE WHEN EXISTS(SELECT 1 FROM cat_ids) THEN (SELECT json_agg(path) FROM paths)
-    ELSE '[]'::json
-    END as result
+	WITH
+		cat_ids AS
+		(SELECT category_id FROM category_for_software AS c4s WHERE c4s.software_id = category_paths_by_software_expanded.software_id),
+	paths as
+		(SELECT category_path_expanded(category_id) AS path FROM cat_ids)
+	SELECT
+		CASE WHEN EXISTS(SELECT 1 FROM cat_ids) THEN (SELECT json_agg(path) FROM paths)
+		ELSE '[]'::json
+		END as result
 $$;
 
 
@@ -129,19 +138,13 @@ CREATE FUNCTION available_categories_expanded()
 RETURNS JSON
 LANGUAGE SQL STABLE AS
 $$
-  WITH
-  cat_ids AS
-    (SELECT id AS category_id FROM category AS node WHERE NOT EXISTS (SELECT 1 FROM category AS sub WHERE node.id = sub.parent)),
-  paths AS
-    (SELECT category_path_expanded(category_id) AS path FROM cat_ids)
-  SELECT
-    CASE WHEN EXISTS(SELECT 1 FROM cat_ids) THEN (SELECT json_agg(path) AS result FROM paths)
-    ELSE '[]'::json
-    END
+	WITH
+	cat_ids AS
+		(SELECT id AS category_id FROM category AS node WHERE NOT EXISTS (SELECT 1 FROM category AS sub WHERE node.id = sub.parent)),
+	paths AS
+		(SELECT category_path_expanded(category_id) AS path FROM cat_ids)
+	SELECT
+		CASE WHEN EXISTS(SELECT 1 FROM cat_ids) THEN (SELECT json_agg(path) AS result FROM paths)
+		ELSE '[]'::json
+		END
 $$
-
-
--- TODO:
--- check read/write access rights writing category_for_software table
--- anybody is allowed to write keywords?
--- sort category paths
