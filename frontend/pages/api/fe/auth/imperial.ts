@@ -35,6 +35,7 @@ export async function imperialRedirectProps() {
         client_id: process.env.IMPERIAL_CLIENT_ID || 'www.research-software.nl',
         scope: process.env.IMPERIAL_SCOPES || 'openid',
         response_mode: process.env.IMPERIAL_RESPONSE_MODE || 'query',
+        prompt: process.env.IMPERIAL_LOGIN_PROMPT,
         claims
       }
       return props
