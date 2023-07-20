@@ -118,7 +118,8 @@ async function generateSofware(amount=500) {
 			get_started_url: faker.internet.url(),
 			image_id: localImageIds[index%localImageIds.length],
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
-			short_statement: faker.commerce.productDescription()
+			short_statement: faker.commerce.productDescription(),
+			closed_source: !!faker.helpers.maybe(() => true, {probability: 0.8})
 		});
 	}
 
