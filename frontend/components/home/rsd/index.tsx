@@ -34,6 +34,7 @@ import 'aos/dist/aos.css'
 
 export type RsdHomeProps = {
   software_cnt: number,
+  open_software_cnt: number,
   project_cnt: number,
   organisation_cnt: number,
   contributor_cnt: number,
