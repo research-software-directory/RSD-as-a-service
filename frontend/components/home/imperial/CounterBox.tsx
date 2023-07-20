@@ -13,7 +13,7 @@ type CounterBoxProps = {
  */
 export default function CounterBox({label,value}:CounterBoxProps) {
   return (
-    <div className="bg-primary text-primary-content p-4 text-center">
+    <div className="bg-primary text-primary-content p-4 text-center rounded-md">
       <div className="text-2xl">{label}</div>
       <div className="text-4xl">{value}</div>
     </div>

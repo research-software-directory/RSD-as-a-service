@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Image from 'next/legacy/image'
+import Link from 'next/link'
 
 import {HomeProps} from 'pages'
 import CounterBox from './CounterBox'
@@ -33,10 +34,17 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
             Some catchy and profound phrase about research software written at Imperial.
           </div>
         </div>
-      <div className="relative">
-      <div className="text-center">
-      <h1>Other text</h1>
-      </div>
+        <div className="relative justify-center">
+          <div className="bg-secondary text-primary-content p-4 text-center max-w-fit mx-auto rounded-full border-4 border-primary">
+            <Link href="/software">
+              <div className="text-4xl">Browse Software</div>
+            </Link>
+          </div>
+          <div className="bg-secondary text-primary-content p-4 text-center max-w-fit mx-auto rounded-full border-4 border-primary mt-8">
+            <Link href="/software/add">
+              <div className="text-4xl">Submit Software</div>
+            </Link>
+          </div>
         </div>
       </div>
 
