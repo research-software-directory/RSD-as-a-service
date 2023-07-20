@@ -210,7 +210,7 @@ export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token
   }
 }
 
-function prepareQueryURL(path:string, params:Record<string, string>) {
+function prepareQueryURL(path:string, params:Record<string, string> = {}) {
   // FIXME: database URL?
   //const baseURL = 'http://localhost:3000/api/v1' // process.env.POSTGREST_URL // getBaseUrl()
   const baseURL = getBaseUrl()
@@ -240,7 +240,7 @@ export async function getCategoriesForSoftware(software_id: string, token?: stri
 
 export async function getAvailableCategories(): Promise<CategoryPath[]> {
   try {
-    const url = prepareQueryURL('/rpc/available_categories_expanded', { })
+    const url = prepareQueryURL('/rpc/available_categories_expanded')
     const resp = await fetch(url, {
       method: 'GET',
     })

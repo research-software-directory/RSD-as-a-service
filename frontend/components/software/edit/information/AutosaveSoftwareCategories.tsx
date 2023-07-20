@@ -54,7 +54,7 @@ export default function AutosaveSoftwareCategories({ softwareId, categories: def
     })
   }
 
-  const onAdd2: ChangeEventHandler<HTMLSelectElement> = (event) => {
+  const onAdd: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const categoryIdx = parseInt(event.  target.value ?? '')
     if (isNaN(categoryIdx)) return
     const path = availableCategoryPaths[categoryIdx]
@@ -62,7 +62,7 @@ export default function AutosaveSoftwareCategories({ softwareId, categories: def
     // console.log('click', { id: categoryId, index: categoryIdx })
     addCategory(path)
     // reset selection
-    event.target.value = 'null'
+    event.target.value = 'none'
   }
 
   const onDelete = (category: SelectedCategory) => {
@@ -85,8 +85,8 @@ export default function AutosaveSoftwareCategories({ softwareId, categories: def
       />
       <div className="py-2">
         <SoftwareCategories categories={categoryPaths} onClick={onDelete} buttonTitle="delete" />
-        <select className="p-2 mt-3 w-full" onChange={onAdd2}>
-          <option value="null">click to add more categories</option>
+        <select className="p-2 mt-3 w-full" onChange={onAdd}>
+          <option value="none">click to add more categories</option>
           {availableCategoryPaths.map((categoryPath, index) => <option key={index} value={index}>{categoryPath.map(cat => cat.short_name).join(' :: ')}</option>)}
         </select>
       </div>
