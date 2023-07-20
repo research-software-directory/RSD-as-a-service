@@ -29,6 +29,7 @@ export async function getHomepageCounts(frontend?:boolean) {
     logger(`getHomepageCounts ${resp.status} ${resp.statusText}`, 'warn')
     return {
       software_cnt: null,
+      open_software_cnt: null,
       project_cnt: null,
       organisation_cnt: null,
       contributor_cnt: null,
@@ -40,6 +41,7 @@ export async function getHomepageCounts(frontend?:boolean) {
     // we log and return zero
     return {
       software_cnt: null,
+      open_software_cnt: null,
       project_cnt: null,
       organisation_cnt: null,
       contributor_cnt: null,
