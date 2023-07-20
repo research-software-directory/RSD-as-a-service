@@ -1,4 +1,6 @@
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -25,7 +27,7 @@ SELECT
 	software.brand_name,
 	software.short_statement,
 	software.updated_at,
-	count_software_countributors.contributor_cnt,
+	count_software_contributors.contributor_cnt,
 	count_software_mentions.mention_cnt,
 	software.is_published,
 	keyword_filter_for_software.keywords,
@@ -34,7 +36,7 @@ SELECT
 FROM
 	software
 LEFT JOIN
-	count_software_countributors() ON software.id=count_software_countributors.software
+	count_software_contributors() ON software.id=count_software_contributors.software
 LEFT JOIN
 	count_software_mentions() ON software.id=count_software_mentions.software
 LEFT JOIN
@@ -67,7 +69,7 @@ SELECT
 	software.brand_name,
 	software.short_statement,
 	software.updated_at,
-	count_software_countributors.contributor_cnt,
+	count_software_contributors.contributor_cnt,
 	count_software_mentions.mention_cnt,
 	software.is_published,
 	keyword_filter_for_software.keywords,
@@ -76,7 +78,7 @@ SELECT
 FROM
 	software
 LEFT JOIN
-	count_software_countributors() ON software.id=count_software_countributors.software
+	count_software_contributors() ON software.id=count_software_contributors.software
 LEFT JOIN
 	count_software_mentions() ON software.id=count_software_mentions.software
 LEFT JOIN

@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +11,7 @@ import {getHomepageCounts} from '~/components/home/getHomepageCounts'
 import HelmholtzHome from '~/components/home/helmholtz'
 import RsdHome,{RsdHomeProps} from '~/components/home/rsd'
 import PageMeta from '~/components/seo/PageMeta'
-import CanonicalUrl, {useCanonicalUrl} from '~/components/seo/CanonicalUrl'
+import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import useRsdSettings from '~/config/useRsdSettings'
 
 type HomeProps = {

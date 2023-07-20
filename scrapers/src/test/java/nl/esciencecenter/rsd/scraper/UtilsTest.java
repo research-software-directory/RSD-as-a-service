@@ -23,6 +23,19 @@ public class UtilsTest {
 		Assertions.assertEquals("one%2Ftwo", Utils.urlEncode("one/two"));
 	}
 
+	@Test
+	void testCreatePatchUri() {
+		String baseuri = "http://localhost/api/v1";
+		String tableName = "table_name";
+		String primaryKey = "d8718d90-a3df-4714-864d-40786223e462";
+		String primaryKeyName = "id";
+
+		String expectedUri = "http://localhost/api/v1/table_name?id=eq.d8718d90-a3df-4714-864d-40786223e462";
+		String actualUri = Utils.createPatchUri(baseuri, tableName, primaryKey, primaryKeyName);
+
+		Assertions.assertEquals(expectedUri, actualUri);
+	}
+
 	@Disabled
 	@Test
 	void getWithoutToken() {

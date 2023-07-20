@@ -39,6 +39,7 @@ function generateMentions(amountExtra = 100) {
 		'journalArticle',
 		'magazineArticle',
 		'newspaperArticle',
+		'poster',
 		'presentation',
 		'report',
 		'thesis',

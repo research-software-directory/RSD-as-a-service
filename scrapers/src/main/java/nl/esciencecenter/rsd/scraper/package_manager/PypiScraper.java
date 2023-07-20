@@ -44,13 +44,12 @@ public class PypiScraper implements PackageManagerScraper {
 				.build();
 		try {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			if (response.statusCode() != 200) throw new RsdResponseException(response.statusCode(), "Unexpected response from " + response.uri() + ": " + response.body());
+			if (response.statusCode() == 404) throw new RsdResponseException(response.statusCode(), request.uri(), response.body(), "Not found, is the URL correct?");
+			else if (response.statusCode() != 200) throw new RsdResponseException(response.statusCode(), request.uri(), response.body(), "Unexpected response");
 
 			JsonElement tree = JsonParser.parseString(response.body());
 			return tree.getAsJsonObject().getAsJsonPrimitive("total_downloads").getAsLong();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (InterruptedException e) {
+		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
