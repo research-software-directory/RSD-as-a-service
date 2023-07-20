@@ -28,6 +28,10 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
           label="Closed-Source Software"
           value={(counts.software_cnt - counts.open_software_cnt).toString()}
         />
+        <CounterBox
+          label="Software Mentions"
+          value={counts.software_mention_cnt.toString()}
+        />
       </div>
 
       {
