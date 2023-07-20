@@ -1,3 +1,8 @@
+-- SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+--
+-- SPDX-License-Identifier: EUPL-1.2
+
 -- THIS FILE SHOULD BE MOVED TO THE DEPLOMENT REPO AND USED AS A MIGRATION FILE
 
 CREATE FUNCTION add_category(parent_name varchar, parent_short_name varchar, sub_categories varchar[][])

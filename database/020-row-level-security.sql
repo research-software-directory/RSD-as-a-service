@@ -2,8 +2,11 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
+-- SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
+-- SPDX-License-Identifier: EUPL-1.2
 
 -- maintainer tables
 ALTER TABLE maintainer_for_software ENABLE ROW LEVEL SECURITY;

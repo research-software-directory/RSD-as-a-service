@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+//
+// SPDX-License-Identifier: EUPL-1.2
 
 import CategoryIcon from '@mui/icons-material/Category'
 import { CategoriesForSoftware, CategoryID, CategoryPath } from '../../types/SoftwareTypes'

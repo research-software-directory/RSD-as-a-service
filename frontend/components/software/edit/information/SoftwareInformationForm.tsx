@@ -1,7 +1,10 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: EUPL-1.2
 
 import {FormProvider, useForm} from 'react-hook-form'
 import {EditSoftwareItem} from '~/types/SoftwareTypes'
