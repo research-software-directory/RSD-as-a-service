@@ -25,8 +25,6 @@ const pageDesc = 'The Research Software Directory is designed to show the impact
 export default function Home({counts}: HomeProps) {
   const {host} = useRsdSettings()
 
-  console.log('host...', host)
-
   if (host && host.name) {
     switch (host.name.toLocaleLowerCase()) {
       case 'helmholtz':
