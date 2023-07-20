@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import Image from 'next/legacy/image'
+
 import {HomeProps} from 'pages'
 import CounterBox from './CounterBox'
 import {useSession} from '~/auth'
@@ -16,7 +18,27 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
 
   return (
     <MainContent>
-      <h1>Main content placeholder</h1>
+      <div className="w-10/12 mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr,1fr] gap-[2rem]">
+        <div className="flex flex-col justify-left">
+          <Image
+            src="/images/imperial-college-logo.svg"
+            width="361"
+            height="85"
+            layout="fixed"
+            alt="Imperial College London logo"
+            priority
+          />
+
+          <div className="mt-8 ml-4 text-lg max-w-prose">
+            Some catchy and profound phrase about research software written at Imperial.
+          </div>
+        </div>
+      <div className="relative">
+      <div className="text-center">
+      <h1>Other text</h1>
+      </div>
+        </div>
+      </div>
 
       {/* COUNTERS SECTION EXAMPLE */}
       <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
