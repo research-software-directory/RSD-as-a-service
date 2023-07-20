@@ -22,7 +22,11 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
       <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <CounterBox
           label="Open-Source Software"
-          value={counts.software_cnt.toString()}
+          value={counts.open_software_cnt.toString()}
+        />
+        <CounterBox
+          label="Closed-Source Software"
+          value={(counts.software_cnt - counts.open_software_cnt).toString()}
         />
       </div>
 
