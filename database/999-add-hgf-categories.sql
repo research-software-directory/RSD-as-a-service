@@ -49,3 +49,5 @@ SELECT add_category('POF IV', 'Program-oriented Funding IV',
     ['From Matter to Materials and Life', 'From Matter to Materials and Life (Matter)']
   ]
 );
+
+-- FIXME: How should be abbreviate some of these long names?  @Christian

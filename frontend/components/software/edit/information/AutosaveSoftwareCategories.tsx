@@ -6,12 +6,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react'
-import Chip from '@mui/material/Chip'
+import { ChangeEventHandler, useEffect, useMemo, useState } from 'react'
 
 import { useSession } from '~/auth'
 import { softwareInformation as config } from '../editSoftwareConfig'
-import { CategoriesForSoftware, CategoryID, CategoryPath, KeywordForSoftware } from '~/types/SoftwareTypes'
+import { CategoryID, CategoryPath } from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import { SelectedCategory, SoftwareCategories } from '../../SoftwareCategories'
@@ -19,40 +18,61 @@ import { addCategoryToSoftware, deleteCategoryToSoftware, getAvailableCategories
 
 export type SoftwareCategoriesProps = {
   softwareId: string
-  categories: CategoriesForSoftware
+  categories: CategoryPath[]
 }
 
-export default function AutosaveSoftwareCategories({ softwareId, categories: categoriesDefault }: SoftwareCategoriesProps) {
+function leaf<T>(list: T[]) {
+  return list[list.length - 1]
+}
+
+export default function AutosaveSoftwareCategories({ softwareId, categories: defaultCategoryPaths }: SoftwareCategoriesProps) {
   const { token } = useSession()
   const { showErrorMessage, showInfoMessage } = useSnackbar()
-  const [categories, setCategories] = useState(categoriesDefault)
-  const [availableCategories, setAvailableCategories] = useState<CategoryPath[]>([])
+  const [categoryPaths, setCategoryPaths] = useState(defaultCategoryPaths)
+  const [availableCategoryPaths, setAvailableCategoryPaths] = useState<CategoryPath[]>([])
+
+  const categoryMap = useMemo(() => {
+    const map:Record<CategoryID, number> = {}
+    for (const [index, path] of availableCategoryPaths.entries()) {
+      const leafCategory = leaf(path)
+      map[leafCategory.id] = index
+    }
+    return map
+  }, [availableCategoryPaths])
 
   useEffect(() => {
     getAvailableCategories()
-      .then(setAvailableCategories);
+      .then(setAvailableCategoryPaths);
   }, [])
 
-  // console.group('SoftwareCategories')
-  // console.log('fields...', fields)
-  // console.groupEnd()
-
-  const onAdd = (category: SelectedCategory) => {
-    console.log('onAdd:', softwareId, category.id)
+  const addCategory = (categoryPath: CategoryPath) => {
+    const category = leaf(categoryPath)
+    // console.log('onAdd:', softwareId, category.id)
     addCategoryToSoftware(softwareId, category.id, token).then(() => {
       // FIXME: should we expect that this is corrent or should we re-fetch the value from backend?
-      setCategories([...categories, availableCategories[category.index]])
+      setCategoryPaths([...categoryPaths, categoryPath])
     }).catch((error) => {
       console.log(error)
       showErrorMessage(error.message)
     })
   }
 
+  const onAdd2: ChangeEventHandler<HTMLSelectElement> = (event) => {
+    const categoryIdx = parseInt(event.  target.value ?? '')
+    if (isNaN(categoryIdx)) return
+    const path = availableCategoryPaths[categoryIdx]
+    const categoryId = path[path.length - 1].id
+    // console.log('click', { id: categoryId, index: categoryIdx })
+    addCategory(path)
+    // reset selection
+    event.target.value = 'null'
+  }
+
   const onDelete = (category: SelectedCategory) => {
-    console.log('onRemove:', softwareId, category.id)
+    // console.log('onRemove:', softwareId, category.id)
     deleteCategoryToSoftware(softwareId, category.id, token).then(() => {
       // FIXME: should we expect that this is corrent or should we re-fetch the value from backend?
-      setCategories(categories.filter((el, index) => index != category.index))
+      setCategoryPaths(categoryPaths.filter((el, index) => index != category.index))
     }).catch((error) => {
       console.log(error)
       showErrorMessage(error.message)
@@ -67,55 +87,12 @@ export default function AutosaveSoftwareCategories({ softwareId, categories: cat
         subtitle={config.categories.subtitle}
       />
       <div className="py-2">
-        <div className="mt-1">Assigned:</div>
-        <SoftwareCategories categories={categories} onClick={onDelete} buttonTitle="delete"/>
-        <div className="mt-1">Add more:</div>
-        <SoftwareCategories categories={availableCategories} onClick={onAdd} buttonTitle="add"/>
+        <SoftwareCategories categories={categoryPaths} onClick={onDelete} buttonTitle="delete" />
+        <select className="p-2 mt-3 w-full" onChange={onAdd2}>
+          <option value="null">click to add more categories</option>
+          {availableCategoryPaths.map((categoryPath, index) => <option key={index} value={index}>{categoryPath.map(cat => cat.short_name).join(' :: ')}</option>)}
+        </select>
       </div>
-      {/*
-      {keywords.map((item, pos) => {
-        return(
-          <div
-            key={item.id}
-            className="py-1 pr-1"
-          >
-            <Chip
-              data-testid="keyword-chip"
-              title={item.keyword}
-              label={item.keyword}
-              onDelete={() => onRemove(pos)}
-              sx={{
-                textTransform:'capitalize'
-              }}
-            />
-          </div>
-        )
-      })}
-      </div>
-      <FindKeyword
-        config={{
-          freeSolo: false,
-          minLength: config.keywords.validation.minLength,
-          label: config.keywords.label,
-          help: config.keywords.help,
-          reset: true
-        }}
-        searchForKeyword={searchForSoftwareKeyword}
-        onAdd={onAdd}
-        onCreate={onCreate}
-      />
-      {
-        concept_doi &&
-        <div className="pt-4 pb-0">
-          <ImportKeywordsFromDoi
-            software_id={software_id}
-            concept_doi={concept_doi}
-            keywords={keywords}
-            onSetKeywords={setKeywords}
-          />
-        </div>
-      }
-    */}
     </>
   )
 }

@@ -22,13 +22,15 @@ export type SelectedCategory = {
 
 type SoftwareCategoriesProps = {
   categories: CategoryPath[]
-} & ({
-  onClick?: (props: SelectedCategory) => void
-  buttonTitle: string
-} | {
-  onClick: never
-  buttonTitle: never
-})
+} & (
+    // need both params together or else none
+    {
+      onClick: (props: SelectedCategory) => void
+      buttonTitle: string
+    } | {
+      onClick?: never
+      buttonTitle?: never
+    })
 
 export function SoftwareCategories({ categories, buttonTitle, onClick }: SoftwareCategoriesProps) {
   if (categories.length === 0) {
@@ -54,19 +56,20 @@ export function SoftwareCategories({ categories, buttonTitle, onClick }: Softwar
       const chunks = path.map((category) => (
         <span key={category.id} className="group">
           {category.short_name}
+          {/* FIXME: This is a tooltip. Needs beautification */}
           {!onClick && <span className="absolute hidden group-hover:flex px-2 py-2 bg-white border ">{category.name}</span>}
         </span>
       ))
 
       return (
-        <div key={index} className={"mb-2" + (onClick?" hover:bg-neutral-100":"")}>
+        <div key={index} className={"clear-both mb-2" + (onClick ? " hover:bg-neutral-100" : "")}>
           <span className='px-2 py-1 bg-neutral-100 inline-block'>
             {interleave(chunks, (index) => <span key={index} className="px-2">::</span>)}
           </span>
 
           {onClick && <span className="ml-2 float-right" onClick={onClickHandler} data-idx={index}>{buttonTitle}</span>}
         </div>
-        )
+      )
     })}
   </div>
 }

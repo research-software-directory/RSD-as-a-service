@@ -110,7 +110,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-   console.log('SoftwareIndexPage...releases...', categories)
+  console.log('SoftwareIndexPage', categories)
   return (
     <>
       {/* Page Head meta tags */}
@@ -229,7 +229,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // keywords
       getKeywordsForSoftware(software.id,false,token),
       // categories
-      getCategoriesForSoftware(software.id, false, token),
+      getCategoriesForSoftware(software.id, token),
       // licenseInfo
       getLicenseForSoftware(software.id, false, token),
       // repositoryInfo: url, languages and commits
