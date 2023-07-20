@@ -32,7 +32,7 @@ export default function ImperialCollegeHome({counts}: HomeProps) {
       <CanonicalUrl />
 
       {/* CONTENT */}
-      <section className="flex-1 flex flex-col bg-secondary text-secondary-content">
+      <section className="flex-1 flex flex-col text-secondary-content  bg-[url('/images/campus_south_ken.jpg')] bg-contain bg-no-repeat bg-center bg-black bg-scroll">
         {/* shared header component */}
         <AppHeader />
         {/* custom content component */}
