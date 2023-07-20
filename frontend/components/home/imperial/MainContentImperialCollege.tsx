@@ -56,23 +56,6 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
         />
       </div>
 
-      {
-      /* ORGANISATION LIST EXAMPLE
-        show spinner when loading===true,
-        otherwise show json organisation data
-        received from useImperialData custom hook (line 10)
-      */}
-      {
-        loading ?
-          <ContentLoader />
-        :
-          <div className="mb-12">
-            <pre>
-              {JSON.stringify(organisations,null,' ')}
-            </pre>
-          </div>
-      }
-
     </MainContent>
   )
 }
