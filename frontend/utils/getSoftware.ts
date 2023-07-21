@@ -259,7 +259,7 @@ export async function getAvailableCategories(): Promise<CategoryPath[]> {
 
 // FIXME: proper location?
 // FIXME: add return type
-export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token) {
+export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
   const url = '/api/v1/category_for_software'
   const data = { software_id: softwareId, category_id: categoryId }
 
@@ -278,7 +278,7 @@ export async function addCategoryToSoftware(softwareId: string, categoryId: Cate
   }
   throw new Error(`API returned: ${resp.status} ${resp.statusText}`)
 }
-export async function deleteCategoryToSoftware(softwareId: string, categoryId: CategoryID, token) {
+export async function deleteCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
   const url = `/api/v1/category_for_software?software_id=eq.${softwareId}&category_id=eq.${categoryId}`
 
   const resp = await fetch(url, {
