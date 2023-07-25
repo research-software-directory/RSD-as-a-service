@@ -46,6 +46,7 @@ it('returns null values on error', async () => {
     project_cnt: null,
     organisation_cnt: null,
     contributor_cnt: null,
-    software_mention_cnt: null
+    software_mention_cnt: null,
+    open_software_cnt: null,
   })
 })

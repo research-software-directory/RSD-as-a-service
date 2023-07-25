@@ -8,6 +8,7 @@ import Link from 'next/link'
 
 import {HomeProps} from 'pages'
 import CounterBox from './CounterBox'
+import Keywords from './Keywords'
 import {useSession} from '~/auth'
 import useImperialData from './useImperialData'
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -15,7 +16,7 @@ import MainContent from '~/components/layout/MainContent'
 
 export default function MainContentImperialCollege({counts}: HomeProps) {
   const {token} = useSession()
-  const {loading, organisations} = useImperialData(token)
+  const {loading, keywords} = useImperialData(token)
 
   return (
     <MainContent>
@@ -63,6 +64,15 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
           value={counts.software_mention_cnt.toString()}
         />
       </div>
+
+      {
+        loading ?
+          <ContentLoader />
+          :
+          <div className="mb-12">
+            <Keywords keywords={keywords} />
+          </div>
+      }
 
     </MainContent>
   )
