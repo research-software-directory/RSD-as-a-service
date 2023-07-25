@@ -15,7 +15,7 @@ import MainContent from '~/components/layout/MainContent'
 
 export default function MainContentImperialCollege({counts}: HomeProps) {
   const {token} = useSession()
-  const {loading, organisations} = useImperialData(token)
+  const {loading, keywords} = useImperialData(token)
 
   return (
     <MainContent>
@@ -63,6 +63,17 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
           value={counts.software_mention_cnt.toString()}
         />
       </div>
+
+      {
+        loading ?
+          <ContentLoader />
+        :
+          <div className="mb-12">
+            <pre>
+              {JSON.stringify(keywords,null,' ')}
+            </pre>
+          </div>
+      }
 
     </MainContent>
   )

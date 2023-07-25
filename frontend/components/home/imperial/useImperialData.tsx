@@ -13,7 +13,7 @@ import logger from '~/utils/logger'
  * @param param0
  * @returns
  */
-async function getOrganisationsList({url, token}: {url: string, token?: string}) {
+async function getKeywordList({url, token}: {url: string, token?: string}) {
   try {
     const resp = await fetch(url, {
       method: 'GET',
@@ -29,17 +29,21 @@ async function getOrganisationsList({url, token}: {url: string, token?: string})
       }
     }
     // otherwise request failed
-    logger(`getOrganisationsList failed: ${resp.status} ${resp.statusText}`, 'warn')
+    logger(`getKeywordList failed: ${resp.status} ${resp.statusText}`, 'warn')
     // we log and return zero
     return {
       data: []
     }
   } catch (e: any) {
-    logger(`getOrganisationsList: ${e?.message}`, 'error')
+    logger(`getKeywordList: ${e?.message}`, 'error')
     return {
       data: []
     }
   }
+}
+
+export type keyword = {
+  value: string
 }
 
 /**
@@ -47,33 +51,31 @@ async function getOrganisationsList({url, token}: {url: string, token?: string})
  * needed for the custom Imperial College homepage
  */
 export default function useImperialData(token: string) {
-  const [organisations, setOrganisations] = useState<OrganisationForOverview[]>([])
+  const [keywords, setKeywords] = useState<keyword[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let abort = false
-    // async function to collect data
+
     async function getData() {
       setLoading(true)
-      // construct api url with all params
-      const url = '/api/v1/rpc/organisations_overview?parent=is.null&limit=1'
-      // pass it to async api call function
-      const {data} = await getOrganisationsList({url, token})
-      // if for any reason the hook is
+
+      const url = '/api/v1/rpc/popular_keywords'
+      const {data} = await getKeywordList({url, token})
+
       if (abort) return
-      // set new data, this triggers rerenders on change
-      setOrganisations(data)
-      // set loading flag to finish
+
+      setKeywords(data)
       setLoading(false)
     }
-    // call async function
+
     getData()
-    // hook clean up
+
     return () => { abort = true }
   }, [token])
 
   return {
-    organisations,
+    keywords,
     loading
   }
 }

@@ -1408,3 +1408,20 @@ ORDER BY
 DESC LIMIT
 	1;
 $$;
+
+CREATE FUNCTION popular_keywords() RETURNS TABLE (
+       value CITEXT
+) LANGUAGE plpgsql VOLATILE AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		keyword.value
+	FROM
+		keyword
+	INNER JOIN
+		combined_counts
+	ON
+		keyword.id=combined_counts.id;
+END
+$$;
