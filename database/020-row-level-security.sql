@@ -276,6 +276,12 @@ CREATE POLICY admin_all_rights ON testimonial TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
+
+-- categories
+
+ALTER TABLE category ENABLE ROW LEVEL SECURITY;
+
+
 -- categories for software
 
 ALTER TABLE category_for_software ENABLE ROW LEVEL SECURITY;
