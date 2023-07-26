@@ -50,6 +50,7 @@ export type NewSoftwareItem = {
   description_url: string | null,
   description_type: 'markdown'|'link',
   get_started_url: string | null,
+  closed_source: boolean,
   is_published: boolean,
   short_statement: string | null,
   image_id: string | null,
@@ -98,6 +99,7 @@ export const SoftwarePropsToSave = [
   'description_url',
   'get_started_url',
   'image_id',
+  'closed_source',
   'is_published',
   'short_statement'
 ]

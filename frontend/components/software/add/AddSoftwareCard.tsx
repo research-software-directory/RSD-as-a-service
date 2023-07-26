@@ -10,6 +10,8 @@ import {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import {useForm} from 'react-hook-form'
@@ -35,6 +37,7 @@ type AddSoftwareForm = {
   slug: string,
   brand_name: string,
   short_statement: string|null,
+  closed_source: boolean
 }
 
 let lastValidatedSlug = ''
@@ -52,7 +55,7 @@ export default function AddSoftwareCard() {
   })
   const {errors, isValid} = formState
   // watch for data change in the form
-  const [slug,brand_name,short_statement] = watch(['slug', 'brand_name', 'short_statement'])
+  const [slug,brand_name,short_statement,closed_source] = watch(['slug', 'brand_name', 'short_statement', 'closed_source'])
   // take the last slugValue
   const bouncedSlug = useDebounce(slugValue, 700)
 
@@ -142,6 +145,7 @@ export default function AddSoftwareCard() {
         brand_name: data.brand_name,
         slug: data.slug,
         short_statement: data.short_statement,
+        closed_source: data.closed_source,
         is_published: false,
         description: null,
         description_type: 'markdown',
@@ -251,6 +255,13 @@ export default function AddSoftwareCard() {
               helperText: errors?.slug?.message ?? config.slug.help
             }}
             register={register('slug',config.slug.validation)}
+          />
+          <div className="py-4"></div>
+          <FormControlLabel
+            control={
+              <Switch {...register('closed_source')} />
+            }
+            label="Closed Source"
           />
         </section>
         <section className='flex justify-end'>

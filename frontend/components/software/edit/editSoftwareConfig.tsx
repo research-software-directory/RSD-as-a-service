@@ -124,6 +124,9 @@ export const softwareInformation = {
   is_published: {
     label: 'Published',
   },
+  closed_source: {
+    label: 'Closed Source'
+  },
   keywords: {
     title: 'Keywords',
     subtitle: 'Find, add or import using concept DOI.',

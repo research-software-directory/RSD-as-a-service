@@ -18,6 +18,7 @@ import AutosaveRepositoryUrl from './AutosaveRepositoryUrl'
 import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
 import AutosaveSoftwareMarkdown from './AutosaveSoftwareMarkdown'
 import AutosaveSoftwareLogo from './AutosaveSoftwareLogo'
+import AutosaveSoftwareSwitch from './AutosaveSoftwareSwitch'
 
 type SoftwareInformationFormProviderProps = {
   editSoftware: EditSoftwareItem
@@ -110,6 +111,12 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
               rules={config.short_statement.validation}
             />
             <div className="py-2"></div>
+            <AutosaveSoftwareSwitch
+              software_id={formData.id}
+              name='closed_source'
+              label={config.closed_source.label}
+              defaultValue={editSoftware.closed_source}
+            />
             <EditSectionTitle
               title='Software URLs'
               subtitle='Where can users find information to start?'

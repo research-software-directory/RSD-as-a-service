@@ -39,6 +39,10 @@ export const addConfig = {
         message: 'Restricted input violiation. Use letters, numbers and dashes "-" only between other input.'
       }
     }
+  },
+  closed_source: {
+    label: 'Closed source',
+    validation: {}
   }
 }
 
