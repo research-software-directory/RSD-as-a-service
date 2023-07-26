@@ -107,6 +107,7 @@ $$
 	-- TODO: How can we reverse the output rows without injecting a new column
 	-- Now we have to list all columns of `category` explicitely
 	-- I want to have something like `* without 'r_index'` to be independant from modifications of `category`
+	-- TODO: check SEARCH keyword
 	SELECT id, parent, short_name, name
 	FROM cat_path
 	ORDER BY r_index DESC;

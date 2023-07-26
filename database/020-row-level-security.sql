@@ -281,6 +281,12 @@ CREATE POLICY admin_all_rights ON testimonial TO rsd_admin
 
 ALTER TABLE category ENABLE ROW LEVEL SECURITY;
 
+-- allow everybody to read
+CREATE POLICY anyone_can_read ON category
+	FOR SELECT
+	TO rsd_web_anon, rsd_user
+	USING (TRUE);
+
 
 -- categories for software
 
@@ -290,7 +296,7 @@ ALTER TABLE category_for_software ENABLE ROW LEVEL SECURITY;
 CREATE POLICY anyone_can_read ON category_for_software
 	FOR SELECT
 	TO rsd_web_anon, rsd_user
-	USING (EXISTS(SELECT 1 FROM software WHERE id = software_id AND is_published = TRUE));
+	USING (EXISTS(SELECT 1 FROM software WHERE id = software_id AND is_published));
 
 -- allow software maintainers to have read/write access to their software
 CREATE POLICY maintainer_all_rights ON category_for_software
