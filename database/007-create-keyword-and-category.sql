@@ -73,17 +73,11 @@ CREATE TABLE category (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	parent UUID REFERENCES category DEFAULT NULL,
 	short_name VARCHAR NOT NULL,
-	name VARCHAR NOT NULL
-	-- We need postgresql 15 for "NULLS NOT DISTINCT" :(
-	-- UNIQUE NULLS NOT DISTINCT (parent, short_name),
-	-- UNIQUE NULLS NOT DISTINCT (parent, name)
+	name VARCHAR NOT NULL,
+
+	CONSTRAINT unique_short_name UNIQUE NULLS NOT DISTINCT (parent, short_name),
+	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name)
 );
--- workaround: for postgrsql <15 for "NULLS NOT DISTINCT"
-CREATE UNIQUE INDEX category_parent_short_name_key1 ON category (parent, short_name) WHERE parent IS NOT NULL;
-CREATE UNIQUE INDEX category_parent_short_name_key2 ON category (short_name) WHERE parent IS NULL;
-CREATE UNIQUE INDEX category_parent_name_key1 ON category (parent, name) WHERE parent IS NOT NULL;
-CREATE UNIQUE INDEX category_parent_name_key2 ON category (name) WHERE parent IS NULL;
--- workaround END
 
 CREATE TABLE category_for_software (
 	software_id UUID references software (id),
