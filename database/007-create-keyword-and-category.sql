@@ -70,7 +70,7 @@ VALUES
 ----------------
 
 CREATE TABLE category (
-	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	id UUID PRIMARY KEY,
 	parent UUID REFERENCES category DEFAULT NULL,
 	short_name VARCHAR NOT NULL,
 	name VARCHAR NOT NULL,
@@ -84,6 +84,71 @@ CREATE TABLE category_for_software (
 	category_id UUID references category (id),
 	PRIMARY KEY (software_id, category_id)
 );
+
+
+-- sanitize categories
+
+CREATE FUNCTION sanitise_insert_category()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER AS
+$$
+BEGIN
+	IF NEW.id IS NOT NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'The category id is generated automatically and may not be set.';
+	END IF;
+	NEW.id = gen_random_uuid();
+	RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_insert_category
+	BEFORE INSERT ON category
+	FOR EACH ROW EXECUTE PROCEDURE sanitise_insert_category();
+
+
+CREATE FUNCTION sanitise_update_category()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER AS
+$$
+BEGIN
+	IF NEW.id != OLD.id THEN
+		RAISE EXCEPTION USING MESSAGE = 'The category id may not be changed.';
+	END IF;
+	RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_category
+	BEFORE UPDATE ON category
+	FOR EACH ROW EXECUTE PROCEDURE sanitise_update_category();
+
+
+CREATE FUNCTION check_cycle_categories()
+RETURNS TRIGGER STABLE
+LANGUAGE plpgsql
+SECURITY DEFINER AS
+$$
+	DECLARE first_id UUID = NEW.id;
+	DECLARE current_id UUID = NEW.parent;
+BEGIN
+	WHILE current_id IS NOT NULL LOOP
+		IF current_id = first_id THEN
+			RAISE EXCEPTION USING MESSAGE = 'Cycle detected for category with id ' || NEW.id;
+		END IF;
+		SELECT parent FROM category WHERE id = current_id INTO current_id;
+	END LOOP;
+	RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER zzz_check_cycle_categories  -- triggers are executed in alphabetical order
+	AFTER INSERT OR UPDATE ON category
+	FOR EACH ROW EXECUTE PROCEDURE check_cycle_categories();
+
+
+-- helper functions
 
 CREATE FUNCTION category_path(category_id UUID)
 RETURNS TABLE (like category)

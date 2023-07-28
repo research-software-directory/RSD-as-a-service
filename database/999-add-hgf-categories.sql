@@ -13,7 +13,7 @@ DECLARE parent_id uuid;
 DECLARE category varchar[];
 BEGIN
   INSERT INTO category(short_name, name) VALUES (parent_short_name, parent_name)
-  RETURNING id INTO parent_id;
+    RETURNING id INTO parent_id;
   FOREACH category SLICE 1 IN ARRAY sub_categories LOOP
     INSERT INTO category(parent, short_name, name) VALUES (parent_id, category[1], category[2]);
   END LOOP;
