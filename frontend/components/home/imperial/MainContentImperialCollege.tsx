@@ -17,10 +17,6 @@ import MainContent from '~/components/layout/MainContent'
 export default function MainContentImperialCollege({ counts }: HomeProps) {
   const { token } = useSession()
   const { loading, keywords } = useImperialData(token)
-  console.log(keywords)
-  console.log(typeof keywords)
-  console.log(JSON.stringify(keywords, null, ' '))
-  console.log(typeof JSON.stringify(keywords, null, ' '))
 
   return (
     <MainContent>
