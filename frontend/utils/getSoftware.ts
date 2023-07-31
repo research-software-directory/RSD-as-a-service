@@ -36,7 +36,7 @@ export async function getSoftwareList({url,token}:{url:string,token?:string }){
         count: extractCountFromHeader(resp.headers),
         data: json
       }
-    } else{
+    } else {
       logger(`getSoftwareList failed: ${resp.status} ${resp.statusText} ${url}`, 'warn')
       return {
         count:0,
@@ -210,12 +210,12 @@ export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token
   }
 }
 
-function prepareQueryURL(path:string, params:Record<string, string> = {}) {
+function prepareQueryURL(path: string, params: Record<string, string> = {}) {
   // FIXME: database URL?
   //const baseURL = 'http://localhost:3000/api/v1' // process.env.POSTGREST_URL // getBaseUrl()
   const baseURL = getBaseUrl()
   logger(`prepareQueryURL baseURL:${baseURL}`)
-  return `${baseURL}${path}?`+ Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&')
+  return `${baseURL}${path}?` + Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&')
 }
 
 export async function getCategoriesForSoftware(software_id: string, token?: string): Promise<CategoriesForSoftware> {
@@ -238,6 +238,15 @@ export async function getCategoriesForSoftware(software_id: string, token?: stri
   return []
 }
 
+function compareCategoryPath(p1: CategoryPath, p2: CategoryPath) {
+  if (p1.length != p2.length) return p1.length - p2.length
+  for (let index = 0; index < p1.length; index++) {
+    const diff = p1[index].short_name.localeCompare(p2[index].short_name)
+    if (diff != 0) return diff
+  }
+  return 0
+}
+
 export async function getAvailableCategories(): Promise<CategoryPath[]> {
   try {
     const url = prepareQueryURL('/rpc/available_categories_expanded')
@@ -247,6 +256,8 @@ export async function getAvailableCategories(): Promise<CategoryPath[]> {
     if (resp.status === 200) {
       const data = await resp.json()
       // logger(`getAvailableCategories response: ${JSON.stringify(data)}`)
+      // FIXME: sorting should be done by backend
+      data.sort(compareCategoryPath)
       return data
     } else if (resp.status === 404) {
       logger(`getAvailableCategories: 404 [${url}]`, 'error')

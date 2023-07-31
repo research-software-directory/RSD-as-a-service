@@ -3,9 +3,12 @@ TODOs for category feature
 ==========================
 
 - add backend test? how?
+- sort results of backend functions which return list of category path
 - how should be abbreviate some of these long category names?
 - the API calling functions have a lot of copy&paste code. Let's create some generic helper functions for API calls
 - eval use of WITH RECURSIVE..SEARCH for category_path()
+- do not show
+- make add_category recursive (only one parameter)
 
 DB tests
 ========
@@ -18,3 +21,9 @@ FE tests
 ========
 
 - ?
+
+
+More ideas for later
+====================
+
+- assign a category to a software: add a search field

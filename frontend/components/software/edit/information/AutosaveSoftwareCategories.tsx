@@ -29,7 +29,7 @@ export default function AutosaveSoftwareCategories({ softwareId, categories: def
   const [availableCategoryPaths, setAvailableCategoryPaths] = useState<CategoryPath[]>([])
 
   const categoryMap = useMemo(() => {
-    const map:Record<CategoryID, number> = {}
+    const map: Record<CategoryID, number> = {}
     for (const [index, path] of availableCategoryPaths.entries()) {
       const leafCategory = leaf(path)
       map[leafCategory.id] = index
@@ -55,7 +55,7 @@ export default function AutosaveSoftwareCategories({ softwareId, categories: def
   }
 
   const onAdd: ChangeEventHandler<HTMLSelectElement> = (event) => {
-    const categoryIdx = parseInt(event.  target.value ?? '')
+    const categoryIdx = parseInt(event.target.value ?? '')
     if (isNaN(categoryIdx)) return
     const path = availableCategoryPaths[categoryIdx]
     const categoryId = path[path.length - 1].id
@@ -86,7 +86,7 @@ export default function AutosaveSoftwareCategories({ softwareId, categories: def
       <div className="py-2">
         <SoftwareCategories categories={categoryPaths} onClick={onDelete} buttonTitle="delete" />
         <select className="p-2 mt-3 w-full" onChange={onAdd}>
-          <option value="none">click to add more categories</option>
+          <option value="none">click to assign categories</option>
           {availableCategoryPaths.map((categoryPath, index) => <option key={index} value={index}>{categoryPath.map(cat => cat.short_name).join(' :: ')}</option>)}
         </select>
       </div>
