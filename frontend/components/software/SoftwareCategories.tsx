@@ -43,7 +43,7 @@ function CategoryTree({ categories }: { categories: CategoryPath[] }) {
   }
 
   const TreeLevel = ({ items, indent = false }: { items: CategoryTreeLevel[], indent?: boolean }) => {
-    return <ul className={"list-disc list-inside" + (indent ? ' pl-9 -indent-4' : '')}>
+    return <ul className={"list-disc list-inside -indent-4" + (indent ? ' pl-7' : ' pl-4')}>
       {items.map((item, index) => (
         <li key={index}>
           {item.cat.short_name}
