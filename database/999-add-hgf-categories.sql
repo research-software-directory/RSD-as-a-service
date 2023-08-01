@@ -54,3 +54,46 @@ SELECT add_category('POF IV', 'Program-oriented Funding IV',
     ['From Matter to Materials and Life', 'From Matter to Materials and Life (Matter)']
   ]
 );
+
+
+CREATE FUNCTION add_test_categories()
+RETURNS TABLE (LIKE category)
+LANGUAGE plpgsql
+AS $$
+  DECLARE parent1 uuid;
+  DECLARE parent2 uuid;
+  DECLARE parent3 uuid;
+BEGIN
+  INSERT INTO category(short_name, name) VALUES ('top level 1', 'Top Level Category 1') RETURNING id INTO parent1;
+  --
+  INSERT INTO category(parent, short_name, name) VALUES (parent1, 'category A', 'Category A aka 1.1') RETURNING id INTO parent2;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 1 bit deeper', 'Category 1 aka 1.1.1') RETURNING id INTO parent3;
+  --
+  INSERT INTO category(parent, short_name, name) VALUES (parent3, 'category a bit deeper', 'Category a aka 1.1.1.1');
+  INSERT INTO category(parent, short_name, name) VALUES (parent3, 'category b bit deeper', 'Category b aka 1.1.1.2');
+  INSERT INTO category(parent, short_name, name) VALUES (parent3, 'category c bit deeper and longer', 'Category c aka 1.1.1.3');
+  INSERT INTO category(parent, short_name, name) VALUES (parent3, 'category d bit deeper and longer', 'Category d aka 1.1.1.4');
+  --
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 2', 'Category 2 aka 1.1.2') RETURNING id INTO parent3;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 3', 'Category 3 aka 1.1.3') RETURNING id INTO parent3;
+  --
+  INSERT INTO category(parent, short_name, name) VALUES (parent1, 'category B', 'Category B aka 1.2') RETURNING id INTO parent2;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 1', 'Category 1 aka 1.2.1') RETURNING id INTO parent3;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 2', 'Category 2 aka 1.2.2') RETURNING id INTO parent3;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 3', 'Category 3 aka 1.2.3') RETURNING id INTO parent3;
+  --
+  INSERT INTO category(short_name, name) VALUES ('top level 2 bit longer', 'Top Level Category 2') RETURNING id INTO parent1;
+  --
+  INSERT INTO category(parent, short_name, name) VALUES (parent1, 'category A bit longer', 'Category A aka 2.1') RETURNING id INTO parent2;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 1 bit longer', 'Category 1 aka 2.1.1') RETURNING id INTO parent3;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 2 bit longer', 'Category 2 aka 2.1.2') RETURNING id INTO parent3;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 3 bit longer', 'Category 3 aka 2.1.3') RETURNING id INTO parent3;
+  --
+  INSERT INTO category(parent, short_name, name) VALUES (parent1, 'category B even more longer', 'Category B aka 2.2') RETURNING id INTO parent2;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 1 even more longer', 'Category 1 aka 2.2.1') RETURNING id INTO parent3;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 2 even more longer', 'Category 2 aka 2.2.2') RETURNING id INTO parent3;
+  INSERT INTO category(parent, short_name, name) VALUES (parent2, 'category 3 even more longer', 'Category 3 aka 2.2.3') RETURNING id INTO parent3;
+END
+$$;
+
+SELECT add_test_categories();
