@@ -296,7 +296,7 @@ WHERE
 		(
 			software_for_organisation.status = 'approved'
 		AND
-		 	software IN (SELECT id FROM software WHERE is_published)
+			software IN (SELECT id FROM software WHERE is_published)
 		)
 GROUP BY list_parent_organisations.organisation_id;
 $$;
@@ -995,7 +995,7 @@ $$;
 
 -- ORGANISATIONS BY MAINTAINER
 -- NOTE! each organisation is shown multiple times in this view
--- we filter this view at least by user acount (maintainer_id uuid) on primary_maintainer or maintainer
+-- we filter this view at least by user account (maintainer_id uuid) on primary_maintainer or maintainer
 CREATE FUNCTION organisations_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
@@ -1010,39 +1010,36 @@ CREATE FUNCTION organisations_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	project_cnt BIGINT,
 	children_cnt BIGINT,
 	rsd_path VARCHAR
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
-	SELECT
-		organisation.id,
-		organisation.slug,
-		organisation.parent,
-		organisation.primary_maintainer,
-		organisation.name,
-		organisation.ror_id,
-		organisation.website,
-		organisation.is_tenant,
-		organisation.logo_id,
-		software_count_by_organisation.software_cnt,
-		project_count_by_organisation.project_cnt,
-		children_count_by_organisation.children_cnt,
-		organisation_route.rsd_path
-	FROM
-		organisation
-	LEFT JOIN
-		software_count_by_organisation() ON software_count_by_organisation.organisation = organisation.id
-	LEFT JOIN
-		project_count_by_organisation() ON project_count_by_organisation.organisation = organisation.id
-	LEFT JOIN
-		children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
-	LEFT JOIN
-		maintainer_for_organisation ON maintainer_for_organisation.organisation = organisation.id
-	LEFT JOIN
-		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
-	WHERE
-		maintainer_for_organisation.maintainer = maintainer_id OR organisation.primary_maintainer = maintainer_id;
-END
+SELECT DISTINCT ON (organisation.id)
+	organisation.id,
+	organisation.slug,
+	organisation.parent,
+	organisation.primary_maintainer,
+	organisation.name,
+	organisation.ror_id,
+	organisation.website,
+	organisation.is_tenant,
+	organisation.logo_id,
+	software_count_by_organisation.software_cnt,
+	project_count_by_organisation.project_cnt,
+	children_count_by_organisation.children_cnt,
+	organisation_route.rsd_path
+FROM
+	organisation
+LEFT JOIN
+	software_count_by_organisation() ON software_count_by_organisation.organisation = organisation.id
+LEFT JOIN
+	project_count_by_organisation() ON project_count_by_organisation.organisation = organisation.id
+LEFT JOIN
+	children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
+LEFT JOIN
+	maintainer_for_organisation ON maintainer_for_organisation.organisation = organisation.id
+LEFT JOIN
+	organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
+WHERE
+	maintainer_for_organisation.maintainer = maintainer_id OR organisation.primary_maintainer = maintainer_id;
 $$;
 
 -- COUNTS by maintainer
