@@ -149,6 +149,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
           onKeyDown={handleKeyDown}
           type="text"
           onFocus={focusSearch}
+          aria-label="Search for software"
         />
 
         {isOpen &&

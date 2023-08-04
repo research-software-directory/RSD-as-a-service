@@ -45,6 +45,7 @@ export default function Searchbox({placeholder, onSearch, delay = 400, defaultVa
       autoComplete='off'
       placeholder={placeholder}
       value={state.value}
+      inputProps={{'aria-label': placeholder}}
       sx={{
         flex:1,
         minWidth: ['auto','auto', '20rem']

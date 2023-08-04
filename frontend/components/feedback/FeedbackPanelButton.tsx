@@ -63,7 +63,6 @@ User Agent: ${navigator.userAgent}`
     <div>
       {/* If desktop size */}
       <button className="hidden md:flex gap-2 items-center no-underline"
-        aria-describedby="feedback panel"
         onClick={handleClickOpen}
       >
         Feedback <CaretIcon/>
