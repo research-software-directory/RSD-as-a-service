@@ -1,0 +1,8 @@
+[sqlfluff]
+templater = raw
+dialect = postgres
+large_file_skip_byte_limit = 0
+
+[sqlfluff:indentation]
+indent_unit = tab
+

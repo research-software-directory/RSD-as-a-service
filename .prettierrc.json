@@ -1,0 +1,18 @@
+{
+	"overrides": [
+		{
+			"files": "**/*.java",
+			"options": {
+				"useTabs": true
+			}
+		},
+		{
+			"files": "**/*.sql",
+			"options": {
+				"language": "postgresql",
+				"keywordCase": "upper",
+				"useTabs": true
+			}
+		}
+	]
+}
