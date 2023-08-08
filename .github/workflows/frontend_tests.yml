@@ -1,5 +1,7 @@
 # SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 - 2023 dv4all
+# SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -30,6 +32,9 @@ jobs:
       - name: "install dependencies"
         working-directory: frontend
         run: yarn install --frozen-lockfile
+      - name: "run eslint check"
+        working-directory: frontend
+        run: yarn lint
       - name: "run unit test"
         working-directory: frontend
         run: yarn test:coverage
