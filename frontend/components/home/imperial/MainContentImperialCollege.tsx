@@ -10,13 +10,30 @@ import {HomeProps} from 'pages'
 import CounterBox from './CounterBox'
 import Keywords from './Keywords'
 import {useSession} from '~/auth'
+import {useAuth} from '~/auth'
 import useImperialData from './useImperialData'
+import useLoginProviders from '~/auth/api/useLoginProviders'
 import ContentLoader from '~/components/layout/ContentLoader'
 import MainContent from '~/components/layout/MainContent'
+import {Provider} from 'pages/api/fe/auth'
+
+function set_location_cookie() {
+  document.cookie = `rsd_pathname=/software/add;path=/auth;SameSite=None;Secure`
+}
+
+function get_href(auth_status: string, login_providers: Provider[]) {
+  if (auth_status == "authenticated") {
+    return "/software/add"
+  }
+  return (login_providers[0]?.redirectUrl ?? '')
+}
 
 export default function MainContentImperialCollege({counts}: HomeProps) {
   const {token} = useSession()
   const {loading, keywords} = useImperialData(token)
+  const {session} = useAuth()
+  const providers = useLoginProviders()
+  const auth_status = session?.status || 'loading'
 
   return (
     <MainContent>
@@ -42,7 +59,10 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
             </Link>
           </div>
           <div className="bg-secondary text-primary-content p-4 text-center max-w-fit mx-auto rounded-full border-4 border-primary mt-8">
-            <Link href="/software/add">
+            <Link
+              href={get_href(auth_status, providers)}
+              onClick={set_location_cookie}
+            >
               <div className="text-4xl">Submit Software</div>
             </Link>
           </div>
