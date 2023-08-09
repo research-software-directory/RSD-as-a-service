@@ -45,6 +45,18 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
   // console.log('formData...', formData)
   // console.groupEnd()
 
+  let repoURL, citationField
+  repoURL = citationField = <></>
+
+  if (formData.closed_source){
+    repoURL = <></>
+    citationField = <></>
+  }
+  else {
+    repoURL = <AutosaveRepositoryUrl />
+    citationField = <AutosaveConceptDoi />
+  }
+
   return (
     <FormProvider {...methods}>
       <form
@@ -134,7 +146,7 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
               rules={config.get_started_url.validation}
             />
             <div className="py-2"></div>
-            <AutosaveRepositoryUrl />
+            {repoURL}
             <div className="py-2"></div>
             <AutosaveSoftwareMarkdown />
             {/* add white space at the bottom */}
@@ -143,7 +155,7 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
           <div className="py-4 min-w-[21rem] xl:my-0">
             <AutosaveSoftwarePageStatus />
             <div className="py-4"></div>
-            <AutosaveConceptDoi />
+            {citationField}
             <div className="py-4"></div>
             <AutosaveSoftwareLogo />
             <div className="py-4"></div>
