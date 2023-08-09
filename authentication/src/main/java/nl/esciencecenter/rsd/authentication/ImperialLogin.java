@@ -37,7 +37,8 @@ public class ImperialLogin implements Login {
 		DecodedJWT idJwt = JWT.decode(idToken);
 		String subject = idJwt.getSubject();
 		String email = idJwt.getClaim("email").asString();
-		return new OpenIdInfo(subject, email, email, "Imperial");
+		String name = idJwt.getClaim("name").asString();
+		return new OpenIdInfo(subject, name, email, "Imperial");
 	}
 
 	private Map<String, String> createForm() {
