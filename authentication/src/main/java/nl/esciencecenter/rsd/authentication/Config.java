@@ -58,8 +58,8 @@ public class Config {
 		return rsdAuthProviders().contains("ORCID");
 	}
 
-	public static boolean isImperialEnabled() {
-		return rsdAuthProviders().contains("IMPERIAL");
+	public static boolean isAzureEnabled() {
+		return rsdAuthProviders().contains("AZURE");
 	}
 
 	public static String userMailWhitelist() {
@@ -152,25 +152,28 @@ public class Config {
 		return System.getenv("ORCID_SCOPES");
 	}
 
-//	IMPERIAL
-	public static String imperialRedirect() {
-		return System.getenv("IMPERIAL_REDIRECT");
+//	Azure Active Directory
+	public static String azureRedirect() {
+		return System.getenv("AZURE_REDIRECT");
 	}
 
-	public static String imperialClientId() {
-		return System.getenv("IMPERIAL_CLIENT_ID");
+	public static String azureClientId() {
+		return System.getenv("AZURE_CLIENT_ID");
 	}
 
-	public static String imperialWellknown() {
-		return System.getenv("IMPERIAL_WELL_KNOWN_URL");
+	public static String azureWellknown() {
+		return System.getenv("AZURE_WELL_KNOWN_URL");
 	}
 
-	public static String imperialClientSecret() {
-		return System.getenv("AUTH_IMPERIAL_CLIENT_SECRET");
+	public static String azureClientSecret() {
+		return System.getenv("AUTH_AZURE_CLIENT_SECRET");
 	}
 
-	public static String imperialScopes() {
-		return System.getenv("IMPERIAL_SCOPES");
+	public static String azureScopes() {
+		return System.getenv("AZURE_SCOPES");
 	}
 
+	public static String azureOrganisation() {
+		return System.getenv("AZURE_ORGANISATION");
+	}
 }

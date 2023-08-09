@@ -9,7 +9,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * IMPERIAL OpenID endpoint
+ * Azure Active Directory OpenID endpoint
  * It provides frontend with redirect uri for the login button
  */
 
@@ -21,9 +21,9 @@ import {Provider, ApiError} from '.'
 
 type Data = Provider | ApiError
 
-export async function imperialRedirectProps() {
+export async function azureRedirectProps() {
   // extract wellknow url from env
-  const wellknownUrl = process.env.IMPERIAL_WELL_KNOWN_URL ?? null
+  const wellknownUrl = process.env.AZURE_WELL_KNOWN_URL ?? null
   if (wellknownUrl) {
     // extract authorisation endpoint from wellknow response
     const authorization_endpoint = await getAuthorisationEndpoint(wellknownUrl)
@@ -31,39 +31,37 @@ export async function imperialRedirectProps() {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
-        redirect_uri: process.env.IMPERIAL_REDIRECT || 'https://research-software.nl/auth/login/imperial',
-        client_id: process.env.IMPERIAL_CLIENT_ID || 'www.research-software.nl',
-        scope: process.env.IMPERIAL_SCOPES || 'openid',
-        response_mode: process.env.IMPERIAL_RESPONSE_MODE || 'query',
-        prompt: process.env.IMPERIAL_LOGIN_PROMPT,
+        redirect_uri: process.env.AZURE_REDIRECT || 'https://research-software.nl/auth/login/azure',
+        client_id: process.env.AZURE_CLIENT_ID || 'www.research-software.nl',
+        scope: process.env.AZURE_SCOPES || 'openid',
+        response_mode: process.env.AZURE_RESPONSE_MODE || 'query',
+        prompt: process.env.AZURE_LOGIN_PROMPT,
         claims
       }
       return props
     } else {
       const message = 'authorization_endpoint is missing'
-      logger(`api/fe/auth/imperial: ${message}`, 'error')
+      logger(`api/fe/auth/azure: ${message}`, 'error')
       throw new Error(message)
     }
   } else {
-    const message = 'IMPERIAL_WELL_KNOWN_URL is missing'
-    logger(`api/fe/auth/imperial: ${message}`, 'error')
+    const message = 'AZURE_WELL_KNOWN_URL is missing'
+    logger(`api/fe/auth/azure: ${message}`, 'error')
     throw new Error(message)
   }
 }
 
-export async function imperialInfo() {
+export async function azureInfo() {
   // extract all props from env and wellknow endpoint
-  const redirectProps = await imperialRedirectProps()
+  const redirectProps = await azureRedirectProps()
   if (redirectProps) {
     // create return url and the name to use in login button
     const redirectUrl = getRedirectUrl(redirectProps)
     // provide redirectUrl and name/label
     return {
-      name: 'IMPERIAL',
+      name: process.env.AZURE_DISPLAY_NAME || 'Azure Active Directory',
       redirectUrl,
-      html: `
-        Sign in with your Imperial credentials!
-      `
+      html: process.env.AZURE_DESCRIPTION_HTML || "Login with your institutional credentials."
     }
   }
   return null
@@ -76,7 +74,7 @@ export default async function handler(
   try {
     // extract all props from env and wellknow endpoint
     // and create return url and the name to use in login button
-    const loginInfo = await imperialInfo()
+    const loginInfo = await azureInfo()
     if (loginInfo) {
       res.status(200).json(loginInfo)
     } else {
@@ -86,7 +84,7 @@ export default async function handler(
       })
     }
   } catch (e: any) {
-    logger(`api/fe/auth/imperial: ${e?.message}`, 'error')
+    logger(`api/fe/auth/azure: ${e?.message}`, 'error')
     res.status(500).json({
       status: 500,
       message: e?.message

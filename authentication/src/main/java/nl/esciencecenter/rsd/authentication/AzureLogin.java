@@ -19,12 +19,17 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class ImperialLogin implements Login {
+// This authentication provider was developed to work with the Imperial College Azure
+// tenant. In principle it should be generic enough to work with a registered
+// application from any Azure Active Directory tenant however this has not been tested
+// and changes may be needed to further generalise it.
+
+public class AzureLogin implements Login {
 
 	private final String code;
 	private final String redirectUrl;
 
-	public ImperialLogin(String code, String redirectUrl) {
+	public AzureLogin(String code, String redirectUrl) {
 		this.code = Objects.requireNonNull(code);
 		this.redirectUrl = Objects.requireNonNull(redirectUrl);
 	}
@@ -32,13 +37,13 @@ public class ImperialLogin implements Login {
 	@Override
 	public OpenIdInfo openidInfo() {
 		Map<String, String> form = createForm();
-		String tokenResponse = getTokensFromImperialconext(form);
+		String tokenResponse = getTokensFromAzureconext(form);
 		String idToken = extractIdToken(tokenResponse);
 		DecodedJWT idJwt = JWT.decode(idToken);
 		String subject = idJwt.getSubject();
 		String email = idJwt.getClaim("email").asString();
 		String name = idJwt.getClaim("name").asString();
-		return new OpenIdInfo(subject, name, email, "Imperial");
+		return new OpenIdInfo(subject, name, email, Config.azureOrganisation());
 	}
 
 	private Map<String, String> createForm() {
@@ -47,14 +52,14 @@ public class ImperialLogin implements Login {
 		form.put("grant_type", "authorization_code");
 		form.put("redirect_uri", redirectUrl);
 		form.put("scope", "openid");
-		form.put("client_id", Config.imperialClientId());
-		form.put("client_secret", Config.imperialClientSecret());
+		form.put("client_id", Config.azureClientId());
+		form.put("client_secret", Config.azureClientSecret());
 		return form;
 	}
 
-	private String getTokensFromImperialconext(Map<String, String> form) {
+	private String getTokensFromAzureconext(Map<String, String> form) {
 		String body = formMapToxWwwFormUrlencoded(form);
-		URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.imperialWellknown()));
+		URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.azureWellknown()));
 		return postForm(tokenEndpoint, body);
 	}
 

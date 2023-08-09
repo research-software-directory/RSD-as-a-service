@@ -10,5 +10,5 @@ public enum OpenidProvider {
 	surfconext,
 	helmholtz,
 	orcid,
-	imperial
+	azure
 }
