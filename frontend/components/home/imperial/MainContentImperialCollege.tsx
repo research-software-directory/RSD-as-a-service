@@ -69,7 +69,7 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
               href={submit_software_href(auth_status, providers)}
               onClick={set_location_cookie}
             >
-              <div className="text-4xl">Submit Software</div>
+              <div className="text-3xl">Submit Software</div>
             </Link>
           </div>
         </div>
