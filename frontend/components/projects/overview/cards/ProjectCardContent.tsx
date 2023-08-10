@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {ProjectState} from '~/types/Project'
 import {getImageUrl} from '~/utils/editImage'
 import KeywordList from '~/components/cards/KeywordList'
 import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
@@ -33,6 +34,7 @@ type ProjectCardProps = {
   impact_cnt: number | null
   output_cnt: number | null
   visibleKeywords?: number
+  project_state: ProjectState
 }
 
 export default function ProjectCardContent(item:ProjectCardProps){
@@ -72,6 +74,7 @@ export default function ProjectCardContent(item:ProjectCardProps){
             <ProjectPeriod
               date_start={item.date_start}
               date_end={item.date_end}
+              project_state={item.project_state}
             />
           </div>
           {/* Metrics */}

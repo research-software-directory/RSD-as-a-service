@@ -22,7 +22,8 @@ CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
 	research_domain VARCHAR[],
 	participating_organisations VARCHAR[],
 	impact_cnt INTEGER,
-	output_cnt INTEGER
+	output_cnt INTEGER,
+	project_state VARCHAR(20)
 ) LANGUAGE sql STABLE AS
 $$
 SELECT DISTINCT ON (project.id)
@@ -42,7 +43,13 @@ SELECT DISTINCT ON (project.id)
 	research_domain_filter_for_project.research_domain,
 	project_participating_organisations.organisations AS participating_organisations,
 	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
-	COALESCE(count_project_output.output_cnt, 0) AS output_cnt
+	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
+	CASE
+			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+			WHEN project.date_start > now() AND project.date_end > now() THEN 'Pending'::VARCHAR
+			WHEN project.date_start < now() AND project.date_end > now() THEN 'In progress'::VARCHAR
+			ELSE 'Waiting to start'::VARCHAR
+	END AS project_state
 FROM
 	project
 LEFT JOIN
@@ -86,7 +93,8 @@ CREATE FUNCTION projects_by_organisation_search(
 	research_domain VARCHAR[],
 	participating_organisations VARCHAR[],
 	impact_cnt INTEGER,
-	output_cnt INTEGER
+	output_cnt INTEGER,
+	project_state VARCHAR(20)
 ) LANGUAGE sql STABLE AS
 $$
 SELECT DISTINCT ON (project.id)
@@ -106,7 +114,13 @@ SELECT DISTINCT ON (project.id)
 	research_domain_filter_for_project.research_domain,
 	project_participating_organisations.organisations AS participating_organisations,
 	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
-	COALESCE(count_project_output.output_cnt, 0) AS output_cnt
+	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
+	CASE
+			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
+			WHEN project.date_start > now() AND project.date_end > now() THEN 'Pending'::VARCHAR
+			WHEN project.date_start < now() AND project.date_end > now() THEN 'In progress'::VARCHAR
+			ELSE 'Waiting to start'::VARCHAR
+	END AS project_state
 FROM
 	project
 LEFT JOIN
