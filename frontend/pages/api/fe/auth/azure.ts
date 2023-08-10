@@ -61,7 +61,7 @@ export async function azureInfo() {
     return {
       name: process.env.AZURE_DISPLAY_NAME || 'Azure Active Directory',
       redirectUrl,
-      html: process.env.AZURE_DESCRIPTION_HTML || "Login with your institutional credentials."
+      html: process.env.AZURE_DESCRIPTION_HTML || 'Login with your institutional credentials.'
     }
   }
   return null
