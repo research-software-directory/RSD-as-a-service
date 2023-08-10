@@ -51,7 +51,11 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
           />
 
           <div className="mt-8 ml-4 text-lg max-w-prose">
-            Some catchy and profound phrase about research software written at Imperial.
+            Software plays an increasingly important role in research. Despite this,
+            it can be difficult to promote and showcase software through traditional
+            academic means. The Imperial Research Software Directory provides a
+            place to tell the world about your research software. Do you develop
+            software at Imperial? Add your package to the directory!
           </div>
         </div>
         <div className="relative justify-center">
