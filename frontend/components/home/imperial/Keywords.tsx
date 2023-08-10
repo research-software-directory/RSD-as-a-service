@@ -5,12 +5,12 @@ type KeywordsProps = {
 }
 
 type KeywordsObject = {
-    value: string
+    keyword: string
 }
 
 export default function Keywords({keywords}: KeywordsProps) {
     const keywordButtons = keywords.map((keyword: KeywordsObject, index: number) => {
-        return <KeywordBox key={index} label={keyword.value} />
+        return <KeywordBox key={index} label={keyword.keyword} />
     })
     return (
         <div className="max-w-screen-xl mx-auto">

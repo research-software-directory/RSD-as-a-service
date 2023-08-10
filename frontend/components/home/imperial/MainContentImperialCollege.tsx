@@ -18,12 +18,14 @@ import MainContent from '~/components/layout/MainContent'
 import {Provider} from 'pages/api/fe/auth'
 
 function set_location_cookie() {
-  document.cookie = `rsd_pathname=/software/add;path=/auth;SameSite=None;Secure`
+  // set cookie so that user is bounced to the software submission page
+  // after authentication
+  document.cookie = 'rsd_pathname=/software/add;path=/auth;SameSite=None;Secure'
 }
 
-function get_href(auth_status: string, login_providers: Provider[]) {
-  if (auth_status == "authenticated") {
-    return "/software/add"
+function submit_software_href(auth_status: string, login_providers: Provider[]) {
+  if (auth_status == 'authenticated') {
+    return '/software/add'
   }
   return (login_providers[0]?.redirectUrl ?? '')
 }
@@ -60,7 +62,7 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
           </div>
           <div className="bg-secondary text-primary-content p-4 text-center max-w-fit mx-auto rounded-full border-4 border-primary mt-8">
             <Link
-              href={get_href(auth_status, providers)}
+              href={submit_software_href(auth_status, providers)}
               onClick={set_location_cookie}
             >
               <div className="text-4xl">Submit Software</div>
@@ -69,7 +71,6 @@ export default function MainContentImperialCollege({counts}: HomeProps) {
         </div>
       </div>
 
-      {/* COUNTERS SECTION EXAMPLE */}
       <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <CounterBox
           label="Open-Source Software"

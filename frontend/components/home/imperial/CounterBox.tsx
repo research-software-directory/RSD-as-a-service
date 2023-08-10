@@ -8,9 +8,6 @@ type CounterBoxProps = {
   value: string
 }
 
-/**
- * Custom counter box component example for Imperial College homepage
- */
 export default function CounterBox({label,value}:CounterBoxProps) {
   return (
     <div className="bg-primary text-primary-content p-4 text-center rounded-md">

@@ -60,7 +60,7 @@ export default function useImperialData(token: string) {
     async function getData() {
       setLoading(true)
 
-      const url = '/api/v1/rpc/popular_keywords'
+      const url = '/api/v1/rpc/keyword_count_for_software'
       const {data} = await getKeywordList({url, token})
 
       if (abort) return
