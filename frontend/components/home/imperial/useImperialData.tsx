@@ -43,7 +43,7 @@ async function getKeywordList({url, token}: {url: string, token?: string}) {
 }
 
 export type keyword = {
-  value: string
+  keyword: string
 }
 
 /**
