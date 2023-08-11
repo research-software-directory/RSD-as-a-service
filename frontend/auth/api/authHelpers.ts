@@ -25,6 +25,7 @@ export type RedirectToProps = {
   client_id: string,
   scope: string,
   response_mode: string,
+  prompt?: string,
   claims: any
 }
 
@@ -51,7 +52,7 @@ export function getRedirectUrl(props: RedirectToProps) {
     '&scope=' + props.scope +
     '&response_type=code' +
     '&response_mode=' + props.response_mode +
-    '&prompt=login+consent' +
+    '&prompt=' + (props.prompt ? props.prompt : 'login+consent') +
     '&claims=' + getEncodedClaims(claims)
   return redirectUrl
 }
