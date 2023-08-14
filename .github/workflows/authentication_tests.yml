@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: scrapers tests
+name: authentication tests
 
 on:
   workflow_dispatch:
@@ -13,13 +13,13 @@ on:
     branches:
       - main
     paths:
-      - "scrapers/**"
+      - "authentication/**"
   pull_request:
     paths:
-      - "scrapers/**"
+      - "authentication/**"
 
 jobs:
-  scrapers-tests:
+  authentication-tests:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -38,12 +38,12 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: "Maven JUnit tests and JaCoCo test report"
-        working-directory: scrapers
+        working-directory: authentication
         run: |
           JAVA_HOME=$JAVA_HOME_17_X64 mvn verify
-      - name: SonarCloud Scan scrapers
+      - name: SonarCloud Scan authentication
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        working-directory: scrapers
-        run: JAVA_HOME=$JAVA_HOME_17_X64 mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=nl.research-software:scrapers -Pcoverage
+        working-directory: authentication
+        run: JAVA_HOME=$JAVA_HOME_17_X64 mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=nl.research-software:authentication -Pcoverage
