@@ -12,6 +12,7 @@
     "test": "jest",
     "test:watch": "jest --watch --detectOpenHandles",
     "test:coverage": "jest --coverage",
+    "test:coveragememlimit": "jest --coverage --workerIdleMemoryLimit=0.1 --maxWorkers=2",
     "test:memory": "node --expose-gc ./node_modules/.bin/jest --logHeapUsage",
     "test:inspect": "node --inspect-brk --expose-gc ./node_modules/.bin/jest --logHeapUsage",
     "test:memlimit": "jest --workerIdleMemoryLimit=0.1 --maxWorkers=2"
