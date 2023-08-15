@@ -15,9 +15,9 @@ type ProjectDurationProps = {
 export default function ProjectDuration({date_start,date_end}:ProjectDurationProps) {
   return (
     <div className="text-sm text-base-content-secondary">
-      <span>{date_start ? getMonthYearDate(date_start) : 'N/S'}</span>
+      <span>{date_start ? getMonthYearDate(date_start) : 'N/A'}</span>
       &nbsp;-&nbsp;
-      <span>{date_end ? getMonthYearDate(date_end) : 'N/S'}</span>
+      <span>{date_end ? getMonthYearDate(date_end) : 'N/A'}</span>
     </div>
   )
 }
