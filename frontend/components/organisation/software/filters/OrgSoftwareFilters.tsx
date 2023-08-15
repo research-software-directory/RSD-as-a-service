@@ -20,7 +20,7 @@ import useOrgSoftwareLanguagesList from './useOrgSoftwareLanguagesList'
 
 export default function OrgSoftwareFilters() {
   const {resetFilters} = useQueryChange()
-  const {order,filterCnt,keywords_json,prog_lang_json,licenses_json} = useSoftwareParams()
+  const {filterCnt,keywords_json,prog_lang_json,licenses_json} = useSoftwareParams()
   const {keywordsList} = useOrgSoftwareKeywordsList()
   const {languagesList} = useOrgSoftwareLanguagesList()
   const {licensesList} = useOrgSoftwareLicensesList()
@@ -32,7 +32,6 @@ export default function OrgSoftwareFilters() {
   // debugger
   function clearDisabled() {
     if (filterCnt && filterCnt > 0) return false
-    if (order) return false
     return true
   }
 

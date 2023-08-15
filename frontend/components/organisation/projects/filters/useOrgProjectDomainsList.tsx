@@ -19,10 +19,13 @@ import useProjectParams from '../useProjectParams'
 import {OrgProjectFilterProps, buildOrgProjectFilter} from './useOrgProjectKeywordsList'
 
 
-export async function orgProjectDomainsList({id,search, keywords, domains, organisations}: OrgProjectFilterProps) {
+export async function orgProjectDomainsList({id,search,project_status,keywords,domains,organisations}: OrgProjectFilterProps) {
   try {
     // get possible options
-    const domainsOptions = await orgProjectDomainsFilter({id, search, keywords, domains, organisations})
+    const domainsOptions = await orgProjectDomainsFilter({
+      id, search, project_status,
+      keywords, domains, organisations
+    })
 
     if (domainsOptions.length > 0) {
       const keys = domainsOptions.map(item => item.domain)
@@ -43,7 +46,7 @@ export async function orgProjectDomainsList({id,search, keywords, domains, organ
   }
 }
 
-async function orgProjectDomainsFilter({id, search, keywords, domains, organisations}: OrgProjectFilterProps) {
+async function orgProjectDomainsFilter({id,search,project_status,keywords,domains,organisations}: OrgProjectFilterProps) {
   try {
     const query = 'rpc/org_project_domains_filter?order=domain'
     const url = `${getBaseUrl()}/${query}`
@@ -52,7 +55,8 @@ async function orgProjectDomainsFilter({id, search, keywords, domains, organisat
       search,
       keywords,
       domains,
-      organisations
+      organisations,
+      project_status
     })
 
     // console.group('softwareKeywordsFilter')
@@ -83,7 +87,7 @@ async function orgProjectDomainsFilter({id, search, keywords, domains, organisat
 export default function useOrgProjectDomainsFilter(){
   const {token} = useSession()
   const {id} = useOrganisationContext()
-  const {search,keywords_json,domains_json,organisations_json} = useProjectParams()
+  const {search,project_status,keywords_json,domains_json,organisations_json} = useProjectParams()
   const [domainsList, setDomainsList] = useState<ResearchDomainOption[]>([])
 
   // console.group('useOrgProjectDomainsFilter')
@@ -109,6 +113,7 @@ export default function useOrgProjectDomainsFilter(){
         keywords,
         domains,
         organisations,
+        project_status,
         token
       }).then(resp => {
         // abort
@@ -123,7 +128,7 @@ export default function useOrgProjectDomainsFilter(){
   }, [
     search, keywords_json,
     domains_json, organisations_json,
-    id,token
+    id,token, project_status
   ])
 
   return {

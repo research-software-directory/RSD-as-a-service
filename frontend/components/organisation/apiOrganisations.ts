@@ -217,6 +217,7 @@ export async function getOrganisationDescription({uuid, token}: { uuid: string, 
 export type OrganisationApiParams = {
   organisation: string,
   searchFor?: string | undefined
+  project_status?: string | undefined
   keywords?: string[] | null
   prog_lang?: string[] | null
   licenses?: string[] | null
@@ -303,7 +304,7 @@ export async function getSoftwareForOrganisation({
 export async function getProjectsForOrganisation({
   organisation, searchFor, keywords, domains,
   organisations, order, page, rows, token,
-  isMaintainer
+  isMaintainer, project_status
 }: OrganisationApiParams) {
   try {
     // baseUrl
@@ -321,6 +322,7 @@ export async function getProjectsForOrganisation({
     }
     // additional filters
     let filters = baseQueryString({
+      project_status,
       keywords,
       domains,
       organisations,

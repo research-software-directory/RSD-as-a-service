@@ -23,7 +23,7 @@ type State = {
 export default function useOrganisationProjects() {
   const {token} = useSession()
   const {id,isMaintainer} = useOrganisationContext()
-  const {search, keywords_json, domains_json, organisations_json, order, page, rows} = useProjectParams()
+  const {search, keywords_json, domains_json, organisations_json, project_status, order, page, rows} = useProjectParams()
   // we need to memo orderOptions array to avoid useEffect dependency loop
   const orderOptions = useMemo(()=>getProjectOrderOptions(isMaintainer),[isMaintainer])
 
@@ -51,6 +51,7 @@ export default function useOrganisationProjects() {
         const projects: State = await getProjectsForOrganisation({
           organisation:id,
           searchFor: search ?? undefined,
+          project_status: project_status ?? undefined,
           keywords: decodeJsonParam(keywords_json,null),
           domains: decodeJsonParam(domains_json,null),
           organisations: decodeJsonParam(organisations_json,null),
@@ -79,7 +80,8 @@ export default function useOrganisationProjects() {
   }, [
     search, keywords_json, domains_json,
     organisations_json, order, page, rows,
-    id, token, isMaintainer, orderOptions
+    id, token, isMaintainer, orderOptions,
+    project_status
   ])
 
   return {

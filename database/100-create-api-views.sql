@@ -559,12 +559,7 @@ BEGIN
 		project.slug,
 		project.title,
 		project.subtitle,
-		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
-			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
-			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-			ELSE 'Running'::VARCHAR
-		END AS current_state,
+		project_status.status AS current_state,
 		project.date_start,
 		project.updated_at,
 		project.is_published,
@@ -575,6 +570,8 @@ BEGIN
 		project
 	INNER JOIN
 		software_for_project ON project.id = software_for_project.project
+	LEFT JOIN
+		project_status() ON project.id=project_status.project
 	WHERE
 		software_for_project.software = software_id
 	;
@@ -868,12 +865,7 @@ BEGIN
 		project.slug,
 		project.title,
 		project.subtitle,
-		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
-			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
-			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-			ELSE 'Running'::VARCHAR
-		END AS current_state,
+		project_status.status AS current_state,
 		project.date_start,
 		project.updated_at,
 		project.is_published,
@@ -883,6 +875,8 @@ BEGIN
 		project
 	INNER JOIN
 		maintainer_for_project ON project.id = maintainer_for_project.project
+	LEFT JOIN
+		project_status() ON project.id=project_status.project
 	WHERE
 		maintainer_for_project.maintainer = maintainer_id;
 END

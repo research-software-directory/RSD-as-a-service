@@ -22,7 +22,8 @@ CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
 	research_domain VARCHAR[],
 	participating_organisations VARCHAR[],
 	impact_cnt INTEGER,
-	output_cnt INTEGER
+	output_cnt INTEGER,
+	project_status VARCHAR(20)
 ) LANGUAGE sql STABLE AS
 $$
 SELECT DISTINCT ON (project.id)
@@ -42,7 +43,8 @@ SELECT DISTINCT ON (project.id)
 	research_domain_filter_for_project.research_domain,
 	project_participating_organisations.organisations AS participating_organisations,
 	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
-	COALESCE(count_project_output.output_cnt, 0) AS output_cnt
+	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
+	project_status.status
 FROM
 	project
 LEFT JOIN
@@ -57,6 +59,8 @@ LEFT JOIN
 	count_project_impact() ON project.id = count_project_impact.project
 LEFT JOIN
 	count_project_output() ON project.id = count_project_output.project
+LEFT JOIN
+	project_status() ON project.id=project_status.project
 WHERE
 	project_for_organisation.organisation IN (
 		SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id)
@@ -86,7 +90,8 @@ CREATE FUNCTION projects_by_organisation_search(
 	research_domain VARCHAR[],
 	participating_organisations VARCHAR[],
 	impact_cnt INTEGER,
-	output_cnt INTEGER
+	output_cnt INTEGER,
+	project_status VARCHAR(20)
 ) LANGUAGE sql STABLE AS
 $$
 SELECT DISTINCT ON (project.id)
@@ -106,7 +111,8 @@ SELECT DISTINCT ON (project.id)
 	research_domain_filter_for_project.research_domain,
 	project_participating_organisations.organisations AS participating_organisations,
 	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
-	COALESCE(count_project_output.output_cnt, 0) AS output_cnt
+	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
+	project_status.status
 FROM
 	project
 LEFT JOIN
@@ -121,6 +127,8 @@ LEFT JOIN
 	count_project_impact() ON project.id = count_project_impact.project
 LEFT JOIN
 	count_project_output() ON project.id = count_project_output.project
+LEFT JOIN
+	project_status() ON project.id=project_status.project
 WHERE
 	project_for_organisation.organisation IN (
 		SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id)
@@ -164,6 +172,7 @@ $$;
 CREATE FUNCTION org_project_keywords_filter(
 	organisation_id UUID,
 	search_filter TEXT DEFAULT '',
+	status_filter VARCHAR DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
 	organisation_filter VARCHAR[] DEFAULT '{}'
@@ -183,6 +192,11 @@ WHERE
 	COALESCE(research_domain, '{}') @> research_domain_filter
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
+	AND
+		CASE
+			WHEN status_filter <> '' THEN project_status = status_filter
+			ELSE true
+		END
 GROUP BY
 	keyword
 ;
@@ -194,6 +208,7 @@ $$;
 CREATE FUNCTION org_project_domains_filter(
 	organisation_id UUID,
 	search_filter TEXT DEFAULT '',
+	status_filter VARCHAR DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
 	organisation_filter VARCHAR[] DEFAULT '{}'
@@ -213,6 +228,11 @@ WHERE
 	COALESCE(research_domain, '{}') @> research_domain_filter
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
+	AND
+		CASE
+			WHEN status_filter <> '' THEN project_status = status_filter
+			ELSE true
+		END
 GROUP BY
 	domain
 ;
@@ -224,6 +244,7 @@ $$;
 CREATE FUNCTION org_project_participating_organisations_filter(
 	organisation_id UUID,
 	search_filter TEXT DEFAULT '',
+	status_filter VARCHAR DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
 	organisation_filter VARCHAR[] DEFAULT '{}'
@@ -243,11 +264,44 @@ WHERE
 	COALESCE(research_domain, '{}') @> research_domain_filter
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
+	AND
+		CASE
+			WHEN status_filter <> '' THEN project_status = status_filter
+			ELSE true
+		END
 GROUP BY
 	organisation
 ;
 $$;
 
+-- REACTIVE PROJECT STATUS WITH COUNTS
+-- PROVIDES AVAILABLE DOMAINS FOR APPLIED FILTERS
+CREATE FUNCTION org_project_status_filter(
+	organisation_id UUID,
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	research_domain_filter VARCHAR[] DEFAULT '{}',
+	organisation_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	project_status VARCHAR,
+	project_status_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	project_status,
+	COUNT(id) AS project_status_cnt
+FROM
+	projects_by_organisation_search(organisation_id,search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(research_domain, '{}') @> research_domain_filter
+	AND
+	COALESCE(participating_organisations, '{}') @> organisation_filter
+GROUP BY
+	project_status
+;
+$$;
 
 -- SOFTWARE info by organisation
 -- we filter this view at least by organisation_id (uuid)

@@ -16,13 +16,10 @@ type PeriodProgressBar = {
 
 export default function PeriodProgressBar({date_start,date_end,className, height='0.5rem'}:PeriodProgressBar) {
 
-  const progress = getProgressValue({
-    date_start,
-    date_end
-  })
+  // if one of date values is missing we do not show progressbar
+  if (date_start === null || date_end === null) return null
 
   function getProgressValue({date_start, date_end}: PeriodProgressBar) {
-
     if (date_start === null || date_end === null) return 0
 
     const start_date = new Date(date_start)
@@ -41,6 +38,11 @@ export default function PeriodProgressBar({date_start,date_end,className, height
     if (progress < 0) return 0
     return Math.floor(progress)
   }
+
+  const progress = getProgressValue({
+    date_start,
+    date_end
+  })
 
   return (
     <div

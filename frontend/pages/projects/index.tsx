@@ -34,13 +34,15 @@ import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggl
 import {
   projectDomainsFilter,
   projectKeywordsFilter,
-  projectParticipatingOrganisationsFilter
+  projectParticipatingOrganisationsFilter,
+  projectStatusFilter
 } from '~/components/projects/overview/filters/projectFiltersApi'
 import {projectOrderOptions} from '~/components/projects/overview/filters/OrderProjectsBy'
 import ProjectFilters from '~/components/projects/overview/filters/ProjectFilters'
 import ProjectSearchSection from '~/components/projects/overview/search/ProjectSearchSection'
 import ProjectOverviewContent from '~/components/projects/overview/ProjectOverviewContent'
 import ProjectFiltersModal from '~/components/projects/overview/filters/ProjectFiltersModal'
+import {StatusFilterOption} from '~/components/projects/overview/filters/ProjectStatusFilter'
 
 
 export type ProjectOverviewPageProps = {
@@ -50,8 +52,10 @@ export type ProjectOverviewPageProps = {
   keywordsList: KeywordFilterOption[],
   domains?: string[] | null
   domainsList: ResearchDomainOption[]
-  organisations: string[] | null
+  organisations?: string[] | null
   organisationsList: OrganisationOption[]
+  project_status?: string | null
+  projectStatusList: StatusFilterOption[]
   page: number,
   rows: number,
   count: number,
@@ -67,6 +71,7 @@ export default function ProjectsOverviewPage({
   keywords, keywordsList,
   domains, domainsList,
   organisations, organisationsList,
+  project_status, projectStatusList,
   page, rows, count, layout,
   projects
 }: ProjectOverviewPageProps) {
@@ -90,6 +95,8 @@ export default function ProjectsOverviewPage({
   // console.log('keywordsList...', keywordsList)
   // console.log('domainsList...', domainsList)
   // console.log('organisationsList...', organisationsList)
+  // console.log('project_status...', project_status)
+  // console.log('projectStatusList...', projectStatusList)
   // console.log('projects...', projects)
   // console.groupEnd()
 
@@ -117,6 +124,7 @@ export default function ProjectsOverviewPage({
     if (domains) count++
     if (organisations) count++
     if (search) count++
+    if (project_status) count++
     return count
   }
 
@@ -154,6 +162,8 @@ export default function ProjectsOverviewPage({
                   domainsList={domainsList}
                   organisations={organisations ?? []}
                   organisationsList={organisationsList}
+                  status={project_status ?? ''}
+                  statusList={projectStatusList}
                 />
               </FiltersPanel>
             }
@@ -205,6 +215,8 @@ export default function ProjectsOverviewPage({
           organisations={organisations ?? []}
           organisationsList={organisationsList}
           setModal={setModal}
+          status={project_status ?? ''}
+          statusList={projectStatusList}
         />
       }
     </>
@@ -216,7 +228,10 @@ export default function ProjectsOverviewPage({
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   let orderBy, offset=0
   // extract from page-query
-  const {search, rows, page, keywords, domains, organisations, order} = ssrProjectsParams(context.query)
+  const {
+    search, rows, page, keywords, domains,
+    organisations, project_status, order
+  } = ssrProjectsParams(context.query)
   // extract user settings from cookie
   const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
@@ -237,6 +252,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     keywords,
     domains,
     organisations,
+    project_status,
     order: orderBy,
     limit: page_rows,
     offset
@@ -257,12 +273,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     projects,
     keywordsList,
     domainsList,
-    organisationsList
+    organisationsList,
+    projectStatusList
   ] = await Promise.all([
     getProjectList({url}),
-    projectKeywordsFilter({search,keywords,domains,organisations}),
-    projectDomainsFilter({search, keywords, domains, organisations}),
-    projectParticipatingOrganisationsFilter({search, keywords, domains, organisations}),
+    projectKeywordsFilter({search,keywords,domains,organisations,project_status}),
+    projectDomainsFilter({search, keywords, domains, organisations,project_status}),
+    projectParticipatingOrganisationsFilter({search, keywords, domains, organisations,project_status}),
+    projectStatusFilter({search, keywords, domains, organisations})
   ])
 
   return {
@@ -276,6 +294,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       domainsList,
       organisations,
       organisationsList,
+      project_status,
+      projectStatusList,
       count: projects.count,
       page,
       rows: page_rows,

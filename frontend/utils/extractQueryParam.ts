@@ -232,6 +232,11 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
     castToType: 'json-encoded',
     defaultValue: null
   })
+  const project_status: string|null = decodeQueryParam({
+    query,
+    param: 'project_status',
+    defaultValue: null
+  })
   const order: string|null = decodeQueryParam({
     query,
     param: 'order',
@@ -245,7 +250,8 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
     page,
     keywords,
     domains,
-    organisations
+    organisations,
+    project_status
   }
 }
 
@@ -296,6 +302,11 @@ export function getProjectsParams(query: ParsedUrlQuery) {
     param: 'search',
     defaultValue: null
   })
+  const project_status: string | null = decodeQueryParam({
+    query,
+    param: 'project_status',
+    defaultValue: null
+  })
   // string encoded array used to avoid
   // useEffect change detection with string[]
   const keywords_json: string | null = decodeQueryParam({
@@ -328,6 +339,7 @@ export function getProjectsParams(query: ParsedUrlQuery) {
     order,
     rows,
     page,
+    project_status,
     keywords_json,
     domains_json,
     organisations_json
