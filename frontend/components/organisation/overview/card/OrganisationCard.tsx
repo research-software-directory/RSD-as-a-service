@@ -33,7 +33,7 @@ export default function OrganisationCard({organisation}: { organisation: Organis
   return (
     <Link
       data-testid="organisation-card-link"
-      href={`/organisations/${organisation.rsd_path}`}
+      href={`/organisations/${organisation.rsd_path}?tab=software&order=mention_cnt`}
       className="flex h-full hover:text-inherit"
       passHref
     >

@@ -152,6 +152,22 @@ GROUP BY
 	output_for_project.project;
 $$;
 
+CREATE FUNCTION project_status() RETURNS TABLE (
+	project UUID,
+	status VARCHAR(20)
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	project.id,
+	CASE
+		WHEN project.date_end < now() THEN 'finished'::VARCHAR
+		WHEN project.date_start > now() THEN 'pending'::VARCHAR
+		WHEN project.date_start < now() AND project.date_end > now() THEN 'in_progress'::VARCHAR
+		ELSE 'unknown'::VARCHAR
+	END AS status
+FROM
+	project
+$$;
 
 CREATE FUNCTION project_quality(show_all BOOLEAN DEFAULT FALSE) RETURNS TABLE (
 	slug VARCHAR,
@@ -238,12 +254,7 @@ SELECT DISTINCT ON (project.id)
 	project.slug,
 	project.title,
 	project.subtitle,
-	CASE
-		WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
-		WHEN project.date_start > now() THEN 'Starting'::VARCHAR
-		WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-		ELSE 'Running'::VARCHAR
-	END AS current_state,
+	project_status.status AS current_state,
 	project.date_start,
 	project.updated_at,
 	project.is_published,
@@ -259,11 +270,13 @@ INNER JOIN
 		(project.id = project_for_project.relation AND project_for_project.origin = project_id)
 		OR
 		(project.id = project_for_project.origin AND project_for_project.relation = project_id)
+LEFT JOIN
+	project_status() ON project.id=project_status.project
 ;
 $$;
 
 -- AGGREGATE participating organisations per project for project_overview RPC
--- use only TOP LEVEL organisations (paren IS NULL)
+-- use only TOP LEVEL organisations (parent IS NULL)
 CREATE FUNCTION project_participating_organisations() RETURNS TABLE (
 	project UUID,
 	organisations VARCHAR[]
@@ -303,7 +316,8 @@ CREATE FUNCTION project_overview() RETURNS TABLE (
 	research_domain_text TEXT,
 	participating_organisations VARCHAR[],
 	impact_cnt INTEGER,
-	output_cnt INTEGER
+	output_cnt INTEGER,
+	project_status VARCHAR(20)
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -323,7 +337,8 @@ SELECT
 	research_domain_filter_for_project.research_domain_text,
 	project_participating_organisations.organisations AS participating_organisations,
 	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
-	COALESCE(count_project_output.output_cnt, 0) AS output_cnt
+	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
+	project_status.status
 FROM
 	project
 LEFT JOIN
@@ -333,9 +348,11 @@ LEFT JOIN
 LEFT JOIN
 	project_participating_organisations() ON project.id=project_participating_organisations.project
 LEFT JOIN
-	count_project_impact() ON project.id = count_project_impact.project
+	count_project_impact() ON project.id=count_project_impact.project
 LEFT JOIN
-	count_project_output() ON project.id = count_project_output.project
+	count_project_output() ON project.id=count_project_output.project
+LEFT JOIN
+	project_status() ON project.id=project_status.project
 ;
 $$;
 
@@ -358,7 +375,8 @@ CREATE FUNCTION project_search(search VARCHAR) RETURNS TABLE (
 	research_domain_text TEXT,
 	participating_organisations VARCHAR[],
 	impact_cnt INTEGER,
-	output_cnt INTEGER
+	output_cnt INTEGER,
+	project_status VARCHAR(20)
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -378,7 +396,8 @@ SELECT
 	research_domain_filter_for_project.research_domain_text,
 	project_participating_organisations.organisations AS participating_organisations,
 	COALESCE(count_project_impact.impact_cnt, 0),
-	COALESCE(count_project_output.output_cnt, 0)
+	COALESCE(count_project_output.output_cnt, 0),
+	project_status.status
 FROM
 	project
 LEFT JOIN
@@ -391,6 +410,8 @@ LEFT JOIN
 	count_project_impact() ON project.id = count_project_impact.project
 LEFT JOIN
 	count_project_output() ON project.id = count_project_output.project
+LEFT JOIN
+	project_status() ON project.id=project_status.project
 WHERE
 	project.title ILIKE CONCAT('%', search, '%')
 	OR
@@ -427,6 +448,7 @@ $$;
 -- PROVIDES AVAILABLE KEYWORDS FOR APPLIED FILTERS
 CREATE FUNCTION project_keywords_filter(
 	search_filter TEXT DEFAULT '',
+	status_filter VARCHAR DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
 	organisation_filter VARCHAR[] DEFAULT '{}'
@@ -446,6 +468,11 @@ WHERE
 	COALESCE(research_domain, '{}') @> research_domain_filter
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
+	AND
+		CASE
+			WHEN status_filter <> '' THEN project_status = status_filter
+			ELSE true
+		END
 GROUP BY
 	keyword
 ;
@@ -456,6 +483,7 @@ $$;
 -- PROVIDES AVAILABLE DOMAINS FOR APPLIED FILTERS
 CREATE FUNCTION project_domains_filter(
 	search_filter TEXT DEFAULT '',
+	status_filter VARCHAR DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
 	organisation_filter VARCHAR[] DEFAULT '{}'
@@ -475,6 +503,11 @@ WHERE
 	COALESCE(research_domain, '{}') @> research_domain_filter
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
+	AND
+		CASE
+			WHEN status_filter <> '' THEN project_status = status_filter
+			ELSE true
+		END
 GROUP BY
 	domain
 ;
@@ -484,6 +517,7 @@ $$;
 -- PROVIDES AVAILABLE DOMAINS FOR APPLIED FILTERS
 CREATE FUNCTION project_participating_organisations_filter(
 	search_filter TEXT DEFAULT '',
+	status_filter VARCHAR DEFAULT '',
 	keyword_filter CITEXT[] DEFAULT '{}',
 	research_domain_filter VARCHAR[] DEFAULT '{}',
 	organisation_filter VARCHAR[] DEFAULT '{}'
@@ -503,7 +537,40 @@ WHERE
 	COALESCE(research_domain, '{}') @> research_domain_filter
 	AND
 	COALESCE(participating_organisations, '{}') @> organisation_filter
+	AND
+		CASE
+			WHEN status_filter <> '' THEN project_status = status_filter
+			ELSE true
+		END
 GROUP BY
 	organisation
+;
+$$;
+
+-- REACTIVE PROJECT STATUS WITH COUNTS
+-- PROVIDES AVAILABLE DOMAINS FOR APPLIED FILTERS
+CREATE FUNCTION project_status_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	research_domain_filter VARCHAR[] DEFAULT '{}',
+	organisation_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	project_status VARCHAR,
+	project_status_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	project_status,
+	COUNT(id) AS project_status_cnt
+FROM
+	project_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(research_domain, '{}') @> research_domain_filter
+	AND
+	COALESCE(participating_organisations, '{}') @> organisation_filter
+GROUP BY
+	project_status
 ;
 $$;

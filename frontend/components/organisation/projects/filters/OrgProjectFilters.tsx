@@ -17,13 +17,16 @@ import OrgResearchDomainFilter from './OrgResearchDomainFilter'
 import useOrgProjectDomainsFilter from './useOrgProjectDomainsList'
 import OrgProjectOrganisationsFilter from './OrgProjectOrganisationsFilter'
 import useOrgProjectOrganisationList from './useOrgProjectOrganisationsList'
+import ProjectStatusFilter from '~/components/projects/overview/filters/ProjectStatusFilter'
+import useOrgProjectStatusList from './useOrgProjectStatusList'
 
 export default function OrgProjectFilters() {
-  const {resetFilters} = useQueryChange()
-  const {order,filterCnt,keywords_json,domains_json,organisations_json} = useProjectParams()
+  const {resetFilters, handleQueryChange} = useQueryChange()
+  const {project_status,filterCnt,keywords_json,domains_json,organisations_json} = useProjectParams()
   const {keywordsList} = useOrgProjectKeywordsList()
   const {domainsList} = useOrgProjectDomainsFilter()
   const {organisationList} = useOrgProjectOrganisationList()
+  const {statusList} = useOrgProjectStatusList()
 
   const keywords = decodeJsonParam(keywords_json, [])
   const domains = decodeJsonParam(domains_json, [])
@@ -32,7 +35,7 @@ export default function OrgProjectFilters() {
   // debugger
   function clearDisabled() {
     if (filterCnt && filterCnt > 0) return false
-    if (order) return false
+    // if (order) return false
     return true
   }
 
@@ -45,6 +48,12 @@ export default function OrgProjectFilters() {
       />
       {/* Order by */}
       <OrgOrderProjectsBy />
+      {/* Project status */}
+      <ProjectStatusFilter
+        status={project_status ?? ''}
+        statusList={statusList}
+        handleQueryChange={handleQueryChange}
+      />
       {/* Keywords */}
       <OrgProjectKeywordsFilter
         keywords={keywords}

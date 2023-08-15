@@ -22,11 +22,17 @@ export type DomainsFilterOption = {
 
 type ParicipatingOrganisationFilterOption = {
   organisation: string
-  organisation_cnt: string
+  organisation_cnt: number
+}
+
+type ProjectStatusFilterProps = {
+  project_status: string
+  project_status_cnt: number
 }
 
 export type ProjectFilterProps = {
   search?: string | null
+  project_status?: string | null
   keywords?: string[] | null
   domains?: string[] | null
   organisations?: string[] | null
@@ -34,12 +40,13 @@ export type ProjectFilterProps = {
 
 type ProjectFilterApiProps = {
   search_filter?: string
+  status_filter?: string
   keyword_filter?: string[]
   research_domain_filter?: string[]
   organisation_filter?: string[]
 }
 
-export function buildProjectFilter({search, keywords, domains, organisations}: ProjectFilterProps) {
+export function buildProjectFilter({search, keywords, domains, organisations, project_status}: ProjectFilterProps) {
   const filter: ProjectFilterApiProps = {}
   if (search) {
     filter['search_filter'] = search
@@ -53,6 +60,9 @@ export function buildProjectFilter({search, keywords, domains, organisations}: P
   if (organisations) {
     filter['organisation_filter'] = organisations
   }
+  if (project_status) {
+    filter['status_filter'] = project_status
+  }
   // console.group('buildProjectFilter')
   // console.log('filter...', filter)
   // console.groupEnd()
@@ -60,7 +70,7 @@ export function buildProjectFilter({search, keywords, domains, organisations}: P
 }
 
 
-export async function projectKeywordsFilter({search, keywords, domains, organisations}: ProjectFilterProps) {
+export async function projectKeywordsFilter({search, keywords, domains, organisations,project_status}: ProjectFilterProps) {
   try {
     const query = 'rpc/project_keywords_filter?order=keyword'
     const url = `${getBaseUrl()}/${query}`
@@ -68,7 +78,8 @@ export async function projectKeywordsFilter({search, keywords, domains, organisa
       search,
       keywords,
       domains,
-      organisations
+      organisations,
+      project_status
     })
 
     // console.group('projectKeywordsFilter')
@@ -96,10 +107,10 @@ export async function projectKeywordsFilter({search, keywords, domains, organisa
   }
 }
 
-export async function projectDomainsFilter({search, keywords, domains, organisations}: ProjectFilterProps) {
+export async function projectDomainsFilter({search, keywords, domains, organisations, project_status}: ProjectFilterProps) {
   try {
     // get possible options
-    const domainsOptions = await getDomainsFilterList({search, keywords, domains, organisations})
+    const domainsOptions = await getDomainsFilterList({search, keywords, domains, organisations, project_status})
 
     if (domainsOptions.length > 0) {
       const keys = domainsOptions.map(item => item.domain)
@@ -120,7 +131,7 @@ export async function projectDomainsFilter({search, keywords, domains, organisat
   }
 }
 
-export async function getDomainsFilterList({search, keywords, domains, organisations}: ProjectFilterProps) {
+export async function getDomainsFilterList({search, keywords, domains, organisations, project_status}: ProjectFilterProps) {
   try {
     const query = 'rpc/project_domains_filter?order=domain'
     const url = `${getBaseUrl()}/${query}`
@@ -128,7 +139,8 @@ export async function getDomainsFilterList({search, keywords, domains, organisat
       search,
       keywords,
       domains,
-      organisations
+      organisations,
+      project_status
     })
 
     // console.group('softwareKeywordsFilter')
@@ -202,7 +214,7 @@ export function createDomainsList(domainOptions: DomainsFilterOption[], domainIn
 }
 
 
-export async function projectParticipatingOrganisationsFilter({search, keywords, domains, organisations}: ProjectFilterProps) {
+export async function projectParticipatingOrganisationsFilter({search, keywords, domains, organisations, project_status}: ProjectFilterProps) {
   try {
     const query = 'rpc/project_participating_organisations_filter?order=organisation'
     const url = `${getBaseUrl()}/${query}`
@@ -210,7 +222,8 @@ export async function projectParticipatingOrganisationsFilter({search, keywords,
       search,
       keywords,
       domains,
-      organisations
+      organisations,
+      project_status
     })
 
     // console.group('softwareKeywordsFilter')
@@ -234,6 +247,42 @@ export async function projectParticipatingOrganisationsFilter({search, keywords,
 
   } catch (e: any) {
     logger(`projectParticipatingOrganisationsFilter: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function projectStatusFilter({search, keywords, domains, organisations}: ProjectFilterProps) {
+  try {
+    const query = 'rpc/project_status_filter?order=project_status'
+    const url = `${getBaseUrl()}/${query}`
+    const filter = buildProjectFilter({
+      search,
+      keywords,
+      domains,
+      organisations
+    })
+
+    // console.group('projectStatusFilter')
+    // console.log('filter...', JSON.stringify(filter))
+    // console.log('url...', url)
+    // console.groupEnd()
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: createJsonHeaders(),
+      body: filter ? JSON.stringify(filter) : undefined
+    })
+
+    if (resp.status === 200) {
+      const json: ProjectStatusFilterProps[] = await resp.json()
+      return json
+    }
+
+    logger(`projectStatusFilter: ${resp.status} ${resp.statusText}`, 'warn')
+    return []
+
+  } catch (e: any) {
+    logger(`projectStatusFilter: ${e?.message}`, 'error')
     return []
   }
 }

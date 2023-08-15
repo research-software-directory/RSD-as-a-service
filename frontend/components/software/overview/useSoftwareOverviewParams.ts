@@ -42,8 +42,10 @@ export default function useSoftwareOverviewParams() {
   }
 
   function resetFilters() {
-    // remove params from url and keep scroll position
-    router.push(router.pathname, router.pathname, {scroll: false})
+    // remove params from url, keep order and keep scroll position
+    const order = router.query['order'] ?? 'mention_cnt'
+    const url = `${router.pathname}?order=${order}`
+    router.push(url,url,{scroll: false})
   }
 
   return {

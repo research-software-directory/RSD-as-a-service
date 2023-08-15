@@ -14,6 +14,7 @@ import ProjectKeywordsFilter from './ProjectKeywordsFilter'
 import ProjectResearchDomainFilter from './ProjectResearchDomainFilter'
 import OrderProjectsBy from './OrderProjectsBy'
 import ProjectOrganisationsFilter, {OrganisationOption} from './ProjectOrganisationsFilter'
+import ProjectStatusFilter, {StatusFilterOption} from './ProjectStatusFilter'
 
 type ProjectFiltersProps = {
   orderBy: string
@@ -23,6 +24,8 @@ type ProjectFiltersProps = {
   domainsList: ResearchDomainOption[]
   organisations: string[]
   organisationsList: OrganisationOption[]
+  status: string
+  statusList: StatusFilterOption[]
   filterCnt: number,
 }
 
@@ -35,14 +38,15 @@ export default function ProjectFilters({
   domainsList,
   organisations,
   organisationsList,
+  status,
+  statusList,
   filterCnt
 }: ProjectFiltersProps) {
 
-  const {resetFilters} = useProjectOverviewParams()
+  const {resetFilters,handleQueryChange} = useProjectOverviewParams()
 
   function clearDisabled() {
     if (filterCnt && filterCnt > 0) return false
-    if (orderBy) return false
     return true
   }
 
@@ -56,6 +60,12 @@ export default function ProjectFilters({
       {/* Order by */}
       <OrderProjectsBy
         orderBy={orderBy}
+      />
+      {/* Project status */}
+      <ProjectStatusFilter
+        status={status}
+        statusList={statusList}
+        handleQueryChange={handleQueryChange}
       />
       {/* Keywords */}
       <ProjectKeywordsFilter
@@ -72,6 +82,7 @@ export default function ProjectFilters({
         organisations={organisations}
         organisationsList={organisationsList}
       />
+
     </>
   )
 }

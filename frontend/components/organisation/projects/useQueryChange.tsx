@@ -32,38 +32,43 @@ export default function useQueryChange() {
       params['rows'] = getDocumentCookie('rsd_page_rows', rowsPerPageOptions[0])
     }
 
+    // update query parameters
+    const query:any = {
+      ...router.query,
+      ...params
+    }
+
+    if (value === '' || value === null || typeof value === 'undefined') {
+      // remove query param
+      delete query[key]
+    }
+
     // construct url with all query params
     if (key === 'page') {
       // console.group('useQueryChange')
       // console.log('scroll...true')
       // console.groupEnd()
       // on page change we scroll to top
-      router.push({
-        query: {
-          ...router.query,
-          ...params
-        }
-      },undefined,{scroll: true})
+      router.push({query},undefined,{scroll: true})
     } else {
       // console.group('useQueryChange')
       // console.log('scroll...false')
       // console.groupEnd()
-      router.push({
-        query: {
-          ...router.query,
-          ...params
-        }
-      },undefined,{scroll: false})
+      router.push({query},undefined,{scroll: false})
     }
   }, [router])
 
   const resetFilters = useCallback((tab: TabKey) => {
-    router.push({
-      query: {
-        slug: router.query.slug,
-        tab
-      }
-    },undefined,{scroll: false})
+    // use basic params
+    const query: any = {
+      slug: router.query.slug,
+      tab
+    }
+    // keep order param if we are on same tab
+    if (router.query['order'] && tab === router.query['tab']) {
+      query['order'] = router.query['order']
+    }
+    router.push({query},undefined,{scroll: false})
   },[router])
 
   return {

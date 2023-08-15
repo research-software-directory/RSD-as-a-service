@@ -43,8 +43,10 @@ export default function useProjectOverviewParams() {
   }
 
   function resetFilters() {
-    // remove params from url and keep scroll position
-    router.push(router.pathname, router.pathname, {scroll: false})
+    // remove params from url, but keep order and scroll position
+    const order = router.query['order'] ?? 'impact_cnt'
+    const url = `${router.pathname}?order=${order}`
+    router.push(url, url, {scroll: false})
   }
 
   return {

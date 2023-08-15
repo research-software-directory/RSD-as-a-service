@@ -46,7 +46,6 @@ export default function SoftwareFilters({
 
   function clearDisabled() {
     if (filterCnt && filterCnt > 0) return false
-    if (orderBy) return false
     return true
   }
 

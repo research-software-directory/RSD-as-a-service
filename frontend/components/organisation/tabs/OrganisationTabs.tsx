@@ -34,12 +34,18 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
       allowScrollButtonsMobile
       value={select_tab}
       onChange={(_, value) => {
-        router.push({
-          query: {
-            slug: router.query['slug'],
-            tab: value
-          }
-        },undefined,{scroll:false})
+        const query:any={
+          slug: router.query['slug'],
+          tab: value,
+        }
+        // add default order
+        if (value === 'projects') {
+          query['order'] = 'impact_cnt'
+        } else if (value === 'software') {
+          query['order'] = 'mention_cnt'
+        }
+        // push route change
+        router.push({query},undefined,{scroll:false})
       }}
       aria-label="organisation tabs"
     >

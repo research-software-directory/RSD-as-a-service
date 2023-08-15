@@ -13,6 +13,8 @@ import {getImageUrl} from '../../../utils/editImage'
 import FeaturedIcon from '~/components/icons/FeaturedIcon'
 import NotPublishedIcon from '~/components/icons/NotPublishedIcon'
 import CardTitle from '../../layout/CardTitle'
+import {ProjectStatusKey} from '~/types/Project'
+import ProjectStatus from './ProjectStatus'
 
 export type ProjectCardProps = {
   slug: string,
@@ -20,7 +22,7 @@ export type ProjectCardProps = {
   subtitle: string | null,
   image_id: string | null,
   updated_at: string | null,
-  current_state?: 'Starting' | 'Running' | 'Finished',
+  current_state?: ProjectStatusKey,
   is_featured?: boolean,
   is_published?: boolean,
   image_contain?: boolean | null,
@@ -96,9 +98,7 @@ export default function ProjectCard(
             <span className="last-update">
               Updated {getTimeAgoSince(today,updated_at)}
             </span>
-            <div className="flex items-start justify-center">
-              {current_state ?? 'Starting'}
-            </div>
+            <ProjectStatus status={current_state ?? 'unknown'} />
           </div>
         </section>
       </article>

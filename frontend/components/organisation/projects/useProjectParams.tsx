@@ -12,8 +12,6 @@ export default function useProjectParams() {
   const router = useRouter()
   // get user preferences
   const {rsd_page_rows} = useUserSettings()
-  // extract project specific params
-  // const params = ssrProjectsParams(router.query)
   // use encoded array params as json string to avoid
   // useEffect re-renders in api hooks
   const params = getProjectsParams(router.query)
@@ -30,6 +28,7 @@ export default function useProjectParams() {
     if (params?.domains_json) count++
     if (params?.organisations_json) count++
     if (params?.search) count++
+    if (params?.project_status) count++
     return count
   }
 
@@ -39,7 +38,6 @@ export default function useProjectParams() {
   // console.log('params...', params)
   // console.log('rsd_page_rows...', rsd_page_rows)
   // console.groupEnd()
-  // extract user prefference
 
   // return these
   return {
