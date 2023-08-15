@@ -19,13 +19,18 @@ import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
 import AutosaveSoftwareMarkdown from './AutosaveSoftwareMarkdown'
 import AutosaveSoftwareLogo from './AutosaveSoftwareLogo'
 import AutosaveSoftwareSwitch from './AutosaveSoftwareSwitch'
+import {addLicensesForSoftware, deleteLicense} from '~/utils/editSoftware'
+import {getLicenseForSoftware} from '~/utils/getSoftware'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {License} from '~/types/SoftwareTypes'
+import {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 
 type SoftwareInformationFormProviderProps = {
   editSoftware: EditSoftwareItem
 }
 
 export default function SoftwareInformationForm({editSoftware}: SoftwareInformationFormProviderProps) {
-  const {user} = useSession()
+  const {user, token} = useSession()
   const methods = useForm<EditSoftwareItem>({
     mode: 'onChange',
     defaultValues: {
@@ -39,22 +44,90 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
   const {dirtyFields} = formState
   // watch form data changes (we use reset in useEffect)
   const formData = watch()
+  const {showErrorMessage} = useSnackbar()
 
-  // console.group('SoftwareInformationForm')
-  // console.log('editSoftware...', editSoftware)
-  // console.log('formData...', formData)
-  // console.groupEnd()
+  console.group('SoftwareInformationForm')
+  console.log('editSoftware...', editSoftware)
+  console.log('formData...', formData)
+  console.log('dirtyFields...', dirtyFields)
+  console.groupEnd()
 
-  let repoURL, citationField
-  repoURL = citationField = <></>
+  let repoURL, citationField, licensesField
+  repoURL = citationField = licensesField = <></>
 
   if (formData.closed_source){
-    repoURL = <></>
-    citationField = <></>
+    repoURL = citationField = licensesField = <></>
+    closedSourceLicense()
   }
   else {
     repoURL = <AutosaveRepositoryUrl />
     citationField = <AutosaveConceptDoi />
+    licensesField = <AutosaveSoftwareLicenses
+      items={formData.licenses}
+      concept_doi={formData.concept_doi ?? undefined}
+    />
+    openSourceLicense()
+  }
+
+  async function closedSourceLicense() {
+    let resp = await getLicenses()
+    console.log("closedSourceLicense_resp:")
+    console.log(resp)
+    if (!(resp.length === 1 && resp[0].license === "Proprietary")) {
+      console.log("CLOSED")
+      await removeAllLicenses(resp, token)
+      await addClosedSourceLicense(formData.id, token)
+      resp = await getLicenses()
+      console.log(resp)
+    }
+  }
+
+  async function openSourceLicense() {
+    const resp = await getLicenses()
+    console.log("openSourceLicense_resp:")
+    console.log(resp)
+    if (resp.length === 1 && resp[0].license === "Proprietary") {
+      console.log("OPEN")
+      removeAllLicenses(resp, token)
+    }
+  }
+
+  async function getLicenses() {
+    const resp = await getLicenseForSoftware(formData.id, true, token)
+    console.log("getLicenses_resp:")
+    console.log(resp)
+    if (!resp) {
+      showErrorMessage(`Failed to get licenses.`)
+    }
+    else {
+      return resp
+    }
+  }
+
+  async function addClosedSourceLicense(software: string, token: string) {
+    console.log("POSTing")
+    const resp = await addLicensesForSoftware({
+      software: software,
+      license: "Proprietary",
+      token: token,
+    })
+    if (resp.status !== 201) {
+      showErrorMessage(`Failed to add Proprietary license. ${resp.message}`)
+    }
+  }
+
+  async function removeAllLicenses(licenses: License[], token: string) {
+    console.log("Removing")
+    for (let i=0;i<licenses.length;i++) {
+      const resp = await deleteLicense({
+        id: String(licenses[i].id),
+        token: token,
+      })
+      console.log("loop",i,resp)
+      if (resp.status !== 200) {
+        showErrorMessage(`Failed to remove license. ${resp.message}`)
+      }
+    }
   }
 
   return (
@@ -165,10 +238,7 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
               items={formData.keywords ?? []}
             />
             <div className="py-4"></div>
-            <AutosaveSoftwareLicenses
-              items={formData.licenses}
-              concept_doi={formData.concept_doi ?? undefined}
-            />
+            {licensesField}
             {/* add white space at the bottom */}
             <div className="py-4"></div>
           </div>
