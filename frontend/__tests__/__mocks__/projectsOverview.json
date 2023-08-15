@@ -49,6 +49,24 @@
       "keyword_cnt": 31
     }
   ],
+  "projectStatusList":[
+    {
+      "project_status": "finished",
+      "project_status_cnt": 107
+    },
+    {
+      "project_status": "in_progress",
+      "project_status_cnt": 123
+    },
+    {
+      "project_status": "pending",
+      "project_status_cnt": 120
+    },
+    {
+      "project_status": "unknown",
+      "project_status_cnt": 54
+    }
+  ],
   "domainsList":[
     {
       "key": "LS1_1",
@@ -1962,7 +1980,7 @@
     "slug": "bakeoff",
     "title": "Facilitating the \"Great Bake Off\" of Bioinformatics Workflows",
     "subtitle": " ",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-07-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -1977,7 +1995,7 @@
     "slug": "microbialgenes",
     "title": "A community-supported workflow connecting microbial genes, and organisms to their molecular products",
     "subtitle": " ",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-03-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -1992,7 +2010,7 @@
     "slug": "emg",
     "title": "Development of a software tool for automated surface EMG analysis of respiratory muscles during mechanical ventilation",
     "subtitle": " ",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-03-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -2007,7 +2025,7 @@
     "slug": "3dvac",
     "title": "Personalized cancer vaccine design through 3D modelling boosted geometric learning",
     "subtitle": " ",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-03-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -2022,7 +2040,7 @@
     "slug": "demoses",
     "title": "DEMOSES",
     "subtitle": "Designing and modelling future systems of energy systems",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-02-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -2034,7 +2052,7 @@
     "slug": "hychain-esi",
     "title": "HyChain-ESI",
     "subtitle": "Hydrogen value chain deployment – Agenda for the emerging hydrogen economy supporting energy system integration",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-02-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -2046,7 +2064,7 @@
     "slug": "nextgenopt",
     "title": "NextGenOpt",
     "subtitle": "Next Generation Sector-Coupling Models for Optimal Investments and Operation",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-02-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -2058,7 +2076,7 @@
     "slug": "tesops",
     "title": "TeSoPs",
     "subtitle": "Technologically and socially feasible transition pathways for local energy system integration",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-02-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -2070,7 +2088,7 @@
     "slug": "granular-materials",
     "title": "An artificial brain for interpreting and accelerating physics-based simulations of granular materials",
     "subtitle": " ",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-01-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -2082,7 +2100,7 @@
     "slug": "fusion-reactor",
     "title": "Development of the European fusion reactor simulation framework for experimental design, optimization, and control",
     "subtitle": " ",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-01-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,
@@ -2094,7 +2112,7 @@
     "slug": "et-apps",
     "title": "Efficient and robust open-source modelling platform for Energy Transition applications",
     "subtitle": " ",
-    "current_state": "Running",
+    "current_state": "in_progress",
     "date_start": "2022-01-01",
     "updated_at": "2022-07-26T14:57:12.747524+00:00",
     "is_published": true,

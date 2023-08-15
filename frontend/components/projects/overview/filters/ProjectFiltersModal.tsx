@@ -15,6 +15,7 @@ import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
 import {OrganisationOption} from './ProjectOrganisationsFilter'
 import ProjectFilters from './ProjectFilters'
+import {StatusFilterOption} from './ProjectStatusFilter'
 
 type ProjectFiltersModalProps = {
   open: boolean,
@@ -25,6 +26,8 @@ type ProjectFiltersModalProps = {
   domainsList: ResearchDomainOption[]
   organisations: string[]
   organisationsList: OrganisationOption[]
+  status: string
+  statusList: StatusFilterOption[]
   filterCnt: number,
   setModal:(open:boolean)=>void
 }
@@ -33,6 +36,7 @@ export default function ProjectFiltersModal({
   open, keywords, keywordsList,
   domains, domainsList,
   organisations, organisationsList,
+  status, statusList,
   filterCnt, orderBy,
   setModal
 }:ProjectFiltersModalProps) {
@@ -64,6 +68,8 @@ export default function ProjectFiltersModal({
             domainsList={domainsList}
             organisations={organisations ?? []}
             organisationsList={organisationsList}
+            status={status}
+            statusList={statusList}
           />
         </div>
       </DialogContent>

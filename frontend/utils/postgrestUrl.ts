@@ -24,6 +24,7 @@ export type ApiParams<T, K extends keyof T> = {
 
 type baseQueryStringProps = {
   search?: string | null,
+  project_status?: string | null,
   keywords?: string[] | null,
   domains?: string[] | null,
   prog_lang?: string[] | null,
@@ -39,7 +40,6 @@ export type PostgrestParams = baseQueryStringProps & {
 }
 
 export type QueryParams={
-  // query: ParsedUrlQuery
   search?:string | null
   order?: string | null,
   keywords?:string[] | null
@@ -47,6 +47,7 @@ export type QueryParams={
   prog_lang?: string[] | null,
   licenses?: string[] | null,
   organisations?: string[] | null,
+  project_status?: string | null,
   page?:number | null,
   rows?:number | null
 }
@@ -74,7 +75,7 @@ export function buildFilterUrl(params: QueryParams, view:string) {
   const {
     search, order, keywords, domains,
     licenses, prog_lang, organisations,
-    rows, page
+    project_status, rows, page
   } = params
   // console.log('buildFilterUrl...params...', params)
   let url = `/${view}?`
@@ -115,6 +116,12 @@ export function buildFilterUrl(params: QueryParams, view:string) {
     query,
     param: 'organisations',
     value: organisations
+  })
+  // project_status
+  query = encodeUrlQuery({
+    query,
+    param: 'project_status',
+    value: project_status
   })
   // sortBy
   query = encodeUrlQuery({
@@ -161,7 +168,7 @@ export function paginationUrlParams({rows=12, page=0}:
  * Provides basic url query string for postgrest endpoints
  */
 export function baseQueryString(props: baseQueryStringProps) {
-  const {keywords,domains,prog_lang,licenses,organisations,order,limit,offset} = props
+  const {keywords,domains,prog_lang,licenses,organisations,project_status,order,limit,offset} = props
   let query
   // console.group('baseQueryString')
   // console.log('keywords...', keywords)
@@ -235,6 +242,16 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `${query}&participating_organisations=cs.%7B${organisationsAll}%7D`
     } else {
       query = `participating_organisations=cs.%7B${organisationsAll}%7D`
+    }
+  }
+  if (typeof project_status !== 'undefined' &&
+    project_status !== null) {
+    // show records with any of project_status values from the filter
+    const encodedStatus = encodeURIComponent(project_status)
+    if (query) {
+      query = `${query}&project_status=eq.${encodedStatus}`
+    } else {
+      query = `project_status=eq.${encodedStatus}`
     }
   }
   // order

@@ -11,7 +11,6 @@ import useOrganisationContext from '../../context/useOrganisationContext'
 // additional admin options
 export const adminOptions = [
   {key: 'status', label: 'Blocked', direction: 'asc.nullslast'},
-  {key: 'is_featured', label: 'Pinned', direction: 'desc.nullslast'},
   {key: 'is_published', label: 'Not published', direction:'asc.nullslast'}
 ]
 

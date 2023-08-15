@@ -19,6 +19,7 @@ const mockProps = {
   keywords: null,
   domains: null,
   organisations: null,
+  project_status: null,
   page: 1,
   rows: 12,
   count: 408,
@@ -26,6 +27,7 @@ const mockProps = {
   keywordsList: mockData.keywordsList,
   domainsList: mockData.domainsList,
   organisationsList: mockData.organisationsList,
+  projectStatusList: mockData.projectStatusList as any,
   projects: mockData.projects as any
 }
 
@@ -48,7 +50,7 @@ describe('pages/projects/index.tsx', () => {
     expect(heading).toBeInTheDocument()
   })
 
-  it('renders project filter panel with orderBy and 3 filters (combobox)', () => {
+  it('renders project filter panel with orderBy, project status and 3 other filters (combobox)', () => {
     render(
       <WithAppContext>
         <ProjectOverviewPage {...mockProps} />
@@ -58,6 +60,7 @@ describe('pages/projects/index.tsx', () => {
     const panel = screen.getByTestId('filters-panel')
     // find order by testid
     const order = within(panel).getByTestId('filters-order-by')
+    const status = within(panel).getByTestId('filters-project-status')
     // should have 3 filters
     const filters = within(panel).getAllByRole('combobox')
     expect(filters.length).toEqual(3)

@@ -41,7 +41,7 @@ export type EditProject = Project & {
   keywords: KeywordForProject[]
 }
 
-export type CurrentState = 'Starting' | 'Running' | 'Finished'
+export type ProjectStatusKey = 'pending' | 'in_progress' | 'finished' | 'unknown'
 export type ProjectListItem = {
   id: string
   slug: string
@@ -58,6 +58,7 @@ export type ProjectListItem = {
   participating_organisations?: string[]
   impact_cnt: number | null
   output_cnt: number | null
+  project_status: ProjectStatusKey
 }
 
 // object returned from api
@@ -110,7 +111,7 @@ export type SearchProject = {
 }
 
 export type RelatedProject = SearchProject & {
-  current_state: CurrentState
+  current_state: ProjectStatusKey
   date_start: string | null
   updated_at: string | null
 }

@@ -17,6 +17,7 @@ import {buildProjectFilter} from '~/components/projects/overview/filters/project
 export type OrgProjectFilterProps = {
   id: string
   search?: string | null
+  project_status?: string | null
   keywords?: string[] | null
   domains?: string[] | null
   organisations?: string[] | null
@@ -31,7 +32,7 @@ type OrgProjectFilterApiProps = {
   organisation_filter?: string[]
 }
 
-export function buildOrgProjectFilter({id, search, keywords, domains, organisations}: OrgProjectFilterProps) {
+export function buildOrgProjectFilter({id, search, project_status, keywords, domains, organisations}: OrgProjectFilterProps) {
   const filter: OrgProjectFilterApiProps = {
     // additional organisation filter
     organisation_id: id,
@@ -40,7 +41,8 @@ export function buildOrgProjectFilter({id, search, keywords, domains, organisati
       search,
       keywords,
       domains,
-      organisations
+      organisations,
+      project_status
     })
   }
   // console.group('buildOrgProjectFilter')
@@ -50,7 +52,9 @@ export function buildOrgProjectFilter({id, search, keywords, domains, organisati
 }
 
 export async function orgProjectKeywordsFilter({
-  id,search, keywords, domains, organisations, token}: OrgProjectFilterProps) {
+  id, search, project_status, keywords,
+  domains, organisations, token
+}: OrgProjectFilterProps) {
   try {
     const query = 'rpc/org_project_keywords_filter?order=keyword'
     const url = `${getBaseUrl()}/${query}`
@@ -59,7 +63,8 @@ export async function orgProjectKeywordsFilter({
       search,
       keywords,
       domains,
-      organisations
+      organisations,
+      project_status
     })
 
     const resp = await fetch(url, {
@@ -87,7 +92,7 @@ export async function orgProjectKeywordsFilter({
 export default function useOrgProjectKeywordsList() {
   const {token} = useSession()
   const {id} = useOrganisationContext()
-  const {search,keywords_json,domains_json,organisations_json} = useProjectParams()
+  const {search,project_status,keywords_json,domains_json,organisations_json} = useProjectParams()
   const [keywordsList, setKeywordsList] = useState<KeywordFilterOption[]>([])
 
   // console.group('useOrgProjectKeywordsList')
@@ -113,6 +118,7 @@ export default function useOrgProjectKeywordsList() {
         keywords,
         domains,
         organisations,
+        project_status,
         token
       }).then(resp => {
         // abort
@@ -127,7 +133,7 @@ export default function useOrgProjectKeywordsList() {
   }, [
     search, keywords_json,
     domains_json, organisations_json,
-    id,token
+    id,token, project_status
   ])
 
   return {
