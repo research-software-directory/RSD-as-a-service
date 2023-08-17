@@ -74,7 +74,6 @@ export default function ProjectCardContent(item:ProjectCardProps){
             <ProjectPeriod
               date_start={item.date_start}
               date_end={item.date_end}
-              project_status={item.project_status}
             />
           </div>
           {/* Metrics */}
