@@ -5,27 +5,15 @@
 
 import PeriodProgressBar from '~/components/charts/progress/PeriodProgressBar'
 import ProjectDuration from './ProjectDuration'
-import {ProjectStatusKey} from '~/types/Project'
 
 type ProjectPeriodProps = {
   date_start: string | null
   date_end: string | null
-  project_status: ProjectStatusKey
 }
 
-export default function ProjectPeriod({date_start, date_end, project_status}: ProjectPeriodProps) {
-  // if status unknown we do not show project period
-  if (project_status==='unknown') return null
-
-  // when project is finished we only show dates
-  // if (project_status === 'finished') {
-  //   return (
-  //     <ProjectDuration
-  //       date_start={date_start}
-  //       date_end={date_end}
-  //     />
-  //   )
-  // }
+export default function ProjectPeriod({date_start, date_end}: ProjectPeriodProps) {
+  // if both dates are missing we do not show project period
+  if (!date_start && !date_end) return null
 
   // show both dates and progressbar
   return (
