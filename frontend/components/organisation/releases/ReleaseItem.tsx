@@ -9,7 +9,7 @@
 import Chip from '@mui/material/Chip'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Link from 'next/link'
-import {SoftwareReleaseInfo} from './useSoftwareReleases'
+import {SoftwareReleaseInfo} from './apiOrganisationReleases'
 
 
 function LinkToVersionDoi({tag,doi}:{tag: string | null,doi:string|null}) {
@@ -66,7 +66,10 @@ function LinkToVersionDoi({tag,doi}:{tag: string | null,doi:string|null}) {
 export default function ReleaseItem({release}: { release: SoftwareReleaseInfo }) {
   const releaseDate = new Date(release.release_date)
   return (
-    <article className="py-2 border-t">
+    <article
+      data-testid="release-item"
+      className="py-2 border-t"
+    >
       <div className="flex gap-4">
         {/* release date */}
         <div className="text-base-content-secondary whitespace-nowrap font-mono tracking-tighter text-sm leading-6">

@@ -31,6 +31,8 @@ jest.mock('~/auth/permissions/isMaintainerOf', () => ({
 
 // MOCK useProjectToEdit (default mock)
 jest.mock('~/components/projects/edit/information/useProjectToEdit')
+// mock default keywords list (autocomplete)
+jest.mock('~/components/projects/edit/information/searchForKeyword')
 
 // MOCK IntersectionObserver
 const mockObserve = jest.fn()

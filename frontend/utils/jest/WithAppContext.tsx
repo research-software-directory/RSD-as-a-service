@@ -52,6 +52,7 @@ export function WithAppContext({children,options}:WithAppContextProps) {
   // console.group('WithAppContext')
   // console.log('session...', session)
   // console.log('settings...', settings)
+  // console.log('muiTheme...', muiTheme)
   // console.groupEnd()
 
   return (

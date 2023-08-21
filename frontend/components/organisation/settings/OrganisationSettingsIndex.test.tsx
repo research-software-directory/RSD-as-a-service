@@ -13,6 +13,9 @@ import OrganisationSettings from './index'
 import config from './general/generalSettingsConfig'
 import mockOrganisation from '../__mocks__/mockOrganisation'
 
+// MOCK user agreement call
+jest.mock('~/components/user/settings/fetchAgreementStatus')
+
 const mockProps = {
   organisation: mockOrganisation,
   isMaintainer: false

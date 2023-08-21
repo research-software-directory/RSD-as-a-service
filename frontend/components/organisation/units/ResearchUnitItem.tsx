@@ -29,8 +29,6 @@ type UnitListItemProps = {
 
 export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onEdit}: UnitListItemProps) {
   const router = useRouter()
-  // remove query params from url (id)
-  const baseUrl = router.asPath.split('?')
   const slugs = []
   if (typeof router.query['slug'] === 'string') {
     slugs.push(router.query['slug'])

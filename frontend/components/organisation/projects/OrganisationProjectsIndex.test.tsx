@@ -22,11 +22,6 @@ const mockProps = {
 }
 
 // MOCK getProjectsForOrganisation
-// const mockProjectsForOrganisation = jest.fn((props) => Promise.resolve({
-//   status: 206,
-//   count: 0,
-//   data: []
-// }))
 const mockUseOrganisationProjects = jest.fn((props) => ({
   loading: false,
   count: 0,
@@ -45,6 +40,12 @@ const mockPatchProjectForOrganisation = jest.fn((props) => Promise.resolve({
 jest.mock('~/utils/editProject', () => ({
   patchProjectForOrganisation: jest.fn((props)=>mockPatchProjectForOrganisation(props))
 }))
+
+// MOCK project filters - use default mocks
+jest.mock('~/components/organisation/projects/filters/useOrgProjectDomainsList')
+jest.mock('~/components/organisation/projects/filters/useOrgProjectKeywordsList')
+jest.mock('~/components/organisation/projects/filters/useOrgProjectOrganisationsList')
+jest.mock('~/components/organisation/projects/filters/useOrgProjectStatusList')
 
 
 describe('frontend/components/organisation/projects/index.tsx', () => {

@@ -6,7 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
+import {JSX} from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -19,7 +19,7 @@ import WarningIcon from '@mui/icons-material/Warning'
 type ConfirmDeleteModalProps = {
   open: boolean,
   title: string,
-  body: React.JSX.Element,
+  body: JSX.Element,
   onCancel: () => void,
   onDelete: () => void
 }

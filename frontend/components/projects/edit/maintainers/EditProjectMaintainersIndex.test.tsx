@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,12 +14,13 @@ import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
 import ProjectMaintainers from './index'
 import editProjectState from '../__mocks__/editProjectState'
 
+// MOCK user agreement call
+jest.mock('~/components/user/settings/fetchAgreementStatus')
 // MOCKS
 const mockGetUnusedInvitations=jest.fn(props=>Promise.resolve([]))
 jest.mock('~/utils/getUnusedInvitations', () => ({
   getUnusedInvitations: jest.fn(props=>mockGetUnusedInvitations(props))
 }))
-
 
 describe('frontend/components/projects/edit/maintainers/index.tsx', () => {
   beforeEach(() => {

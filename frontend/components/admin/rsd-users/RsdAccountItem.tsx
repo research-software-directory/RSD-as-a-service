@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,8 +11,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import ListItemText from '@mui/material/ListItemText'
 
 import {useSession} from '~/auth'
-import {RsdAccountInfo} from './apiRsdUsers'
 import RsdLoginList from './RsdLoginList'
+import {RsdAccountInfo} from './useLoginForAccount'
 
 type RsdUserItemProps = {
   account: RsdAccountInfo,

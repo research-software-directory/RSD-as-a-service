@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,8 +14,8 @@ import {useState} from 'react'
 import {DoiBulkImportReport, useValidateInputList} from './apiImportMentions'
 import {useSession} from '~/auth'
 import Box from '@mui/material/Box'
-import BuilkDialogTitle from './ImportDialogTitle'
-import BulkDialogActions from './ImportDialogActions'
+import ImportDialogTitle from './ImportDialogTitle'
+import ImportDialogActions from './ImportDialogActions'
 
 import config from './config'
 
@@ -54,14 +56,16 @@ export default function DoiInputDialogBody({onCancel, onSubmit}: DoiInputDialogB
 
   return (
     <>
-      <BuilkDialogTitle
+      <ImportDialogTitle
         title={'Import publications'}
       />
-      <DialogContent sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        padding: '0rem 1rem',
-      }}>
+      <DialogContent
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '0rem 1rem',
+        }}
+      >
         <TextField
           multiline={true}
           fullWidth={true}
@@ -81,7 +85,7 @@ export default function DoiInputDialogBody({onCancel, onSubmit}: DoiInputDialogB
         >
         </TextField>
       </DialogContent>
-      <BulkDialogActions>
+      <ImportDialogActions>
         <div className={`flex-1 flex gap-4 text-sm ${error.message ? 'text-error ' : 'text-base-content-disabled'}` }>
           <span>{error.message ? error.message : config.doiInput.helperText}...{`${error.count}/${config.doiInput.maxRows}`}</span>
         </div>
@@ -104,7 +108,7 @@ export default function DoiInputDialogBody({onCancel, onSubmit}: DoiInputDialogB
             Next
           </Button>
         </div>
-      </BulkDialogActions>
+      </ImportDialogActions>
       {validating &&
         <Box sx={{
           position: 'absolute',

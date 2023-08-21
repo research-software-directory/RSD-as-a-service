@@ -11,8 +11,9 @@ import LaunchIcon from '@mui/icons-material/Launch'
 import ContributorAvatar from '~/components/software/ContributorAvatar'
 import {Column} from '~/components/table/EditableTable'
 import {getImageUrl} from '~/utils/editImage'
-import {patchPerson, RsdContributor} from './apiContributors'
+import {patchPerson} from './apiRsdContributors'
 import {getDisplayInitials} from '~/utils/getDisplayName'
+import {RsdContributor} from './useContributors'
 
 export function createColumns(token: string) {
   const columns: Column<RsdContributor, keyof RsdContributor>[] = [{

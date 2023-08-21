@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
+import {JSX} from 'react'
 import InfoIcon from '@mui/icons-material/Info'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import AccountTreeIcon from '@mui/icons-material/AccountTree'
@@ -21,7 +21,7 @@ type IsVisibleProps = Partial<OrganisationForOverview> & {
 export type OrganisationTabItemProps = {
   id: string,
   label: (props:any)=>string,
-  icon: React.JSX.Element,
+  icon: JSX.Element,
   isVisible: (props: IsVisibleProps) => boolean
 }
 

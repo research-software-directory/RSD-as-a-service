@@ -15,8 +15,8 @@ import {softwareListUrl} from '~/utils/postgrestUrl'
 import AsyncAutocompleteSC, {AutocompleteOption} from '~/components/form/AsyncAutocompleteSC'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import SoftwareOptionFound from './SoftwareOptionFound'
-import {SoftwareHighlight} from './apiSoftwareHighlights'
 import {itemsNotInReferenceList} from '~/utils/itemsNotInReferenceList'
+import {SoftwareHighlight} from './apiSoftwareHighlights'
 
 type AddSoftwareHighlightsProps = {
   highlights: SoftwareHighlight[]

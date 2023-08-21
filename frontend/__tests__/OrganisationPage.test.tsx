@@ -9,7 +9,7 @@
 import {render, screen, waitForElementToBeRemoved} from '@testing-library/react'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
-import OrganisationPage from '../pages/organisations/[...slug]'
+import OrganisationPage, {OrganisationPageProps} from '../pages/organisations/[...slug]'
 
 // MOCKS
 import mockRORIinfo from './__mocks__/apiRORInfo.json'
@@ -22,13 +22,20 @@ import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
 // MOCK user agreement call
 jest.mock('~/components/user/settings/fetchAgreementStatus')
 
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+jest.mock('~/auth/api/useLoginProviders')
+
 const mockProps = {
   organisation: mockOrganisation,
   slug:['dutch-research-council'],
   tab: 'software' as TabKey,
   ror: mockRORIinfo as any,
-  isMaintainer: false
-}
+  isMaintainer: false,
+  rsd_page_rows: 12,
+  rsd_page_layout: 'grid'
+} as OrganisationPageProps
+
 // MOCK isMaintainerOfOrganisation
 const mockIsMaintainerOfOrganisation = jest.fn((props) => {
   // console.log('mockIsMaintainerOfOrganisation...', props)
@@ -41,13 +48,17 @@ jest.mock('~/auth/permissions/isMaintainerOfOrganisation', () => {
     default: jest.fn(props=>mockIsMaintainerOfOrganisation(props))
   }
 })
-
 // MOCK getSoftwareForOrganisation
 const mockSoftwareForOrganisation = jest.fn((props) => Promise.resolve({
   status: 206,
   count: 0,
   data: []
 }))
+// MOCK software filters - use default mocks
+jest.mock('~/components/organisation/software/filters/useOrgSoftwareKeywordsList')
+jest.mock('~/components/organisation/software/filters/useOrgSoftwareLanguagesList')
+jest.mock('~/components/organisation/software/filters/useOrgSoftwareLicensesList')
+
 // MOCK getProjectsForOrganisation
 const mockProjectsForOrganisation = jest.fn((props) => Promise.resolve({
   status: 206,
@@ -62,9 +73,12 @@ jest.mock('~/components/organisation/apiOrganisations', () => ({
   getOrganisationChildren: jest.fn((props)=>mockGetOrganisationChildren(props))
 }))
 
-// use DEFAULT MOCK for login providers list
-// required when AppHeader component is used
-jest.mock('~/auth/api/useLoginProviders')
+// MOCK project filters - use default mocks
+jest.mock('~/components/organisation/projects/filters/useOrgProjectDomainsList')
+jest.mock('~/components/organisation/projects/filters/useOrgProjectKeywordsList')
+jest.mock('~/components/organisation/projects/filters/useOrgProjectOrganisationsList')
+jest.mock('~/components/organisation/projects/filters/useOrgProjectStatusList')
+
 
 describe('pages/organisations/[...slug].tsx', () => {
   beforeEach(() => {

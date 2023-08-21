@@ -35,7 +35,7 @@ type SortableTableProps = {
 export default function SortableTable({metadata, initialData, initialOrder=''}: SortableTableProps) {
   const propKeys = Array.from(metadata.keys())
   const [sortColumn, setSortColumn] = useState(initialOrder)
-  const [data, setData] = useState(initialData)
+  const [data] = useState(initialData)
   const [ascending, setAscending] = useState(true)
 
   function getDirection(metadataKey:string){

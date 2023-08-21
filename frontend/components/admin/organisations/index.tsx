@@ -15,7 +15,7 @@ import OrganisationsAdminList from './OrganisationsAdminList'
 import AddOrganisation from './AddOrganisation'
 import {useOrganisations} from './apiOrganisation'
 
-export default function OrganisationAdminPage() {
+export default function OrganisationsAdminPage() {
   const {token} = useSession()
   const {pagination:{count}} = useContext(PaginationContext)
   const {organisations, loading, addOrganisation, removeOrganisation} = useOrganisations(token)

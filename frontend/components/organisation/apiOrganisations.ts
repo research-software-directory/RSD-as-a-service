@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {RsdUser} from '~/auth'
-import {isOrganisationMaintainer} from '~/auth/permissions/useOrganisationMaintainer'
+import {isOrganisationMaintainer} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {
   Organisation, OrganisationForOverview,
   OrganisationList, ProjectOfOrganisation,
@@ -86,7 +86,8 @@ export async function getOrganisationBySlug({slug,user,token}:
     // is this user maintainer of this organisation
     const isMaintainer = await isOrganisationMaintainer({
       organisation: uuid,
-      user,
+      account: user?.account,
+      role: user?.role,
       token
     })
     // console.log('getOrganisationBySlug...isMaintainer...', isMaintainer)

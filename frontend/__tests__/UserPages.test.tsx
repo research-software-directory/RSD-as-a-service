@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -11,8 +12,18 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 import UserPages from '../pages/user/[section]'
 
+import mockSoftwareByMaintainer from '~/components/user/software/__mocks__/softwareByMaintainer.json'
+import mockProjectsByMaintainer from '~/components/user/project/__mocks__/projectsByMaintainer.json'
+
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+jest.mock('~/auth/api/useLoginProviders')
 // MOCK user agreement call
 jest.mock('~/components/user/settings/fetchAgreementStatus')
+// MOCK user project list
+jest.mock('~/components/user/project/useUserProjects')
+// MOCK user software list
+jest.mock('~/components/user/software/useUserSoftware')
 
 // MOCKS
 const mockProps = {
@@ -73,25 +84,29 @@ describe('pages/user/[section].tsx', () => {
   it('renders user software section', async() => {
     mockProps.section = 'software'
 
-    const {container} = render(
+    render(
       <WithAppContext options={{session:mockSession}}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
 
-    const loader = screen.getByRole('progressbar')
+    // validate software cards are shown
+    const software = screen.getAllByTestId('software-card-link')
+    expect(software.length).toEqual(mockSoftwareByMaintainer.length)
   })
 
   it('renders user projects section', async() => {
     mockProps.section = 'projects'
 
-    const {container} = render(
+    render(
       <WithAppContext options={{session:mockSession}}>
         <UserPages {...mockProps} />
       </WithAppContext>
     )
 
-    const loader = screen.getByRole('progressbar')
+    // validate project cards are shown
+    const project = screen.getAllByTestId('project-card-link')
+    expect(project.length).toEqual(mockProjectsByMaintainer.length)
   })
 
 })

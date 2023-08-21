@@ -13,8 +13,6 @@ import PageErrorMessage from '~/components/layout/PageErrorMessage'
 
 export default function RsdAdminContent({children}:{children:any}) {
   const {session} = useAuth()
-  // if slug is provided we need to make api call to check if user
-  // is maintainer of the software
   const [status, setStatus] = useState(session?.status ? session?.status :'loading')
 
   useEffect(() => {

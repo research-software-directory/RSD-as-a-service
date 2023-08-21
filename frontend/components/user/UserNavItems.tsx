@@ -8,7 +8,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
+import {JSX} from 'react'
 import dynamic from 'next/dynamic'
 
 import TerminalIcon from '@mui/icons-material/Terminal'
@@ -44,8 +44,8 @@ export type UserMenuProps = {
   id: string,
   status: string,
   label: (props:any)=>string,
-  icon: React.JSX.Element,
-  component: (props: any) => React.JSX.Element
+  icon: JSX.Element,
+  component: (props: any) => JSX.Element
   showSearch: boolean
 }
 

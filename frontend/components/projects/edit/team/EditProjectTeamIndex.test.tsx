@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -86,7 +88,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -106,7 +108,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -140,7 +142,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -254,7 +256,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -322,7 +324,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -384,7 +386,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug" />
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -463,7 +465,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     const {container} = render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug" />
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )

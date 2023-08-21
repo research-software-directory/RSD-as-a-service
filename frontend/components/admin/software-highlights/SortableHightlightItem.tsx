@@ -8,6 +8,7 @@
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
+import Avatar from '@mui/material/Avatar'
 
 import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
@@ -15,7 +16,7 @@ import SortableListItemActions from '~/components/layout/SortableListItemActions
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {getImageUrl} from '~/utils/editImage'
 import {SoftwareHighlight} from './apiSoftwareHighlights'
-import Avatar from '@mui/material/Avatar'
+
 
 type HighlightProps = {
   pos: number,
@@ -23,7 +24,6 @@ type HighlightProps = {
   onEdit: (pos: number) => void,
   onDelete: (pos: number) => void,
 }
-
 
 export default function SortableHighlightItem({pos, item, onEdit, onDelete}: HighlightProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')

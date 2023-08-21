@@ -1,0 +1,18 @@
+[
+  {
+    "project_status": "finished",
+    "project_status_cnt": 5
+  },
+  {
+    "project_status": "in_progress",
+    "project_status_cnt": 3
+  },
+  {
+    "project_status": "pending",
+    "project_status_cnt": 3
+  },
+  {
+    "project_status": "unknown",
+    "project_status_cnt": 1
+  }
+]

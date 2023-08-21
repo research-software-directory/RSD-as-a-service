@@ -11,6 +11,10 @@ import {WithAppContext} from '~/utils/jest/WithAppContext'
 import SoftwareOverviewPage from '../pages/software/index'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+jest.mock('~/auth/api/useLoginProviders')
+
 // mocked data & props
 import mockData from './__mocks__/softwareOverviewData.json'
 

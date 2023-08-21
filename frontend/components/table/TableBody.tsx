@@ -36,7 +36,7 @@ function formatValue<T, K extends keyof T>(col: Column<T, K>, value: any) {
 
 function TableRow<T extends {id:string,origin?:string}, K extends keyof T>({data, cols}: { data: T, cols: Column<T,K>[]}) {
   return (
-    <MuiTableRow>
+    <MuiTableRow data-testid="mui-table-body-row">
       {
         cols.map((col) => {
           const key = `column-${col.key.toString()}`

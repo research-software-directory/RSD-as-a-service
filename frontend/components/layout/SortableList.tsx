@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
+import {JSX} from 'react'
 import {
   DndContext, DragEndEvent, useSensor,
   useSensors, TouchSensor, MouseSensor
@@ -23,7 +23,7 @@ export type RequiredListProps = {
 type SortableListProps<T extends RequiredListProps>={
   items:T[],
   onSorted: (items: T[]) => void
-  onRenderItem:(item:T,index:number) => React.JSX.Element
+  onRenderItem:(item:T,index:number) => JSX.Element
 }
 
 export default function SortableList<T extends RequiredListProps>({
