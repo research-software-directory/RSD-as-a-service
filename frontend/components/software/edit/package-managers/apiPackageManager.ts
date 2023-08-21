@@ -1,11 +1,10 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
-
-import {useCallback, useEffect, useState} from 'react'
 
 import logger from '~/utils/logger'
 import {
@@ -79,119 +78,7 @@ export type PackageManager = NewPackageManager & {
   reverse_dependency_count_scraped_at: string | null
 }
 
-export function usePackageManagers({token, software}: { token: string, software: string }) {
-  const [managers,setManagers]=useState<PackageManager[]>([])
-  const [loading,setLoading]=useState(true)
-
-  const getManagers = useCallback(async () => {
-    setLoading(true)
-    const managers = await getPackageManagers({
-      software,
-      token
-    })
-    setManagers(managers)
-    setLoading(false)
-  },[software,token])
-
-
-  useEffect(() => {
-    if (token && software) {
-      getManagers()
-    }
-  }, [token, software, getManagers])
-
-  async function saveManager(data: NewPackageManager) {
-    const resp = await postPackageManager({
-      data,
-      token
-    })
-    // debugger
-    if (resp.status !== 200) {
-      return resp
-    }
-    // reload package managers
-    await getManagers()
-    return resp
-  }
-  // NOTE! Cannot update record - it seems not to be allowed at DB level
-  // async function updateManager(item: NewPackageManager) {
-  //   if (item.id) {
-  //     // const data:UpdateManagerProps = {
-  //     //   id: item.id,
-  //     //   software: item.software,
-  //     //   url: item.url,
-  //     //   package_manager: item.package_manager,
-  //     //   position: item.position
-  //     // }
-  //     // update item
-  //     const resp = await putPackageManager({
-  //       data,
-  //       token
-  //     })
-  //     debugger
-  //     if (resp.status !== 200) {
-  //       return resp
-  //     }
-  //     // reload package managers
-  //     await getManagers()
-  //     return resp
-  //   } else {
-  //     return {
-  //       status: 400,
-  //       message: 'Item id missing'
-  //     }
-  //   }
-  // }
-
-  async function deleteManager(id: string) {
-    if (id) {
-      const resp = await deletePackageManager({
-        id,
-        token
-      })
-      if (resp.status !== 200) {
-        return resp
-      }
-
-      await getManagers()
-      return {
-        status: 200,
-        message: 'OK'
-      }
-    } else {
-      return {
-        status: 400,
-        message: 'Id is missing'
-      }
-    }
-  }
-
-  async function sortManagers(items: PackageManager[]) {
-    // visually confirm position change
-    setManagers(items)
-    // make all request
-    const resp = await patchPackageManagers({
-      items,
-      token
-    })
-    if (resp.status !== 200) {
-      // revert back in case of error
-      setManagers(items)
-    }
-    // return response
-    return resp
-  }
-
-  return {
-    managers,
-    loading,
-    saveManager,
-    sortManagers,
-    deleteManager
-  }
-}
-
-async function getPackageManagers({software, token}: { software: string, token: string }) {
+export async function getPackageManagers({software, token}: { software: string, token: string }) {
   try {
     const query = `software=eq.${software}&order=position.asc,package_manager.asc`
     const url = `${getBaseUrl()}/package_manager?${query}`
@@ -216,9 +103,8 @@ async function getPackageManagers({software, token}: { software: string, token: 
   }
 }
 
-async function postPackageManager({data, token}: { data: NewPackageManager, token: string }) {
+export async function postPackageManager({data, token}: { data: NewPackageManager, token: string }) {
   try {
-
     let url = `${getBaseUrl()}/package_manager`
 
     if (data.id) {
@@ -247,35 +133,8 @@ async function postPackageManager({data, token}: { data: NewPackageManager, toke
     }
   }
 }
-// NOTE! Cannot update record - it seems not to be allowed at DB level
-// async function putPackageManager({data, token}: { data: NewPackageManager, token: string }) {
-//   try {
-//     const query = `id=eq.${data.id}`
-//     const url = `${getBaseUrl()}/package_manager?${query}`
 
-//     // make request
-//     const resp = await fetch(url,{
-//       method: 'PUT',
-//       headers: {
-//         ...createJsonHeaders(token),
-//         // UPSERT=merging also works with POST method
-//         'Prefer': 'resolution=merge-duplicates'
-//       },
-//       body: JSON.stringify(data)
-//     })
-
-//     return extractReturnMessage(resp)
-
-//   } catch (e: any) {
-//     logger(`postPackageManager failed. ${e.message}`, 'error')
-//     return {
-//       status: 500,
-//       message: e.message
-//     }
-//   }
-// }
-
-async function patchPackageManagers({items, token}: { items: PackageManager[], token: string }) {
+export async function patchPackageManagers({items, token}: { items: PackageManager[], token: string }) {
   try {
     // create all requests
     const requests = items.map(item => {
@@ -332,7 +191,7 @@ async function patchPackageManagerItem({id,key,value,token}:
   }
 }
 
-async function deletePackageManager({id,token}:{id: string,token:string}) {
+export async function deletePackageManager({id,token}:{id: string,token:string}) {
   try {
     const url = `/api/v1/package_manager?id=eq.${id}`
     const resp = await fetch(url, {

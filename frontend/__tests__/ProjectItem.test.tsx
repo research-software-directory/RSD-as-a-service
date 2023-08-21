@@ -24,6 +24,10 @@ import {RelatedProject} from '../types/Project'
 import {MentionItemProps} from '../types/Mention'
 import {ProjectOrganisationProps} from '~/types/Organisation'
 
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+jest.mock('~/auth/api/useLoginProviders')
+
 const mockedProps: ProjectPageProps = {
   slug: 'test-slug',
   project: projectItem,

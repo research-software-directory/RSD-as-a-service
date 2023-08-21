@@ -6,9 +6,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
+import {JSX} from 'react'
 
-export default function HelperTextWithCounter({message,count}:{message:string|undefined|React.JSX.Element,count:string}) {
+export default function HelperTextWithCounter({message,count}:{message:string|undefined|JSX.Element,count:string}) {
   return (
     <>
       <span className="mr-2">{message}</span>

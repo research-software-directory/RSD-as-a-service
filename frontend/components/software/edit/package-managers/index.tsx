@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,11 +14,12 @@ import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {NewPackageManager, PackageManager, usePackageManagers} from './apiPackageManager'
+import {NewPackageManager, PackageManager} from './apiPackageManager'
 import PackageManagersList from './PackageManagersList'
 import EditPackageManagerModal from './EditPackageManagerModal'
 import useSoftwareContext from '../useSoftwareContext'
 import PackageManagersInfo from './PackageManagersInfo'
+import usePackageManagers from './usePackageManagers'
 
 type EditPackManModal = {
   open: boolean,
@@ -34,6 +37,13 @@ export default function PackageManagers() {
     token
   })
   const [modal, setModal] = useState<EditPackManModal>()
+
+  // console.group('PackageManagers')
+  // console.log('loading...', loading)
+  // console.log('software...', software)
+  // console.log('managers...', managers)
+  // console.log('token...', token)
+  // console.groupEnd()
 
   function getSubtitle() {
     if (managers.length === 0) {
@@ -67,17 +77,6 @@ export default function PackageManagers() {
       showErrorMessage(`Failed to sort items. ${resp.message}`)
     }
   }
-
-  // Cannot edit url
-  // function onEdit(pos:number) {
-  //   // console.log('onEdit...pos...', pos)
-  //   const item = managers[pos]
-  //   setModal({
-  //     open: true,
-  //     manager: item,
-  //     pos
-  //   })
-  // }
 
   async function onDelete(pos: number) {
     const item = managers[pos]

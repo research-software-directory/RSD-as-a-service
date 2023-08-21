@@ -12,6 +12,12 @@ import Home from '../pages/index'
 import {defaultRsdSettings} from '~/config/rsdSettingsReducer'
 import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
 
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+jest.mock('~/auth/api/useLoginProviders')
+// use DEFAULT MOCK for organisation list used by Helmholtz homepage
+jest.mock('~/components/home/helmholtz/useOrganisations')
+
 const props = {
     host: {
       name: 'rsd'

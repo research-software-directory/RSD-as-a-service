@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
+import {useState, JSX} from 'react'
 import IconButton from '@mui/material/IconButton'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Menu from '@mui/material/Menu'
@@ -16,7 +16,7 @@ export type IconBtnMenuOption<T> = {
   type: 'divider' | 'action'
   key: string,
   label: string,
-  icon?: React.JSX.Element,
+  icon?: JSX.Element,
   action: T
   disabled?: boolean,
 }

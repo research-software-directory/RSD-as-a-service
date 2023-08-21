@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,8 +11,9 @@ import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
 import {useSession} from '~/auth'
-import {RsdContributor, useContributors} from './apiContributors'
 import EditableTable, {OrderByProps} from '~/components/table/EditableTable'
+import useContributors, {RsdContributor} from './useContributors'
+import ContentLoader from '~/components/layout/ContentLoader'
 
 const styles = {
   flex: 1,
@@ -30,6 +33,12 @@ export default function ContributorsTable() {
   const [orderBy, setOrderBy] = useState<OrderByProps<RsdContributor, keyof RsdContributor>>(initalOrder)
   const {loading, columns, contributors} = useContributors({token,orderBy})
 
+  // console.group('ContributorsTable')
+  // console.log('loading...', loading)
+  // console.log('columns...', columns)
+  // console.log('contributors...', contributors)
+  // console.groupEnd()
+
   if (contributors.length === 0 && loading==false) {
     return (
       <section className="flex-1">
@@ -43,6 +52,8 @@ export default function ContributorsTable() {
       </section>
     )
   }
+
+  if(loading) return <ContentLoader/>
 
   function onSortColumn(column:keyof RsdContributor) {
     if (orderBy && orderBy.column === column) {

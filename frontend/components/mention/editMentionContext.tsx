@@ -6,8 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
-import {createContext} from 'react'
+import {createContext,JSX} from 'react'
 import {MentionItemProps} from '~/types/Mention'
 import {EditMentionAction, EditMentionState} from './editMentionReducer'
 import NoMentionItems from './NoMentionItems'
@@ -15,7 +14,7 @@ import NoMentionItems from './NoMentionItems'
 export type EditMentionSettings = {
   editModalTitle: string,
   confirmDeleteModalTitle: string,
-  noItemsComponent:()=>React.JSX.Element
+  noItemsComponent:()=>JSX.Element
 }
 
 export type EditModalProps = {

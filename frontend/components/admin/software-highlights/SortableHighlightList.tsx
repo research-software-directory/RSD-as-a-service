@@ -6,15 +6,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
+import {useRouter} from 'next/router'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
 import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import {SoftwareHighlight} from './apiSoftwareHighlights'
 import SortableList from '~/components/layout/SortableList'
 import SortableHighlightItem from './SortableHightlightItem'
-import {useRouter} from 'next/router'
+import {SoftwareHighlight} from './apiSoftwareHighlights'
 
 type DeleteOrganisationModal = {
   open: boolean,

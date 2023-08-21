@@ -50,15 +50,15 @@ export const initSession: AuthSession = {
   setSession: () => defaultSession
 }
 
-const AuthContext = createContext(initSession)
+const AuthContext = createContext<AuthSession>(initSession)
 
 // AuthProvider used in _app to share session between all components
 export function AuthProvider(props: any) {
-  const [session, setSession] = useState(props?.session ?? defaultSession)
+  const [session, setSession] = useState<Session>(props?.session)
 
   // console.group('AuthProvider')
-  // console.log('session.user..', session?.user)
-  // console.log('props.session.user...', props?.session?.user)
+  // console.log('session...', session)
+  // console.log('props.session...', props?.session)
   // console.groupEnd()
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export function AuthProvider(props: any) {
     let schedule: any
     // only if authenticated = valid token
     if (session.status === 'authenticated'
-      && session?.user) {
+      && session?.user?.exp) {
       const {user} = session
       const expiresInMs = getExpInMs(user.exp)
       const waitInMs = getWaitInMs(expiresInMs)
@@ -74,11 +74,16 @@ export function AuthProvider(props: any) {
       if (schedule) clearTimeout(schedule)
       if (expiresInMs <= 0) {
         // token expired
-        setSession(defaultSession)
+        setSession({
+          ...session,
+          status: 'expired',
+          token: `AuthProvider session EXPIRED for account ${session.user.account}`,
+          user: null
+        })
       }else{
         // console.log(`schedule refresh in ${waitInMs/1000}sec.`)
         schedule = setTimeout(() => {
-          // console.log('call...refreshSession')
+          // console.log('call...refreshSession...',user.account)
           // refresh token by sending current valid cookie
           refreshSession()
             .then(newSession => {
@@ -102,7 +107,7 @@ export function AuthProvider(props: any) {
         clearTimeout(schedule)
       }
     }
-  }, [session, setSession])
+  }, [session])
 
   return <AuthContext.Provider value={{session, setSession}} {...props}/>
 }
@@ -113,6 +118,11 @@ export const useAuth = () => useContext(AuthContext)
 // More specific session hook which destructures session
 export function useSession(){
   const {session} = useContext(AuthContext)
+
+  // console.group('useSession')
+  // console.log('session...', session)
+  // console.groupEnd()
+
   return {
     ...session
   }

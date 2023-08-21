@@ -13,6 +13,10 @@ import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 
 import mockData from './__mocks__/projectsOverview.json'
 
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+jest.mock('~/auth/api/useLoginProviders')
+
 const mockProps = {
   search: null,
   order: null,

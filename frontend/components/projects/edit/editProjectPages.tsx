@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
+import {JSX} from 'react'
 import dynamic from 'next/dynamic'
 
 import InfoIcon from '@mui/icons-material/Info'
@@ -53,8 +53,8 @@ export type EditProjectPageProps = {
   id: string,
   status: string,
   label: string,
-  icon: React.JSX.Element,
-  render: () => React.JSX.Element
+  icon: JSX.Element,
+  render: () => JSX.Element
 }
 
 export const editProjectPage: EditProjectPageProps[] = [

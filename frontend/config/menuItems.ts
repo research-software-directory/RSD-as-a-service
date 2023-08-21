@@ -7,7 +7,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
+import {JSX} from 'react'
 
 export type MenuItemType = {
   type?: 'link' | 'function' |'divider'
@@ -18,7 +18,7 @@ export type MenuItemType = {
   match?: string,
   // used to customize menu items per user/profile
   active?: boolean
-  icon?: React.JSX.Element,
+  icon?: JSX.Element,
   // optional, but fn is provided it will have higher priority
   // than path
   fn?: Function,

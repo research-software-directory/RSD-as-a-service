@@ -6,9 +6,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
+import {JSX} from 'react'
 
-export default function ProjectOverviewList({children}: { children: React.JSX.Element | React.JSX.Element[]}) {
+export default function ProjectOverviewList({children}: { children: JSX.Element | JSX.Element[]}) {
   return (
     <section
       data-testid="project-overview-list"

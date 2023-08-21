@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react'
+import {JSX} from 'react'
 import {SxProps, Theme} from '@mui/system'
 import Table from '@mui/material/Table'
 import TableBody from './TableBody'
@@ -29,7 +29,7 @@ export type Column<T,K extends keyof T> = {
   sx?: SxProps<Theme>
   order?: OrderProps
   patchFn?: (props: UpdateProps) => Promise<{ status: number, message: string }>
-  renderFn?: (data:T) => React.JSX.Element
+  renderFn?: (data:T) => JSX.Element
 }
 
 export type OrderByProps<T,K extends keyof T> = {

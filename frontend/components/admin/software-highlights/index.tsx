@@ -7,16 +7,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useSession} from '~/auth'
-import {useSoftwareHighlights} from './apiSoftwareHighlights'
 import AddSoftwareHighlights from './AddSoftwareHighlights'
 import SortableHighlightsList from './SortableHighlightList'
+import useSoftwareHighlights from './useSoftwareHighlights'
 
-export default function AdminSoftwareHighlight() {
+export default function AdminSoftwareHighlightsPage() {
   const {token} = useSession()
   const {highlights, loading, addHighlight, sortHighlights, deleteHighlight} = useSoftwareHighlights(token)
 
-  // console.group('OrganisationAdminPage')
-  // console.log('organisations...', organisations)
+  // console.group('AdminSoftwareHighlight')
+  // console.log('highlights...', highlights)
   // console.groupEnd()
 
   return (

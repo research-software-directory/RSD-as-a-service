@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,7 +16,7 @@ export default function TableHeader<T, K extends keyof T>({columns, onSort}:
   {columns: Column<T, K>[], onSort:(column:K)=>void}) {
    return (
     <MuiTableHead>
-      <MuiTableRow>
+      <MuiTableRow data-testid="mui-table-head-row">
         {columns.map((col, i) => {
           return (
             <MuiTableCell

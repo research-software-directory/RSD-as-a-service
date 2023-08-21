@@ -7,55 +7,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
-import logger from '~/utils/logger'
-
-export type SoftwareReleaseInfo = {
-  software_id: string
-  software_slug: string
-  software_name: string
-  release_doi: string
-  release_tag: string | null
-  release_date: string
-  release_year: number
-  release_authors: string
-}
+import {SoftwareReleaseInfo, getReleasesForOrganisation} from './apiOrganisationReleases'
 
 export type ReleaseCountByYear = {
   release_year: number
   release_cnt: number
 }
 
-type UseSoftwareReleaseProps = {
+export type UseSoftwareReleaseProps = {
   organisation_id?: string,
   release_year?: string,
   token: string
 }
 
-async function getReleasesForOrganisation({organisation_id,release_year,token}:UseSoftwareReleaseProps) {
-  try {
-    const query = `organisation_id=eq.${organisation_id}&release_year=eq.${release_year}&order=release_date.desc`
-    const url = `${getBaseUrl()}/rpc/releases_by_organisation?${query}`
-    // make request
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: {
-        ...createJsonHeaders(token)
-      },
-    })
-
-    if (resp.status === 200) {
-      const data:SoftwareReleaseInfo[] = await resp.json()
-      return data
-    }
-    // some other errors
-    logger(`getReleasesForOrganisation...${resp.status} ${resp.statusText}`)
-    return null
-  } catch(e:any) {
-    logger(`getReleasesForOrganisation...error...${e.message}`)
-    return null
-  }
-}
 
 export default function useSoftwareRelease({organisation_id,release_year,token}:UseSoftwareReleaseProps) {
   const [loading, setLoading] = useState(true)
