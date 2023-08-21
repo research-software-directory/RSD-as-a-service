@@ -27,7 +27,6 @@ export default function AboutPageSettings() {
     }
   })
 
-  {/* About page section */}
   return (
     <BaseSurfaceRounded
       className="flex-1 flex flex-col mb-12 p-4"

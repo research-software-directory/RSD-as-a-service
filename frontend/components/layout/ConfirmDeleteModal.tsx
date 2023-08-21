@@ -1,9 +1,12 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -16,7 +19,7 @@ import WarningIcon from '@mui/icons-material/Warning'
 type ConfirmDeleteModalProps = {
   open: boolean,
   title: string,
-  body: JSX.Element,
+  body: React.JSX.Element,
   onCancel: () => void,
   onDelete: () => void
 }

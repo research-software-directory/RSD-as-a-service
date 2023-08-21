@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import {getImageUrl} from '~/utils/editImage'
 import useValidateImageSrc from '~/utils/useValidateImageSrc'
 import SoftwareMetrics from '../cards/SoftwareMetrics'
@@ -21,7 +22,7 @@ type SoftwareOverviewListItemProps = {
   // prog_lang: string[],
   // licenses: string,
   downloads?: number
-  statusBanner?: JSX.Element
+  statusBanner?: React.JSX.Element
 }
 
 export default function SoftwareListItemContent(item:SoftwareOverviewListItemProps) {

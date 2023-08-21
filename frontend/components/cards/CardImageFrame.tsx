@@ -3,7 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function CardImageFrame({children}:{children:JSX.Element}) {
+import React from 'react'
+
+export default function CardImageFrame({children}:{children:React.JSX.Element}) {
   return (
     <div className="h-[37%] flex overflow-hidden relative bg-base-100">
       {children}

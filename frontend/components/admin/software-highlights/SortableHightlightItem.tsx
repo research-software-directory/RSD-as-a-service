@@ -31,7 +31,7 @@ export default function SortableHighlightItem({pos, item, onEdit, onDelete}: Hig
     attributes,listeners,setNodeRef,
     transform,transition,isDragging
   } = useSortable({id: item.id ?? ''})
-  const {brand_name, contributor_cnt, mention_cnt, slug, image_id, is_published} = item
+  const {brand_name, contributor_cnt, mention_cnt, image_id, is_published} = item
 
   return (
     <ListItem

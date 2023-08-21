@@ -16,7 +16,7 @@ export type IconBtnMenuOption<T> = {
   type: 'divider' | 'action'
   key: string,
   label: string,
-  icon?: JSX.Element,
+  icon?: React.JSX.Element,
   action: T
   disabled?: boolean,
 }

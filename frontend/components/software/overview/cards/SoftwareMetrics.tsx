@@ -39,13 +39,13 @@ export default function SoftwareMetrics({contributor_cnt, mention_cnt, downloads
       <Tooltip title={contributorsMessage()} placement="top">
         <div className="flex gap-2 items-center">
           <ContributorIcon />
-          <span className="text-sm">{contributor_cnt || 0}</span>
+          <span className="text-sm">{contributor_cnt ?? 0}</span>
         </div>
       </Tooltip>
       <Tooltip title={mentionCntMessage()} placement="top">
         <div className="flex gap-2 items-center">
           <MentionIcon />
-          <span className="text-sm">{mention_cnt || 0}</span>
+          <span className="text-sm">{mention_cnt ?? 0}</span>
         </div>
       </Tooltip>
       {/* TODO Add download counts to the cards */}

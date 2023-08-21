@@ -5,12 +5,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import Link from 'next/link'
 
 export type LinksProps = {
   title: string,
   url: string
-  icon: JSX.Element,
+  icon: React.JSX.Element,
 }
 
 export default function Links({links=[]}:{links:LinksProps[]}) {

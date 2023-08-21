@@ -87,7 +87,7 @@ export default function AddSoftwareHighlights({onAddSoftware,highlights}:AddSoft
   }
 
   function onAdd(selected:AutocompleteOption<SoftwareOverviewItemProps>) {
-    if (selected && selected.data) {
+    if (selected?.data) {
       onAddSoftware(selected.data.id)
     }
   }

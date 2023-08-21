@@ -1,8 +1,11 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import {
   DndContext, DragEndEvent, useSensor,
   useSensors, TouchSensor, MouseSensor
@@ -10,6 +13,7 @@ import {
 import {restrictToParentElement, restrictToVerticalAxis} from '@dnd-kit/modifiers'
 import {arrayMove, SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import List from '@mui/material/List'
+
 
 export type RequiredListProps = {
   id: string | null,
@@ -19,7 +23,7 @@ export type RequiredListProps = {
 type SortableListProps<T extends RequiredListProps>={
   items:T[],
   onSorted: (items: T[]) => void
-  onRenderItem:(item:T,index:number) => JSX.Element
+  onRenderItem:(item:T,index:number) => React.JSX.Element
 }
 
 export default function SortableList<T extends RequiredListProps>({

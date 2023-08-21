@@ -9,7 +9,6 @@ import {GetServerSidePropsContext} from 'next/types'
 
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth'
-import {isOrganisationMaintainer} from '~/auth/permissions/useOrganisationMaintainer'
 import {getOrganisationMetadata, RORItem} from '~/utils/getROR'
 import {getUserSettings} from '~/utils/userSettings'
 import {OrganisationForOverview} from '~/types/Organisation'

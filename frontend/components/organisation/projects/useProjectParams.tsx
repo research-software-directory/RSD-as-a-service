@@ -20,8 +20,6 @@ export default function useProjectParams() {
     params.rows = rsd_page_rows
   }
 
-  // if (params.search==='') params.search = null
-
   function getFilterCount() {
     let count = 0
     if (params?.keywords_json) count++

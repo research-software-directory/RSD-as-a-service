@@ -8,7 +8,6 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 
-import useProjectOverviewParams from '../useProjectOverviewParams'
 import {ProjectStatusKey} from '~/types/Project'
 
 export type StatusFilterOption = {

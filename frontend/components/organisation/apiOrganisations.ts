@@ -7,7 +7,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {RsdUser} from '~/auth'
-import {getMaintainerOrganisations} from '~/auth/permissions/isMaintainerOfOrganisation'
 import {isOrganisationMaintainer} from '~/auth/permissions/useOrganisationMaintainer'
 import {
   Organisation, OrganisationForOverview,
@@ -216,8 +215,8 @@ export async function getOrganisationDescription({uuid, token}: { uuid: string, 
 
 export type OrganisationApiParams = {
   organisation: string,
-  searchFor?: string | undefined
-  project_status?: string | undefined
+  searchFor?: string
+  project_status?: string
   keywords?: string[] | null
   prog_lang?: string[] | null
   licenses?: string[] | null
