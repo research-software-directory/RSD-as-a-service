@@ -64,7 +64,6 @@ export default function useOrganisationMaintainer({organisation}: UseOrganisatio
       } else {
         logger('useOrganisationMaintainer...organisation UNDEFINED', 'warn')
         setIsMaintainer(false)
-        // if (loading) setLoading(false)
       }
     }
     if (organisation &&

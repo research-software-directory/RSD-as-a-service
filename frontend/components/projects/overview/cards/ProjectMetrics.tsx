@@ -36,13 +36,13 @@ export default function ProjectMetrics({impact_cnt, output_cnt}: ProjectMetricsP
       <Tooltip title={impactCntMessage()} placement="top">
         <div className="flex gap-2 items-center">
           <ImpactIcon />
-          <span className="text-sm">{impact_cnt || 0}</span>
+          <span className="text-sm">{impact_cnt ?? 0}</span>
         </div>
       </Tooltip>
       <Tooltip title={outputCntMessage()} placement="top">
         <div className="flex gap-2 items-center">
           <MentionIcon />
-          <span className="text-sm">{output_cnt || 0}</span>
+          <span className="text-sm">{output_cnt ?? 0}</span>
         </div>
       </Tooltip>
     </>

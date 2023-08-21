@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,7 +27,7 @@ export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string
             <ListItemButton
               data-testid="edit-software-nav-item"
               key={`step-${pos}`}
-              selected={item.id === pageId ?? false}
+              selected={item.id === pageId}
               onClick={() => {
                 const location = `/software/${slug}/edit/${item.id}`
                 router.push(location)

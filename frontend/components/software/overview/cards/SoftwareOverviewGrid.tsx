@@ -6,7 +6,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function SoftwareOverviewGrid({children}: { children: JSX.Element | JSX.Element[] }) {
+import React from 'react'
+
+export default function SoftwareOverviewGrid({children}: { children: React.JSX.Element | React.JSX.Element[] }) {
   return (
     <section
       data-testid="software-overview-grid"

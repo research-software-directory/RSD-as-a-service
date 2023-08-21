@@ -133,6 +133,9 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
   }
 
   async function patchPositions(newList: RsdLink[]) {
+    const orgItems = [
+      ...navItems
+    ]
     // update ui first
     setNavItems(newList)
     const resp = await updatePagePositions({
@@ -140,9 +143,9 @@ export default function EditMarkdownPages({links}:{links:RsdLink[]}) {
       token:session.token
     })
     if (resp.status !== 200) {
-      // revert back
-      setNavItems(navItems)
       showErrorMessage(`Failed to update page positions. ${resp?.message}`)
+      // revert back
+      setNavItems(orgItems)
     }
   }
 

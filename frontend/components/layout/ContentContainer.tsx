@@ -3,10 +3,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
+
 type ContentContainerProps = {
   element?: 'section' | 'article' | 'main' | 'div'
   className?: string
-  children: JSX.Element | JSX.Element[]
+  children: React.JSX.Element | React.JSX.Element[]
 }
 
 export default function ContentContainer(props: ContentContainerProps) {

@@ -104,7 +104,7 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
     if (mockSession.user) {
       mockSession.user.role = 'rsd_admin'
     }
-    const {container} = render(
+    render(
       <WithAppContext options={{session: mockSession}}>
         <WithOrganisationContext {...mockProps}>
           <OrganisationSettings />
@@ -127,7 +127,7 @@ describe('frontend/components/organisation/settings/index.tsx', () => {
     // expect(descriptionInput).toBeInTheDocument()
   })
 
-  it.only('updates name and slug onBlur', () => {
+  it('updates name and slug onBlur', () => {
     // it is maintainer of this organisation
     mockUseOrganisationMaintainer.mockReturnValue({
       loading: false,

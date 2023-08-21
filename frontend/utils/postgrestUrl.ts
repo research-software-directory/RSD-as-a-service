@@ -8,6 +8,7 @@
 
 import {rowsPerPageOptions} from '~/config/pagination'
 import {encodeUrlQuery} from './extractQueryParam'
+import {localeSort} from './sortFn'
 
 export type OrderByProps<T, K extends keyof T> = {
   column: K,
@@ -186,7 +187,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     // and all keywords should be present (AND).
     // and it needs to be enclosed in {} uri encoded see
     // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
-    const keywordsAll = keywords.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const keywordsAll = [...keywords].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     query = `keywords=cs.%7B${keywordsAll}%7D`
   }
@@ -195,7 +196,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     typeof domains === 'object') {
     // sort and convert research domains array to comma separated string
     // we need to sort because search is on ARRAY field in pgSql
-    const domainsAll = domains.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const domainsAll = [...domains].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     if (query) {
       query = `${query}&research_domain=cs.%7B${domainsAll}%7D`
@@ -211,7 +212,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     // and all prog_lang should be present (AND).
     // and it needs to be enclosed in {} uri encoded see
     // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
-    const languagesAll = prog_lang.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const languagesAll = [...prog_lang].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     if (query) {
       query = `${query}&prog_lang=cs.%7B${languagesAll}%7D`
@@ -223,7 +224,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     licenses !== null &&
     typeof licenses === 'object') {
     // sort and convert array to comma separated string
-    const licensesAll = licenses.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const licensesAll = [...licenses].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     if (query) {
       query = `${query}&licenses=cs.%7B${licensesAll}%7D`
@@ -236,7 +237,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     typeof organisations === 'object') {
     // sort and convert array to comma separated string
     // we need to sort because search is on ARRAY field in pgSql
-    const organisationsAll = organisations.sort().map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+    const organisationsAll = [...organisations].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
     // use cs. command to find
     if (query) {
       query = `${query}&participating_organisations=cs.%7B${organisationsAll}%7D`

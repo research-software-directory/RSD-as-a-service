@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -75,7 +77,7 @@ it('patchOrganisationPositions', async () => {
   }
 
   // resolve addOrganisationToSoftware
-  organisationOfSoftware.map(item => {
+  organisationOfSoftware.forEach(item => {
     // resove OK for all items to patch
     mockResolvedValueOnce('OK')
   })

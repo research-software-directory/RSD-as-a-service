@@ -35,7 +35,6 @@ export default function OrgProjectFilters() {
   // debugger
   function clearDisabled() {
     if (filterCnt && filterCnt > 0) return false
-    // if (order) return false
     return true
   }
 

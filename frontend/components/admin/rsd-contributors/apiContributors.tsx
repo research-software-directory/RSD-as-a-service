@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -51,6 +53,7 @@ export function useContributors({token, orderBy}:useContributorsProps) {
 
     if (abort === false) {
       if (orderBy) {
+        // update columns order
         columns.forEach(col => {
           if (col.key === orderBy.column) {
             col.order = {
@@ -64,8 +67,6 @@ export function useContributors({token, orderBy}:useContributorsProps) {
             }
           }
         })
-        // update columns order
-        setColumns(columns)
       }
       setContributors(contributors)
       setCount(count)

@@ -1,8 +1,11 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import {SxProps, Theme} from '@mui/system'
 import Table from '@mui/material/Table'
 import TableBody from './TableBody'
@@ -26,7 +29,7 @@ export type Column<T,K extends keyof T> = {
   sx?: SxProps<Theme>
   order?: OrderProps
   patchFn?: (props: UpdateProps) => Promise<{ status: number, message: string }>
-  renderFn?: (data:T) => JSX.Element
+  renderFn?: (data:T) => React.JSX.Element
 }
 
 export type OrderByProps<T,K extends keyof T> = {

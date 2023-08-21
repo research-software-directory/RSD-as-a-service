@@ -18,7 +18,7 @@ export default function ProgrammingLanguageList({
       {// limits the keywords to 'visibleNumberOfProgLang' per software.
         prog_lang?.slice(0, visibleNumberOfProgLang)
         .map((lang:string, index: number) => (
-          <li className="px-1 m-0" key={index}>{lang}</li>
+          <li className="px-1 m-0" key={lang ?? index}>{lang}</li>
           ))}
       { //  Show the number of keywords that are not visible.
         (prog_lang?.length > 0)

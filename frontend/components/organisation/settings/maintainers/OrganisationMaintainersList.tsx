@@ -37,7 +37,7 @@ export default function OrganisationMaintainersList({maintainers,onDelete}:Proje
     return maintainers.map((item, pos) => {
       return (
         <ProjectMaintainer
-          key={pos}
+          key={item.account ?? pos}
           pos={pos}
           maintainer={item}
           onEdit={onEdit}

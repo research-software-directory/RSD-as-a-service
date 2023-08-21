@@ -85,7 +85,7 @@ export default function AdminNav() {
             <ListItemButton
               data-testid="admin-nav-item"
               key={`step-${pos}`}
-              selected={item.path === router.route ?? false}
+              selected={item.path === router.route}
               onClick={() => router.push(item.path)}
             >
               <ListItemIcon>

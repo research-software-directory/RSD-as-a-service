@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import InfoIcon from '@mui/icons-material/Info'
 import PersonIcon from '@mui/icons-material/Person'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -13,7 +14,7 @@ export type SettingsMenuProps = {
   id: string,
   status: string,
   label: (props?:any)=>string,
-  icon: JSX.Element
+  icon: React.JSX.Element
 }
 
 export const settingsMenu: SettingsMenuProps[] = [

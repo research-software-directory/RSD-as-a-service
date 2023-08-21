@@ -40,7 +40,7 @@ it('calls api with proper params', async() => {
     statusText: 'OK'
   })
 
-  const resp = await getMaintainersOfOrganisation(mockProps)
+  await getMaintainersOfOrganisation(mockProps)
 
   expect(global.fetch).toBeCalledTimes(1)
   expect(global.fetch).toBeCalledWith(expectedUrl, expectedHeaders)

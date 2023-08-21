@@ -107,7 +107,6 @@ export default function SoftwareOverviewPage({
 
   function getFilterCount() {
     let count = 0
-    // if (order) count++
     if (keywords) count++
     if (prog_lang) count++
     if (licenses) count++

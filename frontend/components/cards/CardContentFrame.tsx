@@ -3,7 +3,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export default function CardContentFrame({children}:{children:JSX.Element[]}) {
+import React from 'react'
+
+export default function CardContentFrame({children}:{children:React.JSX.Element[]}) {
   return (
     <div className="h-[63%] flex flex-col p-4 relative">
       {children}
