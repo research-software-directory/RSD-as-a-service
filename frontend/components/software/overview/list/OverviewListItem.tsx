@@ -3,8 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
+
 type OverviewListItemProps = {
-  children: JSX.Element | JSX.Element[],
+  children: React.JSX.Element | React.JSX.Element[],
   className?: string
 }
 

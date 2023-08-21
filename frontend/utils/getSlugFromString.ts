@@ -24,6 +24,6 @@ export function getSlugFromString(title: string, separator:string='-') {
     .replace(/[^a-z0-9\- ]/g, '')
     .trim()
     .replace(/[-\s]+/g, separator)
-    // remove first and last -
-    .replace(/^-+|-+$/g, '')
+    // remove first and last - exclude from sonar analyses - TEST
+    .replace(/^-+|-+$/g, '') // NOSONAR
 }

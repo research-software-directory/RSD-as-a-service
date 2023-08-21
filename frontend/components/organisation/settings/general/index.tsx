@@ -62,7 +62,7 @@ export default function OrganisationGeneralSettings() {
             useNull: true,
             defaultValue: name,
             helperTextMessage: config.name.help,
-            helperTextCnt: `${name?.length || 0}/${config.name.validation.maxLength.value}`,
+            helperTextCnt: `${name?.length ?? 0}/${config.name.validation.maxLength.value}`,
           }}
           rules={config.name.validation}
         />
@@ -75,7 +75,7 @@ export default function OrganisationGeneralSettings() {
             useNull: true,
             defaultValue: short_description,
             helperTextMessage: config.short_description.help,
-            helperTextCnt: `${short_description?.length || 0}/${config.short_description.validation.maxLength.value}`,
+            helperTextCnt: `${short_description?.length ?? 0}/${config.short_description.validation.maxLength.value}`,
           }}
           rules={config.short_description.validation}
         />
@@ -88,7 +88,7 @@ export default function OrganisationGeneralSettings() {
               useNull: true,
               defaultValue: website,
               helperTextMessage: config.website.help,
-              helperTextCnt: `${website?.length || 0}/${config.website.validation.maxLength.value}`,
+              helperTextCnt: `${website?.length ?? 0}/${config.website.validation.maxLength.value}`,
             }}
             rules={config.website.validation}
             />

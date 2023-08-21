@@ -96,6 +96,9 @@ export function useSoftwareHighlights(token: string) {
   }
 
   async function sortHighlights(items: SoftwareHighlight[]) {
+    const orgItems = [
+      ...highlights
+    ]
     // visually confirm position change
     setHighlights(items)
     // make all request
@@ -106,7 +109,7 @@ export function useSoftwareHighlights(token: string) {
     if (resp.status !== 200) {
       showErrorMessage(`Failed to sort highlight. ${resp.message}`)
       // revert back in case of error
-      setHighlights(highlights)
+      setHighlights(orgItems)
     }
   }
 

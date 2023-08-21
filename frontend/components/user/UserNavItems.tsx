@@ -3,10 +3,12 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import dynamic from 'next/dynamic'
 
 import TerminalIcon from '@mui/icons-material/Terminal'
@@ -42,8 +44,8 @@ export type UserMenuProps = {
   id: string,
   status: string,
   label: (props:any)=>string,
-  icon: JSX.Element,
-  component: (props: any) => JSX.Element
+  icon: React.JSX.Element,
+  component: (props: any) => React.JSX.Element
   showSearch: boolean
 }
 

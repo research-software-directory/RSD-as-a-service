@@ -25,7 +25,7 @@ type SoftwareCardContentProps = {
 }
 
 export default function SoftwareCardContent(item:SoftwareCardContentProps) {
-  {/* Card content */}
+
   return (
     <div
       data-testid="software-card-content"

@@ -18,10 +18,10 @@ export default function KeywordList({keywords=[], visibleNumberOfKeywords = 3}: 
     <ul className="flex flex-wrap items-start gap-2 text-base-content text-xs">
       {// limits the keywords to 'visibleNumberOfKeywords' per software.
         keywords?.slice(0, visibleNumberOfKeywords)
-          .map((keyword:string, index: number) => (
+          .map((keyword:string) => (
             <li
               title={keyword}
-              key={index}
+              key={keyword}
               className="bg-base-200 px-2 py-1 rounded capitalize line-clamp-1"
             >{keyword}</li>
           ))}

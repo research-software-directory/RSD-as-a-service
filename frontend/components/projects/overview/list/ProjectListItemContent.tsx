@@ -5,6 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import {getImageUrl} from '~/utils/editImage'
 import useValidateImageSrc from '~/utils/useValidateImageSrc'
 import ProjectMetrics from '../cards/ProjectMetrics'
@@ -15,7 +16,7 @@ type ProjectListItemProps = {
   image_id: string | null
   impact_cnt: number | null
   output_cnt: number | null
-  statusBanner?: JSX.Element
+  statusBanner?: React.JSX.Element
 }
 
 

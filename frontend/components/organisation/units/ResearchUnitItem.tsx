@@ -41,7 +41,6 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
       slug
     )
   }
-  const rsdUrl = `${baseUrl[0]}/${slug}`
 
   // console.group('UnitItem')
   // console.log('isMaintainer...', isMaintainer)

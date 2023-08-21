@@ -6,6 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import {useEffect, useRef} from 'react'
 import {Controller} from 'react-hook-form'
 import TextField, {TextFieldProps} from '@mui/material/TextField'
@@ -24,7 +25,7 @@ export type ControlledTextFieldOptions<T> = {
   variant?: 'outlined'|'standard'
   useNull?: boolean,
   defaultValue?: string | number | null
-  helperTextMessage?: string | JSX.Element
+  helperTextMessage?: string | React.JSX.Element
   helperTextCnt?: string
   disabled?: boolean
   muiProps?: TextFieldProps

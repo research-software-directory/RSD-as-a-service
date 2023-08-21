@@ -39,7 +39,7 @@ export default function AutosaveOrganisationDescription(props: AutosaveControlle
     const resp = await patchOrganisationTable({
       id: id ?? '',
       data: {
-        [name]:value
+        [name]: description
       },
       token
     })

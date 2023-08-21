@@ -33,8 +33,8 @@ export default function SoftwareOverviewContent({layout, software}: SoftwareOver
     // Masonry layout (software only)
     return (
       <SoftwareOverviewMasonry>
-        {software.map((item, index) => (
-        <div key={index} className="mb-8 break-inside-avoid">
+        {software.map((item) => (
+        <div key={item.id} className="mb-8 break-inside-avoid">
           <SoftwareMasonryCard item={item}/>
         </div>
       ))}

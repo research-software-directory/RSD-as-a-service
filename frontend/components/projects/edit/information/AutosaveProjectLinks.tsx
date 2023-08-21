@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -90,16 +92,17 @@ export default function AutosaveProjectLinks({project_id, url_for_project}: Proj
   async function sortedLinks(newList: ProjectLink[]) {
     // patch only if there are items left
     if (newList.length > 0) {
+      const orgLinks = [...links]
       setLinks(newList)
       const resp = await patchProjectLinkPositions({
         links:newList,
         token
       })
       if (resp.status !== 200) {
-        // revert back
-        setLinks(links)
         // show error message
         showErrorMessage(`Failed to update project link positions. ${resp.message}`)
+        // revert back
+        setLinks(orgLinks)
       }
     } else {
       // reset links

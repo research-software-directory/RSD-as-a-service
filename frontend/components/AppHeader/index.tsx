@@ -76,7 +76,7 @@ export default function AppHeader() {
             {menuItems.map(item => {
               const isActive = isActiveMenuItem({item, activePath})
               return (
-                <Link key={item.path} href={item.path || ''} className={`${isActive ? 'nav-active' : ''}`}>
+                <Link key={item.path} href={item.path ?? ''} className={`${isActive ? 'nav-active' : ''}`}>
                   {item.label}
                 </Link>
               )
@@ -137,7 +137,7 @@ export default function AppHeader() {
                   const isActive = isActiveMenuItem({item, activePath})
                   return (
                     <MenuItem onClick={handleCloseResponsiveMenu} key={item.path}>
-                      <Link href={item.path || ''} className={`${isActive ? 'nav-active' : ''}`}>
+                      <Link href={item.path ?? ''} className={`${isActive ? 'nav-active' : ''}`}>
                         {item.label}
                       </Link>
                     </MenuItem>

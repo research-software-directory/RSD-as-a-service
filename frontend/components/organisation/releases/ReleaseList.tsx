@@ -52,7 +52,7 @@ export default function ReleaseList({release_year}: ReleaseYearProps) {
         </div>
       </div>
 
-      {releases.map((release,pos)=><ReleaseItem key={pos} release={release} />)}
+      {releases.map((release,pos)=><ReleaseItem key={release.release_doi ?? pos} release={release} />)}
 
     </section>
   )

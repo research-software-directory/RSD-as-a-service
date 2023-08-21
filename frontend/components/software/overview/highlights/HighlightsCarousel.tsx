@@ -25,7 +25,7 @@ export const HighlightsCarousel = ({items=[]}: {items:SoftwareHighlight[]}) => {
   useEffect(() => {
     const calculateDistance = () => {
         const rect = divRef.current?.getBoundingClientRect()
-        setDistance(Math.ceil(rect?.left || 0) + 16)
+        setDistance(Math.ceil(rect?.left ?? 0) + 16)
     }
     if (typeof window !== 'undefined') {
       calculateDistance()

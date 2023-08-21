@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -75,7 +77,7 @@ export default function useResearchDomains({l1Selected, l2Selected}: UseResearch
     if (abort === false) {
       getResearchDomains()
     }
-    ()=>{abort=true}
+    return ()=>{abort=true}
   },[])
 
   useEffect(() => {

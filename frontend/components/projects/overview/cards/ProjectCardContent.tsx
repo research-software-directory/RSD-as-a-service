@@ -38,7 +38,7 @@ type ProjectCardProps = {
 }
 
 export default function ProjectCardContent(item:ProjectCardProps){
-  {/* Card content */}
+
   return (
     <div
       data-testid="project-card-content"
