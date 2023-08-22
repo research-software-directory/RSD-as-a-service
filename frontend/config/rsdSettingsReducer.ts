@@ -14,7 +14,8 @@ export type RsdSettingsState = {
   embed: boolean
   links?: CustomLink[]
   pages?: RsdLink[]
-  theme: RsdTheme
+  theme: RsdTheme,
+  announcement: string | null
 }
 
 export type RsdHost = {
@@ -69,6 +70,7 @@ export const defaultRsdSettings: RsdSettingsState = {
   embed: false,
   theme: defaultSettings.theme,
   links:[],
+  announcement: null
 }
 
 export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsAction) {

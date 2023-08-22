@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -21,6 +23,12 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FluorescentIcon from '@mui/icons-material/Fluorescent'
 
 export const adminPages = {
+  notifications: {
+    title: 'Announcements',
+    subtitle: 'Show global notifications to all users',
+    icon: <DescriptionIcon />,
+    path: '/admin/announcements',
+  },
   pages:{
     title: 'Public pages',
     subtitle: 'Manage markdown pages',
