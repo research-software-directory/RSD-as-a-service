@@ -54,3 +54,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 .history
+
+.yarn

@@ -23,5 +23,6 @@
   "dependencies": {
     "vuepress-bar": "^0.4.4",
     "vuepress-theme-reco": "^2.0.0-beta.3"
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }
