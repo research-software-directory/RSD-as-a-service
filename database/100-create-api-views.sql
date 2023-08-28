@@ -1,11 +1,10 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2023 dv4all
--- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
+-- SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
--- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -137,26 +136,6 @@ BEGIN
 END
 $$;
 
--- programming language counts for software
--- used in software filter - language dropdown
-CREATE FUNCTION prog_lang_cnt_for_software() RETURNS TABLE (
-	prog_lang TEXT,
-	cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		JSONB_OBJECT_KEYS(languages) AS "prog_lang",
-		COUNT(software) AS cnt
-	FROM
-		repository_url
-	GROUP BY
-		JSONB_OBJECT_KEYS(languages)
-	;
-END
-$$;
-
 -- programming language filter for software
 -- used by software_overview func
 CREATE FUNCTION prog_lang_filter_for_software() RETURNS TABLE (
@@ -179,6 +158,22 @@ BEGIN
 END
 $$;
 
+-- license filter for software
+-- used by software_search func
+CREATE FUNCTION license_filter_for_software() RETURNS TABLE (
+	software UUID,
+	licenses VARCHAR[]
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	license_for_software.software,
+	ARRAY_AGG(license_for_software.license)
+FROM
+	license_for_software
+GROUP BY
+	license_for_software.software
+;
+$$;
 
 -- RELATED SOFTWARE LIST WITH COUNTS
 CREATE FUNCTION related_software_for_software(software_id UUID) RETURNS TABLE (
@@ -296,7 +291,7 @@ WHERE
 		(
 			software_for_organisation.status = 'approved'
 		AND
-		 	software IN (SELECT id FROM software WHERE is_published)
+			software IN (SELECT id FROM software WHERE is_published)
 		)
 GROUP BY list_parent_organisations.organisation_id;
 $$;
@@ -437,6 +432,7 @@ CREATE FUNCTION organisations_overview(public BOOLEAN DEFAULT TRUE) RETURNS TABL
 	primary_maintainer UUID,
 	name VARCHAR,
 	short_description VARCHAR,
+	country VARCHAR,
 	ror_id VARCHAR,
 	website VARCHAR,
 	is_tenant BOOLEAN,
@@ -457,6 +453,7 @@ SELECT
 	organisation.primary_maintainer,
 	organisation.name,
 	organisation.short_description,
+	organisation.country,
 	organisation.ror_id,
 	organisation.website,
 	organisation.is_tenant,
@@ -484,107 +481,6 @@ LEFT JOIN
 LEFT JOIN
 	release_cnt_by_organisation() ON release_cnt_by_organisation.organisation_id = organisation.id
 ;
-$$;
-
--- Software info by organisation
--- NOTE! one software is shown multiple times in this view
--- we filter this view at least by organisation uuid
-CREATE FUNCTION software_by_organisation(organisation_id UUID) RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	brand_name VARCHAR,
-	short_statement VARCHAR,
-	is_published BOOLEAN,
-	is_featured BOOLEAN,
-	status relation_status,
-	contributor_cnt BIGINT,
-	mention_cnt BIGINT,
-	updated_at TIMESTAMPTZ,
-	organisation UUID
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT DISTINCT ON (software.id)
-		software.id,
-		software.slug,
-		software.brand_name,
-		software.short_statement,
-		software.is_published,
-		software_for_organisation.is_featured,
-		software_for_organisation.status,
-		count_software_contributors.contributor_cnt,
-		count_software_mentions.mention_cnt,
-		software.updated_at,
-		software_for_organisation.organisation
-	FROM
-		software
-	LEFT JOIN
-		software_for_organisation ON software.id=software_for_organisation.software
-	LEFT JOIN
-		count_software_contributors() ON software.id=count_software_contributors.software
-	LEFT JOIN
-		count_software_mentions() ON software.id=count_software_mentions.software
-	WHERE
-		software_for_organisation.organisation IN (
-			SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id)
-		)
-	;
-END
-$$;
-
--- Project info by organisation
--- NOTE! updated by Dusan 2022-07-27
--- we filter this view at least by organisation_id (uuid)
-CREATE FUNCTION projects_by_organisation(organisation_id UUID) RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	title VARCHAR,
-	subtitle VARCHAR,
-	current_state VARCHAR,
-	date_start DATE,
-	updated_at TIMESTAMPTZ,
-	is_published BOOLEAN,
-	image_contain BOOLEAN,
-	is_featured BOOLEAN,
-	image_id VARCHAR,
-	organisation UUID,
-	status relation_status,
-	keywords citext[]
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT DISTINCT ON (project.id)
-		project.id,
-		project.slug,
-		project.title,
-		project.subtitle,
-		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
-			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
-			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-			ELSE 'Running'::VARCHAR
-		END AS current_state,
-		project.date_start,
-		project.updated_at,
-		project.is_published,
-		project.image_contain,
-		project_for_organisation.is_featured,
-		project.image_id,
-		project_for_organisation.organisation,
-		project_for_organisation.status,
-		keyword_filter_for_project.keywords
-	FROM
-		project
-	LEFT JOIN
-		project_for_organisation ON project.id = project_for_organisation.project
-	LEFT JOIN
-		keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
-	WHERE
-		project_for_organisation.organisation IN (SELECT list_child_organisations.organisation_id FROM list_child_organisations(organisation_id))
-	;
-END
 $$;
 
 -- Participating organisations by project
@@ -663,12 +559,7 @@ BEGIN
 		project.slug,
 		project.title,
 		project.subtitle,
-		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
-			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
-			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-			ELSE 'Running'::VARCHAR
-		END AS current_state,
+		project_status.status AS current_state,
 		project.date_start,
 		project.updated_at,
 		project.is_published,
@@ -679,6 +570,8 @@ BEGIN
 		project
 	INNER JOIN
 		software_for_project ON project.id = software_for_project.project
+	LEFT JOIN
+		project_status() ON project.id=project_status.project
 	WHERE
 		software_for_project.software = software_id
 	;
@@ -972,12 +865,7 @@ BEGIN
 		project.slug,
 		project.title,
 		project.subtitle,
-		CASE
-			WHEN project.date_start IS NULL THEN 'Starting'::VARCHAR
-			WHEN project.date_start > now() THEN 'Starting'::VARCHAR
-			WHEN project.date_end < now() THEN 'Finished'::VARCHAR
-			ELSE 'Running'::VARCHAR
-		END AS current_state,
+		project_status.status AS current_state,
 		project.date_start,
 		project.updated_at,
 		project.is_published,
@@ -987,6 +875,8 @@ BEGIN
 		project
 	INNER JOIN
 		maintainer_for_project ON project.id = maintainer_for_project.project
+	LEFT JOIN
+		project_status() ON project.id=project_status.project
 	WHERE
 		maintainer_for_project.maintainer = maintainer_id;
 END
@@ -995,7 +885,7 @@ $$;
 
 -- ORGANISATIONS BY MAINTAINER
 -- NOTE! each organisation is shown multiple times in this view
--- we filter this view at least by user acount (maintainer_id uuid) on primary_maintainer or maintainer
+-- we filter this view at least by user account (maintainer_id uuid) on primary_maintainer or maintainer
 CREATE FUNCTION organisations_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
@@ -1010,39 +900,36 @@ CREATE FUNCTION organisations_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	project_cnt BIGINT,
 	children_cnt BIGINT,
 	rsd_path VARCHAR
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
-	SELECT
-		organisation.id,
-		organisation.slug,
-		organisation.parent,
-		organisation.primary_maintainer,
-		organisation.name,
-		organisation.ror_id,
-		organisation.website,
-		organisation.is_tenant,
-		organisation.logo_id,
-		software_count_by_organisation.software_cnt,
-		project_count_by_organisation.project_cnt,
-		children_count_by_organisation.children_cnt,
-		organisation_route.rsd_path
-	FROM
-		organisation
-	LEFT JOIN
-		software_count_by_organisation() ON software_count_by_organisation.organisation = organisation.id
-	LEFT JOIN
-		project_count_by_organisation() ON project_count_by_organisation.organisation = organisation.id
-	LEFT JOIN
-		children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
-	LEFT JOIN
-		maintainer_for_organisation ON maintainer_for_organisation.organisation = organisation.id
-	LEFT JOIN
-		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
-	WHERE
-		maintainer_for_organisation.maintainer = maintainer_id OR organisation.primary_maintainer = maintainer_id;
-END
+SELECT DISTINCT ON (organisation.id)
+	organisation.id,
+	organisation.slug,
+	organisation.parent,
+	organisation.primary_maintainer,
+	organisation.name,
+	organisation.ror_id,
+	organisation.website,
+	organisation.is_tenant,
+	organisation.logo_id,
+	software_count_by_organisation.software_cnt,
+	project_count_by_organisation.project_cnt,
+	children_count_by_organisation.children_cnt,
+	organisation_route.rsd_path
+FROM
+	organisation
+LEFT JOIN
+	software_count_by_organisation() ON software_count_by_organisation.organisation = organisation.id
+LEFT JOIN
+	project_count_by_organisation() ON project_count_by_organisation.organisation = organisation.id
+LEFT JOIN
+	children_count_by_organisation() ON children_count_by_organisation.parent = organisation.id
+LEFT JOIN
+	maintainer_for_organisation ON maintainer_for_organisation.organisation = organisation.id
+LEFT JOIN
+	organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
+WHERE
+	maintainer_for_organisation.maintainer = maintainer_id OR organisation.primary_maintainer = maintainer_id;
 $$;
 
 -- COUNTS by maintainer
@@ -1218,36 +1105,6 @@ BEGIN
 END
 $$;
 
--- RESEARCH DOMAIN count used in project filter
--- to show used research domains with count
-CREATE FUNCTION research_domain_count_for_projects() RETURNS TABLE (
-	id UUID,
-	key VARCHAR,
-	name VARCHAR,
-	cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		research_domain.id,
-		research_domain.key,
-		research_domain.name,
-		research_domain_count.cnt
-	FROM
-		research_domain
-	LEFT JOIN
-		(SELECT
-				research_domain_for_project.research_domain,
-				COUNT(research_domain_for_project.research_domain) AS cnt
-			FROM
-				research_domain_for_project
-			GROUP BY research_domain_for_project.research_domain
-		) AS research_domain_count ON research_domain.id = research_domain_count.research_domain
-	;
-END
-$$;
-
 -- GLOBAL SEARCH
 -- we use search_text to concatenate all values to use
 CREATE FUNCTION global_search() RETURNS TABLE(
@@ -1338,7 +1195,6 @@ CREATE VIEW user_count_per_home_organisation AS
 		home_organisation
 	;
 
-
 -- Return the number of accounts since specified time stamp
 CREATE FUNCTION new_accounts_count_since_timestamp(timestmp TIMESTAMPTZ) RETURNS INTEGER
 LANGUAGE sql SECURITY DEFINER STABLE AS
@@ -1350,7 +1206,6 @@ FROM
 WHERE
 	created_at > timestmp;
 $$;
-
 
 -- Keywords use by software and projects
 -- DEPENDS ON FUNCTIONS keyword_count_for_software and keyword_count_for_projects
@@ -1405,4 +1260,5 @@ ORDER BY
 	COUNT(*)
 DESC LIMIT
 	1;
+;
 $$;

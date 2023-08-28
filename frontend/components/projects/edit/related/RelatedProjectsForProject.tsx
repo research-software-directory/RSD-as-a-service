@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +13,7 @@ import {getRelatedProjectsForProject} from '~/utils/getProjects'
 import {addRelatedProject, deleteRelatedProject} from '~/utils/editProject'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {sortOnStrProp} from '~/utils/sortFn'
-import {CurrentState, RelatedProjectForProject, SearchProject} from '~/types/Project'
+import {ProjectStatusKey, RelatedProjectForProject, SearchProject} from '~/types/Project'
 import FindRelatedProject from './FindRelatedProject'
 import useProjectContext from '../useProjectContext'
 import RelatedProjectList from './RelatedProjectList'
@@ -79,7 +81,7 @@ export default function RelatedProjectsForProject() {
             // these are not relevant but required in type
             date_start: null,
             updated_at: null,
-            current_state: 'running' as CurrentState
+            current_state: 'unknown' as ProjectStatusKey
           }
         ].sort((a, b) => sortOnStrProp(a, b, 'title'))
         setRelatedProject(newList)

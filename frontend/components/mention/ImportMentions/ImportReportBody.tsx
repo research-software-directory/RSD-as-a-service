@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -105,9 +107,11 @@ export default function ImportReportBody({initialResults,onCancel,onImport}: Bul
       // console.log('key...', key)
       html.push(
         <ListItem
+          data-testid="import-mention-report-item"
           key={result.doi}
           secondaryAction={
             <Switch
+              data-testid="switch-toggle-button"
               disabled={result?.status !== 'valid'}
               checked={result.include}
               onChange={()=>toggleSelection(index)}

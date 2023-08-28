@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -7,8 +9,6 @@ import {render, screen} from '@testing-library/react'
 
 import {WithAppContext} from '~/utils/jest/WithAppContext'
 import CommitsChart, {CommitsChartProps} from './CommitsChart'
-
-import repoInfoData from './__mocks__/repositoryInfoData.json'
 
 // MOCK useResizeObserver
 jest.mock('~/components/charts/d3LineChart/useResizeObserver')
@@ -105,21 +105,3 @@ it('renders "we cannot read the commit history" message', () => {
   expect(message).toHaveTextContent(expectMessage)
   // screen.debug()
 })
-
-// NOTE! Unexpected problem with rendering svg chart component
-// Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: object.
-// WE SKIP this test untill further investigation is performed
-// it.skip('renders commit history chart', () => {
-//   mockProps.repository_url = 'https://some.repo.url.com'
-//   mockProps.commit_history_scraped_at = repoInfoData.commit_history_scraped_at
-//   mockProps.commit_history = repoInfoData.commit_history
-
-//   // render
-//   render(
-//     <WithAppContext>
-//       <CommitsChart {...mockProps} />
-//     </WithAppContext>
-//   )
-
-//   screen.debug()
-// })

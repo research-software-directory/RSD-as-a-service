@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -29,12 +30,12 @@ function calculateStats(languages: ProgramingLanguages) {
 
     let total = 0, totPct=0, totVal=0, totLang=[]
     // calculate total
-    keys.map((key) => {
+    keys.forEach((key) => {
       total+=languages[key]
     })
     // calculate stats
     const stats: {language: string, val: number, pct: number}[] = []
-    keys.map(key => {
+    keys.forEach(key => {
       const pct = Math.round((languages[key] / total) * 100)
       if (pct > 0) {
         totPct += pct

@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,18 +41,24 @@ export type EditProject = Project & {
   keywords: KeywordForProject[]
 }
 
-export type CurrentState = 'Starting' | 'Running' | 'Finished'
-export type ProjectSearchRpc = {
+export type ProjectStatusKey = 'pending' | 'in_progress' | 'finished' | 'unknown'
+export type ProjectListItem = {
   id: string
   slug: string
   title: string
   subtitle: string
-  current_state: CurrentState
   date_start: string | null
+  date_end: string | null
   updated_at: string | null
   is_published: boolean
   image_id: string | null
-  keywords: string[]
+  image_contain: boolean
+  keywords: string[] | null
+  research_domain: string[] | null
+  participating_organisations?: string[]
+  impact_cnt: number | null
+  output_cnt: number | null
+  project_status: ProjectStatusKey
 }
 
 // object returned from api
@@ -103,7 +111,7 @@ export type SearchProject = {
 }
 
 export type RelatedProject = SearchProject & {
-  current_state: CurrentState
+  current_state: ProjectStatusKey
   date_start: string | null
   updated_at: string | null
 }

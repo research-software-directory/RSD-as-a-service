@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,8 +12,13 @@ import Home from '../pages/index'
 import {defaultRsdSettings} from '~/config/rsdSettingsReducer'
 import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
 
-describe('pages/index.tsx', () => {
-  const props = {
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+jest.mock('~/auth/api/useLoginProviders')
+// use DEFAULT MOCK for organisation list used by Helmholtz homepage
+jest.mock('~/components/home/helmholtz/useOrganisations')
+
+const props = {
     host: {
       name: 'rsd'
     },
@@ -22,6 +28,8 @@ describe('pages/index.tsx', () => {
       organisation_cnt: 3333
     }
   }
+
+describe('pages/index.tsx', () => {
   it('renders default RSD Home page when host=rsd', () => {
     render(WrappedComponentWithProps(Home, {
       props

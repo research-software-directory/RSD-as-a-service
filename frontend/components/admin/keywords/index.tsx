@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -19,7 +21,9 @@ export default function KeywordsPage() {
   const disabled = (typeof searchFor === 'undefined' || searchFor.length < 2)
 
   // console.group('KeywordsPage')
-  // console.log('searchFor...', searchFor)
+  // console.log('token...', token)
+  // console.log('keywordProps...', keywordProps)
+  // console.log('disabled...', disabled)
   // console.groupEnd()
 
   return (

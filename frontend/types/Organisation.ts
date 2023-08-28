@@ -6,7 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CurrentState} from './Project'
+import {ProjectStatusKey} from './Project'
 
 // based on ENUMS defined in 012-inter-relation-tables.sql
 export type Status = 'rejected_by_origin' | 'rejected_by_relation' | 'approved'
@@ -40,7 +40,8 @@ export type Organisation = CoreOrganisationProps & {
   id: string | null
   // about page content created by maintainer
   description: string | null
-  short_description?: string | null
+  short_description: string | null
+  country: string | null
   parent_names?: string
   rsd_path?: string
 }
@@ -142,13 +143,17 @@ export type SoftwareOfOrganisation = {
   slug: string
   brand_name: string
   short_statement: string
+  image_id: string|null
   is_published: boolean
+  updated_at: string
   is_featured: boolean
   status: Status
+  keywords: string[],
+  prog_lang: string[],
+  licenses: string,
+  downloads?: number
   contributor_cnt: number | null
   mention_cnt: number | null
-  updated_at: string
-  organisation: string
 }
 
 export type ProjectOfOrganisation = {
@@ -156,21 +161,28 @@ export type ProjectOfOrganisation = {
   slug: string
   title: string
   subtitle: string
-  current_state: CurrentState
   date_start: string
+  date_end: string
   updated_at: string
   is_published: boolean
   is_featured: boolean
+  image_contain: boolean
   image_id: string | null
-  organisation: string
+  // organisation: string
   status: Status
-  keywords: string[]
+  keywords: string[] | null
+  research_domain: string[] | null
+  impact_cnt: number | null
+  output_cnt: number | null,
+  project_status: ProjectStatusKey
 }
 
 export type OrganisationList = {
   id:string
   parent: string | null
   name: string
+  short_description: string | null
+  country: string | null
   website: string | null
   is_tenant: boolean
   rsd_path: string

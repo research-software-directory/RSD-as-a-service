@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +26,7 @@ export default function EditProjectStickyHeader() {
   })
 
   return (
-    <StickyHeader className={`bg-white ${classes}`}>
+    <StickyHeader className={`bg-base-100 ${classes}`}>
       <h1
         ref={headerRef}
         className="flex-1 xl:text-4xl">
@@ -33,7 +35,8 @@ export default function EditProjectStickyHeader() {
       <ViewPageButton
         title={`View ${project?.title ?? 'project page'}`}
         url={`/projects/${project.slug}`}
-        disabled={typeof project ==='undefined'}
+        disabled={typeof project === 'undefined'}
+        label="View Project"
       />
     </StickyHeader>
   )

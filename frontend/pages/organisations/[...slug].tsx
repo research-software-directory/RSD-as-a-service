@@ -1,116 +1,103 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
 
-import {app} from '../../config/app'
-import useOrganisationMaintainer from '../../auth/permissions/useOrganisationMaintainer'
-import DefaultLayout from '../../components/layout/DefaultLayout'
-import {getOrganisationBySlug} from '../../utils/getOrganisations'
-import OrganisationMetadata from '../../components/organisation/metadata'
-import ContentLoader from '../../components/layout/ContentLoader'
-import OrganisationNav from '../../components/organisation/OrganisationNav'
-import {organisationMenu, OrganisationMenuProps} from '../../components/organisation/OrganisationNavItems'
-import OrganisationTitle from '../../components/organisation/OrganisationTitle'
-import {OrganisationForOverview} from '../../types/Organisation'
-
-import {SearchProvider} from '../../components/search/SearchContext'
-import {PaginationProvider} from '../../components/pagination/PaginationContext'
+import {app} from '~/config/app'
+import {getUserFromToken} from '~/auth'
 import {getOrganisationMetadata, RORItem} from '~/utils/getROR'
+import {getUserSettings} from '~/utils/userSettings'
+import {OrganisationForOverview} from '~/types/Organisation'
+import {getOrganisationBySlug} from '~/components/organisation/apiOrganisations'
+import OrganisationMetadata from '~/components/organisation/metadata'
 import PageMeta from '~/components/seo/PageMeta'
+import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
+import CanonicalUrl from '~/components/seo/CanonicalUrl'
+import OrganisationBreadcrumbs from '~/components/organisation/OrganisationBreadcrumbs'
+import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+import OrganisationTabs from '~/components/organisation/tabs/OrganisationTabs'
+import TabContent from '~/components/organisation/tabs/TabContent'
+import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
+import {OrganisationProvider} from '~/components/organisation/context/OrganisationContext'
+import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
 
 export type OrganisationPageProps = {
   organisation: OrganisationForOverview,
   ror: RORItem | null
   slug: string[],
-  page: string
+  tab: TabKey | null,
+  isMaintainer: boolean,
+  rsd_page_rows: number,
+  rsd_page_layout: LayoutType
 }
 
-export default function OrganisationPage({organisation,slug,page,ror}:OrganisationPageProps) {
-  const [pageState, setPageState] = useState<OrganisationMenuProps>()
-  const {loading, isMaintainer} = useOrganisationMaintainer({
-    organisation: organisation.id
-  })
-
-  useEffect(() => {
-    if (page && page!=='') {
-      const nextStep = organisationMenu.find(item => item.id === page)
-      if (nextStep) {
-        setPageState(nextStep)
-      }
-    } else {
-      // if there is description
-      if (organisation.description) {
-        // we show about page
-        setPageState(organisationMenu[0])
-      } else {
-        // otherwise software is default
-        setPageState(organisationMenu[1])
-      }
-    }
-  },[page,organisation.description])
+export default function OrganisationPage({
+  organisation, slug, tab, ror,
+  isMaintainer, rsd_page_rows, rsd_page_layout
+}: OrganisationPageProps) {
 
   // console.group('OrganisationPage')
   // console.log('organisation...', organisation)
   // console.log('slug....', slug)
-  // console.log('page....', page)
   // console.log('ror....', ror)
+  // console.log('tab....', tab)
+  // console.log('select_tab....', select_tab)
   // console.log('loading....', loading)
   // console.log('isMaintainer....', isMaintainer)
   // console.log('pageState....', pageState?.id)
   // console.groupEnd()
 
-  function renderStepComponent() {
-    if (loading || typeof pageState == 'undefined') return <ContentLoader />
-    if (pageState.component) {
-      return pageState.component({organisation,isMaintainer})
-    }
-  }
 
   function getMetaDescription() {
     // use organisation (short) description if available
-    if (organisation.description) return organisation.description
+    if (organisation.short_description) return organisation.short_description
     // else generate description message
     return `${organisation?.name ?? 'The organisation'} participates in the RSD with ${organisation.software_cnt ?? 0} software package(s) and ${organisation.project_cnt ?? 0} project(s).`
   }
 
   return (
-    <DefaultLayout>
+    <>
       {/* Page Head meta tags */}
       <PageMeta
         title={`${organisation?.name} | ${app.title}`}
         description={getMetaDescription()}
       />
-      <SearchProvider>
-      <PaginationProvider>
-        <OrganisationTitle
-          title={organisation.name}
-          slug={slug}
-        />
-        <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
-          <div>
-            <OrganisationNav
-              organisation={organisation}
-              isMaintainer={isMaintainer}
-            />
-            <OrganisationMetadata
-              organisation={organisation}
-              isMaintainer={isMaintainer}
-              meta={ror}
-            />
-          </div>
-          <div
-            data-testid={`organisation-content-${pageState?.id ?? 'loading'}`}
-            className="flex flex-col relative md:min-h-[55rem] md:pb-8">
-            {renderStepComponent()}
-          </div>
-        </section>
-      </PaginationProvider>
-      </SearchProvider>
-    </DefaultLayout>
+      <CanonicalUrl />
+      <BackgroundAndLayout>
+        <UserSettingsProvider
+          settings={{
+            rsd_page_layout,
+            rsd_page_rows
+          }}
+        >
+        <OrganisationProvider
+          organisation={organisation}
+          isMaintainer={isMaintainer}
+        >
+          {/* ORGANISATION HEADER */}
+          <OrganisationBreadcrumbs slug={slug} />
+          <OrganisationMetadata ror_info={ror} />
+
+          {/* TABS */}
+          <BaseSurfaceRounded
+            className="my-4 p-2"
+            type="section"
+          >
+            <OrganisationTabs tab_id={tab} />
+          </BaseSurfaceRounded>
+          {/* TAB CONTENT */}
+          <section className="flex md:min-h-[60rem]">
+            <TabContent tab_id={tab} />
+          </section>
+        </OrganisationProvider>
+        </UserSettingsProvider>
+      </BackgroundAndLayout>
+    </>
   )
 }
 
@@ -118,19 +105,27 @@ export default function OrganisationPage({organisation,slug,page,ror}:Organisati
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
-    const {params,req,query} = context
-    // console.log('getServerSideProps...params...', params)
-    const organisation = await getOrganisationBySlug({
-      slug: params?.slug as string[],
-      token: req?.cookies['rsd_token'] ?? ''
+    const {params, req, query} = context
+    // extract user settings from cookie
+    const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
+    // extract user id from session
+    const user = getUserFromToken(req?.cookies['rsd_token'] ?? null)
+    // find organisation by slug
+    const resp = await getOrganisationBySlug({
+      slug: params?.slug as string[] ?? [],
+      token: req?.cookies['rsd_token'],
+      user
     })
-    if (typeof organisation == 'undefined'){
+    // console.log('organisation...', organisation)
+    if (typeof resp == 'undefined'){
       // returning notFound triggers 404 page
       return {
         notFound: true,
       }
     }
-    // get organisation metadata from ROR
+    // extract data from response
+    const {organisation,isMaintainer} = resp
+    // make maintainer and ror requests
     const ror = await getOrganisationMetadata(organisation.ror_id ?? null)
     return {
       // passed to the page component as props
@@ -138,7 +133,10 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         ror,
         organisation,
         slug: params?.slug,
-        page: query?.page ?? '',
+        tab: query?.tab ?? null,
+        isMaintainer,
+        rsd_page_layout,
+        rsd_page_rows
       },
     }
   }catch(e){

@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -60,6 +62,35 @@ export function handleFileUpload({target}: { target: any }): Promise<HandleFileU
       res({
         status: 500,
         message: `handleFileUpload: ${e.message}`,
+        image_b64: null,
+        image_mime_type: null
+      })
+    }
+  })
+}
+
+export function showDialogAndGetFile(): Promise<HandleFileUploadResponse> {
+  return new Promise((res, rej) => {
+    try {
+      const id = 'handle-input-and-file-upload-element'
+      const input = document.createElement('input')
+      input.id = id
+      input.type = 'file'
+      input.name = 'file-input-element'
+      input.accept = 'image/*'
+      input.onchange = (e) => {
+        // call file upload function
+        handleFileUpload(e)
+          .then(resp => res(resp))
+          .catch(err=>rej(err))
+      }
+      // click on input element
+      input.click()
+    } catch (e: any) {
+      logger(`handleInputAndFileUpload: ${e.message}`, 'error')
+      res({
+        status: 500,
+        message: `handleInputAndFileUpload: ${e.message}`,
         image_b64: null,
         image_mime_type: null
       })

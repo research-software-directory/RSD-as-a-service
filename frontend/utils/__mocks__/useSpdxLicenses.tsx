@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +38,7 @@ export default function useSpdxLicenses({software}:{software?:string}) {
       // if licenses
       if (json?.licenses) {
         const options = json.licenses
-          // only valid liceses
+          // only valid licenses
           // .filter(item => item.isDeprecatedLicenseId === false)
           // ordered on licenseId
           .sort((a,b)=>sortOnStrProp(a,b,'licenseId'))

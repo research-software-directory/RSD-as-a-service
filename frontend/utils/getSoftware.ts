@@ -2,18 +2,17 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: EUPL-1.2
 
-import {CategoriesForSoftware, CategoryID, CategoryPath, KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareListItem} from '../types/SoftwareTypes'
+import {CategoriesForSoftware, CategoryID, CategoryPath, KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
-import {SoftwareReleaseInfo} from '~/components/organisation/releases/useSoftwareReleases'
 
 /*
  * Software list for the software overview page
@@ -30,7 +29,7 @@ export async function getSoftwareList({url,token}:{url:string,token?:string }){
     })
 
     if ([200,206].includes(resp.status)){
-      const json: SoftwareListItem[] = await resp.json()
+      const json: SoftwareOverviewItemProps[] = await resp.json()
       // set
       return {
         count: extractCountFromHeader(resp.headers),
@@ -110,34 +109,6 @@ export async function getRepostoryInfoForSoftware(software: string | undefined, 
   } catch (e: any) {
     logger(`getRepostoryInfoForSoftware: ${e?.message}`, 'error')
     return null
-  }
-}
-
-// Get
-export type TagItem={
-  count: number
-  tag:string
-  active:boolean
-}
-export async function getTagsWithCount(){
-  try {
-    // TODO! tags are replaced with keywords
-    const tags:TagItem[]=[]
-    // this request is always perfomed from backend
-    // const url = `${process.env.POSTGREST_URL}/rpc/keyword_count_for_software?order=keyword.asc`
-    // const resp = await fetch(url,{method:'GET'})
-    // if (resp.status===200){
-    //   const data:TagItem[] = await resp.json()
-    //   return data
-    // } else if (resp.status===404){
-    //   logger(`getTagsWithCount: 404 [${url}]`,'error')
-    //   // query not found
-    //   return []
-    // }
-    return tags
-  }catch(e:any){
-    logger(`getTagsWithCount: ${e?.message}`,'error')
-    return []
   }
 }
 

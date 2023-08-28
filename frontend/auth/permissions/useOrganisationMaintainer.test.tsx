@@ -1,21 +1,25 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render,screen} from '@testing-library/react'
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
 import useOrganisationMaintainer from './useOrganisationMaintainer'
-import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
-import {defaultSession} from '..'
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {Session} from '..'
 
 const mockData = {
   organisation: 'test-organisation-id',
-  account: 'test-account-id',
+  user: {
+    account: 'test-account-id',
+    role: 'rsd_admin'
+  },
   token: 'TEST_TOKEN',
   frontend: true
 }
-
 
 beforeEach(() => {
   // we need to reset fetch mock counts
@@ -27,7 +31,10 @@ function WrappedHook() {
     organisation: mockData.organisation
   })
 
-  // console.log('2.isMaintainer...', isMaintainer)
+  // console.group('WrappedHook')
+  // console.log('loading...', loading)
+  // console.log('isMaintainer...', isMaintainer)
+  // console.groupEnd()
 
   if (loading===true) {
     return (
@@ -46,56 +53,152 @@ function WrappedHook() {
   )
 }
 
-it('returns isMaintainer=true for rsd_admin', async () => {
-  // set authenticated props
-  defaultSession.status = 'authenticated'
-  defaultSession.token = mockData.token
-  defaultSession.user = {
-    iss: 'rsd_auth',
-    role: 'rsd_admin',
-    exp: 11111111,
-    account: 'test-account',
-    name: 'John Doe'
-  }
+it('returns isMaintainer=true for rsd_admin role', async () => {
+  const testSession = {
+    ...mockSession,
+    status: 'authenticated',
+    token: mockData.token,
+    user: {
+      ...mockSession.user,
+      ...mockData.user
+    }
+  } as Session
 
   // return response to getMaintainerOrganisations
-  mockResolvedValueOnce([mockData.organisation])
+  // mockResolvedValueOnce(['Random organisation name'])
 
-  // render with basic privilegies
-  render(WrappedComponentWithProps(WrappedHook, {
-    session:defaultSession
-  }))
+  render(
+    <WithAppContext options={{session: testSession}}>
+      <WrappedHook />
+    </WithAppContext>
+  )
 
-  // check if maintainer
-  const content = await screen.findByText('IS MAINTAINER')
-  expect(content).toBeInTheDocument()
+  // find maintainer header
+  await screen.findByRole('heading', {name: 'IS MAINTAINER'})
 })
 
-// THIS DOES NOT WORK PROPERLY!
-// it('returns isMaintainer=true when user is maintainer', async () => {
-//   // set authenticated props
-//   defaultSession.status = 'authenticated'
-//   defaultSession.token = mockData.token
-//   defaultSession.user = {
-//     iss: 'rsd_auth',
-//     role: 'rsd_user',
-//     exp: 11111111,
-//     account: 'test-account',
-//     name: 'John Doe'
-//   }
+it('returns isMaintainer=true when user is maintainer of organisation', async() => {
+  // return organisation in the list
+  mockResolvedValueOnce([mockData.organisation])
 
-//   // return response to getMaintainerOrganisations
-//   mockResolvedValueOnce([mockData.organisation])
+  render(
+    <WithAppContext options={{session: mockSession}}>
+      <WrappedHook />
+    </WithAppContext>
+  )
 
-//   // render with basic privilegies
-//   render(WrappedComponentWithProps(WrappedHook, {
-//     session:defaultSession
-//   }))
+  // find maintainer header
+  await screen.findByRole('heading',{name: 'IS MAINTAINER'})
+})
 
-//   expect(global.fetch).toBeCalledTimes(1)
-//   // expect(global.fetch).toBeCalledWith({})
+it('returns isMaintainer=false when user is NOT maintainer of organisation', async () => {
+  // set authenticated props
 
-//   // check if maintainer
-//   const content = await screen.findByText('IS MAINTAINER')
-//   expect(content).toBeInTheDocument()
-// })
+  mockResolvedValueOnce(['Random organisation name'])
+
+  render(
+    <WithAppContext options={{session: mockSession}}>
+      <WrappedHook />
+    </WithAppContext>
+  )
+
+  // find maintainer header
+  await screen.findByRole('heading',{name: '403'})
+})
+
+
+it('returns isMaintainer=false when user is NOT maintainer of organisation', async () => {
+  // set authenticated props
+
+  mockResolvedValueOnce(['Random organisation name'])
+
+  render(
+    <WithAppContext options={{session: mockSession}}>
+      <WrappedHook />
+    </WithAppContext>
+  )
+
+  // find maintainer header
+  await screen.findByRole('heading',{name: '403'})
+})
+
+
+it('returns isMaintainer=false when NO user.account OR user.role defined', async () => {
+  // set authenticated props
+  // mockResolvedValueOnce(['Random organisation name'])
+  const noUser = {
+    ...mockSession,
+    user: {}
+  } as Session
+
+  render(
+    <WithAppContext options={{session: noUser}}>
+      <WrappedHook />
+    </WithAppContext>
+  )
+
+  // find maintainer header
+  await screen.findByRole('heading',{name: '403'})
+})
+
+it('returns isMaintainer=false when NO TOKEN', async () => {
+  // set authenticated props
+  // mockResolvedValueOnce(['Random organisation name'])
+  const noUser = {
+    ...mockSession,
+    token: ''
+  } as Session
+
+  render(
+    <WithAppContext options={{session: noUser}}>
+      <WrappedHook />
+    </WithAppContext>
+  )
+
+  // find maintainer header
+  await screen.findByRole('heading',{name: '403'})
+})
+
+it('returns isMaintainer=false when user.account=""', async () => {
+  // set authenticated props
+  // mockResolvedValueOnce(['Random organisation name'])
+  const noUser = {
+    ...mockSession,
+    user: {
+      ...mockSession.user,
+      account: ''
+    }
+  } as Session
+
+  render(
+    <WithAppContext options={{session: noUser}}>
+      <WrappedHook />
+    </WithAppContext>
+  )
+
+  // find maintainer header
+  await screen.findByRole('heading',{name: '403'})
+})
+
+it('returns isMaintainer=false when token is expired', async () => {
+  // set authenticated props
+  // mockResolvedValueOnce(['Random organisation name'])
+  const noUser = {
+    ...mockSession,
+    user: {
+      ...mockSession.user,
+      // expired user values
+      exp: 1111111
+    }
+  } as Session
+
+  render(
+    <WithAppContext options={{session: noUser}}>
+      <WrappedHook />
+    </WithAppContext>
+  )
+
+  // find maintainer header
+  await screen.findByRole('heading',{name: '403'})
+})
+

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,7 +9,8 @@ import {useRouter} from 'next/router'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import ReactMarkdownWithSettings from '~/components/layout/ReactMarkdownWithSettings'
-import {OrganisationComponentsProps} from '../OrganisationNavItems'
+import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+import useOrganisationContext from '../context/useOrganisationContext'
 
 export function AboutPagePlaceholder() {
   const router = useRouter()
@@ -34,19 +37,20 @@ export function AboutPagePlaceholder() {
   )
 }
 
-
-export default function AboutPage({organisation}: OrganisationComponentsProps) {
+export default function AboutPage() {
+  const {description} = useOrganisationContext()
   // if description is present we return markdown page
-  if (organisation.description) {
+  if (description) {
     return (
-      <section
-        data-testid="organisation-about-page"
-        className="pt-2">
+      <BaseSurfaceRounded
+        className="flex-1 mb-12 p-4"
+        type="section"
+      >
         <ReactMarkdownWithSettings
           className="pt-4"
-          markdown={organisation?.description}
+          markdown={description}
         />
-      </section>
+      </BaseSurfaceRounded>
     )
   }
   // if no description we return placeholder info

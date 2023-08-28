@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,10 +15,10 @@ import ListItemText from '@mui/material/ListItemText'
 import DescriptionIcon from '@mui/icons-material/Description'
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import SpellcheckIcon from '@mui/icons-material/Spellcheck'
 import DomainAddIcon from '@mui/icons-material/DomainAdd'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import FluorescentIcon from '@mui/icons-material/Fluorescent'
 
 export const adminPages = {
   pages:{
@@ -24,6 +26,12 @@ export const adminPages = {
     subtitle: 'Manage markdown pages',
     icon: <DescriptionIcon />,
     path: '/admin/public-pages',
+  },
+  softwareHighlights:{
+    title: 'Software highlights',
+    subtitle: 'Manage software highlights',
+    icon: <FluorescentIcon />,
+    path: '/admin/software-highlights',
   },
   orcid:{
     title: 'ORCID users',
@@ -55,12 +63,6 @@ export const adminPages = {
     icon: <SpellcheckIcon />,
     path: '/admin/keywords',
   },
-  softwareDomains:{
-    title: 'Software domains',
-    subtitle: 'Manage software domains',
-    icon: <PlaylistAddIcon />,
-    path: '/admin/software-domains',
-  },
 }
 
 // extract page types from the object
@@ -83,7 +85,7 @@ export default function AdminNav() {
             <ListItemButton
               data-testid="admin-nav-item"
               key={`step-${pos}`}
-              selected={item.path === router.route ?? false}
+              selected={item.path === router.route}
               onClick={() => router.push(item.path)}
             >
               <ListItemIcon>

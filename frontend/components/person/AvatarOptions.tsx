@@ -1,9 +1,10 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-/* eslint-disable @next/next/no-img-element */
 import {ChangeEvent} from 'react'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'

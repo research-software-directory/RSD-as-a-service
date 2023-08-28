@@ -1,19 +1,21 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useContext} from 'react'
 
+import {useSession} from '~/auth'
 import Pagination from '~/components/pagination/Pagination'
 import Searchbox from '~/components/search/Searchbox'
 import PaginationContext from '~/components/pagination/PaginationContext'
 import OrganisationsAdminList from './OrganisationsAdminList'
 import AddOrganisation from './AddOrganisation'
-import {useSession} from '~/auth'
 import {useOrganisations} from './apiOrganisation'
 
-export default function OrganisationAdminPage() {
+export default function OrganisationsAdminPage() {
   const {token} = useSession()
   const {pagination:{count}} = useContext(PaginationContext)
   const {organisations, loading, addOrganisation, removeOrganisation} = useOrganisations(token)

@@ -117,9 +117,9 @@ export function SoftwareCategories({ categories, buttonTitle, onClick }: Softwar
 
     <div className='mt-5 italic'>other variant using TagChipFilter:</div>
     {categories.map((path, index) => {
-      const text = path.map((category) => category.short_name).join(' :: ')
+      const text = path.map((category, index) => category.short_name).join(' :: ')
       return (
-        <div className='my-1'>
+        <div className="my-1" key={index}>
           <TagChipFilter url="" key={index} label={text} title={text} />
         </div>
       )
@@ -127,9 +127,9 @@ export function SoftwareCategories({ categories, buttonTitle, onClick }: Softwar
 
     <div className='mt-5 italic'>other variant using Chip:</div>
     {categories.map((path, index) => {
-      const text = path.map((category) => category.short_name).join(' :: ')
+      const text = path.map((category, index) => category.short_name).join(' :: ')
       return (
-        <div className='my-1'>
+        <div className="my-1" key={index}>
           <Chip key={index} label={text} title={text} onDelete={onClick && (() => onClick({ id: path[path.length - 1].id, index }))} />
         </div>
       )

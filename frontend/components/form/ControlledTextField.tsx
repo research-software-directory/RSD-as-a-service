@@ -6,7 +6,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useRef} from 'react'
+import {useEffect, useRef, JSX} from 'react'
 import {Controller} from 'react-hook-form'
 import TextField, {TextFieldProps} from '@mui/material/TextField'
 import HelperTextWithCounter from './HelperTextWithCounter'

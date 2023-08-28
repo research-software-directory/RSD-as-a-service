@@ -1,17 +1,19 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
 import {useSession} from '~/auth'
-import ContentLoader from '~/components/layout/ContentLoader'
 import NoContent from '~/components/layout/NoContent'
 import ReleaseItem from './ReleaseItem'
 import useSoftwareRelease from './useSoftwareReleases'
+import useOrganisationContext from '../context/useOrganisationContext'
 
 type ReleaseYearProps = {
-  organisation_id: string
+  organisation_id?: string
+  release_year?: number
 }
 
 const smoothScrollSection = {
@@ -20,19 +22,23 @@ const smoothScrollSection = {
   scrollMarginTop: '7rem'
 }
 
-
-export default function ReleaseList({organisation_id}: ReleaseYearProps) {
-  const router = useRouter()
+export default function ReleaseList({release_year}: ReleaseYearProps) {
   const {token} = useSession()
-  const release_year = router.query['release_year']?.toString()
-  const {loading, releases} = useSoftwareRelease({
-    organisation_id,
-    release_year,
+  const {id} = useOrganisationContext()
+  const {releases} = useSoftwareRelease({
+    organisation_id: id,
+    release_year: release_year?.toString(),
     token
   })
 
+  // console.group('ReleaseList')
+  // console.log('id...', id)
+  // console.log('release_year...', release_year)
+  // console.log('releases...', releases)
+  // console.groupEnd()
+
   // show loader
-  if (loading===true) return <ContentLoader />
+  // if (loading===true) return <ContentLoader />
   if (typeof releases === 'undefined') return <NoContent />
 
   return (
@@ -41,13 +47,13 @@ export default function ReleaseList({organisation_id}: ReleaseYearProps) {
         <h3 className="text-primary">
           {release_year}
         </h3>
-        <div className="pb-2 border-b text-sm text-base-content-secondary">
+        <div className="pb-2 text-sm text-base-content-secondary">
           {releases.length} {releases.length === 1 ? 'release' : 'releases'}
         </div>
       </div>
-      <section>
-        {releases.map(release=><ReleaseItem key={release.release_doi} release={release} />)}
-      </section>
+
+      {releases.map((release,pos)=><ReleaseItem key={release.release_doi ?? pos} release={release} />)}
+
     </section>
   )
 }

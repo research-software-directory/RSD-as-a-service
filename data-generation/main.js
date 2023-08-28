@@ -1,15 +1,16 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {faker} from '@faker-js/faker';
 import jwt from 'jsonwebtoken';
-import images from './images.js';
+import {images, organisationLogos, softwareLogos} from './images.js';
 import {conceptDois, dois, packageManagerLinks} from './real-data.js';
 import fs from 'fs/promises';
 
@@ -117,9 +118,10 @@ async function generateSofware(amount=500) {
 			concept_doi: index < conceptDois.length ? conceptDois[index] : null,
 			description: faker.lorem.paragraphs(4, '\n\n'),
 			get_started_url: faker.internet.url(),
-			image_id: localImageIds[index%localImageIds.length],
+			image_id: localImageIds[index % localImageIds.length],
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
-			short_statement: faker.commerce.productDescription()
+			short_statement: faker.commerce.productDescription(),
+			image_id: faker.helpers.maybe(() => localSoftwareLogoIds[index % localSoftwareLogoIds.length], {probability: 0.8}) ?? null,
 		});
 	}
 
@@ -304,6 +306,15 @@ function generateSoftwareForSoftware(ids) {
 	return result;
 }
 
+function generateSoftwareHighlights(ids) {
+	const result = [];
+	for (let index = 0; index < ids.length; index++) {
+		const isHighlight = !!faker.helpers.maybe(() => true, {probability: 0.3});
+		if (isHighlight === true) result.push({software: ids[index]})
+	}
+	return result;
+}
+
 async function generateProjects(amount=500) {
 	const result = [];
 
@@ -340,7 +351,7 @@ async function generateProjects(amount=500) {
 			grant_id: faker.helpers.maybe(() => faker.helpers.replaceSymbols('******'), {probability: 0.8}) ?? null,
 			image_caption: faker.animal.cat(),
 			image_contain: !!faker.helpers.maybe(() => true, {probability: 0.5}),
-			image_id: localImageIds[index%localImageIds.length],
+			image_id: faker.helpers.maybe(() => localImageIds[index % localImageIds.length], {probability: 0.8}) ?? null,
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 		});
 	}
@@ -361,7 +372,7 @@ async function generateContributors(ids, amount=1000) {
 			affiliation: faker.company.name(),
 			role: faker.name.jobTitle(),
 			orcid: faker.helpers.replaceSymbolWithNumber('####-####-####-####'),
-			avatar_id: localImageIds[index%localImageIds.length],
+			avatar_id: localImageIds[index % localImageIds.length],
 		});
 	}
 
@@ -459,7 +470,7 @@ async function generateOrganisations(amount=500) {
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.05}),
 			country: faker.helpers.maybe(() => faker.address.country(), {probability: 0.8}) ?? null,
-			logo_id: localImageIds[index%localImageIds.length],
+			logo_id: faker.helpers.maybe(() => localOrganisationLogoIds[index % localOrganisationLogoIds.length], {probability: 0.8}) ?? null,
 		});
 	}
 
@@ -637,6 +648,8 @@ await postAccountsToBackend(100)
 	.then(() => console.log('accounts, login_for_accounts done'));
 
 const localImageIds = await getLocalImageIds(images);
+const localOrganisationLogoIds = await getLocalImageIds(organisationLogos);
+const localSoftwareLogoIds = await getLocalImageIds(softwareLogos);
 
 let idsMentions, idsKeywords, idsResearchDomains;
 const mentionsPromise = postToBackend('/mention', generateMentions())
@@ -668,6 +681,7 @@ const softwarePromise = postToBackend('/software', await generateSofware())
 		postToBackend('/keyword_for_software', generateKeywordsForEntity(idsSoftware, idsKeywords, 'software'));
 		postToBackend('/mention_for_software', generateMentionsForEntity(idsSoftware, idsMentions, 'software'));
 		postToBackend('/software_for_software', generateSoftwareForSoftware(idsSoftware));
+		postToBackend('/software_highlight', generateSoftwareHighlights(idsSoftware.slice(0,10)));
 	});
 const projectPromise = postToBackend('/project', await generateProjects())
 	.then(resp => resp.json())

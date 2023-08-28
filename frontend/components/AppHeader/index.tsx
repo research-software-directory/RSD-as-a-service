@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,6 +24,7 @@ import LogoAppSmall from '~/assets/LogoAppSmall.svg'
 import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
 import FeedbackPanelButton from '~/components/feedback/FeedbackPanelButton'
 import useDisableScrollLock from '~/utils/useDisableScrollLock'
+import isActiveMenuItem from './isActiveMenuItem'
 
 export default function AppHeader() {
   const [activePath, setActivePath] = useState('/')
@@ -36,8 +38,7 @@ export default function AppHeader() {
   useEffect(() => {
     // set activePath to currently loaded route/page
     if (typeof window != 'undefined') {
-      const paths = window.location.pathname.split('/')
-      if (paths.length > 0) setActivePath(`/${paths[1]}`)
+      setActivePath(window.location.pathname)
     }
   }, [])
 
@@ -72,11 +73,14 @@ export default function AppHeader() {
           {/* Large menu*/}
           <div
             className="justify-center xl:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
-            {menuItems.map(item =>
-              <Link key={item.path} href={item.path || ''} className={`${activePath === item.path ? 'nav-active' : ''}`}>
-                {item.label}
-              </Link>
-            )}
+            {menuItems.map(item => {
+              const isActive = isActiveMenuItem({item, activePath})
+              return (
+                <Link key={item.path} href={item.path ?? ''} className={`${isActive ? 'nav-active' : ''}`}>
+                  {item.label}
+                </Link>
+              )
+            })}
           </div>
 
           <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
@@ -129,13 +133,16 @@ export default function AppHeader() {
                 // disable adding styles to body (overflow:hidden & padding-right)
                 disableScrollLock = {disable}
               >
-                {menuItems.map(item =>
-                  <MenuItem onClick={handleCloseResponsiveMenu} key={item.path}>
-                    <Link href={item.path || ''} className={`${activePath === item.path && 'nav-active'}`}>
-                      {item.label}
-                    </Link>
-                  </MenuItem>
-                )}
+                {menuItems.map(item => {
+                  const isActive = isActiveMenuItem({item, activePath})
+                  return (
+                    <MenuItem onClick={handleCloseResponsiveMenu} key={item.path}>
+                      <Link href={item.path ?? ''} className={`${isActive ? 'nav-active' : ''}`}>
+                        {item.label}
+                      </Link>
+                    </MenuItem>
+                  )
+                })}
                 <li>
                   {host.feedback?.enabled
                     ? <FeedbackPanelButton feedback_email={host.feedback.url} issues_page_url={host.feedback.issues_page_url} />
@@ -147,7 +154,6 @@ export default function AppHeader() {
 
             {/* LOGIN / USER MENU */}
             <LoginButton/>
-
 
           </div>
           <JavascriptSupportWarning/>

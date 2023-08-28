@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
-import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
-import {useAuth, defaultSession} from '.'
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {useAuth,Session} from './index'
 
 import RsdAdminContent from './RsdAdminContent'
 
@@ -26,53 +28,68 @@ function ProtectedComponent() {
 
 
 it('Shows loader when session.status==="loading"', () => {
-  defaultSession.status='loading'
-  render(WrappedComponentWithProps(ProtectedComponent, {
-    session: defaultSession
-  }))
-  const loader = screen.getByRole('progressbar')
-  expect(loader).toBeInTheDocument()
+  const testSession = {
+    ...mockSession,
+    status: 'loading'
+  } as Session
+
+  render(
+    <WithAppContext options={{session: testSession}}>
+      <ProtectedComponent />
+    </WithAppContext>
+  )
+
+  screen.getByRole('progressbar')
   // screen.debug()
 })
 
 it('Protects content with 401 when session.status==="missing"', () => {
-  defaultSession.status='missing'
-  render(WrappedComponentWithProps(ProtectedComponent, {
-    session: defaultSession
-  }))
-  const heading = screen.getByRole('heading')
-  expect(heading.innerHTML).toContain('401')
+  const testSession = {
+    ...mockSession,
+    status: 'missing'
+  } as Session
+
+  render(
+    <WithAppContext options={{session: testSession}}>
+      <ProtectedComponent />
+    </WithAppContext>
+  )
+
+  screen.getByRole('heading', {name:'401'})
+
 })
 
 it('Protects content with 403 when authenticated but not rsd_admin', () => {
-  defaultSession.status = 'authenticated'
-  defaultSession.user = {
-    iss: 'rsd_auth',
-    role: 'rsd_user',
-    exp: 1212121212,
-    account: 'test-account-string',
-    name: 'John Doe'
-  }
-  render(WrappedComponentWithProps(ProtectedComponent, {
-    session: defaultSession
-  }))
-  const heading = screen.getByRole('heading')
-  expect(heading.innerHTML).toContain('403')
+  const testSession = {
+    ...mockSession
+  } as Session
+
+  render(
+    <WithAppContext options={{session: testSession}}>
+      <ProtectedComponent />
+    </WithAppContext>
+  )
+  screen.getByRole('heading', {name: '403'})
+  // screen.debug()
 })
 
 it('Shows content when authenticated AND rsd_admin', () => {
-  defaultSession.status = 'authenticated'
-  defaultSession.user = {
-    iss: 'rsd_auth',
-    role: 'rsd_admin',
-    exp: 1212121212,
-    account: 'test-account-string',
-    name: 'John Doe'
-  }
-  defaultSession.token='TEST_RANDOM_TOKEN'
-  render(WrappedComponentWithProps(ProtectedComponent, {
-    session: defaultSession
-  }))
+
+  const testSession = {
+    ...mockSession,
+    user: {
+      ...mockSession.user,
+      role: 'rsd_admin'
+    }
+
+  } as Session
+
+  render(
+    <WithAppContext options={{session: testSession}}>
+      <ProtectedComponent />
+    </WithAppContext>
+  )
+
   const heading = screen.getByRole('heading')
   expect(heading.innerHTML).toContain(adminText)
   // screen.debug()

@@ -151,6 +151,18 @@ public class Main {
 			});
 		}
 
+		if (Config.isAzureEnabled()) {
+			app.get("/login/azure", ctx -> {
+				String code = ctx.queryParam("code");
+				String redirectUrl = Config.azureRedirect();
+				OpenIdInfo azureInfo = new AzureLogin(code, redirectUrl).openidInfo();
+				AccountInfo accountInfo = new PostgrestAccount().account(azureInfo, OpenidProvider.azure);
+				String email = azureInfo.email();
+				boolean isAdmin = isAdmin(email);
+				createAndSetToken(ctx, accountInfo, isAdmin);
+			});
+		}
+
 		app.get("/refresh", ctx -> {
 			try {
 				String tokenToVerify = ctx.cookie("rsd_token");

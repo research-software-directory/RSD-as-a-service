@@ -1,29 +1,32 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect} from 'react'
-import {useRouter} from 'next/router'
+import {useEffect, useState} from 'react'
 
 import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import NoContent from '~/components/layout/NoContent'
-import {OrganisationComponentsProps} from '../OrganisationNavItems'
+import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
+import useOrganisationContext from '../context/useOrganisationContext'
+
 import ReleaseYear from './ReleaseList'
 import ReleaseNavButton from './ReleaseNavButton'
 import ScrollToTopButton from './ScrollToTopButton'
 import useReleaseCount from './useReleaseCount'
 
-export default function SoftwareReleases({organisation, isMaintainer}: OrganisationComponentsProps) {
+export default function SoftwareReleases() {
   const {token} = useSession()
-  const router = useRouter()
+  const {id} = useOrganisationContext()
   const {loading, countsByYear} = useReleaseCount({
-    organisation_id: organisation.id,
+    organisation_id: id,
     token
   })
-  const release_year = router.query['release_year']
-
+  const [selected_year,setSelected]=useState<number>()
+  // const release_year = router.query['release_year']
   // console.group('SoftwareReleases')
   // console.log('loading...', loading)
   // console.log('releases...', releases)
@@ -32,20 +35,10 @@ export default function SoftwareReleases({organisation, isMaintainer}: Organisat
   // console.groupEnd()
 
   useEffect(() => {
-    if (countsByYear &&
-      countsByYear.length > 0 &&
-      typeof release_year === 'undefined') {
-      // only if no release_year query param
-      router.push({
-        query: {
-          ...router.query,
-          release_year: countsByYear[0].release_year
-        }
-      })
+    if (countsByYear && countsByYear.length > 0) {
+      setSelected(countsByYear[0].release_year)
     }
-  // we ignore router dependency
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[countsByYear,release_year])
+  },[countsByYear])
 
   // show loader
   if (loading === true) return <ContentLoader />
@@ -53,7 +46,7 @@ export default function SoftwareReleases({organisation, isMaintainer}: Organisat
 
   // releases per year
   return (
-    <>
+    <BaseSurfaceRounded className="flex-1 flex flex-col mb-12 p-4">
       <h2 className="pt-4">Releases per year</h2>
       <nav id="period_nav"
         className="flex flex-wrap justify-start items-center my-4"
@@ -62,14 +55,17 @@ export default function SoftwareReleases({organisation, isMaintainer}: Organisat
           .map(count => {
             return <ReleaseNavButton
               key={count.release_year}
-              year={count.release_year.toString()}
-              release_cnt={count.release_cnt} />
+              year={count.release_year}
+              release_cnt={count.release_cnt}
+              selected = {selected_year===count.release_year}
+              onSelectYear={setSelected}
+            />
           })
         }
       </nav>
       {/* Release items of selected year */}
-      <ReleaseYear organisation_id={organisation.id} />
+      <ReleaseYear release_year={selected_year} />
       <ScrollToTopButton minOffset={200} />
-    </>
+    </BaseSurfaceRounded>
   )
 }

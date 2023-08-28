@@ -6,6 +6,7 @@
 # SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -77,10 +78,16 @@ services:
       - ORCID_REDIRECT
       - ORCID_WELL_KNOWN_URL
       - ORCID_SCOPES
+      - AZURE_CLIENT_ID
+      - AZURE_REDIRECT
+      - AZURE_WELL_KNOWN_URL
+      - AZURE_SCOPES
+      - AZURE_ORGANISATION
       - HELMHOLTZAAI_ALLOW_EXTERNAL_USERS
       - AUTH_SURFCONEXT_CLIENT_SECRET
       - AUTH_HELMHOLTZAAI_CLIENT_SECRET
       - AUTH_ORCID_CLIENT_SECRET
+      - AUTH_AZURE_CLIENT_SECRET
       - PGRST_JWT_SECRET
     depends_on:
       - database
@@ -101,7 +108,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:1.18.1
+    image: rsd/frontend:2.0.0
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -124,6 +131,13 @@ services:
       - ORCID_REDIRECT
       - ORCID_WELL_KNOWN_URL
       - ORCID_SCOPES
+      - AZURE_CLIENT_ID
+      - AZURE_REDIRECT
+      - AZURE_WELL_KNOWN_URL
+      - AZURE_SCOPES
+      - AZURE_LOGIN_PROMPT
+      - AZURE_DISPLAY_NAME
+      - AZURE_DESCRIPTION_HTML
     expose:
       - 3000
     depends_on:
@@ -192,7 +206,7 @@ services:
   #----------------------------------------------
   data-generation:
     build: ./data-generation
-    image: rsd/generation:1.2.0
+    image: rsd/generation:1.3.0
     environment:
       # it needs to be here to use values from .env file
       - PGRST_JWT_SECRET
@@ -213,7 +227,7 @@ services:
         - DUID
         - DGID
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend-dev:1.18.1
+    image: rsd/frontend-dev:2.0.0
     ports:
       - "3000:3000"
       - "9229:9229"

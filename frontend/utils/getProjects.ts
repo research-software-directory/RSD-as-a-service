@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +11,7 @@ import {mentionColumns, MentionForProject, MentionItemProps} from '~/types/Menti
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, ProjectSearchRpc, RelatedProjectForProject,
+  ProjectLink, ProjectListItem, ProjectStatusKey, RelatedProjectForProject,
   ResearchDomain, SearchProject, TeamMember
 } from '~/types/Project'
 import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
@@ -17,6 +19,7 @@ import {getImageUrl} from './editImage'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import logger from './logger'
+import {ProjectStatusLabels} from '~/components/projects/overview/filters/ProjectStatusFilter'
 
 export async function getProjectList({url, token}: { url: string, token?: string }) {
   try {
@@ -29,7 +32,7 @@ export async function getProjectList({url, token}: { url: string, token?: string
     })
 
     if ([200, 206].includes(resp.status)) {
-      const json: ProjectSearchRpc[] = await resp.json()
+      const json: ProjectListItem[] = await resp.json()
       // set
       return {
         count: extractCountFromHeader(resp.headers),
@@ -132,6 +135,12 @@ export async function getOrganisations({project, token, frontend = true}:
   return organisations
 }
 
+/**
+ * Calculate project status based on date_start and date_end values.
+ * NOTE!
+ * 1. Ensure values follow SQL logic in project_status() RPC of 105-project-views.
+ * 2. Ensure used labels are same as ProjectStatusLabels used in the filter dropdown
+ */
 export function getProjectStatus({date_start, date_end}:
   {date_start: string, date_end: string}) {
   try {
@@ -139,16 +148,20 @@ export function getProjectStatus({date_start, date_end}:
     const end_date = new Date(date_end)
     const today = new Date()
 
-    let status:'Starting'|'Running'|'Finished' = 'Running'
+    let statusKey: ProjectStatusKey = 'unknown'
 
-    if (today < start_date) status = 'Starting'
-    if (today > end_date) status = 'Finished'
+    if (today < start_date) statusKey = 'pending'
+    if (today > end_date) statusKey = 'finished'
+    if (today > start_date && today < end_date) statusKey = 'in_progress'
 
-    return status
+    if (statusKey!=='unknown') {
+      return ProjectStatusLabels[statusKey]
+    }
+    return ''
   } catch (e:any) {
     logger(`getProjectStatus: ${e?.message}`, 'error')
     // error value return starting
-    return 'Starting'
+    return ''
   }
 }
 

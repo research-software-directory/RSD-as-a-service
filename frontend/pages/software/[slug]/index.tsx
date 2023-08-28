@@ -2,10 +2,11 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: EUPL-1.2
 
 import {useEffect, useState} from 'react'
 import {GetServerSidePropsContext} from 'next'
@@ -54,7 +55,7 @@ import {getParticipatingOrganisations} from '~/utils/editOrganisation'
 import {
   CategoriesForSoftware,
   KeywordForSoftware, License, RepositoryInfo,
-  SoftwareItem, SoftwareListItem
+  SoftwareItem, SoftwareOverviewItemProps
 } from '~/types/SoftwareTypes'
 import {Contributor} from '~/types/Contributor'
 import {Testimonial} from '~/types/Testimonial'
@@ -62,7 +63,6 @@ import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
 import NoContent from '~/components/layout/NoContent'
-import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -76,7 +76,7 @@ interface SoftwareIndexData extends ScriptProps{
   mentions: MentionItemProps[]
   testimonials: Testimonial[]
   contributors: Contributor[]
-  relatedSoftware: SoftwareListItem[]
+  relatedSoftware: SoftwareOverviewItemProps[]
   relatedProjects: RelatedProject[]
   isMaintainer: boolean,
   organisations: ParticipatingOrganisationProps[],

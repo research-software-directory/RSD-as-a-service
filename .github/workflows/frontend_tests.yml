@@ -1,5 +1,8 @@
 # SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 - 2023 dv4all
+# SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -21,6 +24,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: "install node v18.5 and cash yarn"
         uses: actions/setup-node@v3
         with:
@@ -30,9 +35,25 @@ jobs:
       - name: "install dependencies"
         working-directory: frontend
         run: yarn install --frozen-lockfile
+      - name: "run eslint check"
+        working-directory: frontend
+        run: yarn lint
       - name: "run unit test"
         working-directory: frontend
         run: yarn test:coverage
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: SonarCloud Scan frontend
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: frontend
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: "run build test"
         working-directory: frontend
         run: yarn build

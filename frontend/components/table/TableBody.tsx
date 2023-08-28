@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,8 +12,6 @@ import MuiTableCell from '@mui/material/TableCell'
 import logger from '~/utils/logger'
 import {Column} from './EditableTable'
 import EditableCell from './EditableCell'
-import ContributorAvatar from '../software/ContributorAvatar'
-import {getImageUrl} from '~/utils/editImage'
 
 function formatValue<T, K extends keyof T>(col: Column<T, K>, value: any) {
   if (value===null || typeof value==='undefined') return ''
@@ -36,7 +36,7 @@ function formatValue<T, K extends keyof T>(col: Column<T, K>, value: any) {
 
 function TableRow<T extends {id:string,origin?:string}, K extends keyof T>({data, cols}: { data: T, cols: Column<T,K>[]}) {
   return (
-    <MuiTableRow>
+    <MuiTableRow data-testid="mui-table-body-row">
       {
         cols.map((col) => {
           const key = `column-${col.key.toString()}`

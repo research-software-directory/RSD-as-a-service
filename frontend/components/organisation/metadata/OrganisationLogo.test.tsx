@@ -1,14 +1,19 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {screen, render, fireEvent, waitFor, waitForElementToBeRemoved} from '@testing-library/react'
 import {WithAppContext,mockSession} from '~/utils/jest/WithAppContext'
+import {WithOrganisationContext} from '~/utils/jest/WithOrganisationContext'
+
 import OrganisationLogo from './OrganisationLogo'
 
 
 //  MOCKS
+import mockOrganisation from '../__mocks__/mockOrganisation'
 const mockDeleteImage = jest.fn((props) => Promise.resolve({status: 200, statusText: 'OK'}))
 const mockUpsertImage = jest.fn((props) => Promise.resolve({status: 201, statusText: 'OK', message:''}))
 jest.mock('~/utils/editImage', () => ({
@@ -30,16 +35,21 @@ const mockFileUpload = jest.fn((props) => Promise.resolve({
   image_mime_type: 'image/png'
 }))
 jest.mock('~/utils/handleFileUpload', () => ({
-  handleFileUpload: jest.fn((props)=>mockFileUpload(props))
+  // handleFileUpload: jest.fn((props) => mockFileUpload(props)),
+  showDialogAndGetFile: jest.fn((props) => mockFileUpload(props))
 }))
 
-const mockProps = {
+const mockImg = {
   id: 'test-id',
   logo_id: 'test-logo-id',
   name: 'Test organisation name',
   isMaintainer: false
 }
 
+const mockProps = {
+  organisation: mockOrganisation,
+  isMaintainer: false
+}
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -47,22 +57,27 @@ beforeEach(() => {
 
 it('renders avatar component', () => {
   render(
-    <WithAppContext options={{session:mockSession}}>
-      <OrganisationLogo {...mockProps} />
+    <WithAppContext options={{session: mockSession}}>
+      <WithOrganisationContext {...mockProps}>
+        <OrganisationLogo isMaintainer={mockProps.isMaintainer} />
+      </WithOrganisationContext>
     </WithAppContext>
   )
 
   const avatar = screen.getByTestId('logo-avatar')
   expect(avatar).toBeInTheDocument()
   // avatar has title
-  expect(avatar.title).toEqual(mockProps.name)
+  expect(avatar.title).toEqual(mockProps.organisation.name)
 })
 
 it('renders avatar image with url', () => {
-  const expectedUrl=`/image/rpc/get_image?uid=${mockProps.logo_id}`
+  mockProps.organisation.logo_id = mockImg.logo_id
+  const expectedUrl=`/image/rpc/get_image?uid=${mockProps.organisation.logo_id}`
   render(
-    <WithAppContext options={{session:mockSession}}>
-      <OrganisationLogo {...mockProps} />
+    <WithAppContext options={{session: mockSession}}>
+      <WithOrganisationContext {...mockProps}>
+        <OrganisationLogo isMaintainer={mockProps.isMaintainer} />
+      </WithOrganisationContext>
     </WithAppContext>
   )
 
@@ -72,37 +87,50 @@ it('renders avatar image with url', () => {
 })
 
 it('shows edit image buttons when isMaintainer=true', () => {
-  mockProps.isMaintainer=true
+  mockProps.organisation.logo_id = mockImg.logo_id
+  mockProps.isMaintainer = true
   render(
     <WithAppContext options={{session:mockSession}}>
-      <OrganisationLogo {...mockProps} />
+      <WithOrganisationContext {...mockProps}>
+        <OrganisationLogo isMaintainer={mockProps.isMaintainer} />
+      </WithOrganisationContext>
     </WithAppContext>
   )
 
+  // menu button
+  const btnMenu = screen.getByTestId('icon-menu-button')
+  fireEvent.click(btnMenu)
+
   // edit button
-  const btnEdit = screen.getByRole('button', {
+  const btnEdit = screen.getByRole('menuitem', {
     name: 'Change logo'
   })
   expect(btnEdit).toBeInTheDocument()
   // delete button
-  const btnDelete = screen.getByRole('button', {
+  const btnDelete = screen.getByRole('menuitem', {
     name: 'Remove logo'
   })
   expect(btnDelete).toBeInTheDocument()
   // screen.debug()
 })
 
-it('removes logo', async() => {
+it('removes logo', async () => {
+  mockProps.organisation.logo_id = mockImg.logo_id
   mockProps.isMaintainer = true
-  // mockPatchOrganisation.mockResolvedValueOnce('OK')
   render(
     <WithAppContext options={{session:mockSession}}>
-      <OrganisationLogo {...mockProps} />
+      <WithOrganisationContext {...mockProps}>
+        <OrganisationLogo isMaintainer={mockProps.isMaintainer} />
+      </WithOrganisationContext>
     </WithAppContext>
   )
 
+  // menu button
+  const btnMenu = screen.getByTestId('icon-menu-button')
+  fireEvent.click(btnMenu)
+
   // delete button
-  const btnDelete = screen.getByRole('button', {
+  const btnDelete = screen.getByRole('menuitem', {
     name: 'Remove logo'
   })
   expect(btnDelete).toBeInTheDocument()
@@ -115,7 +143,7 @@ it('removes logo', async() => {
   expect(mockPatchOrganisation).toBeCalledTimes(1)
   expect(mockPatchOrganisation).toBeCalledWith({
     'data': {
-      'id': mockProps.id,
+      'id': mockProps.organisation.id,
       'logo_id': null,
     },
     'token': mockSession.token,
@@ -127,38 +155,37 @@ it('removes logo', async() => {
   // validate delete image api call
   expect(mockDeleteImage).toBeCalledTimes(1)
   expect(mockDeleteImage).toBeCalledWith({
-    'id': mockProps.logo_id,
+    'id': mockProps.organisation.logo_id,
     'token': mockSession.token,
   })
 })
 
-it('uploads the logo', async () => {
+it('can change the logo', async () => {
   // return image id as message prop
-  const mockImageId = 'mocked-image-id'
+  mockProps.organisation.logo_id = 'mocked-image-id'
   mockUpsertImage.mockResolvedValueOnce({
-    status: 201, statusText: 'OK', message: mockImageId
+    status: 201, statusText: 'OK', message: mockProps.organisation.logo_id
   })
-  const mockFile = new File(
-    ['some content'],
-    'mock-file-name.png',
-    {
-      type: 'image/png',
-    })
 
   mockProps.isMaintainer = true
   // mockPatchOrganisation.mockResolvedValueOnce('OK')
   render(
     <WithAppContext options={{session:mockSession}}>
-      <OrganisationLogo {...mockProps} />
+      <WithOrganisationContext {...mockProps}>
+        <OrganisationLogo isMaintainer={mockProps.isMaintainer} />
+      </WithOrganisationContext>
     </WithAppContext>
   )
 
-  // fileinput
-  const fileInput = screen.getByTestId('organisation-logo-input')
-  expect(fileInput).toBeInTheDocument()
+  // menu button
+  const btnMenu = screen.getByTestId('icon-menu-button')
+  fireEvent.click(btnMenu)
 
-  // add file to upload
-  fireEvent.change(fileInput,{target:{files:[mockFile]}})
+  // edit button
+  const btnEdit = screen.getByRole('menuitem', {
+    name: 'Change logo'
+  })
+  fireEvent.click(btnEdit)
 
   // wait for image to be removed
   await waitFor(() => {
@@ -181,8 +208,8 @@ it('uploads the logo', async () => {
   expect(mockPatchOrganisation).toBeCalledTimes(1)
   expect(mockPatchOrganisation).toBeCalledWith({
     'data': {
-      'id': mockProps.id,
-      'logo_id': mockImageId,
+      'id': mockProps.organisation.id,
+      'logo_id': mockProps.organisation.logo_id,
     },
     'token': mockSession.token
   })

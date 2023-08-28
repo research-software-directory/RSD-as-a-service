@@ -1,7 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,7 +14,6 @@ import Button from '@mui/material/Button'
 
 import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
-import ContentLoader from '../../layout/ContentLoader'
 import {
   columsForCreate, columsForUpdate, CoreOrganisationProps,
   EditOrganisation, Organisation, OrganisationForOverview
@@ -22,14 +23,15 @@ import {
   newOrganisationProps,
   updateOrganisation
 } from '../../../utils/editOrganisation'
-import useOrganisationUnits from '../../../utils/useOrganisationUnits'
+import useOrganisationUnits from './useOrganisationUnits'
 import {sortOnStrProp} from '../../../utils/sortFn'
 import ResearchUnitList from './ResearchUnitList'
 import ResearchUnitModal from './ResearchUnitModal'
-import {OrganisationComponentsProps} from '../OrganisationNavItems'
 import {upsertImage} from '~/utils/editImage'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
 import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
+import useOrganisationContext from '../context/useOrganisationContext'
+import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 
 type EditOrganisationModal = {
   open: boolean,
@@ -37,27 +39,25 @@ type EditOrganisationModal = {
   organisation?: EditOrganisation
 }
 
-export default function ResearchUnits({organisation,isMaintainer}: OrganisationComponentsProps) {
-  const {token,user} = useSession()
+export default function ResearchUnits() {
+  const {token, user} = useSession()
+  const {id,primary_maintainer,isMaintainer} = useOrganisationContext()
   const {showErrorMessage} = useSnackbar()
-  const {units, setUnits, loading} = useOrganisationUnits({
-    organisation: organisation.id,
-    token
-  })
+  const {units, setUnits, count, loading} = useOrganisationUnits()
   const [modal, setModal] = useState<EditOrganisationModal>({
     open: false
   })
-  const [isPrimary,setPrimary]=useState(organisation.primary_maintainer===user?.account)
+  const [isPrimary,setPrimary]=useState(primary_maintainer===user?.account)
 
   useEffect(() => {
     let abort = false
-    if (organisation.primary_maintainer === user?.account ||
+    if (primary_maintainer === user?.account ||
       user?.role === 'rsd_admin') {
       if (abort) return
       setPrimary(true)
     }
     return ()=>{abort=true}
-  },[organisation.primary_maintainer,user?.account,user?.role])
+  },[primary_maintainer,user?.account,user?.role])
 
   function renderAddBtn() {
     if (isPrimary) {
@@ -74,14 +74,14 @@ export default function ResearchUnits({organisation,isMaintainer}: OrganisationC
   }
 
   function onAddUnit() {
-    if (organisation) {
+    if (id) {
       const newOrganisation:EditOrganisation = newOrganisationProps({
         name:'',
         position: 1,
         // the primary_maintainer of parent is also
         // primary_maintainer of child organisations
-        primary_maintainer: organisation.primary_maintainer ?? '',
-        parent: organisation.id
+        primary_maintainer: primary_maintainer ?? '',
+        parent: id
       })
       // show modal
       setModal({
@@ -206,29 +206,23 @@ export default function ResearchUnits({organisation,isMaintainer}: OrganisationC
     }
   }
 
-  function renderUnitList() {
-    if (loading) {
-      return <ContentLoader />
-    }
-    return (
-      <ResearchUnitList
-        organisations={units}
-        isMaintainer={isPrimary}
-        onEdit={onEditUnit}
-      />
-    )
-  }
-
   return (
-    <section className="flex-1 flex flex-col">
+    <BaseSurfaceRounded
+      className="flex-1 flex flex-col mb-12 p-4"
+    >
       {/* Only when maintainer */}
       {isMaintainer && <UserAgrementModal />}
       <section className="flex justify-between py-4">
-        <h2>Research Units ({units.length ?? 0})</h2>
+        <h2>Research Units ({count ?? 0})</h2>
         {renderAddBtn()}
       </section>
       <section>
-        {renderUnitList()}
+        <ResearchUnitList
+          loading={loading}
+          units={units}
+          isPrimaryMaintainer={isPrimary}
+          onEdit={onEditUnit}
+        />
       </section>
       <ResearchUnitModal
         title="Research unit"
@@ -238,6 +232,6 @@ export default function ResearchUnits({organisation,isMaintainer}: OrganisationC
         onCancel={closeModals}
         onSubmit={saveOrganisation}
       />
-    </section>
+    </BaseSurfaceRounded>
   )
 }

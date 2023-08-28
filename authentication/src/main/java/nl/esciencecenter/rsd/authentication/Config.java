@@ -58,6 +58,10 @@ public class Config {
 		return rsdAuthProviders().contains("ORCID");
 	}
 
+	public static boolean isAzureEnabled() {
+		return rsdAuthProviders().contains("AZURE");
+	}
+
 	public static String userMailWhitelist() {
 		return System.getenv("RSD_AUTH_USER_MAIL_WHITELIST");
 	}
@@ -148,4 +152,28 @@ public class Config {
 		return System.getenv("ORCID_SCOPES");
 	}
 
+//	Azure Active Directory
+	public static String azureRedirect() {
+		return System.getenv("AZURE_REDIRECT");
+	}
+
+	public static String azureClientId() {
+		return System.getenv("AZURE_CLIENT_ID");
+	}
+
+	public static String azureWellknown() {
+		return System.getenv("AZURE_WELL_KNOWN_URL");
+	}
+
+	public static String azureClientSecret() {
+		return System.getenv("AUTH_AZURE_CLIENT_SECRET");
+	}
+
+	public static String azureScopes() {
+		return System.getenv("AZURE_SCOPES");
+	}
+
+	public static String azureOrganisation() {
+		return System.getenv("AZURE_ORGANISATION");
+	}
 }

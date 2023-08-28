@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
@@ -34,7 +35,7 @@ type ImportMentionsProps = {
   onSuccess:()=>void
 }
 
-export default function BulkImport({table, entityId, onSuccess}:ImportMentionsProps) {
+export default function ImportMentions({table, entityId, onSuccess}:ImportMentionsProps) {
   const {token} = useSession()
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:768px)')
@@ -98,6 +99,7 @@ export default function BulkImport({table, entityId, onSuccess}:ImportMentionsPr
       entityId,
       token
     })
+
     if (resp.status === 200) {
       showSuccessMessage(`Succesfully added ${mentionIdsToSave.length} items`)
       onSuccess()
@@ -116,36 +118,39 @@ export default function BulkImport({table, entityId, onSuccess}:ImportMentionsPr
       >
         Import
       </Button>
-      <Dialog
-        fullScreen={smallScreen}
-        // maxWidth={'lg'}
-        open={dialogOpen}
-        onClose={closeDialog}
-        sx={{
-          '.MuiPaper-root': {
-            position:'relative',
-            // minWidth: '21rem',
-            // maxWidth: 'calc(100% - 4rem)'
-            // minWidth 40x16 = 640px
-            minWidth: smallScreen ? 'auto':'40rem',
-            // maxHeight: smallScreen ? 'inherit':'60vh',
-            height: smallScreen ? 'inherit':'60vh'
+      {dialogOpen ?
+        <Dialog
+          fullScreen={smallScreen}
+          // maxWidth={'lg'}
+          open={dialogOpen}
+          onClose={closeDialog}
+          sx={{
+            '.MuiPaper-root': {
+              position: 'relative',
+              // minWidth: '21rem',
+              // maxWidth: 'calc(100% - 4rem)'
+              // minWidth 40x16 = 640px
+              minWidth: smallScreen ? 'auto' : '40rem',
+              // maxHeight: smallScreen ? 'inherit':'60vh',
+              height: smallScreen ? 'inherit' : '60vh'
+            }
+          }}
+        >
+          {searchResults !== null ?
+            <ImportReportBody
+              initialResults={searchResults}
+              onCancel={closeDialog}
+              onImport={importMentions}
+            />
+            :
+            <DoiInputBody
+              onCancel={closeDialog}
+              onSubmit={(report) => setSearchResults(report)}
+            />
           }
-        }}
-      >
-        {searchResults !== null ?
-          <ImportReportBody
-            initialResults={searchResults}
-            onCancel={closeDialog}
-            onImport={importMentions}
-          />
-          :
-          <DoiInputBody
-            onCancel={closeDialog}
-            onSubmit={(report) => setSearchResults(report) }
-          />
-        }
-      </Dialog>
+        </Dialog>
+        : null
+      }
     </>
   )
 }
