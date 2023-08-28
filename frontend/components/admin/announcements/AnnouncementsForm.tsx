@@ -1,126 +1,101 @@
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Button from '@mui/material/Button'
-import AddIcon from '@mui/icons-material/Add'
-
+import {useForm} from 'react-hook-form'
 import {useSession} from '~/auth'
-import {Controller, SubmitHandler, UseControllerProps, useController, useForm} from 'react-hook-form'
-import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
-import {Input, Switch} from '@mui/material'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
-import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
-import {GetServerSidePropsContext} from 'next'
-import logger from '~/utils/logger'
-import {useEffect, useState} from 'react'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
 import ControlledTextField from '~/components/form/ControlledTextField'
+import {AnnouncementItem, saveAnnouncement} from './apiAnnouncement'
 
 const formId = 'announcements-form'
 
-type EditAnnouncementItem = {
-  [id: string]: any,
-  text: string | null,
-  enabled: boolean
-}
-
-type EditAnnouncementFormProps = {
-    data: EditAnnouncementItem
-}
-
-export default function AnnouncementsForm({data}: EditAnnouncementFormProps) {
+export default function AnnouncementsForm({data}: { data: AnnouncementItem|null }) {
   const {token} = useSession()
-  const {handleSubmit, register, control, setValue, formState: {errors}} = useForm<EditAnnouncementItem>({
+  const {showErrorMessage} = useSnackbar()
+  const {handleSubmit, register, control, reset, formState} = useForm<AnnouncementItem>({
     defaultValues: {
-        ...data
+      ...data
     },
     mode: 'onChange'
   })
 
-  function onSubmit(dataToSubmit: EditAnnouncementItem) {
-    saveAnnouncement(dataToSubmit).then(
-      (resp) => {
-        if (resp && [200, 201].includes(resp.status) && resp?.object) {
-          const newObj = resp.object[0]
-          setValue('enabled', newObj.enabled)
-          setValue('id', newObj.id)
-          setValue('text', newObj.text)
-        } else {
-          console.log('Error saving data:', resp)
-        }
+  // track form state
+  const {isValid, isDirty} = formState
+
+  async function onSubmit(item: AnnouncementItem) {
+    const resp = await saveAnnouncement({
+      id: item.id,
+      enabled: item.enabled,
+      text: item.text
+    }, token)
+
+    if (resp.status === 200) {
+      // use values returned from api
+      const update = {
+        id: resp.message?.id ?? null,
+        enabled: resp.message.enabled ?? false,
+        text: resp.message.text ?? null
       }
-    )
+      // will reset form state
+      reset(update)
+    } else {
+      showErrorMessage(`Failed to save announcement. ${resp.message}`)
+    }
   }
 
-  async function saveAnnouncement(item: EditAnnouncementItem) {
-    try {
-      let method
-      let url
-      if (item.id == '') {
-        delete item.id
-        method = 'POST'
-        url = '/api/v1/global_announcement'
-      } else {
-        method = 'PATCH'
-        url = `/api/v1/global_announcement?id=eq.${item.id}`
-      }
-      const resp = await fetch(url, {
-        method: method,
-        headers: {
-          ...createJsonHeaders(token),
-          Prefer: 'return=representation',
-        },
-        body: JSON.stringify(item)
-      })
-      if ([200, 201].includes(resp.status)) {
-        return {
-          status: 201,
-          object: await resp.json()
-        }
-      }
-      // return extractReturnMessage(resp, item.text ?? '')
-    } catch (e: any) {
-      logger(`saveAnnouncement: ${e?.message}`, 'error')
-      return {
-        status: 500,
-        message: e?.message
-      }
-    }
+  function isSaveDisabled() {
+    if (isValid === false) return true
+    if (isDirty === false) return true
+    return false
   }
 
   return (
    <form
     id={formId}
     onSubmit={handleSubmit(onSubmit)}
-    className="w-full md:w-[42rem]"
-   >
-    <Input type="hidden" {...register('id')}/>
-    <ControlledTextField
-      control={control}
-      options={{
-        name: 'text',
-        label: 'Announcement'
-      }}
-      rules={{
-        maxLength: {
-          value: 300,
-          message: 'Maximum length is 300.'
-        }
-      }}
-    />
-    <ControlledSwitch
-      label='Visible'
-      name='enabled'
-      control={control}
-    />
-    <SubmitButtonWithListener
-      disabled={false}
-      formId={formId}
-    />
+    className="flex-1"
+    >
+      {/* id */}
+      <input type="hidden" {...register('id')} />
+      {/* active/visible */}
+      <ControlledSwitch
+        label='Visible'
+        name='enabled'
+        control={control}
+      />
+      <div className="flex justify-between items-center gap-8 py-4">
+        <ControlledTextField
+          control={control}
+          options={{
+            name: 'text',
+            label: 'Announcement',
+            multiline: true
+          }}
+          rules={{
+            required: 'Announcement text is required',
+            minLength: {
+              value: 3,
+              message: 'Minimum length is 3.'
+            },
+            maxLength: {
+              value: 300,
+              message: 'Maximum length is 300.'
+            }
+          }}
+        />
+        <SubmitButtonWithListener
+          disabled={isSaveDisabled()}
+          formId={formId}
+        />
+      </div>
    </form>
   )
 }

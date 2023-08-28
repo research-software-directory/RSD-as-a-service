@@ -21,14 +21,9 @@ import SpellcheckIcon from '@mui/icons-material/Spellcheck'
 import DomainAddIcon from '@mui/icons-material/DomainAdd'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FluorescentIcon from '@mui/icons-material/Fluorescent'
+import CampaignIcon from '@mui/icons-material/Campaign'
 
 export const adminPages = {
-  notifications: {
-    title: 'Announcements',
-    subtitle: 'Show global notifications to all users',
-    icon: <DescriptionIcon />,
-    path: '/admin/announcements',
-  },
   pages:{
     title: 'Public pages',
     subtitle: 'Manage markdown pages',
@@ -71,6 +66,12 @@ export const adminPages = {
     icon: <SpellcheckIcon />,
     path: '/admin/keywords',
   },
+  announcements: {
+    title: 'Announcement',
+    subtitle: 'Notification to all users',
+    icon: <CampaignIcon />,
+    path: '/admin/announcements',
+  }
 }
 
 // extract page types from the object
