@@ -1,5 +1,7 @@
 -- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -37,6 +39,6 @@ CREATE TRIGGER sanitise_update_global_announcement BEFORE UPDATE ON global_annou
 
 ALTER TABLE global_announcement ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY anyone_can_read ON global_announcement FOR SELECT TO rsd_web_anon, rsd_user USING (TRUE);´
+CREATE POLICY anyone_can_read ON global_announcement FOR SELECT TO rsd_web_anon, rsd_user USING (TRUE);
 
 CREATE POLICY admin_all_rights ON global_announcement TO rsd_admin USING (TRUE) WITH CHECK (TRUE);
