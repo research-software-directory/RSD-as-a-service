@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -22,7 +23,7 @@ import outputForProject from './__mocks__/outputForProject.json'
 // MOCK getOutputForProject
 const mockGetOutputForProject = jest.fn((props) => Promise.resolve(outputForProject))
 jest.mock('~/utils/getProjects', () => ({
-  getOutputForProject: jest.fn((props)=>mockGetOutputForProject(props))
+  getMentionsForProject: jest.fn((props)=>mockGetOutputForProject(props))
 }))
 // MOCK getMentionByDoiFromRsd
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
