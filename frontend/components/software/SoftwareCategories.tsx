@@ -4,20 +4,18 @@
 // SPDX-License-Identifier: EUPL-1.2
 
 import CategoryIcon from '@mui/icons-material/Category'
-import { CategoriesForSoftware, CategoryEntry, CategoryID, CategoryPath } from '../../types/SoftwareTypes'
+import {CategoriesForSoftware, CategoryEntry, CategoryID, CategoryPath} from '../../types/SoftwareTypes'
 import TagChipFilter from '../layout/TagChipFilter'
-import { ssrSoftwareUrl } from '~/utils/postgrestUrl'
-import logger from '../../utils/logger'
 import React from 'react'
-import { Chip } from '@mui/material'
+import {Chip} from '@mui/material'
 
 const interleave = <T,>(arr: T[], createElement: (index: number) => T) => arr.reduce((result, element, index, array) => {
-  result.push(element);
+  result.push(element)
   if (index < array.length - 1) {
-    result.push(createElement(index));
+    result.push(createElement(index))
   }
-  return result;
-}, [] as T[]);
+  return result
+}, [] as T[])
 
 
 type CategoryTreeLevel = {
@@ -25,7 +23,7 @@ type CategoryTreeLevel = {
   children: CategoryTreeLevel[]
 }
 
-function CategoryTree({ categories }: { categories: CategoryPath[] }) {
+function CategoryTree({categories}: { categories: CategoryPath[] }) {
 
   const tree: CategoryTreeLevel[] = []
   for (const path of categories) {
@@ -33,7 +31,7 @@ function CategoryTree({ categories }: { categories: CategoryPath[] }) {
     for (const item of path) {
       const found = cursor.find(el => el.cat.id == item.id)
       if (!found) {
-        const sub: CategoryTreeLevel = { cat: item, children: [] }
+        const sub: CategoryTreeLevel = {cat: item, children: []}
         cursor.push(sub)
         cursor = sub.children
       } else {
@@ -42,8 +40,8 @@ function CategoryTree({ categories }: { categories: CategoryPath[] }) {
     }
   }
 
-  const TreeLevel = ({ items, indent = false }: { items: CategoryTreeLevel[], indent?: boolean }) => {
-    return <ul className={"list-disc list-inside -indent-4" + (indent ? ' pl-7' : ' pl-4')}>
+  const TreeLevel = ({items, indent = false}: { items: CategoryTreeLevel[], indent?: boolean }) => {
+    return <ul className={'list-disc list-inside -indent-4' + (indent ? ' pl-7' : ' pl-4')}>
       {items.map((item, index) => (
         <li key={index}>
           {item.cat.short_name}
@@ -74,7 +72,7 @@ type SoftwareCategoriesProps = {
       buttonTitle?: never
     })
 
-export function SoftwareCategories({ categories, buttonTitle, onClick }: SoftwareCategoriesProps) {
+export function SoftwareCategories({categories, buttonTitle, onClick}: SoftwareCategoriesProps) {
   if (categories.length === 0) {
     return (
       <i>No categories</i>
@@ -83,14 +81,14 @@ export function SoftwareCategories({ categories, buttonTitle, onClick }: Softwar
 
   // TODO: useCallback or move out of component
   const onClickHandler = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
+    event.stopPropagation()
     console.log(event)
     const categoryIdx = parseInt(event.currentTarget.dataset.idx ?? '')
     if (isNaN(categoryIdx)) return
     const path = categories[categoryIdx]
     const categoryId = path[path.length - 1].id
-    console.log('click', { id: categoryId, index: categoryIdx })
-    onClick?.({ id: categoryId, index: categoryIdx })
+    console.log('click', {id: categoryId, index: categoryIdx})
+    onClick?.({id: categoryId, index: categoryIdx})
   }
 
   return <div className="py-1">
@@ -104,8 +102,8 @@ export function SoftwareCategories({ categories, buttonTitle, onClick }: Softwar
       ))
 
       return (
-        <div key={index} className={"clear-both mb-2" + (onClick ? " hover:bg-neutral-100" : "")}>
-          <span className='px-2 py-1 bg-neutral-100 inline-block'>
+        <div key={index} className={'clear-both mb-2' + (onClick ? ' hover:bg-neutral-100' : '')}>
+          <span className="px-2 py-1 bg-neutral-100 inline-block">
             {interleave(chunks, (index) => <span key={index} className="px-2">::</span>)}
           </span>
 
@@ -113,9 +111,9 @@ export function SoftwareCategories({ categories, buttonTitle, onClick }: Softwar
         </div>
       )
     })}
-    <div className='clear-both'></div>
+    <div className="clear-both"></div>
 
-    <div className='mt-5 italic'>other variant using TagChipFilter:</div>
+    <div className="mt-5 italic">other variant using TagChipFilter:</div>
     {categories.map((path, index) => {
       const text = path.map((category, index) => category.short_name).join(' :: ')
       return (
@@ -125,23 +123,23 @@ export function SoftwareCategories({ categories, buttonTitle, onClick }: Softwar
       )
     })}
 
-    <div className='mt-5 italic'>other variant using Chip:</div>
+    <div className="mt-5 italic">other variant using Chip:</div>
     {categories.map((path, index) => {
       const text = path.map((category, index) => category.short_name).join(' :: ')
       return (
         <div className="my-1" key={index}>
-          <Chip key={index} label={text} title={text} onDelete={onClick && (() => onClick({ id: path[path.length - 1].id, index }))} />
+          <Chip key={index} label={text} title={text} onDelete={onClick && (() => onClick({id: path[path.length - 1].id, index}))} />
         </div>
       )
     })}
-    <div className='mt-5 italic'>other variant using a tree:</div>
+    <div className="mt-5 italic">other variant using a tree:</div>
     <CategoryTree categories={categories} />
   </div>
 }
 
 // FIXME: I think AboutSection should define headers instead of here
 // FIXME: and a separate header component should be created and use for all blocks in AboutSection
-export function SoftwareCategoriesWithHeadline({ categories }: { categories: CategoriesForSoftware }) {
+export function SoftwareCategoriesWithHeadline({categories}: { categories: CategoriesForSoftware }) {
   return (
     <>
       <div className="pt-8 pb-2">

@@ -14,7 +14,7 @@ import AboutLanguages from './AboutLanguages'
 import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
 import SoftwareLogo from './SoftwareLogo'
-import { SoftwareCategoriesWithHeadline } from './SoftwareCategories'
+import {SoftwareCategoriesWithHeadline} from './SoftwareCategories'
 
 type AboutSectionType = {
   brand_name: string

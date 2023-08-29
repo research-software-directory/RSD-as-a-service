@@ -3,15 +3,15 @@
 //
 // SPDX-License-Identifier: EUPL-1.2
 
-import { ChangeEventHandler, useEffect, useMemo, useState } from 'react'
+import {ChangeEventHandler, useEffect, useMemo, useState} from 'react'
 
-import { useSession } from '~/auth'
-import { softwareInformation as config } from '../editSoftwareConfig'
-import { CategoryID, CategoryPath } from '~/types/SoftwareTypes'
+import {useSession} from '~/auth'
+import {softwareInformation as config} from '../editSoftwareConfig'
+import {CategoryID, CategoryPath} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import { SelectedCategory, SoftwareCategories } from '../../SoftwareCategories'
-import { addCategoryToSoftware, deleteCategoryToSoftware, getAvailableCategories } from '~/utils/getSoftware'
+import {SelectedCategory, SoftwareCategories} from '../../SoftwareCategories'
+import {addCategoryToSoftware, deleteCategoryToSoftware, getAvailableCategories} from '~/utils/getSoftware'
 
 export type SoftwareCategoriesProps = {
   softwareId: string
@@ -22,9 +22,9 @@ function leaf<T>(list: T[]) {
   return list[list.length - 1]
 }
 
-export default function AutosaveSoftwareCategories({ softwareId, categories: defaultCategoryPaths }: SoftwareCategoriesProps) {
-  const { token } = useSession()
-  const { showErrorMessage, showInfoMessage } = useSnackbar()
+export default function AutosaveSoftwareCategories({softwareId, categories: defaultCategoryPaths}: SoftwareCategoriesProps) {
+  const {token} = useSession()
+  const {showErrorMessage, showInfoMessage} = useSnackbar()
   const [categoryPaths, setCategoryPaths] = useState(defaultCategoryPaths)
   const [availableCategoryPaths, setAvailableCategoryPaths] = useState<CategoryPath[]>([])
 
@@ -39,7 +39,7 @@ export default function AutosaveSoftwareCategories({ softwareId, categories: def
 
   useEffect(() => {
     getAvailableCategories()
-      .then(setAvailableCategoryPaths);
+      .then(setAvailableCategoryPaths)
   }, [])
 
   const addCategory = (categoryPath: CategoryPath) => {

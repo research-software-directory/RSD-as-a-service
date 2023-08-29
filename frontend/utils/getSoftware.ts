@@ -191,7 +191,7 @@ function prepareQueryURL(path: string, params: Record<string, string> = {}) {
 
 export async function getCategoriesForSoftware(software_id: string, token?: string): Promise<CategoriesForSoftware> {
   try {
-    const url = prepareQueryURL('/rpc/category_paths_by_software_expanded', { software_id })
+    const url = prepareQueryURL('/rpc/category_paths_by_software_expanded', {software_id})
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
@@ -243,7 +243,7 @@ export async function getAvailableCategories(): Promise<CategoryPath[]> {
 // FIXME: add return type
 export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
   const url = '/api/v1/category_for_software'
-  const data = { software_id: softwareId, category_id: categoryId }
+  const data = {software_id: softwareId, category_id: categoryId}
 
   const resp = await fetch(url, {
     method: 'POST',
