@@ -1,8 +1,22 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "no-debugger":"warn",
+    // --- Linting ---
+    "no-debugger": "warn",
     "no-console": "warn",
+    // use direct imports on material-ui to improve
+    // performance in unit tests with jest
+    // see https://blog.bitsrc.io/why-is-my-jest-suite-so-slow-2a4859bb9ac0
+    "no-restricted-imports": [
+      "warn",
+      {
+        "name": "@mui/material",
+        "message": "Please use \"import foo from '@mui/material/foo'\" instead."
+      }
+    ],
+    // do not warn for use of img element
+    "@next/next/no-img-element": "off",
+    // --- Formating ---
     "eol-last": [
       "warn",
       "always"
@@ -15,6 +29,18 @@
       "warn",
       "never"
     ],
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "no-trailing-spaces": "warn",
+    "no-multi-spaces": [
+      "warn"
+    ],
+    "no-multiple-empty-lines": "warn",
     "object-curly-spacing": [
       "warn",
       "never"
@@ -22,28 +48,6 @@
     "array-bracket-spacing": [
       "warn",
       "never"
-    ],
-    // we use 2 spaces to indent our code
-    // causes eslint error TypeError: Cannot read property 'loc' of undefined
-    // see https://github.com/typescript-eslint/typescript-eslint/issues/792
-    // "indent": ["warn", 2],
-    // we want to avoid extraneous spaces
-    "no-trailing-spaces": "warn",
-    "no-multi-spaces": [
-      "warn"
-    ],
-    "no-multiple-empty-lines": "warn",
-    // use direct imports on material-ui to improve
-    // performance in unit tests with jest
-    // see https://blog.bitsrc.io/why-is-my-jest-suite-so-slow-2a4859bb9ac0
-    "no-restricted-imports": [
-      "warn",
-      {
-        "name": "@mui/material",
-        "message": "Please use \"import foo from '@mui/material/foo'\" instead."
-      }
-    ],
-    // do not warn for use of img element
-    "@next/next/no-img-element":"off"
+    ]
   }
 }
