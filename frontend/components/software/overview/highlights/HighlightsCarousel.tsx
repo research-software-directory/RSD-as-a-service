@@ -16,11 +16,15 @@ export const HighlightsCarousel = ({items=[]}: {items:SoftwareHighlight[]}) => {
   // card size + margin
   const cardMovement: number = 680
   const divRef =useRef<HTMLDivElement>(null)
-  const [distance, setDistance] = useState(0)
-
+  const [distance, setDistance] = useState<number>()
   // Keep track of the current scroll position of the carousel.
   const [scrollPosition, setScrollPosition] = useState(0)
   const carousel = useRef<HTMLDivElement>(null)
+
+  // console.group('HighlightsCarousel')
+  // console.log('distance...',distance)
+  // console.log('scrollPosition...', scrollPosition)
+  // console.groupEnd()
 
   useEffect(() => {
     const calculateDistance = () => {
@@ -53,16 +57,24 @@ export const HighlightsCarousel = ({items=[]}: {items:SoftwareHighlight[]}) => {
     setScrollPosition(event.target.scrollLeft)
   }
 
+  if (typeof distance === 'undefined'){
+    // return only empty reference div if distance is not calculated and keep highlight space
+    return <div ref={divRef} className="container mx-auto invisible sm:h-[22rem]" />
+  }
+
   return (
     <>
-      <div ref={divRef} className="container mx-auto invisible"> </div>
       {/* Reference Div to center align card */}
+      <div ref={divRef} className="lg:container mx-auto invisible" />
       <div
         data-testid="highlights-carousel"
-        className="group relative w-full overflow-x-visible" >
-        {scrollPosition > 0 && <LeftButton handlePrevClick={handlePrevClick} /> }
-        <RightButton handleNextClick={handleNextClick} />
-
+        className="group relative w-full overflow-x-visible sm:h-[22rem]"
+      >
+        {/* Left button */}
+        {scrollPosition > 0 ?
+          <LeftButton handlePrevClick={handlePrevClick} />
+          : null
+        }
         {/* Carousel */}
         <div
           ref={carousel}
@@ -72,13 +84,15 @@ export const HighlightsCarousel = ({items=[]}: {items:SoftwareHighlight[]}) => {
           style={{scrollbarWidth:'none',left:-scrollPosition, paddingLeft: distance +'px'}}>
           {/* render software card in the row direction */}
           {items.map(highlight => (
-            <div key={highlight.id}
+            <div
+              key={highlight.id}
               className="snap-center flex-shrink-0 hover:scale-[101%] transition duration-500">
               <HighlightsCard {...highlight}/>
             </div>
-          ))
-          }
+          ))}
         </div>
+        {/* Right button */}
+        <RightButton handleNextClick={handleNextClick} />
       </div>
     </>
   )
