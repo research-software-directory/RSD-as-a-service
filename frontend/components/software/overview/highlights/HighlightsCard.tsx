@@ -13,6 +13,7 @@ import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
 import ProgrammingLanguageList from '~/components/software/overview/cards/ProgrammingLanguageList'
 import SoftwareMetrics from '~/components/software/overview/cards/SoftwareMetrics'
 import useValidateImageSrc from '~/utils/useValidateImageSrc'
+import {useState} from 'react'
 
 type HighlightsCardProps = {
   id:string
@@ -37,6 +38,11 @@ export default function HighlightsCard(item: HighlightsCardProps) {
   const visibleNumberOfKeywords: number = 3
   const visibleNumberOfProgLang: number = 3
 
+  // console.group('HighlightsCard')
+  // console.log('imgSrc...', imgSrc)
+  // console.log('validImg...', validImg)
+  // console.groupEnd()
+
   return (
     <Link
       data-testid="highlights-card"
@@ -44,18 +50,23 @@ export default function HighlightsCard(item: HighlightsCardProps) {
       href={`/software/${item.slug}`}
       className="hover:text-inherit">
       <div className="flex-shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex flex-col sm:flex-row sm:w-full" >
-        {/* Cover image, show only if valid image link */}
-        {
-          validImg &&
+        {/*
+          Cover image, show only if valid image link! To avoid the layout shift we
+          flip the logic to hide the image only when the image link is not valid.
+        */}
+        { validImg === false ? null
+          :
           <img
             className="object-contain object-left w-full rounded-tr-lg rounded-tl-lg sm:rounded-bl-lg sm:rounded-tl-lg sm:rounded-tr-none sm:h-[20rem]"
             src={`${imgSrc ?? ''}`}
             alt={`Cover image for ${item.brand_name}`}
-            style={{maxWidth:'20rem'}}
+            style={{maxWidth:'22rem'}}
+            loading='eager'
           />
         }
+
         {/* Card content */}
-        <div className="flex flex-col p-4 max-w-[20rem] lg:max-w-[22rem]">
+        <div className="flex flex-col p-4 max-w-[20rem] lg:max-w-[22rem] lg:h-[20rem]">
           <CardTitleSubtitle
             title={item.brand_name}
             subtitle={item.short_statement}
