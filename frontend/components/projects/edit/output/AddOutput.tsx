@@ -21,17 +21,17 @@ export default function AddOutput() {
 
   return (
     <>
-    <h3 className="pt-4 pb-2 text-lg">{config.newItem.title}</h3>
-    <CreateMentionInfoPanel>
-      <div className="pt-4">
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={onNewOutput}>
+      <h3 className="pt-4 pb-2 text-lg">{config.newItem.title}</h3>
+      <CreateMentionInfoPanel>
+        <div className="pt-4">
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={onNewOutput}>
           Create
-        </Button>
-      </div>
-    </CreateMentionInfoPanel>
+          </Button>
+        </div>
+      </CreateMentionInfoPanel>
     </>
   )
 }

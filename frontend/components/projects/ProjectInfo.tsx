@@ -27,7 +27,7 @@ type ProjectInfoProps = {
 
 export default function ProjectInfo(
   {image_id, image_caption, image_contain, description, date_start, date_end,
-  grant_id, links, researchDomains, keywords, fundingOrganisations}: ProjectInfoProps
+    grant_id, links, researchDomains, keywords, fundingOrganisations}: ProjectInfoProps
 ) {
   return (
     <section className="px-4 sm:pb-8 sm:grid sm:gap-8 lg:grid-cols-[3fr,1fr] lg:gap-16">

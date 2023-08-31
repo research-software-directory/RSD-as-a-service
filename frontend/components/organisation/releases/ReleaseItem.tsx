@@ -20,24 +20,24 @@ function LinkToVersionDoi({tag,doi}:{tag: string | null,doi:string|null}) {
         target="_blank"
         passHref
       >
-      <Chip
-        title="Link to DOI page"
-        label={tag ?? 'v?.?.?'}
-        icon={<OpenInNewIcon />}
-        size="small"
-        clickable
-        sx={{
-          maxWidth: '15rem',
-          borderRadius: '0rem 0.5rem',
-          // textTransform: 'capitalize',
-          '& .MuiChip-icon': {
-            order: 1,
-            margin:'0rem 0.25rem 0rem 0rem',
-            height: '1rem',
-            width: '1rem'
-          }
-        }}
-      />
+        <Chip
+          title="Link to DOI page"
+          label={tag ?? 'v?.?.?'}
+          icon={<OpenInNewIcon />}
+          size="small"
+          clickable
+          sx={{
+            maxWidth: '15rem',
+            borderRadius: '0rem 0.5rem',
+            // textTransform: 'capitalize',
+            '& .MuiChip-icon': {
+              order: 1,
+              margin:'0rem 0.25rem 0rem 0rem',
+              height: '1rem',
+              width: '1rem'
+            }
+          }}
+        />
       </Link>
     )
   }
@@ -80,7 +80,7 @@ export default function ReleaseItem({release}: { release: SoftwareReleaseInfo })
                 month: 'short',
                 year: 'numeric'
               })
-            : 'Release date unknown'
+              : 'Release date unknown'
           }
         </div>
 

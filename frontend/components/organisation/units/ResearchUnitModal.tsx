@@ -71,7 +71,7 @@ export default function ResearchUnitModal({
   // console.groupEnd()
 
   useEffect(() => {
-      if (typeof location != 'undefined') {
+    if (typeof location != 'undefined') {
       const baseUrl = location.href.split('?')
       // baseUrl is current location without params
       setBaseUrl(`${baseUrl[0]}/`)
@@ -156,7 +156,7 @@ export default function ResearchUnitModal({
   }
 
   return (
-     <Dialog
+    <Dialog
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}
@@ -194,11 +194,11 @@ export default function ResearchUnitModal({
           padding: '2rem 1.5rem 2.5rem'
         }}>
           <section className="grid grid-cols-[1fr,3fr] gap-8">
-             <div>
+            <div>
               <label htmlFor="upload-avatar-image-modal"
-                  style={{cursor:'pointer'}}
-                  title="Click to upload an image"
-                >
+                style={{cursor:'pointer'}}
+                title="Click to upload an image"
+              >
                 <Avatar
                   alt={formData.name ?? ''}
                   src={formData.logo_b64 ?? getImageUrl(formData?.logo_id) ?? undefined}

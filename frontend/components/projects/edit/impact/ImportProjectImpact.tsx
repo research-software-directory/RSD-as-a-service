@@ -27,15 +27,15 @@ export default function ImportProjectImpact() {
 
   return (
     <>
-    <h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
-    <ImportMentionsInfoPanel>
-      <div className="pt-4">
-        <ImportMentions
-          table="impact_for_project"
-          entityId={project.id!}
-          onSuccess={reloadImpact} />
-      </div>
-    </ImportMentionsInfoPanel>
+      <h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
+      <ImportMentionsInfoPanel>
+        <div className="pt-4">
+          <ImportMentions
+            table="impact_for_project"
+            entityId={project.id!}
+            onSuccess={reloadImpact} />
+        </div>
+      </ImportMentionsInfoPanel>
     </>
   )
 }

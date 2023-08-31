@@ -54,49 +54,49 @@ export default function KeywordTable({loading, keywords, searchFor, deleteKeywor
         </tr>
       </thead>
       <tbody>
-      {
-        keywords.map(item => {
-          return (
-            <tr key={item.keyword}>
-              <td
-                className="py-2 px-1"
-              >
-                <KeywordEdit
-                  id={item.id}
-                  keyword={item.keyword}
-                  token={token}
-                />
+        {
+          keywords.map(item => {
+            return (
+              <tr key={item.keyword}>
+                <td
+                  className="py-2 px-1"
+                >
+                  <KeywordEdit
+                    id={item.id}
+                    keyword={item.keyword}
+                    token={token}
+                  />
 
-              </td>
-              <td>
-                <Link
-                  href={ssrSoftwareUrl({keywords:[item.keyword]})}
-                  target="_blank"
-                >
-                  {item.software_cnt ?? 0}
-                </Link>
-              </td>
-              <td>
-                <Link
-                  href={ssrProjectsUrl({keywords:[item.keyword]})}
-                  target="_blank"
-                >
-                  {item.projects_cnt ?? 0}
-                </Link>
-              </td>
-              <td title="Used keyword cannot be deleted">
-                <IconButton
-                  disabled={item.projects_cnt > 0 || item.software_cnt > 0}
-                  onClick={() =>
-                    deleteKeyword(item.id)
-                  }>
-                  <DeleteIcon />
-                </IconButton>
-              </td>
-            </tr>
-          )
-        })
-      }
+                </td>
+                <td>
+                  <Link
+                    href={ssrSoftwareUrl({keywords:[item.keyword]})}
+                    target="_blank"
+                  >
+                    {item.software_cnt ?? 0}
+                  </Link>
+                </td>
+                <td>
+                  <Link
+                    href={ssrProjectsUrl({keywords:[item.keyword]})}
+                    target="_blank"
+                  >
+                    {item.projects_cnt ?? 0}
+                  </Link>
+                </td>
+                <td title="Used keyword cannot be deleted">
+                  <IconButton
+                    disabled={item.projects_cnt > 0 || item.software_cnt > 0}
+                    onClick={() =>
+                      deleteKeyword(item.id)
+                    }>
+                    <DeleteIcon />
+                  </IconButton>
+                </td>
+              </tr>
+            )
+          })
+        }
       </tbody>
       <tfoot>
         <tr>

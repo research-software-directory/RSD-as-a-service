@@ -29,8 +29,8 @@ it('createOrganisationAndAddToSoftware', async () => {
   const mockId = 'mocked-organisation-id'
   // resolve createOrganisation api call
   mockResolvedValueOnce({
-      message: 'new-organisation-id'
-    },{
+    message: 'new-organisation-id'
+  },{
     status: 201,
     headers: {
       get: () => `a.${mockId}`

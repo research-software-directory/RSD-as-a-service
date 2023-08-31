@@ -80,11 +80,11 @@ export default function SoftwareMaintainerLink({software,brand_name,account,toke
             <Button
               startIcon={<EmailIcon />}
             >
-            <a
-              target="_blank"
-              href={`mailto:?subject=Maintainer invite for software ${encodeURIComponent(brand_name)}&body=Please use the following link to become a maintainer of the software ${encodeURIComponent(brand_name)}. ${encodeURIComponent('\n')}${magicLink}`} rel="noreferrer">
+              <a
+                target="_blank"
+                href={`mailto:?subject=Maintainer invite for software ${encodeURIComponent(brand_name)}&body=Please use the following link to become a maintainer of the software ${encodeURIComponent(brand_name)}. ${encodeURIComponent('\n')}${magicLink}`} rel="noreferrer">
               Email this invite
-            </a>
+              </a>
             </Button>
           </div>
         </div>
@@ -95,20 +95,20 @@ export default function SoftwareMaintainerLink({software,brand_name,account,toke
 
   return (
     <>
-    <Button
-      sx={{
-        marginTop: '2rem',
-        display: 'flex',
-        alignItems: 'center'
-      }}
-      startIcon={<AutoFixHighIcon />}
-      onClick={createInviteLink}
-    >
+      <Button
+        sx={{
+          marginTop: '2rem',
+          display: 'flex',
+          alignItems: 'center'
+        }}
+        startIcon={<AutoFixHighIcon />}
+        onClick={createInviteLink}
+      >
       Generate invite link
-    </Button>
-    <div className="py-2"></div>
-    {renderLinkOptions()}
-    <InvitationList invitations={unusedInvitations} token={token} onDeleteCallback={() => fetchUnusedInvitations()}/>
+      </Button>
+      <div className="py-2"></div>
+      {renderLinkOptions()}
+      <InvitationList invitations={unusedInvitations} token={token} onDeleteCallback={() => fetchUnusedInvitations()}/>
     </>
   )
 }

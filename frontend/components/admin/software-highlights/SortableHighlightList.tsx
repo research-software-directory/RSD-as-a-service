@@ -78,36 +78,36 @@ export default function SortableHighlightsList({highlights, loading, onSorted, o
 
   return (
     <>
-       <SortableList
+      <SortableList
         items={highlights}
         onSorted={onSorted}
         onRenderItem={onRenderItem}
       />
 
-       <ConfirmDeleteModal
-         open={modal.open}
-         title="Remove software highlight"
-         body={
-           <>
-             <p>
+      <ConfirmDeleteModal
+        open={modal.open}
+        title="Remove software highlight"
+        body={
+          <>
+            <p>
                Are you sure you want to delete software <strong>{modal?.highlight?.brand_name}</strong> from hightlight?
-             </p>
-           </>
-         }
-         onCancel={() => {
-           setModal({
-             open: false
-           })
-         }}
-         onDelete={() => {
-           if (modal?.highlight?.id) {
-             onDelete(modal?.highlight?.id)
-           }
-           setModal({
-             open: false
-           })
-         }}
-       />
+            </p>
+          </>
+        }
+        onCancel={() => {
+          setModal({
+            open: false
+          })
+        }}
+        onDelete={() => {
+          if (modal?.highlight?.id) {
+            onDelete(modal?.highlight?.id)
+          }
+          setModal({
+            open: false
+          })
+        }}
+      />
     </>
   )
 }

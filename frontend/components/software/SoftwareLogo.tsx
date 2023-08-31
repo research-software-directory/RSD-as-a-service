@@ -9,8 +9,8 @@ import {getImageUrl} from '~/utils/editImage'
 import ImageWithPlaceholder from '../layout/ImageWithPlaceholder'
 
 export default function SoftwareLogo(
-    {image_id, brand_name}: {image_id:string, brand_name:string}
-  ) {
+  {image_id, brand_name}: {image_id:string, brand_name:string}
+) {
   const image_path = getImageUrl(image_id)
 
   if (image_path !== null ){

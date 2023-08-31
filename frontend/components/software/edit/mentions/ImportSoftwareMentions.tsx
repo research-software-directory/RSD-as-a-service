@@ -27,15 +27,15 @@ export default function ImportSoftwareMentions() {
 
   return (
     <>
-    <h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
-    <ImportMentionsInfoPanel>
-      <div className="pt-4">
-        <ImportMentions
-          table="mention_for_software"
-          entityId={software.id!}
-          onSuccess={reloadMentions} />
-      </div>
-    </ImportMentionsInfoPanel>
+      <h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
+      <ImportMentionsInfoPanel>
+        <div className="pt-4">
+          <ImportMentions
+            table="mention_for_software"
+            entityId={software.id!}
+            onSuccess={reloadMentions} />
+        </div>
+      </ImportMentionsInfoPanel>
     </>
   )
 }

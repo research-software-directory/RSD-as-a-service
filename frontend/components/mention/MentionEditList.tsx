@@ -19,7 +19,7 @@ type MentionSectionListProps = {
 }
 
 export default function MentionEditList({title, items}: MentionSectionListProps) {
-    // do not render accordion/section if no items
+  // do not render accordion/section if no items
   if (!items || items.length===0) return null
   // debugger
   return (
@@ -83,19 +83,19 @@ export default function MentionEditList({title, items}: MentionSectionListProps)
         padding: '0rem 0rem'
       }}>
         <ul>
-        {
-          items.map((item, pos) => {
-            return (
-              <li key={item.id ?? pos} className="p-4 hover:bg-base-200 hover:text-base-900">
-                <MentionEditItem
-                  pos={pos + 1}
-                  item={item}
-                />
-              </li>
-            )
-          })
-        }
-    </ul>
+          {
+            items.map((item, pos) => {
+              return (
+                <li key={item.id ?? pos} className="p-4 hover:bg-base-200 hover:text-base-900">
+                  <MentionEditItem
+                    pos={pos + 1}
+                    item={item}
+                  />
+                </li>
+              )
+            })
+          }
+        </ul>
       </AccordionDetails>
     </Accordion>
   )

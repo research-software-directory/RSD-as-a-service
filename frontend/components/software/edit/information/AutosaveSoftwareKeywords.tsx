@@ -124,24 +124,24 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
         subtitle={config.keywords.subtitle}
       />
       <div className="flex flex-wrap py-2">
-      {keywords.map((item, pos) => {
-        return(
-          <div
-            key={item.id}
-            className="py-1 pr-1"
-          >
-            <Chip
-              data-testid="keyword-chip"
-              title={item.keyword}
-              label={item.keyword}
-              onDelete={() => onRemove(pos)}
-              sx={{
-                textTransform:'capitalize'
-              }}
-            />
-          </div>
-        )
-      })}
+        {keywords.map((item, pos) => {
+          return(
+            <div
+              key={item.id}
+              className="py-1 pr-1"
+            >
+              <Chip
+                data-testid="keyword-chip"
+                title={item.keyword}
+                label={item.keyword}
+                onDelete={() => onRemove(pos)}
+                sx={{
+                  textTransform:'capitalize'
+                }}
+              />
+            </div>
+          )
+        })}
       </div>
       <FindKeyword
         config={{

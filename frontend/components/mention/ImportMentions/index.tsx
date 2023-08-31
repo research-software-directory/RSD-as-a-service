@@ -39,8 +39,8 @@ export default function ImportMentions({table, entityId, onSuccess}:ImportMentio
   const {token} = useSession()
   const {showErrorMessage,showSuccessMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:768px)')
-	const [dialogOpen, setDialogOpen] = useState<boolean>(false)
-	const [searchResults, setSearchResults] = useState<DoiBulkImportReport>(null)
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [searchResults, setSearchResults] = useState<DoiBulkImportReport>(null)
 
   function entityName(): string {
     switch (table) {
@@ -109,7 +109,7 @@ export default function ImportMentions({table, entityId, onSuccess}:ImportMentio
     }
   }
 
-	return (
+  return (
     <>
       <Button
         variant="contained"

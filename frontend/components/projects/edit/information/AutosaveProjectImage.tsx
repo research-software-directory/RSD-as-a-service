@@ -149,49 +149,49 @@ export default function AutosaveProjectImage() {
     return (
       <>
         <div className="flex pt-4">
-        <AutosaveProjectTextField
-          project_id={form_id}
-          options={{
-            name: 'image_caption',
-            // no label
-            label: '',
-            defaultValue: form_image_caption,
-            useNull: true,
-            muiProps:{
-              autoComplete: 'off',
-              variant: 'standard',
-              placeholder: 'Image caption',
-              sx: {
-                width: '100%',
-                '& .MuiInput-root:before':{
-                  border: '2px transparent'
+          <AutosaveProjectTextField
+            project_id={form_id}
+            options={{
+              name: 'image_caption',
+              // no label
+              label: '',
+              defaultValue: form_image_caption,
+              useNull: true,
+              muiProps:{
+                autoComplete: 'off',
+                variant: 'standard',
+                placeholder: 'Image caption',
+                sx: {
+                  width: '100%',
+                  '& .MuiInput-root:before':{
+                    border: '2px transparent'
+                  }
                 }
               }
-            }
-          }}
-        />
+            }}
+          />
 
-        <div className="flex items-center pl-4">
-          <IconButton
-            color="primary"
-            aria-label="remove picture"
-            component="span"
-            title="Delete image"
-            onClick={removeImage}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <div className="flex items-center pl-4">
+            <IconButton
+              color="primary"
+              aria-label="remove picture"
+              component="span"
+              title="Delete image"
+              onClick={removeImage}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </div>
         </div>
-      </div>
 
-      <div className="flex pb-3">
-        <AutosaveProjectSwitch
-          project_id={form_id}
-          name='image_contain'
-          label={config.image_contain.label}
-          defaultValue={form_image_contain}
-        />
-      </div>
+        <div className="flex pb-3">
+          <AutosaveProjectSwitch
+            project_id={form_id}
+            name='image_contain'
+            label={config.image_contain.label}
+            defaultValue={form_image_contain}
+          />
+        </div>
       </>
     )
   }

@@ -65,7 +65,7 @@ it('calls findROR api on search', async () => {
   await waitFor(() => {
     expect(mockFindInROR).toBeCalledTimes(1)
     expect(mockFindInROR).toBeCalledWith({
-       'searchFor': searchFor
+      'searchFor': searchFor
     })
   })
 })
@@ -90,7 +90,7 @@ it('offers to add organisation when not found in ROR', async () => {
   await waitFor(() => {
     expect(mockFindInROR).toBeCalledTimes(1)
     expect(mockFindInROR).toBeCalledWith({
-       'searchFor': searchFor
+      'searchFor': searchFor
     })
   })
 
@@ -122,7 +122,7 @@ it('shows option found in ROR', async () => {
   await waitFor(() => {
     expect(mockFindInROR).toBeCalledTimes(1)
     expect(mockFindInROR).toBeCalledWith({
-       'searchFor': searchFor
+      'searchFor': searchFor
     })
   })
 

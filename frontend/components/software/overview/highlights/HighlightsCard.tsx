@@ -86,6 +86,6 @@ export default function HighlightsCard(item: HighlightsCardProps) {
           </div>
         </div>
       </div>
-  </Link>
+    </Link>
   )
 }

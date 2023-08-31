@@ -87,7 +87,7 @@ export default function UserAgrementModal() {
       </DialogTitle>
 
       <DialogContent sx={{
-          width:['100%','33rem']
+        width:['100%','33rem']
       }}>
         {/* Render only if userInfo present in order to properly load defaultValues */}
         {userInfo &&
@@ -104,33 +104,33 @@ export default function UserAgrementModal() {
         <p>You may view or modify your agreement at any time in your profile settings.</p>
       </DialogContent>
 
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-        }}>
-          <Button
-            tabIndex={1}
-            onClick={onCancel}
-            color="secondary"
-            sx={{
-              marginRight: '1rem',
-            }}
-          >
+      <DialogActions sx={{
+        padding: '1rem 1.5rem',
+      }}>
+        <Button
+          tabIndex={1}
+          onClick={onCancel}
+          color="secondary"
+          sx={{
+            marginRight: '1rem',
+          }}
+        >
             Cancel
-          </Button>
-          <Button
-            tabIndex={0}
-            disabled={!(agreeTerms && noticePrivacy)}
-            type="button"
-            variant="contained"
-            color="primary"
-            endIcon={
-              <CheckIcon />
-            }
-            onClick={onClose}
-          >
+        </Button>
+        <Button
+          tabIndex={0}
+          disabled={!(agreeTerms && noticePrivacy)}
+          type="button"
+          variant="contained"
+          color="primary"
+          endIcon={
+            <CheckIcon />
+          }
+          onClick={onClose}
+        >
             Accept
-          </Button>
-        </DialogActions>
+        </Button>
+      </DialogActions>
 
     </Dialog>
   )

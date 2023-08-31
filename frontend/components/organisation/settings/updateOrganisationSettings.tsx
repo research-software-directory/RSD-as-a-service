@@ -9,7 +9,7 @@ export async function patchOrganisationTable({id, data, token}:
   {id:string, data: any, token: string }) {
   try {
     // extract only required items
-     const url = `/api/v1/organisation?id=eq.${id}`
+    const url = `/api/v1/organisation?id=eq.${id}`
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {

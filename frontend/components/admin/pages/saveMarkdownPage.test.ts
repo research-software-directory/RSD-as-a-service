@@ -57,7 +57,7 @@ it('addMarkdownPage', async() => {
       'slug': 'test-slug',
       'title': 'Test title 1',
     },
-   'status': 200,
+    'status': 200,
   })
 })
 

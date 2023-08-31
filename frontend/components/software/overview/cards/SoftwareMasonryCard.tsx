@@ -55,7 +55,7 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
                 visibleNumberOfKeywords={visibleNumberOfKeywords}
               />
             </div>
-           }
+          }
           <div className="flex gap-2 justify-between mt-4">
             {/* Languages */}
             <ProgrammingLanguageList

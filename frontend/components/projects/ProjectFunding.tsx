@@ -27,20 +27,20 @@ export default function ProjectFunding({grant_id, fundingOrganisations=[]}:
         <>
           <div className="text-primary py-4">Funded by</div>
           <ul>
-          {fundingOrganisations.map(item => {
-            const link = `/organisations/${item.rsd_path}`
-            return (
-              <li key={link} className="text-sm py-1">
-                <Link
-                  href={link}
-                  target="_self"
-                  passHref
-                >
-                  {item.name}
-                </Link>
-              </li>
+            {fundingOrganisations.map(item => {
+              const link = `/organisations/${item.rsd_path}`
+              return (
+                <li key={link} className="text-sm py-1">
+                  <Link
+                    href={link}
+                    target="_self"
+                    passHref
+                  >
+                    {item.name}
+                  </Link>
+                </li>
               )
-          })}
+            })}
           </ul>
         </>
       )

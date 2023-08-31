@@ -68,8 +68,8 @@ export function SearchProvider(props:any) {
     setDelay,
     setSearchInput
   }}
-    // we pass children etc...
-    {...props}
+  // we pass children etc...
+  {...props}
   />
 }
 

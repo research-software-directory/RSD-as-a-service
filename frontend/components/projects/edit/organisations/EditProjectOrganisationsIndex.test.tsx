@@ -186,17 +186,17 @@ describe('frontend/components/projects/edit/organisations/index.tsx', () => {
       // call createOrganisation api
       expect(mockCreateOrganisation).toBeCalledTimes(1)
       expect(mockCreateOrganisation).toBeCalledWith({
-       'organisation': {
-         'is_tenant': false,
-         'logo_id': null,
-         'name': searchFor,
-         'parent': null,
-         'primary_maintainer': null,
-         'ror_id': null,
-         'slug': expectSlug,
-         'website': expectWebsite,
-       },
-       'token': mockSession.token,
+        'organisation': {
+          'is_tenant': false,
+          'logo_id': null,
+          'name': searchFor,
+          'parent': null,
+          'primary_maintainer': null,
+          'ror_id': null,
+          'slug': expectSlug,
+          'website': expectWebsite,
+        },
+        'token': mockSession.token,
       })
     })
 

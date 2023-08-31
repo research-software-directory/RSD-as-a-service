@@ -50,7 +50,7 @@ export default function SortableNav({selected, links, onSelect, onSorted}: Pages
    */
   function renderListItem(item: RsdLink, index: number) {
     return (
-       <SortableNavItem
+      <SortableNavItem
         key={item.id}
         item={item}
         index={index}

@@ -117,7 +117,7 @@ export default function AggregatedContributorModal({open, onCancel, onSubmit, co
   }
 
   return (
-     <Dialog
+    <Dialog
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}
@@ -161,29 +161,29 @@ export default function AggregatedContributorModal({open, onCancel, onSubmit, co
           <div className="py-2"></div>
           <section className="py-4 grid grid-cols-[1fr,1fr] gap-8">
             <ControlledTextField
-                control={control}
-                options={{
-                  name: 'given_names',
-                  label: config.given_names.label,
-                  useNull: true,
-                  defaultValue: formData?.given_names,
-                  helperTextMessage: config.given_names.help,
-                  helperTextCnt: `${formData?.given_names?.length || 0}/${config.given_names.validation.maxLength.value}`,
-                }}
-                rules={config.given_names.validation}
-              />
-              <ControlledTextField
-                control={control}
-                options={{
-                  name: 'family_names',
-                  label: config.family_names.label,
-                  useNull: true,
-                  defaultValue: formData?.family_names,
-                  helperTextMessage: config.family_names.help,
-                  helperTextCnt: `${formData?.family_names?.length || 0}/${config.family_names.validation.maxLength.value}`,
-                }}
-                rules={config.family_names.validation}
-              />
+              control={control}
+              options={{
+                name: 'given_names',
+                label: config.given_names.label,
+                useNull: true,
+                defaultValue: formData?.given_names,
+                helperTextMessage: config.given_names.help,
+                helperTextCnt: `${formData?.given_names?.length || 0}/${config.given_names.validation.maxLength.value}`,
+              }}
+              rules={config.given_names.validation}
+            />
+            <ControlledTextField
+              control={control}
+              options={{
+                name: 'family_names',
+                label: config.family_names.label,
+                useNull: true,
+                defaultValue: formData?.family_names,
+                helperTextMessage: config.family_names.help,
+                helperTextCnt: `${formData?.family_names?.length || 0}/${config.family_names.validation.maxLength.value}`,
+              }}
+              rules={config.family_names.validation}
+            />
             <ControlledAutocomplete
               name="email_address"
               label={config.email_address.label}

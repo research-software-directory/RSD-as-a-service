@@ -10,19 +10,19 @@ export default function logger(
   logType:LogType='info'
 ){
   switch(logType){
-  case 'error':
+    case 'error':
     // eslint-disable-next-line
     console.error(`[ERROR] ${message}`)
-    break
-  case 'warn':
+      break
+    case 'warn':
     // eslint-disable-next-line
     console.warn(`[WARNING] ${message}`)
-    break
-  default:
+      break
+    default:
     // info logs only in dev
-    if (process.env.NODE_ENV ==='development'){
+      if (process.env.NODE_ENV ==='development'){
       // eslint-disable-next-line
       console.log(`[INFO] ${message}`)
-    }
+      }
   }
 }

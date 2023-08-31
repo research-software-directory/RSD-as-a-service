@@ -62,17 +62,17 @@ export default function CookieConsentMatomo({matomo, route}: CookieConsentMatomo
       data-testid="cookie-consent-matomo"
     >
       <div className="container mx-auto sm:px-20">
-          <div className="border border-b-base-content border-t-4 border-x-4 border-b-0 bg-base-100 shadow-lg p-6 rounded-tr-3xl sm:w-96">
-            <div className="w-16 mx-auto relative  mb-3">
-              <CookieTwoToneIcon className="scale-[2]  mb-3" color="primary" fontSize="large"/>
-            </div>
-            <span
-              className="w-full block leading-normal text-base-800 text-md mb-3">We use&nbsp;
-              <span className="text-primary">
-                <Link href="/cookies" passHref target="_blank" className="text-primary" rel="noopener noreferrer">
+        <div className="border border-b-base-content border-t-4 border-x-4 border-b-0 bg-base-100 shadow-lg p-6 rounded-tr-3xl sm:w-96">
+          <div className="w-16 mx-auto relative  mb-3">
+            <CookieTwoToneIcon className="scale-[2]  mb-3" color="primary" fontSize="large"/>
+          </div>
+          <span
+            className="w-full block leading-normal text-base-800 text-md mb-3">We use&nbsp;
+            <span className="text-primary">
+              <Link href="/cookies" passHref target="_blank" className="text-primary" rel="noopener noreferrer">
                   cookies
-                </Link>
-              </span> with&nbsp;
+              </Link>
+            </span> with&nbsp;
             <Link href="https://matomo.org/" target="_blank" className="text-primary" rel="noopener noreferrer">
               matomo.org
             </Link> to provide a better user experience. </span>

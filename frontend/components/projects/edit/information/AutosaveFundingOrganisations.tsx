@@ -108,21 +108,21 @@ export default function AutosaveFundingOrganisations({id,items}:FundingOrganisat
     <>
       <h3 className="mb-2">{config.funding_organisations.subtitle}</h3>
       <div className="flex flex-wrap py-2">
-      {organisations.map((item, pos) => {
-        return(
-          <div
-            key={item.id}
-            className="py-1 pr-1 overflow-hidden"
-          >
-            <Chip
-              data-testid="funding-organisation-chip"
-              title={item.name}
-              label={item.name}
-              onDelete={() => onRemoveOgranisation(pos)}
-            />
-          </div>
-        )
-      })}
+        {organisations.map((item, pos) => {
+          return(
+            <div
+              key={item.id}
+              className="py-1 pr-1 overflow-hidden"
+            >
+              <Chip
+                data-testid="funding-organisation-chip"
+                title={item.name}
+                label={item.name}
+                onDelete={() => onRemoveOgranisation(pos)}
+              />
+            </div>
+          )
+        })}
       </div>
       <FindFundingOrganisation
         config={{

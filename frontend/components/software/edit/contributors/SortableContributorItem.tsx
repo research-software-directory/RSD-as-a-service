@@ -29,7 +29,7 @@ export default function SortableContributorItem({pos, item, onEdit, onDelete}: S
     <><span>{displayName}</span><span className="text-primary"> (contact person)</span></>
     : displayName
 
-   return (
+  return (
     <SortableListItem
       data-testid="contributor-item"
       key={item.id}

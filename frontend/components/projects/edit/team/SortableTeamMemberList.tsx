@@ -23,17 +23,17 @@ type TeamMemberListProps = {
 
 
 export default function SortableTeamMemberList({members, onEdit, onDelete, onSorted}: TeamMemberListProps) {
-	// show message when no members
-	if (members.length === 0) {
-		return (
+  // show message when no members
+  if (members.length === 0) {
+    return (
       <Alert
         data-testid="no-team-member-alert"
         severity="warning" sx={{marginTop: '0.5rem'}}>
         <AlertTitle sx={{fontWeight:500}}>No team members</AlertTitle>
         Add team member using the <strong>search form!</strong>
 		  </Alert>
-		)
-	}
+    )
+  }
 
   function onEditMember(pos: number) {
     const member = members[pos]

@@ -96,7 +96,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
   }
 
   return (
-     <Dialog
+    <Dialog
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}

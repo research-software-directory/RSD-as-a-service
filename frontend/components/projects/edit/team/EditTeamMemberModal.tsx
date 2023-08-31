@@ -109,7 +109,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
       setRemoveAvatar(formData.avatar_id)
       // update form
       setValue('avatar_id', null, {shouldDirty: true,shouldValidate:true})
-     } else {
+    } else {
       // just remove uploaded image from form
       // because it is not saved yet to DB
       setValue('avatar_b64', null)
@@ -179,7 +179,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
   }
 
   return (
-     <Dialog
+    <Dialog
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}
@@ -220,7 +220,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
               <label htmlFor="upload-avatar-image"
                 style={{cursor:'pointer'}}
                 title="Click to upload an image"
-                >
+              >
                 <ContributorAvatar
                   size={8}
                   avatarUrl={formData.avatar_b64 ?? getImageUrl(formData.avatar_id) ?? ''}

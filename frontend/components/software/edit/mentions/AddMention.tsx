@@ -22,17 +22,17 @@ export default function AddMention() {
 
   return (
     <>
-    <h3 className="pt-4 pb-2 text-lg">{config.newItem.title}</h3>
-    <CreateMentionInfoPanel>
-      <div className="pt-4">
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={onNewItem}>
+      <h3 className="pt-4 pb-2 text-lg">{config.newItem.title}</h3>
+      <CreateMentionInfoPanel>
+        <div className="pt-4">
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={onNewItem}>
           Create
-        </Button>
-      </div>
-    </CreateMentionInfoPanel>
+          </Button>
+        </div>
+      </CreateMentionInfoPanel>
     </>
   )
 }

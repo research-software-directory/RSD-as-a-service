@@ -164,15 +164,15 @@ describe('frontend/components/admin/pages/edit/index.tsx', () => {
       expect(mockUpdatePositions).toBeCalledTimes(1)
       expect(mockUpdatePositions).toBeCalledWith({
         'items':[
-         {
-          'id': 'test-id-2',
-          'position': 1,
-          'title': 'Test title 2',
-          'slug': 'test-slug-2',
-          'is_published': false
-         },
-       ],
-       'token': mockSession.token,
+          {
+            'id': 'test-id-2',
+            'position': 1,
+            'title': 'Test title 2',
+            'slug': 'test-slug-2',
+            'is_published': false
+          },
+        ],
+        'token': mockSession.token,
       })
     })
   })

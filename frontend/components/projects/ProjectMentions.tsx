@@ -58,7 +58,7 @@ export default function ProjectMentions({output=[], impact=[]}: MentionsSectionP
               return sortOnDateProp(a,b,'publication_year','desc')
             })
             const title = getMentionType(type,'plural')
-              // mentionType[type].plural
+            // mentionType[type].plural
             return (
               <MentionViewList
                 key={key}

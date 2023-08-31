@@ -95,7 +95,7 @@ export default function GetContributorsFromDoi({contributors,onSetContributors}:
     setLoading(false)
   }
 
-   function renderStartIcon() {
+  function renderStartIcon() {
     if (loading) {
       return <CircularProgress data-testid="circular-loader" color="inherit" size={20} />
     }
