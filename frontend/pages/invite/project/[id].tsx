@@ -53,7 +53,7 @@ export default function InviteProjectMaintainer({projectInfo, error}:
   }
 
   return (
-     <DefaultLayout>
+    <DefaultLayout>
       <Head>
         <title>Project Maintainer Invite | RSD</title>
       </Head>

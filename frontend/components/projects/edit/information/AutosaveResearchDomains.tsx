@@ -91,7 +91,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
     const toAdd=[]
     if (l1Selected) {
       const find = domains.filter(item => item.key === l1Selected.key)
-        // selected.filter(item => item.key === l1Selected.key)
+      // selected.filter(item => item.key === l1Selected.key)
       if (find.length === 0) {
         toAdd.push(l1Selected)
       }
@@ -211,16 +211,16 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
             {l1Domains
               .sort((a,b)=>sortOnStrProp(a,b,'name'))
               .map(item => {
-              return (
-                <MenuItem
-                  data-testid="l1-domain-item"
-                  key={item.key}
-                  title={item.description}
-                  value={item.key}>
-                  {item.name}
-                </MenuItem>
-              )
-            })}
+                return (
+                  <MenuItem
+                    data-testid="l1-domain-item"
+                    key={item.key}
+                    title={item.description}
+                    value={item.key}>
+                    {item.name}
+                  </MenuItem>
+                )
+              })}
           </Select>
         </FormControl>
         <div className="py-2"></div>
@@ -252,21 +252,21 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
             {l2Domains
               .sort((a,b)=>sortOnStrProp(a,b,'name'))
               .map(item => {
-              return (
-                <MenuItem
-                  data-testid="l2-domain-item"
-                  title={item.description}
-                  key={item.key}
-                  value={item.key}
-                  sx={{
+                return (
+                  <MenuItem
+                    data-testid="l2-domain-item"
+                    title={item.description}
+                    key={item.key}
+                    value={item.key}
+                    sx={{
                     // maxWidth: '30rem',
-                    whiteSpace: 'break-spaces'
-                  }}
-                >
-                  {item.name}
-                </MenuItem>
-              )
-            })}
+                      whiteSpace: 'break-spaces'
+                    }}
+                  >
+                    {item.name}
+                  </MenuItem>
+                )
+              })}
           </Select>
         </FormControl>
         <div className="py-2"></div>
@@ -296,22 +296,22 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
             {l3Domains
               .sort((a,b)=>sortOnStrProp(a,b,'name'))
               .map(item => {
-              return (
-                <MenuItem
-                  data-testid="l3-domain-item"
-                  title={item.description}
-                  key={item.key}
-                  value={item.key}
-                  sx={{
+                return (
+                  <MenuItem
+                    data-testid="l3-domain-item"
+                    title={item.description}
+                    key={item.key}
+                    value={item.key}
+                    sx={{
                     // maxWidth: 'calc(100% - 4rem)',
                     // maxWidth:'20rem',
-                    whiteSpace: 'break-spaces'
-                  }}
-                >
-                  {item.name}
-                </MenuItem>
-              )
-            })}
+                      whiteSpace: 'break-spaces'
+                    }}
+                  >
+                    {item.name}
+                  </MenuItem>
+                )
+              })}
           </Select>
         </FormControl>
       </div>

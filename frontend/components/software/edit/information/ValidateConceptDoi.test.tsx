@@ -77,7 +77,7 @@ it('shows valid concept DOI message', async() => {
         ]
       }
     }
-})
+  })
   // render
   render(
     <MuiSnackbarProvider>

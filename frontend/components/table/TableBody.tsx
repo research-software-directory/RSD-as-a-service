@@ -86,7 +86,7 @@ function TableRow<T extends {id:string,origin?:string}, K extends keyof T>({data
 
 export default function TableBody<T extends {id:string,origin?:string}, K extends keyof T>({
   data, columns}: { data: T[], columns: Column<T, K>[] }) {
-   return (
+  return (
     <MuiTableBody>
       {data.map((item,i) => {
         return <TableRow key={`row-${i}`} cols={columns} data={item} />

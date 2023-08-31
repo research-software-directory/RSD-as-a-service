@@ -122,7 +122,7 @@ export default function UnitItem({pos,slug,name,website,logo_id,isMaintainer,onE
           </Link>
         }
         secondary={getSecondaryLabel()}
-        />
-      </ListItem>
+      />
+    </ListItem>
   )
 }

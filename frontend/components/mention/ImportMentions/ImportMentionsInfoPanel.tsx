@@ -14,7 +14,7 @@ export default function ImportMentionsInfoPanel({children}:{children:any}) {
       severity="info"
       icon={false}
     >
-    {/* <AlertTitle>Import publications using DOI list</AlertTitle> */}
+      {/* <AlertTitle>Import publications using DOI list</AlertTitle> */}
       Import up to {config.doiInput.maxRows} publications providing a list of
       DOI&apos;s. All metadata will be imported automatically.
       { children }

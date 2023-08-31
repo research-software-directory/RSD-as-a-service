@@ -20,25 +20,25 @@ export default function ProjectLinks({links}: { links: ProjectLink[] }) {
     <div>
       <div className="text-primary py-4">Project links</div>
       <ul>
-      {
-        links.map(link => {
-          if (link.url) {
-            return (
-              <li key={link.url} className="text-sm py-1">
-                <Link
-                  href={link.url}
-                  target="_blank"
-                  passHref
-                >
+        {
+          links.map(link => {
+            if (link.url) {
+              return (
+                <li key={link.url} className="text-sm py-1">
+                  <Link
+                    href={link.url}
+                    target="_blank"
+                    passHref
+                  >
 
-                  {link.title}
+                    {link.title}
 
-                </Link>
-              </li>
-            )
-          }
-        })
-      }
+                  </Link>
+                </li>
+              )
+            }
+          })
+        }
       </ul>
     </div>
   )

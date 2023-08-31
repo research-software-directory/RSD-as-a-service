@@ -28,11 +28,11 @@ export default function SoftwareKeywords({keywords = []}: { keywords: KeywordFor
 
   return (
     <>
-    <div className="pt-8 pb-2">
-      <LocalOfferIcon color="primary" sx={{transform:'rotate(90deg)'}} />
-      <span className="text-primary pl-2">Keywords</span>
-    </div>
-    {renderTags()}
+      <div className="pt-8 pb-2">
+        <LocalOfferIcon color="primary" sx={{transform:'rotate(90deg)'}} />
+        <span className="text-primary pl-2">Keywords</span>
+      </div>
+      {renderTags()}
     </>
   )
 }

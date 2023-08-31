@@ -186,7 +186,7 @@ it('can add funding organisation from ROR', async() => {
         'slug': 'vu-university-amsterdam',
         'website': foundOrgs[1].data.website
       },
-     'token': 'TEST_TOKEN',
+      'token': 'TEST_TOKEN',
     })
 
     // add as funding organisations to project

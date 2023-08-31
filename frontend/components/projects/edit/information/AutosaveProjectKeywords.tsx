@@ -115,24 +115,24 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
   return (
     <>
       <div className="flex flex-wrap py-2">
-      {keywords.map((field, pos) => {
-        return(
-          <div
-            key={field.id}
-            className="py-1 pr-1"
-          >
-            <Chip
-              data-testid="keyword-chip"
-              title={field.keyword}
-              label={field.keyword}
-              onDelete={() => onRemove(pos)}
-              sx={{
-                textTransform:'capitalize'
-              }}
-            />
-          </div>
-        )
-      })}
+        {keywords.map((field, pos) => {
+          return(
+            <div
+              key={field.id}
+              className="py-1 pr-1"
+            >
+              <Chip
+                data-testid="keyword-chip"
+                title={field.keyword}
+                label={field.keyword}
+                onDelete={() => onRemove(pos)}
+                sx={{
+                  textTransform:'capitalize'
+                }}
+              />
+            </div>
+          )
+        })}
       </div>
       <FindKeyword
         config={{

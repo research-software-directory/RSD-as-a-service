@@ -24,8 +24,8 @@ export const HighlightsCarousel = ({items=[]}: {items:SoftwareHighlight[]}) => {
 
   useEffect(() => {
     const calculateDistance = () => {
-        const rect = divRef.current?.getBoundingClientRect()
-        setDistance(Math.ceil(rect?.left ?? 0) + 16)
+      const rect = divRef.current?.getBoundingClientRect()
+      setDistance(Math.ceil(rect?.left ?? 0) + 16)
     }
     if (typeof window !== 'undefined') {
       calculateDistance()
@@ -58,28 +58,28 @@ export const HighlightsCarousel = ({items=[]}: {items:SoftwareHighlight[]}) => {
       <div ref={divRef} className="container mx-auto invisible"> </div>
       {/* Reference Div to center align card */}
       <div
-      data-testid="highlights-carousel"
-      className="group relative w-full overflow-x-visible" >
-      {scrollPosition > 0 && <LeftButton handlePrevClick={handlePrevClick} /> }
-      <RightButton handleNextClick={handleNextClick} />
+        data-testid="highlights-carousel"
+        className="group relative w-full overflow-x-visible" >
+        {scrollPosition > 0 && <LeftButton handlePrevClick={handlePrevClick} /> }
+        <RightButton handleNextClick={handleNextClick} />
 
-      {/* Carousel */}
-      <div
-        ref={carousel}
-        onScroll={handleScroll}
-        // snap on mobile only
-        className={'flex gap-4 snap-start sm:snap-none scroll-smooth overflow-x-scroll scrollbar-hide p-4'}
-        style={{scrollbarWidth:'none',left:-scrollPosition, paddingLeft: distance +'px'}}>
-        {/* render software card in the row direction */}
-        {items.map(highlight => (
-          <div key={highlight.id}
-          className="snap-center flex-shrink-0 hover:scale-[101%] transition duration-500">
-            <HighlightsCard {...highlight}/>
-          </div>
-        ))
-      }
+        {/* Carousel */}
+        <div
+          ref={carousel}
+          onScroll={handleScroll}
+          // snap on mobile only
+          className={'flex gap-4 snap-start sm:snap-none scroll-smooth overflow-x-scroll scrollbar-hide p-4'}
+          style={{scrollbarWidth:'none',left:-scrollPosition, paddingLeft: distance +'px'}}>
+          {/* render software card in the row direction */}
+          {items.map(highlight => (
+            <div key={highlight.id}
+              className="snap-center flex-shrink-0 hover:scale-[101%] transition duration-500">
+              <HighlightsCard {...highlight}/>
+            </div>
+          ))
+          }
+        </div>
       </div>
-    </div>
-  </>
+    </>
   )
 }

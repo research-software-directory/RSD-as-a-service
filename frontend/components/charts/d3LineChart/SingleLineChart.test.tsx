@@ -24,10 +24,10 @@ it('renders chart with d3-line-chart svg group', async() => {
   // render chart with mocked line data
   const {container} = render(WrappedComponentWithProps(
     SingleLineChart, {
-    props: {
-      data: mockLineData
-    }
-  }))
+      props: {
+        data: mockLineData
+      }
+    }))
 
   // wait for root svg element
   const svg = await screen.findByTestId('d3-line-chart')

@@ -31,7 +31,7 @@ export type ProjectCardProps = {
 
 export default function ProjectCard(
   {slug, title, subtitle, image_id, updated_at, current_state,
-  is_featured, is_published, image_contain, menuSpace}: ProjectCardProps
+    is_featured, is_published, image_contain, menuSpace}: ProjectCardProps
 ) {
   // get current date
   const today = new Date()
@@ -69,7 +69,7 @@ export default function ProjectCard(
         <section
           title={subtitle ?? title}
           className="flex-[3] h-full"
-          >
+        >
           <ImageAsBackground
             alt={title}
             src={getImageUrl(image_id)}

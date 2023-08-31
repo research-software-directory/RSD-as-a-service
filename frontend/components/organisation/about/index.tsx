@@ -30,8 +30,8 @@ export function AboutPagePlaceholder() {
         The about section is not visible to vistors because it does not have any content.
       </p>
       <span>To activate the about section, add content to the about section <strong>
-          <button onClick={goToSettings}>in the settings.</button>
-        </strong>
+        <button onClick={goToSettings}>in the settings.</button>
+      </strong>
       </span>
     </Alert>
   )

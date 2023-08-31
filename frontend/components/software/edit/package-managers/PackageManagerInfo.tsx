@@ -36,21 +36,21 @@ export default function PackageManagerInfo({pm_key}: { pm_key: PackageManagerTyp
         Detected platform
       </h3>
       <div className="text-center">
-          <Avatar
-            variant="square"
-            src={info.icon ?? ''}
-            sx={{
-              width: '3rem',
-              height: '3rem',
-              '& img': {
-                objectFit:'contain'
-              }
-            }}
-          >
-            {info.name.slice(0,3)}
-          </Avatar>
-          <div className="text-base-content-disabled mt-2">{info.name}</div>
-        </div>
+        <Avatar
+          variant="square"
+          src={info.icon ?? ''}
+          sx={{
+            width: '3rem',
+            height: '3rem',
+            '& img': {
+              objectFit:'contain'
+            }
+          }}
+        >
+          {info.name.slice(0,3)}
+        </Avatar>
+        <div className="text-base-content-disabled mt-2">{info.name}</div>
+      </div>
     </div>
   )
 }

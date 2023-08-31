@@ -28,15 +28,15 @@ export default function ImportProjectOutput() {
 
   return (
     <>
-    <h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
-    <ImportMentionsInfoPanel>
-      <div className="pt-4">
-        <ImportMentions
-          table="output_for_project"
-          entityId={project.id!}
-          onSuccess={reloadOutput} />
-      </div>
-    </ImportMentionsInfoPanel>
+      <h3 className="pt-4 pb-2 text-lg">{config.builkImport.title}</h3>
+      <ImportMentionsInfoPanel>
+        <div className="pt-4">
+          <ImportMentions
+            table="output_for_project"
+            entityId={project.id!}
+            onSuccess={reloadOutput} />
+        </div>
+      </ImportMentionsInfoPanel>
     </>
   )
 }

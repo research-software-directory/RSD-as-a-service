@@ -75,26 +75,26 @@ export default function OrganisationPage({
             rsd_page_rows
           }}
         >
-        <OrganisationProvider
-          organisation={organisation}
-          isMaintainer={isMaintainer}
-        >
-          {/* ORGANISATION HEADER */}
-          <OrganisationBreadcrumbs slug={slug} />
-          <OrganisationMetadata ror_info={ror} />
-
-          {/* TABS */}
-          <BaseSurfaceRounded
-            className="my-4 p-2"
-            type="section"
+          <OrganisationProvider
+            organisation={organisation}
+            isMaintainer={isMaintainer}
           >
-            <OrganisationTabs tab_id={tab} />
-          </BaseSurfaceRounded>
-          {/* TAB CONTENT */}
-          <section className="flex md:min-h-[60rem]">
-            <TabContent tab_id={tab} />
-          </section>
-        </OrganisationProvider>
+            {/* ORGANISATION HEADER */}
+            <OrganisationBreadcrumbs slug={slug} />
+            <OrganisationMetadata ror_info={ror} />
+
+            {/* TABS */}
+            <BaseSurfaceRounded
+              className="my-4 p-2"
+              type="section"
+            >
+              <OrganisationTabs tab_id={tab} />
+            </BaseSurfaceRounded>
+            {/* TAB CONTENT */}
+            <section className="flex md:min-h-[60rem]">
+              <TabContent tab_id={tab} />
+            </section>
+          </OrganisationProvider>
         </UserSettingsProvider>
       </BackgroundAndLayout>
     </>

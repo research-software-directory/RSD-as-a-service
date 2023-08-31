@@ -53,7 +53,7 @@ export default function CitationDoi({doi}:{doi:string}) {
           href={`https://doi.org/${doi}`}
           target="_blank"
           className="w-full"
-          >
+        >
           <Box
             sx={{
               flex: 1,

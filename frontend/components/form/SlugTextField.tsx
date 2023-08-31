@@ -58,7 +58,7 @@ export default function SlugTextField({
             <div>
               <CircularProgress data-testid="slug-circular-progress" color="primary" size={32} />
             </div>
-          : null
+            : null
         )
       }}
       {...options}

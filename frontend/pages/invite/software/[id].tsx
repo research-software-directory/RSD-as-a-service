@@ -51,7 +51,7 @@ export default function InviteSoftwareMaintainer({softwareInfo, error}:
   }
 
   return (
-     <DefaultLayout>
+    <DefaultLayout>
       <Head>
         <title>Software Maintainer Invite | RSD</title>
       </Head>

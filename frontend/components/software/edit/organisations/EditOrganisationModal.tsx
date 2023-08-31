@@ -133,7 +133,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
   }
 
   return (
-     <Dialog
+    <Dialog
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}
@@ -174,11 +174,11 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
           padding: '2rem 1.5rem 2.5rem'
         }}>
           <section className="grid grid-cols-[1fr,3fr] gap-8">
-             <div>
+            <div>
               <label htmlFor="upload-avatar-image"
-                  style={{cursor:'pointer'}}
-                  title="Click to upload an image"
-                >
+                style={{cursor:'pointer'}}
+                title="Click to upload an image"
+              >
                 <Avatar
                   alt={formData.name ?? ''}
                   src={formData.logo_b64 ?? getImageUrl(formData?.logo_id) ?? undefined}
@@ -248,11 +248,11 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
             </div>
           </section>
           <Alert
-          severity="info"
-        >
-          <AlertTitle>Do you have a logo?</AlertTitle>
+            severity="info"
+          >
+            <AlertTitle>Do you have a logo?</AlertTitle>
           You are the first to reference this organisation and can add a logo now. After clicking on &quot;Save&quot;, logos can only by added by organisation maintainers.
-        </Alert>
+          </Alert>
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',

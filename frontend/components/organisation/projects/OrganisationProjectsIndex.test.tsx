@@ -139,12 +139,12 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
     // validate patchProject fn is called with expected params
     expect(mockPatchProjectForOrganisation).toBeCalledTimes(1)
     expect(mockPatchProjectForOrganisation).toBeCalledWith({
-       'data': {
-         'is_featured': true,
-       },
-       'organisation': mockProps.organisation.id,
-       'project': mockProjects[0].id,
-       'token': mockSession.token,
+      'data': {
+        'is_featured': true,
+      },
+      'organisation': mockProps.organisation.id,
+      'project': mockProjects[0].id,
+      'token': mockSession.token,
     })
   })
 
@@ -181,12 +181,12 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
     // validate patchProject fn is called with expected params
     expect(mockPatchProjectForOrganisation).toBeCalledTimes(1)
     expect(mockPatchProjectForOrganisation).toBeCalledWith({
-       'data': {
-         'is_featured': false,
-       },
-       'organisation': mockProps.organisation.id,
-       'project': mockProjects[0].id,
-       'token': mockSession.token,
+      'data': {
+        'is_featured': false,
+      },
+      'organisation': mockProps.organisation.id,
+      'project': mockProjects[0].id,
+      'token': mockSession.token,
     })
   })
 
@@ -223,12 +223,12 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
     // validate patchProject fn is called with expected params
     expect(mockPatchProjectForOrganisation).toBeCalledTimes(1)
     expect(mockPatchProjectForOrganisation).toBeCalledWith({
-       'data': {
-         'status': 'rejected_by_relation'
-       },
-       'organisation': mockProps.organisation.id,
-       'project': mockProjects[1].id,
-       'token': mockSession.token,
+      'data': {
+        'status': 'rejected_by_relation'
+      },
+      'organisation': mockProps.organisation.id,
+      'project': mockProjects[1].id,
+      'token': mockSession.token,
     })
   })
 
@@ -266,12 +266,12 @@ describe('frontend/components/organisation/projects/index.tsx', () => {
     // validate patchProject fn is called with expected params
     expect(mockPatchProjectForOrganisation).toBeCalledTimes(1)
     expect(mockPatchProjectForOrganisation).toBeCalledWith({
-       'data': {
-         'status': 'approved'
-       },
-       'organisation': mockProps.organisation.id,
-       'project': mockProjects[1].id,
-       'token': mockSession.token,
+      'data': {
+        'status': 'approved'
+      },
+      'organisation': mockProps.organisation.id,
+      'project': mockProjects[1].id,
+      'token': mockSession.token,
     })
   })
 

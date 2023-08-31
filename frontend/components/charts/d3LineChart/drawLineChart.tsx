@@ -125,12 +125,12 @@ export default function drawLineChart(props: LineChartConfig) {
   lineGroup.selectAll('.line')
     .data([data])
     .join('path')
-      .attr('class','line')
-      .attr('d',d=>generateScaledLine(d as any))
-      .attr('fill','none')
-      .attr('stroke', strokeColor)
-      .attr('stroke-width', 2)
-      .attr('stroke-opacity', 0.7)
+    .attr('class','line')
+    .attr('d',d=>generateScaledLine(d as any))
+    .attr('fill','none')
+    .attr('stroke', strokeColor)
+    .attr('stroke-width', 2)
+    .attr('stroke-opacity', 0.7)
 
   return true
 }

@@ -61,52 +61,52 @@ export type EditSoftwarePageProps = {
 }
 
 export const editSoftwarePage:EditSoftwarePageProps[] = [{
-    id: 'information',
-    label: 'Information',
-    icon: <InfoIcon />,
-    render: () => <SoftwareInformation />,
-    status: 'Required information'
-  },{
-    id: 'contributors',
-    label: 'Contributors',
-    icon: <Diversity1Icon />,
-    render: () => <SoftwareContributors />,
-    status: 'Required information'
-  },{
-    id: 'organisations',
-    label: 'Organisations',
-    icon: <FactoryIcon />,
-    render: () => <SoftwareOgranisations />,
-    status: 'Optional information'
-  },{
-    id: 'mentions',
-    label: 'Mentions',
-    icon: <AddCommentIcon />,
-    render: () => <SoftwareMentions />,
-    status: 'Optional information'
-  },{
-    id: 'testimonials',
-    label: 'Testimonials',
-    icon: <ThreePIcon />,
-    render: () => <SoftwareTestimonials />,
-    status: 'Optional information'
-  },{
-    id: 'package-managers',
-    label: 'Package managers',
-    icon: <HomeRepairServiceIcon />,
-    render: () => <PackageManagers />,
-    status: 'Optional information'
-  },{
-    id: 'related-topics',
-    label: 'Related topics',
-    icon: <ShareIcon />,
-    render: () => <RelatedTopics />,
-    status: 'Optional information'
-  },{
-    id: 'maintainers',
-    label: 'Maintainers',
-    icon: <PersonAddIcon />,
-    render: () => <SoftwareMaintainers />,
-    status: 'Optional information'
-  }
+  id: 'information',
+  label: 'Information',
+  icon: <InfoIcon />,
+  render: () => <SoftwareInformation />,
+  status: 'Required information'
+},{
+  id: 'contributors',
+  label: 'Contributors',
+  icon: <Diversity1Icon />,
+  render: () => <SoftwareContributors />,
+  status: 'Required information'
+},{
+  id: 'organisations',
+  label: 'Organisations',
+  icon: <FactoryIcon />,
+  render: () => <SoftwareOgranisations />,
+  status: 'Optional information'
+},{
+  id: 'mentions',
+  label: 'Mentions',
+  icon: <AddCommentIcon />,
+  render: () => <SoftwareMentions />,
+  status: 'Optional information'
+},{
+  id: 'testimonials',
+  label: 'Testimonials',
+  icon: <ThreePIcon />,
+  render: () => <SoftwareTestimonials />,
+  status: 'Optional information'
+},{
+  id: 'package-managers',
+  label: 'Package managers',
+  icon: <HomeRepairServiceIcon />,
+  render: () => <PackageManagers />,
+  status: 'Optional information'
+},{
+  id: 'related-topics',
+  label: 'Related topics',
+  icon: <ShareIcon />,
+  render: () => <RelatedTopics />,
+  status: 'Optional information'
+},{
+  id: 'maintainers',
+  label: 'Maintainers',
+  icon: <PersonAddIcon />,
+  render: () => <SoftwareMaintainers />,
+  status: 'Optional information'
+}
 ]
