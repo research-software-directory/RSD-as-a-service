@@ -13,7 +13,6 @@ import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
 import ProgrammingLanguageList from '~/components/software/overview/cards/ProgrammingLanguageList'
 import SoftwareMetrics from '~/components/software/overview/cards/SoftwareMetrics'
 import useValidateImageSrc from '~/utils/useValidateImageSrc'
-import {useState} from 'react'
 
 type HighlightsCardProps = {
   id:string
@@ -61,7 +60,12 @@ export default function HighlightsCard(item: HighlightsCardProps) {
             src={`${imgSrc ?? ''}`}
             alt={`Cover image for ${item.brand_name}`}
             style={{maxWidth:'22rem'}}
+            // lighthouse audit requires explicit width and height
+            height="100%"
+            width="100%"
             loading='eager'
+            // this is correct markup but supported yet
+            // fetchPriority="high"
           />
         }
 
