@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useSession} from '~/auth'
-import {getOutputForProject} from '~/utils/getProjects'
+import {getMentionsForProject} from '~/utils/getProjects'
 import ImportMentions from '~/components/mention/ImportMentions/index'
 import ImportMentionsInfoPanel from '~/components/mention/ImportMentions/ImportMentionsInfoPanel'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
@@ -21,7 +21,7 @@ export default function ImportProjectOutput() {
 
   async function reloadOutput() {
     setLoading(true)
-    const data = await getOutputForProject({project: project.id, token: token, frontend: true})
+    const data = await getMentionsForProject({project: project.id,table:'output_for_project',token: token})
     setMentions(data)
     setLoading(false)
   }

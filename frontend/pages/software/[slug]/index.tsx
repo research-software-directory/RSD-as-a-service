@@ -79,7 +79,6 @@ interface SoftwareIndexData extends ScriptProps{
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
-  const [resolvedUrl, setResolvedUrl] = useState('')
   const [author, setAuthor] = useState('')
   // extract data from props
   const {
@@ -91,11 +90,6 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   } = props
 
   useEffect(() => {
-    if (typeof location != 'undefined') {
-      setResolvedUrl(location.href)
-    }
-  }, [])
-  useEffect(() => {
     const contact = contributors.filter(item => item.is_contact_person)
     if (contact.length > 0) {
       const name = getDisplayName(contact[0])
@@ -106,7 +100,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...releases...', releases)
+  // console.log('SoftwareIndexPage...mentions...', mentions)
   return (
     <>
       {/* Page Head meta tags */}
@@ -218,32 +212,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       }
     }
     // fetch all info about software in parallel based on software.id
-    const fetchData = [
-      // software versions info
-      getReleasesForSoftware(software.id,token),
-      // keywords
-      getKeywordsForSoftware(software.id,false,token),
-      // licenseInfo
-      getLicenseForSoftware(software.id, false, token),
-      // repositoryInfo: url, languages and commits
-      getRepostoryInfoForSoftware(software.id, token),
-      // softwareMentionCounts
-      getContributorMentionCount(software.id,token),
-      // mentions
-      getMentionsForSoftware({software: software.id, frontend: false, token}),
-      // testimonials
-      getTestimonialsForSoftware({software:software.id,frontend: false,token}),
-      // contributors
-      getContributorsForSoftware({software:software.id,token}),
-      // relatedTools
-      getRelatedSoftwareForSoftware({software: software.id, frontend: false, token}),
-      // relatedProjects
-      getRelatedProjectsForSoftware({software: software.id, token, frontend: false}),
-      // check if maintainer
-      isMaintainerOfSoftware({slug, account:userInfo?.account, token, frontend: false}),
-      // get organisations
-      getParticipatingOrganisations({software:software.id,frontend:false,token})
-    ]
     const [
       releases,
       keywords,
@@ -257,8 +225,32 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       relatedProjects,
       isMaintainer,
       organisations
-    ] = await Promise.all(fetchData)
-
+    ] = await Promise.all([
+      // software versions info
+      getReleasesForSoftware(software.id,token),
+      // keywords
+      getKeywordsForSoftware(software.id,false,token),
+      // licenseInfo
+      getLicenseForSoftware(software.id, false, token),
+      // repositoryInfo: url, languages and commits
+      getRepostoryInfoForSoftware(software.id, token),
+      // softwareMentionCounts
+      getContributorMentionCount(software.id,token),
+      // mentions
+      getMentionsForSoftware({software:software.id,token}),
+      // testimonials
+      getTestimonialsForSoftware({software:software.id,frontend: false,token}),
+      // contributors
+      getContributorsForSoftware({software:software.id,token}),
+      // relatedTools
+      getRelatedSoftwareForSoftware({software: software.id, frontend: false, token}),
+      // relatedProjects
+      getRelatedProjectsForSoftware({software: software.id, token, frontend: false}),
+      // check if maintainer
+      isMaintainerOfSoftware({slug, account:userInfo?.account, token, frontend: false}),
+      // get organisations
+      getParticipatingOrganisations({software:software.id,frontend:false,token})
+    ])
     // pass data to page component as props
     return {
       props: {

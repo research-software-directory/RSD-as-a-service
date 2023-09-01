@@ -1,12 +1,14 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
 import {MentionItemProps} from '~/types/Mention'
-import {getOutputForProject} from '~/utils/getProjects'
+import {getMentionsForProject} from '~/utils/getProjects'
 import {sortOnNumProp} from '~/utils/sortFn'
 
 type OutputForProjectProps = {
@@ -22,10 +24,10 @@ export default function useOutputForProject({project, token}: OutputForProjectPr
     let abort = false
     async function getImpact() {
       setLoading(true)
-      const mentions = await getOutputForProject({
+      const mentions = await getMentionsForProject({
         project,
-        token,
-        frontend: true
+        table:'output_for_project',
+        token
       })
       const output:MentionItemProps[] = mentions.sort((a, b) => {
         // sort mentions on publication year, newest at the top
@@ -41,12 +43,7 @@ export default function useOutputForProject({project, token}: OutputForProjectPr
     if (project && token && project!==loadedProject) {
       getImpact()
     }
-    // else {
-    //   console.group('skip request useOutputForProject')
-    //   console.log('project...', project)
-    //   console.log('loadedProject...', loadedProject)
-    //   console.groupEnd()
-    // }
+
     return () => { abort = true }
     // we skip setMentions and setLoading methods in the deps to avoid loop
     // TODO! try wrapping methods of useEditMentionReducer in useCallback?

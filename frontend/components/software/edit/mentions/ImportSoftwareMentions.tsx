@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
@@ -20,7 +21,7 @@ export default function ImportSoftwareMentions() {
 
   async function reloadMentions() {
     setLoading(true)
-    const data = await getMentionsForSoftware({software: software.id, token: token, frontend: true})
+    const data = await getMentionsForSoftware({software: software.id, token: token})
     setMentions(data)
     setLoading(false)
   }

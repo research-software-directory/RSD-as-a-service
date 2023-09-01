@@ -55,6 +55,9 @@ export default function ImageWithPlaceholder({
       title={placeholder ?? alt}
       role="img"
       src={src}
+      // lighthouse audit requires explicit width and height
+      height="100%"
+      width="100%"
       style={{
         objectFit: bgSize,
         objectPosition: bgPosition

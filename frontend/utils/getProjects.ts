@@ -7,7 +7,7 @@
 
 import {OrganisationRole} from '~/types/Organisation'
 import {TeamMemberProps} from '~/types/Contributor'
-import {mentionColumns, MentionForProject, MentionItemProps} from '~/types/Mention'
+import {mentionColumns, MentionItemProps} from '~/types/Mention'
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
@@ -240,72 +240,33 @@ export async function getLinksForProject({project, token, frontend = false}:
   }
 }
 
-export async function getOutputForProject({project, token, frontend}:
-  {project: string, token?: string, frontend?: boolean}) {
+export async function getMentionsForProject({project, token, table}:
+  {project: string, token?: string, table: 'output_for_project'|'impact_for_project'}) {
   try {
     // build query url
-    const query = `mention?select=${mentionColumns},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=mention_type.asc`
-    // base url
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
-
+    const query = `project?id=eq.${project}&select=id,slug,mention!${table}(${mentionColumns})&mention.order=mention_type.asc`
+    // construct url
+    const url = `${getBaseUrl()}/${query}`
+    // make request
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createJsonHeaders(token)
+      headers: {
+        ...createJsonHeaders(token),
+        // request single object item
+        'Accept': 'application/vnd.pgrst.object+json'
+      }
     })
     if (resp.status === 200) {
-      const data: MentionForProject[] = await resp.json()
-      // cover to plain mention
-      const mentions: MentionItemProps[] = data.map(item => {
-        if (item?.output_for_project) {
-          delete item.output_for_project
-        }
-        return item
-      })
+      const json = await resp.json()
+      // extract mentions from project object
+      const mentions: MentionItemProps[] = json?.mention ?? []
       return mentions
     }
-    logger(`getOutputForProject: [${resp.status}] [${url}]`, 'error')
+    logger(`getMentionsForProject: [${resp.status}] [${url}]`, 'error')
     // query not found
     return []
   } catch (e: any) {
-    logger(`getOutputForProject: ${e?.message}`, 'error')
-    return []
-  }
-}
-
-export async function getImpactForProject({project, token, frontend}:
-  { project: string, token?: string, frontend?: boolean }) {
-  try {
-    // build query url
-    const query = `mention?select=${mentionColumns},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=mention_type.asc`
-    // base url
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
-
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders(token)
-    })
-    if (resp.status === 200) {
-      const data: MentionForProject[] = await resp.json()
-      // cover to plain mention
-      const mentions: MentionItemProps[] = data.map(item => {
-        if (item?.impact_for_project) {
-          delete item.impact_for_project
-        }
-        return item
-      })
-      return mentions
-    }
-    logger(`getImpactForProject: [${resp.status}] [${url}]`, 'error')
-    // query not found
-    return []
-  } catch (e: any) {
-    logger(`getImpactForProject: ${e?.message}`, 'error')
+    logger(`getMentionsForProject: ${e?.message}`, 'error')
     return []
   }
 }
