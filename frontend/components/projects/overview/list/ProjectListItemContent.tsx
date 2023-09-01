@@ -7,8 +7,8 @@
 
 import {JSX} from 'react'
 import {getImageUrl} from '~/utils/editImage'
-import useValidateImageSrc from '~/utils/useValidateImageSrc'
 import ProjectMetrics from '../cards/ProjectMetrics'
+import ListImageWithGradientPlaceholder from './ListImageWithGradientPlaceholder'
 
 type ProjectListItemProps = {
   title: string
@@ -19,23 +19,14 @@ type ProjectListItemProps = {
   statusBanner?: JSX.Element
 }
 
-
 export default function ProjectListItemContent(item: ProjectListItemProps) {
   const imgSrc = getImageUrl(item.image_id ?? null)
-  const validImg = useValidateImageSrc(imgSrc)
   return (
     <>
-      {validImg ?
-        <img
-          src={`${imgSrc ?? ''}`}
-          alt={`Cover image for ${item.title}`}
-          className="w-12 max-h-[3.5rem] text-base-content-disabled p-2 object-contain object-center"
-        />
-        :
-        <div
-          className="w-12 bg-gradient-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
-        />
-      }
+      <ListImageWithGradientPlaceholder
+        imgSrc={imgSrc}
+        alt = {`Cover image for ${item.title}`}
+      />
       <div className="flex flex-col md:flex-row gap-3 flex-1 py-2">
         <div className="flex-1">
           <div className='line-clamp-2 md:line-clamp-1 break-words font-medium'>

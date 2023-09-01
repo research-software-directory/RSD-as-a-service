@@ -34,12 +34,16 @@ export default function SoftwareMasonryCard({item}:SoftwareCardProps){
       className="hover:text-inherit">
       <div className="flex-shrink-0 transition bg-base-100 shadow-md hover:shadow-lg rounded-lg hover:cursor-pointer h-full select-none flex-col">
         {/* Cover image, show only if valid image link */}
-        {
-          validImg &&
+        { validImg === false ? null
+          :
           <img
             className="object-cover w-full rounded-tr-lg rounded-tl-lg"
             src={`${imgSrc ?? ''}`}
             alt={`Cover image for ${item.brand_name}`}
+            loading='eager'
+            // lighthouse audit requires explicit with and height
+            height="100%"
+            width="100%"
           />
         }
         {/* Card content */}
