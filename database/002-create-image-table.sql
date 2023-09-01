@@ -1,7 +1,8 @@
+-- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 dv4all
+-- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -41,6 +42,7 @@ CREATE TRIGGER sanitise_update_image BEFORE UPDATE ON image FOR EACH ROW EXECUTE
 
 -- ----------------------------------------
 -- RPC to get image by id => sha-1 of data
+-- cache incrased to 1 year based on lighthouse audit
 -- ----------------------------------------
 
 CREATE FUNCTION get_image(uid VARCHAR(40)) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
@@ -52,7 +54,7 @@ BEGIN
 	SELECT format(
 		'[{"Content-Type": "%s"},'
 		'{"Content-Disposition": "inline; filename=\"%s\""},'
-		'{"Cache-Control": "max-age=259200"}]',
+		'{"Cache-Control": "max-age=31536001"}]',
 		mime_type,
 		uid)
 	FROM image WHERE id = uid INTO headers;
