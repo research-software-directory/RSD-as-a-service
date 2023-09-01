@@ -4,7 +4,6 @@
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: EUPL-1.2
 
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
@@ -15,7 +14,7 @@ export type NewAnnouncement = {
 }
 
 export type AnnouncementItem = NewAnnouncement & {
-  id: string
+  id: boolean
 }
 
 export async function getAnnouncement(token?:string) {

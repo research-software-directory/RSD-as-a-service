@@ -40,7 +40,7 @@ export default function AnnouncementsForm({data}: { data: AnnouncementItem|null 
     if (resp.status === 200) {
       // use values returned from api
       const update = {
-        id: resp.message?.id ?? null,
+        id: resp.message?.id ?? true,
         enabled: resp.message.enabled ?? false,
         text: resp.message.text ?? null
       }
@@ -86,8 +86,8 @@ export default function AnnouncementsForm({data}: { data: AnnouncementItem|null 
               message: 'Minimum length is 3.'
             },
             maxLength: {
-              value: 300,
-              message: 'Maximum length is 300.'
+              value: 2000,
+              message: 'Maximum length is 2000.'
             }
           }}
         />
