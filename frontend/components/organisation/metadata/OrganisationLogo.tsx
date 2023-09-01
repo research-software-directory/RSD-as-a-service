@@ -123,7 +123,7 @@ export default function OrganisationLogo({isMaintainer}:OrganisationLogoProps) {
             objectPosition: 'center'
           }
         }}
-        />
+      />
       {isMaintainer &&
         <OrganisationLogoMenu
           logo={logo}

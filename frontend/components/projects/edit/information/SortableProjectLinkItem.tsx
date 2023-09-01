@@ -16,7 +16,7 @@ type SortableProjectLinkProps = {
 }
 
 export default function SortableProjectLinksItem({pos, item, onEdit, onDelete}: SortableProjectLinkProps) {
-   return (
+  return (
     <SortableListItem
       data-testid="project-link-item"
       key={item.id}

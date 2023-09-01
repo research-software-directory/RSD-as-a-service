@@ -158,29 +158,29 @@ export default function AutosaveSoftwareLogo() {
         subtitle={config.logo.help}
       />
 
-        <label htmlFor='upload-software-logo'
-          style={{cursor: 'pointer'}}
-          title="Click to upload a logo"
-        >
-          <ImageWithPlaceholder
-            placeholder="Click to upload a logo < 2MB"
-            src={imageUrl()}
-            alt={'logo'}
-            bgSize={'contain'}
-            bgPosition={'left center'}
-            className="w-full h-[9rem]"
-          />
-        </label>
-
-        <input
-          id="upload-software-logo"
-          type="file"
-          accept="image/*"
-          onChange={onFileUpload}
-          style={{display:'none'}}
+      <label htmlFor='upload-software-logo'
+        style={{cursor: 'pointer'}}
+        title="Click to upload a logo"
+      >
+        <ImageWithPlaceholder
+          placeholder="Click to upload a logo < 2MB"
+          src={imageUrl()}
+          alt={'logo'}
+          bgSize={'contain'}
+          bgPosition={'left center'}
+          className="w-full h-[9rem]"
         />
+      </label>
 
-        {renderImageAttributes()}
+      <input
+        id="upload-software-logo"
+        type="file"
+        accept="image/*"
+        onChange={onFileUpload}
+        style={{display:'none'}}
+      />
+
+      {renderImageAttributes()}
     </>
   )
 }

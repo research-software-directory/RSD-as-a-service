@@ -198,21 +198,21 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
         subtitle={config.licenses.subtitle}
       />
       <div className="flex flex-wrap py-2">
-      {licenses.map((item, pos) => {
-        return(
-          <div
-            key={item.key}
-            className="py-1 pr-1"
-          >
-            <Chip
-              data-testid="license-chip"
-              title={item.label}
-              label={item.label}
-              onDelete={() => onRemove(pos)}
-            />
-          </div>
-        )
-      })}
+        {licenses.map((item, pos) => {
+          return(
+            <div
+              key={item.key}
+              className="py-1 pr-1"
+            >
+              <Chip
+                data-testid="license-chip"
+                title={item.label}
+                label={item.label}
+                onDelete={() => onRemove(pos)}
+              />
+            </div>
+          )
+        })}
       </div>
       <AsyncAutocompleteSC
         status={status}

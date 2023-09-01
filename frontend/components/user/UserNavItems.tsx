@@ -93,5 +93,5 @@ export const userMenu:UserMenuItems = {
     component: (props?) => <UserSettings {...props} />,
     status: 'Your profile settings',
     showSearch: false
- }
+  }
 }

@@ -93,16 +93,16 @@ export default function AboutLanguages({languages, platform}:
 
   return (
     <>
-    <div className="pt-8 pb-2">
-      <Code color="primary" />
-      <span className="text-primary pl-2">{label}</span>
-    </div>
-    <ul className="py-1">
-      {/* show only stat selection pct > 0 and exclude other category */}
-      {stats?.map((props) => {
-        return <AboutLanguageItem key={props.language} {...props} />
-      })}
-    </ul>
+      <div className="pt-8 pb-2">
+        <Code color="primary" />
+        <span className="text-primary pl-2">{label}</span>
+      </div>
+      <ul className="py-1">
+        {/* show only stat selection pct > 0 and exclude other category */}
+        {stats?.map((props) => {
+          return <AboutLanguageItem key={props.language} {...props} />
+        })}
+      </ul>
     </>
   )
 }

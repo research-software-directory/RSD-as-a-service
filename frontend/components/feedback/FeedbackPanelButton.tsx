@@ -94,7 +94,7 @@ User Agent: ${navigator.userAgent}`
               className="placeholder:text-base-500 outline-0 p-2 w-full h-28 text-sm bg-base-700 text-base-100 border border-base-600 rounded"
               placeholder="Ideas on how to improve this page or report an issue?" value={text}
               onChange={e => setText(e.target.value)}>
-          </textarea>
+            </textarea>
 
             {/* Location URL */}
             <div className="text-[#888] text-sm break-all">

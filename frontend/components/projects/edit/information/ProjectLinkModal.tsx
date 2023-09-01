@@ -141,48 +141,48 @@ export default function ProjectLinkModal({open, url_for_project, onCancel, onSub
           width: ['100%', '37rem'],
           padding: '2rem 1.5rem 2.5rem'
         }}>
-        <ControlledTextField
-          control={control}
-          rules={config.url_for_project.title.validation}
-          options={{
-            name: 'title',
-            label: config.url_for_project.title.placeholder,
-            defaultValue: url_for_project?.title ?? '',
-            muiProps:{
-              autoFocus: true,
-              autoComplete: 'off',
-              // placeholder: config.url_for_project.title.placeholder,
-              variant: 'standard',
-              sx: {
-                width: '100%',
-              },
-              helperText: errors?.title ? errors?.title?.message : config.url_for_project.title.label,
-              error: errors?.title ? true : false
-            }
-          }}
-        />
-        <div className="py-4"></div>
-        <ControlledTextField
-          control={control}
-          rules={config.url_for_project.url.validation}
-          options={{
-            name: 'url',
-            label: 'Url',
-            defaultValue: url_for_project?.url ?? '',
-            muiProps: {
-              autoComplete: 'off',
-              // placeholder: config.url_for_project.url.placeholder,
-              variant: 'standard',
-              sx: {
-                width: '100%',
-              },
-              helperText: errors?.url ? errors?.url?.message : config.url_for_project.url.label,
-              error: errors?.url ? true : false
-            }
-          }}
-        />
-      </DialogContent>
-       <DialogActions sx={{
+          <ControlledTextField
+            control={control}
+            rules={config.url_for_project.title.validation}
+            options={{
+              name: 'title',
+              label: config.url_for_project.title.placeholder,
+              defaultValue: url_for_project?.title ?? '',
+              muiProps:{
+                autoFocus: true,
+                autoComplete: 'off',
+                // placeholder: config.url_for_project.title.placeholder,
+                variant: 'standard',
+                sx: {
+                  width: '100%',
+                },
+                helperText: errors?.title ? errors?.title?.message : config.url_for_project.title.label,
+                error: errors?.title ? true : false
+              }
+            }}
+          />
+          <div className="py-4"></div>
+          <ControlledTextField
+            control={control}
+            rules={config.url_for_project.url.validation}
+            options={{
+              name: 'url',
+              label: 'Url',
+              defaultValue: url_for_project?.url ?? '',
+              muiProps: {
+                autoComplete: 'off',
+                // placeholder: config.url_for_project.url.placeholder,
+                variant: 'standard',
+                sx: {
+                  width: '100%',
+                },
+                helperText: errors?.url ? errors?.url?.message : config.url_for_project.url.label,
+                error: errors?.url ? true : false
+              }
+            }}
+          />
+        </DialogContent>
+        <DialogActions sx={{
           padding: '1rem 1.5rem',
           borderTop: '1px solid',
           borderColor: 'divider'

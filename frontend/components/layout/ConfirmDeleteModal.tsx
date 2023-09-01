@@ -57,39 +57,39 @@ export default function ConfirmDeleteModal({
         /> {title}
       </DialogTitle>
 
-        <DialogContent sx={{
-          width:['100%','33rem']
-        }}>
-          <section className="min-h-[5rem] text-lg">
-            {body}
-          </section>
-        </DialogContent>
-        <DialogActions sx={{
-          padding: '1rem 1.5rem',
-        }}>
-          <Button
-            tabIndex={1}
-            onClick={onCancel}
-            color="secondary"
-            sx={{
-              marginRight: '1rem',
-            }}
-          >
+      <DialogContent sx={{
+        width:['100%','33rem']
+      }}>
+        <section className="min-h-[5rem] text-lg">
+          {body}
+        </section>
+      </DialogContent>
+      <DialogActions sx={{
+        padding: '1rem 1.5rem',
+      }}>
+        <Button
+          tabIndex={1}
+          onClick={onCancel}
+          color="secondary"
+          sx={{
+            marginRight: '1rem',
+          }}
+        >
             Cancel
-          </Button>
-          <Button
-            tabIndex={0}
-            type="button"
-            variant="contained"
-            color="error"
-            endIcon={
-              <DeleteIcon />
-            }
-            onClick={onDelete}
-          >
+        </Button>
+        <Button
+          tabIndex={0}
+          type="button"
+          variant="contained"
+          color="error"
+          endIcon={
+            <DeleteIcon />
+          }
+          onClick={onDelete}
+        >
             Remove
-          </Button>
-        </DialogActions>
+        </Button>
+      </DialogActions>
 
     </Dialog>
   )

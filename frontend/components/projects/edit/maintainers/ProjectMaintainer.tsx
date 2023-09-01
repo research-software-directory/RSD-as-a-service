@@ -50,15 +50,15 @@ export default function ProjectMaintainer({pos, maintainer, onEdit, onDelete, di
           backgroundColor:'grey.100'
         }
       }}
-      >
-        <ListItemAvatar>
-          <ContributorAvatar
-            avatarUrl={''}
-            displayName={name ?? ''}
-            displayInitials={displayInitials}
-          />
-        </ListItemAvatar>
-        <ListItemText primary={name} secondary={affiliation} />
+    >
+      <ListItemAvatar>
+        <ContributorAvatar
+          avatarUrl={''}
+          displayName={name ?? ''}
+          displayInitials={displayInitials}
+        />
+      </ListItemAvatar>
+      <ListItemText primary={name} secondary={affiliation} />
     </ListItem>
   )
 }

@@ -36,7 +36,7 @@ function RemoveAccountAlert({disabled}: { disabled: boolean }) {
       <Alert severity="warning" sx={{marginTop:'0.5rem'}}>
         <AlertTitle sx={{fontWeight:500}}>Removing your RSD account</AlertTitle>
         In order to be able to remove your account from RSD you first need to accept Terms of Service and Privacy Statement. After that remove account button will be enabled. If you do not wish to accept the terms of service but want your account to be removed from RSD please <strong>send an email to RSD support at <a href={`mailto:${host.email}?subject=${encodeURIComponent('Remove RSD account')}`} target="_blank" rel="noreferrer">
-        {host.email}</a></strong>.
+          {host.email}</a></strong>.
       </Alert>
     )
   }

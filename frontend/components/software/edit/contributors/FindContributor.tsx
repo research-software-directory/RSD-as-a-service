@@ -77,7 +77,7 @@ export default function FindContributor({software,position,onEdit,onSubmit}:Find
         role: null,
         position
       }
-       // debugger
+      // debugger
       setModal({
         open: true,
         contributor
@@ -168,7 +168,7 @@ export default function FindContributor({software,position,onEdit,onSubmit}:Find
           reset: true
         }}
       />
-        {modal && modal.open && modal.contributor &&
+      {modal && modal.open && modal.contributor &&
         <AggregatedContributorModal
           open={modal.open}
           contributor={modal.contributor}

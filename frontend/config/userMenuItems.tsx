@@ -18,8 +18,8 @@ import Logout from '@mui/icons-material/Logout'
 import {MenuItemType} from './menuItems'
 
 export function getUserMenuItems(
-    role: 'rsd_admin' | 'rsd_user'='rsd_user'
-  ) {
+  role: 'rsd_admin' | 'rsd_user'='rsd_user'
+) {
 
   const userMenuItems: MenuItemType[] = [
     {

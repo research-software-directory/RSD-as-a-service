@@ -73,10 +73,10 @@ export function EditSoftwareProvider(props: any) {
 
   return (
     <EditSoftwareContext.Provider value={{
-        state,
-        dispatch
-      }}
-      {...props}
+      state,
+      dispatch
+    }}
+    {...props}
     />
   )
 }

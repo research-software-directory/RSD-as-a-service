@@ -75,7 +75,7 @@ export default function ControlledSlugTextField({
                   <div>
                     <CircularProgress data-testid="slug-circular-progress" color="primary" size={32} />
                   </div>
-                : null
+                  : null
               )
             }}
             error={error ? true: false}

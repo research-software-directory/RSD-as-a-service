@@ -97,12 +97,12 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   }
 
   function deleteAvatar() {
-     if (formData.id && formData.avatar_id) {
+    if (formData.id && formData.avatar_id) {
       // mark image for deletion
       setRemoveAvatar(formData.avatar_id)
       // update form
       setValue('avatar_id', null, {shouldDirty:true, shouldValidate:true})
-     } else {
+    } else {
       // just remove uploaded image from form
       // because it is not save yet to DB
       setValue('avatar_b64', null)
@@ -172,7 +172,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   }
 
   return (
-     <Dialog
+    <Dialog
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}
@@ -211,9 +211,9 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
           <section className="grid grid-cols-[1fr,2fr] gap-8">
             <div>
               <label htmlFor="upload-avatar-image"
-                  style={{cursor:'pointer'}}
-                  title="Click to upload an image"
-                >
+                style={{cursor:'pointer'}}
+                title="Click to upload an image"
+              >
                 <ContributorAvatar
                   size={8}
                   avatarUrl={formData.avatar_b64 ?? getImageUrl(formData.avatar_id) ?? ''}
@@ -286,17 +286,17 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
             />
 
             <ControlledTextField
-                options={{
-                  name: 'orcid',
-                  label: config.orcid.label,
-                  useNull: true,
-                  defaultValue: contributor?.orcid,
-                  helperTextMessage: config.orcid.help,
-                  // helperTextCnt: `${formData?.orcid?.length || 0}/${config.orcid.validation.maxLength.value}`,
-                }}
-                control={control}
-                rules={config.orcid.validation}
-              />
+              options={{
+                name: 'orcid',
+                label: config.orcid.label,
+                useNull: true,
+                defaultValue: contributor?.orcid,
+                helperTextMessage: config.orcid.help,
+                // helperTextCnt: `${formData?.orcid?.length || 0}/${config.orcid.validation.maxLength.value}`,
+              }}
+              control={control}
+              rules={config.orcid.validation}
+            />
 
             <ControlledTextField
               control={control}

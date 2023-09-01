@@ -34,10 +34,10 @@ export default function SoftwareOverviewContent({layout, software}: SoftwareOver
     return (
       <SoftwareOverviewMasonry>
         {software.map((item) => (
-        <div key={item.id} className="mb-8 break-inside-avoid">
-          <SoftwareMasonryCard item={item}/>
-        </div>
-      ))}
+          <div key={item.id} className="mb-8 break-inside-avoid">
+            <SoftwareMasonryCard item={item}/>
+          </div>
+        ))}
       </SoftwareOverviewMasonry>
     )
   }

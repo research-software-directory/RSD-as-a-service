@@ -86,11 +86,11 @@ export default function ProjectQuality() {
             minHeight: '90vh',
           }}
         >
-        <SortableTable
-          metadata={realLabels}
-          initialData={data}
-          initialOrder=""
-        />
+          <SortableTable
+            metadata={realLabels}
+            initialData={data}
+            initialOrder=""
+          />
         </TableWrapper>
       </FullScreenTable>
     )

@@ -100,15 +100,15 @@ export function RelatedProjectItem({project, onDelete}: ProjectItemProps) {
       data-testid="related-project-item"
       secondaryAction={
         <>
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          onClick={onDelete}
-          sx={{marginRight: '0rem'}}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={onDelete}
+            sx={{marginRight: '0rem'}}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
       }
       sx={{
         minHeight:itemHeight,

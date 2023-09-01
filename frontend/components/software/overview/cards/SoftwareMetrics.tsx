@@ -19,7 +19,7 @@ type SoftwareMetricsProps = {
 
 export default function SoftwareMetrics({contributor_cnt, mention_cnt, downloads}: SoftwareMetricsProps) {
 
-   function mentionCntMessage() {
+  function mentionCntMessage() {
     if (mention_cnt && mention_cnt === 1) {
       return `${mention_cnt} mention`
     }

@@ -157,14 +157,14 @@ describe('frontend/components/projects/edit/output/index.tsx', () => {
       // call RSD api to find mention by DOI
       expect(mockFindPublicationByTitle).toBeCalledTimes(1)
       expect(mockFindPublicationByTitle).toBeCalledWith({
-       'project': editProjectState.project.id,
-       searchFor,
-       'token': mockSession.token
+        'project': editProjectState.project.id,
+        searchFor,
+        'token': mockSession.token
       })
     })
   })
 
-   it('add custom mention', async() => {
+  it('add custom mention', async() => {
     // resolve existing mentions to []
     mockGetOutputForProject.mockResolvedValueOnce([])
     // resolve search with mockedItems
@@ -229,23 +229,23 @@ describe('frontend/components/projects/edit/output/index.tsx', () => {
     await waitFor(() => {
       expect(mockAddNewOutputToProject).toBeCalledTimes(1)
       expect(mockAddNewOutputToProject).toBeCalledWith({
-       'item': {
-         'authors': null,
-         'doi': null,
-         'id': null,
-         'image_url': null,
-         'journal': null,
-         'mention_type': 'book',
-         'note': null,
-         'page': null,
-         'publication_year': null,
-         'publisher': null,
-         'source': 'RSD',
-         'title': 'Test value',
-         'url': 'https://google.com/link1',
-       },
-       'project': editProjectState.project.id,
-       'token': mockSession.token,
+        'item': {
+          'authors': null,
+          'doi': null,
+          'id': null,
+          'image_url': null,
+          'journal': null,
+          'mention_type': 'book',
+          'note': null,
+          'page': null,
+          'publication_year': null,
+          'publisher': null,
+          'source': 'RSD',
+          'title': 'Test value',
+          'url': 'https://google.com/link1',
+        },
+        'project': editProjectState.project.id,
+        'token': mockSession.token,
       })
     })
   })

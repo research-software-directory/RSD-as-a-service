@@ -107,13 +107,13 @@ it('can add keyword from option list', async() => {
   await waitFor(() => {
     expect(mockAddKeywordsToProject).toBeCalledTimes(1)
     expect(mockAddKeywordsToProject).toBeCalledWith({
-       'data': [
-         {
-           'keyword': keywords[0].id,
-           'project': mockProps.project_id,
-         },
-       ],
-       'token': mockSession.token,
+      'data': [
+        {
+          'keyword': keywords[0].id,
+          'project': mockProps.project_id,
+        },
+      ],
+      'token': mockSession.token,
     })
   })
   // wait for keyword chip to be loaded

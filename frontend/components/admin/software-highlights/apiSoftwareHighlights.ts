@@ -92,7 +92,7 @@ export async function addSoftwareHighlight({id,position,token}:{id:string,positi
 }
 
 export async function patchSoftwareHighlights({highlights,token}:{highlights:SoftwareHighlight[],token:string}) {
-   try {
+  try {
     // create all requests
     const requests = highlights.map(item => {
       const url = `/api/v1/software_highlight?software=eq.${item.id}`

@@ -43,16 +43,16 @@ export default function SortableListItemActions({pos,listeners,onEdit,onDelete}:
     if (typeof onDelete !== 'undefined') {
       return (
         <IconButton
-            title="Delete"
-            edge="end"
-            aria-label="delete"
-            onClick={() => {
-              onDelete(pos)
-            }}
-            sx={{marginRight: '1rem'}}
-          >
-            <DeleteIcon />
-          </IconButton>
+          title="Delete"
+          edge="end"
+          aria-label="delete"
+          onClick={() => {
+            onDelete(pos)
+          }}
+          sx={{marginRight: '1rem'}}
+        >
+          <DeleteIcon />
+        </IconButton>
       )
     }
     return null

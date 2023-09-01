@@ -66,7 +66,7 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
   function renderPublished() {
     if (typeof is_published != 'undefined' && is_published === false) {
       return (
-       <NotPublishedIcon />
+        <NotPublishedIcon />
       )
     }
     if (is_featured){
@@ -105,20 +105,20 @@ export default function SoftwareCard({href, brand_name, short_statement, is_feat
             Updated {getTimeAgoSince(today, updated_at)}
           </span>
           <div className="flex gap-2">
-          {mention_cnt &&
+            {mention_cnt &&
             <Tooltip title={mentionCntMessage()} placement="top">
               <span>
                 <InsertCommentOutlinedIcon /> {mention_cnt}
               </span>
             </Tooltip>
-          }
-          {contributor_cnt &&
+            }
+            {contributor_cnt &&
             <Tooltip title={contributorsMessage()} placement="top">
               <span>
                 <PeopleAltOutlinedIcon /> {contributor_cnt}
               </span>
             </Tooltip>
-          }
+            }
           </div>
         </div>
       </article>

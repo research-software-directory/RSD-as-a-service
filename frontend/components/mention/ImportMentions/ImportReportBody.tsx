@@ -130,7 +130,7 @@ export default function ImportReportBody({initialResults,onCancel,onImport}: Bul
                 <a href={`https://doi.org/${result.mention.doi}`} target="_blank">
                   {result.mention.doi}
                 </a>
-              : <span>{result.doi}</span>
+                : <span>{result.doi}</span>
             }
             secondary={
               result?.mention ?

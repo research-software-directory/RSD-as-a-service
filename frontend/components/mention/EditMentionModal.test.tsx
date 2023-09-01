@@ -93,7 +93,7 @@ it('calls onSave when minimum info provided', async () => {
   })
   fireEvent.change(title, {target: {value: expectedItem.title}})
 
-   // select wrapper/group
+  // select wrapper/group
   const selectGroup = screen.getByTestId('controlled-select')
   expect(selectGroup).toBeInTheDocument()
 
