@@ -322,7 +322,7 @@ it('can replace existing image', async () => {
     expect(mockPatchProjectTable).toBeCalledWith({
       'data': {
         'image_id': null,
-        },
+      },
       'id': projectState.project.id,
       'token': mockSession.token,
     })

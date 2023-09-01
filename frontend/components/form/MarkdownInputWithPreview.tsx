@@ -71,17 +71,17 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
   function getHelperTextMsg() {
     if (helperInfo)
       if (helperInfo?.length > helperInfo.maxLength) {
-      return (
-        <div className="py-[1rem] px-[2rem] text-xs text-error">
-          {helperInfo?.length || 0}/{helperInfo?.maxLength}
-        </div>
-      )
-    } else {
-      return (
-        <div className="py-[1rem] px-[2rem] text-xs opacity-70">
-          {helperInfo?.length || 0}/{helperInfo.maxLength}
-        </div>
-      )
+        return (
+          <div className="py-[1rem] px-[2rem] text-xs text-error">
+            {helperInfo?.length || 0}/{helperInfo?.maxLength}
+          </div>
+        )
+      } else {
+        return (
+          <div className="py-[1rem] px-[2rem] text-xs opacity-70">
+            {helperInfo?.length || 0}/{helperInfo.maxLength}
+          </div>
+        )
       }
     return null
   }

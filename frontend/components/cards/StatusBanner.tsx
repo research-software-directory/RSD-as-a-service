@@ -48,6 +48,6 @@ export default function StatusBanner({
           Not published
         </div>
       }
-  </>
+    </>
   )
 }

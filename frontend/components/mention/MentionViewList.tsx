@@ -18,7 +18,7 @@ type MentionSectionListProps = {
 }
 
 export default function MentionViewList({title, type, items}: MentionSectionListProps) {
-    // do not render accordion/section if no items
+  // do not render accordion/section if no items
   if (!items || items.length===0) return null
   // debugger
   return (
@@ -89,7 +89,7 @@ export default function MentionViewList({title, type, items}: MentionSectionList
                 />
               </li>
             )
-            })
+          })
           }
         </ul>
       </AccordionDetails>

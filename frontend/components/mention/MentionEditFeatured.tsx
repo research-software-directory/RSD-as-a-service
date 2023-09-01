@@ -39,7 +39,7 @@ export default function MentionEditFeatured({item}: MentionListItem) {
           data-testid="edit-mention-btn"
           key="edit-button"
           onClick={onEdit}>
-            <EditIcon />
+          <EditIcon />
         </IconButton>
       )
     }

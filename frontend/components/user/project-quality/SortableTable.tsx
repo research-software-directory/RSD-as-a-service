@@ -72,7 +72,7 @@ export default function SortableTable({metadata, initialData, initialOrder=''}: 
           })}
         </TableRow>
       </TableHead>
-       <TableBody>
+      <TableBody>
         {data.map((item, pos) => {
           return (
             <TableRow key={pos}>

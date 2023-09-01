@@ -36,8 +36,8 @@ export default function ResearchUnitsList({loading, units, onEdit, isPrimaryMain
         <AlertTitle sx={{fontWeight: 500}}>The organisation has no research units</AlertTitle>
         {
           isPrimaryMaintainer ?
-          <span>Add one using <strong>ADD button!</strong></span>
-          :null
+            <span>Add one using <strong>ADD button!</strong></span>
+            :null
         }
       </Alert>
     )
@@ -48,19 +48,19 @@ export default function ResearchUnitsList({loading, units, onEdit, isPrimaryMain
       width: '100%',
     }}>
       { units.map((item,pos) => {
-          return (
-            <ResearchUnitItem
-              key={pos}
-              pos={pos}
-              slug={item.slug}
-              name={item.name}
-              website={item.website}
-              logo_id={item.logo_id}
-              isMaintainer={isPrimaryMaintainer}
-              onEdit={onEdit}
-            />
-          )
-        })
+        return (
+          <ResearchUnitItem
+            key={pos}
+            pos={pos}
+            slug={item.slug}
+            name={item.name}
+            website={item.website}
+            logo_id={item.logo_id}
+            isMaintainer={isPrimaryMaintainer}
+            onEdit={onEdit}
+          />
+        )
+      })
       }
     </List>
   )

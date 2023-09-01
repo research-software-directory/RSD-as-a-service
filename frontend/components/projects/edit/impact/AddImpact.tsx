@@ -21,17 +21,17 @@ export default function AddImpact() {
 
   return (
     <>
-    <h3 className="pt-4 pb-2 text-lg">{config.newItem.title}</h3>
-    <CreateMentionInfoPanel>
-      <div className="pt-4">
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={onNewImpact}>
+      <h3 className="pt-4 pb-2 text-lg">{config.newItem.title}</h3>
+      <CreateMentionInfoPanel>
+        <div className="pt-4">
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={onNewImpact}>
           Create
-        </Button>
-      </div>
-    </CreateMentionInfoPanel>
+          </Button>
+        </div>
+      </CreateMentionInfoPanel>
     </>
   )
 }

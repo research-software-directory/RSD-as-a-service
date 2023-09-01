@@ -28,39 +28,39 @@ export default function SoftwareMentionsSection({mentions}: { mentions: MentionF
     <article className="bg-secondary">
       <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
         <DarkThemeSection>
-        <h2
-          data-testid="software-mentions-section-title"
-          className="pb-8 text-[2rem] text-base-100">
+          <h2
+            data-testid="software-mentions-section-title"
+            className="pb-8 text-[2rem] text-base-100">
           Mentions
-        </h2>
-        <section>
-          {featuredMentions
-            .sort((a,b)=>sortOnNumProp(a,b,'publication_year','desc'))
-            .map(item => {
-            return (
-              <MentionItemFeatured key={item.url} mention={item} />
-            )
-          })}
-          {/* render output by type */}
-          {mentionTypes.map((key) => {
-            const type = key as MentionTypeKeys
-            const items = mentionByType[type]?.sort((a, b) => {
+          </h2>
+          <section>
+            {featuredMentions
+              .sort((a,b)=>sortOnNumProp(a,b,'publication_year','desc'))
+              .map(item => {
+                return (
+                  <MentionItemFeatured key={item.url} mention={item} />
+                )
+              })}
+            {/* render output by type */}
+            {mentionTypes.map((key) => {
+              const type = key as MentionTypeKeys
+              const items = mentionByType[type]?.sort((a, b) => {
               // sort mentions on date, newest at the top
-              return sortOnNumProp(a,b,'publication_year','desc')
-            })
-            const title = getMentionType(type,'plural')
-            return (
-              <MentionViewList
-                key={key}
-                title={title}
-                type={type}
-                items={items as MentionItemProps[]}
-              />
-            )
-          })}
+                return sortOnNumProp(a,b,'publication_year','desc')
+              })
+              const title = getMentionType(type,'plural')
+              return (
+                <MentionViewList
+                  key={key}
+                  title={title}
+                  type={type}
+                  items={items as MentionItemProps[]}
+                />
+              )
+            })}
           </section>
-          </DarkThemeSection>
-        </PageContainer>
+        </DarkThemeSection>
+      </PageContainer>
     </article>
   )
 }

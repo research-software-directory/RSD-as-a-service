@@ -33,23 +33,23 @@ export default function AboutPageSettings() {
       type="section"
     >
       <FormProvider {...methods}>
-      <form
-        autoComplete="off"
-        className="flex-1 flex flex-col py-4"
-      >
-        {/* hidden inputs */}
-        <input type="hidden"
-          {...methods.register('id')}
-        />
-        <EditSectionTitle
-          title={config.description.title}
-          subtitle={config.description.subtitle}
-        />
-        <AutosaveOrganisationDescription
-          name="description"
-          maxLength={config.description.validation.maxLength.value}
-        />
-      </form>
+        <form
+          autoComplete="off"
+          className="flex-1 flex flex-col py-4"
+        >
+          {/* hidden inputs */}
+          <input type="hidden"
+            {...methods.register('id')}
+          />
+          <EditSectionTitle
+            title={config.description.title}
+            subtitle={config.description.subtitle}
+          />
+          <AutosaveOrganisationDescription
+            name="description"
+            maxLength={config.description.validation.maxLength.value}
+          />
+        </form>
       </FormProvider>
     </BaseSurfaceRounded>
   )

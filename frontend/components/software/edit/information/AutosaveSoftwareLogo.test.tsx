@@ -175,7 +175,7 @@ it('can replace existing image', async() => {
     expect(mockPatchSoftwareTable).toBeCalledWith({
       'data': {
         'image_id': null,
-        },
+      },
       'id': formValues.id,
       'token': mockSession.token,
     })

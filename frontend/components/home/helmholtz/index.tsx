@@ -78,19 +78,19 @@ function LatestSpotlight({name, description, image, link}:
   {name:string, description:string, image:string, link: string}) {
   return(
     <Link
-    href={link}
-    passHref
+      href={link}
+      passHref
     >
-    <div className="w-full flex flex-row flex-wrap my-5 hover:bg-[#ecfbfd] hover:cursor-pointer relative group">
-      <div className="md:w-2/3 overflow-hidden md:my-auto">
-        <img alt={name} className="group-hover:scale-105 transition duration-100" src={image} />
+      <div className="w-full flex flex-row flex-wrap my-5 hover:bg-[#ecfbfd] hover:cursor-pointer relative group">
+        <div className="md:w-2/3 overflow-hidden md:my-auto">
+          <img alt={name} className="group-hover:scale-105 transition duration-100" src={image} />
+        </div>
+        <div className="md:w-1/3 md:pl-8 mt-auto text-xl">
+          <div className="text-4xl py-2">{name}</div>
+          <p>{description}</p>
+        </div>
       </div>
-      <div className="md:w-1/3 md:pl-8 mt-auto text-xl">
-        <div className="text-4xl py-2">{name}</div>
-        <p>{description}</p>
-      </div>
-    </div>
-  </Link>
+    </Link>
   )
 }
 
@@ -193,28 +193,28 @@ function clearBackgroundImage(event: React.MouseEvent<HTMLDivElement>) {
 function ParticipatingOrganisations({organisations}:{organisations:OrganisationForOverview[]}) {
   return (
     <div className="w-full h-full relative">
-    <div
-      id="participatingOrganisations"
-      className="flex flex-row flex-nowrap w-full overflow-x-scroll h-[12rem] hgf-scrollbar animate-"
-    >
-      {
-        organisations.map(item => {
-          return(
-            <Link
-              key={`link_${item.name}`}
-              href={`/organisations/${item.rsd_path}`}
-              passHref
-            >
-              <img
-                key={item.name}
-                alt={item.name}
-                src={getImageUrl(item.logo_id) ?? undefined}
-                className="p-10 hover:cursor-pointer"
-              />
-            </Link>
-          )
-        })
-      }
+      <div
+        id="participatingOrganisations"
+        className="flex flex-row flex-nowrap w-full overflow-x-scroll h-[12rem] hgf-scrollbar animate-"
+      >
+        {
+          organisations.map(item => {
+            return(
+              <Link
+                key={`link_${item.name}`}
+                href={`/organisations/${item.rsd_path}`}
+                passHref
+              >
+                <img
+                  key={item.name}
+                  alt={item.name}
+                  src={getImageUrl(item.logo_id) ?? undefined}
+                  className="p-10 hover:cursor-pointer"
+                />
+              </Link>
+            )
+          })
+        }
       </div>
       <IconButton
         id="scrollLeftButton"
@@ -287,87 +287,87 @@ export default function HelmholtzHome() {
   }
 
   return (
-     <div className="bg-base-100" data-testid="rsd-helmholtz-home">
+    <div className="bg-base-100" data-testid="rsd-helmholtz-home">
 
-        <AppHeader/>
+      <AppHeader/>
 
-        {/* Head and claim */}
-        <div className="bg-secondary bg-landing-page mb-10">
-          <div className="flex flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-screen-xl text-base-100">
-            <div className="min-w-min flex flex-col">
-              <LogoHelmholtz width="220" />
-              <div className="pt-1 pb-12">Research for grand challenges.</div>
-              {/* <a onClick={handleClickOpen}>
+      {/* Head and claim */}
+      <div className="bg-secondary bg-landing-page mb-10">
+        <div className="flex flex-row flex-wrap container mx-auto px-6 md:px-10 pt-16 pb-12 max-w-screen-xl text-base-100">
+          <div className="min-w-min flex flex-col">
+            <LogoHelmholtz width="220" />
+            <div className="pt-1 pb-12">Research for grand challenges.</div>
+            {/* <a onClick={handleClickOpen}>
                 <div className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-base-100 text-center font-medium text-2xl py-4 px-6 rounded-sm">
                   Add your software
                 </div>
               </a> */}
-            </div>
-            <div className="xs:pt-6 sm:pt-0 md:pt-0 lg:pt-0 xl:pt-0 ml-auto">
-              <h1 className="text-6xl">Promote and Discover <br/>Research Software</h1>
-              <div className="text-2xl">Because software matters</div>
-            </div>
+          </div>
+          <div className="xs:pt-6 sm:pt-0 md:pt-0 lg:pt-0 xl:pt-0 ml-auto">
+            <h1 className="text-6xl">Promote and Discover <br/>Research Software</h1>
+            <div className="text-2xl">Because software matters</div>
           </div>
         </div>
+      </div>
 
-        {/* Software spotlights */}
-        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
-          <h2 className='text-5xl'>Software Spotlights</h2>
-          <div className='text-2xl mt-2'>Outstanding software products of the Helmholtz community</div>
-          <div className="w-full">
-            <Spotlights spotlights={SPOTLIGHTS} />
-            <div className="flex">
-              <Link href="/software" passHref>
-                <div
-                  className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-base-100 text-center font-medium text-2xl py-4 px-6 rounded-sm">
+      {/* Software spotlights */}
+      <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+        <h2 className='text-5xl'>Software Spotlights</h2>
+        <div className='text-2xl mt-2'>Outstanding software products of the Helmholtz community</div>
+        <div className="w-full">
+          <Spotlights spotlights={SPOTLIGHTS} />
+          <div className="flex">
+            <Link href="/software" passHref>
+              <div
+                className="w-[250px] bg-[#05e5ba] hover:bg-primary text-secondary hover:text-base-100 text-center font-medium text-2xl py-4 px-6 rounded-sm">
                   Browse software
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Software meta repository */}
-        <div className="conainer mx-auto my-10 max-w-screen-xl text-base-100 bg-secondary">
-          <div
-            id="backgroundContainer"
-            className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75 relative"
-            onMouseLeave={clearBackgroundImage}>
-            <h2 className='text-5xl'>Discover by research topic</h2>
-            {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
-            <ResearchFields />
-          </div>
-        </div>
-
-        {/* Teaser */}
-        <div className="conainer mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
-          <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-20'>
-            <div className='text-2xl'>
-              <h2 className='text-5xl pb-10'>Upcoming</h2>
-              <div>This service is in <span className="bg-[#cdeefb]">active development</span>. Upcoming features include:</div>
-              <div className="px-6 my-4 border-l-2 border-[#002864]">
-                <div className="py-4">Login with your Helmholtz Institution&apos;s account</div>
-                <div className="py-4">Add your own software products</div>
-                <div className="py-4">Add related projects, funding and institutions</div>
-                <div className="py-4">Obtain a free license consultation from HIFIS</div>
               </div>
-              <div className="py-2">Do you have <span className="bg-[#cdeefb]">suggestions for improvements or new features</span>?</div>
-              <div className="py-2">Please let us know! Send us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="bg-[#cdeefb] underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Software meta repository */}
+      <div className="conainer mx-auto my-10 max-w-screen-xl text-base-100 bg-secondary">
+        <div
+          id="backgroundContainer"
+          className="w-full h-full p-12 bg-blend-multiply bg-center bg-cover bg-secondary bg-opacity-75 relative"
+          onMouseLeave={clearBackgroundImage}>
+          <h2 className='text-5xl'>Discover by research topic</h2>
+          {/* <div className="text-xl my-4">Browse Software by Research Topic</div> */}
+          <ResearchFields />
+        </div>
+      </div>
+
+      {/* Teaser */}
+      <div className="conainer mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+        <div className='grid grid-cols-1 lg:grid-cols-2 lg:gap-20'>
+          <div className='text-2xl'>
+            <h2 className='text-5xl pb-10'>Upcoming</h2>
+            <div>This service is in <span className="bg-[#cdeefb]">active development</span>. Upcoming features include:</div>
+            <div className="px-6 my-4 border-l-2 border-[#002864]">
+              <div className="py-4">Login with your Helmholtz Institution&apos;s account</div>
+              <div className="py-4">Add your own software products</div>
+              <div className="py-4">Add related projects, funding and institutions</div>
+              <div className="py-4">Obtain a free license consultation from HIFIS</div>
             </div>
-            <div className="hidden md:block md:bg-[url(/images/pexels-cottonbro-5483075.jpg)] bg-center bg-cover"></div>
+            <div className="py-2">Do you have <span className="bg-[#cdeefb]">suggestions for improvements or new features</span>?</div>
+            <div className="py-2">Please let us know! Send us an <a href="mailto:support@hifis.net?subject=Comments about RSD" className="bg-[#cdeefb] underline">e-mail</a>, or open an <a href="https://github.com/hifis-net/RSD-as-a-service/issues" target="_blank" className="bg-[#cdeefb] underline" rel="noreferrer">issue</a> in our GitHub repository.</div>
           </div>
+          <div className="hidden md:block md:bg-[url(/images/pexels-cottonbro-5483075.jpg)] bg-center bg-cover"></div>
         </div>
+      </div>
 
-        {/* Participating organsiations */}
-        <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
-          <div className="py-6">
-            <h2 className="text-5xl">Participating organisations</h2>
-            <ParticipatingOrganisations organisations={organisations}/>
-          </div>
+      {/* Participating organsiations */}
+      <div className="container mx-auto p-6 md:p-10 xl:py-10 xl:px-0 max-w-screen-xl text-secondary">
+        <div className="py-6">
+          <h2 className="text-5xl">Participating organisations</h2>
+          <ParticipatingOrganisations organisations={organisations}/>
         </div>
+      </div>
 
-        {/* For RSEs and Researchers */}
-        {/* <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
+      {/* For RSEs and Researchers */}
+      {/* <div className="conainer mx-auto p-6 md:p-10 max-w-screen-xl text-secondary">
           <div className='py-6'>
             <h2 className='text-5xl'>For RSEs and Researchers</h2>
             <div className="text-2xl my-4">A place for Research Software that is being developed in the Helmholtz Association.</div>
@@ -408,8 +408,8 @@ export default function HelmholtzHome() {
             </div>
           </div>
         </div> */}
-        <AppFooter/>
-      </div>
+      <AppFooter/>
+    </div>
   )
 }
 

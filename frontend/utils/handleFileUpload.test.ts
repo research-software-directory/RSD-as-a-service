@@ -46,8 +46,11 @@ it('returns 413 when file exceeds maxFileSize', async () => {
   const props = {
     target: {
       files: [
-        {size: maxFileSize + 1}
-  ]}}
+        {size: maxFileSize + 1},
+      ],
+      other: 1,
+    },
+  }
   const resp = await handleFileUpload(props as any)
 
   expect(resp).toEqual({

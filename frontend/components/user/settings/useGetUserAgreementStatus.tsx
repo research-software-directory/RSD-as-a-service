@@ -25,11 +25,11 @@ export function useGetUserAgreementStatus(token: string, user:RsdUser|null, setA
           setOpen(true)
         }
         if (
-            typeof(setAgreeTerms) === 'function' && typeof(setNoticePrivacy) === 'function' &&
+          typeof(setAgreeTerms) === 'function' && typeof(setNoticePrivacy) === 'function' &&
             typeof(respData.data.agree_terms) === 'boolean' && typeof(respData.data.notice_privacy_statement) === 'boolean'
-          ) {
-            setAgreeTerms(respData.data.agree_terms)
-            setNoticePrivacy(respData.data.notice_privacy_statement)
+        ) {
+          setAgreeTerms(respData.data.agree_terms)
+          setNoticePrivacy(respData.data.notice_privacy_statement)
         }
       }
     }

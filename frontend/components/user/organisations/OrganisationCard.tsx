@@ -63,7 +63,7 @@ export default function OrganisationCard(organisation: OrganisationCardProps) {
                   opacity: 0.4,
                   color: 'primary.main'
                 }}
-            /></span>
+              /></span>
           }
         </div>
         <div className="flex-1 grid gap-8 lg:grid-cols-[1fr,1fr] p-8 overflow-hidden">

@@ -40,7 +40,7 @@ export default function PackageManagersList({loading,managers,onSorted,onEdit,on
           marginTop: '0.5rem'
         }}
       >
-      <AlertTitle sx={{fontWeight:500}}>No download locations</AlertTitle>
+        <AlertTitle sx={{fontWeight:500}}>No download locations</AlertTitle>
         Please provide <strong>download locations</strong> of your software using Add button.
       </Alert>
     )
@@ -78,18 +78,18 @@ export default function PackageManagersList({loading,managers,onSorted,onEdit,on
       />
       {modal &&
         <ConfirmDeleteModal
-        title="Remove package manager"
-        open={modal?.open ?? false}
-        body={
-          <p>Are you sure you want to remove installation location <strong>{modal.location ?? ''}</strong>?</p>
-        }
-        onCancel={() => {
-          setModal(undefined)
-        }}
-        onDelete={() => {
-          onDelete(modal.pos)
-          setModal(undefined)
-        }}
+          title="Remove package manager"
+          open={modal?.open ?? false}
+          body={
+            <p>Are you sure you want to remove installation location <strong>{modal.location ?? ''}</strong>?</p>
+          }
+          onCancel={() => {
+            setModal(undefined)
+          }}
+          onDelete={() => {
+            onDelete(modal.pos)
+            setModal(undefined)
+          }}
         />
       }
     </>

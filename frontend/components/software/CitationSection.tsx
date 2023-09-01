@@ -59,27 +59,27 @@ export default function CitationSection({releases,concept_doi}:
     <PageContainer className='lg:px-4'>
       <article className="flex flex-col min-h-[16rem] px-4 py-8 bg-secondary text-base-100 md:flex-row lg:py-10 lg:px-16 lg:translate-y-[-3rem]">
         <DarkThemeSection>
-        <div className="flex-1 flex flex-col justify-between">
-          <h2 className='py-4'
-            data-testid="citation-section-title">
+          <div className="flex-1 flex flex-col justify-between">
+            <h2 className='py-4'
+              data-testid="citation-section-title">
               Cite this software
-          </h2>
-          {
-            versions?.length > 0 ?
-              <CiteDropdown
-                label="Software version:"
-                options={versions}
-                value={version}
-                onChange={onVersionChange}
-              />
-              :null
-          }
-        </div>
-        <div className="flex-[3] flex flex-col justify-between md:px-4">
-          <CitationDoi doi={citation?.doi ?? concept_doi ?? ''} />
-          {/* NOTE! temporarly dissabled  */}
-          <CitationDownload doi={citation?.doi ?? concept_doi ?? ''} />
-        </div>
+            </h2>
+            {
+              versions?.length > 0 ?
+                <CiteDropdown
+                  label="Software version:"
+                  options={versions}
+                  value={version}
+                  onChange={onVersionChange}
+                />
+                :null
+            }
+          </div>
+          <div className="flex-[3] flex flex-col justify-between md:px-4">
+            <CitationDoi doi={citation?.doi ?? concept_doi ?? ''} />
+            {/* NOTE! temporarly dissabled  */}
+            <CitationDownload doi={citation?.doi ?? concept_doi ?? ''} />
+          </div>
         </DarkThemeSection>
       </article>
     </PageContainer>

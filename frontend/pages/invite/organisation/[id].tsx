@@ -53,7 +53,7 @@ export default function InviteOrganisationMaintainer({organisationInfo, error}:
   }
 
   return (
-     <DefaultLayout>
+    <DefaultLayout>
       <Head>
         <title>Organisation Maintainer Invite | RSD</title>
       </Head>

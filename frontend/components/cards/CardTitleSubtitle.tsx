@@ -17,7 +17,7 @@ export default function CardTitleSubtitle({title,subtitle}:CardTitleSubtitleProp
         title={title}
         className="text-xl font-medium line-clamp-1 my-1"
       >
-      {title}
+        {title}
       </h2>
       <p className="text-base-700 line-clamp-3 break-words my-2">
         {subtitle}

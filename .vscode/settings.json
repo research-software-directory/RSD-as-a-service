@@ -1,22 +1,17 @@
 {
-  // required to indicate that eslint project is not in the root
+  // ESLint
   "eslint.workingDirectories": [
     "./frontend",
   ],
-  // FORMAT ON SAVE for VSC
-  // based on this acticle https://www.aleksandrhovhannisyan.com/blog/format-code-on-save-vs-code-eslint/
-  // define files to validate, can have more options
-  // but in this project we use typescript and react
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-  ],
-  // it tells VScode to use eslint plugin
-  // Note! you might also need to disable Prettier or VSCode defaults
+  // Formating with ESLint:
+  "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
+  },
+  "[javascript][javascriptreact][typescript][typescriptreact]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnSave": true,
   },
   // Tailwind plugin integration
   "css.validate": false,
@@ -26,26 +21,10 @@
   "tailwindCSS.includeLanguages": {
     "plaintext": "html"
   },
+  // Backend
   "[java]": {
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "editor.useTabStops": true,
     "editor.insertSpaces": false,
-  },
-  "java.configuration.updateBuildConfiguration": "automatic",
-  "java.test.config": {
-    "envFile": "${workspaceFolder}/.env",
-  },
-  "[typescript]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.detectIndentation": false
-  },
-  "[typescriptreact]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
-  "[javascript]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
 }

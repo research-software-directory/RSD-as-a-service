@@ -53,7 +53,7 @@ export default function OrcidWitelistPage() {
     fetchWhitelistedOrcids()
   }
 
-	return (
+  return (
     <DefaultLayout>
       <Head>
         <title>{pageTitle}</title>

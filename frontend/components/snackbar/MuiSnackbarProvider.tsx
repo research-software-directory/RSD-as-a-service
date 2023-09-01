@@ -15,13 +15,13 @@ export default function MuiSnackbarProvider(props:any) {
   // console.groupEnd()
   return (
     <>
-    <SnackbarContext.Provider value={{
-      options,
-      setSnackbar
-    }}
-    // we pass children etc...
-    {...props}
-    />
+      <SnackbarContext.Provider value={{
+        options,
+        setSnackbar
+      }}
+      // we pass children etc...
+      {...props}
+      />
       <MuiSnackbar options={options} setSnackbar={setSnackbar}/>
     </>
   )

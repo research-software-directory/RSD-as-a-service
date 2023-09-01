@@ -71,10 +71,10 @@ export function EditProjectProvider(props: any) {
 
   return (
     <EditProjectContext.Provider value={{
-        state,
-        dispatch
-      }}
-      {...props}
+      state,
+      dispatch
+    }}
+    {...props}
     />
   )
 }

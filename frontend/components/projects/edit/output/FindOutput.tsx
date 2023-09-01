@@ -57,29 +57,29 @@ export default function FindOutput() {
 
   return (
     <>
-    <EditSectionTitle
-      title={config.findMention.title}
+      <EditSectionTitle
+        title={config.findMention.title}
       // subtitle={config.findMention.subtitle}
-    />
-    <h3 className="pt-4 pb-2 text-lg">Search</h3>
-    <FindMentionInfoPanel>
-      <div className="pt-4 overflow-hidden">
-        <FindMention
-          onAdd={onAdd}
-          // do not use onCreate option,
-          // use dedicated button instead
-          // onCreate={onCreateImpact}
-          searchFn={findPublication}
-          config={{
-            freeSolo: true,
-            minLength: config.findMention.validation.minLength,
-            label: config.findMention.label,
-            help: config.findMention.help,
-            reset: true
-          }}
-        />
-      </div>
-    </FindMentionInfoPanel>
+      />
+      <h3 className="pt-4 pb-2 text-lg">Search</h3>
+      <FindMentionInfoPanel>
+        <div className="pt-4 overflow-hidden">
+          <FindMention
+            onAdd={onAdd}
+            // do not use onCreate option,
+            // use dedicated button instead
+            // onCreate={onCreateImpact}
+            searchFn={findPublication}
+            config={{
+              freeSolo: true,
+              minLength: config.findMention.validation.minLength,
+              label: config.findMention.label,
+              help: config.findMention.help,
+              reset: true
+            }}
+          />
+        </div>
+      </FindMentionInfoPanel>
     </>
   )
 }

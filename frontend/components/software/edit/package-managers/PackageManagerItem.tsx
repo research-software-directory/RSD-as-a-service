@@ -63,7 +63,7 @@ export default function PackageManagerItem({pos, item, onDelete, onEdit}: Packag
             {
               item.reverse_dependency_count_scraped_at ?
                 <span className="ml-4">Dependents: {item.reverse_dependency_count ?? 0}</span>
-              : <span className="ml-4">Dependents: no info</span>
+                : <span className="ml-4">Dependents: no info</span>
             }
           </>
         }

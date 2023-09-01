@@ -14,7 +14,7 @@ import {Column} from './EditableTable'
 
 export default function TableHeader<T, K extends keyof T>({columns, onSort}:
   {columns: Column<T, K>[], onSort:(column:K)=>void}) {
-   return (
+  return (
     <MuiTableHead>
       <MuiTableRow data-testid="mui-table-head-row">
         {columns.map((col, i) => {
@@ -26,13 +26,13 @@ export default function TableHeader<T, K extends keyof T>({columns, onSort}:
               onClick={() => onSort(col.key)}
               sx={col?.sx}
             >
-               <MuiTableSortLabel
-                  active={col.order?.active}
-                  direction={col.order?.direction}
-                  onClick={() => onSort(col.key)}
-                >
-                  {col.label}
-                </MuiTableSortLabel>
+              <MuiTableSortLabel
+                active={col.order?.active}
+                direction={col.order?.direction}
+                onClick={() => onSort(col.key)}
+              >
+                {col.label}
+              </MuiTableSortLabel>
             </MuiTableCell>
           )
         })}

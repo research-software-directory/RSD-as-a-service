@@ -179,7 +179,7 @@ export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
     image_url: null,
     mention_type: dataciteToRsdType(item),
     source: 'DataCite',
-    note: null
+    note: null,
   }
   return mention
 }
@@ -195,15 +195,15 @@ export async function getDataciteItemByDoiGraphQL(doi: string) {
       body: JSON.stringify({
         operationName: null,
         variables:{},
-        query
-      })
+        query,
+      }),
     })
 
     if (resp.status === 200) {
       const json: DataciteWorkGraphQLResponse = await resp.json()
       return {
         status:200,
-        message:json.data.work
+        message:json.data.work,
       }
     }
     const error = await extractReturnMessage(resp)
@@ -212,7 +212,7 @@ export async function getDataciteItemByDoiGraphQL(doi: string) {
     logger(`getDataciteItemsByDoiGraphQL: ${e?.message}`, 'error')
     return {
       status: 500,
-      message: e?.message
+      message: e?.message,
     }
   }
 }
@@ -228,15 +228,15 @@ export async function getDataciteItemsByDoiGraphQL(dois: string[]) {
       body: JSON.stringify({
         operationName: null,
         variables:{},
-        query
-      })
+        query,
+      }),
     })
 
     if (resp.status === 200) {
       const json = await resp.json()
       return {
         status:200,
-        message:json.data.works.nodes
+        message:json.data.works.nodes,
       }
     }
     const error = await extractReturnMessage(resp)
@@ -245,7 +245,7 @@ export async function getDataciteItemsByDoiGraphQL(dois: string[]) {
     logger(`getDataciteItemsByDoiGraphQL: ${e?.message}`, 'error')
     return {
       status: 500,
-      message: e?.message
+      message: e?.message,
     }
   }
 }
@@ -261,8 +261,8 @@ export async function getDataciteItemsByTitleGraphQL(title: string) {
       body: JSON.stringify({
         operationName: null,
         variables: {},
-        query
-      })
+        query,
+      }),
     })
     if (resp.status === 200) {
       const json: DataciteWorksGraphQLResponse = await resp.json()
@@ -289,8 +289,8 @@ export async function getSoftwareVersionInfoForDoi(doi: string) {
       body: JSON.stringify({
         operationName: null,
         variables: {},
-        query
-      })
+        query,
+      }),
     })
 
     const json = await extractRespFromGraphQL(resp)
@@ -303,13 +303,13 @@ export async function getSoftwareVersionInfoForDoi(doi: string) {
 
 function dataciteToRsdType(item: WorkResponse): MentionTypeKeys {
   switch (item.type.trim().toLowerCase()) {
-    // additional validation using resourceType
+  // additional validation using resourceType
     case 'audiovisual':
       return rsdTypeFromResourceType(item.types.resourceType)
     case 'text':
       return rsdTypeFromResourceType(item.types.resourceType)
     default:
-      // by default using type value
+    // by default using type value
       return rsdTypeFromResourceType(item.type)
   }
 }

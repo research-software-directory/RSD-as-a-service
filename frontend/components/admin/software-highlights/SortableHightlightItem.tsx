@@ -79,7 +79,7 @@ export default function SortableHighlightItem({pos, item, onEdit, onDelete}: Hig
             variant="square"
           >
             {brand_name.slice(0,3)}
-        </Avatar>
+          </Avatar>
         </ListItemAvatar>
       }
       <ListItemText
