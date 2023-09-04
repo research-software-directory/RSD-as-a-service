@@ -14,7 +14,7 @@ import AboutLanguages from './AboutLanguages'
 import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
 import SoftwareLogo from './SoftwareLogo'
-import {SoftwareCategoriesWithHeadline} from './SoftwareCategories'
+import {CategoriesWithHeadlines} from '../category/CategoriesWithHeadlines'
 
 type AboutSectionType = {
   brand_name: string
@@ -61,7 +61,7 @@ export default function AboutSection(props:AboutSectionType) {
       </div>
       <div className="flex-1">
         {getSoftwareLogo()}
-        <SoftwareCategoriesWithHeadline categories={categories} />
+        <CategoriesWithHeadlines categories={categories} />
         <SoftwareKeywords keywords={keywords || []} />
         <AboutLanguages languages={languages} platform={platform} />
         <AboutLicense license={license || []} />

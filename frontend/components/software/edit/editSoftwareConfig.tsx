@@ -128,7 +128,7 @@ export const softwareInformation = {
   },
   categories: {
     title: 'Categories',
-    subtitle: 'Assign default categories.',
+    subtitle: 'Assign categories.',
   },
   keywords: {
     title: 'Keywords',

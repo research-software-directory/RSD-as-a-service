@@ -15,6 +15,7 @@
  */
 
 import {AutocompleteOption} from './AutocompleteOptions'
+import {CategoryPath} from './Category'
 import {Status} from './Organisation'
 
 export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | 'other'
@@ -129,21 +130,6 @@ export type KeywordForSoftware = {
   // passed to save function for updating form value with uuid
   pos?: number
 }
-
-/**
- * Categories
- */
-
-export type CategoryID = string
-
-export type CategoryEntry = {
-  id: CategoryID
-  parent: CategoryID | null
-  short_name: string
-  name: string
-}
-
-export type CategoryPath = CategoryEntry[]
 
 export type CategoriesForSoftware = CategoryPath[]
 
