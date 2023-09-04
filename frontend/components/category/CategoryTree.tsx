@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import CancelIcon from '@mui/icons-material/Cancel'
 import IconButton from '@mui/material/IconButton'
 import {CategoryID, CategoryPath, CategoryTree as TCategoryTree} from '~/types/Category'
