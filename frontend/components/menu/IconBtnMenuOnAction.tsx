@@ -64,6 +64,7 @@ export default function IconBtnMenuOnAction({
             <MenuItem
               data-testid="icon-menu-option"
               key={item.label}
+              aria-label={item.label}
               onClick={() => handleAction(item.action)}>
               {item.icon ? <span className="mr-2">{item.icon}</span> : null}
               {item.label}
@@ -80,6 +81,7 @@ export default function IconBtnMenuOnAction({
       <IconButton
         size="large"
         data-testid="icon-menu-button"
+        aria-label='Menu'
         aria-controls="more-menu"
         aria-haspopup="true"
         aria-expanded={open ? 'true' : 'false'}
