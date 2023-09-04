@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -26,7 +28,7 @@ export default function KeywordEdit({id, keyword, token}: KeywordEditProps) {
 
   return (
     <input
-      className="p-1 w-full focus:bg-base-300 text-warning-content"
+      className="p-1 w-full focus:bg-base-200"
       type="text"
       value={value}
       onChange={({target})=>setValue(target.value)}

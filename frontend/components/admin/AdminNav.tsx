@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -19,6 +21,7 @@ import SpellcheckIcon from '@mui/icons-material/Spellcheck'
 import DomainAddIcon from '@mui/icons-material/DomainAdd'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FluorescentIcon from '@mui/icons-material/Fluorescent'
+import CampaignIcon from '@mui/icons-material/Campaign'
 
 export const adminPages = {
   pages:{
@@ -63,6 +66,12 @@ export const adminPages = {
     icon: <SpellcheckIcon />,
     path: '/admin/keywords',
   },
+  announcements: {
+    title: 'Announcement',
+    subtitle: 'Notification to all users',
+    icon: <CampaignIcon />,
+    path: '/admin/announcements',
+  }
 }
 
 // extract page types from the object

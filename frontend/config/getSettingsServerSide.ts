@@ -1,5 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +14,7 @@ import logger from '~/utils/logger'
 import {getPageLinks} from '~/components/admin/pages/useMarkdownPages'
 import {defaultRsdSettings, RsdSettingsState} from './rsdSettingsReducer'
 import defaultSettings from '~/config/defaultSettings.json'
+import {getAnnouncement} from '~/components/admin/announcements/apiAnnouncement'
 
 /**
  * getThemeSettings from local json file
@@ -40,12 +45,14 @@ export async function getRsdSettings() {
 export async function getSettingsServerSide(req: IncomingMessage | undefined, query: ParsedUrlQuery): Promise<RsdSettingsState> {
   // if not SSR we return default
   if (typeof req === 'undefined') return defaultRsdSettings as RsdSettingsState
-  // get links
-  const pages = await getPageLinks({is_published: true})
   // extract embed flag
   const embed = typeof query?.embed !== 'undefined'
-  // get settings (host and theme)
-  const settings = await getRsdSettings()
+  // get links, settings and announcements in parallel
+  const [pages, settings, announcement] = await Promise.all([
+    getPageLinks({is_published: true}),
+    getRsdSettings(),
+    getAnnouncement()
+  ])
   // compose all settings
   const rsdSettings = {
     ...defaultRsdSettings,
@@ -54,10 +61,10 @@ export async function getSettingsServerSide(req: IncomingMessage | undefined, qu
     theme: settings.theme,
     pages,
     embed,
+    announcement: announcement?.enabled ? announcement?.text : undefined
   }
   // console.group('getSettingsServerSide')
   // console.log('rsdSettings...', rsdSettings)
   // console.groupEnd()
-
   return rsdSettings
 }
