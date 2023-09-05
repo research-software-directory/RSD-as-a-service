@@ -50,7 +50,7 @@ export default function ProjectCardContent(item:ProjectCardProps){
           alt={`Logo for ${item.title}`}
           type="gradient"
           className={`w-full text-base-content-disabled ${item.image_contain ? 'p-4':''}`}
-          bgSize={item.image_contain ? 'contain' : 'cover'}
+          bgSize={item.image_contain ? 'scale-down' : 'cover'}
         />
       </CardImageFrame>
       {/* Card body */}
