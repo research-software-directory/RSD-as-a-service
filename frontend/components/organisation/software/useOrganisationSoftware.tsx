@@ -37,7 +37,7 @@ export default function useOrganisationSoftware() {
 
   useEffect(() => {
     let abort = false
-    let orderBy:string
+    let orderBy='slug.asc'
 
     async function getSoftware() {
       if (id) {
@@ -47,7 +47,9 @@ export default function useOrganisationSoftware() {
         if (order) {
           // extract order direction from definitions
           const orderInfo = orderOptions.find(item=>item.key===order)
-          if (orderInfo) orderBy=`${order}.${orderInfo.direction}`
+          // ordering options require "stable" secondary order
+          // to ensure proper pagination. We use slug for this purpose
+          if (orderInfo) orderBy=`${order}.${orderInfo.direction},slug.asc`
         }
 
         const projects: State = await getSoftwareForOrganisation({
