@@ -22,19 +22,16 @@ export const CategoryTreeLevel = ({items, onRemove}: CategoryTreeLevelProps) => 
 
   type TreeLevelProps = {
     items: TCategoryTree
-    indent?: boolean
   }
-  const TreeLevel=({items, indent = false}: TreeLevelProps) => {
-    return <ul className={'list-disc list-inside -indent-4' + (indent ? ' pl-7' : ' pl-4')}>
+  const TreeLevel = ({items}: TreeLevelProps) => {
+    return <ul className={'list-disc list-outside pl-6'}>
       {items.map((item, index) => (
         <li key={index}>
-          {item.category.short_name}
-          {item.children.length > 0
-            ?
-            <TreeLevel items={item.children} indent />
-            :
-            (onRemove && <IconButton size="small" data-id={item.category.id} onClick={onClickHandler}><CancelIcon /></IconButton>)
-          }
+          <div className='flex flex-row justify-between items-start pb-1'>
+            {item.category.short_name}
+            {onRemove && item.children.length === 0 && <IconButton sx={{top:'-0.125rem'}} data-id={item.category.id} size='small' onClick={onClickHandler}><CancelIcon fontSize='small' /></IconButton>}
+          </div>
+          {item.children.length > 0 && <TreeLevel items={item.children}/> }
         </li>
       ))}
     </ul>
@@ -43,7 +40,6 @@ export const CategoryTreeLevel = ({items, onRemove}: CategoryTreeLevelProps) => 
   return <TreeLevel items={items}/>
 }
 
-// FIXME: separate namespaces for components and types
 type CategoryTreeProps = {
   categories: CategoryPath[]
   onRemove?: CategoryTreeLevelProps['onRemove']
