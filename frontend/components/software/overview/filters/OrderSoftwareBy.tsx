@@ -12,7 +12,6 @@ export const softwareOrderOptions = [
   {key: 'contributor_cnt', label: 'Contributors', direction:'desc.nullslast'},
   {key: 'mention_cnt', label: 'Mentions', direction:'desc.nullslast'},
   {key: 'brand_name', label: 'Name', direction: 'asc'},
-  {key: 'is_featured', label: 'Pinned', direction: 'desc.nullslast'},
 ]
 
 type OrderByProps = {

@@ -17,11 +17,17 @@ export function getSoftwareOrderOptions(isMaintainer:boolean) {
   if (isMaintainer) {
     const order = [
       ...softwareOrderOptions,
+      // additional organisation option (should be default)
+      {key: 'is_featured', label: 'Pinned', direction: 'desc.nullslast'},
       ...adminOrderOptions
     ]
     return order
   } else {
-    return softwareOrderOptions
+    return [
+      ...softwareOrderOptions,
+      // additional organisation option (should be default)
+      {key: 'is_featured', label: 'Pinned', direction: 'desc.nullslast'}
+    ]
   }
 }
 
@@ -30,15 +36,8 @@ export default function useSoftwareOrderOptions() {
   const [softwareOrder,setSoftwareOrder] = useState<OrderOption[]>([])
 
   useEffect(() => {
-    if (isMaintainer) {
-      const order = [
-        ...softwareOrderOptions,
-        ...adminOrderOptions
-      ]
-      setSoftwareOrder(order)
-    } else {
-      setSoftwareOrder(softwareOrderOptions)
-    }
+    const order = getSoftwareOrderOptions(isMaintainer)
+    setSoftwareOrder(order)
   }, [isMaintainer])
 
   return softwareOrder
