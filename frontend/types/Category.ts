@@ -10,6 +10,7 @@ export type CategoryEntry = {
   parent: CategoryID | null
   short_name: string
   name: string
+  icon?: string
 }
 
 

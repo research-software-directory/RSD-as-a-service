@@ -19,7 +19,7 @@ export const CategoriesWithHeadlines = ({categories, onRemove}: CategoriesWithHe
 
   return tree.map(({category,children}) => {
     return <React.Fragment key={category.short_name}>
-      <SidebarHeadline iconName="category" title={category.short_name} />
+      <SidebarHeadline iconName={category.icon} title={category.short_name} />
       <div className='ml-4'>
         <CategoryTreeLevel items={children} onRemove={onRemove}/>
       </div>

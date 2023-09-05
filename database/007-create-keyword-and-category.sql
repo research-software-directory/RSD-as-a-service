@@ -74,6 +74,7 @@ CREATE TABLE category (
 	parent UUID REFERENCES category DEFAULT NULL,
 	short_name VARCHAR NOT NULL,
 	name VARCHAR NOT NULL,
+	icon VARCHAR DEFAULT NULL,
 
 	CONSTRAINT unique_short_name UNIQUE NULLS NOT DISTINCT (parent, short_name),
 	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name)
@@ -164,10 +165,10 @@ $$
 		ON category.id = cat_path.parent
 	)
 	-- TODO: How can we reverse the output rows without injecting a new column
-	-- Now we have to list all columns of `category` explicitely
-	-- I want to have something like `* without 'r_index'` to be independant from modifications of `category`
+	-- TODO: Now we have to list all columns of `category` explicitely
+	--   I want to have something like `* without 'r_index'` to be independant from modifications of `category`
 	-- TODO: check SEARCH keyword
-	SELECT id, parent, short_name, name
+	SELECT id, parent, short_name, name, icon
 	FROM cat_path
 	ORDER BY r_index DESC;
 $$;
