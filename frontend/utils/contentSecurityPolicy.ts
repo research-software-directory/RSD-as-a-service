@@ -64,7 +64,7 @@ function devScript() {
 export function nonceContentSecurity() {
   const nonce = crypto.randomUUID()
   // append default, monitoring scripts and dev script
-  let scriptSrc = `script-src 'nonce-${nonce}' 'strict-dynamic'${monitoringScripts()}${devScript()} 'unsafe-inline'`
+  let scriptSrc = `script-src 'nonce-${nonce}' 'strict-dynamic'${monitoringScripts()}${devScript()} 'unsafe-inline' https:`
   // combine shared policies with script policy
   const policy = `${sharedPolicy.replace(/\s{2,}/g, ' ').trim()} ${scriptSrc}`
   // console.log('shaContentSecurity...', policy)
