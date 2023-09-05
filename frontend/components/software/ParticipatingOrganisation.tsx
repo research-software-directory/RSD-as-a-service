@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,6 +17,16 @@ export default function OrganisationItem({rsd_path, name, website, logo_url}: Pa
       <LogoAvatar
         name={name}
         src={logo_url ?? undefined}
+        sx={{
+          '& img': {
+            // height: 'auto',
+            maxHeight: '100%',
+            // width: 'auto',
+            maxWidth: '100%',
+            // we need to fit thisone properly
+            objectFit: 'scale-down'
+          }
+        }}
       />
     )
   }

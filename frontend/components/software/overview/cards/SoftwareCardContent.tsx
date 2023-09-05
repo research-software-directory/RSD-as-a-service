@@ -37,6 +37,7 @@ export default function SoftwareCardContent(item:SoftwareCardContentProps) {
           alt={`Logo for ${item.brand_name}`}
           type="gradient"
           className="w-full text-base-content-disabled p-4"
+          bgSize='scale-down'
         />
       </div>
       {/* Card body - 67% of card height */}
