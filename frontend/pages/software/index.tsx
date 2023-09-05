@@ -219,7 +219,7 @@ export default function SoftwareOverviewPage({
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let orderBy, offset=0
+  let orderBy='slug.asc', offset=0
   // extract params from page-query
   const {search, keywords, prog_lang, licenses, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
@@ -234,7 +234,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (order) {
     // extract order direction from definitions
     const orderInfo = softwareOrderOptions.find(item=>item.key===order)
-    if (orderInfo) orderBy=`${order}.${orderInfo.direction}`
+    // ordering options require "stable" secondary order
+    // to ensure proper pagination. We use slug for this purpose
+    if (orderInfo) orderBy=`${order}.${orderInfo.direction},slug.asc`
   }
 
   // construct postgREST api url with query params
