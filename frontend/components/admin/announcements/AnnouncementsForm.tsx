@@ -58,10 +58,10 @@ export default function AnnouncementsForm({data}: { data: AnnouncementItem|null 
   }
 
   return (
-   <form
-    id={formId}
-    onSubmit={handleSubmit(onSubmit)}
-    className="flex-1"
+    <form
+      id={formId}
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex-1"
     >
       {/* id */}
       <input type="hidden" {...register('id')} />
@@ -96,6 +96,6 @@ export default function AnnouncementsForm({data}: { data: AnnouncementItem|null 
           formId={formId}
         />
       </div>
-   </form>
+    </form>
   )
 }
