@@ -15,14 +15,21 @@ export const adminOptions = [
 ]
 
 export function getProjectOrderOptions(isMaintainer:boolean) {
+  // if maintainer additional order options are added
   if (isMaintainer) {
     const order = [
       ...projectOrderOptions,
+      // organisation specific option
+      {key: 'is_featured', label: 'Pinned', direction: 'desc.nullslast'},
       ...adminOptions
     ]
     return order
   } else {
-    return projectOrderOptions
+    return [
+      ...projectOrderOptions,
+      // organisation specific option
+      {key: 'is_featured', label: 'Pinned', direction: 'desc.nullslast'},
+    ]
   }
 }
 
@@ -31,16 +38,8 @@ export default function useProjectOrderOptions() {
   const [orderOptions, setOrderOptions] = useState<OrderOption[]>([])
 
   useEffect(() => {
-    // if maintainer additional order options are added
-    if (isMaintainer === true) {
-      const orderOptions = [
-        ...projectOrderOptions,
-        ...adminOptions
-      ]
-      setOrderOptions(orderOptions)
-    } else {
-      setOrderOptions(projectOrderOptions)
-    }
+    const orderOptions = getProjectOrderOptions(isMaintainer)
+    setOrderOptions(orderOptions)
   },[isMaintainer])
 
   return orderOptions

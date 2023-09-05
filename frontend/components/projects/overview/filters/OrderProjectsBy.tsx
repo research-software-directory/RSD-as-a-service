@@ -11,7 +11,6 @@ import OrderBy from '~/components/filter/OrderBy'
 export const projectOrderOptions = [
   {key: 'impact_cnt', label: 'Impact', direction:'desc.nullslast'},
   {key: 'output_cnt', label: 'Output', direction: 'desc.nullslast'},
-  {key: 'is_featured', label: 'Pinned', direction: 'desc.nullslast'},
   {key: 'date_start', label: 'Start date', direction: 'desc.nullslast'},
   {key: 'date_end', label: 'End date', direction: 'asc.nullslast'},
   {key: 'title', label: 'Title', direction: 'asc.nullslast'}

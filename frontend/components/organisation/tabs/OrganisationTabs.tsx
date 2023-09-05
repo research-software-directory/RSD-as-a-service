@@ -38,11 +38,9 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
           slug: router.query['slug'],
           tab: value,
         }
-        // add default order
-        if (value === 'projects') {
-          query['order'] = 'impact_cnt'
-        } else if (value === 'software') {
-          query['order'] = 'mention_cnt'
+        // add default order for software and project tabs
+        if (value === 'projects' || value === 'software') {
+          query['order'] = 'is_featured'
         }
         // push route change
         router.push({query},undefined,{scroll:false})
