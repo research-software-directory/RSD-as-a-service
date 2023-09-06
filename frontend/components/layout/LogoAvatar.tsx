@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,13 +21,14 @@ export default function LogoAvatar({name,src,sx,...props}:LogoAvatarProps) {
       alt={name}
       src={src}
       sx={{
+        // lighthouse audit requires explicit width and height
         width: '100%',
         height: '100%',
         fontSize: '3rem',
         '& img': {
-          height: 'auto',
+          // height: 'auto',
           maxHeight: '100%',
-          width: 'auto',
+          // width: 'auto',
           maxWidth: '100%'
         },
         ...sx

@@ -34,9 +34,12 @@ let sharedPolicy = `
   connect-src 'self' https://*;
   font-src 'self' https://fonts.gstatic.com;
   img-src 'self' data: https://*;
+  base-uri 'none';
+  object-src 'none';
 `
-// default script def
-let sharedScript = 'script-src \'self\''
+// default script def - use unsafe-inline for backward compatibilty
+// https://developer.chrome.com/docs/lighthouse/best-practices/csp-xss/?utm_source=lighthouse&utm_medium=devtools#ensure-csp-is-backwards-compatible
+let sharedScript = 'script-src \'self\' '
 
 function defaultNonce() {
   if (crypto) return crypto.randomUUID()
@@ -45,7 +48,7 @@ function defaultNonce() {
 
 function monitoringScripts() {
   if (process.env.MATOMO_URL) {
-    return process.env.MATOMO_URL
+    return ` ${process.env.MATOMO_URL}`
   }
   return ''
 }
@@ -53,7 +56,7 @@ function monitoringScripts() {
 function devScript() {
   if (process.env.NODE_ENV !== 'production') {
     // enable script eval in development
-    return '\'unsafe-eval\''
+    return ' \'unsafe-eval\''
   }
   return ''
 }
@@ -61,7 +64,7 @@ function devScript() {
 export function nonceContentSecurity() {
   const nonce = crypto.randomUUID()
   // append default, monitoring scripts and dev script
-  let scriptSrc = `${sharedScript} ${monitoringScripts()} ${devScript()} 'nonce-${nonce}'`
+  let scriptSrc = `script-src 'nonce-${nonce}' 'strict-dynamic'${monitoringScripts()}${devScript()} 'unsafe-inline' https:`
   // combine shared policies with script policy
   const policy = `${sharedPolicy.replace(/\s{2,}/g, ' ').trim()} ${scriptSrc}`
   // console.log('shaContentSecurity...', policy)

@@ -34,7 +34,7 @@ export default function OrganisationCard({organisation}: { organisation: Organis
     <div className="relative">
       <Link
         data-testid="organisation-card-link"
-        href={`/organisations/${organisation.rsd_path}?tab=software&order=mention_cnt`}
+        href={`/organisations/${organisation.rsd_path}?tab=software&order=is_featured`}
         className="flex h-full hover:text-inherit"
         passHref
       >
@@ -61,29 +61,16 @@ export default function OrganisationCard({organisation}: { organisation: Organis
                 software_cnt={organisation.software_cnt}
                 project_cnt={organisation.project_cnt}
               />
-              {/* if is not tenant we render the placeholder here and TenantBadge outside the Link */}
+              {/* if is not tenant we render empty placeholder */}
               {organisation.is_tenant === false ?
-                <div className="min-w-[3rem]" />
+                <div className="w-[2rem]">&nbsp;</div>
                 :
-                <TenantBadge
-                  is_tenant={organisation.is_tenant}
-                  organisation={organisation.name}
-                />
+                <TenantBadge/>
               }
             </div>
           </CardContentFrame>
         </div>
       </Link>
-      {/* if is not the tenant TenantBadge needs to be outside organisation link for email link to work */}
-      {organisation.is_tenant === false ?
-        <div style={{position: 'absolute',right:'2.5rem', bottom: '1rem'}}>
-          <TenantBadge
-            is_tenant={organisation.is_tenant}
-            organisation={organisation.name}
-          />
-        </div>
-        : null
-      }
     </div>
   )
 }

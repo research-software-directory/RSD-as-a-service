@@ -71,6 +71,7 @@ export default function OrganisationLogoMenu({logo, onAddLogo, onRemoveLogo}: Ad
       <IconButton
         size="large"
         data-testid="icon-menu-button"
+        aria-label="Logo options"
         aria-controls="more-menu"
         aria-haspopup="true"
         aria-expanded={open ? 'true' : 'false'}

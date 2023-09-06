@@ -2,43 +2,37 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-  MentionByType,
-  MentionItemProps, MentionForSoftware,
+  MentionByType, MentionItemProps,
   mentionColumns, MentionTypeKeys
 } from '../types/Mention'
-import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
 import {getMentionByDoi} from './getDOI'
 import logger from './logger'
 
-export async function getMentionsForSoftware({software,token,frontend}:{software: string, token?: string,frontend?:boolean}) {
+export async function getMentionsForSoftware({software,token}:{software: string, token?: string}) {
   try {
-    // the content is order by type ascending
-    const query = `mention?select=${mentionColumns},mention_for_software!inner(software)&mention_for_software.software=eq.${software}&order=mention_type.asc`
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
-
+    // the content is ordered by type ascending
+    const query = `software?id=eq.${software}&select=id,slug,mention(${mentionColumns})&mention.order=mention_type.asc`
+    // construct url
+    const url = `${getBaseUrl()}/${query}`
+    // make request
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createJsonHeaders(token)
+      headers: {
+        ...createJsonHeaders(token),
+        // request single object item
+        'Accept': 'application/vnd.pgrst.object+json'
+      }
     })
     if (resp.status === 200) {
-      const data: MentionForSoftware[] = await resp.json()
-      // convert to MentionItem
-      const mentions: MentionItemProps[] = data.map(item => {
-        if (item?.mention_for_software) {
-          // remove mention_for_software
-          // because POST/PATCH on mention table
-          // requires only mention table props
-          delete item.mention_for_software
-        }
-        return item
-      })
+      const json = await resp.json()
+      // extract mentions from software object
+      const mentions: MentionItemProps[] = json?.mention ?? []
       return mentions
     }
     logger(`getMentionsForSoftware: [${resp.status}] [${url}]`, 'error')

@@ -18,10 +18,8 @@ import useLoginProviders from '~/auth/api/useLoginProviders'
 import {getUserMenuItems} from '~/config/userMenuItems'
 import UserMenu from '~/components/layout/UserMenu'
 import LoginDialog from './LoginDialog'
-import useRsdSettings from '~/config/useRsdSettings'
 
 export default function LoginButton() {
-  const {host} = useRsdSettings()
   const providers = useLoginProviders()
   const {session} = useAuth()
   const status = session?.status || 'loading'
