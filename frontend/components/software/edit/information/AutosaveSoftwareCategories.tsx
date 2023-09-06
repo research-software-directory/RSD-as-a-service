@@ -3,74 +3,85 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react'
 import {ChangeEventHandler, useEffect, useMemo, useState} from 'react'
 import {useSession} from '~/auth'
 import {softwareInformation as config} from '../editSoftwareConfig'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {addCategoryToSoftware, deleteCategoryToSoftware, getAvailableCategories} from '~/utils/getSoftware'
-import {CategoryID, CategoryPath} from '~/types/Category'
+import {CategoryID, CategoryPath, CategoryTree} from '~/types/Category'
 import {CategoriesWithHeadlines} from '~/components/category/CategoriesWithHeadlines'
+import {genCategoryTree, leaf} from '~/utils/categories'
 
 export type SoftwareCategoriesProps = {
   softwareId: string
   categories: CategoryPath[]
 }
-
-function leaf<T>(list: T[]) {
-  return list[list.length - 1]
-}
-
 export default function AutosaveSoftwareCategories({softwareId, categories: defaultCategoryPaths}: SoftwareCategoriesProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const [categoryPaths, setCategoryPaths] = useState(defaultCategoryPaths)
-  const [availableCategoryPaths, setAvailableCategoryPaths] = useState<CategoryPath[]>([])
 
-  const categoryMap = useMemo(() => {
-    const map: Record<CategoryID, number> = {}
-    for (const [index, path] of availableCategoryPaths.entries()) {
-      const leafCategory = leaf(path)
-      map[leafCategory.id] = index
+  const [availableCategoryPaths, setAvailableCategoryPaths] = useState<CategoryPath[]>([])
+  const [availableCategories, setAvailableCategories] = useState<CategoryTree>([])
+
+  const [categoryPaths, setCategoryPaths] = useState(defaultCategoryPaths)
+  const selectedCategoryIDs = useMemo(() => {
+    const ids = new Set()
+    for (const category of categoryPaths ) {
+      ids.add(leaf(category).id)
     }
-    return map
-  }, [availableCategoryPaths])
+    return ids
+  },[categoryPaths])
 
   useEffect(() => {
     getAvailableCategories()
-      .then(setAvailableCategoryPaths)
+      .then((categories) => {
+        setAvailableCategoryPaths(categories)
+        setAvailableCategories(genCategoryTree(categories))
+      })
   }, [])
 
-  const addCategory = (categoryPath: CategoryPath) => {
+  const onAdd: ChangeEventHandler<HTMLSelectElement> = (event) => {
+    const categoryId = event.target.value
+    event.target.value = 'none'
+
+    const categoryPath = availableCategoryPaths.find(path => leaf(path).id === categoryId)
+    if (!categoryPath) return
+
     const category = leaf(categoryPath)
     addCategoryToSoftware(softwareId, category.id, token).then(() => {
-      // FIXME: should we expect that this is current value or should we re-fetch the value from backend?
+      // FIXME: should we trust that this is the current value or should we re-fetch the values from backend?
       setCategoryPaths([...categoryPaths, categoryPath])
     }).catch((error) => {
       showErrorMessage(error.message)
     })
   }
 
-  const onAdd: ChangeEventHandler<HTMLSelectElement> = (event) => {
-    const categoryIdx = parseInt(event.target.value ?? '')
-    if (isNaN(categoryIdx)) return
-    const path = availableCategoryPaths[categoryIdx]
-    const categoryId = path[path.length - 1].id
-    addCategory(path)
-    // reset selection
-    event.target.value = 'none'
-  }
-
   const onRemove = (categoryId: CategoryID) => {
     deleteCategoryToSoftware(softwareId, categoryId, token).then(() => {
-      const categoryIndex = categoryPaths.findIndex(categoryPath => leaf(categoryPath).id == categoryId)
-      // FIXME: should we expect that this is current value or should we re-fetch the value from backend?
-      setCategoryPaths(categoryPaths.filter((el, index) => index != categoryIndex))
+      // FIXME: should we trust that this is the current value or should we re-fetch the values from backend?
+      setCategoryPaths(categoryPaths.filter(path => leaf(path).id != categoryId))
     }).catch((error) => {
       showErrorMessage(error.message)
     })
   }
 
+  const OptionsTree = ({items, indent=0}: {items: CategoryTree, indent?: number}) => {
+    return items.map((item, index) => {
+      const isLeaf = item.children.length === 0
+      const isSelected = selectedCategoryIDs.has(item.category.id)
+      const title = ' '.repeat(indent)+item.category.name
+      return <React.Fragment key={index}>
+        {isLeaf ?
+          <option disabled={isSelected} value={item.category.id}>{title}{isSelected && ' ✓'}</option>
+          :
+          <optgroup label={title} />
+        }
+        <OptionsTree items={item.children} indent={indent+1}/>
+      </React.Fragment>
+    })
+  }
 
   return (
     <>
@@ -81,8 +92,9 @@ export default function AutosaveSoftwareCategories({softwareId, categories: defa
       <div className="mb-2">
         <select className="p-2 w-full bg-primary text-white" onChange={onAdd}>
           <option value="none">click to assign categories</option>
-          {availableCategoryPaths.map((categoryPath, index) => <option key={index} value={index}>{categoryPath.map(cat => cat.short_name).join(' :: ')}</option>)}
+          <OptionsTree items={availableCategories} />
         </select>
+
         <div className="ml-1">
           <CategoriesWithHeadlines categories={categoryPaths} onRemove={onRemove}/>
         </div>

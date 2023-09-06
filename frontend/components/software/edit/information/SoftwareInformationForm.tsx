@@ -147,7 +147,7 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
             <AutosaveSoftwareCategories
               softwareId={formData.id}
               categories={formData.categories}
-              />
+            />
             <div className="py-4"></div>
             <AutosaveSoftwareKeywords
               software_id={formData.id}

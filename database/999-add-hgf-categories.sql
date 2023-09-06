@@ -12,7 +12,7 @@ AS $$
   DECLARE parent uuid;
 BEGIN
   INSERT INTO category(short_name, name, icon) VALUES
-    ('Research fields', 'Research fields', '')
+    ('Research fields', 'Research fields', 'science')
     RETURNING id INTO parent;
 
   INSERT INTO category(parent, short_name, name) VALUES
@@ -24,7 +24,7 @@ BEGIN
     (parent, 'Matter', 'Matter');
 
   INSERT INTO category(short_name, name, icon) VALUES
-    ('POF IV', 'Program-oriented Funding IV', '')
+    ('POF IV', 'Program-oriented Funding IV', 'category')
     RETURNING id INTO parent;
 
   INSERT INTO category(parent, short_name, name) VALUES

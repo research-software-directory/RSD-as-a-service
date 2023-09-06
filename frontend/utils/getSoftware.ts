@@ -8,11 +8,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CategoriesForSoftware, CategoryID, CategoryPath, KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
+import {CategoriesForSoftware, KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import logger from './logger'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
+import {CategoryID, CategoryPath} from '~/types/Category'
 
 /*
  * Software list for the software overview page
@@ -181,12 +182,17 @@ export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token
   }
 }
 
-function prepareQueryURL(path: string, params: Record<string, string> = {}) {
+function prepareQueryURL(path: string, params?: Record<string, string>) {
   // FIXME: database URL?
   //const baseURL = 'http://localhost:3000/api/v1' // process.env.POSTGREST_URL // getBaseUrl()
   const baseURL = getBaseUrl()
   logger(`prepareQueryURL baseURL:${baseURL}`)
-  return `${baseURL}${path}?` + Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&')
+  let url = `${baseURL}${path}`
+  if (params) {
+    const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&')
+    if (paramStr) url += '?' + paramStr
+  }
+  return url
 }
 
 export async function getCategoriesForSoftware(software_id: string, token?: string): Promise<CategoriesForSoftware> {
@@ -239,10 +245,8 @@ export async function getAvailableCategories(): Promise<CategoryPath[]> {
   return []
 }
 
-// FIXME: proper location?
-// FIXME: add return type
 export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
-  const url = '/api/v1/category_for_software'
+  const url = prepareQueryURL('/category_for_software')
   const data = {software_id: softwareId, category_id: categoryId}
 
   const resp = await fetch(url, {
@@ -254,14 +258,13 @@ export async function addCategoryToSoftware(softwareId: string, categoryId: Cate
     body: JSON.stringify(data),
   })
   logger(`addCategoryToSoftware: resp: ${resp}`)
-  console.log(resp)
   if (resp.ok) {
     return null
   }
   throw new Error(`API returned: ${resp.status} ${resp.statusText}`)
 }
 export async function deleteCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
-  const url = `/api/v1/category_for_software?software_id=eq.${softwareId}&category_id=eq.${categoryId}`
+  const url = prepareQueryURL(`/category_for_software?software_id=eq.${softwareId}&category_id=eq.${categoryId}`)
 
   const resp = await fetch(url, {
     method: 'DELETE',
@@ -269,8 +272,7 @@ export async function deleteCategoryToSoftware(softwareId: string, categoryId: C
       ...createJsonHeaders(token),
     },
   })
-  logger(`addCategoryToSoftware: resp: ${resp}`)
-  console.log(resp)
+  logger(`deleteCategoryToSoftware: resp: ${resp}`)
   if (resp.ok) {
     return null
   }

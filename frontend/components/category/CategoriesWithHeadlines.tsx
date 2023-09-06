@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react'
-import {genCategoryTree} from '~/utils/categories'
+import {useCategoryTree} from '~/utils/categories'
 import {SidebarHeadline} from '../typography/SidebarHeadline'
 import {CategoryTreeLevel, CategoryTreeLevelProps} from './CategoryTree'
 import {CategoryPath} from '~/types/Category'
@@ -15,11 +15,11 @@ type CategoriesWithHeadlinesProps = {
 }
 
 export const CategoriesWithHeadlines = ({categories, onRemove}: CategoriesWithHeadlinesProps) => {
-  const tree = genCategoryTree(categories)
+  const tree = useCategoryTree(categories)
 
-  return tree.map(({category,children}) => {
+  return tree.map(({category, children}) => {
     return <React.Fragment key={category.short_name}>
-      <SidebarHeadline iconName={category.icon} title={category.short_name} />
+      <SidebarHeadline iconName={category.icon} title={category.name} />
       <div className='ml-4'>
         <CategoryTreeLevel items={children} onRemove={onRemove}/>
       </div>

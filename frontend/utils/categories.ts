@@ -3,7 +3,10 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useMemo} from 'react'
 import {CategoryPath, CategoryTree, CategoryTreeLevel} from '~/types/Category'
+
+export const leaf = <T>(list: T[]) => list[list.length - 1]
 
 export const genCategoryTree = (categories: CategoryPath[]) : CategoryTree => {
   const tree: CategoryTree = []
@@ -21,4 +24,8 @@ export const genCategoryTree = (categories: CategoryPath[]) : CategoryTree => {
     }
   }
   return tree
+}
+
+export const useCategoryTree = (categories: CategoryPath[]) : CategoryTree => {
+  return useMemo(() => genCategoryTree(categories), [categories])
 }

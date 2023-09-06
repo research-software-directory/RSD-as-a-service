@@ -11,18 +11,20 @@ import type SvgIcon from '@mui/material/SvgIcon'
 
 // FIXME: This is a workaround before we can load icons dynamically (see #975)
 // create a component map with lowercase icon names as index
-const iconMap = [
-  QuestionMarkIcon,
-  CategoryIcon,
-  ScienceIcon,
-].reduce((map, item)=>{
-  // magically generate icon name
-  // @ts-expect-error
-  const id = item.type.render.displayName.toLowerCase().slice(0, -4)
-  map[id] = item
-  return map
-},{} as Record<string, typeof SvgIcon>)
-
+const iconMap = (() => {
+  const icons = {
+    QuestionMarkIcon,
+    CategoryIcon,
+    ScienceIcon,
+    // => extend the list above if necessary
+  } as Record<string, typeof SvgIcon>
+  // magically generate icon names
+  return Object.keys(icons).reduce((map, key)=>{
+    const iconName = key.toLowerCase().slice(0, -4)
+    map[iconName] = icons[key]
+    return map
+  },{} as Record<string, typeof SvgIcon>)
+})()
 
 type IconProps = {
   name: string
