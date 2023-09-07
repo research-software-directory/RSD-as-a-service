@@ -154,7 +154,6 @@ export async function getReleasesForSoftware(uuid:string,token?:string){
   }
 }
 
-
 export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token?:string){
   try{
     // this request is always perfomed from backend
@@ -183,8 +182,6 @@ export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token
 }
 
 function prepareQueryURL(path: string, params?: Record<string, string>) {
-  // FIXME: database URL?
-  //const baseURL = 'http://localhost:3000/api/v1' // process.env.POSTGREST_URL // getBaseUrl()
   const baseURL = getBaseUrl()
   logger(`prepareQueryURL baseURL:${baseURL}`)
   let url = `${baseURL}${path}`
@@ -253,7 +250,6 @@ export async function addCategoryToSoftware(softwareId: string, categoryId: Cate
     method: 'POST',
     headers: {
       ...createJsonHeaders(token),
-      //'Prefer': 'resolution=merge-duplicates'
     },
     body: JSON.stringify(data),
   })
@@ -263,6 +259,7 @@ export async function addCategoryToSoftware(softwareId: string, categoryId: Cate
   }
   throw new Error(`API returned: ${resp.status} ${resp.statusText}`)
 }
+
 export async function deleteCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
   const url = prepareQueryURL(`/category_for_software?software_id=eq.${softwareId}&category_id=eq.${categoryId}`)
 

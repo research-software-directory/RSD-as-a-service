@@ -10,6 +10,8 @@ export const leaf = <T>(list: T[]) => list[list.length - 1]
 
 export const genCategoryTree = (categories: CategoryPath[]) : CategoryTree => {
   const tree: CategoryTree = []
+  if (!Array.isArray(categories)) return tree
+
   for (const path of categories) {
     let cursor = tree
     for (const item of path) {

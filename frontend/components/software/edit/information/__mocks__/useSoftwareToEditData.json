@@ -12,6 +12,54 @@
   "short_statement": "Lorem ipsum description",
   "repository_url": "https://github.com/research-software-directory/RSD-as-a-service",
   "repository_platform": "github",
+  "categories": [
+    [
+      {
+        "id": "ae88700f-5553-4f93-97af-dc763c9df785",
+        "parent": null,
+        "short_name": "top level 1",
+        "name": "Top Level Category 1",
+        "icon": null
+      },
+      {
+        "id": "b863518a-e440-47cf-a434-8c25fcef7d0e",
+        "parent": "ae88700f-5553-4f93-97af-dc763c9df785",
+        "short_name": "category B",
+        "name": "Category B aka 1.2",
+        "icon": null
+      },
+      {
+        "id": "260291da-2b09-4721-81b8-973270cfb499",
+        "parent": "b863518a-e440-47cf-a434-8c25fcef7d0e",
+        "short_name": "category 2",
+        "name": "Category 2 aka 1.2.2",
+        "icon": null
+      }
+    ],
+    [
+      {
+        "id": "ae88700f-5553-4f93-97af-dc763c9df785",
+        "parent": null,
+        "short_name": "top level 1",
+        "name": "Top Level Category 1",
+        "icon": null
+      },
+      {
+        "id": "b863518a-e440-47cf-a434-8c25fcef7d0e",
+        "parent": "ae88700f-5553-4f93-97af-dc763c9df785",
+        "short_name": "category B",
+        "name": "Category B aka 1.2",
+        "icon": null
+      },
+      {
+        "id": "f64f24be-cfab-44c3-990f-a09cc5ba55d2",
+        "parent": "b863518a-e440-47cf-a434-8c25fcef7d0e",
+        "short_name": "category 3",
+        "name": "Category 3 aka 1.2.3",
+        "icon": null
+      }
+    ]
+  ],
   "keywords": [
     {
       "id": "232042a6-0b00-40b0-b102-ee1c32908447",
