@@ -148,7 +148,7 @@ BEGIN
 	SELECT
 		repository_url.software,
 		(SELECT
-			ARRAY_AGG(p_lang)
+			ARRAY_AGG(p_lang ORDER BY repository_url.languages -> p_lang DESC)
 		FROM
 			JSONB_OBJECT_KEYS(repository_url.languages) p_lang
 		) AS "prog_lang"
