@@ -26,6 +26,3 @@ export const CategoriesWithHeadlines = ({categories, onRemove}: CategoriesWithHe
     </React.Fragment>
   })
 }
-
-// nested menu
-// https://medium.com/@modularcoder/reactjs-multi-level-sidebar-navigation-menu-with-typescrip-materialui-251943c12dda

@@ -4,7 +4,6 @@
 -- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
--- SPDX-License-Identifier: EUPL-1.2
 
 --------------
 -- Keywords --

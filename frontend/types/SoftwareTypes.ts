@@ -8,7 +8,6 @@
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: EUPL-1.2
 
 /**
  * Types used in software pages (view/add/edit)
@@ -111,7 +110,7 @@ export const SoftwarePropsToSave = [
 
 export type EditSoftwareItem = SoftwareItem & {
   keywords: KeywordForSoftware[]
-  categories: CategoryPath[]
+  categories: CategoriesForSoftware
   licenses: AutocompleteOption<License>[]
   image_b64: string | null
   image_mime_type: string | null

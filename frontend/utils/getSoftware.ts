@@ -8,9 +8,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import logger from './logger'
 import {CategoriesForSoftware, KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
-import logger from './logger'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
 import {CategoryID, CategoryPath} from '~/types/Category'
@@ -212,15 +212,6 @@ export async function getCategoriesForSoftware(software_id: string, token?: stri
   return []
 }
 
-function compareCategoryPath(p1: CategoryPath, p2: CategoryPath) {
-  if (p1.length != p2.length) return p1.length - p2.length
-  for (let index = 0; index < p1.length; index++) {
-    const diff = p1[index].short_name.localeCompare(p2[index].short_name)
-    if (diff != 0) return diff
-  }
-  return 0
-}
-
 export async function getAvailableCategories(): Promise<CategoryPath[]> {
   try {
     const url = prepareQueryURL('/rpc/available_categories_expanded')
@@ -229,9 +220,6 @@ export async function getAvailableCategories(): Promise<CategoryPath[]> {
     })
     if (resp.status === 200) {
       const data = await resp.json()
-      // logger(`getAvailableCategories response: ${JSON.stringify(data)}`)
-      // FIXME: sorting should be done by backend
-      data.sort(compareCategoryPath)
       return data
     } else if (resp.status === 404) {
       logger(`getAvailableCategories: 404 [${url}]`, 'error')

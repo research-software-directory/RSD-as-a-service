@@ -6,7 +6,6 @@
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: EUPL-1.2
 
 import {useEffect, useState} from 'react'
 import {AutocompleteOption} from '../../../../types/AutocompleteOptions'

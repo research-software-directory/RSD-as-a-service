@@ -4,9 +4,19 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useMemo} from 'react'
-import {CategoryPath, CategoryTree, CategoryTreeLevel} from '~/types/Category'
+import {CategoryEntry, CategoryPath, CategoryTree, CategoryTreeLevel} from '~/types/Category'
 
 export const leaf = <T>(list: T[]) => list[list.length - 1]
+
+const compareCategoryEntry = (p1: CategoryEntry, p2: CategoryEntry) => p1.short_name.localeCompare(p2.short_name)
+const compareCategoryTreeLevel = (p1: CategoryTreeLevel, p2: CategoryTreeLevel) => compareCategoryEntry(p1.category, p2.category)
+
+const categoryTreeSort = (tree: CategoryTree) => {
+  tree.sort(compareCategoryTreeLevel)
+  for (const item of tree) {
+    categoryTreeSort(item.children)
+  }
+}
 
 export const genCategoryTree = (categories: CategoryPath[]) : CategoryTree => {
   const tree: CategoryTree = []
@@ -25,6 +35,9 @@ export const genCategoryTree = (categories: CategoryPath[]) : CategoryTree => {
       }
     }
   }
+
+  categoryTreeSort(tree)
+
   return tree
 }
 

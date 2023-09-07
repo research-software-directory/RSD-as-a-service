@@ -15,7 +15,7 @@ export type CategoryTreeLevelProps = {
 }
 export const CategoryTreeLevel = ({items, onRemove}: CategoryTreeLevelProps) => {
 
-  const onClickHandler = (event: React.MouseEvent<HTMLElement>) => {
+  const onRemoveHandler = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation()
     const categoryId = event.currentTarget.dataset.id!
     onRemove?.(categoryId)
@@ -32,7 +32,7 @@ export const CategoryTreeLevel = ({items, onRemove}: CategoryTreeLevelProps) => 
             <Tooltip title={item.category.name} placement='left'>
               <span className='pb-1'>{item.category.short_name}</span>
             </Tooltip>
-            {onRemove && item.children.length === 0 && <IconButton sx={{top:'-0.25rem'}} data-id={item.category.id} size='small' onClick={onClickHandler}><CancelIcon fontSize='small' /></IconButton>}
+            {onRemove && item.children.length === 0 && <IconButton sx={{top:'-0.25rem'}} data-id={item.category.id} size='small' onClick={onRemoveHandler}><CancelIcon fontSize='small' /></IconButton>}
           </div>
           {item.children.length > 0 && <TreeLevel items={item.children}/> }
         </li>
