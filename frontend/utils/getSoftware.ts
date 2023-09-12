@@ -3,14 +3,17 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from './logger'
-import {KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
+import {CategoriesForSoftware, KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
+import {CategoryID, CategoryPath} from '~/types/Category'
 
 /*
  * Software list for the software overview page
@@ -33,7 +36,7 @@ export async function getSoftwareList({url,token}:{url:string,token?:string }){
         count: extractCountFromHeader(resp.headers),
         data: json
       }
-    } else{
+    } else {
       logger(`getSoftwareList failed: ${resp.status} ${resp.statusText} ${url}`, 'warn')
       return {
         count:0,
@@ -151,7 +154,6 @@ export async function getReleasesForSoftware(uuid:string,token?:string){
   }
 }
 
-
 export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token?:string){
   try{
     // this request is always perfomed from backend
@@ -178,6 +180,90 @@ export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token
     return null
   }
 }
+
+function prepareQueryURL(path: string, params?: Record<string, string>) {
+  const baseURL = getBaseUrl()
+  logger(`prepareQueryURL baseURL:${baseURL}`)
+  let url = `${baseURL}${path}`
+  if (params) {
+    const paramStr = Object.keys(params).map((key) => `${key}=${encodeURIComponent(params[key])}`).join('&')
+    if (paramStr) url += '?' + paramStr
+  }
+  return url
+}
+
+export async function getCategoriesForSoftware(software_id: string, token?: string): Promise<CategoriesForSoftware> {
+  try {
+    const url = prepareQueryURL('/rpc/category_paths_by_software_expanded', {software_id})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data = await resp.json()
+      logger(`getCategoriesForSoftware response: ${JSON.stringify(data)}`)
+      return data
+    } else if (resp.status === 404) {
+      logger(`getCategoriesForSoftware: 404 [${url}]`, 'error')
+    }
+  } catch (e: any) {
+    logger(`getCategoriesForSoftware: ${e?.message}`, 'error')
+  }
+  return []
+}
+
+export async function getAvailableCategories(): Promise<CategoryPath[]> {
+  try {
+    const url = prepareQueryURL('/rpc/available_categories_expanded')
+    const resp = await fetch(url, {
+      method: 'GET',
+    })
+    if (resp.status === 200) {
+      const data = await resp.json()
+      return data
+    } else if (resp.status === 404) {
+      logger(`getAvailableCategories: 404 [${url}]`, 'error')
+    }
+  } catch (e: any) {
+    logger(`getAvailableCategories: ${e?.message}`, 'error')
+  }
+  return []
+}
+
+export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
+  const url = prepareQueryURL('/category_for_software')
+  const data = {software_id: softwareId, category_id: categoryId}
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      ...createJsonHeaders(token),
+    },
+    body: JSON.stringify(data),
+  })
+  logger(`addCategoryToSoftware: resp: ${resp}`)
+  if (resp.ok) {
+    return null
+  }
+  throw new Error(`API returned: ${resp.status} ${resp.statusText}`)
+}
+
+export async function deleteCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
+  const url = prepareQueryURL(`/category_for_software?software_id=eq.${softwareId}&category_id=eq.${categoryId}`)
+
+  const resp = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      ...createJsonHeaders(token),
+    },
+  })
+  logger(`deleteCategoryToSoftware: resp: ${resp}`)
+  if (resp.ok) {
+    return null
+  }
+  throw new Error(`API returned: ${resp.status} ${resp.statusText}`)
+}
+
 
 /**
  * LICENSE

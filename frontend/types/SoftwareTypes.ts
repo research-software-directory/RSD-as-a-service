@@ -5,6 +5,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,6 +14,7 @@
  */
 
 import {AutocompleteOption} from './AutocompleteOptions'
+import {CategoryPath} from './Category'
 import {Status} from './Organisation'
 
 export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | 'other'
@@ -108,6 +110,7 @@ export const SoftwarePropsToSave = [
 
 export type EditSoftwareItem = SoftwareItem & {
   keywords: KeywordForSoftware[]
+  categories: CategoriesForSoftware
   licenses: AutocompleteOption<License>[]
   image_b64: string | null
   image_mime_type: string | null
@@ -126,6 +129,8 @@ export type KeywordForSoftware = {
   // passed to save function for updating form value with uuid
   pos?: number
 }
+
+export type CategoriesForSoftware = CategoryPath[]
 
 /**
  * LiCENSES

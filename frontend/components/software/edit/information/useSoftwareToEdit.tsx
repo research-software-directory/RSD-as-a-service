@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +11,7 @@ import {useEffect, useState} from 'react'
 import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
 import {EditSoftwareItem, KeywordForSoftware, License} from '../../../../types/SoftwareTypes'
 import {getSoftwareToEdit} from '../../../../utils/editSoftware'
-import {getKeywordsForSoftware, getLicenseForSoftware} from '../../../../utils/getSoftware'
+import {getCategoriesForSoftware, getKeywordsForSoftware, getLicenseForSoftware} from '../../../../utils/getSoftware'
 
 function prepareLicenses(rawLicense: License[]=[]) {
   const license:AutocompleteOption<License>[] = rawLicense?.map((item: any) => {
@@ -30,14 +31,16 @@ export async function getSoftwareInfoForEdit({slug, token}: { slug: string, toke
   if (software) {
     const requests = [
       getKeywordsForSoftware(software.id, true, token),
-      getLicenseForSoftware(software.id, true, token)
-    ]
+      getCategoriesForSoftware(software.id, token),
+      getLicenseForSoftware(software.id, true, token),
+    ] as const
     // other api requests
-    const [keywords, respLicense,] = await Promise.all(requests)
+    const [keywords, categories, respLicense] = await Promise.all(requests)
 
     const data:EditSoftwareItem = {
       ...software,
       keywords: keywords as KeywordForSoftware[],
+      categories,
       licenses: prepareLicenses(respLicense as License[]),
       image_b64: null,
       image_mime_type: null,

@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -7,6 +9,7 @@ import {render, screen} from '@testing-library/react'
 
 import useSoftwareToEdit from './useSoftwareToEdit'
 import useSoftwareToEditData from './__mocks__/useSoftwareToEditData.json'
+import {CategoriesForSoftware} from '~/types/SoftwareTypes'
 
 // MOCS
 // Mock getSoftwareToEdit
@@ -17,10 +20,12 @@ jest.mock('~/utils/editSoftware', () => ({
 
 // MOCK getKeywordsForSoftware, getLicenseForSoftware
 const mockGetKeywordsForSoftware = jest.fn(props => Promise.resolve([] as any))
+const mockGetCategoriesForSoftware = jest.fn(props => Promise.resolve([] as CategoriesForSoftware))
 const mockGetLicenseForSoftware = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/getSoftware', () => ({
   getKeywordsForSoftware: jest.fn(props => mockGetKeywordsForSoftware(props)),
-  getLicenseForSoftware: jest.fn(props => mockGetLicenseForSoftware(props))
+  getCategoriesForSoftware: jest.fn(props => mockGetCategoriesForSoftware(props)),
+  getLicenseForSoftware: jest.fn(props => mockGetLicenseForSoftware(props)),
 }))
 
 const copySoftware = {
@@ -29,6 +34,10 @@ const copySoftware = {
 
 const mockKeywords = [
   ...copySoftware.keywords
+]
+
+const mockCategories = [
+  ...copySoftware.categories
 ]
 
 const mockLicenses = [
@@ -78,6 +87,7 @@ it('renders software returned by api', async() => {
   // mock api responses
   mockGetSoftwareToEdit.mockResolvedValueOnce(copySoftware)
   mockGetKeywordsForSoftware.mockResolvedValueOnce(mockKeywords)
+  mockGetCategoriesForSoftware.mockResolvedValueOnce(mockCategories as any)
   mockGetLicenseForSoftware.mockResolvedValueOnce(mockLicenses)
 
   render(
