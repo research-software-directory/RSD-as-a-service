@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -21,7 +22,7 @@ import projectState from '../__mocks__/editProjectState'
 
 const mockGetImpactForProject = jest.fn((props) => Promise.resolve(mockImpactForProject))
 jest.mock('~/utils/getProjects', () => ({
-  getImpactForProject: jest.fn((props)=>mockGetImpactForProject(props))
+  getMentionsForProject: jest.fn((props)=>mockGetImpactForProject(props))
 }))
 
 const mockGetMentionByDoiFromRsd = jest.fn((props) => Promise.resolve([] as any))
@@ -157,9 +158,9 @@ describe('frontend/components/project/edit/impact/index.tsx', () => {
       // call RSD api to find mention by DOI
       expect(mockFindPublicationByTitle).toBeCalledTimes(1)
       expect(mockFindPublicationByTitle).toBeCalledWith({
-       'project': projectState.project.id,
-       searchFor,
-       'token': mockSession.token
+        'project': projectState.project.id,
+        searchFor,
+        'token': mockSession.token
       })
     })
   })
@@ -229,23 +230,23 @@ describe('frontend/components/project/edit/impact/index.tsx', () => {
     await waitFor(() => {
       expect(mockAddNewImpactToProject).toBeCalledTimes(1)
       expect(mockAddNewImpactToProject).toBeCalledWith({
-       'item': {
-         'authors': null,
-         'doi': null,
-         'id': null,
-         'image_url': null,
-         'journal': null,
-         'mention_type': 'book',
-         'note': null,
-         'page': null,
-         'publication_year': null,
-         'publisher': null,
-         'source': 'RSD',
-         'title': 'Test value',
-         'url': 'https://google.com/link1',
-       },
-       'project': projectState.project.id,
-       'token': mockSession.token,
+        'item': {
+          'authors': null,
+          'doi': null,
+          'id': null,
+          'image_url': null,
+          'journal': null,
+          'mention_type': 'book',
+          'note': null,
+          'page': null,
+          'publication_year': null,
+          'publisher': null,
+          'source': 'RSD',
+          'title': 'Test value',
+          'url': 'https://google.com/link1',
+        },
+        'project': projectState.project.id,
+        'token': mockSession.token,
       })
     })
   })

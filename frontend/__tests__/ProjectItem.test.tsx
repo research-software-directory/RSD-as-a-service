@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,8 +22,11 @@ import apiRelatedSoftware from './__mocks__/apiRelatedSoftware.json'
 import ProjectItemPage, {ProjectPageProps} from '../pages/projects/[slug]/index'
 import {RelatedProject} from '../types/Project'
 import {MentionItemProps} from '../types/Mention'
-import {SoftwareListItem} from '~/types/SoftwareTypes'
 import {ProjectOrganisationProps} from '~/types/Organisation'
+
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+jest.mock('~/auth/api/useLoginProviders')
 
 const mockedProps: ProjectPageProps = {
   slug: 'test-slug',
@@ -35,7 +40,7 @@ const mockedProps: ProjectPageProps = {
   impact: apiMentions as MentionItemProps[],
   team: apiContributors,
   relatedProjects: apiRelatedProjects as RelatedProject[],
-  relatedSoftware: apiRelatedSoftware as SoftwareListItem[]
+  relatedSoftware: apiRelatedSoftware as any
 }
 
 describe('pages/projects/[slug]/index.tsx', () => {

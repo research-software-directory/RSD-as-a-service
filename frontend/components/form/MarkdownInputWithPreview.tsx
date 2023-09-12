@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,8 +34,8 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
     const textInput = document.getElementById('markdown-textarea')
     if (textInput) {
       // save scroll position
-      const scrollLeft = window.pageXOffset || (document.documentElement || document.body.parentNode || document.body).scrollLeft
-      const scrollTop = window.pageYOffset || (document.documentElement || document.body.parentNode || document.body).scrollTop
+      const scrollLeft = window.scrollX || (document.documentElement || document.body.parentNode || document.body).scrollLeft
+      const scrollTop = window.scrollY || (document.documentElement || document.body.parentNode || document.body).scrollTop
       // reset height
       textInput.style.height = 'auto'
       // get new height
@@ -69,23 +71,23 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
   function getHelperTextMsg() {
     if (helperInfo)
       if (helperInfo?.length > helperInfo.maxLength) {
-      return (
-        <div className="py-[1rem] px-[2rem] text-xs text-error">
-          {helperInfo?.length || 0}/{helperInfo?.maxLength}
-        </div>
-      )
-    } else {
-      return (
-        <div className="py-[1rem] px-[2rem] text-xs opacity-70">
-          {helperInfo?.length || 0}/{helperInfo.maxLength}
-        </div>
-      )
+        return (
+          <div className="py-[1rem] px-[2rem] text-xs text-error">
+            {helperInfo?.length || 0}/{helperInfo?.maxLength}
+          </div>
+        )
+      } else {
+        return (
+          <div className="py-[1rem] px-[2rem] text-xs opacity-70">
+            {helperInfo?.length || 0}/{helperInfo.maxLength}
+          </div>
+        )
       }
     return null
   }
 
   return (
-    <article className="border rounded-sm min-h-[33rem]">
+    <article className="flex-1 border rounded-sm min-h-[30rem]">
       <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center">
         <Tabs
           value={tab}

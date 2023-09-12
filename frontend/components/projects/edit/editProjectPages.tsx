@@ -1,8 +1,11 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {JSX} from 'react'
 import dynamic from 'next/dynamic'
 
 import InfoIcon from '@mui/icons-material/Info'
@@ -13,6 +16,7 @@ import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew'
 import ShareIcon from '@mui/icons-material/Share'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ContentLoader from '~/components/layout/ContentLoader'
+
 
 // import ProjectInformation from './information'
 // import ProjectTeam from './team'

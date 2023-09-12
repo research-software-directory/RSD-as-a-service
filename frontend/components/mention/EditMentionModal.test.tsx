@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,6 +23,7 @@ const mockItem:MentionItemProps = {
   publisher: null,
   publication_year: null,
   page: null,
+  journal: null,
   // url to external image
   image_url: null,
   mention_type: null,
@@ -90,7 +93,7 @@ it('calls onSave when minimum info provided', async () => {
   })
   fireEvent.change(title, {target: {value: expectedItem.title}})
 
-   // select wrapper/group
+  // select wrapper/group
   const selectGroup = screen.getByTestId('controlled-select')
   expect(selectGroup).toBeInTheDocument()
 

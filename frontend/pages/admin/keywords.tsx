@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -24,7 +26,7 @@ const pagination = {
   labelRowsPerPage:'Per page'
 }
 
-export default function AdminKeywordsPage(props:any) {
+export default function AdminKeywordsPage() {
 
   // console.group('AdminKeywordsPage')
   // console.log('keywords...', keywords)
@@ -38,7 +40,7 @@ export default function AdminKeywordsPage(props:any) {
       <AdminPageWithNav title={adminPages['keywords'].title}>
         <SearchProvider>
           <PaginationProvider pagination={pagination}>
-            <KeywordsPage {...props} />
+            <KeywordsPage />
           </PaginationProvider>
         </SearchProvider>
       </AdminPageWithNav>

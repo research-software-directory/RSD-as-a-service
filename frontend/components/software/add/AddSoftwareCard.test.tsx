@@ -15,7 +15,7 @@ import {getSlugFromString} from '../../../utils/getSlugFromString'
 const mockAddSoftware = jest.fn((props)=>Promise.resolve({status: 201, message: props}))
 const mockValidSoftwareItem = jest.fn((slug,token) => {
   // console.log('validProjectItem...props...',slug,token)
-   return new Promise((res, rej) => {
+  return new Promise((res, rej) => {
     setTimeout(() => {
       res(false)
     }, 10)

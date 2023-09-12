@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -53,7 +54,7 @@ export default function OrcidWitelistPage() {
     fetchWhitelistedOrcids()
   }
 
-	return (
+  return (
     <DefaultLayout>
       <Head>
         <title>{pageTitle}</title>
@@ -68,7 +69,7 @@ export default function OrcidWitelistPage() {
         </PageTitleSticky>
         <section className="md:flex gap-8">
           <AdminNav />
-          <section className="flex flex-col-reverse gap-8 md:grid md:grid-cols-2">
+          <section className="flex-1 flex flex-col-reverse gap-8 md:grid md:grid-cols-2">
             <OrcidUsersList
               orcids={orcids}
               onDeleteOrcid={fetchWhitelistedOrcids}

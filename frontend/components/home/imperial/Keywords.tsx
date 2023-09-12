@@ -1,3 +1,8 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import KeywordBox from './KeywordBox'
 
 type KeywordsProps = {
@@ -9,17 +14,17 @@ type KeywordsObject = {
 }
 
 export default function Keywords({keywords}: KeywordsProps) {
-    const keywordButtons = keywords.map((keyword: KeywordsObject, index: number) => {
-        return <KeywordBox key={index} label={keyword.keyword} />
-    })
-    return (
-        <div className="max-w-screen-xl mx-auto">
-            <div className="text-2xl ml-10 mt-14">
+  const keywordButtons = keywords.map((keyword: KeywordsObject, index: number) => {
+    return <KeywordBox key={index} label={keyword.keyword} />
+  })
+  return (
+    <div className="max-w-screen-xl mx-auto">
+      <div className="text-2xl ml-10 mt-14">
                 Popular Keywords
-            </div>
-            <div className="flex flex-wrap gap-10 md:gap-3 p-5 md:p-10 ">
-                {keywordButtons}
-            </div>
-        </div>
-    )
+      </div>
+      <div className="flex flex-wrap gap-10 md:gap-3 p-5 md:p-10 ">
+        {keywordButtons}
+      </div>
+    </div>
+  )
 }

@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,9 +34,12 @@ let sharedPolicy = `
   connect-src 'self' https://*;
   font-src 'self' https://fonts.gstatic.com;
   img-src 'self' data: https://*;
+  base-uri 'none';
+  object-src 'none';
 `
-// default script def
-let sharedScript = 'script-src \'self\''
+// default script def - use unsafe-inline for backward compatibilty
+// https://developer.chrome.com/docs/lighthouse/best-practices/csp-xss/?utm_source=lighthouse&utm_medium=devtools#ensure-csp-is-backwards-compatible
+let sharedScript = 'script-src \'self\' '
 
 function defaultNonce() {
   if (crypto) return crypto.randomUUID()
@@ -43,7 +48,7 @@ function defaultNonce() {
 
 function monitoringScripts() {
   if (process.env.MATOMO_URL) {
-    return process.env.MATOMO_URL
+    return ` ${process.env.MATOMO_URL}`
   }
   return ''
 }
@@ -51,7 +56,7 @@ function monitoringScripts() {
 function devScript() {
   if (process.env.NODE_ENV !== 'production') {
     // enable script eval in development
-    return '\'unsafe-eval\''
+    return ' \'unsafe-eval\''
   }
   return ''
 }
@@ -59,7 +64,7 @@ function devScript() {
 export function nonceContentSecurity() {
   const nonce = crypto.randomUUID()
   // append default, monitoring scripts and dev script
-  let scriptSrc = `${sharedScript} ${monitoringScripts()} ${devScript()} 'nonce-${nonce}'`
+  let scriptSrc = `script-src 'nonce-${nonce}' 'strict-dynamic'${monitoringScripts()}${devScript()} 'unsafe-inline' https:`
   // combine shared policies with script policy
   const policy = `${sharedPolicy.replace(/\s{2,}/g, ' ').trim()} ${scriptSrc}`
   // console.log('shaContentSecurity...', policy)
@@ -85,50 +90,3 @@ export function setContentSecurityPolicyHeader(res?: ServerResponse<IncomingMess
   // return nonce
   return nonce
 }
-
-/*
- * SHA content security approach IS NOT USED. It seems that nonce approach is
- * supported by MUI and can also be applied to injected scripts in _document.tsx.
- * I decided to use nonce approach only because it is sufficient and simpler.
- * 2022-10-08 Dusan
- */
-
-// type ShaContentSecurityProps = {
-//   // source code as string
-//   source: string,
-//   // create nonce and provide the value for the refference
-//   withNonce?: boolean
-// }
-// export function shaContentSecurity({source, withNonce = true}: ShaContentSecurityProps) {
-//   // create hash
-//   const hash = hashSourceCode(source)
-//   let nonce
-//   // append default, monitoring scripts and dev script
-//   let scriptSrc = `${sharedScript} ${monitoringScripts()} ${devScript()} ${hash}`
-//   // add nonce
-//   if (withNonce) {
-//     nonce = crypto.randomUUID()
-//     scriptSrc += ` 'nonce-${nonce}'`
-//   }
-//   // combine shared policies with dynamic script policy
-//   const policy = `${sharedPolicy.replace(/\s{2,}/g, ' ').trim()} ${scriptSrc}`
-//   // console.log('shaContentSecurity...', policy)
-//   return {
-//     policy,
-//     nonce
-//   }
-// }
-
-// // Create sha256 hash from the source code
-// function hashSourceCode(src: string) {
-//   if (src) {
-//     const hash = crypto
-//       .createHash('sha256')
-//       .update(src)
-//       .digest('base64')
-
-//     return `'sha256-${hash}'`
-//   }
-//   return ''
-// }
-

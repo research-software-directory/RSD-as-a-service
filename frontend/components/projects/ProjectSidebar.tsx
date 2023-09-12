@@ -1,17 +1,17 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {KeywordForProject, ProjectLink, ResearchDomain} from '../../types/Project'
-
+import {KeywordForProject, ProjectLink, ResearchDomain} from '~/types/Project'
+import {ProjectOrganisationProps} from '~/types/Organisation'
 import ProjectStatus from './ProjectStatus'
 import ProjectFunding from './ProjectFunding'
 import ProjectLinks from './ProjectLinks'
 import ProjectKeywords from './ProjectKeywords'
-import {ProjectOrganisationProps} from '~/types/Organisation'
 import ResearchDomains from './ResearchDomains'
 
 type ProjectSidebarProps = {

@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,27 +54,3 @@ export function useDebounceValid(value: string, errors:any, delay: number = 500)
   // console.groupEnd()
   return debouncedValue
 }
-
-// export function useDebounceWithAutocomplete(value: string, selected: string|undefined, delay: number = 500) {
-//   // state debounced value
-//   const debounced = useDebounce(value, delay)
-//   const [debouncedValue, setDebouncedValue] = useState<string>()
-
-//   useEffect(() => {
-//     // NOTE! only when value and debounced are same but not selected
-//     // it means that user stopped typing and the final input (value)
-//     // is valid according to the validation rules provided to react-hook-form
-//     if (value === debounced && value!==selected) {
-//       setDebouncedValue(debounced)
-//     } else {
-//       setDebouncedValue(undefined)
-//     }
-//   }, [debounced, value, selected])
-//   // console.group('useDebounceWithAutocomplete')
-//   // console.log('delay...', delay)
-//   // console.log('value...', value)
-//   // console.log('debouncedValue...', debouncedValue)
-//   // console.log('selected...', selected)
-//   // console.groupEnd()
-//   return debouncedValue
-// }

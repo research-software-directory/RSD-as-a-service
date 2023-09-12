@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +15,7 @@ import {refreshSession} from './refreshSession'
 // refresh schedule margin 5min. before expiration time
 // REFRESH_MARGIN_MSEC env variable is used for test purposes ONLY
 const testMargin = process.env.REFRESH_MARGIN_MSEC ? parseInt(process.env.REFRESH_MARGIN_MSEC) : undefined
-export const REFRESH_MARGIN = testMargin || 5 * 60 * 1000
+export const REFRESH_MARGIN = testMargin ?? 5 * 60 * 1000
 export type RsdRole = 'rsd_admin' | 'rsd_user'
 export type RsdUser = {
   iss: 'rsd_auth'
@@ -48,15 +50,15 @@ export const initSession: AuthSession = {
   setSession: () => defaultSession
 }
 
-const AuthContext = createContext(initSession)
+const AuthContext = createContext<AuthSession>(initSession)
 
 // AuthProvider used in _app to share session between all components
 export function AuthProvider(props: any) {
-  const [session, setSession] = useState(props?.session ?? defaultSession)
+  const [session, setSession] = useState<Session>(props?.session)
 
   // console.group('AuthProvider')
-  // console.log('session.user..', session?.user)
-  // console.log('props.session.user...', props?.session?.user)
+  // console.log('session...', session)
+  // console.log('props.session...', props?.session)
   // console.groupEnd()
 
   useEffect(() => {
@@ -64,7 +66,7 @@ export function AuthProvider(props: any) {
     let schedule: any
     // only if authenticated = valid token
     if (session.status === 'authenticated'
-      && session?.user) {
+      && session?.user?.exp) {
       const {user} = session
       const expiresInMs = getExpInMs(user.exp)
       const waitInMs = getWaitInMs(expiresInMs)
@@ -72,11 +74,16 @@ export function AuthProvider(props: any) {
       if (schedule) clearTimeout(schedule)
       if (expiresInMs <= 0) {
         // token expired
-        setSession(defaultSession)
+        setSession({
+          ...session,
+          status: 'expired',
+          token: `AuthProvider session EXPIRED for account ${session.user.account}`,
+          user: null
+        })
       }else{
         // console.log(`schedule refresh in ${waitInMs/1000}sec.`)
         schedule = setTimeout(() => {
-          // console.log('call...refreshSession')
+          // console.log('call...refreshSession...',user.account)
           // refresh token by sending current valid cookie
           refreshSession()
             .then(newSession => {
@@ -100,7 +107,7 @@ export function AuthProvider(props: any) {
         clearTimeout(schedule)
       }
     }
-  }, [session, setSession])
+  }, [session])
 
   return <AuthContext.Provider value={{session, setSession}} {...props}/>
 }
@@ -111,6 +118,11 @@ export const useAuth = () => useContext(AuthContext)
 // More specific session hook which destructures session
 export function useSession(){
   const {session} = useContext(AuthContext)
+
+  // console.group('useSession')
+  // console.log('session...', session)
+  // console.groupEnd()
+
   return {
     ...session
   }
@@ -236,4 +248,18 @@ export function removeRsdTokenNode(res: OutgoingMessage) {
   } catch (e:any) {
     logger(`removeRsdTokenCookie: ${e?.message}`,'error')
   }
+}
+
+export function getUserFromToken(token: string | null) {
+  if (token) {
+    const result = verifyJwt(token)
+    if (result === 'valid') {
+      // decode JWT
+      const user = decodeJwt(token) as RsdUser
+      //
+      return user
+    }
+    return null
+  }
+  return null
 }

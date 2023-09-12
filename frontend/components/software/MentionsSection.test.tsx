@@ -19,7 +19,7 @@ it('should NOT render mentions section when no data provided',()=>{
 it('should render mention section title when data provided',()=>{
   render(WrappedComponentWithProps(MentionsSection, {
     props:{mentions: mentionsData}
-}))
+  }))
   const title = screen.queryByTestId('software-mentions-section-title')
   expect(title).toBeInTheDocument()
   // screen.debug()

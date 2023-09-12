@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import {getImpactForProject} from '~/utils/getProjects'
+import {getMentionsForProject} from '~/utils/getProjects'
 
 import {sortOnNumProp} from '~/utils/sortFn'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
@@ -24,11 +26,10 @@ export default function useImpactForProject({project, token}: ImpactForProjectPr
     let abort = false
     async function getImpactFromApi() {
       setLoading(true)
-      // TODO! this request is made two times, investigate
-      const mentionsForProject = await getImpactForProject({
+      const mentionsForProject = await getMentionsForProject({
         project,
-        token,
-        frontend: true
+        table:'impact_for_project',
+        token
       })
       if (mentionsForProject && abort === false) {
         const mentions:MentionItemProps[] = mentionsForProject.sort((a, b) => {

@@ -1,8 +1,10 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -160,7 +162,7 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
       <li {...props} key={option.key}>
         {/* if new option (has input) show label and count  */}
         {option.data?.deprecated ?
-          <span className="text-grey-500">{option.label} (DEPRECATED)</span>
+          <span className="text-base-500">{option.label} (DEPRECATED)</span>
           : <span>{option.label}</span>
         }
       </li>
@@ -196,21 +198,21 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
         subtitle={config.licenses.subtitle}
       />
       <div className="flex flex-wrap py-2">
-      {licenses.map((item, pos) => {
-        return(
-          <div
-            key={item.key}
-            className="py-1 pr-1"
-          >
-            <Chip
-              data-testid="license-chip"
-              title={item.label}
-              label={item.label}
-              onDelete={() => onRemove(pos)}
-            />
-          </div>
-        )
-      })}
+        {licenses.map((item, pos) => {
+          return(
+            <div
+              key={item.key}
+              className="py-1 pr-1"
+            >
+              <Chip
+                data-testid="license-chip"
+                title={item.label}
+                label={item.label}
+                onDelete={() => onRemove(pos)}
+              />
+            </div>
+          )
+        })}
       </div>
       <AsyncAutocompleteSC
         status={status}

@@ -170,9 +170,9 @@ describe('frontend/components/software/edit/maintainers/index.tsx', () => {
       // call RSD api to find mention by DOI
       expect(mockFindPublicationByTitle).toBeCalledTimes(1)
       expect(mockFindPublicationByTitle).toBeCalledWith({
-       'software': softwareState.software.id,
-       searchFor,
-       'token': mockSession.token
+        'software': softwareState.software.id,
+        searchFor,
+        'token': mockSession.token
       })
     })
   })
@@ -242,23 +242,23 @@ describe('frontend/components/software/edit/maintainers/index.tsx', () => {
     await waitFor(() => {
       expect(mockAddNewMentionToSoftware).toBeCalledTimes(1)
       expect(mockAddNewMentionToSoftware).toBeCalledWith({
-       'item': {
-         'authors': null,
-         'doi': null,
-         'id': null,
-         'image_url': null,
-         'journal': null,
-         'mention_type': 'book',
-         'note': null,
-         'page': null,
-         'publication_year': null,
-         'publisher': null,
-         'source': 'RSD',
-         'title': 'Test value',
-         'url': 'https://google.com/link1',
-       },
-       'software': softwareState.software.id,
-       'token': mockSession.token,
+        'item': {
+          'authors': null,
+          'doi': null,
+          'id': null,
+          'image_url': null,
+          'journal': null,
+          'mention_type': 'book',
+          'note': null,
+          'page': null,
+          'publication_year': null,
+          'publisher': null,
+          'source': 'RSD',
+          'title': 'Test value',
+          'url': 'https://google.com/link1',
+        },
+        'software': softwareState.software.id,
+        'token': mockSession.token,
       })
     })
   })

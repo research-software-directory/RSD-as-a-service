@@ -1,15 +1,17 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {OrganisationRole} from '~/types/Organisation'
 import {TeamMemberProps} from '~/types/Contributor'
-import {mentionColumns, MentionForProject, MentionItemProps} from '~/types/Mention'
+import {mentionColumns, MentionItemProps} from '~/types/Mention'
 import {
   KeywordForProject,
   OrganisationsOfProject, Project,
-  ProjectLink, ProjectSearchRpc, RelatedProjectForProject,
+  ProjectLink, ProjectListItem, ProjectStatusKey, RelatedProjectForProject,
   ResearchDomain, SearchProject, TeamMember
 } from '~/types/Project'
 import {RelatedSoftwareOfProject} from '~/types/SoftwareTypes'
@@ -17,6 +19,7 @@ import {getImageUrl} from './editImage'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import logger from './logger'
+import {ProjectStatusLabels} from '~/components/projects/overview/filters/ProjectStatusFilter'
 
 export async function getProjectList({url, token}: { url: string, token?: string }) {
   try {
@@ -29,7 +32,7 @@ export async function getProjectList({url, token}: { url: string, token?: string
     })
 
     if ([200, 206].includes(resp.status)) {
-      const json: ProjectSearchRpc[] = await resp.json()
+      const json: ProjectListItem[] = await resp.json()
       // set
       return {
         count: extractCountFromHeader(resp.headers),
@@ -132,6 +135,12 @@ export async function getOrganisations({project, token, frontend = true}:
   return organisations
 }
 
+/**
+ * Calculate project status based on date_start and date_end values.
+ * NOTE!
+ * 1. Ensure values follow SQL logic in project_status() RPC of 105-project-views.
+ * 2. Ensure used labels are same as ProjectStatusLabels used in the filter dropdown
+ */
 export function getProjectStatus({date_start, date_end}:
   {date_start: string, date_end: string}) {
   try {
@@ -139,16 +148,20 @@ export function getProjectStatus({date_start, date_end}:
     const end_date = new Date(date_end)
     const today = new Date()
 
-    let status:'Starting'|'Running'|'Finished' = 'Running'
+    let statusKey: ProjectStatusKey = 'unknown'
 
-    if (today < start_date) status = 'Starting'
-    if (today > end_date) status = 'Finished'
+    if (today < start_date) statusKey = 'pending'
+    if (today > end_date) statusKey = 'finished'
+    if (today > start_date && today < end_date) statusKey = 'in_progress'
 
-    return status
+    if (statusKey!=='unknown') {
+      return ProjectStatusLabels[statusKey]
+    }
+    return ''
   } catch (e:any) {
     logger(`getProjectStatus: ${e?.message}`, 'error')
     // error value return starting
-    return 'Starting'
+    return ''
   }
 }
 
@@ -227,72 +240,33 @@ export async function getLinksForProject({project, token, frontend = false}:
   }
 }
 
-export async function getOutputForProject({project, token, frontend}:
-  {project: string, token?: string, frontend?: boolean}) {
+export async function getMentionsForProject({project, token, table}:
+  {project: string, token?: string, table: 'output_for_project'|'impact_for_project'}) {
   try {
     // build query url
-    const query = `mention?select=${mentionColumns},output_for_project!inner(project)&output_for_project.project=eq.${project}&order=mention_type.asc`
-    // base url
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
-
+    const query = `project?id=eq.${project}&select=id,slug,mention!${table}(${mentionColumns})&mention.order=mention_type.asc`
+    // construct url
+    const url = `${getBaseUrl()}/${query}`
+    // make request
     const resp = await fetch(url, {
       method: 'GET',
-      headers: createJsonHeaders(token)
+      headers: {
+        ...createJsonHeaders(token),
+        // request single object item
+        'Accept': 'application/vnd.pgrst.object+json'
+      }
     })
     if (resp.status === 200) {
-      const data: MentionForProject[] = await resp.json()
-      // cover to plain mention
-      const mentions: MentionItemProps[] = data.map(item => {
-        if (item?.output_for_project) {
-          delete item.output_for_project
-        }
-        return item
-      })
+      const json = await resp.json()
+      // extract mentions from project object
+      const mentions: MentionItemProps[] = json?.mention ?? []
       return mentions
     }
-    logger(`getOutputForProject: [${resp.status}] [${url}]`, 'error')
+    logger(`getMentionsForProject: [${resp.status}] [${url}]`, 'error')
     // query not found
     return []
   } catch (e: any) {
-    logger(`getOutputForProject: ${e?.message}`, 'error')
-    return []
-  }
-}
-
-export async function getImpactForProject({project, token, frontend}:
-  { project: string, token?: string, frontend?: boolean }) {
-  try {
-    // build query url
-    const query = `mention?select=${mentionColumns},impact_for_project!inner(project)&impact_for_project.project=eq.${project}&order=mention_type.asc`
-    // base url
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
-
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders(token)
-    })
-    if (resp.status === 200) {
-      const data: MentionForProject[] = await resp.json()
-      // cover to plain mention
-      const mentions: MentionItemProps[] = data.map(item => {
-        if (item?.impact_for_project) {
-          delete item.impact_for_project
-        }
-        return item
-      })
-      return mentions
-    }
-    logger(`getImpactForProject: [${resp.status}] [${url}]`, 'error')
-    // query not found
-    return []
-  } catch (e: any) {
-    logger(`getImpactForProject: ${e?.message}`, 'error')
+    logger(`getMentionsForProject: ${e?.message}`, 'error')
     return []
   }
 }

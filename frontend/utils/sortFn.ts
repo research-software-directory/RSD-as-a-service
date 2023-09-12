@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +16,7 @@ export function sortOnStrProp(itemA: any, itemB: any, prop: string, sortDir: 'as
     // ignore case
     const nameA = itemA[prop].toUpperCase()
     const nameB = itemB[prop].toUpperCase()
-    return sortItems(nameA,nameB,sortDir)
+    return localeSort(nameA,nameB,sortDir)
   } catch (e: any) {
     // on error we log and return neutral score
     logger(`sortOnStrProp failed. Error: ${e.message}`)
@@ -33,6 +35,12 @@ export function sortOnNumProp(itemA: any, itemB: any, prop: string, sortDir: 'as
   const valA = itemA[prop]
   const valB = itemB[prop]
   return sortItems(valA,valB,sortDir)
+}
+
+export function localeSort(a: string, b: string, sortDir: 'asc' | 'desc' = 'asc') {
+  if (sortDir === 'desc') return b.localeCompare(a)
+  // default is ascending
+  return a.localeCompare(b)
 }
 
 function sortItems(valA: any, valB: any, sortDir: 'asc' | 'desc' = 'asc'){

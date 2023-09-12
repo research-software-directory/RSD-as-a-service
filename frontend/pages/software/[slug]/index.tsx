@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -50,7 +52,7 @@ import {getMentionsForSoftware} from '~/utils/editMentions'
 import {getParticipatingOrganisations} from '~/utils/editOrganisation'
 import {
   KeywordForSoftware, License, RepositoryInfo,
-  SoftwareItem, SoftwareListItem
+  SoftwareItem, SoftwareOverviewItemProps
 } from '~/types/SoftwareTypes'
 import {Contributor} from '~/types/Contributor'
 import {Testimonial} from '~/types/Testimonial'
@@ -58,7 +60,6 @@ import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
 import NoContent from '~/components/layout/NoContent'
-import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -71,14 +72,13 @@ interface SoftwareIndexData extends ScriptProps{
   mentions: MentionItemProps[]
   testimonials: Testimonial[]
   contributors: Contributor[]
-  relatedSoftware: SoftwareListItem[]
+  relatedSoftware: SoftwareOverviewItemProps[]
   relatedProjects: RelatedProject[]
   isMaintainer: boolean,
   organisations: ParticipatingOrganisationProps[],
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
-  const [resolvedUrl, setResolvedUrl] = useState('')
   const [author, setAuthor] = useState('')
   // extract data from props
   const {
@@ -90,11 +90,6 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   } = props
 
   useEffect(() => {
-    if (typeof location != 'undefined') {
-      setResolvedUrl(location.href)
-    }
-  }, [])
-  useEffect(() => {
     const contact = contributors.filter(item => item.is_contact_person)
     if (contact.length > 0) {
       const name = getDisplayName(contact[0])
@@ -105,7 +100,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...releases...', releases)
+  // console.log('SoftwareIndexPage...mentions...', mentions)
   return (
     <>
       {/* Page Head meta tags */}
@@ -217,32 +212,6 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       }
     }
     // fetch all info about software in parallel based on software.id
-    const fetchData = [
-      // software versions info
-      getReleasesForSoftware(software.id,token),
-      // keywords
-      getKeywordsForSoftware(software.id,false,token),
-      // licenseInfo
-      getLicenseForSoftware(software.id, false, token),
-      // repositoryInfo: url, languages and commits
-      getRepostoryInfoForSoftware(software.id, token),
-      // softwareMentionCounts
-      getContributorMentionCount(software.id,token),
-      // mentions
-      getMentionsForSoftware({software: software.id, frontend: false, token}),
-      // testimonials
-      getTestimonialsForSoftware({software:software.id,frontend: false,token}),
-      // contributors
-      getContributorsForSoftware({software:software.id,token}),
-      // relatedTools
-      getRelatedSoftwareForSoftware({software: software.id, frontend: false, token}),
-      // relatedProjects
-      getRelatedProjectsForSoftware({software: software.id, token, frontend: false}),
-      // check if maintainer
-      isMaintainerOfSoftware({slug, account:userInfo?.account, token, frontend: false}),
-      // get organisations
-      getParticipatingOrganisations({software:software.id,frontend:false,token})
-    ]
     const [
       releases,
       keywords,
@@ -256,8 +225,32 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       relatedProjects,
       isMaintainer,
       organisations
-    ] = await Promise.all(fetchData)
-
+    ] = await Promise.all([
+      // software versions info
+      getReleasesForSoftware(software.id,token),
+      // keywords
+      getKeywordsForSoftware(software.id,false,token),
+      // licenseInfo
+      getLicenseForSoftware(software.id, false, token),
+      // repositoryInfo: url, languages and commits
+      getRepostoryInfoForSoftware(software.id, token),
+      // softwareMentionCounts
+      getContributorMentionCount(software.id,token),
+      // mentions
+      getMentionsForSoftware({software:software.id,token}),
+      // testimonials
+      getTestimonialsForSoftware({software:software.id,frontend: false,token}),
+      // contributors
+      getContributorsForSoftware({software:software.id,token}),
+      // relatedTools
+      getRelatedSoftwareForSoftware({software: software.id, frontend: false, token}),
+      // relatedProjects
+      getRelatedProjectsForSoftware({software: software.id, token, frontend: false}),
+      // check if maintainer
+      isMaintainerOfSoftware({slug, account:userInfo?.account, token, frontend: false}),
+      // get organisations
+      getParticipatingOrganisations({software:software.id,frontend:false,token})
+    ])
     // pass data to page component as props
     return {
       props: {

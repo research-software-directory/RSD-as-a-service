@@ -248,20 +248,20 @@ describe('frontend/components/software/edit/contributors/index.tsx', () => {
     await waitFor(() => {
       expect(mockPostContributor).toBeCalledTimes(1)
       expect(mockPostContributor).toBeCalledWith({
-       'contributor': {
-         'affiliation': newPerson.affiliation,
-         'avatar_id': null,
-         'email_address': newPerson.email,
-         'family_names': newPerson.family_names,
-         'given_names': newPerson.given_names,
-         'id': memberId,
-         'is_contact_person': true,
-         'orcid': null,
-         'position': 1,
-         'software': editSoftwareState.software.id,
-         'role': newPerson.role,
-       },
-       'token': mockSession.token,
+        'contributor': {
+          'affiliation': newPerson.affiliation,
+          'avatar_id': null,
+          'email_address': newPerson.email,
+          'family_names': newPerson.family_names,
+          'given_names': newPerson.given_names,
+          'id': memberId,
+          'is_contact_person': true,
+          'orcid': null,
+          'position': 1,
+          'software': editSoftwareState.software.id,
+          'role': newPerson.role,
+        },
+        'token': mockSession.token,
       })
     })
 

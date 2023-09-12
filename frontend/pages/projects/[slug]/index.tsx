@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,11 +12,11 @@ import {getAccountFromToken} from '~/auth/jwtUtils'
 import isMaintainerOfProject from '~/auth/permissions/isMaintainerOfProject'
 import logger from '~/utils/logger'
 import {
-  getLinksForProject, getImpactForProject,
-  getOutputForProject, getOrganisations,
+  getLinksForProject, getOrganisations,
   getProjectItem, getRelatedSoftwareForProject,
   getTeamForProject, getResearchDomainsForProject,
-  getKeywordsForProject, getRelatedProjectsForProject
+  getKeywordsForProject, getRelatedProjectsForProject,
+  getMentionsForProject
 } from '~/utils/getProjects'
 import {
   KeywordForProject, Project, ProjectLink,
@@ -23,7 +25,7 @@ import {
 import {MentionItemProps} from '~/types/Mention'
 import {Person} from '~/types/Contributor'
 import {ProjectOrganisationProps} from '~/types/Organisation'
-import {SoftwareListItem} from '~/types/SoftwareTypes'
+import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import AppHeader from '~/components/AppHeader'
 import EditPageButton from '~/components/layout/EditPageButton'
 import PageContainer from '~/components/layout/PageContainer'
@@ -51,7 +53,7 @@ export interface ProjectPageProps extends ScriptProps{
   output: MentionItemProps[],
   impact: MentionItemProps[],
   team: Person[],
-  relatedSoftware: SoftwareListItem[],
+  relatedSoftware: SoftwareOverviewItemProps[],
   relatedProjects: RelatedProject[]
 }
 
@@ -64,7 +66,7 @@ export default function ProjectPage(props: ProjectPageProps) {
   if (!project?.title){
     return <NoContent />
   }
-  // console.log('ProjectPage...project...', project)
+  // console.log('ProjectPage...output...', output)
   return (
     <>
       {/* Page Head meta tags */}
@@ -146,26 +148,12 @@ export async function getServerSideProps(context:any) {
     // console.log('getServerSideProps...userInfo...', userInfo)
     const project = await getProjectItem({slug: params?.slug, token})
     if (typeof project == 'undefined'){
-    // returning this value
-    // triggers 404 page on frontend
+      // returning this value triggers 404 page on frontend
       return {
         notFound: true,
       }
     }
     // fetch all info about project in parallel based on project.id
-    const fetchData = [
-      getOrganisations({project: project.id, token, frontend: false}),
-      getResearchDomainsForProject({project: project.id, token, frontend: false}),
-      getKeywordsForProject({project: project.id, token, frontend: false}),
-      getOutputForProject({project: project.id, token, frontend: false}),
-      getImpactForProject({project: project.id, token, frontend: false}),
-      getTeamForProject({project: project.id, token, frontend: false}),
-      getRelatedSoftwareForProject({project: project.id, token, frontend: false}),
-      getRelatedProjectsForProject({project: project.id, token, frontend: false}),
-      getLinksForProject({project: project.id, token, frontend: false}),
-      isMaintainerOfProject({slug, account:userInfo?.account, token, frontend: false}),
-    ]
-
     const [
       organisations,
       researchDomains,
@@ -177,7 +165,20 @@ export async function getServerSideProps(context:any) {
       relatedProjects,
       links,
       isMaintainer
-    ] = await Promise.all(fetchData)
+    ] = await Promise.all([
+      getOrganisations({project: project.id, token, frontend: false}),
+      getResearchDomainsForProject({project: project.id, token, frontend: false}),
+      getKeywordsForProject({project: project.id, token, frontend: false}),
+      // Output
+      getMentionsForProject({project: project.id, token, table:'output_for_project'}),
+      // Impact
+      getMentionsForProject({project: project.id, token, table:'impact_for_project'}),
+      getTeamForProject({project: project.id, token, frontend: false}),
+      getRelatedSoftwareForProject({project: project.id, token, frontend: false}),
+      getRelatedProjectsForProject({project: project.id, token, frontend: false}),
+      getLinksForProject({project: project.id, token, frontend: false}),
+      isMaintainerOfProject({slug, account:userInfo?.account, token, frontend: false}),
+    ])
 
     // console.log("getServerSideProps...project...", project)
     return {

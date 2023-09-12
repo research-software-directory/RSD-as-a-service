@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {SearchSoftware, SoftwareListItem} from '../types/SoftwareTypes'
+import {SearchSoftware, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
 import {createJsonHeaders, extractReturnMessage} from './fetchHelpers'
 import logger from './logger'
 
@@ -22,7 +24,7 @@ export async function getRelatedSoftwareForSoftware({software, token, frontend}:
       headers: createJsonHeaders(token)
     })
     if (resp.status === 200) {
-      const data: SoftwareListItem[] = await resp.json()
+      const data: SoftwareOverviewItemProps[] = await resp.json()
       return data
     } else if (resp.status === 404) {
       // no items found

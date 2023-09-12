@@ -1,6 +1,8 @@
 <!--
-SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-SPDX-FileCopyrightText: 2021 - 2022 dv4all
+SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+SPDX-FileCopyrightText: 2021 - 2023 dv4all
+SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -13,9 +15,7 @@ The global.css file is imported in `page/_app.tsx`. The `global.css` in its turn
 
 ## Themes
 
-The theme have two modes: light and dark. The definition are loaded from public/settings/theme.json file. The default RSD theme settings are loaded from styles/themeSettings.json and used in tailing.config.js and rsdMuiTheme.ts. The colors and the typography definitions are used in both Tailwind and Material-UI.
-
-On inital load of the theme the css variables are also populated.
+The theme have two modes: light and dark. The definition are loaded from public/data/settings.json file. These theme settings are used in tailing.config.js and rsdMuiTheme.ts.
 
 ### Define custom theme
 
@@ -26,7 +26,7 @@ The current setup supports loading of custom theme during the runtime. It requir
 3. Mount index.css file to app/public/styles folder of the frontend image. See docker-compose file
 4. Mount theme.json file to app/public/settings folder of the frontend image. See docker-compose file
 
-Default theme settings from (theme.json)
+Default theme from settings
 
 ```json
 {
@@ -35,6 +35,12 @@ Default theme settings from (theme.json)
       "base-100": "#ffffff",
       "base-200": "#eeeeee",
       "base-300": "#dcdcdc",
+      "base-400": "#bdbdbd",
+      "base-500": "#9e9e9e",
+      "base-600": "#757575",
+      "base-700": "#616161",
+      "base-800": "#111",
+      "base-900": "#000",
       "base-content": "rgba(34,36,37,1)",
       "base-content-secondary": "rgba(34,36,37,0.7)",
       "base-content-disabled": "rgba(34,36,37,0.45)",
@@ -72,6 +78,12 @@ Default theme settings from (theme.json)
       "base-100": "#0a0a0a",
       "base-200": "#151515",
       "base-300": "#2a2a2a",
+      "base-400": "#757575",
+      "base-500": "#9e9e9e",
+      "base-600": "#bdbdbd",
+      "base-700": "#dcdcdc",
+      "base-800": "#eeeeee",
+      "base-900": "#fff",
       "base-content": "rgba(255,255,255,0.87)",
       "base-content-secondary": "rgba(255,255,255,0.7)",
       "base-content-disabled": "rgba(255,255,255,0.45)",
@@ -159,7 +171,7 @@ Example of index.css to load custom fonts
 }
 ```
 
-## MUI Theme properties
+## MUI theme properties
 
 For general information about MUI themes [see documentation](https://mui.com/customization/theming/)
 Below is the print of all theme properites created at scafold of the project. You can overwrite any property by specifying new values in the **rsdTheme.ts** file.
@@ -170,10 +182,11 @@ const rsdTheme = {
     keys: ["xs", "sm", "md", "lg", "xl"],
     values: {
       xs: 0,
-      sm: 600,
-      md: 900,
-      lg: 1200,
-      xl: 1536,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      '2xl':1536
     },
     unit: "px",
   },
@@ -425,7 +438,7 @@ const rsdTheme = {
 
 ## Tailwind theme
 
-Below you see default theme configuration of tailwind. We combine material-ui and tailwind and we need to keep color definitions in sync. For more info see themeConfig.js and tailwind.config.js
+Below you see default theme configuration of tailwind. We combine material-ui and tailwind and we need to keep color definitions in sync. For more info see rsdMuiTheme.ts and tailwind.config.js
 
 ```javascript
 const colors = require("../colors");

@@ -2,7 +2,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -71,7 +73,7 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
   // console.log('formData...', formData)
   // console.groupEnd()
 
-  function handleCancel(e?:any, reason?:'backdropClick' | 'escapeKeyDown') {
+  function handleCancel(e?: any, reason?: 'backdropClick' | 'escapeKeyDown') {
     if (reason && reason==='backdropClick') return
     // reset form
     reset()
@@ -118,7 +120,7 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
   }
 
   return (
-     <Dialog
+    <Dialog
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}
@@ -162,29 +164,29 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
           <div className="py-2"></div>
           <section className="py-4 grid grid-cols-[1fr,1fr] gap-8">
             <ControlledTextField
-                control={control}
-                options={{
-                  name: 'given_names',
-                  label: config.given_names.label,
-                  useNull: true,
-                  defaultValue: formData?.given_names,
-                  helperTextMessage: config.given_names.help,
-                  helperTextCnt: `${formData?.given_names?.length || 0}/${config.given_names.validation.maxLength.value}`,
-                }}
-                rules={config.given_names.validation}
-              />
-              <ControlledTextField
-                control={control}
-                options={{
-                  name: 'family_names',
-                  label: config.family_names.label,
-                  useNull: true,
-                  defaultValue: formData?.family_names,
-                  helperTextMessage: config.family_names.help,
-                  helperTextCnt: `${formData?.family_names?.length || 0}/${config.family_names.validation.maxLength.value}`,
-                }}
-                rules={config.family_names.validation}
-              />
+              control={control}
+              options={{
+                name: 'given_names',
+                label: config.given_names.label,
+                useNull: true,
+                defaultValue: formData?.given_names,
+                helperTextMessage: config.given_names.help,
+                helperTextCnt: `${formData?.given_names?.length || 0}/${config.given_names.validation.maxLength.value}`,
+              }}
+              rules={config.given_names.validation}
+            />
+            <ControlledTextField
+              control={control}
+              options={{
+                name: 'family_names',
+                label: config.family_names.label,
+                useNull: true,
+                defaultValue: formData?.family_names,
+                helperTextMessage: config.family_names.help,
+                helperTextCnt: `${formData?.family_names?.length || 0}/${config.family_names.validation.maxLength.value}`,
+              }}
+              rules={config.family_names.validation}
+            />
             <ControlledAutocomplete
               name="email_address"
               label={config.email_address.label}

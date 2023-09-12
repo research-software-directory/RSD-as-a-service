@@ -47,12 +47,12 @@ function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string,
     className="flex gap-4 cursor-pointer"
     target={target}
     passHref
-    >
+  >
     <div className="relative group">
       <div
-        className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
+        className="absolute -inset-1 bg-gradient-to-r from-glow-start to-glow-end rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
       <div
-        className="flex gap-3 text-black relative px-8 py-3 bg-white ring-1 ring-gray-900/5 rounded leading-none items-center justify-center space-x-2"
+        className="flex gap-3 text-base-900 relative px-8 py-3 bg-base-100 ring-1 rounded leading-none items-center justify-center space-x-2"
         style={{
           minWidth
         }}
@@ -79,7 +79,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
   }, [])
 
   return (
-    <div className="bg-white dark:bg-black dark:text-white" data-testid="rsd-home-page">
+    <div className="bg-base-100 dark:bg-base-900 dark:text-base-100" data-testid="rsd-home-page">
       {/* Header  */}
       <AppHeader/>
 
@@ -87,16 +87,16 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
       <div className="max-w-screen-xl mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr,1fr] gap-[2rem]">
         {/* Jumbo Text*/}
         <div className="flex flex-col justify-center"
-              data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
+          data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
         >
           <h1 className="text-5xl font-rsd-titles font-bold">
             Show your research software to the world
           </h1>
           <div className="mt-8 text-lg">
             The<span
-            className="text-transparent font-medium bg-clip-text bg-gradient-to-tr from-[#03A9F1] to-[#09FBD3] px-1">
+              className="text-transparent font-medium bg-clip-text bg-gradient-to-tr from-[#03A9F1] to-[#09FBD3] px-1">
                 Research Software Directory
-              </span>
+            </span>
             is designed to show the impact research software has on research and society. We
             stimulate the reuse of research software and encourage proper citation of research
             software to ensure researchers and RSEs get credit for their work. {/*Learn more.*/}
@@ -143,21 +143,21 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         </div>
       </div>
 
-      <div className="bg-[#111]">
+      <div className="bg-base-800">
         {/* Arc separator  */}
-        <Arc className="w-full text-white dark:text-black -translate-y-1"></Arc>
+        <Arc className="w-full text-base-100 dark:text-base-900 -translate-y-1"></Arc>
 
         {/* Get started section  */}
         <section
           id="get-started"
           className="px-5 md:px-10 py-5 ">
           <h2 className="flex justify-center text-4xl font-rsd-titles font-bold"
-              data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
+            data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
             {/* eslint-disable-next-line react/no-unescaped-entities */}
             Let's get started!
           </h2>
           <p className="text-center text-lg mt-5" data-aos="fade"
-             data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
+            data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
             Discover research software relevant to your research! <br/>
             Get more information on how to add your own software or organization.
           </p>
@@ -268,11 +268,11 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
           </div>
           <div>
             <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
-                data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
+              data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
               Learn more
             </h2>
             <p className="text-center text-lg mt-5" data-aos="fade"
-               data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
+              data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
               Try out our online demo, or get more detailed information in our documentation and
               FAQ.
             </p>
@@ -280,7 +280,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
             <div
               className="flex flex-wrap justify-center gap-4 p-2 scale-90 mt-5">
               <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
-                   data-aos-easing="ease-in-out">
+                data-aos-easing="ease-in-out">
                 <GlowingButton
                   text={button.demo.label}
                   url={button.demo.url}
@@ -288,8 +288,8 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
                 />
               </div>
               <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
-                   data-aos-delay="100"
-                   data-aos-easing="ease-in-out">
+                data-aos-delay="100"
+                data-aos-easing="ease-in-out">
                 <GlowingButton
                   text={button.docs.label}
                   url={button.docs.url}
@@ -297,8 +297,8 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
                 />
               </div>
               <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
-                   data-aos-delay="200"
-                   data-aos-easing="ease-in-out">
+                data-aos-delay="200"
+                data-aos-easing="ease-in-out">
                 <GlowingButton
                   text={button.faq.label}
                   url={button.faq.url}
@@ -318,12 +318,12 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
           id="about-us"
           className="px-5 md:px-10 py-5 w-full max-w-screen-lg mx-auto mt-10">
           <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
-              data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
+            data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
             {/* eslint-disable-next-line react/no-unescaped-entities */}
             About us
           </h2>
           <p className="text-center text-lg mt-5" data-aos="fade"
-             data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
+            data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
             The Research Software Directory is an open source project initiated by the Netherlands
             eScience Center and jointly developed with Helmholtz. Feel free to
             contact us or join our effort!
@@ -332,7 +332,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
           <div
             className="max-w-screen-md mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
             <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
-                 data-aos-duration="500" data-aos-easing="ease-in-out">
+              data-aos-duration="500" data-aos-easing="ease-in-out">
               <GlowingButton
                 text={button.team.label}
                 url={button.team.url}
@@ -341,7 +341,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
             </div>
             {host.email &&
               <div className="flex justify-center" data-aos="fade" data-aos-duration="500"
-                  data-aos-easing="ease-in-out">
+                data-aos-easing="ease-in-out">
                 <GlowingButton
                   text={button.contact.label}
                   url={button.contact.url}
@@ -350,7 +350,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
               </div>
             }
             <div className="flex justify-center" data-aos="fade" data-aos-delay="200"
-                 data-aos-duration="500" data-aos-easing="ease-in-out">
+              data-aos-duration="500" data-aos-easing="ease-in-out">
               <GlowingButton
                 text={button.github.label}
                 url={button.github.url}

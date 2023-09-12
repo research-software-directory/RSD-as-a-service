@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,8 +14,8 @@ import List from '@mui/material/List'
 import {useSession} from '~/auth'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import ContentLoader from '~/components/layout/ContentLoader'
-import {RsdAccountInfo, useLoginForAccount} from './apiRsdUsers'
 import RsdAccountItem from './RsdAccountItem'
+import useLoginForAccount, {RsdAccountInfo} from './useLoginForAccount'
 
 export type DeleteAccountModal = {
   open: boolean,
@@ -26,6 +28,11 @@ export default function RsdUsersList() {
   const [modal, setModal] = useState<DeleteAccountModal>({
     open: false
   })
+
+  // console.group('RsdUsersList')
+  // console.log('loading...', loading)
+  // console.log('accounts...', accounts)
+  // console.groupEnd()
 
   if (loading) return <ContentLoader />
 

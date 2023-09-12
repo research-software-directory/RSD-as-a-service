@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -86,7 +88,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -106,7 +108,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -140,7 +142,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -223,20 +225,20 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     await waitFor(() => {
       expect(mockPostTeamMember).toBeCalledTimes(1)
       expect(mockPostTeamMember).toBeCalledWith({
-       'member': {
-         'affiliation': newPerson.affiliation,
-         'avatar_id': null,
-         'email_address': newPerson.email,
-         'family_names': newPerson.family_names,
-         'given_names': newPerson.given_names,
-         'id': memberId,
-         'is_contact_person': true,
-         'orcid': null,
-         'position': 1,
-         'project': editProjectState.project.id,
-         'role': newPerson.role,
-       },
-       'token': mockSession.token,
+        'member': {
+          'affiliation': newPerson.affiliation,
+          'avatar_id': null,
+          'email_address': newPerson.email,
+          'family_names': newPerson.family_names,
+          'given_names': newPerson.given_names,
+          'id': memberId,
+          'is_contact_person': true,
+          'orcid': null,
+          'position': 1,
+          'project': editProjectState.project.id,
+          'role': newPerson.role,
+        },
+        'token': mockSession.token,
       })
     })
 
@@ -254,7 +256,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -280,10 +282,10 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
       // validate delete called
       expect(mockDeleteTeamMemberById).toBeCalledTimes(1)
       expect(mockDeleteTeamMemberById).toBeCalledWith({
-       'ids': [
-         mockTeamMembers[0].id,
-       ],
-       'token': mockSession.token,
+        'ids': [
+          mockTeamMembers[0].id,
+        ],
+        'token': mockSession.token,
       })
       // confirm member removed from list
       const remainedMembers = screen.getAllByTestId('team-member-item')
@@ -322,7 +324,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug"/>
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -384,7 +386,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug" />
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )
@@ -463,7 +465,7 @@ describe('frontend/components/projects/edit/team/index.tsx', () => {
     const {container} = render(
       <WithAppContext options={{session: mockSession}}>
         <WithProjectContext state={editProjectState}>
-          <ProjectTeam slug="test-slug" />
+          <ProjectTeam />
         </WithProjectContext>
       </WithAppContext>
     )

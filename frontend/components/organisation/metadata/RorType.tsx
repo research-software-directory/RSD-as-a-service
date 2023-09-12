@@ -1,36 +1,27 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Chip from '@mui/material/Chip'
 import {RORItem} from '~/utils/getROR'
-import UnderlinedTitle from './UnderlinedTitle'
+import TypeIcon from '~/components/icons/TypeIcon'
 
 export default function RorType({meta}:{meta:RORItem|null}) {
   try {
-    if (meta===null) return null
+    if (meta === null) return null
+
     return (
       <>
-        <UnderlinedTitle title='Type' />
-        <div className="flex gap-4 mb-4">
-          {meta.types.map(item => (
-            <Chip
-            key={item}
-            label={item}
-            sx={{
-              maxWidth: '19rem',
-              borderRadius: '0rem 0.5rem',
-              backgroundColor: 'primary.main',
-              color: 'primary.contrastText',
-              textTransform: 'uppercase',
-              letterSpacing: '0.125rem',
-              fontSize:'0.75rem'
-            }}
-          />
+        {meta.types.map(item => (
+          <div key={item} className="flex gap-2">
+            <TypeIcon />
+            <span>{item}</span>
+          </div>
         ))}
-        </div>
       </>
+
     )
   } catch (e) {
     return null

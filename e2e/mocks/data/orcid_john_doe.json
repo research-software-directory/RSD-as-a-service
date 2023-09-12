@@ -1,0 +1,472 @@
+{
+  "expanded-result": [
+    {
+      "orcid-id": "0000-0001-8905-5259",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0001-8672-0508",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-2085-9256",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [
+        "hrusmacz@seznam.cz"
+      ],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-1361-7395",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-4217-153X",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-9236-7293",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-1101-2176",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0001-7284-7452",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-4485-8821",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-1719-0878",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-0857-3287",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-6614-0554",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-9265-5631",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-3996-4520",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-5522-8577",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": "jonhdoer123",
+      "other-name": [
+        "gtservices"
+      ],
+      "email": [],
+      "institution-name": [
+        "Central Queensland University - Gladstone Campus",
+        "Gladstone Trainiing Services"
+      ]
+    },
+    {
+      "orcid-id": "0000-0001-8886-2841",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-4059-0474",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-3160-0821",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0001-6400-5570",
+      "given-names": "john",
+      "family-names": "doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0001-5423-1814",
+      "given-names": "john",
+      "family-names": "doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0001-9497-0988",
+      "given-names": "john",
+      "family-names": "doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-4716-7874",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-7351-9052",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-8582-9613",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-4260-1301",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-1175-2668",
+      "given-names": "john",
+      "family-names": "doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-1792-2653",
+      "given-names": "john",
+      "family-names": "doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0001-5347-9447",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-3807-7807",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-9614-1777",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0001-5393-1421",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": [
+        "Liverpool John Moores University"
+      ]
+    },
+    {
+      "orcid-id": "0000-0001-6619-5427",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-1734-1659",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-8247-5311",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0009-0000-5790-0278",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-2199-5444",
+      "given-names": "john",
+      "family-names": "doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-3849-9770",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0009-0000-5305-6428",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-4682-5847",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-0612-2976",
+      "given-names": "john",
+      "family-names": "doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-3935-6544",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0001-7346-8518",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": [
+        "Enago"
+      ]
+    },
+    {
+      "orcid-id": "0009-0002-1199-8307",
+      "given-names": "john",
+      "family-names": "doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0009-0001-2742-6007",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": "John H. Doe",
+      "other-name": [],
+      "email": [],
+      "institution-name": [
+        "East Japan Railway (Japan)",
+        "Research Intern at XYZ AI Research Lab",
+        "SPIE Europe"
+      ]
+    },
+    {
+      "orcid-id": "0009-0002-5721-2859",
+      "given-names": "john",
+      "family-names": "doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0009-0008-6556-9392",
+      "given-names": "John",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0003-0413-0753",
+      "given-names": "John Karmuah",
+      "family-names": "Doe",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": [
+        "CEPRES International University"
+      ]
+    },
+    {
+      "orcid-id": "0000-0003-4420-6425",
+      "given-names": "John",
+      "family-names": "Doe Rod",
+      "credit-name": "John Doe Rod",
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0002-3889-5511",
+      "given-names": "John",
+      "family-names": "Don",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    },
+    {
+      "orcid-id": "0000-0001-5898-8494",
+      "given-names": "John",
+      "family-names": "does",
+      "credit-name": null,
+      "other-name": [],
+      "email": [],
+      "institution-name": []
+    }
+  ],
+  "num-found": 66
+}

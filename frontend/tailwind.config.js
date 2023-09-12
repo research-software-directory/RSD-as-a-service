@@ -1,8 +1,9 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,10 +14,8 @@
  * https://medium.com/@akarX23/a-full-setup-of-next-js-with-redux-tailwind-material-ui-pwa-and-docker-c33bdceadce5
  */
 
-// default tailwind theme
-// const defaultTheme = require('tailwindcss/defaultTheme')
-// default theme variables
-const defaultSettings = require('./config/defaultSettings.json')
+// get theme variables
+const defaultSettings = require('./public/data/settings.json')
 // console.log('defaultSettings...', defaultSettings)
 // load colors and typography
 const colors = defaultSettings.theme.light.colors
@@ -27,8 +26,7 @@ const typography = defaultSettings.theme.typography
 module.exports = {
   darkMode: 'class',
   plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/line-clamp'),
+    require('@tailwindcss/typography')
   ],
   content: [
     './auth/**/*.{js,ts,jsx,tsx}',
@@ -36,6 +34,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    // USE ONLY THEME FONTS
     fontFamily: {
       // font-sans is default
       sans: `var(--rsd-default-font-family,${typography.defaultFontFamily})`,
@@ -51,29 +50,25 @@ module.exports = {
       ],
     },
     extend: {
-      // ultra large resolutions
-      // not relevant at the moment
-      // screens: {
-      //   qhd:'2304px'
-      // },
-      animation: {
-        wiggle: 'wiggle 1s ease-in-out infinite',
-        'spin-slow': 'spin 3s linear infinite',
-      },
-      fontFamily: {
-        'rsd-titles': `var(--rsd-titles-font-family,${typography.titlesFontFamily})`,
-      },
-      //
-      // THEME COLORS
-      //
+      // EXTEND WITH THEME COLORS
+      // PLEASE USE ONLY THEME COLORS!
+      // If the color is not defined in the theme, you can define it using public/data/settings.json
+      // and then reference it here (as it is done with the other theme colors).
+      // More info can be also found in styles/ README.md
       colors: {
-        // in order to have optimal theme integration with material ui components
-        // please keep the color names (props) in sync with MUI definitions
-        // the list of all theme properties can be found in README.md
-        // 'base-100': colors['base-100'],
+        // ALREADY DEFINED in tailwind
+        // transparent: 'transparent',
+        // current: 'currentColor',
+        // inherit: 'inherit',
         'base-100':`var(--rsd-base-100,${colors['base-100']})`,
         'base-200':`var(--rsd-base-200,${colors['base-200']})`,
         'base-300':`var(--rsd-base-300,${colors['base-300']})`,
+        'base-400':`var(--rsd-base-400,${colors['base-400']})`,
+        'base-500':`var(--rsd-base-500,${colors['base-500']})`,
+        'base-600':`var(--rsd-base-600,${colors['base-600']})`,
+        'base-700':`var(--rsd-base-700,${colors['base-700']})`,
+        'base-800':`var(--rsd-base-800,${colors['base-800']})`,
+        'base-900':`var(--rsd-base-900,${colors['base-900']})`,
         'base-content': `var(--rsd-base-content,${colors['base-content']})`,
         'base-content-secondary':`var(--rsd-base-content-secondary,${colors['base-content-secondary']})`,
         'base-content-disabled':`var(--rsd-base-content-disabled,${colors['base-content-disabled']})`,
@@ -90,7 +85,21 @@ module.exports = {
         info:`var(--rsd-info,${colors.info})`,
         'info-content':`var(--rsd-info-content,${colors['info-content']})`,
         success:`var(--rsd-success,${colors.success})`,
-        'success-content':`var(--rsd-success-content,${colors['success-content']})`
+        'success-content': `var(--rsd-success-content,${colors['success-content']})`,
+        'glow-start': `var(--rsd-glow-start,${colors['glow-start']})`,
+        'glow-end': `var(--rsd-glow-end,${colors['glow-end']})`
+      },
+      // ultra large resolutions
+      // not relevant at the moment
+      // screens: {
+      //   qhd:'2304px'
+      // },
+      animation: {
+        wiggle: 'wiggle 1s ease-in-out infinite',
+        'spin-slow': 'spin 3s linear infinite',
+      },
+      fontFamily: {
+        'rsd-titles': `var(--rsd-titles-font-family,${typography.titlesFontFamily})`,
       },
       fontWeight: {
         light:`var(--rsd-font-light, ${typography.fontWeightLight})`,

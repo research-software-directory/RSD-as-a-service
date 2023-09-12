@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -12,9 +14,9 @@ import {Column} from './EditableTable'
 
 export default function TableHeader<T, K extends keyof T>({columns, onSort}:
   {columns: Column<T, K>[], onSort:(column:K)=>void}) {
-   return (
+  return (
     <MuiTableHead>
-      <MuiTableRow>
+      <MuiTableRow data-testid="mui-table-head-row">
         {columns.map((col, i) => {
           return (
             <MuiTableCell
@@ -24,13 +26,13 @@ export default function TableHeader<T, K extends keyof T>({columns, onSort}:
               onClick={() => onSort(col.key)}
               sx={col?.sx}
             >
-               <MuiTableSortLabel
-                  active={col.order?.active}
-                  direction={col.order?.direction}
-                  onClick={() => onSort(col.key)}
-                >
-                  {col.label}
-                </MuiTableSortLabel>
+              <MuiTableSortLabel
+                active={col.order?.active}
+                direction={col.order?.direction}
+                onClick={() => onSort(col.key)}
+              >
+                {col.label}
+              </MuiTableSortLabel>
             </MuiTableCell>
           )
         })}

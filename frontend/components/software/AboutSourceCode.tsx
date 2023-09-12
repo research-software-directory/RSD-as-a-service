@@ -48,13 +48,13 @@ export default function AboutSourceCode({repository,platform}: { repository: str
 
   return (
     <>
-    <div className="pt-8 pb-2">
-      <span className="font-bold text-primary">{code}</span>
-      <span className="text-primary pl-2">Source code</span>
-    </div>
-    <div className="py-1">
-      {getIcon()}
-    </div>
+      <div className="pt-8 pb-2">
+        <span className="font-bold text-primary">{code}</span>
+        <span className="text-primary pl-2">Source code</span>
+      </div>
+      <div className="py-1">
+        {getIcon()}
+      </div>
     </>
   )
 }

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -191,7 +193,7 @@ export default function FindMention({config, onAdd, searchFn, onCreate}: FindMen
           item={option.data}
           nav={
             // we show source on nav position
-            <span className="pl-4 text-grey-600">{option.data.source}</span>
+            <span className="pl-4 text-base-600">{option.data.source}</span>
           }
           type={getMentionType(option.data.mention_type, 'singular')}
           role="find"

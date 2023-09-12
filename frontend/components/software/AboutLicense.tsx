@@ -22,11 +22,11 @@ export default function AboutLicense({license}:{license:string[]}) {
 
   return (
     <>
-    <div className="pt-8 pb-2">
+      <div className="pt-8 pb-2">
         <AttachFileIcon color="primary" sx={{transform:'rotate(45deg)'}} />
-      <span className="text-primary pl-2">License</span>
-    </div>
-    {renderLicenses()}
+        <span className="text-primary pl-2">License</span>
+      </div>
+      {renderLicenses()}
     </>
   )
 }

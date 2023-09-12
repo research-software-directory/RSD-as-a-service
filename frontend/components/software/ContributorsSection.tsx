@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Contributor, Person} from '../../types/Contributor'
+import {Person} from '../../types/Contributor'
 import PageContainer from '../layout/PageContainer'
 import ContributorsList from './ContributorsList'
 import ContactPersonCard from './ContactPersonCard'

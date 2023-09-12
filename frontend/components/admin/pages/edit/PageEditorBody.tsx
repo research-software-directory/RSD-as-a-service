@@ -45,11 +45,11 @@ export default function PageEditorBody({links,selected,onSelect,onSorted,onDelet
             onSorted={onSorted}
           />
         </div>
-          <EditMarkdownPage
-            slug={selected}
-            onDelete={onDelete}
-            onSubmit={onSubmit}
-          />
+        <EditMarkdownPage
+          slug={selected}
+          onDelete={onDelete}
+          onSubmit={onSubmit}
+        />
       </FormProvider>
     </section>
   )

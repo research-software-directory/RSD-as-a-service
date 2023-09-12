@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -39,19 +41,19 @@ export default function MentionEditSection() {
     if (higlightedMentions.length === 0) return null
     return (
       <>
-      <h3 className="pb-4 text-xl">{mentionType['highlight'].plural}</h3>
-      {
-        higlightedMentions
-        .sort((a, b) => sortOnNumProp(a, b, 'publication_year', 'desc'))
-          .map((item) => {
-            return (
-              <MentionEditFeatured
-                key={item.id}
-                item={item}
-              />
-            )
-          })
-      }
+        <h3 className="pb-4 text-xl">{mentionType['highlight'].plural}</h3>
+        {
+          higlightedMentions
+            .sort((a, b) => sortOnNumProp(a, b, 'publication_year', 'desc'))
+            .map((item) => {
+              return (
+                <MentionEditFeatured
+                  key={item.id}
+                  item={item}
+                />
+              )
+            })
+        }
       </>
     )
   }
@@ -71,41 +73,40 @@ export default function MentionEditSection() {
         <MentionEditList
           key={key}
           title={title}
-          type={mType}
           items={items ?? []}
         />
-        )
-      })
+      )
+    })
   }
 
   function renderModals() {
     return (
       <>
-      {/* modal as external part of the section */}
-      <EditMentionModal
-        title={settings.editModalTitle}
-        open={editModal.open}
-        pos={editModal.pos}
-        item={editModal.item}
-        onCancel={closeEditModal}
-        onSubmit={(props)=>onSubmit(props.data)}
-      />
-      <ConfirmDeleteModal
-        open={confirmModal.open}
-        title={settings.confirmDeleteModalTitle}
-        body={
-          <p>Are you sure you want to remove <strong>{confirmModal?.item?.title ?? 'this item'}</strong>?</p>
-        }
-        onCancel={() => {
+        {/* modal as external part of the section */}
+        <EditMentionModal
+          title={settings.editModalTitle}
+          open={editModal.open}
+          pos={editModal.pos}
+          item={editModal.item}
+          onCancel={closeEditModal}
+          onSubmit={(props)=>onSubmit(props.data)}
+        />
+        <ConfirmDeleteModal
+          open={confirmModal.open}
+          title={settings.confirmDeleteModalTitle}
+          body={
+            <p>Are you sure you want to remove <strong>{confirmModal?.item?.title ?? 'this item'}</strong>?</p>
+          }
+          onCancel={() => {
           // cancel confirm by removing item
-          confirmDelete()
-        }}
-        onDelete={() => {
-          if (confirmModal?.item) onDelete(confirmModal?.item)
-          // hide modal by removing confirm item
-          confirmDelete()
-        }}
-      />
+            confirmDelete()
+          }}
+          onDelete={() => {
+            if (confirmModal?.item) onDelete(confirmModal?.item)
+            // hide modal by removing confirm item
+            confirmDelete()
+          }}
+        />
       </>
     )
   }

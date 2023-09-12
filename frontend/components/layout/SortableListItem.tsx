@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -27,7 +29,7 @@ export default function SortableListItem<T extends RequiredListProps>({
 
   return (
     <ListItem
-      data-testid="contributor-item"
+      data-testid="sortable-list-item"
       // draggable
       ref={setNodeRef}
       {...attributes}

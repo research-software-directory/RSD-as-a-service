@@ -1,7 +1,10 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,6 +35,7 @@ import {getMatomoConsent,Matomo} from '~/components/cookies/nodeCookies'
 import {initMatomoCustomUrl} from '~/components/cookies/setMatomoPage'
 import {getSettingsServerSide} from '~/config/getSettingsServerSide'
 import {setContentSecurityPolicyHeader} from '~/utils/contentSecurityPolicy'
+import Announcement from '~/components/Announcement/Announcement'
 
 // extend Next app props interface with emotion cache
 export interface MuiAppProps extends AppProps {
@@ -67,8 +71,9 @@ Router.events.on('routeChangeError', ()=>{
 function RsdApp(props: MuiAppProps) {
   const {
     Component, emotionCache = clientSideEmotionCache,
-    pageProps, session, settings, matomo
+    pageProps, session, settings, matomo,
   } = props
+
   //currently we support only default (light) and dark RSD theme for MUI
   // const muiTheme = loadMuiTheme(settings.theme.mode as RsdThemes)
   const router = useRouter()
@@ -128,6 +133,8 @@ function RsdApp(props: MuiAppProps) {
         </AuthProvider>
         {/* Matomo cookie consent dialog */}
         <CookieConsentMatomo matomo={matomo} route={router.pathname} />
+        {/* RSD admin announcements/ system notifications */}
+        <Announcement announcement={rsdSettings?.announcement ?? null} />
       </ThemeProvider>
     </CacheProvider>
   )

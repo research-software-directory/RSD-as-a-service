@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
@@ -34,7 +35,7 @@ type SortableTableProps = {
 export default function SortableTable({metadata, initialData, initialOrder=''}: SortableTableProps) {
   const propKeys = Array.from(metadata.keys())
   const [sortColumn, setSortColumn] = useState(initialOrder)
-  const [data, setData] = useState(initialData)
+  const [data] = useState(initialData)
   const [ascending, setAscending] = useState(true)
 
   function getDirection(metadataKey:string){
@@ -71,7 +72,7 @@ export default function SortableTable({metadata, initialData, initialOrder=''}: 
           })}
         </TableRow>
       </TableHead>
-       <TableBody>
+      <TableBody>
         {data.map((item, pos) => {
           return (
             <TableRow key={pos}>
@@ -123,9 +124,7 @@ export default function SortableTable({metadata, initialData, initialOrder=''}: 
     else nowAscending = !ascending
 
     const type = properties.type
-    // if (type === 'link') {
-    //   // data.sort((a, b) => nowAscending ? a[label]['text'].localeCompare(b[label]['text']) : b[label]['text'].localeCompare(a[label]['text']))
-    // } else
+    // update sort in existing data object
     if (type === 'boolean' || type === 'number' || type === 'pct') {
       data.sort((a, b) => nowAscending ? a[label] - b[label] : b[label] - a[label])
     } else {
@@ -133,7 +132,6 @@ export default function SortableTable({metadata, initialData, initialOrder=''}: 
     }
     setAscending(nowAscending)
     setSortColumn(label)
-    setData(data)
   }
 
   function compareStringNullsAware(s1: string | null, s2: string | null, ascending: boolean): number {

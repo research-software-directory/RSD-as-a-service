@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,18 +16,18 @@ const mockProps = {
 
 const now = new Date()
 
-it('renders project with Starting status', () => {
+it('renders project with Pending status', () => {
   // dates in future
   mockProps.date_start = new Date(now.getTime() + 1000 * 60 * 60).toISOString()
   mockProps.date_end = new Date(now.getTime() + 10000 * 60 * 60).toISOString()
 
   render(<ProjectStatus {...mockProps} />)
 
-  const status = screen.getByText('Starting')
+  const status = screen.getByText('Pending')
   expect(status).toBeInTheDocument()
 })
 
-it('renders project with Running status', () => {
+it('renders project with In progress status', () => {
   // start_date in past
   mockProps.date_start = new Date(now.getTime() - 10000 * 60 * 60).toISOString()
   // end data in future
@@ -33,7 +35,7 @@ it('renders project with Running status', () => {
 
   render(<ProjectStatus {...mockProps} />)
 
-  const status = screen.getByText('Running')
+  const status = screen.getByText('In progress')
   expect(status).toBeInTheDocument()
 })
 
