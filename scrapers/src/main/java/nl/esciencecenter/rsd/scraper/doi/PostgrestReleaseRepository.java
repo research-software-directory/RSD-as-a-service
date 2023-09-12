@@ -78,7 +78,8 @@ public class PostgrestReleaseRepository {
 		Gson gson = new GsonBuilder()
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.create();
-		TypeToken<Collection<ReleaseData>> typeToken = new TypeToken<Collection<ReleaseData>>() {};
+		TypeToken<Collection<ReleaseData>> typeToken = new TypeToken<>() {
+		};
 		return gson.fromJson(data, typeToken.getType());
 	}
 }

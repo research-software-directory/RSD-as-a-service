@@ -6,23 +6,20 @@
 package nl.esciencecenter.rsd.scraper.doi;
 
 import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
-import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.net.URI;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -64,23 +61,28 @@ public class PostgrestMentionRepository implements MentionRepository {
 	}
 
 	@Override
-	public Map<String, UUID> save(Collection<MentionRecord> mentions) {
-		String scrapedMentionsJson = new GsonBuilder()
+	public void save(Collection<MentionRecord> mentions) {
+		Gson gson = new GsonBuilder()
 				.serializeNulls()
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
 				.registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-				.create().toJson(mentions);
-		String response = Utils.postAsAdmin(Config.backendBaseUrl() + "/mention?on_conflict=doi&select=doi,id", scrapedMentionsJson, "Prefer", "resolution=merge-duplicates,return=representation");
+				.create();
+		for (MentionRecord mention : mentions) {
+			String scrapedMentionJson = gson.toJson(mention);
+			String onConflictFilter;
+			if (mention.doi != null) {
+				onConflictFilter = "doi";
+			} else {
+				onConflictFilter = "external_id,source";
+			}
 
-		JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
-		Map<String, UUID> doiToId = new HashMap<>();
-		for (JsonElement jsonElement : responseAsArray) {
-			String doi = jsonElement.getAsJsonObject().getAsJsonPrimitive("doi").getAsString();
-			UUID id = UUID.fromString(jsonElement.getAsJsonObject().getAsJsonPrimitive("id").getAsString());
-			doiToId.put(doi, id);
+			String uri = "%s/mention?on_conflict=%s&select=id".formatted(backendUrl, onConflictFilter);
+			String response = Utils.postAsAdmin(uri, scrapedMentionJson, "Prefer", "resolution=merge-duplicates,return=representation");
+
+			JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
+			UUID id = UUID.fromString(responseAsArray.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString());
+			mention.id = id;
 		}
-
-		return doiToId;
 	}
 }

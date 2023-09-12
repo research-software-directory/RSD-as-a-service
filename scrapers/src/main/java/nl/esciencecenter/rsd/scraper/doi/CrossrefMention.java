@@ -23,10 +23,10 @@ import java.util.Objects;
 
 public class CrossrefMention implements Mention {
 
-	private static final Map<String, MentionType> crossrefTypeMap;
+	static final Map<String, MentionType> crossrefTypeMap;
 
 	static {
-//		https://api.crossref.org/types
+		//		https://api.crossref.org/types
 		crossrefTypeMap = new HashMap<>();
 
 		crossrefTypeMap.put("book-section", MentionType.bookSection);
@@ -97,7 +97,7 @@ public class CrossrefMention implements Mention {
 		try {
 			result.publicationYear = Utils.integerOrNull(workJson.getAsJsonObject("published").getAsJsonArray("date-parts").get(0).getAsJsonArray().get(0));
 		} catch (RuntimeException e) {
-//			year not found, we leave it at null, nothing to do
+			//			year not found, we leave it at null, nothing to do
 		}
 		if (workJson.getAsJsonArray("container-title").size() > 0) {
 			JsonArray journalTitles = workJson.getAsJsonArray("container-title");
