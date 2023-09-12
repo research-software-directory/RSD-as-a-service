@@ -9,6 +9,7 @@ import nl.esciencecenter.rsd.scraper.Config;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 
 /*
@@ -34,7 +35,11 @@ public class MainReleases {
 		Collection<MentionRecord> allMentions = scrapedReleasesPerConceptDoi.values().stream()
 				.flatMap(Collection::stream)
 				.toList();
-		Map<String, UUID> doiToId = localMentionRepository.save(allMentions);
+		localMentionRepository.save(allMentions);
+		Map<String, UUID> doiToId = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+		for (MentionRecord mention : allMentions) {
+			doiToId.put(mention.doi, mention.id);
+		}
 
 		releaseRepository.saveReleaseContent(releasesToScrape, scrapedReleasesPerConceptDoi, doiToId);
 		System.out.println("Done scraping releases");

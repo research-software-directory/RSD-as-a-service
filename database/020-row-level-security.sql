@@ -446,17 +446,9 @@ CREATE POLICY admin_all_rights ON research_domain_for_project TO rsd_admin
 
 
 -- mentions
--- TODO: not sure what to do here,
--- should a mention only be visible if you can see at least one software or project for which it relates?
 ALTER TABLE mention ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON mention FOR SELECT TO rsd_web_anon, rsd_user
-	USING (id IN (SELECT mention FROM mention_for_software)
-		OR id IN (SELECT mention FROM output_for_project)
-		OR id IN (SELECT mention FROM impact_for_project)
-		OR id IN (SELECT mention_id FROM release_version));
-
-CREATE POLICY maintainer_can_read ON mention FOR SELECT TO rsd_user
 	USING (TRUE);
 
 CREATE POLICY maintainer_can_delete ON mention FOR DELETE TO rsd_user
@@ -480,6 +472,30 @@ CREATE POLICY maintainer_all_rights ON mention_for_software TO rsd_user
 	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON mention_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE reference_paper_for_software ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON reference_paper_for_software FOR SELECT TO rsd_web_anon, rsd_user
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_all_rights ON reference_paper_for_software TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()))
+	WITH CHECK (software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON reference_paper_for_software TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE citation_for_mention ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON citation_for_mention FOR SELECT TO rsd_web_anon, rsd_user
+	USING (mention IN (SELECT id FROM mention));
+
+CREATE POLICY admin_all_rights ON citation_for_mention TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
