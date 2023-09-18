@@ -75,7 +75,7 @@ export default function AppHeader() {
               className="2xl:hidden"
               loading='eager'
               // lighthouse audit requires explicit width and height
-              width="100%"
+              width="7rem"
               height="1.5rem"
             />
           </Link>

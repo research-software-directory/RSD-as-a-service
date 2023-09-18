@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -126,4 +128,16 @@ export function getMonthYearDate(date: string, locale = 'en-us') {
   } catch (e:any) {
     return null
   }
+}
+
+/**
+ * Calculates the date from now for number of days passed.
+ * Pass positive value for dates in the future and negative values for dates in the past.
+ */
+export function getDateFromNow(days:number){
+  const newDate = new Date()
+  // change date
+  newDate.setDate(newDate.getDate() + days)
+  // return changed date
+  return newDate
 }
