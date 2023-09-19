@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,47 +18,50 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import LockIcon from '@mui/icons-material/Lock'
 
 import {maxText} from '~/utils/maxText'
+import {getImageUrl} from '~/utils/editImage'
 import {Status} from '~/types/Organisation'
 
-type SoftwareItem = {
-  id: string
+type RelatedProjectProps = {
   slug: string
-  brand_name: string
-  short_statement: string
+  title: string
+  subtitle: string | null
+  image_id: string | null
   status: Status
 }
 
-type SoftwareListProps = {
-  software: SoftwareItem[] | undefined
+type ProjectListProps = {
+  projects: RelatedProjectProps[] | undefined
   onRemove:(pos:number)=>void
 }
 
-type SoftwareItemProps = {
-  software: SoftwareItem
+type ProjectItemProps = {
+  project: RelatedProjectProps
   onDelete:()=>void
 }
 
 // list item & alert height
 const itemHeight='6rem'
 
-export default function RelatedSoftwareList({software,onRemove}:SoftwareListProps) {
-  if (typeof software == 'undefined') return null
-  if (software.length === 0) {
+export default function RelatedProjectList({projects,onRemove}:ProjectListProps) {
+
+  if (typeof projects == 'undefined') return null
+
+  if (projects.length === 0) {
     return (
       <Alert severity="warning" sx={{marginTop:'0.5rem',height:itemHeight}}>
-        <AlertTitle sx={{fontWeight:500}}>No related software items</AlertTitle>
-        Add related software using <strong>search form!</strong>
+        <AlertTitle sx={{fontWeight:500}}>No related projects</AlertTitle>
+        Add related projects using <strong>search form!</strong>
       </Alert>
     )
   }
 
   function renderList() {
-    if (typeof software == 'undefined') return null
-    return software.map((item,pos) => {
+    if (typeof projects == 'undefined') return null
+    return projects.map((item,pos) => {
       return (
-        <RelatedSoftwareItem
-          key={pos}
-          software={item}
+        <RelatedProjectItem
+          key={item.slug}
+          project={item}
           onDelete={()=>onRemove(pos)}
         />
       )
@@ -72,9 +77,9 @@ export default function RelatedSoftwareList({software,onRemove}:SoftwareListProp
   )
 }
 
-export function RelatedSoftwareItem({software,onDelete}:SoftwareItemProps) {
+export function RelatedProjectItem({project, onDelete}: ProjectItemProps) {
   function getStatusIcon() {
-    if (software.status !== 'approved') {
+    if (project.status !== 'approved') {
       return (
         <div
           title="Waiting on approval"
@@ -94,16 +99,18 @@ export function RelatedSoftwareItem({software,onDelete}:SoftwareItemProps) {
   }
   return (
     <ListItem
-      data-testid="related-software-item"
+      data-testid="related-project-item"
       secondaryAction={
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          onClick={onDelete}
-          sx={{marginRight: '0rem'}}
-        >
-          <DeleteIcon />
-        </IconButton>
+        <>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={onDelete}
+            sx={{marginRight: '0rem'}}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
       }
       sx={{
         minHeight:itemHeight,
@@ -116,7 +123,8 @@ export function RelatedSoftwareItem({software,onDelete}:SoftwareItemProps) {
     >
       <ListItemAvatar>
         <Avatar
-          alt={software.brand_name ?? ''}
+          alt={project.title}
+          src={getImageUrl(project.image_id) ?? ''}
           sx={{
             width: '4rem',
             height: '4rem',
@@ -128,19 +136,20 @@ export function RelatedSoftwareItem({software,onDelete}:SoftwareItemProps) {
           }}
           variant="square"
         >
-          {software?.brand_name.slice(0,2).toUpperCase()}
+          {project?.title.slice(0,2).toUpperCase()}
         </Avatar>
       </ListItemAvatar>
       {getStatusIcon()}
       <ListItemText
         primary={
-          <a href={`/software/${software.slug}`} target="_blank" rel="noreferrer">
-            {software.brand_name}
+          <a href={`/projects/${project.slug}`} target="_blank" rel="noreferrer">
+            {project.title}
           </a>
         }
         secondary={maxText({
-          text: software.short_statement ?? ''
-        })}
+          text: project.subtitle
+        })
+        }
       />
     </ListItem>
   )

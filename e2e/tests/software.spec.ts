@@ -163,17 +163,26 @@ test.describe.serial('Software', async()=> {
 
   // We test related items as last because we
   // need some items to be created and published
-  test('Related items', async ({page}, {project}) => {
+  test('Related software', async ({page}, {project}) => {
     const software = mockSoftware[project.name]
-
     // directly open edit software page
     const url = `/software/${software.slug}`
     await openEditPage(page, url, software.title)
-
     // navigate to related topics section
-    await openEditSection(page, 'Related topics')
+    await openEditSection(page, 'Related software')
     // add some related software randomly
     await addRelatedSoftware(page, 'software_for_software')
+  })
+
+  // We test related items as last because we
+  // need some items to be created and published
+  test('Related projects', async ({page}, {project}) => {
+    const software = mockSoftware[project.name]
+    // directly open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
+    // navigate to related topics section
+    await openEditSection(page, 'Related projects')
     // add some related projects randomly
     await addRelatedProject(page, 'software_for_project')
   })

@@ -15,6 +15,7 @@ import OutboundIcon from '@mui/icons-material/Outbound'
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew'
 import ShareIcon from '@mui/icons-material/Share'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import TerminalIcon from '@mui/icons-material/Terminal'
 import ContentLoader from '~/components/layout/ContentLoader'
 
 
@@ -42,7 +43,10 @@ const ProjectImpact = dynamic(() => import('./impact'),{
 const ProjectOutput = dynamic(() => import('./output'),{
   loading: ()=><ContentLoader />
 })
-const RelatedTopics = dynamic(() => import('./related'),{
+const RelatedProjects = dynamic(() => import('./related-projects'),{
+  loading: ()=><ContentLoader />
+})
+const RelatedSoftware = dynamic(() => import('./related-software'),{
   loading: ()=><ContentLoader />
 })
 const ProjectMaintainers = dynamic(() => import('./maintainers'),{
@@ -94,10 +98,17 @@ export const editProjectPage: EditProjectPageProps[] = [
     status: 'Optional information'
   },
   {
-    id: 'related-topics',
-    label: 'Related topics',
+    id: 'related-projects',
+    label: 'Related projects',
     icon: <ShareIcon />,
-    render: () => <RelatedTopics />,
+    render: () => <RelatedProjects />,
+    status: 'Optional information'
+  },
+  {
+    id: 'related-software',
+    label: 'Related software',
+    icon: <TerminalIcon />,
+    render: () => <RelatedSoftware />,
     status: 'Optional information'
   },
   {

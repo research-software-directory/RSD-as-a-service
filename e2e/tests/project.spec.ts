@@ -164,7 +164,7 @@ test.describe.serial('Project', async () => {
     expect(count).toBeGreaterThanOrEqual(organisations.length)
   })
 
-  test('Related items', async ({page}, {project: {name}}) => {
+  test('Related projects', async ({page}, {project: {name}}) => {
     const project = mockProject[name]
 
     // directly open edit software page
@@ -173,9 +173,21 @@ test.describe.serial('Project', async () => {
 
     // await page.pause()
     // navigate to organisations section
-    await openEditSection(page, 'Related topics')
+    await openEditSection(page, 'Related projects')
 
     await addRelatedProject(page, 'project_for_project')
+  })
+
+  test('Related software', async ({page}, {project: {name}}) => {
+    const project = mockProject[name]
+
+    // directly open edit software page
+    const url = `/projects/${project.slug}`
+    await openEditPage(page, url, project.title)
+
+    // await page.pause()
+    // navigate to organisations section
+    await openEditSection(page, 'Related software')
 
     // add related software only if not added
     const relatedSoftware = page.getByTestId('related-software-item')
