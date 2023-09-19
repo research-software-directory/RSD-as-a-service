@@ -45,7 +45,7 @@ export default function OrganisationCard({organisation}: { organisation: Organis
               alt={`Logo for ${organisation.name}`}
               type="gradient"
               className={`w-full text-base-content-disabled ${organisation.logo_id ? 'p-4':''}`}
-              bgSize={'contain'}
+              bgSize={'scale-down'}
             />
           </CardImageFrame>
           <CardContentFrame>
