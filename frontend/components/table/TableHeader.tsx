@@ -20,19 +20,23 @@ export default function TableHeader<T, K extends keyof T>({columns, onSort}:
         {columns.map((col, i) => {
           return (
             <MuiTableCell
-              style={{cursor:'pointer'}}
+              style={{cursor: col.type!=='custom' ? 'pointer' : 'default'}}
               key={`col-header-${i}`}
               align={col?.align ?? 'left'}
-              onClick={() => onSort(col.key)}
+              onClick={() => col.type!=='custom' ? onSort(col.key) : null}
               sx={col?.sx}
             >
-              <MuiTableSortLabel
-                active={col.order?.active}
-                direction={col.order?.direction}
-                onClick={() => onSort(col.key)}
-              >
-                {col.label}
-              </MuiTableSortLabel>
+              {col.type!=='custom' ?
+                <MuiTableSortLabel
+                  active={col.order?.active}
+                  direction={col.order?.direction}
+                  onClick={() => onSort(col.key)}
+                >
+                  {col.label}
+                </MuiTableSortLabel>
+                :
+                col.label
+              }
             </MuiTableCell>
           )
         })}

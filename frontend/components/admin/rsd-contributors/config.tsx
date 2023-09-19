@@ -126,7 +126,6 @@ export function createColumns(token: string) {
       return (
         <a href={url} target="_blank" rel="noreferrer">
           <LaunchIcon sx={{marginRight:'0.25rem'}} fontSize="small"/>
-          {data.origin === 'contributor' ? 'Software' : 'Project'}
         </a>
       )
     }

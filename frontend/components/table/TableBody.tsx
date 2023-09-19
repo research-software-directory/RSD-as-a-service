@@ -24,6 +24,9 @@ function formatValue<T, K extends keyof T>(col: Column<T, K>, value: any) {
       case 'date':
         formatedValue = new Date(value).toLocaleDateString()
         return formatedValue
+      case 'datetime':
+        formatedValue = new Date(value).toLocaleString()
+        return formatedValue
       default:
         // formatedValue = value.toString()
         return value
