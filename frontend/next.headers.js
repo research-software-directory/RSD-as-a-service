@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,10 +31,10 @@ const staticHeaders = [
   // we decided to allow embeding
   // required by https://securityheaders.com/
   // https://scotthelme.co.uk/hardening-your-http-response-headers/#x-frame-options
-  // {
-  //   key: 'X-Frame-Options',
-  //   value: 'SAMEORIGIN'
-  // },
+  {
+    key: 'X-Frame-Options',
+    value: 'DENY'
+  },
   // required by https://securityheaders.com/
   // https://scotthelme.co.uk/hardening-your-http-response-headers/#x-frame-options
   {
