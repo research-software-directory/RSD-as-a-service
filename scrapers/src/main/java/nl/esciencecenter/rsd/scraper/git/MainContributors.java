@@ -13,6 +13,7 @@ import nl.esciencecenter.rsd.scraper.Utils;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class MainContributors {
@@ -34,10 +35,15 @@ public class MainContributors {
 			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
 				try {
 					String repoUrl = contributorData.url();
-					String repo = repoUrl.replace("https://github.com/", "");
-					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-					Integer scrapedContributorData = new GithubScraper("https://api.github.com", repo).contributorCount();
+					Optional<GithubScraper> githubScraperOptional = GithubScraper.create(repoUrl);
+					if (githubScraperOptional.isEmpty()) {
+						Utils.saveErrorMessageInDatabase("Not a valid GitHub URL: " + repoUrl, "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
+						return;
+					}
+
+					GithubScraper githubScraper = githubScraperOptional.get();
+					Integer scrapedContributorData = githubScraper.contributorCount();
 					ContributorDatabaseData updatedData = new ContributorDatabaseData(new BasicRepositoryData(contributorData.software(), null), scrapedContributorData, scrapedAt);
 					softwareInfoRepository.saveContributorCount(updatedData);
 				} catch (RsdRateLimitException e) {

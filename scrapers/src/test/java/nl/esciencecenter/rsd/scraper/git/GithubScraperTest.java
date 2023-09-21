@@ -12,16 +12,18 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 public class GithubScraperTest {
-	private final String apiUrl = "https://api.github.com";
+
+	private final String githubUrlPrefix = "https://github.com/";
 	private final String repo = "research-software-directory/RSD-as-a-service";
 	private final String repoEmpty = "cmeessen/empty";
 	private final String repoNonEx = "research-software-directory/does-not-exist";
 
-	private final GithubScraper githubScraper = new GithubScraper(apiUrl, repo);
-	private final GithubScraper githubScraperEmpty = new GithubScraper(apiUrl, repoEmpty);
-	private final GithubScraper githubScraperNonEx = new GithubScraper(apiUrl, repoNonEx);
+	private final GithubScraper githubScraper = GithubScraper.create(githubUrlPrefix + repo).get();
+	private final GithubScraper githubScraperEmpty = GithubScraper.create(githubUrlPrefix + repoEmpty).get();
+	private final GithubScraper githubScraperNonEx = GithubScraper.create(githubUrlPrefix + repoNonEx).get();
 
 	@Disabled
 	@Test
@@ -74,5 +76,29 @@ public class GithubScraperTest {
 		List<String> singleLinkList = List.of("invalid");
 
 		Assertions.assertThrows(RuntimeException.class, () -> GithubScraper.lastPageFromLinkHeader(singleLinkList));
+	}
+
+	@Test
+	void givenValidGithubUrl_whenCreatingScraper_thenNonEmptyScraperReturned() {
+		Optional<GithubScraper> scraper1 = GithubScraper.create(githubUrlPrefix + repo);
+		Assertions.assertTrue(scraper1.isPresent());
+
+		Optional<GithubScraper> scraper2 = GithubScraper.create(githubUrlPrefix + repoEmpty);
+		Assertions.assertTrue(scraper2.isPresent());
+
+		Optional<GithubScraper> scraper3 = GithubScraper.create(githubUrlPrefix + repoNonEx + "/");
+		Assertions.assertTrue(scraper3.isPresent());
+	}
+
+	@Test
+	void givenInValidGithubUrl_whenCreatingScraper_thenEmptyScraperReturned() {
+		Optional<GithubScraper> scraper1 = GithubScraper.create(githubUrlPrefix + repo + "/issues");
+		Assertions.assertTrue(scraper1.isEmpty());
+
+		Optional<GithubScraper> scraper2 = GithubScraper.create(githubUrlPrefix + repoEmpty + "/tree/main");
+		Assertions.assertTrue(scraper2.isEmpty());
+
+		Optional<GithubScraper> scraper3 = GithubScraper.create(githubUrlPrefix + "org-only/");
+		Assertions.assertTrue(scraper3.isEmpty());
 	}
 }

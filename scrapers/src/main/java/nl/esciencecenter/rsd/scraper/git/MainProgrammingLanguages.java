@@ -13,6 +13,7 @@ import nl.esciencecenter.rsd.scraper.Utils;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class MainProgrammingLanguages {
@@ -69,10 +70,15 @@ public class MainProgrammingLanguages {
 			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
 				try {
 					String repoUrl = programmingLanguageData.url();
-					String repo = repoUrl.replace("https://github.com/", "");
-					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-					String scrapedLanguages = new GithubScraper("https://api.github.com", repo).languages();
+					Optional<GithubScraper> githubScraperOptional = GithubScraper.create(repoUrl);
+					if (githubScraperOptional.isEmpty()) {
+						Utils.saveErrorMessageInDatabase("Not a valid GitHub URL: " + repoUrl, "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
+						return;
+					}
+
+					GithubScraper githubScraper = githubScraperOptional.get();
+					String scrapedLanguages = githubScraper.languages();
 					LanguagesData updatedData = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), scrapedLanguages, scrapedAt);
 					softwareInfoRepository.saveLanguagesData(updatedData);
 				} catch (RsdRateLimitException e) {
