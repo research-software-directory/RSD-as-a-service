@@ -23,7 +23,7 @@ export default function RelatedSoftwareSection({relatedSoftware = []}: { related
       <h2
         data-testid="software-contributors-section-title"
         className="pb-8 text-[2rem] text-primary">
-        Related tools
+        Related software
       </h2>
       <SoftwareGrid
         className="gap-[0.125rem]"
