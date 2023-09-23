@@ -1,13 +1,15 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 // used to support fetch with Jest
 import 'whatwg-fetch'
 // specific
-import '@testing-library/jest-dom/extend-expect'
+import '@testing-library/jest-dom'
 
 // retry 2 times
 jest.retryTimes(2, {
