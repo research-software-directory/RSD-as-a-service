@@ -45,8 +45,6 @@ export async function getRsdSettings() {
 export async function getSettingsServerSide(req: IncomingMessage | undefined, query: ParsedUrlQuery): Promise<RsdSettingsState> {
   // if not SSR we return default
   if (typeof req === 'undefined') return defaultRsdSettings as RsdSettingsState
-  // extract embed flag
-  const embed = typeof query?.embed !== 'undefined'
   // get links, settings and announcements in parallel
   const [pages, settings, announcement] = await Promise.all([
     getPageLinks({is_published: true}),
@@ -60,7 +58,6 @@ export async function getSettingsServerSide(req: IncomingMessage | undefined, qu
     links: settings.links,
     theme: settings.theme,
     pages,
-    embed,
     announcement: announcement?.enabled ? announcement?.text : undefined
   }
   // console.group('getSettingsServerSide')

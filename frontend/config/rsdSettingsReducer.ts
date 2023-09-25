@@ -13,7 +13,6 @@ import defaultSettings from '~/config/defaultSettings.json'
 
 export type RsdSettingsState = {
   host: RsdHost,
-  embed: boolean
   theme: RsdTheme,
   links?: CustomLink[]
   pages?: RsdLink[]
@@ -53,7 +52,6 @@ export type RsdLink = {
 export enum RsdActionType {
   SET_LINKS = 'SET_LINKS',
   SET_THEME = 'SET_THEME',
-  SET_EMBED = 'SET_EMBED',
   SET_HOST = 'SET_HOST'
 }
 
@@ -69,7 +67,6 @@ export const defaultRsdSettings: RsdSettingsState = {
     name: 'rsd',
     email: 'rsd@esciencecenter.nl'
   },
-  embed: false,
   theme: defaultSettings.theme,
   links:[]
 }
@@ -89,11 +86,6 @@ export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsA
       return {
         ...state,
         theme: action.payload
-      }
-    case RsdActionType.SET_EMBED:
-      return {
-        ...state,
-        embed: action.payload
       }
     case RsdActionType.SET_HOST:
       return {

@@ -15,8 +15,7 @@ import OrganisationLogo from './OrganisationLogo'
 import ContactEmail from './ContactEmail'
 
 export default function AppFooter () {
-  const {pages,links,embedMode,host} = useRsdSettings()
-  if (embedMode === true) return null
+  const {pages,links,host} = useRsdSettings()
 
   return (
     <footer className="flex flex-wrap text-primary-content border-t bg-secondary border-base-300">

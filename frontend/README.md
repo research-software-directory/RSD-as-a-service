@@ -187,7 +187,7 @@ yarn add @mui/material @mui/icons-material @emotion/react @emotion/server @emoti
 
 ```bash
 # react testing lib
-yarn add -D @testing-library/react @testing-library/jest-dom jest jest-environment-jsdom @types/jest
+yarn add -D @testing-library/react@latest @testing-library/jest-dom@latest jest@latest jest-environment-jsdom@latest @types/jest@latest
 ```
 
 ### Others
