@@ -9,14 +9,14 @@ import Link from 'next/link'
 import {ProjectListItem} from '~/types/Project'
 import NoContent from '~/components/layout/NoContent'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
-import {ProjectLayoutType} from './search/ViewToggleGroup'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 import ProjectOverviewList from './list/ProjectOverviewList'
 import ProjectCardContent from './cards/ProjectCardContent'
 import ProjectOverviewGrid from './cards/ProjectOverviewGrid'
 import ProjectListItemContent from './list/ProjectListItemContent'
 
 type ProjectOverviewContentProps = {
-  layout: ProjectLayoutType
+  layout: LayoutOptions
   projects: ProjectListItem[]
 }
 

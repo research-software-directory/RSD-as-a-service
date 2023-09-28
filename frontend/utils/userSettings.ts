@@ -9,7 +9,7 @@ import {IncomingMessage} from 'http'
 import cookie from 'cookie'
 import logger from '~/utils/logger'
 import {rowsPerPageOptions} from '~/config/pagination'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 
 /**
  * Extract user settings cookies
@@ -24,12 +24,12 @@ export function getUserSettings(req: IncomingMessage) {
     const cookies = cookie.parse(req.headers.cookie)
     // validate and decode
     return {
-      rsd_page_layout: (cookies?.rsd_page_layout ?? 'masonry') as LayoutType,
+      rsd_page_layout: (cookies?.rsd_page_layout ?? 'grid') as LayoutOptions,
       rsd_page_rows: parseInt(cookies?.rsd_page_rows ?? rowsPerPageOptions[0])
     }
   } else {
     return {
-      rsd_page_layout: 'masonry' as LayoutType,
+      rsd_page_layout: 'masonry' as LayoutOptions,
       rsd_page_rows: rowsPerPageOptions[0]
     }
   }

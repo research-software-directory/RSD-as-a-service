@@ -9,7 +9,7 @@ import Link from 'next/link'
 
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import NoContent from '~/components/layout/NoContent'
-import {LayoutType} from './search/ViewToggleGroup'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 import SoftwareOverviewList from './list/SoftwareOverviewList'
 import SoftwareOverviewMasonry from './cards/SoftwareOverviewMasonry'
 import SoftwareOverviewGrid from './cards/SoftwareOverviewGrid'
@@ -19,7 +19,7 @@ import SoftwareListItemContent from './list/SoftwareListItemContent'
 import OverviewListItem from './list/OverviewListItem'
 
 type SoftwareOverviewContentProps = {
-  layout: LayoutType
+  layout: LayoutOptions
   software: SoftwareOverviewItemProps[]
 }
 

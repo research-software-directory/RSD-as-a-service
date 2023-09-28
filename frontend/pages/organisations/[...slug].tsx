@@ -13,6 +13,7 @@ import {getOrganisationMetadata, RORItem} from '~/utils/getROR'
 import {getUserSettings} from '~/utils/userSettings'
 import {OrganisationForOverview} from '~/types/Organisation'
 import {getOrganisationBySlug} from '~/components/organisation/apiOrganisations'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 import OrganisationMetadata from '~/components/organisation/metadata'
 import PageMeta from '~/components/seo/PageMeta'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
@@ -23,7 +24,6 @@ import OrganisationTabs from '~/components/organisation/tabs/OrganisationTabs'
 import TabContent from '~/components/organisation/tabs/TabContent'
 import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
 import {OrganisationProvider} from '~/components/organisation/context/OrganisationContext'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
 
 export type OrganisationPageProps = {
@@ -33,7 +33,7 @@ export type OrganisationPageProps = {
   tab: TabKey | null,
   isMaintainer: boolean,
   rsd_page_rows: number,
-  rsd_page_layout: LayoutType
+  rsd_page_layout: LayoutOptions
 }
 
 export default function OrganisationPage({

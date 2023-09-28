@@ -4,11 +4,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {createContext, useContext} from 'react'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 
 type UserSettingsContextProps = {
   rsd_page_rows: number,
-  rsd_page_layout: LayoutType,
+  rsd_page_layout: LayoutOptions,
 }
 
 const UserSettingsContext = createContext<UserSettingsContextProps>({

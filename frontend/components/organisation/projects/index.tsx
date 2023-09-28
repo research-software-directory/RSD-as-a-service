@@ -11,7 +11,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
 import FiltersPanel from '~/components/filter/FiltersPanel'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 import {setDocumentCookie} from '~/utils/userSettings'
 import useOrganisationContext from '../context/useOrganisationContext'
 import {useUserSettings} from '../context/UserSettingsContext'
@@ -31,7 +31,7 @@ export default function OrganisationProjects() {
   // if masonry we change to grid
   const initView = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
   const {projects, count, loading} = useOrganisationProjects()
-  const [view, setView] = useState<ProjectLayoutType>(initView ?? 'grid')
+  const [view, setView] = useState<LayoutOptions>(initView ?? 'grid')
   const numPages = Math.ceil(count / rows)
 
   // console.group('OrganisationProjects')
@@ -41,7 +41,7 @@ export default function OrganisationProjects() {
   // console.log('isMaintainer...',isMaintainer)
   // console.groupEnd()
 
-  function setLayout(view: ProjectLayoutType) {
+  function setLayout(view: LayoutOptions) {
     // update local view
     setView(view)
     // save to cookie

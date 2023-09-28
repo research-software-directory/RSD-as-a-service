@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next'
 
 import Pagination from '@mui/material/Pagination'
@@ -29,8 +29,7 @@ import FiltersPanel from '~/components/filter/FiltersPanel'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {OrganisationOption} from '~/components/filter/OrganisationsFilter'
 import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 import {
   projectDomainsFilter,
   projectKeywordsFilter,
@@ -39,7 +38,7 @@ import {
 } from '~/components/projects/overview/filters/projectFiltersApi'
 import {projectOrderOptions} from '~/components/projects/overview/filters/OrderProjectsBy'
 import ProjectFilters from '~/components/projects/overview/filters/ProjectFilters'
-import ProjectSearchSection from '~/components/projects/overview/search/ProjectSearchSection'
+import OverviewSearchSection from '~/components/projects/overview/search/OverviewSearchSection'
 import ProjectOverviewContent from '~/components/projects/overview/ProjectOverviewContent'
 import ProjectFiltersModal from '~/components/projects/overview/filters/ProjectFiltersModal'
 import {StatusFilterOption} from '~/components/projects/overview/filters/ProjectStatusFilter'
@@ -59,7 +58,7 @@ export type ProjectOverviewPageProps = {
   page: number,
   rows: number,
   count: number,
-  layout: LayoutType,
+  layout: LayoutOptions,
   projects: ProjectListItem[]
 }
 
@@ -75,10 +74,13 @@ export default function ProjectsOverviewPage({
   page, rows, count, layout,
   projects
 }: ProjectOverviewPageProps) {
-  const {handleQueryChange} = useProjectOverviewParams()
   const smallScreen = useMediaQuery('(max-width:640px)')
-  const [view, setView] = useState<ProjectLayoutType>('grid')
+  const {handleQueryChange} = useProjectOverviewParams()
   const [modal,setModal] = useState(false)
+  // if masonry we change to grid
+  const initView = layout === 'masonry' ? 'grid' : layout
+  const [view, setView] = useState<LayoutOptions>(initView)
+  // calculate pages and used filters
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
 
@@ -100,18 +102,7 @@ export default function ProjectsOverviewPage({
   // console.log('projects...', projects)
   // console.groupEnd()
 
-  // Update view state based on layout value
-  useEffect(() => {
-    if (layout) {
-      if (layout === 'masonry') {
-        setView('grid')
-      } else {
-        setView(layout)
-      }
-    }
-  },[layout])
-
-  function setLayout(view: ProjectLayoutType) {
+  function setLayout(view: LayoutOptions) {
     // update local view
     setView(view)
     // save to cookie
@@ -169,7 +160,7 @@ export default function ProjectsOverviewPage({
             }
             {/* Search & main content section */}
             <div className="flex-1">
-              <ProjectSearchSection
+              <OverviewSearchSection
                 page={page}
                 rows={rows}
                 count={count}
@@ -178,6 +169,7 @@ export default function ProjectsOverviewPage({
                 layout={view}
                 setView={setLayout}
                 setModal={setModal}
+                handleQueryChange={handleQueryChange}
               />
               {/* Project content: masonry, cards or list */}
               <ProjectOverviewContent

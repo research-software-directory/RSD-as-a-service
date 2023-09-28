@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Pagination from '@mui/material/Pagination'
@@ -30,8 +30,8 @@ import {
   SoftwareHighlight,
   getSoftwareHighlights
 } from '~/components/admin/software-highlights/apiSoftwareHighlights'
+import OverviewSearchSection from '~/components/projects/overview/search/OverviewSearchSection'
 import SoftwareHighlights from '~/components/software/overview/SoftwareHighlights'
-import SoftwareSearchSection from '~/components/software/overview/search/SoftwareSearchSection'
 import useSoftwareOverviewParams from '~/components/software/overview/useSoftwareOverviewParams'
 import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
 import SoftwareFilters from '~/components/software/overview/filters/index'
@@ -42,7 +42,7 @@ import {
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
 import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
 import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 
 
 type SoftwareOverviewProps = {
@@ -57,7 +57,7 @@ type SoftwareOverviewProps = {
   page: number,
   rows: number,
   count: number,
-  layout: LayoutType,
+  layout: LayoutOptions,
   software: SoftwareOverviewItemProps[],
   highlights: SoftwareHighlight[]
 }
@@ -73,11 +73,13 @@ export default function SoftwareOverviewPage({
   keywordsList, languagesList,
   licensesList, software, highlights
 }: SoftwareOverviewProps) {
-  const [view, setView] = useState<LayoutType>('masonry')
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {handleQueryChange} = useSoftwareOverviewParams()
-
   const [modal,setModal] = useState(false)
+  // if masonry we change to grid
+  const initView = layout === 'masonry' ? 'grid' : layout
+  const [view, setView] = useState<LayoutOptions>(initView)
+  // calculate pages and used filters
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
 
@@ -98,13 +100,6 @@ export default function SoftwareOverviewPage({
   // console.log('highlights...', highlights)
   // console.groupEnd()
 
-  // Update view state based on layout value
-  useEffect(() => {
-    if (layout) {
-      setView(layout)
-    }
-  },[layout])
-
   function getFilterCount() {
     let count = 0
     if (keywords) count++
@@ -114,7 +109,7 @@ export default function SoftwareOverviewPage({
     return count
   }
 
-  function setLayout(view: LayoutType) {
+  function setLayout(view: LayoutOptions) {
     // update local view
     setView(view)
     // save to cookie
@@ -164,7 +159,7 @@ export default function SoftwareOverviewPage({
             }
             {/* Search & main content section */}
             <div className="flex-1">
-              <SoftwareSearchSection
+              <OverviewSearchSection
                 page={page}
                 rows={rows}
                 count={count}
@@ -173,6 +168,7 @@ export default function SoftwareOverviewPage({
                 layout={view}
                 setView={setLayout}
                 setModal={setModal}
+                handleQueryChange={handleQueryChange}
               />
               {/* Software content: masonry, cards or list */}
               <SoftwareOverviewContent

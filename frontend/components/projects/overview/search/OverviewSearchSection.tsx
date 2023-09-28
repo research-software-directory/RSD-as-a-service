@@ -10,26 +10,25 @@ import Button from '@mui/material/Button'
 
 import SearchInput from '~/components/search/SearchInput'
 import SelectRows from '~/components/software/overview/search/SelectRows'
-import ViewToggleGroup, {ProjectLayoutType} from './ViewToggleGroup'
-import useProjectOverviewParams from '../useProjectOverviewParams'
+import CardsLayoutOptions, {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 
 type SearchSectionProps = {
   page: number
   rows: number
   count: number
   placeholder: string
-  layout: ProjectLayoutType
+  layout: LayoutOptions
   search?: string | null
   setModal: (modal: boolean) => void
-  setView: (view:ProjectLayoutType)=>void
+  setView: (view:LayoutOptions)=>void
+  handleQueryChange: (key:string, value: string|string[])=>void
 }
 
 
-export default function ProjectSearchSection({
+export default function OverviewSearchSection({
   search, placeholder, page, rows, count, layout,
-  setView, setModal
+  setView, setModal, handleQueryChange
 }: SearchSectionProps) {
-  const {handleQueryChange} = useProjectOverviewParams()
   const smallScreen = useMediaQuery('(max-width:640px)')
 
   return (
@@ -40,7 +39,7 @@ export default function ProjectSearchSection({
           onSearch={(search: string) => handleQueryChange('search', search)}
           defaultValue={search ?? ''}
         />
-        <ViewToggleGroup
+        <CardsLayoutOptions
           layout={layout}
           onSetView={setView}
         />

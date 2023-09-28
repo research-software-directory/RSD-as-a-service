@@ -7,7 +7,7 @@
 
 import Link from 'next/link'
 import NoContent from '~/components/layout/NoContent'
-import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 import AdminProjectGridCard from './card/AdminProjectGridCard'
 import {ProjectOfOrganisation} from '~/types/Organisation'
 import useOrganisationContext from '../context/useOrganisationContext'
@@ -20,7 +20,7 @@ import ProjectCardContent from '~/components/projects/overview/cards/ProjectCard
 import GridCardSkeleton from '../software/card/GridCardSkeleton'
 
 type OrganisationProjectsOverviewProps = {
-  layout: ProjectLayoutType
+  layout: LayoutOptions
   projects: ProjectOfOrganisation[]
   loading: boolean
   rows: number

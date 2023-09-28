@@ -10,14 +10,14 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 
-export type ProjectLayoutType = 'list'|'grid'
+export type LayoutOptions = 'list'|'grid'|'masonry'
 
-type ViewToggleGroupProps = {
-  layout: ProjectLayoutType
-  onSetView: (view:ProjectLayoutType)=>void
+type CardsLayoutProps = {
+  layout: LayoutOptions
+  onSetView: (view:LayoutOptions)=>void
 }
 
-export default function ViewToggleGroup({layout,onSetView}:ViewToggleGroupProps) {
+export default function CardsLayoutOptions({layout,onSetView}:CardsLayoutProps) {
   return (
     <ToggleButtonGroup
       data-testid="card-layout-options"

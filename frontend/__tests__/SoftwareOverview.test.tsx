@@ -9,14 +9,14 @@ import {render, screen, within} from '@testing-library/react'
 import {WithAppContext} from '~/utils/jest/WithAppContext'
 
 import SoftwareOverviewPage from '../pages/software/index'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {LayoutOptions} from '~/components/cards/CardsLayoutOptions'
 
-// use DEFAULT MOCK for login providers list
-// required when AppHeader component is used
-jest.mock('~/auth/api/useLoginProviders')
 
 // mocked data & props
 import mockData from './__mocks__/softwareOverviewData.json'
+// use DEFAULT MOCK for login providers list
+// required when AppHeader component is used
+jest.mock('~/auth/api/useLoginProviders')
 
 const mockProps = {
   search:null,
@@ -27,7 +27,7 @@ const mockProps = {
   page: 1,
   rows: 12,
   count: 408,
-  layout: 'masonry' as LayoutType,
+  layout: 'grid' as LayoutOptions,
   keywordsList: mockData.keywordsList,
   languagesList: mockData.languagesList,
   licensesList: mockData.licensesList,
@@ -88,23 +88,23 @@ describe('pages/software/index.tsx', () => {
   })
 
   it('renders layout options (toggle button group)', async () => {
-    mockProps.layout='masonry'
+    mockProps.layout='grid'
     render(
       <WithAppContext>
         <SoftwareOverviewPage {...mockProps} />
       </WithAppContext>
     )
-    const buttonGroup = screen.getByTestId('card-layout-options')
+    screen.getByTestId('card-layout-options')
   })
 
-  it('renders (12) masonry cards', async () => {
+  it('renders (12) grid cards - IGNORE masonry', async () => {
     mockProps.layout='masonry'
     render(
       <WithAppContext>
         <SoftwareOverviewPage {...mockProps} />
       </WithAppContext>
     )
-    const cards = screen.getAllByTestId('software-masonry-card')
+    const cards = screen.getAllByTestId('software-grid-card')
     expect(cards.length).toEqual(mockProps.software.length)
   })
 
