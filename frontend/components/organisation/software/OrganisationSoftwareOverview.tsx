@@ -79,15 +79,18 @@ export default function OrganisationSoftwareOverview({layout,software,loading,ro
   }
 
   // GRID as default
+  // NOTE! we need to use isMaintainer flag to load
+  // grid cards with image placeholder in order to
+  // show admin menu and statuses: not published, blocked etc.
   return (
-    <SoftwareOverviewGrid>
+    <SoftwareOverviewGrid withImg={isMaintainer}>
       {software.map((item) => {
         if (isMaintainer) {
           return (
-            <AdminSoftwareGridCard key={item.id} item={item} />
+            <AdminSoftwareGridCard key={item.id} withImg={isMaintainer} item={item} />
           )
         }
-        return <SoftwareGridCard key={item.id} {...item}/>
+        return <SoftwareGridCard key={item.id} withImg={isMaintainer} {...item}/>
       })}
     </SoftwareOverviewGrid>
   )

@@ -66,9 +66,9 @@ export default function SoftwareOverviewContent({layout, software}: SoftwareOver
 
   // GRID as default
   return (
-    <SoftwareOverviewGrid>
+    <SoftwareOverviewGrid withImg={false}>
       {software.map((item) => (
-        <SoftwareGridCard key={item.id} {...item}/>
+        <SoftwareGridCard key={item.id} withImg={false} {...item}/>
       ))}
     </SoftwareOverviewGrid>
   )

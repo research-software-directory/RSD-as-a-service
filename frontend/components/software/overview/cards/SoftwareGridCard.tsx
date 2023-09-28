@@ -8,6 +8,7 @@
 
 import Link from 'next/link'
 import SoftwareCardContent from './SoftwareCardContent'
+import SoftwareCardNoImage from './SoftwareCardNoImage'
 
 type SoftwareCardProps = {
   slug:string
@@ -18,7 +19,8 @@ type SoftwareCardProps = {
   prog_lang: string[],
   contributor_cnt: number | null
   mention_cnt: number | null
-  downloads?: number
+  downloads?: number,
+  withImg?:boolean
 }
 
 export default function SoftwareGridCard(item:SoftwareCardProps){
@@ -29,11 +31,19 @@ export default function SoftwareGridCard(item:SoftwareCardProps){
       href={`/software/${item.slug}`}
       className="flex-1 flex flex-col hover:text-inherit"
     >
-      <SoftwareCardContent
-        visibleKeywords={3}
-        visibleProgLang={3}
-        {...item}
-      />
+      {item.withImg ?
+        <SoftwareCardContent
+          visibleKeywords={3}
+          visibleProgLang={3}
+          {...item}
+        />
+        :
+        <SoftwareCardNoImage
+          visibleKeywords={3}
+          visibleProgLang={3}
+          {...item}
+        />
+      }
     </Link>
   )
 }
