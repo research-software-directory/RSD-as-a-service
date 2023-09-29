@@ -23,7 +23,7 @@ export type OrderProps = {
 export type Column<T,K extends keyof T> = {
   key: K
   label: string
-  type: 'string' | 'date' | 'boolean' | 'custom'
+  type: 'string' | 'date' | 'datetime' | 'boolean' | 'custom'
   align?: 'left'|'right'|'center'|'justify'
   className?: string
   sx?: SxProps<Theme>

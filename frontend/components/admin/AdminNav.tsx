@@ -22,6 +22,7 @@ import DomainAddIcon from '@mui/icons-material/DomainAdd'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FluorescentIcon from '@mui/icons-material/Fluorescent'
 import CampaignIcon from '@mui/icons-material/Campaign'
+import BugReportIcon from '@mui/icons-material/BugReport'
 
 export const adminPages = {
   pages:{
@@ -65,6 +66,12 @@ export const adminPages = {
     subtitle: 'Manage keyword entries',
     icon: <SpellcheckIcon />,
     path: '/admin/keywords',
+  },
+  logs:{
+    title: 'Error logs',
+    subtitle: 'From background services',
+    icon: <BugReportIcon />,
+    path: '/admin/logs',
   },
   announcements: {
     title: 'Announcement',

@@ -30,7 +30,7 @@ export default function AppHeader() {
   const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
   const status = session?.status || 'loading'
-  const {host, embedMode} = useRsdSettings()
+  const {host} = useRsdSettings()
   const disable = useDisableScrollLock()
   // Responsive menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -41,9 +41,6 @@ export default function AppHeader() {
       setActivePath(window.location.pathname)
     }
   }, [])
-
-  // Doesn't show the header in embed mode
-  if (embedMode) return null
 
   // Responsive menu
   const open = Boolean(anchorEl)
@@ -75,7 +72,7 @@ export default function AppHeader() {
               className="2xl:hidden"
               loading='eager'
               // lighthouse audit requires explicit width and height
-              width="100%"
+              width="7rem"
               height="1.5rem"
             />
           </Link>
@@ -105,10 +102,6 @@ export default function AppHeader() {
                 : null
               }
             </div>
-
-
-            {/* EDIT button MOVED TO PAGE TITLE */}
-            {/* {editButton ? editButton : null} */}
 
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}

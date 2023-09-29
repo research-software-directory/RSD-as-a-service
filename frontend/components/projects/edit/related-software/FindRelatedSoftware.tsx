@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -57,7 +59,7 @@ export default function FindRelatedSoftware({software,config,token,onAdd, onCrea
   }
 
   function onAddSelected(selected:AutocompleteOption<SearchSoftware>) {
-    if (selected && selected.data) {
+    if (selected?.data) {
       onAdd(selected.data)
     }
   }
@@ -127,7 +129,7 @@ export default function FindRelatedSoftware({software,config,token,onAdd, onCrea
           // if onCreate fn is not provided
           // we do not allow free solo text
           // eg. only selection of found items
-          freeSolo: onCreate ? true : false
+          freeSolo: typeof(onCreate) !== 'undefined'
         }}
       />
     </section>

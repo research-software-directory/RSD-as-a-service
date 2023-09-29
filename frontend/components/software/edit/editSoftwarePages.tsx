@@ -17,6 +17,7 @@ import ShareIcon from '@mui/icons-material/Share'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ContentLoader from '~/components/layout/ContentLoader'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
+import PendingActionsIcon from '@mui/icons-material/PendingActions'
 
 // import SoftwareInformation from './information'
 // import SoftwareContributors from './contributors'
@@ -45,7 +46,10 @@ const SoftwareMentions = dynamic(() => import('./mentions'),{
 const SoftwareTestimonials = dynamic(() => import('./testimonials'),{
   loading: ()=><ContentLoader />
 })
-const RelatedTopics = dynamic(() => import('./related'),{
+const RelatedSoftware = dynamic(() => import('./related-software'),{
+  loading: ()=><ContentLoader />
+})
+const RelatedProjects = dynamic(() => import('./related-projects'),{
   loading: ()=><ContentLoader />
 })
 const SoftwareMaintainers = dynamic(() => import('./maintainers'),{
@@ -97,10 +101,16 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
   render: () => <PackageManagers />,
   status: 'Optional information'
 },{
-  id: 'related-topics',
-  label: 'Related topics',
+  id: 'related-software',
+  label: 'Related software',
   icon: <ShareIcon />,
-  render: () => <RelatedTopics />,
+  render: () => <RelatedSoftware />,
+  status: 'Optional information'
+},{
+  id: 'related-projects',
+  label: 'Related projects',
+  icon: <PendingActionsIcon />,
+  render: () => <RelatedProjects />,
   status: 'Optional information'
 },{
   id: 'maintainers',

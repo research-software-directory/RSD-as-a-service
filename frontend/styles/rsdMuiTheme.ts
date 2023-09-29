@@ -280,7 +280,14 @@ function applyThemeConfig({colors, action, typography}: ThemeConfig) {
             backgroundColor: colors['base-600']
           }
         }
-      }
+      },
+      MuiTooltip: {
+        styleOverrides:{
+          tooltip: {
+            maxWidth: '40rem'
+          },
+        }
+      },
     },
   })
 }
