@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -55,12 +55,12 @@ export const softwareInformation = {
   },
   repository_url: {
     label: 'Repository URL',
-    help: 'Link to source code repository',
+    help: (repoUrl: string | null) => repoUrl ? verifyGithubUrl(repoUrl) : 'Link to source code repository',
     validation: {
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^https?:\/\/.+\..+/,
-        message: 'URL should start with htps://, have at least one dot (.) and at least one slash (/).'
+        message: 'URL should start with http(s)://, have at least one dot (.) and at least one slash (/).'
       }
     }
   },
@@ -91,7 +91,13 @@ export const softwareInformation = {
   // field for markdown URL
   description_url: {
     label: 'URL location of markdown file',
-    help: <>Point to the location of markdown file including the filename. Make sure to provide the <u><a target = '_blank' href='https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md' rel="noreferrer">raw file</a></u> and <strong>not</strong> the <u><a target = '_blank' href='https://github.com/research-software-directory/RSD-as-a-service/blob/main/README.md' rel="noreferrer">rendered output</a></u>.</>,
+    help: <>Point to the location of markdown file including the filename. Make sure to provide the <u><a
+      target='_blank'
+      href='https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md'
+      rel="noreferrer">raw file</a></u> and <strong>not</strong> the <u><a target='_blank'
+      href='https://github.com/research-software-directory/RSD-as-a-service/blob/main/README.md'
+      rel="noreferrer">rendered
+      output</a></u>.</>,
     validation: {
       required: 'Valid markdown URL must be provided',
       maxLength: {value: 200, message: 'Maximum length is 200'},
@@ -105,7 +111,10 @@ export const softwareInformation = {
     title: 'Citation',
     subtitle: 'We generate citation files using concept DOI',
     label: 'Concept DOI',
-    help: <>Concept DOI of your software, i.e. a DOI representing <u><a target = '_blank' href='https://help.zenodo.org/' rel="noreferrer">all of the versions</a></u> of this software</>,
+    help: <>Concept DOI of your software, i.e. a DOI representing <u><a target='_blank'
+      href='https://help.zenodo.org/'
+      rel="noreferrer">all of the
+      versions</a></u> of this software</>,
     validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
@@ -116,7 +125,7 @@ export const softwareInformation = {
     }
   },
   validateConceptDoi: {
-    label:'Validate DOI'
+    label: 'Validate DOI'
   },
   pageStatus: {
     title: 'Status',
@@ -180,7 +189,7 @@ export const contributorInformation = {
   },
   is_contact_person: {
     label: 'Contact person',
-    help:'Is this contributor main contact person'
+    help: 'Is this contributor the main contact person?'
   },
   given_names: {
     label: 'First name / Given name(s)',
@@ -255,7 +264,7 @@ export const organisationInformation = {
       minLength: 2,
     }
   },
-  name:{
+  name: {
     label: 'Name',
     help: 'Participating organisation',
     validation: {
@@ -306,7 +315,7 @@ export const testimonialInformation = {
     label: 'Source',
     help: 'Who provided the credits?',
     validation: {
-      required: 'The source of testimonal is required',
+      required: 'The source of the testimonial is required',
       minLength: {value: 2, message: 'Minimum length is 2'},
       maxLength: {value: 200, message: 'Maximum length is 200'},
     }
@@ -342,7 +351,7 @@ export const mentionInformation = {
     label: 'Author',
     help: 'List all authors',
     validation: {
-      required:false
+      required: false
     }
   },
   url: {
@@ -363,7 +372,7 @@ export const mentionInformation = {
   },
   image_url: {
     label: 'Image',
-    help:'Provide URL to image',
+    help: 'Provide URL to image',
     validation: {
       pattern: {
         value: /^https?:\/\/.+\..+/,
@@ -388,6 +397,16 @@ export const mentionInformation = {
 
 export const relatedSoftwareInformation = {
   title: 'Related software',
-  subtitle:(brand_name:string)=>`Mention software often used together with ${brand_name}`,
+  subtitle: (brand_name: string) => `Mention software often used together with ${brand_name}`,
   help: 'Select related RSD software'
+}
+
+function verifyGithubUrl(repoUrl: string) {
+  if ((repoUrl.startsWith('https://github.com/') || repoUrl.startsWith('http://github.com/'))
+    && !repoUrl.match('^https?://github\\.com/([^\\s/]+)/([^\\s/]+)/?$')) {
+    return <div style={{color: 'orange'}}>This does not seem to be the root of a single GitHub repository, are you
+      sure?</div>
+  }
+
+  return 'Link to source code repository'
 }

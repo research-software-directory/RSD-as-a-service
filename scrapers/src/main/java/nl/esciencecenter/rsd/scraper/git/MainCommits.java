@@ -15,6 +15,7 @@ import nl.esciencecenter.rsd.scraper.Utils;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class MainCommits {
@@ -47,10 +48,10 @@ public class MainCommits {
 				} catch (RsdRateLimitException e) {
 					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", null, null);
-				} catch (RsdResponseException  e) {
+				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
-				} catch (RuntimeException  e) {
+				} catch (RuntimeException e) {
 					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}
@@ -71,10 +72,15 @@ public class MainCommits {
 			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
 				try {
 					String repoUrl = commitData.url();
-					String repo = repoUrl.replace("https://github.com/", "");
-					if (repo.endsWith("/")) repo = repo.substring(0, repo.length() - 1);
 
-					CommitsPerWeek scrapedCommits = new GithubScraper("https://api.github.com", repo).contributions();
+					Optional<GithubScraper> githubScraperOptional = GithubScraper.create(repoUrl);
+					if (githubScraperOptional.isEmpty()) {
+						Utils.saveErrorMessageInDatabase("Not a valid GitHub URL: " + repoUrl, "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
+						return;
+					}
+
+					GithubScraper githubScraper = githubScraperOptional.get();
+					CommitsPerWeek scrapedCommits = githubScraper.contributions();
 					CommitData updatedData = new CommitData(commitData, scrapedCommits, scrapedAt);
 					softwareInfoRepository.saveCommitData(updatedData);
 				} catch (RsdRateLimitException e) {

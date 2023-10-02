@@ -26,13 +26,27 @@ import java.util.regex.Pattern;
 
 public class GithubScraper implements GitScraper {
 
-	private final String baseApiUrl;
+	private final String BASE_API_URL = "https://api.github.com";
+	private final String organisation;
 	private final String repo;
 	private static final Pattern LINK_PATTERN = Pattern.compile("<([^>]+page=(\\d+)[^>]*)>; rel=\"([^\"]+)\"");
+	public static final Pattern GITHUB_URL_PATTERN = Pattern.compile("^https?://github\\.com/([^\\s/]+)/([^\\s/]+)/?$");
 
-	public GithubScraper(String baseApiUrl, String repo) {
-		this.baseApiUrl = Objects.requireNonNull(baseApiUrl);
+	private GithubScraper(String organisation, String repo) {
+		this.organisation = Objects.requireNonNull(organisation);
 		this.repo = Objects.requireNonNull(repo);
+	}
+
+	public static Optional<GithubScraper> create(String url) {
+		Matcher matcher = GITHUB_URL_PATTERN.matcher(url);
+		if (!matcher.find()) {
+			return Optional.empty();
+		}
+
+		String organisation = matcher.group(1);
+		String repo = matcher.group(2);
+		GithubScraper githubScraper = new GithubScraper(organisation, repo);
+		return Optional.of(githubScraper);
 	}
 
 	/**
@@ -44,16 +58,18 @@ public class GithubScraper implements GitScraper {
 		Optional<String> apiCredentials = Config.apiCredentialsGithub();
 		HttpResponse<String> response;
 		if (apiCredentials.isPresent()) {
-			response = Utils.getAsHttpResponse(baseApiUrl + "/repos/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
-		}
-		else {
-			response = Utils.getAsHttpResponse(baseApiUrl + "/repos/" + repo);
+			response = Utils.getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
+		} else {
+			response = Utils.getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo);
 		}
 		return switch (response.statusCode()) {
 			case 200 -> parseBasicData(response.body());
-			case 404 -> throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
-			case 403 -> throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
-			default -> throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
+			case 404 ->
+					throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+			case 403 ->
+					throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
+			default ->
+					throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 		};
 	}
 
@@ -63,12 +79,15 @@ public class GithubScraper implements GitScraper {
 	 */
 	@Override
 	public String languages() {
-		HttpResponse<String> response = getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/languages");
+		HttpResponse<String> response = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/languages");
 		return switch (response.statusCode()) {
-			case 404 -> throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
-			case 403 -> throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
+			case 404 ->
+					throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+			case 403 ->
+					throw new RsdRateLimitException(403, response.uri(), response.body(), "Rate limit for GitHub probably reached");
 			case 200 -> response.body();
-			default -> throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
+			default ->
+					throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 		};
 	}
 
@@ -76,30 +95,30 @@ public class GithubScraper implements GitScraper {
 	 * Returns  all contributors commit activity.
 	 * https://docs.github.com/en/rest/reference/metrics#get-all-contributor-commit-activity=
 	 * Requesting commit activity requires a GitHub authentication token.
-	 *
+	 * <p>
 	 * The returned string represents a JsonArray with one entry per contributor. THe information
 	 * per entry are:
-	 *
+	 * <p>
 	 * {
-	 *     "author": { <AuthorInformation> },
-	 *     "total": number of total commits,
-	 *     "weeks": [
-	 *         {
-	 *             "w": unix timestamp (Start of the week 00:00 on Sundays),
-	 *             "a": number of additions,
-	 *             "d": number of deletions,
-	 *             "c": number of commits
-	 *         }, ...
-	 *     ]
+	 * "author": { <AuthorInformation> },
+	 * "total": number of total commits,
+	 * "weeks": [
+	 * {
+	 * "w": unix timestamp (Start of the week 00:00 on Sundays),
+	 * "a": number of additions,
+	 * "d": number of deletions,
+	 * "c": number of commits
+	 * }, ...
+	 * ]
 	 * }
-	 *
+	 * <p>
 	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/stats/contributors
 	 */
 	@Override
 	public CommitsPerWeek contributions() {
 		HttpResponse<String> httpResponse = null;
 		for (int i = 0; i < 2; i++) {
-			httpResponse = getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/stats/contributors");
+			httpResponse = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/stats/contributors");
 
 			if (httpResponse.statusCode() != 202) break;
 			try {
@@ -120,7 +139,7 @@ public class GithubScraper implements GitScraper {
 		} else if (status == 202) {
 			// response not ready yet
 			return null;
-		} else if (status != 200){
+		} else if (status != 200) {
 			throw new RsdResponseException(status, httpResponse.uri(), httpResponse.body(), "Unexpected response");
 		} else {
 			String contributionsJson = httpResponse.body();
@@ -132,14 +151,14 @@ public class GithubScraper implements GitScraper {
 	public Integer contributorCount() {
 		// we request one contributor per page and just extract the number of pages from the headers
 		// see https://docs.github.com/en/rest/guides/using-pagination-in-the-rest-api?apiVersion=2022-11-28
-		HttpResponse<String> httpResponse = getAsHttpResponse(baseApiUrl + "/repos/" + repo + "/contributors?per_page=1");
+		HttpResponse<String> httpResponse = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/contributors?per_page=1");
 
 		int status = httpResponse.statusCode();
 		if (status == 404) {
 			throw new RsdResponseException(404, httpResponse.uri(), httpResponse.body(), "Not found, is the repository URL correct?");
 		} else if (status == 403) {
 			throw new RsdRateLimitException(403, httpResponse.uri(), httpResponse.body(), "Rate limit for GitHub probably reached");
-		} else if (status != 200){
+		} else if (status != 200) {
 			throw new RsdResponseException(status, httpResponse.uri(), httpResponse.body(), "Unexpected response");
 		} else {
 			List<String> linkHeaders = httpResponse.headers().allValues("link");
@@ -194,7 +213,7 @@ public class GithubScraper implements GitScraper {
 			Matcher matcher = LINK_PATTERN.matcher(link);
 			while (matcher.find()) {
 				String relation = matcher.group(3);
-				if (relation.equals("last")) return new String[] {matcher.group(1), matcher.group(2)};
+				if (relation.equals("last")) return new String[]{matcher.group(1), matcher.group(2)};
 			}
 		}
 
@@ -205,8 +224,7 @@ public class GithubScraper implements GitScraper {
 		Optional<String> apiCredentials = Config.apiCredentialsGithub();
 		if (apiCredentials.isPresent()) {
 			return Utils.getAsHttpResponse(url, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));
-		}
-		else {
+		} else {
 			return Utils.getAsHttpResponse(url);
 		}
 	}
