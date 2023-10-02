@@ -36,7 +36,7 @@ async function suggestPlatform(repositoryUrl: string | null) {
   }
 
   try {
-    const repositoryUrlDomain =new URL(repositoryUrl)
+    const repositoryUrlDomain = new URL(repositoryUrl)
     const baseUrl = getBaseUrl()
     const resp = await fetch(
       `${baseUrl}/rpc/suggest_platform`,
@@ -47,7 +47,7 @@ async function suggestPlatform(repositoryUrl: string | null) {
       })
     if (resp.status === 200) {
       const platform_type = await resp.json()
-      if ( platform_type !== null){
+      if (platform_type !== null) {
         return platform_type
       }
     }
@@ -61,18 +61,18 @@ export default function AutosaveRepositoryUrl() {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {control, watch, resetField} = useFormContext<EditSoftwareItem>()
-  const {fieldState:{error:urlError},field:{value:repository_url}} = useController({
+  const {fieldState: {error: urlError}, field: {value: repository_url}} = useController({
     control,
-    name:'repository_url'
+    name: 'repository_url'
   })
-  const [id,repository_platform] = watch(['id','repository_platform'])
+  const [id, repository_platform] = watch(['id', 'repository_platform'])
   const [platform, setPlatform] = useState<{
     id: CodePlatform | null
     disabled: boolean
     helperText: string
   }>({
     id: repository_platform,
-    disabled: repository_platform===null,
+    disabled: repository_platform === null,
     helperText: 'Suggestion'
   })
   const [suggestedPlatform, setSuggestedPlatform] = useState<CodePlatform>()
@@ -82,7 +82,7 @@ export default function AutosaveRepositoryUrl() {
     label: config.repository_url.label,
     useNull: true,
     defaultValue: repository_url,
-    helperTextMessage: config.repository_url.help,
+    helperTextMessage: config.repository_url.help(repository_url),
     helperTextCnt: `${repository_url?.length || 0}/${config.repository_url.validation.maxLength.value}`,
   }
 
@@ -90,7 +90,7 @@ export default function AutosaveRepositoryUrl() {
   useEffect(() => {
     if (typeof urlError == 'undefined' && repository_url) {
       // Do nothing if the host name is not complete
-      if (! /^https?:\/\/\S+\//.test(repository_url)) {
+      if (!/^https?:\/\/\S+\//.test(repository_url)) {
         return
       }
       // debugger
@@ -114,11 +114,11 @@ export default function AutosaveRepositoryUrl() {
         helperText: ''
       })
     }
-  },[urlError,repository_url,platform.id])
+  }, [urlError, repository_url, platform.id])
 
   async function saveRepositoryInfo({name, value}: OnSaveProps<EditSoftwareItem>) {
     // complete record for upsert
-    const data:RepositoryUrl = {
+    const data: RepositoryUrl = {
       software: id,
       url: repository_url ?? '',
       code_platform: platform.id ?? 'other',
@@ -151,7 +151,7 @@ export default function AutosaveRepositoryUrl() {
       }
       // update value
       data.code_platform = value as CodePlatform
-      // manualy overwriting advice
+      // manually overwriting advice
       setPlatform({
         id: value as CodePlatform,
         disabled: false,
@@ -183,7 +183,7 @@ export default function AutosaveRepositoryUrl() {
     } else {
       // reset both fields
       resetField('repository_url', {defaultValue: data.url})
-      resetField('repository_platform',{defaultValue: data.code_platform})
+      resetField('repository_platform', {defaultValue: data.code_platform})
     }
   }
 
@@ -206,7 +206,7 @@ export default function AutosaveRepositoryUrl() {
         value={platform.id}
         disabled={platform.disabled}
         helperText={platform.helperText}
-        onChange={(platform)=>saveRepositoryInfo({name:'repository_platform',value:platform})}
+        onChange={(platform) => saveRepositoryInfo({name: 'repository_platform', value: platform})}
       />
     </div>
   )
