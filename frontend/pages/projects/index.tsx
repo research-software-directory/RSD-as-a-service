@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next'
 
 import Pagination from '@mui/material/Pagination'
@@ -77,8 +77,10 @@ export default function ProjectsOverviewPage({
 }: ProjectOverviewPageProps) {
   const {handleQueryChange} = useProjectOverviewParams()
   const smallScreen = useMediaQuery('(max-width:640px)')
-  const [view, setView] = useState<ProjectLayoutType>('grid')
   const [modal,setModal] = useState(false)
+  // if masonry we change to grid
+  const initView = layout === 'masonry' ? 'grid' : layout
+  const [view, setView] = useState<ProjectLayoutType>(initView)
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
 
@@ -99,17 +101,6 @@ export default function ProjectsOverviewPage({
   // console.log('projectStatusList...', projectStatusList)
   // console.log('projects...', projects)
   // console.groupEnd()
-
-  // Update view state based on layout value
-  useEffect(() => {
-    if (layout) {
-      if (layout === 'masonry') {
-        setView('grid')
-      } else {
-        setView(layout)
-      }
-    }
-  },[layout])
 
   function setLayout(view: ProjectLayoutType) {
     // update local view

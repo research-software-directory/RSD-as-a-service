@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Pagination from '@mui/material/Pagination'
@@ -73,11 +73,12 @@ export default function SoftwareOverviewPage({
   keywordsList, languagesList,
   licensesList, software, highlights
 }: SoftwareOverviewProps) {
-  const [view, setView] = useState<LayoutType>('masonry')
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {handleQueryChange} = useSoftwareOverviewParams()
-
   const [modal,setModal] = useState(false)
+  // if no layout - default is masonry
+  const initView = layout ?? 'masonry'
+  const [view, setView] = useState<LayoutType>(initView)
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
 
@@ -97,13 +98,6 @@ export default function SoftwareOverviewPage({
   // console.log('software...', software)
   // console.log('highlights...', highlights)
   // console.groupEnd()
-
-  // Update view state based on layout value
-  useEffect(() => {
-    if (layout) {
-      setView(layout)
-    }
-  },[layout])
 
   function getFilterCount() {
     let count = 0
