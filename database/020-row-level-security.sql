@@ -2,9 +2,10 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
+-- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -275,6 +276,44 @@ CREATE POLICY maintainer_all_rights ON testimonial TO rsd_user
 CREATE POLICY admin_all_rights ON testimonial TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
+
+
+-- categories
+
+ALTER TABLE category ENABLE ROW LEVEL SECURITY;
+
+-- allow everybody to read
+CREATE POLICY anyone_can_read ON category
+	FOR SELECT
+	TO rsd_web_anon, rsd_user
+	USING (TRUE);
+
+-- allow admins to have full read/write access
+CREATE POLICY admin_all_rights ON category
+	TO rsd_admin
+	USING (TRUE);
+
+
+-- categories for software
+
+ALTER TABLE category_for_software ENABLE ROW LEVEL SECURITY;
+
+-- allow everybody to read metadata of published software
+CREATE POLICY anyone_can_read ON category_for_software
+	FOR SELECT
+	TO rsd_web_anon, rsd_user
+	USING (EXISTS(SELECT 1 FROM software WHERE id = software_id));
+
+-- allow software maintainers to have read/write access to their software
+CREATE POLICY maintainer_all_rights ON category_for_software
+	TO rsd_user
+	USING (software_id IN (SELECT * FROM software_of_current_maintainer()));
+
+-- allow admins to have full read/write access
+CREATE POLICY admin_all_rights ON category_for_software
+	TO rsd_admin
+	USING (TRUE);
+
 
 -- keywords
 ALTER TABLE keyword ENABLE ROW LEVEL SECURITY;

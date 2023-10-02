@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -41,6 +43,8 @@ window.IntersectionObserver = jest.fn(() => ({
 // use default mocks
 jest.mock('~/components/software/edit/information/useSoftwareToEdit')
 jest.mock('~/components/software/edit/information/searchForSoftwareKeyword')
+// mock all default software calls
+jest.mock('~/utils/getSoftware')
 
 const mockProps = {
   // information page

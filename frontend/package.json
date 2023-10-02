@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
-    "dev:docker": "NODE_ENV=docker NODE_OPTIONS='--inspect=0.0.0.0:9229' next dev",
+    "dev:docker": "NODE_ENV=docker next dev  # backup: NODE_ENV=docker NODE_OPTIONS='--inspect=0.0.0.0:9229' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
