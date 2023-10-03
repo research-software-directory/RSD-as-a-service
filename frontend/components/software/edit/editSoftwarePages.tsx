@@ -18,6 +18,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ContentLoader from '~/components/layout/ContentLoader'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import PendingActionsIcon from '@mui/icons-material/PendingActions'
+import PostAddIcon from '@mui/icons-material/PostAdd'
 
 // import SoftwareInformation from './information'
 // import SoftwareContributors from './contributors'
@@ -28,10 +29,16 @@ import PendingActionsIcon from '@mui/icons-material/PendingActions'
 // import SoftwareMaintainers from './maintainers'
 
 // use dynamic imports instead
+const SoftwareContributors = dynamic(() => import('./contributors'),{
+  loading: ()=><ContentLoader />
+})
 const SoftwareInformation = dynamic(() => import('./information'),{
   loading: ()=><ContentLoader />
 })
-const SoftwareContributors = dynamic(() => import('./contributors'),{
+const SoftwareMaintainers = dynamic(() => import('./maintainers'),{
+  loading: ()=><ContentLoader />
+})
+const SoftwareMentions = dynamic(() => import('./mentions'),{
   loading: ()=><ContentLoader />
 })
 const SoftwareOgranisations = dynamic(() => import('./organisations'),{
@@ -40,10 +47,7 @@ const SoftwareOgranisations = dynamic(() => import('./organisations'),{
 const PackageManagers = dynamic(() => import('./package-managers'),{
   loading: ()=><ContentLoader />
 })
-const SoftwareMentions = dynamic(() => import('./mentions'),{
-  loading: ()=><ContentLoader />
-})
-const SoftwareTestimonials = dynamic(() => import('./testimonials'),{
+const ReferencePapers = dynamic(() => import('./reference-papers'),{
   loading: ()=><ContentLoader />
 })
 const RelatedSoftware = dynamic(() => import('./related-software'),{
@@ -52,9 +56,10 @@ const RelatedSoftware = dynamic(() => import('./related-software'),{
 const RelatedProjects = dynamic(() => import('./related-projects'),{
   loading: ()=><ContentLoader />
 })
-const SoftwareMaintainers = dynamic(() => import('./maintainers'),{
+const SoftwareTestimonials = dynamic(() => import('./testimonials'),{
   loading: ()=><ContentLoader />
 })
+
 
 export type EditSoftwarePageProps = {
   id: string
@@ -81,6 +86,12 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
   label: 'Organisations',
   icon: <FactoryIcon />,
   render: () => <SoftwareOgranisations />,
+  status: 'Optional information'
+},{
+  id: 'reference-paper',
+  label: 'Reference papers',
+  icon: <PostAddIcon />,
+  render: () => <ReferencePapers />,
   status: 'Optional information'
 },{
   id: 'mentions',

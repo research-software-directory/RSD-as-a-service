@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,7 +35,7 @@ export type MentionItemProps = {
   // is_featured?: boolean
   mention_type: MentionTypeKeys | null
   source: string
-  note: string | null
+  note?: string | null
 }
 
 export const mentionColumns ='id,doi,url,title,authors,publisher,publication_year,journal,page,image_url,mention_type,source,note'

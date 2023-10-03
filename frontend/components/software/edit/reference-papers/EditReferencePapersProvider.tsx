@@ -8,25 +8,29 @@
 
 import {useReducer} from 'react'
 
+import {useSession} from '~/auth'
+import logger from '~/utils/logger'
+import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
+import {MentionItemProps} from '~/types/Mention'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {
   EditMentionAction, EditMentionActionType,
   editMentionReducer, EditMentionState
 } from '~/components/mention/editMentionReducer'
 import EditMentionContext from '~/components/mention/editMentionContext'
-import {addNewMentionToSoftware, addToMentionForSoftware, removeMentionForSoftware} from './mentionForSoftwareApi'
-import {MentionItemProps} from '~/types/Mention'
-import {getMentionType} from '~/components/mention/config'
-import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
-import NoMentionItems from './NoMentionItems'
-import logger from '~/utils/logger'
-import {useSession} from '~/auth'
+import NoRefferencePapers from './NoRefferencePapers'
+import {
+  addToReferencePaperForSoftware,
+  addNewReferencePaperToSoftware,
+  removeReferencePaperForSoftware
+} from './apiReferencePapers'
+import useSoftwareContext from '../useSoftwareContext'
 
 const initalState:EditMentionState = {
   settings: {
-    editModalTitle: 'Mention',
-    confirmDeleteModalTitle: 'Delete mention',
-    noItemsComponent:()=><NoMentionItems/>
+    editModalTitle: 'Reference papers',
+    confirmDeleteModalTitle: 'Delete reference paper',
+    noItemsComponent:()=><NoRefferencePapers/>
   },
   loading: true,
   processing: false,
@@ -39,25 +43,13 @@ const initalState:EditMentionState = {
   }
 }
 
-function createSuccessMessage(item:MentionItemProps) {
-  let message = `Added ${item.title}`
-  if (item.mention_type) {
-    message += ` to ${getMentionType(item.mention_type,'plural')}`
-  }
-  return message
-}
-
-export default function EditMentionsProvider(props: any) {
-  const {user} = useSession()
+export default function EditReferencePapersProvider(props: any) {
+  const {user,token} = useSession()
+  const {software:{id:software}} = useSoftwareContext()
   const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
-  // extract needed info from props
-  const {token, software} = props
-  const [state, dispatch] = useReducer(
-    editMentionReducer,
-    initalState
-  )
+  const [state, dispatch] = useReducer(editMentionReducer,initalState)
 
-  // console.group('EditMentionsProvider')
+  // console.group('EditReferencePapersProvider')
   // console.log('software...', software)
   // console.groupEnd()
 
@@ -68,7 +60,7 @@ export default function EditMentionsProvider(props: any) {
       item.id = null
       item.source = 'RSD'
       // new item to be added
-      const resp = await addNewMentionToSoftware({
+      const resp = await addNewReferencePaperToSoftware({
         item,
         software,
         token
@@ -81,7 +73,7 @@ export default function EditMentionsProvider(props: any) {
           payload: resp.message
         })
         // show success
-        showSuccessMessage(createSuccessMessage(resp.message as MentionItemProps))
+        showSuccessMessage(`Added ${item.title}`)
       } else {
         showErrorMessage(resp.message as string)
       }
@@ -109,13 +101,13 @@ export default function EditMentionsProvider(props: any) {
     if (item.doi) {
       const found = state.mentions.find(mention=>mention.doi===item.doi)
       if (found) {
-        showInfoMessage(`Mention with DOI ${item.doi} is already in ${getMentionType(item.mention_type,'plural')}.`)
+        showInfoMessage(`Reference paper with DOI ${item.doi} is already in the list.`)
         return true
       }
     }
     if (item.id) {
       // existing RSD mention item to be added to software
-      const resp = await addToMentionForSoftware({
+      const resp = await addToReferencePaperForSoftware({
         software,
         mention: item.id,
         token
@@ -129,11 +121,11 @@ export default function EditMentionsProvider(props: any) {
           payload: item
         })
         // show success
-        showSuccessMessage(createSuccessMessage(item))
+        showSuccessMessage(`Added ${item.title}`)
       }
     } else {
       // probably new item from crossref or datacite
-      const resp = await addNewMentionToSoftware({item, software, token})
+      const resp = await addNewReferencePaperToSoftware({item, software, token})
       // debugger
       if (resp.status === 200) {
         dispatch({
@@ -142,37 +134,17 @@ export default function EditMentionsProvider(props: any) {
           payload: resp.message
         })
         // show success
-        showSuccessMessage(createSuccessMessage(resp.message as MentionItemProps))
+        showSuccessMessage(`Added ${item.title}`)
       } else {
         showErrorMessage(resp.message as string)
       }
     }
   }
 
-  // WE do not allow update of mentions with DOI from FE
-  // Dusan 2022-10-19
-  // async function processOnUpdate(action: EditMentionAction) {
-  //   debugger
-  //   const rsdItem = action.payload
-  //   const resp = await updateDoiItem({
-  //     rsdItem,
-  //     token
-  //   })
-  //   if (resp.status == 200 && rsdItem) {
-  //     dispatch({
-  //       type: EditMentionActionType.UPDATE_ITEM,
-  //       // item is returned in message
-  //       payload: resp.message
-  //     })
-  //   } else {
-  //     showErrorMessage(`Failed to update ${rsdItem.title}. ${resp.message}`)
-  //   }
-  // }
-
   async function processOnDelete(action: EditMentionAction) {
     const item = action.payload
     if (item.id) {
-      const resp = await removeMentionForSoftware({
+      const resp = await removeReferencePaperForSoftware({
         software,
         mention: item.id,
         token
@@ -224,12 +196,9 @@ export default function EditMentionsProvider(props: any) {
         break
       case EditMentionActionType.ON_UPDATE:
         // WE do not allow update of mentions with DOI
-        // Dusan 2022-10-19
         logger('ON_UPDATE action not supported','warn')
         // pass original action
         dispatch(action)
-        // process item by api
-        // processOnUpdate(action)
         break
       case EditMentionActionType.ON_DELETE:
         // pass original action
