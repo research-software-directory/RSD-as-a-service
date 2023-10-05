@@ -5,6 +5,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -404,8 +405,8 @@ export const relatedSoftwareInformation = {
 function verifyGithubUrl(repoUrl: string) {
   if ((repoUrl.startsWith('https://github.com/') || repoUrl.startsWith('http://github.com/'))
     && !repoUrl.match('^https?://github\\.com/([^\\s/]+)/([^\\s/]+)/?$')) {
-    return <div style={{color: 'orange'}}>This does not seem to be the root of a single GitHub repository, are you
-      sure?</div>
+    return <span className="text-warning">This does not seem to be the root of a single GitHub repository, are you
+      sure?</span>
   }
 
   return 'Link to source code repository'

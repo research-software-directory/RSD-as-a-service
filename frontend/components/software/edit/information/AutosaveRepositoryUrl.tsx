@@ -69,7 +69,7 @@ export default function AutosaveRepositoryUrl() {
   const [platform, setPlatform] = useState<{
     id: CodePlatform | null
     disabled: boolean
-    helperText: string
+    helperText: string | JSX.Element
   }>({
     id: repository_platform,
     disabled: repository_platform === null,
@@ -112,7 +112,7 @@ export default function AutosaveRepositoryUrl() {
             setPlatform({
               id: platform.id,
               disabled: false,
-              helperText: suggestion === platform.id ? 'Suggested' : 'Are you sure?'
+              helperText: suggestion === platform.id ? 'Suggested' : <span className="text-warning">Are you sure?</span>
             })
           }
         )
