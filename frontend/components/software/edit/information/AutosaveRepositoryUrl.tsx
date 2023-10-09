@@ -69,11 +69,11 @@ export default function AutosaveRepositoryUrl() {
   const [platform, setPlatform] = useState<{
     id: CodePlatform | null
     disabled: boolean
-    helperText: string
+    helperText: string | JSX.Element
   }>({
     id: repository_platform,
     disabled: repository_platform === null,
-    helperText: 'Suggestion'
+    helperText: ''
   })
   const [suggestedPlatform, setSuggestedPlatform] = useState<CodePlatform>()
 
@@ -101,7 +101,18 @@ export default function AutosaveRepositoryUrl() {
             setPlatform({
               id: suggestion,
               disabled: false,
-              helperText: 'Suggestion'
+              helperText: 'Suggested'
+            })
+          }
+        )
+      } else {
+        suggestPlatform(repository_url).then(
+          (suggestion) => {
+            setSuggestedPlatform(suggestion)
+            setPlatform({
+              id: platform.id,
+              disabled: false,
+              helperText: suggestion === platform.id ? 'Suggested' : <span className="text-warning">Are you sure?</span>
             })
           }
         )
@@ -143,7 +154,7 @@ export default function AutosaveRepositoryUrl() {
       data.url = value
     } else if (name === 'repository_platform') {
       // compare to suggested platform
-      let helperText = 'Selected'
+      let helperText: string
       if (suggestedPlatform === value) {
         helperText = 'Suggested'
       } else {
@@ -163,7 +174,7 @@ export default function AutosaveRepositoryUrl() {
       // console.group('saveRepositoryInfo')
       // console.log('DELETE...', id)
       // console.groupEnd()
-      // DELETE entry when url is clered
+      // DELETE entry when url is cleared
       resp = await deleteFromRepositoryTable({software: id, token})
       // remove platform value
       setPlatform({
