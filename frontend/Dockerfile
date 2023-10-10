@@ -24,7 +24,7 @@ RUN yarn install --frozen-lockfile --silent
 # ----------------------------------------
 # 2. Build image
 # ----------------------------------------
-FROM node:18.5-buster-slim AS builder
+FROM deps AS builder
 
 WORKDIR /app
 
@@ -59,18 +59,20 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# You only need to copy next.config.js if you are NOT using the default configuration
-# COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
-
 # Using standalone output to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
 EXPOSE 3000
+
+# required to enable fetch to localhost:3000
+# set next port
+ENV PORT 3000
+# set next hostname
+ENV HOSTNAME "0.0.0.0"
 
 CMD ["node", "server.js"]
