@@ -3,16 +3,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Badge from '@mui/material/Badge'
+
 import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import MentionViewItem from './MentionViewItem'
 import useLazyLoadedItems from './useLazyLoadedItems'
-import GetMoreListItem from './GetMoreListItem'
+import GetMoreOnScroll from './GetMoreOnScroll'
 
 type MentionSectionListProps = {
   title: string
@@ -24,6 +25,7 @@ export default function MentionViewList({title, type, items}: MentionSectionList
   const [ofset,setOfset] = useState(0)
   const [limit,setLimit] = useState(20)
   const {mentions,loading,hasMore} = useLazyLoadedItems({items,ofset,limit})
+  const parentRef = useRef(null)
   // do not render accordion/section if no items
   if (!mentions || mentions.length===0) return null
 
@@ -89,13 +91,16 @@ export default function MentionViewList({title, type, items}: MentionSectionList
           <div className="text-xl">{title}</div>
         </Badge>
       </AccordionSummary>
-      <AccordionDetails sx={{
-        // set max height to avoid large shifts
-        maxHeight: '32rem',
-        //avoid resizing when scrollbar appears
-        overflow: 'overlay',
-        padding: '0rem 0rem'
-      }}>
+      <AccordionDetails
+        ref={parentRef}
+        sx={{
+          // set max height to avoid large shifts
+          maxHeight: '32rem',
+          //avoid resizing when scrollbar appears
+          overflow: 'overlay',
+          padding: '0rem 0rem'
+        }}
+      >
         <ul>
           {mentions.map((item, pos) => {
             return (
@@ -108,9 +113,13 @@ export default function MentionViewList({title, type, items}: MentionSectionList
             )
           })
           }
-          <GetMoreListItem
+          <GetMoreOnScroll
+            options={{
+              root: parentRef.current,
+              threshold: 0.75
+            }}
             show={hasMore}
-            onClick={()=>setOfset(mentions.length)}
+            onLoad={()=>setOfset(mentions.length)}
           />
         </ul>
       </AccordionDetails>
