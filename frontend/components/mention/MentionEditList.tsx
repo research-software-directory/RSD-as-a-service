@@ -12,6 +12,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Badge from '@mui/material/Badge'
 import {MentionItemProps} from '~/types/Mention'
 import MentionEditItem from './MentionEditItem'
+import useLazyLoadedItems from './useLazyLoadedItems'
+import {useState} from 'react'
+import GetMoreListItem from './GetMoreListItem'
 
 type MentionSectionListProps = {
   title: string
@@ -19,8 +22,20 @@ type MentionSectionListProps = {
 }
 
 export default function MentionEditList({title, items}: MentionSectionListProps) {
+  const [ofset,setOfset] = useState(0)
+  const [limit,setLimit] = useState(12)
+  const {mentions,loading,hasMore} = useLazyLoadedItems({items,ofset,limit})
   // do not render accordion/section if no items
-  if (!items || items.length===0) return null
+  if (!mentions || mentions.length===0) return null
+
+  // console.group('MentionEditList')
+  // console.log('mentions...', mentions)
+  // console.log('items...', items)
+  // console.log('ofeset...', ofset)
+  // console.log('limit...', limit)
+  // console.log('hasMore...', hasMore)
+  // console.groupEnd()
+
   // debugger
   return (
     <Accordion
@@ -59,7 +74,7 @@ export default function MentionEditList({title, items}: MentionSectionListProps)
       >
         <Badge
           badgeContent={items.length ?? null}
-          max={999}
+          max={99999}
           color="primary"
           sx={{
             '& .MuiBadge-badge': {
@@ -84,7 +99,7 @@ export default function MentionEditList({title, items}: MentionSectionListProps)
       }}>
         <ul>
           {
-            items.map((item, pos) => {
+            mentions.map((item, pos) => {
               return (
                 <li key={item.id ?? pos} className="p-4 hover:bg-base-200 hover:text-base-900">
                   <MentionEditItem
@@ -95,6 +110,10 @@ export default function MentionEditList({title, items}: MentionSectionListProps)
               )
             })
           }
+          <GetMoreListItem
+            show={hasMore}
+            onClick={()=>setOfset(mentions.length)}
+          />
         </ul>
       </AccordionDetails>
     </Accordion>

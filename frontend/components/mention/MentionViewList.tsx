@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -10,6 +11,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Badge from '@mui/material/Badge'
 import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import MentionViewItem from './MentionViewItem'
+import useLazyLoadedItems from './useLazyLoadedItems'
+import GetMoreListItem from './GetMoreListItem'
 
 type MentionSectionListProps = {
   title: string
@@ -18,6 +21,20 @@ type MentionSectionListProps = {
 }
 
 export default function MentionViewList({title, type, items}: MentionSectionListProps) {
+  const [ofset,setOfset] = useState(0)
+  const [limit,setLimit] = useState(20)
+  const {mentions,loading,hasMore} = useLazyLoadedItems({items,ofset,limit})
+  // do not render accordion/section if no items
+  if (!mentions || mentions.length===0) return null
+
+  // console.group('MentionViewList')
+  // console.log('mentions...', mentions)
+  // console.log('items...', items)
+  // console.log('ofeset...', ofset)
+  // console.log('limit...', limit)
+  // console.log('hasMore...', hasMore)
+  // console.groupEnd()
+
   // do not render accordion/section if no items
   if (!items || items.length===0) return null
   // debugger
@@ -80,9 +97,9 @@ export default function MentionViewList({title, type, items}: MentionSectionList
         padding: '0rem 0rem'
       }}>
         <ul>
-          {items.map((item, pos) => {
+          {mentions.map((item, pos) => {
             return (
-              <li key={pos} className="p-4">
+              <li key={item.id} className="p-4">
                 <MentionViewItem
                   pos={pos+1}
                   item={item}
@@ -91,6 +108,10 @@ export default function MentionViewList({title, type, items}: MentionSectionList
             )
           })
           }
+          <GetMoreListItem
+            show={hasMore}
+            onClick={()=>setOfset(mentions.length)}
+          />
         </ul>
       </AccordionDetails>
     </Accordion>
