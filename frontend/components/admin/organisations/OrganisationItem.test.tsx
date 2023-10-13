@@ -97,7 +97,7 @@ it('can EDIT organisation with software or projects', () => {
   mockOrganisationItem.software_cnt = 1
   mockOrganisationItem.project_cnt = 0
 
-  const editLink=`http://localhost/organisations/${mockOrganisationItem.rsd_path}?page=settings`
+  const editLink=`http://localhost/organisations/${mockOrganisationItem.rsd_path}?tab=settings`
 
   render(
     <OrganisationItem
