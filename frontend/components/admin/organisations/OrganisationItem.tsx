@@ -36,7 +36,7 @@ export default function OrganisationItem({item, onDelete}: OrganisationItemProps
             edge="end"
             aria-label="edit"
             sx={{marginRight: '1rem'}}
-            href={`/organisations/${item.rsd_path}?page=settings`}
+            href={`/organisations/${item.rsd_path}?tab=settings`}
           >
             <EditIcon />
           </IconButton>
