@@ -574,3 +574,77 @@ GROUP BY
 	project_status
 ;
 $$;
+
+-- PROJECT OVERVIEW LIST by ORCID
+-- WE FILTER THIS RPC by orcid
+CREATE FUNCTION project_by_orcid() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	date_start DATE,
+	date_end DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_contain BOOLEAN,
+	image_id VARCHAR,
+	keywords citext[],
+	keywords_text TEXT,
+	research_domain VARCHAR[],
+	-- research_domain_text TEXT,
+	participating_organisations VARCHAR[],
+	impact_cnt INTEGER,
+	output_cnt INTEGER,
+	project_status VARCHAR(20),
+	orcid VARCHAR[]
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	project.id,
+	project.slug,
+	project.title,
+	project.subtitle,
+	project.date_start,
+	project.date_end,
+	project.updated_at,
+	project.is_published,
+	project.image_contain,
+	project.image_id,
+	keyword_filter_for_project.keywords,
+	keyword_filter_for_project.keywords_text,
+	research_domain_filter_for_project.research_domain,
+--	research_domain_filter_for_project.research_domain_text,
+	project_participating_organisations.organisations AS participating_organisations,
+	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
+	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
+	project_status.status,
+	ARRAY_AGG(
+		team_member.orcid
+	) as orcid
+FROM
+	project
+INNER JOIN
+	team_member ON project.id=team_member.project
+LEFT JOIN
+	keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
+LEFT JOIN
+	research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
+LEFT JOIN
+	project_participating_organisations() ON project.id=project_participating_organisations.project
+LEFT JOIN
+	count_project_impact() ON project.id=count_project_impact.project
+LEFT JOIN
+	count_project_output() ON project.id=count_project_output.project
+LEFT JOIN
+	project_status() ON project.id=project_status.project
+GROUP BY
+	project.id,
+	keyword_filter_for_project.keywords,
+	keyword_filter_for_project.keywords_text,
+	research_domain_filter_for_project.research_domain,
+	project_participating_organisations.organisations,
+	count_project_impact.impact_cnt,
+	count_project_output.output_cnt,
+	project_status.status
+;
+$$;

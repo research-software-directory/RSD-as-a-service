@@ -37,6 +37,11 @@ export default function ContributorsSection({contributors, title='Contributors'}
   if (typeof contributors == 'undefined' || contributors?.length===0) return null
   // clasify
   const {contact, contributorList} = clasifyContributors(contributors)
+  // determine section for the profile link
+  let section:'software'|'projects' = 'software'
+  if (title==='Team'){
+    section = 'projects'
+  }
   return (
     <section className="bg-base-200">
       <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
@@ -50,7 +55,7 @@ export default function ContributorsSection({contributors, title='Contributors'}
             <ContactPersonCard person={contact} />
           </div>
           <div className="2xl:flex-[3]">
-            <ContributorsList contributors={contributorList} />
+            <ContributorsList contributors={contributorList} section={section}/>
           </div>
         </section>
       </PageContainer>
