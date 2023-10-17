@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -65,7 +64,7 @@ public class DataciteMentionRepository implements MentionRepository {
 	private static final Pattern URL_TREE_TAG_PATTERN = Pattern.compile("/tree/([^/]+)$");
 
 	static {
-//		https://schema.datacite.org/meta/kernel-4.4/
+		// https://schema.datacite.org/meta/kernel-4.4/
 		dataciteTypeMap = new HashMap<>();
 		dataciteTypeMap.put("Audiovisual", MentionType.presentation);
 		dataciteTypeMap.put("Book", MentionType.book);
@@ -92,7 +91,7 @@ public class DataciteMentionRepository implements MentionRepository {
 		dataciteTypeMap.put("Software", MentionType.computerProgram);
 		dataciteTypeMap.put("Sound", MentionType.other);
 		dataciteTypeMap.put("Standard", MentionType.other);
-//		dataciteTypeMap.put("Text", MentionType.other);
+		// dataciteTypeMap.put("Text", MentionType.other);
 		dataciteTypeMap.put("Workflow", MentionType.other);
 		dataciteTypeMap.put("Other", MentionType.other);
 
@@ -105,7 +104,7 @@ public class DataciteMentionRepository implements MentionRepository {
 		dataciteTextTypeMap.put("Report", MentionType.report);
 	}
 
-	//	"10.5281/zenodo.1408128","10.1186/s12859-018-2165-7"
+	// "10.5281/zenodo.1408128","10.1186/s12859-018-2165-7"
 	static String joinCollection(Collection<String> dois) {
 		return dois.stream()
 				.collect(Collectors.joining("\",\"", "\"", "\""));
@@ -118,8 +117,8 @@ public class DataciteMentionRepository implements MentionRepository {
 		Set<String> usedDois = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 		for (JsonElement work : worksJson) {
 			try {
-//				Sometimes, DataCite gives back two of the same results for one DOI, e.g. for 10.4122/1.1000000817,
-//				so we need to only add it once, otherwise we cannot POST it to the backend
+				// Sometimes, DataCite gives back two of the same results for one DOI, e.g. for 10.4122/1.1000000817,
+				// so we need to only add it once, otherwise we cannot POST it to the backend
 				MentionRecord parsedMention = parseWork(work.getAsJsonObject());
 				if (usedDois.contains(parsedMention.doi)) continue;
 
@@ -212,7 +211,7 @@ public class DataciteMentionRepository implements MentionRepository {
 	}
 
 	@Override
-	public Map<String, UUID> save(Collection<MentionRecord> mentions) {
+	public void save(Collection<MentionRecord> mentions) {
 		throw new UnsupportedOperationException();
 	}
 

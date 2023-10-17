@@ -6,8 +6,6 @@
 package nl.esciencecenter.rsd.scraper.doi;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.UUID;
 
 public interface MentionRepository {
 
@@ -15,5 +13,5 @@ public interface MentionRepository {
 
 	Collection<MentionRecord> mentionData(Collection<String> dois);
 
-	Map<String, UUID> save(Collection<MentionRecord> mentions);
+	void save(Collection<MentionRecord> mentions);
 }

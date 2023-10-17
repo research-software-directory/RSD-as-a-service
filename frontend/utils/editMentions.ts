@@ -17,7 +17,8 @@ import logger from './logger'
 export async function getMentionsForSoftware({software,token}:{software: string, token?: string}) {
   try {
     // the content is ordered by type ascending
-    const query = `software?id=eq.${software}&select=id,slug,mention(${mentionColumns})&mention.order=mention_type.asc`
+    // Try changing 'mention' to one of the following: 'mention!mention_for_software', 'mention!reference_paper_for_software'. Find the desired relationship in the 'details' key.
+    const query = `software?id=eq.${software}&select=id,slug,mention!mention_for_software(${mentionColumns})&mention.order=mention_type.asc`
     // construct url
     const url = `${getBaseUrl()}/${query}`
     // make request

@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext} from 'react'
+import {useCallback, useContext} from 'react'
 import {EditMentionActionType} from './editMentionReducer'
 import EditMentionContext from './editMentionContext'
 import {MentionItemProps} from '~/types/Mention'
@@ -11,58 +13,60 @@ import {MentionItemProps} from '~/types/Mention'
 export default function useEditMentionReducer() {
   const {state, dispatch} = useContext(EditMentionContext)
 
-  function setLoading(loading: boolean) {
+  const setLoading = useCallback((loading:boolean)=>{
     dispatch({
       type: EditMentionActionType.SET_LOADING,
       payload: loading
     })
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
-  function setMentions(mentions: MentionItemProps[]) {
+  const setMentions = useCallback((mentions: MentionItemProps[])=>{
     dispatch({
       type: EditMentionActionType.SET_MENTIONS,
       payload: mentions
     })
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
-  function onAdd(item: MentionItemProps) {
+  const onAdd = useCallback((item: MentionItemProps)=>{
     dispatch({
       type: EditMentionActionType.ON_ADD,
       payload: item
     })
-  }
+  },[dispatch])
 
-  function onNewItem() {
+  const onNewItem = useCallback(()=>{
     dispatch({
       type: EditMentionActionType.SET_EDIT_MODAL,
       payload: {
         open:true
       }
     })
-  }
+  },[dispatch])
 
-  function onSubmit(item:MentionItemProps) {
+  const onSubmit = useCallback((item:MentionItemProps)=>{
     dispatch({
       type: EditMentionActionType.ON_SUBMIT,
       payload: item
     })
-  }
+  },[dispatch])
 
-  function onUpdate(item:MentionItemProps) {
+  const onUpdate = useCallback((item:MentionItemProps)=>{
     dispatch({
       type: EditMentionActionType.ON_UPDATE,
       payload: item
     })
-  }
+  },[dispatch])
 
-  function onDelete(item:MentionItemProps) {
+  const onDelete = useCallback((item:MentionItemProps)=>{
     dispatch({
       type: EditMentionActionType.ON_DELETE,
       payload: item
     })
-  }
+  },[dispatch])
 
-  function confirmDelete(item?: MentionItemProps) {
+  const confirmDelete = useCallback((item?: MentionItemProps)=>{
     if (item) {
       // open modal
       dispatch({
@@ -81,9 +85,9 @@ export default function useEditMentionReducer() {
         }
       })
     }
-  }
+  },[dispatch])
 
-  function setEditModal(item?: MentionItemProps) {
+  const setEditModal = useCallback((item?: MentionItemProps)=>{
     if (item) {
       // show modal when item provided
       dispatch({
@@ -102,9 +106,9 @@ export default function useEditMentionReducer() {
         }
       })
     }
-  }
+  },[dispatch])
 
-  // console.group('useOutputContext')
+  // console.group('useEditMentionReducer')
   // console.log('state...', state)
   // console.groupEnd()
 

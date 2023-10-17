@@ -43,7 +43,7 @@ export default function MentionViewItem({item, pos}: {item: MentionItemProps, po
             doi={item?.doi}
             className="text-sm"
           />
-          <MentionNote note={item.note} />
+          <MentionNote note={item.note ?? null} />
         </div>
         <div className="flex justify-center items-center">
           {item?.url ? <LinkIcon /> : null}

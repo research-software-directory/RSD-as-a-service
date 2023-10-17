@@ -75,7 +75,7 @@ export default function MentionItemBase({item,pos,nav,type,role='find'}:MentionI
         className="text-sm"
         role={role}
       />
-      <MentionNote note={item.note} />
+      <MentionNote note={item.note ?? null} />
     </article>
   )
 }

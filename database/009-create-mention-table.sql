@@ -40,12 +40,15 @@ CREATE TABLE mention (
 	page VARCHAR(50),
 	image_url VARCHAR(500) CHECK (image_url ~ '^https?://'),
 	mention_type mention_type NOT NULL,
+	external_id VARCHAR(500),
 	source VARCHAR(50) NOT NULL,
 	version VARCHAR(100),
 	note VARCHAR(500),
 	scraped_at TIMESTAMPTZ,
+	citations_scraped_at TIMESTAMPTZ,
 	created_at TIMESTAMPTZ NOT NULL,
-	updated_at TIMESTAMPTZ NOT NULL
+	updated_at TIMESTAMPTZ NOT NULL,
+	UNIQUE(external_id, source)
 );
 
 CREATE FUNCTION sanitise_insert_mention() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -78,6 +81,20 @@ CREATE TABLE mention_for_software (
 	mention UUID REFERENCES mention (id),
 	software UUID REFERENCES software (id),
 	PRIMARY KEY (mention, software)
+);
+
+
+CREATE TABLE reference_paper_for_software (
+	mention UUID REFERENCES mention (id),
+	software UUID REFERENCES software (id),
+	PRIMARY KEY (mention, software)
+);
+
+
+CREATE TABLE citation_for_mention (
+	mention UUID REFERENCES mention (id),
+	citation UUID REFERENCES mention (id),
+	PRIMARY KEY (mention, citation)
 );
 
 

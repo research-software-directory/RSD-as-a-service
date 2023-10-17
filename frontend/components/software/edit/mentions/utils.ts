@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
@@ -11,8 +12,8 @@ export type SearchTermInfo = {
   term: string,
   type: 'doi' | 'title'
 }
-
 export function extractSearchTerm(query: string): SearchTermInfo{
+
   const doiRegexMatch = query.match(doiRegex)
   if (doiRegexMatch != null) {
     return {term: doiRegexMatch[0], type: 'doi'}

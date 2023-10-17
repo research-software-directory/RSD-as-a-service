@@ -23,7 +23,30 @@ public class MentionRecord {
 	String page;
 	URI imageUrl;
 	MentionType mentionType;
+	String externalId;
 	String source;
 	Instant scrapedAt;
 	String version;
+
+	@Override
+	public String toString() {
+		return "MentionRecord{" +
+				"id=" + id +
+				", doi='" + doi + '\'' +
+				", url=" + url +
+				", title='" + title + '\'' +
+				", authors='" + authors + '\'' +
+				", publisher='" + publisher + '\'' +
+				", publicationYear=" + publicationYear +
+				", doiRegistrationDate=" + doiRegistrationDate +
+				", journal='" + journal + '\'' +
+				", page='" + page + '\'' +
+				", imageUrl=" + imageUrl +
+				", mentionType=" + mentionType +
+				", externalId='" + externalId + '\'' +
+				", source='" + source + '\'' +
+				", scrapedAt=" + scrapedAt +
+				", version='" + version + '\'' +
+				'}';
+	}
 }
