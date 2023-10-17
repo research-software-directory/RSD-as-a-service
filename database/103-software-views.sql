@@ -265,3 +265,63 @@ GROUP BY
 	license
 ;
 $$;
+
+-- FILTER SOFTWARE by orcid
+CREATE FUNCTION software_by_orcid() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	image_id VARCHAR,
+	updated_at TIMESTAMPTZ,
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT,
+	is_published BOOLEAN,
+	keywords CITEXT[],
+	keywords_text TEXT,
+	prog_lang TEXT[],
+	licenses VARCHAR[],
+	orcid VARCHAR[]
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	software.id,
+	software.slug,
+	software.brand_name,
+	software.short_statement,
+	software.image_id,
+	software.updated_at,
+	count_software_contributors.contributor_cnt,
+	count_software_mentions.mention_cnt,
+	software.is_published,
+	keyword_filter_for_software.keywords,
+	keyword_filter_for_software.keywords_text,
+	prog_lang_filter_for_software.prog_lang,
+	license_filter_for_software.licenses,
+	ARRAY_AGG(
+		contributor.orcid
+	) as orcid
+FROM
+	software
+INNER JOIN
+	contributor ON software.id=contributor.software
+LEFT JOIN
+	count_software_contributors() ON software.id=count_software_contributors.software
+LEFT JOIN
+	count_software_mentions() ON software.id=count_software_mentions.software
+LEFT JOIN
+	keyword_filter_for_software() ON software.id=keyword_filter_for_software.software
+LEFT JOIN
+	prog_lang_filter_for_software() ON software.id=prog_lang_filter_for_software.software
+LEFT JOIN
+	license_filter_for_software() ON software.id=license_filter_for_software.software
+GROUP BY
+	software.id,
+	count_software_contributors.contributor_cnt,
+	count_software_mentions.mention_cnt,
+	keyword_filter_for_software.keywords,
+	keyword_filter_for_software.keywords_text,
+	prog_lang_filter_for_software.prog_lang,
+	license_filter_for_software.licenses
+;
+$$;

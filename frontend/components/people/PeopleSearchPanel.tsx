@@ -1,0 +1,40 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import SearchInput from '~/components/search/SearchInput'
+import SelectRows from '~/components/software/overview/search/SelectRows'
+import ViewToggleGroup, {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
+
+type PeopleSearchPanelProps={
+  placeholder: string
+  layout: ProjectLayoutType
+  rows: number
+  search: string | null
+  onSetView: (view:ProjectLayoutType)=>void
+  handleQueryChange: (key:string, value: string|string[])=>void
+}
+
+export default function PeopleSearchPanel({
+  placeholder,layout,rows,search,
+  onSetView,handleQueryChange
+}:PeopleSearchPanelProps) {
+  return (
+    <div className="flex border rounded-md shadow-sm bg-base-100 p-2">
+      <SearchInput
+        placeholder={placeholder}
+        onSearch={(search: string) => handleQueryChange('search', search)}
+        defaultValue={search ?? ''}
+      />
+      <ViewToggleGroup
+        layout={layout}
+        onSetView={onSetView}
+      />
+      <SelectRows
+        rows={rows}
+        handleQueryChange={handleQueryChange}
+      />
+    </div>
+  )
+}

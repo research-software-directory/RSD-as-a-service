@@ -7,16 +7,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
-
-import {Person} from '../../types/Contributor'
-import ContributorAvatar from './ContributorAvatar'
-import {getDisplayName, getDisplayInitials} from '../../utils/getDisplayName'
-import PersonalInfo from './PersonalInfo'
-import {getImageUrl} from '~/utils/editImage'
 import Button from '@mui/material/Button'
+import LaunchIcon from '@mui/icons-material/Launch'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+
+import {getImageUrl} from '~/utils/editImage'
+import {getDisplayName, getDisplayInitials} from '~/utils/getDisplayName'
+import {Person} from '~/types/Contributor'
+import PersonalInfo from './PersonalInfo'
 import useContributorList from './useContributorList'
+import ContributorAvatar from './ContributorAvatar'
 
 type GetMoreIconButtonProps={
   showAll: boolean
@@ -66,7 +67,7 @@ function ShowButton({showAll,showLess,onShowAll,onShowLess}:GetMoreIconButtonPro
   return null
 }
 
-export default function ContributorsList({contributors}: { contributors: Person[] }) {
+export default function ContributorsList({contributors,section='software'}: { contributors: Person[],section:'software'|'projects'}) {
   // show top 12 items
   const [limit,setLimit] = useState(12)
   const {persons,hasMore} = useContributorList({
@@ -97,8 +98,14 @@ export default function ContributorsList({contributors}: { contributors: Person[
                   displayInitials={getDisplayInitials(item)}
                 />
                 <div className='flex-1'>
-                  <div className="text-xl font-medium ">
-                    {displayName}
+                  <div className="text-xl font-medium">
+                    {item.orcid ?
+                      <a href={`/people/${item.orcid}/${section}`} className="flex gap-2 items-center">
+                        {displayName} <LaunchIcon/>
+                      </a>
+                      :
+                      <span>{displayName}</span>
+                    }
                   </div>
                   <PersonalInfo {...item} />
                 </div>

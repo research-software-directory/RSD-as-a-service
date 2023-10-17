@@ -63,10 +63,7 @@ export async function deleteLogById({id,token}:{id:string, token:string}){
     const resp = await fetch(url,{
       method: 'DELETE',
       headers: {
-        ...createJsonHeaders(token),
-        // request record count to be returned
-        // note: it's returned in the header
-        // 'Prefer': 'count=exact'
+        ...createJsonHeaders(token)
       },
     })
 

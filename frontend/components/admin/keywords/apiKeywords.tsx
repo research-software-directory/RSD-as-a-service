@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -84,9 +86,6 @@ export async function patchKeyword({id, value, token}: { id: string, value: stri
       method: 'PATCH',
       headers: {
         ...createJsonHeaders(token),
-        // request record count to be returned
-        // note: it's returned in the header
-        'Prefer': 'count=exact'
       },
       body: JSON.stringify({
         value
