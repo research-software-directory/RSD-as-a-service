@@ -2,7 +2,9 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,119 +12,16 @@ import {Contributor} from '~/types/Contributor'
 import {createJsonHeaders} from './fetchHelpers'
 import {itemsNotInReferenceList} from './itemsNotInReferenceList'
 import logger from './logger'
+import {splitName} from './getDisplayName'
 
-const exampleCreator = {
-  'name': 'Doe, John',
-  'nameType': 'Personal',
-  'givenName': 'John',
-  'familyName': 'Doe',
-  'affiliation': [
-    {
-      'name': 'Example organisation'
-    }
-  ],
-  'nameIdentifiers': [
-    {
-      'schemeUri': 'https://orcid.org',
-      'nameIdentifier': 'https://orcid.org/0000-0000-0000-0000',
-      'nameIdentifierScheme': 'ORCID'
-    }
-  ]
-}
-
-const exampleSubject = {
-  'subject': '000 computer science',
-  'subjectScheme': 'dewey',
-  'valueURI': 'https://cern.ch',
-  'schemeURI': 'http://dewey.info/',
-  'lang': 'en-us'
-}
-
-const exampleRightsList = [
-  {
-    'rights': 'Open Access',
-    'rightsUri': 'info:eu-repo/semantics/openAccess',
-    'schemeUri': 'https://spdx.org/licenses/',
-    'rightsIdentifier': 'cc-by-4.0',
-    'rightsIdentifierScheme': 'SPDX'
-  }
-]
-
-const exampleResponse = {
-  'id': 'https://doi.org/10.0000/zenodo.0000000',
-  'doi': '10.0000/ZENODO.0000000',
-  'url': 'https://zenodo.org/record/0000000',
-  'types': {
-    'ris': 'COMP',
-    'bibtex': 'misc',
-    'citeproc': 'article',
-    'schemaOrg': 'SoftwareSourceCode',
-    'resourceTypeGeneral': 'Software'
-  },
-  'creators': [
-    exampleCreator,
-  ],
-  'titles': [
-    {
-      'title': 'Example Title v0.0.0'
-    }
-  ],
-  'publisher': 'Zenodo',
-  'container': {},
-  'contributors': [],
-  'dates': [
-    {
-      'date': '2021-10-16',
-      'dateType': 'Issued'
-    }
-  ],
-  'publicationYear': 2021,
-  'subjects': [
-    exampleSubject
-  ],
-  'identifiers': [
-    {
-      'identifier': 'https://zenodo.org/record/0000000',
-      'identifierType': 'URL'
-    }
-  ],
-  'sizes': [
-    '8461 Bytes'
-  ],
-  'formats': [],
-  'version': 'v0.0.0',
-  'rightsList': exampleRightsList,
-  'descriptions': [
-    {
-      'description': 'Example description',
-      'descriptionType': 'Abstract',
-    }
-  ],
-  'geoLocations': [],
-  'fundingReferences': [],
-  'relatedIdentifiers': [
-    {
-      'relationType': 'IsSupplementTo',
-      'relatedIdentifier': 'https://github.com/github/software/tree/v0.0.0',
-      'relatedIdentifierType': 'URL'
-    },
-  ],
-  'relatedItems': [],
-  'schemaVersion': 'http://datacite.org/schema/kernel-4',
-  'providerId': 'cern',
-  'clientId': 'cern.zenodo',
-  'agency': 'datacite',
-  'state': 'findable'
-}
-
-export type DataciteRecord = typeof exampleResponse
-export type DatacitePerson = typeof exampleCreator
-export type DataciteSubject = typeof exampleSubject
-export type DataciteRightsList = typeof exampleRightsList
+// use example response for types
+import dataciteItem from './__mocks__/dataciteItem.json'
+export type DataciteRecord = typeof dataciteItem
+export type DatacitePerson = typeof dataciteItem.creators[0]
+export type DataciteSubject = typeof dataciteItem.subjects[0]
+export type DataciteRightsList = typeof dataciteItem.rightsList[0]
 
 const baseUrl = 'https://api.datacite.org/application/vnd.datacite.datacite+json/'
-const orcidPattern = /^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$/
-const orcidUrlPattern = /^https?\:\/\/orcid\.org\/\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$/
 
 export async function getDoiInfo(doiId: string) {
   try {
@@ -137,7 +36,7 @@ export async function getDoiInfo(doiId: string) {
     })
 
     if (resp.status === 200) {
-      const json: DataciteRecord[] = await resp.json()
+      const json: DataciteRecord = await resp.json()
       return json
     }
 
@@ -152,90 +51,104 @@ export async function getDoiInfo(doiId: string) {
 export async function getContributorsFromDoi(
   softwareId: string, doiId: string
 ) {
+  const contributors: Contributor[] = []
+  const allPersons: DatacitePerson[] = []
+
   if (doiId==='' || softwareId==='') {
     return []
   }
 
   const doiData = await getDoiInfo(doiId)
 
-  if (!doiData) {
+  if (doiData===null) {
     return []
   }
 
-  const contributors: Contributor[] = []
-  let allPersons: DatacitePerson[] = []
-
-  if ('creators' in doiData) {
-    allPersons = doiData['creators'] as any
+  if (doiData?.creators?.length > 0) {
+    // extract persons from creators
+    const creators = doiData.creators
+    creators.forEach(item=>{
+      allPersons.push(item)
+    })
   }
 
-  if ('contributors' in doiData) {
-    const contributors = itemsNotInReferenceList({
-      list: doiData['contributors'] as any,
+  if (doiData?.contributors?.length > 0) {
+    // extract unique persons from contributors
+    itemsNotInReferenceList({
+      list: doiData['contributors'],
       referenceList: allPersons,
       key: 'name'
+    }).forEach(item=>{
+      allPersons.push(item)
     })
-    allPersons = [
-      ...allPersons,
-      ...contributors
-    ]
   }
+  // convert DOI creators and contributors into RSD contributor format
+  allPersons.forEach(person=>{
+    let given_names:string|null=null,
+      family_names:string|null=null,
+      affiliation:string|null=null,
+      orcid:string|null=null
 
-  for (const person of allPersons) {
-    const affiliation = person.affiliation
-    const nameIds = person.nameIdentifiers
-    let useAffiliation = ''
-    let useOrcid = ''
+    // use first affiliation
+    if (person?.affiliation?.length > 0) {
+      const first = person?.affiliation[0]
+      // DataCite schema says "free text", but API returns "name" attribute
+      if (typeof(person?.affiliation[0]) === 'string') {
+        affiliation = person?.affiliation[0]
+      } else if (typeof(first) === 'object' && 'name' in first) {
+        affiliation = person?.affiliation[0].name
+      }
+    }
+
+    // extract ORCID
+    if (person?.nameIdentifiers?.length > 0) {
+      person?.nameIdentifiers.forEach(id=>{
+        if (id.nameIdentifierScheme === 'ORCID'){
+          if (id.nameIdentifier.startsWith('https://orcid.org/')===true){
+            orcid = id.nameIdentifier.replace('https://orcid.org/','')
+          }else {
+            orcid = id.nameIdentifier
+          }
+        }
+      })
+    }
 
     // check minimum needed attributes
-    if (!('givenName' in person) || !('familyName' in person)) {
-      continue
-    }
-
-    if (affiliation && affiliation.length > 0) {
-      const first = affiliation[0]
-
-      // DataCite schema says "free text", but API returns "name" attribute
-      if (typeof(first) === 'string') {
-        useAffiliation = first
-      } else if (typeof(first) === 'object' && 'name' in first) {
-        useAffiliation = first.name
+    if (person.hasOwnProperty('givenName')===true && person.hasOwnProperty('familyName')===true){
+      given_names = person.givenName
+      family_names = person.familyName
+    }else if (person.hasOwnProperty('name')===true){
+      // if no givenName & familyName we can use name
+      if (person.name.includes(' ')===true){
+        // we split by space
+        const names = splitName(person.name)
+        given_names = names.given_names
+        family_names = names.family_names
+      } else if (person.name.includes('-')===true){
+        // if we can split by - we use that
+        const split = person.name.split('-')
+        given_names = split[0]
+        family_names = split.splice(1).join(' ')
       }
     }
-
-    if (nameIds && nameIds.length > 0) {
-      for (const id of nameIds) {
-        if (id.nameIdentifierScheme !== 'ORCID') {
-          continue
-        }
-
-        if (id.nameIdentifier.match(orcidUrlPattern) !== null) {
-          const l = id.nameIdentifier.length
-          useOrcid = id.nameIdentifier.substring(l - 19, l)
-          break
-        }
-
-        if (id.nameIdentifier.match(orcidPattern) !== null) {
-          useOrcid = id.nameIdentifier
-          break
-        }
-      }
+    // if we have name props we can add contributor
+    if (given_names && family_names){
+      // add contributor
+      contributors.push({
+        given_names,
+        family_names,
+        email_address: null,
+        software: softwareId,
+        affiliation,
+        is_contact_person: false,
+        orcid,
+        position: null,
+        id: null,
+        role: null,
+        avatar_id: null
+      })
     }
-
-    contributors.push({
-      given_names: person.givenName,
-      family_names: person.familyName,
-      email_address: '',
-      software: softwareId,
-      affiliation: useAffiliation,
-      is_contact_person: false,
-      orcid: useOrcid,
-      position: null,
-      id: null,
-      role: null,
-      avatar_id: null
-    })
-  }
+  })
 
   return contributors
 }
@@ -251,7 +164,7 @@ export async function getKeywordsFromDoi(doiId: string | null | undefined) {
     return []
   }
 
-  const allSubjects: DataciteSubject[] = doiData['subjects'] as any
+  const allSubjects = doiData['subjects']
   const keywords = []
 
   for (const subject of allSubjects) {
@@ -274,7 +187,7 @@ export async function getLicensesFromDoi(doiId: string | null | undefined) {
     return []
   }
 
-  const allLicenses: DataciteRightsList = doiData['rightsList'] as any
+  const allLicenses = doiData['rightsList']
   const spdxLicenses = []
 
   for (const license of allLicenses) {
