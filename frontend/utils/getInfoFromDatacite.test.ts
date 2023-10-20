@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -418,7 +420,7 @@ it('returns expected contributors', async () => {
     [
       {
         affiliation: 'Example organisation',
-        email_address: '',
+        email_address: null,
         family_names: 'Doe',
         given_names: 'John',
         is_contact_person: false,
@@ -440,7 +442,7 @@ it('returns authors and contributors (without duplicates)', async () => {
     {
       given_names: 'Massimiliano',
       family_names: 'Pittore',
-      email_address: '',
+      email_address: null,
       software: '0',
       affiliation: 'GFZ German Research Centre for Geosciences, Potsdam, Germany',
       is_contact_person: false,
@@ -453,7 +455,7 @@ it('returns authors and contributors (without duplicates)', async () => {
     {
       given_names: 'Michael',
       family_names: 'Haas',
-      email_address: '',
+      email_address: null,
       software: '0',
       affiliation: 'Formerly at GFZ German Research Centre for Geosciences, Potsdam, Germany',
       is_contact_person: false,
