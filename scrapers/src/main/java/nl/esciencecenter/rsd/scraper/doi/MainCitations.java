@@ -29,7 +29,9 @@ public class MainCitations {
 
 			for (CitationData citationData : referencePapersToScrape) {
 				Collection<MentionRecord> citingMentions = openAlexCitations.citations(citationData.doi, email, citationData.id);
-				citingMentions.removeIf(mention -> citationData.knownDois.contains(mention.doi));
+				// we don't update mentions that have a DOI in the database with OpenAlex data, as they can already be
+				// scraped through Crossref of DataCite
+				citingMentions.removeIf(mention -> mention.doi != null && citationData.knownDois.contains(mention.doi));
 				localMentionRepository.save(citingMentions);
 
 				Collection<UUID> citingMentionIds = new ArrayList<>();
