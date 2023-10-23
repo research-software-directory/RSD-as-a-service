@@ -1,27 +1,45 @@
 {
-  "name": "vuepress-starter",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "name": "rsd-docs-v-3",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
-  },
-  "devDependencies": {
-    "@mr-hope/vuepress-plugin-reading-time": "^1.28.3",
-    "@vuepress/plugin-back-to-top": "^2.0.0-beta.38",
-    "@vuepress/plugin-docsearch": "^2.0.0-beta.38",
-    "@vuepress/plugin-external-link-icon": "^2.0.0-beta.38",
-    "@vuepress/plugin-nprogress": "^2.0.0-beta.38",
-    "@vuepress/plugin-palette": "^2.0.0-beta.38",
-    "@vuepress/plugin-prismjs": "^2.0.0-beta.38",
-    "@vuepress/plugin-search": "^2.0.0-beta.38",
-    "tailwindcss": "^3.0.24",
-    "vuepress": "^2.0.0-beta.39",
-    "vuepress-plugin-auto-sidebar": "^2.3.2"
+    "docusaurus": "docusaurus",
+    "start": "docusaurus start",
+    "dev": "docusaurus start --no-open",
+    "build": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "clear": "docusaurus clear",
+    "serve": "docusaurus serve",
+    "write-translations": "docusaurus write-translations",
+    "write-heading-ids": "docusaurus write-heading-ids"
   },
   "dependencies": {
-    "vuepress-bar": "^0.4.4",
-    "vuepress-theme-reco": "^2.0.0-beta.3"
+    "@docusaurus/core": "3.0.0",
+    "@docusaurus/preset-classic": "3.0.0",
+    "@mdx-js/react": "^3.0.0",
+    "docusaurus-lunr-search": "^3.2.0",
+    "prism-react-renderer": "^2.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@docusaurus/module-type-aliases": "3.0.0",
+    "@docusaurus/types": "3.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0"
   }
 }

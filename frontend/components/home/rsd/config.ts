@@ -26,22 +26,22 @@ export const config = {
     },
     demo: {
       label: 'Demo',
-      url: 'https://research-software-directory.github.io/documentation/online-demo.html',
+      url: '/documentation/users/online-demo/',
       target: '_blank'
     },
     docs: {
       label: 'Docs',
-      url: 'https://research-software-directory.github.io/documentation/',
+      url: '/documentation/',
       target: '_blank'
     },
     faq: {
       label: 'FAQ',
-      url: 'https://research-software-directory.github.io/documentation/faq.html',
+      url: '/documentation/users/faq/',
       target: '_blank'
     },
     team: {
       label: 'Our story',
-      url: 'page/about',
+      url: '/page/about',
       target: '_self'
     },
     github: {

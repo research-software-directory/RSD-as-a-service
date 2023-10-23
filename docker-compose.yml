@@ -182,6 +182,17 @@ services:
     networks:
       - net
 
+  documentation:
+    build:
+      context: ./documentation
+      # dockerfile to use for build
+      dockerfile: Dockerfile
+    image: rsd/documentation:2.0.0
+    expose:
+      - "80"
+    networks:
+      - net
+
   nginx:
     build:
       context: ./nginx

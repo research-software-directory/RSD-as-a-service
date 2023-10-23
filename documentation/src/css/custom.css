@@ -1,0 +1,52 @@
+/*
+ * SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+ * SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #006649;
+  --ifm-color-primary-dark: #29784c;
+  --ifm-color-primary-darker: #277148;
+  --ifm-color-primary-darkest: #205d3b;
+  --ifm-color-primary-light: #33925d;
+  --ifm-color-primary-lighter: #359962;
+  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+html[data-theme='dark']{
+/* [data-theme='dark'] { */
+  --ifm-color-primary: #01ad83;
+  --ifm-color-primary-dark: #21af90;
+  --ifm-color-primary-darker: #1fa588;
+  --ifm-color-primary-darkest: #1a8870;
+  --ifm-color-primary-light: #29d5b0;
+  --ifm-color-primary-lighter: #32d8b4;
+  --ifm-color-primary-lightest: #4fddbf;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* background colors */
+  --ifm-background-color: #111;
+  --ifm-background-surface-color: #111;
+  /* background color TIP */
+  --ifm-color-success-contrast-background: rgb(0,49,0);
+}
+
+/* FOOTER SECTION IS DISABLED */
+/* footer colors - dark mode */
+/* .footer--dark {
+  --ifm-footer-background-color: #242526;
+  --ifm-footer-color: var(--ifm-footer-link-color);
+  --ifm-footer-link-color: var(--ifm-color-secondary);
+  --ifm-footer-title-color: var(--ifm-color-white);
+} */

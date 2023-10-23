@@ -109,7 +109,7 @@ export default function PersonalSignUp({minWidth = '9rem'}:{minWidth:string}) {
               {config.button.signUp.label}
             </div>
             <div className="text-sm text-[#B7B7B7] pb-4">
-              You can find more information about how to get access in our <u><a href="https://research-software-directory.github.io/documentation/getting-access.html" target="_blank" rel="noreferrer">documentation</a></u>.
+              You can find more information about how to get access in our <u><a href="/documentation/users/getting-access/" target="_blank" rel="noreferrer">documentation</a></u>.
             </div>
             {/* INPUTS */}
             <input type="text"
