@@ -2,7 +2,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -47,7 +49,7 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
   const {showWarningMessage,showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [removeAvatar, setRemoveAvatar] = useState<null|string>(null)
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<TeamMember>({
+  const {handleSubmit, watch, formState, reset, control, register, setValue,trigger} = useForm<TeamMember>({
     mode: 'onChange',
     defaultValues: {
       ...member
@@ -63,11 +65,14 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
   // console.log('isValid...', isValid)
   // console.groupEnd()
 
-  useEffect(() => {
-    if (member) {
-      reset(member)
+  useEffect(()=>{
+    if (trigger){
+      setTimeout(()=>{
+        // trigger initial validation after default data is loaded
+        trigger()
+      },1)
     }
-  }, [member,reset])
+  },[trigger])
 
   function handleCancel() {
     // reset form
@@ -281,9 +286,10 @@ export default function TeamMemberModal({open, onCancel, onSubmit, member, pos}:
             <ControlledTextField
               control={control}
               options={{
+                // do not use type: 'email' because it automatically ignores leading/trailing spaces,
+                // and then the regex email validation does not detect these properly
                 name: 'email_address',
                 label: config.email_address.label,
-                type: 'email',
                 useNull: true,
                 defaultValue: member?.email_address,
                 helperTextMessage: config.email_address.help,

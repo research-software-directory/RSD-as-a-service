@@ -2,11 +2,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent, useState} from 'react'
+import {ChangeEvent, useEffect, useState} from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -46,7 +48,7 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   const {showWarningMessage,showErrorMessage} = useSnackbar()
   const smallScreen = useMediaQuery('(max-width:600px)')
   const [removeAvatar, setRemoveAvatar] = useState<null|string>(null)
-  const {handleSubmit, watch, formState, reset, control, register, setValue} = useForm<Contributor>({
+  const {handleSubmit, watch, formState, reset, control, register, setValue,trigger} = useForm<Contributor>({
     mode: 'onChange',
     defaultValues: {
       ...contributor
@@ -60,7 +62,17 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
   // console.group('EditContributorModal')
   // console.log('isDirty...', isDirty)
   // console.log('isValid...', isValid)
+  // console.log('errors...', errors)
   // console.groupEnd()
+
+  useEffect(()=>{
+    if (trigger){
+      setTimeout(()=>{
+        // trigger initial validation after default data is loaded
+        trigger()
+      },1)
+    }
+  },[trigger])
 
   function handleCancel() {
     // reset form
@@ -274,9 +286,10 @@ export default function EditContributorModal({open, onCancel, onSubmit, contribu
             <ControlledTextField
               control={control}
               options={{
+                // do not use type: 'email' because it automatically ignores leading/trailing spaces,
+                // and then the regex email validation does not detect these properly
                 name: 'email_address',
                 label: config.email_address.label,
-                type: 'email',
                 useNull: true,
                 defaultValue: contributor?.email_address,
                 helperTextMessage: config.email_address.help,
