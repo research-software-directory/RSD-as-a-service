@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:18.14.0-bullseye-slim
+FROM node:21.0.0-bullseye-slim
 WORKDIR /usr/app
 COPY ./package.json /usr/app
 RUN npm install

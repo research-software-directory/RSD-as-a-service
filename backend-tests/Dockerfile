@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM maven:3.8.7-openjdk-18
+FROM maven:3.9.5-eclipse-temurin-21
 WORKDIR /usr/mymaven
 RUN mkdir src
 COPY pom.xml .
