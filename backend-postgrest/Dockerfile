@@ -3,4 +3,4 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM postgrest/postgrest:v11.0.1
+FROM postgrest/postgrest:v11.2.1
