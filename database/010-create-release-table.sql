@@ -18,6 +18,20 @@ CREATE TABLE release_version (
 );
 
 
+CREATE FUNCTION z_delete_old_releases() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS
+$$
+BEGIN
+	IF NEW.concept_doi IS DISTINCT FROM OLD.concept_doi THEN
+		DELETE FROM release_version WHERE release_version.release_id = OLD.id;
+		DELETE FROM release WHERE release.software = OLD.id;
+	END IF;
+	RETURN NEW;
+END
+$$;
+
+CREATE TRIGGER z_delete_old_releases BEFORE UPDATE ON software FOR EACH ROW EXECUTE PROCEDURE z_delete_old_releases();
+
+
 CREATE FUNCTION software_join_release() RETURNS TABLE (
 	software_id UUID,
 	slug VARCHAR,
