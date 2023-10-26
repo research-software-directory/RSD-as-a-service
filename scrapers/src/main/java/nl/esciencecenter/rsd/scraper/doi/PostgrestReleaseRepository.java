@@ -15,6 +15,7 @@ import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -48,10 +49,11 @@ public class PostgrestReleaseRepository {
 
 
 		// Then update the release_version table.
-		// For each scraped or existing version as a mention, we need to know its id of the mention table and the id of the software to which it belongs.
-		Map<String, UUID> conceptDoiToSoftwareId = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+		// For each scraped or existing version as a mention, we need to know its id of the mention table and the ids of the software to which it belongs.
+		Map<String, Collection<UUID>> conceptDoiToSoftwareIds = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		for (ReleaseData release : releaseData) {
-			conceptDoiToSoftwareId.put(release.conceptDoi, release.softwareId);
+			Collection<UUID> softwareIds = conceptDoiToSoftwareIds.computeIfAbsent(release.conceptDoi, k -> new ArrayList<>());
+			softwareIds.add(release.softwareId);
 		}
 
 		Map<String, String> versionDoiToConceptDoi = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -65,10 +67,13 @@ public class PostgrestReleaseRepository {
 
 		JsonArray coupling = new JsonArray();
 		for (String versionDoi : versionDoiToConceptDoi.keySet()) {
-			JsonObject couple = new JsonObject();
-			couple.addProperty("release_id", conceptDoiToSoftwareId.get(versionDoiToConceptDoi.get(versionDoi)).toString());
-			couple.addProperty("mention_id", versionDoiToMentionId.get(versionDoi).toString());
-			coupling.add(couple);
+			Collection<UUID> softwareIds = conceptDoiToSoftwareIds.get(versionDoiToConceptDoi.get(versionDoi));
+			for (UUID softwareId : softwareIds) {
+				JsonObject couple = new JsonObject();
+				couple.addProperty("release_id", softwareId.toString());
+				couple.addProperty("mention_id", versionDoiToMentionId.get(versionDoi).toString());
+				coupling.add(couple);
+			}
 		}
 
 		Utils.postAsAdmin(Config.backendBaseUrl() + "/release_version", coupling.toString(), "Prefer", "resolution=merge-duplicates");
