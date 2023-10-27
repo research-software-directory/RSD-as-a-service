@@ -1,6 +1,8 @@
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -9,12 +11,14 @@
 import ContentContainer from '~/components/layout/ContentContainer'
 import {HighlightsCarousel} from './highlights/HighlightsCarousel'
 import {SoftwareHighlight} from '~/components/admin/software-highlights/apiSoftwareHighlights'
+import useRsdSettings from '~/config/useRsdSettings'
 
 export default function SoftwareHighlights({highlights}: { highlights: SoftwareHighlight[] }) {
   // console.group('SoftwareHighlights')
   // console.log('loading...', loading)
   // console.log('highlights...', highlights)
   // console.groupEnd()
+  const {host} = useRsdSettings()
 
   // if there are no hightlights we do not show this section
   if (highlights.length===0) return null
@@ -25,7 +29,7 @@ export default function SoftwareHighlights({highlights}: { highlights: SoftwareH
         <div
           className="text-3xl"
         >
-          Software Highlights
+          {host.software_highlights_title}
         </div>
       </ContentContainer>
       <HighlightsCarousel items={highlights} />
