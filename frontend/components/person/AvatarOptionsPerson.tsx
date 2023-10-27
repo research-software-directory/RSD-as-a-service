@@ -5,25 +5,45 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent} from 'react'
+import {ChangeEvent, useEffect} from 'react'
 import {UseFormSetValue, UseFormWatch} from 'react-hook-form'
 
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {handleFileUpload} from '~/utils/handleFileUpload'
 import AvatarOptions from '~/components/person/AvatarOptions'
-import {NewRsdMember} from './AggregatedMemberModal'
 
-type AvatarOptionsProps = {
+export type RequiredAvatarProps={
+  avatar_id: string | null
+  avatar_b64: string | null
+  avatar_mime_type: string | null
   avatar_options: string[]
-  watch: UseFormWatch<NewRsdMember>
-  setValue: UseFormSetValue<NewRsdMember>
+  given_names: string
+  family_names: string
 }
 
-export default function AvatarOptionsTeamMember(props: AvatarOptionsProps) {
+export type AvatarOptionsProps = {
+  avatar_options: string[]
+  watch: UseFormWatch<RequiredAvatarProps>
+  setValue: UseFormSetValue<RequiredAvatarProps>
+}
+
+export default function AvatarOptionsContributor(props: AvatarOptionsProps) {
   const {showWarningMessage, showErrorMessage} = useSnackbar()
   const {setValue, avatar_options, watch} = props
   const [avatar_id, avatar_b64] = watch(['avatar_id', 'avatar_b64'])
   const [given_names, family_names] = watch(['given_names', 'family_names'])
+
+  useEffect(()=>{
+    if (avatar_options.length===0){
+      // initial loading - reset avatar_id and change dirty flag
+      // this is needed to enable Save when no avatar to choose
+      // debugger
+      setValue('avatar_id', null, {shouldDirty: true,shouldValidate:true})
+    }else if (avatar_options.length>0){
+      // if there is avatar we select firstone by default
+      setValue('avatar_id', avatar_options[0], {shouldDirty: true,shouldValidate:true})
+    }
+  },[avatar_options,setValue])
 
   async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
     if (typeof e !== 'undefined') {

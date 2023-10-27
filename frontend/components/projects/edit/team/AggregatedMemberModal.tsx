@@ -15,7 +15,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import {useForm} from 'react-hook-form'
+import {UseFormSetValue, UseFormWatch, useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth'
 import {SaveTeamMember} from '~/types/Project'
@@ -28,7 +28,7 @@ import ControlledSwitch from '~/components/form/ControlledSwitch'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import ControlledAutocomplete from '~/components/form/ControlledAutocomplete'
 import {AggregatedPerson} from '~/components/person/groupByOrcid'
-import AvatarOptionsTeamMember from './AvatarOptionsTeamMember'
+import AvatarOptionsPerson, {RequiredAvatarProps} from '~/components/person/AvatarOptionsPerson'
 import {postTeamMember} from './editTeamMembers'
 import {cfgTeamMembers as config} from './config'
 
@@ -156,9 +156,9 @@ export default function AggregatedMemberModal({open, onCancel, onSubmit, member}
         <DialogContent sx={{
           width: ['100%', '37rem'],
         }}>
-          <AvatarOptionsTeamMember
-            watch={watch}
-            setValue={setValue}
+          <AvatarOptionsPerson
+            watch={watch as unknown as UseFormWatch<RequiredAvatarProps>}
+            setValue={setValue as unknown as UseFormSetValue<RequiredAvatarProps>}
             avatar_options={member.avatar_options}
           />
           <div className="py-2"></div>

@@ -2,7 +2,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,21 +15,21 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import {useForm} from 'react-hook-form'
+import {UseFormSetValue, UseFormWatch, useForm} from 'react-hook-form'
 
 import {useSession} from '~/auth'
+import {upsertImage} from '~/utils/editImage'
+import {postContributor} from '~/utils/editContributors'
+import {getPropsFromObject} from '~/utils/getPropsFromObject'
+import {ContributorProps, SaveContributor} from '~/types/Contributor'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ControlledTextField from '~/components/form/ControlledTextField'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
-import {contributorInformation as config} from '../editSoftwareConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
-import {upsertImage} from '~/utils/editImage'
-import {getPropsFromObject} from '~/utils/getPropsFromObject'
-import {ContributorProps, SaveContributor} from '~/types/Contributor'
 import ControlledAutocomplete from '~/components/form/ControlledAutocomplete'
-import {postContributor} from '~/utils/editContributors'
 import {AggregatedPerson} from '~/components/person/groupByOrcid'
-import AvatarOptionsContributor from './AvatarOptionsContributor'
+import AvatarOptionsPerson, {RequiredAvatarProps} from '~/components/person/AvatarOptionsPerson'
+import {contributorInformation as config} from '../editSoftwareConfig'
 
 type AggregatedContributorModalProps = {
   open: boolean,
@@ -153,12 +155,12 @@ export default function AggregatedContributorModal({open, onCancel, onSubmit, co
         <DialogContent sx={{
           width: ['100%', '37rem'],
         }}>
-          <AvatarOptionsContributor
-            watch={watch}
-            setValue={setValue}
+          <AvatarOptionsPerson
+            watch={watch as unknown as UseFormWatch<RequiredAvatarProps>}
+            setValue={setValue as unknown as UseFormSetValue<RequiredAvatarProps>}
             avatar_options={contributor.avatar_options}
           />
-          <div className="py-2"></div>
+          <div className="py-2"/>
           <section className="py-4 grid grid-cols-[1fr,1fr] gap-8">
             <ControlledTextField
               control={control}

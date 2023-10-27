@@ -63,7 +63,7 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
         />
       </div>
       <div>
-        <h3 className="text-sm text-base-content-disabled pb-4">Image options</h3>
+        <h3 className="text-sm text-base-content-disabled pb-4">Avatar options</h3>
         <Box
           sx={{
             flex: 1,
@@ -76,12 +76,6 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
             overflow: 'auto'
           }}
         >
-          <IconButton
-            title="No image"
-            onClick={onNoAvatar}
-          >
-            {getDisplayInitials({given_names, family_names})}
-          </IconButton>
           {avatar_options.map(img => {
             return (
               <IconButton
@@ -97,6 +91,12 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
               </IconButton>
             )
           })}
+          <IconButton
+            title="No image"
+            onClick={onNoAvatar}
+          >
+            {getDisplayInitials({given_names, family_names})}
+          </IconButton>
         </Box>
       </div>
     </div>
