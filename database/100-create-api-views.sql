@@ -1032,7 +1032,7 @@ CREATE FUNCTION homepage_counts(
 $$
 BEGIN
 	SELECT COUNT(id) FROM software INTO software_cnt;
-	SELECT COUNT(id) FROM software WHERE NOT closed_source INTO open_software_cnt;
+	SELECT COUNT(id) FROM software WHERE open_source INTO open_software_cnt;
 	SELECT COUNT(id) FROM project INTO project_cnt;
 	SELECT
 		COUNT(id) AS organisation_cnt

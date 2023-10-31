@@ -48,6 +48,7 @@ export default function useSpdxLicenses({software}:{software?:string}) {
                   software,
                   license: item.licenseId,
                   deprecated: item.isDeprecatedLicenseId,
+                  reference: item.reference,
                   name: item.name
                 }
               }

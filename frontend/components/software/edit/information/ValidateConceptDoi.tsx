@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -16,6 +17,7 @@ import {getSoftwareVersionInfoForDoi} from '~/utils/getDataCite'
 
 type ValidateConceptDoiProps = {
   doi: string,
+  disabled: boolean,
   onUpdate:(doi:string)=>void
 }
 
@@ -27,7 +29,7 @@ type DataciteWorkType = {
   }[]
 }
 
-export default function ValidateConceptDoi({doi, onUpdate}: ValidateConceptDoiProps) {
+export default function ValidateConceptDoi({doi,disabled,onUpdate}: ValidateConceptDoiProps) {
   const {showErrorMessage,showSuccessMessage, showWarningMessage} = useSnackbar()
   const [loading, setLoading] = useState(false)
 
@@ -63,8 +65,6 @@ export default function ValidateConceptDoi({doi, onUpdate}: ValidateConceptDoiPr
     return <FactCheckIcon />
   }
 
-  if (!doi) return null
-
   return (
     <Button
       startIcon={renderStartIcon()}
@@ -73,6 +73,7 @@ export default function ValidateConceptDoi({doi, onUpdate}: ValidateConceptDoiPr
       sx={{
         marginTop:'1rem'
       }}
+      disabled={disabled}
     >
       { config.validateConceptDoi.label }
     </Button>

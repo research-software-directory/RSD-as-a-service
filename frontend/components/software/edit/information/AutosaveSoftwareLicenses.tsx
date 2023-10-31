@@ -9,21 +9,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {HTMLAttributes, useState} from 'react'
+import Chip from '@mui/material/Chip'
 
 import {useSession} from '~/auth'
-import {softwareInformation as config} from '../editSoftwareConfig'
-import useSpdxLicenses from '~/utils/useSpdxLicenses'
 import {License} from '~/types/SoftwareTypes'
+import useSpdxLicenses from '~/utils/useSpdxLicenses'
+import {sortBySearchFor} from '~/utils/sortFn'
+import {addLicensesForSoftware, deleteLicense} from '~/utils/editSoftware'
 import AsyncAutocompleteSC, {
   AutocompleteOption
 } from '~/components/form/AsyncAutocompleteSC'
-import Chip from '@mui/material/Chip'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {sortBySearchFor} from '~/utils/sortFn'
-import ImportLicensesFromDoi from './ImportLicensesFromDoi'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {softwareInformation as config} from '../editSoftwareConfig'
 import useSoftwareContext from '../useSoftwareContext'
-import {addLicensesForSoftware, deleteLicense} from '~/utils/editSoftware'
+import ImportLicensesFromDoi from './ImportLicensesFromDoi'
+import AutosaveLicenseType from './AutosaveLicenseType'
 
 export type SoftwareLicensesProps = {
   items: AutocompleteOption<License>[]
@@ -145,8 +146,7 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
   }
 
   function renderOption(props: HTMLAttributes<HTMLLIElement>,
-    option: AutocompleteOption<License>,
-    state: object) {
+    option: AutocompleteOption<License>, state: object) {
     // console.log('renderOption...', option)
     // when value is not found option returns input prop
     if (option?.input) {
@@ -197,6 +197,7 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
         title={config.licenses.title}
         subtitle={config.licenses.subtitle}
       />
+      <AutosaveLicenseType />
       <div className="flex flex-wrap py-2">
         {licenses.map((item, pos) => {
           return(
@@ -233,16 +234,13 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
           reset: true
         }}
       />
-      {
-        concept_doi &&
-        <div className="pt-4 pb-0">
-          <ImportLicensesFromDoi
-            concept_doi={concept_doi}
-            items={licenses}
-            onSetLicenses={setLicenses}
-          />
-        </div>
-      }
+      <div className="pt-4 pb-0">
+        <ImportLicensesFromDoi
+          concept_doi={concept_doi ?? ''}
+          items={licenses}
+          onSetLicenses={setLicenses}
+        />
+      </div>
     </>
   )
 }

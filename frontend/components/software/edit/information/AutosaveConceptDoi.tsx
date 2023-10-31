@@ -1,25 +1,28 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Button from '@mui/material/Button'
 import {useState} from 'react'
-import {useController, useFormContext} from 'react-hook-form'
-import {softwareInformation as config} from '../editSoftwareConfig'
-
-import ValidateConceptDoi from './ValidateConceptDoi'
+import Button from '@mui/material/Button'
 import UpdateIcon from '@mui/icons-material/Sync'
-import AutosaveSoftwareTextField from './AutosaveSoftwareTextField'
-import {patchSoftwareTable} from './patchSoftwareTable'
+import {useController, useFormContext} from 'react-hook-form'
+
 import {useSession} from '~/auth'
+import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import ValidateConceptDoi from './ValidateConceptDoi'
+import AutosaveSoftwareTextField from './AutosaveSoftwareTextField'
+import {patchSoftwareTable} from './patchSoftwareTable'
 
 export default function AutosaveConceptDoi() {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {control,resetField,watch} = useFormContext()
+  const {control,resetField,watch} = useFormContext<EditSoftwareItem>()
   const {fieldState:{error}} = useController({
     control,
     name: 'concept_doi'
@@ -78,9 +81,18 @@ export default function AutosaveConceptDoi() {
         <ValidateConceptDoi
           doi={concept_doi}
           onUpdate={setUpdateDoi}
+          disabled={false}
         />
       )
     }
+    // show validate button disabled
+    return (
+      <ValidateConceptDoi
+        doi={concept_doi ?? ''}
+        onUpdate={setUpdateDoi}
+        disabled={true}
+      />
+    )
   }
 
   return (

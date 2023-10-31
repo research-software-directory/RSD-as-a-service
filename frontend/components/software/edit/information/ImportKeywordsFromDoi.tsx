@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -118,6 +120,7 @@ export default function ImportKeywordsFromDoi({software_id, concept_doi, keyword
       startIcon={renderStartIcon()}
       onClick={importKeywordsFromDoi}
       title={config.importKeywords.message(concept_doi) ?? ''}
+      disabled={concept_doi===''}
     >
       { config.importKeywords.label }
     </Button>

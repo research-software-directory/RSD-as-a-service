@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,6 +27,7 @@ import {useDebounce} from '~/utils/useDebounce'
 import {addSoftware} from '../../../utils/editSoftware'
 import {addConfig as config} from './addConfig'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import ControlledLicenseType from './ControlledLicenseType'
 
 const initalState = {
   loading: false,
@@ -35,6 +38,7 @@ type AddSoftwareForm = {
   slug: string,
   brand_name: string,
   short_statement: string|null,
+  type: 'open_source' | 'proprietary'
 }
 
 let lastValidatedSlug = ''
@@ -47,8 +51,8 @@ export default function AddSoftwareCard() {
   const [slugValue, setSlugValue] = useState('')
   const [validating, setValidating]=useState(false)
   const [state, setState] = useState(initalState)
-  const {register, handleSubmit, watch, formState, setValue,setError} = useForm<AddSoftwareForm>({
-    mode: 'onChange'
+  const {register,handleSubmit,watch,formState,setValue,setError,control} = useForm<AddSoftwareForm>({
+    mode: 'onChange',
   })
   const {errors, isValid} = formState
   // watch for data change in the form
@@ -64,6 +68,7 @@ export default function AddSoftwareCard() {
   // console.log('isValid...', isValid)
   // console.log('validating...', validating)
   // console.log('validSlug...', validSlug)
+  // console.log('type...', type)
   // console.groupEnd()
 
   useEffect(() => {
@@ -143,6 +148,7 @@ export default function AddSoftwareCard() {
         slug: data.slug,
         short_statement: data.short_statement,
         is_published: false,
+        open_source: data.type==='open_source',
         description: null,
         description_type: 'markdown',
         description_url: null,
@@ -214,7 +220,15 @@ export default function AddSoftwareCard() {
           <h1 className="text-primary text-2xl mb-4">{config.title}</h1>
           {renderDialogText()}
         </section>
-        <section className="py-8">
+        <section className="pb-8">
+          <ControlledLicenseType
+            control={control}
+            name="type"
+            options={config.open_source.options}
+            rules={config.open_source.validation}
+            defaultValue="open_source"
+          />
+          <div className="py-4"></div>
           <TextFieldWithCounter
             options={{
               autofocus:true,

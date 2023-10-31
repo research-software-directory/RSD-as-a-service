@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,6 +16,7 @@ import AutosaveSoftwareLicenses, {SoftwareLicensesProps} from './AutosaveSoftwar
 // MOCKS
 import licenseForSoftware from './__mocks__/licenseForSoftware.json'
 import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+import {WithFormContext} from '~/utils/jest/WithFormContext'
 
 const licenseOptions:AutocompleteOption<License>[] = licenseForSoftware.map(item => ({
   key: item.license,
@@ -55,6 +58,14 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
+const formValues = {
+  id: 'software-test-id',
+  brand_name: 'Test software title',
+  open_source: true,
+  description: 'Test description',
+  description_url: null
+}
+
 it('renders mocked licenses', () => {
   // copy software id
   softwareState.software.id = licenseForSoftware[0].software
@@ -64,7 +75,9 @@ it('renders mocked licenses', () => {
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={formValues}>
+          <AutosaveSoftwareLicenses {...mockProps} />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )
@@ -83,7 +96,9 @@ it('can add NEW license', async() => {
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={formValues}>
+          <AutosaveSoftwareLicenses {...mockProps} />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )
@@ -127,7 +142,9 @@ it('can import license from DOI', async() => {
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={formValues}>
+          <AutosaveSoftwareLicenses {...mockProps} />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )
@@ -170,7 +187,9 @@ it('can add license from list', async() => {
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={formValues}>
+          <AutosaveSoftwareLicenses {...mockProps} />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )
@@ -213,7 +232,9 @@ it('can remove license', async () => {
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={formValues}>
+          <AutosaveSoftwareLicenses {...mockProps} />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )

@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
@@ -14,6 +15,7 @@ import ValidateConceptDoi from './ValidateConceptDoi'
 const mockOnUpdate = jest.fn()
 const mockProps = {
   doi: '',
+  disabled: true,
   onUpdate: mockOnUpdate
 }
 
@@ -33,31 +35,33 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-it('does NOT render when no DOI', () => {
+it('renders DISABLED validate DOI button when disabled=true', () => {
   // render
   render(
     <ValidateConceptDoi {...mockProps} />
   )
   // ensure button not shown
   const validateBtn = screen.queryByRole('button')
-  expect(validateBtn).not.toBeInTheDocument()
+  expect(validateBtn).toBeDisabled()
 })
 
-it('renders validate DOI button', () => {
+it('renders ENABLED validate DOI button', () => {
   // provide DOI
   mockProps.doi = '10.1017/9781009085809'
+  mockProps.disabled = false
   // render
   render(
     <ValidateConceptDoi {...mockProps} />
   )
   // ensure button not shown
   const validateBtn = screen.queryByRole('button')
-  expect(validateBtn).toBeInTheDocument()
+  expect(validateBtn).toBeEnabled()
 })
 
 it('shows valid concept DOI message', async() => {
   // provide DOI
   mockProps.doi = '10.1017/9781009085809'
+  mockProps.disabled = false
   // mock response for valid Concept DOI
   mockGetSoftwareVersionInfoForDoi.mockResolvedValueOnce({
     status: 200,
@@ -97,6 +101,7 @@ it('shows valid concept DOI message', async() => {
 it('shows version DOI message and suggest concept DOI', async() => {
   // provide DOI
   mockProps.doi = '10.1017/9781009085809'
+  mockProps.disabled = false
   const conceptDOI = '10.5281/zenodo.7137566'
   // mock response for valid Concept DOI
   mockGetSoftwareVersionInfoForDoi.mockResolvedValueOnce({

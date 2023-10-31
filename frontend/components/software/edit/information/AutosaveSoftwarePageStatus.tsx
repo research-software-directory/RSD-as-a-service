@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,11 +16,12 @@ import {useFormContext} from 'react-hook-form'
 
 export default function AutosaveSoftwarePageStatus() {
   const {watch} = useFormContext()
-  const [id, is_published] = watch(['id', 'is_published'])
+  const [id,is_published] = watch(['id', 'is_published'])
 
   // console.group('AutosaveSoftwarePageStatus')
   // console.log('id...', id)
   // console.log('is_published...', is_published)
+  // console.log('open_source...', open_source)
   // console.groupEnd()
 
   return (

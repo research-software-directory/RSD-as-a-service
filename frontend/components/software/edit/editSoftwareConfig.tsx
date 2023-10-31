@@ -113,7 +113,7 @@ export const softwareInformation = {
     subtitle: 'We generate citation files using concept DOI',
     label: 'Concept DOI',
     help: <>Concept DOI of your software, i.e. a DOI representing <u><a target='_blank'
-      href='https://help.zenodo.org/'
+      href='https://help.zenodo.org/faq/#versioning'
       rel="noreferrer">all of the
       versions</a></u> of this software</>,
     validation: {
@@ -134,6 +134,9 @@ export const softwareInformation = {
   },
   is_published: {
     label: 'Published',
+  },
+  open_source: {
+    label: 'Open source',
   },
   categories: {
     title: 'Categories',

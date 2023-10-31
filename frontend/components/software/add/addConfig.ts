@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,6 +39,20 @@ export const addConfig = {
         value: /^[a-z0-9]+(-[a-z0-9]+)*$/,
         message: 'Restricted input violiation. Use letters, numbers and dashes "-" only between other input.'
       }
+    }
+  },
+  open_source:{
+    label: 'Software type',
+    help: 'Select the licensing policy.',
+    options:[{
+      label: 'Open source software',
+      value: 'open_source'
+    },{
+      label: 'Proprietary software',
+      value: 'closed_source'
+    }],
+    validation: {
+      required: 'The license type is required.'
     }
   }
 }
