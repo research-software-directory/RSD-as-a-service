@@ -1,8 +1,8 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
--- SPDX-FileCopyrightText: 2022 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+-- SPDX-FileCopyrightText: 2022 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
@@ -720,17 +720,6 @@ CREATE POLICY anyone_can_read ON meta_pages FOR SELECT TO rsd_web_anon, rsd_user
 	USING (TRUE);
 
 CREATE POLICY admin_all_rights ON meta_pages TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
-
--- oaipmh
-ALTER TABLE oaipmh ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON oaipmh FOR SELECT TO rsd_web_anon, rsd_user
-	USING (TRUE);
-
-CREATE POLICY admin_all_rights ON oaipmh TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
