@@ -43,8 +43,8 @@ public class MainPackageManager {
 			};
 			tasks.add(task);
 		}
-		ExecutorService executorService = Executors.newCachedThreadPool();
-		try {
+
+		try (ExecutorService executorService = Executors.newCachedThreadPool()) {
 			List<Future<Void>> completedTasks = executorService.invokeAll(tasks);
 			for (Future<Void> completedTask : completedTasks) {
 				try {
@@ -55,8 +55,6 @@ public class MainPackageManager {
 			}
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
-		} finally {
-			executorService.shutdownNow();
 		}
 		System.out.println("Done scraping package manager data");
 	}
