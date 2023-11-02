@@ -24,7 +24,7 @@ type ProjectStatusFilterProps = {
 export const ProjectStatusLabels: {
   [K in ProjectStatusKey]: string
 } = {
-  'pending': 'Pending',
+  'upcoming': 'Upcoming',
   'in_progress': 'In progress',
   'finished': 'Finished',
   'unknown': 'Unknown'

@@ -16,15 +16,15 @@ const mockProps = {
 
 const now = new Date()
 
-it('renders project with Pending status', () => {
+it('renders project with Upcoming status', () => {
   // dates in future
   mockProps.date_start = new Date(now.getTime() + 1000 * 60 * 60).toISOString()
   mockProps.date_end = new Date(now.getTime() + 10000 * 60 * 60).toISOString()
 
   render(<ProjectStatus {...mockProps} />)
 
-  const status = screen.getByText('Pending')
-  expect(status).toBeInTheDocument()
+  screen.getByText('Upcoming')
+
 })
 
 it('renders project with In progress status', () => {
@@ -35,8 +35,7 @@ it('renders project with In progress status', () => {
 
   render(<ProjectStatus {...mockProps} />)
 
-  const status = screen.getByText('In progress')
-  expect(status).toBeInTheDocument()
+  screen.getByText('In progress')
 })
 
 it('renders project with Finished status', () => {
@@ -47,8 +46,7 @@ it('renders project with Finished status', () => {
 
   render(<ProjectStatus {...mockProps} />)
 
-  const status = screen.getByText('Finished')
-  expect(status).toBeInTheDocument()
+  screen.getByText('Finished')
 })
 
 it('renders project progress to 50%', () => {

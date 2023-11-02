@@ -161,7 +161,7 @@ SELECT
 	project.id,
 	CASE
 		WHEN project.date_end < now() THEN 'finished'::VARCHAR
-		WHEN project.date_start > now() THEN 'pending'::VARCHAR
+		WHEN project.date_start > now() THEN 'upcoming'::VARCHAR
 		WHEN project.date_start < now() AND project.date_end > now() THEN 'in_progress'::VARCHAR
 		ELSE 'unknown'::VARCHAR
 	END AS status
