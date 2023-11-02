@@ -150,7 +150,7 @@ export function getProjectStatus({date_start, date_end}:
 
     let statusKey: ProjectStatusKey = 'unknown'
 
-    if (today < start_date) statusKey = 'pending'
+    if (today < start_date) statusKey = 'upcoming'
     if (today > end_date) statusKey = 'finished'
     if (today > start_date && today < end_date) statusKey = 'in_progress'
 

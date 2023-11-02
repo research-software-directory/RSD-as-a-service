@@ -41,7 +41,7 @@ export type EditProject = Project & {
   keywords: KeywordForProject[]
 }
 
-export type ProjectStatusKey = 'pending' | 'in_progress' | 'finished' | 'unknown'
+export type ProjectStatusKey = 'upcoming' | 'in_progress' | 'finished' | 'unknown'
 export type ProjectListItem = {
   id: string
   slug: string
