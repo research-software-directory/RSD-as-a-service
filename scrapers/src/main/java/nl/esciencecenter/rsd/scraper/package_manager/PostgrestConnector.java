@@ -27,7 +27,7 @@ public class PostgrestConnector {
 	}
 
 	public Collection<BasicPackageManagerData> oldestDownloadCounts(int limit) {
-		String filter = "or=(package_manager.eq.dockerhub,package_manager.eq.pypi)";
+		String filter = "or=(package_manager.eq.dockerhub)";
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=id,url,package_manager&order=download_count_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("download_count_scraped_at"));
 		return parseBasicJsonData(data);
 	}
