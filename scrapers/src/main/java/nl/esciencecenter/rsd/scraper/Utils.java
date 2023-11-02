@@ -235,12 +235,14 @@ public class Utils {
 		postAsAdmin(Config.backendBaseUrl() + "/backend_log", logData.toString());
 	}
 
-	public static void saveErrorMessageInDatabase(String message, String tableName, String columnName, String primaryKey, String primaryKeyName, ZonedDateTime scrapedAt, String scapedAtName) {
+	public static void saveErrorMessageInDatabase(String message, String tableName, String columnName, String primaryKey, String primaryKeyName, ZonedDateTime scrapedAt, String scrapedAtName) {
 		JsonObject body = new JsonObject();
-		body.addProperty(columnName, message);
+		if (columnName != null) {
+			body.addProperty(columnName, message);
+		}
 
-		if (scrapedAt != null && scapedAtName != null) {
-			body.addProperty(scapedAtName, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		if (scrapedAt != null && scrapedAtName != null) {
+			body.addProperty(scrapedAtName, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		}
 
 		String uri = createPatchUri(Config.backendBaseUrl(), tableName, primaryKey, primaryKeyName);

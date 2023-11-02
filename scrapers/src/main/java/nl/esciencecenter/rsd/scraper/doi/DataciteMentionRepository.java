@@ -202,7 +202,9 @@ public class DataciteMentionRepository implements MentionRepository {
 
 	@Override
 	public Collection<MentionRecord> mentionData(Collection<String> dois) {
-		if (dois.isEmpty()) return Collections.EMPTY_LIST;
+		if (dois.isEmpty()) {
+			return Collections.emptyList();
+		}
 
 		JsonObject body = new JsonObject();
 		body.addProperty("query", QUERY_UNFORMATTED.formatted(joinCollection(dois)));

@@ -99,7 +99,7 @@ public class CrossrefMention implements Mention {
 		} catch (RuntimeException e) {
 			//			year not found, we leave it at null, nothing to do
 		}
-		if (workJson.getAsJsonArray("container-title").size() > 0) {
+		if (!workJson.getAsJsonArray("container-title").isEmpty()) {
 			JsonArray journalTitles = workJson.getAsJsonArray("container-title");
 			result.journal = journalTitles.get(0).getAsString();
 			for (int i = 1; i < journalTitles.size(); i++) {

@@ -16,16 +16,20 @@ $$
 SELECT CASE
 	WHEN table_name = 'repository_url' THEN (
 		SELECT
-			CONCAT('/software/',slug,'/edit/information') as slug
+			CONCAT('/software/', slug, '/edit/information') as slug
 		FROM
 			software WHERE id = reference_id
 	)
 	WHEN table_name = 'package_manager' THEN (
 		SELECT
-			CONCAT('/software/',slug,'/edit/package-managers') as slug
+			CONCAT('/software/', slug, '/edit/package-managers') as slug
 		FROM
 			software
 		WHERE id = (SELECT software FROM package_manager WHERE id = reference_id))
+	WHEN table_name = 'mention' AND reference_id IS NOT NULL THEN (
+		SELECT
+			CONCAT('/api/v1/mention?id=eq.', reference_id) as slug
+	)
 	END
 $$;
 
