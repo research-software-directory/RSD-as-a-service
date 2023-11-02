@@ -51,6 +51,12 @@ export async function getSettingsServerSide(req: IncomingMessage | undefined, qu
     getRsdSettings(),
     getAnnouncement()
   ])
+
+  // Set default values that should not be overwritten if they don't exist in settings.host
+  if (!settings.host.software_highlights_title) {
+    settings.host.software_highlights_title = defaultSettings.host.software_highlights_title
+  }
+
   // compose all settings
   const rsdSettings = {
     ...defaultRsdSettings,

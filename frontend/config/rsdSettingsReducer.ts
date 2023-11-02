@@ -32,7 +32,8 @@ export type RsdHost = {
   },
   login_info_url?:string,
   terms_of_service_url?: string,
-  privacy_statement_url?: string
+  privacy_statement_url?: string,
+  software_highlights_title?: string
 }
 
 export type CustomLink = {
@@ -62,14 +63,7 @@ export type RsdSettingsAction = {
 
 export type RsdSettingsDispatch = (action: RsdSettingsAction)=>void
 
-export const defaultRsdSettings: RsdSettingsState = {
-  host: {
-    name: 'rsd',
-    email: 'rsd@esciencecenter.nl'
-  },
-  theme: defaultSettings.theme,
-  links:[]
-}
+export const defaultRsdSettings: RsdSettingsState = defaultSettings
 
 export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsAction) {
   // console.group('rsdSettingsReducer')
