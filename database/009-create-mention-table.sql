@@ -33,7 +33,7 @@ CREATE TABLE mention (
 	doi_registration_date TIMESTAMPTZ,
 	url VARCHAR(500) CHECK (url ~ '^https?://'),
 	title VARCHAR(500) NOT NULL,
-	authors VARCHAR(15000),
+	authors VARCHAR(50000),
 	publisher VARCHAR(255),
 	publication_year SMALLINT,
 	journal VARCHAR(500),

@@ -78,11 +78,34 @@ public class PostgrestMentionRepository implements MentionRepository {
 			}
 
 			String uri = "%s/mention?on_conflict=%s&select=id".formatted(backendUrl, onConflictFilter);
-			String response = Utils.postAsAdmin(uri, scrapedMentionJson, "Prefer", "resolution=merge-duplicates,return=representation");
+			String response;
+			try {
+				response = Utils.postAsAdmin(uri, scrapedMentionJson, "Prefer", "resolution=merge-duplicates,return=representation");
+			} catch (RuntimeException e) {
+				if (mention.doi == null) {
+					Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
+				} else {
+					// We will try to update the scraped_at field, so that it goes back into the queue for being scraped
+					String existingMentionResponse = Utils.getAsAdmin("%s/mention?doi=eq.%s&select=id".formatted(backendUrl, mention.doi));
+					JsonArray array = JsonParser.parseString(existingMentionResponse).getAsJsonArray();
+					String id = array.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+					Utils.saveErrorMessageInDatabase(null,
+							"mention",
+							null,
+							id,
+							"id",
+							ZonedDateTime.now(),
+							"scraped_at");
+
+					Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), e);
+				}
+
+				continue;
+			}
 
 			JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
-			UUID id = UUID.fromString(responseAsArray.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString());
-			mention.id = id;
+			// Used in MainCitations, do not remove
+			mention.id = UUID.fromString(responseAsArray.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString());
 		}
 	}
 }

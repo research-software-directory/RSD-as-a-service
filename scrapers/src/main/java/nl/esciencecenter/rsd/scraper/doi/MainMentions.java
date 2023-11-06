@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,9 +26,9 @@ public class MainMentions {
 		System.out.println("Start scraping mentions");
 		MentionRepository localMentionRepository = new PostgrestMentionRepository(Config.backendBaseUrl());
 		Collection<MentionRecord> mentionsToScrape = localMentionRepository.leastRecentlyScrapedMentions(Config.maxRequestsDoi());
-//		we will remove successfully scraped mentions from here,
-//		we use this to set scrapedAt even for failed mentions,
-//		to put them back at the scraping order
+		// we will remove successfully scraped mentions from here,
+		// we use this to set scrapedAt even for failed mentions,
+		// to put them back at the scraping order
 		Map<String, MentionRecord> mentionsFailedToScrape = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		for (MentionRecord mentionRecord : mentionsToScrape) {
 			mentionsFailedToScrape.put(mentionRecord.doi, mentionRecord);
@@ -46,13 +46,12 @@ public class MainMentions {
 		Collection<String> dataciteDois = doiToSource.entrySet()
 				.stream()
 				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("DataCite"))
-				.map(doiSourceEntry -> doiSourceEntry.getKey())
+				.map(Map.Entry::getKey)
 				.toList();
 		try {
 			scrapedMentions.addAll(new DataciteMentionRepository().mentionData(dataciteDois));
 		} catch (RuntimeException e) {
-			System.out.println("Failed to scrape from DataCite");
-			e.printStackTrace();
+			Utils.saveExceptionInDatabase("DataCite mention scraper", "mention", null, e);
 		}
 		for (MentionRecord scrapedMention : scrapedMentions) {
 			mentionsFailedToScrape.remove(scrapedMention.doi);
@@ -61,7 +60,7 @@ public class MainMentions {
 		Collection<String> crossrefDois = doiToSource.entrySet()
 				.stream()
 				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("Crossref"))
-				.map(doiSourceEntry -> doiSourceEntry.getKey())
+				.map(Map.Entry::getKey)
 				.toList();
 		for (String crossrefDoi : crossrefDois) {
 			try {
@@ -69,8 +68,8 @@ public class MainMentions {
 				scrapedMentions.add(scrapedMention);
 				mentionsFailedToScrape.remove(scrapedMention.doi);
 			} catch (RuntimeException e) {
-				System.out.println("Failed to scrape a Crossref mention with DOI " + crossrefDoi);
-				e.printStackTrace();
+				RuntimeException exceptionWithMessage = new RuntimeException("Failed to scrape a Crossref mention with DOI " + crossrefDoi, e);
+				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", null, exceptionWithMessage);
 			}
 		}
 
@@ -81,7 +80,11 @@ public class MainMentions {
 		scrapedMentions.addAll(mentionsFailedToScrape.values());
 
 
-		localMentionRepository.save(scrapedMentions);
+		try {
+			localMentionRepository.save(scrapedMentions);
+		} catch (RuntimeException e) {
+			Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
+		}
 
 		System.out.println("Done scraping mentions");
 	}
