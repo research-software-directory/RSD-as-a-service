@@ -2,14 +2,14 @@
 
 If you would like to experiment with adding content to the RSD yourself, your can use our [online demo version at https://research-software.dev](https://research-software.dev). This online demo allows anyone to add software and projects using test accounts. __Please note that the data entered in this demo version is not curated in any way, and may be deleted at any time!__
 
-## Sign in with a random user name
+## Sign in with a random username
 
 To get access to the online demo, click on __"Sign in"__ at the top right. You will then get 4 options to sign in:
 
 ![image](img/demo-sign-in.webp)
 
-The most convenient way of signing in is using the __"Local account"__ option. This option only requires a user name
-to sign in. No password is needed. We suggest using random user name, unrelated to your actual name.
+The most convenient way of signing in is using the __"Local account"__ option. This option only requires a username
+to sign in. No password is needed. We suggest using random username, unrelated to your actual name.
 
 ## Adding software and projects
 

@@ -1,11 +1,11 @@
-# Maintaining organisation
+# Maintaining an organisation
 
 Organisations have the opportunity to maintain their representation within the RSD.
 In order to achieve this, official representatives of the organisation can take on the role of maintainers of their organisation.
 
 ## How to claim an organisation
 
-If you would like to claim an organisation, please have a look at [Register or claim an organization](/users/register-organisation/).
+If you would like to claim an organisation, please have a look at [Register or claim an organisation](/users/register-organisation/).
 
 ## What can organisation maintainers do
 
@@ -74,7 +74,7 @@ A list of existing maintainers will be shown:
 
 :::warning
 The __primary maintainer__ of an organisation cannot be removed (in this example "Maintainer 1").
-If you want to exchange the primary maintainer, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
+If you want to change the primary maintainer, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
 :::
 
 To invite new maintainers, click on __"Generate invite link"__. A link will be generated. You can either copy this link or click on "Email this invite" to open your mail program with a preformulated email.
@@ -83,12 +83,12 @@ To invite new maintainers, click on __"Generate invite link"__. A link will be g
 
 In the __"About"__ section, relevant information about your organisation can be added in a free text form.
 To edit the content of the section, please navigate to __"Settings"__ and scroll down to the __"About page"__ section (see [Manage metadata](#manage-metadata)).
-The text can be formatted using the [Markdown syntax](https://www.markdownguide.org/basic-syntax/).
+The text can be formatted using [Markdown syntax](https://www.markdownguide.org/basic-syntax/).
 
 ![Organisation About Page](img/organisation-about-page.webp)
 
 :::warning
-If there is no content for Abou page, the page will not be shown.
+If there is no content for the About page, the page will not be shown.
 :::
 
 ### Pin software or projects

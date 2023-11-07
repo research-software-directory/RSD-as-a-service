@@ -58,7 +58,7 @@ AZURE_ORGANISATION=
 
 ### Enable ORCID authentication
 
-Please refer to [ORCID oAuth documentation](https://info.orcid.org/documentation/integration-guide/getting-started-with-your-orcid-integration/) in order to setup ORCID authentication service for RSD.
+Please refer to [ORCID OAuth documentation](https://info.orcid.org/documentation/integration-guide/getting-started-with-your-orcid-integration/) in order to setup ORCID authentication service for RSD.
 
 In the RSD `.env` file you need to provide following information to enable this authenitcation service.
 
@@ -81,7 +81,7 @@ ORCID_RESPONSE_MODE=query
 ```
 
 :::warning
-In addition to defining ORCID as authentication provider each ORCID user need to be added to ORCID users list. See [ORCID users page](/rsd-instance/adminstration/) in the administration section.
+In addition to defining ORCID as authentication provider each ORCID user need to be added to ORCID users list. See [ORCID users page](/rsd-instance/administration/) in the administration section.
 :::
 
 ### Enable SURFconext authentication
@@ -89,7 +89,7 @@ In addition to defining ORCID as authentication provider each ORCID user need to
 Please refer to [SURFconext documention](https://www.surf.nl/en/surfconext-global-access-with-1-set-of-credentials).
 
 :::danger
-Main RSD service is already registered in uses SURFconext authentication services. We advice to use our main RSD instance and enable it for your organisation. For more information see [register you organisation](/users/register-organisation/).
+The main RSD instance is already registered with the SURFconext authentication service. We advise you to use our main RSD instance and enable it for your organisation. For more information see [register you organisation](/users/register-organisation/).
 :::
 
 ### Enable Helmholtz AI authentication
