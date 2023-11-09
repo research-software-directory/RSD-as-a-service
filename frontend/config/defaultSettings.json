@@ -23,12 +23,12 @@
     },
     {
       "label": "User Documentation",
-      "url": "https://research-software-directory.github.io/documentation",
+      "url": "/documentation/users/",
       "target": "_blank"
     },
     {
       "label": "Technical Documentation",
-      "url": "https://research-software-directory.github.io/RSD-as-a-service",
+      "url": "/documentation/rsd-instance/",
       "target": "_blank"
     },
     {

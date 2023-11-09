@@ -8,7 +8,6 @@
 import {useEffect} from 'react'
 
 import AOS from 'aos'
-import Link from 'next/link'
 import Image from 'next/legacy/image'
 
 import useRsdSettings from '~/config/useRsdSettings'
@@ -42,11 +41,10 @@ export type RsdHomeProps = {
 }
 
 function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string, url: string, target?:string, minWidth?:string}) {
-  return <Link
+  return <a
     href={url}
     className="flex gap-4 cursor-pointer"
     target={target}
-    passHref
   >
     <div className="relative group">
       <div
@@ -62,7 +60,7 @@ function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string,
         </span>
       </div>
     </div>
-  </Link>
+  </a>
 }
 
 function LandingPageDivider() {
