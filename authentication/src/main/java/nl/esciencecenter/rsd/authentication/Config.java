@@ -1,8 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
@@ -21,7 +21,7 @@ public class Config {
 
 	static {
 		String adminList = System.getenv("RSD_ADMIN_EMAIL_LIST");
-		rsdAdmins = adminList == null || adminList.isBlank() ? Collections.EMPTY_SET :
+		rsdAdmins = adminList == null || adminList.isBlank() ? Collections.emptySet() :
 				Set.of(adminList.split(";"));
 	}
 
@@ -31,10 +31,10 @@ public class Config {
 
 	private static Collection<String> rsdAuthProviders() {
 		return Optional.ofNullable(System.getenv("RSD_AUTH_PROVIDERS"))
-				.map(s -> s.toUpperCase())
+				.map(String::toUpperCase)
 				.map(s -> s.split(";"))
-				.map(strings -> Set.of(strings))
-				.orElse(Collections.EMPTY_SET);
+				.map(Set::of)
+				.orElse(Collections.emptySet());
 	}
 
 	public static Collection<String> rsdAdmins() {
@@ -46,7 +46,7 @@ public class Config {
 	}
 
 	public static boolean isSurfConextEnabled() {
-		Collection<String> enabledProviders =  rsdAuthProviders();
+		Collection<String> enabledProviders = rsdAuthProviders();
 		return enabledProviders.isEmpty() || enabledProviders.contains("SURFCONEXT");
 	}
 
@@ -71,7 +71,7 @@ public class Config {
 	}
 
 
-//	SURFconext
+	// SURFconext
 	public static String surfconextRedirect() {
 		return System.getenv("SURFCONEXT_REDIRECT");
 	}
@@ -93,7 +93,7 @@ public class Config {
 	}
 
 
-//	Helmholtz AAI
+	//	Helmholtz AAI
 	public static String helmholtzAaiRedirect() {
 		return System.getenv("HELMHOLTZAAI_REDIRECT");
 	}
@@ -116,7 +116,7 @@ public class Config {
 
 	public static boolean helmholtzAaiAllowExternalUsers() {
 		return Boolean.parseBoolean(
-			System.getenv("HELMHOLTZAAI_ALLOW_EXTERNAL_USERS")
+				System.getenv("HELMHOLTZAAI_ALLOW_EXTERNAL_USERS")
 		);
 	}
 
@@ -126,15 +126,15 @@ public class Config {
 
 	public static boolean helmholtzAaiUseAllowList() {
 		return Boolean.parseBoolean(
-			System.getenv("HELMHOLTZAAI_USE_ALLOW_LIST")
+				System.getenv("HELMHOLTZAAI_USE_ALLOW_LIST")
 		);
 	}
 
 
-//	ORCID
+	// ORCID
 	public static String orcidRedirect() {
-	return System.getenv("ORCID_REDIRECT");
-}
+		return System.getenv("ORCID_REDIRECT");
+	}
 
 	public static String orcidClientId() {
 		return System.getenv("ORCID_CLIENT_ID");
@@ -152,7 +152,7 @@ public class Config {
 		return System.getenv("ORCID_SCOPES");
 	}
 
-//	Azure Active Directory
+	// Azure Active Directory
 	public static String azureRedirect() {
 		return System.getenv("AZURE_REDIRECT");
 	}

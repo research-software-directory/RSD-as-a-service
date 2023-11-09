@@ -1,7 +1,7 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -47,8 +47,8 @@ public class HelmholtzAaiLogin implements Login {
 	static final String DEFAULT_ORGANISATION = "Helmholtz";
 
 	// See https://hifis.net/doc/helmholtz-aai/list-of-vos/#vos-representing-helmholtz-centres
-	static private final Collection<String> knownHgfOrganisations = Set.<String>of(
-		"AWI", "CISPA", "DESY", "DKFZ", "DLR", "DZNE", "FZJ", "GEOMAR", "GFZ", "GSI", "hereon", "HMGU", "HZB", "KIT", "MDC", "UFZ"
+	static private final Collection<String> knownHgfOrganisations = Set.of(
+			"AWI", "CISPA", "DESY", "DKFZ", "DLR", "DZNE", "FZJ", "GEOMAR", "GFZ", "GSI", "hereon", "HMGU", "HZB", "KIT", "MDC", "UFZ"
 	);
 
 	public HelmholtzAaiLogin(String code, String redirectUrl) {
@@ -62,7 +62,7 @@ public class HelmholtzAaiLogin implements Login {
 		}
 
 		String returnOrganisation;
-		ArrayList<String> organisationsDelivered = new ArrayList<String>();
+		ArrayList<String> organisationsDelivered = new ArrayList<>();
 		boolean helmholtzmemberFound = false;
 
 		// Collect all organisations delivered, because the home organisation
@@ -116,13 +116,13 @@ public class HelmholtzAaiLogin implements Login {
 
 		// Detect whether one of the delivered organisations is in the list of known HGF centres
 		organisationsDelivered.retainAll(knownHgfOrganisations);
-		if (organisationsDelivered.size() == 0) {
+		if (organisationsDelivered.isEmpty()) {
 			// No known HGF organisation could be found
 			returnOrganisation = DEFAULT_ORGANISATION;
 		} else {
 			// Always return the first element in the list, even if there were multiple centres found
 			returnOrganisation = organisationsDelivered.get(0);
-		};
+		}
 
 		// else: we either return the found the Helmholtz centre name
 		// or the default organisation
@@ -130,25 +130,21 @@ public class HelmholtzAaiLogin implements Login {
 	}
 
 	@Override
-	public OpenIdInfo openidInfo() {
+	public OpenIdInfo openidInfo() throws IOException, InterruptedException {
 		UserInfo userInfo;
 		String userinfoUrl;
 
 		/* get the userinfo endpoint URL first */
-		try {
-			HttpRequest request = HttpRequest.newBuilder(
-					URI.create(Config.helmholtzAaiWellknown())
+		HttpRequest request = HttpRequest.newBuilder(
+						URI.create(Config.helmholtzAaiWellknown())
 				)
 				.header("accept", "application/json")
 				.build();
-			HttpClient client = HttpClient.newHttpClient();
-			HttpResponse<String> response;
-			response = client.send(request, BodyHandlers.ofString());
-			JsonElement resp = JsonParser.parseString(response.body());
 
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+			JsonElement resp = JsonParser.parseString(response.body());
 			userinfoUrl = resp.getAsJsonObject().getAsJsonPrimitive("userinfo_endpoint").getAsString();
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
 		}
 
 		try {
@@ -162,14 +158,14 @@ public class HelmholtzAaiLogin implements Login {
 
 			Scope scopes = new Scope();
 
-			for (String scope: Config.helmholtzAaiScopes().split(" ")) {
+			for (String scope : Config.helmholtzAaiScopes().split(" ")) {
 				scopes.add(scope);
 			}
 
-			TokenRequest request = new TokenRequest(
-				tokenEndpoint, clientAuth, codeGrant, scopes
+			TokenRequest tokenRequest = new TokenRequest(
+					tokenEndpoint, clientAuth, codeGrant, scopes
 			);
-			TokenResponse response = TokenResponse.parse(request.toHTTPRequest().send());
+			TokenResponse response = TokenResponse.parse(tokenRequest.toHTTPRequest().send());
 
 			if (!response.indicatesSuccess()) {
 				TokenErrorResponse errorResponse = response.toErrorResponse();
@@ -179,10 +175,10 @@ public class HelmholtzAaiLogin implements Login {
 			AccessTokenResponse successResponse = response.toSuccessResponse();
 
 			URI userInfoEndpoint = new URI(userinfoUrl);
-			BearerAccessToken token= successResponse.getTokens().getBearerAccessToken();
+			BearerAccessToken token = successResponse.getTokens().getBearerAccessToken();
 			HTTPResponse httpResponse = new UserInfoRequest(userInfoEndpoint, token)
-				.toHTTPRequest()
-				.send();
+					.toHTTPRequest()
+					.send();
 
 			UserInfoResponse userInfoResponse = UserInfoResponse.parse(httpResponse);
 
@@ -191,6 +187,8 @@ public class HelmholtzAaiLogin implements Login {
 			}
 
 			userInfo = userInfoResponse.toSuccessResponse().getUserInfo();
+		} catch (InterruptedException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -209,10 +207,10 @@ public class HelmholtzAaiLogin implements Login {
 		String organisation = getOrganisationFromEntitlements(entitlements);
 
 		return new OpenIdInfo(
-			userInfo.getSubject().toString(),
-			userInfo.getName(),
-			userInfo.getEmailAddress(),
-			organisation
+				userInfo.getSubject().toString(),
+				userInfo.getName(),
+				userInfo.getEmailAddress(),
+				organisation
 		);
 	}
 }

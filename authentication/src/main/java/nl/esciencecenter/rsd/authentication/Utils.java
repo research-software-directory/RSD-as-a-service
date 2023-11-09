@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,18 +17,13 @@ import java.nio.charset.StandardCharsets;
 
 public class Utils {
 
-	public static URI getTokenUrlFromWellKnownUrl(URI wellKnownUrl) {
-		HttpClient client = HttpClient.newHttpClient();
+	public static URI getTokenUrlFromWellKnownUrl(URI wellKnownUrl) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder(wellKnownUrl).build();
-		HttpResponse<String> response;
-
-		try {
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<String> response;
 			response = client.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
+			return extractTokenUrlFromWellKnownData(response.body());
 		}
-
-		return extractTokenUrlFromWellKnownData(response.body());
 	}
 
 	static URI extractTokenUrlFromWellKnownData(String jsonData) {
