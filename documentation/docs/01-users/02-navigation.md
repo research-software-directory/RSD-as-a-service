@@ -63,3 +63,4 @@ To browse and search for organisations of interest, the _search_ bar on the top 
 
 By default, 12 organisation cards are shown per page. This number can be increased if desired using the __Per page__ dropdown menu. The __\<__ and __\>__ icons can be used to move
 between pages.
+

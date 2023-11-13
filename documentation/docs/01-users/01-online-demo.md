@@ -4,12 +4,10 @@ If you would like to experiment with adding content to the RSD yourself, your ca
 
 ## Sign in with a random username
 
-To get access to the online demo, click on __"Sign in"__ at the top right. You will then get 4 options to sign in:
-
-![image](img/demo-sign-in.webp)
-
-The most convenient way of signing in is using the __"Local account"__ option. This option only requires a username
+To get access to the online demo, click on __"Sign in"__ at the top right. The most convenient way of signing in is using the __"Local account"__ option. This option only requires a username
 to sign in. No password is needed. We suggest using random username, unrelated to your actual name.
+
+![image](../03-rsd-instance/img/rsd-login-tester.gif)
 
 ## Adding software and projects
 

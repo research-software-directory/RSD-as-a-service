@@ -126,7 +126,8 @@ export async function getOrganisations({project, token, frontend = true}:
         slug: item.slug,
         name: item.name,
         website: item.website ?? '',
-        rsd_path: item.rsd_path,
+        // extend basic path to link to projects tab and use default order
+        rsd_path: `${item.rsd_path}?tab=projects&order=is_featured`,
         logo_url: getImageUrl(item.logo_id),
         role: item.role
       }

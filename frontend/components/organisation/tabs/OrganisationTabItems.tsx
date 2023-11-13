@@ -36,21 +36,6 @@ export type OrganisationTabProps = {
  * TabContent.tsx file to load proper component.
  */
 export const organistionTabItems:OrganisationTabProps = {
-  about: {
-    id:'about',
-    label:()=>'About',
-    icon: <InfoIcon />,
-    isVisible: ({description}) => {
-      // we always show about section to maintainer
-      // if (isMaintainer === true) return true
-      // we do not show to visitors if there is no content
-      if (typeof description === 'undefined') return false
-      else if (description === null) return false
-      else if (description.trim()==='') return false
-      // else the description is present and we show about section
-      else return true
-    },
-  },
   software: {
     id:'software',
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
@@ -86,5 +71,20 @@ export const organistionTabItems:OrganisationTabProps = {
     icon: <SettingsIcon />,
     // we do not show this option if not a maintainer
     isVisible: ({isMaintainer}) => isMaintainer
+  },
+  about: {
+    id:'about',
+    label:()=>'About',
+    icon: <InfoIcon />,
+    isVisible: ({description}) => {
+      // we always show about section to maintainer
+      // if (isMaintainer === true) return true
+      // we do not show to visitors if there is no content
+      if (typeof description === 'undefined') return false
+      else if (description === null) return false
+      else if (description.trim()==='') return false
+      // else the description is present and we show about section
+      else return true
+    },
   }
 }

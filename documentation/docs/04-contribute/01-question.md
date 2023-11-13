@@ -1,4 +1,4 @@
-# You have a question, suggestion, comment, etc.
+# You have a question or suggestion
 
 For general questions (not directly related to the development of the software) you can send an email to rsd@esciencecenter.nl. Alternatively, you can also submit an issue:
 

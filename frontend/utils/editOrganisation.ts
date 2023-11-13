@@ -134,7 +134,8 @@ export async function getParticipatingOrganisations({software, token, frontend =
       slug: item.slug,
       name: item.name,
       website: item.website,
-      rsd_path: item.rsd_path,
+      // extend basic path to link to software and use default order
+      rsd_path: `${item.rsd_path}?tab=software&order=is_featured`,
       logo_url: getImageUrl(item.logo_id)
     }
   })

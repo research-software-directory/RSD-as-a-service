@@ -75,9 +75,13 @@ We currently support the following package managers:
 
 If your package manager is not listed above, you can still add it, but we will categorise it as *other* and cannot scrape it yet. You can [open an GitHub issue](https://github.com/research-software-directory/RSD-as-a-service/issues) (please check for existing issues first) or contact us if you want us to support an additional package manager.
 
-## Related topics
+## Related software
 
-The various related topics sections can be used to link related projects and software pages in the RSD to this software page. Items can be added by simply typing (part) of the name in either search bars, and selecting the desired item from the search result list.
+The related software sections can be used to link related software pages in the RSD to this software page. Items can be added by simply typing (part) of the name in the search bar and selecting the desired item from the search result list.
+
+## Related projects
+
+The related projects sections can be used to link related project pages in the RSD to this software page. Items can be added by simply typing (part) of the name in the search bar and selecting the desired item from the search result list.
 
 ## Maintainers
 
