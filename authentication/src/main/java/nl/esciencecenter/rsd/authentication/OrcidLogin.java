@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,7 +30,7 @@ public class OrcidLogin implements Login {
 	}
 
 	@Override
-	public OpenIdInfo openidInfo() {
+	public OpenIdInfo openidInfo() throws IOException, InterruptedException {
 		Map<String, String> form = createForm();
 		String tokenResponse = getTokensFromOrcidconext(form);
 		String idToken = extractIdToken(tokenResponse);
@@ -43,7 +43,7 @@ public class OrcidLogin implements Login {
 			String familyName = idJwt.getClaim("family_name").asString();
 			if (givenName != null && familyName != null) name = givenName + " " + familyName;
 			else if (familyName != null) name = familyName;
-			else if (givenName != null ) name = givenName;
+			else if (givenName != null) name = givenName;
 		}
 		return new OpenIdInfo(subject, name, null, null);
 	}
@@ -59,7 +59,7 @@ public class OrcidLogin implements Login {
 		return form;
 	}
 
-	private String getTokensFromOrcidconext(Map<String, String> form) {
+	private String getTokensFromOrcidconext(Map<String, String> form) throws IOException, InterruptedException {
 		String body = formMapToxWwwFormUrlencoded(form);
 		URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.orcidWellknown()));
 		return postForm(tokenEndpoint, body);
@@ -75,22 +75,18 @@ public class OrcidLogin implements Login {
 		return JsonParser.parseString(response).getAsJsonObject().getAsJsonPrimitive("id_token").getAsString();
 	}
 
-	private String postForm(URI uri, String json) {
+	private String postForm(URI uri, String json) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(uri)
 				.header("Content-Type", "application/x-www-form-urlencoded")
 				.build();
-		HttpClient client = HttpClient.newHttpClient();
-		HttpResponse<String> response;
-		try {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			if (response.statusCode() >= 300) {
+				throw new RuntimeException("Error fetching data from " + uri.toString() + ": " + response.body());
+			}
+			return response.body();
 		}
-		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from " + uri.toString() + ": " + response.body());
-		}
-		return response.body();
 	}
 }

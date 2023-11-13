@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +23,7 @@ public class PostgrestAccount implements Account {
 
 
 	@Override
-	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) {
+	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
 		Objects.requireNonNull(openIdInfo);
 		Objects.requireNonNull(provider);
 
@@ -45,13 +45,12 @@ public class PostgrestAccount implements Account {
 			UUID account = UUID.fromString(accountInfo.getAsJsonPrimitive("account").getAsString());
 			String name = openIdInfo.name();
 			return new AccountInfo(account, name);
-		}
-		else { // create account
+		} else { // create account
 			URI createAccountEndpoint = URI.create(backendUri + "/account");
 			String newAccountJson = postJsonAsAdmin(createAccountEndpoint, "{}", token);
 			String newAccountId = JsonParser.parseString(newAccountJson).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 
-//			create login for account
+			// create login for account
 			JsonObject loginForAccountData = new JsonObject();
 			loginForAccountData.addProperty("account", newAccountId);
 			loginForAccountData.addProperty("sub", subject);
@@ -66,7 +65,7 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	private void updateLoginForAccount(UUID id, OpenIdInfo openIdInfo, String token) {
+	private void updateLoginForAccount(UUID id, OpenIdInfo openIdInfo, String token) throws IOException, InterruptedException {
 		JsonObject loginForAccountData = new JsonObject();
 		loginForAccountData.addProperty("name", openIdInfo.name());
 		loginForAccountData.addProperty("email", openIdInfo.email());
@@ -79,26 +78,22 @@ public class PostgrestAccount implements Account {
 		patchJsonAsAdmin(patchLoginForAccountUri, resultingJson, token);
 	}
 
-	static String getAsAdmin(URI uri, String token) {
+	static String getAsAdmin(URI uri, String token) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.GET()
 				.uri(uri)
 				.header("Authorization", "bearer " + token)
 				.build();
-		HttpClient client = HttpClient.newHttpClient();
-		HttpResponse<String> response;
-		try {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			if (response.statusCode() >= 300) {
+				throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
+			}
+			return response.body();
 		}
-		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
-		}
-		return response.body();
 	}
 
-	private String postJsonAsAdmin(URI uri, String json, String token) {
+	private String postJsonAsAdmin(URI uri, String json, String token) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(uri)
@@ -106,20 +101,16 @@ public class PostgrestAccount implements Account {
 				.header("Prefer", "return=representation")
 				.header("Authorization", "bearer " + token)
 				.build();
-		HttpClient client = HttpClient.newHttpClient();
-		HttpResponse<String> response;
-		try {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			if (response.statusCode() >= 300) {
+				throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
+			}
+			return response.body();
 		}
-		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
-		}
-		return response.body();
 	}
 
-	private String patchJsonAsAdmin(URI uri, String json, String token) {
+	private String patchJsonAsAdmin(URI uri, String json, String token) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
 				.uri(uri)
@@ -127,16 +118,13 @@ public class PostgrestAccount implements Account {
 				.header("Prefer", "return=representation")
 				.header("Authorization", "bearer " + token)
 				.build();
-		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
-		try {
+		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
+			if (response.statusCode() >= 300) {
+				throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
+			}
+			return response.body();
 		}
-		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
-		}
-		return response.body();
 	}
 }

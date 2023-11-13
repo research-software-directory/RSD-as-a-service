@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +25,7 @@ public class PostgrestCheckOrcidWhitelistedAccount implements Account {
 	}
 
 	@Override
-	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) {
+	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
 		Objects.requireNonNull(openIdInfo);
 		Objects.requireNonNull(provider);
 
@@ -37,7 +38,8 @@ public class PostgrestCheckOrcidWhitelistedAccount implements Account {
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String token = jwtCreator.createAdminJwt();
 		String response = PostgrestAccount.getAsAdmin(queryUri, token);
-		if (!orcidInResponse(orcid, response)) throw new RsdAuthenticationException("Your ORCID (" + orcid + ") is not whitelisted.");
+		if (!orcidInResponse(orcid, response))
+			throw new RsdAuthenticationException("Your ORCID (" + orcid + ") is not whitelisted.");
 
 		return origin.account(openIdInfo, provider);
 	}

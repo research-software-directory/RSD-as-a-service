@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -34,7 +34,7 @@ public class SurfconextLogin implements Login {
 	}
 
 	@Override
-	public OpenIdInfo openidInfo() {
+	public OpenIdInfo openidInfo() throws IOException, InterruptedException {
 		Map<String, String> form = createForm();
 		String tokenResponse = getTokensFromSurfconext(form);
 		String idToken = extractIdToken(tokenResponse);
@@ -58,7 +58,7 @@ public class SurfconextLogin implements Login {
 		return form;
 	}
 
-	private String getTokensFromSurfconext(Map<String, String> form) {
+	private String getTokensFromSurfconext(Map<String, String> form) throws IOException, InterruptedException {
 		String body = formMapToxWwwFormUrlencoded(form);
 		URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.surfconextWellknown()));
 		return postForm(tokenEndpoint, body);
@@ -74,22 +74,18 @@ public class SurfconextLogin implements Login {
 		return JsonParser.parseString(response).getAsJsonObject().getAsJsonPrimitive("id_token").getAsString();
 	}
 
-	private String postForm(URI uri, String json) {
+	private String postForm(URI uri, String json) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(uri)
 				.header("Content-Type", "application/x-www-form-urlencoded")
 				.build();
-		HttpClient client = HttpClient.newHttpClient();
-		HttpResponse<String> response;
-		try {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			if (response.statusCode() >= 300) {
+				throw new RuntimeException("Error fetching data from " + uri.toString() + ": " + response.body());
+			}
+			return response.body();
 		}
-		if (response.statusCode() >= 300) {
-			throw new RuntimeException("Error fetching data from " + uri.toString() + ": " + response.body());
-		}
-		return response.body();
 	}
 }

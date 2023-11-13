@@ -1,7 +1,7 @@
 <!--
+SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 SPDX-FileCopyrightText: 2022 dv4all
 
 SPDX-License-Identifier: CC-BY-4.0
@@ -22,6 +22,7 @@ extra_hosts:
   - "host.docker.internal:host-gateway"
 ```
 2. In `nginx.conf`, replace `server auth:7000;` with `server host.docker.internal:7000;`
+3. (Optionally) allow TCP traffic on port 7000 of your firewall if logging in seems to hang forever or if you get `504 Gateway Timeout` responses.
 
 Remember to undo these changes before committing!
 
