@@ -114,7 +114,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
       </div>
 
       {/* stats  */}
-      <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between gap-10 md:gap-16 p-5 md:p-10 ">
+      <div className="max-w-screen-xl mx-auto flex flex-wrap md:justify-between gap-10 md:gap-16 p-5 md:p-10 ">
         <div>
           <div className="text-lg">{software_cnt} Software</div>
           <div className="opacity-50">packages registered</div>
