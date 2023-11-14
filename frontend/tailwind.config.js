@@ -55,6 +55,13 @@ module.exports = {
       // If the color is not defined in the theme, you can define it using public/data/settings.json
       // and then reference it here (as it is done with the other theme colors).
       // More info can be also found in styles/ README.md
+      backgroundSize: {
+        "size-200": "200% 200%",
+      },
+      backgroundPosition: {
+        "pos-0": "0% 0%",
+        "pos-100": "100% 100%",
+      },
       colors: {
         // ALREADY DEFINED in tailwind
         // transparent: 'transparent',
