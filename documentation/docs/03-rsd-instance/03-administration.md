@@ -34,13 +34,15 @@ You can customise the software highlights section title in `settings.json` by pr
 
 ## ORCID users
 
-This section defines a list of the ORCIDs allowed to log in to the RSD. Because anyone can create the ORCID account we decided to limit the access only to ORCID users that are approved by rsd administrator.
+This section shows the list of ORCIDs that are allowed to log in to the RSD. Because anyone can create an ORCID account, we decided to limit access only to ORCID users that are approved by an RSD administrator.
 
 :::warning
-In order to be able to login using ORCID account the [ORCID authentication provider need to be enabled](/rsd-instance/configurations/#enable-orcid-authentication) and the ORCID of that user need to be added to this list.
+In order to be able to log in with ORCID credentials, the [ORCID authentication provider needs to be enabled](/rsd-instance/configurations/#enable-orcid-authentication) and the ORCID of that user need to be added to this list.
 :::
 
-![animation](img/admin-orcid-user-add.gif)
+You can add, search and delete ORCIDs from the RSD. Use the bulk import button to add up to 50 ORCID users to the RSD at once.
+
+![animation](img/admin-orcid-users.gif)
 
 ## RSD users
 
