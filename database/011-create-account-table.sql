@@ -9,6 +9,7 @@
 
 CREATE TABLE account (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	allow_orcid_profile BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL,
 	agree_terms BOOLEAN DEFAULT FALSE NOT NULL,

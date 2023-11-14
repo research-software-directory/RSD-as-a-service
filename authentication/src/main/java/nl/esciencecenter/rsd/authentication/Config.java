@@ -124,6 +124,10 @@ public class Config {
 		return System.getenv("ORCID_REDIRECT");
 	}
 
+	public static String orcidRedirectCouple() {
+		return System.getenv("ORCID_REDIRECT_COUPLE");
+	}
+
 	public static String orcidClientId() {
 		return System.getenv("ORCID_CLIENT_ID");
 	}

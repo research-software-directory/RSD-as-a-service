@@ -67,18 +67,34 @@ public class PostgrestAccount implements Account {
 			String newAccountJson = postJsonAsAdmin(createAccountEndpoint, "{}", token);
 			String newAccountId = JsonParser.parseString(newAccountJson).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 
-			// Create login for account, i.e., tie the login credentials to the newly created account.
-			JsonObject loginForAccountData = new JsonObject();
-			loginForAccountData.addProperty("account", newAccountId);
-			loginForAccountData.addProperty("sub", subject);
-			loginForAccountData.addProperty("name", openIdInfo.name());
-			loginForAccountData.addProperty("email", openIdInfo.email());
-			loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
-			loginForAccountData.addProperty("provider", provider.toString());
-			URI createLoginUri = URI.create(backendUri + "/login_for_account");
-			postJsonAsAdmin(createLoginUri, loginForAccountData.toString(), token);
+			createLoginForAccount(UUID.fromString(newAccountId), openIdInfo, provider, backendUri, token);
 
 			return new AccountInfo(UUID.fromString(newAccountId), openIdInfo.name(), false);
+		}
+	}
+
+	public void coupleLogin(UUID accountId, OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
+		String backendUri = Config.backendBaseUrl();
+		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
+		String adminJwt = jwtCreator.createAdminJwt();
+		createLoginForAccount(accountId, openIdInfo, provider, backendUri, adminJwt);
+	}
+
+	private void createLoginForAccount(UUID accountId, OpenIdInfo openIdInfo, OpenidProvider provider, String backendUri, String adminJwt) throws IOException, InterruptedException {
+		JsonObject loginForAccountData = new JsonObject();
+		loginForAccountData.addProperty("account", accountId.toString());
+		loginForAccountData.addProperty("sub", openIdInfo.sub());
+		loginForAccountData.addProperty("name", openIdInfo.name());
+		loginForAccountData.addProperty("email", openIdInfo.email());
+		loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
+		loginForAccountData.addProperty("provider", provider.toString());
+		URI createLoginUri = URI.create(backendUri + "/login_for_account");
+
+		HttpResponse<String> response = postJsonAsAdminWithResponse(createLoginUri, loginForAccountData.toString(), adminJwt);
+		if (response.statusCode() == 409) {
+			throw new RsdAuthenticationException("This login is already coupled to an account.");
+		} else if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from the endpoint: %s with status code %d and response: %s".formatted(createLoginUri.toString(), response.statusCode(), response.body()));
 		}
 	}
 
@@ -110,20 +126,27 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	private String postJsonAsAdmin(URI uri, String json, String token) throws IOException, InterruptedException {
-		HttpRequest request = HttpRequest.newBuilder()
+	public static String postJsonAsAdmin(URI uri, String json, String token, String... headers) throws IOException, InterruptedException {
+		HttpResponse<String> response = postJsonAsAdminWithResponse(uri, json, token, headers);
+		if (response.statusCode() >= 300) {
+			throw new RuntimeException("Error fetching data from the endpoint: %s with status code %d and response: %s".formatted(uri.toString(), response.statusCode(), response.body()));
+		}
+		return response.body();
+	}
+
+	public static HttpResponse<String> postJsonAsAdminWithResponse(URI uri, String json, String token, String... headers) throws IOException, InterruptedException {
+		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(uri)
 				.header("Content-Type", "application/json")
 				.header("Prefer", "return=representation")
-				.header("Authorization", "bearer " + token)
-				.build();
+				.header("Authorization", "bearer " + token);
+		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
+			httpRequestBuilder.headers(headers);
+		}
+		HttpRequest request = httpRequestBuilder.build();
 		try (HttpClient client = HttpClient.newHttpClient()) {
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			if (response.statusCode() >= 300) {
-				throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
-			}
-			return response.body();
+			return client.send(request, HttpResponse.BodyHandlers.ofString());
 		}
 	}
 
