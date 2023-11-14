@@ -30,6 +30,7 @@ import OrganisationSignUp from './OrganisationSignUp'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
+import { Gradient } from '@mui/icons-material'
 
 export type RsdHomeProps = {
   software_cnt: number,
@@ -51,15 +52,21 @@ function GlowingButton({ text, url, target = '_self', minWidth = '9rem' }: { tex
         className="absolute -inset-1 bg-gradient-to-r from-glow-start to-glow-end rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300" />
       <div
         className="flex gap-3 text-base-900 relative px-8 py-3 bg-base-100 ring-1 rounded leading-none items-center justify-center space-x-2"
-        style={{
-          minWidth
-        }}
+        style={{ minWidth }}
       >
         <span className="space-y-2 text-xl font-medium whitespace-nowrap">
           {text}
         </span>
       </div>
     </div>
+  </a>
+}
+function GradientBorderButton({ text, url, target = '_self', minWidth = '9rem' }: { text: string, url: string, target?: string, minWidth?: string }) {
+  return <a href={url} className="cursor-pointer" target={target}>
+    <button style={{ minWidth }} className="m-2 p-[1px] text-base-400 hover:text-base-100 rounded transition-all duration-500 bg-gradient-to-tl to-base-100 via-base-900 from-primary bg-size-200 bg-pos-0 hover:bg-pos-100">
+      <span className="flex w-full bg-base-800   p-4 rounded justify-center pointer-events-none">
+        {text}
+      </span></button>
   </a>
 }
 
@@ -82,7 +89,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
       <AppHeader />
 
       {/* Jumbo Banner  */}
-      <div className="max-w-screen-xl mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr,1fr] gap-[2rem]">
+      <div className="max-w-screen-xl mx-auto p-5  grid lg:grid-cols-[1fr,1fr] gap-8 md:gap-20 md:my-28">
         {/* Jumbo Text*/}
         <div className="flex flex-col justify-center"
           data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
@@ -98,23 +105,17 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
             is designed to show the impact research software has on research and society. We stimulate
             the reuse of research software and encourage proper citation to ensure researchers and RSEs get credit for their work.
           </div>
+        </div>
 
-        </div>
-        {/* Jumbo image */}
-        <div className="relative">
-          <iframe className="w-full" width="560" height="315" src="https://www.youtube.com/embed/LeRtVJi7gKo?si=fOW_TmQLR3a58DAJ&rel=0&modestbranding=1
-"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
-          {/* <Image
-            src="/images/screenshots.webp"
-            width="877"
-            height="767"
-            layout="intrinsic"
-            alt="rsd-illustration"
-            priority
-          /> */}
-        </div>
+        {/* Video: it will only load once the page is rendered, and only when the user clicks on play. And it will strea the video after. */}
+        <video width="100%" height="auto" className='rounded-lg' controls preload="metadata" poster="/video/rsd-video-cover.webp"
+          data-aos="fade" data-aos-delay="100"
+          data-aos-duration="600"
+          data-aos-easing="ease-in-out">
+          <source src="/video/RSD-video.mp4" type="video/mp4" />
+          <source src="/video/RSD-video.webm" type="video/webm" />
+          Your browser does not support HTML5 video.
+        </video>
       </div>
 
       {/* stats  */}
@@ -163,24 +164,12 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
             Discover research software relevant to your research! <br />
             Get more information on how to add your own software or organization.
           </p>
-          <button className="bg-gradient-to-br from-white to-base-800 text-base font-semibold rounded p-[1px] hover:transition-all hover:to-base-500 transition-all ease-in-out">
-            <span className="flex w-full bg-base-800 text-base-100  p-4 rounded">
-              Gradient border
-            </span>
-          </button>
 
-          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-t to-white via-black from-red-500 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
-          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-tl to-white via-black from-red-500 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
-          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-br to-white via-black from-red-500 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
-          <br />
-          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-t from-red-800 via-red-500 to-red-200 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
-          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-tl from-purple-800 via-purple-600 to-purple-400 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
-          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-tl from-pink-500 via-red-500 to-yellow-400 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
 
           <div
             className="max-w-screen-lg mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
             <div className="flex justify-center"
-              data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out"
+              data-aos="fade" data-aos-duration="600" data-aos-easing="ease-in-out"
             >
               <GlowingButton
                 text={button.discover.label}
@@ -189,20 +178,16 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
                 minWidth='19rem' />
             </div>
             <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
-              data-aos-duration="300"
+              data-aos-duration="600"
               data-aos-easing="ease-in-out"
             >
-              <PersonalSignUp
-                minWidth='19rem'
-              />
+              <PersonalSignUp minWidth='19rem' />
             </div>
             <div className="flex justify-center" data-aos="fade" data-aos-delay="200"
-              data-aos-duration="300"
+              data-aos-duration="600"
               data-aos-easing="ease-in-out"
             >
-              <OrganisationSignUp
-                minWidth='19rem'
-              />
+              <OrganisationSignUp minWidth='19rem' />
             </div>
           </div>
         </section>
@@ -222,7 +207,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
 
           <div className="grid gap-20 grid-cols-1 md:grid-cols-2 pt-14">
             <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="0">
-              <LandingPageImpactIcon className="w-10 h-auto mr-5 pt-1 scale-125 flex-shrink-0" />
+              <LandingPageImpactIcon className="h-auto mr-5 pt-1 scale-125 flex-shrink-0" />
               <div>
                 <h3 className="mb-4 text-2xl font-medium">Show the impact of research software</h3>
                 <p className="text-lg opacity-70">
@@ -232,7 +217,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
               </div>
             </article>
             <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="100">
-              <LandingPageCiteIcon className="w-10 mr-5 pt-1 flex-shrink-0" />
+              <LandingPageCiteIcon className="h-auto mr-5 pt-1 flex-shrink-0" />
               <div>
                 <h3 className="mb-4 text-2xl font-medium">
                   Encourage proper citation of research software</h3>
@@ -243,7 +228,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
               </div>
             </article>
             <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="0">
-              <LandingPageShowIcon className="w-10 mr-5 pt-1 flex-shrink-0" />
+              <LandingPageShowIcon className="h-auto mr-5 pt-1 flex-shrink-0" />
               <div>
                 <h3 className="mb-4 text-2xl font-medium">Make it easy to find and reuse research
                   software</h3>
@@ -252,7 +237,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
               </div>
             </article>
             <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="100">
-              <LandingPageShareIcon className="w-10 mr-5 pt-1 flex-shrink-0 scale-105" />
+              <LandingPageShareIcon className="h-auto mr-5 pt-1 flex-shrink-0 scale-105" />
               <div>
                 <h3 className="mb-4 text-2xl font-medium">Share metadata about research
                   software</h3>
@@ -273,21 +258,17 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
           id="learn-more"
           className="p-5 md:p-10 grid gap-12 grid-cols-1 sm:grid-cols-2 max-w-screen-xl mt-20 mx-auto">
           <div className="relative">
-            <Image
-              src="/images/screenshots.webp"
-              width="877"
-              height="767"
-              layout="intrinsic"
-              alt="rsd-illustration"
-              priority
-            />
-            {/* <Image
-              src="/images/learnMore.webp"
-              width="1920"
-              height="830"
-              layout="responsive"
-              alt="rsd learn more illustration"
-            /> */}
+
+            <div className='sm:absolute -top-0 lg:-top-10 xl:-top-32 left-0 z-0'>
+              <Image
+                src="/images/screenshots.webp"
+                width="877"
+                height="767"
+                layout="intrinsic"
+                alt="rsd-illustration"
+                priority
+              />
+            </div>
           </div>
           <div>
             <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
@@ -304,7 +285,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
               className="flex flex-wrap justify-center gap-4 p-2 scale-90 mt-5">
               <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
                 data-aos-easing="ease-in-out">
-                <GlowingButton
+                <GradientBorderButton
                   text={button.demo.label}
                   url={button.demo.url}
                   target={button.demo.target}
@@ -313,7 +294,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
               <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
                 data-aos-delay="100"
                 data-aos-easing="ease-in-out">
-                <GlowingButton
+                <GradientBorderButton
                   text={button.docs.label}
                   url={button.docs.url}
                   target={button.docs.target}
@@ -322,7 +303,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
               <div className="flex justify-center" data-aos="fade-up" data-aos-duration="600"
                 data-aos-delay="200"
                 data-aos-easing="ease-in-out">
-                <GlowingButton
+                <GradientBorderButton
                   text={button.faq.label}
                   url={button.faq.url}
                   target={button.faq.target}
@@ -356,7 +337,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
             className="max-w-screen-md mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
             <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
               data-aos-duration="500" data-aos-easing="ease-in-out">
-              <GlowingButton
+              <GradientBorderButton
                 text={button.team.label}
                 url={button.team.url}
                 target={button.team.target}
@@ -365,7 +346,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
             {host.email &&
               <div className="flex justify-center" data-aos="fade" data-aos-duration="500"
                 data-aos-easing="ease-in-out">
-                <GlowingButton
+                <GradientBorderButton
                   text={button.contact.label}
                   url={button.contact.url}
                   target={button.contact.target}
@@ -374,7 +355,7 @@ export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, c
             }
             <div className="flex justify-center" data-aos="fade" data-aos-delay="200"
               data-aos-duration="500" data-aos-easing="ease-in-out">
-              <GlowingButton
+              <GradientBorderButton
                 text={button.github.label}
                 url={button.github.url}
                 target={button.github.target}
