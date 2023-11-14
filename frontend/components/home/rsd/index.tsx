@@ -5,13 +5,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 
 import AOS from 'aos'
 import Image from 'next/legacy/image'
 
 import useRsdSettings from '~/config/useRsdSettings'
-import {config} from './config'
+import { config } from './config'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import LandingPageCiteIcon from '~/components/icons/LandingPageCiteIcon.svg'
@@ -40,7 +40,7 @@ export type RsdHomeProps = {
   software_mention_cnt: number,
 }
 
-function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string, url: string, target?:string, minWidth?:string}) {
+function GlowingButton({ text, url, target = '_self', minWidth = '9rem' }: { text: string, url: string, target?: string, minWidth?: string }) {
   return <a
     href={url}
     className="flex gap-4 cursor-pointer"
@@ -48,7 +48,7 @@ function GlowingButton({text,url,target='_self',minWidth='9rem'}: {text: string,
   >
     <div className="relative group">
       <div
-        className="absolute -inset-1 bg-gradient-to-r from-glow-start to-glow-end rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300"/>
+        className="absolute -inset-1 bg-gradient-to-r from-glow-start to-glow-end rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300" />
       <div
         className="flex gap-3 text-base-900 relative px-8 py-3 bg-base-100 ring-1 rounded leading-none items-center justify-center space-x-2"
         style={{
@@ -68,9 +68,9 @@ function LandingPageDivider() {
     className="w-full max-w-screen-xl mx-auto border-t border-[#90909060] mt-[80px]"></div>
 }
 
-export default function RsdHome({software_cnt, project_cnt, organisation_cnt, contributor_cnt, software_mention_cnt}: RsdHomeProps) {
-  const {host} = useRsdSettings()
-  const {button} = config
+export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, contributor_cnt, software_mention_cnt }: RsdHomeProps) {
+  const { host } = useRsdSettings()
+  const { button } = config
   // Initialize AOS library
   useEffect(() => {
     AOS.init()
@@ -79,7 +79,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
   return (
     <div className="bg-base-100 dark:bg-base-900 dark:text-base-100" data-testid="rsd-home-page">
       {/* Header  */}
-      <AppHeader/>
+      <AppHeader />
 
       {/* Jumbo Banner  */}
       <div className="max-w-screen-xl mx-auto p-5 md:p-10 grid lg:grid-cols-[1fr,1fr] gap-[2rem]">
@@ -91,25 +91,29 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
             Show your research software to the world
           </h1>
           <div className="mt-8 text-lg">
-            The<span
+            The <span
               className="text-transparent font-medium bg-clip-text bg-gradient-to-tr from-[#03A9F1] to-[#09FBD3] px-1">
-                Research Software Directory
+              Research Software Directory
             </span>
-            is designed to show the impact research software has on research and society. We
-            stimulate the reuse of research software and encourage proper citation of research
-            software to ensure researchers and RSEs get credit for their work. {/*Learn more.*/}
+            is designed to show the impact research software has on research and society. We stimulate
+            the reuse of research software and encourage proper citation to ensure researchers and RSEs get credit for their work.
           </div>
+
         </div>
         {/* Jumbo image */}
         <div className="relative">
-          <Image
+          <iframe className="w-full" width="560" height="315" src="https://www.youtube.com/embed/LeRtVJi7gKo?si=fOW_TmQLR3a58DAJ&rel=0&modestbranding=1
+"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+          {/* <Image
             src="/images/screenshots.webp"
             width="877"
             height="767"
             layout="intrinsic"
             alt="rsd-illustration"
             priority
-          />
+          /> */}
         </div>
       </div>
 
@@ -156,14 +160,27 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
           </h2>
           <p className="text-center text-lg mt-5" data-aos="fade"
             data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
-            Discover research software relevant to your research! <br/>
+            Discover research software relevant to your research! <br />
             Get more information on how to add your own software or organization.
           </p>
+          <button className="bg-gradient-to-br from-white to-base-800 text-base font-semibold rounded p-[1px] hover:transition-all hover:to-base-500 transition-all ease-in-out">
+            <span className="flex w-full bg-base-800 text-base-100  p-4 rounded">
+              Gradient border
+            </span>
+          </button>
+
+          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-t to-white via-black from-red-500 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
+          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-tl to-white via-black from-red-500 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
+          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-br to-white via-black from-red-500 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
+          <br />
+          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-t from-red-800 via-red-500 to-red-200 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
+          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-tl from-purple-800 via-purple-600 to-purple-400 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
+          <button className="m-2 p-10 text-white rounded-xl transition-all duration-500 bg-gradient-to-tl from-pink-500 via-red-500 to-yellow-400 bg-size-200 bg-pos-0 hover:bg-pos-100">Hover me</button>
 
           <div
             className="max-w-screen-lg mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
             <div className="flex justify-center"
-              data-aos="fade-up" data-aos-duration="300" data-aos-easing="ease-in-out"
+              data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out"
             >
               <GlowingButton
                 text={button.discover.label}
@@ -171,7 +188,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
                 target={button.discover.target}
                 minWidth='19rem' />
             </div>
-            <div className="flex justify-center" data-aos="fade-up" data-aos-delay="100"
+            <div className="flex justify-center" data-aos="fade" data-aos-delay="100"
               data-aos-duration="300"
               data-aos-easing="ease-in-out"
             >
@@ -179,7 +196,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
                 minWidth='19rem'
               />
             </div>
-            <div className="flex justify-center" data-aos="fade-up" data-aos-delay="200"
+            <div className="flex justify-center" data-aos="fade" data-aos-delay="200"
               data-aos-duration="300"
               data-aos-easing="ease-in-out"
             >
@@ -191,7 +208,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         </section>
 
         {/*  Divider  */}
-        <LandingPageDivider/>
+        <LandingPageDivider />
 
         {/* Our Goals Section */}
         <section
@@ -205,41 +222,41 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
 
           <div className="grid gap-20 grid-cols-1 md:grid-cols-2 pt-14">
             <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="0">
-              <LandingPageImpactIcon className="w-10 mr-5 pt-1 scale-125 flex-shrink-0"/>
+              <LandingPageImpactIcon className="w-10 h-auto mr-5 pt-1 scale-125 flex-shrink-0" />
               <div>
                 <h3 className="mb-4 text-2xl font-medium">Show the impact of research software</h3>
-                <p className="text-lg">
+                <p className="text-lg opacity-70">
                   By showing how research software relates to other research
                   outputs, events, news items, etc.
                 </p>
               </div>
             </article>
             <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="100">
-              <LandingPageCiteIcon className="w-10 mr-5 pt-1 flex-shrink-0"/>
+              <LandingPageCiteIcon className="w-10 mr-5 pt-1 flex-shrink-0" />
               <div>
                 <h3 className="mb-4 text-2xl font-medium">
                   Encourage proper citation of research software</h3>
-                <p className="text-lg">
+                <p className="text-lg opacity-70">
                   We provide citation information that you can download and use in your
                   publications.
                 </p>
               </div>
             </article>
             <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="0">
-              <LandingPageShowIcon className="w-10 mr-5 pt-1 flex-shrink-0"/>
+              <LandingPageShowIcon className="w-10 mr-5 pt-1 flex-shrink-0" />
               <div>
                 <h3 className="mb-4 text-2xl font-medium">Make it easy to find and reuse research
                   software</h3>
-                <p className="text-lg">All information is collected on a single page, making it
+                <p className="text-lg opacity-70">All information is collected on a single page, making it
                   easier to find software relevant to your research.</p>
               </div>
             </article>
             <article className="flex gap-4 items-start" data-aos="fade" data-aos-delay="100">
-              <LandingPageShareIcon className="w-10 mr-5 pt-1 flex-shrink-0 scale-105"/>
+              <LandingPageShareIcon className="w-10 mr-5 pt-1 flex-shrink-0 scale-105" />
               <div>
                 <h3 className="mb-4 text-2xl font-medium">Share metadata about research
                   software</h3>
-                <p className="text-lg">
+                <p className="text-lg opacity-70">
                   The data we collect is openly accessible and shared with
                   other open science platforms.</p>
               </div>
@@ -249,7 +266,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
 
 
         {/*  Divider  */}
-        <LandingPageDivider/>
+        <LandingPageDivider />
 
         {/* Learn more section  */}
         <section
@@ -257,12 +274,20 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
           className="p-5 md:p-10 grid gap-12 grid-cols-1 sm:grid-cols-2 max-w-screen-xl mt-20 mx-auto">
           <div className="relative">
             <Image
+              src="/images/screenshots.webp"
+              width="877"
+              height="767"
+              layout="intrinsic"
+              alt="rsd-illustration"
+              priority
+            />
+            {/* <Image
               src="/images/learnMore.webp"
               width="1920"
               height="830"
               layout="responsive"
               alt="rsd learn more illustration"
-            />
+            /> */}
           </div>
           <div>
             <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
@@ -308,7 +333,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
         </section>
 
         {/*  Divider  */}
-        <LandingPageDivider/>
+        <LandingPageDivider />
 
 
         {/* About us section  */}
@@ -360,7 +385,7 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
 
 
         {/*  Divider  */}
-        <LandingPageDivider/>
+        <LandingPageDivider />
 
         {/* Logos  */}
         <div
@@ -371,18 +396,18 @@ export default function RsdHome({software_cnt, project_cnt, organisation_cnt, co
           </div>
           <div
             className="flex gap-10 w-full max-w-screen-xl flex-wrap mt-6 p-3 md:p-10 items-center opacity-30">
-            <LogoEscience className="max-w-[160px]"/>
-            <LogoHelmholtz className="max-w-[130px]"/>
-            <LogoUMC className="max-w-[200px]"/>
-            <LogoUU className="max-w-[220px]"/>
-            <LogoLeiden className="max-w-[220px]"/>
+            <LogoEscience className="max-w-[160px]" />
+            <LogoHelmholtz className="max-w-[130px]" />
+            <LogoUMC className="max-w-[200px]" />
+            <LogoUU className="max-w-[220px]" />
+            <LogoLeiden className="max-w-[220px]" />
           </div>
         </div>
 
         {/* Footer */}
         <div className="mt-20"></div>
-        <AppFooter/>
-      </div>
-    </div>
+        <AppFooter />
+      </div >
+    </div >
   )
 }
