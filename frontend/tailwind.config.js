@@ -25,21 +25,21 @@
  */
 
 // get theme variables
-const defaultSettings = require("./public/data/settings.json");
+const defaultSettings = require('./public/data/settings.json')
 // console.log('defaultSettings...', defaultSettings)
 // load colors and typography
-const colors = defaultSettings.theme.light.colors;
-const typography = defaultSettings.theme.typography;
+const colors = defaultSettings.theme.light.colors
+const typography = defaultSettings.theme.typography
 // console.log('colors...', colors)
 // console.log('typography...', typography)
 
 module.exports = {
-  darkMode: "class",
-  plugins: [require("@tailwindcss/typography")],
+  darkMode: 'class',
+  plugins: [require('@tailwindcss/typography')],
   content: [
-    "./auth/**/*.{js,ts,jsx,tsx}",
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    './auth/**/*.{js,ts,jsx,tsx}',
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     // USE ONLY THEME FONTS
@@ -47,23 +47,23 @@ module.exports = {
       // font-sans is default
       sans: `var(--rsd-default-font-family,${typography.defaultFontFamily})`,
       mono: [
-        "ui-monospace",
-        "SFMono-Regular",
-        "Menlo",
-        "Monaco",
-        "Consolas",
+        'ui-monospace',
+        'SFMono-Regular',
+        'Menlo',
+        'Monaco',
+        'Consolas',
         '"Liberation Mono"',
         '"Courier New"',
-        "monospace",
+        'monospace',
       ],
     },
     extend: {
       backgroundSize: {
-        "size-200": "200% 200%",
+        'size-200': '200% 200%',
       },
       backgroundPosition: {
-        "pos-0": "0% 0%",
-        "pos-100": "100% 100%",
+        'pos-0': '0% 0%',
+        'pos-100': '100% 100%',
       },
       colors: {
         // EXTEND WITH THEME COLORS
@@ -75,34 +75,34 @@ module.exports = {
         // transparent: 'transparent',
         // current: 'currentColor',
         // inherit: 'inherit',
-        "base-100": `var(--rsd-base-100,${colors["base-100"]})`,
-        "base-200": `var(--rsd-base-200,${colors["base-200"]})`,
-        "base-300": `var(--rsd-base-300,${colors["base-300"]})`,
-        "base-400": `var(--rsd-base-400,${colors["base-400"]})`,
-        "base-500": `var(--rsd-base-500,${colors["base-500"]})`,
-        "base-600": `var(--rsd-base-600,${colors["base-600"]})`,
-        "base-700": `var(--rsd-base-700,${colors["base-700"]})`,
-        "base-800": `var(--rsd-base-800,${colors["base-800"]})`,
-        "base-900": `var(--rsd-base-900,${colors["base-900"]})`,
-        "base-content": `var(--rsd-base-content,${colors["base-content"]})`,
-        "base-content-secondary": `var(--rsd-base-content-secondary,${colors["base-content-secondary"]})`,
-        "base-content-disabled": `var(--rsd-base-content-disabled,${colors["base-content-disabled"]})`,
+        'base-100': `var(--rsd-base-100,${colors['base-100']})`,
+        'base-200': `var(--rsd-base-200,${colors['base-200']})`,
+        'base-300': `var(--rsd-base-300,${colors['base-300']})`,
+        'base-400': `var(--rsd-base-400,${colors['base-400']})`,
+        'base-500': `var(--rsd-base-500,${colors['base-500']})`,
+        'base-600': `var(--rsd-base-600,${colors['base-600']})`,
+        'base-700': `var(--rsd-base-700,${colors['base-700']})`,
+        'base-800': `var(--rsd-base-800,${colors['base-800']})`,
+        'base-900': `var(--rsd-base-900,${colors['base-900']})`,
+        'base-content': `var(--rsd-base-content,${colors['base-content']})`,
+        'base-content-secondary': `var(--rsd-base-content-secondary,${colors['base-content-secondary']})`,
+        'base-content-disabled': `var(--rsd-base-content-disabled,${colors['base-content-disabled']})`,
         primary: `var(--rsd-primary,${colors.primary})`,
-        "primary-content": `var(--rsd-primary-content,${colors["primary-content"]})`,
+        'primary-content': `var(--rsd-primary-content,${colors['primary-content']})`,
         secondary: `var(--rsd-secondary,${colors.secondary})`,
-        "secondary-content": `var(--rsd-secondary-content,${colors["secondary-content"]})`,
+        'secondary-content': `var(--rsd-secondary-content,${colors['secondary-content']})`,
         accent: `var(--rsd-accent,${colors.accent})`,
-        "accent-content": `var(--rsd-accent-content,${colors["accent-content"]})`,
+        'accent-content': `var(--rsd-accent-content,${colors['accent-content']})`,
         error: `var(--rsd-error,${colors.error})`,
-        "error-content": `var(--rsd-error-content,${colors["error-content"]})`,
+        'error-content': `var(--rsd-error-content,${colors['error-content']})`,
         warning: `var(--rsd-warning,${colors.warning})`,
-        "warning-content": `var(--rsd-warning-content,${colors["warning-content"]})`,
+        'warning-content': `var(--rsd-warning-content,${colors['warning-content']})`,
         info: `var(--rsd-info,${colors.info})`,
-        "info-content": `var(--rsd-info-content,${colors["info-content"]})`,
+        'info-content': `var(--rsd-info-content,${colors['info-content']})`,
         success: `var(--rsd-success,${colors.success})`,
-        "success-content": `var(--rsd-success-content,${colors["success-content"]})`,
-        "glow-start": `var(--rsd-glow-start,${colors["glow-start"]})`,
-        "glow-end": `var(--rsd-glow-end,${colors["glow-end"]})`,
+        'success-content': `var(--rsd-success-content,${colors['success-content']})`,
+        'glow-start': `var(--rsd-glow-start,${colors['glow-start']})`,
+        'glow-end': `var(--rsd-glow-end,${colors['glow-end']})`,
       },
       // ultra large resolutions
       // not relevant at the moment
@@ -110,11 +110,11 @@ module.exports = {
       //   qhd:'2304px'
       // },
       animation: {
-        wiggle: "wiggle 1s ease-in-out infinite",
-        "spin-slow": "spin 3s linear infinite",
+        wiggle: 'wiggle 1s ease-in-out infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
       fontFamily: {
-        "rsd-titles": `var(--rsd-titles-font-family,${typography.titlesFontFamily})`,
+        'rsd-titles': `var(--rsd-titles-font-family,${typography.titlesFontFamily})`,
       },
       fontWeight: {
         light: `var(--rsd-font-light, ${typography.fontWeightLight})`,
@@ -127,4 +127,4 @@ module.exports = {
   variants: {
     extend: {},
   },
-};
+}

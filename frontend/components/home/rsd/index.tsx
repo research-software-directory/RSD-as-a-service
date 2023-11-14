@@ -30,7 +30,6 @@ import OrganisationSignUp from './OrganisationSignUp'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
-import {Gradient} from '@mui/icons-material'
 
 export type RsdHomeProps = {
   software_cnt: number,
