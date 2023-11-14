@@ -5,13 +5,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect } from 'react'
+import {useEffect} from 'react'
 
 import AOS from 'aos'
 import Image from 'next/legacy/image'
 
 import useRsdSettings from '~/config/useRsdSettings'
-import { config } from './config'
+import {config} from './config'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import LandingPageCiteIcon from '~/components/icons/LandingPageCiteIcon.svg'
@@ -30,7 +30,7 @@ import OrganisationSignUp from './OrganisationSignUp'
 
 /*! purgecss start ignore */
 import 'aos/dist/aos.css'
-import { Gradient } from '@mui/icons-material'
+import {Gradient} from '@mui/icons-material'
 
 export type RsdHomeProps = {
   software_cnt: number,
@@ -41,7 +41,7 @@ export type RsdHomeProps = {
   software_mention_cnt: number,
 }
 
-function GlowingButton({ text, url, target = '_self', minWidth = '9rem' }: { text: string, url: string, target?: string, minWidth?: string }) {
+function GlowingButton({text, url, target = '_self', minWidth = '9rem'}: { text: string, url: string, target?: string, minWidth?: string }) {
   return <a
     href={url}
     className="flex gap-4 cursor-pointer"
@@ -52,7 +52,7 @@ function GlowingButton({ text, url, target = '_self', minWidth = '9rem' }: { tex
         className="absolute -inset-1 bg-gradient-to-r from-glow-start to-glow-end rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-300" />
       <div
         className="flex gap-3 text-base-900 relative px-8 py-3 bg-base-100 ring-1 rounded leading-none items-center justify-center space-x-2"
-        style={{ minWidth }}
+        style={{minWidth}}
       >
         <span className="space-y-2 text-xl font-medium whitespace-nowrap">
           {text}
@@ -61,9 +61,9 @@ function GlowingButton({ text, url, target = '_self', minWidth = '9rem' }: { tex
     </div>
   </a>
 }
-function GradientBorderButton({ text, url, target = '_self', minWidth = '9rem' }: { text: string, url: string, target?: string, minWidth?: string }) {
+function GradientBorderButton({text, url, target = '_self', minWidth = '9rem'}: { text: string, url: string, target?: string, minWidth?: string }) {
   return <a href={url} className="cursor-pointer" target={target}>
-    <button style={{ minWidth }} className="m-2 p-[1px] text-base-400 hover:text-base-100 rounded transition-all duration-500 bg-gradient-to-tl to-base-100 via-base-900 from-primary bg-size-200 bg-pos-0 hover:bg-pos-100">
+    <button style={{minWidth}} className="m-2 p-[1px] text-base-400 hover:text-base-100 rounded transition-all duration-500 bg-gradient-to-tl to-base-100 via-base-900 from-primary bg-size-200 bg-pos-0 hover:bg-pos-100">
       <span className="flex w-full bg-base-800   p-4 rounded justify-center pointer-events-none">
         {text}
       </span></button>
@@ -75,9 +75,9 @@ function LandingPageDivider() {
     className="w-full max-w-screen-xl mx-auto border-t border-[#90909060] mt-[80px]"></div>
 }
 
-export default function RsdHome({ software_cnt, project_cnt, organisation_cnt, contributor_cnt, software_mention_cnt }: RsdHomeProps) {
-  const { host } = useRsdSettings()
-  const { button } = config
+export default function RsdHome({software_cnt, project_cnt, organisation_cnt, contributor_cnt, software_mention_cnt}: RsdHomeProps) {
+  const {host} = useRsdSettings()
+  const {button} = config
   // Initialize AOS library
   useEffect(() => {
     AOS.init()
