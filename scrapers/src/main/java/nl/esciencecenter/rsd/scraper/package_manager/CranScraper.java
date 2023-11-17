@@ -14,18 +14,28 @@ import java.util.regex.Pattern;
 
 public class CranScraper implements PackageManagerScraper {
 
-	private final String packageName;
-	private static final Pattern urlPattern = Pattern.compile("https://cran\\.r-project\\.org/web/packages/([^/]+)(/index\\.html/?)?");
+	final String packageName;
+	private static final Pattern urlPattern1 = Pattern.compile("https://cran\\.r-project\\.org/web/packages/([^/\\s]+)/?(index\\.html/?)?", Pattern.CASE_INSENSITIVE);
+	private static final Pattern urlPattern2 = Pattern.compile("https://cran\\.r-project\\.org/package=([^/\\s]+)/?", Pattern.CASE_INSENSITIVE);
 
 	public CranScraper(String url) {
 		Objects.requireNonNull(url);
-		Matcher urlMatcher = urlPattern.matcher(url);
-		if (!urlMatcher.matches()) {
-			throw new RuntimeException("Invalid CRAN URL: " + url);
+
+		Matcher urlMatcher1 = urlPattern1.matcher(url);
+		if (urlMatcher1.matches()) {
+			packageName = urlMatcher1.group(1);
+			return;
 		}
 
-		packageName = urlMatcher.group(1);
+		Matcher urlMatcher2 = urlPattern2.matcher(url);
+		if (urlMatcher2.matches()) {
+			packageName = urlMatcher2.group(1);
+			return;
+		}
+
+		throw new RuntimeException("Invalid CRAN URL: " + url);
 	}
+
 	@Override
 	public Long downloads() {
 		throw new UnsupportedOperationException();
