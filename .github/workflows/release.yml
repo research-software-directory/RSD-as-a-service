@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 dv4all
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+# SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -143,25 +144,25 @@ jobs:
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
 
-  documenation:
-    # it needs to be check on string value
+  documentation:
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: release_tag
-    name: documenation
+    name: documentation
     uses: ./.github/workflows/_ghcr.yml
     with:
       ghcr_user: ${{github.actor}}
-      base_image_name: ghcr.io/research-software-directory/rsd-saas/documenation
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/documentation
       image_tag: ${{needs.release_tag.outputs.tag}}
-      dockerfile: documenation/Dockerfile
-      docker_context: ./documenation
+      dockerfile: documentation/Dockerfile
+      docker_context: ./documentation
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
 
   deployment_files:
     # it needs to be check on string value
     if: needs.release_tag.outputs.skipped == 'false'
-    needs: [release_tag,auth,database,backend,frontend,nginx,scrapers,documenation]
+    needs: [ release_tag,auth,database,backend,frontend,nginx,scrapers,documentation ]
     name: create deployment.zip
     runs-on: ubuntu-22.04
     steps:
@@ -210,7 +211,7 @@ jobs:
   release_draft:
     # it needs to be check on string value
     if: needs.release_tag.outputs.skipped == 'false'
-    needs: [release_tag, deployment_files]
+    needs: [ release_tag, deployment_files ]
     name: create release draft
     runs-on: ubuntu-22.04
     steps:
@@ -240,9 +241,9 @@ jobs:
           files: deployment.zip
 
   citation:
-   # it needs to be check on string value
+    # it needs to be check on string value
     if: needs.release_tag.outputs.skipped == 'false'
-    needs: [release_tag, deployment_files, release_draft]
+    needs: [ release_tag, deployment_files, release_draft ]
     name: citations
     uses: ./.github/workflows/_cff.yml
     with:
