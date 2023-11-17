@@ -12,7 +12,7 @@ import ListItemText from '@mui/material/ListItemText'
 
 import {useSession} from '~/auth'
 import RsdLoginList from './RsdLoginList'
-import {RsdAccountInfo} from './useLoginForAccount'
+import {RsdAccountInfo} from './useRsdAccounts'
 
 type RsdUserItemProps = {
   account: RsdAccountInfo,

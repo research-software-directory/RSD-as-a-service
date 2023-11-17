@@ -9,7 +9,7 @@ import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
-import {RsdAccountInfo} from './useLoginForAccount'
+import {RsdAccountInfo} from './useRsdAccounts'
 
 type getLoginApiParams = {
   token: string,

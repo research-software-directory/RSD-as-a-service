@@ -12,30 +12,34 @@ import {useEffect, useState} from 'react'
 import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 
-import {app} from '../../config/app'
 import {useAuth} from '~/auth'
 import ProtectedContent from '~/auth/ProtectedContent'
+import {getRedirectUrl} from '~/auth/api/authHelpers'
+import {app} from '~/config/app'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import {userMenu, UserMenuProps} from '~/components/user/UserNavItems'
 import {PaginationProvider} from '~/components/pagination/PaginationContext'
 import {SearchProvider} from '~/components/search/SearchContext'
 import UserTitle from '~/components/user/UserTitle'
-import UserNav, {UserCounts} from '../../components/user/UserNav'
+import UserNav, {UserCounts} from '~/components/user/UserNav'
 import {getUserCounts} from '~/components/user/getUserCounts'
+import {orcidRedirectProps} from '../api/fe/auth/orcid'
 
 type UserPagesProps = {
   section: string,
-  counts: UserCounts
+  counts: UserCounts,
+  orcidAuthLink:string|null
 }
 
-export default function UserPages({section,counts}:UserPagesProps) {
+export default function UserPages({section,counts,orcidAuthLink}:UserPagesProps) {
   const {session} = useAuth()
   const [pageSection, setPageSection] = useState<UserMenuProps>(userMenu[section])
   const pageTitle = `${session.user?.name} | ${app.title}`
 
-  // console.group("UserPages")
+  // console.group('UserPages')
   // console.log('pageSection...', pageSection)
   // console.log('pageTitle...', pageTitle)
+  // console.log('orcidAuthLink...', orcidAuthLink)
   // console.groupEnd()
 
   useEffect(() => {
@@ -49,7 +53,7 @@ export default function UserPages({section,counts}:UserPagesProps) {
 
   function renderStepComponent() {
     if (pageSection.component) {
-      return pageSection.component({session})
+      return pageSection.component({session,orcidAuthLink})
     }
   }
 
@@ -115,11 +119,22 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       frontend: false
     })
 
+    let orcidAuthLink:string|null=null
+    const orcid = await orcidRedirectProps()
+    if (orcid){
+      if (orcid?.redirect_couple_uri){
+        // getRedirectUrl uses redirect_uri to construct redirectURL
+        orcid.redirect_uri = orcid.redirect_couple_uri
+        orcidAuthLink = getRedirectUrl(orcid)
+      }
+    }
+
     return {
       // passed to the page component as props
       props: {
         section,
-        counts
+        counts,
+        orcidAuthLink
       },
     }
   }catch(e){

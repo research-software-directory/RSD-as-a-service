@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -8,30 +9,33 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 import UserAgrementModal from './UserAgreementModal'
 
-// MOCK fetchAgreementStatus
-const mockFetchAgreementStatus = jest.fn()
-jest.mock('./fetchAgreementStatus', () => ({
-  fetchAgreementStatus:jest.fn(props=>mockFetchAgreementStatus(props))
-}))
-
-// MOCK patchAccountTable
+// MOCK useUserAgreements
+const mockUserAgreements = jest.fn(props => {
+  return {
+    loading: false,
+    agree_terms: false,
+    notice_privacy_statement: true,
+    public_orcid_profile: true
+  }
+})
 const mockPatchAccountTable = jest.fn()
-jest.mock('./patchAccountTable', () => ({
-  patchAccountTable:jest.fn(props=>mockPatchAccountTable(props))
+
+jest.mock('./useUserAgreements', () => ({
+  useUserAgreements: (props: any) => mockUserAgreements(props),
+  patchAccountTable: (props:any) => mockPatchAccountTable(props)
 }))
 
 beforeEach(() => {
   jest.clearAllMocks()
 })
 
-it('renders modal when agree_terms=false', async() => {
-
-  mockFetchAgreementStatus.mockResolvedValueOnce({
-    status: 200,
-    data: {
-      agree_terms: false,
-      notice_privacy_statement: true
-    }
+it('renders modal when agree_terms=false', async () => {
+  // mock values
+  mockUserAgreements.mockReturnValueOnce({
+    loading: false,
+    agree_terms: false,
+    notice_privacy_statement: true,
+    public_orcid_profile: true
   })
 
   render(
@@ -44,13 +48,12 @@ it('renders modal when agree_terms=false', async() => {
 })
 
 it('renders modal when notice_privacy_statement=false', async() => {
-
-  mockFetchAgreementStatus.mockResolvedValueOnce({
-    status: 200,
-    data: {
-      agree_terms: true,
-      notice_privacy_statement: false
-    }
+  // mock values
+  mockUserAgreements.mockReturnValueOnce({
+    loading: false,
+    agree_terms: true,
+    notice_privacy_statement: false,
+    public_orcid_profile: true
   })
 
   render(
@@ -64,38 +67,13 @@ it('renders modal when notice_privacy_statement=false', async() => {
 
 it('does not render modal when terms accepted', async() => {
 
-  mockFetchAgreementStatus.mockResolvedValueOnce({
-    status: 200,
-    data: {
-      agree_terms: true,
-      notice_privacy_statement: true
-    }
+  // mock values
+  mockUserAgreements.mockReturnValueOnce({
+    loading: false,
+    agree_terms: true,
+    notice_privacy_statement: true,
+    public_orcid_profile: false
   })
-
-  render(
-    <WithAppContext options={{session: mockSession}}>
-      <UserAgrementModal />
-    </WithAppContext>
-  )
-
-  const modal = await screen.queryByTestId('user-agreement-modal')
-  expect(modal).toBe(null)
-})
-
-it('does not render modal when role rsd_admin', async () => {
-  // role is rsd_admin
-  if (mockSession.user && mockSession.user.role) {
-    mockSession.user.role = 'rsd_admin'
-  }
-
-  mockFetchAgreementStatus.mockResolvedValueOnce({
-    status: 200,
-    data: {
-      agree_terms: false,
-      notice_privacy_statement: false
-    }
-  })
-
   render(
     <WithAppContext options={{session: mockSession}}>
       <UserAgrementModal />
@@ -107,16 +85,17 @@ it('does not render modal when role rsd_admin', async () => {
 })
 
 it('accepts TOS via modal and calls patch account', async() => {
-  // role is rsd_admin
-  if (mockSession.user && mockSession.user.role) {
-    mockSession.user.role = 'rsd_user'
-  }
+  // mock values
+  mockUserAgreements.mockReturnValueOnce({
+    loading: false,
+    agree_terms: false,
+    notice_privacy_statement: true,
+    public_orcid_profile: false
+  })
 
-  mockFetchAgreementStatus.mockResolvedValueOnce({
-    status: 200,
-    data: {
-      agree_terms: false,
-      notice_privacy_statement: true
+  mockPatchAccountTable.mockResolvedValueOnce((props: any) => {
+    return {
+      status:204
     }
   })
 
@@ -138,18 +117,24 @@ it('accepts TOS via modal and calls patch account', async() => {
   fireEvent.click(tosSwitch)
   // validate checked
   expect(tosSwitch).toBeChecked()
-  // loose focus
-  fireEvent.blur(tosSwitch)
+
+  // get accept button
+  const acceptBtn = screen.getByRole('button', {
+    name: 'Accept'
+  })
+  expect(acceptBtn).toBeEnabled()
+  // click on accept
+  fireEvent.submit(acceptBtn)
 
   await waitFor(() => {
     expect(mockPatchAccountTable).toBeCalledTimes(1)
     expect(mockPatchAccountTable).toBeCalledWith({
-      'account': mockSession.user?.account,
-      'data': {
-        'agree_terms': true,
+      account: mockSession.user?.account,
+      data: {
+        agree_terms: true,
+        notice_privacy_statement: true,
       },
-      'token': mockSession.token
+      token: mockSession.token
     })
   })
-
 })

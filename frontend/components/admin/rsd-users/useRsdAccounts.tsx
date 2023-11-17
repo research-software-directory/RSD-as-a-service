@@ -8,7 +8,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import {deleteRsdAccount, getRsdAccounts} from './apiRsdUsers'
 
-export type LoginForAccount = {
+export type RsdAccount = {
   id: string,
   provider: string,
   name: string|null,
@@ -18,10 +18,10 @@ export type LoginForAccount = {
 
 export type RsdAccountInfo = {
   id: string,
-  login_for_account: LoginForAccount[]
+  login_for_account: RsdAccount[]
 }
 
-export default function useLoginForAccount(token: string) {
+export default function useRsdAccounts(token: string) {
   const {showErrorMessage}=useSnackbar()
   const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find user by account id (exact match) or by name, email or affiliation (partial match)')
   const [accounts, setAccounts] = useState<RsdAccountInfo[]>([])

@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,7 +15,7 @@ import OrganisationMaintainers from './index'
 import mockOrganisation from '../../__mocks__/mockOrganisation'
 
 // MOCK user agreement call
-jest.mock('~/components/user/settings/fetchAgreementStatus')
+jest.mock('~/components/user/settings/useUserAgreements')
 
 const mockMaintainerOfOrganisation=jest.fn<Promise<any[]>,any[]>((props)=>Promise.resolve([]))
 jest.mock('./getMaintainersOfOrganisation', () => ({

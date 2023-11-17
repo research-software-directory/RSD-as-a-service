@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,10 +15,8 @@ import {deleteRsdAccount} from '~/components/admin/rsd-users/apiRsdUsers'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import useRsdSettings from '~/config/useRsdSettings'
-
-type RemoveAccountProps = {
-  disabled:boolean
-}
+import {useFormContext} from 'react-hook-form'
+import {UserSettingsType} from './useUserAgreements'
 
 function RemoveAccountBody(props:any) {
   return (
@@ -26,7 +25,6 @@ function RemoveAccountBody(props:any) {
     </p>
   )
 }
-
 
 function RemoveAccountAlert({disabled}: { disabled: boolean }) {
   const {host} = useRsdSettings()
@@ -49,11 +47,13 @@ function RemoveAccountAlert({disabled}: { disabled: boolean }) {
   )
 }
 
-
-export default function RemoveAccount({disabled}:RemoveAccountProps) {
+export default function RemoveAccount() {
   const {token,user} = useSession()
   const {showErrorMessage} = useSnackbar()
   const [modal, setModal] = useState(false)
+  const {watch} = useFormContext<UserSettingsType>()
+  const [agree_terms,notice_privacy_statement]=watch(['agree_terms','notice_privacy_statement'])
+  const disabled = agree_terms===false || notice_privacy_statement===false
 
   function onDeleteAccount() {
     setModal(true)
@@ -77,39 +77,42 @@ export default function RemoveAccount({disabled}:RemoveAccountProps) {
     }
   }
 
+  if (user?.account) {
+    return (
+      <>
+        <h2 className="py-4">Remove account</h2>
 
-  return (
-    <>
-      <h2 className="py-4">Remove account</h2>
+        <RemoveAccountAlert disabled={disabled} />
 
-      <RemoveAccountAlert disabled={disabled} />
+        <div className="py-4">
+          <Button
+            disabled={disabled}
+            variant="contained"
+            color="error"
+            onClick={onDeleteAccount}>
+            Remove account
+          </Button>
+        </div>
 
-      <div className="py-4">
-        <Button
-          disabled={disabled}
-          variant="contained"
-          color="error"
-          onClick={onDeleteAccount}>
-          Remove account
-        </Button>
-      </div>
-
-      <ConfirmDeleteModal
-        open={modal}
-        title="Remove account"
-        body={
-          <>
-            <p>
-              Are you sure you want to completely remove your account?
-            </p>
-            <RemoveAccountBody className="py-4 text-sm" />
-          </>
-        }
-        onCancel={() => {
-          setModal(false)
-        }}
-        onDelete={deleteAccount}
-      />
-    </>
-  )
+        <ConfirmDeleteModal
+          open={modal}
+          title="Remove account"
+          body={
+            <>
+              <p>
+                Are you sure you want to completely remove your account?
+              </p>
+              <RemoveAccountBody className="py-4 text-sm" />
+            </>
+          }
+          onCancel={() => {
+            setModal(false)
+          }}
+          onDelete={deleteAccount}
+        />
+      </>
+    )
+  }
+  // do not show if no account
+  return null
 }

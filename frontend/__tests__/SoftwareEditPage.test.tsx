@@ -21,7 +21,7 @@ import {softwareInformation as config} from '~/components/software/edit/editSoft
 // we mock default providers used in page header
 jest.mock('~/auth/api/useLoginProviders')
 // mock user agreement call
-jest.mock('~/components/user/settings/fetchAgreementStatus')
+jest.mock('~/components/user/settings/useUserAgreements')
 
 
 // MOCK isMaintainerOf

@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,11 +15,19 @@
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {getAuthorisationEndpoint, RedirectToProps, claims, getRedirectUrl} from '~/auth/api/authHelpers'
+import {getAuthorisationEndpoint, RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
 import logger from '~/utils/logger'
 import {Provider, ApiError} from '.'
 
 type Data = Provider | ApiError
+
+const claims = {
+  id_token:{
+    schac_home_organization: null,
+    name: null,
+    email: null
+  }
+}
 
 async function helmholtzRedirectProps() {
   // extract wellknow url from env

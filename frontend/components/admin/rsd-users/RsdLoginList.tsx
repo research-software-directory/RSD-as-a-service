@@ -5,9 +5,9 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {LoginForAccount} from './useLoginForAccount'
+import {RsdAccount} from './useRsdAccounts'
 
-export default function RsdLoginForAccount({logins}:{logins:LoginForAccount[]}) {
+export default function RsdLoginForAccount({logins}:{logins:RsdAccount[]}) {
   return (
     <ul className="text-sm">
       {logins.map(login => {

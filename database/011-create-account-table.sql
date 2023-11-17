@@ -3,13 +3,14 @@
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 -- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
 
 CREATE TABLE account (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	allow_orcid_profile BOOLEAN DEFAULT FALSE NOT NULL,
+	public_orcid_profile BOOLEAN DEFAULT FALSE NOT NULL,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL,
 	agree_terms BOOLEAN DEFAULT FALSE NOT NULL,

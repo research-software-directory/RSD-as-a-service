@@ -1,23 +1,16 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 
-export const claims = {
-  id_token:
-  {
-    schac_home_organization: null,
-    name: null,
-    email: null
-  }
-}
-
-export function getEncodedClaims(claims: any) {
-  return encodeURIComponent(JSON.stringify(claims))
-}
+// export function getEncodedClaims(claims: any) {
+//   return encodeURIComponent(JSON.stringify(claims))
+// }
 
 export type RedirectToProps = {
   authorization_endpoint: string,
@@ -26,7 +19,8 @@ export type RedirectToProps = {
   scope: string,
   response_mode: string,
   prompt?: string,
-  claims: any
+  redirect_couple_uri?:string,
+  claims?: any
 }
 
 export async function getAuthorisationEndpoint(wellknownUrl: string){
@@ -46,14 +40,18 @@ export async function getAuthorisationEndpoint(wellknownUrl: string){
 }
 
 export function getRedirectUrl(props: RedirectToProps) {
-  const redirectUrl = props.authorization_endpoint +
+  let redirectUrl = props.authorization_endpoint +
     '?redirect_uri=' + props.redirect_uri +
     '&client_id=' + props.client_id +
     '&scope=' + props.scope +
     '&response_type=code' +
     '&response_mode=' + props.response_mode +
-    '&prompt=' + (props.prompt ? props.prompt : 'login+consent') +
-    '&claims=' + getEncodedClaims(claims)
+    '&prompt=' + (props.prompt ? props.prompt : 'login+consent')
+
+  if (props?.claims){
+    redirectUrl += '&claims=' + encodeURIComponent(JSON.stringify(props.claims))
+  }
+
   return redirectUrl
 }
 

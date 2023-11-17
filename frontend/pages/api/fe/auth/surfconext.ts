@@ -15,11 +15,19 @@
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {getAuthorisationEndpoint, RedirectToProps, claims, getRedirectUrl} from '~/auth/api/authHelpers'
+import {getAuthorisationEndpoint, RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
 import logger from '~/utils/logger'
 import {Provider, ApiError} from '.'
 
 type Data = Provider | ApiError
+
+const claims = {
+  id_token:{
+    schac_home_organization: null,
+    name: null,
+    email: null
+  }
+}
 
 export async function surfconextRedirectProps() {
   // extract wellknow url from env

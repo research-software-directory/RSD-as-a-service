@@ -15,7 +15,7 @@
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {getAuthorisationEndpoint, RedirectToProps, claims, getRedirectUrl} from '~/auth/api/authHelpers'
+import {getAuthorisationEndpoint, RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
 import logger from '~/utils/logger'
 import {Provider, ApiError} from '.'
 
@@ -35,8 +35,7 @@ export async function azureRedirectProps() {
         client_id: process.env.AZURE_CLIENT_ID || 'www.research-software.nl',
         scope: process.env.AZURE_SCOPES || 'openid',
         response_mode: process.env.AZURE_RESPONSE_MODE || 'query',
-        prompt: process.env.AZURE_LOGIN_PROMPT,
-        claims
+        prompt: process.env.AZURE_LOGIN_PROMPT
       }
       return props
     } else {

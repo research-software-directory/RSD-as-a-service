@@ -15,7 +15,7 @@
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {getAuthorisationEndpoint, RedirectToProps, claims, getRedirectUrl} from '~/auth/api/authHelpers'
+import {getAuthorisationEndpoint, RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
 import logger from '~/utils/logger'
 import {Provider, ApiError} from '.'
 
@@ -32,10 +32,10 @@ export async function orcidRedirectProps() {
       const props: RedirectToProps = {
         authorization_endpoint,
         redirect_uri: process.env.ORCID_REDIRECT || 'https://research-software.nl/auth/login/orcid',
+        redirect_couple_uri: process.env.ORCID_REDIRECT_COUPLE || 'MISSING',
         client_id: process.env.ORCID_CLIENT_ID || 'www.research-software.nl',
         scope: process.env.ORCID_SCOPES || 'openid',
-        response_mode: process.env.ORCID_RESPONSE_MODE || 'query',
-        claims
+        response_mode: process.env.ORCID_RESPONSE_MODE || 'query'
       }
       return props
     } else {

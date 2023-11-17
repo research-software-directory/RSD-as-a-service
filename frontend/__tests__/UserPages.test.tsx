@@ -19,7 +19,9 @@ import mockProjectsByMaintainer from '~/components/user/project/__mocks__/projec
 // required when AppHeader component is used
 jest.mock('~/auth/api/useLoginProviders')
 // MOCK user agreement call
-jest.mock('~/components/user/settings/fetchAgreementStatus')
+jest.mock('~/components/user/settings/useUserAgreements')
+// MOCK user logins call
+jest.mock('~/components/user/settings/useLoginForAccount')
 // MOCK user project list
 jest.mock('~/components/user/project/useUserProjects')
 // MOCK user software list
@@ -32,7 +34,8 @@ const mockProps = {
     software_cnt: 0,
     project_cnt: 0,
     organisation_cnt: 0
-  }
+  },
+  orcidAuthLink:null
 }
 
 describe('pages/user/[section].tsx', () => {

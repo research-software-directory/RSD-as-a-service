@@ -1,0 +1,99 @@
+// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 dv4all
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import Link from 'next/link'
+import {useFormContext} from 'react-hook-form'
+import useRsdSettings from '~/config/useRsdSettings'
+import ControlledSwitch from '~/components/form/ControlledSwitch'
+import ContentLoader from '~/components/layout/ContentLoader'
+import {useUserAgreements} from './useUserAgreements'
+
+type UserAgreementsProps = {
+  publicProfile?: {
+    show: boolean
+    disabled: boolean
+  }
+}
+
+const defaultPublicProfileProps = {
+  show: false,
+  disabled: false
+}
+
+export default function UserAgreementsSection({publicProfile=defaultPublicProfileProps}:UserAgreementsProps) {
+  const {host} = useRsdSettings()
+  const {control} = useFormContext()
+  const {loading, agree_terms, setAgreeTerms,
+    notice_privacy_statement, setPrivacyStatement,
+    public_orcid_profile, setPublicOrcidProfile
+  } = useUserAgreements()
+
+  // console.group('UserAgreementForm')
+  // console.log('loading...', loading)
+  // console.log('agree_terms...', agree_terms)
+  // console.log('notice_privacy_statement...', notice_privacy_statement)
+  // console.log('public_orcid_profile...', public_orcid_profile)
+  // console.groupEnd()
+
+  if (loading) return <ContentLoader />
+
+  return(
+    <form
+      id="profile-settings-form"
+      className='flex-1'
+    >
+      <div className="py-4">
+        <h2>User agreements</h2>
+        <div className="py-4">
+          To be able to contribute to the RSD, we need to know that you agree to our Terms of Service, and that you have read the Privacy Statement. Please check all of the points below to proceed:
+        </div>
+        <div>
+          <ControlledSwitch
+            defaultValue={agree_terms}
+            name='agree_terms'
+            control={control}
+            onSave={setAgreeTerms}
+            label={
+              <span>I agree to the <Link className="underline" target='_blank' href={host?.terms_of_service_url ?? ''}>Terms of Service</Link>.</span>
+            }
+
+          />
+        </div>
+        <div>
+          <ControlledSwitch
+            defaultValue={notice_privacy_statement}
+            name='notice_privacy_statement'
+            control={control}
+            onSave={setPrivacyStatement}
+            label={
+              <span>I have read the <Link className='underline' target='_blank' href={host?.privacy_statement_url ?? ''}>Privacy Statement</Link>.</span>
+            }
+          />
+        </div>
+        {
+          publicProfile.show ?
+            <div>
+              <ControlledSwitch
+                disabled={publicProfile.disabled && public_orcid_profile===false}
+                defaultValue={public_orcid_profile}
+                name='public_orcid_profile'
+                control={control}
+                onSave={setPublicOrcidProfile}
+                label={
+                  <span>Enable my public profile using ORCID</span>
+                }
+              />
+            </div>
+            : null
+        }
+      </div>
+    </form>
+  )
+}
