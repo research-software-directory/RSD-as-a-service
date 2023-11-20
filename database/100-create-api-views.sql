@@ -1175,8 +1175,8 @@ $$
 BEGIN
 	RETURN (
 		SELECT (
-			account.agree_terms = TRUE AND
-			account.notice_privacy_statement = TRUE
+			account.agree_terms AND
+			account.notice_privacy_statement
 		)
 		FROM
 			account
