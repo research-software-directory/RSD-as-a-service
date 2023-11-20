@@ -16,12 +16,12 @@ import RemoveAccount from './RemoveAccount'
 import {useLoginForAccount} from './useLoginForAccount'
 import LoginForAccountList from './LoginForAccountList'
 import LinkOrcidButton from './LinkOrcidButton'
-import {UserSettingsType} from './useUserAgreements'
+import {UserSettingsType, useUserAgreements} from './useUserAgreements'
 import BasicProfileProps from './BasicProfileProps'
 
 export default function UserSettings({orcidAuthLink}:{orcidAuthLink:string|null}) {
   const {loading, accounts, deleteLogin} = useLoginForAccount()
-
+  const userAgreements = useUserAgreements()
   const publicProfile = {
     show: orcidAuthLink !== null,
     // disabled if ORCID account is not linked
@@ -35,25 +35,29 @@ export default function UserSettings({orcidAuthLink}:{orcidAuthLink:string|null}
   // console.group('UserSettings')
   // console.log('publicProfile...', publicProfile)
   // console.log('loading...', loading)
-  // console.log('user...', user)
+  // console.log('userAgreements...', userAgreements)
   // console.log('accounts...', accounts)
   // console.groupEnd()
 
-  if (loading) return (
+  if (loading || userAgreements.loading) return (
     <ContentLoader />
   )
 
   return (
-    <div data-testid="user-settings-section" className='pb-12'>
+    <div data-testid="user-settings-section" className="pt-2">
       <BasicProfileProps />
 
-      {orcidAuthLink ? <LinkOrcidButton orcidAuthLink={orcidAuthLink}/> : null}
-
-      <LoginForAccountList accounts={accounts} deleteLogin={deleteLogin} />
-
-      {/* Render only if userInfo present in order to properly load defaultValues */}
+      {/* Render only if all info present in order to properly load defaultValues */}
       <FormProvider {...methods}>
-        <UserAgreementsSection publicProfile={publicProfile} />
+        {/* use FormProvider to check for user agreement values */}
+        <LoginForAccountList accounts={accounts} deleteLogin={deleteLogin} />
+
+        {orcidAuthLink ? <LinkOrcidButton orcidAuthLink={orcidAuthLink}/> : null}
+        <UserAgreementsSection
+          publicProfile={publicProfile}
+          {...userAgreements}
+        />
+
         {/* use FormProvider to check for user agreement values */}
         <RemoveAccount />
       </FormProvider>

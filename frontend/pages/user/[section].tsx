@@ -69,7 +69,7 @@ export default function UserPages({section,counts,orcidAuthLink}:UserPagesProps)
               title={session.user?.name ?? 'John Doe'}
               showSearch={pageSection?.showSearch ?? false}
             />
-            <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem]">
+            <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem] pb-12">
               <div>
                 <UserNav
                   selected={section}

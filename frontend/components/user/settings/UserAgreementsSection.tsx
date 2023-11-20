@@ -12,10 +12,14 @@ import Link from 'next/link'
 import {useFormContext} from 'react-hook-form'
 import useRsdSettings from '~/config/useRsdSettings'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
-import ContentLoader from '~/components/layout/ContentLoader'
-import {useUserAgreements} from './useUserAgreements'
 
 type UserAgreementsProps = {
+  agree_terms?:boolean,
+  notice_privacy_statement?:boolean,
+  public_orcid_profile?:boolean,
+  setAgreeTerms:(agree:boolean)=>Promise<void>,
+  setPrivacyStatement:(privacy:boolean)=>Promise<void>,
+  setPublicOrcidProfile:(profile:boolean)=>Promise<void>,
   publicProfile?: {
     show: boolean
     disabled: boolean
@@ -27,22 +31,18 @@ const defaultPublicProfileProps = {
   disabled: false
 }
 
-export default function UserAgreementsSection({publicProfile=defaultPublicProfileProps}:UserAgreementsProps) {
+export default function UserAgreementsSection({
+  agree_terms,
+  notice_privacy_statement,
+  public_orcid_profile,
+  setAgreeTerms,
+  setPrivacyStatement,
+  setPublicOrcidProfile,
+  publicProfile=defaultPublicProfileProps
+}:UserAgreementsProps) {
+
   const {host} = useRsdSettings()
   const {control} = useFormContext()
-  const {loading, agree_terms, setAgreeTerms,
-    notice_privacy_statement, setPrivacyStatement,
-    public_orcid_profile, setPublicOrcidProfile
-  } = useUserAgreements()
-
-  // console.group('UserAgreementForm')
-  // console.log('loading...', loading)
-  // console.log('agree_terms...', agree_terms)
-  // console.log('notice_privacy_statement...', notice_privacy_statement)
-  // console.log('public_orcid_profile...', public_orcid_profile)
-  // console.groupEnd()
-
-  if (loading) return <ContentLoader />
 
   return(
     <form
@@ -63,7 +63,6 @@ export default function UserAgreementsSection({publicProfile=defaultPublicProfil
             label={
               <span>I agree to the <Link className="underline" target='_blank' href={host?.terms_of_service_url ?? ''}>Terms of Service</Link>.</span>
             }
-
           />
         </div>
         <div>
@@ -87,7 +86,7 @@ export default function UserAgreementsSection({publicProfile=defaultPublicProfil
                 control={control}
                 onSave={setPublicOrcidProfile}
                 label={
-                  <span>Enable my public profile using ORCID</span>
+                  <span>Enable my public profile (requires to link your ORCID account)</span>
                 }
               />
             </div>

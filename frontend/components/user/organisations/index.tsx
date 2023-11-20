@@ -56,7 +56,7 @@ export default function UserOrganisations({session}: { session: Session }) {
 
   return (
     <FlexibleGridSection
-      className="gap-[0.125rem] pt-4 pb-12"
+      className="gap-[0.125rem] pt-2"
       height='17rem'
       minWidth='26rem'
       maxWidth='1fr'

@@ -64,6 +64,26 @@ async function deleteLoginForAccount(id:string,token:string){
   }
 }
 
+async function deleteFromOrcidList(orcid:string,token:string){
+  try{
+    const query=`orcid=eq.${orcid}`
+    const url = `${getBaseUrl()}/orcid_whitelist?${query}`
+
+    const resp = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    return extractReturnMessage(resp)
+  }catch(e:any){
+    return {
+      status:500,
+      message: e.message
+    }
+  }
+}
+
 export function useLoginForAccount(){
   const {token, user} = useSession()
   const {showErrorMessage} = useSnackbar()
@@ -95,9 +115,14 @@ export function useLoginForAccount(){
     if (resp.status!==200){
       showErrorMessage(`Failed to remove login. ${resp.message}`)
     }else{
+      const acc = accounts.find(account=>account.id===id)
       // remove account from state and update
       const newList = accounts.filter(account=>account.id!==id)
       setAccounts(newList)
+      // for ORCID account remove it from orcid list too
+      if (acc?.provider==='orcid'){
+        deleteFromOrcidList(acc.sub,token)
+      }
     }
   }
 

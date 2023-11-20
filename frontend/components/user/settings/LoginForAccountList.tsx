@@ -12,11 +12,18 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
 
 import {LoginForAccount} from './useLoginForAccount'
+import {UserSettingsType} from './useUserAgreements'
+import {useFormContext} from 'react-hook-form'
 
 
 function LoginAccount({account,onDelete}:{account:LoginForAccount,onDelete:()=>void}){
-  // TODO! delete enabled only for ORCID???
-  const enabled = account.provider === 'orcid'
+  // watch for changes in public_orcid_profile
+  // REQUIRES FormProvider
+  const {watch} = useFormContext<UserSettingsType>()
+  const [public_orcid_profile]=watch(['public_orcid_profile'])
+  // Delete enabled only for ORCID when public profile disabled
+  const enabled = account.provider === 'orcid' && public_orcid_profile===false
+
   return (
     <ListItem
       secondaryAction={
@@ -57,7 +64,7 @@ type LoginForAccountListProps={
 export default function LoginForAccountList({accounts, deleteLogin}:LoginForAccountListProps) {
   return (
     <div className="py-4">
-      <h3>Authentications</h3>
+      <h2>Authentication methods</h2>
       <List dense={true}>
         {accounts.map(account=>{
           return <LoginAccount

@@ -55,6 +55,12 @@ export default function RemoveAccount() {
   const [agree_terms,notice_privacy_statement]=watch(['agree_terms','notice_privacy_statement'])
   const disabled = agree_terms===false || notice_privacy_statement===false
 
+  // console.group('RemoveAccount')
+  // console.log('agree_terms...', agree_terms)
+  // console.log('notice_privacy_statement...', notice_privacy_statement)
+  // console.log('disabled...', disabled)
+  // console.groupEnd()
+
   function onDeleteAccount() {
     setModal(true)
   }
