@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +39,13 @@ public class MainMentions {
 				.map(mention -> mention.doi)
 				.map(doi -> Utils.urlEncode(doi))
 				.collect(Collectors.joining(","));
-		String jsonSources = Utils.get("https://doi.org/doiRA/" + doisJoined);
+		String jsonSources = null;
+		try {
+			jsonSources = Utils.get("https://doi.org/doiRA/" + doisJoined);
+		} catch (IOException | InterruptedException e) {
+			Utils.saveExceptionInDatabase("DOI mention scraper", "mention", null, e);
+			System.exit(1);
+		}
 
 		Map<String, String> doiToSource = parseJsonSources(jsonSources);
 
@@ -67,7 +74,7 @@ public class MainMentions {
 				MentionRecord scrapedMention = new CrossrefMention(crossrefDoi).mentionData();
 				scrapedMentions.add(scrapedMention);
 				mentionsFailedToScrape.remove(scrapedMention.doi);
-			} catch (RuntimeException e) {
+			} catch (Exception e) {
 				RuntimeException exceptionWithMessage = new RuntimeException("Failed to scrape a Crossref mention with DOI " + crossrefDoi, e);
 				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", null, exceptionWithMessage);
 			}

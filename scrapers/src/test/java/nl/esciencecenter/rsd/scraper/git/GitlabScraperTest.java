@@ -18,7 +18,7 @@ public class GitlabScraperTest {
 	@Disabled
 	@Test
 	void languages() {
-		final String languages = scraper.languages();
+		final String languages = Assertions.assertDoesNotThrow(scraper::languages);
 		Assertions.assertTrue(languages.startsWith("{"));
 		Assertions.assertTrue(languages.endsWith("}"));
 		Assertions.assertTrue(languages.contains("Python"));
@@ -27,7 +27,8 @@ public class GitlabScraperTest {
 	@Disabled
 	@Test
 	void license() {
-		Assertions.assertEquals("MIT License", scraper.basicData().license);
+		String license = Assertions.assertDoesNotThrow(() -> scraper.basicData().license);
+		Assertions.assertEquals("MIT License", license);
 	}
 
 	@Disabled
@@ -35,13 +36,14 @@ public class GitlabScraperTest {
 	void licenseDoesNotExist() {
 		// unlicensed projects should return null
 		// we need to find a suitable project or create a mocked interface
-		Assertions.assertEquals(null, scraper.basicData().license);
+		String license = Assertions.assertDoesNotThrow(() -> scraper.basicData().license);
+		Assertions.assertNull(license);
 	}
 
 	@Disabled
 	@Test
 	void contributions() {
-		final CommitsPerWeek contributions = scraper.contributions();
+		final CommitsPerWeek contributions = Assertions.assertDoesNotThrow(scraper::contributions);
 		// Assertions.assertTrue(contributions.contains("360071ec98b3c0d38ac8e7f0abacc05098c90311"));
 		// Assertions.assertTrue(contributions.contains("2019-10-24T16:40:44.000+02:00"));
 	}

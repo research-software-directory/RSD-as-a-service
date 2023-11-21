@@ -54,7 +54,7 @@ public class Utils {
 	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
 	 * @return The response as a String.
 	 */
-	public static String get(String uri, String... headers) {
+	public static String get(String uri, String... headers) throws IOException, InterruptedException {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.GET()
 				.timeout(Duration.ofSeconds(30))
@@ -63,20 +63,16 @@ public class Utils {
 			httpRequestBuilder.headers(headers);
 		}
 		HttpRequest request = httpRequestBuilder.build();
-		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
-		HttpResponse<String> response;
-		try {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
+		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();) {
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			if (response.statusCode() >= 300) {
+				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
+			}
+			return response.body();
 		}
-		if (response.statusCode() >= 300) {
-			throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
-		}
-		return response.body();
 	}
 
-	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) {
+	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) throws IOException, InterruptedException {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.GET()
 				.timeout(Duration.ofSeconds(30))
@@ -85,13 +81,9 @@ public class Utils {
 			httpRequestBuilder.headers(headers);
 		}
 		HttpRequest request = httpRequestBuilder.build();
-		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
-		HttpResponse<String> response;
-		try {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			return response;
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
 		}
 	}
 

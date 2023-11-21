@@ -5,13 +5,15 @@
 
 package nl.esciencecenter.rsd.scraper.git;
 
+import java.io.IOException;
+
 public interface GitScraper {
 
-	BasicGitData basicData();
+	BasicGitData basicData() throws IOException, InterruptedException;
 
-	String languages();
+	String languages() throws IOException, InterruptedException;
 
-	CommitsPerWeek contributions();
+	CommitsPerWeek contributions() throws IOException, InterruptedException;
 
-	Integer contributorCount();
+	Integer contributorCount() throws IOException, InterruptedException;
 }

@@ -53,7 +53,7 @@ public class MainContributors {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitHub contributor scraper", "repository_url", contributorData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub contributor scraper", "repository_url", contributorData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
 				}
@@ -89,7 +89,7 @@ public class MainContributors {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab contributor scraper", "repository_url", contributorData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitLab contributor scraper", "repository_url", contributorData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
 				}

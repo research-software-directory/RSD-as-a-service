@@ -41,7 +41,7 @@ public class MainCitations {
 
 				localCitationRepository.saveCitations(backendUrl, citationData.id, citingMentionIds, now);
 			}
-		} catch (RuntimeException e) {
+		} catch (Exception e) {
 			Utils.saveExceptionInDatabase("Citation scraper", null, null, e);
 		}
 
