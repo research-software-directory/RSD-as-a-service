@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next'
-import {RsdUser, getUserFromToken} from '~/auth'
 import {app} from '~/config/app'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {ProjectListItem} from '~/types/Project'
@@ -16,17 +15,18 @@ import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {RsdContributor} from '~/components/admin/rsd-contributors/useContributors'
 import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
-import {getPersonProfiles, getProfileProjects, getProfileSoftware} from '~/components/people/apiProfile'
-import ProfileMetadata from '~/components/people/metadata'
-import ProfileTabs from '~/components/people/tabs'
-import ProfileTabContent from '~/components/people/tabs/PeopleTabContent'
-import {PeopleContextProvider} from '~/components/people/context/PeopleContext'
+import {getPersonProfiles, getProfileProjects, getProfileSoftware} from '~/components/profile/apiProfile'
+import ProfileMetadata from '~/components/profile/metadata'
+import ProfileTabs from '~/components/profile/tabs'
+import ProfileTabContent from '~/components/profile/tabs/ProfileTabContent'
+import {ProfileContextProvider} from '~/components/profile/context/ProfileContext'
+import {ProfileTabKey} from '~/components/profile/tabs/ProfileTabItems'
 
 type SoftwareByOrcidProps={
   orcid: string
   rsd_page_layout: LayoutType,
   rsd_page_rows: number,
-  tab: 'software' | 'projects' | 'settings'
+  tab: ProfileTabKey
   profiles: RsdContributor[],
   software_cnt: number,
   software: SoftwareOverviewItemProps[],
@@ -34,7 +34,7 @@ type SoftwareByOrcidProps={
   projects: ProjectListItem[]
 }
 
-export default function SoftwareByOrcid({
+export default function ProfileByOrcidPage({
   orcid,rsd_page_rows,rsd_page_layout,
   tab,profiles,software_cnt,
   software, project_cnt, projects
@@ -67,7 +67,7 @@ export default function SoftwareByOrcid({
             rsd_page_rows
           }}
         >
-          <PeopleContextProvider value={{
+          <ProfileContextProvider value={{
             software_cnt,
             software,
             project_cnt,
@@ -86,7 +86,7 @@ export default function SoftwareByOrcid({
             <section className="flex md:min-h-[60rem] mb-12">
               <ProfileTabContent tab_id={tab} />
             </section>
-          </PeopleContextProvider>
+          </ProfileContextProvider>
         </UserSettingsProvider>
       </BackgroundAndLayout>
     </>

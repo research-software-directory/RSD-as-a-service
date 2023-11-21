@@ -5,25 +5,25 @@
 
 import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
-import useProjectParams from '~/components/organisation/projects/useProjectParams'
-import PeopleSearchPanel from '~/components/people/PeopleSearchPanel'
+import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
+import ProfileSearchPanel from '~/components/profile/ProfileSearchPanel'
 
-type PeopleSearchSoftware = {
+type ProfileSearchSoftware = {
   count: number
   layout: ProjectLayoutType
   setView: (view:ProjectLayoutType)=>void
 }
 
 
-export default function PeopleSearchProjects({
+export default function ProfileSearchSoftware({
   count, layout, setView
-}: PeopleSearchSoftware) {
-  const {search,page,rows} = useProjectParams()
+}: ProfileSearchSoftware) {
+  const {search,page,rows} = useSoftwareParams()
   const {handleQueryChange} = useQueryChange()
 
-  const placeholder = 'Find project'
+  const placeholder = 'Find software'
 
-  // console.group('PeopleSearchSoftware')
+  // console.group('ProfileSearchSoftware')
   // console.log('page...', page)
   // console.log('rows...', rows)
   // console.log('search...', search)
@@ -31,7 +31,7 @@ export default function PeopleSearchProjects({
 
   return (
     <section data-testid="search-section">
-      <PeopleSearchPanel
+      <ProfileSearchPanel
         placeholder={placeholder}
         layout={layout}
         rows={rows}

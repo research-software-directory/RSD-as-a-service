@@ -7,7 +7,7 @@ import {createContext, useContext} from 'react'
 import {ProjectListItem} from '~/types/Project'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 
-type PeopleContextProps={
+type ProfileContextProps={
   software_cnt: number,
   software: SoftwareOverviewItemProps[],
   project_cnt: number,
@@ -15,22 +15,22 @@ type PeopleContextProps={
 }
 
 // create context
-const PeopleContext = createContext<PeopleContextProps|null>(null)
+const ProfileContext = createContext<ProfileContextProps|null>(null)
 
 // profile context provider
-export function PeopleContextProvider(props:any){
-  return <PeopleContext.Provider
+export function ProfileContextProvider(props:any){
+  return <ProfileContext.Provider
     {...props}
   />
 }
 
 // profile context hook
-export function usePeopleContext(){
-  const props = useContext(PeopleContext)
+export function useProfileContext(){
+  const props = useContext(ProfileContext)
   if (props===null){
-    throw Error('usePeopleContext requires PeopleContextProvider at parent')
+    throw Error('useProfileContext requires ProfileContextProvider at parent')
   }
   return props
 }
 
-export default PeopleContext
+export default ProfileContext

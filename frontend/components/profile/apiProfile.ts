@@ -57,14 +57,14 @@ export async function getProfileSoftware({orcid,rows=12,page=0,search,token}:Pro
     if (!orcid) return null
     const offset = page * rows
     // filter on orcid, order by mention count first
-    let query = `orcid=cs.%7B${orcid}%7D&order=mention_cnt.desc,contributor_cnt.desc,id&limit=${rows}&offset=${offset}`
+    let query = `orcid=eq.${orcid}&order=mention_cnt.desc,contributor_cnt.desc,id&limit=${rows}&offset=${offset}`
     // include search
     if (search){
       const encodedSearch = encodeURIComponent(search)
       query+=`&or=(brand_name.ilike.*${encodedSearch}*,short_statement.ilike.*${encodedSearch}*,keywords_text.ilike.*${encodedSearch}*)`
     }
     // complete url
-    const url = `${getBaseUrl()}/rpc/software_by_orcid?${query}`
+    const url = `${getBaseUrl()}/rpc/software_by_public_profile?${query}`
     // console.log("getProfileSoftware...url...", url)
     // make request
     const resp = await fetch(url,{
@@ -103,14 +103,14 @@ export async function getProfileProjects({orcid,rows=12,page=0,search,token}:Pro
     if (!orcid) return null
     const offset = page * rows
     // filter on orcid, order by impact_cnt first
-    let query = `orcid=cs.%7B${orcid}%7D&order=impact_cnt.desc,output_cnt.desc,id&limit=${rows}&offset=${offset}`
+    let query = `orcid=eq.${orcid}&order=impact_cnt.desc,output_cnt.desc,id&limit=${rows}&offset=${offset}`
     // include search
     if (search){
       const encodedSearch = encodeURIComponent(search)
       query+=`&or=(title.ilike.*${encodedSearch}*,subtitle.ilike.*${encodedSearch}*,keywords_text.ilike.*${encodedSearch}*)`
     }
     // complete url
-    const url = `${getBaseUrl()}/rpc/project_by_orcid?${query}`
+    const url = `${getBaseUrl()}/rpc/project_by_public_profile?${query}`
     // console.log('getProfileProjects...url...', url)
     // console.log('getProfileProjects...search...', search)
     // make request

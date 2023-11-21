@@ -7,21 +7,20 @@ import {useRouter} from 'next/router'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 
-import {usePeopleContext} from '../context/PeopleContext'
-import {PeopleTabKey, profileTabItems} from './PeopleTabItems'
-
+import {useProfileContext} from '../context/ProfileContext'
+import {ProfileTabKey, profileTabItems} from './ProfileTabItems'
 
 type ProfileTabsProps={
-  tab_id: PeopleTabKey,
+  tab_id: ProfileTabKey,
   isMaintainer: boolean
 }
 
 // extract tab items (object keys)
-const tabItems = Object.keys(profileTabItems) as PeopleTabKey[]
+const tabItems = Object.keys(profileTabItems) as ProfileTabKey[]
 
 export default function ProfileTabs({tab_id, isMaintainer}:ProfileTabsProps) {
   const router = useRouter()
-  const {software_cnt,project_cnt} = usePeopleContext()
+  const {software_cnt,project_cnt} = useProfileContext()
   return (
     <Tabs
       variant="scrollable"

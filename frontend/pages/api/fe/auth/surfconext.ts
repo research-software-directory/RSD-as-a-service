@@ -39,10 +39,10 @@ export async function surfconextRedirectProps() {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
-        redirect_uri: process.env.SURFCONEXT_REDIRECT || 'https://research-software.nl/auth/login/surfconext',
-        client_id: process.env.SURFCONEXT_CLIENT_ID || 'www.research-software.nl',
-        scope: process.env.SURFCONEXT_SCOPES || 'openid',
-        response_mode: process.env.SURFCONEXT_RESPONSE_MODE || 'form_post',
+        redirect_uri: process.env.SURFCONEXT_REDIRECT ?? 'https://research-software.nl/auth/login/surfconext',
+        client_id: process.env.SURFCONEXT_CLIENT_ID ?? 'www.research-software.nl',
+        scope: process.env.SURFCONEXT_SCOPES ?? 'openid',
+        response_mode: process.env.SURFCONEXT_RESPONSE_MODE ?? 'form_post',
         claims
       }
       return props

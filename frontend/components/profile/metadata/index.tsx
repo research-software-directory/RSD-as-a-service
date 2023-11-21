@@ -47,7 +47,7 @@ function aggregateProfiles(profiles:RsdContributor[]|null){
   }
 }
 
-export default function PeopleMetadata({profiles}:{profiles:RsdContributor[]|null}) {
+export default function ProfileMetadata({profiles}:{profiles:RsdContributor[]|null}) {
   const {name, logo, initials, role, affiliation, email, orcid} = aggregateProfiles(profiles)
   return (
     <section className="grid md:grid-cols-[1fr,3fr] xl:grid-cols-[1fr,5fr] gap-4 mt-8">

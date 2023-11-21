@@ -6,7 +6,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {OrganisationRole} from '~/types/Organisation'
-import {TeamMemberProps} from '~/types/Contributor'
 import {mentionColumns, MentionItemProps} from '~/types/Mention'
 import {
   KeywordForProject,
@@ -272,16 +271,13 @@ export async function getMentionsForProject({project, token, table}:
   }
 }
 
-export async function getTeamForProject({project, token, frontend}:
-  {project: string, token?: string, frontend?: boolean}) {
+export async function getTeamForProject({project, token}:
+  {project: string, token?: string}) {
   try {
-    // use standardized list of columns - after team_member table is updated (as with contributors)
-    const columns = TeamMemberProps.join(',')
-    const query = `team_member?select=${columns}&project=eq.${project}&order=position,given_names.asc`
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend) {
-      url = `/api/v1/${query}`
-    }
+    // build url
+    const query = `project_id=${project}&order=position.asc,given_names.asc`
+    const url = `${getBaseUrl()}/rpc/project_team?${query}`
+
     const resp = await fetch(url, {
       method: 'GET',
       headers: {

@@ -11,14 +11,15 @@ import VpnKeyIcon from '@mui/icons-material/VpnKey'
 import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
 
+import {useFormContext} from 'react-hook-form'
+import OrcidLink from '~/components/layout/OrcidLink'
 import {LoginForAccount} from './useLoginForAccount'
 import {UserSettingsType} from './useUserAgreements'
-import {useFormContext} from 'react-hook-form'
 
 
 function LoginAccount({account,onDelete}:{account:LoginForAccount,onDelete:()=>void}){
   // watch for changes in public_orcid_profile
-  // REQUIRES FormProvider
+  // FormProvider context at parent is REQUIRED
   const {watch} = useFormContext<UserSettingsType>()
   const [public_orcid_profile]=watch(['public_orcid_profile'])
   // Delete enabled only for ORCID when public profile disabled
@@ -44,9 +45,14 @@ function LoginAccount({account,onDelete}:{account:LoginForAccount,onDelete:()=>v
         primary={account?.provider.toUpperCase() ?? ''}
         secondary={
           <>
-            <span data-testid="provider">{account?.name ?? ''}</span><br/>
+            <span data-testid="user-settings-username">{account?.name ?? ''}</span>
+            {/* Show ORCID and link to ORCID website */}
+            {account?.provider==='orcid' ?
+              <><br/><OrcidLink orcid={account?.sub}/></>
+              : null
+            }
             {account?.home_organisation ?
-              <span data-testid="affiliation">{account?.home_organisation}</span>
+              <><br/><span data-testid="affiliation">{account?.home_organisation}</span></>
               : null
             }
           </>

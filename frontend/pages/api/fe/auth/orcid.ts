@@ -31,11 +31,11 @@ export async function orcidRedirectProps() {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
-        redirect_uri: process.env.ORCID_REDIRECT || 'https://research-software.nl/auth/login/orcid',
-        redirect_couple_uri: process.env.ORCID_REDIRECT_COUPLE || 'MISSING',
-        client_id: process.env.ORCID_CLIENT_ID || 'www.research-software.nl',
-        scope: process.env.ORCID_SCOPES || 'openid',
-        response_mode: process.env.ORCID_RESPONSE_MODE || 'query'
+        redirect_uri: process.env.ORCID_REDIRECT ?? 'https://research-software.nl/auth/login/orcid',
+        redirect_couple_uri: process.env.ORCID_REDIRECT_COUPLE ?? 'MISSING',
+        client_id: process.env.ORCID_CLIENT_ID ?? 'www.research-software.nl',
+        scope: process.env.ORCID_SCOPES ?? 'openid',
+        response_mode: process.env.ORCID_RESPONSE_MODE ?? 'query'
       }
       return props
     } else {

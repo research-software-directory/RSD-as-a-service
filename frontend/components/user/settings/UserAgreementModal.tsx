@@ -10,6 +10,7 @@
 
 import {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
+import Link from 'next/link'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -19,14 +20,12 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import CheckIcon from '@mui/icons-material/Check'
 import InfoIcon from '@mui/icons-material/Info'
 
-import {useSession} from '~/auth'
 import {useForm} from 'react-hook-form'
+import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {UserSettingsType, patchAccountTable, useUserAgreements} from './useUserAgreements'
-import ContentLoader from '~/components/layout/ContentLoader'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
-import Link from 'next/link'
 import useRsdSettings from '~/config/useRsdSettings'
+import {UserSettingsType, patchAccountTable, useUserAgreements} from './useUserAgreements'
 
 type UserSettingsModalForm = UserSettingsType & {
   account: string
@@ -61,7 +60,7 @@ export default function UserAgrementModal() {
   // console.groupEnd()
 
   /**
-  * This effect runs only on load when inital
+  * This effect runs only on load when initial
   * values are loaded by useUserAgreements hook
   * The effect should not react on value changes in the form
   */

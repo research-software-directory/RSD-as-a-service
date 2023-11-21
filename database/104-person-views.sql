@@ -74,7 +74,9 @@ SELECT
 	'contributor' AS origin,
 	software.slug
 FROM
-	contributor
+	public_profile()
+INNER JOIN
+	contributor ON public_profile.orcid=contributor.orcid
 INNER JOIN
 	software ON contributor.software = software.id
 UNION
@@ -90,7 +92,9 @@ SELECT
 	'team_member' AS origin,
 	project.slug
 FROM
-	team_member
+	public_profile()
+INNER JOIN
+	team_member ON public_profile.orcid = team_member.orcid
 INNER JOIN
 	project ON team_member.project = project.id
 $$;

@@ -31,10 +31,10 @@ export async function azureRedirectProps() {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
-        redirect_uri: process.env.AZURE_REDIRECT || 'https://research-software.nl/auth/login/azure',
-        client_id: process.env.AZURE_CLIENT_ID || 'www.research-software.nl',
-        scope: process.env.AZURE_SCOPES || 'openid',
-        response_mode: process.env.AZURE_RESPONSE_MODE || 'query',
+        redirect_uri: process.env.AZURE_REDIRECT ?? 'https://research-software.nl/auth/login/azure',
+        client_id: process.env.AZURE_CLIENT_ID ?? 'www.research-software.nl',
+        scope: process.env.AZURE_SCOPES ?? 'openid',
+        response_mode: process.env.AZURE_RESPONSE_MODE ?? 'query',
         prompt: process.env.AZURE_LOGIN_PROMPT
       }
       return props

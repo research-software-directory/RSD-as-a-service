@@ -9,30 +9,21 @@ import Pagination from '@mui/material/Pagination'
 import {setDocumentCookie} from '~/utils/userSettings'
 import {useUserSettings} from '~/components/organisation/context/UserSettingsContext'
 import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
+import useProjectParams from '~/components/organisation/projects/useProjectParams'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
-import {usePeopleContext} from '../context/PeopleContext'
-import PeopleSoftwareOverview from './PeopleSoftwareOverview'
-import PeopleSearchSoftware from './PeopleSearchSoftware'
+import {useProfileContext} from '~/components/profile/context/ProfileContext'
+import ProfileSearchProjects from './ProfileSearchProjects'
+import ProfileProjectOverview from './ProfileProjectOverview'
 
-export default function PeopleSoftware() {
+export default function ProfileProjects() {
   const {rsd_page_layout} = useUserSettings()
-  const {software_cnt,software} = usePeopleContext()
-  const {page,rows} = useSoftwareParams()
+  const {project_cnt,projects} = useProfileContext()
+  const {page,rows} = useProjectParams()
   const {handleQueryChange} = useQueryChange()
   // if masonry we change to grid
   const initView = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
   const [view, setView] = useState<ProjectLayoutType>(initView ?? 'grid')
-  const numPages = Math.ceil(software_cnt / rows)
-
-  // console.group('PeopleSoftware')
-  // console.log('page...', page)
-  // console.log('rows...', rows)
-  // console.log('software_cnt...', software_cnt)
-  // console.log('software...', software)
-  // console.log('view...', view)
-  // console.log('rsd_page_layout...', rsd_page_layout)
-  // console.groupEnd()
+  const numPages = Math.ceil(project_cnt / rows)
 
   function setLayout(view: ProjectLayoutType) {
     // update local view
@@ -43,15 +34,15 @@ export default function PeopleSoftware() {
 
   return (
     <div className="flex-1">
-      <PeopleSearchSoftware
-        count={software_cnt}
+      <ProfileSearchProjects
+        count={project_cnt}
         layout={view}
         setView={setLayout}
       />
-      {/* software overview/content */}
-      <PeopleSoftwareOverview
+      {/* project overview/content */}
+      <ProfileProjectOverview
         layout={view}
-        software={software}
+        projects={projects}
       />
       {/* Pagination */}
       {numPages > 1 &&

@@ -5,17 +5,16 @@
 
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
-import SettingsIcon from '@mui/icons-material/Settings'
 
 import {OrganisationTabItemProps} from '~/components/organisation/tabs/OrganisationTabItems'
 
-export type PeopleTabKey = 'software' | 'projects' | 'settings'
+export type ProfileTabKey = 'software' | 'projects'
 
-export type PeopleTabProps = {
-  [key in PeopleTabKey]: OrganisationTabItemProps
+export type ProfileTabProps = {
+  [key in ProfileTabKey]: OrganisationTabItemProps
 }
 
-export const profileTabItems:PeopleTabProps = {
+export const profileTabItems:ProfileTabProps = {
   software: {
     id:'software',
     label:({software_cnt})=>`Software (${software_cnt ?? 0})`,
@@ -27,12 +26,5 @@ export const profileTabItems:PeopleTabProps = {
     label: ({project_cnt})=>`Projects (${project_cnt ?? 0})`,
     icon: <ListAltIcon />,
     isVisible: (props) => true,
-  },
-  settings:{
-    id:'settings',
-    label:()=>'Settings',
-    icon: <SettingsIcon />,
-    // we do not show this option if not a maintainer
-    isVisible: ({isMaintainer}) => isMaintainer
   }
 }

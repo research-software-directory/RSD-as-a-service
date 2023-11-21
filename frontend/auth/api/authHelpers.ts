@@ -8,10 +8,6 @@
 import logger from '~/utils/logger'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 
-// export function getEncodedClaims(claims: any) {
-//   return encodeURIComponent(JSON.stringify(claims))
-// }
-
 export type RedirectToProps = {
   authorization_endpoint: string,
   redirect_uri: string,

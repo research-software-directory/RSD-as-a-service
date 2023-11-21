@@ -7,7 +7,7 @@ import SearchInput from '~/components/search/SearchInput'
 import SelectRows from '~/components/software/overview/search/SelectRows'
 import ViewToggleGroup, {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 
-type PeopleSearchPanelProps={
+type ProfileSearchPanelProps={
   placeholder: string
   layout: ProjectLayoutType
   rows: number
@@ -16,10 +16,10 @@ type PeopleSearchPanelProps={
   handleQueryChange: (key:string, value: string|string[])=>void
 }
 
-export default function PeopleSearchPanel({
+export default function ProfileSearchPanel({
   placeholder,layout,rows,search,
   onSetView,handleQueryChange
-}:PeopleSearchPanelProps) {
+}:ProfileSearchPanelProps) {
   return (
     <div className="flex border rounded-md shadow-sm bg-base-100 p-2">
       <SearchInput

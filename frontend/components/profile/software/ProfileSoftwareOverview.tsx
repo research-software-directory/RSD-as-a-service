@@ -13,12 +13,12 @@ import SoftwareListItemContent from '~/components/software/overview/list/Softwar
 import SoftwareOverviewList from '~/components/software/overview/list/SoftwareOverviewList'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 
-type PeopleSoftwareOverviewProps = {
+type ProfileSoftwareOverviewProps = {
   layout: ProjectLayoutType
   software: SoftwareOverviewItemProps[]
 }
 
-export default function PeopleSoftwareOverview({layout,software}:PeopleSoftwareOverviewProps) {
+export default function ProfileSoftwareOverview({layout,software}:ProfileSoftwareOverviewProps) {
 
   if (!software || software.length === 0) {
     return <NoContent />

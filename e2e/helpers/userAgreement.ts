@@ -1,4 +1,6 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -50,10 +52,7 @@ export async function acceptUserAgreement(page: Page) {
     // check/accept all options
     for (const checkbox of checkboxes) {
       if (await checkbox.isChecked() === false) {
-        await Promise.all([
-          checkbox.check(),
-          page.waitForRequest(req => req.method() === 'PATCH')
-        ])
+        await checkbox.check()
       }
     }
 
@@ -66,5 +65,8 @@ export async function acceptUserAgreement(page: Page) {
 
     // click OK button
     okBtn.click()
+    await Promise.all([
+      page.waitForRequest(req => req.method() === 'PATCH')
+    ])
   }
 }

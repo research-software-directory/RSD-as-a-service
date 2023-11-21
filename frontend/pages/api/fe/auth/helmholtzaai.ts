@@ -40,10 +40,10 @@ async function helmholtzRedirectProps() {
       // use default values if env not provided
       const props: RedirectToProps = {
         authorization_endpoint,
-        client_id: process.env.HELMHOLTZAAI_CLIENT_ID || 'rsd-dev',
-        redirect_uri: process.env.HELMHOLTZAAI_REDIRECT || 'http://localhost/auth/login/helmholtzaai',
-        scope: process.env.HELMHOLTZAAI_SCOPES || 'openid+profile+email+eduperson_principal_name',
-        response_mode: process.env.HELMHOLTZAAI_RESPONSE_MODE || 'query',
+        client_id: process.env.HELMHOLTZAAI_CLIENT_ID ?? 'rsd-dev',
+        redirect_uri: process.env.HELMHOLTZAAI_REDIRECT ?? 'http://localhost/auth/login/helmholtzaai',
+        scope: process.env.HELMHOLTZAAI_SCOPES ?? 'openid+profile+email+eduperson_principal_name',
+        response_mode: process.env.HELMHOLTZAAI_RESPONSE_MODE ?? 'query',
         claims
       }
       return props

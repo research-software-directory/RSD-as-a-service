@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,18 +11,15 @@
  */
 
 import logger from './logger'
-import {Contributor, ContributorProps, PatchPerson, SaveContributor} from '../types/Contributor'
+import {Contributor, PatchPerson, Profile, SaveContributor} from '../types/Contributor'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
 
 export async function getContributorsForSoftware({software, token}:
   { software: string, token?: string}) {
   try {
-    // use standardized list of columns
-    const columns = ContributorProps.join(',')
-    // , avatar_data
-    const query = `contributor?select=${columns}&software=eq.${software}&order=position.asc,given_names.asc`
-    const baseUrl = getBaseUrl()
-    const url = `${baseUrl}/${query}`
+    // build url
+    const query = `software_id=${software}&order=position.asc,given_names.asc`
+    const url = `${getBaseUrl()}/rpc/software_contributors?${query}`
 
     const resp = await fetch(url, {
       method: 'GET',
@@ -31,7 +29,7 @@ export async function getContributorsForSoftware({software, token}:
     })
 
     if (resp.status === 200) {
-      const data: Contributor[] = await resp.json()
+      const data: Profile[] = await resp.json()
       return data
     } else if (resp.status === 404) {
       logger(`getContributorsForSoftware: 404 [${url}]`, 'error')

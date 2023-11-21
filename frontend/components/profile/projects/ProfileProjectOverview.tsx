@@ -14,12 +14,12 @@ import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggl
 import SoftwareOverviewGrid from '~/components/software/overview/cards/SoftwareOverviewGrid'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 
-type PeopleProjectOverviewProps = {
+type ProfileProjectOverviewProps = {
   layout: ProjectLayoutType
   projects: ProjectListItem[]
 }
 
-export default function PeopleProjectOverview({layout,projects}:PeopleProjectOverviewProps) {
+export default function ProfileProjectOverview({layout,projects}:ProfileProjectOverviewProps) {
 
   if (!projects || projects.length === 0) {
     return <NoContent />

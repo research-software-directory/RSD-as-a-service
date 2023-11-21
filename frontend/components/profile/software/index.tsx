@@ -9,21 +9,30 @@ import Pagination from '@mui/material/Pagination'
 import {setDocumentCookie} from '~/utils/userSettings'
 import {useUserSettings} from '~/components/organisation/context/UserSettingsContext'
 import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import useProjectParams from '~/components/organisation/projects/useProjectParams'
+import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
-import {usePeopleContext} from '~/components/people/context/PeopleContext'
-import ProfileSearchProjects from './PeopleSearchProjects'
-import ProfileProjectOverview from './PeopleProjectOverview'
+import {useProfileContext} from '../context/ProfileContext'
+import ProfileSoftwareOverview from './ProfileSoftwareOverview'
+import ProfileSearchSoftware from './ProfileSearchSoftware'
 
-export default function ProfileProjects() {
+export default function ProfileSoftware() {
   const {rsd_page_layout} = useUserSettings()
-  const {project_cnt,projects} = usePeopleContext()
-  const {page,rows} = useProjectParams()
+  const {software_cnt,software} = useProfileContext()
+  const {page,rows} = useSoftwareParams()
   const {handleQueryChange} = useQueryChange()
   // if masonry we change to grid
   const initView = rsd_page_layout === 'masonry' ? 'grid' : rsd_page_layout
   const [view, setView] = useState<ProjectLayoutType>(initView ?? 'grid')
-  const numPages = Math.ceil(project_cnt / rows)
+  const numPages = Math.ceil(software_cnt / rows)
+
+  // console.group('ProfileSoftware')
+  // console.log('page...', page)
+  // console.log('rows...', rows)
+  // console.log('software_cnt...', software_cnt)
+  // console.log('software...', software)
+  // console.log('view...', view)
+  // console.log('rsd_page_layout...', rsd_page_layout)
+  // console.groupEnd()
 
   function setLayout(view: ProjectLayoutType) {
     // update local view
@@ -34,15 +43,15 @@ export default function ProfileProjects() {
 
   return (
     <div className="flex-1">
-      <ProfileSearchProjects
-        count={project_cnt}
+      <ProfileSearchSoftware
+        count={software_cnt}
         layout={view}
         setView={setLayout}
       />
-      {/* project overview/content */}
-      <ProfileProjectOverview
+      {/* software overview/content */}
+      <ProfileSoftwareOverview
         layout={view}
-        projects={projects}
+        software={software}
       />
       {/* Pagination */}
       {numPages > 1 &&
