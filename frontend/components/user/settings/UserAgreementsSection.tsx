@@ -12,6 +12,7 @@ import Link from 'next/link'
 import {useFormContext} from 'react-hook-form'
 import useRsdSettings from '~/config/useRsdSettings'
 import ControlledSwitch from '~/components/form/ControlledSwitch'
+import {UserSettingsType} from './useUserAgreements'
 
 type UserAgreementsProps = {
   agree_terms?:boolean,
@@ -42,7 +43,7 @@ export default function UserAgreementsSection({
 }:UserAgreementsProps) {
 
   const {host} = useRsdSettings()
-  const {control} = useFormContext()
+  const {control, watch} = useFormContext<UserSettingsType>()
 
   return(
     <form
@@ -86,7 +87,7 @@ export default function UserAgreementsSection({
                 control={control}
                 onSave={setPublicOrcidProfile}
                 label={
-                  <span>Enable my public profile (requires to link your ORCID account)</span>
+                  <span>Enable my <Link className="underline" target='_blank' href="/documentation/users/user-settings/#public-profile">Public Profile</Link></span>
                 }
               />
             </div>
