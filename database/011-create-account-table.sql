@@ -149,5 +149,5 @@ FROM
 INNER JOIN
 	account ON login_for_account.account = account.id
 WHERE
-	login_for_account.provider='orcid'
+	login_for_account.provider='orcid' AND account.public_orcid_profile = TRUE
 $$;

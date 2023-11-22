@@ -43,57 +43,52 @@ export default function UserAgreementsSection({
 }:UserAgreementsProps) {
 
   const {host} = useRsdSettings()
-  const {control, watch} = useFormContext<UserSettingsType>()
+  const {control} = useFormContext<UserSettingsType>()
 
   return(
-    <form
-      id="profile-settings-form"
-      className='flex-1'
-    >
+    <div className="py-4">
+      <h2>User agreements</h2>
       <div className="py-4">
-        <h2>User agreements</h2>
-        <div className="py-4">
           To be able to contribute to the RSD, we need to know that you agree to our Terms of Service, and that you have read the Privacy Statement. Please check all of the points below to proceed:
-        </div>
-        <div>
-          <ControlledSwitch
-            defaultValue={agree_terms}
-            name='agree_terms'
-            control={control}
-            onSave={setAgreeTerms}
-            label={
-              <span>I agree to the <Link className="underline" target='_blank' href={host?.terms_of_service_url ?? ''}>Terms of Service</Link>.</span>
-            }
-          />
-        </div>
-        <div>
-          <ControlledSwitch
-            defaultValue={notice_privacy_statement}
-            name='notice_privacy_statement'
-            control={control}
-            onSave={setPrivacyStatement}
-            label={
-              <span>I have read the <Link className='underline' target='_blank' href={host?.privacy_statement_url ?? ''}>Privacy Statement</Link>.</span>
-            }
-          />
-        </div>
-        {
-          publicProfile.show ?
-            <div>
-              <ControlledSwitch
-                disabled={publicProfile.disabled && public_orcid_profile===false}
-                defaultValue={public_orcid_profile}
-                name='public_orcid_profile'
-                control={control}
-                onSave={setPublicOrcidProfile}
-                label={
-                  <span>Enable my <Link className="underline" target='_blank' href="/documentation/users/user-settings/#public-profile">Public Profile</Link></span>
-                }
-              />
-            </div>
-            : null
-        }
       </div>
-    </form>
+      <div>
+        <ControlledSwitch
+          defaultValue={agree_terms}
+          name='agree_terms'
+          control={control}
+          onSave={setAgreeTerms}
+          label={
+            <span>I agree to the <Link className="underline" target='_blank' href={host?.terms_of_service_url ?? ''}>Terms of Service</Link>.</span>
+          }
+        />
+      </div>
+      <div>
+        <ControlledSwitch
+          defaultValue={notice_privacy_statement}
+          name='notice_privacy_statement'
+          control={control}
+          onSave={setPrivacyStatement}
+          label={
+            <span>I have read the <Link className='underline' target='_blank' href={host?.privacy_statement_url ?? ''}>Privacy Statement</Link>.</span>
+          }
+        />
+      </div>
+      {
+        publicProfile.show ?
+          <div>
+            <ControlledSwitch
+              disabled={publicProfile.disabled && public_orcid_profile===false}
+              defaultValue={public_orcid_profile}
+              name='public_orcid_profile'
+              control={control}
+              onSave={setPublicOrcidProfile}
+              label={
+                <span>Enable my <Link className="underline" target='_blank' href="/documentation/users/user-settings/#public-profile">Public Profile</Link></span>
+              }
+            />
+          </div>
+          : null
+      }
+    </div>
   )
 }

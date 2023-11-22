@@ -12,6 +12,31 @@ import {RsdContributor} from '~/components/admin/rsd-contributors/useContributor
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import OrcidLink from '~/components/layout/OrcidLink'
 
+/**
+ * Add new string value to a list of UNIQUE string values.
+ * New value will be trimmed and transformed to locale-lower-case before comparison.
+ * It ignores null and undefined values.
+ * @param list
+ * @param value
+ * @returns
+ */
+function addToList(list:string[],value?:string|null){
+  // if no value to add we return
+  if (!value) return list
+
+  // try to find trimmed and lowercased value
+  const found = list.find(item=>item.trim().toLocaleLowerCase()===value.trim().toLocaleLowerCase())
+
+  if (found){
+    // already present in the list
+    return list
+  }else{
+    // new item to add to the list
+    list.push(value)
+    return list
+  }
+}
+
 function aggregateProfiles(profiles:RsdContributor[]|null){
   const name:string[]=[],affiliation:string[]=[],role:string[]=[],email:string[]=[]
   let logo:string|null=null, orcid:string|null=null, initials:string|null=null
@@ -20,20 +45,20 @@ function aggregateProfiles(profiles:RsdContributor[]|null){
   profiles?.forEach(item=>{
     // name
     const displayName = getDisplayName(item)
-    if (displayName && name.includes(displayName)===false) {
-      name.push(displayName)
-    }
+    // validate display name
+    addToList(name,displayName)
+    // initals - to be used if no image present
     if (initials===null) initials = getDisplayInitials(item)
-    // orcid
+    // orcid - should be only 1 orcid
     if (item.orcid && orcid===null) orcid=item.orcid
-    // logo
+    // logo - use first image found
     if (logo===null && item?.avatar_id) logo = item.avatar_id
     // affiliation
-    if (item.affiliation && affiliation.includes(item.affiliation.trim())===false) affiliation.push(item.affiliation.trim())
+    addToList(affiliation,item.affiliation)
     // roles
-    if (item.role && role.includes(item.role.trim())===false) role.push(item.role.trim())
-    // emails
-    if (item.email_address && email.includes(item.email_address)===false) email.push(item.email_address)
+    addToList(role,item.role)
+    // emails - we force all emails to lower case
+    addToList(email,item?.email_address?.toLocaleLowerCase())
   })
 
   return {

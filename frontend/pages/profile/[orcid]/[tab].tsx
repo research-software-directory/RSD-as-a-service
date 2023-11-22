@@ -15,7 +15,7 @@ import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {RsdContributor} from '~/components/admin/rsd-contributors/useContributors'
 import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
-import {getPersonProfiles, getProfileProjects, getProfileSoftware} from '~/components/profile/apiProfile'
+import {getPublicProfile,getProfileProjects,getProfileSoftware} from '~/components/profile/apiProfile'
 import ProfileMetadata from '~/components/profile/metadata'
 import ProfileTabs from '~/components/profile/tabs'
 import ProfileTabContent from '~/components/profile/tabs/ProfileTabContent'
@@ -34,7 +34,7 @@ type SoftwareByOrcidProps={
   projects: ProjectListItem[]
 }
 
-export default function ProfileByOrcidPage({
+export default function PublicProfileByOrcidPage({
   orcid,rsd_page_rows,rsd_page_layout,
   tab,profiles,software_cnt,
   software, project_cnt, projects
@@ -108,7 +108,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     // find person by orcid
     const token = req?.cookies['rsd_token']
     const orcid = params?.orcid as string
-    const profiles = await getPersonProfiles({orcid,token})
+    const profiles = await getPublicProfile({orcid,token})
     // 404 if profiles not found
     if (profiles === null || profiles.length === 0){
       return {

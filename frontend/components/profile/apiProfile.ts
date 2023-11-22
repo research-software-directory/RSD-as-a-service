@@ -10,16 +10,16 @@ import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {RsdContributor} from '~/components/admin/rsd-contributors/useContributors'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 
-type PersonProfilesProps={
+type PublicProfileProps={
   orcid: string
   token?: string
 }
 
-export async function getPersonProfiles({orcid, token}: PersonProfilesProps) {
+export async function getPublicProfile({orcid, token}: PublicProfileProps) {
   try {
     if (!orcid) return null
     // filter on orcid, order by image first
-    const query = `orcid=eq.${orcid}&order=avatar_id.nullslast`
+    const query = `public_orcid_profile=eq.${orcid}&order=avatar_id.nullslast`
 
     // complete url
     const url = `${getBaseUrl()}/rpc/person_mentions?${query}`
@@ -57,7 +57,7 @@ export async function getProfileSoftware({orcid,rows=12,page=0,search,token}:Pro
     if (!orcid) return null
     const offset = page * rows
     // filter on orcid, order by mention count first
-    let query = `orcid=eq.${orcid}&order=mention_cnt.desc,contributor_cnt.desc,id&limit=${rows}&offset=${offset}`
+    let query = `orcid=eq.${orcid}&order=mention_cnt.desc.nullslast,contributor_cnt.desc.nullslast,id&limit=${rows}&offset=${offset}`
     // include search
     if (search){
       const encodedSearch = encodeURIComponent(search)
@@ -103,7 +103,7 @@ export async function getProfileProjects({orcid,rows=12,page=0,search,token}:Pro
     if (!orcid) return null
     const offset = page * rows
     // filter on orcid, order by impact_cnt first
-    let query = `orcid=eq.${orcid}&order=impact_cnt.desc,output_cnt.desc,id&limit=${rows}&offset=${offset}`
+    let query = `orcid=eq.${orcid}&order=impact_cnt.desc.nullslast,output_cnt.desc.nullslast,id&limit=${rows}&offset=${offset}`
     // include search
     if (search){
       const encodedSearch = encodeURIComponent(search)

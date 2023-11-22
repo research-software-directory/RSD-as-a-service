@@ -17,7 +17,8 @@ import {useLoginForAccount} from './useLoginForAccount'
 import LoginForAccountList from './LoginForAccountList'
 import LinkOrcidButton from './LinkOrcidButton'
 import {UserSettingsType, useUserAgreements} from './useUserAgreements'
-import BasicProfileProps from './BasicProfileProps'
+import BasicProfile from './BasicProfile'
+import {useEffect} from 'react'
 
 export default function UserSettings({orcidAuthLink}:{orcidAuthLink:string|null}) {
   const {loading, accounts, deleteLogin} = useLoginForAccount()
@@ -25,11 +26,13 @@ export default function UserSettings({orcidAuthLink}:{orcidAuthLink:string|null}
   const publicProfile = {
     show: orcidAuthLink !== null,
     // disabled if ORCID account is not linked
-    disabled: accounts.findIndex(item=>item.provider==='orcid') === -1
+    disabled: accounts.findIndex(item=>item.provider==='orcid') === -1,
+    // orcid id linked
+    orcid: accounts.find(item=>item.provider==='orcid')?.sub
   }
 
   const methods = useForm<UserSettingsType>({
-    mode: 'onChange',
+    mode: 'onChange'
   })
 
   // console.group('UserSettings')
@@ -39,27 +42,47 @@ export default function UserSettings({orcidAuthLink}:{orcidAuthLink:string|null}
   // console.log('accounts...', accounts)
   // console.groupEnd()
 
-  if (loading || userAgreements.loading) return (
-    <ContentLoader />
-  )
+  /**
+   * We need to reset form value for public_orcid_profile in order to pass
+   * the inital value to other components that listen for change in this value
+   */
+  useEffect(()=>{
+    if (typeof userAgreements?.public_orcid_profile !=='undefined'){
+      methods.reset({
+        'public_orcid_profile': userAgreements.public_orcid_profile
+      })
+    }
+  },[methods,
+    userAgreements.public_orcid_profile
+  ])
+
+  if (loading || userAgreements.loading) {
+    return <ContentLoader />
+  }
 
   return (
     <div data-testid="user-settings-section" className="pt-2">
-      <BasicProfileProps />
-
       {/* Render only if all info present in order to properly load defaultValues */}
       <FormProvider {...methods}>
-        {/* use FormProvider to check for user agreement values */}
-        <LoginForAccountList accounts={accounts} deleteLogin={deleteLogin} />
+        <form
+          id="profile-settings-form"
+          className='flex-1'
+        >
+          <BasicProfile orcid={publicProfile.orcid} />
 
-        {orcidAuthLink ? <LinkOrcidButton orcidAuthLink={orcidAuthLink}/> : null}
-        <UserAgreementsSection
-          publicProfile={publicProfile}
-          {...userAgreements}
-        />
+          {/* use FormProvider to check for user agreement values */}
+          <LoginForAccountList accounts={accounts} deleteLogin={deleteLogin} />
 
-        {/* use FormProvider to check for user agreement values */}
-        <RemoveAccount />
+          {publicProfile.show ? <LinkOrcidButton orcidAuthLink={orcidAuthLink} disabled={!publicProfile.disabled}/> : null}
+
+          <UserAgreementsSection
+            publicProfile={publicProfile}
+            {...userAgreements}
+          />
+
+          {/* use FormProvider to check for user agreement values */}
+          <RemoveAccount />
+        </form>
       </FormProvider>
     </div>
   )

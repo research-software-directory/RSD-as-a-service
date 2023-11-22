@@ -324,31 +324,31 @@ $$;
 CREATE FUNCTION software_contributors(software_id UUID) RETURNS TABLE (
 	id UUID,
 	is_contact_person BOOLEAN,
-  email_address VARCHAR,
-  family_names VARCHAR,
-  given_names VARCHAR,
-  affiliation VARCHAR,
-  role VARCHAR,
-  orcid VARCHAR,
-  avatar_id VARCHAR,
-  "position" INT,
-  software UUID,
-  public_orcid_profile VARCHAR
+	email_address VARCHAR,
+	family_names VARCHAR,
+	given_names VARCHAR,
+	affiliation VARCHAR,
+	role VARCHAR,
+	orcid VARCHAR,
+	avatar_id VARCHAR,
+	"position" INT,
+	software UUID,
+	public_orcid_profile VARCHAR
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
 	contributor.id,
 	contributor.is_contact_person,
-  contributor.email_address,
-  contributor.family_names,
-  contributor.given_names,
-  contributor.affiliation,
-  contributor.role,
-  contributor.orcid,
-  contributor.avatar_id,
-  contributor."position",
-  contributor.software,
-  public_profile.orcid as public_orcid_profile
+	contributor.email_address,
+	contributor.family_names,
+	contributor.given_names,
+	contributor.affiliation,
+	contributor.role,
+	contributor.orcid,
+	contributor.avatar_id,
+	contributor."position",
+	contributor.software,
+	public_profile.orcid as public_orcid_profile
 FROM
 	contributor
 LEFT JOIN

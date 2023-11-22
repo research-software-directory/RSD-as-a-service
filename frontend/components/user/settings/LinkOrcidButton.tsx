@@ -5,13 +5,15 @@
 
 import Button from '@mui/material/Button'
 
-export default function LinkOrcidButton({orcidAuthLink}:{orcidAuthLink:string|null}) {
+export default function LinkOrcidButton({orcidAuthLink,disabled}:{orcidAuthLink:string|null,disabled:boolean}) {
   if (orcidAuthLink){
     return (
       <Button
+        disabled={disabled}
         href={orcidAuthLink}
         variant="outlined"
-        color="info">
+        color="info"
+      >
           Link your ORCID account
       </Button>
     )

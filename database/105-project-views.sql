@@ -643,31 +643,31 @@ $$;
 CREATE FUNCTION project_team(project_id UUID) RETURNS TABLE (
 	id UUID,
 	is_contact_person BOOLEAN,
-  email_address VARCHAR,
-  family_names VARCHAR,
-  given_names VARCHAR,
-  affiliation VARCHAR,
-  role VARCHAR,
-  orcid VARCHAR,
-  avatar_id VARCHAR,
-  "position" INT,
-  project UUID,
-  public_orcid_profile VARCHAR
+	email_address VARCHAR,
+	family_names VARCHAR,
+	given_names VARCHAR,
+	affiliation VARCHAR,
+	role VARCHAR,
+	orcid VARCHAR,
+	avatar_id VARCHAR,
+	"position" INT,
+	project UUID,
+	public_orcid_profile VARCHAR
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
 	team_member.id,
 	team_member.is_contact_person,
-  team_member.email_address,
-  team_member.family_names,
-  team_member.given_names,
-  team_member.affiliation,
-  team_member.role,
-  team_member.orcid,
-  team_member.avatar_id,
-  team_member."position",
-  team_member.project,
-  public_profile.orcid as public_orcid_profile
+	team_member.email_address,
+	team_member.family_names,
+	team_member.given_names,
+	team_member.affiliation,
+	team_member.role,
+	team_member.orcid,
+	team_member.avatar_id,
+	team_member."position",
+	team_member.project,
+	public_profile.orcid as public_orcid_profile
 FROM
 	team_member
 LEFT JOIN

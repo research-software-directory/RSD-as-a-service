@@ -15,7 +15,8 @@ import {useFormContext} from 'react-hook-form'
 import OrcidLink from '~/components/layout/OrcidLink'
 import {LoginForAccount} from './useLoginForAccount'
 import {UserSettingsType} from './useUserAgreements'
-
+import {useState} from 'react'
+import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 
 function LoginAccount({account,onDelete}:{account:LoginForAccount,onDelete:()=>void}){
   // watch for changes in public_orcid_profile
@@ -23,19 +24,25 @@ function LoginAccount({account,onDelete}:{account:LoginForAccount,onDelete:()=>v
   const {watch} = useFormContext<UserSettingsType>()
   const [public_orcid_profile]=watch(['public_orcid_profile'])
   // Delete enabled only for ORCID when public profile disabled
-  const enabled = account.provider === 'orcid' && public_orcid_profile===false
+  const disabled = account.provider === 'orcid' && public_orcid_profile===true
+
+  // console.group('LoginAccount')
+  // console.log('public_orcid_profile...', public_orcid_profile)
+  // console.groupEnd()
 
   return (
     <ListItem
       secondaryAction={
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          disabled={!enabled}
-          onClick={onDelete}
-        >
-          <DeleteIcon />
-        </IconButton>
+        account.provider === 'orcid' ?
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            disabled={disabled}
+            onClick={onDelete}
+          >
+            <DeleteIcon />
+          </IconButton>
+          : null
       }
     >
       <ListItemIcon>
@@ -66,8 +73,16 @@ type LoginForAccountListProps={
   accounts:LoginForAccount[]
   deleteLogin:(id:string)=>Promise<void>
 }
+type DeleteAccountModal={
+  open: boolean
+  account?: LoginForAccount
+}
 
 export default function LoginForAccountList({accounts, deleteLogin}:LoginForAccountListProps) {
+  const [modal, setModal] = useState<DeleteAccountModal>({
+    open: false
+  })
+
   return (
     <div className="py-4">
       <h2>Authentication methods</h2>
@@ -76,10 +91,35 @@ export default function LoginForAccountList({accounts, deleteLogin}:LoginForAcco
           return <LoginAccount
             key={account.id}
             account={account}
-            onDelete={()=>deleteLogin(account.id)}
+            onDelete={()=>setModal({
+              open:true,
+              account
+            })}
           />
         })}
       </List>
+      <ConfirmDeleteModal
+        open={modal.open}
+        title="Remove authentication method"
+        body={
+          <p>
+            Are you sure you want to delete <strong>{modal?.account?.provider} authentication method</strong>?
+          </p>
+        }
+        onCancel={() => {
+          setModal({
+            open: false
+          })
+        }}
+        onDelete={() => {
+          if (modal?.account?.['id']){
+            deleteLogin(modal.account.id)
+            setModal({
+              open: false
+            })
+          }
+        }}
+      />
     </div>
   )
 }

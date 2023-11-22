@@ -59,7 +59,8 @@ CREATE FUNCTION person_mentions() RETURNS TABLE (
 	orcid VARCHAR,
 	avatar_id VARCHAR,
 	origin VARCHAR,
-	slug VARCHAR
+	slug VARCHAR,
+	public_orcid_profile VARCHAR
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -72,13 +73,14 @@ SELECT
 	contributor.orcid,
 	contributor.avatar_id,
 	'contributor' AS origin,
-	software.slug
+	software.slug,
+	public_profile.orcid as public_orcid_profile
 FROM
-	public_profile()
-INNER JOIN
-	contributor ON public_profile.orcid=contributor.orcid
+	contributor
 INNER JOIN
 	software ON contributor.software = software.id
+LEFT JOIN
+	public_profile() ON public_profile.orcid=contributor.orcid
 UNION
 SELECT
 	team_member.id,
@@ -90,11 +92,12 @@ SELECT
 	team_member.orcid,
 	team_member.avatar_id,
 	'team_member' AS origin,
-	project.slug
+	project.slug,
+	public_profile.orcid as public_orcid_profile
 FROM
-	public_profile()
-INNER JOIN
-	team_member ON public_profile.orcid = team_member.orcid
+	team_member
 INNER JOIN
 	project ON team_member.project = project.id
+LEFT JOIN
+	public_profile() ON public_profile.orcid = team_member.orcid
 $$;
