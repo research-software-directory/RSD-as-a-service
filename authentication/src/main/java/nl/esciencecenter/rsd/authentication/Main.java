@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
@@ -23,12 +23,12 @@ public class Main {
 	public static boolean userIsAllowed(OpenIdInfo info) {
 		String whitelist = Config.userMailWhitelist();
 
-		if (whitelist == null || whitelist.length() == 0) {
+		if (whitelist == null || whitelist.isEmpty()) {
 			// allow any user
 			return true;
 		}
 
-		if (info == null || info.email() == null || info.email().length() == 0) {
+		if (info == null || info.email() == null || info.email().isEmpty()) {
 			throw new Error("Unexpected parameters for 'userIsAllowed'");
 		}
 
@@ -46,11 +46,11 @@ public class Main {
 	public static boolean userInAaiAllowList(OpenIdInfo info) {
 		String allowList = Config.helmholtzAaiAllowList();
 
-		if (!Config.helmholtzAaiUseAllowList() || allowList == null || allowList.length() == 0) {
+		if (!Config.helmholtzAaiUseAllowList() || allowList == null || allowList.isEmpty()) {
 			return false;
 		}
 
-		if (info == null || info.email() == null || info.email().length() == 0) {
+		if (info == null || info.email() == null || info.email().isEmpty()) {
 			throw new Error("Unexpected parameters for 'userInAaiAllowList'");
 		}
 
@@ -99,8 +99,7 @@ public class Main {
 				OpenIdInfo localInfo = new OpenIdInfo(sub, name, email, organisation);
 
 				AccountInfo accountInfo = new PostgrestAccount().account(localInfo, OpenidProvider.local);
-				boolean isAdmin = isAdmin(email);
-				createAndSetToken(ctx, accountInfo, isAdmin);
+				createAndSetToken(ctx, accountInfo);
 			});
 		}
 
@@ -115,9 +114,7 @@ public class Main {
 				}
 
 				AccountInfo accountInfo = new PostgrestAccount().account(surfconextInfo, OpenidProvider.surfconext);
-				String email = surfconextInfo.email();
-				boolean isAdmin = isAdmin(email);
-				createAndSetToken(ctx, accountInfo, isAdmin);
+				createAndSetToken(ctx, accountInfo);
 			});
 		}
 
@@ -132,9 +129,7 @@ public class Main {
 				}
 
 				AccountInfo accountInfo = new PostgrestAccount().account(helmholtzInfo, OpenidProvider.helmholtz);
-				String email = helmholtzInfo.email();
-				boolean isAdmin = isAdmin(email);
-				createAndSetToken(ctx, accountInfo, isAdmin);
+				createAndSetToken(ctx, accountInfo);
 			});
 		}
 
@@ -145,9 +140,7 @@ public class Main {
 				OpenIdInfo orcidInfo = new OrcidLogin(code, redirectUrl).openidInfo();
 
 				AccountInfo accountInfo = new PostgrestCheckOrcidWhitelistedAccount(new PostgrestAccount()).account(orcidInfo, OpenidProvider.orcid);
-				String email = orcidInfo.email();
-				boolean isAdmin = isAdmin(email);
-				createAndSetToken(ctx, accountInfo, isAdmin);
+				createAndSetToken(ctx, accountInfo);
 			});
 		}
 
@@ -157,9 +150,7 @@ public class Main {
 				String redirectUrl = Config.azureRedirect();
 				OpenIdInfo azureInfo = new AzureLogin(code, redirectUrl).openidInfo();
 				AccountInfo accountInfo = new PostgrestAccount().account(azureInfo, OpenidProvider.azure);
-				String email = azureInfo.email();
-				boolean isAdmin = isAdmin(email);
-				createAndSetToken(ctx, accountInfo, isAdmin);
+				createAndSetToken(ctx, accountInfo);
 			});
 		}
 
@@ -198,13 +189,9 @@ public class Main {
 		});
 	}
 
-	static boolean isAdmin(String email) {
-		return email != null && !email.isBlank() && Config.rsdAdmins().contains(email);
-	}
-
-	static void createAndSetToken(Context ctx, AccountInfo accountInfo, boolean isAdmin) {
+	static void createAndSetToken(Context ctx, AccountInfo accountInfo) {
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
-		String token = jwtCreator.createUserJwt(accountInfo.account(), accountInfo.name(), isAdmin);
+		String token = jwtCreator.createUserJwt(accountInfo);
 		setJwtCookie(ctx, token);
 		setRedirectFromCookie(ctx);
 	}

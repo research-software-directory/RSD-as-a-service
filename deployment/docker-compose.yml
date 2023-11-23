@@ -60,7 +60,6 @@ services:
       # it uses values from .env file
       - POSTGREST_URL
       - RSD_AUTH_PROVIDERS
-      - RSD_ADMIN_EMAIL_LIST
       - RSD_AUTH_USER_MAIL_WHITELIST
       - SURFCONEXT_CLIENT_ID
       - SURFCONEXT_REDIRECT

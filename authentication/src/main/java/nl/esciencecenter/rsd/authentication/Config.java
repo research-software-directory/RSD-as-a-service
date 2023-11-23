@@ -17,14 +17,6 @@ import java.util.Set;
 
 public class Config {
 
-	private static final Collection<String> rsdAdmins;
-
-	static {
-		String adminList = System.getenv("RSD_ADMIN_EMAIL_LIST");
-		rsdAdmins = adminList == null || adminList.isBlank() ? Collections.emptySet() :
-				Set.of(adminList.split(";"));
-	}
-
 	public static String jwtSigningSecret() {
 		return System.getenv("PGRST_JWT_SECRET");
 	}
@@ -35,10 +27,6 @@ public class Config {
 				.map(s -> s.split(";"))
 				.map(Set::of)
 				.orElse(Collections.emptySet());
-	}
-
-	public static Collection<String> rsdAdmins() {
-		return rsdAdmins;
 	}
 
 	public static boolean isLocalEnabled() {

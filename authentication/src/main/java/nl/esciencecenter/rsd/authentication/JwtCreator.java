@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 public class JwtCreator {
 
@@ -29,12 +28,12 @@ public class JwtCreator {
 		this.signingAlgorithm = Algorithm.HMAC256(this.signingSecret);
 	}
 
-	String createUserJwt(UUID account, String name, boolean isAdmin) {
+	String createUserJwt(AccountInfo accountInfo) {
 		return JWT.create()
 				.withClaim("iss", "rsd_auth")
-				.withClaim("role", isAdmin ? "rsd_admin" : "rsd_user")
-				.withClaim("account", account.toString())
-				.withClaim("name", name)
+				.withClaim("role", accountInfo.isAdmin() ? "rsd_admin" : "rsd_user")
+				.withClaim("account", accountInfo.account().toString())
+				.withClaim("name", accountInfo.name())
 				.withExpiresAt(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MILLISECONDS))
 				.sign(signingAlgorithm);
 	}

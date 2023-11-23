@@ -91,6 +91,10 @@ $$;
 CREATE TRIGGER sanitise_update_login_for_account BEFORE UPDATE ON login_for_account FOR EACH ROW EXECUTE PROCEDURE sanitise_update_login_for_account();
 
 
+CREATE TABLE admin_account (
+	account_id UUID REFERENCES account (id) PRIMARY KEY
+);
+
 
 CREATE TABLE orcid_whitelist (
 	orcid VARCHAR(19) PRIMARY KEY CHECK (orcid ~ '^\d{4}-\d{4}-\d{4}-\d{3}[0-9X]$')
@@ -125,6 +129,7 @@ BEGIN
 	DELETE FROM invite_maintainer_for_project WHERE created_by = account_id OR claimed_by = account_id;
 	DELETE FROM invite_maintainer_for_organisation WHERE created_by = account_id OR claimed_by = account_id;
 	UPDATE organisation SET primary_maintainer = NULL WHERE primary_maintainer = account_id;
+	DELETE FROM admin_account WHERE admin_account.account_id = delete_account.account_id;
 	DELETE FROM login_for_account WHERE account = account_id;
 	DELETE FROM account WHERE id = account_id;
 END
