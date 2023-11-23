@@ -55,22 +55,23 @@ At this point you should be able to see RSD instance running. You should also be
 The local account login option is only for test purposes. Local accounts do not require a password and are therefore not safe.
 :::
 
-## Login as RSD adminstrator
+## Log in as RSD administrator
 
-To be able to login as rsd adminstrator you will need to provide the email address of the logged in user in the `RSD_ADMIN_EMAIL_LIST` property of the .env file. In the example below we defined one rsd admin having the email `isaacnewton@university-example.org`. This is the email of SURFconext test account with the username professor3 which has this email address provided in the JWT token that RSD receives from the SURFconext authentication provider.
+To be able to log in as RSD administrator, the account id of that account needs to be in the database table `admin_account` first.
+To do so, [connect to the database](/rsd-instance/database/#connecting-to-the-database) and execute the following query, changing the value of the UUID:
 
-```env
-# Define a semicolon-separated list of user email addresses of RSD admins.
-# When someome authenticates with an email address in this list,
-# they will get a token with as role rsd_admin, meaning they
-# have admin rights for all the tables.
-# consumed by: authentication
-RSD_ADMIN_EMAIL_LIST=isaacnewton@university-example.org
+```sql
+INSERT INTO admin_account VALUES ('00000000-0000-0000-0000-000000000000');
 ```
 
 :::tip
-- When you login to RSD as administrator you will see additional "Administration" option in the profile dropdown menu.
-- To define admin email for LOCAL account use @example.org email domain. For example for user `Tester` the email should be `tester@example.org`
+A user can see their account ID in their user settings page, which they can find under the `My settings` option in the profile dropdown menu.
+:::
+
+If that user is already logged in, they need to log out and log in again before they can make use of their admin rights.
+
+:::tip
+When you log in to the RSD as administrator, you will see an additional "Administration" option in the profile dropdown menu.
 :::
 
 ![Login as rsd admin](img/rsd-login-admin.gif)
