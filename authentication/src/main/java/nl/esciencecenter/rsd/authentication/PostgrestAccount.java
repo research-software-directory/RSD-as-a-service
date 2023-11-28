@@ -31,26 +31,43 @@ public class PostgrestAccount implements Account {
 		String subject = openIdInfo.sub();
 		String subjectUrlEncoded = URLEncoder.encode(subject, StandardCharsets.UTF_8);
 		String providerUrlEncoded = URLEncoder.encode(provider.toString(), StandardCharsets.UTF_8);
-		URI queryUri = URI.create(backendUri + "/login_for_account?select=id,account,name&sub=eq." + subjectUrlEncoded + "&provider=eq." + providerUrlEncoded);
+
+		// The following URI sees if the login credentials already are tied to an account.
+		// If yes, it also, by joining through the account table, looks up if the account is an admin.
+		URI queryUri = URI.create(backendUri + "/login_for_account?select=id,account_id:account,name,account(admin_account(account_id))&sub=eq." + subjectUrlEncoded + "&provider=eq." + providerUrlEncoded);
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String token = jwtCreator.createAdminJwt();
 		String responseLogin = getAsAdmin(queryUri, token);
 		JsonArray accountsWithSub = JsonParser.parseString(responseLogin).getAsJsonArray();
-		if (accountsWithSub.size() > 1)
+		// Because of the UNIQUE(provider, sub) constraint on the login_for_account table, this should never happen
+		if (accountsWithSub.size() > 1) {
 			throw new RuntimeException("More than one login for subject " + subject + " exists");
+		}
+		// The credentials are already tied to an account, so we update the login credentials with a possibly new name, email, etc.,
+		// and we return the existing account.
 		else if (accountsWithSub.size() == 1) {
 			JsonObject accountInfo = accountsWithSub.get(0).getAsJsonObject();
 			UUID id = UUID.fromString(accountInfo.getAsJsonPrimitive("id").getAsString());
 			updateLoginForAccount(id, openIdInfo, token);
-			UUID account = UUID.fromString(accountInfo.getAsJsonPrimitive("account").getAsString());
+			UUID account = UUID.fromString(accountInfo.getAsJsonPrimitive("account_id").getAsString());
 			String name = openIdInfo.name();
-			return new AccountInfo(account, name);
-		} else { // create account
+
+			boolean isAdmin = accountInfo.getAsJsonObject("account").get("admin_account").isJsonObject()
+					&&
+					accountInfo.getAsJsonObject("account").getAsJsonObject("admin_account").get("account_id").isJsonPrimitive()
+					&&
+					accountInfo.getAsJsonObject("account").getAsJsonObject("admin_account").getAsJsonPrimitive("account_id").getAsString().equals(account.toString());
+
+			return new AccountInfo(account, name, isAdmin);
+		}
+		// The login credentials do no exist yet, create a new account and return it.
+		else {
+			// create account
 			URI createAccountEndpoint = URI.create(backendUri + "/account");
 			String newAccountJson = postJsonAsAdmin(createAccountEndpoint, "{}", token);
 			String newAccountId = JsonParser.parseString(newAccountJson).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 
-			// create login for account
+			// Create login for account, i.e., tie the login credentials to the newly created account.
 			JsonObject loginForAccountData = new JsonObject();
 			loginForAccountData.addProperty("account", newAccountId);
 			loginForAccountData.addProperty("sub", subject);
@@ -61,7 +78,7 @@ public class PostgrestAccount implements Account {
 			URI createLoginUri = URI.create(backendUri + "/login_for_account");
 			postJsonAsAdmin(createLoginUri, loginForAccountData.toString(), token);
 
-			return new AccountInfo(UUID.fromString(newAccountId), openIdInfo.name());
+			return new AccountInfo(UUID.fromString(newAccountId), openIdInfo.name(), false);
 		}
 	}
 
