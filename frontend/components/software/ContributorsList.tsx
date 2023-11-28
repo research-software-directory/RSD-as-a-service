@@ -101,7 +101,7 @@ export default function ContributorsList({contributors,section='software'}: { co
                   <div className="text-xl font-medium">
                     {item?.public_orcid_profile ?
                       <a href={`/profile/${item.public_orcid_profile}/${section}`} className="flex gap-2 items-center">
-                        {displayName} <LaunchIcon/>
+                        {displayName} <LaunchIcon sx={{width:'1rem'}}/>
                       </a>
                       :
                       <span>{displayName}</span>

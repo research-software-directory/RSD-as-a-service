@@ -15,12 +15,47 @@ type PublicProfileProps={
   token?: string
 }
 
+async function hasPublicProfile(orcid:string){
+  try{
+    // filter on orcid, order by image first
+    const query = `orcid=eq.${orcid}`
+    // complete url
+    const url = `${getBaseUrl()}/rpc/public_profile?${query}`
+
+    // make request
+    const resp = await fetch(url,{
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(),
+      },
+    })
+
+    if (resp.status===200){
+      const orcids = await resp.json()
+      if (orcids?.length === 0){
+        return false
+      }
+      return true
+    }
+
+    return false
+
+  } catch (e: any) {
+    logger(`hasPublicProfile: ${e.message}`,'error')
+    return false
+  }
+}
+
 export async function getPublicProfile({orcid, token}: PublicProfileProps) {
   try {
+    // without ORCID no public profile
     if (!orcid) return null
+    // validate if there is public profile
+    const publicProfile = await hasPublicProfile(orcid)
+    // not a public profile
+    if (publicProfile===false) return null
     // filter on orcid, order by image first
     const query = `public_orcid_profile=eq.${orcid}&order=avatar_id.nullslast`
-
     // complete url
     const url = `${getBaseUrl()}/rpc/person_mentions?${query}`
 

@@ -39,9 +39,11 @@ export default function BasicProfile({orcid}:BasicProfileProps) {
         <div>Public profile</div>
         {public_orcid_profile === true && orcid ?
           <a href={`/profile/${orcid}/software`} className="flex gap-2 items-center" target='_blank'>
-            Enabled <LaunchIcon/>
+            Enabled <LaunchIcon sx={{width:'1rem'}}/>
           </a>
-          : <a href="/documentation/users/user-settings/#public-profile" target='_blank'>Read here how to enable public profile</a>
+          : <a href="/documentation/users/user-settings/#public-profile" target='_blank'>
+            Disabled <LaunchIcon sx={{width:'1rem'}}/>
+          </a>
         }
       </div>
     </>

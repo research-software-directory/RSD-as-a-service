@@ -109,8 +109,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const token = req?.cookies['rsd_token']
     const orcid = params?.orcid as string
     const profiles = await getPublicProfile({orcid,token})
-    // 404 if profiles not found
-    if (profiles === null || profiles.length === 0){
+    // 404 if profiles is null (not found in the list of public profile)
+    if (profiles === null){
       return {
         notFound: true,
       }
