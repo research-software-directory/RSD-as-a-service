@@ -577,6 +577,7 @@ $$;
 
 -- FILTER PROJECTS by orcid
 -- OPT-IN ONLY, uses public_profile table as filter
+-- UNIQUE entries by ORCID & project.id
 CREATE FUNCTION project_by_public_profile() RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
@@ -599,6 +600,7 @@ CREATE FUNCTION project_by_public_profile() RETURNS TABLE (
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
+	DISTINCT ON (project.id,public_profile.orcid)
 	project.id,
 	project.slug,
 	project.title,

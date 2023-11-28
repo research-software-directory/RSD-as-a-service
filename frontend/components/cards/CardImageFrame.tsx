@@ -7,7 +7,7 @@
 
 export default function CardImageFrame({children}:{children:JSX.Element}) {
   return (
-    <div className="h-[37%] flex overflow-hidden relative bg-base-100">
+    <div className="h-[34%] flex overflow-hidden relative bg-base-100">
       {children}
     </div>
   )

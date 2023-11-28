@@ -93,7 +93,7 @@ export default function ProfileMetadata({profiles}:{profiles:RsdContributor[]|nu
         <h1
           title={name[0]}
           className="text-2xl font-medium line-clamp-1">
-          {name}
+          {name[0] ?? ''}
         </h1>
         <p className="py-2">
           <OrcidLink orcid={orcid} />

@@ -69,7 +69,8 @@ function ShowButton({showAll,showLess,onShowAll,onShowLess}:GetMoreIconButtonPro
 
 export default function ContributorsList({contributors,section='software'}: { contributors: Profile[],section:'software'|'projects'}) {
   // show top 12 items
-  const [limit,setLimit] = useState(12)
+  const topItems = 12
+  const [limit,setLimit] = useState(topItems)
   const {persons,hasMore} = useContributorList({
     items:contributors,
     limit
@@ -78,6 +79,7 @@ export default function ContributorsList({contributors,section='software'}: { co
   if (persons?.length === 0) return null
 
   // console.group('ContributorsList')
+  // console.log('contributors...', contributors)
   // console.log('persons...', persons)
   // console.log('limit...',limit)
   // console.log('hasMore...',hasMore)
@@ -118,9 +120,9 @@ export default function ContributorsList({contributors,section='software'}: { co
       </div>
       <ShowButton
         showAll={hasMore}
-        showLess={contributors.length === limit}
+        showLess={contributors.length > topItems}
         onShowAll={()=>setLimit(contributors.length)}
-        onShowLess={()=>setLimit(12)}
+        onShowLess={()=>setLimit(topItems)}
       />
     </>
   )

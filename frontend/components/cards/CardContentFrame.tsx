@@ -7,7 +7,7 @@
 
 export default function CardContentFrame({children}:{children:JSX.Element[]}) {
   return (
-    <div className="h-[63%] flex flex-col p-4 relative">
+    <div className="h-[66%] flex flex-col p-4 relative">
       {children}
     </div>
   )

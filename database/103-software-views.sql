@@ -268,6 +268,7 @@ $$;
 
 -- FILTER SOFTWARE by orcid
 -- OPT-IN ONLY, uses public_profile table as filter
+-- UNIQUE entries by ORCID & software.id
 CREATE FUNCTION software_by_public_profile() RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
@@ -286,6 +287,7 @@ CREATE FUNCTION software_by_public_profile() RETURNS TABLE (
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
+	DISTINCT ON (software.id,public_profile.orcid)
 	software.id,
 	software.slug,
 	software.brand_name,
