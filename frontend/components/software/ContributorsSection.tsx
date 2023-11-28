@@ -1,25 +1,24 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Person} from '../../types/Contributor'
+import {Contributor, Person} from '../../types/Contributor'
 import PageContainer from '../layout/PageContainer'
 import ContributorsList from './ContributorsList'
 import ContactPersonCard from './ContactPersonCard'
 
 function clasifyContributors(contributors: Person[]) {
-  const contributorList:Person[] = []
-  let contact: Person | null = null
+  const contributorList: Person[] = []
+  let contact: Person[] = []
 
   contributors.forEach(item => {
     // take first contact person to be show as contact
-    if (item.is_contact_person === true && contact===null) {
-      contact = item
-      // but push it also to contributors list
-      contributorList.push(item)
+    if (item.is_contact_person) {
+      contact.push(item)
     } else {
       contributorList.push(item)
     }
@@ -31,11 +30,11 @@ function clasifyContributors(contributors: Person[]) {
 }
 
 // shared component with project page for team members
-export default function ContributorsSection({contributors, title='Contributors'}:
-  { contributors: Person[], title?:string }) {
+export default function ContributorsSection({contributors, title = 'Contributors'}:
+                                              { contributors: Person[], title?: string }) {
   // do not show section if no content
-  if (typeof contributors == 'undefined' || contributors?.length===0) return null
-  // clasify
+  if (typeof contributors == 'undefined' || contributors?.length === 0) return null
+  // classify
   const {contact, contributorList} = clasifyContributors(contributors)
   return (
     <section className="bg-base-200">
@@ -47,10 +46,12 @@ export default function ContributorsSection({contributors, title='Contributors'}
         </h2>
         <section className="2xl:flex 2xl:flex-row-reverse">
           <div className="2xl:flex-1 lg:self-start">
-            <ContactPersonCard person={contact} />
+            {contact.map(contact_person => {
+              return (<ContactPersonCard key={contact_person.id} person={contact_person as Contributor}/>)
+            })}
           </div>
           <div className="2xl:flex-[3]">
-            <ContributorsList contributors={contributorList} />
+            <ContributorsList contributors={contributorList}/>
           </div>
         </section>
       </PageContainer>
