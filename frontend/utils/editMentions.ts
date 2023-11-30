@@ -377,3 +377,36 @@ export async function deleteMentionItem({id, token}:
     }
   }
 }
+
+/**
+ * Get manually added mentions and automatically scraped citations provided by reference papers
+ * @param param0
+ * @returns MentionItemProps[]
+ */
+export async function getMentionsBySoftware({software,token}:{software: string, token?: string}) {
+  try {
+    // the content is ordered by type ascending
+    const query = `software=eq.${software}&order=mention_type.asc`
+    // construct url
+    const url = `${getBaseUrl()}/rpc/mentions_by_software?${query}`
+    // make request
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+      }
+    })
+    if (resp.status === 200) {
+      const json = await resp.json()
+      // extract mentions from software object
+      const mentions: MentionItemProps[] = json ?? []
+      return mentions
+    }
+    logger(`getMentionsBySoftware: [${resp.status}] [${url}]`, 'error')
+    // query not found
+    return []
+  } catch (e: any) {
+    logger(`getMentionsBySoftware: ${e?.message}`, 'error')
+    return []
+  }
+}

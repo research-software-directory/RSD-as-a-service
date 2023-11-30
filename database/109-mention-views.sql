@@ -80,3 +80,63 @@ GROUP BY
 	mention.source
 ;
 $$;
+
+-- UNIQUE MENTIONS & CITATIONS BY SOFTWARE ID
+-- UNION will deduplicate exact entries
+CREATE FUNCTION mentions_by_software() RETURNS TABLE (
+	software UUID,
+	id UUID,
+	doi CITEXT,
+	url VARCHAR,
+	title VARCHAR,
+	authors VARCHAR,
+	publisher VARCHAR,
+	publication_year SMALLINT,
+	journal VARCHAR,
+	page VARCHAR,
+	image_url VARCHAR,
+	mention_type mention_type,
+	source VARCHAR
+)LANGUAGE sql STABLE AS
+$$
+-- mentions for software
+SELECT
+	mention_for_software.software,
+	mention.id,
+	mention.doi,
+	mention.url,
+	mention.title,
+	mention.authors,
+	mention.publisher,
+	mention.publication_year,
+	mention.journal,
+	mention.page,
+	mention.image_url,
+	mention.mention_type,
+	mention.source
+FROM
+	mention
+INNER JOIN
+	mention_for_software ON mention_for_software.mention = mention.id
+-- will deduplicate identical entries
+-- from scraped citations
+UNION
+-- scraped citations from reference papers
+SELECT
+	software,
+	id,
+	doi,
+	url,
+	title,
+	authors,
+	publisher,
+	publication_year,
+	journal,
+	page,
+	image_url,
+	mention_type,
+	source
+FROM
+	citation_by_software()
+;
+$$;

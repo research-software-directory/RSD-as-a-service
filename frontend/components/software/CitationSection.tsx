@@ -8,7 +8,7 @@
 import {useState,useEffect} from 'react'
 import {SelectChangeEvent} from '@mui/material/Select'
 
-import DarkThemeSection from '../layout/DarkThemeSection'
+import DarkThemeProvider from '../layout/DarkThemeProvider'
 import PageContainer from '../layout/PageContainer'
 import CiteDropdown from './CiteDropdown'
 import CitationDoi from './CitationDoi'
@@ -58,7 +58,7 @@ export default function CitationSection({releases,concept_doi}:
   return (
     <PageContainer className='lg:px-4'>
       <article className="flex flex-col min-h-[16rem] px-4 py-8 bg-secondary text-base-100 md:flex-row lg:py-10 lg:px-16 lg:translate-y-[-3rem]">
-        <DarkThemeSection>
+        <DarkThemeProvider>
           <div className="flex-1 flex flex-col justify-between">
             <h2 className='py-4'
               data-testid="citation-section-title">
@@ -80,7 +80,7 @@ export default function CitationSection({releases,concept_doi}:
             {/* NOTE! temporarly dissabled  */}
             <CitationDownload doi={citation?.doi ?? concept_doi ?? ''} />
           </div>
-        </DarkThemeSection>
+        </DarkThemeProvider>
       </article>
     </PageContainer>
   )

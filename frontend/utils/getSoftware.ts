@@ -302,42 +302,6 @@ export async function getLicenseForSoftware(uuid:string,frontend?:boolean,token?
 }
 
 /**
- * Contributors and mentions counts
- */
-
-export type ContributorMentionCount = {
-  id: string
-  contributor_cnt: number | null
-  mention_cnt: number | null
-}
-
-export async function getContributorMentionCount(uuid: string,token?: string){
-  try{
-    // this request is always perfomed from backend
-    // the content is order by id ascending
-    const url = `${process.env.POSTGREST_URL}/rpc/count_software_contributors_mentions?id=eq.${uuid}`
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: createJsonHeaders(token)
-    })
-    if (resp.status===200){
-      const data: ContributorMentionCount[] = await resp.json()
-      if (data.length > 0) {
-        return data[0]
-      }
-      return null
-    } else if (resp.status===404){
-      logger(`getContributorMentionCount: 404 [${url}]`,'error')
-      // query not found
-      return null
-    }
-  }catch(e:any){
-    logger(`getContributorMentionCount: ${e?.message}`,'error')
-    return null
-  }
-}
-
-/**
  * REMOTE MARKDOWN FILE
  */
 export async function getRemoteMarkdown(url: string) {

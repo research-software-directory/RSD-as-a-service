@@ -1,16 +1,20 @@
 // SPDX-FileCopyrightText: 2021 - 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ContributorMentionCount} from '../../utils/getSoftware'
 import ContentHeader from '../layout/ContentHeader'
 import SoftwareStatCounter from './SoftwareStatCounter'
 
 type SoftwareIntroSectionProps = {
   brand_name: string,
   short_statement: string,
-  counts: ContributorMentionCount
+  counts: {
+    mention_cnt: number,
+    contributor_cnt: number
+  }
 }
 
 export default function SoftwareIntroSection(props:SoftwareIntroSectionProps) {

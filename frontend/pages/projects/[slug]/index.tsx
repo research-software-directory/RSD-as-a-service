@@ -27,20 +27,21 @@ import {Person} from '~/types/Contributor'
 import {ProjectOrganisationProps} from '~/types/Organisation'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import AppHeader from '~/components/AppHeader'
+import AppFooter from '~/components/AppFooter'
 import EditPageButton from '~/components/layout/EditPageButton'
 import PageContainer from '~/components/layout/PageContainer'
 import ContentHeader from '~/components/layout/ContentHeader'
-import AppFooter from '~/components/AppFooter'
+import NoContent from '~/components/layout/NoContent'
+import DarkThemeSection from '~/components/layout/DarkThemeSection'
 import PageMeta from '~/components/seo/PageMeta'
 import OgMetaTags from '~/components/seo/OgMetaTags'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import ProjectInfo from '~/components/projects/ProjectInfo'
 import OrganisationsSection from '~/components/software/OrganisationsSection'
-import ProjectMentions from '~/components/projects/ProjectMentions'
 import ContributorsSection from '~/components/software/ContributorsSection'
-import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
 import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
-import NoContent from '~/components/layout/NoContent'
+import ProjectInfo from '~/components/projects/ProjectInfo'
+import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
+import MentionsSection from '~/components/mention/MentionsSection'
 
 export interface ProjectPageProps extends ScriptProps{
   slug: string
@@ -111,11 +112,18 @@ export default function ProjectPage(props: ProjectPageProps) {
       <OrganisationsSection
         organisations={organisations.filter(item=>item.role!=='funding')}
       />
-      {/* Project mentions */}
-      <ProjectMentions
-        impact={impact}
-        output={output}
-      />
+      <DarkThemeSection>
+        {/* Project impact mentions */}
+        <MentionsSection
+          title="Impact"
+          mentions={impact}
+        />
+        {/* Project output */}
+        <MentionsSection
+          title="Output"
+          mentions={output}
+        />
+      </DarkThemeSection>
       {/* Team (uses software components) */}
       <ContributorsSection
         title="Team"
