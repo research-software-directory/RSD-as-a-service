@@ -67,7 +67,6 @@ export default function ConfirmDeleteModal({
         padding: '1rem 1.5rem',
       }}>
         <Button
-          tabIndex={1}
           onClick={onCancel}
           color="secondary"
           sx={{
@@ -77,7 +76,6 @@ export default function ConfirmDeleteModal({
             Cancel
         </Button>
         <Button
-          tabIndex={0}
           type="button"
           variant="contained"
           color="error"

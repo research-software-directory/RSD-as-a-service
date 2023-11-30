@@ -41,9 +41,8 @@ export default function BasicProfile({orcid}:BasicProfileProps) {
           <a href={`/profile/${orcid}/software`} className="flex gap-2 items-center" target='_blank'>
             Enabled <LaunchIcon sx={{width:'1rem'}}/>
           </a>
-          : <a href="/documentation/users/user-settings/#public-profile" target='_blank'>
-            Disabled <LaunchIcon sx={{width:'1rem'}}/>
-          </a>
+          :
+          <span>Disabled (<a href="/documentation/users/user-settings/#public-profile" target='_blank'>how to enable? <LaunchIcon sx={{width:'1rem'}}/></a>)</span>
         }
       </div>
     </>

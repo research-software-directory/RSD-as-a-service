@@ -163,7 +163,6 @@ export default function UserAgrementModal() {
           padding: '1rem 1.5rem',
         }}>
           <Button
-            tabIndex={1}
             // on cancel go back to previous page
             onClick={()=>router.back()}
             color="secondary"
@@ -175,7 +174,6 @@ export default function UserAgrementModal() {
           </Button>
           <Button
             form="user-agreement-form"
-            tabIndex={0}
             disabled={!(agreeTerms && privacyStatement)}
             type="submit"
             variant="contained"
