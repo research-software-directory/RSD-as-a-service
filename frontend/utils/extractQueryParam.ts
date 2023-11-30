@@ -20,10 +20,11 @@ type BuildUrlQueryProps = EncodeQueryParamProps & {
   query: string
 }
 
-export function encodeQueryValue(value: EncodeQueryValue) {
+export function encodeQueryValue(value: EncodeQueryValue,encodeString?:boolean) {
   try {
     if (typeof value === 'string') {
-      return encodeURIComponent(value)
+      if (encodeString) return encodeURIComponent(value)
+      return value
     } else if (Array.isArray(value) === true && (value as any)?.length > 0) {
       // arrays are stringified
       return encodeURIComponent(JSON.stringify(value))
