@@ -52,7 +52,7 @@ export default function UserSoftware({session}: { session: Session }) {
         minWidth,
         maxWidth
       }}
-      className="gap-[0.125rem] pt-4 pb-12"
+      className="gap-[0.125rem] pt-2"
     />
   )
 

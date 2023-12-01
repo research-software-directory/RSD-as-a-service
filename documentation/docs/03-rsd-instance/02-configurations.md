@@ -69,6 +69,14 @@ Please refer to [ORCID OAuth documentation](https://info.orcid.org/documentation
 
 In the RSD `.env` file you need to provide following information to enable this authenitcation service.
 
+:::tip
+RSD offers public profile page that use ORCID as unique key. In order to enable linking of orcid account
+for public profile page ORCID authentication need to be enabled. ORCID_REDIRECT_COUPLE variable is used specifically for linking the ORCID account.
+
+- For more [info about public profile page see documentation](/users/user-settings/#public-profile)
+- After user links ORCID to RSD account he/she will be able to login using ORCID credentials too
+:::
+
 ```bash
 # Ensure ORCID key is included in the list
 RSD_AUTH_PROVIDERS=ORCID
@@ -79,6 +87,8 @@ ORCID_CLIENT_ID=
 # consumed by: authentication, frontend/utils/loginHelpers
 ORCID_REDIRECT=http://localhost/auth/login/orcid
 # consumed by: authentication, frontend/utils/loginHelpers
+ORCID_REDIRECT_COUPLE=http://localhost/auth/couple/orcid
+# consumed by: authentication, frontend/utils/loginHelpers
 ORCID_WELL_KNOWN_URL=
 # consumed by: authentication, frontend/utils/loginHelpers
 ORCID_SCOPES=openid
@@ -88,7 +98,7 @@ ORCID_RESPONSE_MODE=query
 ```
 
 :::warning
-In addition to defining ORCID as authentication provider each ORCID user need to be added to ORCID users list. See [ORCID users page](/rsd-instance/administration/) in the administration section.
+When using ORCID authentication only, each ORCID user need to be added to ORCID users list. See [ORCID users page](/rsd-instance/administration/#orcid-users) in the administration section.
 :::
 
 ### Enable SURFconext authentication

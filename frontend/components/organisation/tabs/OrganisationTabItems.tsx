@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {JSX} from 'react'
 import InfoIcon from '@mui/icons-material/Info'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import AccountTreeIcon from '@mui/icons-material/AccountTree'

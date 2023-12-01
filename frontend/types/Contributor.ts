@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,8 +31,8 @@ export type PatchPerson = {
   affiliation?: string | null
   role?: string | null
   orcid?: string | null
-  position?: number | null
   avatar_id?: string | null
+  position?: number | null
 }
 
 export type SaveContributor = Person & {
@@ -44,6 +46,10 @@ export type Contributor = Person & {
   // avatar image for upload is stored in this props
   avatar_b64?: string | null
   avatar_mime_type?: string | null
+}
+
+export type Profile = Person & {
+  public_orcid_profile?: string | null
 }
 
 export type SourceType = 'RSD' | 'ORCID'

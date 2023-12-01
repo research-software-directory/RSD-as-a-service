@@ -15,7 +15,7 @@ import {useSession} from '~/auth'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import ContentLoader from '~/components/layout/ContentLoader'
 import RsdAccountItem from './RsdAccountItem'
-import useLoginForAccount, {RsdAccountInfo} from './useLoginForAccount'
+import useRsdAccounts, {RsdAccountInfo} from './useRsdAccounts'
 
 export type DeleteAccountModal = {
   open: boolean,
@@ -24,7 +24,7 @@ export type DeleteAccountModal = {
 
 export default function RsdUsersList() {
   const {token} = useSession()
-  const {loading, accounts, deleteAccount} = useLoginForAccount(token)
+  const {loading, accounts, deleteAccount} = useRsdAccounts(token)
   const [modal, setModal] = useState<DeleteAccountModal>({
     open: false
   })

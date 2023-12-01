@@ -21,7 +21,7 @@ import mockProjectToEdit from '~/components/projects/edit/information/__mocks__/
 // we mock default providers used in page header
 jest.mock('~/auth/api/useLoginProviders')
 // mock user agreement call
-jest.mock('~/components/user/settings/fetchAgreementStatus')
+jest.mock('~/components/user/settings/useUserAgreements')
 
 // MOCK isMaintainerOf
 const mockIsMaintainer = jest.fn(props => Promise.resolve(false))

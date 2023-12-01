@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,11 +15,19 @@
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {getAuthorisationEndpoint, RedirectToProps, claims, getRedirectUrl} from '~/auth/api/authHelpers'
+import {getAuthorisationEndpoint, RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
 import logger from '~/utils/logger'
 import {Provider, ApiError} from '.'
 
 type Data = Provider | ApiError
+
+const claims = {
+  id_token:{
+    schac_home_organization: null,
+    name: null,
+    email: null
+  }
+}
 
 async function helmholtzRedirectProps() {
   // extract wellknow url from env
@@ -30,10 +40,10 @@ async function helmholtzRedirectProps() {
       // use default values if env not provided
       const props: RedirectToProps = {
         authorization_endpoint,
-        client_id: process.env.HELMHOLTZAAI_CLIENT_ID || 'rsd-dev',
-        redirect_uri: process.env.HELMHOLTZAAI_REDIRECT || 'http://localhost/auth/login/helmholtzaai',
-        scope: process.env.HELMHOLTZAAI_SCOPES || 'openid+profile+email+eduperson_principal_name',
-        response_mode: process.env.HELMHOLTZAAI_RESPONSE_MODE || 'query',
+        client_id: process.env.HELMHOLTZAAI_CLIENT_ID ?? 'rsd-dev',
+        redirect_uri: process.env.HELMHOLTZAAI_REDIRECT ?? 'http://localhost/auth/login/helmholtzaai',
+        scope: process.env.HELMHOLTZAAI_SCOPES ?? 'openid+profile+email+eduperson_principal_name',
+        response_mode: process.env.HELMHOLTZAAI_RESPONSE_MODE ?? 'query',
         claims
       }
       return props

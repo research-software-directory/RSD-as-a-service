@@ -250,7 +250,7 @@ export function removeRsdTokenNode(res: OutgoingMessage) {
   }
 }
 
-export function getUserFromToken(token: string | null) {
+export function getUserFromToken(token?: string | null) {
   if (token) {
     const result = verifyJwt(token)
     if (result === 'valid') {

@@ -6,8 +6,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {JSX} from 'react'
-
 export default function ProjectOverviewGrid({children}: { children: JSX.Element | JSX.Element[] }) {
   // console.log('ProjectOverviewGrid')
   return (

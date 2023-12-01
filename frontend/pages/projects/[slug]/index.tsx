@@ -173,7 +173,7 @@ export async function getServerSideProps(context:any) {
       getMentionsForProject({project: project.id, token, table:'output_for_project'}),
       // Impact
       getMentionsForProject({project: project.id, token, table:'impact_for_project'}),
-      getTeamForProject({project: project.id, token, frontend: false}),
+      getTeamForProject({project: project.id, token}),
       getRelatedSoftwareForProject({project: project.id, token, frontend: false}),
       getRelatedProjectsForProject({project: project.id, token, frontend: false}),
       getLinksForProject({project: project.id, token, frontend: false}),

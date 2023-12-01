@@ -15,11 +15,19 @@
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {getAuthorisationEndpoint, RedirectToProps, claims, getRedirectUrl} from '~/auth/api/authHelpers'
+import {getAuthorisationEndpoint, RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
 import logger from '~/utils/logger'
 import {Provider, ApiError} from '.'
 
 type Data = Provider | ApiError
+
+const claims = {
+  id_token:{
+    schac_home_organization: null,
+    name: null,
+    email: null
+  }
+}
 
 export async function surfconextRedirectProps() {
   // extract wellknow url from env
@@ -31,10 +39,10 @@ export async function surfconextRedirectProps() {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
-        redirect_uri: process.env.SURFCONEXT_REDIRECT || 'https://research-software.nl/auth/login/surfconext',
-        client_id: process.env.SURFCONEXT_CLIENT_ID || 'www.research-software.nl',
-        scope: process.env.SURFCONEXT_SCOPES || 'openid',
-        response_mode: process.env.SURFCONEXT_RESPONSE_MODE || 'form_post',
+        redirect_uri: process.env.SURFCONEXT_REDIRECT ?? 'https://research-software.nl/auth/login/surfconext',
+        client_id: process.env.SURFCONEXT_CLIENT_ID ?? 'www.research-software.nl',
+        scope: process.env.SURFCONEXT_SCOPES ?? 'openid',
+        response_mode: process.env.SURFCONEXT_RESPONSE_MODE ?? 'form_post',
         claims
       }
       return props

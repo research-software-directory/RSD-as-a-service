@@ -574,3 +574,107 @@ GROUP BY
 	project_status
 ;
 $$;
+
+-- FILTER PROJECTS by orcid
+-- OPT-IN ONLY, uses public_profile table as filter
+-- UNIQUE entries by ORCID & project.id
+CREATE FUNCTION project_by_public_profile() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	date_start DATE,
+	date_end DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_contain BOOLEAN,
+	image_id VARCHAR,
+	keywords citext[],
+	keywords_text TEXT,
+	research_domain VARCHAR[],
+	participating_organisations VARCHAR[],
+	impact_cnt INTEGER,
+	output_cnt INTEGER,
+	project_status VARCHAR(20),
+	orcid VARCHAR
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	DISTINCT ON (project.id,public_profile.orcid)
+	project.id,
+	project.slug,
+	project.title,
+	project.subtitle,
+	project.date_start,
+	project.date_end,
+	project.updated_at,
+	project.is_published,
+	project.image_contain,
+	project.image_id,
+	keyword_filter_for_project.keywords,
+	keyword_filter_for_project.keywords_text,
+	research_domain_filter_for_project.research_domain,
+	project_participating_organisations.organisations AS participating_organisations,
+	COALESCE(count_project_impact.impact_cnt, 0) AS impact_cnt,
+	COALESCE(count_project_output.output_cnt, 0) AS output_cnt,
+	project_status.status,
+	public_profile.orcid
+FROM
+	public_profile()
+INNER JOIN
+	team_member ON public_profile.orcid = team_member.orcid
+LEFT JOIN
+	project ON project.id=team_member.project
+LEFT JOIN
+	keyword_filter_for_project() ON project.id=keyword_filter_for_project.project
+LEFT JOIN
+	research_domain_filter_for_project() ON project.id=research_domain_filter_for_project.project
+LEFT JOIN
+	project_participating_organisations() ON project.id=project_participating_organisations.project
+LEFT JOIN
+	count_project_impact() ON project.id=count_project_impact.project
+LEFT JOIN
+	count_project_output() ON project.id=count_project_output.project
+LEFT JOIN
+	project_status() ON project.id=project_status.project
+;
+$$;
+
+-- FILTER team members for a project by project_id
+-- public_orcid_profile indicates public profile OPT-IN
+CREATE FUNCTION project_team(project_id UUID) RETURNS TABLE (
+	id UUID,
+	is_contact_person BOOLEAN,
+	email_address VARCHAR,
+	family_names VARCHAR,
+	given_names VARCHAR,
+	affiliation VARCHAR,
+	role VARCHAR,
+	orcid VARCHAR,
+	avatar_id VARCHAR,
+	"position" INT,
+	project UUID,
+	public_orcid_profile VARCHAR
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	team_member.id,
+	team_member.is_contact_person,
+	team_member.email_address,
+	team_member.family_names,
+	team_member.given_names,
+	team_member.affiliation,
+	team_member.role,
+	team_member.orcid,
+	team_member.avatar_id,
+	team_member."position",
+	team_member.project,
+	public_profile.orcid as public_orcid_profile
+FROM
+	team_member
+LEFT JOIN
+	public_profile() ON team_member.orcid = public_profile.orcid
+WHERE
+	team_member.project = project_id
+;
+$$;

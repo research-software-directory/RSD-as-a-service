@@ -7,16 +7,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
-
-import {Person} from '../../types/Contributor'
-import ContributorAvatar from './ContributorAvatar'
-import {getDisplayName, getDisplayInitials} from '../../utils/getDisplayName'
-import PersonalInfo from './PersonalInfo'
-import {getImageUrl} from '~/utils/editImage'
 import Button from '@mui/material/Button'
+import LaunchIcon from '@mui/icons-material/Launch'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+
+import {getImageUrl} from '~/utils/editImage'
+import {getDisplayName, getDisplayInitials} from '~/utils/getDisplayName'
+import {Profile} from '~/types/Contributor'
+import PersonalInfo from './PersonalInfo'
 import useContributorList from './useContributorList'
+import ContributorAvatar from './ContributorAvatar'
 
 type GetMoreIconButtonProps={
   showAll: boolean
@@ -66,9 +67,10 @@ function ShowButton({showAll,showLess,onShowAll,onShowLess}:GetMoreIconButtonPro
   return null
 }
 
-export default function ContributorsList({contributors}: { contributors: Person[] }) {
+export default function ContributorsList({contributors,section='software'}: { contributors: Profile[],section:'software'|'projects'}) {
   // show top 12 items
-  const [limit,setLimit] = useState(12)
+  const topItems = 12
+  const [limit,setLimit] = useState(topItems)
   const {persons,hasMore} = useContributorList({
     items:contributors,
     limit
@@ -77,6 +79,7 @@ export default function ContributorsList({contributors}: { contributors: Person[
   if (persons?.length === 0) return null
 
   // console.group('ContributorsList')
+  // console.log('contributors...', contributors)
   // console.log('persons...', persons)
   // console.log('limit...',limit)
   // console.log('hasMore...',hasMore)
@@ -97,8 +100,14 @@ export default function ContributorsList({contributors}: { contributors: Person[
                   displayInitials={getDisplayInitials(item)}
                 />
                 <div className='flex-1'>
-                  <div className="text-xl font-medium ">
-                    {displayName}
+                  <div className="text-xl font-medium">
+                    {item?.public_orcid_profile ?
+                      <a href={`/profile/${item.public_orcid_profile}/${section}`} className="flex gap-2 items-center">
+                        {displayName} <LaunchIcon sx={{width:'1rem'}}/>
+                      </a>
+                      :
+                      <span>{displayName}</span>
+                    }
                   </div>
                   <PersonalInfo {...item} />
                 </div>
@@ -111,9 +120,9 @@ export default function ContributorsList({contributors}: { contributors: Person[
       </div>
       <ShowButton
         showAll={hasMore}
-        showLess={contributors.length === limit}
+        showLess={contributors.length > topItems}
         onShowAll={()=>setLimit(contributors.length)}
-        onShowLess={()=>setLimit(12)}
+        onShowLess={()=>setLimit(topItems)}
       />
     </>
   )

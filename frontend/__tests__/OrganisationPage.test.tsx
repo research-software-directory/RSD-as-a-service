@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -20,7 +20,7 @@ import mockUnits from '~/components/organisation/units/__mocks__/mockUnits.json'
 import {TabKey} from '~/components/organisation/tabs/OrganisationTabItems'
 
 // MOCK user agreement call
-jest.mock('~/components/user/settings/fetchAgreementStatus')
+jest.mock('~/components/user/settings/useUserAgreements')
 
 // use DEFAULT MOCK for login providers list
 // required when AppHeader component is used

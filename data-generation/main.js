@@ -359,28 +359,42 @@ async function generateProjects(amount=500) {
 	return result;
 }
 
-async function generateContributors(ids, amount=1000) {
+function generateOrcids(amount=50) {
+	const orcids = new Set();
+
+	while (orcids.size < amount) {
+		orcids.add(faker.helpers.replaceSymbolWithNumber('0000-000#-####-####'));
+	}
+
+	return [...orcids];
+}
+
+async function generateContributors(softwareIds, orcids, minPerSoftware=0, maxPerSoftware=15) {
 	const result = [];
 
-	for (let index = 0; index < amount; index++) {
-		result.push({
-			software: faker.helpers.arrayElement(ids),
-			is_contact_person: !!faker.helpers.maybe(() => true, {probability: 0.2}),
-			email_address: faker.internet.email(),
-			family_names: faker.name.lastName(),
-			given_names: faker.name.firstName(),
-			affiliation: faker.company.name(),
-			role: faker.name.jobTitle(),
-			orcid: faker.helpers.replaceSymbolWithNumber('####-####-####-####'),
-			avatar_id: localImageIds[index % localImageIds.length],
-		});
+	for (const softwareId of softwareIds) {
+		const amount = faker.mersenne.rand(maxPerSoftware, minPerSoftware);
+
+		for (let i = 0; i < amount; i++) {
+			result.push({
+				software: softwareId,
+				is_contact_person: !!faker.helpers.maybe(() => true, {probability: 0.2}),
+				email_address: faker.internet.email(),
+				family_names: faker.name.lastName(),
+				given_names: faker.name.firstName(),
+				affiliation: faker.company.name(),
+				role: faker.name.jobTitle(),
+				orcid: faker.helpers.maybe(() => faker.helpers.arrayElement(orcids), {probability: 0.8}) ?? null,
+				avatar_id: localImageIds[i % localImageIds.length],
+			});
+		}
 	}
 
 	return result;
 }
 
-async function generateTeamMembers(ids, amount=1000) {
-	const result = await generateContributors(ids, amount);
+async function generateTeamMembers(projectIds, orcids, minPerProject=0, maxPerProject=15) {
+	const result = await generateContributors(projectIds, orcids, minPerProject, maxPerProject);
 	result.forEach(contributor => {
 		contributor['project'] = contributor['software'];
 		delete contributor['software'];
@@ -607,12 +621,21 @@ async function downloadAndGetImages(urlGenerator, amount) {
 	return ids
 }
 
-async function postAccountsToBackend(amount=50) {
-	return postToBackend('/account', new Array(amount).fill({}));
+async function postAccountsToBackend(amount=100) {
+	const accounts = [];
+	for (let i = 0; i < amount; i++) {
+		accounts.push({
+			public_orcid_profile: !!faker.helpers.maybe(() => true, {probability: 0.8}),
+			agree_terms: !!faker.helpers.maybe(() => true, {probability: 0.8}),
+			notice_privacy_statement: !!faker.helpers.maybe(() => true, {probability: 0.8}),
+		});
+	}
+
+	return postToBackend('/account', accounts);
 }
 
 // Generate one login_for_account per given account
-function generateLoginForAccount(accountIds) {
+function generateLoginForAccount(accountIds, orcids) {
 	const homeOrganisations = [null];
 	for (let i=0; i < 10; i++) {
 		homeOrganisations.push("Organisation for " + faker.word.noun());
@@ -624,27 +647,43 @@ function generateLoginForAccount(accountIds) {
 		"ip4"
 	];
 
+	let orcidsAdded = 0;
 	const login_for_accounts = [];
 	accountIds.forEach(accountId => {
 		let firstName = faker.name.firstName();
 		let givenName = faker.name.lastName();
-		login_for_accounts.push({
-			account: accountId,
-			name: firstName + ' ' + givenName,
-			email: faker.internet.email(firstName, givenName),
-			sub: faker.random.alphaNumeric(30),
-			provider: faker.helpers.arrayElement(providers),
-			home_organisation: faker.helpers.arrayElement(homeOrganisations)
-		});
+
+		if (orcidsAdded < orcids.length) {
+			const orcid = orcids[orcidsAdded];
+			orcidsAdded += 1;
+			login_for_accounts.push({
+				account: accountId,
+				name: firstName + ' ' + givenName,
+				email: faker.internet.email(firstName, givenName),
+				sub: orcid,
+				provider: 'orcid',
+				home_organisation: faker.helpers.arrayElement(homeOrganisations)
+			});
+		} else {
+			login_for_accounts.push({
+				account: accountId,
+				name: firstName + ' ' + givenName,
+				email: faker.internet.email(firstName, givenName),
+				sub: faker.random.alphaNumeric(30),
+				provider: faker.helpers.arrayElement(providers),
+				home_organisation: faker.helpers.arrayElement(homeOrganisations)
+			});
+		}
 	})
 	return login_for_accounts;
 }
 
+const orcids = generateOrcids();
 await postAccountsToBackend(100)
 	.then(() => getFromBackend('/account'))
 	.then(res => res.json())
 	.then(jsonAccounts => jsonAccounts.map(a => a.id))
-	.then(async accountIds => postToBackend('/login_for_account', generateLoginForAccount(accountIds)))
+	.then(async accountIds => postToBackend('/login_for_account', generateLoginForAccount(accountIds, orcids)))
 	.then(() => console.log('accounts, login_for_accounts done'));
 
 const localImageIds = await getLocalImageIds(images);
@@ -673,7 +712,7 @@ const softwarePromise = postToBackend('/software', await generateSofware())
 		idsSoftware = swArray.map(sw => sw['id']);
 		idsFakeSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Software')).map(sw => sw['id']);
 		idsRealSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Real software')).map(sw => sw['id']);
-		postToBackend('/contributor', await generateContributors(idsSoftware));
+		postToBackend('/contributor', await generateContributors(idsSoftware, orcids));
 		postToBackend('/testimonial', generateTestimonials(idsSoftware));
 		postToBackend('/repository_url', generateRepositoryUrls(idsSoftware));
 		postToBackend('/package_manager', generatePackageManagers(idsRealSoftware));
@@ -687,7 +726,7 @@ const projectPromise = postToBackend('/project', await generateProjects())
 	.then(resp => resp.json())
 	.then(async pjArray => {
 		idsProjects = pjArray.map(sw => sw['id']);
-		postToBackend('/team_member', await generateTeamMembers(idsProjects));
+		postToBackend('/team_member', await generateTeamMembers(idsProjects, orcids));
 		postToBackend('/url_for_project', generateUrlsForProjects(idsProjects));
 		postToBackend('/keyword_for_project', generateKeywordsForEntity(idsProjects, idsKeywords, 'project'));
 		postToBackend('/output_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));

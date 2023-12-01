@@ -1,4 +1,6 @@
+-- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+-- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -57,7 +59,8 @@ CREATE FUNCTION person_mentions() RETURNS TABLE (
 	orcid VARCHAR,
 	avatar_id VARCHAR,
 	origin VARCHAR,
-	slug VARCHAR
+	slug VARCHAR,
+	public_orcid_profile VARCHAR
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -70,11 +73,14 @@ SELECT
 	contributor.orcid,
 	contributor.avatar_id,
 	'contributor' AS origin,
-	software.slug
+	software.slug,
+	public_profile.orcid as public_orcid_profile
 FROM
 	contributor
 INNER JOIN
 	software ON contributor.software = software.id
+LEFT JOIN
+	public_profile() ON public_profile.orcid=contributor.orcid
 UNION
 SELECT
 	team_member.id,
@@ -86,10 +92,12 @@ SELECT
 	team_member.orcid,
 	team_member.avatar_id,
 	'team_member' AS origin,
-	project.slug
+	project.slug,
+	public_profile.orcid as public_orcid_profile
 FROM
 	team_member
 INNER JOIN
 	project ON team_member.project = project.id
+LEFT JOIN
+	public_profile() ON public_profile.orcid = team_member.orcid
 $$;
-

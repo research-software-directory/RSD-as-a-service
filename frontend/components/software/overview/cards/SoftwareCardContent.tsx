@@ -7,6 +7,8 @@ import {getImageUrl} from '~/utils/editImage'
 import KeywordList from '~/components/cards/KeywordList'
 import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
+import CardContentFrame from '~/components/cards/CardContentFrame'
+import CardImageFrame from '~/components/cards/CardImageFrame'
 import ProgrammingLanguageList from './ProgrammingLanguageList'
 import SoftwareMetrics from './SoftwareMetrics'
 
@@ -30,8 +32,8 @@ export default function SoftwareCardContent(item:SoftwareCardContentProps) {
     <div
       data-testid="software-card-content"
       className="flex flex-col h-full transition overflow-hidden bg-base-100 shadow-md hover:shadow-lg rounded-md" >
-      {/* Cover image - 33% of card height */}
-      <div className="h-[33%] flex overflow-hidden relative bg-base-100">
+
+      <CardImageFrame>
         <ImageWithPlaceholder
           src={`${getImageUrl(item.image_id) ?? ''}`}
           alt={`Logo for ${item.brand_name}`}
@@ -39,9 +41,9 @@ export default function SoftwareCardContent(item:SoftwareCardContentProps) {
           className="w-full text-base-content-disabled p-4"
           bgSize='scale-down'
         />
-      </div>
-      {/* Card body - 67% of card height */}
-      <div className="h-[67%] flex flex-col p-4">
+      </CardImageFrame>
+
+      <CardContentFrame>
         <CardTitleSubtitle
           title={item.brand_name}
           subtitle={item.short_statement}
@@ -70,7 +72,7 @@ export default function SoftwareCardContent(item:SoftwareCardContentProps) {
             />
           </div>
         </div>
-      </div>
+      </CardContentFrame>
     </div>
   )
 }

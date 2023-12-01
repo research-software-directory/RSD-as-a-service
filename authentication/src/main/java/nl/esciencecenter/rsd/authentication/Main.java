@@ -11,10 +11,12 @@
 package nl.esciencecenter.rsd.authentication;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
 import java.util.Base64;
+import java.util.UUID;
 
 public class Main {
 	static final long ONE_HOUR_IN_SECONDS = 3600; // 60 * 60
@@ -141,6 +143,24 @@ public class Main {
 
 				AccountInfo accountInfo = new PostgrestCheckOrcidWhitelistedAccount(new PostgrestAccount()).account(orcidInfo, OpenidProvider.orcid);
 				createAndSetToken(ctx, accountInfo);
+			});
+
+			app.get("/couple/orcid", ctx -> {
+				String code = ctx.queryParam("code");
+				String redirectUrl = Config.orcidRedirectCouple();
+				OpenIdInfo orcidInfo = new OrcidLogin(code, redirectUrl).openidInfo();
+
+				String tokenToVerify = ctx.cookie("rsd_token");
+				String signingSecret = Config.jwtSigningSecret();
+				JwtVerifier verifier = new JwtVerifier(signingSecret);
+				DecodedJWT decodedJWT = verifier.verify(tokenToVerify);
+				UUID accountId = UUID.fromString(decodedJWT.getClaim("account").asString());
+
+				new PostgrestAccount().coupleLogin(accountId, orcidInfo, OpenidProvider.orcid);
+
+				PostgrestConnector.addOrcidToAllowList(orcidInfo.sub());
+
+				setRedirectFromCookie(ctx);
 			});
 		}
 

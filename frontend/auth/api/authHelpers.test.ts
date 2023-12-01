@@ -1,12 +1,14 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
 import {
-  getEncodedClaims, getRedirectUrl,
-  getAuthorisationEndpoint, claims, RedirectToProps,
+  getRedirectUrl,
+  getAuthorisationEndpoint, RedirectToProps,
   claimProjectMaintainerInvite,
   claimSoftwareMaintainerInvite,
   claimOrganisationMaintainerInvite
@@ -43,7 +45,6 @@ const mockProps: RedirectToProps = {
   client_id: '1234567',
   scope: 'openid',
   response_mode: 'form',
-  claims
 }
 
 // mock console log
@@ -54,21 +55,16 @@ const mockProps: RedirectToProps = {
 //   log: jest.fn()
 // }
 
-const expectedClaims = encodeURIComponent(JSON.stringify(claims))
+// const expectedClaims = encodeURIComponent(JSON.stringify(claims))
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-it('encodeUrlClaims', () => {
-  const encodedClaims = getEncodedClaims(claims)
-
-  expect(encodedClaims).toEqual(expectedClaims)
-})
 
 it('crates RedirectUrl', () => {
   const {authorization_endpoint, redirect_uri, client_id, scope, response_mode} = mockProps
-  const expectedRedirect = `${authorization_endpoint}?redirect_uri=${redirect_uri}&client_id=${client_id}&scope=${scope}&response_type=code&response_mode=${response_mode}&prompt=login+consent&claims=${expectedClaims}`
+  const expectedRedirect = `${authorization_endpoint}?redirect_uri=${redirect_uri}&client_id=${client_id}&scope=${scope}&response_type=code&response_mode=${response_mode}&prompt=login+consent`
   const redirectUrl = getRedirectUrl(mockProps)
   expect(redirectUrl).toEqual(expectedRedirect)
 })

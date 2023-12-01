@@ -57,7 +57,7 @@ import {
   KeywordForSoftware, License, RepositoryInfo,
   SoftwareItem, SoftwareOverviewItemProps
 } from '~/types/SoftwareTypes'
-import {Contributor} from '~/types/Contributor'
+import {Profile} from '~/types/Contributor'
 import {Testimonial} from '~/types/Testimonial'
 import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
@@ -75,7 +75,7 @@ interface SoftwareIndexData extends ScriptProps{
   softwareIntroCounts: ContributorMentionCount
   mentions: MentionItemProps[]
   testimonials: Testimonial[]
-  contributors: Contributor[]
+  contributors: Profile[]
   relatedSoftware: SoftwareOverviewItemProps[]
   relatedProjects: RelatedProject[]
   isMaintainer: boolean,

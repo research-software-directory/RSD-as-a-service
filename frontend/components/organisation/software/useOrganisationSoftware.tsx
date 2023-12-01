@@ -52,7 +52,7 @@ export default function useOrganisationSoftware() {
           if (orderInfo) orderBy=`${order}.${orderInfo.direction},slug.asc`
         }
 
-        const projects: State = await getSoftwareForOrganisation({
+        const software: State = await getSoftwareForOrganisation({
           organisation:id,
           searchFor: search ?? undefined,
           keywords: decodeJsonParam(keywords_json,null),
@@ -68,7 +68,7 @@ export default function useOrganisationSoftware() {
         // abort
         if (abort) return
         // set state
-        setState(projects)
+        setState(software)
         // set loding done
         setLoading(false)
       }

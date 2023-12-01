@@ -13,7 +13,10 @@ type IsActiveMenuItemProps = {
 export default function isActiveMenuItem({item, activePath}:IsActiveMenuItemProps) {
 
   if (activePath && item.match) {
-    return activePath.includes(item.match)
+    // console.log('activePath...', activePath)
+    // console.log('match...', item.match)
+    // using startsWith to be activate root of the tree
+    return activePath.startsWith(item.match)
   }
 
   return false

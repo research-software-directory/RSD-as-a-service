@@ -1,11 +1,12 @@
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import LogoOrcid from '~/assets/logos/logo-orcid.svg'
+import OrcidLink from '../layout/OrcidLink'
 
 type PersonalInfoProps = {
   role?: string | null
@@ -20,14 +21,7 @@ export default function PersonalInfo({role, affiliation, orcid}:PersonalInfoProp
     <div>
       {role && <div>{role}</div>}
       {affiliation && <div>{affiliation}</div>}
-      {orcid && <div>
-        <a href={'https://orcid.org/' + orcid} target="_blank" rel="noreferrer"
-          style={{whiteSpace:'nowrap'}}
-        >
-          <LogoOrcid className="inline max-w-[1.125rem] mr-1" />
-          <span className="text-sm align-bottom">{orcid}</span>
-        </a>
-      </div>}
+      {orcid && <div><OrcidLink orcid={orcid} /></div>}
     </div>
   )
 }

@@ -75,6 +75,7 @@ services:
       - HELMHOLTZAAI_ALLOW_LIST
       - ORCID_CLIENT_ID
       - ORCID_REDIRECT
+      - ORCID_REDIRECT_COUPLE
       - ORCID_WELL_KNOWN_URL
       - ORCID_SCOPES
       - AZURE_CLIENT_ID
@@ -128,6 +129,7 @@ services:
       - HELMHOLTZAAI_RESPONSE_MODE
       - ORCID_CLIENT_ID
       - ORCID_REDIRECT
+      - ORCID_REDIRECT_COUPLE
       - ORCID_WELL_KNOWN_URL
       - ORCID_SCOPES
       - AZURE_CLIENT_ID
@@ -215,7 +217,7 @@ services:
   #----------------------------------------------
   data-generation:
     build: ./data-generation
-    image: rsd/generation:1.3.1
+    image: rsd/generation:1.3.2
     environment:
       # it needs to be here to use values from .env file
       - PGRST_JWT_SECRET

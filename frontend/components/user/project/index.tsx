@@ -43,7 +43,7 @@ export default function UserProjects({session}: { session: Session }) {
       height={itemHeight}
       minWidth={minWidth}
       maxWidth={maxWidth}
-      className="gap-[0.125rem] pt-4 pb-12"
+      className="gap-[0.125rem] pt-2"
     />
   )
 }

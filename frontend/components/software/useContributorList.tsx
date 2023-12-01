@@ -4,15 +4,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import {Person} from '~/types/Contributor'
+import {Profile} from '~/types/Contributor'
 
 type UseContributorListProps={
-  items: Person[]
+  items: Profile[]
   limit: number
 }
 
 export default function useContributorList({items,limit=12}:UseContributorListProps){
-  const [persons, setPersons] = useState<Person[]>([])
+  const [persons, setPersons] = useState<Profile[]>([])
 
   useEffect(()=>{
     let abort = false
