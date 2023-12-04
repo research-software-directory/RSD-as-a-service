@@ -58,6 +58,7 @@ services:
       - 7000
     environment:
       # it uses values from .env file
+      - RSD_ENVIRONMENT
       - POSTGREST_URL
       - RSD_AUTH_PROVIDERS
       - RSD_AUTH_USER_MAIL_WHITELIST

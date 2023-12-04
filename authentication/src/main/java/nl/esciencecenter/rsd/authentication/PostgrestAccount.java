@@ -58,6 +58,10 @@ public class PostgrestAccount implements Account {
 					&&
 					accountInfo.getAsJsonObject("account").getAsJsonObject("admin_account").getAsJsonPrimitive("account_id").getAsString().equals(account.toString());
 
+			if (createAdminIfDevAndNoAdminsExist(backendUri, token, account)) {
+				isAdmin = true;
+			}
+
 			return new AccountInfo(account, name, isAdmin);
 		}
 		// The login credentials do no exist yet, create a new account and return it.
@@ -67,9 +71,12 @@ public class PostgrestAccount implements Account {
 			String newAccountJson = postJsonAsAdmin(createAccountEndpoint, "{}", token);
 			String newAccountId = JsonParser.parseString(newAccountJson).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 
-			createLoginForAccount(UUID.fromString(newAccountId), openIdInfo, provider, backendUri, token);
+			UUID accountId = UUID.fromString(newAccountId);
+			createLoginForAccount(accountId, openIdInfo, provider, backendUri, token);
 
-			return new AccountInfo(UUID.fromString(newAccountId), openIdInfo.name(), false);
+			boolean isAdmin = createAdminIfDevAndNoAdminsExist(backendUri, token, accountId);
+
+			return new AccountInfo(accountId, openIdInfo.name(), isAdmin);
 		}
 	}
 
@@ -78,6 +85,25 @@ public class PostgrestAccount implements Account {
 		JwtCreator jwtCreator = new JwtCreator(Config.jwtSigningSecret());
 		String adminJwt = jwtCreator.createAdminJwt();
 		createLoginForAccount(accountId, openIdInfo, provider, backendUri, adminJwt);
+	}
+
+	private boolean createAdminIfDevAndNoAdminsExist(String backendUri, String token, UUID accountId) throws IOException, InterruptedException {
+		if (!Config.isDevEnv()) {
+			return false;
+		}
+
+		URI adminAccountUri = URI.create(backendUri + "/admin_account");
+		HttpResponse<Void> countAdminResponse = headAsAdmin(adminAccountUri, token, "Prefer", "count=exact");
+
+		String contentRange = countAdminResponse.headers().firstValue("Content-Range").orElseThrow();
+		if (!"0".equals(contentRange.split("/")[1])) {
+			return false;
+		}
+
+		String body = "{\"account_id\": \"%s\"}".formatted(accountId);
+		postJsonAsAdmin(adminAccountUri, body, token);
+
+		return true;
 	}
 
 	private void createLoginForAccount(UUID accountId, OpenIdInfo openIdInfo, OpenidProvider provider, String backendUri, String adminJwt) throws IOException, InterruptedException {
@@ -165,6 +191,20 @@ public class PostgrestAccount implements Account {
 				throw new RuntimeException("Error fetching data from the endpoint: " + uri.toString() + " with response: " + response.body());
 			}
 			return response.body();
+		}
+	}
+
+	private HttpResponse<Void> headAsAdmin(URI uri, String token, String... headers) throws IOException, InterruptedException {
+		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
+				.HEAD()
+				.uri(uri)
+				.header("Authorization", "bearer " + token);
+		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
+			httpRequestBuilder.headers(headers);
+		}
+		HttpRequest request = httpRequestBuilder.build();
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			return client.send(request, HttpResponse.BodyHandlers.discarding());
 		}
 	}
 }
