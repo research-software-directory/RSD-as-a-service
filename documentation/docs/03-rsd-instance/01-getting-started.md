@@ -79,3 +79,59 @@ When you log in to the RSD as administrator, you will see an additional "Adminis
 ## Customizing RSD instance
 
 For customizing and administrating your RSD instance have a look at [configuration](/rsd-instance/configurations/) and [administration](/rsd-instance/administration/).
+
+## Public RSD instance
+
+If you want to run a RSD on a non-localhost machine you will need SSL certificates. The easiest way is to use Linux with Letsencrypt and a public IP address for that purpose. 
+Please note that you should take measures to protect a public installation against attackers, in particular as long as the authentication has not been set up properly.
+
+You will need docker, git and make 
+```env
+sudo curl -sSL https://get.docker.com/ | CHANNEL=stable sh
+
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
+
+curl -L https://github.com/docker/compose/releases/download/$(curl -Ls https://www.servercow.de/docker-compose/latest.php)/docker-compose-$(uname -s)-$(uname -m) > /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+sudo apt install git make
+```
+Then you can clone RSD and prepare the docker images
+```env
+git clone https://github.com/research-software-directory/RSD-as-a-service.git
+sudo make
+```
+You can then set your server name in nginx/nginx.conf, let's assume it is `fqdn.yourdomain.com`
+```env
+server_name fqdn.yourdomain.com;
+```
+Copy the example config to a .env file
+```env
+cp .env.example .env
+```
+and change, as described above, the values for `POSTGRES_PASSWORD`, `PGRST_JWT_SECRET` (with at least 32 characters) and `POSTGRES_AUTHENTICATOR_PASSWORD` to arbitrary values.
+Additionally set 
+```
+POSTGREST_URL_EXTERNAL=http://fqdn.yourdomain.com/api/v1
+RSD_AUTH_URL=http://fqdn.yourdomain.com:7000
+RSD_ADMIN_EMAIL_LIST admin@example.com
+```
+This grants full admin access to a *local* user admin *without password*. Please note the @example.com "domain" is obligatory no matter what yourdomain is.
+The way how admin users are managed will change soon, so please have a look how it works [in the future](https://research-software-directory.org/documentation/rsd-instance/getting-started/#log-in-as-rsd-administrator).
+
+You can then prepare the SSL certificates for the user cookies
+
+```env
+cp .env frontend/.env.local
+docker-compose exec nginx bash -c 'certbot --nginx -d fqdn.yourdomain.com --agree-tos --register-unsafely-without-email'
+```
+and create and start the final docker containers
+```env
+sudo make install
+```
+
+https://fqdn.yourdomain.com should now show your installation.  As mentioned you should now be able to log in with local user "admin".
+
+
