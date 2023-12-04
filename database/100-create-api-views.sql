@@ -94,7 +94,6 @@ BEGIN
 END
 $$;
 
-
 -- COUNT contributors per software
 CREATE FUNCTION count_software_contributors() RETURNS TABLE (software UUID, contributor_cnt BIGINT) LANGUAGE plpgsql STABLE AS
 $$
@@ -113,26 +112,11 @@ CREATE FUNCTION count_software_mentions() RETURNS TABLE (software UUID, mention_
 $$
 BEGIN
 	RETURN QUERY SELECT
-		mention_for_software.software, COUNT(mention) AS mention_cnt
+		mentions_by_software.software, COUNT(mentions_by_software.id) AS mention_cnt
 	FROM
-		mention_for_software
+		mentions_by_software()
 	GROUP BY
-		mention_for_software.software;
-END
-$$;
-
--- JOIN contributors and mentions counts per software
-CREATE FUNCTION count_software_contributors_mentions() RETURNS TABLE (id UUID, contributor_cnt BIGINT, mention_cnt BIGINT) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY SELECT
-		software.id, count_software_contributors.contributor_cnt, count_software_mentions.mention_cnt
-	FROM
-		software
-	LEFT JOIN
-		count_software_contributors() AS count_software_contributors ON software.id=count_software_contributors.software
-	LEFT JOIN
-		count_software_mentions() AS count_software_mentions ON software.id=count_software_mentions.software;
+		mentions_by_software.software;
 END
 $$;
 

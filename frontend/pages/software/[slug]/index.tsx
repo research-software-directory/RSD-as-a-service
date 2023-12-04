@@ -25,7 +25,6 @@ import SoftwareIntroSection from '~/components/software/SoftwareIntroSection'
 import GetStartedSection from '~/components/software/GetStartedSection'
 import CitationSection from '~/components/software/CitationSection'
 import AboutSection from '~/components/software/AboutSection'
-import MentionsSection from '~/components/software/MentionsSection'
 import ContributorsSection from '~/components/software/ContributorsSection'
 import TestimonialSection from '~/components/software/TestimonialsSection'
 import EditPageButton from '~/components/layout/EditPageButton'
@@ -36,9 +35,7 @@ import {
   getSoftwareItem,
   getRepostoryInfoForSoftware,
   getLicenseForSoftware,
-  getContributorMentionCount,
   getRemoteMarkdown,
-  ContributorMentionCount,
   getKeywordsForSoftware,
   getCategoriesForSoftware,
   getRelatedProjectsForSoftware,
@@ -50,7 +47,7 @@ import {getDisplayName} from '~/utils/getDisplayName'
 import {getContributorsForSoftware} from '~/utils/editContributors'
 import {getTestimonialsForSoftware} from '~/utils/editTestimonial'
 import {getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
-import {getMentionsForSoftware} from '~/utils/editMentions'
+import {getMentionsBySoftware} from '~/utils/editMentions'
 import {getParticipatingOrganisations} from '~/utils/editOrganisation'
 import {
   CategoriesForSoftware,
@@ -63,6 +60,9 @@ import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
 import NoContent from '~/components/layout/NoContent'
+import {getReferencePapersForSoftware} from '~/components/software/edit/reference-papers/apiReferencePapers'
+import DarkThemeSection from '~/components/layout/DarkThemeSection'
+import MentionsSection from '~/components/mention/MentionsSection'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -72,8 +72,8 @@ interface SoftwareIndexData extends ScriptProps{
   categories: CategoriesForSoftware
   licenseInfo: License[]
   repositoryInfo: RepositoryInfo
-  softwareIntroCounts: ContributorMentionCount
   mentions: MentionItemProps[]
+  referencePapers: MentionItemProps[]
   testimonials: Testimonial[]
   contributors: Profile[]
   relatedSoftware: SoftwareOverviewItemProps[]
@@ -87,10 +87,10 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   // extract data from props
   const {
     software, releases, keywords, categories,
-    licenseInfo, repositoryInfo, softwareIntroCounts,
+    licenseInfo, repositoryInfo,
     mentions, testimonials, contributors,
     relatedSoftware, relatedProjects, isMaintainer,
-    slug, organisations
+    slug, organisations, referencePapers
   } = props
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...mentions...', mentions)
+  // console.log('SoftwareIndexPage...referencePapers...', referencePapers)
   return (
     <>
       {/* Page Head meta tags */}
@@ -136,7 +136,10 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <SoftwareIntroSection
         brand_name={software.brand_name}
         short_statement={software.short_statement ?? ''}
-        counts={softwareIntroCounts}
+        counts={{
+          mention_cnt: mentions.length ?? 0,
+          contributor_cnt: contributors.length ?? 0
+        }}
       />
       <GetStartedSection
         get_started_url={software.get_started_url}
@@ -164,10 +167,18 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <OrganisationsSection
         organisations={organisations}
       />
-      {/* Mentions */}
-      <MentionsSection
-        mentions={mentions}
-      />
+      <DarkThemeSection>
+        {/* Reference papers */}
+        <MentionsSection
+          title="Reference papers"
+          mentions={referencePapers}
+        />
+        {/* Mentions */}
+        <MentionsSection
+          title="Mentions"
+          mentions={mentions}
+        />
+      </DarkThemeSection>
       {/* Testimonials */}
       <TestimonialSection
         testimonials={testimonials}
@@ -223,14 +234,14 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       categories,
       licenseInfo,
       repositoryInfo,
-      softwareIntroCounts,
       mentions,
       testimonials,
       contributors,
       relatedSoftware,
       relatedProjects,
       isMaintainer,
-      organisations
+      organisations,
+      referencePapers
     ] = await Promise.all([
       // software versions info
       getReleasesForSoftware(software.id,token),
@@ -242,10 +253,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       getLicenseForSoftware(software.id, false, token),
       // repositoryInfo: url, languages and commits
       getRepostoryInfoForSoftware(software.id, token),
-      // softwareMentionCounts
-      getContributorMentionCount(software.id,token),
       // mentions
-      getMentionsForSoftware({software:software.id,token}),
+      getMentionsBySoftware({software:software.id,token}),
       // testimonials
       getTestimonialsForSoftware({software:software.id,frontend: false,token}),
       // contributors
@@ -257,7 +266,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // check if maintainer
       isMaintainerOfSoftware({slug, account:userInfo?.account, token, frontend: false}),
       // get organisations
-      getParticipatingOrganisations({software:software.id,frontend:false,token})
+      getParticipatingOrganisations({software:software.id,frontend:false,token}),
+      // reference papers
+      getReferencePapersForSoftware({software:software.id,token}),
     ])
     // pass data to page component as props
     return {
@@ -268,8 +279,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         categories,
         licenseInfo,
         repositoryInfo,
-        softwareIntroCounts,
         mentions,
+        referencePapers,
         testimonials,
         contributors,
         relatedSoftware,

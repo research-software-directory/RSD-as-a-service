@@ -67,7 +67,7 @@ describe('pages/software/[slug]/index.tsx', () => {
       SoftwareItemPage,
       {props: softwareIndexData}
     ))
-    const expected = softwareIndexData.softwareIntroCounts.mention_cnt
+    const expected = softwareIndexData.mentions.length
     const mentions = screen.getByText(expected)
     expect(mentions).toBeInTheDocument()
     // screen.debug(editBtn)
@@ -77,7 +77,7 @@ describe('pages/software/[slug]/index.tsx', () => {
       SoftwareItemPage,
       {props: softwareIndexData}
     ))
-    const expected = softwareIndexData.softwareIntroCounts.contributor_cnt
+    const expected = softwareIndexData.contributors.length
     const contributor_cnt = screen.getByText(expected)
     expect(contributor_cnt).toBeInTheDocument()
     // screen.debug(editBtn)

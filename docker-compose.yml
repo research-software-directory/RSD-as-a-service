@@ -36,7 +36,7 @@ services:
 
   backend:
     build: ./backend-postgrest
-    image: rsd/backend-postgrest:1.12.1
+    image: rsd/backend-postgrest:1.12.2
     expose:
       - 3500
     environment:
