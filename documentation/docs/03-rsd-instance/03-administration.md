@@ -46,7 +46,7 @@ You can add, search and delete ORCIDs from the RSD. Use the bulk import button t
 
 ## RSD users
 
-This section shows all RSD users who logged in to RSD at least once. You can search for users and delete an user account.
+This section shows all RSD users who logged in to RSD at least once. You can search for users, assign the adminstrator role (rsd_admin) or delete an user account.
 
 :::danger
 
@@ -54,7 +54,7 @@ This section shows all RSD users who logged in to RSD at least once. You can sea
 - You cannot delete account you are currently using.
 :::
 
-![animation](img/admin-rsd-user-remove.gif)
+![animation](img/admin-rsd-users.gif)
 
 ## RSD contributors
 
