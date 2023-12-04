@@ -34,7 +34,7 @@ export default function RsdUsersList() {
   // console.log('accounts...', accounts)
   // console.groupEnd()
 
-  if (loading) return <ContentLoader />
+  if(loading) return <ContentLoader/>
 
   if (accounts.length === 0) {
     return (

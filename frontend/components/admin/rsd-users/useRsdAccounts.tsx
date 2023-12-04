@@ -18,18 +18,19 @@ export type RsdAccount = {
 
 export type RsdAccountInfo = {
   id: string,
-  login_for_account: RsdAccount[]
+  login_for_account: RsdAccount[],
+  admin_account: string[] | null
 }
 
 export default function useRsdAccounts(token: string) {
   const {showErrorMessage}=useSnackbar()
   const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find user by account id (exact match) or by name, email or affiliation (partial match)')
   const [accounts, setAccounts] = useState<RsdAccountInfo[]>([])
+  // show loading only on inital load
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function getLogins() {
-      setLoading(true)
       const {accounts, count} = await getRsdAccounts({
         token,
         searchFor,

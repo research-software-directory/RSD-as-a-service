@@ -32,12 +32,12 @@ type useContributorsProps = {
 export default function useContributors({token, orderBy}:useContributorsProps) {
   const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find contributor')
   const [contributors, setContributors] = useState<RsdContributor[]>([])
-  const [loading, setLoading] = useState(true)
   const [columns] = useState(createColumns(token))
+  // show loading only on inital load
+  const [loading, setLoading] = useState(true)
 
   const loadContributors = useCallback(async () => {
     let abort = false
-    setLoading(true)
     const {contributors, count} = await getContributors({
       token,
       searchFor,
