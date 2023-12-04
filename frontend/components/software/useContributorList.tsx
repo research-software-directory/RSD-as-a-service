@@ -3,36 +3,31 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
 import {Profile} from '~/types/Contributor'
 
 type UseContributorListProps={
   items: Profile[]
-  limit: number
+  limit: number,
 }
 
 export default function useContributorList({items,limit=12}:UseContributorListProps){
-  const [persons, setPersons] = useState<Profile[]>([])
+  let persons:Profile[] = []
 
-  useEffect(()=>{
-    let abort = false
+  if (limit >= items.length && persons.length < items.length){
+    persons = [
+      ...items
+    ]
+  }
 
-    if (limit >= items.length && persons.length < items.length){
-      // exit if hook is closed
-      if (abort) return
-      // show all items
-      setPersons(items)
-    }
+  if (limit < items.length && persons.length !== limit){
+    persons = items.slice(0,limit)
+  }
 
-    if (limit < items.length && persons.length !== limit){
-      // exit if hook is closed
-      if (abort) return
-      // show only limited list
-      setPersons(items.slice(0,limit))
-    }
-
-    return ()=>{abort=true}
-  },[items,limit,persons])
+  // console.group('useContributorList')
+  // console.log('items...', items)
+  // console.log('persons...', persons)
+  // console.log('limit...', limit)
+  // console.groupEnd()
 
   return {
     persons,
