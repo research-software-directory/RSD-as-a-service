@@ -63,6 +63,7 @@ import NoContent from '~/components/layout/NoContent'
 import {getReferencePapersForSoftware} from '~/components/software/edit/reference-papers/apiReferencePapers'
 import DarkThemeSection from '~/components/layout/DarkThemeSection'
 import MentionsSection from '~/components/mention/MentionsSection'
+import {PackageManager, getPackageManagers} from '~/components/software/edit/package-managers/apiPackageManager'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -80,6 +81,7 @@ interface SoftwareIndexData extends ScriptProps{
   relatedProjects: RelatedProject[]
   isMaintainer: boolean,
   organisations: ParticipatingOrganisationProps[],
+  packages: PackageManager[]
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
@@ -90,7 +92,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     licenseInfo, repositoryInfo,
     mentions, testimonials, contributors,
     relatedSoftware, relatedProjects, isMaintainer,
-    slug, organisations, referencePapers
+    slug, organisations, referencePapers, packages
   } = props
 
   useEffect(() => {
@@ -104,7 +106,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...referencePapers...', referencePapers)
+  // console.log('SoftwareIndexPage...packages...', packages)
   return (
     <>
       {/* Page Head meta tags */}
@@ -162,6 +164,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         repository={repositoryInfo?.url}
         platform={repositoryInfo?.code_platform}
         image_id={software.image_id}
+        packages={packages}
       />
       {/* Participating organisations */}
       <OrganisationsSection
@@ -241,7 +244,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       relatedProjects,
       isMaintainer,
       organisations,
-      referencePapers
+      referencePapers,
+      packages
     ] = await Promise.all([
       // software versions info
       getReleasesForSoftware(software.id,token),
@@ -269,6 +273,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       getParticipatingOrganisations({software:software.id,frontend:false,token}),
       // reference papers
       getReferencePapersForSoftware({software:software.id,token}),
+      // package managers
+      getPackageManagers({software:software.id,token})
     ])
     // pass data to page component as props
     return {
@@ -287,7 +293,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         relatedProjects,
         isMaintainer: isMaintainer ? isMaintainer : userInfo?.role==='rsd_admin',
         organisations,
-        slug
+        slug,
+        packages
       }
     }
   }catch(e:any){

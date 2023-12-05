@@ -2,19 +2,26 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {License, ProgramingLanguages, CodePlatform, KeywordForSoftware, CategoriesForSoftware} from '../../types/SoftwareTypes'
-import PageContainer from '../layout/PageContainer'
+import {
+  License, ProgramingLanguages,
+  CodePlatform, KeywordForSoftware,
+  CategoriesForSoftware} from '~/types/SoftwareTypes'
+import {CategoriesWithHeadlines} from '~/components/category/CategoriesWithHeadlines'
+import PageContainer from '~/components/layout/PageContainer'
+import {PackageManager} from './edit/package-managers/apiPackageManager'
 import AboutStatement from './AboutStatement'
 import SoftwareKeywords from './SoftwareKeywords'
 import AboutLanguages from './AboutLanguages'
 import AboutLicense from './AboutLicense'
 import AboutSourceCode from './AboutSourceCode'
 import SoftwareLogo from './SoftwareLogo'
-import {CategoriesWithHeadlines} from '../category/CategoriesWithHeadlines'
+import AboutPackageManagers from './AboutPackageManagers'
 
 type AboutSectionType = {
   brand_name: string
@@ -27,14 +34,14 @@ type AboutSectionType = {
   platform: CodePlatform
   languages: ProgramingLanguages
   image_id: string | null
+  packages: PackageManager[]
 }
-
 
 export default function AboutSection(props:AboutSectionType) {
   const {
     brand_name = '', description = '', keywords, categories, licenses,
     repository, languages, platform, description_type = 'markdown',
-    image_id
+    image_id, packages
   } = props
   if (brand_name==='') return null
 
@@ -69,6 +76,7 @@ export default function AboutSection(props:AboutSectionType) {
           repository={repository ?? null}
           platform={platform}
         />
+        <AboutPackageManagers packages={packages} />
       </div>
     </PageContainer>
   )

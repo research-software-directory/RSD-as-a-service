@@ -78,7 +78,7 @@ export type PackageManager = NewPackageManager & {
   reverse_dependency_count_scraped_at: string | null
 }
 
-export async function getPackageManagers({software, token}: { software: string, token: string }) {
+export async function getPackageManagers({software, token}: { software: string, token?: string }) {
   try {
     const query = `software=eq.${software}&order=position.asc,package_manager.asc`
     const url = `${getBaseUrl()}/package_manager?${query}`
