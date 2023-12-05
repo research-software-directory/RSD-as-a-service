@@ -39,7 +39,9 @@ export default function ContributorsTable() {
   // console.log('contributors...', contributors)
   // console.groupEnd()
 
-  if (contributors.length === 0 && loading==false) {
+  if(loading) return <ContentLoader/>
+
+  if (contributors.length === 0) {
     return (
       <section className="flex-1">
         <Alert severity="warning"
@@ -52,8 +54,6 @@ export default function ContributorsTable() {
       </section>
     )
   }
-
-  if(loading) return <ContentLoader/>
 
   function onSortColumn(column:keyof RsdContributor) {
     if (orderBy && orderBy.column === column) {

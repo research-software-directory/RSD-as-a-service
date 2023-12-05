@@ -21,7 +21,7 @@ type getLoginApiParams = {
 export async function getRsdAccounts({page,rows,token,searchFor}:getLoginApiParams) {
   try {
     // pagination
-    let query = `select=id,login_for_account!inner(id,provider,name,email,home_organisation)${paginationUrlParams({rows, page})}`
+    let query = `select=id,login_for_account!inner(id,provider,name,email,home_organisation),admin_account!left(account_id)${paginationUrlParams({rows, page})}`
     // search
     if (searchFor) {
       if (searchFor.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i) !== null) {
@@ -34,6 +34,10 @@ export async function getRsdAccounts({page,rows,token,searchFor}:getLoginApiPara
     }
     // complete url
     const url = `${getBaseUrl()}/account?${query}`
+
+    // console.group('getRsdAccounts')
+    // console.log('url...', url)
+    // console.groupEnd()
 
     // make request
     const resp = await fetch(url,{
@@ -82,6 +86,52 @@ export async function deleteRsdAccount({id,token}:{ id: string, token: string })
     return await extractReturnMessage(resp)
   } catch (e:any) {
     logger(`deleteRsdAccount: ${e.message}`,'error')
+    return {
+      status: 500,
+      message: e.message
+    }
+  }
+}
+
+export async function addRsdAdmin({id,token}:{ id: string, token: string }){
+  try {
+
+    const url = `${getBaseUrl()}/admin_account`
+
+    const resp = await fetch(url,{
+      method: 'POST',
+      headers: createJsonHeaders(token),
+      body: JSON.stringify({
+        account_id: id
+      })
+    })
+    return await extractReturnMessage(resp)
+  } catch (e:any) {
+    logger(`addRsdAdmin: ${e.message}`,'error')
+    return {
+      status: 500,
+      message: e.message
+    }
+  }
+}
+
+export async function removeRsdAdmin({id,token}:{ id: string, token: string }){
+  try {
+    if (!id) return {
+      status: 400,
+      message: 'User account_id not provided'
+    }
+
+    const query=`account_id=eq.${id}`
+    const url = `${getBaseUrl()}/admin_account?${query}`
+
+    const resp = await fetch(url,{
+      method: 'DELETE',
+      headers: createJsonHeaders(token)
+    })
+    return await extractReturnMessage(resp)
+  } catch (e:any) {
+    logger(`removeRsdAdmin: ${e.message}`,'error')
     return {
       status: 500,
       message: e.message

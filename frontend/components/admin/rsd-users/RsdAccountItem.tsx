@@ -13,6 +13,7 @@ import ListItemText from '@mui/material/ListItemText'
 import {useSession} from '~/auth'
 import RsdLoginList from './RsdLoginList'
 import {RsdAccountInfo} from './useRsdAccounts'
+import RsdRoleSwitch from './RsdRoleSwitch'
 
 type RsdUserItemProps = {
   account: RsdAccountInfo,
@@ -27,7 +28,12 @@ export default function RsdAccountItem({account, onDelete}: RsdUserItemProps) {
       data-testid="account-item"
       key={account.id}
       secondaryAction={
-        <>
+        <div className="flex gap-2">
+          <RsdRoleSwitch
+            id={account.id}
+            admin_account={account.admin_account}
+            disabled={user?.account === account.id}
+          />
           <IconButton
             disabled={user?.account === account.id}
             edge="end"
@@ -38,11 +44,11 @@ export default function RsdAccountItem({account, onDelete}: RsdUserItemProps) {
           >
             <DeleteIcon />
           </IconButton>
-        </>
+        </div>
       }
       sx={{
         // this makes space for buttons
-        paddingRight:'6.5rem',
+        paddingRight:'8.5rem',
         '&:hover': {
           backgroundColor:'grey.100'
         }
