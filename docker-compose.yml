@@ -53,13 +53,14 @@ services:
 
   auth:
     build: ./authentication
-    image: rsd/auth:1.3.0
+    image: rsd/auth:1.4.0
     ports:
       - 5005:5005
     expose:
       - 7000
     environment:
       # it uses values from .env file
+      - RSD_ENVIRONMENT
       - POSTGREST_URL
       - RSD_AUTH_PROVIDERS
       - RSD_AUTH_USER_MAIL_WHITELIST

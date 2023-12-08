@@ -29,6 +29,14 @@ public class Config {
 				.orElse(Collections.emptySet());
 	}
 
+	public static boolean isDevEnv() {
+		try {
+			return "dev".equals(System.getenv("RSD_ENVIRONMENT"));
+		} catch (RuntimeException e) {
+			return false;
+		}
+	}
+
 	public static boolean isLocalEnabled() {
 		return rsdAuthProviders().contains("LOCAL");
 	}
