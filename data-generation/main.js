@@ -369,13 +369,31 @@ function generateOrcids(amount=50) {
 	return [...orcids];
 }
 
-async function generateContributors(softwareIds, orcids, minPerSoftware=0, maxPerSoftware=15) {
+function generatePeopleWithOrcids(orcids, imageIds) {
+	const result = [];
+
+	for (const orcid of orcids) {
+		result.push({
+			email_address: faker.internet.email(),
+			family_names: faker.person.lastName(),
+			given_names: faker.person.firstName(),
+			orcid: orcid,
+			avatar_id: faker.helpers.arrayElement(imageIds)
+		});
+	}
+
+	return result;
+}
+
+async function generateContributors(softwareIds, peopleWithOrcids, minPerSoftware=0, maxPerSoftware=15) {
 	const result = [];
 
 	for (const softwareId of softwareIds) {
 		const amount = faker.number.int({max: maxPerSoftware, min: minPerSoftware});
+		const amountWithOrcid = faker.number.int({max: amount, min: 0});
+		const amountWithoutOrcid = amount - amountWithOrcid;
 
-		for (let i = 0; i < amount; i++) {
+		for (let i = 0; i < amountWithoutOrcid; i++) {
 			result.push({
 				software: softwareId,
 				is_contact_person: !!faker.helpers.maybe(() => true, {probability: 0.2}),
@@ -384,8 +402,20 @@ async function generateContributors(softwareIds, orcids, minPerSoftware=0, maxPe
 				given_names: faker.person.firstName(),
 				affiliation: faker.company.name(),
 				role: faker.person.jobTitle(),
-				orcid: faker.helpers.maybe(() => faker.helpers.arrayElement(orcids), {probability: 0.8}) ?? null,
-				avatar_id: localImageIds[i % localImageIds.length],
+				orcid: null,
+				avatar_id: faker.helpers.maybe(() => faker.helpers.arrayElement(localImageIds), {probability: 0.8}) ?? null,
+			});
+		}
+
+		const randomPeopleWithOrcdid = faker.helpers.arrayElements(peopleWithOrcids, amountWithOrcid);
+
+		for (const personWithOrcid of randomPeopleWithOrcdid) {
+			result.push({
+				...personWithOrcid,
+				software: softwareId,
+				is_contact_person: !!faker.helpers.maybe(() => true, {probability: 0.2}),
+				affiliation: faker.company.name(),
+				role: faker.person.jobTitle(),
 			});
 		}
 	}
@@ -393,8 +423,8 @@ async function generateContributors(softwareIds, orcids, minPerSoftware=0, maxPe
 	return result;
 }
 
-async function generateTeamMembers(projectIds, orcids, minPerProject=0, maxPerProject=15) {
-	const result = await generateContributors(projectIds, orcids, minPerProject, maxPerProject);
+async function generateTeamMembers(projectIds, peopleWithOrcids, minPerProject=0, maxPerProject=15) {
+	const result = await generateContributors(projectIds, peopleWithOrcids, minPerProject, maxPerProject);
 	result.forEach(contributor => {
 		contributor['project'] = contributor['software'];
 		delete contributor['software'];
@@ -678,7 +708,11 @@ function generateLoginForAccount(accountIds, orcids) {
 	return login_for_accounts;
 }
 
+// start of running code, main
 const orcids = generateOrcids();
+const localImageIds = await getLocalImageIds(images);
+const peopleWithOrcid = generatePeopleWithOrcids(orcids, localImageIds);
+
 await postAccountsToBackend(100)
 	.then(() => getFromBackend('/account'))
 	.then(res => res.json())
@@ -686,7 +720,6 @@ await postAccountsToBackend(100)
 	.then(async accountIds => postToBackend('/login_for_account', generateLoginForAccount(accountIds, orcids)))
 	.then(() => console.log('accounts, login_for_accounts done'));
 
-const localImageIds = await getLocalImageIds(images);
 const localOrganisationLogoIds = await getLocalImageIds(organisationLogos);
 const localSoftwareLogoIds = await getLocalImageIds(softwareLogos);
 
@@ -712,7 +745,7 @@ const softwarePromise = postToBackend('/software', await generateSofware())
 		idsSoftware = swArray.map(sw => sw['id']);
 		idsFakeSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Software')).map(sw => sw['id']);
 		idsRealSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Real software')).map(sw => sw['id']);
-		postToBackend('/contributor', await generateContributors(idsSoftware, orcids));
+		postToBackend('/contributor', await generateContributors(idsSoftware, peopleWithOrcid));
 		postToBackend('/testimonial', generateTestimonials(idsSoftware));
 		postToBackend('/repository_url', generateRepositoryUrls(idsSoftware));
 		postToBackend('/package_manager', generatePackageManagers(idsRealSoftware));
@@ -726,7 +759,7 @@ const projectPromise = postToBackend('/project', await generateProjects())
 	.then(resp => resp.json())
 	.then(async pjArray => {
 		idsProjects = pjArray.map(sw => sw['id']);
-		postToBackend('/team_member', await generateTeamMembers(idsProjects, orcids));
+		postToBackend('/team_member', await generateTeamMembers(idsProjects, peopleWithOrcid));
 		postToBackend('/url_for_project', generateUrlsForProjects(idsProjects));
 		postToBackend('/keyword_for_project', generateKeywordsForEntity(idsProjects, idsKeywords, 'project'));
 		postToBackend('/output_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));
