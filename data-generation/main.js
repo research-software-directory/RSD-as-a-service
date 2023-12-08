@@ -58,11 +58,11 @@ function generateMentions(amountExtra = 100) {
 			doi: doi,
 			url: 'https://doi.org/' + doi,
 			title: faker.music.songName(),
-			authors: faker.helpers.maybe(() => faker.name.fullName(), 0.8) ?? null,
+			authors: faker.helpers.maybe(() => faker.person.fullName(), 0.8) ?? null,
 			publisher: faker.helpers.maybe(() => faker.company.name(), 0.8) ?? null,
-			publication_year: faker.mersenne.rand(2026, 2000),
+			publication_year: faker.number.int({max: 2026, min: 2000}),
 			journal: faker.helpers.maybe(() => faker.company.name(), 0.8) ?? null,
-			page: faker.helpers.maybe(() => faker.mersenne.rand(301, 0), 0.1) ?? null,
+			page: faker.helpers.maybe(() => faker.number.int({max: 301, min: 0}), 0.1) ?? null,
 			image_url: null,
 			mention_type: faker.helpers.arrayElement(mentionTypes),
 			source: 'faker',
@@ -76,11 +76,11 @@ function generateMentions(amountExtra = 100) {
 			doi: null,
 			url: faker.internet.url(),
 			title: faker.music.songName(),
-			authors: faker.helpers.maybe(() => faker.name.fullName(), 0.8) ?? null,
+			authors: faker.helpers.maybe(() => faker.person.fullName(), 0.8) ?? null,
 			publisher: faker.helpers.maybe(() => faker.company.name(), 0.8) ?? null,
-			publication_year: faker.mersenne.rand(2026, 2000),
+			publication_year: faker.number.int({max: 2026, min: 2000}),
 			journal: faker.helpers.maybe(() => faker.company.name(), 0.8) ?? null,
-			page: faker.helpers.maybe(() => faker.mersenne.rand(301, 0), 0.1) ?? null,
+			page: faker.helpers.maybe(() => faker.number.int({max: 301, min: 0}), 0.1) ?? null,
 			image_url: null,
 			mention_type: faker.helpers.arrayElement(mentionTypes),
 			source: 'faker',
@@ -98,14 +98,14 @@ async function generateSofware(amount=500) {
 	const brandNames = [];
 	for (let index = 0; index < amountRealSoftware; index++) {
 		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
-		const brandName = generateUniqueCaseInsensitiveString(() => ('Real software: ' + faker.random.words(faker.mersenne.rand(maxWords, 1))).substring(0, 200));
+		const brandName = generateUniqueCaseInsensitiveString(() => ('Real software: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200));
 		brandNames.push(brandName);
 	}
 
 	const amountFakeSoftware = amount - amountRealSoftware;
 	for (let index = 0; index < amountFakeSoftware; index++) {
 		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
-		const brandName = generateUniqueCaseInsensitiveString(() => ('Software: ' + faker.random.words(faker.mersenne.rand(maxWords, 1))).substring(0, 200));
+		const brandName = generateUniqueCaseInsensitiveString(() => ('Software: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200));
 		brandNames.push(brandName);
 	}
 
@@ -133,12 +133,12 @@ function generateTestimonials(ids) {
 
 	for (const id of ids) {
 		// each software will get 0, 1 or 2 testimonials
-		const numberOfTestimonials = faker.mersenne.rand(3,0);
+		const numberOfTestimonials = faker.number.int({max: 3, min: 0});
 		for (let index = 0; index < numberOfTestimonials; index++) {
 			result.push({
 				software: id,
 				message: faker.hacker.phrase(),
-				source: faker.name.fullName(),
+				source: faker.person.fullName(),
 			});
 		}
 	}
@@ -213,7 +213,7 @@ function generateLincensesForSoftware(ids) {
 	const result = [];
 
 	for (const id of ids) {
-		const nummerOfLicenses = faker.mersenne.rand(3, 0);
+		const nummerOfLicenses = faker.number.int({max: 3, min: 0});
 		if (nummerOfLicenses === 0) continue;
 
 		const licensesToAdd = faker.helpers.arrayElements(licenses, nummerOfLicenses);
@@ -232,7 +232,7 @@ function generateKeywordsForEntity(idsEntity, idsKeyword, nameEntity) {
 	const result = [];
 
 	for (const idEntity of idsEntity) {
-		const nummerOfKeywords = faker.mersenne.rand(3, 0);
+		const nummerOfKeywords = faker.number.int({max: 3, min: 0});
 		if (nummerOfKeywords === 0) continue;
 
 		const keywordIdsToAdd = faker.helpers.arrayElements(idsKeyword, nummerOfKeywords);
@@ -251,7 +251,7 @@ function generateMentionsForEntity(idsEntity, idsMention, nameEntity) {
 	const result = [];
 
 	for (const idEntity of idsEntity) {
-		const nummerOfMentions = faker.mersenne.rand(11, 0);
+		const nummerOfMentions = faker.number.int({max: 11, min: 0});
 		if (nummerOfMentions === 0) continue;
 
 		const mentionIdsToAdd = faker.helpers.arrayElements(idsMention, nummerOfMentions);
@@ -270,7 +270,7 @@ function generateResearchDomainsForProjects(idsProject, idsResearchDomain) {
 	const result = [];
 
 	for (const idProject of idsProject) {
-		const nummerOfKeywords = faker.mersenne.rand(3, 0);
+		const nummerOfKeywords = faker.number.int({max: 3, min: 0});
 		if (nummerOfKeywords === 0) continue;
 
 		const researchDomainIdsToAdd = faker.helpers.arrayElements(idsResearchDomain, nummerOfKeywords);
@@ -289,7 +289,7 @@ function generateSoftwareForSoftware(ids) {
 	const result = [];
 
 	for (let index = 0; index < ids.length; index++) {
-		const numberOfRelatedSoftware = faker.mersenne.rand(5, 0);
+		const numberOfRelatedSoftware = faker.number.int({max: 5, min: 0});
 		if (numberOfRelatedSoftware === 0) continue;
 
 		const origin = ids[index];
@@ -322,22 +322,22 @@ async function generateProjects(amount=500) {
 
 	for (let index = 0; index < amount; index++) {
 		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
-		const title = generateUniqueCaseInsensitiveString(() => ('Project: ' + faker.random.words(faker.mersenne.rand(maxWords, 1))).substring(0, 200));
+		const title = generateUniqueCaseInsensitiveString(() => ('Project: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200));
 
 		const status = faker.helpers.arrayElement(projectStatuses);
 		let dateEnd, dateStart;
 		switch (status) {
 			case 'finished':
-				dateEnd = faker.date.past(2);
-				dateStart = faker.date.past(2, dateEnd);
+				dateEnd = faker.date.past({years: 2});
+				dateStart = faker.date.past({years: 2, refDate: dateEnd});
 				break;
 			case 'running':
-				dateEnd = faker.date.future(2);
-				dateStart = faker.date.past(2);
+				dateEnd = faker.date.future({years: 2});
+				dateStart = faker.date.past({years: 2});
 				break;
 			case 'starting':
-				dateStart = faker.date.future(2);
-				dateEnd = faker.date.future(2, dateStart);
+				dateStart = faker.date.future({years: 2});
+				dateEnd = faker.date.future({years: 2, refDate: dateStart});
 				break;
 		}
 
@@ -369,23 +369,53 @@ function generateOrcids(amount=50) {
 	return [...orcids];
 }
 
-async function generateContributors(softwareIds, orcids, minPerSoftware=0, maxPerSoftware=15) {
+function generatePeopleWithOrcids(orcids, imageIds) {
+	const result = [];
+
+	for (const orcid of orcids) {
+		result.push({
+			email_address: faker.internet.email(),
+			family_names: faker.person.lastName(),
+			given_names: faker.person.firstName(),
+			orcid: orcid,
+			avatar_id: faker.helpers.arrayElement(imageIds)
+		});
+	}
+
+	return result;
+}
+
+async function generateContributors(softwareIds, peopleWithOrcids, minPerSoftware=0, maxPerSoftware=15) {
 	const result = [];
 
 	for (const softwareId of softwareIds) {
-		const amount = faker.mersenne.rand(maxPerSoftware, minPerSoftware);
+		const amount = faker.number.int({max: maxPerSoftware, min: minPerSoftware});
+		const amountWithOrcid = faker.number.int({max: amount, min: 0});
+		const amountWithoutOrcid = amount - amountWithOrcid;
 
-		for (let i = 0; i < amount; i++) {
+		for (let i = 0; i < amountWithoutOrcid; i++) {
 			result.push({
 				software: softwareId,
 				is_contact_person: !!faker.helpers.maybe(() => true, {probability: 0.2}),
 				email_address: faker.internet.email(),
-				family_names: faker.name.lastName(),
-				given_names: faker.name.firstName(),
+				family_names: faker.person.lastName(),
+				given_names: faker.person.firstName(),
 				affiliation: faker.company.name(),
-				role: faker.name.jobTitle(),
-				orcid: faker.helpers.maybe(() => faker.helpers.arrayElement(orcids), {probability: 0.8}) ?? null,
-				avatar_id: localImageIds[i % localImageIds.length],
+				role: faker.person.jobTitle(),
+				orcid: null,
+				avatar_id: faker.helpers.maybe(() => faker.helpers.arrayElement(localImageIds), {probability: 0.8}) ?? null,
+			});
+		}
+
+		const randomPeopleWithOrcdid = faker.helpers.arrayElements(peopleWithOrcids, amountWithOrcid);
+
+		for (const personWithOrcid of randomPeopleWithOrcdid) {
+			result.push({
+				...personWithOrcid,
+				software: softwareId,
+				is_contact_person: !!faker.helpers.maybe(() => true, {probability: 0.2}),
+				affiliation: faker.company.name(),
+				role: faker.person.jobTitle(),
 			});
 		}
 	}
@@ -393,8 +423,8 @@ async function generateContributors(softwareIds, orcids, minPerSoftware=0, maxPe
 	return result;
 }
 
-async function generateTeamMembers(projectIds, orcids, minPerProject=0, maxPerProject=15) {
-	const result = await generateContributors(projectIds, orcids, minPerProject, maxPerProject);
+async function generateTeamMembers(projectIds, peopleWithOrcids, minPerProject=0, maxPerProject=15) {
+	const result = await generateContributors(projectIds, peopleWithOrcids, minPerProject, maxPerProject);
 	result.forEach(contributor => {
 		contributor['project'] = contributor['software'];
 		delete contributor['software'];
@@ -407,7 +437,7 @@ function generateUrlsForProjects(ids) {
 
 	for (const id of ids) {
 		// each project will get 0, 1 or 2 URLs
-		const numberOfUrls = faker.mersenne.rand(3,0);
+		const numberOfUrls = faker.number.int({max: 3, min: 0});
 		for (let index = 0; index < numberOfUrls; index++) {
 			result.push({
 				project: id,
@@ -467,7 +497,7 @@ async function generateOrganisations(amount=500) {
 	const names = [];
 	for (let index = 0; index < amount; index++) {
 		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
-		const name = generateUniqueCaseInsensitiveString(() => ('Organisation: ' + faker.random.words(faker.mersenne.rand(maxWords, 1))).substring(0, 200));
+		const name = generateUniqueCaseInsensitiveString(() => ('Organisation: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200));
 		names.push(name);
 	}
 
@@ -483,7 +513,7 @@ async function generateOrganisations(amount=500) {
 			ror_id: index < rorIds.length ? rorIds[index] : null,
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.05}),
-			country: faker.helpers.maybe(() => faker.address.country(), {probability: 0.8}) ?? null,
+			country: faker.helpers.maybe(() => faker.location.country(), {probability: 0.8}) ?? null,
 			logo_id: faker.helpers.maybe(() => localOrganisationLogoIds[index % localOrganisationLogoIds.length], {probability: 0.8}) ?? null,
 		});
 	}
@@ -513,7 +543,7 @@ function generateRelationsForDifferingEntities(idsOrigin, idsRelation, nameOrigi
 	const result = [];
 
 	for (const idOrigin of idsOrigin) {
-		const numberOfIdsRelation = faker.mersenne.rand(maxRelationsPerOrigin, 0);
+		const numberOfIdsRelation = faker.number.int({max: maxRelationsPerOrigin, min: 0});
 		const relationsToAdd = faker.helpers.arrayElements(idsRelation, numberOfIdsRelation);
 		for (const idRelation of relationsToAdd) {
 			result.push({
@@ -650,8 +680,8 @@ function generateLoginForAccount(accountIds, orcids) {
 	let orcidsAdded = 0;
 	const login_for_accounts = [];
 	accountIds.forEach(accountId => {
-		let firstName = faker.name.firstName();
-		let givenName = faker.name.lastName();
+		let firstName = faker.person.firstName();
+		let givenName = faker.person.lastName();
 
 		if (orcidsAdded < orcids.length) {
 			const orcid = orcids[orcidsAdded];
@@ -659,7 +689,7 @@ function generateLoginForAccount(accountIds, orcids) {
 			login_for_accounts.push({
 				account: accountId,
 				name: firstName + ' ' + givenName,
-				email: faker.internet.email(firstName, givenName),
+				email: faker.internet.email({firstName: firstName, lastName: givenName}),
 				sub: orcid,
 				provider: 'orcid',
 				home_organisation: faker.helpers.arrayElement(homeOrganisations)
@@ -668,8 +698,8 @@ function generateLoginForAccount(accountIds, orcids) {
 			login_for_accounts.push({
 				account: accountId,
 				name: firstName + ' ' + givenName,
-				email: faker.internet.email(firstName, givenName),
-				sub: faker.random.alphaNumeric(30),
+				email: faker.internet.email({firstName: firstName, lastName: givenName}),
+				sub: faker.string.alphanumeric(30),
 				provider: faker.helpers.arrayElement(providers),
 				home_organisation: faker.helpers.arrayElement(homeOrganisations)
 			});
@@ -678,7 +708,11 @@ function generateLoginForAccount(accountIds, orcids) {
 	return login_for_accounts;
 }
 
+// start of running code, main
 const orcids = generateOrcids();
+const localImageIds = await getLocalImageIds(images);
+const peopleWithOrcid = generatePeopleWithOrcids(orcids, localImageIds);
+
 await postAccountsToBackend(100)
 	.then(() => getFromBackend('/account'))
 	.then(res => res.json())
@@ -686,7 +720,6 @@ await postAccountsToBackend(100)
 	.then(async accountIds => postToBackend('/login_for_account', generateLoginForAccount(accountIds, orcids)))
 	.then(() => console.log('accounts, login_for_accounts done'));
 
-const localImageIds = await getLocalImageIds(images);
 const localOrganisationLogoIds = await getLocalImageIds(organisationLogos);
 const localSoftwareLogoIds = await getLocalImageIds(softwareLogos);
 
@@ -712,7 +745,7 @@ const softwarePromise = postToBackend('/software', await generateSofware())
 		idsSoftware = swArray.map(sw => sw['id']);
 		idsFakeSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Software')).map(sw => sw['id']);
 		idsRealSoftware = swArray.filter(sw => sw['brand_name'].startsWith('Real software')).map(sw => sw['id']);
-		postToBackend('/contributor', await generateContributors(idsSoftware, orcids));
+		postToBackend('/contributor', await generateContributors(idsSoftware, peopleWithOrcid));
 		postToBackend('/testimonial', generateTestimonials(idsSoftware));
 		postToBackend('/repository_url', generateRepositoryUrls(idsSoftware));
 		postToBackend('/package_manager', generatePackageManagers(idsRealSoftware));
@@ -726,7 +759,7 @@ const projectPromise = postToBackend('/project', await generateProjects())
 	.then(resp => resp.json())
 	.then(async pjArray => {
 		idsProjects = pjArray.map(sw => sw['id']);
-		postToBackend('/team_member', await generateTeamMembers(idsProjects, orcids));
+		postToBackend('/team_member', await generateTeamMembers(idsProjects, peopleWithOrcid));
 		postToBackend('/url_for_project', generateUrlsForProjects(idsProjects));
 		postToBackend('/keyword_for_project', generateKeywordsForEntity(idsProjects, idsKeywords, 'project'));
 		postToBackend('/output_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));
