@@ -8,14 +8,15 @@
 
 import EmailIcon from '@mui/icons-material/Email'
 import Avatar from '@mui/material/Avatar'
-import {getImageUrl} from '~/utils/editImage'
+import LaunchIcon from '@mui/icons-material/Launch'
 
-import {Contributor} from '../../types/Contributor'
-import {getDisplayName, getDisplayInitials} from '../../utils/getDisplayName'
+import {Profile} from '~/types/Contributor'
+import {getImageUrl} from '~/utils/editImage'
+import {getDisplayName, getDisplayInitials} from '~/utils/getDisplayName'
 import LogoOrcid from '~/assets/logos/logo-orcid.svg'
 
 
-export default function ContactPersonCard({person}: { person: Contributor|null }) {
+export default function ContactPersonCard({person,section='software'}: {person: Profile|null,section:'software'|'projects'}) {
   // what to render if no contact person?
   if (!person) return null
   const displayName = getDisplayName(person)
@@ -59,7 +60,15 @@ export default function ContactPersonCard({person}: { person: Contributor|null }
           }
         </Avatar>
         <div className="flex-1 flex flex-col items-start">
-          <h4 className="text-primary text-2xl">{displayName}</h4>
+          <h4 className="text-primary text-2xl">
+            {person?.public_orcid_profile ?
+              <a href={`/profile/${person.public_orcid_profile}/${section}`}>
+                {displayName} <LaunchIcon sx={{width:'1rem'}}/>
+              </a>
+              :
+              <>{displayName}</>
+            }
+          </h4>
           {person?.role && <h5 className="pt-1">
             {person?.role}
           </h5>
