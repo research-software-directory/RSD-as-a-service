@@ -1,0 +1,21 @@
+/*
+ * SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
+ * SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+ * SPDX-FileCopyrightText: 2022 - 2023 dv4all
+ * SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
+ * SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+.card{
+    @apply rounded-lg bg-gradient-to-r p-[1px] from-[#7928ca70] to-[#ff008070]
+}
+.cardInside{
+    @apply flex flex-col justify-between h-full rounded-lg p-10 bg-cover bg-base-100
+}
+
+/* Current limitation of css modules, can't apply directly higher level classes like :dark */
+:global(.dark) .cardInside  {
+    @apply  bg-base-900
+}

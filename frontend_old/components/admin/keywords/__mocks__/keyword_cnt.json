@@ -1,0 +1,74 @@
+[
+  {
+    "id": "f74c2e52-ecd1-4529-b317-9323656462de",
+    "keyword": "Big data",
+    "software_cnt": 44,
+    "projects_cnt": 41
+  },
+  {
+    "id": "6a8d6bc2-98df-4a0d-b423-9773c2cc7d72",
+    "keyword": "GPU",
+    "software_cnt": 45,
+    "projects_cnt": 34
+  },
+  {
+    "id": "f14bc70e-7188-4718-89b7-52cf1f827ad9",
+    "keyword": "High performance computing",
+    "software_cnt": 42,
+    "projects_cnt": 48
+  },
+  {
+    "id": "f2e83f93-552a-452c-ad67-dd4e3b8592fa",
+    "keyword": "Image processing",
+    "software_cnt": 32,
+    "projects_cnt": 49
+  },
+  {
+    "id": "3cbe1b57-39ee-4eec-a966-703c6ae2af03",
+    "keyword": "Inter-operability & linked data",
+    "software_cnt": 39,
+    "projects_cnt": 42
+  },
+  {
+    "id": "4a65aa76-4f67-4e3e-afb2-9915b7cdf844",
+    "keyword": "Machine learning",
+    "software_cnt": 45,
+    "projects_cnt": 43
+  },
+  {
+    "id": "4c7805ae-69d3-4ccc-ad37-9b86ac755be9",
+    "keyword": "Multi-scale & multi model simulations",
+    "software_cnt": 41,
+    "projects_cnt": 35
+  },
+  {
+    "id": "08b8578e-237c-409d-8ffb-86389552ede2",
+    "keyword": "Optimized data handling",
+    "software_cnt": 35,
+    "projects_cnt": 35
+  },
+  {
+    "id": "0fe51727-5c4a-4505-8ad5-67b483baf83a",
+    "keyword": "Real time data analysis",
+    "software_cnt": 39,
+    "projects_cnt": 40
+  },
+  {
+    "id": "1601622b-ac2f-44b3-b03d-6c47c043d80d",
+    "keyword": "Text analysis & natural language processing",
+    "software_cnt": 48,
+    "projects_cnt": 46
+  },
+  {
+    "id": "4c20cfe9-1962-45fc-913a-0455934a051f",
+    "keyword": "Visualization",
+    "software_cnt": 49,
+    "projects_cnt": 44
+  },
+  {
+    "id": "898a3028-f8a4-4a63-8f26-c9fba5f29c71",
+    "keyword": "Workflow technologies",
+    "software_cnt": 35,
+    "projects_cnt": 54
+  }
+]

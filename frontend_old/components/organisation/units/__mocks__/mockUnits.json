@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1039ccae-83f3-42d3-bf0a-3b924daed65e",
+    "slug": "research-unit-1",
+    "parent": "9735e6ab-d2f8-4070-bdc2-696b23ffc869",
+    "primary_maintainer": null,
+    "name": "Research unit 1",
+    "ror_id": null,
+    "website": "https://google.com/unit-1",
+    "is_tenant": false,
+    "rsd_path": "dutch-research-council/research-unit-1/",
+    "logo_id": null,
+    "software_cnt": null,
+    "project_cnt": null,
+    "children_cnt": null,
+    "score": 0
+  },
+  {
+    "id": "b1fbe137-ead7-4ad2-a488-024526b8d627",
+    "slug": "research-unit-2",
+    "parent": "9735e6ab-d2f8-4070-bdc2-696b23ffc869",
+    "primary_maintainer": null,
+    "name": "Research Unit 2",
+    "ror_id": null,
+    "website": "https://google.com/unit-2",
+    "is_tenant": false,
+    "rsd_path": "dutch-research-council/research-unit-2/",
+    "logo_id": null,
+    "software_cnt": null,
+    "project_cnt": null,
+    "children_cnt": null,
+    "score": 0
+  }
+]

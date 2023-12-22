@@ -6,7 +6,7 @@
   // Formating with ESLint:
   "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
+    "source.fixAll.eslint": "explicit"
   },
   "[javascript][javascriptreact][typescript][typescriptreact]": {
     "editor.tabSize": 2,

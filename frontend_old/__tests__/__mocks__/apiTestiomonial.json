@@ -1,0 +1,16 @@
+[
+  {
+    "id": "3cbe7e91-26b4-4cae-b4a8-057c6707acb7",
+    "software": "06a784f2-91f9-4019-b207-eae4c2f3bc26",
+    "message": "Thank you @vtvanhees for your work and support on the #GGIRpackage ",
+    "source": "Damien Bachasson, Institute of Myology, Paris, France",
+    "position": null
+  },
+  {
+    "id": "e95c28f9-3cdc-4f67-9910-7cf9ff678144",
+    "software": "06a784f2-91f9-4019-b207-eae4c2f3bc26",
+    "message": "The GGIR R package has been used extensively with GENEActiv, ActiGraph, and Axivity data and has grown organically to become the application of choice for many researchers using raw acceleration data to study not only PA and sedentary time, but also sleep.",
+    "source": "Prof. Stuart Fairclough, Edgehill University, Ormskirk, UK",
+    "position": null
+  }
+]

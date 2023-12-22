@@ -1,0 +1,38 @@
+[{
+  "id": "18f5322e-c60a-4cd6-8fa2-c5c6f86183a8",
+  "doi": "10.5281/zenodo.5748141",
+  "url": "https://doi.org/10.5281%2Fzenodo.5748141",
+  "title": "Italian COVID-19 Integrated Surveillance Dataset (v42.0.0)",
+  "authors": "Pietro Monticone, Claudio Moroni, Claudio Moroni, Pietro Monticone",
+  "publisher": "Zenodo",
+  "publication_year": 2022,
+  "page": null,
+  "image_url": null,
+  "mention_type": "dataset",
+  "source": "DataCite",
+  "note": null,
+  "output_for_project": [
+    {
+      "project": "4119ee13-40e4-4f96-9bf0-c16f90297bca"
+    }
+  ]
+},
+{
+  "id": "6ba02b11-5d6b-4a66-ba50-30b3d85c7071",
+  "doi": "10.5334/dsj-2022-010",
+  "url": "https://doi.org/10.5334%2Fdsj-2022-010",
+  "title": "Quality Management Framework for Climate Datasets",
+  "authors": "Carlo Lacagnina, Francisco Doblas-Reyes, Gilles Larnicol, Carlo Buontempo, André Obregón, Montserrat Costa-Surós, Daniel San-Martín, Pierre-Antoine Bretonnière, Suraj D. Polade, Vanya Romanova, Davide Putero, Federico Serva, Alba Llabrés-Brustenga, Antonio Pérez, Davide Cavaliere, Olivier Membrive, Christian Steger, Núria Pérez-Zanón, Paolo Cristofanelli, Fabio Madonna, Marco Rosoldi, Aku Riihelä, Markel García Díez",
+  "publisher": "Ubiquity Press, Ltd.",
+  "publication_year": 2022,
+  "page": "10",
+  "image_url": null,
+  "mention_type": "journalArticle",
+  "source": "Crossref",
+  "note": null,
+  "output_for_project": [
+    {
+      "project": "4119ee13-40e4-4f96-9bf0-c16f90297bca"
+    }
+  ]
+}]

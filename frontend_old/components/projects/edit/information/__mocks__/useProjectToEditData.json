@@ -1,0 +1,124 @@
+{
+  "id": "33532768-746f-49b2-8452-e2180d9d59d2",
+  "slug": "test-project-chrome-694",
+  "title": "Test project chrome 694",
+  "subtitle": "Lorem ipsum description",
+  "date_end": "2022-01-01",
+  "date_start": "2020-12-01",
+  "description": "\n## Test software chrome\n\nThis is test software markdown test.\n\n## Second header\nSecond level header here!\n\n",
+  "grant_id": "12345ABC",
+  "image_caption": "Eiffel tower in Paris by Eugene Dorosh (www.pexels)",
+  "image_contain": false,
+  "image_id": "cc58c854d23237a3ba79e6cc809ccdca29b48683",
+  "is_published": true,
+  "created_at": "2022-12-14T09:39:43.451893+00:00",
+  "updated_at": "2022-12-14T09:39:56.579364+00:00",
+  "url_for_project": [
+    {
+      "id": "457f13f7-7bb7-4f07-af73-8033f7810604",
+      "uuid": "457f13f7-7bb7-4f07-af73-8033f7810604",
+      "position": 0,
+      "title": "Test link 1",
+      "url": "https://google.com/link1",
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2"
+    },
+    {
+      "id": "c17d8aca-d606-456a-b2ed-2b906817c3f2",
+      "uuid": "c17d8aca-d606-456a-b2ed-2b906817c3f2",
+      "position": 1,
+      "title": "Test link 2",
+      "url": "https://google.com/link2",
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2"
+    },
+    {
+      "id": "66739960-0a4a-4d56-81d5-8a1afea84f05",
+      "uuid": "66739960-0a4a-4d56-81d5-8a1afea84f05",
+      "position": 2,
+      "title": "Test link 3",
+      "url": "https://google.com/link3",
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2"
+    }
+  ],
+  "funding_organisations": [
+    {
+      "id": "d706f926-c81e-4fa2-be53-61a828ce5d60",
+      "slug": "dutch-research-council",
+      "primary_maintainer": null,
+      "name": "Dutch Research Council",
+      "ror_id": "https://ror.org/04jsz6e67",
+      "is_tenant": false,
+      "website": "http://www.nwo.nl/",
+      "rsd_path": "dutch-research-council/",
+      "logo_id": "91e3df883c31fb13dd703f132080d686b7e6acee",
+      "status": "approved",
+      "role": "funding",
+      "position": null,
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2",
+      "parent": null,
+      "pos": 0,
+      "source": "RSD",
+      "description": null
+    },
+    {
+      "id": "e2d59319-3db8-40ce-8a74-5969b6eb2574",
+      "slug": "netherlands-escience-center",
+      "primary_maintainer": null,
+      "name": "Netherlands eScience Center",
+      "ror_id": "https://ror.org/00rbjv475",
+      "is_tenant": false,
+      "website": "https://www.esciencecenter.nl/",
+      "rsd_path": "netherlands-escience-center/",
+      "logo_id": "72a4970c6531d96e1178bbac3060d0bb1c159aca",
+      "status": "approved",
+      "role": "funding",
+      "position": null,
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2",
+      "parent": null,
+      "pos": 1,
+      "source": "RSD",
+      "description": null
+    }
+  ],
+  "research_domains": [
+    {
+      "id": "a3f37c45-50f6-40ea-a823-0b6ad80fed2c",
+      "key": "LS",
+      "name": "Life Sciences",
+      "description": "Life Sciences (LS)",
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2"
+    },
+    {
+      "id": "acc139a7-0d13-4575-8eb8-864f0ad719e3",
+      "key": "LS9",
+      "name": "Biotechnology and Biosystems Engineering",
+      "description": "Biotechnology using all organisms, biotechnology for environment and food applications, applied plant and animal sciences, bioengineering and synthetic biology, biomass and biofuels, biohazards (LS9)",
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2"
+    },
+    {
+      "id": "25ca0470-0d89-4ed4-8f7b-dfbaf1ff6b22",
+      "key": "LS9_2",
+      "name": "Applied genetics, gene editing and transgenic organisms",
+      "description": "Applied genetics, gene editing and transgenic organisms (LS9_2)",
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2"
+    }
+  ],
+  "keywords": [
+    {
+      "id": "7a838c26-ac57-4ad1-ade0-59be878accb4",
+      "keyword": "Big data",
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2"
+    },
+    {
+      "id": "6904231e-cc00-4379-9b41-021a4ca6c2f0",
+      "keyword": "GPU",
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2"
+    },
+    {
+      "id": "97129c70-1044-4436-b8ef-4c3cf185ce56",
+      "keyword": "Testing",
+      "project": "33532768-746f-49b2-8452-e2180d9d59d2"
+    }
+  ],
+  "image_b64": null,
+  "image_mime_type": null
+}

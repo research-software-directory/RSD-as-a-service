@@ -1,0 +1,23 @@
+[
+  {
+    "id": "d840e888-e8bf-4bd2-b7ce-120c3bcce896",
+    "key": "SH",
+    "name": "Social Sciences and Humanities",
+    "description": "Social Sciences and Humanities (SH)",
+    "project": "c85e213e-8c87-4429-a1e6-df4c3dcc2a17"
+  },
+  {
+    "id": "38dfe5ae-65f8-4bab-9178-7026f73db234",
+    "key": "SH6",
+    "name": "The Study of the Human Past",
+    "description": "Archaeology and history (SH6)",
+    "project": "c85e213e-8c87-4429-a1e6-df4c3dcc2a17"
+  },
+  {
+    "id": "bbccdade-f98a-4ab2-8537-cb37e8b2656f",
+    "key": "SH6_12",
+    "name": "Social and economic history",
+    "description": "Social and economic history (SH6_12)",
+    "project": "c85e213e-8c87-4429-a1e6-df4c3dcc2a17"
+  }
+]

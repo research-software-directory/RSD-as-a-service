@@ -1,0 +1,286 @@
+{
+  "id": "https://doi.org/10.5281/zenodo.597993",
+  "doi": "10.5281/ZENODO.597993",
+  "url": "https://zenodo.org/record/597993",
+  "types": {
+    "ris": "COMP",
+    "bibtex": "misc",
+    "citeproc": "article",
+    "schemaOrg": "SoftwareSourceCode",
+    "resourceTypeGeneral": "Software"
+  },
+  "titles": [
+    {
+        "title": "Xenon"
+    }
+  ],
+  "creators": [
+    {
+      "name": "Maassen, Jason",
+      "nameType": "Personal",
+      "givenName": "Jason",
+      "familyName": "Maassen",
+      "affiliation": [
+        {
+            "name": "Netherlands eScience Center"
+        }
+      ],
+      "nameIdentifiers": [
+        {
+            "schemeUri": "https://orcid.org",
+            "nameIdentifier": "https://orcid.org/0000-0002-8172-4865",
+            "nameIdentifierScheme": "ORCID"
+        }
+      ]
+    },
+    {
+      "name": "Verhoeven, Stefan",
+      "nameType": "Personal",
+      "givenName": "Stefan",
+      "familyName": "Verhoeven",
+      "affiliation": [
+        {
+            "name": "Netherlands eScience Center"
+        }
+      ],
+      "nameIdentifiers": [
+        {
+          "schemeUri": "https://orcid.org",
+          "nameIdentifier": "https://orcid.org/0000-0002-5821-2060",
+          "nameIdentifierScheme": "ORCID"
+        }
+      ]
+    }
+  ],
+  "contributors": [{
+    "name": "van Werkhoven, Ben",
+    "nameType": "Personal",
+    "givenName": "Ben",
+    "familyName": "van Werkhoven",
+    "affiliation": [
+      {
+        "name": "Netherlands eScience Center"
+      }
+    ],
+    "nameIdentifiers": [
+      {
+        "schemeUri": "https://orcid.org",
+        "nameIdentifier": "https://orcid.org/0000-0002-7508-3272",
+        "nameIdentifierScheme": "ORCID"
+      }
+    ]
+  },{
+    "name": "Kuzniar, Arnold",
+    "nameType": "Personal",
+    "givenName": "Arnold",
+    "familyName": "Kuzniar",
+    "affiliation": [
+      {
+          "name": "Netherlands eScience Center"
+      }
+    ],
+    "nameIdentifiers": [
+      {
+        "schemeUri": "https://orcid.org",
+        "nameIdentifier": "https://orcid.org/0000-0003-1711-7961",
+        "nameIdentifierScheme": "ORCID"
+      }
+    ]
+  }],
+  "publisher": "Zenodo",
+  "container": {},
+  "subjects": [
+    {
+        "subject": "Java"
+    },
+    {
+        "subject": "batch-job"
+    },
+    {
+        "subject": "middleware"
+    },
+    {
+        "subject": "library"
+    },
+    {
+        "subject": "FTP"
+    }
+  ],
+  "dates": [
+    {
+      "date": "2020-03-20",
+      "dateType": "Issued"
+    }
+  ],
+  "publicationYear": 2020,
+  "identifiers": [
+    {
+      "identifier": "https://doi.org/10.5281/zenodo.597993",
+      "identifierType": "DOI"
+    },
+    {
+      "identifier": "https://zenodo.org/record/3719296",
+      "identifierType": "URL"
+    }
+  ],
+  "sizes": [],
+  "formats": [],
+  "version": "3.1.0",
+  "rightsList": [
+    {
+      "rights": "Apache License 2.0",
+      "rightsUri": "http://www.opensource.org/licenses/Apache-2.0"
+    },
+    {
+      "rights": "Open Access",
+      "rightsUri": "info:eu-repo/semantics/openAccess",
+      "schemeUri": "https://spdx.org/licenses/",
+      "rightsIdentifier": "cc-by-4.0",
+      "rightsIdentifierScheme": "SPDX"
+    }
+  ],
+  "descriptions": [
+    {
+      "description": "Many applications use remote storage and compute resources. To do so, they need to include code to interact with the scheduling systems and file transfer protocols used on those remote machines. Unfortunately, many different scheduler systems and file transfer protocols exist, often with completely different programming interfaces. This makes it hard for applications to switch to a different system or support multiple remote systems simultaneously. Xenon solves this problem by providing a single programming interface to many different types of remote resources, allowing applications to switch without changing a single line of code.",
+      "descriptionType": "Abstract"
+    }
+  ],
+  "geoLocations": [],
+  "fundingReferences": [],
+  "relatedIdentifiers": [
+      {
+          "relationType": "IsSupplementTo",
+          "relatedIdentifier": "https://github.com/xenon-middleware/xenon/tree/3.1.0",
+          "relatedIdentifierType": "URL"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.274153",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.321861",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.344357",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.344474",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.344475",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.572636",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.830235",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.838670",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.838984",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1036769",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1040261",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1042443",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1162733",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1183426",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1185115",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1188072",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1194353",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1200251",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.1287235",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.3244998",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.3356859",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.3402881",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.3403171",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.3404191",
+          "relatedIdentifierType": "DOI"
+      },
+      {
+          "relationType": "HasVersion",
+          "relatedIdentifier": "10.5281/zenodo.3719296",
+          "relatedIdentifierType": "DOI"
+      }
+  ],
+  "providerId": "cern",
+  "clientId": "cern.zenodo",
+  "agency": "datacite",
+  "state": "findable"
+}

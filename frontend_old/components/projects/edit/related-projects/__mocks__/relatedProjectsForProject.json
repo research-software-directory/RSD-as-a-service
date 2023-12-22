@@ -1,0 +1,32 @@
+[
+  {
+    "id": "4119ee13-40e4-4f96-9bf0-c16f90297bca",
+    "slug": "test-project-firefox-88833",
+    "title": "Test project firefox 88833",
+    "subtitle": "Lorem ipsum description",
+    "current_state": "Finished",
+    "date_start": "2020-12-01",
+    "updated_at": "2022-12-27T19:19:39.799522+00:00",
+    "is_published": true,
+    "image_contain": false,
+    "image_id": "1ca7aa00421d37456037650ce54fd0915498d1a7",
+    "status": "approved",
+    "origin": "c85e213e-8c87-4429-a1e6-df4c3dcc2a17",
+    "relation": "b44b63b2-d00f-4c2a-9cbd-8834d23222f6"
+  },
+  {
+    "id": "b44b63b2-d00f-4c2a-9cbd-8834d23222f6",
+    "slug": "test-project-msedge-45842",
+    "title": "Test project msedge 45842",
+    "subtitle": "Lorem ipsum description",
+    "current_state": "Finished",
+    "date_start": "2020-12-01",
+    "updated_at": "2022-12-27T19:19:34.77007+00:00",
+    "is_published": true,
+    "image_contain": false,
+    "image_id": "1ca7aa00421d37456037650ce54fd0915498d1a7",
+    "status": "approved",
+    "origin": "c85e213e-8c87-4429-a1e6-df4c3dcc2a17",
+    "relation": "4119ee13-40e4-4f96-9bf0-c16f90297bca"
+  }
+]

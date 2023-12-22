@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -16,16 +20,44 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "~/assets/*": ["assets/*"],
-      "~/auth": ["auth"],
-      "~/auth/*": ["auth/*"],
-      "~/components/*": ["components/*"],
-      "~/config/*": ["config/*"],
-      "~/types/*": ["types/*"],
-      "~/styles/*": ["styles/*"],
-      "~/utils/*": ["utils/*"],
-    }
+      "~/assets/*": [
+        "assets/*"
+      ],
+      "~/auth": [
+        "auth"
+      ],
+      "~/auth/*": [
+        "auth/*"
+      ],
+      "~/components/*": [
+        "components/*"
+      ],
+      "~/config/*": [
+        "config/*"
+      ],
+      "~/types/*": [
+        "types/*"
+      ],
+      "~/styles/*": [
+        "styles/*"
+      ],
+      "~/utils/*": [
+        "utils/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

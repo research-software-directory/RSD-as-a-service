@@ -1,0 +1,152 @@
+[
+  {
+    "id": "764ee9d9-7f67-40d4-ba35-bd33746236c2",
+    "keyword": "Big data",
+    "cnt": 3
+  },
+  {
+    "id": "b990fd26-e9fc-49f9-a54d-0de00fc73c99",
+    "keyword": "GPU",
+    "cnt": 3
+  },
+  {
+    "id": "3eb68203-8588-4355-ab87-3e3c5929a4fa",
+    "keyword": "Testing",
+    "cnt": 3
+  },
+  {
+    "id": "b0317f1a-c6ce-4afe-bb21-23509c31eb96",
+    "keyword": "Software Reuse",
+    "cnt": 1
+  },
+  {
+    "id": "2af9a627-d34a-49dc-a19e-75c11a24538e",
+    "keyword": "BAM",
+    "cnt": null
+  },
+  {
+    "id": "9e0c2063-e566-48f0-8fc3-95c4a373b5ad",
+    "keyword": "bioinformatics",
+    "cnt": null
+  },
+  {
+    "id": "e5225e68-805e-468d-bcf4-a5449b7fd0e2",
+    "keyword": "cancer genomics",
+    "cnt": null
+  },
+  {
+    "id": "232042a6-0b00-40b0-b102-ee1c32908447",
+    "keyword": "FAIR Sofware",
+    "cnt": null
+  },
+  {
+    "id": "e4f64efb-dbbc-47f5-b893-239fa8edec21",
+    "keyword": "germline variants",
+    "cnt": null
+  },
+  {
+    "id": "af3913da-2890-452d-b24c-e2349409e062",
+    "keyword": "High performance computing",
+    "cnt": null
+  },
+  {
+    "id": "032aa0d3-6077-4f66-84a2-f578dd2d42f3",
+    "keyword": "high-performance computing",
+    "cnt": null
+  },
+  {
+    "id": "bd773419-54c2-4b03-8da7-5c12823480ec",
+    "keyword": "HPC",
+    "cnt": null
+  },
+  {
+    "id": "2b082179-bdab-4430-82e9-d71b13f3b4bd",
+    "keyword": "Image processing",
+    "cnt": null
+  },
+  {
+    "id": "0fb6eec4-50d0-4d08-afa9-a05dfff508fe",
+    "keyword": "Inter-operability & linked data",
+    "cnt": null
+  },
+  {
+    "id": "66841846-db61-4dae-8e84-7c15e1067558",
+    "keyword": "Machine learning",
+    "cnt": null
+  },
+  {
+    "id": "dadc3286-df2a-489c-afc0-1c5118d4793f",
+    "keyword": "Multi-scale & multi model simulations",
+    "cnt": null
+  },
+  {
+    "id": "b0bc724d-8645-4472-b295-da7463ed7c68",
+    "keyword": "Optimized data handling",
+    "cnt": null
+  },
+  {
+    "id": "3aaf2a99-3b9f-4ca7-8ed7-183e8089cbff",
+    "keyword": "Real time data analysis",
+    "cnt": null
+  },
+  {
+    "id": "e4f21a4c-bb63-45ed-a8ce-32db5d992341",
+    "keyword": "Research Software",
+    "cnt": null
+  },
+  {
+    "id": "bb112cf2-51a2-432a-9b05-3089da049524",
+    "keyword": "Software Citation",
+    "cnt": null
+  },
+  {
+    "id": "538dcd2f-dac1-40ae-9eba-710452b7a31d",
+    "keyword": "Software Impact",
+    "cnt": null
+  },
+  {
+    "id": "f822aa90-1876-41a9-9113-186e93a85cc7",
+    "keyword": "somatic variants",
+    "cnt": null
+  },
+  {
+    "id": "f69439bf-cde7-4ae3-8317-76dc676e8eec",
+    "keyword": "structural variants",
+    "cnt": null
+  },
+  {
+    "id": "88392c2d-f378-40df-8bf9-cbf5d3f75381",
+    "keyword": "Text analysis & natural language processing",
+    "cnt": null
+  },
+  {
+    "id": "ba0d9293-d682-4f0f-8178-5512307c36b8",
+    "keyword": "variant calling",
+    "cnt": null
+  },
+  {
+    "id": "43f4c99a-5373-451d-945b-e9ca7694a51b",
+    "keyword": "VCF",
+    "cnt": null
+  },
+  {
+    "id": "cd3e7332-da59-4f60-9fa9-522c62595aa7",
+    "keyword": "Visualization",
+    "cnt": null
+  },
+  {
+    "id": "b95792eb-5b65-4402-91af-08f707600357",
+    "keyword": "WGS",
+    "cnt": null
+  },
+  {
+    "id": "ccea9c50-6f42-4a0d-a048-4c39eb726a36",
+    "keyword": "whole genome sequencing",
+    "cnt": null
+  },
+  {
+    "id": "3a644041-af7e-4ff3-9909-ef17da1fda6d",
+    "keyword": "workflow",
+    "cnt": null
+  }
+]

@@ -17,9 +17,9 @@ FROM node:20.10-slim AS deps
 WORKDIR /app
 
 # copy
-COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 # install
-RUN yarn install --frozen-lockfile --silent
+RUN npm ci
 
 # ----------------------------------------
 # 2. Build image
@@ -42,7 +42,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # RUN yarn test
 
 # build the solution
-RUN yarn build
+RUN npm run build
 
 # ----------------------------------------
 # 3. Production image (standalone mode)

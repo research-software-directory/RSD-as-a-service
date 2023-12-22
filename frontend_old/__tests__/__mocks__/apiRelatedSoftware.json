@@ -1,0 +1,156 @@
+[
+  {
+    "id": "c3d1ff6c-bc36-4daa-89ff-4cebaa9f8ded",
+    "slug": "3d-e-chem-vm",
+    "brand_name": "3D-e-Chem Virtual Machine",
+    "short_statement": "A freely available Virtual Machine encompassing tools, databases, and workflows for cheminformaticians, including new resources developed for ligand binding site comparisons and GPCR research.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 2,
+    "mention_cnt": 3,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "acd4ce33-a6d3-4691-a807-a24f6645881f",
+    "slug": "knime-klifs",
+    "brand_name": "KLIFS KNIME nodes",
+    "short_statement": "If you are working in the KNIME worflow platform and need data about your favorite kinase receptor ligand interaction, then these nodes are for you.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 2,
+    "mention_cnt": 3,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "72d42995-9421-409c-95d4-e56fd10e94e4",
+    "slug": "knime-gpcrdb",
+    "brand_name": "KNIME GPCRdb nodes",
+    "short_statement": "A node for the KNIME workflow systems that allows you to retrieve data about your favorite G protein-coupled receptors from gpcrdb.org.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 2,
+    "mention_cnt": 1,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "06024197-be83-4e75-9e8c-53cabe40c512",
+    "slug": "knime-molviewer",
+    "brand_name": "KNIME molecule viewer nodes",
+    "short_statement": "A 3D viewer for large molecules for the KNIME workflow system.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 2,
+    "mention_cnt": null,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "05e530ba-fe92-4b70-9134-98b2441da90f",
+    "slug": "knime-archetype",
+    "brand_name": "KNIME node archetype",
+    "short_statement": "Want to write your own KNIME node Then use the KNIME node archetype to generate a node skeleton repository with sample code.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 1,
+    "mention_cnt": 1,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "c0d4e29c-c698-4aea-bb1e-8b7cb6e14121",
+    "slug": "knime-kripodb",
+    "brand_name": "KNIME node for Kripo",
+    "short_statement": "A node for the KNIME workflow systems that allows you to compare different binding sites in proteins with each other.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 1,
+    "mention_cnt": 2,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "ac3b11a7-85f9-4820-8a76-a85647aa1174",
+    "slug": "3d-e-chem-knime-pharmacophore",
+    "brand_name": "KNIME Pharmacophore",
+    "short_statement": "A plugin for the KNIME workflow system that adds a Pharmacophore data type and nodes to read, write, and align them.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 1,
+    "mention_cnt": null,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "993bb1e0-a982-4916-af87-e496165fb901",
+    "slug": "3d-e-chem-knime-plants",
+    "brand_name": "KNIME PLANTS",
+    "short_statement": "A node for the KNIME workflow system that allows you to use the PLANTS protein-ligand docking algorithm.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 1,
+    "mention_cnt": null,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "fc6cae17-47a1-434a-808c-9d07dde3de60",
+    "slug": "3d-e-chem-knime-python-node-archetype",
+    "brand_name": "KNIME Python node archetype",
+    "short_statement": "Want to write your own KNIME node wrapping a Python library. Then use the KNIME Python node archetype to generate a node skeleton repository with sample code",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 1,
+    "mention_cnt": null,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "ea25c0d3-ce9b-48db-85f8-da7c0d60b184",
+    "slug": "3d-e-chem-knime-python-wrapper",
+    "brand_name": "KNIME Python wrapper",
+    "short_statement": "If you are developing a KNIME node which calls some Python code, then the KNIME Python wrapper can help you.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 1,
+    "mention_cnt": null,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "b68df3d6-7b5c-494d-b22b-289a74a434e8",
+    "slug": "3d-e-chem-knime-silicos-it",
+    "brand_name": "KNIME Silicos-it nodes",
+    "short_statement": "A node for the KNIME workflow systems that allows you to use the Silicos-it software to filter or align molecules.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 2,
+    "mention_cnt": 1,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "07fcfa8d-e5eb-4144-99a2-26a44fe9dfd1",
+    "slug": "knime-sstea",
+    "brand_name": "KNIME ss-TEA node",
+    "short_statement": "A node for the KNIME workflow systems that allows you to identify which residue position in a big protein sequence alignment is specific to ligand binding.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 1,
+    "mention_cnt": null,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "6a39de81-4be0-4bf5-b986-70e9808bc84f",
+    "slug": "knime-testflow",
+    "brand_name": "KNIME Testflow",
+    "short_statement": "Allows you to test KNIME nodes automatically using JUnit.",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 1,
+    "mention_cnt": 1,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "23b6c8f3-9119-47b0-8638-732c82f3334b",
+    "slug": "3d-e-chem-sygma",
+    "brand_name": "SyGMa",
+    "short_statement": "SyGMa provides fast and lightweight predictions of human metabolites to support discovery scientists design better and safer drugs  ",
+    "updated_at": "2022-07-19T12:35:44.529904+00:00",
+    "contributor_cnt": 2,
+    "mention_cnt": 2,
+    "is_published": true,
+    "status": "approved"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "2f2af9ae-46c9-407e-bdce-d2c07f79eba5",
+    "slug": "test-software-chrome-29904",
+    "brand_name": "Test software chrome 29904",
+    "short_statement": "Lorem ipsum description",
+    "updated_at": "2022-12-27T19:19:31.489888+00:00",
+    "contributor_cnt": 10,
+    "mention_cnt": 2,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "6bf9a8ae-1874-4348-ac02-528309cc4a50",
+    "slug": "test-software-firefox-27074",
+    "brand_name": "Test software firefox 27074",
+    "short_statement": "Lorem ipsum description",
+    "updated_at": "2022-12-27T19:19:35.153076+00:00",
+    "contributor_cnt": 6,
+    "mention_cnt": 2,
+    "is_published": true,
+    "status": "approved"
+  },
+  {
+    "id": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2",
+    "slug": "test-software-msedge-76572",
+    "brand_name": "Test software msedge 76572",
+    "short_statement": "Lorem ipsum description",
+    "updated_at": "2022-12-27T19:19:31.990543+00:00",
+    "contributor_cnt": 10,
+    "mention_cnt": 2,
+    "is_published": true,
+    "status": "approved"
+  }
+]

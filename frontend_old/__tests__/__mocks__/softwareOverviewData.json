@@ -1,0 +1,497 @@
+{
+  "keywordsList":[
+    {
+      "keyword": "Big data",
+      "keyword_cnt": 46
+    },
+    {
+      "keyword": "GPU",
+      "keyword_cnt": 33
+    },
+    {
+      "keyword": "High performance computing",
+      "keyword_cnt": 23
+    },
+    {
+      "keyword": "Image processing",
+      "keyword_cnt": 33
+    },
+    {
+      "keyword": "Inter-operability & linked data",
+      "keyword_cnt": 36
+    },
+    {
+      "keyword": "Machine learning",
+      "keyword_cnt": 17
+    },
+    {
+      "keyword": "Multi-scale & multi model simulations",
+      "keyword_cnt": 32
+    },
+    {
+      "keyword": "Optimized data handling",
+      "keyword_cnt": 38
+    },
+    {
+      "keyword": "Real time data analysis",
+      "keyword_cnt": 37
+    },
+    {
+      "keyword": "Text analysis & natural language processing",
+      "keyword_cnt": 33
+    },
+    {
+      "keyword": "Visualization",
+      "keyword_cnt": 38
+    },
+    {
+      "keyword": "Workflow technologies",
+      "keyword_cnt": 31
+    }
+  ],
+  "languagesList":[
+    {
+      "prog_language": "C++",
+      "prog_language_cnt": 1
+    },
+    {
+      "prog_language": "CMake",
+      "prog_language_cnt": 1
+    },
+    {
+      "prog_language": "CSS",
+      "prog_language_cnt": 4
+    },
+    {
+      "prog_language": "Dart",
+      "prog_language_cnt": 1
+    },
+    {
+      "prog_language": "Dockerfile",
+      "prog_language_cnt": 9
+    },
+    {
+      "prog_language": "GLSL",
+      "prog_language_cnt": 1
+    },
+    {
+      "prog_language": "Go",
+      "prog_language_cnt": 3
+    },
+    {
+      "prog_language": "HTML",
+      "prog_language_cnt": 6
+    },
+    {
+      "prog_language": "Java",
+      "prog_language_cnt": 1
+    },
+    {
+      "prog_language": "JavaScript",
+      "prog_language_cnt": 4
+    },
+    {
+      "prog_language": "Jinja",
+      "prog_language_cnt": 2
+    },
+    {
+      "prog_language": "Jupyter Notebook",
+      "prog_language_cnt": 2
+    },
+    {
+      "prog_language": "Makefile",
+      "prog_language_cnt": 4
+    },
+    {
+      "prog_language": "PLpgSQL",
+      "prog_language_cnt": 1
+    },
+    {
+      "prog_language": "Python",
+      "prog_language_cnt": 5
+    },
+    {
+      "prog_language": "R",
+      "prog_language_cnt": 4
+    },
+    {
+      "prog_language": "Ruby",
+      "prog_language_cnt": 3
+    },
+    {
+      "prog_language": "Shell",
+      "prog_language_cnt": 9
+    },
+    {
+      "prog_language": "Swift",
+      "prog_language_cnt": 1
+    },
+    {
+      "prog_language": "TeX",
+      "prog_language_cnt": 3
+    },
+    {
+      "prog_language": "TypeScript",
+      "prog_language_cnt": 1
+    }
+  ],
+  "licensesList":[
+    {
+      "license": "Apache-2.0",
+      "license_cnt": 68
+    },
+    {
+      "license": "CC-BY-4.0",
+      "license_cnt": 67
+    },
+    {
+      "license": "CC-BY-NC-ND-3.0",
+      "license_cnt": 81
+    },
+    {
+      "license": "GPL-2.0-or-later",
+      "license_cnt": 68
+    },
+    {
+      "license": "LGPL-2.0-or-later",
+      "license_cnt": 72
+    },
+    {
+      "license": "MIT",
+      "license_cnt": 84
+    }
+  ],
+  "software":[
+    {
+      "id": "bdf9dd4d-46f7-42b7-87e1-173857b9238f",
+      "slug": "software-avon-sausages-dynamic",
+      "brand_name": "Software: Avon Sausages dynamic",
+      "short_statement": "Andy shoes are designed to keeping in mind durability as well as trends, the most stylish range of shoes & sandals",
+      "image_id": "b5f66923d5533c42f87cfcac398275705b13e59d",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 1,
+      "mention_cnt": 4,
+      "is_published": true,
+      "keywords": [
+        "Text analysis & natural language processing"
+      ],
+      "keywords_text": "Text analysis & natural language processing",
+      "prog_lang": null,
+      "licenses": [
+        "MIT",
+        "Apache-2.0"
+      ]
+    },
+    {
+      "id": "f2da6206-e693-49b8-a33a-5f5963ccb5bf",
+      "slug": "software-override-mazda-data",
+      "brand_name": "Software: override Mazda Data",
+      "short_statement": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
+      "image_id": "425a1fac3db6f89d5b258cb5a0bf0bbeaa31159f",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 3,
+      "mention_cnt": 3,
+      "is_published": true,
+      "keywords": [
+        "Visualization"
+      ],
+      "keywords_text": "Visualization",
+      "prog_lang": null,
+      "licenses": null
+    },
+    {
+      "id": "7da44697-4227-4088-b78d-4d52ee177ab4",
+      "slug": "real-software-hmph-virginia-armenian",
+      "brand_name": "Real software: hmph Virginia Armenian",
+      "short_statement": "Ergonomic executive chair upholstered in bonded black leather and PVC padded seat and back for all-day comfort and support",
+      "image_id": "3fbd02ad27d9c3d11f90431c4ff48f94bb9b9af2",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 2,
+      "mention_cnt": 1,
+      "is_published": true,
+      "keywords": null,
+      "keywords_text": null,
+      "prog_lang": null,
+      "licenses": [
+        "LGPL-2.0-or-later",
+        "CC-BY-NC-ND-3.0"
+      ]
+    },
+    {
+      "id": "542e8504-5a07-46d1-a931-b1d048024368",
+      "slug": "real-software-woman",
+      "brand_name": "Real software: woman",
+      "short_statement": "The Football Is Good For Training And Recreational Purposes",
+      "image_id": "b5f66923d5533c42f87cfcac398275705b13e59d",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 2,
+      "mention_cnt": 3,
+      "is_published": true,
+      "keywords": null,
+      "keywords_text": null,
+      "prog_lang": null,
+      "licenses": [
+        "CC-BY-4.0"
+      ]
+    },
+    {
+      "id": "bf5b70f1-0df8-45dc-aa5b-7b3055a0faf8",
+      "slug": "real-software-berkshire-buckinghamshire-policy",
+      "brand_name": "Real software: Berkshire Buckinghamshire policy",
+      "short_statement": "Ergonomic executive chair upholstered in bonded black leather and PVC padded seat and back for all-day comfort and support",
+      "image_id": "795cb8f47ea710c8c138adec049bea9c98246149",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 2,
+      "mention_cnt": 8,
+      "is_published": true,
+      "keywords": [
+        "Real time data analysis"
+      ],
+      "keywords_text": "Real time data analysis",
+      "prog_lang": null,
+      "licenses": [
+        "MIT",
+        "CC-BY-NC-ND-3.0"
+      ]
+    },
+    {
+      "id": "5b18576d-3ef2-4ad3-9742-d2ada295bca8",
+      "slug": "real-software-gasoline-magenta",
+      "brand_name": "Real software: Gasoline magenta",
+      "short_statement": "The Apollotech B340 is an affordable wireless mouse with reliable connectivity, 12 months battery life and modern design",
+      "image_id": "b80a775f137291e3298bd0c2585fa9717db9fc7c",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 3,
+      "mention_cnt": 2,
+      "is_published": true,
+      "keywords": [
+        "High performance computing"
+      ],
+      "keywords_text": "High performance computing",
+      "prog_lang": null,
+      "licenses": [
+        "CC-BY-NC-ND-3.0"
+      ]
+    },
+    {
+      "id": "68bc6c6b-2c7f-4f29-9066-1cac93b54e2e",
+      "slug": "real-software-female-gah-capitulation-southwest-road-avon-mole-georgia-missouri-connect-checking-ascii-gastonia-country-grocery-pink-world-css-smart",
+      "brand_name": "Real software: female gah capitulation Southwest Road Avon mole Georgia Missouri connect Checking ASCII Gastonia Country Grocery pink World CSS Smart",
+      "short_statement": "The Football Is Good For Training And Recreational Purposes",
+      "image_id": "1727af42cf0deb5fcc30befca450d1a3d4927eab",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 1,
+      "mention_cnt": 10,
+      "is_published": true,
+      "keywords": null,
+      "keywords_text": null,
+      "prog_lang": null,
+      "licenses": [
+        "LGPL-2.0-or-later",
+        "CC-BY-NC-ND-3.0"
+      ]
+    },
+    {
+      "id": "6da8bfe5-2a98-4071-9546-996903da48fa",
+      "slug": "real-software-bandwidth",
+      "brand_name": "Real software: bandwidth",
+      "short_statement": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
+      "image_id": "a27c82df7e1d2b13757ede271dd652c57d37d5d1",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": null,
+      "mention_cnt": 4,
+      "is_published": true,
+      "keywords": [
+        "Big data",
+        "Workflow technologies"
+      ],
+      "keywords_text": "Big data Workflow technologies",
+      "prog_lang": null,
+      "licenses": [
+        "GPL-2.0-or-later"
+      ]
+    },
+    {
+      "id": "8fd29445-963e-49c7-b5e3-c33f6fdc241b",
+      "slug": "real-software-borders-maxime",
+      "brand_name": "Real software: Borders maxime",
+      "short_statement": "Carbonite web goalkeeper gloves are ergonomically designed to give easy fit",
+      "image_id": "0734d6a1e1e8e4e99c9d3d78c6fd635c3e41699f",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 3,
+      "mention_cnt": 8,
+      "is_published": true,
+      "keywords": [
+        "GPU",
+        "Optimized data handling"
+      ],
+      "keywords_text": "GPU Optimized data handling",
+      "prog_lang": null,
+      "licenses": [
+        "Apache-2.0"
+      ]
+    },
+    {
+      "id": "04e967b5-0de5-450b-8fc6-99dccf526953",
+      "slug": "real-software-salmon-minivan-unbranded-sedan",
+      "brand_name": "Real software: salmon Minivan Unbranded Sedan",
+      "short_statement": "The Football Is Good For Training And Recreational Purposes",
+      "image_id": "786e0df3a302c9e02b36710ee634a7c49f5b4d2a",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 1,
+      "mention_cnt": 2,
+      "is_published": true,
+      "keywords": [
+        "GPU"
+      ],
+      "keywords_text": "GPU",
+      "prog_lang": null,
+      "licenses": null
+    },
+    {
+      "id": "48fd3afc-65dc-4f6b-ab61-662db9eb97f8",
+      "slug": "real-software-incredible-indexing-violet",
+      "brand_name": "Real software: Incredible indexing violet",
+      "short_statement": "New range of formal shirts are designed keeping you in mind. With fits and styling that will make you stand apart",
+      "image_id": "3fbd02ad27d9c3d11f90431c4ff48f94bb9b9af2",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 4,
+      "mention_cnt": 1,
+      "is_published": true,
+      "keywords": null,
+      "keywords_text": null,
+      "prog_lang": [
+        "R"
+      ],
+      "licenses": [
+        "CC-BY-NC-ND-3.0",
+        "MIT"
+      ]
+    },
+    {
+      "id": "b0e51739-bbd5-4a70-8639-38ad0bf76c16",
+      "slug": "real-software-southeast-southwest-copy-zirconium",
+      "brand_name": "Real software: Southeast Southwest copy Zirconium",
+      "short_statement": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
+      "image_id": "8ac56d71326e8acc332de83a585f7b87e111957c",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "contributor_cnt": 2,
+      "mention_cnt": 10,
+      "is_published": true,
+      "keywords": null,
+      "keywords_text": null,
+      "prog_lang": [
+        "Python"
+      ],
+      "licenses": [
+        "MIT",
+        "LGPL-2.0-or-later"
+      ]
+    }
+  ],
+  "highlights":[
+    {
+      "id": "20a59ce6-96fc-4257-81ab-d235d73822a0",
+      "slug": "real-software-facilitate-evolve-uganda",
+      "brand_name": "Real software: facilitate evolve Uganda",
+      "short_statement": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
+      "image_id": "6404fe74f01e90845f37f5e8f36c914596de48c5",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "is_published": true,
+      "contributor_cnt": 5,
+      "mention_cnt": 10,
+      "keywords": [
+        "GPU",
+        "Inter-operability & linked data"
+      ],
+      "keywords_text": "GPU Inter-operability & linked data",
+      "prog_lang": [
+        "Go",
+        "Ruby",
+        "Shell",
+        "Makefile",
+        "Dockerfile"
+      ],
+      "licenses": null,
+      "position": 1
+    },
+    {
+      "id": "cd5bb638-32af-494b-b00d-0c28ccc4ba7f",
+      "slug": "real-software-sticky-phosphorus-json-enable",
+      "brand_name": "Real software: sticky Phosphorus JSON enable",
+      "short_statement": "The beautiful range of Apple Naturalé that has an exciting mix of natural ingredients. With the Goodness of 100% Natural Ingredients",
+      "image_id": "f3921426c70da70364e528bca17ecce65721120b",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "is_published": true,
+      "contributor_cnt": 5,
+      "mention_cnt": 10,
+      "keywords": null,
+      "keywords_text": null,
+      "prog_lang": null,
+      "licenses": [
+        "CC-BY-4.0",
+        "CC-BY-NC-ND-3.0"
+      ],
+      "position": 2
+    },
+    {
+      "id": "eb259590-bedd-4e41-9cff-b8f168752391",
+      "slug": "real-software-utilize-orange-female-actinium",
+      "brand_name": "Real software: utilize orange female Actinium",
+      "short_statement": "The Nagasaki Lander is the trademarked name of several series of Nagasaki sport bikes, that started with the 1984 ABC800J",
+      "image_id": "b5f66923d5533c42f87cfcac398275705b13e59d",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "is_published": true,
+      "contributor_cnt": 4,
+      "mention_cnt": 10,
+      "keywords": [
+        "Inter-operability & linked data"
+      ],
+      "keywords_text": "Inter-operability & linked data",
+      "prog_lang": null,
+      "licenses": null,
+      "position": 3
+    },
+    {
+      "id": "873bee1f-afd4-4e94-a0b2-8b3bf57392cc",
+      "slug": "real-software-rustic-into-buckinghamshire",
+      "brand_name": "Real software: Rustic into Buckinghamshire",
+      "short_statement": "The Apollotech B340 is an affordable wireless mouse with reliable connectivity, 12 months battery life and modern design",
+      "image_id": "b80a775f137291e3298bd0c2585fa9717db9fc7c",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "is_published": true,
+      "contributor_cnt": 2,
+      "mention_cnt": 10,
+      "keywords": [
+        "Inter-operability & linked data"
+      ],
+      "keywords_text": "Inter-operability & linked data",
+      "prog_lang": null,
+      "licenses": [
+        "GPL-2.0-or-later"
+      ],
+      "position": 4
+    },
+    {
+      "id": "b0e51739-bbd5-4a70-8639-38ad0bf76c16",
+      "slug": "real-software-southeast-southwest-copy-zirconium",
+      "brand_name": "Real software: Southeast Southwest copy Zirconium",
+      "short_statement": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
+      "image_id": "8ac56d71326e8acc332de83a585f7b87e111957c",
+      "updated_at": "2023-05-11T16:29:51.35019+00:00",
+      "is_published": true,
+      "contributor_cnt": 2,
+      "mention_cnt": 10,
+      "keywords": null,
+      "keywords_text": null,
+      "prog_lang": [
+        "Python"
+      ],
+      "licenses": [
+        "MIT",
+        "LGPL-2.0-or-later"
+      ],
+      "position": 5
+    }
+  ]
+}

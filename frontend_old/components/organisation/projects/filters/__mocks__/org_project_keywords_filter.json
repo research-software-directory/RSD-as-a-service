@@ -1,0 +1,42 @@
+[
+  {
+    "keyword": "Big data",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "GPU",
+    "keyword_cnt": 2
+  },
+  {
+    "keyword": "High performance computing",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Image processing",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Inter-operability & linked data",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Multi-scale & multi model simulations",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Optimized data handling",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Text analysis & natural language processing",
+    "keyword_cnt": 2
+  },
+  {
+    "keyword": "Visualization",
+    "keyword_cnt": 2
+  },
+  {
+    "keyword": "Workflow technologies",
+    "keyword_cnt": 2
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "netherlands-escience-center",
+    "name": "Netherlands eScience Center",
+    "website": "http://www.esciencecenter.nl/",
+    "rsd_path": "netherlands-escience-center/",
+    "logo_url": "/image/rpc/get_logo?id=d644e07a-fd69-4a70-91f1-cf04eb879493",
+    "role": "participating"
+  },
+  {
+    "slug": "radboud-university-nijmegen",
+    "name": "Radboud University Nijmegen",
+    "website": "http://www.ru.nl/",
+    "rsd_path": "radboud-university-nijmegen/",
+    "logo_url": "/image/rpc/get_logo?id=b106a689-9c38-4738-872a-a6c52d28867e",
+    "role": "participating"
+  },
+  {
+    "slug": "vu-university-amsterdam",
+    "name": "VU University Amsterdam",
+    "website": "http://www.vu.nl/",
+    "rsd_path": "vu-university-amsterdam",
+    "logo_url": "/image/rpc/get_logo?id=06f28760-a27f-4f62-bdf6-682e9113cd45",
+    "role": "participating"
+  }
+]

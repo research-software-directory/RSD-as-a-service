@@ -1,0 +1,27 @@
+[
+  {
+    "id": "4d66243d-7bcc-47bc-9a74-1f4934f8c015",
+    "keyword": "FAIR Sofware",
+    "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
+  },
+  {
+    "id": "400ffce7-bc92-437f-bc8d-23f9dbf130b7",
+    "keyword": "Research Software",
+    "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
+  },
+  {
+    "id": "a5ee4b74-6c6d-499b-9696-8ada7d726ba6",
+    "keyword": "Software Citation",
+    "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
+  },
+  {
+    "id": "f1a0737a-3a7c-4404-abae-bf058aadc740",
+    "keyword": "Software Impact",
+    "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
+  },
+  {
+    "id": "a687507e-2ef0-4918-81f4-6593638f3dec",
+    "keyword": "Software Reuse",
+    "software": "3406ca08-0fdd-46e6-ab01-c0c0c783775d"
+  }
+]

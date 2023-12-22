@@ -1,0 +1,40 @@
+[
+  {
+    "id": "6b00ecdd-44aa-4406-9a28-446ad2945d0c",
+    "doi": "10.5281/zenodo.1149011",
+    "url": "https://doi.org/10.5281%2Fzenodo.1149011",
+    "title": "Nlesc/Boatswain: Release 1.0.2",
+    "authors": "Berend Weel, Jurriaan H. Spaaks",
+    "publisher": "Zenodo",
+    "publication_year": 2018,
+    "page": null,
+    "image_url": null,
+    "mention_type": "computerProgram",
+    "source": "DataCite",
+    "note": null,
+    "mention_for_software": [
+      {
+        "software": "2930a586-6781-4091-af8e-7411f9be76d4"
+      }
+    ]
+  },
+  {
+    "id": "369cb465-e6e9-4d2c-bf74-2fa59d98514b",
+    "doi": "10.5281/zenodo.4075237",
+    "url": "https://doi.org/10.5281%2Fzenodo.4075237",
+    "title": "Analysing patient data off-premises on a national supercomputer",
+    "authors": "Jasmin K. Böhmer, Luca Santuari, Arnold Kuzniar",
+    "publisher": "Zenodo",
+    "publication_year": 2020,
+    "page": null,
+    "image_url": null,
+    "mention_type": "report",
+    "source": "DataCite",
+    "note": null,
+    "mention_for_software": [
+      {
+        "software": "2930a586-6781-4091-af8e-7411f9be76d4"
+      }
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "id": "fb59c229-0c5f-4aef-92f2-8cd16b0df0c3",
+    "is_contact_person": false,
+    "email_address": "test66587@example.com",
+    "family_names": "Doe 80091",
+    "given_names": "John",
+    "affiliation": "Created by msedge 9866",
+    "role": "Senior Developer 93879",
+    "orcid": null,
+    "avatar_id": "f312b64a21770404f839beffdda250ea2acf7f2c",
+    "position": 1,
+    "project": "b44b63b2-d00f-4c2a-9cbd-8834d23222f6"
+  },
+  {
+    "id": "b1386134-c591-44ec-a7dc-4bba6b18a4ee",
+    "is_contact_person": false,
+    "email_address": null,
+    "family_names": "Mijatovic",
+    "given_names": "Dusan",
+    "affiliation": "Netherlands eScience Center",
+    "role": null,
+    "orcid": "0000-0002-1898-4461",
+    "avatar_id": null,
+    "position": 2,
+    "project": "b44b63b2-d00f-4c2a-9cbd-8834d23222f6"
+  }
+]

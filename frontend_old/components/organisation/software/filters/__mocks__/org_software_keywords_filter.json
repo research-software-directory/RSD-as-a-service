@@ -1,0 +1,39 @@
+
+[
+  {
+    "keyword": "High performance computing",
+    "keyword_cnt": 2
+  },
+  {
+    "keyword": "Image processing",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Machine learning",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Multi-scale & multi model simulations",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Optimized data handling",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Real time data analysis",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Text analysis & natural language processing",
+    "keyword_cnt": 1
+  },
+  {
+    "keyword": "Visualization",
+    "keyword_cnt": 3
+  },
+  {
+    "keyword": "Workflow technologies",
+    "keyword_cnt": 1
+  }
+]

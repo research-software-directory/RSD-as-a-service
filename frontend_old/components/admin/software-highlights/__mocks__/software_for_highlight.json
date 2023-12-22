@@ -1,0 +1,139 @@
+[
+  {
+    "id": "5023f936-774f-4ef0-8630-9528f78d50a3",
+    "slug": "real-software-quality-architecto-microchip-dolorum",
+    "brand_name": "Real software: Quality architecto microchip dolorum",
+    "short_statement": "Andy shoes are designed to keeping in mind durability as well as trends, the most stylish range of shoes & sandals",
+    "image_id": "e57197fe2a417ea31f1ca36d3633b23a4c87fbd6",
+    "updated_at": "2023-08-22T07:40:19.762681+00:00",
+    "is_published": true,
+    "contributor_cnt": 1,
+    "mention_cnt": 6,
+    "keywords": null,
+    "keywords_text": null,
+    "prog_lang": [
+      "Go",
+      "Ruby",
+      "Shell",
+      "Makefile",
+      "Dockerfile"
+    ],
+    "licenses": [
+      "GPL-2.0-or-later"
+    ],
+    "position": 1
+  },
+  {
+    "id": "395d1fa9-a198-418f-8010-19064aa28b99",
+    "slug": "software-haunt-man",
+    "brand_name": "Software: haunt Man",
+    "short_statement": "Carbonite web goalkeeper gloves are ergonomically designed to give easy fit",
+    "image_id": "a98fb2fad3bdc29f138be618aef8a4825a717d8b",
+    "updated_at": "2023-08-22T07:40:19.762681+00:00",
+    "is_published": true,
+    "contributor_cnt": 2,
+    "mention_cnt": 10,
+    "keywords": [
+      "Real time data analysis"
+    ],
+    "keywords_text": "Real time data analysis",
+    "prog_lang": [
+      "Python"
+    ],
+    "licenses": null,
+    "position": 2
+  },
+  {
+    "id": "847d4f1c-4e37-4ed3-af00-1f089fa8934a",
+    "slug": "software-south-content-drive-bicycle-white-steel-fluorine-upland-composer-why-north-hillsboro-within-principal-azure-perferendis-omnigender-hardware-east-steel-gender-northeast",
+    "brand_name": "Software: South content drive Bicycle white Steel Fluorine Upland composer why North Hillsboro within Principal azure perferendis Omnigender hardware East Steel Gender Northeast",
+    "short_statement": "New ABC 13 9370, 13.3, 5th Gen CoreA5-8250U, 8GB RAM, 256GB SSD, power UHD Graphics, OS 10 Home, OS Office A & J 2016",
+    "image_id": "262f060ee4ac6abd58da5bb2f257454601c7937e",
+    "updated_at": "2023-08-22T07:40:19.762681+00:00",
+    "is_published": true,
+    "contributor_cnt": 2,
+    "mention_cnt": 10,
+    "keywords": [
+      "GPU",
+      "Real time data analysis"
+    ],
+    "keywords_text": "GPU Real time data analysis",
+    "prog_lang": [
+      "CSS",
+      "HTML",
+      "Java",
+      "Shell",
+      "Python",
+      "PLpgSQL",
+      "Makefile",
+      "Dockerfile",
+      "JavaScript",
+      "TypeScript"
+    ],
+    "licenses": [
+      "LGPL-2.0-or-later",
+      "CC-BY-NC-ND-3.0"
+    ],
+    "position": 3
+  },
+  {
+    "id": "10074848-4f80-4780-97c6-e53d5fadc4a6",
+    "slug": "real-software-models",
+    "brand_name": "Real software: models",
+    "short_statement": "The automobile layout consists of a front-engine design, with transaxle-type transmissions mounted at the rear of the engine and four wheel drive",
+    "image_id": "fb8ea4b00e60ed8ca3775de2739e45765969e71c",
+    "updated_at": "2023-08-22T07:40:19.762681+00:00",
+    "is_published": true,
+    "contributor_cnt": 2,
+    "mention_cnt": 9,
+    "keywords": [
+      "Image processing"
+    ],
+    "keywords_text": "Image processing",
+    "prog_lang": [
+      "R",
+      "NCL",
+      "TeX",
+      "XSLT",
+      "Julia",
+      "Shell",
+      "Python",
+      "Dockerfile",
+      "Emacs Lisp"
+    ],
+    "licenses": [
+      "Apache-2.0",
+      "CC-BY-NC-ND-3.0"
+    ],
+    "position": 4
+  },
+  {
+    "id": "f0c07a82-c98f-4bd8-be22-071a5a00bfd2",
+    "slug": "real-software-brr",
+    "brand_name": "Real software: brr",
+    "short_statement": "Andy shoes are designed to keeping in mind durability as well as trends, the most stylish range of shoes & sandals",
+    "image_id": null,
+    "updated_at": "2023-08-22T07:40:19.762681+00:00",
+    "is_published": true,
+    "contributor_cnt": 1,
+    "mention_cnt": 9,
+    "keywords": [
+      "Big data"
+    ],
+    "keywords_text": "Big data",
+    "prog_lang": [
+      "R",
+      "TeX",
+      "HTML",
+      "Jinja",
+      "Python",
+      "Dockerfile",
+      "Jupyter Notebook"
+    ],
+    "licenses": [
+      "CC-BY-4.0",
+      "Apache-2.0"
+    ],
+    "position": 5
+  }
+]

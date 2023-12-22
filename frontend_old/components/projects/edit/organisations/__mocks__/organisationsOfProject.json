@@ -1,0 +1,34 @@
+[
+  {
+    "id": "6f41e3b8-56d9-4a80-a73f-ee59ce5dabec",
+    "slug": "vrije-universiteit-amsterdam",
+    "primary_maintainer": null,
+    "name": "Vrije Universiteit Amsterdam",
+    "ror_id": "https://ror.org/008xxew50",
+    "is_tenant": false,
+    "website": "https://vu.nl/",
+    "rsd_path": "vrije-universiteit-amsterdam/",
+    "logo_id": "df269fe1a09510e71bc18dd8683fb7bba7a429e7",
+    "status": "approved",
+    "role": "participating",
+    "position": 1,
+    "project": "c85e213e-8c87-4429-a1e6-df4c3dcc2a17",
+    "parent": null
+  },
+  {
+    "id": "691785d9-6457-4722-92b1-32177d338564",
+    "slug": "eindhoven-university-of-technology",
+    "primary_maintainer": null,
+    "name": "Eindhoven University of Technology",
+    "ror_id": "https://ror.org/02c2kyt77",
+    "is_tenant": false,
+    "website": "http://www.tue.nl/",
+    "rsd_path": "eindhoven-university-of-technology/",
+    "logo_id": "9feb9c4d2ff0ac5cced6e82259d0f2d7ef5f4843",
+    "status": "approved",
+    "role": "participating",
+    "position": 2,
+    "project": "c85e213e-8c87-4429-a1e6-df4c3dcc2a17",
+    "parent": null
+  }
+]
