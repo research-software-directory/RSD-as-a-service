@@ -1,7 +1,9 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -55,7 +57,7 @@ export default function SoftwareEditPages({pageIndex,software}:SoftwareEditPageP
         <UserAgrementModal />
         <EditSoftwareProvider state={state}>
           <EditSoftwareStickyHeader />
-          <section className="md:flex gap-[3rem]">
+          <section className="md:flex gap-[3rem] mb-8">
             <EditSoftwareNav slug={software.slug} pageId={page.id} />
             {/* Here we load main component of each step */}
             {renderPageComponent()}
