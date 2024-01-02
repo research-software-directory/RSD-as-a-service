@@ -12,7 +12,7 @@
 # ----------------------------------------
 # 1. Install dependencies only when needed
 # ----------------------------------------
-FROM node:20.5-slim AS deps
+FROM node:20.10-slim AS deps
 
 WORKDIR /app
 
@@ -47,7 +47,7 @@ RUN yarn build
 # ----------------------------------------
 # 3. Production image (standalone mode)
 # ----------------------------------------
-FROM node:20.5-slim AS runner
+FROM node:20.10-slim AS runner
 
 # optional install updates
 # RUN apt-get upgrade -y

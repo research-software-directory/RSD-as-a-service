@@ -52,7 +52,7 @@ export default function ContributorsSection({contributors, title='Contributors'}
         </h2>
         <section className="2xl:flex 2xl:flex-row-reverse">
           <div className="2xl:flex-1 lg:self-start">
-            <ContactPersonCard person={contact} />
+            <ContactPersonCard person={contact} section={section}/>
           </div>
           <div className="2xl:flex-[3]">
             <ContributorsList contributors={contributorList} section={section}/>

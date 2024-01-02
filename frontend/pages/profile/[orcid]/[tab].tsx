@@ -126,16 +126,23 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     // tab & search
     const tab = params?.tab ?? 'software'
     const search = query?.search as string
-    let softwareSearch, projectSearch
-    if (tab==='software' && search) {
-      softwareSearch=search
-    }else if (tab==='projects' && search){
-      projectSearch=search
-    }
+
     // get both software and projects
-    const [software, project] = await Promise.all([
-      getProfileSoftware({orcid,rows,page,search:softwareSearch,token}),
-      getProfileProjects({orcid,rows,page,search:projectSearch,token})
+    const [software, projects] = await Promise.all([
+      getProfileSoftware({
+        page: tab==='software' ? page : 0,
+        search: tab==='software' && search ? search : undefined,
+        orcid,
+        rows,
+        token
+      }),
+      getProfileProjects({
+        page: tab==='projects' ? page : 0,
+        search: tab==='projects' && search ? search : undefined,
+        orcid,
+        rows,
+        token
+      })
     ])
     // return data
     return {
@@ -146,7 +153,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         tab,
         profiles,
         ...software,
-        ...project
+        ...projects
       }
     }
   }catch(e){
