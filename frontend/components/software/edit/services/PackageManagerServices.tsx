@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -33,6 +33,7 @@ export default function PackageManagerServices() {
                     scraped_at={service.download_count_scraped_at}
                     last_error={service.download_count_last_error}
                     url={service.url}
+                    platform={null}
                   />
                   : null
                 }
@@ -43,6 +44,7 @@ export default function PackageManagerServices() {
                     scraped_at={service.reverse_dependency_count_scraped_at}
                     last_error={service.reverse_dependency_count_last_error}
                     url={service.url}
+                    platform={null}
                   />
                   : null
                 }
@@ -57,8 +59,7 @@ export default function PackageManagerServices() {
   return (
     <Alert severity="warning" sx={{marginTop:'0.5rem'}}>
       <AlertTitle sx={{fontWeight:500}}>Not active</AlertTitle>
-      There is no info about running package manager services. <br/>
-      High likely the package managers are not defined for this software.
+      No information about package managers is provided for this software
     </Alert>
   )
 }

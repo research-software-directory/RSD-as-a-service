@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +24,8 @@ export default function SoftwareRepoServices() {
           desc: service.desc,
           scraped_at: services ? services[service.props.scraped_at] : null,
           last_error: services ? services[service.props.last_error] : null,
-          url: services ? services[service.props.url] : null
+          url: services ? services[service.props.url] : null,
+          platform: services ? services['code_platform'] : null
         }
         return (
           <ServiceInfoListItem key={service.name} {...props} />

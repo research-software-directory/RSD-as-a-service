@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,11 +18,15 @@ export default function ServiceInfoAlert() {
     >
       <AlertTitle sx={{fontWeight:500}}>Background services</AlertTitle>
       <p>
-        This section shows all background services executed by RSD to collect
-        the additional information about your software.
+        The RSD collects additional information about your software using the links you
+        have provided. For example, the software repository URL is used to collect
+        information about the commit history and programming languages, and a
+        package manager URL can be used to retrieve download numbers.
       </p>
       <p className="py-2">
-        For each service you see when the information is extracted for the last time. If there were errors during the extraction process we try to construct a human readable message from received error.
+        This section provides feedback if the RSD could succesfully retrieve
+        this information or if it has encountered an error. These may be caused by
+        missing or incorrect URL.
       </p>
       <p className="py-2 font-medium">
         Please contact us at <a href={`mailto:${host.email}`} target="_blank">{host.email}</a> in case you need our assistance in solving any of the errors.

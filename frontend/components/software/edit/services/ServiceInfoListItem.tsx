@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,20 +12,23 @@ import ListItemText from '@mui/material/ListItemText'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn'
+import {CodePlatform} from '~/types/SoftwareTypes'
 
 type ServiceInfoListItemProps={
   title:string
   scraped_at: string|null
   last_error: string|null
   url: string|null
+  platform: CodePlatform|null
 }
 
-export function ServiceInfoListItem({title,scraped_at,last_error,url}:ServiceInfoListItemProps){
-  let status:'error'|'success'|'not_active'|'scheduled' = 'not_active'
+export function ServiceInfoListItem({title,scraped_at,last_error,url,platform}:ServiceInfoListItemProps){
+  let status:'error'|'success'|'not_active'|'scheduled'|'not_supported' = 'not_active'
 
   // set service status
   if (scraped_at) status='success'
   if (url && !scraped_at) status='scheduled'
+  if (url && (platform==='bitbucket' || platform==='other')) status='not_supported'
   if (last_error) status='error'
 
   // define icon color
@@ -52,10 +55,15 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url}:ServiceInf
         <span className="text-success">{`Last run at ${lastRun.toLocaleString()}`}</span>
       )
     }
+    // we have url
     if (url){
-      // we have url
+      if (status==='not_supported'){
+        return (
+          <span>Platform not supported (yet).</span>
+        )
+      }
       return (
-        <span>Scheduled but not yet executed. Check the status again after 30 minutes.</span>
+        <span>Scheduled, check again after 30 minutes.</span>
       )
     }
     // no URL
