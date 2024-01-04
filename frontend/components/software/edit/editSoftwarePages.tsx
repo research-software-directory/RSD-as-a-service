@@ -19,14 +19,7 @@ import ContentLoader from '~/components/layout/ContentLoader'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import PendingActionsIcon from '@mui/icons-material/PendingActions'
 import PostAddIcon from '@mui/icons-material/PostAdd'
-
-// import SoftwareInformation from './information'
-// import SoftwareContributors from './contributors'
-// import SoftwareOgranisations from './organisations'
-// import SoftwareMentions from './mentions'
-// import SoftwareTestimonials from './testimonials'
-// import RelatedTopics from './related'
-// import SoftwareMaintainers from './maintainers'
+import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices'
 
 // use dynamic imports instead
 const SoftwareContributors = dynamic(() => import('./contributors'),{
@@ -57,6 +50,9 @@ const RelatedProjects = dynamic(() => import('./related-projects'),{
   loading: ()=><ContentLoader />
 })
 const SoftwareTestimonials = dynamic(() => import('./testimonials'),{
+  loading: ()=><ContentLoader />
+})
+const SoftwareServices = dynamic(() => import('./services'),{
   loading: ()=><ContentLoader />
 })
 
@@ -129,5 +125,11 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
   icon: <PersonAddIcon />,
   render: () => <SoftwareMaintainers />,
   status: 'Optional information'
+},{
+  id: 'services',
+  label: 'Background services',
+  icon: <MiscellaneousServicesIcon />,
+  render: () => <SoftwareServices />,
+  status: 'Status reports'
 }
 ]

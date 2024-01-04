@@ -16,37 +16,44 @@ export const packageManagerSettings = {
   anaconda: {
     name: 'Anaconda',
     icon: '/images/anaconda-logo-96.svg',
-    hostname: ['anaconda.org']
+    hostname: ['anaconda.org'],
+    services: ['dependents']
   },
   cran: {
     name: 'CRAN',
     icon: '/images/cran-r-logo.svg',
-    hostname: ['cran.r-project.org']
+    hostname: ['cran.r-project.org'],
+    services: ['dependents']
   },
   dockerhub: {
     name: 'Dockerhub',
     icon: '/images/dockerhub-logo.webp',
-    hostname: ['hub.docker.com']
+    hostname: ['hub.docker.com'],
+    services: ['downloads']
   },
   maven: {
     name: 'Maven',
     icon: '/images/apache-maven-logo.svg',
-    hostname: ['mvnrepository.com']
+    hostname: ['mvnrepository.com'],
+    services: ['dependents']
   },
   npm: {
     name: 'NPM',
     icon: '/images/npm-logo-64.png',
-    hostname: ['www.npmjs.com','npmjs.com']
+    hostname: ['www.npmjs.com','npmjs.com'],
+    services: ['dependents']
   },
   pypi: {
     name: 'PyPi',
     icon: '/images/pypi-logo.svg',
-    hostname: ['pypi.org']
+    hostname: ['pypi.org'],
+    services: ['dependents']
   },
   other: {
     name: 'Other',
     icon: null,
-    hostname: ['other']
+    hostname: ['other'],
+    services: ['other']
   }
 }
 
