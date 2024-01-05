@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +17,7 @@ export async function getLogs({page, rows, token, searchFor, orderBy}: ApiParams
   try {
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
-      query+=`&or=(service_name.ilike.*${searchFor}*,table_name.ilike.*${searchFor}*,message.ilike.*${searchFor}*,stack_trace.ilike.*${searchFor}*)`
+      query+=`&or=(service_name.ilike.*${searchFor}*,table_name.ilike.*${searchFor}*,message.ilike.*${searchFor}*,stack_trace.ilike.*${searchFor}*,slug.ilike.*${searchFor}*)`
     }
     if (orderBy) {
       query+=`&order=${orderBy.column}.${orderBy.direction}`
