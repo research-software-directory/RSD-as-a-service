@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,7 +28,9 @@ public class PostgrestConnector {
 
 	public Collection<BasicPackageManagerData> oldestDownloadCounts(int limit) {
 		String filter = "or=(package_manager.eq.dockerhub)";
-		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=id,url,package_manager&order=download_count_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("download_count_scraped_at"));
+		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=id,url,package_manager&order=download_count_scraped_at.asc.nullsfirst&limit=" + limit
+				+ "&" + Utils.atLeastOneHourAgoFilter("download_count_scraped_at")
+		);
 		return parseBasicJsonData(data);
 	}
 
@@ -39,12 +41,12 @@ public class PostgrestConnector {
 	}
 
 	public void saveDownloadCount(UUID id, Long count, ZonedDateTime scrapedAt) {
-		String json = "{\"download_count\": %s, \"download_count_scraped_at\": \"%s\"}".formatted(count, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		String json = "{\"download_count\": %s, \"download_count_scraped_at\": \"%s\", \"download_count_last_error\": null}".formatted(count, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		Utils.patchAsAdmin(backendUrl + "?id=eq." + id, json);
 	}
 
 	public void saveReverseDependencyCount(UUID id, Integer count, ZonedDateTime scrapedAt) {
-		String json = "{\"reverse_dependency_count\": %s, \"reverse_dependency_count_scraped_at\": \"%s\"}".formatted(count, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		String json = "{\"reverse_dependency_count\": %s, \"reverse_dependency_count_scraped_at\": \"%s\", \"reverse_dependency_count_last_error\": null}".formatted(count, scrapedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		Utils.patchAsAdmin(backendUrl + "?id=eq." + id, json);
 	}
 
