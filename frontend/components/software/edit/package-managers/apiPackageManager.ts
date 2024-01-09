@@ -32,11 +32,47 @@ export const packageManagerSettings = {
     hostname: ['cran.r-project.org'],
     services: ['dependents']
   },
+  crates: {
+    name: 'Crates.io',
+    icon: '/images/rust-cargo-logo.png',
+    hostname: ['crates.io'],
+    services: []
+  },
+  chocolatey: {
+    name: 'Chocolatey',
+    icon: '/images/chocolatey-logo.svg',
+    hostname: ['community.chocolatey.org'],
+    services: []
+  },
+  debian:{
+    name: 'Debian',
+    icon: '/images/debian-logo.svg',
+    hostname: ['packages.debian.org'],
+    services: []
+  },
   dockerhub: {
     name: 'Dockerhub',
     icon: '/images/dockerhub-logo.webp',
     hostname: ['hub.docker.com'],
     services: ['downloads']
+  },
+  github: {
+    name: 'Github',
+    icon: '/images/github-logo.svg',
+    hostname: ['github.com'],
+    services: []
+  },
+  gitlab: {
+    name: 'Gitlab',
+    icon: '/images/gitlab-icon-rgb.svg',
+    hostname: ['gitlab.com','registry.gitlab.com'],
+    services: []
+  },
+  golang: {
+    name: 'Golang',
+    icon: '/images/go-logo-blue.svg',
+    hostname: ['pkg.go.dev'],
+    services: []
   },
   maven: {
     name: 'Maven',
@@ -55,6 +91,18 @@ export const packageManagerSettings = {
     icon: '/images/pypi-logo.svg',
     hostname: ['pypi.org'],
     services: ['dependents']
+  },
+  sonatype:{
+    name: 'Sonatype',
+    icon: '/images/sonatype-logo.svg',
+    hostname: ['central.sonatype.com'],
+    services: []
+  },
+  snapcraft:{
+    name: 'Snapcraft',
+    icon: '/images/snapcraft-logo.svg',
+    hostname: ['snapcraft.io'],
+    services: []
   },
   other: {
     name: 'Other',

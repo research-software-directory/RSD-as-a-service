@@ -27,7 +27,7 @@ function PackageManager({item}:{item:PackageManager}){
             height: '4rem',
             width: '4rem',
             fontSize: '1.5rem',
-            borderRadius: '0.25rem',
+            // borderRadius: '0.25rem',
             '& img': {
               // fit icon into area
               objectFit: 'scale-down'
