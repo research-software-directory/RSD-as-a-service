@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -11,6 +11,13 @@ import {
   createJsonHeaders, extractErrorMessages,
   extractReturnMessage, getBaseUrl
 } from '~/utils/fetchHelpers'
+
+export type PackageManagerSettings={
+  name: string,
+  icon: string|null,
+  hostname: string[],
+  services: string[]
+}
 
 export const packageManagerSettings = {
   anaconda: {
@@ -52,8 +59,8 @@ export const packageManagerSettings = {
   other: {
     name: 'Other',
     icon: null,
-    hostname: ['other'],
-    services: ['other']
+    hostname: [],
+    services: []
   }
 }
 
@@ -224,7 +231,7 @@ export function getPackageManagerTypeFromUrl(url:string) {
     const keys = Object.keys(packageManagerSettings)
 
     const pm_key = keys.find(key => {
-      const manager = packageManagerSettings[key as PackageManagerTypes]
+      const manager = packageManagerSettings[key as PackageManagerTypes] as PackageManagerSettings
       // match hostname
       return manager.hostname.includes(urlObject.hostname)
     })

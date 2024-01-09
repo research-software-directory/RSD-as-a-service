@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +23,7 @@ type PackageManagerItemProps = {
 export default function PackageManagerItem({pos, item, onDelete, onEdit}: PackageManagerItemProps) {
   // get package manager info
   const info = packageManagerSettings[item.package_manager ?? 'other']
-
+  const url = new URL(item.url)
   return (
     <SortableListItem
       key={item.id}
@@ -48,7 +49,7 @@ export default function PackageManagerItem({pos, item, onDelete, onEdit}: Packag
             }
           }}
         >
-          {info.name.slice(0,3)}
+          {url?.hostname?.slice(0,3)}
         </Avatar>
       </ListItemAvatar>
       <ListItemText

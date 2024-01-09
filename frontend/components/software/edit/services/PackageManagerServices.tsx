@@ -9,8 +9,9 @@ import ContentLoader from '~/components/layout/ContentLoader'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
-import {packageManagerSettings} from '../package-managers/apiPackageManager'
+import {PackageManagerSettings, packageManagerSettings} from '../package-managers/apiPackageManager'
 import {ServiceInfoListItem} from './ServiceInfoListItem'
+
 
 export default function PackageManagerServices() {
   const {loading,services} = usePackageManagerServices()
@@ -22,13 +23,13 @@ export default function PackageManagerServices() {
       <div>
         {services.map(service=>{
           // For each PM show status of scrapers
-          const svcInfo = packageManagerSettings[service.package_manager]
-          if (svcInfo && svcInfo?.services.length > 0){
+          const svcInfo = packageManagerSettings[service.package_manager] as PackageManagerSettings
+          if (svcInfo && svcInfo.services.length > 0){
             return (
-              <List key={service.package_manager}>
+              <List key={service.url}>
                 {svcInfo?.services.includes('downloads') ?
                   <ServiceInfoListItem
-                    key={`downloads-${service.package_manager}`}
+                    key={`downloads-${service.url}`}
                     title={`${service.package_manager.toLocaleUpperCase()} downloads`}
                     scraped_at={service.download_count_scraped_at}
                     last_error={service.download_count_last_error}
@@ -39,7 +40,7 @@ export default function PackageManagerServices() {
                 }
                 {svcInfo?.services.includes('dependents') ?
                   <ServiceInfoListItem
-                    key={`dependants-${service.package_manager}`}
+                    key={`dependants-${service.url}`}
                     title={`${service.package_manager.toLocaleUpperCase()} dependents`}
                     scraped_at={service.reverse_dependency_count_scraped_at}
                     last_error={service.reverse_dependency_count_last_error}
@@ -59,7 +60,7 @@ export default function PackageManagerServices() {
   return (
     <Alert severity="warning" sx={{marginTop:'0.5rem'}}>
       <AlertTitle sx={{fontWeight:500}}>Not active</AlertTitle>
-      No information about package managers is provided for this software
+      No information about <strong>supported</strong> package managers is provided for this software.
     </Alert>
   )
 }
