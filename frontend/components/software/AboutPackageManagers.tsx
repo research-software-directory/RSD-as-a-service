@@ -1,35 +1,47 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {PackageManager, packageManagerSettings} from './edit/package-managers/apiPackageManager'
 import WidgetsIcon from '@mui/icons-material/Widgets'
+import LogoAvatar from '~/components/layout/LogoAvatar'
+import {PackageManager, packageManagerSettings} from './edit/package-managers/apiPackageManager'
 
 type AboutPackageManagersProps={
   packages: PackageManager[]
 }
 
 function PackageManager({item}:{item:PackageManager}){
-  // get package manager info
-  const info = packageManagerSettings[item.package_manager ?? 'other']
-  return (
-    <div
-      title={info.name}
-      className="flex items-center p-1 h-[4rem] w-[4rem] hover:bg-base-200"
-    >
+  // get package manager only when url provided
+  if (item.url){
+    const info = packageManagerSettings[item.package_manager ?? 'other']
+    const link = new URL(item.url)
+    return (
       <a href={item.url} target="_blank">
-        <img src={info.icon ?? ''} alt={`Logo ${info.name}`} />
+        <LogoAvatar
+          name={link.hostname}
+          src={info.icon ?? undefined}
+          sx={{
+            height: '4rem',
+            width: '4rem',
+            fontSize: '1.5rem',
+            borderRadius: '0.25rem',
+            '& img': {
+              // fit icon into area
+              objectFit: 'scale-down'
+            }
+          }}
+        />
       </a>
-    </div>
-  )
+    )
+  }
+  return null
 }
 
 
 export default function AboutPackageManagers({packages}:AboutPackageManagersProps) {
-
   if (packages?.length > 0){
     return (
       <>
