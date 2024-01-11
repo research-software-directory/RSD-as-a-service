@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+#
+# SPDX-License-Identifier: Apache-2.0
+
+services:
+ frontend:
+  build:
+    context: ./frontend
+    # dockerfile to use for build
+    dockerfile: Dockerfile.dev
+    args:
+      - DUID
+      - DGID
+  ports:
+    - "3000:3000"
+    - "9229:9229"
+  volumes:
+    - ./frontend:/app
+    # Replace the follwoing directory with the custom deployment directory
+    # - ./deployment/rsd:/app/public
