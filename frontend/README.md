@@ -1,8 +1,8 @@
 <!--
 SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2021 - 2023 dv4all
-SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2023 Netherlands eScience Center
@@ -31,10 +31,23 @@ Based on the features in the legacy application and the current requirements we 
 
 **Use this if you are using a custom theme and mount files from the `/deployment` directory**
 
+First, add the folders that contain the custom configuration to the `docker-compose.dev.yml`:
+
+```yml
+services:
+ frontend:
+#   .....
+  volumes:
+    - ./frontend:/app
+    # Replace the follwoing directory with the custom deployment directory
+    - ./deployment/rsd:/app/public
+
+```
+
 You can start the frontend in dev mode inside Docker using the `Makefile`. The command will make sure that the created Docker container uses a user with the same user id and group id as your local account. This ensures that you will be the owner of all files that are written via mounted volumes to your drive (mainly everything in the `frontend/.next` and `frontend/node_modules` folders).
 
 ```bash
-make frontend-docker
+make frontend-dev
 ```
 
 Alternatively you can run
@@ -43,8 +56,8 @@ Alternatively you can run
 # Export your user and group ids to the variables so Docker will correctly build the frontend-dev container. This is required only if you build the container
 export DUID=$(id -u)
 export DGID=$(id -g)
-docker compose build frontend-dev
-docker compose up --scale frontend=0 --scale frontend-dev=1 --scale scrapers=0
+docker compose -f docker-compose.yml -f docker-compose.dev.yml build frontend
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up
 ```
 
 ### Environment variables

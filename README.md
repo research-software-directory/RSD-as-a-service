@@ -5,8 +5,8 @@ SPDX-FileCopyrightText: 2021 - 2022 dv4all
 SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 SPDX-FileCopyrightText: 2021 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -70,9 +70,9 @@ You can run frontend in development mode as docker a service (called frontend-de
 
 ```
 # Run frontend development using docker at http://localhost:3000
-make frontend-docker
+make frontend-dev
 # OR use docker compose directly
-docker compose up --scale frontend=0 --scale scrapers=0 --scale frontend-dev=1
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up 
 ```
 
 It is possible to directly run the frontend too (without using a docker container). You must then have NodeJS installed, preferably v18.
@@ -85,8 +85,6 @@ make dev
 # Stop all services with `docker compose down`
 make down
 ```
-
-More information about building and data migration can be found in [Getting started](https://research-software-directory.github.io/RSD-as-a-service/getting-started.html) documentation.
 
 ## License
 

@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 - 2023 dv4all
+# SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 #
@@ -49,9 +49,9 @@ clean:
 stop:
 	docker compose down
 
-frontend-docker: frontend/.env.local
-	docker compose build frontend-dev
-	docker compose up --scale frontend=0 --scale scrapers=0 --scale frontend-dev=1
+frontend-dev: frontend/.env.local
+	docker compose -f docker-compose.yml -f docker-compose.dev.yml build frontend
+	docker compose -f docker-compose.yml -f docker-compose.dev.yml up --scale scrapers=0
 
 data:
 	docker compose up --scale data-generation=1 --scale scrapers=0

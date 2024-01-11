@@ -2,8 +2,8 @@
 # SPDX-FileCopyrightText: 2021 - 2023 dv4all
 # SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 # SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
-# SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-# SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+# SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+# SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 # SPDX-FileCopyrightText: 2022 Helmholtz Centre for Environmental Research (UFZ)
 # SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 # SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
@@ -229,52 +229,7 @@ services:
       - net
     deploy:
       replicas: 0
-
-  frontend-dev:
-    build:
-      context: ./frontend
-      # dockerfile to use for build
-      dockerfile: Dockerfile.dev
-      args:
-        - DUID
-        - DGID
-    # update version number to correspond to frontend/package.json
-    image: rsd/frontend-dev:2.5.1
-    ports:
-      - "3000:3000"
-      - "9229:9229"
-    environment:
-      # it uses values from .env file
-      - POSTGREST_URL
-      - PGRST_JWT_SECRET
-      - RSD_AUTH_URL
-      - RSD_AUTH_PROVIDERS
-      - MATOMO_URL
-      - MATOMO_ID
-      - SURFCONEXT_CLIENT_ID
-      - SURFCONEXT_REDIRECT
-      - SURFCONEXT_WELL_KNOWN_URL
-      - SURFCONEXT_SCOPES
-      - SURFCONEXT_RESPONSE_MODE
-      - HELMHOLTZAAI_CLIENT_ID
-      - HELMHOLTZAAI_REDIRECT
-      - HELMHOLTZAAI_WELL_KNOWN_URL
-      - HELMHOLTZAAI_SCOPES
-      - HELMHOLTZAAI_RESPONSE_MODE
-    depends_on:
-      - database
-      - backend
-      - auth
-    volumes:
-      - ./frontend:/app
-      # - ./deployment/hmz/styles:/app/public/styles
-      # - ./deployment/hmz/data:/app/public/data
-      # - ./deployment/hmz/images:/app/public/images
-    networks:
-      - net
-    deploy:
-      replicas: 0
-
+ 
 # define name for docker network
 # it should have name: rsd-as-a-service_net
 networks:
