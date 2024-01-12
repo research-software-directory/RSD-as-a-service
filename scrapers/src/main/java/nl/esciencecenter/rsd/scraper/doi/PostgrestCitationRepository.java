@@ -46,14 +46,16 @@ public class PostgrestCitationRepository {
 
 		for (UUID citingMention : citingMentions) {
 
-			String citationID = citingMention.toString();
+			if (citingMention != null) {
+ 				String citationID = citingMention.toString();
 
-			if (!seen.contains(citationID)) {
-				seen.add(citationID);
-  				JsonObject jsonObject = new JsonObject();
-				jsonObject.addProperty("mention", idCitedMention.toString());
-				jsonObject.addProperty("citation", citationID);
-				jsonArray.add(jsonObject);
+				if (!seen.contains(citationID)) {
+					seen.add(citationID);
+	  				JsonObject jsonObject = new JsonObject();
+					jsonObject.addProperty("mention", idCitedMention.toString());
+					jsonObject.addProperty("citation", citationID);
+					jsonArray.add(jsonObject);
+				}
 			}
 		}
 

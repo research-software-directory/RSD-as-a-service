@@ -31,9 +31,17 @@ public class MainCitations {
 			ZonedDateTime now = ZonedDateTime.now();
 
 			for (CitationData citationData : referencePapersToScrape) {
+
+	    			long t1 = System.currentTimeMillis();
+
+                		System.out.println("Scraping for " + citationData.doi);
+
 				Collection<MentionRecord> citingMentions = openAlexCitations.citations(citationData.doi, email, citationData.id);
 				// we don't update mentions that have a DOI in the database with OpenAlex data, as they can already be
 				// scraped through Crossref of DataCite
+
+	    			long t2 = System.currentTimeMillis();
+
 				citingMentions.removeIf(mention -> mention.doi != null && citationData.knownDois.contains(mention.doi));
 				localMentionRepository.save(citingMentions);
 
@@ -42,9 +50,19 @@ public class MainCitations {
 					citingMentionIds.add(citingMention.id);
 				}
 
+	    			long t3 = System.currentTimeMillis();
+
 				localCitationRepository.saveCitations(backendUrl, citationData.id, citingMentionIds, now);
+
+	    			long t4 = System.currentTimeMillis();
+
+                		System.out.println("Done. " + (t4-t1) + "ms total, " + (t2-t1) + "ms OpenAlex, " + (t3-t2) + " ms. processing, " + (t4-t3) + " ms. database)");
+
 			}
 		} catch (RuntimeException e) {
+			System.out.println("Failed to scrape citations " + e.getMessage());
+			e.printStackTrace(System.out);
+
 			Utils.saveExceptionInDatabase("Citation scraper", null, null, e);
 		}
 

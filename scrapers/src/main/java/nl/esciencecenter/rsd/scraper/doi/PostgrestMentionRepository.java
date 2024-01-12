@@ -68,9 +68,13 @@ public class PostgrestMentionRepository implements MentionRepository {
 				.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
 				.registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
 				.create();
+
+		System.out.println("Will save " + mentions.size() + " mentions");
+
 		for (MentionRecord mention : mentions) {
 			String scrapedMentionJson = gson.toJson(mention);
 			String onConflictFilter;
+
 			if (mention.doi != null) {
 				onConflictFilter = "doi";
 			} else {
@@ -79,17 +83,31 @@ public class PostgrestMentionRepository implements MentionRepository {
 
 			String uri = "%s/mention?on_conflict=%s&select=id".formatted(backendUrl, onConflictFilter);
 			String response;
+
 			try {
+				System.out.print("Saving mention: " + mention.doi + " / " + mention.externalId + " / " + mention.source);
 				response = Utils.postAsAdmin(uri, scrapedMentionJson, "Prefer", "resolution=merge-duplicates,return=representation");
+				System.out.println(" done");
+
+      				JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
+				// Used in MainCitations, do not remove
+				mention.id = UUID.fromString(responseAsArray.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString());
+
 			} catch (RuntimeException e) {
+
+				System.out.println(" failed: " + e.getMessage());
+				e.printStackTrace();
+
 				if (mention.doi == null) {
 					Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
 				} else {
 					// We will try to update the scraped_at field, so that it goes back into the queue for being scraped
-					String existingMentionResponse = Utils.getAsAdmin("%s/mention?doi=eq.%s&select=id".formatted(backendUrl, mention.doi));
-					JsonArray array = JsonParser.parseString(existingMentionResponse).getAsJsonArray();
-					String id = array.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
-					Utils.saveErrorMessageInDatabase(null,
+					// Note that this operation in itself may also fail.
+					try {
+						String existingMentionResponse = Utils.getAsAdmin("%s/mention?doi=eq.%s&select=id".formatted(backendUrl, mention.doi));
+						JsonArray array = JsonParser.parseString(existingMentionResponse).getAsJsonArray();
+						String id = array.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+						Utils.saveErrorMessageInDatabase(null,
 							"mention",
 							null,
 							id,
@@ -97,15 +115,15 @@ public class PostgrestMentionRepository implements MentionRepository {
 							ZonedDateTime.now(),
 							"scraped_at");
 
-					Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), e);
+						Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), e);
+					} catch (Exception e2) {
+						System.out.println("Failed to store exception in database " + e2.getMessage());
+		                                e2.printStackTrace();
+					}
 				}
 
-				continue;
 			}
 
-			JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
-			// Used in MainCitations, do not remove
-			mention.id = UUID.fromString(responseAsArray.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString());
 		}
 	}
 }
