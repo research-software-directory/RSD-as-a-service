@@ -45,9 +45,6 @@ public class MainCitations {
 				localCitationRepository.saveCitations(backendUrl, citationData.id, citingMentionIds, now);
 			}
 		} catch (RuntimeException e) {
-                        System.err.println("Failed to scrape citations" + e.getMessage());
-			e.printStackTrace(System.err);
-
 			Utils.saveExceptionInDatabase("Citation scraper", null, null, e);
 		}
 
