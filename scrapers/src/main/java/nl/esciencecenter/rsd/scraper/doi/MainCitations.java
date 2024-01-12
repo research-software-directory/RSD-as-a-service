@@ -17,6 +17,9 @@ public class MainCitations {
 
 	public static void main(String[] args) {
 		System.out.println("Start scraping citations");
+
+		long start = System.currentTimeMillis();
+
 		try {
 			String backendUrl = Config.backendBaseUrl();
 			PostgrestCitationRepository localCitationRepository = new PostgrestCitationRepository(backendUrl);
@@ -42,9 +45,14 @@ public class MainCitations {
 				localCitationRepository.saveCitations(backendUrl, citationData.id, citingMentionIds, now);
 			}
 		} catch (RuntimeException e) {
+                        System.err.println("Failed to scrape citations" + e.getMessage());
+			e.printStackTrace(System.err);
+
 			Utils.saveExceptionInDatabase("Citation scraper", null, null, e);
 		}
 
-		System.out.println("Done scraping citations");
+                long time = System.currentTimeMillis() - start;
+
+		System.out.println("Done scraping citations (" + time + " ms.)");
 	}
 }

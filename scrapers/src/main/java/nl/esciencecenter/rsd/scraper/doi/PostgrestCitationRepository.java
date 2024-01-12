@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.TreeSet;
+import java.util.HashSet;
 import java.util.UUID;
 
 public class PostgrestCitationRepository {
@@ -40,11 +41,20 @@ public class PostgrestCitationRepository {
 
 		JsonArray jsonArray = new JsonArray();
 
+                // We sometimes encouter duplicate citations which may lead to the operation to fail.
+		HashSet<String> seen = new HashSet<>();
+
 		for (UUID citingMention : citingMentions) {
-			JsonObject jsonObject = new JsonObject();
-			jsonObject.addProperty("mention", idCitedMention.toString());
-			jsonObject.addProperty("citation", citingMention.toString());
-			jsonArray.add(jsonObject);
+
+			String citationID = citingMention.toString();
+
+			if (!seen.contains(citationID)) {
+				seen.add(citationID);
+  				JsonObject jsonObject = new JsonObject();
+				jsonObject.addProperty("mention", idCitedMention.toString());
+				jsonObject.addProperty("citation", citationID);
+				jsonArray.add(jsonObject);
+			}
 		}
 
 		String uri = backendUrl + "/citation_for_mention";
