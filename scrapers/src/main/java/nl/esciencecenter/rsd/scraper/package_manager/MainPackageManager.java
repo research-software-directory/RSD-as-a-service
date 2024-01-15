@@ -10,6 +10,7 @@ import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -86,7 +87,7 @@ public class MainPackageManager {
 		} catch (RsdResponseException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id().toString(), "id", scrapedAt, "download_count_scraped_at");
-		} catch (RuntimeException e) {
+		} catch (IOException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "download_count_last_error", data.id().toString(), "id", scrapedAt, "download_count_scraped_at");
 		}

@@ -7,13 +7,15 @@ package nl.esciencecenter.rsd.scraper.git;
 
 import java.io.IOException;
 
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+
 public interface GitScraper {
 
-	BasicGitData basicData() throws IOException, InterruptedException;
+	BasicGitData basicData() throws IOException, InterruptedException, RsdResponseException;
 
-	String languages() throws IOException, InterruptedException;
+	String languages() throws IOException, InterruptedException, RsdResponseException;
 
-	CommitsPerWeek contributions() throws IOException, InterruptedException;
+	CommitsPerWeek contributions() throws IOException, InterruptedException, RsdResponseException;
 
-	Integer contributorCount() throws IOException, InterruptedException;
+	Integer contributorCount() throws IOException, InterruptedException, RsdResponseException;
 }

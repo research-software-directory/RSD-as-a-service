@@ -36,7 +36,7 @@ public class DockerHubScraper implements PackageManagerScraper {
 	}
 
 	@Override
-	public Long downloads() {
+	public Long downloads() throws RsdResponseException{
 		String url;
 		if (owner.equals("_")) url = "https://hub.docker.com/v2/repositories/library/" + packageName;
 		else url = "https://hub.docker.com/v2/repositories/" + owner + "/" + packageName;

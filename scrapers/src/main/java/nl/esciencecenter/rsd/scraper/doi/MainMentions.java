@@ -42,7 +42,7 @@ public class MainMentions {
 		String jsonSources = null;
 		try {
 			jsonSources = Utils.get("https://doi.org/doiRA/" + doisJoined);
-		} catch (IOException | InterruptedException e) {
+		} catch (Exception e) {
 			Utils.saveExceptionInDatabase("DOI mention scraper", "mention", null, e);
 			System.exit(1);
 		}

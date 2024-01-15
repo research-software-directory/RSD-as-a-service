@@ -7,7 +7,9 @@ package nl.esciencecenter.rsd.scraper.doi;
 
 import java.io.IOException;
 
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+
 public interface Mention {
 
-	MentionRecord mentionData() throws IOException, InterruptedException;
+	MentionRecord mentionData() throws IOException, InterruptedException, RsdResponseException;
 }

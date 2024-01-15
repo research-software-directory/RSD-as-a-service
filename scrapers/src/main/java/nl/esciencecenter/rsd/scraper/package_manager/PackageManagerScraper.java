@@ -19,11 +19,11 @@ import java.util.Optional;
 
 public interface PackageManagerScraper {
 
-	Long downloads();
+	Long downloads() throws IOException, RsdResponseException;
 
-	Integer reverseDependencies() throws IOException, InterruptedException;
+	Integer reverseDependencies() throws IOException, InterruptedException, RsdResponseException;
 
-	static String doLibrariesIoRequest(String url) throws IOException, InterruptedException {
+	static String doLibrariesIoRequest(String url) throws IOException, InterruptedException, RsdResponseException {
 		Optional<String> optionalApiKey = Config.librariesIoKey();
 		if (optionalApiKey.isPresent()) url += "?api_key=" + optionalApiKey.get();
 

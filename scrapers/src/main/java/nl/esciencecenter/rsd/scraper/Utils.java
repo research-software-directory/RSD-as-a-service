@@ -36,9 +36,9 @@ import org.slf4j.LoggerFactory;
 public class Utils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
-	
+
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
-	
+
 	/**
 	 * Base64encode a string.
 	 *
@@ -65,26 +65,18 @@ public class Utils {
 	 * @param uri The encoded URI
 	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
 	 * @return The response as a String.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws RsdResponseException
 	 */
-	public static String get(String uri, String... headers) throws IOException, InterruptedException {
-		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
-				.GET()
-				.timeout(DEFAULT_TIMEOUT)
-				.uri(URI.create(uri));
-		
-		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
-			httpRequestBuilder.headers(headers);
-		}
-		
-		HttpRequest request = httpRequestBuilder.build();
+	public static String get(String uri, String... headers) throws IOException, InterruptedException, RsdResponseException {
+		HttpResponse<String> response = getAsHttpResponse(uri, headers);
 
-		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();) {
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			if (response.statusCode() >= 300) {
-				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
-			}
-			return response.body();
+		if (response.statusCode() >= 300) {
+			throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 		}
+		return response.body();
 	}
 
 	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) throws IOException, InterruptedException {
@@ -116,7 +108,7 @@ public class Utils {
 				.timeout(DEFAULT_TIMEOUT)
 				.header("Authorization", "Bearer " + jwtString)
 				.build();
-		
+
 		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
 		try {

@@ -55,7 +55,7 @@ public class GithubScraper implements GitScraper {
 	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service
 	 */
 	@Override
-	public BasicGitData basicData() throws IOException, InterruptedException {
+	public BasicGitData basicData() throws IOException, InterruptedException, RsdResponseException  {
 		Optional<String> apiCredentials = Config.apiCredentialsGithub();
 		HttpResponse<String> response;
 		if (apiCredentials.isPresent()) {
@@ -79,7 +79,7 @@ public class GithubScraper implements GitScraper {
 	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/languages
 	 */
 	@Override
-	public String languages() throws IOException, InterruptedException {
+	public String languages() throws IOException, InterruptedException, RsdResponseException {
 		HttpResponse<String> response = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/languages");
 		return switch (response.statusCode()) {
 			case 404 ->
@@ -116,7 +116,7 @@ public class GithubScraper implements GitScraper {
 	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/stats/contributors
 	 */
 	@Override
-	public CommitsPerWeek contributions() throws IOException, InterruptedException {
+	public CommitsPerWeek contributions() throws IOException, InterruptedException, RsdResponseException {
 		HttpResponse<String> httpResponse = null;
 		for (int i = 0; i < 2; i++) {
 			httpResponse = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/stats/contributors");
@@ -145,7 +145,7 @@ public class GithubScraper implements GitScraper {
 	}
 
 	@Override
-	public Integer contributorCount() throws IOException, InterruptedException {
+	public Integer contributorCount() throws IOException, InterruptedException, RsdResponseException {
 		// we request one contributor per page and just extract the number of pages from the headers
 		// see https://docs.github.com/en/rest/guides/using-pagination-in-the-rest-api?apiVersion=2022-11-28
 		HttpResponse<String> httpResponse = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/contributors?per_page=1");

@@ -47,7 +47,7 @@ public class GitlabScraper implements GitScraper {
 	 * @return The basic data
 	 */
 	@Override
-	public BasicGitData basicData() throws IOException, InterruptedException {
+	public BasicGitData basicData() throws IOException, InterruptedException, RsdResponseException {
 		String response = Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "?license=True");
 		return parseBasicData(response);
 	}
@@ -59,7 +59,7 @@ public class GitlabScraper implements GitScraper {
 	 * @return A JSON as a String
 	 */
 	@Override
-	public String languages() throws IOException, InterruptedException {
+	public String languages() throws IOException, InterruptedException, RsdResponseException {
 		return Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/languages");
 	}
 
@@ -76,7 +76,7 @@ public class GitlabScraper implements GitScraper {
 	 * Example URL: https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell/repository/commits?per_page=100&order=default&page=1
 	 */
 	@Override
-	public CommitsPerWeek contributions() throws IOException, InterruptedException {
+	public CommitsPerWeek contributions() throws IOException, InterruptedException, RsdResponseException {
 		CommitsPerWeek commits = new CommitsPerWeek();
 		String page = "1";
 		boolean done = false;
@@ -105,7 +105,7 @@ public class GitlabScraper implements GitScraper {
 	}
 
 	@Override
-	public Integer contributorCount() throws IOException, InterruptedException {
+	public Integer contributorCount() throws IOException, InterruptedException, RsdResponseException {
 		HttpResponse<String> httpResponse = Utils.getAsHttpResponse(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/repository/contributors");
 
 		if (httpResponse.statusCode() == 429)
