@@ -13,14 +13,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+/*
+ * Main entry point for citation scraper. 
+ */
 public class MainCitations {
-
+	
 	public static void main(String[] args) {
 		System.out.println("Start scraping citations");
 
 		long start = System.currentTimeMillis();
 
 		try {
+			// Connect to the database to retrieve the 
+			
 			String backendUrl = Config.backendBaseUrl();
 			PostgrestCitationRepository localCitationRepository = new PostgrestCitationRepository(backendUrl);
 
@@ -32,15 +37,15 @@ public class MainCitations {
 
 			for (CitationData citationData : referencePapersToScrape) {
 
-	    			long t1 = System.currentTimeMillis();
+				long t1 = System.currentTimeMillis();
 
-                		System.out.println("Scraping for " + citationData.doi);
+				System.out.println("Scraping for " + citationData.doi);
 
 				Collection<MentionRecord> citingMentions = openAlexCitations.citations(citationData.doi, email, citationData.id);
 				// we don't update mentions that have a DOI in the database with OpenAlex data, as they can already be
 				// scraped through Crossref of DataCite
 
-	    			long t2 = System.currentTimeMillis();
+				long t2 = System.currentTimeMillis();
 
 				citingMentions.removeIf(mention -> mention.doi != null && citationData.knownDois.contains(mention.doi));
 				localMentionRepository.save(citingMentions);
@@ -50,13 +55,13 @@ public class MainCitations {
 					citingMentionIds.add(citingMention.id);
 				}
 
-	    			long t3 = System.currentTimeMillis();
+				long t3 = System.currentTimeMillis();
 
 				localCitationRepository.saveCitations(backendUrl, citationData.id, citingMentionIds, now);
 
-	    			long t4 = System.currentTimeMillis();
+				long t4 = System.currentTimeMillis();
 
-                		System.out.println("Done. " + (t4-t1) + "ms total, " + (t2-t1) + "ms OpenAlex, " + (t3-t2) + " ms. processing, " + (t4-t3) + " ms. database)");
+				System.out.println("Done. " + (t4-t1) + "ms total, " + (t2-t1) + "ms OpenAlex, " + (t3-t2) + " ms. processing, " + (t4-t3) + " ms. database)");
 
 			}
 		} catch (RuntimeException e) {
@@ -66,7 +71,7 @@ public class MainCitations {
 			Utils.saveExceptionInDatabase("Citation scraper", null, null, e);
 		}
 
-                long time = System.currentTimeMillis() - start;
+		long time = System.currentTimeMillis() - start;
 
 		System.out.println("Done scraping citations (" + time + " ms.)");
 	}

@@ -32,6 +32,12 @@ import java.util.UUID;
 
 public class Utils {
 
+	/**
+	 * Base64encode a string.
+	 *
+	 * @param value The string to be encoded
+	 * @return The base64 encoded string.
+	 */	
 	public static String base64Encode(String s) {
 		return Base64.getEncoder().encodeToString(s.getBytes());
 	}
@@ -47,10 +53,9 @@ public class Utils {
 	}
 
 	/**
-	 * Performs a GET request with given headers and returns the response body
-	 * as a String.
+	 * Performs a GET request with given headers and returns the response body as a String.
 	 *
-	 * @param uri     The encoded URI
+	 * @param uri The encoded URI
 	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
 	 * @return The response as a String.
 	 */

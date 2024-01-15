@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+SPDX-FileCopyrightText: 2024 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -106,6 +107,21 @@ SPDX-License-Identifier: Apache-2.0
 	</dependencyManagement>
 
 	<dependencies>
+                <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+		        <artifactId>slf4j-api</artifactId>
+  	 	        <version>2.0.11</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.4.14</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
 		<dependency>
 			<groupId>com.auth0</groupId>
