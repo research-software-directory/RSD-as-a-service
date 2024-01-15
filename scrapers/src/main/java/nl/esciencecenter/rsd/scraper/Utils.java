@@ -30,8 +30,15 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Utils {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
+	
+	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
+	
 	/**
 	 * Base64encode a string.
 	 *
@@ -60,21 +67,26 @@ public class Utils {
 	 * @return The response as a String.
 	 */
 	public static String get(String uri, String... headers) {
+		
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.GET()
-				.timeout(Duration.ofSeconds(30))
+				.timeout(DEFAULT_TIMEOUT)
 				.uri(URI.create(uri));
+		
 		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
 			httpRequestBuilder.headers(headers);
 		}
+		
 		HttpRequest request = httpRequestBuilder.build();
 		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
 		HttpResponse<String> response;
-		try {
+		
+		try { 
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
-		}
+		} 
+		
 		if (response.statusCode() >= 300) {
 			throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 		}
@@ -84,7 +96,7 @@ public class Utils {
 	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.GET()
-				.timeout(Duration.ofSeconds(30))
+				.timeout(DEFAULT_TIMEOUT)
 				.uri(URI.create(uri));
 		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
 			httpRequestBuilder.headers(headers);
@@ -111,9 +123,10 @@ public class Utils {
 		HttpRequest request = HttpRequest.newBuilder()
 				.GET()
 				.uri(URI.create(uri))
-				.timeout(Duration.ofSeconds(30))
+				.timeout(DEFAULT_TIMEOUT)
 				.header("Authorization", "Bearer " + jwtString)
 				.build();
+		
 		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
 		try {
@@ -140,7 +153,7 @@ public class Utils {
 	public static String post(String uri, String body, String... extraHeaders) {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(body))
-				.timeout(Duration.ofSeconds(30))
+				.timeout(DEFAULT_TIMEOUT)
 				.uri(URI.create(uri));
 		if (extraHeaders != null && extraHeaders.length > 0 && extraHeaders.length % 2 == 0) {
 			httpRequestBuilder.headers(extraHeaders);
@@ -172,7 +185,7 @@ public class Utils {
 		HttpRequest.Builder builder = HttpRequest.newBuilder()
 				.POST(HttpRequest.BodyPublishers.ofString(json))
 				.uri(URI.create(uri))
-				.timeout(Duration.ofSeconds(30))
+				.timeout(DEFAULT_TIMEOUT)
 				.header("Content-Type", "application/json")
 				.header("Authorization", "Bearer " + jwtString);
 		if (extraHeaders != null && extraHeaders.length > 0) builder.headers(extraHeaders);
@@ -299,6 +312,12 @@ public class Utils {
 		return e == null || !e.isJsonPrimitive() ? null : e.getAsInt();
 	}
 
+	/** 
+	 * Generate a filter to select column entries older than one hour. 
+	 *  
+	 * @param scrapedAtColumnName the name of the column containing the timestamp.
+	 * @return the filter.
+	 */
 	public static String atLeastOneHourAgoFilter(String scrapedAtColumnName) {
 		String oneHourAgoEncoded = urlEncode(ZonedDateTime.now().minusHours(1).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		return "or=(%s.is.null,%s.lte.%s)".formatted(scrapedAtColumnName, scrapedAtColumnName, oneHourAgoEncoded);
