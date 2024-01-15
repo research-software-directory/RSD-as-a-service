@@ -51,7 +51,7 @@ public class MainCommits {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}
@@ -90,7 +90,7 @@ public class MainCommits {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitHub commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}

@@ -16,6 +16,7 @@ import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.util.List;
@@ -54,7 +55,7 @@ public class GithubScraper implements GitScraper {
 	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service
 	 */
 	@Override
-	public BasicGitData basicData() {
+	public BasicGitData basicData() throws IOException, InterruptedException {
 		Optional<String> apiCredentials = Config.apiCredentialsGithub();
 		HttpResponse<String> response;
 		if (apiCredentials.isPresent()) {
@@ -78,7 +79,7 @@ public class GithubScraper implements GitScraper {
 	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/languages
 	 */
 	@Override
-	public String languages() {
+	public String languages() throws IOException, InterruptedException {
 		HttpResponse<String> response = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/languages");
 		return switch (response.statusCode()) {
 			case 404 ->
@@ -115,17 +116,13 @@ public class GithubScraper implements GitScraper {
 	 * Example URL: https://api.github.com/repos/research-software-directory/RSD-as-a-service/stats/contributors
 	 */
 	@Override
-	public CommitsPerWeek contributions() {
+	public CommitsPerWeek contributions() throws IOException, InterruptedException {
 		HttpResponse<String> httpResponse = null;
 		for (int i = 0; i < 2; i++) {
 			httpResponse = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/stats/contributors");
 
 			if (httpResponse.statusCode() != 202) break;
-			try {
-				Thread.sleep(3000L);
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
+			Thread.sleep(3000L);
 		}
 
 		int status = httpResponse.statusCode();
@@ -148,7 +145,7 @@ public class GithubScraper implements GitScraper {
 	}
 
 	@Override
-	public Integer contributorCount() {
+	public Integer contributorCount() throws IOException, InterruptedException {
 		// we request one contributor per page and just extract the number of pages from the headers
 		// see https://docs.github.com/en/rest/guides/using-pagination-in-the-rest-api?apiVersion=2022-11-28
 		HttpResponse<String> httpResponse = getAsHttpResponse(BASE_API_URL + "/repos/" + organisation + "/" + repo + "/contributors?per_page=1");
@@ -220,7 +217,7 @@ public class GithubScraper implements GitScraper {
 		throw new RuntimeException("No last page found");
 	}
 
-	static HttpResponse<String> getAsHttpResponse(String url) {
+	static HttpResponse<String> getAsHttpResponse(String url) throws IOException, InterruptedException {
 		Optional<String> apiCredentials = Config.apiCredentialsGithub();
 		if (apiCredentials.isPresent()) {
 			return Utils.getAsHttpResponse(url, "Authorization", "Basic " + Utils.base64Encode(apiCredentials.get()));

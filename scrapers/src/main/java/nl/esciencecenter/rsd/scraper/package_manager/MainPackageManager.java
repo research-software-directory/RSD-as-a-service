@@ -49,12 +49,12 @@ public class MainPackageManager {
 			for (Future<Void> completedTask : completedTasks) {
 				try {
 					completedTask.get();
-				} catch (ExecutionException e) {
+				} catch (ExecutionException | InterruptedException e) {
 					Utils.saveExceptionInDatabase("Package manager scraper", "package_manager", null, e);
 				}
 			}
 		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
+			Utils.saveExceptionInDatabase("Package manager scraper", "package_manager", null, e);
 		}
 		System.out.println("Done scraping package manager data");
 	}
@@ -107,7 +107,7 @@ public class MainPackageManager {
 		} catch (RsdResponseException e) {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id().toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
-		} catch (RuntimeException e) {
+		} catch (Exception e) {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "reverse_dependency_count_last_error", data.id().toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
 		}

@@ -39,7 +39,7 @@ public class UtilsTest {
 	@Disabled
 	@Test
 	void getWithoutToken() {
-		final String jsonResponse = Utils.get(gitHubUri);
+		final String jsonResponse = Assertions.assertDoesNotThrow(() -> Utils.get(gitHubUri));
 		Assertions.assertTrue(jsonResponse.startsWith("{"));
 	}
 
@@ -48,7 +48,7 @@ public class UtilsTest {
 	void getWrongUri() {
 		final String wrongUri = gitHubApiUrl + "/repos/research-software-directory/wrongRepo";
 		RuntimeException thrown = Assertions.assertThrows(
-			RuntimeException.class, () -> Utils.get(wrongUri)
+				RuntimeException.class, () -> Utils.get(wrongUri)
 		);
 		Assertions.assertTrue(thrown.getMessage().startsWith("Error fetching data"));
 	}
@@ -57,7 +57,7 @@ public class UtilsTest {
 	@Test
 	void getAsAdmin() {
 		String table = "repository_url";
-		String value = Utils.getAsAdmin(dbUrl + "/" + table );
+		String value = Utils.getAsAdmin(dbUrl + "/" + table);
 		Assertions.assertTrue(value.startsWith("[{\"software\":"));
 	}
 }

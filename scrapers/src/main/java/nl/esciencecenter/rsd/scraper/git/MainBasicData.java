@@ -52,7 +52,7 @@ public class MainBasicData {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitHub basic data scraper", "repository_url", basicData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub basic data scraper", "repository_url", basicData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
 				}
@@ -87,7 +87,7 @@ public class MainBasicData {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab basic data scraper", "repository_url", basicData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitLab basic data scraper", "repository_url", basicData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "basic_data_last_error", basicData.software().toString(), "software", scrapedAt, "basic_data_scraped_at");
 				}

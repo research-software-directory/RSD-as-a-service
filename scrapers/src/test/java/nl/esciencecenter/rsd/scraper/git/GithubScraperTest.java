@@ -28,7 +28,7 @@ public class GithubScraperTest {
 	@Disabled
 	@Test
 	void languages() {
-		final String languages = githubScraper.languages();
+		final String languages = Assertions.assertDoesNotThrow(() -> githubScraper.languages());
 		Assertions.assertTrue(languages.startsWith("{"));
 		Assertions.assertTrue(languages.endsWith("}"));
 		Assertions.assertTrue(languages.contains("Java"));
@@ -37,27 +37,28 @@ public class GithubScraperTest {
 	@Disabled
 	@Test
 	void license() {
-		Assertions.assertEquals("Apache-2.0", githubScraper.basicData().license);
+		String license = Assertions.assertDoesNotThrow(() -> githubScraper.basicData().license);
+		Assertions.assertEquals("Apache-2.0", license);
 	}
 
 	@Disabled
 	@Test
 	void contributions() {
-		final CommitsPerWeek contributions = githubScraper.contributions();
+		final CommitsPerWeek contributions = Assertions.assertDoesNotThrow(githubScraper::contributions);
 		// Assertions.assertTrue(contributions.startsWith("[{\"total"));
 	}
 
 	@Disabled
 	@Test
 	void contributionsEmpty() {
-		final CommitsPerWeek contributionsEmpty = githubScraperEmpty.contributions();
+		final CommitsPerWeek contributionsEmpty = Assertions.assertDoesNotThrow(githubScraperEmpty::contributions);
 		// Assertions.assertTrue("[]", contributionsEmpty);
 	}
 
 	@Disabled
 	@Test
 	void contributionsNonEx() {
-		final CommitsPerWeek contributionsNonEx = githubScraperNonEx.contributions();
+		final CommitsPerWeek contributionsNonEx = Assertions.assertDoesNotThrow(githubScraperNonEx::contributions);
 		// Assertions.assertNull(contributionsNonEx);
 	}
 

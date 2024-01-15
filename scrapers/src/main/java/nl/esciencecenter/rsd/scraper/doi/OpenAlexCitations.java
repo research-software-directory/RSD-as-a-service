@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpResponse;
 import java.time.Instant;
@@ -24,7 +25,7 @@ public class OpenAlexCitations {
 
 	static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
 
-	public Collection<MentionRecord> citations(String doi, String email, UUID id) {
+	public Collection<MentionRecord> citations(String doi, String email, UUID id) throws IOException, InterruptedException {
 
 		String doiUrlEncoded = Utils.urlEncode(doi);
 		String worksUri = DOI_FILTER_URL_UNFORMATTED.formatted(doiUrlEncoded);
@@ -37,7 +38,7 @@ public class OpenAlexCitations {
 		return scrapeCitations(optionalCitationsUri.get(), email, id);
 	}
 
-	static Optional<String> citationsUri(String worksUri, String email) {
+	static Optional<String> citationsUri(String worksUri, String email) throws IOException, InterruptedException {
 		HttpResponse<String> response;
 		if (email == null || email.isBlank()) {
 			response = Utils.getAsHttpResponse(worksUri);
@@ -68,7 +69,7 @@ public class OpenAlexCitations {
 
 	// we use cursor paging as that will always work
 	// https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging#cursor-paging
-	static Collection<MentionRecord> scrapeCitations(String citationsUri, String email, UUID id) {
+	static Collection<MentionRecord> scrapeCitations(String citationsUri, String email, UUID id) throws IOException, InterruptedException {
 		final int perPage = 200;
 		String cursor = "*";
 

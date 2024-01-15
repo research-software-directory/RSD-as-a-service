@@ -64,10 +64,8 @@ public class MainCitations {
 				System.out.println("Done. " + (t4-t1) + "ms total, " + (t2-t1) + "ms OpenAlex, " + (t3-t2) + " ms. processing, " + (t4-t3) + " ms. database)");
 
 			}
-		} catch (RuntimeException e) {
-			System.out.println("Failed to scrape citations " + e.getMessage());
-			e.printStackTrace(System.out);
 
+		} catch (Exception e) {
 			Utils.saveExceptionInDatabase("Citation scraper", null, null, e);
 		}
 

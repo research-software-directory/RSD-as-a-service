@@ -49,7 +49,7 @@ public class MainProgrammingLanguages {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				}
@@ -87,7 +87,7 @@ public class MainProgrammingLanguages {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				}
