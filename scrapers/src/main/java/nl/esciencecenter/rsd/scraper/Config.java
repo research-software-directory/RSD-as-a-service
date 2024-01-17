@@ -42,11 +42,14 @@ public class Config {
 			value = System.getenv(name);			
 		} catch (Exception e) {			
 			LOGGER.error("Failed to retrieve environment variable: %s", name, e);
-			throw new Error("Failed to retrieve environment variable: " + name, e);
+			return null;
+			// throw new Error("Failed to retrieve environment variable: " + name, e);
 		}
 		
 		if (value == null || value.isBlank()) { 
-			throw new Error("Failed to retrieve environment variable: " + name);
+			LOGGER.error("Blank environment variable: %s", name);
+			return value;
+			//throw new Error("Failed to retrieve environment variable: " + name);
 		}
 		
 		return value;

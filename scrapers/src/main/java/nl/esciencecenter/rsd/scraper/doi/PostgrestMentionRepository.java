@@ -89,7 +89,7 @@ public class PostgrestMentionRepository implements MentionRepository {
 				response = Utils.postAsAdmin(uri, scrapedMentionJson, "Prefer", "resolution=merge-duplicates,return=representation");
 				System.out.println(" done");
 
-      				JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
+				JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
 				// Used in MainCitations, do not remove
 				mention.id = UUID.fromString(responseAsArray.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString());
 
@@ -108,17 +108,17 @@ public class PostgrestMentionRepository implements MentionRepository {
 						JsonArray array = JsonParser.parseString(existingMentionResponse).getAsJsonArray();
 						String id = array.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
 						Utils.saveErrorMessageInDatabase(null,
-							"mention",
-							null,
-							id,
-							"id",
-							ZonedDateTime.now(),
-							"scraped_at");
+								"mention",
+								null,
+								id,
+								"id",
+								ZonedDateTime.now(),
+								"scraped_at");
 
 						Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), e);
 					} catch (Exception e2) {
 						System.out.println("Failed to store exception in database " + e2.getMessage());
-		                                e2.printStackTrace();
+						e2.printStackTrace();
 					}
 				}
 

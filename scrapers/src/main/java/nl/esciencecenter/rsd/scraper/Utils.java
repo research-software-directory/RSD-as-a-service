@@ -37,6 +37,7 @@ public class Utils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 
+	// Default timeout used for http connections.
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
 	/**
@@ -76,9 +77,21 @@ public class Utils {
 		if (response.statusCode() >= 300) {
 			throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 		}
+		
 		return response.body();
 	}
 
+	/**
+	 * Performs a GET request with given headers and returns the entire http response.
+	 *
+	 * @param uri The encoded URI
+	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
+	 * @return The response as a String.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws RsdResponseException
+	 */
 	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) throws IOException, InterruptedException {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
 				.GET()
@@ -88,9 +101,9 @@ public class Utils {
 			httpRequestBuilder.headers(headers);
 		}
 		HttpRequest request = httpRequestBuilder.build();
+		
 		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			return response;
+			return client.send(request, HttpResponse.BodyHandlers.ofString());
 		}
 	}
 
@@ -109,9 +122,9 @@ public class Utils {
 				.header("Authorization", "Bearer " + jwtString)
 				.build();
 
-		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
-		try {
+		
+		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
 			System.out.println("An error occurred sending a request to " + uri + ":");
@@ -141,9 +154,9 @@ public class Utils {
 			httpRequestBuilder.headers(extraHeaders);
 		}
 		HttpRequest request = httpRequestBuilder.build();
-		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
-		try {
+		
+		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
@@ -172,13 +185,14 @@ public class Utils {
 				.header("Authorization", "Bearer " + jwtString);
 		if (extraHeaders != null && extraHeaders.length > 0) builder.headers(extraHeaders);
 		HttpRequest request = builder.build();
-		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
-		try {
+		
+		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
+		
 		if (response.statusCode() >= 300) {
 			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
 		}

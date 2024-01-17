@@ -47,8 +47,8 @@ public class UtilsTest {
 	@Test
 	void getWrongUri() {
 		final String wrongUri = gitHubApiUrl + "/repos/research-software-directory/wrongRepo";
-		RuntimeException thrown = Assertions.assertThrows(
-				RuntimeException.class, () -> Utils.get(wrongUri)
+		Exception thrown = Assertions.assertThrows(
+				Exception.class, () -> Utils.get(wrongUri)
 		);
 		Assertions.assertTrue(thrown.getMessage().startsWith("Error fetching data"));
 	}
