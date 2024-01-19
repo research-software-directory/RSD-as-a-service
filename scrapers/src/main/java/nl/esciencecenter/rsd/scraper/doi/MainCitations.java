@@ -8,6 +8,7 @@ package nl.esciencecenter.rsd.scraper.doi;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,8 +71,12 @@ public class MainCitations {
 				LOGGER.info("Scraping for {} done. OpenAlex: {} ms. Saving mentions {} ms. Saving citations {} ms. Total {} ms.", citationData.doi, (t2-t1), (t3-t2), (t4-t3), (t4-t1));				
 			}
 
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			Utils.saveExceptionInDatabase("Citation scraper", null, null, e);
+			
+			if (e instanceof InterruptedException) { 
+				Thread.currentThread().interrupt();
+			}				
 		}
 
 		long time = System.currentTimeMillis() - start;
