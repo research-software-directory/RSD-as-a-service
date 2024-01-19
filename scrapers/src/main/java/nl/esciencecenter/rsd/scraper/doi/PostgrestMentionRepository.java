@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 public class PostgrestMentionRepository implements MentionRepository {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DataciteMentionRepository.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PostgrestMentionRepository.class);
 	
 	private final String backendUrl;
 
@@ -99,7 +99,7 @@ public class PostgrestMentionRepository implements MentionRepository {
 
 			} catch (RuntimeException e) {
 				
-				LOGGER.warn("Failed to saving mention: {} / {} / {}", mention.doi, mention.externalId, mention.source, e);
+				LOGGER.warn("Failed to save mention: {} / {} / {}", mention.doi, mention.externalId, mention.source, e);
 				
 				if (mention.doi == null) {
 					Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
@@ -120,7 +120,7 @@ public class PostgrestMentionRepository implements MentionRepository {
 
 						Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), e);
 					} catch (Exception e2) {
-						LOGGER.warn("Failed to saving exception in database", e2);
+						LOGGER.warn("Failed to save exception in database", e2);
 					}
 				}
 
