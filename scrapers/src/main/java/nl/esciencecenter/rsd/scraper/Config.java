@@ -41,13 +41,13 @@ public class Config {
 		try { 
 			value = System.getenv(name);			
 		} catch (Exception e) {			
-			LOGGER.error("Failed to retrieve environment variable: %s", name, e);
+			LOGGER.error("Failed to retrieve environment variable: {}", name, e);
 			return null;
 			// throw new Error("Failed to retrieve environment variable: " + name, e);
 		}
 		
 		if (value == null || value.isBlank()) { 
-			LOGGER.error("Blank environment variable: %s", name);
+			LOGGER.error("Blank environment variable: {}", name);
 			return value;
 			//throw new Error("Failed to retrieve environment variable: " + name);
 		}
@@ -72,7 +72,7 @@ public class Config {
 			String value = System.getenv(name);			
 			return (value == null || value.isBlank()) ? Optional.empty() : Optional.of(value.strip());
 		} catch (Exception e) {			
-			LOGGER.warn("Failed to retrieve environment variable: %s", name, e);
+			LOGGER.warn("Failed to retrieve environment variable: {}", name, e);
 			return Optional.empty();
 		}
 	}
@@ -95,7 +95,7 @@ public class Config {
 		try { 
 			return Integer.parseInt(System.getenv(name));
 		} catch (Exception e) {
-			LOGGER.warn("Failed to retrieve environment variable: %s", name, e);			
+			LOGGER.warn("Failed to retrieve environment variable: {}", name, e);			
 		}
 
 		return defaultValue;		
