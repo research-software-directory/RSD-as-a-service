@@ -16,13 +16,25 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainProgrammingLanguages {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainProgrammingLanguages.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping programming languages");
+		
+		LOGGER.info("Start scraping programming languages");
+		
+		long t1 = System.currentTimeMillis();
+		
 		scrapeGithub();
 		scrapeGitLab();
-		System.out.println("Done scraping programming languages");
+		
+		long time = System.currentTimeMillis() - t1;
+		
+		LOGGER.info("Done scraping programming languages ({} ms.)", time);
 	}
 
 	private static void scrapeGitLab() {

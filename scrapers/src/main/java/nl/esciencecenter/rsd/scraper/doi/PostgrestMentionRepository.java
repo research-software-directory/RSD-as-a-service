@@ -23,8 +23,13 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PostgrestMentionRepository implements MentionRepository {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DataciteMentionRepository.class);
+	
 	private final String backendUrl;
 
 	public PostgrestMentionRepository(String backendUrl) {
@@ -40,7 +45,7 @@ public class PostgrestMentionRepository implements MentionRepository {
 					try {
 						return URI.create(json.getAsString());
 					} catch (IllegalArgumentException e) {
-						System.out.println("Warning: couldn't create a URI of the following: " + json.getAsString());
+						LOGGER.warn("Could not create a URI of {} ", json.getAsString());
 						return null;
 					}
 				})
@@ -69,7 +74,7 @@ public class PostgrestMentionRepository implements MentionRepository {
 				.registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
 				.create();
 
-		System.out.println("Will save " + mentions.size() + " mentions");
+		LOGGER.info("Will save {} mentions", mentions.size());
 
 		for (MentionRecord mention : mentions) {
 			String scrapedMentionJson = gson.toJson(mention);
@@ -85,19 +90,17 @@ public class PostgrestMentionRepository implements MentionRepository {
 			String response;
 
 			try {
-				System.out.print("Saving mention: " + mention.doi + " / " + mention.externalId + " / " + mention.source);
+				LOGGER.debug("Saving mention: {} / {} / {}", mention.doi, mention.externalId, mention.source);
 				response = Utils.postAsAdmin(uri, scrapedMentionJson, "Prefer", "resolution=merge-duplicates,return=representation");
-				System.out.println(" done");
-
+				
 				JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
 				// Used in MainCitations, do not remove
 				mention.id = UUID.fromString(responseAsArray.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString());
 
 			} catch (RuntimeException e) {
-
-				System.out.println(" failed: " + e.getMessage());
-				e.printStackTrace();
-
+				
+				LOGGER.warn("Failed to saving mention: {} / {} / {}", mention.doi, mention.externalId, mention.source, e);
+				
 				if (mention.doi == null) {
 					Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
 				} else {
@@ -117,8 +120,7 @@ public class PostgrestMentionRepository implements MentionRepository {
 
 						Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), e);
 					} catch (Exception e2) {
-						System.out.println("Failed to store exception in database " + e2.getMessage());
-						e2.printStackTrace();
+						LOGGER.warn("Failed to saving exception in database", e2);
 					}
 				}
 

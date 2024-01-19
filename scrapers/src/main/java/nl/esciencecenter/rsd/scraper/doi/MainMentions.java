@@ -12,7 +12,6 @@ import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,10 +20,19 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainMentions {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainMentions.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping mentions");
+		
+		LOGGER.info("Start scraping mentions");
+		
+		long t1 = System.currentTimeMillis();
+		
 		MentionRepository localMentionRepository = new PostgrestMentionRepository(Config.backendBaseUrl());
 		Collection<MentionRecord> mentionsToScrape = localMentionRepository.leastRecentlyScrapedMentions(Config.maxRequestsDoi());
 		// we will remove successfully scraped mentions from here,
@@ -93,7 +101,9 @@ public class MainMentions {
 			Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
 		}
 
-		System.out.println("Done scraping mentions");
+		long time = System.currentTimeMillis() - t1;
+
+		LOGGER.info("Done scraping mentions ({} ms.)", time);
 	}
 
 	static Map<String, String> parseJsonSources(String jsonSources) {

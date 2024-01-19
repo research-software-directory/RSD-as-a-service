@@ -17,8 +17,13 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DataCiteReleaseRepository {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DataCiteReleaseRepository.class);
+	
 	private static final String QUERY_UNFORMATTED = """
 			query {
 			  works(ids: [%s], first: 10000) {
@@ -57,7 +62,7 @@ public class DataCiteReleaseRepository {
 				String conceptDoi = workObject.getAsJsonPrimitive("doi").getAsString();
 				Integer versionOfCount = Utils.integerOrNull(workObject.get("versionOfCount"));
 				if (versionOfCount == null || versionOfCount.intValue() != 0) {
-					System.out.println("%s is not a concept DOI".formatted(conceptDoi));
+					LOGGER.debug("{} is not a concept DOI", conceptDoi);
 					continue;
 				}
 
@@ -78,8 +83,7 @@ public class DataCiteReleaseRepository {
 
 				releasesPerConceptDoi.put(conceptDoi, versionedMentions);
 			} catch (RuntimeException e) {
-				System.out.println("Failed to scrape a DataCite mention with data " + work);
-				e.printStackTrace();
+				LOGGER.warn("Failed to scrape a DataCite mention with data {}, ", work, e);
 			}
 		}
 		return releasesPerConceptDoi;

@@ -12,6 +12,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /*
  * 1. Get the least recently scraped releases from software with a concept DOI. We also check for existing releases that already exist as a mention in the database, so we don't have to (TODO) recreate them later.
  * 2. For each release check if it's a concept DOI on DataCite and get all the versioned DOIs.
@@ -19,8 +22,14 @@ import java.util.UUID;
  */
 public class MainReleases {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainReleases.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping releases");
+		
+		LOGGER.info("Start scraping releases");
+		
+		long t1 = System.currentTimeMillis();
+		
 		PostgrestReleaseRepository releaseRepository = new PostgrestReleaseRepository(Config.backendBaseUrl());
 
 		Collection<ReleaseData> releasesToScrape = releaseRepository.leastRecentlyScrapedReleases(Config.maxRequestsDoi());
@@ -42,6 +51,9 @@ public class MainReleases {
 		}
 
 		releaseRepository.saveReleaseContent(releasesToScrape, scrapedReleasesPerConceptDoi, doiToId);
-		System.out.println("Done scraping releases");
+		
+		long time = System.currentTimeMillis() - t1;
+		
+		LOGGER.info("Done scraping releases ({} ms.)", time);
 	}
 }

@@ -21,10 +21,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class MainPackageManager {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class MainPackageManager {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainPackageManager.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping package manager data");
+		LOGGER.info("Start scraping package manager data");
+		
+		long t1 = System.currentTimeMillis();
+		
 		PostgrestConnector postgrestConnector = new PostgrestConnector(Config.backendBaseUrl() + "/package_manager");
 		Collection<BasicPackageManagerData> downloadsToScrape = postgrestConnector.oldestDownloadCounts(10);
 		Collection<BasicPackageManagerData> revDepsToScrape = postgrestConnector.oldestReverseDependencyCounts(10);
@@ -57,7 +65,10 @@ public class MainPackageManager {
 		} catch (InterruptedException e) {
 			Utils.saveExceptionInDatabase("Package manager scraper", "package_manager", null, e);
 		}
-		System.out.println("Done scraping package manager data");
+		
+		long time = System.currentTimeMillis() - t1;
+		
+		LOGGER.info("Done scraping package manager data ({} ms.)", time);
 	}
 
 	static PackageManagerScraper scraperForType(PackageManagerType type, String url) {

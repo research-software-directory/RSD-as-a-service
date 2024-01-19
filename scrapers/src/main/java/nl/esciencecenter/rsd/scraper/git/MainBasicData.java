@@ -16,13 +16,24 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainBasicData {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainBasicData.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping basic Git data");
+		LOGGER.info("Start scraping basic Git data");
+		
+		long t1 = System.currentTimeMillis();
+		
 		scrapeGitHub();
 		scrapeGitLab();
-		System.out.println("Done scraping basic Git data");
+		
+		long time = System.currentTimeMillis() - t1;
+		
+		LOGGER.info("Done scraping basic Git data ({} ms.)", time);
 	}
 
 	private static void scrapeGitHub() {

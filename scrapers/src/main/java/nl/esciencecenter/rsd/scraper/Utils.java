@@ -127,7 +127,7 @@ public class Utils {
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
-			System.out.println("An error occurred sending a request to " + uri + ":");
+			LOGGER.warn("An error occurred sending a request to {}", uri, e);
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {

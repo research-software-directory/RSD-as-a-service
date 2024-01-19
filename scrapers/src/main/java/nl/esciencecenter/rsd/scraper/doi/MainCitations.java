@@ -13,13 +13,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*
  * Main entry point for citation scraper. 
  */
 public class MainCitations {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainCitations.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping citations");
+		
+		LOGGER.info("Start scraping citations");
 
 		long start = System.currentTimeMillis();
 
@@ -39,7 +45,7 @@ public class MainCitations {
 
 				long t1 = System.currentTimeMillis();
 
-				System.out.println("Scraping for " + citationData.doi);
+				LOGGER.info("Scraping for {}", citationData.doi);
 
 				Collection<MentionRecord> citingMentions = openAlexCitations.citations(citationData.doi, email, citationData.id);
 				// we don't update mentions that have a DOI in the database with OpenAlex data, as they can already be
@@ -61,8 +67,7 @@ public class MainCitations {
 
 				long t4 = System.currentTimeMillis();
 
-				System.out.println("Done. " + (t4-t1) + "ms total, " + (t2-t1) + "ms OpenAlex, " + (t3-t2) + " ms. processing, " + (t4-t3) + " ms. database)");
-
+				LOGGER.info("Scraping for {} done. OpenAlex: {} ms. Saving mentions {} ms. Saving citations {} ms. Total {} ms.", citationData.doi, (t2-t1), (t3-t2), (t4-t3), (t4-t1));				
 			}
 
 		} catch (Exception e) {
@@ -71,6 +76,6 @@ public class MainCitations {
 
 		long time = System.currentTimeMillis() - start;
 
-		System.out.println("Done scraping citations (" + time + " ms.)");
+		LOGGER.info("Done scraping citations ({} ms.)", time);
 	}
 }
