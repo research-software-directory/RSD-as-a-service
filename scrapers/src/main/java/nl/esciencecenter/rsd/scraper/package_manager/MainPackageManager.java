@@ -60,7 +60,10 @@ public class MainPackageManager {
 					completedTask.get();
 				} catch (ExecutionException | InterruptedException e) {
 					Utils.saveExceptionInDatabase("Package manager scraper", "package_manager", null, e);
-					Thread.currentThread().interrupt();
+					
+					if (e instanceof InterruptedException) { 
+						Thread.currentThread().interrupt();
+					}
 				}
 			}
 		} catch (InterruptedException e) {

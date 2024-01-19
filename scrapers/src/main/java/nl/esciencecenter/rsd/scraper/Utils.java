@@ -126,11 +126,15 @@ public class Utils {
 		
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
-			LOGGER.warn("An error occurred sending a request to {}", uri, e);
+		} catch (InterruptedException e) {
+			LOGGER.warn("Request to {} was interrupted", uri, e);
 			Thread.currentThread().interrupt();
 			throw new RuntimeException(e);
+		} catch (IOException e) {
+			LOGGER.warn("An error occurred sending a request to {}", uri, e);
+			throw new RuntimeException(e);
 		}
+
 		if (response.statusCode() >= 300) {
 			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
 		}
@@ -159,10 +163,13 @@ public class Utils {
 		
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
+		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
+
 		if (response.statusCode() >= 300) {
 			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
 		}
@@ -191,8 +198,10 @@ public class Utils {
 		
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
+		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
+			throw new RuntimeException(e);
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		
@@ -284,8 +293,10 @@ public class Utils {
 		HttpResponse<String> response;
 		try {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException | InterruptedException e) {
+		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
+			throw new RuntimeException(e);
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {

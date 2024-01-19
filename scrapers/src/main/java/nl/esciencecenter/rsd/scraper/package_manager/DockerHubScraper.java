@@ -54,10 +54,13 @@ public class DockerHubScraper implements PackageManagerScraper {
 				default ->
 						throw new RsdResponseException(response.statusCode(), request.uri(), response.body(), "Unexpected response");
 			};
-		} catch (IOException | InterruptedException e) {
+		} catch (InterruptedException e) {
 			 Thread.currentThread().interrupt();
 			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
+
 		return parseDowloadsResponse(json);
 	}
 
