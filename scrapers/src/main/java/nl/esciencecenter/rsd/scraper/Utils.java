@@ -128,6 +128,7 @@ public class Utils {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
 			LOGGER.warn("An error occurred sending a request to {}", uri, e);
+			Thread.currentThread().interrupt();
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
@@ -159,6 +160,7 @@ public class Utils {
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
+			Thread.currentThread().interrupt();
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
@@ -190,6 +192,7 @@ public class Utils {
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
+			Thread.currentThread().interrupt();
 			throw new RuntimeException(e);
 		}
 		
@@ -282,6 +285,7 @@ public class Utils {
 		try {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (IOException | InterruptedException e) {
+			Thread.currentThread().interrupt();
 			throw new RuntimeException(e);
 		}
 		if (response.statusCode() >= 300) {
