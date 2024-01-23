@@ -1,14 +1,18 @@
-package nl.esciencecenter;
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
 
-import java.util.Date;
+package nl.esciencecenter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.gson.JsonObject;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
+
+import java.util.Date;
 
 public class User {
 	String accountId;

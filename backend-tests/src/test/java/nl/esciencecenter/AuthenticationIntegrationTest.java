@@ -1,79 +1,29 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.google.gson.JsonObject;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.Date;
 import java.util.List;
 
+@ExtendWith({SetupAllTests.class})
+
 public class AuthenticationIntegrationTest {
-
-	static Header adminAuthHeader;
-
-	@BeforeAll
-	static void checkBackendAvailable() throws InterruptedException {
-		URI backendUri = URI.create(System.getenv("POSTGREST_URL"));
-		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder(backendUri).build();
-		int maxTries = 30;
-		for (int i = 1; i <= maxTries; i++) {
-			try {
-				client.send(request, HttpResponse.BodyHandlers.discarding());
-				System.out.println("Attempt %d/%d to connect to the backend on %s succeeded, continuing with the tests"
-						.formatted(i, maxTries, backendUri));
-				return;
-			} catch (IOException e) {
-				System.out.println("Attempt %d/%d to connect to the backend on %s failed, trying again in 1 second"
-						.formatted(i, maxTries, backendUri));
-				Thread.sleep(1000);
-			}
-		}
-		throw new RuntimeException("Unable to make connection to the backend with URI: " + backendUri);
-	}
-
-	@BeforeAll
-	static void setupRestAssured() {
-		String backendUri = System.getenv("POSTGREST_URL");
-		RestAssured.baseURI = backendUri;
-		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-
-		String secret = System.getenv("PGRST_JWT_SECRET");
-		Algorithm signingAlgorithm = Algorithm.HMAC256(secret);
-
-		String adminToken = JWT.create()
-				.withClaim("iss", "rsd_test")
-				.withClaim("role", "rsd_admin")
-				.withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // expires in one hour
-				.sign(signingAlgorithm);
-		adminAuthHeader = new Header("Authorization", "bearer " + adminToken);
-
-		User.adminAuthHeader = adminAuthHeader;
-	}
 
 	@Test
 	void givenAdmin_whenCreatingAccount_thenSuccess() {
@@ -139,7 +89,7 @@ public class AuthenticationIntegrationTest {
 	void givenUserWhoAgreedOnTerms_whenEditingSoftwareNotMaintainer_thenNowAllowed() {
 		String slug = Commons.createUUID();
 		RestAssured.given()
-				.header(adminAuthHeader)
+				.header(SetupAllTests.adminAuthHeader)
 				.contentType(ContentType.JSON)
 				.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": true, \"short_statement\": \"Test software for testing\"}"
 						.formatted(slug))
@@ -194,7 +144,7 @@ public class AuthenticationIntegrationTest {
 	void givenUnauthenticatedUser_whenViewingUnpublishedSoftware_thenNothingReturned() {
 		String slug = Commons.createUUID();
 		RestAssured.given()
-				.header(adminAuthHeader)
+				.header(SetupAllTests.adminAuthHeader)
 				.contentType(ContentType.JSON)
 				.body("{\"slug\": \"%s\", \"brand_name\": \"Test software user\", \"is_published\": false, \"short_statement\": \"Test software for testing\"}"
 						.formatted(slug))
@@ -255,7 +205,7 @@ public class AuthenticationIntegrationTest {
 
 	@Test
 	void givenAdmin_createCategory() {
-		requestCreateDummyCategory(adminAuthHeader)
+		requestCreateDummyCategory(SetupAllTests.adminAuthHeader)
 				.then()
 				.statusCode(201);
 	}
@@ -320,7 +270,7 @@ public class AuthenticationIntegrationTest {
 		obj.addProperty("parent", catId3);
 
 		RestAssured.given()
-				.header(adminAuthHeader)
+				.header(SetupAllTests.adminAuthHeader)
 				.contentType(ContentType.JSON)
 				.body(obj.toString())
 				.when()
@@ -337,7 +287,7 @@ public class AuthenticationIntegrationTest {
 		String catId2 = createUniqueCategory("top level 2", "top level 2 long", null);
 		String catId2_1 = createUniqueCategory("sub category 2.1", "sub category 2.1 long", catId2);
 		String catId2_2 = createUniqueCategory("sub category 2.2", "sub category 2.2 long", catId2);
-		return new String[] { catId1_1, catId1_2, catId2_1, catId2_2 };
+		return new String[]{catId1_1, catId1_2, catId2_1, catId2_2};
 	}
 
 	String createCategory(String name, String short_name, String parentId, boolean makeUnique) {
@@ -354,7 +304,7 @@ public class AuthenticationIntegrationTest {
 		obj.addProperty("parent", parentId);
 
 		return RestAssured.given()
-				.header(adminAuthHeader)
+				.header(SetupAllTests.adminAuthHeader)
 				.header(Commons.requestEntry)
 				.contentType(ContentType.JSON)
 				.body(obj.toString())
