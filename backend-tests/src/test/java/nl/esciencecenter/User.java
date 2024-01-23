@@ -23,8 +23,7 @@ public class User {
 
 	static User create(boolean hasAgreedTerms) {
 		if (adminAuthHeader == null) {
-			// throw new Exception("User.adminAuthHeader is not initialized.");
-			System.out.println("ERROR: User.adminAuthHeader is not initialized.");
+			throw new RuntimeException("User.adminAuthHeader is not initialized.");
 		}
 
 		String accountId = RestAssured.given()

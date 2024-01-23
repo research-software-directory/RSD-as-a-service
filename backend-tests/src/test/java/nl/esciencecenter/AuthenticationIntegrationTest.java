@@ -26,7 +26,7 @@ import java.util.List;
 public class AuthenticationIntegrationTest {
 
 	@Test
-	void givenAdmin_whenCreatingAccount_thenSuccess() {
+	void whenCreatingUserAccount_thenSuccess() {
 		User.create(false);
 	}
 
@@ -50,7 +50,7 @@ public class AuthenticationIntegrationTest {
 	void givenUserWhoAgreedOnTerms_whenCreatingAndEditingSoftware_thenSuccess() {
 		User user = User.create(false);
 
-		RestAssured.given().log().all()
+		RestAssured.given()
 				.header(user.authHeader)
 				.contentType(ContentType.JSON)
 				.body("{\"agree_terms\": true, \"notice_privacy_statement\": true}")
@@ -81,7 +81,8 @@ public class AuthenticationIntegrationTest {
 				.then()
 				.statusCode(200)
 				.extract()
-				.path("[0].get_started_url");
+				.jsonPath()
+				.getString("[0].get_started_url");
 		Assertions.assertEquals(getStartedUrl, patchedGetStartedUrl);
 	}
 
@@ -313,7 +314,8 @@ public class AuthenticationIntegrationTest {
 				.then()
 				.statusCode(201)
 				.extract()
-				.path("[0].id");
+				.jsonPath()
+				.getString("[0].id");
 	}
 
 	String createUniqueCategory(String name, String short_name, String parentId) {
