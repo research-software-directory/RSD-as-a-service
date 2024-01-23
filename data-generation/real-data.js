@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -82,6 +82,14 @@ const packageManagerLinks = [
 	{url: 'https://www.npmjs.com/package/jest', type: 'npm'},
 	{url: 'https://pypi.org/project/cffconvert/', type: 'pypi'},
 	{url: 'https://pypi.org/project/flask', type: 'pypi'},
+	{url: 'https://packages.debian.org/search?keywords=libcdk-java', type: 'debian'},
+	{url: 'https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle/overview', type: 'sonatype'},
+	{url: 'https://community.chocolatey.org/packages/openchrom', type: 'chocolatey'},
+	{url: 'https://snapcraft.io/openchrom', type: 'snapcraft'},
+	{url: 'https://github.com/orgs/research-software-directory/packages?repo_name=RSD-as-a-service', type: 'github'},
+	{url: 'https://gitlab.com/gitlab-org/gitlab/container_registry', type: 'gitlab'},
+	{url: 'https://crates.io/crates/serde', type: 'crates'},
+	{url: 'https://pkg.go.dev/strconv', type: 'golang'},
 ]
 
 export {conceptDois, dois, packageManagerLinks};
