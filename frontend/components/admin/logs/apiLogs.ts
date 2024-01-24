@@ -26,20 +26,23 @@ export async function getLogs({page, rows, token, searchFor, orderBy}: ApiParams
     const url = `${getBaseUrl()}/rpc/backend_log_view?${query}`
 
     // make request
+    const headers: any = {
+      ...createJsonHeaders(token)
+    }
+    if (page === 0) {
+      // request record count to be returned
+      // note: it's returned in the header
+      headers['Prefer'] = 'count=exact'
+    }
     const resp = await fetch(url,{
       method: 'GET',
-      headers: {
-        ...createJsonHeaders(token),
-        // request record count to be returned
-        // note: it's returned in the header
-        'Prefer': 'count=exact'
-      },
+      headers: headers
     })
 
     if ([200,206].includes(resp.status)) {
       const logs: BackendLog[] = await resp.json()
       return {
-        count: extractCountFromHeader(resp.headers) ?? 0,
+        count: extractCountFromHeader(resp.headers),
         logs
       }
     }

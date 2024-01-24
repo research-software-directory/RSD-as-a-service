@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2021 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +16,7 @@ export function extractCountFromHeader(headers:Headers){
       const splitted = stats.split('/')
       if (splitted.length > 0){
         const count = parseInt(splitted[1])
-        return count
+        return isNaN(count) ? null : count
       }
       return null
     }
