@@ -20,6 +20,38 @@ type PackageManagerItemProps = {
   onEdit?: (pos:number) => void
 }
 
+type ServiceStatusProps={
+  services: string[]
+  download_count: number|null,
+  download_count_scraped_at: string|null
+  reverse_dependency_count: number|null
+  reverse_dependency_count_scraped_at: string|null
+}
+
+function RsdScraperStatus({services,download_count,download_count_scraped_at,reverse_dependency_count,reverse_dependency_count_scraped_at}:ServiceStatusProps){
+  const html=[]
+  if (services?.length===0) {
+    return <span>RSD scraper services not available</span>
+  }
+  if (services.includes('downloads')===true){
+    if (download_count_scraped_at){
+      html.push(<span key="downloads">Downloads: {download_count ?? 0}</span>)
+
+    }else{
+      html.push(<span key="downloads">Downloads: no info</span>)
+    }
+  }
+  if (services.includes('dependents')===true){
+    if (reverse_dependency_count_scraped_at){
+      html.push(<span key="dependents">Dependents: {reverse_dependency_count ?? 0}</span>)
+    }else{
+      html.push(<span key="dependents">Dependents: no info</span>)
+    }
+  }
+  return html
+}
+
+
 export default function PackageManagerItem({pos, item, onDelete, onEdit}: PackageManagerItemProps) {
   // get package manager info
   const info = packageManagerSettings[item.package_manager ?? 'other']
@@ -57,15 +89,13 @@ export default function PackageManagerItem({pos, item, onDelete, onEdit}: Packag
         secondary={
           <>
             <span>{item.url}</span><br />
-            {item.download_count_scraped_at ?
-              <span>Downloads: {item.download_count ?? 0}</span>
-              : <span>Downloads: no info</span>
-            }
-            {
-              item.reverse_dependency_count_scraped_at ?
-                <span className="ml-4">Dependents: {item.reverse_dependency_count ?? 0}</span>
-                : <span className="ml-4">Dependents: no info</span>
-            }
+            <RsdScraperStatus
+              services={info?.services ?? []}
+              download_count={item.download_count}
+              download_count_scraped_at={item.download_count_scraped_at}
+              reverse_dependency_count={item.reverse_dependency_count}
+              reverse_dependency_count_scraped_at={item.reverse_dependency_count_scraped_at}
+            />
           </>
         }
         sx={{

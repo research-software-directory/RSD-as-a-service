@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +15,9 @@ export default function PackageManagersInfo() {
   const keys = Object.keys(packageManagerSettings)
   let managers:string[]=[]
   keys.forEach((key) => {
-    if (key!=='other') managers.push(packageManagerSettings[key as PackageManagerTypes].name)
+    if (packageManagerSettings[key as PackageManagerTypes].services?.length > 0){
+      managers.push(packageManagerSettings[key as PackageManagerTypes].name)
+    }
   })
 
   return (
@@ -25,7 +29,7 @@ export default function PackageManagersInfo() {
     >
       <AlertTitle>Where can I find software?</AlertTitle>
       Use Add button to provide <strong>download locations</strong> of your software.
-      RSD will try to extract information about the downloads and dependencies from the
+      RSD will try to extract information about the downloads and/or dependencies from the
       package manager api. Collecting additional information by RSD scraper
       might take up to 1 day.
       {
