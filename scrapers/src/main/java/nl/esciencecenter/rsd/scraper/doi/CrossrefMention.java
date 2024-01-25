@@ -11,8 +11,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -67,7 +69,7 @@ public class CrossrefMention implements Mention {
 	}
 
 	@Override
-	public MentionRecord mentionData() {
+	public MentionRecord mentionData() throws IOException, InterruptedException, RsdResponseException{
 		StringBuilder url = new StringBuilder("https://api.crossref.org/works/" + Utils.urlEncode(doi));
 		Config.crossrefContactEmail().ifPresent(email -> url.append("?mailto=").append(email));
 		String responseJson = Utils.get(url.toString());

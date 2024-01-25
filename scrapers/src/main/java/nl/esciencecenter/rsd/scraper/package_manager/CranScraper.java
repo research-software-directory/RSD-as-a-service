@@ -8,6 +8,9 @@ package nl.esciencecenter.rsd.scraper.package_manager;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import nl.esciencecenter.rsd.scraper.RsdResponseException;
+
+import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +45,7 @@ public class CranScraper implements PackageManagerScraper {
 	}
 
 	@Override
-	public Integer reverseDependencies() {
+	public Integer reverseDependencies() throws IOException, InterruptedException, RsdResponseException {
 		String data = PackageManagerScraper.doLibrariesIoRequest("https://libraries.io/api/cran/" + packageName);
 		JsonElement tree = JsonParser.parseString(data);
 		return tree.getAsJsonObject().getAsJsonPrimitive("dependents_count").getAsInt();

@@ -16,13 +16,24 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainContributors {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainContributors.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping contributors");
+		LOGGER.info("Start scraping contributors");
+		
+		long t1 = System.currentTimeMillis();
+		
 		scrapeGitHub();
 		scrapeGitLab();
-		System.out.println("Done scraping contributors");
+		
+		long time = System.currentTimeMillis() - t1;
+		
+		LOGGER.info("Done scraping contributors ({} ms.)", time);
 	}
 
 	private static void scrapeGitHub() {
@@ -53,7 +64,7 @@ public class MainContributors {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitHub contributor scraper", "repository_url", contributorData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub contributor scraper", "repository_url", contributorData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
 				}
@@ -89,7 +100,7 @@ public class MainContributors {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab contributor scraper", "repository_url", contributorData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitLab contributor scraper", "repository_url", contributorData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "contributor_count_last_error", contributorData.software().toString(), "software", scrapedAt, "contributor_count_scraped_at");
 				}

@@ -25,8 +25,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DataciteMentionRepository implements MentionRepository {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DataciteMentionRepository.class);
+	
 	private static final String QUERY_UNFORMATTED = """
 			query {
 			  works(ids: [%s], first: 10000) {
@@ -125,8 +130,8 @@ public class DataciteMentionRepository implements MentionRepository {
 				usedDois.add(parsedMention.doi);
 				mentions.add(parsedMention);
 			} catch (RuntimeException e) {
-				System.out.println("Failed to scrape a DataCite mention with data " + work);
-				e.printStackTrace();
+				// TODO: fix exeption type
+				LOGGER.warn("Failed to scrape a DataCite mention with data {} ", work, e);				
 			}
 		}
 		return mentions;

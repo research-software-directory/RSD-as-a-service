@@ -19,31 +19,31 @@ import java.util.Optional;
 
 public interface PackageManagerScraper {
 
-	Long downloads();
+	Long downloads() throws IOException, RsdResponseException;
 
-	Integer reverseDependencies();
+	Integer reverseDependencies() throws IOException, InterruptedException, RsdResponseException;
 
-	static String doLibrariesIoRequest(String url) {
+	static String doLibrariesIoRequest(String url) throws IOException, InterruptedException, RsdResponseException {
 		Optional<String> optionalApiKey = Config.librariesIoKey();
 		if (optionalApiKey.isPresent()) url += "?api_key=" + optionalApiKey.get();
 
-		HttpClient client = HttpClient.newBuilder()
-				.followRedirects(HttpClient.Redirect.NORMAL)
-				.build();
+
 		HttpRequest request = HttpRequest.newBuilder(URI.create(url))
 				.timeout(Duration.ofSeconds(30))
 				.build();
-		try {
+		try (HttpClient client = HttpClient.newBuilder()
+				.followRedirects(HttpClient.Redirect.NORMAL)
+				.build();) {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			return switch (response.statusCode()) {
-				case 429 -> throw new RsdRateLimitException(429, request.uri(), response.body(), "Rate limit reached for libraries.io");
-				case 404 -> throw new RsdResponseException(404, request.uri(), response.body(), "Not found, is the URL correct?");
+				case 429 ->
+						throw new RsdRateLimitException(429, request.uri(), response.body(), "Rate limit reached for libraries.io");
+				case 404 ->
+						throw new RsdResponseException(404, request.uri(), response.body(), "Not found, is the URL correct?");
 				case 200 -> response.body();
 				default ->
 						throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 			};
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
 		}
 	}
 }

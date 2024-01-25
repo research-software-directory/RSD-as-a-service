@@ -20,10 +20,19 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainMentions {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainMentions.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping mentions");
+		
+		LOGGER.info("Start scraping mentions");
+		
+		long t1 = System.currentTimeMillis();
+		
 		MentionRepository localMentionRepository = new PostgrestMentionRepository(Config.backendBaseUrl());
 		Collection<MentionRecord> mentionsToScrape = localMentionRepository.leastRecentlyScrapedMentions(Config.maxRequestsDoi());
 		// we will remove successfully scraped mentions from here,
@@ -38,7 +47,13 @@ public class MainMentions {
 				.map(mention -> mention.doi)
 				.map(doi -> Utils.urlEncode(doi))
 				.collect(Collectors.joining(","));
-		String jsonSources = Utils.get("https://doi.org/doiRA/" + doisJoined);
+		String jsonSources = null;
+		try {
+			jsonSources = Utils.get("https://doi.org/doiRA/" + doisJoined);
+		} catch (Exception e) {
+			Utils.saveExceptionInDatabase("DOI mention scraper", "mention", null, e);
+			System.exit(1);
+		}
 
 		Map<String, String> doiToSource = parseJsonSources(jsonSources);
 
@@ -67,7 +82,7 @@ public class MainMentions {
 				MentionRecord scrapedMention = new CrossrefMention(crossrefDoi).mentionData();
 				scrapedMentions.add(scrapedMention);
 				mentionsFailedToScrape.remove(scrapedMention.doi);
-			} catch (RuntimeException e) {
+			} catch (Exception e) {
 				RuntimeException exceptionWithMessage = new RuntimeException("Failed to scrape a Crossref mention with DOI " + crossrefDoi, e);
 				Utils.saveExceptionInDatabase("Crossref mention scraper", "mention", null, exceptionWithMessage);
 			}
@@ -86,7 +101,9 @@ public class MainMentions {
 			Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
 		}
 
-		System.out.println("Done scraping mentions");
+		long time = System.currentTimeMillis() - t1;
+
+		LOGGER.info("Done scraping mentions ({} ms.)", time);
 	}
 
 	static Map<String, String> parseJsonSources(String jsonSources) {

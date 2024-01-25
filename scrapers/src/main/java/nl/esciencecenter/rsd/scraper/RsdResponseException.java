@@ -9,7 +9,10 @@ package nl.esciencecenter.rsd.scraper;
 
 import java.net.URI;
 
-public class RsdResponseException extends RuntimeException {
+public class RsdResponseException extends Exception {
+	
+	private static final long serialVersionUID = 1L;
+	
 	public final int statusCode;
 	public final URI uri;
 	public final String body;
@@ -20,5 +23,4 @@ public class RsdResponseException extends RuntimeException {
 		this.uri = uri;
 		this.body = body;
 	}
-
 }

@@ -18,13 +18,26 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainCommits {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainCommits.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping commits");
+		
+		LOGGER.info("Start scraping commits");
+		
+		long t1 = System.currentTimeMillis();
+		
 		scrapeGitHub();
 		scrapeGitLab();
-		System.out.println("Done scraping commits");
+
+		long time = System.currentTimeMillis() - t1;
+		
+		LOGGER.info("Done scraping commits ({} ms.)", time);
 	}
 
 	private static void scrapeGitLab() {
@@ -51,7 +64,7 @@ public class MainCommits {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitLab commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}
@@ -90,7 +103,7 @@ public class MainCommits {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitHub commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}

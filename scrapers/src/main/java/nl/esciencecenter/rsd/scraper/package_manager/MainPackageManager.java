@@ -10,6 +10,7 @@ import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,10 +21,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class MainPackageManager {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class MainPackageManager {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainPackageManager.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping package manager data");
+		LOGGER.info("Start scraping package manager data");
+		
+		long t1 = System.currentTimeMillis();
+		
 		PostgrestConnector postgrestConnector = new PostgrestConnector(Config.backendBaseUrl() + "/package_manager");
 		Collection<BasicPackageManagerData> downloadsToScrape = postgrestConnector.oldestDownloadCounts(10);
 		Collection<BasicPackageManagerData> revDepsToScrape = postgrestConnector.oldestReverseDependencyCounts(10);
@@ -49,14 +58,22 @@ public class MainPackageManager {
 			for (Future<Void> completedTask : completedTasks) {
 				try {
 					completedTask.get();
-				} catch (ExecutionException e) {
+				} catch (ExecutionException | InterruptedException e) {
 					Utils.saveExceptionInDatabase("Package manager scraper", "package_manager", null, e);
+					
+					if (e instanceof InterruptedException) { 
+						Thread.currentThread().interrupt();
+					}
 				}
 			}
 		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
+			Utils.saveExceptionInDatabase("Package manager scraper", "package_manager", null, e);
+			Thread.currentThread().interrupt();
 		}
-		System.out.println("Done scraping package manager data");
+		
+		long time = System.currentTimeMillis() - t1;
+		
+		LOGGER.info("Done scraping package manager data ({} ms.)", time);
 	}
 
 	static PackageManagerScraper scraperForType(PackageManagerType type, String url) {
@@ -86,7 +103,7 @@ public class MainPackageManager {
 		} catch (RsdResponseException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "download_count_last_error", data.id().toString(), "id", scrapedAt, "download_count_scraped_at");
-		} catch (RuntimeException e) {
+		} catch (IOException e) {
 			Utils.saveExceptionInDatabase("Package manager downloads scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "download_count_last_error", data.id().toString(), "id", scrapedAt, "download_count_scraped_at");
 		}
@@ -107,7 +124,7 @@ public class MainPackageManager {
 		} catch (RsdResponseException e) {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase(e.getMessage(), "package_manager", "reverse_dependency_count_last_error", data.id().toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
-		} catch (RuntimeException e) {
+		} catch (Exception e) {
 			Utils.saveExceptionInDatabase("Package manager reverse dependencies scraper", "package_manager", data.id(), e);
 			Utils.saveErrorMessageInDatabase("Unknown error", "package_manager", "reverse_dependency_count_last_error", data.id().toString(), "id", scrapedAt, "reverse_dependency_count_scraped_at");
 		}

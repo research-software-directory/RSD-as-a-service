@@ -16,13 +16,25 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainProgrammingLanguages {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainProgrammingLanguages.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Start scraping programming languages");
+		
+		LOGGER.info("Start scraping programming languages");
+		
+		long t1 = System.currentTimeMillis();
+		
 		scrapeGithub();
 		scrapeGitLab();
-		System.out.println("Done scraping programming languages");
+		
+		long time = System.currentTimeMillis() - t1;
+		
+		LOGGER.info("Done scraping programming languages ({} ms.)", time);
 	}
 
 	private static void scrapeGitLab() {
@@ -49,7 +61,7 @@ public class MainProgrammingLanguages {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitLab programming languages scraper", "repository_url", programmingLanguageData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				}
@@ -87,7 +99,7 @@ public class MainProgrammingLanguages {
 				} catch (RsdResponseException e) {
 					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
-				} catch (RuntimeException e) {
+				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				}

@@ -44,7 +44,7 @@ jobs:
       - name: "Maven JUnit tests and JaCoCo test report"
         working-directory: scrapers
         run: |
-          mvn verify
+          mvn -X verify
       - name: SonarCloud Scan scrapers
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any

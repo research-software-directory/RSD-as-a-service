@@ -31,7 +31,7 @@ public class GitlabScraper implements GitScraper {
 	 * A GitLab scraper for API version 4.
 	 *
 	 * @param gitLabApiUrl The API Url without version, e.g. https://<gitlab_instance_url>/api
-	 * @param projectPath The full path to the project
+	 * @param projectPath  The full path to the project
 	 */
 	public GitlabScraper(String gitLabApiUrl, String projectPath) {
 		this.projectPath = projectPath;
@@ -47,7 +47,7 @@ public class GitlabScraper implements GitScraper {
 	 * @return The basic data
 	 */
 	@Override
-	public BasicGitData basicData() {
+	public BasicGitData basicData() throws IOException, InterruptedException, RsdResponseException {
 		String response = Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "?license=True");
 		return parseBasicData(response);
 	}
@@ -59,7 +59,7 @@ public class GitlabScraper implements GitScraper {
 	 * @return A JSON as a String
 	 */
 	@Override
-	public String languages() {
+	public String languages() throws IOException, InterruptedException, RsdResponseException {
 		return Utils.get(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/languages");
 	}
 
@@ -67,16 +67,16 @@ public class GitlabScraper implements GitScraper {
 	 * Retrieve all contributions from GitLab API. Uses the API Endpoint:
 	 * https://docs.gitlab.com/ee/api/commits.html#list-repository-commits
 	 * This endpoint does not require authentication for public projects.
-	 *
+	 * <p>
 	 * Maybe use GraphQL to reduce return data?
 	 * https://docs.gitlab.com/ee/api/graphql/reference/#commit=
 	 *
 	 * @return String representing a JSON array with the defined metadata (id, committed_date).
-	 *
+	 * <p>
 	 * Example URL: https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell/repository/commits?per_page=100&order=default&page=1
 	 */
 	@Override
-	public CommitsPerWeek contributions() {
+	public CommitsPerWeek contributions() throws IOException, InterruptedException, RsdResponseException {
 		CommitsPerWeek commits = new CommitsPerWeek();
 		String page = "1";
 		boolean done = false;
@@ -86,36 +86,35 @@ public class GitlabScraper implements GitScraper {
 							+ "/repository/commits?per_page=100&order=default&page=" + page))
 					.timeout(Duration.ofSeconds(30))
 					.build();
-			HttpClient client =
-					HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
 			HttpResponse<String> response;
-			try {
+			try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
 				response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			} catch (IOException | InterruptedException e) {
-				System.out.println("An error occurred fetching data from: " + request.uri());
-				throw new RuntimeException(e);
 			}
-			if (response.statusCode() == 429) throw new RsdRateLimitException(429, response.uri(), response.body(), "API rate limit reached for GitLab");
-			if (response.statusCode() == 404) throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
+			if (response.statusCode() == 429)
+				throw new RsdRateLimitException(429, response.uri(), response.body(), "API rate limit reached for GitLab");
+			if (response.statusCode() == 404)
+				throw new RsdResponseException(404, response.uri(), response.body(), "Not found, is the repository URL correct?");
 
 			String body = response.body();
 			parseCommitPage(body, commits);
 
-			page = response.headers().firstValue("x-next-page").get();
-			done = page.length() == 0;
+			page = response.headers().firstValue("x-next-page").orElseThrow();
+			done = page.isEmpty();
 		}
 		return commits;
 	}
 
 	@Override
-	public Integer contributorCount() {
+	public Integer contributorCount() throws IOException, InterruptedException, RsdResponseException {
 		HttpResponse<String> httpResponse = Utils.getAsHttpResponse(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/repository/contributors");
 
-		if (httpResponse.statusCode() == 429) throw new RsdRateLimitException(429, httpResponse.uri(), httpResponse.body(), "Rate limit reached for GitLab");
-		if (httpResponse.statusCode() == 404) throw new RsdResponseException(404, httpResponse.uri(), httpResponse.body(), "Not found, is the repository URL correct?");
+		if (httpResponse.statusCode() == 429)
+			throw new RsdRateLimitException(429, httpResponse.uri(), httpResponse.body(), "Rate limit reached for GitLab");
+		if (httpResponse.statusCode() == 404)
+			throw new RsdResponseException(404, httpResponse.uri(), httpResponse.body(), "Not found, is the repository URL correct?");
 
 		// see https://docs.gitlab.com/ee/api/rest/index.html#other-pagination-headers
-		String totalItemsHeader = httpResponse.headers().firstValue("x-total").get();
+		String totalItemsHeader = httpResponse.headers().firstValue("x-total").orElseThrow();
 		return Integer.parseInt(totalItemsHeader);
 	}
 
@@ -136,7 +135,7 @@ public class GitlabScraper implements GitScraper {
 		JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
 
 		JsonElement jsonLicense = jsonObject.get("license");
-		result.license =  jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().get("name").getAsString();
+		result.license = jsonLicense.isJsonNull() ? null : jsonLicense.getAsJsonObject().get("name").getAsString();
 		result.starCount = jsonObject.getAsJsonPrimitive("star_count").getAsLong();
 		result.forkCount = jsonObject.getAsJsonPrimitive("forks_count").getAsInt();
 
