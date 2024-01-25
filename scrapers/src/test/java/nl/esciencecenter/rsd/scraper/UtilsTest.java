@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -8,56 +8,25 @@
 package nl.esciencecenter.rsd.scraper;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class UtilsTest {
-	private final String gitHubApiUrl = "https://api.github.com";
-	private final String gitHubRepository = "research-software-directory/RSD-as-a-service";
-	private final String gitHubUri = gitHubApiUrl + "/repos/" + gitHubRepository;
-
-	private final String dbUrl = Config.backendBaseUrl();
 
 	@Test
-	void urlencode() {
+	void urlEncode() {
 		Assertions.assertEquals("one%2Ftwo", Utils.urlEncode("one/two"));
 	}
 
 	@Test
 	void testCreatePatchUri() {
-		String baseuri = "http://localhost/api/v1";
+		String baseUri = "http://localhost/api/v1";
 		String tableName = "table_name";
 		String primaryKey = "d8718d90-a3df-4714-864d-40786223e462";
 		String primaryKeyName = "id";
 
 		String expectedUri = "http://localhost/api/v1/table_name?id=eq.d8718d90-a3df-4714-864d-40786223e462";
-		String actualUri = Utils.createPatchUri(baseuri, tableName, primaryKey, primaryKeyName);
+		String actualUri = Utils.createPatchUri(baseUri, tableName, primaryKey, primaryKeyName);
 
 		Assertions.assertEquals(expectedUri, actualUri);
-	}
-
-	@Disabled
-	@Test
-	void getWithoutToken() {
-		final String jsonResponse = Assertions.assertDoesNotThrow(() -> Utils.get(gitHubUri));
-		Assertions.assertTrue(jsonResponse.startsWith("{"));
-	}
-
-	@Disabled
-	@Test
-	void getWrongUri() {
-		final String wrongUri = gitHubApiUrl + "/repos/research-software-directory/wrongRepo";
-		Exception thrown = Assertions.assertThrows(
-				Exception.class, () -> Utils.get(wrongUri)
-		);
-		Assertions.assertTrue(thrown.getMessage().startsWith("Error fetching data"));
-	}
-
-	@Disabled
-	@Test
-	void getAsAdmin() {
-		String table = "repository_url";
-		String value = Utils.getAsAdmin(dbUrl + "/" + table);
-		Assertions.assertTrue(value.startsWith("[{\"software\":"));
 	}
 }
