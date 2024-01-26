@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -82,17 +83,36 @@ export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfOrga
   try {
     const maintainers:MaintainerOfOrganisation[] = []
     raw_maintainers.forEach(item => {
+      let maintainerWithMostInfo: MaintainerOfOrganisation | null = null
+      let bestScore = -1
       // use name as second loop indicator
       item.name.forEach((name, pos) => {
-        const maintainer = {
+        let score = 0
+        if (name) {
+          score += 1
+        }
+        if (item.email[pos]) {
+          score += 1
+        }
+        if (item.affiliation[pos]) {
+          score += 1
+        }
+
+        if (score <= bestScore) {
+          return
+        }
+        const maintainer: MaintainerOfOrganisation = {
           account: item.maintainer,
           name,
           email: item.email[pos] ? item.email[pos] : '',
           affiliation: item.affiliation[pos] ? item.affiliation[pos] : '',
           is_primary: item?.is_primary ?? false
         }
-        maintainers.push(maintainer)
+
+        maintainerWithMostInfo = maintainer
+        bestScore = score
       })
+      maintainers.push(maintainerWithMostInfo as unknown as MaintainerOfOrganisation)
     })
     return maintainers
   } catch (e:any) {
