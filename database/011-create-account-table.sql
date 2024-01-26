@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -43,9 +43,13 @@ BEGIN
 	NEW.updated_at = LOCALTIMESTAMP;
 	IF NEW.agree_terms != OLD.agree_terms THEN
 		NEW.agree_terms_updated_at = NEW.updated_at;
+	ELSE
+		NEW.agree_terms_updated_at = OLD.agree_terms_updated_at;
 	END IF;
 	IF NEW.notice_privacy_statement != OLD.notice_privacy_statement THEN
 		NEW.notice_privacy_statement_updated_at = NEW.updated_at;
+	ELSE
+		NEW.notice_privacy_statement_updated_at = OLD.notice_privacy_statement_updated_at;
 	END IF;
 	return NEW;
 END
