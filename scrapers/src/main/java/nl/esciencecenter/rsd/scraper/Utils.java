@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -13,6 +13,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,9 +32,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class Utils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
@@ -43,9 +42,9 @@ public class Utils {
 	/**
 	 * Base64encode a string.
 	 *
-	 * @param value The string to be encoded
+	 * @param s The string to be encoded
 	 * @return The base64 encoded string.
-	 */	
+	 */
 	public static String base64Encode(String s) {
 		return Base64.getEncoder().encodeToString(s.getBytes());
 	}
@@ -63,10 +62,9 @@ public class Utils {
 	/**
 	 * Performs a GET request with given headers and returns the response body as a String.
 	 *
-	 * @param uri The encoded URI
+	 * @param uri     The encoded URI
 	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
 	 * @return The response as a String.
-	 * 
 	 * @throws IOException
 	 * @throws InterruptedException
 	 * @throws RsdResponseException
@@ -77,20 +75,18 @@ public class Utils {
 		if (response.statusCode() >= 300) {
 			throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Unexpected response");
 		}
-		
+
 		return response.body();
 	}
 
 	/**
 	 * Performs a GET request with given headers and returns the entire http response.
 	 *
-	 * @param uri The encoded URI
+	 * @param uri     The encoded URI
 	 * @param headers (Optional) Variable amount of headers. Number of arguments must be a multiple of two.
 	 * @return The response as a String.
-	 * 
 	 * @throws IOException
 	 * @throws InterruptedException
-	 * @throws RsdResponseException
 	 */
 	public static HttpResponse<String> getAsHttpResponse(String uri, String... headers) throws IOException, InterruptedException {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
@@ -101,7 +97,7 @@ public class Utils {
 			httpRequestBuilder.headers(headers);
 		}
 		HttpRequest request = httpRequestBuilder.build();
-		
+
 		try (HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build()) {
 			return client.send(request, HttpResponse.BodyHandlers.ofString());
 		}
@@ -123,7 +119,7 @@ public class Utils {
 				.build();
 
 		HttpResponse<String> response;
-		
+
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (InterruptedException e) {
@@ -160,7 +156,7 @@ public class Utils {
 		}
 		HttpRequest request = httpRequestBuilder.build();
 		HttpResponse<String> response;
-		
+
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (InterruptedException e) {
@@ -195,7 +191,7 @@ public class Utils {
 		if (extraHeaders != null && extraHeaders.length > 0) builder.headers(extraHeaders);
 		HttpRequest request = builder.build();
 		HttpResponse<String> response;
-		
+
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (InterruptedException e) {
@@ -204,7 +200,7 @@ public class Utils {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		if (response.statusCode() >= 300) {
 			throw new RuntimeException("Error fetching data from endpoint " + uri + " with response: " + response.body());
 		}
@@ -289,9 +285,8 @@ public class Utils {
 				.header("Content-Type", "application/json")
 				.header("Authorization", "Bearer " + jwtString)
 				.build();
-		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response;
-		try {
+		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
@@ -308,11 +303,10 @@ public class Utils {
 	private static String adminJwt() {
 		String signingSecret = Config.jwtSigningSecret();
 		Algorithm signingAlgorithm = Algorithm.HMAC256(signingSecret);
-		String jwtString = JWT.create()
+		return JWT.create()
 				.withClaim("role", "rsd_admin")
 				.withExpiresAt(new Date(System.currentTimeMillis() + Config.jwtExpirationTime()))
 				.sign(signingAlgorithm);
-		return jwtString;
 	}
 
 	public static String stringOrNull(JsonElement e) {
@@ -323,9 +317,9 @@ public class Utils {
 		return e == null || !e.isJsonPrimitive() ? null : e.getAsInt();
 	}
 
-	/** 
-	 * Generate a filter to select column entries older than one hour. 
-	 *  
+	/**
+	 * Generate a filter to select column entries older than one hour.
+	 *
 	 * @param scrapedAtColumnName the name of the column containing the timestamp.
 	 * @return the filter.
 	 */
