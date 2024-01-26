@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2022 dv4all
 
@@ -12,7 +12,7 @@ SPDX-License-Identifier: CC-BY-4.0
 This module handles authentication from third parties using oAuth2 and OpenID.
 
 ## Environment variables
-Check `.env.example` to see which environment variables are needed. 
+Check `.env.example` to see which environment variables are needed. In particular, look for the env variable `RSD_ENVIRONMENT` to allow for easy admin creation when developing and testing out the RSD (this is not safe for production!).
 
 ## Developing locally
 If you want to develop and run the auth module locally, i.e. outside of Docker, you have to make two changes to files tracked by Git.
