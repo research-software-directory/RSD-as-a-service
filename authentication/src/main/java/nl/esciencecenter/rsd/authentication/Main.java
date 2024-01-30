@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -90,7 +90,7 @@ public class Main {
 		Javalin app = Javalin.create().start(7000);
 		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
-		if (Config.isLocalEnabled()) {
+		if (Config.isLocalLoginEnabled()) {
 			System.out.println("********************");
 			System.out.println("Warning: local accounts are enabled, this is not safe for production!");
 			System.out.println("********************");
@@ -107,7 +107,7 @@ public class Main {
 			});
 		}
 
-		if (Config.isSurfConextEnabled()) {
+		if (Config.isSurfConextLoginEnabled()) {
 			app.post("/login/surfconext", ctx -> {
 				String code = ctx.formParam("code");
 				String redirectUrl = Config.surfconextRedirect();
@@ -122,7 +122,7 @@ public class Main {
 			});
 		}
 
-		if (Config.isHelmholtzEnabled()) {
+		if (Config.isHelmholtzLoginEnabled()) {
 			app.get("/login/helmholtzaai", ctx -> {
 				String code = ctx.queryParam("code");
 				String redirectUrl = Config.helmholtzAaiRedirect();
@@ -137,7 +137,7 @@ public class Main {
 			});
 		}
 
-		if (Config.isOrcidEnabled()) {
+		if (Config.isOrcidLoginEnabled()) {
 			app.get("/login/orcid", ctx -> {
 				String code = ctx.queryParam("code");
 				String redirectUrl = Config.orcidRedirect();
@@ -146,7 +146,9 @@ public class Main {
 				AccountInfo accountInfo = new PostgrestCheckOrcidWhitelistedAccount(new PostgrestAccount()).account(orcidInfo, OpenidProvider.orcid);
 				createAndSetToken(ctx, accountInfo);
 			});
+		}
 
+		if (Config.isOrcidCoupleEnabled()) {
 			app.get("/couple/orcid", ctx -> {
 				String code = ctx.queryParam("code");
 				String redirectUrl = Config.orcidRedirectCouple();
@@ -166,7 +168,7 @@ public class Main {
 			});
 		}
 
-		if (Config.isAzureEnabled()) {
+		if (Config.isAzureLoginEnabled()) {
 			app.get("/login/azure", ctx -> {
 				String code = ctx.queryParam("code");
 				String redirectUrl = Config.azureRedirect();

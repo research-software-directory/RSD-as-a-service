@@ -3,6 +3,8 @@ SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2022 dv4all
 SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -52,6 +54,7 @@ The default index.css and settings.json are already in the frontend image. If yo
       - POSTGREST_URL
       - PGRST_JWT_SECRET
       - RSD_AUTH_URL
+      - RSD_AUTH_COUPLE_PROVIDERS
       - RSD_AUTH_PROVIDERS
       - MATOMO_URL
       - MATOMO_ID

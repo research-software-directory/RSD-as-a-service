@@ -13,6 +13,7 @@ RSD offers following customization options:
 - Main locations for customizing RSD are:
   - `.env` file at the same location as your docker-compose.yml
   - `settings.json` that should be (volume) mounted into the frontend service in your docker-compose.yml
+- When configuring your production instance, replace `localhost` and `www.localhost` with the domain of your RSD
 :::
 
 ## Authentication providers
@@ -63,31 +64,18 @@ AZURE_DESCRIPTION_HTML="Sign in with your institutional credentials"
 AZURE_ORGANISATION=
 ```
 
-### Enable ORCID authentication
+### Enable ORCID authentication and coupling
+
+The RSD offers an integration with ORCID which can be used for login and coupling the user's RSD account with their ORCID. Both integrations can be used independently.
 
 Please refer to [ORCID OAuth documentation](https://info.orcid.org/documentation/integration-guide/getting-started-with-your-orcid-integration/) in order to setup ORCID authentication service for RSD.
 
-In the RSD `.env` file you need to provide following information to enable this authenitcation service.
-
-:::tip
-RSD offers public profile page that use ORCID as unique key. In order to enable linking of orcid account
-for public profile page ORCID authentication need to be enabled. ORCID_REDIRECT_COUPLE variable is used specifically for linking the ORCID account.
-
-- For more [info about public profile page see documentation](/users/user-settings/#public-profile)
-- After user links ORCID to RSD account he/she will be able to login using ORCID credentials too
-:::
+For both integrations (login and coupling) these common variables need to be defined in `.env`:
 
 ```bash
-# Ensure ORCID key is included in the list
-RSD_AUTH_PROVIDERS=ORCID
-
 # ORCID
 # consumed by: authentication, frontend/utils/loginHelpers
 ORCID_CLIENT_ID=
-# consumed by: authentication, frontend/utils/loginHelpers
-ORCID_REDIRECT=http://localhost/auth/login/orcid
-# consumed by: authentication, frontend/utils/loginHelpers
-ORCID_REDIRECT_COUPLE=http://localhost/auth/couple/orcid
 # consumed by: authentication, frontend/utils/loginHelpers
 ORCID_WELL_KNOWN_URL=
 # consumed by: authentication, frontend/utils/loginHelpers
@@ -95,11 +83,45 @@ ORCID_SCOPES=openid
 # consumed by: frontend/utils/loginHelpers
 ORCID_RESPONSE_MODE=query
 
+# consumed by services: authentication
+AUTH_ORCID_CLIENT_SECRET=
+```
+
+#### ORCID authentication
+
+To enable login via ORCID, provide ythe following information in `.env`:
+
+```bash
+# Ensure ORCID key is included in the list
+RSD_AUTH_PROVIDERS=ORCID
+
+# consumed by: authentication, frontend/utils/loginHelpers
+ORCID_REDIRECT=http://www.localhost/auth/login/orcid
 ```
 
 :::warning
 When using ORCID authentication only, each ORCID user need to be added to ORCID users list. See [ORCID users page](/rsd-instance/administration/#orcid-users) in the administration section.
 :::
+
+#### ORCID coupling
+
+For ORCID account coupling to be enabled, the following variables need to be set in `.env`:
+
+```bash
+# consumed by: authentication, frontend/utils/loginHelpers
+ORCID_REDIRECT_COUPLE=http://www.localhost/auth/couple/orcid
+# Enable ORCID account coupling
+RSD_AUTH_COUPLE_PROVIDERS=ORCID
+```
+
+If `RSD_AUTH_COUPLE_PROVIDERS` is undefined, ORCID account coupling is disabled.
+
+:::danger
+If ORCID login is disabled and ORCID coupling is enabled, users are added to the ORCID login allowlist after coupling their accounts.
+:::
+
+- For more [info about public profile page see documentation](/users/user-settings/#public-profile).
+- If ORCID login is enabled: after a user links an ORCID to their RSD account they will be able to login using ORCID credentials too.
 
 ### Enable SURFconext authentication
 

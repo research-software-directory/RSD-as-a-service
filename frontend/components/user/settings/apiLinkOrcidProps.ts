@@ -51,6 +51,11 @@ async function orcidAuthEndpoint(wellknownUrl:string){
  */
 export async function orcidCoupleProps() {
   try{
+    const coupleProviders = process.env.RSD_AUTH_COUPLE_PROVIDERS ?? null
+    if (!coupleProviders?.includes('ORCID')) {
+      // Do not continue if ORCID coupling not enabled
+      return null
+    }
     // extract well known url from env
     const wellknownUrl = process.env.ORCID_WELL_KNOWN_URL ?? null
     if (wellknownUrl) {
