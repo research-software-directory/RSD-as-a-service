@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
@@ -22,17 +22,17 @@ import {Provider, ApiError} from '.'
 type Data = Provider | ApiError
 
 export async function orcidRedirectProps() {
-  // extract wellknow url from env
+  // extract well known url from env
   const wellknownUrl = process.env.ORCID_WELL_KNOWN_URL ?? null
   if (wellknownUrl) {
-    // extract authorisation endpoint from wellknow response
+    // extract authorisation endpoint from well known response
     const authorization_endpoint = await getAuthorisationEndpoint(wellknownUrl)
     if (authorization_endpoint) {
       // construct all props needed for redirectUrl
       const props: RedirectToProps = {
         authorization_endpoint,
         redirect_uri: process.env.ORCID_REDIRECT ?? 'https://research-software.nl/auth/login/orcid',
-        redirect_couple_uri: process.env.ORCID_REDIRECT_COUPLE ?? 'MISSING',
+        redirect_couple_uri: process.env.ORCID_REDIRECT_COUPLE ?? null,
         client_id: process.env.ORCID_CLIENT_ID ?? 'www.research-software.nl',
         scope: process.env.ORCID_SCOPES ?? 'openid',
         response_mode: process.env.ORCID_RESPONSE_MODE ?? 'query'
