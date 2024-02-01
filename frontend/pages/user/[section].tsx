@@ -2,9 +2,10 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +24,7 @@ import {SearchProvider} from '~/components/search/SearchContext'
 import UserTitle from '~/components/user/UserTitle'
 import UserNav, {UserCounts} from '~/components/user/UserNav'
 import {getUserCounts} from '~/components/user/getUserCounts'
-import {orcidRedirectProps} from '../api/fe/auth/orcid'
+import {orcidCoupleProps} from '~/components/user/settings/apiLinkOrcidProps'
 
 type UserPagesProps = {
   section: string,
@@ -90,9 +91,10 @@ export default function UserPages({section,counts,orcidAuthLink}:UserPagesProps)
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
     const {params, req} = context
-
     const section = params?.section
     const token = req?.cookies['rsd_token']
+    // placeholder for orcid couple link
+    let orcidAuthLink:string|null=null
 
     // console.log('getServerSideProps...params...', params)
     // console.log('getServerSideProps...token...', token)
@@ -119,10 +121,10 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       frontend: false
     })
 
-    let orcidAuthLink:string|null=null
-    const orcid = await orcidRedirectProps()
-    if (orcid){
-      if (orcid?.redirect_couple_uri){
+    if (section === 'settings') {
+      // only relevant for settings page
+      const orcid = await orcidCoupleProps()
+      if (orcid && orcid?.redirect_couple_uri){
         // getRedirectUrl uses redirect_uri to construct redirectURL
         orcid.redirect_uri = orcid.redirect_couple_uri
         orcidAuthLink = getRedirectUrl(orcid)
@@ -130,7 +132,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     }
 
     return {
-      // passed to the page component as props
+      // passed to page component as props
       props: {
         section,
         counts,
