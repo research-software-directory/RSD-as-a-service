@@ -1,6 +1,6 @@
+-- SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
--- SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -19,6 +19,10 @@ $$
 	LEFT JOIN mention AS citation ON citation_for_mention.citation = citation.id
 	WHERE mention.id IN (
 		SELECT mention FROM reference_paper_for_software
+	)
+	OR
+	mention.id IN (
+		SELECT mention FROM output_for_project
 	)
 	GROUP BY mention.id
 $$;
@@ -39,7 +43,7 @@ CREATE FUNCTION citation_by_software() RETURNS TABLE (
 	mention_type mention_type,
 	source VARCHAR,
 	reference_papers UUID[]
-)LANGUAGE sql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
 SELECT
 	reference_paper_for_software.software,
@@ -97,7 +101,7 @@ CREATE FUNCTION mentions_by_software() RETURNS TABLE (
 	image_url VARCHAR,
 	mention_type mention_type,
 	source VARCHAR
-)LANGUAGE sql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
 -- mentions for software
 SELECT
@@ -138,5 +142,125 @@ SELECT
 	source
 FROM
 	citation_by_software()
+;
+$$;
+
+
+-- UNIQUE CITATIONS BY PROJECT ID
+CREATE FUNCTION citation_by_project() RETURNS TABLE (
+	project UUID,
+	id UUID,
+	doi CITEXT,
+	url VARCHAR,
+	title VARCHAR,
+	authors VARCHAR,
+	publisher VARCHAR,
+	publication_year SMALLINT,
+	journal VARCHAR,
+	page VARCHAR,
+	image_url VARCHAR,
+	mention_type mention_type,
+	source VARCHAR,
+	reference_papers UUID[]
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	output_for_project.project,
+	mention.id,
+	mention.doi,
+	mention.url,
+	mention.title,
+	mention.authors,
+	mention.publisher,
+	mention.publication_year,
+	mention.journal,
+	mention.page,
+	mention.image_url,
+	mention.mention_type,
+	mention.source,
+	ARRAY_AGG(
+		output_for_project.mention
+	) AS reference_paper
+FROM
+	output_for_project
+INNER JOIN
+	citation_for_mention ON citation_for_mention.mention = output_for_project.mention
+INNER JOIN
+	mention ON mention.id = citation_for_mention.citation
+GROUP BY
+	output_for_project.project,
+	mention.id,
+	mention.doi,
+	mention.url,
+	mention.title,
+	mention.authors,
+	mention.publisher,
+	mention.publication_year,
+	mention.journal,
+	mention.page,
+	mention.image_url,
+	mention.mention_type,
+	mention.source
+;
+$$;
+
+
+-- UNIQUE MENTIONS & CITATIONS BY PROJECT ID
+-- UNION will deduplicate exact entries
+CREATE FUNCTION impact_by_project() RETURNS TABLE (
+	project UUID,
+	id UUID,
+	doi CITEXT,
+	url VARCHAR,
+	title VARCHAR,
+	authors VARCHAR,
+	publisher VARCHAR,
+	publication_year SMALLINT,
+	journal VARCHAR,
+	page VARCHAR,
+	image_url VARCHAR,
+	mention_type mention_type,
+	source VARCHAR
+) LANGUAGE sql STABLE AS
+$$
+-- impact for project
+SELECT
+	impact_for_project.project,
+	mention.id,
+	mention.doi,
+	mention.url,
+	mention.title,
+	mention.authors,
+	mention.publisher,
+	mention.publication_year,
+	mention.journal,
+	mention.page,
+	mention.image_url,
+	mention.mention_type,
+	mention.source
+FROM
+	mention
+INNER JOIN
+	impact_for_project ON impact_for_project.mention = mention.id
+-- will deduplicate identical entries
+-- from scraped citations
+UNION
+-- scraped citations from reference papers
+SELECT
+	project,
+	id,
+	doi,
+	url,
+	title,
+	authors,
+	publisher,
+	publication_year,
+	journal,
+	page,
+	image_url,
+	mention_type,
+	source
+FROM
+	citation_by_project()
 ;
 $$;
