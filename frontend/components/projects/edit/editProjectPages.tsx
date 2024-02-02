@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ import ShareIcon from '@mui/icons-material/Share'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ContentLoader from '~/components/layout/ContentLoader'
-
+import JoinInnerIcon from '@mui/icons-material/JoinInner'
 
 // import ProjectInformation from './information'
 // import ProjectTeam from './team'
@@ -41,6 +41,9 @@ const ProjectImpact = dynamic(() => import('./impact'),{
   loading: ()=><ContentLoader />
 })
 const ProjectOutput = dynamic(() => import('./output'),{
+  loading: ()=><ContentLoader />
+})
+const ProjectCitations = dynamic(() => import('./citations'),{
   loading: ()=><ContentLoader />
 })
 const RelatedProjects = dynamic(() => import('./related-projects'),{
@@ -84,13 +87,6 @@ export const editProjectPage: EditProjectPageProps[] = [
     status: 'Optional information'
   },
   {
-    id: 'impact',
-    label: 'Impact',
-    icon: <AccessibilityNewIcon />,
-    render: () => <ProjectImpact />,
-    status: 'Optional information'
-  },
-  {
     id: 'output',
     label: 'Output',
     icon: <OutboundIcon />,
@@ -98,9 +94,23 @@ export const editProjectPage: EditProjectPageProps[] = [
     status: 'Optional information'
   },
   {
+    id: 'impact',
+    label: 'Impact',
+    icon: <AccessibilityNewIcon />,
+    render: () => <ProjectImpact />,
+    status: 'Optional information'
+  },
+  {
+    id: 'citations',
+    label: 'Citations',
+    icon: <ShareIcon />,
+    render: () => <ProjectCitations />,
+    status: 'Scraped information'
+  },
+  {
     id: 'related-projects',
     label: 'Related projects',
-    icon: <ShareIcon />,
+    icon: <JoinInnerIcon />,
     render: () => <RelatedProjects />,
     status: 'Optional information'
   },

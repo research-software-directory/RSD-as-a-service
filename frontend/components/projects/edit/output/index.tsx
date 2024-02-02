@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,6 +14,7 @@ import AddOutput from './AddOutput'
 import EditOutputProvider from './EditOutputProvider'
 import useProjectContext from '../useProjectContext'
 import ImportProjectOutput from './ImportProjectOutput'
+import ScrapersInfo from './ScrapersInfo'
 
 export default function ProjectOutput() {
   const {token} = useSession()
@@ -32,6 +34,7 @@ export default function ProjectOutput() {
           <FindOutput />
           <ImportProjectOutput/>
           <AddOutput />
+          <ScrapersInfo />
         </div>
       </EditSection>
     </EditOutputProvider>

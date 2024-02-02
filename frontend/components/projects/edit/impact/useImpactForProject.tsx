@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +11,6 @@ import {getMentionsForProject} from '~/utils/getProjects'
 
 import {sortOnNumProp} from '~/utils/sortFn'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
-import {MentionItemProps} from '~/types/Mention'
 
 type ImpactForProjectProps = {
   project: string,
@@ -26,18 +25,19 @@ export default function useImpactForProject({project, token}: ImpactForProjectPr
     let abort = false
     async function getImpactFromApi() {
       setLoading(true)
+
       const mentionsForProject = await getMentionsForProject({
         project,
         table:'impact_for_project',
         token
       })
-      if (mentionsForProject && abort === false) {
-        const mentions:MentionItemProps[] = mentionsForProject.sort((a, b) => {
+
+      if (abort === false) {
+        mentionsForProject.sort((a, b) => {
           // sort mentions on publication year, newest at the top
           return sortOnNumProp(a,b,'publication_year','desc')
         })
-        // debugger
-        setMentions(mentions)
+        setMentions(mentionsForProject)
         setLoadedProject(project)
         setLoading(false)
       }

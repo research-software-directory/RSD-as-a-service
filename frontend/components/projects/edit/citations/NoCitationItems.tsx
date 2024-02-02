@@ -8,11 +8,11 @@
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 
-export default function NoOutputItems() {
+export default function NoCitationItems() {
   return (
     <Alert severity="warning" sx={{marginTop:'0.5rem'}}>
-      <AlertTitle sx={{fontWeight:500}}>No output items to show</AlertTitle>
-      Add one using <strong>search, import or create options!</strong>
+      <AlertTitle sx={{fontWeight:500}}>No citations to show</AlertTitle>
+      Provide project publications <strong>in the output section</strong>.
     </Alert>
   )
 }

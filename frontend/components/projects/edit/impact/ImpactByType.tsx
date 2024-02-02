@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -46,7 +48,8 @@ export default function ImpactByType() {
         Here you can add results of the project which had impact on others.
         This could be papers by others re-using your software or data,
         articles or videos in the press describing the results, policy
-        documents based on these results, etc.
+        documents based on these results, etc. If you added publications
+        in the output section RSD will scrape OpenAlex for the citations.
       </Alert>
       <div className="py-2" />
       <MentionEditSection />

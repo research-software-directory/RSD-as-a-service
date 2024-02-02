@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -41,6 +43,7 @@ export default function OutputByType() {
       <Alert severity="info">
         Here you can add things which were produced by the project itself.
         These can be papers, books, articles, software, datasets, blogs, etc.
+        RSD will scrape citations of your output using OpenAlex.
       </Alert>
       <div className="py-2" />
       <MentionEditSection />

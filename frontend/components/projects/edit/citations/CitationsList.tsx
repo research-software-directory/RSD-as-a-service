@@ -6,35 +6,35 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionItemProps} from '~/types/Mention'
-import MentionEditItem from './MentionEditItem'
-import AccordionForLightTheme from './AccordionForLightTheme'
+import MentionViewItem from '~/components/mention/MentionViewItem'
+import AccordionForLightTheme from '~/components/mention/AccordionForLightTheme'
 
 type MentionSectionListProps = {
   title: string
   items: MentionItemProps[]
 }
 
-export default function MentionEditList({title, items}: MentionSectionListProps) {
+export default function CitationsList({title, items}: MentionSectionListProps) {
   // do not render accordion/section if no items
   if (!items || items.length===0) return null
 
+  // debugger
   return (
     <AccordionForLightTheme
       title={title}
       badgeContent={items.length}
     >
       <ul>
-        {
-          items.map((item, pos) => {
-            return (
-              <li key={item.id ?? pos} className="p-4 hover:bg-base-200 hover:text-base-900">
-                <MentionEditItem
-                  pos={pos + 1}
-                  item={item}
-                />
-              </li>
-            )
-          })
+        {items.map((item, pos) => {
+          return (
+            <li key={item.id ?? pos} className="p-4">
+              <MentionViewItem
+                pos={pos+1}
+                item={item}
+              />
+            </li>
+          )
+        })
         }
       </ul>
     </AccordionForLightTheme>
