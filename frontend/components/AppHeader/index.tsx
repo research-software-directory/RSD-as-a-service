@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -159,14 +159,11 @@ export default function AppHeader() {
 
             {/* LOGIN / USER MENU */}
             <LoginButton/>
-
           </div>
-          <JavascriptSupportWarning/>
         </div>
-
-
         <GlobalSearchAutocomplete className="xl:hidden mt-4"/>
       </div>
+      <JavascriptSupportWarning/>
     </header>
   )
 }
