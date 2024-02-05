@@ -1,25 +1,39 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Badge from '@mui/material/Badge'
-import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
+import {MentionItemProps} from '~/types/Mention'
 import MentionViewItem from './MentionViewItem'
+import useListPagination from './useListPagination'
+import Button from '@mui/material/Button'
 
 type MentionSectionListProps = {
   title: string
-  type: MentionTypeKeys,
   items: MentionItemProps[]
 }
 
-export default function MentionViewList({title, type, items}: MentionSectionListProps) {
+export default function MentionViewList({title, items}: MentionSectionListProps) {
+  // show top 50 items, use hasMore to show button to load more items
+  const [limit,setLimit] = useState(50)
+  const {selection,hasMore} = useListPagination({items,limit})
   // do not render accordion/section if no items
   if (!items || items.length===0) return null
+
+  // console.group('MentionViewList')
+  // console.log('items...', items)
+  // console.log('selection...', selection)
+  // console.log('hasMore...', hasMore)
+  // console.groupEnd()
+
   // debugger
   return (
     <Accordion
@@ -56,7 +70,7 @@ export default function MentionViewList({title, type, items}: MentionSectionList
       >
         <Badge
           badgeContent={items.length ?? null}
-          max={999}
+          max={9999}
           color="secondary"
           sx={{
             '& .MuiBadge-badge': {
@@ -80,7 +94,7 @@ export default function MentionViewList({title, type, items}: MentionSectionList
         padding: '0rem 0rem'
       }}>
         <ul>
-          {items.map((item, pos) => {
+          {selection.map((item, pos) => {
             return (
               <li key={pos} className="p-4">
                 <MentionViewItem
@@ -90,6 +104,21 @@ export default function MentionViewList({title, type, items}: MentionSectionList
               </li>
             )
           })
+          }
+          {
+            hasMore ?
+              <li key="show-all-button" className="p-4">
+                <Button
+                  title='Show more items'
+                  aria-label="Show more items"
+                  onClick={()=>setLimit(limit * 2)}
+                  size="large"
+                  startIcon = {<ExpandMoreIcon />}
+                >
+                Show more
+                </Button>
+              </li>
+              : null
           }
         </ul>
       </AccordionDetails>
