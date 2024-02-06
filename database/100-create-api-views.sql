@@ -1,9 +1,9 @@
 -- SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2021 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
--- SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
--- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -1091,47 +1091,45 @@ BEGIN
 END
 $$;
 
+
 -- GLOBAL SEARCH
--- we use search_text to concatenate all values to use
-CREATE FUNCTION global_search() RETURNS TABLE(
+CREATE FUNCTION global_search(query VARCHAR) RETURNS TABLE(
 	slug VARCHAR,
 	name VARCHAR,
 	source TEXT,
 	is_published BOOLEAN,
-	search_text TEXT
-) LANGUAGE plpgsql STABLE AS
+	score INTEGER
+) LANGUAGE sql STABLE AS
 $$
-BEGIN RETURN QUERY
 	-- SOFTWARE search item
 	SELECT
-		software_overview.slug,
-		software_overview.brand_name AS name,
+		software.slug,
+		software.brand_name AS name,
 		'software' AS "source",
-		software_overview.is_published,
-		CONCAT_WS(
-			' ',
-			software_overview.brand_name,
-			software_overview.short_statement,
-			software_overview.keywords_text
-		) AS search_text
+		software.is_published,
+		(CASE
+			WHEN software.slug ILIKE query OR software.brand_name ILIKE query THEN 3
+			WHEN software.slug ILIKE CONCAT(query, '%') OR software.brand_name ILIKE CONCAT(query, '%') THEN 2
+			ELSE 1
+		END) AS score
 	FROM
-		software_overview()
+		software
+	WHERE software.slug ILIKE CONCAT('%', query, '%') OR software.brand_name ILIKE CONCAT('%', query, '%')
 	UNION
 	-- PROJECT search item
 	SELECT
-		project_overview.slug,
-		project_overview.title AS name,
+		project.slug,
+		project.title AS name,
 		'projects' AS "source",
-		project_overview.is_published,
-		CONCAT_WS(
-			' ',
-			project_overview.title,
-			project_overview.subtitle,
-			project_overview.keywords_text,
-			project_overview.research_domain_text
-		) AS search_text
+		project.is_published,
+		(CASE
+			WHEN project.slug ILIKE query OR project.title ILIKE query THEN 3
+			WHEN project.slug ILIKE CONCAT(query, '%') OR project.title ILIKE CONCAT(query, '%') THEN 2
+			ELSE 1
+		END) AS score
 	FROM
-		project_overview()
+		project
+	WHERE project.slug ILIKE CONCAT('%', query, '%') OR project.title ILIKE CONCAT('%', query, '%')
 	UNION
 	-- ORGANISATION search item
 	SELECT
@@ -1139,19 +1137,21 @@ BEGIN RETURN QUERY
 		organisation."name",
 		'organisations' AS "source",
 		TRUE AS is_published,
-		CONCAT_WS(
-			' ',
-			organisation."name",
-			organisation.website
-		) AS search_text
+		(CASE
+			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query THEN 3
+			WHEN organisation.slug ILIKE CONCAT(query, '%') OR organisation."name" ILIKE CONCAT(query, '%') THEN 2
+			ELSE 1
+		END) AS score
 	FROM
 		organisation
 	WHERE
 	-- ONLY TOP LEVEL ORGANISATIONS
 		organisation.parent IS NULL
+		AND
+		organisation.slug ILIKE CONCAT('%', query, '%') OR organisation."name" ILIKE CONCAT('%', query, '%')
 ;
-END
 $$;
+
 
 -- Check whether user agreed on Terms of Service and read the Privacy Statement
 CREATE FUNCTION user_agreements_stored(account_id UUID) RETURNS BOOLEAN LANGUAGE plpgsql STABLE AS

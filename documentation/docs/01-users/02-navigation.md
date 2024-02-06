@@ -16,12 +16,10 @@ For more advanced users, we also offer a [REST API](/API/rest-api/), allowing yo
 Using the search bar in the header, you can perform a global search of all data in the RSD by simply providing a search term.
 Currently, the search will match the following fields:
 
-* the name of software, projects and organizations
-* the short description of software and projects
-* the keywords of software and projects
-* the research domains of projects
+* the name of software, projects and organisations
+* the slug of software, projects and organisations
 
-At the moment, we do not yet match on the long descriptions of software, projects and organizations, but we expect to do so in the future.
+At the moment, we do not yet match on descriptions of software, projects and organisations, but we expect to do so in the future.
 
 ## Software Overview
 

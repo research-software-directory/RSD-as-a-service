@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -37,7 +39,7 @@ it('shows 3 navigation option on focus', async () => {
 })
 
 it('calls search api on input', async () => {
-  const expectedUrl = '/api/v1/rpc/global_search?search_text=ilike.*Search text*&limit=30'
+  const expectedUrl = '/api/v1/rpc/global_search?query=Search text&limit=30&order=score.desc'
   const expectPayload = {
     'headers': {
       'Content-Type': 'application/json'
