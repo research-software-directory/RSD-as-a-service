@@ -22,7 +22,7 @@ type MentionSectionListProps = {
 }
 
 export default function MentionViewList({title, items}: MentionSectionListProps) {
-  // show top 50 items, use hasMore to show button to load more items
+  // show top 50 items, use hasMore to show button to load all items
   const [limit,setLimit] = useState(50)
   const {selection,hasMore} = useListPagination({items,limit})
   // do not render accordion/section if no items
@@ -111,11 +111,11 @@ export default function MentionViewList({title, items}: MentionSectionListProps)
                 <Button
                   title='Show more items'
                   aria-label="Show more items"
-                  onClick={()=>setLimit(limit * 2)}
+                  onClick={()=>setLimit(items.length)}
                   size="large"
                   startIcon = {<ExpandMoreIcon />}
                 >
-                Show more
+                Show all
                 </Button>
               </li>
               : null
