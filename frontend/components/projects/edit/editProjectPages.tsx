@@ -70,62 +70,62 @@ export const editProjectPage: EditProjectPageProps[] = [
     label: 'Information',
     icon: <InfoIcon />,
     render: () => <ProjectInformation />,
-    status: 'Required information'
+    status: ''
   },
   {
     id: 'team',
     label: 'Team',
     icon: <TeamsIcon />,
     render: () => <ProjectTeam />,
-    status: 'Required information'
+    status: ''
   },
   {
     id: 'organisations',
     label: 'Organisations',
     icon: <FactoryIcon />,
     render: () => <ProjectOrganisations />,
-    status: 'Optional information'
+    status: ''
   },
   {
     id: 'output',
     label: 'Output',
     icon: <OutboundIcon />,
     render: () => <ProjectOutput />,
-    status: 'Optional information'
+    status: ''
   },
   {
     id: 'impact',
     label: 'Impact',
     icon: <AccessibilityNewIcon />,
     render: () => <ProjectImpact />,
-    status: 'Optional information'
+    status: ''
   },
   {
     id: 'citations',
     label: 'Citations',
     icon: <ShareIcon />,
     render: () => <ProjectCitations />,
-    status: 'Scraped information'
+    status: ''
   },
   {
     id: 'related-projects',
     label: 'Related projects',
     icon: <JoinInnerIcon />,
     render: () => <RelatedProjects />,
-    status: 'Optional information'
+    status: ''
   },
   {
     id: 'related-software',
     label: 'Related software',
     icon: <TerminalIcon />,
     render: () => <RelatedSoftware />,
-    status: 'Optional information'
+    status: ''
   },
   {
     id: 'maintainers',
     label: 'Maintainers',
     icon: <PersonAddIcon />,
     render: () => <ProjectMaintainers />,
-    status: 'Optional information'
+    status: ''
   }
 ]
