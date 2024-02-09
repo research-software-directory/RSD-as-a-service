@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,8 +21,8 @@ public class Config {
 		return System.getenv("PGRST_JWT_SECRET");
 	}
 
-	private static Collection<String> rsdAuthProviders() {
-		return Optional.ofNullable(System.getenv("RSD_AUTH_PROVIDERS"))
+	private static Collection<String> rsdAuthCoupleProviders() {
+		return Optional.ofNullable(System.getenv("RSD_AUTH_COUPLE_PROVIDERS"))
 				.map(String::toUpperCase)
 				.map(s -> s.split(";"))
 				.map(Set::of)
@@ -37,25 +37,37 @@ public class Config {
 		}
 	}
 
-	public static boolean isLocalEnabled() {
-		return rsdAuthProviders().contains("LOCAL");
+	private static Collection<String> rsdLoginProviders() {
+		return Optional.ofNullable(System.getenv("RSD_AUTH_PROVIDERS"))
+			.map(String::toUpperCase)
+			.map(s -> s.split(";"))
+			.map(Set::of)
+			.orElse(Collections.emptySet());
 	}
 
-	public static boolean isSurfConextEnabled() {
-		Collection<String> enabledProviders = rsdAuthProviders();
+	public static boolean isLocalLoginEnabled() {
+		return rsdLoginProviders().contains("LOCAL");
+	}
+
+	public static boolean isSurfConextLoginEnabled() {
+		Collection<String> enabledProviders = rsdLoginProviders();
 		return enabledProviders.isEmpty() || enabledProviders.contains("SURFCONEXT");
 	}
 
-	public static boolean isHelmholtzEnabled() {
-		return rsdAuthProviders().contains("HELMHOLTZAAI");
+	public static boolean isHelmholtzLoginEnabled() {
+		return rsdLoginProviders().contains("HELMHOLTZAAI");
 	}
 
-	public static boolean isOrcidEnabled() {
-		return rsdAuthProviders().contains("ORCID");
+	public static boolean isOrcidCoupleEnabled() {
+		return rsdAuthCoupleProviders().contains("ORCID");
 	}
 
-	public static boolean isAzureEnabled() {
-		return rsdAuthProviders().contains("AZURE");
+	public static boolean isOrcidLoginEnabled() {
+		return rsdLoginProviders().contains("ORCID");
+	}
+
+	public static boolean isAzureLoginEnabled() {
+		return rsdLoginProviders().contains("AZURE");
 	}
 
 	public static String userMailWhitelist() {

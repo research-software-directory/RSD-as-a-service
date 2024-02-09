@@ -62,6 +62,7 @@ services:
       # it uses values from .env file
       - RSD_ENVIRONMENT
       - POSTGREST_URL
+      - RSD_AUTH_COUPLE_PROVIDERS
       - RSD_AUTH_PROVIDERS
       - RSD_AUTH_USER_MAIL_WHITELIST
       - SURFCONEXT_CLIENT_ID
@@ -116,6 +117,7 @@ services:
       - PGRST_JWT_SECRET
       - RSD_AUTH_URL
       - RSD_AUTH_PROVIDERS
+      - RSD_AUTH_COUPLE_PROVIDERS
       - MATOMO_URL
       - MATOMO_ID
       - SURFCONEXT_CLIENT_ID
