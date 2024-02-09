@@ -39,7 +39,7 @@ it('shows 3 navigation option on focus', async () => {
 })
 
 it('calls search api on input', async () => {
-  const expectedUrl = '/api/v1/rpc/global_search?query=Search text&limit=30&order=score.desc'
+  const expectedUrl = '/api/v1/rpc/global_search?query=Search text&limit=30&order=rank.asc,index_found.asc'
   const expectPayload = {
     'headers': {
       'Content-Type': 'application/json'

@@ -25,7 +25,7 @@ export type GlobalSearchResults = {
 export async function getGlobalSearch(searchText: string, token: string,) {
   try {
     // call the function query
-    const query = `rpc/global_search?query=${searchText}&limit=30&order=score.desc`
+    const query = `rpc/global_search?query=${searchText}&limit=30&order=rank.asc,index_found.asc`
     let url = `/api/v1/${query}`
 
     const resp = await fetch(url, {

@@ -18,8 +18,11 @@ Currently, the search will match the following fields:
 
 * the name of software, projects and organisations
 * the slug of software, projects and organisations
+* the keywords of software and projects
+* the short description of software
+* the subtitle of projects
 
-At the moment, we do not yet match on descriptions of software, projects and organisations, but we expect to do so in the future.
+At the moment, we do not yet match on the long descriptions of software, projects and organisations, but we expect to do so in the future.
 
 ## Software Overview
 

@@ -1098,7 +1098,8 @@ CREATE FUNCTION global_search(query VARCHAR) RETURNS TABLE(
 	name VARCHAR,
 	source TEXT,
 	is_published BOOLEAN,
-	score INTEGER
+	rank INTEGER,
+	index_found INTEGER
 ) LANGUAGE sql STABLE AS
 $$
 	-- SOFTWARE search item
@@ -1108,13 +1109,32 @@ $$
 		'software' AS "source",
 		software.is_published,
 		(CASE
-			WHEN software.slug ILIKE query OR software.brand_name ILIKE query THEN 3
+			WHEN software.slug ILIKE query OR software.brand_name ILIKE query THEN 0
+			WHEN BOOL_OR(keyword.value ILIKE query) THEN 1
 			WHEN software.slug ILIKE CONCAT(query, '%') OR software.brand_name ILIKE CONCAT(query, '%') THEN 2
-			ELSE 1
-		END) AS score
+			WHEN software.slug ILIKE CONCAT('%', query, '%') OR software.brand_name ILIKE CONCAT('%', query, '%') THEN 3
+			ELSE 4
+		END) AS rank,
+		(CASE
+			WHEN software.slug ILIKE query OR software.brand_name ILIKE query THEN 0
+			WHEN BOOL_OR(keyword.value ILIKE query) THEN 0
+			WHEN software.slug ILIKE CONCAT(query, '%') OR software.brand_name ILIKE CONCAT(query, '%') THEN 0
+			WHEN software.slug ILIKE CONCAT('%', query, '%') OR software.brand_name ILIKE CONCAT('%', query, '%') THEN LEAST(POSITION(query IN software.slug), POSITION(query IN software.brand_name))
+			ELSE 0
+		END) AS index_found
 	FROM
 		software
-	WHERE software.slug ILIKE CONCAT('%', query, '%') OR software.brand_name ILIKE CONCAT('%', query, '%')
+	LEFT JOIN keyword_for_software ON keyword_for_software.software = software.id
+	LEFT JOIN keyword ON keyword.id = keyword_for_software.keyword
+	GROUP BY software.id
+	HAVING
+		software.slug ILIKE CONCAT('%', query, '%')
+		OR
+		software.brand_name ILIKE CONCAT('%', query, '%')
+		OR
+		software.short_statement ILIKE CONCAT('%', query, '%')
+		OR
+		BOOL_OR(keyword.value ILIKE CONCAT('%', query, '%'))
 	UNION
 	-- PROJECT search item
 	SELECT
@@ -1123,13 +1143,32 @@ $$
 		'projects' AS "source",
 		project.is_published,
 		(CASE
-			WHEN project.slug ILIKE query OR project.title ILIKE query THEN 3
+			WHEN project.slug ILIKE query OR project.title ILIKE query THEN 0
+			WHEN BOOL_OR(keyword.value ILIKE query) THEN 1
 			WHEN project.slug ILIKE CONCAT(query, '%') OR project.title ILIKE CONCAT(query, '%') THEN 2
-			ELSE 1
-		END) AS score
+			WHEN project.slug ILIKE CONCAT('%', query, '%') OR project.title ILIKE CONCAT('%', query, '%') THEN 3
+			ELSE 4
+		END) AS rank,
+		(CASE
+			WHEN project.slug ILIKE query OR project.title ILIKE query THEN 0
+			WHEN BOOL_OR(keyword.value ILIKE query) THEN 0
+			WHEN project.slug ILIKE CONCAT(query, '%') OR project.title ILIKE CONCAT(query, '%') THEN 0
+			WHEN project.slug ILIKE CONCAT('%', query, '%') OR project.title ILIKE CONCAT('%', query, '%') THEN LEAST(POSITION(query IN project.slug), POSITION(query IN project.title))
+			ELSE 0
+		END) AS index_found
 	FROM
 		project
-	WHERE project.slug ILIKE CONCAT('%', query, '%') OR project.title ILIKE CONCAT('%', query, '%')
+	LEFT JOIN keyword_for_project ON keyword_for_project.project = project.id
+	LEFT JOIN keyword ON keyword.id = keyword_for_project.keyword
+	GROUP BY project.id
+	HAVING
+		project.slug ILIKE CONCAT('%', query, '%')
+		OR
+		project.title ILIKE CONCAT('%', query, '%')
+		OR
+		project.subtitle ILIKE CONCAT('%', query, '%')
+		OR
+		BOOL_OR(keyword.value ILIKE CONCAT('%', query, '%'))
 	UNION
 	-- ORGANISATION search item
 	SELECT
@@ -1138,10 +1177,15 @@ $$
 		'organisations' AS "source",
 		TRUE AS is_published,
 		(CASE
-			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query THEN 3
+			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query THEN 0
 			WHEN organisation.slug ILIKE CONCAT(query, '%') OR organisation."name" ILIKE CONCAT(query, '%') THEN 2
-			ELSE 1
-		END) AS score
+			ELSE 3
+		END) AS rank,
+		(CASE
+			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query THEN 0
+			WHEN organisation.slug ILIKE CONCAT(query, '%') OR organisation."name" ILIKE CONCAT(query, '%') THEN 0
+			ELSE LEAST(POSITION(query IN organisation.slug), POSITION(query IN organisation."name"))
+		END) AS index_found
 	FROM
 		organisation
 	WHERE
