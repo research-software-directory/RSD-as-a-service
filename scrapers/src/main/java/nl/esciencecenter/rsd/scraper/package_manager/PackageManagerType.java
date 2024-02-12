@@ -8,7 +8,9 @@ package nl.esciencecenter.rsd.scraper.package_manager;
 public enum PackageManagerType {
 	anaconda,
 	cran,
+	crates,
 	dockerhub,
+	golang,
 	maven,
 	npm,
 	pypi,

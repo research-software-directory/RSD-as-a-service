@@ -11,7 +11,9 @@ import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.AnacondaScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.CranScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.CratesScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.DockerHubScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.GoScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.MavenScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.NpmScraper;
 import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PackageManagerScraper;
@@ -86,7 +88,9 @@ public class MainPackageManager {
 		return switch (type) {
 			case anaconda -> new AnacondaScraper(url);
 			case cran -> new CranScraper(url);
+			case crates -> new CratesScraper(url);
 			case dockerhub -> new DockerHubScraper(url);
+			case golang -> new GoScraper(url);
 			case maven, sonatype -> new MavenScraper(url);
 			case npm -> new NpmScraper(url);
 			case pypi -> new PypiScraper(url);

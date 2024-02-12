@@ -36,7 +36,7 @@ export const packageManagerSettings = {
     name: 'Crates.io',
     icon: '/images/rust-cargo-logo.png',
     hostname: ['crates.io'],
-    services: []
+    services: ['dependents']
   },
   chocolatey: {
     name: 'Chocolatey',
@@ -72,7 +72,7 @@ export const packageManagerSettings = {
     name: 'Golang',
     icon: '/images/go-logo-blue.svg',
     hostname: ['pkg.go.dev'],
-    services: []
+    services: ['dependents']
   },
   maven: {
     name: 'Maven',
