@@ -17,8 +17,8 @@ import java.util.regex.Pattern;
 
 public class MavenScraper implements PackageManagerScraper {
 
-	private final String groupId;
-	private final String artifactId;
+	final String groupId;
+	final String artifactId;
 	private static final Pattern mvnPattern = Pattern.compile("https://mvnrepository\\.com/artifact/([^/]+)/([^/]+)/?");
 	private static final Pattern sonatypePattern = Pattern.compile("https://central\\.sonatype\\.com/artifact/([^/]+)/([^/]+)/?");
 
