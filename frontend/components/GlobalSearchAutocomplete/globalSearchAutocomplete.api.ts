@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +25,7 @@ export type GlobalSearchResults = {
 export async function getGlobalSearch(searchText: string, token: string,) {
   try {
     // call the function query
-    const query = `rpc/global_search?search_text=ilike.*${searchText}*&limit=30`
+    const query = `rpc/global_search?query=${searchText}&limit=30&order=rank.asc,index_found.asc`
     let url = `/api/v1/${query}`
 
     const resp = await fetch(url, {
