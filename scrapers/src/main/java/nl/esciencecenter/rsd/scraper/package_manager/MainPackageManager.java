@@ -9,6 +9,13 @@ import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.AnacondaScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.CranScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.DockerHubScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.MavenScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.NpmScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PackageManagerScraper;
+import nl.esciencecenter.rsd.scraper.package_manager.scrapers.PypiScraper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

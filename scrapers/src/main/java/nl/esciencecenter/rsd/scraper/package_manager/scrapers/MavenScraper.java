@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package nl.esciencecenter.rsd.scraper.package_manager;
+package nl.esciencecenter.rsd.scraper.package_manager.scrapers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;

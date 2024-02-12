@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-package nl.esciencecenter.rsd.scraper.package_manager;
+package nl.esciencecenter.rsd.scraper.package_manager.scrapers;
 
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
@@ -36,7 +36,7 @@ public class DockerHubScraper implements PackageManagerScraper {
 	}
 
 	@Override
-	public Long downloads() throws RsdResponseException{
+	public Long downloads() throws RsdResponseException {
 		String url;
 		if (owner.equals("_")) url = "https://hub.docker.com/v2/repositories/library/" + packageName;
 		else url = "https://hub.docker.com/v2/repositories/" + owner + "/" + packageName;
@@ -55,7 +55,7 @@ public class DockerHubScraper implements PackageManagerScraper {
 						throw new RsdResponseException(response.statusCode(), request.uri(), response.body(), "Unexpected response");
 			};
 		} catch (InterruptedException e) {
-			 Thread.currentThread().interrupt();
+			Thread.currentThread().interrupt();
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
