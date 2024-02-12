@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -19,17 +19,27 @@ public class MavenScraper implements PackageManagerScraper {
 
 	private final String groupId;
 	private final String artifactId;
-	private static final Pattern urlPattern = Pattern.compile("https://mvnrepository\\.com/artifact/([^/]+)/([^/]+)/?");
+	private static final Pattern mvnPattern = Pattern.compile("https://mvnrepository\\.com/artifact/([^/]+)/([^/]+)/?");
+	private static final Pattern sonatypePattern = Pattern.compile("https://central\\.sonatype\\.com/artifact/([^/]+)/([^/]+)/?");
 
 	public MavenScraper(String url) {
 		Objects.requireNonNull(url);
-		Matcher urlMatcher = urlPattern.matcher(url);
-		if (!urlMatcher.matches()) {
-			throw new RuntimeException("Invalid Maven URL: " + url);
+
+		Matcher mvnMatcher = mvnPattern.matcher(url);
+		if (mvnMatcher.matches()) {
+			groupId = mvnMatcher.group(1);
+			artifactId = mvnMatcher.group(2);
+			return;
 		}
 
-		groupId = urlMatcher.group(1);
-		artifactId = urlMatcher.group(2);
+		Matcher sonatypeMatcher = sonatypePattern.matcher(url);
+		if (sonatypeMatcher.matches()) {
+			groupId = sonatypeMatcher.group(1);
+			artifactId = sonatypeMatcher.group(2);
+			return;
+		}
+
+		throw new RuntimeException("Invalid Maven URL: " + url);
 	}
 
 	@Override
@@ -37,6 +47,7 @@ public class MavenScraper implements PackageManagerScraper {
 		throw new UnsupportedOperationException();
 	}
 
+	// Example URL: https://libraries.io/api/maven/io.github.sanctuuary:APE
 	@Override
 	public Integer reverseDependencies() throws IOException, InterruptedException, RsdResponseException {
 		String data = PackageManagerScraper.doLibrariesIoRequest("https://libraries.io/api/maven/" + groupId + ":" + artifactId);

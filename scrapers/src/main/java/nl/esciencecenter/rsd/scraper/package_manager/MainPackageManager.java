@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +9,8 @@ import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -21,18 +23,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class MainPackageManager {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainPackageManager.class);
-	
+
 	public static void main(String[] args) {
 		LOGGER.info("Start scraping package manager data");
-		
+
 		long t1 = System.currentTimeMillis();
-		
+
 		PostgrestConnector postgrestConnector = new PostgrestConnector(Config.backendBaseUrl() + "/package_manager");
 		Collection<BasicPackageManagerData> downloadsToScrape = postgrestConnector.oldestDownloadCounts(10);
 		Collection<BasicPackageManagerData> revDepsToScrape = postgrestConnector.oldestReverseDependencyCounts(10);
@@ -60,8 +59,8 @@ public class MainPackageManager {
 					completedTask.get();
 				} catch (ExecutionException | InterruptedException e) {
 					Utils.saveExceptionInDatabase("Package manager scraper", "package_manager", null, e);
-					
-					if (e instanceof InterruptedException) { 
+
+					if (e instanceof InterruptedException) {
 						Thread.currentThread().interrupt();
 					}
 				}
@@ -70,9 +69,9 @@ public class MainPackageManager {
 			Utils.saveExceptionInDatabase("Package manager scraper", "package_manager", null, e);
 			Thread.currentThread().interrupt();
 		}
-		
+
 		long time = System.currentTimeMillis() - t1;
-		
+
 		LOGGER.info("Done scraping package manager data ({} ms.)", time);
 	}
 
@@ -81,7 +80,7 @@ public class MainPackageManager {
 			case anaconda -> new AnacondaScraper(url);
 			case cran -> new CranScraper(url);
 			case dockerhub -> new DockerHubScraper(url);
-			case maven -> new MavenScraper(url);
+			case maven, sonatype -> new MavenScraper(url);
 			case npm -> new NpmScraper(url);
 			case pypi -> new PypiScraper(url);
 			case other -> throw new RuntimeException("Package manager scraper requested for 'other'");
