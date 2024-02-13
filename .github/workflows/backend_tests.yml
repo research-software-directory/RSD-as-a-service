@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 dv4all
 #
@@ -26,7 +26,7 @@ jobs:
   api-tests:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: "backend tests with docker compose"
         working-directory: backend-tests
         run: |
