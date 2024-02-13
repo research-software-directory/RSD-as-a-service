@@ -20,7 +20,7 @@ public class MavenScraperTest {
 			"https://mvnrepository.com/artifact/io.github.sanctuuary/APE,io.github.sanctuuary,APE",
 			"https://mvnrepository.com/artifact/io.github.sanctuuary/APE/,io.github.sanctuuary,APE",
 	})
-	void givenValidMavenOrSonatypeUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNamesCorrect(
+	void givenValidMavenOrSonatypeUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNameCorrect(
 			String url,
 			String expectedGroupId,
 			String expectedArtifactID
