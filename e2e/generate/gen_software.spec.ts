@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -35,6 +35,28 @@ test.describe.serial('Software', async () => {
     expect(slug).toEqual(software.slug)
   })
 
+  test('Generate organisations', async ({page}) => {
+    // get mock software for the browser
+    const proj = mockSoftware['chrome']
+    const organisations = [
+      ...mockSoftwareOrganisation['chrome'].map(item => item.name),
+      ...mockSoftwareOrganisation['chromium'].map(item => item.name),
+    ]
+
+    // directly open edit page
+    const url = `/software/${proj.slug}`
+    await openEditPage(page, url, proj.title)
+
+    // navigate to organisations section
+    await openEditSection(page, 'Organisations')
+
+    // create organisations
+    for (const org of organisations) {
+      const saved = await saveOrganisation(page, org)
+      expect(saved).toBeTruthy()
+    }
+  })
+
   test('Generate mentions using DOI', async ({page}) => {
     // https://playwright.dev/docs/test-timeouts#test-timeout
     // this test need to be marked as slow because it saves all data per DOI
@@ -59,23 +81,5 @@ test.describe.serial('Software', async () => {
     }
   })
 
-  test('Generate organisations', async ({page}) => {
-    // get mock software for the browser
-    const proj = mockSoftware['chrome']
-    const organisations = mockSoftwareOrganisation['chrome'].map(item => item.name)
-
-    // directly open edit page
-    const url = `/software/${proj.slug}`
-    await openEditPage(page, url, proj.title)
-
-    // navigate to organisations section
-    await openEditSection(page, 'Organisations')
-
-    // create organisations
-    for (const org of organisations) {
-      const saved = await saveOrganisation(page, org)
-      expect(saved).toBeTruthy()
-    }
-  })
 })
 

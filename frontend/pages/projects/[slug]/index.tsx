@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +16,7 @@ import {
   getProjectItem, getRelatedSoftwareForProject,
   getTeamForProject, getResearchDomainsForProject,
   getKeywordsForProject, getRelatedProjectsForProject,
-  getMentionsForProject
+  getMentionsForProject, getImpactByProject
 } from '~/utils/getProjects'
 import {
   KeywordForProject, Project, ProjectLink,
@@ -180,7 +180,7 @@ export async function getServerSideProps(context:any) {
       // Output
       getMentionsForProject({project: project.id, token, table:'output_for_project'}),
       // Impact
-      getMentionsForProject({project: project.id, token, table:'impact_for_project'}),
+      getImpactByProject({project: project.id, token}),
       getTeamForProject({project: project.id, token}),
       getRelatedSoftwareForProject({project: project.id, token, frontend: false}),
       getRelatedProjectsForProject({project: project.id, token, frontend: false}),

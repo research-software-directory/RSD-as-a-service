@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -267,6 +267,35 @@ export async function getMentionsForProject({project, token, table}:
     return []
   } catch (e: any) {
     logger(`getMentionsForProject: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+export async function getImpactByProject({project, token}:
+  {project: string, token?: string}) {
+  try {
+    // the content is ordered by type ascending
+    const query = `project=eq.${project}&order=mention_type.asc`
+    // construct url
+    const url = `${getBaseUrl()}/rpc/impact_by_project?${query}`
+    // make request
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+      }
+    })
+    if (resp.status === 200) {
+      const json = await resp.json()
+      // extract mentions from software object
+      const mentions: MentionItemProps[] = json ?? []
+      return mentions
+    }
+    logger(`getImpactForProject: [${resp.status}] [${url}]`, 'error')
+    // query not found
+    return []
+  } catch (e: any) {
+    logger(`getImpactForProject: ${e?.message}`, 'error')
     return []
   }
 }
