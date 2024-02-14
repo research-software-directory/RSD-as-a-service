@@ -68,7 +68,7 @@ AZURE_ORGANISATION=
 
 The RSD offers an integration with ORCID which can be used for login and coupling the user's RSD account with their ORCID. Both integrations can be used independently.
 
-Please refer to [ORCID OAuth documentation](https://info.orcid.org/documentation/integration-guide/getting-started-with-your-orcid-integration/) in order to setup ORCID authentication service for RSD.
+Please refer to the [ORCID OAuth documentation](https://info.orcid.org/documentation/integration-guide/getting-started-with-your-orcid-integration/) in order to set up the ORCID authentication service for the RSD. Specifically, look [here](https://info.orcid.org/documentation/integration-guide/registering-a-public-api-client/) on how to register redirect URLs.
 
 For both integrations (login and coupling) these common variables need to be defined in `.env`:
 
