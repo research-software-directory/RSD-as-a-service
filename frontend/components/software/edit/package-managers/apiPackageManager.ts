@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -36,7 +36,7 @@ export const packageManagerSettings = {
     name: 'Crates.io',
     icon: '/images/rust-cargo-logo.png',
     hostname: ['crates.io'],
-    services: []
+    services: ['dependents']
   },
   chocolatey: {
     name: 'Chocolatey',
@@ -72,7 +72,7 @@ export const packageManagerSettings = {
     name: 'Golang',
     icon: '/images/go-logo-blue.svg',
     hostname: ['pkg.go.dev'],
-    services: []
+    services: ['dependents']
   },
   maven: {
     name: 'Maven',
@@ -96,7 +96,7 @@ export const packageManagerSettings = {
     name: 'Sonatype',
     icon: '/images/sonatype-logo.svg',
     hostname: ['central.sonatype.com'],
-    services: []
+    services: ['dependents']
   },
   snapcraft:{
     name: 'Snapcraft',

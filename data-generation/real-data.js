@@ -83,13 +83,14 @@ const packageManagerLinks = [
 	{url: 'https://pypi.org/project/cffconvert/', type: 'pypi'},
 	{url: 'https://pypi.org/project/flask', type: 'pypi'},
 	{url: 'https://packages.debian.org/search?keywords=libcdk-java', type: 'debian'},
-	{url: 'https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle/overview', type: 'sonatype'},
+	{url: 'https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle/', type: 'sonatype'},
 	{url: 'https://community.chocolatey.org/packages/openchrom', type: 'chocolatey'},
 	{url: 'https://snapcraft.io/openchrom', type: 'snapcraft'},
 	{url: 'https://github.com/orgs/research-software-directory/packages?repo_name=RSD-as-a-service', type: 'github'},
 	{url: 'https://gitlab.com/gitlab-org/gitlab/container_registry', type: 'gitlab'},
-	{url: 'https://crates.io/crates/serde', type: 'crates'},
-	{url: 'https://pkg.go.dev/strconv', type: 'golang'},
+	{url: 'https://crates.io/crates/tokio', type: 'crates'},
+	{url: 'https://pkg.go.dev/github.com/gin-gonic/gin', type: 'golang'},
+	{url: 'https://pkg.go.dev/google.golang.org/grpc', type: 'golang'},
 ]
 
 export {conceptDois, dois, packageManagerLinks};

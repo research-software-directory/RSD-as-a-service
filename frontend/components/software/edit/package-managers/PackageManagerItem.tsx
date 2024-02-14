@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
@@ -34,16 +34,16 @@ function RsdScraperStatus({services,download_count,download_count_scraped_at,rev
     return <span>RSD scraper services not available</span>
   }
   if (services.includes('downloads')===true){
-    if (download_count_scraped_at){
-      html.push(<span key="downloads">Downloads: {download_count ?? 0}</span>)
+    if (download_count_scraped_at && Number.isInteger(download_count)){
+      html.push(<span key="downloads">Downloads: {download_count}</span>)
 
     }else{
       html.push(<span key="downloads">Downloads: no info</span>)
     }
   }
   if (services.includes('dependents')===true){
-    if (reverse_dependency_count_scraped_at){
-      html.push(<span key="dependents">Dependents: {reverse_dependency_count ?? 0}</span>)
+    if (reverse_dependency_count_scraped_at && Number.isInteger(reverse_dependency_count)){
+      html.push(<span key="dependents">Dependents: {reverse_dependency_count}</span>)
     }else{
       html.push(<span key="dependents">Dependents: no info</span>)
     }
