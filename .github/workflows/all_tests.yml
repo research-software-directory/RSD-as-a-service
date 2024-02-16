@@ -88,12 +88,12 @@ jobs:
         working-directory: .
         run: |
           cp e2e/.env.e2e .env
-          docker compose build --parallel database backend auth frontend nginx
+          docker compose build --parallel database backend auth frontend documentation nginx
       - name: start rsd
         working-directory: .
         run: |
-          docker compose up --detach database backend auth frontend nginx swagger
-          sleep 5
+          docker compose up --detach database backend auth frontend nginx documentation swagger
+          sleep 10
       - name: run e2e tests in chrome
         working-directory: e2e
         run: npm run e2e:chrome:action
