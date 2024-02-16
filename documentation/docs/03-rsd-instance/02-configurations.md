@@ -31,7 +31,7 @@ RSD requires one of mentioned authentication providers to be used in the product
 
 :::tip
 You can define multiple providers for authentication in the environment variable by providing a semicolon seprated keys.
-RSD_AUTH_PROVIDERS=AZURE;ORCID;HELMHOLTZAAI;SURFCONEXT;LOCAL
+RSD_AUTH_PROVIDERS=AZURE;ORCID;HELMHOLTZID;SURFCONEXT;LOCAL
 :::
 
 ### Enable Microsoft Entra ID (Azure AD) authentication

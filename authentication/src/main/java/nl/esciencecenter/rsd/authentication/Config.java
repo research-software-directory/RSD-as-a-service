@@ -55,7 +55,7 @@ public class Config {
 	}
 
 	public static boolean isHelmholtzLoginEnabled() {
-		return rsdLoginProviders().contains("HELMHOLTZAAI");
+		return rsdLoginProviders().contains("HELMHOLTZID");
 	}
 
 	public static boolean isOrcidCoupleEnabled() {
@@ -101,40 +101,40 @@ public class Config {
 	}
 
 
-	//	Helmholtz AAI
-	public static String helmholtzAaiRedirect() {
-		return System.getenv("HELMHOLTZAAI_REDIRECT");
+	//	Helmholtz ID
+	public static String helmholtzIdRedirect() {
+		return System.getenv("HELMHOLTZID_REDIRECT");
 	}
 
-	public static String helmholtzAaiClientId() {
-		return System.getenv("HELMHOLTZAAI_CLIENT_ID");
+	public static String helmholtzIdClientId() {
+		return System.getenv("HELMHOLTZID_CLIENT_ID");
 	}
 
-	public static String helmholtzAaiWellknown() {
-		return System.getenv("HELMHOLTZAAI_WELL_KNOWN_URL");
+	public static String helmholtzIdWellknown() {
+		return System.getenv("HELMHOLTZID_WELL_KNOWN_URL");
 	}
 
-	public static String helmholtzAaiClientSecret() {
-		return System.getenv("AUTH_HELMHOLTZAAI_CLIENT_SECRET");
+	public static String helmholtzIdClientSecret() {
+		return System.getenv("AUTH_HELMHOLTZID_CLIENT_SECRET");
 	}
 
-	public static String helmholtzAaiScopes() {
-		return System.getenv("HELMHOLTZAAI_SCOPES");
+	public static String helmholtzIdScopes() {
+		return System.getenv("HELMHOLTZID_SCOPES");
 	}
 
-	public static boolean helmholtzAaiAllowExternalUsers() {
+	public static boolean helmholtzIdAllowExternalUsers() {
 		return Boolean.parseBoolean(
-				System.getenv("HELMHOLTZAAI_ALLOW_EXTERNAL_USERS")
+				System.getenv("HELMHOLTZID_ALLOW_EXTERNAL_USERS")
 		);
 	}
 
-	public static String helmholtzAaiAllowList() {
-		return System.getenv("HELMHOLTZAAI_ALLOW_LIST");
+	public static String helmholtzIdAllowList() {
+		return System.getenv("HELMHOLTZID_ALLOW_LIST");
 	}
 
-	public static boolean helmholtzAaiUseAllowList() {
+	public static boolean helmholtzIdUseAllowList() {
 		return Boolean.parseBoolean(
-				System.getenv("HELMHOLTZAAI_USE_ALLOW_LIST")
+				System.getenv("HELMHOLTZID_USE_ALLOW_LIST")
 		);
 	}
 

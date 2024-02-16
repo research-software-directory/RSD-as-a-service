@@ -63,11 +63,11 @@ The default index.css and settings.json are already in the frontend image. If yo
       - SURFCONEXT_WELL_KNOWN_URL
       - SURFCONEXT_SCOPES
       - SURFCONEXT_RESPONSE_MODE
-      - HELMHOLTZAAI_CLIENT_ID
-      - HELMHOLTZAAI_REDIRECT
-      - HELMHOLTZAAI_WELL_KNOWN_URL
-      - HELMHOLTZAAI_SCOPES
-      - HELMHOLTZAAI_RESPONSE_MODE
+      - HELMHOLTZID_CLIENT_ID
+      - HELMHOLTZID_REDIRECT
+      - HELMHOLTZID_WELL_KNOWN_URL
+      - HELMHOLTZID_SCOPES
+      - HELMHOLTZID_RESPONSE_MODE
     expose:
       - 3000
     depends_on:
