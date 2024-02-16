@@ -196,27 +196,27 @@ jobs:
 
       - name: Upload deployment.zip
         # https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deployment
           path: deployment.zip
 
       - name: Upload CITATION.cff
         # https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: citation
           path: CITATION.cff
 
   release_draft:
-    # it needs to be check on string value
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: [ release_tag, deployment_files ]
     name: create release draft
     runs-on: ubuntu-22.04
     steps:
       - name: get deployment.zip
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: deployment
 

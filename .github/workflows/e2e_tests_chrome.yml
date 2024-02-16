@@ -35,9 +35,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18.5
+          node-version: 20.10
           cache: 'npm'
           cache-dependency-path: e2e/package-lock.json
       - name: get playwright version
@@ -45,7 +45,7 @@ jobs:
         working-directory: e2e
         run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').dependencies['@playwright/test'].version)")" >> $GITHUB_ENV
       - name: cache playwright binaries
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: playwright-cache
         with:
           path: |
@@ -71,13 +71,13 @@ jobs:
       - name: run e2e tests in chrome
         working-directory: e2e
         run: npm run e2e:chrome:action
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
           path: e2e/playwright-report/
           retention-days: 30
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: browser state and .env file
