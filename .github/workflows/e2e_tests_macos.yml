@@ -46,13 +46,13 @@ jobs:
       - name: run e2e tests
         working-directory: e2e
         run: npm run e2e:${{inputs.browser}}:dev
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: macos-playwright-report-${{inputs.browser}}
           path: e2e/playwright-report/
           retention-days: 30
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: macos browser ${{inputs.browser}} state
