@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
@@ -16,14 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class HelmholtzAaiLoginTest {
+class HelmholtzIdLoginTest {
 	@Test
 	void testOrganisationFromEntitlementsExpected() {
 		JSONArray arr = new JSONArray();
 
 		arr.add("urn:geant:h-df.de:group:test-vo#login-dev.helmholtz.de");
 		assertNull(
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+				HelmholtzIdLogin.getOrganisationFromEntitlements(arr)
 		);
 
 		arr.add("urn:geant:helmholtz.de:group:Helmholtz-member#login-dev.helmholtz.de");
@@ -33,14 +33,14 @@ class HelmholtzAaiLoginTest {
 
 		assertEquals(
 				"GFZ",
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+				HelmholtzIdLogin.getOrganisationFromEntitlements(arr)
 		);
 
 		arr.add("urn:geant:helmholtz.de:group:UFZ#login-dev.helmholtz.de");
 		assertTrue(
-				"GFZ".equals(HelmholtzAaiLogin.getOrganisationFromEntitlements(arr))
+				"GFZ".equals(HelmholtzIdLogin.getOrganisationFromEntitlements(arr))
 						||
-						"UFZ".equals(HelmholtzAaiLogin.getOrganisationFromEntitlements(arr))
+						"UFZ".equals(HelmholtzIdLogin.getOrganisationFromEntitlements(arr))
 		);
 
 		JSONArray nohash = new JSONArray();
@@ -50,7 +50,7 @@ class HelmholtzAaiLoginTest {
 
 		assertEquals(
 				"GFZ",
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(nohash)
+				HelmholtzIdLogin.getOrganisationFromEntitlements(nohash)
 		);
 	}
 
@@ -64,17 +64,17 @@ class HelmholtzAaiLoginTest {
 
 		assertEquals(
 				"GFZ",
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+				HelmholtzIdLogin.getOrganisationFromEntitlements(arr)
 		);
 
 		assertNull(
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(null)
+				HelmholtzIdLogin.getOrganisationFromEntitlements(null)
 		);
 
 		JSONArray empty = new JSONArray();
 
 		assertNull(
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(empty)
+				HelmholtzIdLogin.getOrganisationFromEntitlements(empty)
 		);
 	}
 
@@ -89,8 +89,8 @@ class HelmholtzAaiLoginTest {
 		arr.add("GFZ");
 
 		assertEquals(
-				HelmholtzAaiLogin.DEFAULT_ORGANISATION,
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+				HelmholtzIdLogin.DEFAULT_ORGANISATION,
+				HelmholtzIdLogin.getOrganisationFromEntitlements(arr)
 		);
 	}
 
@@ -100,11 +100,11 @@ class HelmholtzAaiLoginTest {
 
 		// No entitlements -> Null
 		assertNull(
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(null)
+				HelmholtzIdLogin.getOrganisationFromEntitlements(null)
 		);
 
 		assertNull(
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+				HelmholtzIdLogin.getOrganisationFromEntitlements(arr)
 		);
 
 		// Default value should be returned if user is part of the Helmholtz
@@ -112,30 +112,30 @@ class HelmholtzAaiLoginTest {
 		arr.add("urn:geant:helmholtz.de:group:Helmholtz-member#login.helmholtz.de");
 
 		assertEquals(
-				HelmholtzAaiLogin.DEFAULT_ORGANISATION,
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+				HelmholtzIdLogin.DEFAULT_ORGANISATION,
+				HelmholtzIdLogin.getOrganisationFromEntitlements(arr)
 		);
 
 		// Unknown or new institution
 		arr.add("urn:geant:helmholtz.de:group:NoRealCentre#login-dev.helmholtz.de");
 		assertEquals(
-				HelmholtzAaiLogin.DEFAULT_ORGANISATION,
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+				HelmholtzIdLogin.DEFAULT_ORGANISATION,
+				HelmholtzIdLogin.getOrganisationFromEntitlements(arr)
 		);
 
 		arr.add("");
 		arr.add("test");
 
 		assertEquals(
-				HelmholtzAaiLogin.DEFAULT_ORGANISATION,
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+				HelmholtzIdLogin.DEFAULT_ORGANISATION,
+				HelmholtzIdLogin.getOrganisationFromEntitlements(arr)
 		);
 
 		// Actual centre does not return default value
 		arr.add("urn:geant:helmholtz.de:group:GFZ#login-dev.helmholtz.de");
 		assertNotEquals(
-				HelmholtzAaiLogin.DEFAULT_ORGANISATION,
-				HelmholtzAaiLogin.getOrganisationFromEntitlements(arr)
+				HelmholtzIdLogin.DEFAULT_ORGANISATION,
+				HelmholtzIdLogin.getOrganisationFromEntitlements(arr)
 		);
 	}
 }

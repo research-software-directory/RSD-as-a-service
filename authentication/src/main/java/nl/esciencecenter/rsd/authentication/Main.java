@@ -46,15 +46,15 @@ public class Main {
 		return false;
 	}
 
-	public static boolean userInAaiAllowList(OpenIdInfo info) {
-		String allowList = Config.helmholtzAaiAllowList();
+	public static boolean userInIdAllowList(OpenIdInfo info) {
+		String allowList = Config.helmholtzIdAllowList();
 
-		if (!Config.helmholtzAaiUseAllowList() || allowList == null || allowList.isEmpty()) {
+		if (!Config.helmholtzIdUseAllowList() || allowList == null || allowList.isEmpty()) {
 			return false;
 		}
 
 		if (info == null || info.email() == null || info.email().isEmpty()) {
-			throw new Error("Unexpected parameters for 'userInAaiAllowList'");
+			throw new Error("Unexpected parameters for 'userInIdAllowList'");
 		}
 
 		String[] allowed = allowList.split(";");
@@ -68,14 +68,14 @@ public class Main {
 		return false;
 	}
 
-	public static boolean aaiUserIsAllowed(OpenIdInfo helmholtzInfo) {
-		if (Config.helmholtzAaiAllowExternalUsers()) {
+	public static boolean idUserIsAllowed(OpenIdInfo helmholtzInfo) {
+		if (Config.helmholtzIdAllowExternalUsers()) {
 			return true;
 		}
 		if (helmholtzInfo.organisation() == null) {
-			if (Config.helmholtzAaiUseAllowList() && userInAaiAllowList(helmholtzInfo)) {
+			if (Config.helmholtzIdUseAllowList() && userInIdAllowList(helmholtzInfo)) {
 				return true;
-			} else if (Config.helmholtzAaiUseAllowList()) {
+			} else if (Config.helmholtzIdUseAllowList()) {
 				throw new RsdAuthenticationException("Your email address (" + helmholtzInfo.email() + ") is not in the allow list.");
 			}
 		} else {
@@ -123,12 +123,12 @@ public class Main {
 		}
 
 		if (Config.isHelmholtzLoginEnabled()) {
-			app.get("/login/helmholtzaai", ctx -> {
+			app.get("/login/helmholtzid", ctx -> {
 				String code = ctx.queryParam("code");
-				String redirectUrl = Config.helmholtzAaiRedirect();
-				OpenIdInfo helmholtzInfo = new HelmholtzAaiLogin(code, redirectUrl).openidInfo();
+				String redirectUrl = Config.helmholtzIdRedirect();
+				OpenIdInfo helmholtzInfo = new HelmholtzIdLogin(code, redirectUrl).openidInfo();
 
-				if (!aaiUserIsAllowed(helmholtzInfo)) {
+				if (!idUserIsAllowed(helmholtzInfo)) {
 					throw new RsdAuthenticationException("You are not allowed to log in.");
 				}
 

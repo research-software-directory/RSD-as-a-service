@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,7 +40,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
-public class HelmholtzAaiLogin implements Login {
+public class HelmholtzIdLogin implements Login {
 
 	private final String code;
 	private final String redirectUrl;
@@ -51,7 +51,7 @@ public class HelmholtzAaiLogin implements Login {
 			"AWI", "CISPA", "DESY", "DKFZ", "DLR", "DZNE", "FZJ", "GEOMAR", "GFZ", "GSI", "hereon", "HMGU", "HZB", "KIT", "MDC", "UFZ"
 	);
 
-	public HelmholtzAaiLogin(String code, String redirectUrl) {
+	public HelmholtzIdLogin(String code, String redirectUrl) {
 		this.code = Objects.requireNonNull(code);
 		this.redirectUrl = Objects.requireNonNull(redirectUrl);
 	}
@@ -136,7 +136,7 @@ public class HelmholtzAaiLogin implements Login {
 
 		/* get the userinfo endpoint URL first */
 		HttpRequest request = HttpRequest.newBuilder(
-						URI.create(Config.helmholtzAaiWellknown())
+						URI.create(Config.helmholtzIdWellknown())
 				)
 				.header("accept", "application/json")
 				.build();
@@ -151,14 +151,14 @@ public class HelmholtzAaiLogin implements Login {
 			AuthorizationCode authcode = new AuthorizationCode(code);
 			URI callback = new URI(redirectUrl);
 			AuthorizationGrant codeGrant = new AuthorizationCodeGrant(authcode, callback);
-			ClientID clientID = new ClientID(Config.helmholtzAaiClientId());
-			Secret clientSecret = new Secret(Config.helmholtzAaiClientSecret());
+			ClientID clientID = new ClientID(Config.helmholtzIdClientId());
+			Secret clientSecret = new Secret(Config.helmholtzIdClientSecret());
 			ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-			URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.helmholtzAaiWellknown()));
+			URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.helmholtzIdWellknown()));
 
 			Scope scopes = new Scope();
 
-			for (String scope : Config.helmholtzAaiScopes().split(" ")) {
+			for (String scope : Config.helmholtzIdScopes().split(" ")) {
 				scopes.add(scope);
 			}
 

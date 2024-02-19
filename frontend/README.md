@@ -240,7 +240,7 @@ RSD-as-a-service/frontend$ npx unimported
        entry file 7        : ./pages/admin/rsd-contributors.tsx
        entry file 8        : ./pages/admin/rsd-users.tsx
        entry file 9        : ./pages/admin/software-highlights.tsx
-       entry file 10       : ./pages/api/fe/auth/helmholtzaai.ts
+       entry file 10       : ./pages/api/fe/auth/helmholtzid.ts
        entry file 11       : ./pages/api/fe/auth/index.ts
        entry file 12       : ./pages/api/fe/auth/local.ts
        entry file 13       : ./pages/api/fe/auth/orcid.ts
