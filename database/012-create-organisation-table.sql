@@ -3,6 +3,8 @@
 -- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+-- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -18,6 +20,9 @@ CREATE TABLE organisation (
 	website VARCHAR(200) UNIQUE,
 	is_tenant BOOLEAN DEFAULT FALSE NOT NULL,
 	country VARCHAR(100),
+	city VARCHAR(100),
+	ror_scraped_at TIMESTAMPTZ,
+	ror_last_error VARCHAR(500),
 	logo_id VARCHAR(40) REFERENCES image(id),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL,
