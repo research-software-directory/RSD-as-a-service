@@ -1,6 +1,6 @@
 {
   "name": "rsd-frontend",
-  "version": "2.5.1",
+  "version": "2.8.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -32,7 +32,7 @@
     "cookie": "0.5.0",
     "d3": "7.8.2",
     "jsonwebtoken": "9.0.0",
-    "next": "14.0.4",
+    "next": "14.1.0",
     "nprogress": "0.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -62,7 +62,7 @@
     "jest-environment-jsdom": "29.7.0",
     "postcss": "8.4.24",
     "tailwindcss": "3.3.2",
-    "typescript": "5.1.6",
+    "typescript": "5.3.3",
     "unimported": "1.29.2",
     "whatwg-fetch": "3.6.2"
   }
