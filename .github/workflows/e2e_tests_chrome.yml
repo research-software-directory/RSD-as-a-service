@@ -62,11 +62,11 @@ jobs:
         working-directory: .
         run: |
           cp e2e/.env.e2e .env
-          docker compose build --parallel database backend auth frontend documentation nginx
+          docker compose build --parallel database backend auth frontend documentation nginx codemeta swagger
       - name: start rsd
         working-directory: .
         run: |
-          docker compose up --detach database backend auth frontend documentation nginx swagger
+          docker compose up --detach database backend auth frontend documentation nginx codemeta swagger
           sleep 5
       - name: run e2e tests in chrome
         working-directory: e2e
