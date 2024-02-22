@@ -1,18 +1,23 @@
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 package nl.esciencecenter.rsd.scraper.ror;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Test;
-
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 @WireMockTest(proxyMode = true)
@@ -42,55 +47,25 @@ class RorScraperTest {
 
 	}
 
-	@Test
-	void testNullLocations() throws Exception {
+@ParameterizedTest
+@ValueSource(strings = {
+		"{\"addresses\": [{\"city\": null}], \"country\": {\"country_name\": null}}",
+		"{\"addresses\": [],\"country\": {}}",
+		"{}",
+})
+	void testNullLocationsOrEmptyLocationOrEmptyResponse(String jsonBody) throws Exception {
 		stubFor(
 			get(apiPath)
 			.withHost(WireMock.equalTo(apiDomain))
 			.willReturn(
 				aResponse()
 				.withStatus(200)
-				.withBody("{\"addresses\": [{\"city\": null}], \"country\": {\"country_name\": null}}")
+				.withBody(jsonBody)
 			));
 		
 		rorScraper = new RorScraper("http://" + apiDomain + apiPath);
 
-		assertEquals(null, rorScraper.city());
-		assertEquals(null, rorScraper.country());
-	}
-	
-	@Test
-	void testEmpyLocations() throws Exception {
-		stubFor(
-			get(apiPath)
-			.withHost(WireMock.equalTo(apiDomain))
-			.willReturn(
-				aResponse()
-				.withStatus(200)
-				.withBody("{\"addresses\": [],\"country\": {}}")
-			)
-		);
-
-		rorScraper = new RorScraper("http://" + apiDomain + apiPath);
-
-		assertEquals(null, rorScraper.city());
-		assertEquals(null, rorScraper.country());
-	}
-
-	@Test
-	void testEmptyResponse() throws Exception {
-		stubFor(
-			get(apiPath)
-			.withHost(WireMock.equalTo(apiDomain))
-			.willReturn(
-				aResponse()
-				.withStatus(200)
-				.withBody("{}")
-			));
-		
-		rorScraper = new RorScraper("http://" + apiDomain + apiPath);
-
-		assertEquals(null, rorScraper.city());
-		assertEquals(null, rorScraper.country());
+		assertNull(rorScraper.city());
+		assertNull(rorScraper.country());
 	}
 }
