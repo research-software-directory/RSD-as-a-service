@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +15,7 @@ import {
 import {mockProject} from '../mocks/mockProject'
 import {
   addRelatedProject, addRelatedSoftware,
-  openEditPage, openEditSection, uploadFile
+  openEditPage, openEditSection, selectTab, uploadFile
 } from '../helpers/utils'
 import {getDusanMijatovic, getRandomPerson} from '../mocks/mockPerson'
 import {mockCitations} from '../mocks/mockCitations'
@@ -94,10 +94,6 @@ test.describe.serial('Project', async () => {
     const url = `/projects/${proj.slug}`
     await openEditPage(page, url, proj.title)
 
-    // open edit project page from overview
-    // it does not allways show items?!?
-    // await openEditProjectPage(page, `Test project ${project.name}`)
-
     // open edit team members page
     await openEditTeamPage(page)
     // create new team member
@@ -105,6 +101,27 @@ test.describe.serial('Project', async () => {
     // import team member from ORCID
     // uses real name and orcid for validation
     await importTeamMemberByOrcid(page, dusan)
+  })
+
+  test('Add organisations', async ({page}, {project}) => {
+    // get mock software for the browser
+    const proj = mockProject[project.name]
+    const organisations = mockProjectOrganisation[project.name]
+
+    // directly open edit page
+    const url = `/projects/${proj.slug}`
+    await openEditPage(page, url, proj.title)
+
+    // navigate to organisations section
+    await openEditSection(page, 'Organisations')
+    // await page.pause()
+    // create organisations
+    for (const org of organisations) {
+      await addOrganisation(page, org, 'project_for_organisation')
+    }
+    // check the count
+    const count = await page.getByTestId('organisation-list-item').count()
+    expect(count).toBeGreaterThanOrEqual(organisations.length)
   })
 
   test('Add impact', async ({page}, {project: {name}}) => {
@@ -117,7 +134,10 @@ test.describe.serial('Project', async () => {
     await openEditPage(page, url, project.title)
 
     // navigate to organisations sectiont
-    await openEditSection(page, 'Impact')
+    await openEditSection(page, 'Mentions')
+    // select impact tab
+    await selectTab(page,'Impact')
+    // await page.getByRole('tab', {name: 'Impact'}).click()
 
     // add citations using doi
     for (const item of citations.dois.impact) {
@@ -135,33 +155,14 @@ test.describe.serial('Project', async () => {
     await openEditPage(page, url, project.title)
 
     // navigate to organisations sectiont
-    await openEditSection(page, 'Output')
+    await openEditSection(page, 'Mentions')
+    // select output tab
+    await selectTab(page,'Output')
 
     // add citations using doi
     for (const item of citations.dois.output) {
       await addCitation(page, item, 'output_for_project')
     }
-  })
-
-  test('Add organisations', async ({page}, {project}) => {
-    // get mock software for the browser
-    const proj = mockProject[project.name]
-    const organisations = mockProjectOrganisation[project.name]
-
-    // directly open edit page
-    const url = `/projects/${proj.slug}`
-    await openEditPage(page, url, proj.title)
-
-    // navigate to organisations section
-    await openEditSection(page, 'Organisations')
-
-    // create organisations
-    for (const org of organisations) {
-      await addOrganisation(page, org, 'project_for_organisation')
-    }
-    // check the count
-    const count = await page.getByTestId('organisation-list-item').count()
-    expect(count).toBeGreaterThanOrEqual(organisations.length)
   })
 
   test('Related projects', async ({page}, {project: {name}}) => {
@@ -196,6 +197,5 @@ test.describe.serial('Project', async () => {
       await addRelatedSoftware(page, 'software_for_project')
     }
   })
-
 })
 

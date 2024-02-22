@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,7 +10,7 @@ import {test, expect} from '@playwright/test'
 import {mockSoftware} from '../mocks/mockSoftware'
 import {createSoftware} from '../helpers/software'
 import {mockCitations} from '../mocks/mockCitations'
-import {openEditPage, openEditSection} from '../helpers/utils'
+import {openEditPage, openEditSection, selectTab} from '../helpers/utils'
 import {saveCitation} from '../helpers/citations'
 import {mockSoftwareOrganisation} from '../mocks/mockOrganisation'
 import {saveOrganisation} from '../helpers/organisations'
@@ -35,34 +35,13 @@ test.describe.serial('Software', async () => {
     expect(slug).toEqual(software.slug)
   })
 
-  test('Generate mentions using DOI', async ({page}) => {
-    // https://playwright.dev/docs/test-timeouts#test-timeout
-    // this test need to be marked as slow because it saves all data per DOI
-    test.slow()
-    // get mock software for the browser
-    const software = mockSoftware['chrome']
-
-    // directly open edit software page
-    const url = `/software/${software.slug}`
-    await openEditPage(page, url, software.title)
-
-    // navigate to organisations sectiont
-    await openEditSection(page, 'Mentions')
-
-    const keys = Object.keys(mockCitations)
-    for (const key of keys) {
-      const citations = mockCitations[key]
-      // add mentions using doi
-      for (const item of citations.dois.mention) {
-        await saveCitation(page, item, 'mention_for_software')
-      }
-    }
-  })
-
   test('Generate organisations', async ({page}) => {
     // get mock software for the browser
     const proj = mockSoftware['chrome']
-    const organisations = mockSoftwareOrganisation['chrome'].map(item => item.name)
+    const organisations = [
+      ...mockSoftwareOrganisation['chrome'].map(item => item.name),
+      ...mockSoftwareOrganisation['chromium'].map(item => item.name),
+    ]
 
     // directly open edit page
     const url = `/software/${proj.slug}`
@@ -77,5 +56,58 @@ test.describe.serial('Software', async () => {
       expect(saved).toBeTruthy()
     }
   })
+
+  test('Generate related output using DOI', async ({page}) => {
+    // https://playwright.dev/docs/test-timeouts#test-timeout
+    // this test need to be marked as slow because it saves all data per DOI
+    test.slow()
+    // get mock software for the browser
+    const software = mockSoftware['chrome']
+
+    // directly open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
+
+    // navigate to organisations sectiont
+    await openEditSection(page, 'Mentions')
+    // select impact tab
+    await selectTab(page,'Related output')
+
+    const keys = Object.keys(mockCitations)
+    for (const key of keys) {
+      const citations = mockCitations[key]
+      // add mentions using doi
+      for (const item of citations.dois.mention) {
+        await saveCitation(page, item, 'mention_for_software')
+      }
+    }
+  })
+
+  test('Generate reference papers using DOI', async ({page}) => {
+    // https://playwright.dev/docs/test-timeouts#test-timeout
+    // this test need to be marked as slow because it saves all data per DOI
+    test.slow()
+    // get mock software for the browser
+    const software = mockSoftware['chrome']
+
+    // directly open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
+
+    // navigate to organisations sectiont
+    await openEditSection(page, 'Mentions')
+    // select impact tab
+    await selectTab(page,'Reference papers')
+
+    const keys = Object.keys(mockCitations)
+    for (const key of keys) {
+      const citations = mockCitations[key]
+      // add mentions using doi
+      for (const item of citations.dois.reference_paper) {
+        await saveCitation(page, item, 'reference_paper_for_software')
+      }
+    }
+  })
+
 })
 

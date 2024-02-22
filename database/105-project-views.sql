@@ -1,10 +1,141 @@
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
+
+-- UNIQUE CITATIONS BY PROJECT ID
+-- Scraped citation using output as reference
+CREATE FUNCTION citation_by_project() RETURNS TABLE (
+	project UUID,
+	id UUID,
+	doi CITEXT,
+	url VARCHAR,
+	title VARCHAR,
+	authors VARCHAR,
+	publisher VARCHAR,
+	publication_year SMALLINT,
+	journal VARCHAR,
+	page VARCHAR,
+	image_url VARCHAR,
+	mention_type mention_type,
+	source VARCHAR,
+	reference_papers UUID[]
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	output_for_project.project,
+	mention.id,
+	mention.doi,
+	mention.url,
+	mention.title,
+	mention.authors,
+	mention.publisher,
+	mention.publication_year,
+	mention.journal,
+	mention.page,
+	mention.image_url,
+	mention.mention_type,
+	mention.source,
+	ARRAY_AGG(
+		output_for_project.mention
+	) AS reference_paper
+FROM
+	output_for_project
+INNER JOIN
+	citation_for_mention ON citation_for_mention.mention = output_for_project.mention
+INNER JOIN
+	mention ON mention.id = citation_for_mention.citation
+--EXCLUDE reference papers items from citations
+WHERE
+	mention.id NOT IN (
+		SELECT mention FROM output_for_project
+	)
+GROUP BY
+	output_for_project.project,
+	mention.id,
+	mention.doi,
+	mention.url,
+	mention.title,
+	mention.authors,
+	mention.publisher,
+	mention.publication_year,
+	mention.journal,
+	mention.page,
+	mention.image_url,
+	mention.mention_type,
+	mention.source
+;
+$$;
+
+
+-- UNIQUE MENTIONS & CITATIONS BY PROJECT ID
+-- UNION will deduplicate exact entries
+CREATE FUNCTION impact_by_project() RETURNS TABLE (
+	project UUID,
+	id UUID,
+	doi CITEXT,
+	url VARCHAR,
+	title VARCHAR,
+	authors VARCHAR,
+	publisher VARCHAR,
+	publication_year SMALLINT,
+	journal VARCHAR,
+	page VARCHAR,
+	image_url VARCHAR,
+	mention_type mention_type,
+	source VARCHAR,
+	note VARCHAR
+) LANGUAGE sql STABLE AS
+$$
+-- impact for project
+SELECT
+	impact_for_project.project,
+	mention.id,
+	mention.doi,
+	mention.url,
+	mention.title,
+	mention.authors,
+	mention.publisher,
+	mention.publication_year,
+	mention.journal,
+	mention.page,
+	mention.image_url,
+	mention.mention_type,
+	mention.source,
+	mention.note
+FROM
+	mention
+INNER JOIN
+	impact_for_project ON impact_for_project.mention = mention.id
+-- will deduplicate identical entries
+-- from scraped citations
+UNION
+-- scraped citations from reference papers
+SELECT
+	project,
+	id,
+	doi,
+	url,
+	title,
+	authors,
+	publisher,
+	publication_year,
+	journal,
+	page,
+	image_url,
+	mention_type,
+	source,
+	-- scraped citations have no note prop
+	-- we need this prop in the edit impact section
+	NULL as note
+FROM
+	citation_by_project()
+;
+$$;
+
 
 CREATE FUNCTION count_project_team_members() RETURNS TABLE (
 	project UUID,
@@ -129,12 +260,12 @@ CREATE FUNCTION count_project_impact() RETURNS TABLE (
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
-	impact_for_project.project,
-	COUNT(impact_for_project.mention)
+	impact_by_project.project,
+	COUNT(impact_by_project.id)
 FROM
-	impact_for_project
+	impact_by_project()
 GROUP BY
-	impact_for_project.project;
+	impact_by_project.project;
 $$;
 
 

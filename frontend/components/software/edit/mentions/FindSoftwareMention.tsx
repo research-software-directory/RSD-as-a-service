@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,12 +15,28 @@ import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import FindMention from '~/components/mention/FindMention'
 import FindMentionInfoPanel from '~/components/mention/FindMentionInfoPanel'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
+import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
 import {extractSearchTerm} from '~/components/software/edit/mentions/utils'
-import useSoftwareContext from '../useSoftwareContext'
-import {cfgMention as config} from './config'
-import {findPublicationByTitle} from './mentionForSoftwareApi'
 
-export default function FindSoftwareMention() {
+type FindSoftwareMentionProps={
+  config: {
+    title:string,
+    minLength:number,
+    label: string,
+    help: string
+  },
+  findPublicationByTitle:({
+    software,
+    searchFor,
+    token
+  }:{
+    software:string,
+    searchFor:string,
+    token:string
+  })=>Promise<MentionItemProps[]>
+}
+
+export default function FindSoftwareMention({config,findPublicationByTitle}:FindSoftwareMentionProps) {
   const {software} = useSoftwareContext()
   const {session: {token}} = useAuth()
   const {onAdd} = useEditMentionReducer()
@@ -59,8 +76,7 @@ export default function FindSoftwareMention() {
   return (
     <>
       <EditSectionTitle
-        title={config.findMention.title}
-        // subtitle={config.findMention.subtitle}
+        title={config.title}
       />
       <h3 className="pt-4 pb-2 text-lg">Search</h3>
       <FindMentionInfoPanel>
@@ -73,9 +89,9 @@ export default function FindSoftwareMention() {
             searchFn={findPublication}
             config={{
               freeSolo: true,
-              minLength: config.findMention.validation.minLength,
-              label: config.findMention.label,
-              help: config.findMention.help,
+              minLength: config.minLength,
+              label: config.label,
+              help: config.help,
               reset: true
             }}
           />

@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
--- SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -17,9 +17,17 @@ $$
 	FROM mention
 	LEFT JOIN citation_for_mention ON mention.id = citation_for_mention.mention
 	LEFT JOIN mention AS citation ON citation_for_mention.citation = citation.id
-	WHERE mention.id IN (
-		SELECT mention FROM reference_paper_for_software
-	)
+	WHERE
+	-- ONLY items with DOI
+		mention.doi IS NOT NULL AND (
+			mention.id IN (
+				SELECT mention FROM reference_paper_for_software
+			)
+			OR
+			mention.id IN (
+				SELECT mention FROM output_for_project
+			)
+		)
 	GROUP BY mention.id
 $$;
 
@@ -39,7 +47,7 @@ CREATE FUNCTION citation_by_software() RETURNS TABLE (
 	mention_type mention_type,
 	source VARCHAR,
 	reference_papers UUID[]
-)LANGUAGE sql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
 SELECT
 	reference_paper_for_software.software,
@@ -64,6 +72,11 @@ INNER JOIN
 	citation_for_mention ON citation_for_mention.mention = reference_paper_for_software.mention
 INNER JOIN
 	mention ON mention.id = citation_for_mention.citation
+--EXCLUDE reference papers items from citations
+WHERE
+	mention.id NOT IN (
+		SELECT mention FROM reference_paper_for_software
+	)
 GROUP BY
 	reference_paper_for_software.software,
 	mention.id,
@@ -97,7 +110,7 @@ CREATE FUNCTION mentions_by_software() RETURNS TABLE (
 	image_url VARCHAR,
 	mention_type mention_type,
 	source VARCHAR
-)LANGUAGE sql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
 -- mentions for software
 SELECT
