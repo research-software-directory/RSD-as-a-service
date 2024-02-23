@@ -1,6 +1,6 @@
+-- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -27,6 +27,13 @@ SELECT CASE
 	WHEN table_name = 'mention' AND reference_id IS NOT NULL THEN (
 		SELECT
 			CONCAT('/api/v1/mention?id=eq.', reference_id)
+	)
+	WHEN table_name = 'organisation' AND reference_id IS NOT NULL THEN (
+		SELECT
+			CONCAT('/organisations/', slug, '?tab=settings')
+		FROM
+			organisation
+		WHERE id = reference_id
 	)
 	END
 $$;
