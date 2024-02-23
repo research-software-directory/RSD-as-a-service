@@ -59,7 +59,7 @@ public class MainRor {
 					}
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("ROR location scraper", tableName, organisation.id(), e);
-					Utils.saveErrorMessageInDatabase("Unkown error", tableName, columnName, organisation.id().toString(), primaryKeyName, scrapedAt, scrapedAtName);
+					Utils.saveErrorMessageInDatabase("Unknown error", tableName, columnName, organisation.id().toString(), primaryKeyName, scrapedAt, scrapedAtName);
 				}
 			});
 			futures[i] = future;
