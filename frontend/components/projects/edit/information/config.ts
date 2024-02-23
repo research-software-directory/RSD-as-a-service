@@ -1,17 +1,18 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 export const projectInformation = {
   sectionTitle: 'Project information',
   slug: {
-    label: 'RSD path',
-    help: 'Use letters, numbers and dash "-". Other characters are not allowed.',
+    label: 'RSD path (admin only)',
+    help: '',
     // react-hook-form validation rules
     validation: {
       required: 'Slug is required',
@@ -25,7 +26,7 @@ export const projectInformation = {
   },
   title: {
     label: 'Title',
-    help: 'Project title used as a title of your page.',
+    help: '',
     // react-hook-form validation rules
     validation: {
       required: 'Title is required',
@@ -35,7 +36,7 @@ export const projectInformation = {
   },
   subtitle: {
     label: 'Subtitle',
-    help: 'Project subtitle.',
+    help: '',
     // react-hook-form validation rules
     validation: {
       // required: 'Subtitle is optional',
@@ -71,9 +72,9 @@ export const projectInformation = {
   },
   funding_organisations: {
     title: 'Funding',
-    subtitle: 'Funding organisations',
+    subtitle: 'Grand id and funding organisations',
     label: 'Find funding organisation',
-    help: 'Search by name in RSD and ROR databases',
+    help: '',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
@@ -89,7 +90,7 @@ export const projectInformation = {
     title: 'Keywords',
     subtitle: 'How to find this project?',
     label: 'Find or add keyword',
-    help: 'Select from top 30 list or start typing for the suggestions',
+    help: '',
     validation: {
       //custom validation rule, not in used by react-hook-form
       minLength: 1,

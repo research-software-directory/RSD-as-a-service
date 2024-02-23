@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -232,19 +232,16 @@ export default function SoftwareContributors() {
             onSubmit={onSubmitContributor}
           />
           <ContributorPrivacyHint />
-          {
-            software?.concept_doi &&
-            <div className="pt-8 pb-0">
-              <EditSectionTitle
-                title={config.importContributors.title}
-                subtitle={config.importContributors.subtitle}
-              />
-              <GetContributorsFromDoi
-                contributors={contributors}
-                onSetContributors={setContributors}
-              />
-            </div>
-          }
+          <div className="pt-8 pb-0">
+            <EditSectionTitle
+              title={config.importContributors.title}
+              subtitle={config.importContributors.subtitle}
+            />
+            <GetContributorsFromDoi
+              contributors={contributors}
+              onSetContributors={setContributors}
+            />
+          </div>
         </section>
       </EditSection>
       {modal.edit.open &&

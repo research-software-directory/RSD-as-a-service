@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -197,23 +197,6 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
         title={config.licenses.title}
         subtitle={config.licenses.subtitle}
       />
-      <div className="flex flex-wrap py-2">
-        {licenses.map((item, pos) => {
-          return(
-            <div
-              key={item.key}
-              className="py-1 pr-1"
-            >
-              <Chip
-                data-testid="license-chip"
-                title={item.label}
-                label={item.label}
-                onDelete={() => onRemove(pos)}
-              />
-            </div>
-          )
-        })}
-      </div>
       <AsyncAutocompleteSC
         status={status}
         options={options}
@@ -233,16 +216,30 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
           reset: true
         }}
       />
-      {
-        concept_doi &&
-        <div className="pt-4 pb-0">
-          <ImportLicensesFromDoi
-            concept_doi={concept_doi}
-            items={licenses}
-            onSetLicenses={setLicenses}
-          />
-        </div>
-      }
+      <div className="flex flex-wrap py-2">
+        {licenses.map((item, pos) => {
+          return(
+            <div
+              key={item.key}
+              className="py-1 pr-1"
+            >
+              <Chip
+                data-testid="license-chip"
+                title={item.label}
+                label={item.label}
+                onDelete={() => onRemove(pos)}
+              />
+            </div>
+          )
+        })}
+      </div>
+      <div className="py-2">
+        <ImportLicensesFromDoi
+          concept_doi={concept_doi ?? null}
+          items={licenses}
+          onSetLicenses={setLicenses}
+        />
+      </div>
     </>
   )
 }

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,15 +22,16 @@ type DeleteOrganisationModal = {
 type OrganisationsAdminListProps = {
   organisations: OrganisationList[]
   loading: boolean
+  page: number
   onDeleteOrganisation: (props:RemoveOrganisationProps)=>void
 }
 
-export default function OrganisationsAdminList({organisations,loading,onDeleteOrganisation}:OrganisationsAdminListProps) {
+export default function OrganisationsAdminList({organisations,loading,page,onDeleteOrganisation}:OrganisationsAdminListProps) {
   const [modal, setModal] = useState<DeleteOrganisationModal>({
     open: false
   })
 
-  if (loading) return <ContentLoader />
+  if (loading && !page) return <ContentLoader />
 
   function onDelete(organisation:OrganisationList) {
     if (organisation) {

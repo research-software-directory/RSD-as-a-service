@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -54,7 +56,7 @@ export default function ProjectInformationForm({editProject}: { editProject: Edi
         />
         <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
           {/* middle panel */}
-          <div className="py-4 overflow-hidden">
+          <div className="py-2 overflow-hidden">
             <EditSectionTitle
               title={config.sectionTitle}
             />
@@ -122,7 +124,7 @@ export default function ProjectInformationForm({editProject}: { editProject: Edi
             <div className="xl:py-4"></div>
           </div>
           {/* right panel */}
-          <div className="py-4 min-w-[21rem] xl:my-0">
+          <div className="py-2 min-w-[21rem] xl:my-0">
             <EditSectionTitle
               title={config.pageStatus.title}
               subtitle={config.pageStatus.subtitle}
@@ -142,8 +144,9 @@ export default function ProjectInformationForm({editProject}: { editProject: Edi
             <div className="py-4"></div>
             <EditSectionTitle
               title={config.funding_organisations.title}
+              subtitle={config.funding_organisations.subtitle}
             />
-            <div className="py-1"></div>
+            {/* <div className="py-2"></div> */}
             <AutosaveProjectTextField
               project_id={formData.id}
               options={{
@@ -153,11 +156,11 @@ export default function ProjectInformationForm({editProject}: { editProject: Edi
                 useNull: true,
                 muiProps:{
                   autoComplete: 'off',
-                  variant: 'standard',
+                  variant: 'outlined',
                   label: config.grant_id.label,
-                  sx: {
-                    width: '20rem'
-                  }
+                  // sx: {
+                  //   width: '20rem'
+                  // }
                 }
               }}
             />
@@ -173,12 +176,13 @@ export default function ProjectInformationForm({editProject}: { editProject: Edi
               url_for_project={editProject?.url_for_project ?? []}
             />
             {/* <ProjectLinks project={project?.id ?? ''} /> */}
-            <div className="py-2"></div>
+            <div className="py-4"></div>
             {/* Research Domain */}
             <AutosaveResearchDomains
               project_id={editProject?.id ?? ''}
               research_domains={editProject?.research_domains ?? []}
             />
+            <div className="py-4"></div>
             {/* Keywords */}
             <EditSectionTitle
               title={config.keywords.title}

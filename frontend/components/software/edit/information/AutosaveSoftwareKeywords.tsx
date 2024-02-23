@@ -1,8 +1,10 @@
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -123,6 +125,18 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
         title={config.keywords.title}
         subtitle={config.keywords.subtitle}
       />
+      <FindKeyword
+        config={{
+          freeSolo: false,
+          minLength: config.keywords.validation.minLength,
+          label: config.keywords.label,
+          help: config.keywords.help,
+          reset: true,
+        }}
+        searchForKeyword={searchForSoftwareKeyword}
+        onAdd={onAdd}
+        onCreate={onCreate}
+      />
       <div className="flex flex-wrap py-2">
         {keywords.map((item, pos) => {
           return(
@@ -143,29 +157,14 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
           )
         })}
       </div>
-      <FindKeyword
-        config={{
-          freeSolo: false,
-          minLength: config.keywords.validation.minLength,
-          label: config.keywords.label,
-          help: config.keywords.help,
-          reset: true
-        }}
-        searchForKeyword={searchForSoftwareKeyword}
-        onAdd={onAdd}
-        onCreate={onCreate}
-      />
-      {
-        concept_doi &&
-        <div className="pt-4 pb-0">
-          <ImportKeywordsFromDoi
-            software_id={software_id}
-            concept_doi={concept_doi}
-            keywords={keywords}
-            onSetKeywords={setKeywords}
-          />
-        </div>
-      }
+      <div className="py-2">
+        <ImportKeywordsFromDoi
+          software_id={software_id}
+          concept_doi={concept_doi ?? null}
+          keywords={keywords}
+          onSetKeywords={setKeywords}
+        />
+      </div>
     </>
   )
 }

@@ -1,9 +1,9 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -76,7 +76,7 @@ export default function ControlledTextField<T>({options, control, rules}:Control
             label={options?.label ?? 'Label not provided'}
             type={options?.type ?? 'text'}
             fullWidth={options?.fullWidth ?? true }
-            variant={options?.variant ?? 'standard'}
+            variant={options?.variant ?? 'outlined'}
             // controlled mui input requires "" instead of null
             // but the value in controller of react-hook-form is null (can be null)
             value={value ?? ''}

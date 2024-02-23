@@ -1,11 +1,14 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Head from 'next/head'
 
-import {app} from '../../config/app'
+import {app} from '~/config/app'
+import {rowsPerPageOptions} from '~/config/pagination'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import AdminPageWithNav from '~/components/admin/AdminPageWithNav'
 import {adminPages} from '~/components/admin/AdminNav'
@@ -18,8 +21,8 @@ const pageTitle = `${adminPages['organisations'].title} | Admin page | ${app.tit
 const pagination = {
   count: 0,
   page: 0,
-  rows: 6,
-  rowsOptions: [6,12,24],
+  rows: rowsPerPageOptions[0],
+  rowsOptions: rowsPerPageOptions,
   labelRowsPerPage:'Per page'
 }
 

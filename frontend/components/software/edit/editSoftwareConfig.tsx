@@ -1,19 +1,20 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 export const softwareInformation = {
   slug: {
-    label: 'RSD path',
-    help: 'Use letters, numbers and dash "-". Other characters are not allowed.',
+    label: 'RSD path (admin only)',
+    help: '',
     // react-hook-form validation rules
     validation: {
       required: 'Slug is required',
@@ -26,8 +27,8 @@ export const softwareInformation = {
     }
   },
   brand_name: {
-    label: 'Name',
-    help: 'Provide software name to use as a title of your software page.',
+    label: 'Software Name',
+    help: '',
     // react-hook-form validation rules
     validation: {
       required: 'Name is required',
@@ -37,7 +38,7 @@ export const softwareInformation = {
   },
   short_statement: {
     label: 'Short description',
-    help: 'Provide a short description of your software to use as page subtitle.',
+    help: '',
     validation: {
       minLength: {value: 3, message: 'Minimum length is 3'},
       maxLength: {value: 300, message: 'Maximum length is 300'},
@@ -45,7 +46,7 @@ export const softwareInformation = {
   },
   get_started_url: {
     label: 'Get Started URL',
-    help: 'Link to documentation for users.',
+    help: '',
     validation: {
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
@@ -56,7 +57,7 @@ export const softwareInformation = {
   },
   repository_url: {
     label: 'Repository URL',
-    help: (repoUrl: string | null) => repoUrl ? verifyGithubUrl(repoUrl) : 'Link to source code repository',
+    help: (repoUrl: string | null) => repoUrl ? verifyGithubUrl(repoUrl) : '',
     validation: {
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
@@ -86,7 +87,7 @@ export const softwareInformation = {
   },
   // field for logo upload
   logo: {
-    label: 'Logo',
+    label: 'Software Logo',
     help: 'Upload a logo of your software.'
   },
   // field for markdown URL
@@ -109,13 +110,11 @@ export const softwareInformation = {
     }
   },
   concept_doi: {
-    title: 'Citation',
-    subtitle: 'We generate citation files using concept DOI',
+    title: 'Concept DOI',
+    subtitle: 'Generate citation files and import keywords, licenses and contributors using concept DOI metadata',
     label: 'Concept DOI',
-    help: <>Concept DOI of your software, i.e. a DOI representing <u><a target='_blank'
-      href='https://help.zenodo.org/'
-      rel="noreferrer">all of the
-      versions</a></u> of this software</>,
+    help: '',
+    infoLink: 'https://help.zenodo.org/faq/#versioning',
     validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
@@ -126,7 +125,7 @@ export const softwareInformation = {
     }
   },
   validateConceptDoi: {
-    label: 'Validate DOI'
+    label: 'Validate'
   },
   pageStatus: {
     title: 'Status',
@@ -409,5 +408,5 @@ function verifyGithubUrl(repoUrl: string) {
       sure?</span>
   }
 
-  return 'Link to source code repository'
+  return ''
 }

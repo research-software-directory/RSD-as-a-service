@@ -1,8 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,7 +16,7 @@ import ListItemText from '@mui/material/ListItemText'
 
 import DescriptionIcon from '@mui/icons-material/Description'
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove'
+import GroupIcon from '@mui/icons-material/Group'
 import SpellcheckIcon from '@mui/icons-material/Spellcheck'
 import DomainAddIcon from '@mui/icons-material/DomainAdd'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
@@ -24,58 +24,60 @@ import FluorescentIcon from '@mui/icons-material/Fluorescent'
 import CampaignIcon from '@mui/icons-material/Campaign'
 import BugReportIcon from '@mui/icons-material/BugReport'
 
+import {editMenuItemButtonSx} from '~/config/menuItems'
+
 export const adminPages = {
   pages:{
     title: 'Public pages',
-    subtitle: 'Manage markdown pages',
+    subtitle: '',
     icon: <DescriptionIcon />,
     path: '/admin/public-pages',
   },
   softwareHighlights:{
     title: 'Software highlights',
-    subtitle: 'Manage software highlights',
+    subtitle: '',
     icon: <FluorescentIcon />,
     path: '/admin/software-highlights',
   },
   orcid:{
     title: 'ORCID users',
-    subtitle: 'Manage ORCID users',
+    subtitle: '',
     icon: <PlaylistAddCheckIcon />,
     path: '/admin/orcid-users',
   },
   accounts:{
     title: 'RSD users',
-    subtitle: 'Manage RSD accounts',
-    icon: <PersonRemoveIcon />,
+    subtitle: '',
+    icon: <GroupIcon />,
     path: '/admin/rsd-users',
   },
   contributors:{
     title: 'RSD contributors',
-    subtitle: 'Manage RSD contributors',
+    subtitle: '',
     icon: <AccountCircleIcon />,
     path: '/admin/rsd-contributors',
   },
   organisations: {
     title: 'Organisations',
-    subtitle: 'Manage organisation entries',
+    subtitle: '',
     icon: <DomainAddIcon />,
     path: '/admin/organisations',
   },
   keywords:{
     title: 'Keywords',
-    subtitle: 'Manage keyword entries',
+    subtitle: '',
     icon: <SpellcheckIcon />,
     path: '/admin/keywords',
   },
   logs:{
     title: 'Error logs',
-    subtitle: 'From background services',
+    subtitle: '',
     icon: <BugReportIcon />,
     path: '/admin/logs',
   },
   announcements: {
     title: 'Announcement',
-    subtitle: 'Notification to all users',
+    subtitle: '',
     icon: <CampaignIcon />,
     path: '/admin/announcements',
   }
@@ -103,6 +105,7 @@ export default function AdminNav() {
               key={`step-${pos}`}
               selected={item.path === router.route}
               onClick={() => router.push(item.path)}
+              sx={editMenuItemButtonSx}
             >
               <ListItemIcon>
                 {item.icon}

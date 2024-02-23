@@ -1,7 +1,10 @@
+// SPDX-FileCopyrightText: 2023 - 2024 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -59,13 +62,13 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
           {...register('id', {required:'id is required'})}
         />
         <EditSection className='xl:grid xl:grid-cols-[3fr,1fr] xl:px-0 xl:gap-[3rem]'>
-          <div className="py-4 overflow-hidden">
+          <div className="py-2 overflow-hidden">
             <EditSectionTitle
               title="Software information"
             />
             {user?.role === 'rsd_admin' ?
               <>
-                <div className="py-2"></div>
+                <div className="py-3"></div>
                 <AutosaveSoftwareTextField
                   software_id={formData.id}
                   options={{
@@ -84,7 +87,7 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
                 {...register('slug', {required:'slug is required'})}
               />
             }
-            <div className="py-2"></div>
+            <div className="py-3"></div>
             <AutosaveSoftwareTextField
               software_id={formData.id}
               options={{
@@ -97,7 +100,7 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
               }}
               rules={config.brand_name.validation}
             />
-            <div className="py-2"></div>
+            <div className="py-3"></div>
             <AutosaveSoftwareTextField
               software_id={formData.id}
               options={{
@@ -112,11 +115,13 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
               }}
               rules={config.short_statement.validation}
             />
-            <div className="py-2"></div>
+            <div className="py-4"></div>
             <EditSectionTitle
               title='Software URLs'
               subtitle='Where can users find information to start?'
             />
+            <AutosaveRepositoryUrl />
+            <div className="py-3"></div>
             <AutosaveSoftwareTextField
               software_id={formData.id}
               options={{
@@ -129,20 +134,18 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
               }}
               rules={config.get_started_url.validation}
             />
-            <div className="py-2"></div>
-            <AutosaveRepositoryUrl />
-            <div className="py-2"></div>
+            <div className="py-4"></div>
+            <AutosaveConceptDoi />
+            <div className="py-4"></div>
             <AutosaveSoftwareMarkdown />
             {/* add white space at the bottom */}
-            <div className="xl:py-4"></div>
+            <div className="xl:py-3"></div>
           </div>
           <div className="py-4 min-w-[21rem] xl:my-0">
             <AutosaveSoftwarePageStatus />
             <div className="py-4"></div>
-            <AutosaveConceptDoi />
-            <div className="py-4"></div>
             <AutosaveSoftwareLogo />
-            <div className="py-4"></div>
+            {/* dynamically shown if enabled/used */}
             <AutosaveSoftwareCategories
               softwareId={formData.id}
               categories={formData.categories}

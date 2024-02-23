@@ -86,7 +86,7 @@ export default function ProjectPage(props: ProjectPageProps) {
         title="Edit project"
         url={`${slug}/edit/information`}
         isMaintainer={isMaintainer}
-        variant="text"
+        variant="contained"
       />
       <PageContainer>
         <ContentHeader

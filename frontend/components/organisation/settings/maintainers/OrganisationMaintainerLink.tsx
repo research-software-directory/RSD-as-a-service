@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -96,19 +96,24 @@ export default function OrganisationMaintainerLink({organisation, name, account,
   return (
     <>
       <Button
+        variant='contained'
         sx={{
-          marginTop: '2rem',
+          margin: '1rem 0rem',
           display: 'flex',
           alignItems: 'center'
         }}
         startIcon={<AutoFixHighIcon />}
         onClick={createInviteLink}
       >
-      Generate invite link
+        Generate invite link
       </Button>
-      <div className="py-2"></div>
       {renderLinkOptions()}
-      <InvitationList invitations={unusedInvitations} token={token} onDeleteCallback={() => fetchUnusedInvitations()}/>
+      <div className="py-4"></div>
+      <InvitationList
+        invitations={unusedInvitations}
+        token={token}
+        onDeleteCallback={() => fetchUnusedInvitations()}
+      />
     </>
   )
 }

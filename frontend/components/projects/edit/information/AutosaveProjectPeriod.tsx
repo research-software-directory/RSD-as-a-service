@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,8 +36,8 @@ export default function AutosaveProjectPeriod({date_start, date_end}:
       if (start_date > end_date) {
         // we need to wait for event loop to complete before setting new error
         setTimeout(() => {
-          setError('date_start', {type: 'validate', message: 'Start date should be before end date'})
-          setError('date_end', {type:'validate',message:'End date should be after start date'})
+          setError('date_start', {type: 'validate', message: 'Start date > End date'})
+          setError('date_end', {type:'validate',message:'End date < Start date'})
         }, 1)
       } else {
         // console.log('clearErrors')
@@ -91,6 +91,7 @@ export default function AutosaveProjectPeriod({date_start, date_end}:
         options={{
           name: 'date_start',
           label: '',
+          helperTextMessage: 'Month / Day / Year',
           defaultValue: date_start,
           useNull: true,
           muiProps:{
@@ -111,6 +112,7 @@ export default function AutosaveProjectPeriod({date_start, date_end}:
         options={{
           name: 'date_end',
           label: '',
+          helperTextMessage: 'Month / Day / Year',
           defaultValue: date_end,
           useNull: true,
           muiProps:{

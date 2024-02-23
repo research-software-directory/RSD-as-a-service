@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -114,6 +116,18 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
 
   return (
     <>
+      <FindKeyword
+        config={{
+          freeSolo: false,
+          minLength: config.keywords.validation.minLength,
+          label: config.keywords.label,
+          help: config.keywords.help,
+          reset: true
+        }}
+        searchForKeyword={searchForProjectKeyword}
+        onAdd={onAdd}
+        onCreate={onCreate}
+      />
       <div className="flex flex-wrap py-2">
         {keywords.map((field, pos) => {
           return(
@@ -134,18 +148,6 @@ export default function AutosaveProjectKeywords({project_id,items}:ProjectKeywor
           )
         })}
       </div>
-      <FindKeyword
-        config={{
-          freeSolo: false,
-          minLength: config.keywords.validation.minLength,
-          label: config.keywords.label,
-          help: config.keywords.help,
-          reset: true
-        }}
-        searchForKeyword={searchForProjectKeyword}
-        onAdd={onAdd}
-        onCreate={onCreate}
-      />
     </>
   )
 }

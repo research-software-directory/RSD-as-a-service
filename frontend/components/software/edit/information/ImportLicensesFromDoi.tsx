@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,7 +23,7 @@ import logger from '~/utils/logger'
 import {sortOnStrProp} from '~/utils/sortFn'
 
 type ImportLicensesFromDoiProps = {
-  concept_doi: string
+  concept_doi: string | null
   items: AutocompleteOption<License>[]
   onSetLicenses: (items: AutocompleteOption<License>[])=>void
 }
@@ -30,7 +32,7 @@ export default function ImportLicensesFromDoi({
   concept_doi, items, onSetLicenses}: ImportLicensesFromDoiProps) {
   const {token} = useSession()
   const {software:{id}} = useSoftwareContext()
-  const {showSuccessMessage, showErrorMessage, showInfoMessage} = useSnackbar()
+  const {showSuccessMessage, showInfoMessage} = useSnackbar()
   const {options:allOptions} = useSpdxLicenses({software:id ?? ''})
   const [loading, setLoading] = useState(false)
 
@@ -145,9 +147,11 @@ export default function ImportLicensesFromDoi({
 
   return (
     <Button
+      variant='contained'
       startIcon={renderStartIcon()}
       onClick={importLicensesFromDoi}
       title={config.importLicenses.message(concept_doi ?? '')}
+      disabled={concept_doi===null}
     >
       { config.importLicenses.label }
     </Button>

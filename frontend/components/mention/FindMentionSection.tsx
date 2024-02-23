@@ -2,23 +2,22 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useAuth} from '~/auth'
-import {getMentionByDoi} from '~/utils/getDOI'
-import {getMentionByDoiFromRsd} from '~/utils/editMentions'
 import {MentionItemProps} from '~/types/Mention'
+import {getMentionByDoiFromRsd} from '~/utils/editMentions'
+import {getMentionByDoi} from '~/utils/getDOI'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import FindMention from '~/components/mention/FindMention'
 import FindMentionInfoPanel from '~/components/mention/FindMentionInfoPanel'
 import useEditMentionReducer from '~/components/mention/useEditMentionReducer'
-import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
 import {extractSearchTerm} from '~/components/software/edit/mentions/utils'
 
-type FindSoftwareMentionProps={
+type FindProjectMentionProps={
+  id:string,
   config: {
     title:string,
     minLength:number,
@@ -26,18 +25,17 @@ type FindSoftwareMentionProps={
     help: string
   },
   findPublicationByTitle:({
-    software,
+    id,
     searchFor,
     token
   }:{
-    software:string,
+    id:string,
     searchFor:string,
     token:string
   })=>Promise<MentionItemProps[]>
 }
 
-export default function FindSoftwareMention({config,findPublicationByTitle}:FindSoftwareMentionProps) {
-  const {software} = useSoftwareContext()
+export default function FindMentionSection({id,config,findPublicationByTitle}:FindProjectMentionProps) {
   const {session: {token}} = useAuth()
   const {onAdd} = useEditMentionReducer()
 
@@ -65,7 +63,7 @@ export default function FindSoftwareMention({config,findPublicationByTitle}:Find
       searchFor = searchData.term
       // find by title
       const mentions = await findPublicationByTitle({
-        software: software.id ?? '',
+        id: id,
         searchFor,
         token
       })
@@ -77,6 +75,7 @@ export default function FindSoftwareMention({config,findPublicationByTitle}:Find
     <>
       <EditSectionTitle
         title={config.title}
+        // subtitle={config.findMention.subtitle}
       />
       <h3 className="pt-4 pb-2 text-lg">Search</h3>
       <FindMentionInfoPanel>
@@ -92,7 +91,8 @@ export default function FindSoftwareMention({config,findPublicationByTitle}:Find
               minLength: config.minLength,
               label: config.label,
               help: config.help,
-              reset: true
+              reset: true,
+              variant: 'standard'
             }}
           />
         </div>

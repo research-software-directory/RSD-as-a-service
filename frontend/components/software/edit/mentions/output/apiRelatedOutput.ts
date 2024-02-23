@@ -16,9 +16,9 @@ import {addOrGetMentionItem} from '~/utils/editMentions'
  * @param param0
  * @returns MentionItemProps[]
  */
-export async function findPublicationByTitle({software, searchFor, token}:
-  { software: string, searchFor: string, token: string }) {
-  const query = `id=${software}&search=${encodeURIComponent(searchFor)}`
+export async function findPublicationByTitle({id, searchFor, token}:
+  { id: string, searchFor: string, token: string }) {
+  const query = `id=${id}&search=${encodeURIComponent(searchFor)}`
   const url = `/api/fe/mention/software?${query}`
   try {
     const resp = await fetch(url, {

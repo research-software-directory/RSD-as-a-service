@@ -10,7 +10,7 @@ import {useEffect, useReducer} from 'react'
 
 import {useSession} from '~/auth'
 import logger from '~/utils/logger'
-import {deleteMentionItem} from '~/utils/editMentions'
+import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
 import {MentionItemProps} from '~/types/Mention'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {
@@ -83,49 +83,49 @@ export default function EditReferencePapersProvider(props:any) {
   // console.log('state...', state)
   // console.groupEnd()
 
-  // async function processOnSubmit(action: EditMentionAction) {
-  //   const item:MentionItemProps = action.payload
-  //   // new item created manually
-  //   if (item.id === null || item.id === '') {
-  //     item.id = null
-  //     item.source = 'RSD'
-  //     // new item to be added
-  //     const resp = await addNewReferencePaperToSoftware({
-  //       item,
-  //       software,
-  //       token
-  //     })
-  //     // debugger
-  //     if (resp.status === 200) {
-  //       dispatch({
-  //         type: EditMentionActionType.ADD_ITEM,
-  //         // updated item is in message
-  //         payload: resp.message
-  //       })
-  //       // show success
-  //       showSuccessMessage(`Added ${item.title}`)
-  //       // increase count
-  //       setReferencePapersCnt(reference_papers+1)
-  //     } else {
-  //       showErrorMessage(resp.message as string)
-  //     }
-  //   } else if (user?.role === 'rsd_admin') {
-  //     // rsd_admin can update mention
-  //     const resp = await updateMentionItem({
-  //       mention: item,
-  //       token,
-  //     })
-  //     if (resp.status !== 200) {
-  //       showErrorMessage(`Failed to update ${item.title}. ${resp.message}`)
-  //       return
-  //     }
-  //     dispatch({
-  //       type: EditMentionActionType.UPDATE_ITEM,
-  //       // item is returned in message
-  //       payload: resp.message
-  //     })
-  //   }
-  // }
+  async function processOnSubmit(action: EditMentionAction) {
+    const item:MentionItemProps = action.payload
+    // new item created manually
+    if (item.id === null || item.id === '') {
+      item.id = null
+      item.source = 'RSD'
+      // new item to be added
+      const resp = await addNewReferencePaperToSoftware({
+        item,
+        software,
+        token
+      })
+      // debugger
+      if (resp.status === 200) {
+        dispatch({
+          type: EditMentionActionType.ADD_ITEM,
+          // updated item is in message
+          payload: resp.message
+        })
+        // show success
+        showSuccessMessage(`Added ${item.title}`)
+        // increase count
+        setReferencePapersCnt(reference_papers+1)
+      } else {
+        showErrorMessage(resp.message as string)
+      }
+    } else if (user?.role === 'rsd_admin') {
+      // rsd_admin can update mention
+      const resp = await updateMentionItem({
+        mention: item,
+        token,
+      })
+      if (resp.status !== 200) {
+        showErrorMessage(`Failed to update ${item.title}. ${resp.message}`)
+        return
+      }
+      dispatch({
+        type: EditMentionActionType.UPDATE_ITEM,
+        // item is returned in message
+        payload: resp.message
+      })
+    }
+  }
 
   async function processOnAdd(action: EditMentionAction) {
     const item: MentionItemProps = action.payload
@@ -222,11 +222,8 @@ export default function EditReferencePapersProvider(props:any) {
       case EditMentionActionType.ON_SUBMIT:
         // pass original action
         dispatch(action)
-        // WE do not allow manual creation of reference papers
-        logger('ON_SUBMIT action not supported','warn')
-        // process item by api
-        // and dispatch next action (see function)
-        // processOnSubmit(action)
+        // ONLY FOR rsd-admin to update item
+        processOnSubmit(action)
         break
       case EditMentionActionType.ON_ADD:
         // pass original action

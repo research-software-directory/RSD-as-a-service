@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,8 +18,8 @@ import FindRelatedProject from '~/components/projects/edit/related-projects/Find
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import RelatedProjectList from '~/components/projects/edit/related-projects/RelatedProjectList'
 import EditSection from '~/components/layout/EditSection'
+import {relatedProject as config} from '~/components/projects/edit/related-projects/config'
 import useSoftwareContext from '../useSoftwareContext'
-import {relatedProject as config} from './config'
 
 export default function RelatedProjectsForSoftware() {
   const {token} = useSession()
@@ -124,7 +124,7 @@ export default function RelatedProjectsForSoftware() {
       <section className="py-4">
         <EditSectionTitle
           title={config.findTitle}
-          // subtitle={config.label}
+          subtitle={config.findSubtitle}
         />
         <FindRelatedProject
           project={''}

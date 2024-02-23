@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +15,8 @@ import ValidateConceptDoi from './ValidateConceptDoi'
 const mockOnUpdate = jest.fn()
 const mockProps = {
   doi: '',
-  onUpdate: mockOnUpdate
+  onUpdate: mockOnUpdate,
+  disabled: true
 }
 
 const mockGetSoftwareVersionInfoForDoi = jest.fn(props => Promise.resolve({
@@ -33,31 +35,34 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-it('does NOT render when no DOI', () => {
+it('disabled button when disabled=true ', () => {
+  mockProps.disabled = true
   // render
   render(
     <ValidateConceptDoi {...mockProps} />
   )
   // ensure button not shown
   const validateBtn = screen.queryByRole('button')
-  expect(validateBtn).not.toBeInTheDocument()
+  expect(validateBtn).toBeDisabled()
 })
 
-it('renders validate DOI button', () => {
+it('enabled validate DOI button', () => {
   // provide DOI
   mockProps.doi = '10.1017/9781009085809'
+  mockProps.disabled = false
   // render
   render(
     <ValidateConceptDoi {...mockProps} />
   )
   // ensure button not shown
   const validateBtn = screen.queryByRole('button')
-  expect(validateBtn).toBeInTheDocument()
+  expect(validateBtn).not.toBeDisabled()
 })
 
 it('shows valid concept DOI message', async() => {
   // provide DOI
   mockProps.doi = '10.1017/9781009085809'
+  mockProps.disabled = false
   // mock response for valid Concept DOI
   mockGetSoftwareVersionInfoForDoi.mockResolvedValueOnce({
     status: 200,
@@ -94,9 +99,10 @@ it('shows valid concept DOI message', async() => {
   const validDOI = screen.getByText(`The DOI ${mockProps.doi} is a valid Concept DOI`)
 })
 
-it('shows version DOI message and suggest concept DOI', async() => {
+it('calls onUpdate with concept DOI when version DOI provided', async() => {
   // provide DOI
   mockProps.doi = '10.1017/9781009085809'
+  mockProps.disabled = false
   const conceptDOI = '10.5281/zenodo.7137566'
   // mock response for valid Concept DOI
   mockGetSoftwareVersionInfoForDoi.mockResolvedValueOnce({
@@ -130,5 +136,7 @@ it('shows version DOI message and suggest concept DOI', async() => {
   // wait loader to disappear
   await waitForElementToBeRemoved(within(validateBtn).getByRole('progressbar'))
   // valid DOI message shown
-  const versionDOI = screen.getByText(`This is a version DOI. The Concept DOI is ${conceptDOI}`)
+  // const versionDOI = screen.getByText(`This is a version DOI. The Concept DOI is ${conceptDOI}`)
+  expect(mockOnUpdate).toBeCalledTimes(1)
+  expect(mockOnUpdate).toBeCalledWith(conceptDOI)
 })

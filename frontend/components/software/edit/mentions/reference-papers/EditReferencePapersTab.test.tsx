@@ -207,7 +207,7 @@ describe('frontend/components/software/edit/mentions/outputindex.tsx', () => {
       // call RSD api to find mention by DOI
       expect(mockFindPublicationByTitle).toBeCalledTimes(1)
       expect(mockFindPublicationByTitle).toBeCalledWith({
-        'software': softwareState.software.id,
+        'id': softwareState.software.id,
         searchFor,
         'token': mockSession.token
       })

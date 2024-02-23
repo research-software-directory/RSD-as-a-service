@@ -4,16 +4,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import EditSection from '~/components/layout/EditSection'
-import FindSoftwareMention from '~/components/software/edit/mentions/FindSoftwareMention'
 import MentionEditSection from '~/components/mention/MentionEditSection'
 import ScrapersInfo from '~/components/projects/edit/mentions/output/ScrapersInfo'
-import {findPublicationByTitle} from '../output/apiRelatedOutput'
+import FindMentionSection from '~/components/mention/FindMentionSection'
+import {findPublicationByTitle} from '~/components/software/edit/mentions/output/apiRelatedOutput'
+import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
 import {cfgReferencePapers as config} from './config'
 import EditReferencePapersProvider from './EditReferencePapersProvider'
 import ReferencePapersInfo from './ReferencePapersInfo'
 
 export default function ReferencePapersTab() {
-
+  const {software} = useSoftwareContext()
   return (
     <EditReferencePapersProvider>
       <EditSection className="xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]">
@@ -23,8 +24,8 @@ export default function ReferencePapersTab() {
           <MentionEditSection />
         </div>
         <div className="pt-4 pb-8">
-          {/* use mention component */}
-          <FindSoftwareMention
+          <FindMentionSection
+            id={software.id}
             config={{
               title: config.findMention.title,
               minLength: config.findMention.validation.minLength,

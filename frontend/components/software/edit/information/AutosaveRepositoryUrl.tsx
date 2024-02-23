@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -101,7 +101,7 @@ export default function AutosaveRepositoryUrl() {
             setPlatform({
               id: suggestion,
               disabled: false,
-              helperText: 'Suggested'
+              helperText: ''
             })
           }
         )
@@ -112,7 +112,7 @@ export default function AutosaveRepositoryUrl() {
             setPlatform({
               id: platform.id,
               disabled: false,
-              helperText: suggestion === platform.id ? 'Suggested' : <span className="text-warning">Are you sure?</span>
+              helperText: suggestion === platform.id ? '' : <span className="text-warning">Are you sure?</span>
             })
           }
         )
@@ -156,7 +156,7 @@ export default function AutosaveRepositoryUrl() {
       // compare to suggested platform
       let helperText: string
       if (suggestedPlatform === value) {
-        helperText = 'Suggested'
+        helperText = ''
       } else {
         helperText = 'Are you sure?'
       }
@@ -203,10 +203,11 @@ export default function AutosaveRepositoryUrl() {
   // console.log('repository_url...', repository_url)
   // console.log('platform...', platform)
   // console.log('urlError...', urlError)
+  // console.log('options...', options)
   // console.groupEnd()
 
   return (
-    <div className="flex items-baseline">
+    <div className="flex gap-4 items-baseline">
       <AutosaveControlledTextField
         options={options}
         control={control}

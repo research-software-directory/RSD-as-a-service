@@ -8,7 +8,8 @@
 
 import EditSection from '~/components/layout/EditSection'
 import MentionEditSection from '~/components/mention/MentionEditSection'
-import FindSoftwareMention from '../FindSoftwareMention'
+import FindMentionSection from '~/components/mention/FindMentionSection'
+import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
 import EditRelatedOutputProvider from './EditRelatedOutputProvider'
 import AddRelatedOutput from './AddRelatedOutput'
 import ImportRelatedOutput from './ImportRelatedOutput'
@@ -17,7 +18,7 @@ import {findPublicationByTitle} from './apiRelatedOutput'
 import RelatedOutputInfo from './RelatedOutputInfo'
 
 export default function SoftwareOutputTab() {
-
+  const {software} = useSoftwareContext()
   return (
     <EditRelatedOutputProvider>
       <EditSection className="xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-[3rem]">
@@ -27,7 +28,8 @@ export default function SoftwareOutputTab() {
           <MentionEditSection />
         </div>
         <div className="pt-4 pb-8">
-          <FindSoftwareMention
+          <FindMentionSection
+            id={software.id}
             config={{
               title: config.findMention.title,
               minLength: config.findMention.validation.minLength,
