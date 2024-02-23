@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,23 +11,13 @@ import dynamic from 'next/dynamic'
 import InfoIcon from '@mui/icons-material/Info'
 import TeamsIcon from '@mui/icons-material/Groups'
 import FactoryIcon from '@mui/icons-material/Factory'
-import OutboundIcon from '@mui/icons-material/Outbound'
-import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew'
-import ShareIcon from '@mui/icons-material/Share'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ContentLoader from '~/components/layout/ContentLoader'
+import JoinInnerIcon from '@mui/icons-material/JoinInner'
+import AddCommentIcon from '@mui/icons-material/AddComment'
 
-
-// import ProjectInformation from './information'
-// import ProjectTeam from './team'
-// import ProjectOrganisations from './organisations'
-// import ProjectImpact from './impact'
-// import ProjectOutput from './output'
-// import RelatedTopics from './related'
-// import ProjectMaintainers from './maintainers'
-
-// use dynamic imports instead
+// use dynamic imports
 const ProjectInformation = dynamic(() => import('./information'),{
   loading: ()=><ContentLoader />
 })
@@ -37,10 +27,7 @@ const ProjectTeam = dynamic(() => import('./team'),{
 const ProjectOrganisations = dynamic(() => import('./organisations'),{
   loading: ()=><ContentLoader />
 })
-const ProjectImpact = dynamic(() => import('./impact'),{
-  loading: ()=><ContentLoader />
-})
-const ProjectOutput = dynamic(() => import('./output'),{
+const ProjectMentions = dynamic(() => import('./mentions'),{
   loading: ()=><ContentLoader />
 })
 const RelatedProjects = dynamic(() => import('./related-projects'),{
@@ -67,55 +54,48 @@ export const editProjectPage: EditProjectPageProps[] = [
     label: 'Information',
     icon: <InfoIcon />,
     render: () => <ProjectInformation />,
-    status: 'Required information'
+    status: ''
   },
   {
     id: 'team',
     label: 'Team',
     icon: <TeamsIcon />,
     render: () => <ProjectTeam />,
-    status: 'Required information'
+    status: ''
   },
   {
     id: 'organisations',
     label: 'Organisations',
     icon: <FactoryIcon />,
     render: () => <ProjectOrganisations />,
-    status: 'Optional information'
+    status: ''
   },
   {
-    id: 'impact',
-    label: 'Impact',
-    icon: <AccessibilityNewIcon />,
-    render: () => <ProjectImpact />,
-    status: 'Optional information'
-  },
-  {
-    id: 'output',
-    label: 'Output',
-    icon: <OutboundIcon />,
-    render: () => <ProjectOutput />,
-    status: 'Optional information'
+    id: 'mentions',
+    label: 'Mentions',
+    icon: <AddCommentIcon />,
+    render: () => <ProjectMentions />,
+    status: ''
   },
   {
     id: 'related-projects',
     label: 'Related projects',
-    icon: <ShareIcon />,
+    icon: <JoinInnerIcon />,
     render: () => <RelatedProjects />,
-    status: 'Optional information'
+    status: ''
   },
   {
     id: 'related-software',
     label: 'Related software',
     icon: <TerminalIcon />,
     render: () => <RelatedSoftware />,
-    status: 'Optional information'
+    status: ''
   },
   {
     id: 'maintainers',
     label: 'Maintainers',
     icon: <PersonAddIcon />,
     render: () => <ProjectMaintainers />,
-    status: 'Optional information'
+    status: ''
   }
 ]

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,6 +22,7 @@ import {
   addRelatedSoftware,
   openEditPage,
   openEditSection,
+  selectTab,
   uploadFile
 } from '../helpers/utils'
 import {Organisation, mockSoftwareOrganisation} from '../mocks/mockOrganisation'
@@ -125,6 +126,26 @@ test.describe.serial('Software', async()=> {
     expect(count).toBeGreaterThanOrEqual(0)
   })
 
+  test('Add reference papers using DOI', async ({page}, {project}) => {
+    // get mock software for the browser
+    const software = mockSoftware[project.name]
+    const citations = mockCitations[project.name]
+
+    // directly open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
+
+    // navigate to organisations sectiont
+    await openEditSection(page, 'Mentions')
+    // select impact tab
+    await selectTab(page,'Reference papers')
+
+    // add mentions using doi
+    for (const item of citations.dois.reference_paper) {
+      await addCitation(page, item, 'reference_paper_for_software')
+    }
+  })
+
   test('Add mentions using DOI', async ({page}, {project}) => {
     // get mock software for the browser
     const software = mockSoftware[project.name]
@@ -136,6 +157,8 @@ test.describe.serial('Software', async()=> {
 
     // navigate to organisations sectiont
     await openEditSection(page, 'Mentions')
+    // select impact tab
+    await selectTab(page,'Related output')
 
     // add mentions using doi
     for (const item of citations.dois.mention) {

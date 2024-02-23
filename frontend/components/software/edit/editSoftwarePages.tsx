@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,7 +18,6 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ContentLoader from '~/components/layout/ContentLoader'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import PendingActionsIcon from '@mui/icons-material/PendingActions'
-import PostAddIcon from '@mui/icons-material/PostAdd'
 import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices'
 
 // use dynamic imports instead
@@ -38,9 +37,6 @@ const SoftwareOgranisations = dynamic(() => import('./organisations'),{
   loading: ()=><ContentLoader />
 })
 const PackageManagers = dynamic(() => import('./package-managers'),{
-  loading: ()=><ContentLoader />
-})
-const ReferencePapers = dynamic(() => import('./reference-papers'),{
   loading: ()=><ContentLoader />
 })
 const RelatedSoftware = dynamic(() => import('./related-software'),{
@@ -70,66 +66,60 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
   label: 'Information',
   icon: <InfoIcon />,
   render: () => <SoftwareInformation />,
-  status: 'Required information'
+  status: ''
 },{
   id: 'contributors',
   label: 'Contributors',
   icon: <Diversity1Icon />,
   render: () => <SoftwareContributors />,
-  status: 'Required information'
+  status: ''
 },{
   id: 'organisations',
   label: 'Organisations',
   icon: <FactoryIcon />,
   render: () => <SoftwareOgranisations />,
-  status: 'Optional information'
-},{
-  id: 'reference-paper',
-  label: 'Reference papers',
-  icon: <PostAddIcon />,
-  render: () => <ReferencePapers />,
-  status: 'Optional information'
+  status: ''
 },{
   id: 'mentions',
   label: 'Mentions',
   icon: <AddCommentIcon />,
   render: () => <SoftwareMentions />,
-  status: 'Optional information'
+  status: ''
 },{
   id: 'testimonials',
   label: 'Testimonials',
   icon: <ThreePIcon />,
   render: () => <SoftwareTestimonials />,
-  status: 'Optional information'
+  status: ''
 },{
   id: 'package-managers',
   label: 'Package managers',
   icon: <HomeRepairServiceIcon />,
   render: () => <PackageManagers />,
-  status: 'Optional information'
+  status: ''
 },{
   id: 'related-software',
   label: 'Related software',
   icon: <ShareIcon />,
   render: () => <RelatedSoftware />,
-  status: 'Optional information'
+  status: ''
 },{
   id: 'related-projects',
   label: 'Related projects',
   icon: <PendingActionsIcon />,
   render: () => <RelatedProjects />,
-  status: 'Optional information'
+  status: ''
 },{
   id: 'maintainers',
   label: 'Maintainers',
   icon: <PersonAddIcon />,
   render: () => <SoftwareMaintainers />,
-  status: 'Optional information'
+  status: ''
 },{
   id: 'services',
   label: 'Background services',
   icon: <MiscellaneousServicesIcon />,
   render: () => <SoftwareServices />,
-  status: 'Status reports'
+  status: ''
 }
 ]

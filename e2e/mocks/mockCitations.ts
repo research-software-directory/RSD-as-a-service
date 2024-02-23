@@ -1,12 +1,18 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 export const mockCitations = {
   chrome: {
     dois: {
+      reference_paper:[
+        '10.1186/s13321-017-0220-4',
+        '10.1186/1758-2946-6-3'
+      ],
       mention: [
         '10.1017/9781009085809',
         '10.5281/zenodo.4075237',
@@ -27,6 +33,10 @@ export const mockCitations = {
   },
   chromium: {
     dois: {
+      reference_paper:[
+        '10.1186/s13321-017-0220-4',
+        '10.1186/1758-2946-6-3'
+      ],
       mention: [
         '10.1055/a-1229-5048',
         '10.1145/2996913.2997005'
@@ -47,6 +57,10 @@ export const mockCitations = {
   },
   firefox: {
     dois: {
+      reference_paper:[
+        '10.1186/s13321-017-0220-4',
+        '10.1186/1758-2946-6-3'
+      ],
       mention: [
         '10.1186/s12966-019-0834-1',
         '10.1515/itit-2019-0040',
@@ -67,6 +81,10 @@ export const mockCitations = {
   },
   msedge: {
     dois: {
+      reference_paper:[
+        '10.1186/s13321-017-0220-4',
+        '10.1186/1758-2946-6-3'
+      ],
       mention: [
         '10.21428/2e3983f5',
         '10.4060/cb9376en',
@@ -87,6 +105,10 @@ export const mockCitations = {
   },
   webkit: {
     dois: {
+      reference_paper:[
+        '10.1186/s13321-017-0220-4',
+        '10.1186/1758-2946-6-3'
+      ],
       mention: [
         '10.1109/eScience.2016.7870925',
         '10.26524/royal.37.29',

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "c04351c2-b7c9-4dd0-98b0-d9a4557818a2",
+    "doi": "10.1186/s13321-017-0220-4",
+    "url": "https://doi.org/10.1186%2Fs13321-017-0220-4",
+    "title": "The Chemistry Development Kit (CDK) v2.0: atom typing, depiction, molecular formulas, and substructure searching",
+    "authors": "Egon L. Willighagen, John W. Mayfield, Jonathan Alvarsson, Arvid Berg, Lars Carlsson, Nina Jeliazkova, Stefan Kuhn, Tomáš Pluskal, Miquel Rojas-Chertó, Ola Spjuth, Gilleain Torrance, Chris T. Evelo, Rajarshi Guha, Christoph Steinbeck",
+    "publisher": "Springer Science and Business Media LLC",
+    "publication_year": 2017,
+    "journal": "Journal of Cheminformatics",
+    "page": null,
+    "image_url": null,
+    "mention_type": "journalArticle",
+    "source": "Crossref",
+    "note": null
+  },
+  {
+    "id": "05990f5d-31c6-45c4-a14b-c9f7054130b2",
+    "doi": "10.1186/1758-2946-6-3",
+    "url": "https://doi.org/10.1186%2F1758-2946-6-3",
+    "title": "Efficient ring perception for the Chemistry Development Kit",
+    "authors": "John W May, Christoph Steinbeck",
+    "publisher": "Springer Science and Business Media LLC",
+    "publication_year": 2014,
+    "journal": "Journal of Cheminformatics",
+    "page": null,
+    "image_url": null,
+    "mention_type": "journalArticle",
+    "source": "Crossref",
+    "note": null
+  }
+]

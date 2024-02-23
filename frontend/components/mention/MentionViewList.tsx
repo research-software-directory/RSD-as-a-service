@@ -6,15 +6,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import Badge from '@mui/material/Badge'
 import {MentionItemProps} from '~/types/Mention'
 import MentionViewItem from './MentionViewItem'
 import useListPagination from './useListPagination'
 import Button from '@mui/material/Button'
+import AccordionForDarkTheme from './AccordionForDarkTheme'
 
 type MentionSectionListProps = {
   title: string
@@ -36,92 +33,38 @@ export default function MentionViewList({title, items}: MentionSectionListProps)
 
   // debugger
   return (
-    <Accordion
-      data-testid='mentions-section-for-type'
-      sx={{
-        boxShadow: 0,
-        borderTop: '1px solid',
-        borderColor: 'divider',
-        backgroundColor: 'secondary.light',
-        // remove line above the accordion
-        '&:before': {
-          height: '0px'
-        },
-        '&:last-child': {
-          borderBottom: '1px solid',
-          borderColor: 'divider'
+    <AccordionForDarkTheme
+      title={title}
+      badgeContent={items?.length ?? 0}
+    >
+      <ul>
+        {selection.map((item, pos) => {
+          return (
+            <li key={pos} className="p-4">
+              <MentionViewItem
+                pos={pos+1}
+                item={item}
+              />
+            </li>
+          )
+        })
         }
-      }}>
-      <AccordionSummary
-        expandIcon={
-          <ExpandMoreIcon />
-        }
-        // aria-controls={`panel1-content-${type}`}
-        // id={`panel1-header-${type}`}
-        sx={{
-          position: 'sticky',
-          top: 0,
-          backgroundColor: 'secondary.main',
-          padding: '0rem',
-          '&:hover': {
-            opacity:0.95
-          }
-        }}
-      >
-        <Badge
-          badgeContent={items.length ?? null}
-          max={9999}
-          color="secondary"
-          sx={{
-            '& .MuiBadge-badge': {
-              right: '-1rem',
-              top: '0.25rem',
-              border: '1px solid',
-              borderColor: 'secondary.contrastText',
-              color: 'secondary.contrastText',
-              fontWeight: 500
-            },
-          }}
-        >
-          <div className="text-xl">{title}</div>
-        </Badge>
-      </AccordionSummary>
-      <AccordionDetails sx={{
-        // set max height to avoid large shifts
-        maxHeight: '32rem',
-        //avoid resizing when scrollbar appears
-        overflow: 'overlay',
-        padding: '0rem 0rem'
-      }}>
-        <ul>
-          {selection.map((item, pos) => {
-            return (
-              <li key={pos} className="p-4">
-                <MentionViewItem
-                  pos={pos+1}
-                  item={item}
-                />
-              </li>
-            )
-          })
-          }
-          {
-            hasMore ?
-              <li key="show-all-button" className="p-4">
-                <Button
-                  title='Show more items'
-                  aria-label="Show more items"
-                  onClick={()=>setLimit(items.length)}
-                  size="large"
-                  startIcon = {<ExpandMoreIcon />}
-                >
+        {
+          hasMore ?
+            <li key="show-all-button" className="p-4">
+              <Button
+                title='Show more items'
+                aria-label="Show more items"
+                onClick={()=>setLimit(items.length)}
+                size="large"
+                startIcon = {<ExpandMoreIcon />}
+              >
                 Show all
-                </Button>
-              </li>
-              : null
-          }
-        </ul>
-      </AccordionDetails>
-    </Accordion>
+              </Button>
+            </li>
+            : null
+        }
+      </ul>
+    </AccordionForDarkTheme>
   )
 }
