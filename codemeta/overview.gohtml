@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CodeMeta overview</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.3/css/pico.min.css">
+</head>
+<body class="container">
+<h1>
+	CodeMeta overview
+</h1>
+<section>
+	This page gives a succinct overview of all software pages that export to CodeMeta.
+	<mark><strong>Warning</strong>: this feature is still in development, so the generated CodeMeta data might still
+		change.
+	</mark>
+</section>
+<section>{{range .}}
+		<article>
+			<header><a href="v3/{{.Slug}}/">{{.BrandName}}</a></header>{{.ShortStatement}}
+		</article>{{end}}
+</section>
+</body>
+</html>
