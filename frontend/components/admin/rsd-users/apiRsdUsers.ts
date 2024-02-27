@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,7 +22,7 @@ type getLoginApiParams = {
 export async function getRsdAccounts({page,rows,token,searchFor}:getLoginApiParams) {
   try {
     // pagination
-    let query = `select=id,login_for_account!inner(id,provider,name,email,home_organisation),admin_account!left(account_id)${paginationUrlParams({rows, page})}`
+    let query = `select=id,login_for_account!inner(id,provider,name,email,home_organisation,last_login_date),admin_account!left(account_id)${paginationUrlParams({rows, page})}`
     // search
     if (searchFor) {
       if (searchFor.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i) !== null) {

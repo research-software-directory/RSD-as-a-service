@@ -66,6 +66,7 @@ CREATE TABLE login_for_account (
 	name VARCHAR(200),
 	email VARCHAR(200),
 	home_organisation VARCHAR(200),
+	last_login_date TIMESTAMPTZ,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL,
 	UNIQUE(provider, sub)

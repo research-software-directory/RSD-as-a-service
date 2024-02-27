@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,6 +16,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -114,6 +116,7 @@ public class PostgrestAccount implements Account {
 		loginForAccountData.addProperty("email", openIdInfo.email());
 		loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
 		loginForAccountData.addProperty("provider", provider.toString());
+		loginForAccountData.addProperty("last_login_date", ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		URI createLoginUri = URI.create(backendUri + "/login_for_account");
 
 		HttpResponse<String> response = postJsonAsAdminWithResponse(createLoginUri, loginForAccountData.toString(), adminJwt);
@@ -124,17 +127,18 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	private void updateLoginForAccount(UUID id, OpenIdInfo openIdInfo, String token) throws IOException, InterruptedException {
+	private void updateLoginForAccount(UUID id, OpenIdInfo openIdInfo, String authToken) throws IOException, InterruptedException {
 		JsonObject loginForAccountData = new JsonObject();
 		loginForAccountData.addProperty("name", openIdInfo.name());
 		loginForAccountData.addProperty("email", openIdInfo.email());
 		loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
+		loginForAccountData.addProperty("last_login_date", ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		String resultingJson = loginForAccountData.toString();
 
 		String backendUri = Config.backendBaseUrl();
 		URI patchLoginForAccountUri = URI.create(backendUri + "/login_for_account?id=eq." + id.toString());
 
-		patchJsonAsAdmin(patchLoginForAccountUri, resultingJson, token);
+		patchJsonAsAdmin(patchLoginForAccountUri, resultingJson, authToken);
 	}
 
 	static String getAsAdmin(URI uri, String token) throws IOException, InterruptedException {
@@ -176,13 +180,13 @@ public class PostgrestAccount implements Account {
 		}
 	}
 
-	private String patchJsonAsAdmin(URI uri, String json, String token) throws IOException, InterruptedException {
+	private String patchJsonAsAdmin(URI uri, String json, String authToken) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
 				.uri(uri)
 				.header("Content-Type", "application/json")
 				.header("Prefer", "return=representation")
-				.header("Authorization", "bearer " + token)
+				.header("Authorization", "bearer " + authToken)
 				.build();
 		HttpResponse<String> response;
 		try (HttpClient client = HttpClient.newHttpClient()) {
