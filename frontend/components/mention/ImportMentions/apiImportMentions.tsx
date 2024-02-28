@@ -10,7 +10,7 @@ import {useState} from 'react'
 import {extractSearchTerm} from '~/components/software/edit/mentions/utils'
 import {SearchResult} from '.'
 import {getMentionsByDoiFromRsd} from '~/utils/editMentions'
-import {getDoiRAList, getItemsFromCrossref, getItemsFromDatacite} from '~/utils/getDOI'
+import {getDoiRAList, getItemsFromCrossref, getItemsFromDatacite, getItemsFromOpenAlex} from '~/utils/getDOI'
 import {MentionItemProps} from '~/types/Mention'
 import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import useEditMentionReducer from '../useEditMentionReducer'
@@ -53,7 +53,7 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
         const found = mentions.find(mention => mention.doi?.toLowerCase() === doi)
         if (found) {
           // flag item with DOI alredy processed
-          mentionResultPerDoi.set(doi, {doi ,status: 'alredyImported', include: false})
+          mentionResultPerDoi.set(doi, {doi ,status: 'alreadyImported', include: false})
           return false
         }
         return true
@@ -96,6 +96,7 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
     // classify dois by RA
     const crossrefDois: string[] = []
     const dataciteDois: string[] = []
+    const openalexDois: string[] = []
     doiRas.forEach(doiRa => {
       const doi = doiRa.DOI.toLowerCase()
       if (typeof doiRa?.RA === 'undefined') {
@@ -105,6 +106,8 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
         crossrefDois.push(doi)
       } else if (doiRa.RA === 'DataCite') {
         dataciteDois.push(doi)
+      } else if (doiRa.RA === 'OP') {
+        openalexDois.push(doi)
       } else {
         mentionResultPerDoi.set(doi, {doi, status: 'unsupportedRA', include: false})
       }
@@ -136,6 +139,20 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
           doi,
           status: 'valid',
           source: 'DataCite',
+          include: true,
+          mention
+        })
+      }
+    })
+
+    const openalexMentions = await getItemsFromOpenAlex(openalexDois)
+    openalexMentions.forEach(mention => {
+      if (mention.doi !== null) {
+        const doi = mention.doi.toLowerCase()
+        mentionResultPerDoi.set(doi, {
+          doi,
+          status: 'valid',
+          source: 'OpenAlex',
           include: true,
           mention
         })

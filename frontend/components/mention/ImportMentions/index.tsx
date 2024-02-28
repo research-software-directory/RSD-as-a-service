@@ -1,7 +1,7 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -23,9 +23,9 @@ import {DoiBulkImportReport, addMentions, linkMentionToEntity} from './apiImport
 
 export type SearchResult = {
   doi: string
-  status: 'valid' | 'invalidDoi' | 'doiNotFound' |'unsupportedRA' | 'alredyImported' | 'unknown',
+  status: 'valid' | 'invalidDoi' | 'doiNotFound' |'unsupportedRA' | 'alreadyImported' | 'unknown',
   include: boolean
-  source?: 'RSD' | 'Crossref' | 'DataCite',
+  source?: 'RSD' | 'Crossref' | 'DataCite' | 'OpenAlex',
   mention?: MentionItemProps
 }
 
