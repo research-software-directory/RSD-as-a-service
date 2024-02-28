@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class OpenAlexCitations {
+class OpenAlexCitations {
 
 	static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
 
@@ -214,7 +214,7 @@ public class OpenAlexCitations {
 			JsonObject locationObject = location.getAsJsonObject();
 			String landingPageUrl = Utils.stringOrNull(locationObject.get("landing_page_url"));
 			if (landingPageUrl != null) {
-				landingPageUrl = landingPageUrl.replaceAll("\\\\", "%5C");
+				landingPageUrl = landingPageUrl.replace("\\", "%5C");
 				return URI.create(landingPageUrl);
 			}
 

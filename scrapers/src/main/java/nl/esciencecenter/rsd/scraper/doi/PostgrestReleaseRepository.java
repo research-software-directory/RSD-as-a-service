@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -66,8 +66,10 @@ public class PostgrestReleaseRepository {
 		}
 
 		JsonArray coupling = new JsonArray();
-		for (String versionDoi : versionDoiToConceptDoi.keySet()) {
-			Collection<UUID> softwareIds = conceptDoiToSoftwareIds.get(versionDoiToConceptDoi.get(versionDoi));
+		for (Map.Entry<String, String> entry : versionDoiToConceptDoi.entrySet()) {
+			String versionDoi = entry.getKey();
+			String conceptDoi = entry.getValue();
+			Collection<UUID> softwareIds = conceptDoiToSoftwareIds.get(conceptDoi);
 			for (UUID softwareId : softwareIds) {
 				JsonObject couple = new JsonObject();
 				couple.addProperty("release_id", softwareId.toString());
