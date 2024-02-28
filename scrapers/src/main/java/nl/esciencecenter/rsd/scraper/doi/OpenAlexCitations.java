@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -27,6 +28,37 @@ import java.util.stream.StreamSupport;
 public class OpenAlexCitations {
 
 	static final String DOI_FILTER_URL_UNFORMATTED = "https://api.openalex.org/works?filter=doi:%s";
+
+	public Collection<MentionRecord> mentionData(Collection<String> dataciteDois, String email) throws IOException, InterruptedException {
+		String filter = dataciteDois.stream().filter(Objects::nonNull).collect(Collectors.joining("|"));
+		String worksUri = DOI_FILTER_URL_UNFORMATTED.formatted(Utils.urlEncode(filter)) + "&per-page=200";
+
+		HttpResponse<String> response;
+		if (email == null || email.isBlank()) {
+			response = Utils.getAsHttpResponse(worksUri);
+		} else {
+			response = Utils.getAsHttpResponse(worksUri, "User-Agent", "mailto:" + email);
+		}
+
+		JsonObject tree = JsonParser.parseString(response.body()).getAsJsonObject();
+		JsonArray citationsArray = tree
+				.getAsJsonArray("results");
+
+		Collection<MentionRecord> mentions = new ArrayList<>();
+		Instant now = Instant.now();
+		for (JsonElement citation : citationsArray) {
+			MentionRecord citationAsMention;
+			try {
+				citationAsMention = parseCitationAsMention(citation, now);
+			} catch (RuntimeException e) {
+				Utils.saveExceptionInDatabase("OpenAlex mention scraper", "mention", null, e);
+				continue;
+			}
+			mentions.add(citationAsMention);
+		}
+
+		return mentions;
+	}
 
 	public Collection<MentionRecord> citations(String doi, String email, UUID id) throws IOException, InterruptedException {
 
