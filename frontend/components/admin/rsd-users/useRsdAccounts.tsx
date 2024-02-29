@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,6 +15,7 @@ export type RsdAccount = {
   name: string|null,
   email: string | null,
   home_organisation: string | null,
+  last_login_date: Date | null,
 }
 
 export type RsdAccountInfo = {
