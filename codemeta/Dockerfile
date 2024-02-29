@@ -11,6 +11,8 @@ COPY **.go .
 
 RUN go build -v -o /usr/local/bin/app
 
+COPY **.gohtml .
+
 RUN useradd user
 USER user
 

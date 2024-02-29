@@ -3,14 +3,12 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-// https://research-software-directory.org/api/v1/software?slug=eq.rsd-ng&select=brand_name,concept_doi,short_statement,contributor(family_names,given_names,affiliation,role,orcid),license_for_software(license),repository_url(url)
-
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -81,15 +79,37 @@ func main() {
 		postgrestUrl = "http://backend:3500"
 	}
 
-	http.HandleFunc("GET /", func(writer http.ResponseWriter, request *http.Request) {
-		http.Redirect(writer, request, "/v3/", http.StatusMovedPermanently)
+	http.HandleFunc("GET /{other}/", func(writer http.ResponseWriter, request *http.Request) {
+		http.Redirect(writer, request, "/", http.StatusMovedPermanently)
 	})
 
-	http.HandleFunc("GET /v3/", func(writer http.ResponseWriter, request *http.Request) {
-		writer.WriteHeader(http.StatusBadRequest)
-		_, err := writer.Write([]byte("Please provide a slug"))
+	http.HandleFunc("GET /", func(writer http.ResponseWriter, request *http.Request) {
+		urlUnformatted := "%v/software?select=slug,brand_name,short_statement&order=brand_name"
+		url := fmt.Sprintf(urlUnformatted, postgrestUrl)
+		bodyBytes, err := GetAndReadBody(url)
 		if err != nil {
-			log.Print("Couldn't write response: ", err)
+			log.Print("Unknown error when downloading software overview: ", err)
+			writer.WriteHeader(http.StatusInternalServerError)
+			_, err := writer.Write([]byte("Server error"))
+			if err != nil {
+				log.Print("Couldn't write response: ", err)
+			}
+			return
+		}
+
+		byteBuffer := &bytes.Buffer{}
+		err = GenerateOverview(bodyBytes, byteBuffer)
+		if err != nil {
+			writer.WriteHeader(http.StatusInternalServerError)
+			_, err := writer.Write([]byte("Unknown error when generating software overview, please provide a slug"))
+			if err != nil {
+				log.Print("Couldn't write response: ", err)
+			}
+		}
+
+		_, err = byteBuffer.WriteTo(writer)
+		if err != nil {
+			log.Print("Couldn't write response after generating the overview: ", err)
 		}
 	})
 
@@ -129,33 +149,9 @@ func main() {
 		urlUnformatted := "%v/software?slug=eq.%v&select=brand_name,concept_doi,short_statement,contributor(family_names,given_names,affiliation,role,orcid,email_address),keyword(value),license_for_software(license),repository_url(url)"
 		url := fmt.Sprintf(urlUnformatted, postgrestUrl, slug)
 
-		resp, err := http.Get(url)
+		bytes, err := GetAndReadBody(url)
 		if err != nil {
 			log.Print("Unknown error when downloading data for slug "+slug+": ", err)
-			writer.WriteHeader(http.StatusInternalServerError)
-			_, err := writer.Write([]byte("Server error"))
-			if err != nil {
-				log.Print("Couldn't write response: ", err)
-			}
-			return
-		}
-
-		var bytes []byte
-		defer func(Body io.ReadCloser) {
-			err := Body.Close()
-			if err != nil {
-				log.Print("Unknown error when closing response body for slug "+slug+": ", err)
-				writer.WriteHeader(http.StatusInternalServerError)
-				_, err := writer.Write([]byte("Server error"))
-				if err != nil {
-					log.Print("Couldn't write response: ", err)
-				}
-				return
-			}
-		}(resp.Body)
-		bytes, err = io.ReadAll(resp.Body)
-		if err != nil {
-			log.Print("Unknown error for reading response body for slug "+slug+": ", err)
 			writer.WriteHeader(http.StatusInternalServerError)
 			_, err := writer.Write([]byte("Server error"))
 			if err != nil {
