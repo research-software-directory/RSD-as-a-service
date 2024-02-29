@@ -55,7 +55,7 @@ jobs:
           echo skipped=${{needs.release_tag.outputs.skipped}}
           echo tag=${{needs.release_tag.outputs.tag}}
   auth:
-    # it needs to be check on string value
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: release_tag
     name: auth
@@ -70,7 +70,7 @@ jobs:
       token: ${{secrets.GITHUB_TOKEN}}
 
   database:
-    # it needs to be check on string value
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: release_tag
     name: database
@@ -85,7 +85,7 @@ jobs:
       token: ${{secrets.GITHUB_TOKEN}}
 
   backend:
-    # it needs to be check on string value
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: release_tag
     name: backend api
@@ -100,7 +100,7 @@ jobs:
       token: ${{secrets.GITHUB_TOKEN}}
 
   frontend:
-    # it needs to be check on string value
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: release_tag
     name: frontend
@@ -115,7 +115,7 @@ jobs:
       token: ${{secrets.GITHUB_TOKEN}}
 
   nginx:
-    # it needs to be check on string value
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: release_tag
     name: nginx
@@ -129,8 +129,23 @@ jobs:
     secrets:
       token: ${{secrets.GITHUB_TOKEN}}
 
+  codemeta:
+    # it needs to be checked on string value
+    if: needs.release_tag.outputs.skipped == 'false'
+    needs: release_tag
+    name: codemeta
+    uses: ./.github/workflows/_ghcr.yml
+    with:
+      ghcr_user: ${{github.actor}}
+      base_image_name: ghcr.io/research-software-directory/rsd-saas/codemeta
+      image_tag: ${{needs.release_tag.outputs.tag}}
+      dockerfile: codemeta/Dockerfile
+      docker_context: ./codemeta
+    secrets:
+      token: ${{secrets.GITHUB_TOKEN}}
+
   scrapers:
-    # it needs to be check on string value
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: release_tag
     name: scrapers
@@ -160,7 +175,7 @@ jobs:
       token: ${{secrets.GITHUB_TOKEN}}
 
   deployment_files:
-    # it needs to be check on string value
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: [ release_tag,auth,database,backend,frontend,nginx,scrapers,documentation ]
     name: create deployment.zip
@@ -241,7 +256,7 @@ jobs:
           files: deployment.zip
 
   citation:
-    # it needs to be check on string value
+    # it needs to be checked on string value
     if: needs.release_tag.outputs.skipped == 'false'
     needs: [ release_tag, deployment_files, release_draft ]
     name: citations

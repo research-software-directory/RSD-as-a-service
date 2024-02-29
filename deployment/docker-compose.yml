@@ -162,6 +162,18 @@ services:
       - net
     restart: unless-stopped
 
+  codemeta:
+    image: ghcr.io/research-software-directory/rsd-saas/codemeta:latest
+    expose:
+      - "8000"
+    environment:
+      - POSTGREST_URL
+    depends_on:
+      - backend
+    networks:
+      - net
+    restart: unless-stopped
+
   swagger:
     image: swaggerapi/swagger-ui:v4.15.0
     expose:
@@ -196,6 +208,9 @@ services:
       - backend
       - auth
       - frontend
+      - codemeta
+      - swagger
+      - documentation
     networks:
       - net
     restart: unless-stopped
