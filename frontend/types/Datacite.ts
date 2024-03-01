@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,8 +26,8 @@ type DoiAttributes = {
   ]
   referenceCount: number
   citationCount: number
-  // and many more but we are initially interesed in these
-  // see exapleResponse for more or response from
+  // and many more, but we are initially interested in these
+  // see exampleResponse for more or response from
   // https://api.datacite.org/dois/10.5281/zenodo.1051064
   // documentation https://support.datacite.org/reference/get_dois-id
 }
@@ -92,7 +94,9 @@ const exampleWork = {
       'title': 'CellProfiler and KNIME: Open-Source Tools for High-Content Screening'
     }
   ],
-  'publisher': 'Springer Science and Business Media LLC',
+  'publisher': {
+    'name': 'Springer Science and Business Media LLC'
+  },
   'publicationYear': 2019,
   'creators': [
     {

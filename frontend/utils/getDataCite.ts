@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -27,7 +27,9 @@ function graphQLDoiQuery(doi:string) {
       descriptions(first:1){
         description
       },
-      publisher,
+      publisher {
+        name
+      },
       publicationYear,
       creators{
         givenName,
@@ -66,7 +68,9 @@ function graphQLDoisQuery(dois: string[]) {
         descriptions(first:1){
           description
         },
-        publisher,
+        publisher {
+          name
+        },
         publicationYear,
         creators{
           givenName,
@@ -118,7 +122,9 @@ function gqlWorksByTitleQuery(title: string) {
         descriptions(first:1){
           description
         },
-        publisher,
+        publisher {
+          name
+        },
         publicationYear,
         creators{
           givenName,
@@ -172,7 +178,7 @@ export function dataCiteGraphQLItemToMentionItem(item: WorkResponse) {
     url: makeDoiRedirectUrl(item.doi),
     title: item.titles[0].title,
     authors: extractAuthors(item),
-    publisher: item.publisher,
+    publisher: item.publisher.name,
     publication_year: item.publicationYear,
     journal: null,
     page: null,
@@ -252,7 +258,7 @@ export async function getDataciteItemsByDoiGraphQL(dois: string[]) {
 
 export async function getDataciteItemsByTitleGraphQL(title: string) {
   try {
-    const query = gqlWorksByTitleQuery(title)
+    const query = gqlWorksByTitleQuery(title.replace(':', '\\\\:'))
     const url = 'https://api.datacite.org/graphql'
 
     const resp = await fetch(url, {

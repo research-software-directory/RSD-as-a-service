@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.Instant;
@@ -24,9 +26,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DataciteMentionRepository implements MentionRepository {
 
@@ -49,7 +48,9 @@ public class DataciteMentionRepository implements MentionRepository {
 			      titles(first: 1) {
 			        title
 			      }
-			      publisher
+			      publisher {
+			        name
+			      }
 			      publicationYear
 			      registered
 			      creators {
@@ -154,7 +155,7 @@ public class DataciteMentionRepository implements MentionRepository {
 		}
 		result.authors = String.join(", ", authors);
 
-		result.publisher = Utils.stringOrNull(work.get("publisher"));
+		result.publisher = Utils.stringOrNull(work.getAsJsonObject("publisher").get("name"));
 		result.publicationYear = Utils.integerOrNull(work.get("publicationYear"));
 		String doiRegistrationDateString = Utils.stringOrNull(work.get("registered"));
 		if (doiRegistrationDateString != null) {
