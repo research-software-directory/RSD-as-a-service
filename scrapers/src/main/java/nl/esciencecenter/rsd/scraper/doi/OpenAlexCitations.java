@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,6 +20,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class OpenAlexCitations {
 
@@ -135,16 +138,15 @@ public class OpenAlexCitations {
 		}
 
 		JsonArray authorsArray = citationObject.getAsJsonArray("authorships");
-		Collection<String> authors = new ArrayList<>();
-		for (JsonElement jsonElement : authorsArray) {
-			authors.add(
-					jsonElement
-							.getAsJsonObject()
-							.getAsJsonPrimitive("raw_author_name")
-							.getAsString()
-			);
+		mention.authors = StreamSupport.stream(authorsArray.spliterator(), false)
+				.map(JsonElement::getAsJsonObject)
+				.map(jo -> jo.get("raw_author_name"))
+				.filter(Predicate.not(JsonElement::isJsonNull))
+				.map(JsonElement::getAsString)
+				.collect(Collectors.joining(", "));
+		if (mention.authors.isBlank()) {
+			mention.authors = null;
 		}
-		mention.authors = String.join(", ", authors);
 
 		mention.publisher = null;
 
