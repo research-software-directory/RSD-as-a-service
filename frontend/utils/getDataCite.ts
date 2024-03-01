@@ -258,7 +258,7 @@ export async function getDataciteItemsByDoiGraphQL(dois: string[]) {
 
 export async function getDataciteItemsByTitleGraphQL(title: string) {
   try {
-    const query = gqlWorksByTitleQuery(title)
+    const query = gqlWorksByTitleQuery(title.replace(':', '\\\\:'))
     const url = 'https://api.datacite.org/graphql'
 
     const resp = await fetch(url, {
@@ -270,10 +270,8 @@ export async function getDataciteItemsByTitleGraphQL(title: string) {
         query,
       }),
     })
-    console.log(resp)
     if (resp.status === 200) {
       const json: DataciteWorksGraphQLResponse = await resp.json()
-      console.log(JSON.stringify(json))
       if (json.data.works && json.data.works.nodes) return json.data.works.nodes
       return []
     }
