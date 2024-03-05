@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -82,7 +83,7 @@ export default function ImportReportBody({initialResults,onCancel,onImport}: Bul
         return 'DOI not found'
       case 'unsupportedRA':
         return 'Registration agent (RA) is not supported'
-      case 'alredyImported':
+      case 'alreadyImported':
         return 'This publication is already imported'
       default:
         return 'Unknown error'

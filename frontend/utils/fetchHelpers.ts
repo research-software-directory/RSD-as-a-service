@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,7 +44,7 @@ export async function extractReturnMessage(resp: Response, dataId?: string) {
       status: resp.status,
       message: `
           ${resp.statusText}.
-          You might not have sufficient priveleges to edit this item.
+          You might not have sufficient privileges to edit this item.
           Please contact site administrators.
         `
     }

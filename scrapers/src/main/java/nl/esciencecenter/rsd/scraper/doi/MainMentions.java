@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -19,9 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MainMentions {
 
@@ -45,7 +44,7 @@ public class MainMentions {
 
 		String doisJoined = mentionsToScrape.stream()
 				.map(mention -> mention.doi)
-				.map(doi -> Utils.urlEncode(doi))
+				.map(Utils::urlEncode)
 				.collect(Collectors.joining(","));
 		String jsonSources = null;
 		try {
@@ -88,9 +87,26 @@ public class MainMentions {
 			}
 		}
 
+		String email = Config.crossrefContactEmail().orElse(null);
+		Collection<String> europeanPublicationsOfficeDois = doiToSource.entrySet()
+				.stream()
+				.filter(doiSourceEntry -> doiSourceEntry.getValue().equals("OP"))
+				.map(Map.Entry::getKey)
+				.toList();
+		try {
+			Collection<MentionRecord> openalexMentions = new OpenAlexCitations().mentionData(europeanPublicationsOfficeDois, email);
+			for (MentionRecord openalexMention : openalexMentions) {
+				mentionsFailedToScrape.remove(openalexMention.doi);
+				scrapedMentions.add(openalexMention);
+			}
+		} catch (Exception e) {
+			Utils.saveExceptionInDatabase("DataCite mention scraper", "mention", null, e);
+		}
+
 		Instant now = Instant.now();
 		for (MentionRecord mention : mentionsFailedToScrape.values()) {
 			mention.scrapedAt = now;
+			LOGGER.info("Failed to scrape mention with DOI {}", mention.doi);
 		}
 		scrapedMentions.addAll(mentionsFailedToScrape.values());
 

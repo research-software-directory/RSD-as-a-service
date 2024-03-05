@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +9,7 @@ import {MentionItemProps} from '~/types/Mention'
 import {crossrefItemToMentionItem, getCrossrefItemByDoi} from './getCrossref'
 import {dataCiteGraphQLItemToMentionItem, getDataciteItemByDoiGraphQL, getDataciteItemsByDoiGraphQL} from './getDataCite'
 import logger from './logger'
+import {getOpenalexItemByDoi, getOpenalexItemsByDoi, openalexItemToMentionItem} from '~/utils/getOpenalex'
 
 type DoiRA = {
   DOI: string,
@@ -155,6 +156,30 @@ export async function getItemsFromDatacite(dois: string[]) {
   return mentions
 }
 
+async function getItemFromOpenalex(doi: string) {
+  const resp = await getOpenalexItemByDoi(doi)
+  // debugger
+  if (resp.status === 200) {
+    const mention = openalexItemToMentionItem(resp.message)
+    return {
+      status: 200,
+      message: mention
+    }
+  }
+  // return error message
+  return resp
+}
+
+export async function getItemsFromOpenAlex(dois: string[]): Promise<MentionItemProps[]> {
+  if (dois.length === 0) {
+    return []
+  }
+
+  const response = await getOpenalexItemsByDoi(dois)
+
+  return response.message.map((rawMention: any) => openalexItemToMentionItem(rawMention))
+}
+
 export async function getMentionByDoi(doi: string) {
   // get RA first
   const doiRA = await getDoiRA(doi)
@@ -167,6 +192,8 @@ export async function getMentionByDoi(doi: string) {
       case 'datacite':
         // get from datacite
         return getItemFromDatacite(doi)
+      case 'op':
+        return getItemFromOpenalex(doi)
       default:
         return {
           status: 400,

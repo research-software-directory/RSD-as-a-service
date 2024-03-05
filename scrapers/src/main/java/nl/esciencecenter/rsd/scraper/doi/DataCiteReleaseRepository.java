@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,15 +10,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DataCiteReleaseRepository {
 
@@ -41,7 +40,9 @@ public class DataCiteReleaseRepository {
 			""";
 
 	public Map<String, Collection<MentionRecord>> getVersionedDois(Collection<String> conceptDois) {
-		if (conceptDois.isEmpty()) return Collections.EMPTY_MAP;
+		if (conceptDois.isEmpty()) {
+			return Collections.emptyMap();
+		}
 
 		String query = QUERY_UNFORMATTED.formatted(DataciteMentionRepository.joinCollection(conceptDois));
 		JsonObject body = new JsonObject();
