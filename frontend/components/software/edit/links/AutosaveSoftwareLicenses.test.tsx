@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,12 +10,14 @@ import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import {License} from '~/types/SoftwareTypes'
 import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
+import {WithFormContext} from '~/utils/jest/WithFormContext'
 
-import AutosaveSoftwareLicenses, {SoftwareLicensesProps} from './AutosaveSoftwareLicenses'
+import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
 
 // MOCKS
 import licenseForSoftware from './__mocks__/licenseForSoftware.json'
 import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
+
 
 const licenseOptions:AutocompleteOption<License>[] = licenseForSoftware.map(item => ({
   key: item.license,
@@ -25,8 +29,15 @@ const licenseOptions:AutocompleteOption<License>[] = licenseForSoftware.map(item
     software: item.software
   }
 }))
-const mockProps:SoftwareLicensesProps = {
-  items: licenseOptions
+
+const defaultValues:{
+  id:string
+  licenses: AutocompleteOption<License>[],
+  concept_doi: string | null
+}={
+  id: licenseForSoftware[0].software,
+  licenses: licenseOptions,
+  concept_doi: null
 }
 
 // MOCKS
@@ -58,32 +69,39 @@ beforeEach(() => {
 it('renders mocked licenses', () => {
   // copy software id
   softwareState.software.id = licenseForSoftware[0].software
-  // mock items
-  mockProps.items = licenseOptions
+  // mock values
+  defaultValues.id = licenseForSoftware[0].software
+  defaultValues.licenses = licenseOptions
+  defaultValues.concept_doi = null
   // render
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={defaultValues}>
+          <AutosaveSoftwareLicenses />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )
   // validate chips shown
   const chips = screen.getAllByTestId('license-chip')
-  expect(chips.length).toEqual(mockProps.items.length)
+  expect(chips.length).toEqual(defaultValues.licenses.length)
 })
 
 it('can add NEW license', async() => {
   const newLicense = 'New license to add'
-  // copy software id
-  softwareState.software.id = licenseForSoftware[0].software
-  // mock no items
-  mockProps.items = []
+  // mock values
+  defaultValues.id = licenseForSoftware[0].software
+  // mock no licenses
+  defaultValues.licenses = []
+  defaultValues.concept_doi = null
   // render
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={defaultValues}>
+          <AutosaveSoftwareLicenses />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )
@@ -115,9 +133,10 @@ it('can add NEW license', async() => {
 it('can import license from DOI', async() => {
   // copy software id
   softwareState.software.id = licenseForSoftware[0].software
-  // mock no items
-  mockProps.items = []
-  mockProps.concept_doi = '10.1017/9781009085809'
+  // mock values
+  defaultValues.id = licenseForSoftware[0].software
+  defaultValues.licenses = []
+  defaultValues.concept_doi = '10.1017/9781009085809'
 
   // mock api response
   const importLicense = 'Apache-2.0'
@@ -127,7 +146,9 @@ it('can import license from DOI', async() => {
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={defaultValues}>
+          <AutosaveSoftwareLicenses />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )
@@ -144,7 +165,7 @@ it('can import license from DOI', async() => {
   await waitFor(() => {
     // validate import api call
     expect(mockGetLicensesFromDoi).toBeCalledTimes(1)
-    expect(mockGetLicensesFromDoi).toBeCalledWith(mockProps.concept_doi)
+    expect(mockGetLicensesFromDoi).toBeCalledWith(defaultValues.concept_doi)
 
     // validate license save api call
     expect(mockAddLicensesForSoftware).toBeCalledTimes(1)
@@ -165,12 +186,16 @@ it('can add license from list', async() => {
   // copy software id
   softwareState.software.id = licenseForSoftware[0].software
   // mock no items
-  mockProps.items = []
+  defaultValues.id = licenseForSoftware[0].software
+  defaultValues.licenses = []
+  defaultValues.concept_doi = null
   // render
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={defaultValues}>
+          <AutosaveSoftwareLicenses />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )
@@ -203,7 +228,9 @@ it('can remove license', async () => {
   // copy software id
   softwareState.software.id = licenseForSoftware[0].software
   // mock items
-  mockProps.items = licenseOptions
+  defaultValues.id = licenseForSoftware[0].software
+  defaultValues.licenses = licenseOptions
+  defaultValues.concept_doi = null
   // mock api response for delete
   mockDeleteLicense.mockResolvedValueOnce({
     status: 200,
@@ -213,7 +240,9 @@ it('can remove license', async () => {
   render(
     <WithAppContext options={{session: mockSession}}>
       <WithSoftwareContext state={softwareState}>
-        <AutosaveSoftwareLicenses {...mockProps} />
+        <WithFormContext defaultValues={defaultValues}>
+          <AutosaveSoftwareLicenses />
+        </WithFormContext>
       </WithSoftwareContext>
     </WithAppContext>
   )
@@ -227,7 +256,7 @@ it('can remove license', async () => {
   await waitFor(() => {
     expect(mockDeleteLicense).toBeCalledTimes(1)
     expect(mockDeleteLicense).toBeCalledWith({
-      'id': mockProps.items[0].data.id,
+      'id': defaultValues.licenses[0].data.id,
       'token': mockSession.token,
     })
     const remained = screen.getAllByTestId('license-chip')

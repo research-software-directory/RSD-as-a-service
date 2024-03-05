@@ -13,8 +13,9 @@ import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import FormHelperText from '@mui/material/FormHelperText'
+
 import {CodePlatform} from '~/types/SoftwareTypes'
-import {softwareInformation as config} from '../editSoftwareConfig'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 
 type AutosaveRepositoryPlatformProps = {
   value: CodePlatform | null

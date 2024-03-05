@@ -7,7 +7,7 @@ import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import useSoftwareContext from '../useSoftwareContext'
 import useSoftwareToEdit from '../useSoftwareToEdit'
-import EditSoftwareDescriptionForm from './EditSoftwareDescriptionForm'
+import EditSoftwareMetadataForm from './EditSoftwareMetadataForm'
 
 export default function EditSoftwareDescrptionPage() {
   const {token} = useSession()
@@ -28,7 +28,7 @@ export default function EditSoftwareDescrptionPage() {
   // Load the form component after editSoftware is present
   // in order to loaded these values directly in the form (defaultValues)
   if (editSoftware) {
-    return <EditSoftwareDescriptionForm data={editSoftware} />
+    return <EditSoftwareMetadataForm data={editSoftware} />
   }
 
   return <ContentLoader />

@@ -4,14 +4,20 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import {AutocompleteOption} from '../../../../types/AutocompleteOptions'
-import {EditSoftwareItem, KeywordForSoftware, License} from '../../../../types/SoftwareTypes'
-import {getSoftwareToEdit} from '../../../../utils/editSoftware'
-import {getCategoriesForSoftware, getKeywordsForSoftware, getLicenseForSoftware} from '../../../../utils/getSoftware'
+import {AutocompleteOption} from '~/types/AutocompleteOptions'
+import {EditSoftwareItem, KeywordForSoftware, License} from '~/types/SoftwareTypes'
+import {getSoftwareToEdit} from '~/utils/editSoftware'
+import {
+  getCategoriesForSoftware,
+  getKeywordsForSoftware,
+  getLicenseForSoftware
+} from '~/utils/getSoftware'
 
 function prepareLicenses(rawLicense: License[]=[]) {
   const license:AutocompleteOption<License>[] = rawLicense?.map((item: any) => {
@@ -23,7 +29,6 @@ function prepareLicenses(rawLicense: License[]=[]) {
   })
   return license
 }
-
 
 export async function getSoftwareInfoForEdit({slug, token}: { slug: string, token: string }) {
   const software = await getSoftwareToEdit({slug, token})

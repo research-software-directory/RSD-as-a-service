@@ -4,6 +4,8 @@
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -236,6 +238,7 @@ export default function SoftwareContributors() {
             <EditSectionTitle
               title={config.importContributors.title}
               subtitle={config.importContributors.subtitle}
+              infoLink={config.importContributors.infoLink}
             />
             <GetContributorsFromDoi
               contributors={contributors}

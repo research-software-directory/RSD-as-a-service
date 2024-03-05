@@ -19,12 +19,16 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
 import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices'
 import JoinInnerIcon from '@mui/icons-material/JoinInner'
 import DonutLargeIcon from '@mui/icons-material/DonutLarge'
+import ArticleIcon from '@mui/icons-material/Article'
 
 // use dynamic imports instead
 const SoftwareContributors = dynamic(() => import('./contributors'),{
   loading: ()=><ContentLoader />
 })
-const SoftwareInformation = dynamic(() => import('./information'),{
+const SoftwareDescription = dynamic(() => import('./information'),{
+  loading: ()=><ContentLoader />
+})
+const SoftwareLinks = dynamic(() => import('./links'),{
   loading: ()=><ContentLoader />
 })
 const SoftwareMaintainers = dynamic(() => import('./maintainers'),{
@@ -63,9 +67,15 @@ export type EditSoftwarePageProps = {
 
 export const editSoftwarePage:EditSoftwarePageProps[] = [{
   id: 'information',
-  label: 'Software details',
+  label: 'Description',
+  icon: <ArticleIcon />,
+  render: () => <SoftwareDescription />,
+  status: ''
+},{
+  id: 'links',
+  label: 'Links & metadata',
   icon: <AppShortcutIcon />,
-  render: () => <SoftwareInformation />,
+  render: () => <SoftwareLinks />,
   status: ''
 },{
   id: 'contributors',

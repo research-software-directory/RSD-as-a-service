@@ -78,8 +78,8 @@ export const softwareInformation = {
   },
   // field for markdown
   description: {
-    label: 'Description',
-    help: (brand_name: string) => `What ${brand_name} can do for you`,
+    label: (brand_name: string) => `What ${brand_name} can do for you`,
+    help: '/documentation/users/adding-software/#basic-information',
     validation: {
       // we do not show error message for this one, we use only maxLength value
       maxLength: {value: 10000, message: 'Maximum length is 10000'},
@@ -110,9 +110,9 @@ export const softwareInformation = {
     }
   },
   concept_doi: {
-    title: 'Concept DOI',
-    subtitle: 'Generate citation files and import keywords, licenses and contributors using concept DOI metadata',
-    label: 'Concept DOI',
+    title: 'Software DOI',
+    subtitle: 'Provide the DOI of your software. This DOI will be used to import metadata about the software.',
+    label: 'Software DOI',
     help: '',
     infoLink: 'https://help.zenodo.org/faq/#versioning',
     validation: {
@@ -140,7 +140,7 @@ export const softwareInformation = {
   },
   keywords: {
     title: 'Keywords',
-    subtitle: 'Find, add or import using concept DOI.',
+    subtitle: 'Add keywords to your software, or import them using the Software DOI.',
     label: 'Find or add keyword',
     help: 'Select from top 30 list or start typing for the suggestions',
     validation: {
@@ -154,7 +154,7 @@ export const softwareInformation = {
   },
   licenses: {
     title: 'Licenses',
-    subtitle: 'What licenses do apply to your software? You can also import licenses using concept DOI.',
+    subtitle: 'What licenses do apply to your software?',
     label: 'Find or add a license',
     help: 'Start typing for the suggestions',
     validation: {
@@ -183,7 +183,8 @@ export const contributorInformation = {
   },
   importContributors: {
     title: 'Import contributors',
-    subtitle: 'We use your concept DOI and datacite.org API',
+    subtitle: 'We use your Software DOI and DataCite.org API',
+    infoLink: '/documentation/users/adding-software/#contributors',
     label: 'Import contributors',
     message: (doi: string) => `Import contributors from datacite.org using DOI ${doi}`
   },

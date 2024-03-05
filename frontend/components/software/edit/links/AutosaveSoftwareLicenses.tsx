@@ -9,28 +9,29 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {HTMLAttributes, useState} from 'react'
+import Chip from '@mui/material/Chip'
+import {useFormContext} from 'react-hook-form'
 
 import {useSession} from '~/auth'
-import {softwareInformation as config} from '../editSoftwareConfig'
 import useSpdxLicenses from '~/utils/useSpdxLicenses'
-import {License} from '~/types/SoftwareTypes'
+import {sortBySearchFor} from '~/utils/sortFn'
+import {addLicensesForSoftware, deleteLicense} from '~/utils/editSoftware'
+import {EditSoftwareItem, License} from '~/types/SoftwareTypes'
+import useSnackbar from '~/components/snackbar/useSnackbar'
 import AsyncAutocompleteSC, {
   AutocompleteOption
 } from '~/components/form/AsyncAutocompleteSC'
-import Chip from '@mui/material/Chip'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import {sortBySearchFor} from '~/utils/sortFn'
-import ImportLicensesFromDoi from './ImportLicensesFromDoi'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import useSoftwareContext from '../useSoftwareContext'
-import {addLicensesForSoftware, deleteLicense} from '~/utils/editSoftware'
+import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import ImportLicensesFromDoi from './ImportLicensesFromDoi'
 
 export type SoftwareLicensesProps = {
   items: AutocompleteOption<License>[]
   concept_doi?: string
 }
 
-export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareLicensesProps) {
+export default function AutosaveSoftwareLicenses() {
   const {token} = useSession()
   const {software: {id}} = useSoftwareContext()
   const {showErrorMessage} = useSnackbar()
@@ -43,12 +44,25 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
     foundFor: undefined
   })
   const [options, setOptions] = useState<AutocompleteOption<License>[]>(allOptions)
-  const [licenses, setLicenses] = useState(items)
+  const {watch,setValue,formState:{errors}} = useFormContext<EditSoftwareItem>()
+  const [licenses,concept_doi] = watch(['licenses','concept_doi'])
+  const validDoi = errors?.concept_doi ? false : true
 
   // console.group('AutosaveSoftwareLicenses')
   // console.log('licenses...', licenses)
-  // console.log('fields...', fields)
+  // console.log('concept_doi...', concept_doi)
+  // console.log('errors...', errors)
+  // console.log('validDoi...', validDoi)
   // console.groupEnd()
+
+  function setLicenses(items:AutocompleteOption<License>[]){
+    // save licenses in the form context
+    setValue('licenses',items,{
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false
+    })
+  }
 
   function searchLicense(searchFor: string) {
     // console.log('searchLicense...searchFor...', searchFor)
@@ -196,7 +210,13 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
       <EditSectionTitle
         title={config.licenses.title}
         subtitle={config.licenses.subtitle}
-      />
+      >
+        <ImportLicensesFromDoi
+          concept_doi={validDoi && concept_doi ? concept_doi : null}
+          items={licenses}
+          onSetLicenses={setLicenses}
+        />
+      </EditSectionTitle>
       <AsyncAutocompleteSC
         status={status}
         options={options}
@@ -232,13 +252,6 @@ export default function AutosaveSoftwareLicenses({concept_doi, items}: SoftwareL
             </div>
           )
         })}
-      </div>
-      <div className="py-2">
-        <ImportLicensesFromDoi
-          concept_doi={concept_doi ?? null}
-          items={licenses}
-          onSetLicenses={setLicenses}
-        />
       </div>
     </>
   )

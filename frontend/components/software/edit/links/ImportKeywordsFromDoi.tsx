@@ -7,19 +7,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import DownloadIcon from '@mui/icons-material/Download'
 
-import {softwareInformation as config} from '../editSoftwareConfig'
-import {KeywordForSoftware} from '~/types/SoftwareTypes'
-import {useState} from 'react'
-import {getKeywordsFromDoi} from '~/utils/getInfoFromDatacite'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import {addKeywordsToSoftware, createOrGetKeyword, KeywordItem} from '~/utils/editKeywords'
 import {useSession} from '~/auth'
-import {sortOnStrProp} from '~/utils/sortFn'
 import logger from '~/utils/logger'
+import {sortOnStrProp} from '~/utils/sortFn'
+import {getKeywordsFromDoi} from '~/utils/getInfoFromDatacite'
+import {addKeywordsToSoftware, createOrGetKeyword, KeywordItem} from '~/utils/editKeywords'
+import {KeywordForSoftware} from '~/types/SoftwareTypes'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 
 type ImportKeywordsFromDoiProps = {
   software_id: string

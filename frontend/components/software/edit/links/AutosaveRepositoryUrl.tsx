@@ -9,17 +9,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useController, useFormContext} from 'react-hook-form'
-import {CodePlatform, EditSoftwareItem, RepositoryUrl} from '~/types/SoftwareTypes'
-import {softwareInformation as config} from '../editSoftwareConfig'
-import AutosaveRepositoryPlatform from './AutosaveRepositoryPlatform'
-import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
 import {useEffect, useState} from 'react'
-import {addToRepositoryTable, deleteFromRepositoryTable} from '~/utils/editSoftware'
+import {useController, useFormContext} from 'react-hook-form'
+
 import {useSession} from '~/auth'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import {getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
+import {addToRepositoryTable, deleteFromRepositoryTable} from '~/utils/editSoftware'
+import {getBaseUrl} from '~/utils/fetchHelpers'
+import {CodePlatform, EditSoftwareItem, RepositoryUrl} from '~/types/SoftwareTypes'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import AutosaveRepositoryPlatform from './AutosaveRepositoryPlatform'
 
 async function suggestPlatform(repositoryUrl: string | null) {
   // console.log('repositoryUrl...',repositoryUrl)

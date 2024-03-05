@@ -61,7 +61,19 @@ export async function createSoftware({title, desc, slug, page}: CreateSoftwarePr
   return inputSlug
 }
 
-export async function editSoftwareInput(page: Page, mockSoftware: MockedSoftware) {
+export async function editSoftwareDescription(page: Page, mockSoftware: MockedSoftware) {
+  // add custom markdown
+  await page.getByText('Custom markdown').click()
+  // write markdown
+  const markdown = page.locator('#markdown-textarea')
+  await fillAutosaveInput({
+    page,
+    element: markdown,
+    value: mockSoftware.markdown
+  })
+}
+
+export async function editSoftwareMetadata(page: Page, mockSoftware: MockedSoftware) {
   // add get started url
   const getStarted = await page.getByLabel('Get Started URL')
   await fillAutosaveInput({
@@ -77,17 +89,8 @@ export async function editSoftwareInput(page: Page, mockSoftware: MockedSoftware
     // wait for POST
     page.waitForResponse(/\/repository_url/),
   ])
-  // add custom markdown
-  await page.getByText('Custom markdown').click()
-  // write markdown
-  const markdown = page.locator('#markdown-textarea')
-  await fillAutosaveInput({
-    page,
-    element: markdown,
-    value: mockSoftware.markdown
-  })
   // add Concept DOI
-  const doi = await page.getByLabel('Concept DOI')
+  const doi = await page.getByLabel('Software DOI')
   await fillAutosaveInput({
     page,
     element: doi,

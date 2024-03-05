@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import softwareItem from './softwareItem.json'
 import SoftwareCitationItems from './citationItems'
-import licenseInfo from '~/components/software/edit/information/__mocks__/licenseForSoftware.json'
+import licenseInfo from '~/components/software/edit/links/__mocks__/licenseForSoftware.json'
 import apiMentions from './apiMentions.json'
 import apiTestimonial from './apiTestiomonial.json'
 import apiContributors from './apiContributors.json'

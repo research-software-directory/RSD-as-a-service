@@ -11,9 +11,9 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import FactCheckIcon from '@mui/icons-material/FactCheck'
 
-import {softwareInformation as config} from '../editSoftwareConfig'
-import useSnackbar from '~/components/snackbar/useSnackbar'
 import {getSoftwareVersionInfoForDoi} from '~/utils/getDataCite'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 
 type ValidateConceptDoiProps = {
   doi: string,

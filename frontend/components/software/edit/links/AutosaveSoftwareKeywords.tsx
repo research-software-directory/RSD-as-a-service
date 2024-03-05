@@ -8,37 +8,48 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
 import Chip from '@mui/material/Chip'
+import {useFormContext} from 'react-hook-form'
 
 import {useSession} from '~/auth'
-import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
-import {softwareInformation as config} from '../editSoftwareConfig'
-import {searchForSoftwareKeyword} from './searchForSoftwareKeyword'
-import {KeywordForSoftware} from '~/types/SoftwareTypes'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import ImportKeywordsFromDoi from './ImportKeywordsFromDoi'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {
   addKeywordsToSoftware, createOrGetKeyword,
   deleteKeywordFromSoftware, silentKeywordDelete
 } from '~/utils/editKeywords'
 import {sortOnStrProp} from '~/utils/sortFn'
+import {EditSoftwareItem, KeywordForSoftware} from '~/types/SoftwareTypes'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {searchForSoftwareKeyword} from './searchForSoftwareKeyword'
+import ImportKeywordsFromDoi from './ImportKeywordsFromDoi'
 
 export type SoftwareKeywordsProps={
   software_id:string,
-  items: KeywordForSoftware[]
   concept_doi?:string
 }
 
-export default function AutosaveSoftwareKeywords({software_id, items, concept_doi}:SoftwareKeywordsProps){
+export default function AutosaveSoftwareKeywords(){
   const {token} = useSession()
   const {showErrorMessage, showInfoMessage} = useSnackbar()
-  const [keywords, setKeywords] = useState(items)
+  const {watch,setValue,formState:{errors}} = useFormContext<EditSoftwareItem>()
+  const [id,keywords,concept_doi] = watch(['id','keywords','concept_doi'])
+  const validDoi = errors?.concept_doi ? false : true
 
-  // console.group('SoftwareKeywords')
-  // console.log('fields...', fields)
+  // console.group('AutosaveSoftwareKeywords')
+  // console.log('concept_doi...', concept_doi)
+  // console.log('validDoi...', validDoi)
   // console.groupEnd()
+
+  function setKeywords(items:KeywordForSoftware[]){
+    // save keywords in the form context
+    setValue('keywords',items,{
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false
+    })
+  }
 
   async function onAdd(selected: Keyword) {
     // check if already added
@@ -46,7 +57,7 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
     let resp
     if (find.length === 0) {
       resp = await addKeywordsToSoftware({
-        data:{software:software_id, keyword: selected.id},
+        data:{software:id, keyword: selected.id},
         token
       })
       if (resp.status===200){
@@ -54,7 +65,7 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
           ...keywords,
           {
             ...selected,
-            software:software_id
+            software:id
           }
         ].sort((a,b)=>sortOnStrProp(a,b,'keyword'))
         setKeywords(items)
@@ -79,7 +90,7 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
         const keyword = {
           id: resp.message.id,
           keyword: resp.message.value,
-          software: software_id,
+          software: id,
           cnt: null
         }
         // add keyword after created
@@ -124,14 +135,21 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
       <EditSectionTitle
         title={config.keywords.title}
         subtitle={config.keywords.subtitle}
-      />
+      >
+        <ImportKeywordsFromDoi
+          software_id={id}
+          concept_doi={validDoi && concept_doi ? concept_doi : null}
+          keywords={keywords}
+          onSetKeywords={setKeywords}
+        />
+      </EditSectionTitle>
       <FindKeyword
         config={{
           freeSolo: false,
           minLength: config.keywords.validation.minLength,
           label: config.keywords.label,
           help: config.keywords.help,
-          reset: true,
+          reset: true
         }}
         searchForKeyword={searchForSoftwareKeyword}
         onAdd={onAdd}
@@ -156,14 +174,6 @@ export default function AutosaveSoftwareKeywords({software_id, items, concept_do
             </div>
           )
         })}
-      </div>
-      <div className="py-2">
-        <ImportKeywordsFromDoi
-          software_id={software_id}
-          concept_doi={concept_doi ?? null}
-          keywords={keywords}
-          onSetKeywords={setKeywords}
-        />
       </div>
     </>
   )

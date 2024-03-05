@@ -7,14 +7,14 @@
 
 import InputAdornment from '@mui/material/InputAdornment'
 import {useController, useFormContext} from 'react-hook-form'
-import {softwareInformation as config} from '../editSoftwareConfig'
 
-import ValidateConceptDoi from './ValidateConceptDoi'
-import AutosaveSoftwareTextField from './AutosaveSoftwareTextField'
-import {patchSoftwareTable} from './patchSoftwareTable'
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import AutosaveSoftwareTextField from '~/components/software/edit/information/AutosaveSoftwareTextField'
+import {patchSoftwareTable} from '~/components/software/edit/information/patchSoftwareTable'
+import ValidateConceptDoi from './ValidateConceptDoi'
 
 export default function AutosaveConceptDoi() {
   const {token} = useSession()
@@ -24,10 +24,9 @@ export default function AutosaveConceptDoi() {
     control,
     name: 'concept_doi'
   })
-  // const [updateDoi, setUpdateDoi] = useState<string>()
   const [id,concept_doi] = watch(['id','concept_doi'])
 
-  // console.group('ConceptDoi')
+  // console.group('AutosaveConceptDoi')
   // console.log('id...', id)
   // console.log('concept_doi...', concept_doi)
   // console.log('error...', error)
@@ -50,9 +49,7 @@ export default function AutosaveConceptDoi() {
         resetField('concept_doi', {
           defaultValue:doi
         })
-        // setValue('concept_doi', updateDoi, {shouldValidate: true, shouldDirty: true})
-        // remove value to hide update button
-        // setUpdateDoi(undefined)
+        // Notify user about the update
         showSuccessMessage(`Updated version DOI to Concept DOI: ${doi}`)
       }
     }

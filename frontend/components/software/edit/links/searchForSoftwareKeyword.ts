@@ -3,12 +3,14 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import logger from '~/utils/logger'
 import {Keyword} from '~/components/keyword/FindKeyword'
 import {getBaseUrl} from '~/utils/fetchHelpers'
-import logger from '../../../../utils/logger'
 
 
 // this is always frontend call

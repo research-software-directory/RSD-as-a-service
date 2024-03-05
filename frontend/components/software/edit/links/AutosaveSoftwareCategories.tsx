@@ -6,14 +6,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {ChangeEventHandler, Fragment, useEffect, useMemo, useState} from 'react'
+
 import {useSession} from '~/auth'
-import {softwareInformation as config} from '../editSoftwareConfig'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {genCategoryTree, leaf} from '~/utils/categories'
 import {addCategoryToSoftware, deleteCategoryToSoftware, getAvailableCategories} from '~/utils/getSoftware'
 import {CategoryID, CategoryPath, CategoryTree} from '~/types/Category'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {CategoriesWithHeadlines} from '~/components/category/CategoriesWithHeadlines'
-import {genCategoryTree, leaf} from '~/utils/categories'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 
 export type SoftwareCategoriesProps = {
   softwareId: string

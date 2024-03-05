@@ -11,16 +11,16 @@ import CircularProgress from '@mui/material/CircularProgress'
 import DownloadIcon from '@mui/icons-material/Download'
 
 import {useSession} from '~/auth'
-import {softwareInformation as config} from '../editSoftwareConfig'
 import {License} from '~/types/SoftwareTypes'
 import {AutocompleteOption} from '~/types/AutocompleteOptions'
-import {getLicensesFromDoi} from '~/utils/getInfoFromDatacite'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import useSpdxLicenses from '~/utils/useSpdxLicenses'
-import useSoftwareContext from '../useSoftwareContext'
-import {addLicensesForSoftware} from '~/utils/editSoftware'
 import logger from '~/utils/logger'
 import {sortOnStrProp} from '~/utils/sortFn'
+import {getLicensesFromDoi} from '~/utils/getInfoFromDatacite'
+import useSpdxLicenses from '~/utils/useSpdxLicenses'
+import {addLicensesForSoftware} from '~/utils/editSoftware'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
 
 type ImportLicensesFromDoiProps = {
   concept_doi: string | null
