@@ -121,7 +121,7 @@ async function generateSofware(amount=500) {
 			image_id: faker.helpers.maybe(() => localSoftwareLogoIds[index % localSoftwareLogoIds.length], {probability: 0.8}) ?? null,
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 			short_statement: faker.commerce.productDescription(),
-			closed_source: !!faker.helpers.maybe(() => true, {probability: 0.8}),
+			open_source: !!faker.helpers.maybe(() => true, {probability: 0.5}),
 		});
 	}
 

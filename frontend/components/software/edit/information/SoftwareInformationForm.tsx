@@ -1,6 +1,8 @@
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -139,13 +141,13 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
           <div className="py-4 min-w-[21rem] xl:my-0">
             <AutosaveSoftwarePageStatus />
             <div className="py-4"></div>
-            <AutosaveConceptDoi />
-            <div className="py-4"></div>
             <AutosaveSoftwareLogo />
             <div className="py-4"></div>
-            <AutosaveSoftwareCategories
-              softwareId={formData.id}
-              categories={formData.categories}
+            <AutosaveConceptDoi />
+            <div className="py-4"></div>
+            <AutosaveSoftwareLicenses
+              items={formData.licenses}
+              concept_doi={formData.concept_doi ?? undefined}
             />
             <div className="py-4"></div>
             <AutosaveSoftwareKeywords
@@ -153,10 +155,9 @@ export default function SoftwareInformationForm({editSoftware}: SoftwareInformat
               concept_doi={formData.concept_doi ?? undefined}
               items={formData.keywords ?? []}
             />
-            <div className="py-4"></div>
-            <AutosaveSoftwareLicenses
-              items={formData.licenses}
-              concept_doi={formData.concept_doi ?? undefined}
+            <AutosaveSoftwareCategories
+              softwareId={formData.id}
+              categories={formData.categories}
             />
             {/* add white space at the bottom */}
             <div className="py-4"></div>

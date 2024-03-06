@@ -56,6 +56,7 @@ export type NewSoftwareItem = {
   is_published: boolean,
   short_statement: string | null,
   image_id: string | null,
+  open_source: boolean
 }
 
 export type SoftwareTableItem = NewSoftwareItem & {
@@ -99,6 +100,7 @@ export const SoftwarePropsToSave = [
   'id',
   'slug',
   'brand_name',
+  'short_statement',
   'concept_doi',
   'description',
   'description_type',
@@ -106,7 +108,7 @@ export const SoftwarePropsToSave = [
   'get_started_url',
   'image_id',
   'is_published',
-  'short_statement'
+  'open_source'
 ]
 
 export type EditSoftwareItem = SoftwareItem & {

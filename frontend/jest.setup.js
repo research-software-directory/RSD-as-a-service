@@ -10,6 +10,7 @@
 import 'whatwg-fetch'
 // specific
 import '@testing-library/jest-dom'
+// import '@testing-library/jest-dom/extend-expect'
 
 // retry 2 times
 jest.retryTimes(2, {

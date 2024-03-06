@@ -1,10 +1,11 @@
 -- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 dv4all
 -- SPDX-FileCopyrightText: 2023 Diego Alonso Alvarez (ICL) <d.alonso-alvarez@imperial.ac.uk>
+-- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 Imperial College London
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -23,7 +24,7 @@ CREATE TABLE software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	brand_name VARCHAR(200) NOT NULL,
-	closed_source BOOLEAN DEFAULT FALSE NOT NULL,
+	open_source BOOLEAN DEFAULT TRUE NOT NULL,
 	concept_doi CITEXT CHECK (concept_doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(concept_doi) <= 255),
 	description VARCHAR(10000),
 	description_url VARCHAR(200) CHECK (description_url ~ '^https?://'),
