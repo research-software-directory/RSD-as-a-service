@@ -6,7 +6,7 @@
 import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import useSoftwareContext from '../useSoftwareContext'
-import useSoftwareToEdit from '../useSoftwareToEdit'
+import useSoftwareToEdit from './useSoftwareToEdit'
 import EditSoftwareMetadataForm from './EditSoftwareMetadataForm'
 
 export default function EditSoftwareDescrptionPage() {

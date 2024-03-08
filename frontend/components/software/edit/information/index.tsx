@@ -6,13 +6,13 @@
 import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import useSoftwareContext from '../useSoftwareContext'
-import useSoftwareToEdit from '../useSoftwareToEdit'
 import EditSoftwareDescriptionForm from './EditSoftwareDescriptionForm'
+import useSoftwareTable from './useSoftwareTable'
 
 export default function EditSoftwareDescrptionPage() {
   const {token} = useSession()
   const {software:{slug}} = useSoftwareContext()
-  const {editSoftware,loading} = useSoftwareToEdit({slug, token})
+  const {editSoftware,loading} = useSoftwareTable({slug, token})
 
   // console.group('EditSoftwareDescrptionPage')
   // console.log('loading...', loading)

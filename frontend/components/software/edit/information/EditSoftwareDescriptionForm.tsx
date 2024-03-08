@@ -4,8 +4,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {FormProvider, useForm} from 'react-hook-form'
-import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import EditSoftwareDescriptionInputs from './EditSoftwareDescriptionInputs'
+import {EditSoftwareDescriptionProps} from './useSoftwareTable'
+
 
 /**
  * Implement FormProvider (shared form context) of react-hook-form.
@@ -13,8 +14,8 @@ import EditSoftwareDescriptionInputs from './EditSoftwareDescriptionInputs'
  * @param param0
  * @returns
  */
-export default function EditSoftwareDescriptionForm({data}:{data:EditSoftwareItem}) {
-  const methods = useForm<EditSoftwareItem>({
+export default function EditSoftwareDescriptionForm({data}:{data:EditSoftwareDescriptionProps}) {
+  const methods = useForm<EditSoftwareDescriptionProps>({
     mode: 'onChange',
     defaultValues: {
       ...data

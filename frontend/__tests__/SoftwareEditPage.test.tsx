@@ -14,7 +14,7 @@ import {WithFormContext} from '~/utils/jest/WithFormContext'
 import SoftwareEditPage from '../pages/software/[slug]/edit/[page]'
 import {initialState as softwareState} from '~/components/software/edit/editSoftwareContext'
 import {editSoftwarePage} from '~/components/software/edit/editSoftwarePages'
-import editSoftwareData from '~/components/software/edit/__mocks__/useSoftwareToEditData.json'
+import editSoftwareData from '~/components/software/edit/information/__mocks__/useSoftwareTableData.json'
 import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 
 // MOCKS
@@ -22,7 +22,6 @@ import {softwareInformation as config} from '~/components/software/edit/editSoft
 jest.mock('~/auth/api/useLoginProviders')
 // mock user agreement call
 jest.mock('~/components/user/settings/useUserAgreements')
-
 
 // MOCK isMaintainerOf
 const mockIsMaintainer = jest.fn(props => Promise.resolve(false))
@@ -41,8 +40,7 @@ window.IntersectionObserver = jest.fn(() => ({
 } as any))
 
 // use default mocks
-jest.mock('~/components/software/edit/useSoftwareToEdit')
-jest.mock('~/components/software/edit/links/searchForSoftwareKeyword')
+jest.mock('~/components/software/edit/information/useSoftwareTable')
 // mock all default software calls
 jest.mock('~/utils/getSoftware')
 

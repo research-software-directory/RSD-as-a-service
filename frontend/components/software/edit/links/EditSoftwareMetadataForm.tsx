@@ -4,8 +4,20 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {FormProvider, useForm} from 'react-hook-form'
-import {EditSoftwareItem} from '~/types/SoftwareTypes'
+import {CategoriesForSoftware, CodePlatform, EditSoftwareItem, KeywordForSoftware, License} from '~/types/SoftwareTypes'
+import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import EditSoftwareMetadataInputs from './EditSoftwareMetadataInputs'
+
+type EditSoftwareMetadataFormProps={
+  id: string
+  get_started_url: string | null
+  repository_url: string | null,
+  repository_platform: CodePlatform | null
+  concept_doi: string | null,
+  licenses: AutocompleteOption<License>[]
+  keywords: KeywordForSoftware[]
+  categories: CategoriesForSoftware
+}
 
 /**
  * Implement FormProvider (shared form context) of react-hook-form.
@@ -14,7 +26,7 @@ import EditSoftwareMetadataInputs from './EditSoftwareMetadataInputs'
  * @returns
  */
 export default function EditSoftwareMetadataForm({data}:{data:EditSoftwareItem}) {
-  const methods = useForm<EditSoftwareItem>({
+  const methods = useForm<EditSoftwareMetadataFormProps>({
     mode: 'onChange',
     defaultValues: {
       ...data
