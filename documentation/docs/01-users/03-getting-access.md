@@ -44,16 +44,20 @@ the first time you [sign in](/users/getting-access/#how-to-sign-in).
 
 ## How to sign in
 
-To sign in to the RSD, go to the __"Sign in"__ button at the top right corner of the page and select the identity provider you wish to use:
+To sign in to the RSD, go to the __"Sign in"__ button at the top right corner of the page and select the identity provider you wish to use. Next, you will be redirected to a login page of the selected identity provider. After providing you credentials you will return to the RSD page you came from.
 
-![image](img/idp-selection.gif)
+:::info
 
-Next, you will be redirected to a login page of the selected identity provider. After providing you credentials you will return to the RSD
-page you came from. If you sign in to the RSD for the first time, the identify provider may ask you permission to share
-information with the RSD.
+* If you sign in to the RSD for the first time, the identity provider may ask you permission to share information with the 
+RSD.
+* Before editing any item in RSD you should accept terms and conditions. You can find these in your personal settings.
+
+:::
+
+![video](img/rsd-surf-login.gif)
 
 ## How to sign out
 
-To sign out, you can use the profile button the top right corner of the page and select __"Logout"__:
+To sign out, you can use the profile button at the top right corner of the page and select __"Logout"__:
 
-![image](img/my-software.gif)
+![video](img/rsd-logout.gif)

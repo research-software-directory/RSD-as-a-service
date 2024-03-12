@@ -114,7 +114,7 @@ export const softwareInformation = {
     subtitle: 'Provide the DOI of your software. This DOI will be used to import metadata about the software.',
     label: 'Software DOI',
     help: '',
-    infoLink: 'https://help.zenodo.org/faq/#versioning',
+    infoLink: '/documentation/users/adding-software/#links--metadata',
     validation: {
       minLength: {value: 7, message: 'Minimum length is 7'},
       maxLength: {value: 100, message: 'Maximum length is 100'},
