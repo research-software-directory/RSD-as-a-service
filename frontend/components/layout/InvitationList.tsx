@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -45,7 +46,10 @@ export default function InvitationList({invitations, token, onDeleteCallback}: {
 
   return (
     <>
-      <EditSectionTitle title={'Unused invitations'} subtitle={'These invitations are not used yet'}/>
+      <EditSectionTitle
+        title={'Unused invitations'}
+        subtitle={'These invitations are not used yet'}
+      />
       <List>
         {invitations.map(inv => {
           const currentLink = `${location.origin}/invite/${inv.type}/${inv.id}`

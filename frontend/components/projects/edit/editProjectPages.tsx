@@ -8,9 +8,9 @@
 
 import dynamic from 'next/dynamic'
 
-import InfoIcon from '@mui/icons-material/Info'
+import FeedIcon from '@mui/icons-material/Feed'
 import TeamsIcon from '@mui/icons-material/Groups'
-import FactoryIcon from '@mui/icons-material/Factory'
+import BusinessIcon from '@mui/icons-material/Business'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ContentLoader from '~/components/layout/ContentLoader'
@@ -51,8 +51,8 @@ export type EditProjectPageProps = {
 export const editProjectPage: EditProjectPageProps[] = [
   {
     id: 'information',
-    label: 'Information',
-    icon: <InfoIcon />,
+    label: 'Project details',
+    icon: <FeedIcon />,
     render: () => <ProjectInformation />,
     status: ''
   },
@@ -66,7 +66,7 @@ export const editProjectPage: EditProjectPageProps[] = [
   {
     id: 'organisations',
     label: 'Organisations',
-    icon: <FactoryIcon />,
+    icon: <BusinessIcon />,
     render: () => <ProjectOrganisations />,
     status: ''
   },

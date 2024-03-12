@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,6 +43,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
   const {l1Domains,l2Domains,l3Domains} = useResearchDomains({l1Selected,l2Selected})
 
   // console.group('ResearchDomains')
+  // console.log('l1Selected...', l1Selected)
   // console.log('l1Domains...', l1Domains)
   // console.log('l2Domains...', l2Domains)
   // console.log('l3Domains...', l3Domains)
@@ -165,26 +167,18 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
         title={config.research_domain.title}
         subtitle={config.research_domain.subtitle}
         infoLink={config.research_domain.infoLink}
-      />
-      <div className="flex flex-wrap pb-4">
-        {
-          domains.map((item, pos) => (
-            <Chip
-              data-testid="research-domain-chip"
-              key={item.key}
-              title={item.description}
-              label={`${item.key}: ${item.name}`}
-              onDelete={() => onRemove(pos)}
-              sx={{
-                marginBottom: '1rem',
-                marginRight: '0.5rem',
-                maxWidth: '21rem'
-              }}
-            />
-          ))
-        }
-      </div>
-      <div className="flex flex-col">
+      >
+        <Button
+          data-testid="add-research-domains"
+          variant='contained'
+          startIcon={<AddIcon />}
+          onClick={addDomains}
+          disabled={l1Selected===null}
+        >
+          Add
+        </Button>
+      </EditSectionTitle>
+      <div className="flex flex-col mb-4">
         <FormControl
           variant="standard"
           fullWidth
@@ -200,6 +194,7 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
           </InputLabel>
           <Select
             data-testid="l1-domain-select"
+            // variant='filled'
             value={l1Selected?.key ?? ''}
             onChange={({target}:{target:any}) => {
               selectDomain({
@@ -315,16 +310,23 @@ export default function AutosaveResearchDomains({project_id, research_domains}: 
           </Select>
         </FormControl>
       </div>
-      <div className="flex justify-end py-4">
-        <Button
-          data-testid="add-research-domains"
-          startIcon={<AddIcon />}
-          onClick={addDomains}
-          sx={{margin: '0rem 0rem 0.5rem 1rem'}}
-          disabled={l1Domains===null}
-        >
-          Add
-        </Button>
+      <div className="flex flex-wrap">
+        {
+          domains.map((item, pos) => (
+            <Chip
+              data-testid="research-domain-chip"
+              key={item.key}
+              title={item.description}
+              label={`${item.key}: ${item.name}`}
+              onDelete={() => onRemove(pos)}
+              sx={{
+                marginBottom: '1rem',
+                marginRight: '0.5rem',
+                maxWidth: '21rem'
+              }}
+            />
+          ))
+        }
       </div>
     </>
   )

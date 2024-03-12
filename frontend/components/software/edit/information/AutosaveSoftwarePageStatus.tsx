@@ -1,16 +1,18 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
-
-import EditSectionTitle from '../../../layout/EditSectionTitle'
-import AutosaveSoftwareSwitch from './AutosaveSoftwareSwitch'
-import {softwareInformation as config} from '../editSoftwareConfig'
 import {useFormContext} from 'react-hook-form'
+
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
+import {softwareInformation as config} from '../editSoftwareConfig'
+import AutosaveSoftwareSwitch from './AutosaveSoftwareSwitch'
 
 export default function AutosaveSoftwarePageStatus() {
   const {watch} = useFormContext()

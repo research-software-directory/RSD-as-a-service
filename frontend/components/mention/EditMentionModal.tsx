@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -205,6 +206,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
               rules={config.publication_year.validation}
             />
           </div>
+          <div className="py-2"></div>
           <ControlledTextField
             control={control}
             options={{
@@ -217,6 +219,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.journal.validation}
           />
+          <div className="py-2"></div>
           <ControlledTextField
             control={control}
             options={{
@@ -229,24 +232,22 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.url.validation}
           />
-          {formData.mention_type === 'highlight' ?
-            <>
-              <div className="py-2"></div>
-              <ControlledTextField
-                control={control}
-                options={{
-                  name: 'image_url',
-                  label: config.image_url.label,
-                  useNull: true,
-                  defaultValue: formData?.image_url,
-                  helperTextMessage: config.image_url.help,
-                  helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`
-                }}
-                rules={config.image_url.validation}
-              />
-            </>
-            :null
-          }
+
+          <div className="py-2"></div>
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'image_url',
+              label: config.image_url.label,
+              useNull: true,
+              defaultValue: formData?.image_url,
+              helperTextMessage: config.image_url.help,
+              helperTextCnt: `${formData?.image_url?.length || 0}/${config.image_url.validation.maxLength.value}`,
+              disabled: formData?.mention_type !== 'highlight'
+            }}
+            rules={formData?.mention_type === 'highlight' ? config.image_url.validation : {}}
+          />
+
           <div className="py-2"></div>
           <ControlledTextField
             control={control}
@@ -260,7 +261,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.note.validation}
           />
-          <Alert severity="warning" sx={{marginTop: '1.5rem'}}>
+          <Alert severity="warning" sx={{marginTop: '1rem'}}>
             The information can not be edited after creation.
           </Alert>
         </DialogContent>

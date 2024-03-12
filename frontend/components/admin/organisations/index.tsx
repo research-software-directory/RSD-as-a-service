@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -18,7 +18,7 @@ import {useOrganisations} from './apiOrganisation'
 export default function OrganisationsAdminPage() {
   const {token} = useSession()
   const {pagination:{count}} = useContext(PaginationContext)
-  const {organisations, loading, addOrganisation, removeOrganisation} = useOrganisations(token)
+  const {organisations, loading, page, addOrganisation, removeOrganisation} = useOrganisations(token)
 
   // console.group('OrganisationAdminPage')
   // console.log('organisations...', organisations)
@@ -36,6 +36,7 @@ export default function OrganisationsAdminPage() {
           <Pagination />
         </div>
         <OrganisationsAdminList
+          page={page}
           loading={loading}
           organisations={organisations}
           onDeleteOrganisation={removeOrganisation}

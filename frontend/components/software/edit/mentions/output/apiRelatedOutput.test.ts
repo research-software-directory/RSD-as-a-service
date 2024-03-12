@@ -21,12 +21,12 @@ beforeEach(() => {
 
 it('findPublicationByTitle', async () => {
   const props = {
-    software: 'test-software-id',
+    id: 'test-software-id',
     searchFor: 'Test search',
     token: 'TEST-TOKEN'
   }
 
-  const expectedUrl = `/api/fe/mention/software?id=${props.software}&search=${encodeURIComponent(props.searchFor)}`
+  const expectedUrl = `/api/fe/mention/software?id=${props.id}&search=${encodeURIComponent(props.searchFor)}`
   const expectBody = {
     'headers': {
       'Authorization': `Bearer ${props.token}`,

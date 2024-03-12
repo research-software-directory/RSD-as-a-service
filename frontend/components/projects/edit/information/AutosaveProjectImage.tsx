@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -153,14 +154,12 @@ export default function AutosaveProjectImage() {
             project_id={form_id}
             options={{
               name: 'image_caption',
-              // no label
-              label: '',
+              label: 'Image caption',
               defaultValue: form_image_caption,
               useNull: true,
               muiProps:{
                 autoComplete: 'off',
-                variant: 'standard',
-                placeholder: 'Image caption',
+                variant: 'outlined',
                 sx: {
                   width: '100%',
                   '& .MuiInput-root:before':{

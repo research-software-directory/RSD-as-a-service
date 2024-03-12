@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -106,24 +108,7 @@ export default function AutosaveFundingOrganisations({id,items}:FundingOrganisat
 
   return (
     <>
-      <h3 className="mb-2">{config.funding_organisations.subtitle}</h3>
-      <div className="flex flex-wrap py-2">
-        {organisations.map((item, pos) => {
-          return(
-            <div
-              key={item.id}
-              className="py-1 pr-1 overflow-hidden"
-            >
-              <Chip
-                data-testid="funding-organisation-chip"
-                title={item.name}
-                label={item.name}
-                onDelete={() => onRemoveOgranisation(pos)}
-              />
-            </div>
-          )
-        })}
-      </div>
+      {/* <h3 className="mb-2">{config.funding_organisations.subtitle}</h3> */}
       <FindFundingOrganisation
         config={{
           freeSolo: false,
@@ -141,6 +126,23 @@ export default function AutosaveFundingOrganisations({id,items}:FundingOrganisat
         searchForOrganisation={searchForOrganisation}
         // onCreate={onCreateOrganisation}
       />
+      <div className="flex flex-wrap py-2">
+        {organisations.map((item, pos) => {
+          return(
+            <div
+              key={item.id}
+              className="py-1 pr-1 overflow-hidden"
+            >
+              <Chip
+                data-testid="funding-organisation-chip"
+                title={item.name}
+                label={item.name}
+                onDelete={() => onRemoveOgranisation(pos)}
+              />
+            </div>
+          )
+        })}
+      </div>
     </>
   )
 }

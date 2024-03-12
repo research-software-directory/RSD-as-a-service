@@ -205,7 +205,7 @@ describe('frontend/components/project/edit/mentions/impact/index.tsx', () => {
       // call RSD api to find mention by DOI
       expect(mockFindPublicationByTitle).toBeCalledTimes(1)
       expect(mockFindPublicationByTitle).toBeCalledWith({
-        'project': projectState.project.id,
+        'id': projectState.project.id,
         searchFor,
         'token': mockSession.token
       })

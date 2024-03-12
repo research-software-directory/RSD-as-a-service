@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -56,7 +58,7 @@ it('renders upload image inputs', () => {
   )
 
   // has image caption
-  const imageCaption = screen.getByPlaceholderText('Image caption')
+  const imageCaption = screen.getByRole('textbox',{name:'Image caption'})
   // has contain switch
   const containSwitch = screen.getByRole('checkbox', {
     name: config.image_contain.label
@@ -84,9 +86,8 @@ it('saves image caption', () => {
       </WithProjectContext>
     </WithAppContext>
   )
-
   // has image caption
-  const imageCaption = screen.getByPlaceholderText('Image caption')
+  const imageCaption = screen.getByRole('textbox',{name:'Image caption'})
   // provide value
   fireEvent.change(imageCaption,{target:{value:expectedValue}})
   // fire onBlur event to save

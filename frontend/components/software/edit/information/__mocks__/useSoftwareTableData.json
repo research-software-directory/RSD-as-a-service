@@ -1,0 +1,17 @@
+{
+  "id": "6ba08e77-9f81-4aa3-ab6a-36f8fd620da2",
+  "slug": "test-software-msedge-76572",
+  "brand_name": "Test software msedge 76572",
+  "concept_doi": "10.5281/zenodo.6379973",
+  "description": "\n## Test software msedge\n\nThis is test software markdown test.\n\n## Second header\nSecond level header here!\n\n",
+  "description_type": "markdown",
+  "description_url": null,
+  "get_started_url": "https://github.com/research-software-directory/RSD-as-a-service",
+  "image_id": "de373aec1a941814e992befe353ddfe486b6b4d1",
+  "is_published": true,
+  "short_statement": "Lorem ipsum description",
+  "repository_url": "https://github.com/research-software-directory/RSD-as-a-service",
+  "repository_platform": "github",
+  "image_b64": null,
+  "image_mime_type": null
+}

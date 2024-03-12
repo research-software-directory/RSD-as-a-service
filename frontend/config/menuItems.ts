@@ -2,9 +2,9 @@
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,3 +29,11 @@ export const menuItems:MenuItemType[] = [
   {path: '/projects?order=impact_cnt', match: '/projects', label: 'Projects'},
   {path: '/organisations', match: '/organisations', label: 'Organisations'}
 ]
+
+// ListItemButton styles for menus used on the edit pages
+export const editMenuItemButtonSx={
+  padding: '0.75rem 1rem',
+  '&.Mui-selected > div >span': {
+    fontWeight:500
+  }
+}

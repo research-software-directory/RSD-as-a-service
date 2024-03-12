@@ -7,10 +7,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import EditSection from '~/components/layout/EditSection'
-import ContentLoader from '~/components/layout/ContentLoader'
 import MentionEditSection from '~/components/mention/MentionEditSection'
-import FindProjectMention from '~/components/projects/edit/mentions/FindProjectMention'
-import {useProjectMentionContext} from '../ProjectMentionContext'
+import FindMentionSection from '~/components/mention/FindMentionSection'
+import useProjectContext from '~/components/projects/edit/useProjectContext'
 import AddOutput from './AddOutput'
 import EditOutputProvider from './EditOutputProvider'
 import ImportProjectOutput from './ImportProjectOutput'
@@ -20,7 +19,7 @@ import {findPublicationByTitle} from './outputForProjectApi'
 import ProjectOutputInfo from './ProjectOutputInfo'
 
 export default function ProjectOutputTab() {
-
+  const {project} = useProjectContext()
   return (
     <EditOutputProvider>
       <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:gap-[3rem]'>
@@ -30,7 +29,8 @@ export default function ProjectOutputTab() {
           <MentionEditSection />
         </div>
         <div className="pt-4 pb-8">
-          <FindProjectMention
+          <FindMentionSection
+            id={project.id}
             config={{
               title: config.findMention.title,
               minLength: config.findMention.validation.minLength,

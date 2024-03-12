@@ -10,9 +10,9 @@ import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 import {MentionItemProps} from '~/types/Mention'
 import {addOrGetMentionItem} from '~/utils/editMentions'
 
-export async function findPublicationByTitle({project, searchFor, token}:
-  { project: string, searchFor: string, token: string }) {
-  const query = `id=${project}&search=${encodeURIComponent(searchFor)}`
+export async function findPublicationByTitle({id, searchFor, token}:
+  { id: string, searchFor: string, token: string }) {
+  const query = `id=${id}&search=${encodeURIComponent(searchFor)}`
   const url = `/api/fe/mention/impact?${query}`
   try {
     const resp = await fetch(url, {

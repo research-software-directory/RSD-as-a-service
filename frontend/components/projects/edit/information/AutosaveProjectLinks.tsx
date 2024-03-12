@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -137,9 +137,10 @@ export default function AutosaveProjectLinks({project_id, url_for_project}: Proj
         subtitle={config.url_for_project.sectionSubtitle}
       >
         <Button
+          variant='contained'
           startIcon={<AddIcon />}
           onClick={addLink}
-          sx={{margin:'0rem 0rem 0.5rem 1rem'}}
+          // sx={{margin:'0rem 0rem 0rem 0rem'}}
         >
           Add
         </Button>

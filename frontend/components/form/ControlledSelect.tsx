@@ -1,6 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,12 +26,13 @@ export type ControlledSelectProps = {
   defaultValue: any
   control: any
   rules: any
-  sx?: any
   helperTextMessage:string
+  sx?: any
+  variant?: 'standard'|'outlined'|'filled'
 }
 
 export default function ControlledSelect({name, label, options, control,
-  rules, defaultValue, disabled, sx, helperTextMessage}: ControlledSelectProps) {
+  rules, defaultValue, disabled, sx, helperTextMessage, variant}: ControlledSelectProps) {
   // do not render if no options provided
   if (!options || options?.length === 0) return null
 
@@ -44,7 +47,9 @@ export default function ControlledSelect({name, label, options, control,
         return (
           <FormControl
             data-testid="controlled-select"
-            variant="standard" sx={sx}>
+            variant={variant ?? 'outlined'}
+            sx={sx}
+          >
             <InputLabel
               aria-label={label}
               id={`select-${label}`}>
@@ -53,7 +58,7 @@ export default function ControlledSelect({name, label, options, control,
             <Select
               id={`select-${label}`}
               label={label}
-              variant='standard'
+              variant='outlined'
               value={value ?? ''}
               onChange={({target}:{target:any}) => {
                 onChange(target.value)

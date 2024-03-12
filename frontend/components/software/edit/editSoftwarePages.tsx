@@ -8,23 +8,27 @@
 
 import dynamic from 'next/dynamic'
 
-import InfoIcon from '@mui/icons-material/Info'
-import Diversity1Icon from '@mui/icons-material/Diversity1'
-import FactoryIcon from '@mui/icons-material/Factory'
+import AppShortcutIcon from '@mui/icons-material/AppShortcut'
+import GroupIcon from '@mui/icons-material/Group'
+import BusinessIcon from '@mui/icons-material/Business'
 import AddCommentIcon from '@mui/icons-material/AddComment'
 import ThreePIcon from '@mui/icons-material/ThreeP'
-import ShareIcon from '@mui/icons-material/Share'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ContentLoader from '~/components/layout/ContentLoader'
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService'
-import PendingActionsIcon from '@mui/icons-material/PendingActions'
 import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices'
+import JoinInnerIcon from '@mui/icons-material/JoinInner'
+import DonutLargeIcon from '@mui/icons-material/DonutLarge'
+import ArticleIcon from '@mui/icons-material/Article'
 
 // use dynamic imports instead
 const SoftwareContributors = dynamic(() => import('./contributors'),{
   loading: ()=><ContentLoader />
 })
-const SoftwareInformation = dynamic(() => import('./information'),{
+const SoftwareDescription = dynamic(() => import('./information'),{
+  loading: ()=><ContentLoader />
+})
+const SoftwareLinks = dynamic(() => import('./links'),{
   loading: ()=><ContentLoader />
 })
 const SoftwareMaintainers = dynamic(() => import('./maintainers'),{
@@ -63,20 +67,26 @@ export type EditSoftwarePageProps = {
 
 export const editSoftwarePage:EditSoftwarePageProps[] = [{
   id: 'information',
-  label: 'Information',
-  icon: <InfoIcon />,
-  render: () => <SoftwareInformation />,
+  label: 'Description',
+  icon: <ArticleIcon />,
+  render: () => <SoftwareDescription />,
+  status: ''
+},{
+  id: 'links',
+  label: 'Links & metadata',
+  icon: <AppShortcutIcon />,
+  render: () => <SoftwareLinks />,
   status: ''
 },{
   id: 'contributors',
   label: 'Contributors',
-  icon: <Diversity1Icon />,
+  icon: <GroupIcon />,
   render: () => <SoftwareContributors />,
   status: ''
 },{
   id: 'organisations',
   label: 'Organisations',
-  icon: <FactoryIcon />,
+  icon: <BusinessIcon />,
   render: () => <SoftwareOgranisations />,
   status: ''
 },{
@@ -100,13 +110,13 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
 },{
   id: 'related-software',
   label: 'Related software',
-  icon: <ShareIcon />,
+  icon: <JoinInnerIcon />,
   render: () => <RelatedSoftware />,
   status: ''
 },{
   id: 'related-projects',
   label: 'Related projects',
-  icon: <PendingActionsIcon />,
+  icon: <DonutLargeIcon />,
   render: () => <RelatedProjects />,
   status: ''
 },{

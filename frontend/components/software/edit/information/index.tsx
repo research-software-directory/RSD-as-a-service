@@ -1,26 +1,20 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import useSoftwareContext from '../useSoftwareContext'
-import useSoftwareToEdit from './useSoftwareToEdit'
-import SoftwareInformationForm from './SoftwareInformationForm'
+import EditSoftwareDescriptionForm from './EditSoftwareDescriptionForm'
+import useSoftwareTable from './useSoftwareTable'
 
-export default function SoftwareInformationPage() {
+export default function EditSoftwareDescrptionPage() {
   const {token} = useSession()
   const {software:{slug}} = useSoftwareContext()
-  const {editSoftware,loading} = useSoftwareToEdit({slug, token})
+  const {editSoftware,loading} = useSoftwareTable({slug, token})
 
-  // console.group('SoftwareInformationPage')
+  // console.group('EditSoftwareDescrptionPage')
   // console.log('loading...', loading)
   // console.log('token...', token)
   // console.log('slug...', slug)
@@ -34,9 +28,7 @@ export default function SoftwareInformationPage() {
   // Load the form component after editSoftware is present
   // in order to loaded these values directly in the form (defaultValues)
   if (editSoftware) {
-    return (
-      <SoftwareInformationForm editSoftware={editSoftware} />
-    )
+    return <EditSoftwareDescriptionForm data={editSoftware} />
   }
 
   return <ContentLoader />

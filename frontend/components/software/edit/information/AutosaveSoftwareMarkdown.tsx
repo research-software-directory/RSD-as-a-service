@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -147,29 +147,26 @@ export default function AutosaveSoftwareMarkdown() {
     }
     // custom markdown is default
     return (
-      <>
-        <div className="py-4"></div>
-        <MarkdownInputWithPreview
-          markdown={description || ''}
-          register={register('description', {
-            maxLength: config.description.validation.maxLength.value
-          })}
-          disabled={description_type !== 'markdown'}
-          helperInfo={{
-            length: description?.length ?? 0,
-            maxLength: config.description.validation.maxLength.value
-          }}
-          onBlur={saveDescription}
-        />
-      </>
+      <MarkdownInputWithPreview
+        markdown={description || ''}
+        register={register('description', {
+          maxLength: config.description.validation.maxLength.value
+        })}
+        disabled={description_type !== 'markdown'}
+        helperInfo={{
+          length: description?.length ?? 0,
+          maxLength: config.description.validation.maxLength.value
+        }}
+        onBlur={saveDescription}
+      />
     )
   }
 
   return (
     <>
       <EditSectionTitle
-        title={config.description.label}
-        subtitle={config.description.help(brand_name ?? '')}
+        title={config.description.label(brand_name ?? '')}
+        infoLink={config.description.help}
       />
       <RadioGroup
         row
@@ -184,6 +181,9 @@ export default function AutosaveSoftwareMarkdown() {
             name: 'description_type',
             value
           })
+        }}
+        sx={{
+          margin:'0.75rem 0rem'
         }}
       >
         <FormControlLabel

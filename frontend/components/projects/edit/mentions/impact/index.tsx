@@ -7,17 +7,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import EditSection from '~/components/layout/EditSection'
-import FindProjectMention from '~/components/projects/edit/mentions/FindProjectMention'
+import MentionEditSection from '~/components/mention/MentionEditSection'
+import FindMentionSection from '~/components/mention/FindMentionSection'
+import useProjectContext from '~/components/projects/edit/useProjectContext'
 import EditImpactProvider from './EditImpactProvider'
 import AddImpact from './AddImpact'
 import BulkImportImpact from './ImportProjectImpact'
 import {cfgImpact as config} from './config'
 import {findPublicationByTitle} from './impactForProjectApi'
 import ProjectImpactInfo from './ProjectImpactInfo'
-import MentionEditSection from '~/components/mention/MentionEditSection'
 
 export default function ProjectImpactTab() {
-
+  const {project} = useProjectContext()
   return (
     <EditImpactProvider>
       <EditSection className='xl:grid xl:grid-cols-[3fr,2fr] xl:gap-[3rem]'>
@@ -27,7 +28,8 @@ export default function ProjectImpactTab() {
           <MentionEditSection />
         </div>
         <div className="pt-4 pb-8">
-          <FindProjectMention
+          <FindMentionSection
+            id={project.id}
             config={{
               title: config.findMention.title,
               minLength: config.findMention.validation.minLength,

@@ -64,7 +64,7 @@ export async function createProject({title, desc, slug, page}: CreateSoftwarePro
 export async function editProjectInput(page: Page, mockProject: MockedProject) {
   // image caption if provided
   if (mockProject?.image?.caption) {
-    const caption = page.getByPlaceholder('Image caption')
+    const caption = page.getByLabel('Image caption')
     await fillAutosaveInput({
       page,
       element: caption,

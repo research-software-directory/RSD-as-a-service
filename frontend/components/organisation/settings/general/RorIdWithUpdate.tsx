@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -98,7 +98,7 @@ export default function FindRorId() {
       <IconButton
         title="Find in ROR database using organisation name"
         // color='primary'
-        disabled={name ? false : true}
+        disabled={name===null}
         onClick={FindRorOrganisation}
       >
         <FindReplaceIcon />
@@ -107,7 +107,7 @@ export default function FindRorId() {
   }
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-start">
       <AutosaveOrganisationTextField
         options={{
           name: 'ror_id',
@@ -119,7 +119,7 @@ export default function FindRorId() {
         }}
         rules={config.ror_id.validation}
       />
-      <div className="w-[3rem]">
+      <div className="w-[3rem] p-2">
         {showButton()}
       </div>
       <RorIdOptionsModal

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -41,11 +41,11 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
       // get new height
       const height = textInput.scrollHeight
       // assign the height
-      if (height > 432) {
+      if (height > 600) {
         textInput.style.height = `${height}px`
       } else {
         // default height
-        textInput.style.height = '432px'
+        textInput.style.height = '600px'
       }
       // recover scroll position
       window.scrollTo(scrollLeft, scrollTop)
@@ -87,7 +87,7 @@ export default function MarkdownInputWithPreview({markdown, register, disabled =
   }
 
   return (
-    <article className="flex-1 border rounded-sm min-h-[30rem]">
+    <article className="flex-1 border rounded-sm min-h-[43rem]">
       <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center">
         <Tabs
           value={tab}

@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -96,6 +97,7 @@ export default function SoftwareMaintainerLink({software,brand_name,account,toke
   return (
     <>
       <Button
+        variant='contained'
         sx={{
           marginTop: '2rem',
           display: 'flex',
@@ -106,7 +108,7 @@ export default function SoftwareMaintainerLink({software,brand_name,account,toke
       >
       Generate invite link
       </Button>
-      <div className="py-2"></div>
+      <div className="py-4"></div>
       {renderLinkOptions()}
       <InvitationList invitations={unusedInvitations} token={token} onDeleteCallback={() => fetchUnusedInvitations()}/>
     </>

@@ -14,6 +14,8 @@ import {
   editFirstContact,
   createContact,
   addTestimonial,
+  editSoftwareDescription,
+  editSoftwareMetadata,
 } from '../helpers/software'
 import {mockSoftware} from '../mocks/mockSoftware'
 import {getRandomPerson} from '../mocks/mockPerson'
@@ -52,29 +54,47 @@ test.describe.serial('Software', async()=> {
     expect(slug).toEqual(software.slug)
   })
 
-  test('Edit software info', async ({page}, {project}) => {
+  test('Edit description', async ({page}, {project}) => {
     // mark this test as slow, see https://playwright.dev/docs/test-timeouts#test-timeout
-    test.slow()
+    // test.slow()
     // get mock software for the browser
     const software = mockSoftware[project.name]
     // open edit software page
     const url = `/software/${software.slug}`
     await openEditPage(page, url, software.title)
 
-    // edit software values
-    await editSoftwareInput(page, software)
+    // edit software description
+    await editSoftwareDescription(page, software)
 
     // upload file
     await uploadFile(page, '#upload-software-logo', software.logo)
-
-    // test DOI imports
-    await conceptDoiFeatures(page, software.doi, software.doiApi)
 
     // publish the software
     await page.getByLabel('Published').check()
 
     // open view page
-    await page.getByTestId('view-page-button').click()
+    // await page.getByTestId('view-page-button').click()
+  })
+
+  test('Edit links & metadata', async ({page}, {project}) => {
+    // mark this test as slow, see https://playwright.dev/docs/test-timeouts#test-timeout
+    // test.slow()
+    // get mock software for the browser
+    const software = mockSoftware[project.name]
+    // open edit software page
+    const url = `/software/${software.slug}`
+    await openEditPage(page, url, software.title)
+
+    // navigate to contributors section
+    await openEditSection(page, 'Links & metadata')
+
+    // edit software values
+    await editSoftwareMetadata(page, software)
+
+    // test DOI imports
+    await conceptDoiFeatures(page, software.doi, software.doiApi)
+    // open view page
+    // await page.getByTestId('view-page-button').click()
   })
 
   test('Edit contributors', async ({page}, {project}) => {
