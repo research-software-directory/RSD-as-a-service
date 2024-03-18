@@ -12,11 +12,11 @@ To create a new software page, you must provide a name and a short description o
 
 ## Description
 
-In this section you can provide the basic information about the software. Add **description** of the software, which will be shown on the software page. You can use [custom markdown](#custom-markdown) to write the description or [link to existing markdown](#document-url) page on the web.
+In this section, you can provide the basic information about the software, like a **description** of the software, which will be shown on the software page. You can use [custom markdown](#custom-markdown) to write the description or [link to existing markdown](#document-url) page on the web.
 
 ### Custom markdown
 
-The custom markdown supports basic markdown features: titles, bullet points, code area, simple table, task list, links and the images. The example below demostrates widely used markdown features in RSD.
+The custom markdown supports basic markdown features: titles, bullet points, code area, simple table, task list, links and the images. The example below demonstrates widely used markdown features in RSD.
 
 ```markdown
 <!--This section starts with What {software name} can do for you-->
@@ -61,21 +61,21 @@ This example is code area
 
 You need an image that allows CORS reference, otherwise image will not be loaded
 
-![Mozzila](https://cdn.glitch.me/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg)
+![Mozilla](https://cdn.glitch.me/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg)
 
 ```
 
 ### Document URL
 
-You can link to remote markdown file which will be dynamically loaded by RSD. Often used approach is to link to readme file on the Github repository. In this case you need to link to `raw` version of readme file. For example, to link to readme file of the RSD repository we used the link https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md. **Note that url domain is different** `https://raw.githubusercontent.com/` from default Github domain (github.com).
+You can link to a remote Markdown file which will be dynamically loaded by the RSD. An often used approach is to link to a readme file on the GitHub repository. In this case you need to link to `raw` version of readme file. For example, to link to readme file of the RSD repository, we used the link https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md. **Note that url domain is different** `https://raw.githubusercontent.com/` from default GitHub domain (https://github.com).
 
 :::warning
-When using Document URL to point to remote markdown file on the github, you need to provide URL to raw markdown file (see animation below). In addition all links used in the markdown document need to be `absolute` (https://...). This is required because markdown content is loaded from github api into the RSD website.
+When using a Document URL to point to remote markdown file on the GitGub, you need to provide URL to raw markdown file (see the animation below). In addition, all links used in the Markdown document need to be `absolute` (https://...). This is required, because Markdown content is loaded from the GitHub domain into the RSD website.
 :::
 
 ### Logo
 
-Software logo is shown on the software page and in the software card (see example below). **You can upload an image up to 2MB of size**. Widely used image formats like jpg, jpeg, png, svg etc. are supported. Use **svg** format, if possible, because it scales better than other formats.
+The software logo is shown on the software page and in the software card (see example below). **You can upload an image up to 2MB of size**. Widely used image formats like jpg, jpeg, png, svg etc. are supported. Use the **svg** format, if possible, because it scales better than other formats.
 
 ![image](img/software-logo-card.webp)
 
@@ -83,9 +83,9 @@ Software logo is shown on the software page and in the software card (see exampl
 
 ![video](img/software-links-metadata.gif)
 
-### Software URL's
+### Software URLs
 
-- A **Source code repository URL** of the software. This link will show up as a repository icon on the software page and will be used to harvest information about the software development activity, which will be shown as a graph. At the moment we support [GitHub](https://github.com/), [GitLab](https://about.gitlab.com/) and have limited support for [Bitbucket](https://bitbucket.org/product/). The platform is automatically detected from the http domain but it can be changed manually.
+- A **Source code repository URL** of the software. This link will show up as a repository icon on the software page and will be used to harvest information about the software development activity, which will be shown as a graph. At the moment we support [GitHub](https://github.com/), [GitLab](https://about.gitlab.com/) and have limited support for [Bitbucket](https://bitbucket.org/product/). The platform is automatically detected from the http domain, but can be changed manually.
 
 - A **Getting started URL** which refers to webpage with more information about the software. This is shown as the "Get started" button on the software page.
 
@@ -93,15 +93,15 @@ Software logo is shown on the software page and in the software card (see exampl
 
 The software DOI will be used to automatically detect new releases of your software, and generate the block with citation information shown on the software page. You can find more information on [DOI versioning at Zenodo](https://help.zenodo.org/faq/#versioning).
 
-After providing DOI use "Validate" button to confirm that provided DOI is valid "Concept/Software" DOI. If provided DOI is a version DOI, and RSD is able to find the concept DOI, it will update DOI and notify you about the change.
+After providing a DOI, use the "Validate" button to confirm that provided DOI is valid "Concept/Software" DOI. If the provided DOI is a version DOI, and RSD is able to find the concept DOI, it will update the DOI and notify you about the change.
 
 :::tip
-After providing valid software DOI you will have option to import keywords, software license and contributors provided in the DOI metadata.
+After providing a valid software DOI, you will have the option to import keywords, software license and contributors provided in the DOI metadata.
 :::
 
 ### Keywords
 
-The keywords describing your software. These will be shown in the sidebar of the software page. The users have option to filter for the software with specific keywords. If you provided software DOI and have keywords defined in the DOI you can import them using "Import keywords" button.
+The keywords describing your software. These will be shown in the sidebar of the software page. The users have option to filter for the software with specific keywords. If you provided w software DOI and have keywords defined in the DOI, you can import them using "Import keywords" button.
 
 :::tip
 When you start typing the keyword you will see a list of suggestions based on the keywords already present in RSD.
@@ -112,7 +112,7 @@ When you start typing the keyword you will see a list of suggestions based on th
 The **License** of the software. This will be shown in the sidebar of the software page. If you have provided a software DOI you can import the license info from DOI metadata.
 
 :::tip
-When you start typing the license you will get a list of valid open source licenses pulled from [SPDX repository](https://github.com/spdx/license-list-data).
+When you start typing the license you will get a list of valid open source licenses pulled from the [SPDX repository](https://github.com/spdx/license-list-data).
 :::
 
 ## Contributors
@@ -136,7 +136,7 @@ If you have provided a **Software DOI** in the previous section, you can import 
 :::warning
 
 - Only one person can be shown in the card as a contact person.
-- Please ensure the contact person has valid email address.
+- Please ensure the contact person has a valid email address.
 
 :::
 
@@ -155,11 +155,11 @@ This section allows you to add mentions to your software page. You can use this 
 
 ### Reference papers
 
-Use search to find paper by DOI or title. All the relevant data about the publication will be retrieved automatically. RSD scraper will use OpenAlex to collect all citations for the reference papers.
+Use search to find papers by DOI or title. All the relevant data about the publication will be retrieved automatically. A background scraper will use OpenAlex to collect all citations of the reference papers.
 
 ### Citations
 
-All the results RSD scraper was able to find on OpenAlex citing provided reference papers.
+All the results RSD scraper was able to find on OpenAlex citing provided reference papers. It can take a few minutes before the citations are harvested.
 
 :::warning
 You cannot edit this section. All entries are automatically generated by RSD scraper service. The found mentions are displayed in the mentions section of the software page.
@@ -167,7 +167,7 @@ You cannot edit this section. All entries are automatically generated by RSD scr
 
 ### Related output
 
-Here you can add all additional related output. Use search to find paper by DOI or title. It is also possible to bulk add mentions, that have a DOI (use the *Import* button). On the popup, you can add one DOI per line, with a maximum of 50. After clicking on the *Next* button, we will fetch the data, which can take a moment. When that is done, you will see an overview of the data we fetched, including possible errors, where you can check the data and possibly disable some of the mentions.
+Here you can add all additional related output. Use search to find papers or other publications by DOI or title. It is also possible to bulk add mentions, that have a DOI (use the *Import* button). On the popup, you can add one DOI per line, with a maximum of 50. After clicking on the *Next* button, we will fetch the data, which can take a moment. When that is done, you will see an overview of the data we fetched, including possible errors, where you can check the data and possibly disable some of the mentions.
 
 ## Testimonials
 
@@ -179,7 +179,7 @@ This section allows user testimonials to be added to the software page. A testim
 
 If your software is available through a package manager like Anaconda, PyPi or Docker Hub, you can add links to those here. We will use these to scrape some data like download count and the number of packages that depend on your software. We do not show this info on the public view of your page, as we're still in the process of figuring out how much data we can harvest and how to present this in the best way. It would therefore be very helpful if you add this information to your software page.
 
-We currently support the following package managers: [Anaconda](https://anaconda.org/), [Cran](https://cran.r-project.org/web/packages/index.html), [Chocolatey](https://community.chocolatey.org), [Debian](https://packages.debian.org), [Docker Hub](https://hub.docker.com/search?q=), [Github](https://github.com), [Gitlab](https://gitlab.com), [Go](https://pkg.go.dev), [Maven](https://mvnrepository.com/), [npm](https://www.npmjs.com/), [PyPI](https://pypi.org/), [Rust](https://crates.io), [Sonatype](https://central.sonatype.com/), [Snapcraft](https://snapcraft.io).
+We currently support the following package managers: [Anaconda](https://anaconda.org/), [Cran](https://cran.r-project.org/web/packages/index.html), [Chocolatey](https://community.chocolatey.org), [Debian](https://packages.debian.org), [Docker Hub](https://hub.docker.com/search?q=), [GitHub](https://github.com), [Gitlab](https://gitlab.com), [Go](https://pkg.go.dev), [Maven](https://mvnrepository.com/), [npm](https://www.npmjs.com/), [PyPI](https://pypi.org/), [Rust](https://crates.io), [Sonatype](https://central.sonatype.com/), [Snapcraft](https://snapcraft.io).
 
 If your package manager is not listed above, you can still add it, but we will categorise it as *other* and cannot scrape it yet. You can [open an GitHub issue](https://github.com/research-software-directory/RSD-as-a-service/issues) (please check for existing issues first) or contact us if you want us to support an additional package manager.
 
@@ -202,7 +202,7 @@ Here, you can see all the people who can maintain this software page. You can al
 Here you can find the information about the background services that RSD offers and their last status.
 
 :::tip
-Please check this section from time to time to confirm that information you provided is correct and that RSD background services are able to use provided information in the propper way.
+Please check this section from time to time to confirm that information you provided is correct and that RSD background services are able to use provided information in the proper way.
 :::
 
 ## The finished page

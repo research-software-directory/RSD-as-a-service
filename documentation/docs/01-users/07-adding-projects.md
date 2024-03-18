@@ -1,7 +1,7 @@
 # Adding a project
 
 :::warning
-Before you can add software, you will need to get access to the RSD. See [How to get access](/users/getting-access) and [Sign in](/users/getting-access#how-to-sign-in).
+Before you can add projects, you will need to get access to the RSD. See [How to get access](/users/getting-access) and [Sign in](/users/getting-access#how-to-sign-in).
 :::
 
 After signing in, use the **"+"** button next to your avatar icon on the top right of the page, and select "New Project". Before the project page is created, you must provide a **Title** and **Subtitle** for your project:
@@ -9,13 +9,13 @@ After signing in, use the **"+"** button next to your avatar icon on the top rig
 ![image](img/new-project.gif)
 
 The RSD will automatically generate a *slug* for your project based on the project name you have provided. This slug will become part of the URL on which your project page can found.
-There is a small chance the generated slug is already in use by another project. If this is the case, an error will be show and you will need to change the slug manually and resolve this conflict.
+There is a small chance the generated slug is already in use by another project. If this is the case, an error will be shown, and you will need to change the slug manually to resolve this conflict.
 
-Once you click **"save"** the RSD will initialize a new empty project page. This page will not be public yet to give you some time to provide additional information. Next, you can add additional information in the edit sections explained below.
+Once you click **"save"**, the RSD will initialize a new empty project page. This page will not be public yet to give you some time to provide additional information. Next, you can add additional information in the edit sections explained below.
 
 :::warning
 After you save the project page the slug can no longer be changed!
-Only adminstrators can change the slug. You can change the title or subtitle of the project later using "Project details" section.
+Only administrators can change the slug. You can change the title or subtitle of the project later using "Project details" section.
 :::
 
 ## Project details
@@ -27,7 +27,7 @@ On this page, you can add and change the basic information about the project. Th
 - The **title** of the project
 - A **subtitle** (which briefly explains the topic).
 - An **image** illustrating the topic or goal of the project
-- A **description** of the project written in markdown. The functionality is [similar to software description](/documentation/users/adding-software/#custom-markdown).
+- A **description** of the project written in Markdown ([see the documentation on the software description](/documentation/users/adding-software/#custom-markdown)).
 
 In addition, the sidebar on the right shows:
 
@@ -85,7 +85,7 @@ information. Please [contact us](mailto:rsd@esciencecenter.nl) if you need to up
 
 ## Mentions
 
-In this section you can add mentions to your project. These entries may consist of other research outputs such as publications, dataset, book sections, blogs, etc. Where **Output** typically consists of research output being produced by the project team itself, **Impact** is generally triggered by events outside of the project, such as re-use of results in other projects, publications, or society, items in the media, etc.
+In this section, you can add mentions to your project. These entries may consist of other research outputs such as publications, dataset, book sections, blogs, etc. Where **Output** typically consists of research output being produced by the project team itself, **Impact** is generally triggered by events outside the project, such as re-use of results in other projects, publications, or society, items in the media, etc.
 
 ![image](img/project-mentions.gif)
 
@@ -99,7 +99,7 @@ To add item, the search bar on the left can be used to search the RSD, [Crossref
 
 #### Import output
 
-You can import up to 50 publications by providing a list of DOI's, one per line.
+You can import up to 50 publications by providing a list of DOIs, one per line.
 
 #### Create manually
 
@@ -128,7 +128,7 @@ To add item, the search bar on the left can be used to search the RSD, [Crossref
 
 #### Import publication
 
-You can import up to 50 publications by providing a list of DOI's, one per line.
+You can import up to 50 publications by providing a list of DOIs, one per line.
 
 #### Create impact item
 
@@ -164,7 +164,7 @@ Here, you can see all the people who can maintain this project page. You can als
 Once you are satisfied with the information you have entered for each of the sections, you can publish the project page. To do so, use the **"Published"** slider on the information page and use the **"View Project"** to admire the result. Don't hesitate to update and extend the page later!
 
 :::tip
-You can find all your projects in "My projects" section under your profile menu.
+You can find all projects you maintain in the "My projects" section under your profile menu.
 :::
 
 ![image](img/project-publish-completed.gif)

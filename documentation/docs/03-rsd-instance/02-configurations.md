@@ -19,7 +19,7 @@ RSD offers following customization options:
 
 ## Authentication providers
 
-RSD supports the following third party OpenID Connect authentication services:
+The RSD supports the following third party OpenID Connect authentication services:
 
 - [Microsoft Entra ID (Azure AD)](#enable-microsoft-entra-id-azure-ad-authentication)
 - [ORCID](#enable-orcid-authentication-and-coupling)
