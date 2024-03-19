@@ -8,26 +8,39 @@
 import {ChangeEventHandler, Fragment, useEffect, useMemo, useState} from 'react'
 
 import {useSession} from '~/auth'
-import {genCategoryTree, leaf} from '~/utils/categories'
+import {ReorderedCategories, genCategoryTree, leaf, useCategoryTree} from '~/utils/categories'
 import {addCategoryToSoftware, deleteCategoryToSoftware, getAvailableCategories} from '~/utils/getSoftware'
-import {CategoryID, CategoryPath, CategoryTree} from '~/types/Category'
+import {CategoryID, CategoryPath, CategoryTree, CategoryTreeLevel as TCategoryTreeLevel} from '~/types/Category'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {CategoriesWithHeadlines} from '~/components/category/CategoriesWithHeadlines'
 import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {CategoryTreeLevel} from '~/components/category/CategoryTree'
 
 export type SoftwareCategoriesProps = {
   softwareId: string
   categories: CategoryPath[]
+  reorderedCategories: ReorderedCategories
 }
-export default function AutosaveSoftwareCategories({softwareId, categories: defaultCategoryPaths}: SoftwareCategoriesProps) {
+export default function AutosaveSoftwareCategories({softwareId, categories: defaultCategoryPaths, reorderedCategories}: SoftwareCategoriesProps) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
 
-  const [availableCategoryPaths, setAvailableCategoryPaths] = useState<CategoryPath[]>([])
-  const [availableCategories, setAvailableCategories] = useState<CategoryTree>([])
+  // want to show each highlighted category plus a general section
+  const availableCategoriesTree = useMemo(() => [
+    ...reorderedCategories.highlighted,
+    {
+      category: {
+        id: 'general',
+        name: config.categories.title,
+        properties:{subtitle: config.categories.subtitle},
+      },
+      children: reorderedCategories.general
+    } as TCategoryTreeLevel,
+  ], [reorderedCategories])
 
+  // selected category items
   const [categoryPaths, setCategoryPaths] = useState(defaultCategoryPaths)
+  const categoryTree = useCategoryTree(categoryPaths)
   const selectedCategoryIDs = useMemo(() => {
     const ids = new Set()
     for (const category of categoryPaths ) {
@@ -36,19 +49,11 @@ export default function AutosaveSoftwareCategories({softwareId, categories: defa
     return ids
   },[categoryPaths])
 
-  useEffect(() => {
-    getAvailableCategories()
-      .then((categories) => {
-        setAvailableCategoryPaths(categories)
-        setAvailableCategories(genCategoryTree(categories))
-      })
-  }, [])
-
   const onAdd: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const categoryId = event.target.value
     event.target.value = 'none'
 
-    const categoryPath = availableCategoryPaths.find(path => leaf(path).id === categoryId)
+    const categoryPath = reorderedCategories.paths.find(path => leaf(path).id === categoryId)
     if (!categoryPath) return
 
     const category = leaf(categoryPath)
@@ -85,25 +90,47 @@ export default function AutosaveSoftwareCategories({softwareId, categories: defa
     })
   }
 
-  if (availableCategories.length === 0) return null
+  const extractSelected = (treeLevel: TCategoryTreeLevel, categoryTree:CategoryTree) => {
+    if (treeLevel.category.id == 'general') {
+      const selectedItems = []
+      // scan the general top-level categories
+      for (const general of reorderedCategories.general) {
+        const l1 = categoryTree.find((entry) => entry.category.id == general.category.id )
+        if (l1) selectedItems.push(l1)
+      }
+      return selectedItems
+    }
 
-  return (
-    <>
-      <div className="py-4"></div>
-      <EditSectionTitle
-        title={config.categories.title}
-        subtitle={config.categories.subtitle}
-      />
-      <div className="mb-2">
-        <select className="p-2 w-full bg-primary text-white" onChange={onAdd}>
-          <option value="none">Select a category</option>
-          <OptionsTree items={availableCategories} />
-        </select>
+    return categoryTree.find((entry) => entry.category.id == treeLevel.category.id )?.children
+  }
 
-        <div className="ml-1">
-          <CategoriesWithHeadlines categories={categoryPaths} onRemove={onRemove}/>
+  if (reorderedCategories.all.length === 0) return null
+
+  return availableCategoriesTree.map(treeLevel => {
+    if (treeLevel.children.length == 0) return null
+
+    const selectedItems = extractSelected(treeLevel, categoryTree)
+
+    return (
+      <Fragment key={treeLevel.category.id}>
+        <div className="py-4"></div>
+        <EditSectionTitle
+          title={treeLevel.category.name}
+          subtitle={treeLevel.category.properties.subtitle}
+        />
+        <div className="mt-4 mb-2">
+          <select className="p-2 w-full" onChange={onAdd}>
+            <option value="none">Select a category</option>
+            <OptionsTree items={treeLevel.children} />
+          </select>
+
+          {selectedItems &&
+              <div className="mt-4">
+                <CategoryTreeLevel items={selectedItems} showLongNames onRemove={onRemove}/>
+              </div>
+          }
         </div>
-      </div>
-    </>
-  )
+      </Fragment>
+    )
+  })
 }

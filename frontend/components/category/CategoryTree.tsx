@@ -11,9 +11,10 @@ import {useCategoryTree} from '~/utils/categories'
 
 export type CategoryTreeLevelProps = {
    items: TCategoryTree
+   showLongNames?: boolean
    onRemove?: (categoryId: CategoryID) => void
 }
-export const CategoryTreeLevel = ({items, onRemove}: CategoryTreeLevelProps) => {
+export const CategoryTreeLevel = ({onRemove, ...props}: CategoryTreeLevelProps) => {
 
   const onRemoveHandler = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation()
@@ -21,25 +22,26 @@ export const CategoryTreeLevel = ({items, onRemove}: CategoryTreeLevelProps) => 
     onRemove?.(categoryId)
   }
 
-  return <TreeLevel items={items} onRemoveHandler={onRemove && onRemoveHandler}/>
+  return <TreeLevel {...props} onRemoveHandler={onRemove && onRemoveHandler}/>
 }
 
 
 type TreeLevelProps = {
   items: TCategoryTree
+  showLongNames?: boolean
   onRemoveHandler? : (event: React.MouseEvent<HTMLElement>) => void
 }
-const TreeLevel = ({items, onRemoveHandler}: TreeLevelProps) => {
+const TreeLevel = ({items, showLongNames, onRemoveHandler}: TreeLevelProps) => {
   return <ul className={'list-disc list-outside pl-6'}>
     {items.map((item, index) => (
-      <li key={item.category.short_name}>
+      <li key={item.category.id}>
         <div className='flex flex-row justify-between items-start'>
-          <Tooltip title={item.category.name} placement='left'>
-            <span className='pb-1'>{item.category.short_name}</span>
+          <Tooltip title={showLongNames ? item.category.short_name : item.category.name} placement='left'>
+            <span className='pb-1'>{showLongNames ? item.category.name : item.category.short_name}</span>
           </Tooltip>
           {onRemoveHandler && item.children.length === 0 && <IconButton sx={{top:'-0.25rem'}} data-id={item.category.id} size='small' onClick={onRemoveHandler}><CancelIcon fontSize='small' /></IconButton>}
         </div>
-        {item.children.length > 0 && <TreeLevel items={item.children} onRemoveHandler={onRemoveHandler}/> }
+        {item.children.length > 0 && <TreeLevel items={item.children} showLongNames={showLongNames} onRemoveHandler={onRemoveHandler}/> }
       </li>
     ))}
   </ul>
@@ -48,9 +50,10 @@ const TreeLevel = ({items, onRemoveHandler}: TreeLevelProps) => {
 
 type CategoryTreeProps = {
   categories: CategoryPath[]
+  showLongNames?: boolean
   onRemove?: CategoryTreeLevelProps['onRemove']
 }
-export const CategoryTree = ({categories, onRemove}: CategoryTreeProps) => {
+export const CategoryTree = ({categories, showLongNames, onRemove}: CategoryTreeProps) => {
   const tree = useCategoryTree(categories)
-  return <CategoryTreeLevel items={tree} onRemove={onRemove}/>
+  return <CategoryTreeLevel items={tree} showLongNames={showLongNames} onRemove={onRemove}/>
 }

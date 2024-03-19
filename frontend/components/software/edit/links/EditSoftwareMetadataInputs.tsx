@@ -21,12 +21,15 @@ import AutosaveSoftwareCategories from './AutosaveSoftwareCategories'
 import AutosaveSoftwareKeywords from './AutosaveSoftwareKeywords'
 import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
 import SoftwareLinksInfo from './SoftwareLinksInfo'
+import {useReorderedCategories} from '~/utils/categories'
 
 export default function EditSoftwareMetadataInputs() {
   // use form context to interact with form data
   const {watch} = useFormContext<EditSoftwareItem>()
   // watch form data changes
   const [id,get_started_url,categories] = watch(['id','get_started_url','categories'])
+
+  const reorderedCategories = useReorderedCategories()
 
   // console.group('EditSoftwareMetadataInputs')
   // console.log('editSoftware...', editSoftware)
@@ -66,10 +69,11 @@ export default function EditSoftwareMetadataInputs() {
         <AutosaveSoftwareCategories
           softwareId={id}
           categories={categories}
+          reorderedCategories={reorderedCategories}
         />
       </div>
       <div className="min-w-[21rem]">
-        <SoftwareLinksInfo />
+        <SoftwareLinksInfo reorderedCategories={reorderedCategories}/>
       </div>
     </EditSection>
   )

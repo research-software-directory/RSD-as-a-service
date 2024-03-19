@@ -5,12 +5,19 @@
 
 export type CategoryID = string // NOSONAR ignore: typescript:S6564
 
+export type CategoryProperties = {
+  icon?: string
+  is_highlight?: boolean
+  subtitle?: string
+  description?: string
+}
+
 export type CategoryEntry = {
   id: CategoryID
   parent: CategoryID | null
   short_name: string
   name: string
-  icon?: string
+  properties: CategoryProperties
 }
 
 

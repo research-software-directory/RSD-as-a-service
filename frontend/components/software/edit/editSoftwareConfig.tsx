@@ -137,6 +137,7 @@ export const softwareInformation = {
   categories: {
     title: 'Categories',
     subtitle: 'Tell us more about your software.',
+    help: 'Assign categories to your software from a predefined catalog of categories.'
   },
   keywords: {
     title: 'Keywords',

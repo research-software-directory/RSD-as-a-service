@@ -8,7 +8,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {GetServerSidePropsContext} from 'next'
 import {ScriptProps} from 'next/script'
 
@@ -64,6 +64,8 @@ import DarkThemeSection from '~/components/layout/DarkThemeSection'
 import MentionsSection from '~/components/mention/MentionsSection'
 import {getReferencePapersForSoftware} from '~/components/software/edit/mentions/reference-papers/apiReferencePapers'
 import {PackageManager, getPackageManagers} from '~/components/software/edit/package-managers/apiPackageManager'
+import CategoriesSection from '~/components/software/CategoriesSection'
+import {CategoryPath} from '~/types/Category'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -88,12 +90,26 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   const [author, setAuthor] = useState('')
   // extract data from props
   const {
-    software, releases, keywords, categories,
+    software, releases, keywords,
     licenseInfo, repositoryInfo,
     mentions, testimonials, contributors,
     relatedSoftware, relatedProjects, isMaintainer,
     slug, organisations, referencePapers, packages
   } = props
+
+  const [highlightedCategories, otherCategories] = useMemo(() => {
+    const highlightedCategories: CategoryPath[] = []
+    const otherCategories: CategoryPath[] = []
+
+    for (const path of props.categories) {
+      if (path[0].properties.is_highlight) {
+        highlightedCategories.push(path)
+      } else {
+        otherCategories.push(path)
+      }
+    }
+    return [highlightedCategories, otherCategories]
+  }, [props.categories])
 
   useEffect(() => {
     const contact = contributors.filter(item => item.is_contact_person)
@@ -158,7 +174,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         description={software?.description ?? ''}
         description_type={software?.description_type}
         keywords={keywords}
-        categories={categories}
+        categories={otherCategories}
         licenses={licenseInfo}
         languages={repositoryInfo?.languages}
         repository={repositoryInfo?.url}
@@ -189,6 +205,9 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       {/* Contributors */}
       <ContributorsSection
         contributors={contributors}
+      />
+      <CategoriesSection
+        categories={highlightedCategories}
       />
       {/* Related projects (uses project components) */}
       <RelatedProjectsSection
