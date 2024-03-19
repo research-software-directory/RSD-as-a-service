@@ -67,10 +67,10 @@ You need an image that allows CORS reference, otherwise image will not be loaded
 
 ### Document URL
 
-You can link to a remote Markdown file which will be dynamically loaded by the RSD. An often used approach is to link to a readme file on the GitHub repository. In this case you need to link to `raw` version of readme file. For example, to link to readme file of the RSD repository, we used the link https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md. **Note that url domain is different** `https://raw.githubusercontent.com/` from default GitHub domain (https://github.com).
+You can link to a remote Markdown file which will be dynamically loaded by the RSD. An often used approach is to link to a readme file on the GitHub repository. In this case you need to link to the `raw` version of the readme file. For example, to link to the readme file of the RSD repository, we used the link https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md. **Note that the url domain is different** `https://raw.githubusercontent.com/` from the default GitHub domain (https://github.com).
 
 :::warning
-When using a Document URL to point to remote markdown file on the GitGub, you need to provide URL to raw markdown file (see the animation below). In addition, all links used in the Markdown document need to be `absolute` (https://...). This is required, because Markdown content is loaded from the GitHub domain into the RSD website.
+When using a Document URL to point to a remote markdown file on the GitGub, you need to provide a URL to a raw markdown file (see the animation below). In addition, all links used in the Markdown document need to be `absolute` (https://...). This is required, because Markdown content is loaded from the GitHub domain into the RSD website.
 :::
 
 ### Logo
@@ -101,7 +101,7 @@ After providing a valid software DOI, you will have the option to import keyword
 
 ### Keywords
 
-The keywords describing your software. These will be shown in the sidebar of the software page. The users have option to filter for the software with specific keywords. If you provided w software DOI and have keywords defined in the DOI, you can import them using "Import keywords" button.
+The keywords describing your software. These will be shown in the sidebar of the software page. Users can filter all software entries by keywords. If you provided a software DOI and have keywords defined in this DOI, you can import them using the "Import keywords" button.
 
 :::tip
 When you start typing the keyword you will see a list of suggestions based on the keywords already present in RSD.
@@ -119,19 +119,19 @@ When you start typing the license you will get a list of valid open source licen
 
 In this section, you can provide more information on who contributed to the software. This section can be used to list the developers, designers, community managers, etc.
 
-You can use the search bar underneath "Add contributor" to search for people already registered in the RSD or [ORCID](https://orcid.org) database. If needed, you can add a role and affiliation to the contributor, and select one contributor as a "contact person" for the software.
+You can use the search bar underneath "Add contributor" to search for people already registered in the RSD or [ORCID](https://orcid.org) database. If needed, you can add a role and an affiliation to the contributor, and select one contributor as a "contact person" for the software.
 
 The contributors you add will show up in the contributors section of the software page.
 
 :::tip
-If you have provided a **Software DOI** in the previous section, you can import the contributors from the DOI metadata by clicking the "import contributors" button (see animation).
+If you have provided a **Software DOI** in the previous section, you can import the contributors from the DOI metadata by clicking the "Import contributors" button (see animation).
 :::
 
 ![video](img/software-contributors.gif)
 
 ### Contact person
 
-**One of the contributors** can be defined as contact person. The contact person will appear in a separate card and the email button will be displayed if email address is provided.
+**One of the contributors** can be defined as contact person. The contact person will appear in a separate card and the email button will be displayed if an email address is provided.
 
 :::warning
 
@@ -155,14 +155,14 @@ This section allows you to add mentions to your software page. You can use this 
 
 ### Reference papers
 
-Use search to find papers by DOI or title. All the relevant data about the publication will be retrieved automatically. A background scraper will use OpenAlex to collect all citations of the reference papers.
+Use the *Search* box on the right hand side to find papers by DOI or title. All the relevant data about the publication will be retrieved automatically. A background scraper will use [OpenAlex](https://openalex.org/) to collect all citations of the reference papers.
 
 ### Citations
 
-All the results RSD scraper was able to find on OpenAlex citing provided reference papers. It can take a few minutes before the citations are harvested.
+All the results RSD scraper was able to find on [OpenAlex](https://openalex.org/) citing provided reference papers. It can take a few minutes before the citations are harvested.
 
 :::warning
-You cannot edit this section. All entries are automatically generated by RSD scraper service. The found mentions are displayed in the mentions section of the software page.
+You cannot edit this section. All entries are automatically generated by the RSD scraper service. The found mentions are displayed in the mentions section of the software page.
 :::
 
 ### Related output
