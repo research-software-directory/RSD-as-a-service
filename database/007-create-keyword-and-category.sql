@@ -74,6 +74,7 @@ CREATE TABLE category (
 	short_name VARCHAR NOT NULL,
 	name VARCHAR NOT NULL,
 	icon VARCHAR DEFAULT NULL,
+	skos_exact_match VARCHAR DEFAULT NULL, -- https://www.w3.org/TR/skos-primer/#secmapping
 
 	CONSTRAINT unique_short_name UNIQUE NULLS NOT DISTINCT (parent, short_name),
 	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name)
@@ -167,7 +168,7 @@ $$
 	-- 2. How a table row "type" could be used here Now we have to list all columns of `category` explicitely
 	--    I want to have something like `* without 'r_index'` to be independant from modifications of `category`
 	-- 3. Maybe this could be improved by using SEARCH keyword.
-	SELECT id, parent, short_name, name, icon
+	SELECT id, parent, short_name, name, icon, skos_exact_match
 	FROM cat_path
 	ORDER BY r_index DESC;
 $$;
