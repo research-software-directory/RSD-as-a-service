@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"slices"
 )
 
 type RsdSoftware struct {
@@ -34,7 +35,8 @@ type RsdSoftware struct {
 		License string `json:"license"`
 	} `json:"license_for_software"`
 	RepositoryURL *struct {
-		URL string `json:"url"`
+		URL       string            `json:"url"`
+		Languages map[string]uint64 `json:"languages"`
 	} `json:"repository_url"`
 }
 
@@ -59,15 +61,16 @@ type CreativeWork struct {
 }
 
 type SoftwareApplication struct {
-	Context        string         `json:"@context"`
-	Type           string         `json:"@type"`
-	Id             *string        `json:"@id"`
-	Name           string         `json:"name"`
-	Description    string         `json:"description"`
-	CodeRepository *string        `json:"codeRepository"`
-	Author         []Person       `json:"author"`
-	Keyword        []string       `json:"keyword"`
-	License        []CreativeWork `json:"license"`
+	Context             string         `json:"@context"`
+	Type                string         `json:"@type"`
+	Id                  *string        `json:"@id"`
+	Name                string         `json:"name"`
+	Description         string         `json:"description"`
+	CodeRepository      *string        `json:"codeRepository"`
+	Author              []Person       `json:"author"`
+	Keyword             []string       `json:"keyword"`
+	ProgrammingLanguage []string       `json:"programmingLanguage"`
+	License             []CreativeWork `json:"license"`
 }
 
 var slugRegex *regexp.Regexp = regexp.MustCompile("^[a-z0-9]+(-[a-z0-9]+)*$")
@@ -146,10 +149,10 @@ func main() {
 			return
 		}
 
-		urlUnformatted := "%v/software?slug=eq.%v&select=brand_name,concept_doi,short_statement,contributor(family_names,given_names,affiliation,role,orcid,email_address),keyword(value),license_for_software(license),repository_url(url)"
+		urlUnformatted := "%v/software?slug=eq.%v&select=brand_name,concept_doi,short_statement,contributor(family_names,given_names,affiliation,role,orcid,email_address),keyword(value),license_for_software(license),repository_url(url,languages)"
 		url := fmt.Sprintf(urlUnformatted, postgrestUrl, slug)
 
-		bytes, err := GetAndReadBody(url)
+		bodyBytes, err := GetAndReadBody(url)
 		if err != nil {
 			log.Print("Unknown error when downloading data for slug "+slug+": ", err)
 			writer.WriteHeader(http.StatusInternalServerError)
@@ -160,7 +163,7 @@ func main() {
 			return
 		}
 
-		jsonBytes, err := convertRsdToCodeMeta(bytes)
+		jsonBytes, err := convertRsdToCodeMeta(bodyBytes)
 		if err != nil {
 			log.Print("Unknown error for slug "+slug+": ", err)
 			writer.WriteHeader(http.StatusInternalServerError)
@@ -206,14 +209,15 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 	rsdResponse := rsdResponseArray[0]
 
 	var codemetaData = SoftwareApplication{
-		Context:     "https://w3id.org/codemeta/v3.0",
-		Id:          rsdResponse.ConceptDoi,
-		Type:        "SoftwareApplication",
-		Name:        rsdResponse.BrandName,
-		Description: rsdResponse.ShortStatement,
-		Author:      extractContributors(rsdResponse),
-		Keyword:     extractKeywords(rsdResponse),
-		License:     extractLicenses(rsdResponse),
+		Context:             "https://w3id.org/codemeta/v3.0",
+		Id:                  rsdResponse.ConceptDoi,
+		Type:                "SoftwareApplication",
+		Name:                rsdResponse.BrandName,
+		Description:         rsdResponse.ShortStatement,
+		Author:              extractContributors(rsdResponse),
+		Keyword:             extractKeywords(rsdResponse),
+		ProgrammingLanguage: extractProgrammingLanguages(rsdResponse),
+		License:             extractLicenses(rsdResponse),
 	}
 
 	if rsdResponse.RepositoryURL != nil {
@@ -236,6 +240,33 @@ func extractKeywords(rsdSoftware RsdSoftware) []string {
 
 		result = append(result, keyword)
 	}
+
+	return result
+}
+
+func extractProgrammingLanguages(rsdSoftware RsdSoftware) []string {
+	result := []string{}
+
+	if rsdSoftware.RepositoryURL == nil {
+		return result
+	}
+
+	for k := range rsdSoftware.RepositoryURL.Languages {
+		result = append(result, k)
+	}
+
+	slices.SortFunc(result, func(a, b string) int {
+		valA := rsdSoftware.RepositoryURL.Languages[a]
+		valB := rsdSoftware.RepositoryURL.Languages[b]
+
+		if valA > valB {
+			return -1
+		} else if valA < valB {
+			return 1
+		} else {
+			return 0
+		}
+	})
 
 	return result
 }
