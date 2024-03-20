@@ -178,7 +178,7 @@ services:
 
   codemeta:
     build: ./codemeta
-    image: rsd/codemeta:v1.1.0
+    image: rsd/codemeta:v1.2.0
     expose:
       - "8000"
     environment:
