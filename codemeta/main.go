@@ -17,10 +17,13 @@ import (
 )
 
 type RsdSoftware struct {
-	BrandName      string  `json:"brand_name"`
-	ConceptDoi     *string `json:"concept_doi"`
-	ShortStatement string  `json:"short_statement"`
-	Contributor    []struct {
+	BrandName       string  `json:"brand_name"`
+	ConceptDoi      *string `json:"concept_doi"`
+	ShortStatement  *string `json:"short_statement"`
+	DescriptionType string  `json:"description_type"`
+	Description     *string `json:"description"`
+	DescriptionUrl  *string `json:"description_url"`
+	Contributor     []struct {
 		FamilyNames  string  `json:"family_names"`
 		GivenNames   string  `json:"given_names"`
 		Affiliation  *string `json:"affiliation"`
@@ -79,7 +82,7 @@ type SoftwareApplication struct {
 	Type                 string             `json:"@type"`
 	Id                   *string            `json:"@id"`
 	Name                 string             `json:"name"`
-	Description          string             `json:"description"`
+	Description          []string           `json:"description"`
 	CodeRepository       *string            `json:"codeRepository"`
 	Author               []Person           `json:"author"`
 	Keyword              []string           `json:"keyword"`
@@ -164,7 +167,7 @@ func main() {
 			return
 		}
 
-		urlUnformatted := "%v/software?slug=eq.%v&select=brand_name,concept_doi,short_statement,contributor(family_names,given_names,affiliation,role,orcid,email_address),keyword(value),license_for_software(license),repository_url(url,languages),reference_papers:mention!reference_paper_for_software(doi,title,page,url)"
+		urlUnformatted := "%v/software?slug=eq.%v&select=brand_name,concept_doi,short_statement,description_type,description,description_url,contributor(family_names,given_names,affiliation,role,orcid,email_address),keyword(value),license_for_software(license),repository_url(url,languages),reference_papers:mention!reference_paper_for_software(doi,title,page,url)"
 		url := fmt.Sprintf(urlUnformatted, postgrestUrl, slug)
 
 		bodyBytes, err := GetAndReadBody(url)
@@ -231,7 +234,7 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 		Id:                   rsdResponse.ConceptDoi,
 		Type:                 "SoftwareApplication",
 		Name:                 rsdResponse.BrandName,
-		Description:          rsdResponse.ShortStatement,
+		Description:          extractDescription(rsdResponse),
 		Author:               extractContributors(rsdResponse),
 		Keyword:              extractKeywords(rsdResponse),
 		ProgrammingLanguage:  extractProgrammingLanguages(rsdResponse),
@@ -249,6 +252,24 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 		return nil, err
 	}
 	return jsonBytes, nil
+}
+
+func extractDescription(rsdSoftware RsdSoftware) []string {
+	result := []string{}
+
+	if rsdSoftware.ShortStatement != nil {
+		result = append(result, *rsdSoftware.ShortStatement)
+	}
+
+	if rsdSoftware.DescriptionType == "markdown" && rsdSoftware.Description != nil {
+		result = append(result, *rsdSoftware.Description)
+	}
+
+	if rsdSoftware.DescriptionType == "link" && rsdSoftware.DescriptionUrl != nil {
+		result = append(result, *rsdSoftware.DescriptionUrl)
+	}
+
+	return result
 }
 
 func extractKeywords(rsdSoftware RsdSoftware) []string {
