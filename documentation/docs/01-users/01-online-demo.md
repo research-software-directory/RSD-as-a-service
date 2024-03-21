@@ -1,6 +1,10 @@
 # Online demo
 
-If you would like to experiment with adding content to the RSD yourself, your can use our [online demo version at https://research-software.dev](https://research-software.dev). This online demo allows anyone to add software and projects using test accounts. __Please note that the data entered in this demo version is not curated in any way, and may be deleted at any time!__
+If you would like to experiment with adding content to the RSD yourself, your can use our [online demo version at https://research-software.dev](https://research-software.dev). This online demo allows anyone to add software and projects using test accounts.
+
+:::warning
+Please note that the data entered into this demo version is not curated in any way, and may be deleted at any time!
+:::
 
 ## Sign in with a random username
 
