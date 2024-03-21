@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -92,7 +92,7 @@ function generateMentions(amountExtra = 100) {
 	return result;
 }
 
-async function generateSofware(amount=500) {
+async function generateSoftware(amount=500) {
 	// real software has a real concept DOI
 	const amountRealSoftware = Math.min(conceptDois.length, amount);
 	const brandNames = [];
@@ -739,7 +739,7 @@ await Promise.all([mentionsPromise, keywordPromise, researchDomainsPromise])
 	.then(() => console.log('mentions, keywords, research domains done'));
 
 let idsSoftware, idsFakeSoftware, idsRealSoftware, idsProjects, idsOrganisations;
-const softwarePromise = postToBackend('/software', await generateSofware())
+const softwarePromise = postToBackend('/software', await generateSoftware())
 	.then(resp => resp.json())
 	.then(async swArray => {
 		idsSoftware = swArray.map(sw => sw['id']);

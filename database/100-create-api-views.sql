@@ -19,10 +19,8 @@ CREATE FUNCTION keyword_count_for_software() RETURNS TABLE (
 	id UUID,
 	keyword CITEXT,
 	cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
 	SELECT
 		keyword.id,
 		keyword.value AS keyword,
@@ -36,9 +34,7 @@ BEGIN
 			FROM
 				keyword_for_software
 			GROUP BY keyword_for_software.keyword
-		) AS keyword_count ON keyword.id = keyword_count.keyword
-	;
-END
+		) AS keyword_count ON keyword.id = keyword_count.keyword;
 $$;
 
 -- Keywords by software
@@ -48,20 +44,16 @@ CREATE FUNCTION keywords_by_software() RETURNS TABLE (
 	id UUID,
 	keyword CITEXT,
 	software UUID
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
-SELECT
-	keyword.id,
-	keyword.value AS keyword,
-	keyword_for_software.software
-FROM
-	keyword_for_software
-INNER JOIN
-	keyword ON keyword.id = keyword_for_software.keyword
-;
-END
+	SELECT
+		keyword.id,
+		keyword.value AS keyword,
+		keyword_for_software.software
+	FROM
+		keyword_for_software
+	INNER JOIN
+		keyword ON keyword.id = keyword_for_software.keyword;
 $$;
 
 -- Keywords grouped by software for filtering
@@ -71,10 +63,8 @@ CREATE FUNCTION keyword_filter_for_software() RETURNS TABLE (
 	software UUID,
 	keywords CITEXT[],
 	keywords_text TEXT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
 	SELECT
 		keyword_for_software.software AS software,
 		ARRAY_AGG(
@@ -89,35 +79,18 @@ BEGIN
 		keyword_for_software
 	INNER JOIN
 		keyword ON keyword.id = keyword_for_software.keyword
-	GROUP BY keyword_for_software.software
-;
-END
+	GROUP BY keyword_for_software.software;
 $$;
 
 -- COUNT contributors per software
-CREATE FUNCTION count_software_contributors() RETURNS TABLE (software UUID, contributor_cnt BIGINT) LANGUAGE plpgsql STABLE AS
+CREATE FUNCTION count_software_contributors() RETURNS TABLE (software UUID, contributor_cnt BIGINT) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY SELECT
+SELECT
 		contributor.software, COUNT(contributor.id) AS contributor_cnt
 	FROM
 		contributor
 	GROUP BY
 		contributor.software;
-END
-$$;
-
--- COUNT mentions per software
-CREATE FUNCTION count_software_mentions() RETURNS TABLE (software UUID, mention_cnt BIGINT) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY SELECT
-		mentions_by_software.software, COUNT(mentions_by_software.id) AS mention_cnt
-	FROM
-		mentions_by_software()
-	GROUP BY
-		mentions_by_software.software;
-END
 $$;
 
 -- programming language filter for software
@@ -125,10 +98,8 @@ $$;
 CREATE FUNCTION prog_lang_filter_for_software() RETURNS TABLE (
 	software UUID,
 	prog_lang TEXT[]
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
 	SELECT
 		repository_url.software,
 		(SELECT
@@ -137,9 +108,7 @@ BEGIN
 			JSONB_OBJECT_KEYS(repository_url.languages) p_lang
 		) AS "prog_lang"
 	FROM
-		repository_url
-	;
-END
+		repository_url;
 $$;
 
 -- license filter for software
@@ -159,54 +128,15 @@ GROUP BY
 ;
 $$;
 
--- RELATED SOFTWARE LIST WITH COUNTS
-CREATE FUNCTION related_software_for_software(software_id UUID) RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	brand_name VARCHAR,
-	short_statement VARCHAR,
-	updated_at TIMESTAMPTZ,
-	contributor_cnt BIGINT,
-	mention_cnt BIGINT,
-	is_published BOOLEAN
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		software.id,
-		software.slug,
-		software.brand_name,
-		software.short_statement,
-		software.updated_at,
-		count_software_contributors.contributor_cnt,
-		count_software_mentions.mention_cnt,
-		software.is_published
-	FROM
-		software
-	LEFT JOIN
-		count_software_contributors() ON software.id=count_software_contributors.software
-	LEFT JOIN
-		count_software_mentions() ON software.id=count_software_mentions.software
-	INNER JOIN
-		software_for_software ON software.id=software_for_software.relation
-	WHERE
-		software_for_software.origin = software_id
-	;
-END
-$$;
-
 -- Software maintainer by software slug
-CREATE FUNCTION maintainer_for_software_by_slug() RETURNS TABLE (maintainer UUID, software UUID, slug VARCHAR) LANGUAGE plpgsql STABLE AS
+CREATE FUNCTION maintainer_for_software_by_slug() RETURNS TABLE (maintainer UUID, software UUID, slug VARCHAR) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY SELECT
+	SELECT
 		maintainer_for_software.maintainer, maintainer_for_software.software, software.slug
 	FROM
 		maintainer_for_software
 	LEFT JOIN
 		software ON software.id = maintainer_for_software.software;
-END
 $$;
 
 -- Participating organisations by software
@@ -224,10 +154,8 @@ CREATE FUNCTION organisations_of_software(software_id UUID) RETURNS TABLE (
 	status relation_status,
 	"position" INTEGER,
 	software UUID
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
 	SELECT
 		organisation.id AS id,
 		organisation.slug,
@@ -250,9 +178,7 @@ BEGIN
 	LEFT JOIN
 		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
 	WHERE
-		software.id = software_id
-	;
-END
+		software.id = software_id;
 $$;
 
 -- Software count by organisation
@@ -389,9 +315,8 @@ $$;
 CREATE FUNCTION release_cnt_by_year(organisation_id UUID) RETURNS TABLE (
 	release_year SMALLINT,
 	release_cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN RETURN QUERY
 	SELECT
 		releases_by_organisation.release_year,
 		COUNT(releases_by_organisation.*) AS release_cnt
@@ -400,9 +325,7 @@ BEGIN RETURN QUERY
 	WHERE
 		releases_by_organisation.organisation_id = release_cnt_by_year.organisation_id
 	GROUP BY
-		releases_by_organisation.release_year
-	;
-END
+		releases_by_organisation.release_year;
 $$;
 
 -- Organisations overview
@@ -484,10 +407,8 @@ CREATE FUNCTION organisations_of_project(project_id UUID) RETURNS TABLE (
 	"position" INTEGER,
 	project UUID,
 	parent UUID
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
 	SELECT
 			organisation.id AS id,
 			organisation.slug,
@@ -512,95 +433,7 @@ BEGIN
 	LEFT JOIN
 		organisation_route(organisation.id) ON organisation_route.organisation = organisation.id
 	WHERE
-		project.id = project_id
-	;
-END
-$$;
-
--- RELATED PROJECTS for software
--- NOTE! updated by Dusan 2022-07-27
--- filter by software_id
-CREATE FUNCTION related_projects_for_software(software_id UUID) RETURNS TABLE (
-	software UUID,
-	id UUID,
-	slug VARCHAR,
-	title VARCHAR,
-	subtitle VARCHAR,
-	current_state VARCHAR,
-	date_start DATE,
-	updated_at TIMESTAMPTZ,
-	is_published BOOLEAN,
-	image_contain BOOLEAN,
-	status relation_status,
-	image_id VARCHAR
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		software_for_project.software,
-		project.id,
-		project.slug,
-		project.title,
-		project.subtitle,
-		project_status.status AS current_state,
-		project.date_start,
-		project.updated_at,
-		project.is_published,
-		project.image_contain,
-		software_for_project.status,
-		project.image_id
-	FROM
-		project
-	INNER JOIN
-		software_for_project ON project.id = software_for_project.project
-	LEFT JOIN
-		project_status() ON project.id=project_status.project
-	WHERE
-		software_for_project.software = software_id
-	;
-END
-$$;
-
-
--- RELATED SOFTWARE for PROJECT
--- filter by project_id
-CREATE FUNCTION related_software_for_project(project_id UUID) RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	brand_name VARCHAR,
-	short_statement VARCHAR,
-	updated_at TIMESTAMPTZ,
-	contributor_cnt BIGINT,
-	mention_cnt BIGINT,
-	is_published BOOLEAN,
-	status relation_status
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		software.id,
-		software.slug,
-		software.brand_name,
-		software.short_statement,
-		software.updated_at,
-		count_software_contributors.contributor_cnt,
-		count_software_mentions.mention_cnt,
-		software.is_published,
-		software_for_project.status
-	FROM
-		software
-	LEFT JOIN
-		count_software_contributors() ON software.id=count_software_contributors.software
-	LEFT JOIN
-		count_software_mentions() ON software.id=count_software_mentions.software
-	INNER JOIN
-		software_for_project ON software.id=software_for_project.software
-	WHERE
-		software_for_project.project=project_id
-	;
-END
+		project.id = project_id;
 $$;
 
 -- Project maintainer by slug
@@ -609,10 +442,8 @@ CREATE FUNCTION maintainer_for_project_by_slug() RETURNS TABLE (
 	maintainer UUID,
 	project UUID,
 	slug VARCHAR
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
 	SELECT
 		maintainer_for_project.maintainer,
 		maintainer_for_project.project,
@@ -621,7 +452,6 @@ BEGIN
 		maintainer_for_project
 	LEFT JOIN
 		project ON project.id = maintainer_for_project.project;
-END
 $$;
 
 -- Project maintainers list with basic personal info
@@ -673,10 +503,8 @@ CREATE FUNCTION keyword_count_for_projects() RETURNS TABLE (
 	id UUID,
 	keyword CITEXT,
 	cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
 	SELECT
 		keyword.id,
 		keyword.value AS keyword,
@@ -690,9 +518,7 @@ BEGIN
 			FROM
 				keyword_for_project
 			GROUP BY keyword_for_project.keyword
-		) AS keyword_count ON keyword.id = keyword_count.keyword
-	;
-END
+		) AS keyword_count ON keyword.id = keyword_count.keyword;
 $$;
 
 -- Keywords by project
@@ -702,20 +528,16 @@ CREATE FUNCTION keywords_by_project() RETURNS TABLE (
 	id UUID,
 	keyword CITEXT,
 	project UUID
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
-SELECT
-	keyword.id,
-	keyword.value AS keyword,
-	keyword_for_project.project
-FROM
-	keyword_for_project
-INNER JOIN
-	keyword ON keyword.id = keyword_for_project.keyword
-;
-END
+	SELECT
+		keyword.id,
+		keyword.value AS keyword,
+		keyword_for_project.project
+	FROM
+		keyword_for_project
+	INNER JOIN
+		keyword ON keyword.id = keyword_for_project.keyword;
 $$;
 
 
@@ -726,22 +548,18 @@ CREATE FUNCTION research_domain_by_project() RETURNS TABLE (
 	name VARCHAR,
 	description VARCHAR,
 	project UUID
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
-SELECT
-	research_domain.id,
-	research_domain.key,
-	research_domain.name,
-	research_domain.description,
-	research_domain_for_project.project
-FROM
-	research_domain_for_project
-INNER JOIN
-	research_domain ON research_domain.id=research_domain_for_project.research_domain
-;
-END
+	SELECT
+		research_domain.id,
+		research_domain.key,
+		research_domain.name,
+		research_domain.description,
+		research_domain_for_project.project
+	FROM
+		research_domain_for_project
+	INNER JOIN
+		research_domain ON research_domain.id=research_domain_for_project.research_domain;
 $$;
 
 -- Software maintainers list with basic personal info
@@ -784,85 +602,6 @@ BEGIN
 	WHERE maintainer_for_software.software = software_id
 	GROUP BY maintainer_for_software.maintainer;
 	RETURN;
-END
-$$;
-
--- SOFTWARE BY MAINTAINER
--- NOTE! one software is shown multiple times in this view
--- we filter this view at least by organisation uuid
-CREATE FUNCTION software_by_maintainer(maintainer_id UUID) RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	brand_name VARCHAR,
-	short_statement VARCHAR,
-	is_published BOOLEAN,
-	updated_at TIMESTAMPTZ,
-	contributor_cnt BIGINT,
-	mention_cnt BIGINT
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		software.id,
-		software.slug,
-		software.brand_name,
-		software.short_statement,
-		software.is_published,
-		software.updated_at,
-		count_software_contributors.contributor_cnt,
-		count_software_mentions.mention_cnt
-	FROM
-		software
-	LEFT JOIN
-		count_software_contributors() ON software.id=count_software_contributors.software
-	LEFT JOIN
-		count_software_mentions() ON software.id=count_software_mentions.software
-	INNER JOIN
-		maintainer_for_software ON software.id=maintainer_for_software.software
-	WHERE
-		maintainer_for_software.maintainer=maintainer_id
-;
-END
-$$;
-
--- PROJECTS BY MAINTAINER
--- NOTE! updated by Dusan on 2022-07-27
--- we filter this view at least by user acount (uuid)
-CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
-	id UUID,
-	slug VARCHAR,
-	title VARCHAR,
-	subtitle VARCHAR,
-	current_state VARCHAR,
-	date_start DATE,
-	updated_at TIMESTAMPTZ,
-	is_published BOOLEAN,
-	image_contain BOOLEAN,
-	image_id VARCHAR
-) LANGUAGE plpgsql STABLE AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		project.id,
-		project.slug,
-		project.title,
-		project.subtitle,
-		project_status.status AS current_state,
-		project.date_start,
-		project.updated_at,
-		project.is_published,
-		project.image_contain,
-		project.image_id
-	FROM
-		project
-	INNER JOIN
-		maintainer_for_project ON project.id = maintainer_for_project.project
-	LEFT JOIN
-		project_status() ON project.id=project_status.project
-	WHERE
-		maintainer_for_project.maintainer = maintainer_id;
 END
 $$;
 
@@ -1038,10 +777,8 @@ CREATE FUNCTION keyword_filter_for_project() RETURNS TABLE (
 	project UUID,
 	keywords CITEXT[],
 	keywords_text TEXT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
 	SELECT
 		keyword_for_project.project AS project,
 		ARRAY_AGG(
@@ -1056,9 +793,7 @@ BEGIN
 		keyword_for_project
 	INNER JOIN
 		keyword ON keyword.id = keyword_for_project.keyword
-	GROUP BY keyword_for_project.project
-;
-END
+	GROUP BY keyword_for_project.project;
 $$;
 
 -- RESEARCH DOMAIN grouped by project
@@ -1068,10 +803,8 @@ CREATE FUNCTION research_domain_filter_for_project() RETURNS TABLE (
 	project UUID,
 	research_domain VARCHAR[],
 	research_domain_text TEXT
-) LANGUAGE plpgsql STABLE AS
+) LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN QUERY
 	SELECT
 		research_domain_for_project.project AS project,
 		ARRAY_AGG(
@@ -1086,9 +819,7 @@ BEGIN
 		research_domain_for_project
 	INNER JOIN
 		research_domain ON research_domain.id = research_domain_for_project.research_domain
-	GROUP BY research_domain_for_project.project
-;
-END
+	GROUP BY research_domain_for_project.project;
 $$;
 
 
@@ -1198,20 +929,16 @@ $$;
 
 
 -- Check whether user agreed on Terms of Service and read the Privacy Statement
-CREATE FUNCTION user_agreements_stored(account_id UUID) RETURNS BOOLEAN LANGUAGE plpgsql STABLE AS
+CREATE FUNCTION user_agreements_stored(account_id UUID) RETURNS BOOLEAN LANGUAGE sql STABLE AS
 $$
-BEGIN
-	RETURN (
-		SELECT (
-			account.agree_terms AND
-			account.notice_privacy_statement
-		)
-		FROM
-			account
-		WHERE
-			account.id = account_id
-	);
-END
+	SELECT (
+		account.agree_terms AND
+		account.notice_privacy_statement
+	)
+	FROM
+		account
+	WHERE
+		account.id = account_id;
 $$;
 
 -- Display amount of users per home_organisation
