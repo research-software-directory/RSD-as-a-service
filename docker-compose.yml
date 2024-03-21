@@ -16,7 +16,7 @@ version: "3.0"
 services:
   database:
     build: ./database
-    image: rsd/database:2.2.0
+    image: rsd/database:2.2.1
     ports:
       # enable connection from outside (development mode)
       - "5432:5432"
@@ -235,7 +235,7 @@ services:
   #----------------------------------------------
   data-generation:
     build: ./data-generation
-    image: rsd/generation:1.4.1
+    image: rsd/generation:1.4.2
     environment:
       # it needs to be here to use values from .env file
       - PGRST_JWT_SECRET
