@@ -6,7 +6,7 @@ Before you can add software, you will need to get access to the RSD. See [How to
 
 After signing in, you can use the **"+"** button next to your avatar icon on the top right of the page. Select "New Software" from the drop-down menu.
 
-To create a new software page, you must provide a name and a short description of what your software does. Once you click "save" the RSD will use this information to create a new software page. Next, you can add additional information using the sections explained below.
+To create a new software page provide a name and a short description (optional) of what your software does. Once you click "Save" the RSD will use this information to create a new software page. Next, you can add additional information using the sections explained below.
 
 ![video](img/software-add-description.gif)
 
@@ -70,7 +70,7 @@ You need an image that allows CORS reference, otherwise image will not be loaded
 You can link to a remote Markdown file which will be dynamically loaded by the RSD. An often used approach is to link to a readme file on the GitHub repository. In this case you need to link to the `raw` version of the readme file. For example, to link to the readme file of the RSD repository, we used the link https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md. **Note that the url domain is different** `https://raw.githubusercontent.com/` from the default GitHub domain (https://github.com).
 
 :::warning
-When using a Document URL to point to a remote markdown file on the GitGub, you need to provide a URL to a raw markdown file (see the animation below). In addition, all links used in the Markdown document need to be `absolute` (https://...). This is required, because Markdown content is loaded from the GitHub domain into the RSD website.
+When using a Document URL to point to a remote markdown file on the GitHub, you need to provide a URL to a raw markdown file (see the animation below). In addition, all links used in the Markdown document need to be `absolute` (https://...). This is required, because Markdown content is loaded from the GitHub domain into the RSD website.
 :::
 
 ### Logo
