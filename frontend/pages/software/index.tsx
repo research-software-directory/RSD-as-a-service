@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -63,7 +64,7 @@ type SoftwareOverviewProps = {
 }
 
 const pageTitle = `Software | ${app.title}`
-const pageDesc = 'The list of research software registerd in the Research Software Directory.'
+const pageDesc = 'The list of research software registered in the Research Software Directory.'
 
 export default function SoftwareOverviewPage({
   search, keywords,

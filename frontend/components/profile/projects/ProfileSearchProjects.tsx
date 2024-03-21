@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,6 +8,7 @@ import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggl
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
 import useProjectParams from '~/components/organisation/projects/useProjectParams'
 import ProfileSearchPanel from '~/components/profile/ProfileSearchPanel'
+import {getPageRange} from '~/utils/pagination'
 
 type ProfileSearchSoftware = {
   count: number
@@ -41,7 +43,7 @@ export default function ProfileSearchProjects({
       />
       <div className="flex justify-between items-center px-1 py-2">
         <div className="text-sm opacity-70">
-          Page {page ?? 1} of {count} results
+          {getPageRange(rows, page, count)}
         </div>
       </div>
     </section>
