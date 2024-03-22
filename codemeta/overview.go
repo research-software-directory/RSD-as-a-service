@@ -6,6 +6,7 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"html/template"
 	"io"
@@ -17,7 +18,9 @@ type SoftwareBasicData struct {
 	ShortStatement string `json:"short_statement"`
 }
 
-var tmpl = template.Must(template.ParseFiles("overview.gohtml"))
+//go:embed template/*
+var content embed.FS
+var tmpl = template.Must(template.ParseFS(content, "template/overview.gohtml"))
 
 func GenerateOverview(bytes []byte, writer io.Writer) error {
 	var software []SoftwareBasicData
