@@ -3,15 +3,19 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM golang:1.22.0-bullseye
+FROM golang:1.22.1-bookworm AS builder
 
 WORKDIR /usr/src/app
 COPY go.mod .
 COPY **.go .
+COPY template template
 
 RUN go build -v -o /usr/local/bin/app
 
-COPY **.gohtml .
+
+FROM ubuntu:22.04
+
+COPY --from=builder /usr/local/bin/app /usr/local/bin/app
 
 RUN useradd user
 USER user

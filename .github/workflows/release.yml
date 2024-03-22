@@ -243,7 +243,7 @@ jobs:
 
       - name: create release draft
         # https://github.com/softprops/action-gh-release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           # The token is provided by Actions, you do not need to create your own token
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
