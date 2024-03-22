@@ -2,11 +2,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {ClickAwayListener} from '@mui/base'
 import {useRouter} from 'next/router'
 
@@ -31,8 +33,10 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const [selected, setSelected] = useState(0)
   const [hasResults, setHasResults] = useState(true)
   const [searchResults, setSearchResults] = useState<GlobalSearchResults[]>([])
+  const [searchCombo, setSearchCombo] = useState('Ctrl K')
 
   const lastValue = useDebounce(inputValue, 150)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   // console.group('GlobalSearchAutocomplete')
   // console.log('inputValue...', inputValue)
@@ -129,6 +133,30 @@ export default function GlobalSearchAutocomplete(props: Props) {
     }
   }
 
+  useEffect(() => {
+    if (navigator === undefined || navigator.userAgent === undefined) {
+      return
+    } else if (/(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent)) {
+      setSearchCombo('⌘ K')
+    }
+  }, [])
+
+  const handleCtrlK = useCallback((event: KeyboardEvent) => {
+    if (event.ctrlKey || event.metaKey) {
+      if (event.key?.toLowerCase() === 'k') {
+        event.preventDefault()
+        inputRef.current?.focus()
+      }
+    }
+  }, [inputRef])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleCtrlK)
+    return () => {
+      window.removeEventListener('keydown', handleCtrlK)
+    }
+  },[handleCtrlK])
+
   return (
     <ClickAwayListener onClickAway={() => {
       setOpen(false)
@@ -144,6 +172,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
           </svg>
         </div>
         <input className="px-2 pl-8 py-2 bg-transparent rounded-sm border border-base-600 focus:outline-0 w-full focus:bg-base-100 focus:text-base-900 duration-200"
+          ref={inputRef}
           data-testid="global-search"
           name="global-search"
           placeholder="Search or jump to..."
@@ -155,6 +184,10 @@ export default function GlobalSearchAutocomplete(props: Props) {
           onFocus={focusSearch}
           aria-label="Search for software"
         />
+        <span
+          className="absolute top-[9px] right-2 text-base-600"
+          hidden={isOpen}
+        >{searchCombo}</span>
 
         {isOpen &&
           <div
