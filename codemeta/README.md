@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+SPDX-FileCopyrightText: 2024 - 2025 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2024 - 2025 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -34,3 +34,11 @@ POSTGREST_URL=http://localhost/api/v1 ./codemeta
 You can then access the service on http://localhost:8000/v3/
 
 You can also use an IDE to build and run it more easily.
+
+# Scrapers
+
+Still under development.
+
+When running the RSD, the `codemeta` container must also run (note that this scraper is _not_ part of the `scrapers` service). This is the default, no action needed, but don't use `--scale codemeta=0`.
+
+The scraper currently does _not_ run automatically. You can run it with `docker compose exec codemeta scraper-4tu`
