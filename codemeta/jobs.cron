@@ -1,0 +1,2 @@
+* * * * * /usr/local/bin/scraper-4tu > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
+* * * * * /usr/local/bin/hello.sh > /proc/$(cat /var/run/crond.pid)/fd/1 2>&1
