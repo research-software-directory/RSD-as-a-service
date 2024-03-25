@@ -923,7 +923,7 @@ $$
 	-- ONLY TOP LEVEL ORGANISATIONS
 		organisation.parent IS NULL
 		AND
-		organisation.slug ILIKE CONCAT('%', query, '%') OR organisation."name" ILIKE CONCAT('%', query, '%')
+		(organisation.slug ILIKE CONCAT('%', query, '%') OR organisation."name" ILIKE CONCAT('%', query, '%'))
 ;
 $$;
 

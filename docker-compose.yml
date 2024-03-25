@@ -16,7 +16,7 @@ version: "3.0"
 services:
   database:
     build: ./database
-    image: rsd/database:2.2.1
+    image: rsd/database:2.2.2
     ports:
       # enable connection from outside (development mode)
       - "5432:5432"
