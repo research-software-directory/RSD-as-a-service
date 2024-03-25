@@ -6,9 +6,7 @@
 FROM golang:1.22.2-bookworm AS builder
 
 WORKDIR /usr/src/app
-COPY go.mod .
-COPY **.go .
-COPY template template
+COPY src .
 
 RUN go build -v -o /usr/local/bin/app
 

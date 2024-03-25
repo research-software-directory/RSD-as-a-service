@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +9,8 @@ import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -16,24 +18,22 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class MainProgrammingLanguages {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainProgrammingLanguages.class);
-	
+
 	public static void main(String[] args) {
-		
+
 		LOGGER.info("Start scraping programming languages");
-		
+
 		long t1 = System.currentTimeMillis();
-		
+
 		scrapeGithub();
 		scrapeGitLab();
-		
+		scrape4tu();
+
 		long time = System.currentTimeMillis() - t1;
-		
+
 		LOGGER.info("Done scraping programming languages ({} ms.)", time);
 	}
 
@@ -101,6 +101,38 @@ public class MainProgrammingLanguages {
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
+				}
+			});
+			futures[i] = future;
+			i++;
+		}
+		CompletableFuture.allOf(futures).join();
+	}
+
+	private static void scrape4tu() {
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.FOURTU);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.languagesData(10);
+		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
+		int i = 0;
+		for (BasicRepositoryData programmingLanguageData : dataToScrape) {
+			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+				try {
+					String repoUrl = programmingLanguageData.url();
+
+					FourTuGitScraper fourTuGitScraper = new FourTuGitScraper(repoUrl);
+					String scrapedLanguages = fourTuGitScraper.languages();
+					LanguagesData updatedData = new LanguagesData(new BasicRepositoryData(programmingLanguageData.software(), null), scrapedLanguages, scrapedAt);
+					softwareInfoRepository.saveLanguagesData(updatedData);
+				} catch (RsdRateLimitException e) {
+					Utils.saveExceptionInDatabase("4TU programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("4TU programming languages scraper", "repository_url", programmingLanguageData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
+				} catch (Exception e) {
+					Utils.saveExceptionInDatabase("4TU programming languages scraper", "repository_url", programmingLanguageData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "languages_last_error", programmingLanguageData.software().toString(), "software", scrapedAt, "languages_scraped_at");
 				}
 			});
