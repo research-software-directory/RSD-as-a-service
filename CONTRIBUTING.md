@@ -1,9 +1,9 @@
 <!--
+SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 SPDX-FileCopyrightText: 2022 Jason Maassen (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -144,7 +144,7 @@ Create a new file called `pre-commit` in the directory `RSD-as-a-service/.git/ho
 chmod +x pre-commit
 ```
 
-Now, copy-paste this template into `pre-commit` and configure it as required:
+Now, copy-paste this template into `pre-commit` and configure it as required (this was tested to work with version `3.0.1` of REUSE):
 
 ```bash
 #!/bin/bash
@@ -234,7 +234,7 @@ for file in ${STAGED_FILES[@]}; do
             ;;
     esac
     ARGS="${BASE_ARGS} --license $LICENSE"
-    eval "reuse addheader $ARGS $file 1> /tmp/reuse_out 2> /tmp/reuse_error"
+    eval "reuse annotate $ARGS $file 1> /tmp/reuse_out 2> /tmp/reuse_error"
     case $? in
         0)
             if ! git diff --quiet $file; then
