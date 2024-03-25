@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -11,6 +11,8 @@ import nl.esciencecenter.rsd.scraper.Config;
 import nl.esciencecenter.rsd.scraper.RsdRateLimitException;
 import nl.esciencecenter.rsd.scraper.RsdResponseException;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
@@ -18,25 +20,22 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class MainCommits {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainCommits.class);
-	
+
 	public static void main(String[] args) {
-		
+
 		LOGGER.info("Start scraping commits");
-		
+
 		long t1 = System.currentTimeMillis();
-		
+
 		scrapeGitHub();
 		scrapeGitLab();
+		scrape4tu();
 
 		long time = System.currentTimeMillis() - t1;
-		
+
 		LOGGER.info("Done scraping commits ({} ms.)", time);
 	}
 
@@ -105,6 +104,39 @@ public class MainCommits {
 					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				} catch (Exception e) {
 					Utils.saveExceptionInDatabase("GitHub commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
+				}
+			});
+			futures[i] = future;
+			i++;
+		}
+		CompletableFuture.allOf(futures).join();
+	}
+
+	private static void scrape4tu() {
+		PostgrestConnector softwareInfoRepository = new PostgrestConnector(Config.backendBaseUrl() + "/repository_url", CodePlatformProvider.FOURTU);
+		Collection<BasicRepositoryData> dataToScrape = softwareInfoRepository.commitData(Config.maxRequestsGithub());
+		CompletableFuture<?>[] futures = new CompletableFuture[dataToScrape.size()];
+		ZonedDateTime scrapedAt = ZonedDateTime.now();
+		int i = 0;
+		for (BasicRepositoryData commitData : dataToScrape) {
+			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+				try {
+					String repoUrl = commitData.url();
+
+					FourTuGitScraper fourTuGitScraper = new FourTuGitScraper(repoUrl);
+					CommitsPerWeek scrapedCommits = fourTuGitScraper.contributions();
+					CommitData updatedData = new CommitData(commitData, scrapedCommits, scrapedAt);
+					softwareInfoRepository.saveCommitData(updatedData);
+				} catch (RsdRateLimitException e) {
+					// in case we hit the rate limit, we don't update the scraped_at time, so it gets scraped first next time
+					Utils.saveExceptionInDatabase("4TU commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", null, null);
+				} catch (RsdResponseException e) {
+					Utils.saveExceptionInDatabase("4TU commit scraper", "repository_url", commitData.software(), e);
+					Utils.saveErrorMessageInDatabase(e.getMessage(), "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
+				} catch (Exception e) {
+					Utils.saveExceptionInDatabase("4TU commit scraper", "repository_url", commitData.software(), e);
 					Utils.saveErrorMessageInDatabase("Unknown error", "repository_url", "commit_history_last_error", commitData.software().toString(), "software", scrapedAt, "commit_history_scraped_at");
 				}
 			});

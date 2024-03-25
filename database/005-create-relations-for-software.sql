@@ -13,6 +13,7 @@ CREATE TYPE platform_type AS ENUM (
 	'github',
 	'gitlab',
 	'bitbucket',
+	'4tu',
 	'other'
 );
 
