@@ -88,7 +88,7 @@ export default function ProjectPage(props: ProjectPageProps) {
         isMaintainer={isMaintainer}
         variant="contained"
       />
-      <PageContainer>
+      <PageContainer className='flex-1'>
         <ContentHeader
           title={project.title}
           subtitle={project.subtitle}

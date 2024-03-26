@@ -7,38 +7,36 @@
 
 import {useRouter} from 'next/router'
 import {useFormContext} from 'react-hook-form'
+
 import {useSession} from '~/auth'
-import {EditSoftwareItem} from '~/types/SoftwareTypes'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import useSoftwareContext from '../useSoftwareContext'
-import {patchSoftwareTable} from './patchSoftwareTable'
+import {NewsItem, patchNewsTable} from '../apiNews'
 
-export type AutosaveSoftwareInfoProps = {
-  software_id: string
-  options: ControlledTextFieldOptions<EditSoftwareItem>
+export type AutosaveNewsTextFieldProps = {
+  news_id: string
+  options: ControlledTextFieldOptions<NewsItem>
   rules?: any
 }
 
-export default function AutosaveSoftwareTextField({software_id,options,rules}:AutosaveSoftwareInfoProps) {
+export default function AutosaveNewsTextField({news_id,options,rules}:AutosaveNewsTextFieldProps) {
   const router = useRouter()
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
-  const {setSoftwareTitle, setSoftwareSlug, setConceptDoi} = useSoftwareContext()
   const {control, resetField} = useFormContext()
 
-  async function saveSoftwareInfo({name, value}: OnSaveProps<EditSoftwareItem>) {
+  async function saveNewsInfo({name, value}: OnSaveProps<NewsItem>) {
     // patch project table
-    const resp = await patchSoftwareTable({
-      id: software_id,
+    const resp = await patchNewsTable({
+      id: news_id,
       data: {
         [name]:value
       },
       token
     })
 
-    // console.group('AutosaveSoftwareTextField')
+    // console.group('AutosaveNewsTextField')
     // console.log('saved...', options.name)
     // console.log('value...', value)
     // console.log('status...', resp?.status)
@@ -58,16 +56,8 @@ export default function AutosaveSoftwareTextField({software_id,options,rules}:Au
 
   function updateSharedInfo(value:string) {
     if (options.name === 'slug') {
-      // update software slug
-      setSoftwareSlug(value)
       // reload page
-      router.push(`/software/${value}/edit/information`)
-    }
-    if (options.name === 'brand_name') {
-      setSoftwareTitle(value)
-    }
-    if (options.name === 'concept_doi') {
-      setConceptDoi(value)
+      router.push(`/news/${value}/edit`)
     }
   }
 
@@ -76,7 +66,7 @@ export default function AutosaveSoftwareTextField({software_id,options,rules}:Au
       options={options}
       control={control}
       rules={rules}
-      onSaveField={saveSoftwareInfo}
+      onSaveField={saveNewsInfo}
     />
   )
 }

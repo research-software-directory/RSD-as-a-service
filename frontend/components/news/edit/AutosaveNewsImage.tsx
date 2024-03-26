@@ -14,20 +14,21 @@ import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useFormContext} from 'react-hook-form'
 
-import {softwareInformation as config} from '../editSoftwareConfig'
+import {useSession} from '~/auth'
+import {handleFileUpload} from '~/utils/handleFileUpload'
+import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
-import {handleFileUpload} from '~/utils/handleFileUpload'
-import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {EditSoftwareItem} from '~/types/SoftwareTypes'
-import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
-import {patchSoftwareTable} from './patchSoftwareTable'
+import {EditNewsItem, patchNewsTable} from '../apiNews'
+import {newsConfig as config} from './config'
+import CopyToClipboard from '~/components/layout/CopyToClipboard'
 
-export default function AutosaveSoftwareLogo() {
+
+export default function AutosaveNewsImage() {
   const {token} = useSession()
-  const {showWarningMessage, showErrorMessage} = useSnackbar()
-  const {watch, setValue} = useFormContext<EditSoftwareItem>()
+  const {showWarningMessage, showErrorMessage, showInfoMessage} = useSnackbar()
+  const {watch, setValue} = useFormContext<EditNewsItem>()
 
   const [
     form_id, form_image_id, form_image_b64, form_image_mime_type
@@ -50,7 +51,7 @@ export default function AutosaveSoftwareLogo() {
     // split base64 to use only encoded content
     const data = image_b64.split(',')[1]
     if (form_image_id) {
-      const patch = await patchSoftwareTable({
+      const patch = await patchNewsTable({
         id: form_id,
         data: {
           image_id: null
@@ -76,7 +77,7 @@ export default function AutosaveSoftwareLogo() {
       showErrorMessage(`Failed to save image. ${resp.message}`)
       return
     }
-    const patch = await patchSoftwareTable({
+    const patch = await patchNewsTable({
       id:form_id,
       data: {
         image_id:resp.message
@@ -84,9 +85,8 @@ export default function AutosaveSoftwareLogo() {
       token
     })
     if (patch.status === 200) {
-      // update local value
+      // save value
       setValue('image_id', resp.message)
-      // debugger
     } else {
       showErrorMessage(`Failed to save image. ${resp.message}`)
     }
@@ -94,7 +94,7 @@ export default function AutosaveSoftwareLogo() {
 
   async function removeImage() {
     // remove image
-    const resp = await patchSoftwareTable({
+    const resp = await patchNewsTable({
       id: form_id,
       data: {
         image_id: null,
@@ -133,45 +133,69 @@ export default function AutosaveSoftwareLogo() {
     }
   }
 
+  function markdownLink(){
+    const imgUrl = imageUrl()
+    if (imgUrl){
+      const link = `![image](${imgUrl})`
+      return link
+    }
+    return null
+  }
+
+  function onCopiedLink(success:boolean){
+    if (success){
+      showInfoMessage('Copied to clipboard')
+    }else{
+      showErrorMessage('Failed to copy image link')
+    }
+  }
+
   function renderImageAttributes() {
     // debugger
     if (form_image_b64 === null && form_image_id === null) {
       return null
     }
     return (
-      <Button
-        startIcon={<DeleteIcon />}
-        onClick={removeImage}
-        aria-label="Delete logo"
-      >
-        Delete logo
-      </Button>
+      <div className="flex gap-4 justify-between py-4">
+        <Button
+          startIcon={<DeleteIcon />}
+          onClick={removeImage}
+          aria-label="Delete image"
+        >
+          Delete image
+        </Button>
+        <CopyToClipboard
+          label="Copy link"
+          value={markdownLink()}
+          onCopied={onCopiedLink}
+        />
+      </div>
     )
   }
 
   return (
     <>
       <EditSectionTitle
-        title={config.logo.label}
-        subtitle={config.logo.help}
+        title={config.image.label}
+        subtitle={config.image.help}
       />
 
-      <label htmlFor='upload-software-logo'
+      <label htmlFor='upload-article-image'
         style={{cursor: 'pointer'}}
-        title="Click to upload a logo"
+        title="Click to upload an image"
       >
         <ImageWithPlaceholder
-          placeholder="Click to upload a logo < 2MB"
+          placeholder="Click to upload image < 2MB"
           src={imageUrl()}
-          alt={'logo'}
-          bgSize={'contain'}
+          alt={'image'}
+          bgSize={'cover'}
           bgPosition={'left center'}
           className="w-full h-[9rem]"
         />
       </label>
 
       <input
-        id="upload-software-logo"
+        id="upload-article-image"
         type="file"
         accept="image/*"
         onChange={onFileUpload}
