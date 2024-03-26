@@ -20,6 +20,7 @@ import {useEffect} from 'react'
 import {Invitation} from '~/types/Invitation'
 import InvitationList from '~/components/layout/InvitationList'
 import {getUnusedInvitations} from '~/utils/getUnusedInvitations'
+import CopyToClipboard from '~/components/layout/CopyToClipboard'
 
 export default function SoftwareMaintainerLink({software,brand_name,account,token}: {software: string, brand_name: string, account: string,token: string}) {
   const {showErrorMessage,showInfoMessage} = useSnackbar()
@@ -48,16 +49,12 @@ export default function SoftwareMaintainerLink({software,brand_name,account,toke
     }
   }
 
-  async function toClipboard() {
-    if (magicLink) {
-      // copy doi to clipboard
-      const copied = await copyToClipboard(magicLink)
-      // notify user about copy action
-      if (copied) {
-        showInfoMessage('Copied to clipboard')
-      } else {
-        showErrorMessage(`Failed to copy link ${magicLink}`)
-      }
+  async function toClipboard(copied:boolean) {
+    // notify user about copy action
+    if (copied) {
+      showInfoMessage('Copied to clipboard')
+    } else {
+      showErrorMessage(`Failed to copy link ${magicLink}`)
     }
   }
 
@@ -67,17 +64,11 @@ export default function SoftwareMaintainerLink({software,brand_name,account,toke
         <div>
           <p>{magicLink}</p>
           <div className="py-4 flex justify-between">
-            <Button
-              disabled={!canCopy}
-              startIcon={<CopyIcon />}
-              onClick={toClipboard}
-              sx={{
-                marginRight:'1rem'
-              }}
-            >
-              Copy to clipboard
-            </Button>
-
+            <CopyToClipboard
+              label="Copy to clipboard"
+              value={magicLink}
+              onCopied={toClipboard}
+            />
             <Button
               startIcon={<EmailIcon />}
             >

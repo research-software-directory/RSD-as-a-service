@@ -18,6 +18,7 @@ import {organisationMaintainerLink} from './useOrganisationMaintainers'
 import InvitationList from '~/components/layout/InvitationList'
 import {Invitation} from '~/types/Invitation'
 import {getUnusedInvitations} from '~/utils/getUnusedInvitations'
+import CopyToClipboard from '~/components/layout/CopyToClipboard'
 
 export default function OrganisationMaintainerLink({organisation, name, account, token}:
   {organisation: string, name: string, account: string, token: string}) {
@@ -66,16 +67,11 @@ export default function OrganisationMaintainerLink({organisation, name, account,
         <div>
           <p>{magicLink}</p>
           <div className="py-4 flex justify-between">
-            <Button
-              disabled={!canCopy}
-              startIcon={<CopyIcon />}
-              onClick={toClipboard}
-              sx={{
-                marginRight:'1rem'
-              }}
-            >
-              Copy to clipboard
-            </Button>
+            <CopyToClipboard
+              label="Copy to clipboard"
+              value={magicLink}
+              onCopied={toClipboard}
+            />
 
             <Button
               startIcon={<EmailIcon />}
