@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,14 +14,15 @@ import useSoftwareContext from '../useSoftwareContext'
 
 export type SoftwareServices = {
   software:string,
-	url:string,
+  url:string,
   code_platform: CodePlatform,
-	basic_data_scraped_at: string|null,
-	basic_data_last_error: string|null,
-	languages_scraped_at: string|null,
-	languages_last_error: string|null,
-	commit_history_scraped_at: string|null,
-	commit_history_last_error: string|null
+  basic_data_scraped_at: string|null,
+  basic_data_last_error: string|null,
+  languages_scraped_at: string|null,
+  languages_last_error: string|null,
+  commit_history_scraped_at: string|null,
+  commit_history_last_error: string|null,
+  scraping_disabled_reason: string|null,
 }
 
 export type PackageManagerService = {
@@ -35,7 +37,7 @@ export type PackageManagerService = {
 
 async function getSoftwareServices(id:string,token:string){
   try{
-    const select='select=software,url,code_platform,basic_data_scraped_at,basic_data_last_error,languages_scraped_at,languages_last_error,commit_history_scraped_at,commit_history_last_error'
+    const select='select=software,url,code_platform,basic_data_scraped_at,basic_data_last_error,languages_scraped_at,languages_last_error,commit_history_scraped_at,commit_history_last_error,scraping_disabled_reason'
     const query = `${select}&software=eq.${id}`
     const url = `${getBaseUrl()}/repository_url?${query}`
 

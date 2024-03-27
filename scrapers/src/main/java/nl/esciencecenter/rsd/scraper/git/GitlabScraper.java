@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -43,6 +43,7 @@ public class GitlabScraper implements GitScraper {
 	 * returned. If the license could not be detected, returns "Other". API endpoint:
 	 * https://docs.gitlab.com/ee/api/projects.html#get-single-project NOTE: A GraphQL request here
 	 * might be more efficient since less data would be sent.
+	 * Example URL: https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell?license=True
 	 *
 	 * @return The basic data
 	 */
@@ -55,6 +56,8 @@ public class GitlabScraper implements GitScraper {
 	/**
 	 * Returns the languages used in a project with percentage values. Uses the API Endpoint
 	 * https://docs.gitlab.com/ee/api/projects.html#languages GET /projects/:id/languages
+	 * <p>
+	 * Example URL: https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell/languages
 	 *
 	 * @return A JSON as a String
 	 */
@@ -104,6 +107,7 @@ public class GitlabScraper implements GitScraper {
 		return commits;
 	}
 
+	// Example URL: https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-shell/repository/contributors
 	@Override
 	public Integer contributorCount() throws IOException, InterruptedException, RsdResponseException {
 		HttpResponse<String> httpResponse = Utils.getAsHttpResponse(apiUri + "/projects/" + Utils.urlEncode(projectPath) + "/repository/contributors");
