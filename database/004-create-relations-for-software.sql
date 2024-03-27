@@ -1,4 +1,4 @@
--- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2024 dv4all
@@ -34,7 +34,8 @@ CREATE TABLE repository_url (
 	commit_history_scraped_at TIMESTAMPTZ,
 	contributor_count INTEGER,
 	contributor_count_last_error VARCHAR(500),
-	contributor_count_scraped_at TIMESTAMPTZ
+	contributor_count_scraped_at TIMESTAMPTZ,
+	scraping_disabled_reason VARCHAR(200)
 );
 
 
