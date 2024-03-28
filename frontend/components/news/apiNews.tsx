@@ -236,3 +236,40 @@ export async function deleteNewsItem({id,token}:{id:string,token:string}){
     }
   }
 }
+
+export type TopNewsProps={
+  id:string,
+  slug: string,
+  publication_date: string,
+  title: string,
+  summary: string|null
+  image_id: string|null
+}
+
+export async function getTopNews(items:number) {
+  try {
+    // use server side when available
+    const select = 'id,slug,publication_date,title,summary,image_id,is_published'
+    // get top 4 published articles (newest at the top)
+    let query = `${paginationUrlParams({rows:items, page:0})}&is_published=eq.true&order=publication_date.desc`
+    const url = `${getBaseUrl()}/news?select=${select}&${query}`
+
+    // get page
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders()
+      }
+    })
+
+    if ([200,206].includes(resp.status)) {
+      const json:TopNewsProps[] = await resp.json()
+      return json
+    }
+    logger(`getTopNews failed: ${resp?.status} ${resp.statusText}`, 'error')
+    return []
+  } catch (e: any) {
+    logger(`getTopNews: ${e?.message}`, 'error')
+    return []
+  }
+}

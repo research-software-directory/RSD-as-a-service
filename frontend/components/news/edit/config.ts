@@ -37,8 +37,8 @@ export const newsConfig = {
     }
   },
   summary: {
-    label: 'Card summary',
-    help: 'This summary is only used in the card. If you want to be part of the article body repeat it in the markdown.',
+    label: 'Summary',
+    help: 'The summary is used in the card and on the RSD homepage to link to the article',
     validation: {
       minLength: {value: 3, message: 'Minimum length is 3'},
       maxLength: {value: 300, message: 'Maximum length is 300'},
