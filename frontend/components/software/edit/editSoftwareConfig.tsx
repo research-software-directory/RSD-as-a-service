@@ -76,6 +76,12 @@ export const softwareInformation = {
       {label: 'Other', value: 'other'},
     ]
   },
+  repository_disabled_scraping_reason: {
+    label: 'Reason why scraping is disabled',
+    validation: {
+      maxLength: {value: 200, message: 'Maximum length is 200'}
+    }
+  },
   // field for markdown
   description: {
     label: (brand_name: string) => `What ${brand_name} can do for you`,

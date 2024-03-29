@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -53,7 +53,7 @@ export async function getSoftwareToEdit({slug, token}:
   { slug: string, token: string }) {
   try {
     // GET
-    const select = '*,repository_url!left(url,code_platform)'
+    const select = '*,repository_url!left(url,code_platform,scraping_disabled_reason)'
     const url = `${getBaseUrl()}/software?select=${select}&slug=eq.${slug}`
     const resp = await fetch(url, {
       method: 'GET',
@@ -71,6 +71,7 @@ export async function getSoftwareToEdit({slug, token}:
         software.repository_url = null
         software.repository_platform = null
       }
+      software.scraping_disabled_reason = data[0]?.repository_url?.scraping_disabled_reason
       return software
     }
   } catch (e: any) {

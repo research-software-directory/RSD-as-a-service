@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,6 +14,7 @@ type EditSoftwareMetadataFormProps={
   get_started_url: string | null
   repository_url: string | null,
   repository_platform: CodePlatform | null
+  scraping_disabled_reason: string | null
   concept_doi: string | null,
   licenses: AutocompleteOption<License>[]
   keywords: KeywordForSoftware[]

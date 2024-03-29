@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
@@ -42,7 +42,8 @@ export type RepositoryUrl = {
   commit_history_scraped_at?: string | null,
   contributor_count?: number | null,
   contributor_count_last_error?: string | null,
-  contributor_count_scraped_at?: string | null
+  contributor_count_scraped_at?: string | null,
+  scraping_disabled_reason: string | null
 }
 
 export type NewSoftwareItem = {
@@ -67,6 +68,7 @@ export type SoftwareTableItem = NewSoftwareItem & {
 export type SoftwareItem = SoftwareTableItem & {
   repository_url: string | null,
   repository_platform: CodePlatform | null
+  scraping_disabled_reason: string | null
 }
 
 export type SoftwareItemFromDB = SoftwareTableItem & {
