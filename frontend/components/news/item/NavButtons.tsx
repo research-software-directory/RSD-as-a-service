@@ -12,33 +12,40 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import {useSession} from '~/auth'
 import {deleteImage} from '~/utils/editImage'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import {deleteNewsItem} from '../apiNews'
+import {NewsImageProps, deleteNewsItem, deleteNewsImages} from '../apiNews'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
 type NavButtonsProps={
   id:string
   title:string
   slug:string
-  image_id: string|null
+  image_for_news: NewsImageProps[]
   isMaintainer: boolean
   token: string
 }
 
-async function deleteArticle(id:string,image_id:string|null,token:string):Promise<{status:number,message:string}>{
+async function deleteArticle(id:string,image_for_news:NewsImageProps[],token:string):Promise<{status:number,message:string}>{
   try{
+    // delete images from image_for_news FIRST (reference index)
+    const img = await deleteNewsImages({
+      news_id: id,
+      token
+    })
     // delete article
     const resp = await deleteNewsItem({
       id,
       token
     })
+    // if status OK
     if (resp.status===200){
-      // delete image if exists
-      // do not wait for response
-      if (image_id) {
-        await deleteImage({
-          id:image_id,
+      // delete all images if any defined
+      if (image_for_news?.length>0) {
+        const delImages = image_for_news.map(img=>deleteImage({
+          id:img.image_id,
           token
-        })
+        }))
+        // do not wait for response
+        await Promise.all(delImages)
       }
     }
     return resp
@@ -50,7 +57,7 @@ async function deleteArticle(id:string,image_id:string|null,token:string):Promis
   }
 }
 
-export function NavButtons({id,slug,title,image_id,isMaintainer}:NavButtonsProps){
+export function NavButtons({id,slug,title,image_for_news,isMaintainer}:NavButtonsProps){
   const router = useRouter()
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
@@ -65,11 +72,12 @@ export function NavButtons({id,slug,title,image_id,isMaintainer}:NavButtonsProps
         <Button
           data-testid="delete-button"
           title="Delete"
-          variant="text"
+          variant="contained"
           color='error'
           startIcon={<DeleteIcon />}
           sx={{
-            textTransform:'capitalize'
+            textTransform:'capitalize',
+            minWidth: '7rem'
           }}
           onClick={() => {
             setDelModal({
@@ -79,7 +87,7 @@ export function NavButtons({id,slug,title,image_id,isMaintainer}:NavButtonsProps
           }}
         >
           {/* Delete page */}
-        Delete article
+          Delete
         </Button>
         <Button
           data-testid="edit-button"
@@ -87,14 +95,15 @@ export function NavButtons({id,slug,title,image_id,isMaintainer}:NavButtonsProps
           variant='contained'
           startIcon={<EditIcon />}
           sx={{
-            textTransform:'capitalize'
+            textTransform:'capitalize',
+            minWidth: '7rem'
           }}
           onClick={() => {
             router.push(url)
           }}
         >
           {/* Edit page */}
-          Edit article
+          Edit
         </Button>
       </div>
       <ConfirmDeleteModal
@@ -111,7 +120,7 @@ export function NavButtons({id,slug,title,image_id,isMaintainer}:NavButtonsProps
         }}
         onDelete={()=>{
           // delete article
-          deleteArticle(id,image_id,token).then(({status,message})=>{
+          deleteArticle(id,image_for_news,token).then(({status,message})=>{
             // move to news root page after delete
             if (status===200){
               router.push('/news')

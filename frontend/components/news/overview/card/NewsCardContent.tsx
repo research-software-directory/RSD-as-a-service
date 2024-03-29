@@ -5,13 +5,18 @@
 
 import {getImageUrl} from '~/utils/editImage'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
-import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
 import {NewsListItem} from '~/components/news/apiNews'
 import PublicationDate from './PublicationDate'
 import NewsAuthors from './NewsAuthors'
 import NewsCardTextBody from './NewsCardTextBody'
 
 export default function NewsCardContent({item}:{item:NewsListItem}) {
+  // construct image url
+  let imgUrl=null
+  if (item.image_for_news?.length>0){
+    imgUrl = `${getImageUrl(item.image_for_news[0].image_id) ?? ''}`
+  }
+
   return (
     <div
       data-testid="project-card-content"
@@ -19,7 +24,7 @@ export default function NewsCardContent({item}:{item:NewsListItem}) {
       {/* Cover image */}
       <div className="h-[45%] flex overflow-hidden relative bg-base-100">
         <ImageWithPlaceholder
-          src={`${getImageUrl(item.image_id) ?? ''}`}
+          src={imgUrl}
           alt={`Image of article ${item.title}`}
           type="gradient"
           className={'w-full text-base-content-disabled'}

@@ -8,7 +8,7 @@ import {FormProvider, useForm} from 'react-hook-form'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import AutosaveControlledMarkdown from '~/components/form/AutosaveControlledMarkdown'
-import {NewsItem,EditNewsItem, patchNewsTable} from '~/components/news/apiNews'
+import {NewsItem, patchNewsTable} from '~/components/news/apiNews'
 import {newsConfig as config} from './config'
 import AutosaveNewsTextField from './AutosaveNewsTextField'
 import EditNewsStickyHeader from './EditNewsStickyHeader'
@@ -17,13 +17,9 @@ import AutosaveNewsImage from './AutosaveNewsImage'
 import NewsItemInfo from './NewsItemInfo'
 
 export default function EditNewsItem({item}:{item:NewsItem}) {
-  const methods = useForm<EditNewsItem>({
+  const methods = useForm<NewsItem>({
     mode: 'onChange',
-    defaultValues: {
-      ...item,
-      image_b64: null,
-      image_mime_type: null
-    }
+    defaultValues: item
   })
   const {register, watch} = methods
   // watch form data changes (we use reset in useEffect)

@@ -37,7 +37,11 @@ function ListItemNav({item}:{item:NewsListItem}){
 
 
 export default function ListItemNews({item}: {item:NewsListItem}) {
-  const imgSrc = getImageUrl(item.image_id ?? null)
+  // construct image url
+  let imgUrl=null
+  if (item.image_for_news?.length>0){
+    imgUrl = `${getImageUrl(item.image_for_news[0].image_id) ?? ''}`
+  }
 
   return (
     <OverviewListItem className="flex-none">
@@ -48,7 +52,7 @@ export default function ListItemNews({item}: {item:NewsListItem}) {
         className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-sm'
       >
         <ListImageWithGradientPlaceholder
-          imgSrc={imgSrc}
+          imgSrc={imgUrl}
           alt = {`Cover image for ${item.title}`}
         />
         <div className="flex-1 flex flex-col md:flex-row gap-3 py-2">

@@ -47,7 +47,7 @@ export default function NewsItemPage({newsItem}:{newsItem:NewsItem}) {
               id={newsItem.id}
               slug={`${newsItem.publication_date}/${newsItem.slug}`}
               title={newsItem.title}
-              image_id={newsItem.image_id}
+              image_for_news={newsItem.image_for_news}
               isMaintainer={user?.role==='rsd_admin'}
               token={token}
             />

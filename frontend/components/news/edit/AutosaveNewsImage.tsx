@@ -16,57 +16,77 @@ import {useFormContext} from 'react-hook-form'
 
 import {useSession} from '~/auth'
 import {handleFileUpload} from '~/utils/handleFileUpload'
-import {deleteImage, getImageUrl, upsertImage} from '~/utils/editImage'
+import {deleteImage,getImageUrl,upsertImage} from '~/utils/editImage'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {EditNewsItem, patchNewsTable} from '../apiNews'
-import {newsConfig as config} from './config'
 import CopyToClipboard from '~/components/layout/CopyToClipboard'
+import {NewsImageProps,NewsItem,addNewsImage,deleteNewsImage} from '../apiNews'
+import {newsConfig as config} from './config'
 
+type UploadedImageProps={
+  imgUrl: string|null,
+  onDelete: ()=>void
+}
+
+function UploadedImage({imgUrl,onDelete}:UploadedImageProps){
+  const {showErrorMessage, showInfoMessage} = useSnackbar()
+  // ignore if no imgUrl
+  if (imgUrl===null) return null
+
+  function onCopiedLink(success:boolean){
+    if (success){
+      showInfoMessage('Copied to clipboard')
+    }else{
+      showErrorMessage('Failed to copy image link')
+    }
+  }
+
+  return (
+    <div className="relative pb-4">
+      <ImageWithPlaceholder
+        placeholder="Uploaded image < 2MB"
+        src={imgUrl}
+        alt={'image'}
+        bgSize={'scale-down'}
+        bgPosition={'left top'}
+        className="w-full"
+      />
+      <div className="absolute top-[0.5rem] flex gap-4 justify-between bg-base-100 opacity-70 hover:opacity-100">
+        <Button
+          startIcon={<DeleteIcon />}
+          onClick={onDelete}
+          aria-label="Delete image"
+        >
+          Delete
+        </Button>
+        <CopyToClipboard
+          label="Copy link"
+          value={`![image](${imgUrl})`}
+          onCopied={onCopiedLink}
+        />
+      </div>
+    </div>
+  )
+}
 
 export default function AutosaveNewsImage() {
   const {token} = useSession()
   const {showWarningMessage, showErrorMessage, showInfoMessage} = useSnackbar()
-  const {watch, setValue} = useFormContext<EditNewsItem>()
+  const {watch, setValue} = useFormContext<NewsItem>()
 
   const [
-    form_id, form_image_id, form_image_b64, form_image_mime_type
+    form_id, image_for_news, description
   ] = watch([
-    'id', 'image_id', 'image_b64', 'image_mime_type'
+    'id', 'image_for_news','description'
   ])
 
-  function imageUrl() {
-    if (form_image_b64 && form_image_b64.length > 10) {
-      return form_image_b64
-    }
-    if (form_image_id && form_image_id.length > 10) {
-      return getImageUrl(form_image_id)
-    }
-    return null
-  }
 
   async function saveImage(image_b64: string, mime_type: string) {
     let resp
     // split base64 to use only encoded content
     const data = image_b64.split(',')[1]
-    if (form_image_id) {
-      const patch = await patchNewsTable({
-        id: form_id,
-        data: {
-          image_id: null
-        },
-        token
-      })
-      if (patch.status === 200) {
-        // try to remove old image
-        // but don't wait for results
-        const del = await deleteImage({
-          id: form_image_id,
-          token
-        })
-      }
-    }
+    // debugger
     // add new image to db
     resp = await upsertImage({
       data,
@@ -77,47 +97,23 @@ export default function AutosaveNewsImage() {
       showErrorMessage(`Failed to save image. ${resp.message}`)
       return
     }
-    const patch = await patchNewsTable({
-      id:form_id,
-      data: {
-        image_id:resp.message
-      },
-      token
-    })
-    if (patch.status === 200) {
-      // save value
-      setValue('image_id', resp.message)
-    } else {
-      showErrorMessage(`Failed to save image. ${resp.message}`)
-    }
-  }
-
-  async function removeImage() {
-    // remove image
-    const resp = await patchNewsTable({
+    // add new image to news images collection
+    const add = await addNewsImage({
       id: form_id,
-      data: {
-        image_id: null,
-      },
-      token
+      image_id: resp.message,
+      token,
+      position: image_for_news?.length===0 ? 'card':'other'
     })
-    if (resp.status === 200) {
-      // clear all image values in the form
-      if (form_image_b64) setValue('image_b64', null)
-      if (form_image_mime_type) setValue('image_mime_type', null)
-      if (form_image_id) {
-        // try to remove old image
-        // but don't wait for results
-        const del = await deleteImage({
-          id: form_image_id,
-          token
-        })
-        setValue('image_id', null)
-      }
-    } else {
-      showErrorMessage(`Failed to remove image. ${resp.message}`)
+
+    if (add.status!==200){
+      showErrorMessage(`Failed to save image. ${add.message}`)
       return
     }
+    // update form values
+    setValue('image_for_news',[
+      ...image_for_news,
+      add.message
+    ])
   }
 
   async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
@@ -133,44 +129,38 @@ export default function AutosaveNewsImage() {
     }
   }
 
-  function markdownLink(){
-    const imgUrl = imageUrl()
-    if (imgUrl){
-      const link = `![image](${imgUrl})`
-      return link
-    }
-    return null
-  }
+  async function removeImage(image:NewsImageProps) {
+    // remove image from news
+    const resp = await deleteNewsImage({
+      id: image.id,
+      token
+    })
+    if (resp.status === 200 && image.image_id) {
+      // try to remove old image
+      // but don't wait for results
+      const del = await deleteImage({
+        id: image.image_id,
+        token
+      })
 
-  function onCopiedLink(success:boolean){
-    if (success){
-      showInfoMessage('Copied to clipboard')
-    }else{
-      showErrorMessage('Failed to copy image link')
-    }
-  }
+      // update the form value
+      setValue('image_for_news', image_for_news.filter(item=>item.id!==image.id))
 
-  function renderImageAttributes() {
-    // debugger
-    if (form_image_b64 === null && form_image_id === null) {
-      return null
+      // check if image used in description (markdown)
+      const imgLink = `![image](${getImageUrl(image.image_id)})`
+      if (description.includes(imgLink)===true){
+        // replace the link
+        const withoutLink = description.replaceAll(imgLink,'')
+        // update description
+        setValue('description',withoutLink)
+        // notify user about removal of image link from the markdown
+        showInfoMessage('Removed image and the image link from the markdown.')
+      }
+
+    } else {
+      showErrorMessage(`Failed to remove image. ${resp.message}`)
+      return
     }
-    return (
-      <div className="flex gap-4 justify-between py-4">
-        <Button
-          startIcon={<DeleteIcon />}
-          onClick={removeImage}
-          aria-label="Delete image"
-        >
-          Delete image
-        </Button>
-        <CopyToClipboard
-          label="Copy link"
-          value={markdownLink()}
-          onCopied={onCopiedLink}
-        />
-      </div>
-    )
   }
 
   return (
@@ -179,6 +169,18 @@ export default function AutosaveNewsImage() {
         title={config.image.label}
         subtitle={config.image.help}
       />
+      {/* list uploaded images */}
+      {
+        image_for_news.map(item=>{
+          return (
+            <UploadedImage
+              key={item.id}
+              imgUrl={getImageUrl(item.image_id)}
+              onDelete={()=>removeImage(item)}
+            />
+          )
+        })
+      }
 
       <label htmlFor='upload-article-image'
         style={{cursor: 'pointer'}}
@@ -186,9 +188,9 @@ export default function AutosaveNewsImage() {
       >
         <ImageWithPlaceholder
           placeholder="Click to upload image < 2MB"
-          src={imageUrl()}
+          src={null}
           alt={'image'}
-          bgSize={'cover'}
+          bgSize={'scale-down'}
           bgPosition={'left center'}
           className="w-full h-[9rem]"
         />
@@ -201,8 +203,6 @@ export default function AutosaveNewsImage() {
         onChange={onFileUpload}
         style={{display:'none'}}
       />
-
-      {renderImageAttributes()}
     </>
   )
 }

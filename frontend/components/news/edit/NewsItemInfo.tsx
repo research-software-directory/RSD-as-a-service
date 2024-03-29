@@ -13,19 +13,20 @@ export default function NewsItemInfo() {
     <Alert
       severity="info"
     >
-      The article image can be used in two ways.
+      The article images can be used in two ways.
 
       <p className="py-2"><strong>1. Card image</strong></p>
       <p>
-        The image is used in the news card on the news overview page.
+        First image is used in the news card on the news overview page.
       </p>
 
       <p className="py-2"><strong>2. In the markdown</strong></p>
       <p>
         You can use uploaded image in the markdown at any position you wish.
         Use &quot;Copy link&quot; button to copy image link in the markdown format.
-        Then navigate to a position in the markdown where you want image to appear and
-        paste the link.
+      </p>
+      <p className="py-2">
+        <strong>When deleting the image used link will be removed from the markdown.</strong>
       </p>
     </Alert>
   )

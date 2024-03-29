@@ -8,6 +8,12 @@ import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetch
 import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 
+export type NewsImageProps={
+  id:string,
+  image_id: string,
+  position: string
+}
+
 export type AddNewsItem={
   slug: string
   title: string
@@ -20,7 +26,7 @@ export type NewsListItem=AddNewsItem & {
   author: string|null
   is_published: boolean
   summary: string | null
-  image_id: string | null
+  image_for_news: NewsImageProps[]
   updated_at: string
 }
 
@@ -28,17 +34,17 @@ export type NewsItem=NewsListItem & {
   description: string
 }
 
-export type EditNewsItem=NewsItem & {
-  image_b64?: string | null
-  image_mime_type?: string | null
-}
+// export type EditNewsItem=NewsItem & {
+//   image_b64?: string | null
+//   image_mime_type?: string | null
+// }
 
 export async function getNewsItemBySlug({date,slug,token}: {date:string,slug:string,token?:string}) {
   try {
     if (!slug) return null
 
-    // get news item
-    let query = `slug=eq.${slug}&publication_date=eq.${date}`
+    // get news item, join with image_for_news
+    let query = `slug=eq.${slug}&publication_date=eq.${date}&select=*,image_for_news(id,image_id,position)`
     const url = `${getBaseUrl()}/news?${query}`
 
     // get page
@@ -62,6 +68,112 @@ export async function getNewsItemBySlug({date,slug,token}: {date:string,slug:str
   }
 }
 
+export async function getNewsImages({id,token}:{id:string,token?:string}){
+  try{
+    const url = `/api/v1/image_for_news?id=eq.${id}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    if (resp.status === 200) {
+      const json: NewsImageProps[] = await resp.json()
+      return json
+    }
+    logger(`getNewsImages failed: ${resp?.status} ${resp.statusText}`, 'error')
+    return []
+  }catch(e:any){
+    logger(`getNewsImages failed ${e.message}`, 'error')
+    return []
+  }
+}
+
+export async function addNewsImage({id,image_id,token,position}:{id:string,image_id:string,token:string,position?:string}){
+  try{
+    const url = '/api/v1/image_for_news'
+    const resp = await fetch(url, {
+      body: JSON.stringify({
+        news: id,
+        image_id,
+        position: position ?? 'card'
+      }),
+      headers: {
+        ...createJsonHeaders(token),
+        'Prefer': 'return=representation'
+      },
+      method: 'POST'
+    })
+    // check status
+    if (resp.status===201){
+      const images: NewsImageProps[] = await resp.json()
+      return {
+        status: 200,
+        message: images[0]
+      }
+    }
+    logger(`addNewsImage failed: ${resp?.status} ${resp.statusText}`, 'error')
+    return {
+      status: resp?.status ?? 400,
+      message: resp.statusText
+    }
+  }catch(e:any){
+    logger(`addNewsImage failed ${e.message}`, 'error')
+    return {
+      status: 500,
+      message: e.message
+    }
+  }
+}
+
+/**
+ * Delete specific news image by id
+ * @param param0
+ * @returns
+ */
+export async function deleteNewsImage({id,token}:{id:string,token:string}){
+  try{
+    const url = `/api/v1/image_for_news?id=eq.${id}`
+    const resp = await fetch(url, {
+      headers: {
+        ...createJsonHeaders(token)
+      },
+      method: 'DELETE'
+    })
+    return extractReturnMessage(resp, '')
+  }catch(e:any){
+    logger(`deleteNewsImage failed ${e.message}`, 'error')
+    return {
+      status: 500,
+      message: e.message
+    }
+  }
+}
+
+/**
+ * Delete all news item images from image_for_news table
+ * @param param0
+ * @returns
+ */
+export async function deleteNewsImages({news_id,token}:{news_id:string,token:string}){
+  try{
+    const url = `/api/v1/image_for_news?news=eq.${news_id}`
+    const resp = await fetch(url, {
+      headers: {
+        ...createJsonHeaders(token)
+      },
+      method: 'DELETE'
+    })
+    return extractReturnMessage(resp, '')
+  }catch(e:any){
+    logger(`deleteNewsImages failed ${e.message}`, 'error')
+    return {
+      status: 500,
+      message: e.message
+    }
+  }
+}
+
 type GetNewsListProps={
   page: number
   rows: number
@@ -74,7 +186,7 @@ type GetNewsListProps={
 export async function getNewsList({page,rows,is_published=true,token,searchFor,orderBy}: GetNewsListProps) {
   try {
     // use server side when available
-    const select = 'id,slug,publication_date,author,is_published,title,summary,image_id'
+    const select = 'id,slug,publication_date,author,is_published,title,summary,image_for_news(id,image_id,position)'
     // get published meta pages ordered by position
     let query = paginationUrlParams({rows, page})
     if (searchFor) {
@@ -249,7 +361,7 @@ export type TopNewsProps={
 export async function getTopNews(items:number) {
   try {
     // use server side when available
-    const select = 'id,slug,publication_date,title,summary,image_id,is_published'
+    const select = 'id,slug,publication_date,title,summary,is_published'
     // get top 4 published articles (newest at the top)
     let query = `${paginationUrlParams({rows:items, page:0})}&is_published=eq.true&order=publication_date.desc`
     const url = `${getBaseUrl()}/news?select=${select}&${query}`

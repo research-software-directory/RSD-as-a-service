@@ -66,7 +66,7 @@ export const newsConfig = {
   },
   // field for logo upload
   image: {
-    label: 'Article image',
-    help: 'Upload an image used in the card'
+    label: 'Article images',
+    help: 'First image is used in the news card.'
   },
 }

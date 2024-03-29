@@ -33,6 +33,10 @@ function TopNewsItem({item}:{item:TopNewsProps}){
  * */
 export default function TopNewsSection({news}:{news:TopNewsProps[]}) {
 
+  // console.group('TopNewsSection')
+  // console.log('news...',news)
+  // console.groupEnd()
+
   if (news?.length > 0){
     return (
       <>
