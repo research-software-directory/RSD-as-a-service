@@ -72,7 +72,6 @@ export default function NewsItemPage({newsItem}:{newsItem:NewsItem}) {
   )
 }
 
-
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
@@ -87,18 +86,20 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       newsItem = await getNewsItemBySlug({date, slug, token})
     }
 
-    if (newsItem===null){
+    // News item found in DB
+    if (newsItem){
       return {
-        notFound: true,
+        props: {
+          newsItem
+        },
       }
     }
 
+    // otherwise not found
     return {
-      // passed to the page component as props
-      props: {
-        newsItem
-      },
+      notFound: true,
     }
+
   }catch(e){
     return {
       notFound: true,

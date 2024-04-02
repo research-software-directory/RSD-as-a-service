@@ -21,7 +21,7 @@ export default function ReactMarkdownWithSettings({markdown, className, breaks=t
       data-testid="react-markdown-with-settings"
       className={`prose max-w-none prose-h1:text-3xl prose-headings:font-normal prose-code:before:hidden prose-code:after:hidden ${className ?? ''}`}
       linkTarget="_blank"
-      skipHtml={false}
+      skipHtml={true}
       remarkPlugins={plugins}
     >
       {markdown ?? ''}

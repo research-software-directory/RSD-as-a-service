@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {getImageUrl} from '~/utils/editImage'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
@@ -34,14 +35,9 @@ export type NewsItem=NewsListItem & {
   description: string
 }
 
-// export type EditNewsItem=NewsItem & {
-//   image_b64?: string | null
-//   image_mime_type?: string | null
-// }
-
 export async function getNewsItemBySlug({date,slug,token}: {date:string,slug:string,token?:string}) {
   try {
-    if (!slug) return null
+    if (!slug || !date) return null
 
     // get news item, join with image_for_news
     let query = `slug=eq.${slug}&publication_date=eq.${date}&select=*,image_for_news(id,image_id,position)`
@@ -57,7 +53,12 @@ export async function getNewsItemBySlug({date,slug,token}: {date:string,slug:str
 
     if (resp.status === 200) {
       const json:NewsItem[] = await resp.json()
-      return json[0]
+      // we should find 1 item
+      if (json.length === 1){
+        return json[0]
+      }
+      // item not found
+      return null
     }
     logger(`getNewsItemBySlug failed: ${resp?.status} ${resp.statusText}`, 'error')
     return null
@@ -383,5 +384,23 @@ export async function getTopNews(items:number) {
   } catch (e: any) {
     logger(`getTopNews: ${e?.message}`, 'error')
     return []
+  }
+}
+
+export function getCardImageUrl(image_for_news:NewsImageProps[]){
+  try{
+    if (image_for_news?.length>0){
+      // look for specified card image
+      const cardImage = image_for_news.find(item=>item.position==='card')
+      if (cardImage){
+        return `${getImageUrl(cardImage.image_id) ?? null}`
+      }
+      // otherwise use first item
+      return `${getImageUrl(image_for_news[0].image_id) ?? null}`
+    }
+    return null
+  }catch(e:any){
+    logger(`getCardImageUrl: ${e?.message}`, 'error')
+    return null
   }
 }

@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,10 +14,14 @@ import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import IconButton from '@mui/material/IconButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
+import NewspaperIcon from '@mui/icons-material/Newspaper'
+
+import {useSession} from '~/auth'
 import CaretIcon from '~/components/icons/caret.svg'
 import useDisableScrollLock from '~/utils/useDisableScrollLock'
 
 export default function AddMenu() {
+  const {user} = useSession()
   const router = useRouter()
   const disable = useDisableScrollLock()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -59,7 +65,6 @@ export default function AddMenu() {
         <CaretIcon />
       </IconButton>
 
-
       <Menu
         anchorEl={anchorEl}
         open={open}
@@ -83,6 +88,17 @@ export default function AddMenu() {
           </ListItemIcon>
           New Project
         </MenuItem>
+        {
+          // ADMIN ONLY options
+          user?.role==='rsd_admin' ?
+            <MenuItem data-testid="add-menu-option" onClick={() => handleClose('/news/add')}>
+              <ListItemIcon>
+                <NewspaperIcon/>
+              </ListItemIcon>
+              Add News
+            </MenuItem>
+            : null
+        }
       </Menu>
     </>
   )

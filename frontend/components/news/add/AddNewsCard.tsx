@@ -13,7 +13,6 @@ import {useForm} from 'react-hook-form'
 import {useAuth} from '~/auth'
 import {useDebounce} from '~/utils/useDebounce'
 import {getSlugFromString} from '~/utils/getSlugFromString'
-import ContentInTheMiddle from '~/components/layout/ContentInTheMiddle'
 import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
 import SlugTextField from '~/components/form/SlugTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
@@ -196,80 +195,78 @@ export default function AddNewsCard() {
   }
 
   return (
-    <ContentInTheMiddle>
-      <form
-        id={formId}
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full md:w-[42rem]">
-        <section className="min-h-[6rem]">
-          <h1 className="text-primary text-2xl mb-4">{config.page_title}</h1>
-          {renderDialogText()}
-        </section>
-        <section className="py-8">
-          <ControlledTextField
-            options={{
-              name: 'publication_date',
+    <form
+      id={formId}
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full md:w-[42rem] mx-auto">
+      <section className="min-h-[6rem]">
+        <h1 className="text-primary text-2xl mb-4">{config.page_title}</h1>
+        {renderDialogText()}
+      </section>
+      <section className="py-8">
+        <ControlledTextField
+          options={{
+            name: 'publication_date',
+            label: config.publication_date.label,
+            useNull: true,
+            defaultValue: publication_date,
+            helperTextMessage: config.publication_date.help,
+            // helperTextCnt: `${item?.publication_date?.length || 0}/${config.slug.validation.maxLength.value}`,
+            muiProps:{
+              autoComplete: 'off',
+              variant: 'outlined',
               label: config.publication_date.label,
-              useNull: true,
-              defaultValue: publication_date,
-              helperTextMessage: config.publication_date.help,
-              // helperTextCnt: `${item?.publication_date?.length || 0}/${config.slug.validation.maxLength.value}`,
-              muiProps:{
-                autoComplete: 'off',
-                variant: 'outlined',
-                label: config.publication_date.label,
-                type: 'date',
-                InputLabelProps:{
-                  shrink: true
-                },
-                sx:{
-                  maxWidth:'13rem'
-                }
+              type: 'date',
+              InputLabelProps:{
+                shrink: true
+              },
+              sx:{
+                maxWidth:'13rem'
               }
-            }}
-            control={control}
-            rules={config.publication_date.validation}
-          />
-          <div className="py-4"></div>
-          <TextFieldWithCounter
-            options={{
-              autofocus:true,
-              error: errors.title?.message !== undefined,
-              label: config.title.label,
-              helperTextMessage: errors?.title?.message ?? config.title.help,
-              helperTextCnt: `${title?.length || 0}/${config.title.validation.maxLength.value}`,
-              variant:'outlined'
-            }}
-            register={register('title', {
-              ...config.title.validation
-            })}
-          />
-          <div className="py-4"></div>
-          <SlugTextField
-            baseUrl={baseUrl}
-            loading={validating}
-            options={{
-              label:config.slug.label,
-              error: errors.slug?.message !== undefined,
-              helperText: errors?.slug?.message ?? config.slug.help
-            }}
-            register={register('slug',config.slug.validation)}
-          />
-        </section>
-        <section className='flex justify-end'>
-          <Button
-            onClick={handleCancel}
-            color="secondary"
-            sx={{marginRight:'2rem'}}
-          >
+            }
+          }}
+          control={control}
+          rules={config.publication_date.validation}
+        />
+        <div className="py-4"></div>
+        <TextFieldWithCounter
+          options={{
+            autofocus:true,
+            error: errors.title?.message !== undefined,
+            label: config.title.label,
+            helperTextMessage: errors?.title?.message ?? config.title.help,
+            helperTextCnt: `${title?.length || 0}/${config.title.validation.maxLength.value}`,
+            variant:'outlined'
+          }}
+          register={register('title', {
+            ...config.title.validation
+          })}
+        />
+        <div className="py-4"></div>
+        <SlugTextField
+          baseUrl={baseUrl}
+          loading={validating}
+          options={{
+            label:config.slug.label,
+            error: errors.slug?.message !== undefined,
+            helperText: errors?.slug?.message ?? config.slug.help
+          }}
+          register={register('slug',config.slug.validation)}
+        />
+      </section>
+      <section className='flex justify-end'>
+        <Button
+          onClick={handleCancel}
+          color="secondary"
+          sx={{marginRight:'2rem'}}
+        >
           Cancel
-          </Button>
-          <SubmitButtonWithListener
-            formId={formId}
-            disabled={isSaveDisabled()}
-          />
-        </section>
-      </form>
-    </ContentInTheMiddle>
+        </Button>
+        <SubmitButtonWithListener
+          formId={formId}
+          disabled={isSaveDisabled()}
+        />
+      </section>
+    </form>
   )
 }

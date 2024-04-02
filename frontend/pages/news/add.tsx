@@ -13,7 +13,7 @@ export default function AddNews() {
   return (
     <>
       <AppHeader />
-      <PageContainer className="flex-1 flex items-start px-4 py-6 lg:py-12">
+      <PageContainer className="flex-1 flex px-4 py-6 lg:py-12">
         <RsdAdminContent>
           <AddNewsCard />
         </RsdAdminContent>

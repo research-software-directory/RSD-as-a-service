@@ -3,19 +3,15 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {getImageUrl} from '~/utils/editImage'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
-import {NewsListItem} from '~/components/news/apiNews'
+import {NewsListItem, getCardImageUrl} from '~/components/news/apiNews'
 import PublicationDate from './PublicationDate'
 import NewsAuthors from './NewsAuthors'
 import NewsCardTextBody from './NewsCardTextBody'
 
 export default function NewsCardContent({item}:{item:NewsListItem}) {
   // construct image url
-  let imgUrl=null
-  if (item.image_for_news?.length>0){
-    imgUrl = `${getImageUrl(item.image_for_news[0].image_id) ?? ''}`
-  }
+  const imgUrl = getCardImageUrl(item.image_for_news)
 
   return (
     <div

@@ -7,12 +7,11 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 
 import {useSession} from '~/auth'
-import {getImageUrl} from '~/utils/editImage'
 import IconBtnMenuOnAction from '~/components/menu/IconBtnMenuOnAction'
 import ListImageWithGradientPlaceholder from '~/components/projects/overview/list/ListImageWithGradientPlaceholder'
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import StatusBanner from '~/components/cards/StatusBanner'
-import {NewsListItem} from '~/components/news/apiNews'
+import {NewsListItem, getCardImageUrl} from '~/components/news/apiNews'
 import PublicationDate from '~/components/news/overview/card/PublicationDate'
 import NewsAuthors from '~/components/news/overview/card/NewsAuthors'
 import {getMenuOptions, onNewsAction} from '~/components/news/overview/card/NewsCardNav'
@@ -38,10 +37,7 @@ function ListItemNav({item}:{item:NewsListItem}){
 
 export default function ListItemNews({item}: {item:NewsListItem}) {
   // construct image url
-  let imgUrl=null
-  if (item.image_for_news?.length>0){
-    imgUrl = `${getImageUrl(item.image_for_news[0].image_id) ?? ''}`
-  }
+  const imgUrl = getCardImageUrl(item.image_for_news)
 
   return (
     <OverviewListItem className="flex-none">

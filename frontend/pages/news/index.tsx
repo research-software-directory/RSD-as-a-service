@@ -21,7 +21,6 @@ import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import ViewToggleGroup,{ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import NewsGrid from '~/components/news/overview/NewsGrid'
 import useNewsOverviewParams from '~/components/news/overview/useNewsOverviewParams'
-import AddNewsButton from '~/components/news/overview/AddNewsButton'
 import {NewsListItem, getNewsList} from '~/components/news/apiNews'
 import NewsList from '~/components/news/overview/list'
 
@@ -79,11 +78,10 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
             </h1>
             <div className="flex-[2] flex min-w-[20rem]">
               <SearchInput
-                placeholder="Search news items by title, subtitle or author"
+                placeholder="Search news items by title, summary or author"
                 onSearch={(search: string) => handleQueryChange('search', search)}
                 defaultValue={search ?? ''}
               />
-              <AddNewsButton />
               <ViewToggleGroup
                 layout={view}
                 onSetView={setLayout}
