@@ -10,6 +10,8 @@ import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Pagination from '@mui/material/Pagination'
+import Link from 'next/link'
+import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {getBaseUrl} from '~/utils/fetchHelpers'
@@ -75,7 +77,7 @@ export default function SoftwareOverviewPage({
   licensesList, software, highlights
 }: SoftwareOverviewProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
-  const {handleQueryChange} = useSoftwareOverviewParams()
+  const {createUrl} = useSoftwareOverviewParams()
   const [modal,setModal] = useState(false)
   // if no layout - default is masonry
   const initView = layout ?? 'masonry'
@@ -180,8 +182,18 @@ export default function SoftwareOverviewPage({
                   <Pagination
                     count={numPages}
                     page={page}
-                    onChange={(_, page) => {
-                      handleQueryChange('page',page.toString())
+                    renderItem={item => {
+                      if (item.page !== null) {
+                        return (
+                          <Link href={createUrl('page', item.page.toString())}>
+                            <PaginationItem {...item}/>
+                          </Link>
+                        )
+                      } else {
+                        return (
+                          <PaginationItem {...item}/>
+                        )
+                      }
                     }}
                   />
                 }

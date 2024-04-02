@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +10,8 @@ import {MouseEvent, ChangeEvent} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
 import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
+import Link from 'next/link'
+import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '../../config/app'
 import PageTitle from '../../components/layout/PageTitle'
@@ -41,7 +44,7 @@ const pageDesc = 'List of organizations involved in the development of research 
 export default function OrganisationsOverviewPage({
   organisations = [], count, page, rows, search
 }: OrganisationsOverviewPageProps) {
-  const {handleQueryChange} = useOrganisationOverviewParams()
+  const {handleQueryChange, createUrl} = useOrganisationOverviewParams()
   const numPages = Math.ceil(count / rows)
 
   // console.group('OrganisationsOverviewPage')
@@ -123,8 +126,18 @@ export default function OrganisationsOverviewPage({
               <Pagination
                 count={numPages}
                 page={page}
-                onChange={(_, page) => {
-                  handleQueryChange('page',page.toString())
+                renderItem={item => {
+                  if (item.page !== null) {
+                    return (
+                      <Link href={createUrl('page', item.page.toString())}>
+                        <PaginationItem {...item}/>
+                      </Link>
+                    )
+                  } else {
+                    return (
+                      <PaginationItem {...item}/>
+                    )
+                  }
                 }}
               />
             </div>

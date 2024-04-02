@@ -3,14 +3,15 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import EditIcon from '@mui/icons-material/Edit'
 import Button from '@mui/material/Button'
-import {useRouter} from 'next/router'
 import EditFab from './EditFab'
 import PageContainer from './PageContainer'
+import Link from 'next/link'
 
 type EditButtonProps = {
   title: string,
@@ -25,7 +26,6 @@ type EditButtonProps = {
  * @returns
  */
 export default function EditPageButton({title, url, isMaintainer, variant}: EditButtonProps) {
-  const router = useRouter()
   // console.log('EditPageButton...', title)
   if (isMaintainer) {
     if (variant === 'fab') {
@@ -61,10 +61,8 @@ export default function EditPageButton({title, url, isMaintainer, variant}: Edit
             textTransform:'capitalize'
             // minWidth: '6rem'
           }}
-          onClick={() => {
-            // const slug = router.query['slug']
-            router.push(url)
-          }}
+          href={url}
+          LinkComponent={Link}
         >
           {/* Edit page */}
           {title}

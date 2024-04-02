@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,7 +17,7 @@ import {getDocumentCookie} from '~/utils/userSettings'
 export default function useProjectOverviewParams() {
   const router = useRouter()
 
-  function handleQueryChange(key: string, value: string | string[]) {
+  function createUrl(key: string, value: string | string[]) {
     const params: QueryParams = {
       // take existing params from url (query)
       ...ssrProjectsParams(router.query),
@@ -32,6 +33,11 @@ export default function useProjectOverviewParams() {
     }
     // construct url with all query params
     const url = ssrProjectsUrl(params)
+    return url
+  }
+
+  function handleQueryChange(key: string, value: string | string[]) {
+    const url = createUrl(key, value)
     // debugger
     if (key === 'page') {
       // when changin page we scroll to top
@@ -51,6 +57,7 @@ export default function useProjectOverviewParams() {
 
   return {
     handleQueryChange,
-    resetFilters
+    resetFilters,
+    createUrl
   }
 }
