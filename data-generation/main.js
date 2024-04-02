@@ -539,6 +539,83 @@ function generateMetaPages() {
 	return result;
 }
 
+function generateNews() {
+	const entries = [
+		{
+			title: 'RSD released',
+			slug: 'rsd-released'
+		},
+		{
+			title: 'Some Big News',
+			slug: 'some-big-news'
+		},
+		{
+			title: 'You wont believe this!',
+			slug: 'you-wont-believe-this'
+		},
+		{
+			title: 'The perfect software doesn\'t exi-',
+			slug: 'the-prefect-software-doesnt-exi'
+		},
+		{
+			title: '10 clickbait headlines you didn\'t know about!',
+			slug: '10-clickbait-headlines'
+		},
+		{
+			title: 'You will never use a dependency anymore after you know this...',
+			slug: 'never-dependency'
+		},
+		{
+			title: 'Shutting down the RSD',
+			slug: 'shutting-down-the-rsd'
+		},
+		{
+			title: 'The last package you will ever need',
+			slug: 'last-package'
+		},
+		{
+			title: 'How to make your project a big success',
+			slug: 'project-success'
+		},
+		{
+			title: 'The 5 best dependencies you never heard about',
+			slug: '5-best-dependencies'
+		},
+	];
+
+	const result = [];
+	for (const newsItem of entries) {
+		result.push({
+			slug: newsItem.slug,
+			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
+			publication_date: faker.date.anytime(),
+			title: newsItem.title,
+			author: faker.person.fullName(),
+			summary: faker.lorem.paragraph(),
+			description: faker.lorem.paragraphs(faker.number.int({max: 20, min: 3}), '\n\n'),
+		});
+	}
+
+	return result;
+}
+
+function generateImagesForNews(newsIds, imageIds) {
+	const result = [];
+
+	for (const id of newsIds) {
+		if (faker.datatype.boolean(0.2)) {
+			continue;
+		}
+
+		result.push({
+			news: id,
+			image_id: faker.helpers.arrayElement(imageIds),
+		});
+	}
+
+	return result;
+}
+
 function generateRelationsForDifferingEntities(idsOrigin, idsRelation, nameOrigin, nameRelation, maxRelationsPerOrigin=11) {
 	const result = [];
 
@@ -773,6 +850,12 @@ const organisationPromise = postToBackend('/organisation', await generateOrganis
 		idsOrganisations = orgArray.map(org => org['id']);
 	});
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
+await postToBackend('/news?select=id', generateNews())
+	.then(() => getFromBackend("/news"))
+	.then(res => res.json())
+	.then(jsonNewsIds => jsonNewsIds.map(news => news.id))
+	.then(newsIds => postToBackend('/image_for_news', generateImagesForNews(newsIds, localImageIds)))
+	.then(() => console.log('news done'));
 
 await Promise.all([softwarePromise, projectPromise, organisationPromise]).then(() => console.log('sw, pj, org done'));
 
