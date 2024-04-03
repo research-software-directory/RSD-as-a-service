@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -273,7 +275,7 @@ export async function deletePackageManager({id,token}:{id: string,token:string})
   }
 }
 
-export function getPackageManagerTypeFromUrl(url:string) {
+export async function getPackageManagerTypeFromUrl(url:string) {
   try {
     const urlObject = new URL(url)
     const keys = Object.keys(packageManagerSettings)
@@ -287,6 +289,24 @@ export function getPackageManagerTypeFromUrl(url:string) {
     if (pm_key) {
       return pm_key as PackageManagerTypes
     }
+
+    // Try to infer from platforms already in the RSD
+    const baseApiUrl = getBaseUrl()
+    const resp = await fetch(
+      `${baseApiUrl}/rpc/suggest_platform`,
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({hostname: urlObject.host})
+      }
+    )
+    if (resp.status === 200) {
+      const platform_type = await resp.json()
+      if (platform_type !== null) {
+        return platform_type
+      }
+    }
+
     return 'other' as PackageManagerTypes
   } catch (e: any) {
     return 'other' as PackageManagerTypes

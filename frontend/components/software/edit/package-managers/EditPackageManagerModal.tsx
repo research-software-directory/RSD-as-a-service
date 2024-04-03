@@ -26,6 +26,7 @@ import {
 } from './apiPackageManager'
 import PackageManagerInfo from './PackageManagerInfo'
 import {config} from './config'
+import {getBaseUrl} from '~/utils/fetchHelpers'
 
 type EditPackageManagerModalProps = {
   open: boolean,
@@ -53,23 +54,27 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
   const [url] = watch(['url'])
 
   useEffect(() => {
+    const fetchPackageManagerType = async () => {
+      // extract manager type from url
+      const pm_key = await getPackageManagerTypeFromUrl(url)
+
+      if (pm_key) {
+        // const manager = PackageManagerInfo[pm_key as PackageManagerTypes]
+        setValue('package_manager', pm_key as PackageManagerTypes, {
+          shouldValidate: true,
+          shouldDirty: true
+        })
+      } else {
+        setValue('package_manager', 'other' as PackageManagerTypes,{
+          shouldValidate: true,
+          shouldDirty: true
+        })
+      }
+    }
+
     try {
       if (typeof errors['url'] === 'undefined' && url.length > 5) {
-        // extract manager type from url
-        const pm_key = getPackageManagerTypeFromUrl(url)
-
-        if (pm_key) {
-          // const manager = PackageManagerInfo[pm_key as PackageManagerTypes]
-          setValue('package_manager', pm_key as PackageManagerTypes, {
-            shouldValidate: true,
-            shouldDirty: true
-          })
-        } else {
-          setValue('package_manager', 'other' as PackageManagerTypes,{
-            shouldValidate: true,
-            shouldDirty: true
-          })
-        }
+        fetchPackageManagerType()
       }
     } catch (e: any) {
       logger(`useEffect.getPackageManagerTypeFromUrl...${e.message}`, 'warn')
