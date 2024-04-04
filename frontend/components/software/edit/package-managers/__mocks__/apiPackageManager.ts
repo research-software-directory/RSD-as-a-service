@@ -1,8 +1,13 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * DEFAULT MOCKS OF apiPackageManager methods
+ */
+
+import {PackageManagerSettings} from '../apiPackageManager'
 import mockPackageManagers from './package_manager.json'
 
 export const packageManagerSettings = {
@@ -99,5 +104,25 @@ export async function deletePackageManager({id, token}: { id: string, token: str
   return {
     status: 200,
     message: 'OK'
+  }
+}
+
+export async function getPackageManagerTypeFromUrl(url:string) {
+  try {
+    const urlObject = new URL(url)
+    const keys = Object.keys(packageManagerSettings) as PackageManagerTypes[]
+
+    // find first key to match the hostname
+    const pm_key = keys.find(key => {
+      const manager = packageManagerSettings[key as PackageManagerTypes] as PackageManagerSettings
+      // match hostname
+      return manager.hostname.includes(urlObject.hostname)
+    })
+    if (pm_key) {
+      return pm_key
+    }
+    return 'other' as PackageManagerTypes
+  } catch (e: any) {
+    return 'other' as PackageManagerTypes
   }
 }

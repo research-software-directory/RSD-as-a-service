@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -124,6 +124,11 @@ describe('frontend/components/software/edit/package-managers/index.tsx', () => {
       fireEvent.click(saveBtn)
       // wait for edit modal to be removed
       await waitForElementToBeRemoved(editModal)
+      // screen.debug()
     })
+
+    // validate package_manager label by text
+    const pacman = `${mockManagers[0].package_manager.slice(0,1).toUpperCase()}${mockManagers[0].package_manager.slice(1)}`
+    await screen.findByText(pacman)
   })
 })

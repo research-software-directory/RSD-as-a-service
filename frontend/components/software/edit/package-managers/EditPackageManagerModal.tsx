@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,8 +19,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import {useForm} from 'react-hook-form'
 
-import logger from '~/utils/logger'
-import ControlledTextField from '../../../form/ControlledTextField'
+import ControlledTextField from '~/components/form/ControlledTextField'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
 import {
   getPackageManagerTypeFromUrl, NewPackageManager,
@@ -26,7 +27,6 @@ import {
 } from './apiPackageManager'
 import PackageManagerInfo from './PackageManagerInfo'
 import {config} from './config'
-import {getBaseUrl} from '~/utils/fetchHelpers'
 
 type EditPackageManagerModalProps = {
   open: boolean,
@@ -54,37 +54,23 @@ export default function EditPackageManagerModal({open, onCancel, onSubmit, packa
   const [url] = watch(['url'])
 
   useEffect(() => {
-    const fetchPackageManagerType = async () => {
+    async function fetchPackageManagerType(){
       // extract manager type from url
       const pm_key = await getPackageManagerTypeFromUrl(url)
-
-      if (pm_key) {
-        // const manager = PackageManagerInfo[pm_key as PackageManagerTypes]
-        setValue('package_manager', pm_key as PackageManagerTypes, {
-          shouldValidate: true,
-          shouldDirty: true
-        })
-      } else {
-        setValue('package_manager', 'other' as PackageManagerTypes,{
-          shouldValidate: true,
-          shouldDirty: true
-        })
-      }
+      // save value
+      setValue('package_manager', pm_key as PackageManagerTypes, {
+        shouldValidate: true,
+        shouldDirty: true
+      })
     }
-
-    try {
-      if (typeof errors['url'] === 'undefined' && url.length > 5) {
-        fetchPackageManagerType()
-      }
-    } catch (e: any) {
-      logger(`useEffect.getPackageManagerTypeFromUrl...${e.message}`, 'warn')
+    if (typeof errors['url'] === 'undefined' && url.length > 5) {
+      fetchPackageManagerType()
     }
   },[url,setValue,errors])
 
   // console.group('EditPackageManagerModal')
   // console.log('isValid...', isValid)
   // console.log('isDirty...', isDirty)
-  // console.log('packman...', packman)
   // console.log('url...', url)
   // console.groupEnd()
 
