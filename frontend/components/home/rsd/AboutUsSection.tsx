@@ -16,7 +16,7 @@ export default function AboutUsSection() {
     <section
       id="about-us"
       className="px-5 md:px-10 py-5 w-full max-w-screen-lg mx-auto mt-10">
-      <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
+      <h2 className="flex justify-center text-3xl lg:text-4xl font-rsd-titles font-bold "
         data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
         About us
       </h2>

@@ -34,19 +34,16 @@ export default function GetStartedSection() {
   return (
     <section
       id="get-started"
-      className="px-5 md:px-10 py-5 ">
-      <h2 className="flex justify-center text-4xl font-rsd-titles font-bold"
+      className="p-5 md:px-10">
+      <h2 className="flex justify-center text-3xl lg:text-4xl font-rsd-titles font-bold"
         data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
-        {/* eslint-disable-next-line react/no-unescaped-entities */}
-            Let's get started!
+        Let&apos;s get started!
       </h2>
       <p className="text-center text-lg mt-5" data-aos="fade"
         data-aos-delay="100" data-aos-duration="400" data-aos-easing="ease-in-out">
-            Discover research software relevant to your research! <br />
-            Get more information on how to add your own software or organization.
+        Discover research software relevant to your research! <br />
+        Get more information on how to add your own software or organization.
       </p>
-
-
       <div
         className="max-w-screen-lg mt-6 mx-auto flex flex-wrap justify-center gap-4 p-2 scale-90">
         <div className="flex justify-center"

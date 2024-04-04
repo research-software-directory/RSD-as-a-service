@@ -45,10 +45,9 @@ export default function TopNewsSection({news}:{news:TopNewsProps[]}) {
           id="top-news"
           className="p-5 md:p-10 w-full max-w-screen-xl mx-auto">
 
-          <h2
-            className="flex justify-start text-4xl font-rsd-titles font-bold mt-6"
+          <h2 className="flex justify-start text-3xl lg:text-4xl font-rsd-titles font-bold mt-6"
             data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
-          Latest news
+            Latest news
           </h2>
 
           <div className="grid gap-20 grid-cols-1 md:grid-cols-2 pt-14">

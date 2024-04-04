@@ -5,12 +5,12 @@
 
 export default function JumboBanner() {
   return (
-    <div className="max-w-screen-xl mx-auto p-5  grid lg:grid-cols-[1fr,1fr] gap-8 md:gap-20 md:my-28">
+    <div className="max-w-screen-xl mx-auto p-4  grid lg:grid-cols-[1fr,1fr] gap-8 md:gap-20 lg:my-20 md:px-10">
       {/* Jumbo Text*/}
       <div className="flex flex-col justify-center"
         data-aos="fade" data-aos-offset="200" data-aos-delay="50" data-aos-duration="1000"
       >
-        <h1 className="text-5xl font-rsd-titles font-bold">
+        <h1 className="text-4xl xl:text-5xl font-rsd-titles font-bold">
             Show your research software to the world
         </h1>
         <div className="mt-8 text-lg">

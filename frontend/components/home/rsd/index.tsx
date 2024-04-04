@@ -42,7 +42,7 @@ export default function RsdHome({
 }: RsdHomeProps) {
   // Initialize AOS library
   useEffect(() => {
-    AOS.init()
+    AOS.init({offset: 16})
   }, [])
 
   return (
@@ -67,12 +67,12 @@ export default function RsdHome({
         <Arc className="w-full text-base-100 dark:text-base-900 -translate-y-1"></Arc>
         {/* Get started section  */}
         <GetStartedSection />
+        {/* Top news items, ONLY if there are some */}
+        <TopNewsSection news={news} />
         {/*  Divider  */}
         <HomepageDivider />
         {/* Our Goals Section */}
         <OurGoalsSection />
-        {/* Top news items, ONLY if there are some */}
-        <TopNewsSection news={news} />
         {/*  Divider  */}
         <HomepageDivider />
         {/* Learn more section  */}

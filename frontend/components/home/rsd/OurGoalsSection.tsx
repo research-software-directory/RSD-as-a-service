@@ -14,7 +14,7 @@ export default function OurGoalsSection() {
       id="our-goals"
       className="p-5 md:p-10 w-full max-w-screen-xl mx-auto">
       <h2
-        className="flex justify-start text-4xl font-rsd-titles font-bold mt-6"
+        className="flex justify-start text-3xl lg:text-4xl font-rsd-titles font-bold mt-6"
         data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
             Our goals
       </h2>

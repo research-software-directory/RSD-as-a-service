@@ -27,7 +27,7 @@ export default function LearnMoreSection() {
         </div>
       </div>
       <div>
-        <h2 className="flex justify-center text-4xl font-rsd-titles font-bold "
+        <h2 className="flex justify-center text-3xl lg:text-4xl font-rsd-titles font-bold "
           data-aos="fade" data-aos-duration="400" data-aos-easing="ease-in-out">
               Learn more
         </h2>
