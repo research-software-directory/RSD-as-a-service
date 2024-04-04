@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,23 +14,30 @@ import RsdHome,{RsdHomeProps} from '~/components/home/rsd'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import useRsdSettings from '~/config/useRsdSettings'
+import {TopNewsProps, getTopNews} from '~/components/news/apiNews'
 
 export type HomeProps = {
+  news: TopNewsProps[]
   counts: RsdHomeProps
 }
 
 const pageTitle = `Home | ${app.title}`
 const pageDesc = 'The Research Software Directory is designed to show the impact research software has on research and society. We stimulate the reuse of research software and encourage proper citation of research software to ensure researchers and RSEs get credit for their work.'
 
-export default function Home({counts}: HomeProps) {
+export default function Home({counts,news}: HomeProps) {
   const {host} = useRsdSettings()
+
+  // console.group('Home')
+  // console.log('counts...', counts)
+  // console.log('news...', news)
+  // console.groupEnd()
 
   if (host && host.name) {
     switch (host.name.toLocaleLowerCase()) {
       case 'helmholtz':
         return <HelmholtzHome />
       case 'imperial':
-        return <ImperialCollegeHome counts={counts} />
+        return <ImperialCollegeHome counts={counts} news={news} />
       default:
         // RSD default homepage
         return (
@@ -42,7 +49,7 @@ export default function Home({counts}: HomeProps) {
             />
             {/* canonical url meta tag */}
             <CanonicalUrl/>
-            <RsdHome {...counts} />
+            <RsdHome {...counts} news={news} />
           </>
         )
     }
@@ -57,7 +64,7 @@ export default function Home({counts}: HomeProps) {
       />
       {/* canonical url meta tag */}
       <CanonicalUrl/>
-      <RsdHome {...counts} />
+      <RsdHome {...counts} news={news} />
     </>
   )
 }
@@ -66,13 +73,16 @@ export default function Home({counts}: HomeProps) {
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps() {
   // get counts for default rsd home page
-  const counts = await getHomepageCounts()
-  // get host information for home page
-  const host = process.env.RSD_HOST ?? 'rsd'
+  const [counts,news] = await Promise.all([
+    getHomepageCounts(),
+    // get top 3 (most recent) news items
+    getTopNews(3)
+  ])
   // provide props to home component
   return {
     props: {
-      counts
+      counts,
+      news
     },
   }
 }
