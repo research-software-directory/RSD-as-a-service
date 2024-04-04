@@ -3,12 +3,13 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import Button from '@mui/material/Button'
-import {useRouter} from 'next/router'
+import Link from 'next/link'
 
 type ViewButtonProps = {
   title: string,
@@ -18,7 +19,6 @@ type ViewButtonProps = {
 }
 
 export default function ViewPageButton({title,label,url,disabled}:ViewButtonProps) {
-  const router = useRouter()
   return (
     <Button
       data-testid="view-page-button"
@@ -27,12 +27,15 @@ export default function ViewPageButton({title,label,url,disabled}:ViewButtonProp
       startIcon={<ArticleOutlinedIcon />}
       sx={{
         minWidth: '6rem',
-        textTransform:'capitalize'
+        textTransform:'capitalize',
+        // we need to overwrite global link styling from tailwind
+        // because the type of button is a link (we use href param)
+        ':hover':{
+          color:'primary.contrastText'
+        }
       }}
-      onClick={() => {
-        // const slug = router.query['slug']
-        router.push(url)
-      }}
+      href={url}
+      LinkComponent={Link}
       disabled={disabled}
     >
       {/* View page */}

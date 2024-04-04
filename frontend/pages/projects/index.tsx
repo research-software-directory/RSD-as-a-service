@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,6 +11,8 @@ import {GetServerSidePropsContext} from 'next'
 
 import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import Link from 'next/link'
+import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {ProjectListItem} from '~/types/Project'
@@ -75,7 +78,7 @@ export default function ProjectsOverviewPage({
   page, rows, count, layout,
   projects
 }: ProjectOverviewPageProps) {
-  const {handleQueryChange} = useProjectOverviewParams()
+  const {createUrl} = useProjectOverviewParams()
   const smallScreen = useMediaQuery('(max-width:640px)')
   const [modal,setModal] = useState(false)
   // if masonry we change to grid
@@ -181,8 +184,18 @@ export default function ProjectsOverviewPage({
                   <Pagination
                     count={numPages}
                     page={page}
-                    onChange={(_, page) => {
-                      handleQueryChange('page',page.toString())
+                    renderItem={item => {
+                      if (item.page !== null) {
+                        return (
+                          <Link href={createUrl('page', item.page.toString())}>
+                            <PaginationItem {...item}/>
+                          </Link>
+                        )
+                      } else {
+                        return (
+                          <PaginationItem {...item}/>
+                        )
+                      }
                     }}
                   />
                 </div>
