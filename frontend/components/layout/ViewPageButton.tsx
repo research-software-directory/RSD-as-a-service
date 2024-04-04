@@ -27,7 +27,12 @@ export default function ViewPageButton({title,label,url,disabled}:ViewButtonProp
       startIcon={<ArticleOutlinedIcon />}
       sx={{
         minWidth: '6rem',
-        textTransform:'capitalize'
+        textTransform:'capitalize',
+        // we need to overwrite global link styling from tailwind
+        // because the type of button is a link (we use href param)
+        ':hover':{
+          color:'primary.contrastText'
+        }
       }}
       href={url}
       LinkComponent={Link}

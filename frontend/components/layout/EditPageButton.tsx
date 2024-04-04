@@ -58,7 +58,12 @@ export default function EditPageButton({title, url, isMaintainer, variant}: Edit
             right: {
               lg:'1rem'
             },
-            textTransform:'capitalize'
+            textTransform:'capitalize',
+            // we need to overwrite global link styling from tailwind
+            // because the type of button is a link (we use href param)
+            ':hover':{
+              color:'primary.contrastText'
+            }
             // minWidth: '6rem'
           }}
           href={url}
