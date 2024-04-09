@@ -265,7 +265,7 @@ export const organisationInformation = {
     title: 'Add organisation',
     subtitle: 'We search by name in the RSD and the ROR databases',
     label: 'Find or add organisation',
-    help: 'At least the fist 2 letters of the organisation name',
+    help: 'At least the first 2 letters of the organisation name',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,

@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM golang:1.22.1-bookworm AS builder
+FROM golang:1.22.2-bookworm AS builder
 
 WORKDIR /usr/src/app
 COPY go.mod .

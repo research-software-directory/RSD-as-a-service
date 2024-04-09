@@ -85,7 +85,7 @@ type SoftwareApplication struct {
 	Description          []string           `json:"description"`
 	CodeRepository       *string            `json:"codeRepository"`
 	Author               []Person           `json:"author"`
-	Keyword              []string           `json:"keyword"`
+	Keywords             []string           `json:"keywords"`
 	ProgrammingLanguage  []string           `json:"programmingLanguage"`
 	License              []CreativeWork     `json:"license"`
 	ReferencePublication []ScholarlyArticle `json:"referencePublication"`
@@ -236,7 +236,7 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 		Name:                 rsdResponse.BrandName,
 		Description:          extractDescription(rsdResponse),
 		Author:               extractContributors(rsdResponse),
-		Keyword:              extractKeywords(rsdResponse),
+		Keywords:             extractKeywords(rsdResponse),
 		ProgrammingLanguage:  extractProgrammingLanguages(rsdResponse),
 		License:              extractLicenses(rsdResponse),
 		ReferencePublication: extractReferencePublications(rsdResponse),
