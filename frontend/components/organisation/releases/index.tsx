@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -13,7 +14,7 @@ import NoContent from '~/components/layout/NoContent'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import useOrganisationContext from '../context/useOrganisationContext'
 
-import ReleaseYear from './ReleaseList'
+import ReleaseList from './ReleaseList'
 import ReleaseNavButton from './ReleaseNavButton'
 import ScrollToTopButton from './ScrollToTopButton'
 import useReleaseCount from './useReleaseCount'
@@ -64,7 +65,7 @@ export default function SoftwareReleases() {
         }
       </nav>
       {/* Release items of selected year */}
-      <ReleaseYear release_year={selected_year} />
+      <ReleaseList release_year={selected_year} />
       <ScrollToTopButton minOffset={200} />
     </BaseSurfaceRounded>
   )
