@@ -126,7 +126,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>oauth2-oidc-sdk</artifactId>
-			<version>9.32</version>
+			<version>11.10.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
