@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -40,7 +40,7 @@ import SoftwareOverviewContent from '~/components/software/overview/SoftwareOver
 import SoftwareFilters from '~/components/software/overview/filters/index'
 import {
   softwareKeywordsFilter, softwareLanguagesFilter,
-  softwareLicesesFilter
+  softwareLicensesFilter
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
 import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
@@ -275,7 +275,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     getSoftwareList({url}),
     softwareKeywordsFilter({search, keywords, prog_lang, licenses}),
     softwareLanguagesFilter({search, keywords, prog_lang, licenses}),
-    softwareLicesesFilter({search, keywords, prog_lang, licenses}),
+    softwareLicensesFilter({search, keywords, prog_lang, licenses}),
     getSoftwareHighlights({
       page: 0,
       // get max. 20 items

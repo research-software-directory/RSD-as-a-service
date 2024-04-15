@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,6 +46,20 @@ it('returns null string on missing title', () => {
   const title = null
   const slug = getSlugFromString(title as any, '_')
   const expected = ''
+  expect(slug).toEqual(expected)
+})
+
+it('allows use of capital letters', () => {
+  const title = 'This Uses Capitals'
+  const slug = getSlugFromString(title, '-',false)
+  const expected = 'This-Uses-Capitals'
+  expect(slug).toEqual(expected)
+})
+
+it('trims original value', () => {
+  const title = ' This Uses Capitals '
+  const slug = getSlugFromString(title, '-',false)
+  const expected = 'This-Uses-Capitals'
   expect(slug).toEqual(expected)
 })
 

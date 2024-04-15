@@ -9,12 +9,12 @@ import useSoftwareContext from '../useSoftwareContext'
 import useSoftwareToEdit from './useSoftwareToEdit'
 import EditSoftwareMetadataForm from './EditSoftwareMetadataForm'
 
-export default function EditSoftwareDescrptionPage() {
+export default function EditSoftwareDescriptionPage() {
   const {token} = useSession()
   const {software:{slug}} = useSoftwareContext()
   const {editSoftware,loading} = useSoftwareToEdit({slug, token})
 
-  // console.group('EditSoftwareDescrptionPage')
+  // console.group('EditSoftwareDescriptionPage')
   // console.log('loading...', loading)
   // console.log('token...', token)
   // console.log('slug...', slug)

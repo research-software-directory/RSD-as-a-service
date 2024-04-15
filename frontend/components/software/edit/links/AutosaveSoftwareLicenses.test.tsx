@@ -13,6 +13,7 @@ import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 import {WithFormContext} from '~/utils/jest/WithFormContext'
 
 import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
+import {config} from './config'
 
 // MOCKS
 import licenseForSoftware from './__mocks__/licenseForSoftware.json'
@@ -21,13 +22,8 @@ import {initialState as softwareState} from '~/components/software/edit/editSoft
 
 const licenseOptions:AutocompleteOption<License>[] = licenseForSoftware.map(item => ({
   key: item.license,
-  label: item.license,
-  data: {
-    id: item.id,
-    name: item.license,
-    license: item.license,
-    software: item.software
-  }
+  label: item.name ?? item.license,
+  data: item
 }))
 
 const defaultValues:{
@@ -89,12 +85,20 @@ it('renders mocked licenses', () => {
 })
 
 it('can add NEW license', async() => {
-  const newLicense = 'New license to add'
-  // mock values
+  const newLicense = {
+    license:'New-license-to-add',
+    name: 'New license to add',
+    reference: 'https://test-url-license.com',
+    open_source: true
+  }
+  // mock software id value
   defaultValues.id = licenseForSoftware[0].software
+  softwareState.software.id = licenseForSoftware[0].software
   // mock no licenses
   defaultValues.licenses = []
   defaultValues.concept_doi = null
+
+
   // render
   render(
     <WithAppContext options={{session: mockSession}}>
@@ -107,27 +111,47 @@ it('can add NEW license', async() => {
   )
   // get license input
   const combo = screen.getByRole('combobox')
-  fireEvent.change(combo, {target: {value: newLicense}})
+  fireEvent.change(combo, {target: {value: newLicense.name}})
 
   // find Add option
   const addLicense = await screen.findByRole('option', {
-    name: `Add "${newLicense}"`
+    name: `Add "${newLicense.name}"`
   })
   // select to add new license
   fireEvent.click(addLicense)
 
+  await waitFor(()=>{
+    screen.getByRole('dialog',{name: 'Add custom license'})
+  })
+
+  const urlInput = screen.getByRole('textbox',{name: config.licenses.modal.reference.label})
+
+  // type license url
+  fireEvent.change(urlInput,{target:{value:newLicense.reference}})
+  expect(urlInput).toHaveValue(newLicense.reference)
+
+  // get Save button
+  const saveBtn = screen.getByRole('button',{name:'Save'})
+  await waitFor(()=>{
+    expect(saveBtn).toBeEnabled()
+  })
+  // click save
+  fireEvent.click(saveBtn)
+
   await waitFor(() => {
     expect(mockAddLicensesForSoftware).toBeCalledTimes(1)
     expect(mockAddLicensesForSoftware).toBeCalledWith({
-      'license': newLicense,
-      'software': softwareState.software.id,
+      'license': {
+        ...newLicense,
+        software: softwareState.software.id
+      },
       'token': mockSession.token,
     })
   })
 
   // confirm license added as chip
   const chips = await screen.findAllByTestId('license-chip')
-  expect(chips[0]).toHaveTextContent(newLicense)
+  expect(chips[0]).toHaveTextContent(newLicense.license)
 })
 
 it('can import license from DOI', async() => {
@@ -139,8 +163,11 @@ it('can import license from DOI', async() => {
   defaultValues.concept_doi = '10.1017/9781009085809'
 
   // mock api response
-  const importLicense = 'Apache-2.0'
-  mockGetLicensesFromDoi.mockResolvedValueOnce([importLicense])
+  mockGetLicensesFromDoi.mockResolvedValueOnce([{
+    key: licenseForSoftware[0].license,
+    name: licenseForSoftware[0].name,
+    reference: licenseForSoftware[0].reference
+  }])
 
   // render
   render(
@@ -170,19 +197,29 @@ it('can import license from DOI', async() => {
     // validate license save api call
     expect(mockAddLicensesForSoftware).toBeCalledTimes(1)
     expect(mockAddLicensesForSoftware).toBeCalledWith({
-      'license': importLicense,
-      'software': softwareState.software.id,
+      'license': {
+        license: licenseForSoftware[0].license,
+        name: licenseForSoftware[0].name,
+        reference: licenseForSoftware[0].reference,
+        open_source: licenseForSoftware[0].open_source,
+        software: softwareState.software.id
+      },
       'token': mockSession.token,
     })
 
     // validate license listed
     const chips = screen.getAllByTestId('license-chip')
-    expect(chips[0]).toHaveTextContent(importLicense)
+    expect(chips[0]).toHaveTextContent(licenseForSoftware[0].license)
   })
 })
 
 it('can add license from list', async() => {
-  const newLicense = 'Apache-2.0'
+  const newLicense = {
+    license: licenseForSoftware[0].license,
+    name: licenseForSoftware[0].name,
+    reference: licenseForSoftware[0].reference,
+    open_source: licenseForSoftware[0].open_source
+  }
   // copy software id
   softwareState.software.id = licenseForSoftware[0].software
   // mock no items
@@ -201,11 +238,11 @@ it('can add license from list', async() => {
   )
   // get license input
   const combo = screen.getByRole('combobox')
-  fireEvent.change(combo, {target: {value: newLicense}})
+  fireEvent.change(combo, {target: {value: newLicense.name}})
 
   // find Add option
   const addLicense = await screen.findByRole('option', {
-    name: newLicense
+    title: newLicense.license
   })
   // select to add new license
   fireEvent.click(addLicense)
@@ -213,15 +250,17 @@ it('can add license from list', async() => {
   await waitFor(() => {
     expect(mockAddLicensesForSoftware).toBeCalledTimes(1)
     expect(mockAddLicensesForSoftware).toBeCalledWith({
-      'license': newLicense,
-      'software': softwareState.software.id,
+      'license': {
+        ...newLicense,
+        'software': softwareState.software.id
+      },
       'token': mockSession.token,
     })
   })
 
   // confirm license added as chip
   const chips = await screen.findAllByTestId('license-chip')
-  expect(chips[0]).toHaveTextContent(newLicense)
+  expect(chips[0]).toHaveTextContent(newLicense.license)
 })
 
 it('can remove license', async () => {

@@ -23,7 +23,7 @@ type EditSoftwareMetadataFormProps={
 
 /**
  * Implement FormProvider (shared form context) of react-hook-form.
- * The form context can be then used in any child component to retreive/update form data.
+ * The form context can be then used in any child component to retrieve/update form data.
  * @param param0
  * @returns
  */

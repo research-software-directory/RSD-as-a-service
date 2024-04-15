@@ -12,10 +12,9 @@ import {WithFormContext} from '~/utils/jest/WithFormContext'
 import {WithSoftwareContext} from '~/utils/jest/WithSoftwareContext'
 
 import AutosaveRepositoryUrl from './AutosaveRepositoryUrl'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {config} from './config'
 
 // MOCK patchSoftwareTable
-
 const mockAddToRepositoryTable = jest.fn(props => Promise.resolve('OK'))
 jest.mock('~/utils/editSoftware', () => ({
   addToRepositoryTable: jest.fn(props=>mockAddToRepositoryTable(props))

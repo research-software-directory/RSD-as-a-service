@@ -21,9 +21,9 @@ import {EditSoftwareItem, KeywordForSoftware} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import FindKeyword, {Keyword} from '~/components/keyword/FindKeyword'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 import {searchForSoftwareKeyword} from './searchForSoftwareKeyword'
 import ImportKeywordsFromDoi from './ImportKeywordsFromDoi'
+import {config} from './config'
 
 export type SoftwareKeywordsProps={
   software_id:string,

@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +37,7 @@ export const addConfig = {
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
         value: /^[a-z0-9]+(-[a-z0-9]+)*$/,
-        message: 'Restricted input violiation. Use letters, numbers and dashes "-" only between other input.'
+        message: 'Restricted input violation. Use letters, numbers and dashes "-" only between other input.'
       }
     }
   }

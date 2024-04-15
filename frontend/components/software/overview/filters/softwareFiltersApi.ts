@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -118,7 +118,7 @@ export async function softwareLanguagesFilter({search, keywords, prog_lang, lice
   }
 }
 
-export async function softwareLicesesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
+export async function softwareLicensesFilter({search, keywords, prog_lang, licenses}: SoftwareFilterProps) {
   try {
     const query = 'rpc/software_licenses_filter?order=license'
     const url = `${getBaseUrl()}/${query}`
@@ -140,11 +140,11 @@ export async function softwareLicesesFilter({search, keywords, prog_lang, licens
       return json
     }
 
-    logger(`softwareLicesesFilter: ${resp.status} ${resp.statusText}`, 'warn')
+    logger(`softwareLicensesFilter: ${resp.status} ${resp.statusText}`, 'warn')
     return []
 
   } catch (e: any) {
-    logger(`softwareLicesesFilter: ${e?.message}`, 'error')
+    logger(`softwareLicensesFilter: ${e?.message}`, 'error')
     return []
   }
 }

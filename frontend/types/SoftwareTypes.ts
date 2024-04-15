@@ -145,12 +145,14 @@ export type CategoriesForSoftware = CategoryPath[]
 export type LicenseForSoftware = {
   software: string
   license: string
+  reference: string|null,
+  open_source: boolean
+  name: string
 }
 
 export type License = LicenseForSoftware & {
   id?: string,
   deprecated?: boolean,
-  name: string
 }
 
 

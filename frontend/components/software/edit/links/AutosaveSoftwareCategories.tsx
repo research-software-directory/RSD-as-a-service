@@ -14,7 +14,7 @@ import {CategoryID, CategoryPath, CategoryTree} from '~/types/Category'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import {CategoriesWithHeadlines} from '~/components/category/CategoriesWithHeadlines'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {config} from './config'
 
 export type SoftwareCategoriesProps = {
   softwareId: string
