@@ -27,7 +27,18 @@ You need to activate "Publish" switch and reload the page in order to see change
 The software overview page design has a highlights section. This section is **shown only when the software highlights are defined** by RSD admin.
 
 :::tip
-You can customise the software highlights section title in `settings.json` by providing a value for the optional property `software_highlights_title`.
+You can customise the software highlights section title in `settings.json` by providing a values for the optional property `software_highlights`:
+
+```json
+{
+  "host": {
+    "software_highlights": {
+      "title": "Software Highlights",
+      "description": "Descriptive text below page headline."
+    }
+  }
+}
+```
 :::
 
 ![animation](img/admin-software-highlights.gif)

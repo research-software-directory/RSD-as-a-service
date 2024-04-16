@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -51,6 +53,17 @@ export type QueryParams={
   project_status?: string | null,
   page?:number | null,
   rows?:number | null
+}
+
+export type ViewQueryParams = {
+  view: string,
+  params: QueryParams
+}
+
+export function ssrViewUrl(viewParams:ViewQueryParams) {
+  const {view, params} = viewParams
+  const url = buildFilterUrl(params, view)
+  return url
 }
 
 export function ssrSoftwareUrl(params:QueryParams){
@@ -296,6 +309,27 @@ export function softwareListUrl(props: PostgrestParams) {
   return url
 }
 
+export function highlightsListUrl(props: PostgrestParams) {
+  const {baseUrl, search} = props
+  let query = baseQueryString(props)
+
+  if (search) {
+    // console.log('softwareListUrl...keywords...', props.keywords)
+    const encodedSearch = encodeURIComponent(search)
+    // search query is performed in software_search RPC
+    // we search in title,subtitle,slug,keywords_text and prog_lang
+    // check rpc in 105-project-views.sql for exact filtering
+    query += `&search=${encodedSearch}`
+
+    const url = `${baseUrl}/rpc/highlight_search?${query}`
+    // console.log('softwareListUrl...', url)
+    return url
+  }
+
+  const url = `${baseUrl}/rpc/highlight_overview?${query}`
+  // console.log('softwareListUrl...', url)
+  return url
+}
 
 export function projectListUrl(props: PostgrestParams) {
   const {baseUrl, search} = props

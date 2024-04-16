@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,7 +13,7 @@ import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
-import OrderSoftwareBy from './OrderSoftwareBy'
+import OrderSoftwareBy, {OrderHighlightsBy} from './OrderSoftwareBy'
 import SoftwareKeywordsFilter from './SoftwareKeywordsFilter'
 import SoftwareLanguagesFilter from './SoftwareLanguagesFilter'
 import SoftwareLicensesFilter from './SoftwareLicensesFilter'
@@ -29,7 +31,8 @@ type SoftwareFilterProps = {
   licenses: string[]
   licensesList: LicensesFilterOption[]
   orderBy: string,
-  filterCnt: number
+  filterCnt: number,
+  highlightsOnly?: boolean
 }
 
 export default function SoftwareFilters({
@@ -40,7 +43,8 @@ export default function SoftwareFilters({
   licenses,
   licensesList,
   filterCnt,
-  orderBy
+  orderBy,
+  highlightsOnly = false
 }:SoftwareFilterProps) {
   const {resetFilters} = useSoftwareOverviewParams()
 
@@ -57,9 +61,8 @@ export default function SoftwareFilters({
         resetFilters={resetFilters}
       />
       {/* Order by */}
-      <OrderSoftwareBy
-        orderBy={orderBy}
-      />
+      {highlightsOnly && <OrderHighlightsBy orderBy={orderBy} />}
+      {!highlightsOnly && <OrderSoftwareBy orderBy={orderBy} />}
       {/* Keywords */}
       <SoftwareKeywordsFilter
         keywords={keywords}

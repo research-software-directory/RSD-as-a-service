@@ -13,6 +13,8 @@ import {HighlightsCarousel} from './highlights/HighlightsCarousel'
 import {SoftwareHighlight} from '~/components/admin/software-highlights/apiSoftwareHighlights'
 import useRsdSettings from '~/config/useRsdSettings'
 import {useRouter} from 'next/router'
+import Button from '@mui/material/Button'
+import {KeyboardDoubleArrowRight} from '@mui/icons-material'
 
 export default function SoftwareHighlights({highlights}: { highlights: SoftwareHighlight[] }) {
   // console.group('SoftwareHighlights')
@@ -34,10 +36,28 @@ export default function SoftwareHighlights({highlights}: { highlights: SoftwareH
         <div
           className="text-3xl"
         >
-          {host.software_highlights_title}
+          {host.software_highlights?.title}
         </div>
       </ContentContainer>
+
       <HighlightsCarousel items={highlights} />
+
+      <ContentContainer className='flex justify-end'>
+        <Button
+          variant='contained'
+          href='/spotlights?order=position'
+          endIcon={<KeyboardDoubleArrowRight />}
+          sx={{
+            backgroundColor: 'primary.main',
+            marginLeft: 'auto',
+            ':hover': {
+              color: '#fff'
+            }
+          }}
+        >
+          Browse all Highlights
+        </Button>
+      </ContentContainer>
     </div>
   )
 }

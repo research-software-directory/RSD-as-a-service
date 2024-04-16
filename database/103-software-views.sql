@@ -3,6 +3,8 @@
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 dv4all
+-- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+-- SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -214,6 +216,47 @@ LEFT JOIN
 ;
 $$;
 
+-- HIGHLIGHT OVERVIEW LIST
+-- WITH COUNTS and KEYWORDS for filtering
+CREATE FUNCTION highlight_overview() RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	image_id VARCHAR,
+	updated_at TIMESTAMPTZ,
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT,
+	is_published BOOLEAN,
+	keywords CITEXT[],
+	keywords_text TEXT,
+	prog_lang TEXT[],
+	licenses VARCHAR[],
+	"position" INT
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	software_overview.id,
+	software_overview.slug,
+	software_overview.brand_name,
+	software_overview.short_statement,
+	software_overview.image_id,
+	software_overview.updated_at,
+	software_overview.contributor_cnt,
+	software_overview.mention_cnt,
+	software_overview.is_published,
+	software_overview.keywords,
+	software_overview.keywords_text,
+	software_overview.prog_lang,
+	software_overview.licenses,
+	software_highlight.position
+FROM
+	software_overview()
+RIGHT JOIN
+	software_highlight ON software_overview.id=software_highlight.software
+;
+$$;
+
 
 -- SOFTWARE OVERVIEW LIST FOR SEARCH
 -- WITH COUNTS and KEYWORDS for filtering
@@ -286,6 +329,47 @@ ORDER BY
 		WHEN short_statement ILIKE CONCAT('%', search, '%') THEN 2
 		ELSE 3
 	END
+;
+$$;
+
+-- HIGHLIGHT OVERVIEW LIST FOR SEARCH
+-- WITH COUNTS and KEYWORDS for filtering
+CREATE FUNCTION highlight_search(search VARCHAR) RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	brand_name VARCHAR,
+	short_statement VARCHAR,
+	image_id VARCHAR,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	contributor_cnt BIGINT,
+	mention_cnt BIGINT,
+	keywords CITEXT[],
+	keywords_text TEXT,
+	prog_lang TEXT[],
+	licenses VARCHAR[],
+	"position" INT
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	software_search.id,
+	software_search.slug,
+	software_search.brand_name,
+	software_search.short_statement,
+	software_search.image_id,
+	software_search.updated_at,
+	software_search.is_published,
+	software_search.contributor_cnt,
+	software_search.mention_cnt,
+	software_search.keywords,
+	software_search.keywords_text,
+	software_search.prog_lang,
+	software_search.licenses,
+	software_highlight.position
+FROM
+	software_search(search)
+RIGHT JOIN
+	software_highlight ON software_search.id=software_highlight.software
 ;
 $$;
 
@@ -370,6 +454,34 @@ GROUP BY
 $$;
 
 
+-- REACTIVE KEYWORD FILTER WITH COUNTS FOR HIGHLIGHTS
+-- PROVIDES AVAILABLE KEYWORDS FOR APPLIED FILTERS
+CREATE FUNCTION highlight_keywords_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	keyword CITEXT,
+	keyword_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(keywords) AS keyword,
+	COUNT(id) AS keyword_cnt
+FROM
+	highlight_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+GROUP BY
+	keyword
+;
+$$;
+
 -- REACTIVE PROGRAMMING LANGUAGES WITH COUNTS FOR SOFTWARE
 -- PROVIDES AVAILABLE PROGRAMMING LANGUAGES FOR APPLIED FILTERS
 CREATE FUNCTION software_languages_filter(
@@ -387,6 +499,34 @@ SELECT
 	COUNT(id) AS prog_language_cnt
 FROM
 	software_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+GROUP BY
+	prog_language
+;
+$$;
+
+-- REACTIVE PROGRAMMING LANGUAGES WITH COUNTS FOR HIGHLIGHTS
+-- PROVIDES AVAILABLE PROGRAMMING LANGUAGES FOR APPLIED FILTERS
+CREATE FUNCTION highlight_languages_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	prog_language TEXT,
+	prog_language_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(prog_lang) AS prog_language,
+	COUNT(id) AS prog_language_cnt
+FROM
+	highlight_search(search_filter)
 WHERE
 	COALESCE(keywords, '{}') @> keyword_filter
 	AND
@@ -416,6 +556,34 @@ SELECT
 	COUNT(id) AS license_cnt
 FROM
 	software_search(search_filter)
+WHERE
+	COALESCE(keywords, '{}') @> keyword_filter
+	AND
+	COALESCE(prog_lang, '{}') @> prog_lang_filter
+	AND
+	COALESCE(licenses, '{}') @> license_filter
+GROUP BY
+	license
+;
+$$;
+
+-- REACTIVE LICENSES FILTER WITH COUNTS FOR HIGHLIGHTS
+-- PROVIDES AVAILABLE LICENSES FOR APPLIED FILTERS
+CREATE FUNCTION highlight_licenses_filter(
+	search_filter TEXT DEFAULT '',
+	keyword_filter CITEXT[] DEFAULT '{}',
+	prog_lang_filter TEXT[] DEFAULT '{}',
+	license_filter VARCHAR[] DEFAULT '{}'
+) RETURNS TABLE (
+	license VARCHAR,
+	license_cnt INTEGER
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	UNNEST(licenses) AS license,
+	COUNT(id) AS license_cnt
+FROM
+	highlight_search(search_filter)
 WHERE
 	COALESCE(keywords, '{}') @> keyword_filter
 	AND

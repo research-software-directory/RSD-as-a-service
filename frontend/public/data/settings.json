@@ -12,7 +12,11 @@
     },
     "login_info_url":"https://research-software-directory.github.io/documentation/getting-access.html",
     "terms_of_service_url": "/page/terms-of-service/",
-    "privacy_statement_url": "/page/privacy-statement/"
+    "privacy_statement_url": "/page/privacy-statement/",
+    "software_highlights": {
+      "title": "Software Highlights",
+      "description": "Software Highlights description."
+    }
   },
   "links": [
     {

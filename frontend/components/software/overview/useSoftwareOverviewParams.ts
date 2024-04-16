@@ -3,7 +3,9 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,13 +13,15 @@ import {useRouter} from 'next/router'
 
 import {rowsPerPageOptions} from '~/config/pagination'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
-import {QueryParams, ssrSoftwareUrl} from '~/utils/postgrestUrl'
+import {QueryParams, ssrViewUrl} from '~/utils/postgrestUrl'
 import {getDocumentCookie} from '../../../utils/userSettings'
 
 export default function useSoftwareOverviewParams() {
   const router = useRouter()
 
   function createUrl(key: string, value: string | string[]) {
+    const view = router.pathname.split('/')[1]
+
     const params: QueryParams = {
       // take existing params from url (query)
       ...ssrSoftwareParams(router.query),
@@ -32,7 +36,10 @@ export default function useSoftwareOverviewParams() {
       params['rows'] = getDocumentCookie('rsd_page_rows', rowsPerPageOptions[0])
     }
     // construct url with all query params
-    const url = ssrSoftwareUrl(params)
+    const url = ssrViewUrl({
+      view: view,
+      params: params
+    })
     return url
   }
 

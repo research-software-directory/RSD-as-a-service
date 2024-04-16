@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,11 +53,49 @@ export async function getSoftwareList({url,token}:{url:string,token?:string }){
   }
 }
 
+
+/*
+ * Software list for the software overview page
+ * Note! url should contain all query params. Use softwareUrl helper fn to construct url.
+ */
+export async function getHighlightList({url,token}:{url:string,token?:string }){
+  try{
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+        'Prefer':'count=exact'
+      },
+    })
+
+    if ([200,206].includes(resp.status)){
+      const json: SoftwareOverviewItemProps[] = await resp.json()
+      // set
+      return {
+        count: extractCountFromHeader(resp.headers),
+        data: json
+      }
+    } else {
+      logger(`getHighlightList failed: ${resp.status} ${resp.statusText} ${url}`, 'warn')
+      return {
+        count:0,
+        data:[]
+      }
+    }
+  }catch(e:any){
+    logger(`getHighlightList: ${e?.message}`,'error')
+    return {
+      count:0,
+      data:[]
+    }
+  }
+}
+
 // query for software item page based on slug
 export async function getSoftwareItem(slug:string|undefined, token?:string){
   try {
     // console.log('token...', token)
-    // this request is always perfomed from backend
+    // this request is always performed from backend
     const url = `${process.env.POSTGREST_URL}/software?select=*,repository_url!left(url)&slug=eq.${slug}`
     let resp
     if (token) {
@@ -319,7 +358,7 @@ export async function getRemoteMarkdown(url: string) {
   }
 }
 
-// RELATED PROJECTS FOR SORFTWARE
+// RELATED PROJECTS FOR SOFTWARE
 export async function getRelatedProjectsForSoftware({software, token, frontend, approved=true}:
   { software: string, token?: string, frontend?: boolean, approved?:boolean }) {
   try {
