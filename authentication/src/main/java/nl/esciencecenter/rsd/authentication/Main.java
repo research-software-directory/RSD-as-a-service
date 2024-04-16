@@ -14,7 +14,6 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import io.javalin.util.ConcurrencyUtil;
 
 import java.util.Base64;
 import java.util.UUID;
@@ -86,8 +85,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		ConcurrencyUtil.INSTANCE.setUseLoom(false);
-		Javalin app = Javalin.create().start(7000);
+		Javalin app = Javalin.create(c -> c.useVirtualThreads = false).start(7000);
 		app.get("/", ctx -> ctx.json("{\"Module\": \"rsd/auth\", \"Status\": \"live\"}"));
 
 		if (Config.isLocalLoginEnabled()) {
