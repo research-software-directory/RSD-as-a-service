@@ -1,6 +1,6 @@
--- SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
--- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 dv4all
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 --
@@ -45,7 +45,9 @@ CREATE TRIGGER sanitise_update_image BEFORE UPDATE ON image FOR EACH ROW EXECUTE
 -- cache incrased to 1 year based on lighthouse audit
 -- ----------------------------------------
 
-CREATE FUNCTION get_image(uid VARCHAR(40)) RETURNS BYTEA STABLE LANGUAGE plpgsql AS
+CREATE DOMAIN "application/octet-stream" AS BYTEA;
+
+CREATE FUNCTION get_image(uid VARCHAR(40)) RETURNS "application/octet-stream" STABLE LANGUAGE plpgsql AS
 $$
 DECLARE headers TEXT;
 DECLARE blob BYTEA;
