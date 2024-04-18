@@ -2,13 +2,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import ProtectedOrganisationPage from '../ProtectedOrganisationPage'
-import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
 import useOrganisationContext from '../context/useOrganisationContext'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import SettingsNav from './SettingsNav'
@@ -23,7 +23,7 @@ export default function OrganisationSettings() {
     <ProtectedOrganisationPage
       isMaintainer={isMaintainer}
     >
-      <UserAgrementModal />
+      <UserAgreementModal />
       <div className="flex-1 grid grid-cols-[1fr,4fr] gap-4">
         <BaseSurfaceRounded
           className="mb-12 p-4"

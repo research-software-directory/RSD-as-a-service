@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -15,7 +16,7 @@ import ProtectedContent from '~/auth/ProtectedContent'
 import {getProjectItem} from '~/utils/getProjects'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import ContentLoader from '~/components/layout/ContentLoader'
-import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
 import {EditProjectProvider, ProjectInfo} from '~/components/projects/edit/editProjectContext'
 import {editProjectPage} from '~/components/projects/edit/editProjectPages'
 import EditProjectNav from '~/components/projects/edit/EditProjectNav'
@@ -55,7 +56,7 @@ export default function ProjectEditPage({pageIndex,project}:ProjectEditPageProps
         <p style={{fontSize: '2rem', textAlign: 'center'}}>Please enable JavaScript to use this page</p>
       </noscript>
       <ProtectedContent slug={project.slug} pageType="project">
-        <UserAgrementModal />
+        <UserAgreementModal />
         {/* edit project context is share project info between pages */}
         <EditProjectProvider state={state}>
           <EditProjectStickyHeader />
