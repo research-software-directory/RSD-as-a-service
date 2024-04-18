@@ -29,7 +29,7 @@ import ResearchUnitList from './ResearchUnitList'
 import ResearchUnitModal from './ResearchUnitModal'
 import {upsertImage} from '~/utils/editImage'
 import {getPropsFromObject} from '~/utils/getPropsFromObject'
-import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
 import useOrganisationContext from '../context/useOrganisationContext'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 
@@ -212,7 +212,7 @@ export default function ResearchUnits() {
       className="flex-1 flex flex-col mb-12 p-4"
     >
       {/* Only when maintainer */}
-      {isMaintainer && <UserAgrementModal />}
+      {isMaintainer && <UserAgreementModal />}
       <section className="flex justify-between py-4">
         <h2>Research Units ({count ?? 0})</h2>
         {renderAddBtn()}
