@@ -38,8 +38,8 @@ type RsdSoftware struct {
 		License string `json:"license"`
 	} `json:"license_for_software"`
 	RepositoryURL *struct {
-		URL       string            `json:"url"`
-		Languages map[string]uint64 `json:"languages"`
+		URL       string             `json:"url"`
+		Languages map[string]float64 `json:"languages"`
 	} `json:"repository_url"`
 	ReferencePapers []struct {
 		Doi   *string `json:"doi"`
