@@ -48,6 +48,7 @@ import SoftwareFiltersModal from '~/components/software/overview/filters/Softwar
 import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
 import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {getRsdSettings} from '~/config/getSettingsServerSide'
 
 type SoftwareOverviewProps = {
   search?: string | null
@@ -259,6 +260,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     offset
   })
 
+  // extract rsd settings
+  const settings = await getRsdSettings()
+
   // console.log('software...url...', url)
   // console.log('order...', order)
   // console.log('orderBy...', orderBy)
@@ -278,9 +282,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     softwareLanguagesFilter({search, keywords, prog_lang, licenses}),
     softwareLicensesFilter({search, keywords, prog_lang, licenses}),
     getSoftwareHighlights({
-      limit: 3,
-      offset: 0,
-      orderBy: 'position'
+      limit: settings.host?.software_highlights?.limit ?? 3,
+      offset: 0
     })
   ])
 

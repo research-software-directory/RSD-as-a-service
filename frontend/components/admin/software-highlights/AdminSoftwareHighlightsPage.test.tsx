@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +10,7 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 import AdminSoftwareHighlightsPage from './index'
 
 // MOCKS
-import mockSoftwareHighlighs from './__mocks__/software_for_highlight.json'
+import mockSoftwareHighlight from './__mocks__/software_for_highlight.json'
 // default api mock
 jest.mock('~/components/admin/software-highlights/apiSoftwareHighlights')
 
@@ -24,7 +24,7 @@ const testSession = {
 
 describe('components/admin/software-highlights/index.tsx', () => {
 
-  it('shows progressbar initialy', () => {
+  it('shows progressbar initially', () => {
     render(
       <WithAppContext options={{session: testSession}}>
         <AdminSoftwareHighlightsPage />
@@ -42,8 +42,8 @@ describe('components/admin/software-highlights/index.tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
-    const rows = screen.getAllByTestId('admin-hightlight-item')
-    expect(rows.length).toEqual(mockSoftwareHighlighs.length)
+    const rows = screen.getAllByTestId('admin-highlight-item')
+    expect(rows.length).toEqual(mockSoftwareHighlight.length)
     // screen.debug(rows)
   })
 
@@ -56,8 +56,8 @@ describe('components/admin/software-highlights/index.tsx', () => {
     // wait for loader to be removed
     await waitForElementToBeRemoved(screen.getByRole('progressbar'))
 
-    const rows = screen.getAllByTestId('admin-hightlight-item')
-    expect(rows.length).toEqual(mockSoftwareHighlighs.length)
+    const rows = screen.getAllByTestId('admin-highlight-item')
+    expect(rows.length).toEqual(mockSoftwareHighlight.length)
 
     const deleteBtn = within(rows[0]).getByRole('button',{name:'delete'})
     fireEvent.click(deleteBtn)
@@ -66,7 +66,7 @@ describe('components/admin/software-highlights/index.tsx', () => {
       // get confirm delete
       const confirmDelete = screen.getByRole('dialog')
       // confirm first account from list - listed twice in modal
-      screen.getAllByText(mockSoftwareHighlighs[0].brand_name)
+      screen.getAllByText(mockSoftwareHighlight[0].brand_name)
       // confirm remove
       const removeBtn = within(confirmDelete).getByRole('button', {name: 'Remove'})
       fireEvent.click(removeBtn)

@@ -15,7 +15,8 @@
     "privacy_statement_url": "/page/privacy-statement/",
     "software_highlights": {
       "title": "Software Highlights",
-      "description": "Software Highlights description."
+      "limit": 5,
+      "description": null
     }
   },
   "links": [

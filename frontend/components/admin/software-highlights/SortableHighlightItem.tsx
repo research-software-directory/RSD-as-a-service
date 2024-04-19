@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -17,25 +17,26 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import {getImageUrl} from '~/utils/editImage'
 import {SoftwareHighlight} from './apiSoftwareHighlights'
 
-
 type HighlightProps = {
   pos: number,
   item: SoftwareHighlight,
+  inCarousel: boolean,
   onEdit: (pos: number) => void,
   onDelete: (pos: number) => void,
 }
 
-export default function SortableHighlightItem({pos, item, onEdit, onDelete}: HighlightProps) {
+export default function SortableHighlightItem({pos,item,inCarousel,onEdit,onDelete}: HighlightProps) {
   const smallScreen = useMediaQuery('(max-width:600px)')
   const {
     attributes,listeners,setNodeRef,
     transform,transition,isDragging
   } = useSortable({id: item.id ?? ''})
+
   const {brand_name, contributor_cnt, mention_cnt, image_id, is_published} = item
 
   return (
     <ListItem
-      data-testid="admin-hightlight-item"
+      data-testid="admin-highlight-item"
       // draggable
       ref={setNodeRef}
       {...attributes}
@@ -89,6 +90,7 @@ export default function SortableHighlightItem({pos, item, onEdit, onDelete}: Hig
             <span>Mentions: {mention_cnt ?? 0}</span>
             <span className="ml-4">Contributors: {contributor_cnt ?? 0}</span>
             <span className="ml-4">Published: {is_published ? 'Yes' : 'No'}</span>
+            <span className="ml-4">Carousel: {inCarousel ? 'Yes' : 'No'}</span>
           </>
         }
       />

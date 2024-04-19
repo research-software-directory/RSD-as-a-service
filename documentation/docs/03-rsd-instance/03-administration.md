@@ -26,19 +26,27 @@ You need to activate "Publish" switch and reload the page in order to see change
 
 The software overview page design has a highlights section. This section is **shown only when the software highlights are defined** by RSD admin.
 
+In addition to carousel, which is used on the software overview page and not suitable for showing a large number of items, we offer separate "All Highlights" page. All highlights page can be accessed using the "Browse All Highlights" button shown underneath the carousel.
+
 :::tip
-You can customise the software highlights section title in `settings.json` by providing a values for the optional property `software_highlights`:
+You can customise the software highlights section in the `settings.json` by changing the values in the optional property `software_highlights`.
+
+- `title` value is shown in the admin section, as carousel title and as a title of all highlights page.
+- `limit` defines a maximum number of items to include in the carousel.
+- `description` is used on the all highlights page.
 
 ```json
 {
   "host": {
     "software_highlights": {
       "title": "Software Highlights",
+      "limit": 5,
       "description": "Descriptive text below page headline."
     }
   }
 }
 ```
+
 :::
 
 ![animation](img/admin-software-highlights.gif)
