@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,6 +16,8 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {patchOrganisationTable} from '../updateOrganisationSettings'
 import {OrganisationForOverview} from '~/types/Organisation'
 import useOrganisationContext from '../../context/useOrganisationContext'
+import {useRouter} from 'next/router'
+import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 
 export type AutosaveOrganisationTextFieldProps = {
   options: ControlledTextFieldOptions<OrganisationForOverview>
@@ -21,6 +25,7 @@ export type AutosaveOrganisationTextFieldProps = {
 }
 
 export default function AutosaveOrganisationTextField({options,rules}:AutosaveOrganisationTextFieldProps) {
+  const router = useRouter()
   const {token} = useSession()
   const {id,updateOrganisation} = useOrganisationContext()
   const {showErrorMessage} = useSnackbar()
@@ -54,6 +59,18 @@ export default function AutosaveOrganisationTextField({options,rules}:AutosaveOr
       resetField(options.name, {
         defaultValue:value
       })
+      if (name === 'parent' || name === 'slug') {
+        const url = `/api/v1/rpc/organisation_route?id=${id}`
+        const slugResp = await fetch(url)
+        if (slugResp?.status !== 200) {
+          showErrorMessage('Failed to fetch new organisation slug.')
+        } else {
+          const json = await slugResp.json()
+          const updatedSlug = json[0].rsd_path
+          const newUrl = `/organisations/${updatedSlug}?tab=settings&settings=general`
+          router.push(newUrl, newUrl, {scroll: false})
+        }
+      }
     }
   }
 
