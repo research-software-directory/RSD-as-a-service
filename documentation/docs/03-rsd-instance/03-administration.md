@@ -1,9 +1,9 @@
 # Administration
 
-This section describes administration options avilable in the RSD.
+This section describes administration options available in the RSD.
 
 :::tip
-To be able to login as RSD administrator you first need to define a list of rsd admin users in the .env file.
+To be able to log in as RSD administrator you first need to define a list of rsd admin users in the .env file.
 See [Login as rsd administrator in the getting started section](/rsd-instance/getting-started/#login-as-rsd-adminstrator).
 :::
 
@@ -24,9 +24,9 @@ You need to activate "Publish" switch and reload the page in order to see change
 
 ## Software highlights
 
-The software overview page design has a highlights section. This section is **shown only when the software highlights are defined** by RSD admin.
+The software overview page design has a highlights section. This section is **shown only when software highlights are set** by an RSD admin.
 
-In addition to carousel, which is used on the software overview page and not suitable for showing a large number of items, we offer separate "All Highlights" page. All highlights page can be accessed using the "Browse All Highlights" button shown underneath the carousel.
+In addition to the carousel, which is shown on the software overview page, but is not suitable for showing a large number of items, we offer a separate "All Highlights" page. This page can be accessed using the "Browse all Highlights" button, shown underneath the carousel.
 
 :::tip
 You can customise the software highlights section in the `settings.json` by changing the values in the optional property `software_highlights`.
@@ -65,7 +65,7 @@ You can add, search and delete ORCIDs from the RSD. Use the bulk import button t
 
 ## RSD users
 
-This section shows all RSD users who logged in to RSD at least once. You can search for users, assign the adminstrator role (rsd_admin) or delete an user account.
+This section shows all RSD users who logged in to RSD at least once. You can search for users, assign the administrator role (rsd_admin) or delete user accounts.
 
 :::danger
 
@@ -77,7 +77,7 @@ This section shows all RSD users who logged in to RSD at least once. You can sea
 
 ## RSD contributors
 
-The page shows the list of all contributors and team members. You can search by name, email or ORCID. You can change the values in the table by clicking on the value. The values is automatically saved after you navigate out of the edit box. The link in the last column will open the software or project item where this contributor/team member is used.
+The page shows the list of all contributors and team members. You can search by name, email or ORCID. You can change the values in the table by clicking on the value. The values are automatically saved after you navigate out of the edit box. The link in the last column will open the software or project item where this contributor/team member is used.
 
 ![animation](img/admin-rsd-contributor.gif)
 
@@ -87,13 +87,13 @@ This page allows management of all organisations added to RSD. RSD users can add
 
 ### Add organisation
 
-Use search box to find the organisation in the ROR database. This is preferred approach. If the organisation cannot be found in ROR database you will see "Add..." option and you will be able to add basic organisation information manually.
+Use the search box to find organisations in the ROR database. This is the preferred approach. If the organisation cannot be found in ROR database, you will see the "Add..." option, and you will be able to add basic organisation information manually.
 
 ![animation](img/admin-add-organisation.gif)
 
 ### Define organisation primary maintainer
 
-The primary maintainer of an organisation is defined by rsd administrator. You need to provide user id in the general settings section. The user id is unique and it is automatically created by RSD after an user is logged in for the first time.
+The primary maintainer of an organisation is defined by an RSD administrator. You need to provide the user id in the general settings section. The user id is unique, and it is automatically created by RSD after a user is logged in for the first time.
 
 ![animation](img/organisation-maintainers-primary-invite.gif)
 
@@ -115,7 +115,7 @@ For editing the organisation see [maintaining the organisation section](/users/o
 
 ## Keywords
 
-RSD comes with an predefined list of keywords. You can change the list by adding new keywords or deleting the existing entries.
+RSD comes with a predefined list of keywords. You can change the list by adding new keywords or deleting the existing entries.
 
 :::warning
 You can delete the keyword only when it is not used in any software or project.
@@ -161,8 +161,8 @@ After news item is created you will be redirected to edit news item page. Here y
 - Summary is used in the latest news section of the homepage and in the news card on the news overview.
 - Publication date is shown in the header of the news title. It can be changed at any time. Note that changing the publication title also changes public url of the news item.
 - First uploaded image is used in the news card.
-- Using "Copy link" button you can copy the markdown syntax to the clipboard and the paste the link at the desired location of the body.
-- Using "Delete" button will delete image and the markdown link syntax from the news body.
+- Using "Copy link" button you can copy the Markdown syntax to the clipboard and the paste the link at the desired location of the body.
+- Using "Delete" button will delete image and the Markdown link syntax from the news body.
 
 :::
 
@@ -170,7 +170,7 @@ After news item is created you will be redirected to edit news item page. Here y
 
 ### Latest news
 
-The latest news selection is shown on the homepage after "Our Goals" section. It consist of 3 most recent items, based on the publication date, and "More news" button that links to the news overview page.
+The latest news selection is shown on the homepage after "Our Goals" section. It consists of the 3 most recent items, based on the publication date, and "More news" button that links to the news overview page.
 
 :::warning
 If there are no published news items the "Latest news" section is omitted from the homepage.
