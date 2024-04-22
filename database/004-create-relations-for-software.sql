@@ -106,6 +106,9 @@ CREATE TABLE license_for_software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID references software (id) NOT NULL,
 	license VARCHAR(100) NOT NULL,
+	name VARCHAR(200) NULL,
+	reference VARCHAR(200) NULL CHECK (reference ~ '^https?://'),
+	open_source BOOLEAN NOT NULL DEFAULT TRUE,
 	UNIQUE(software, license),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL

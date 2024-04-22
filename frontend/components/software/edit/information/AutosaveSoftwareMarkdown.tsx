@@ -140,7 +140,7 @@ export default function AutosaveSoftwareMarkdown() {
             helperTextCnt: `${description_url?.length || 0}/${config.description_url.validation.maxLength.value}`,
           }}
           control={control}
-          rules={config.repository_url.validation}
+          rules={config.description_url.validation}
           onSaveField={saveSoftwareInfo}
         />
       )

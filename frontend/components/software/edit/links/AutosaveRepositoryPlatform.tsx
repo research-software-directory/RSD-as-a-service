@@ -15,7 +15,7 @@ import Select from '@mui/material/Select'
 import FormHelperText from '@mui/material/FormHelperText'
 
 import {CodePlatform} from '~/types/SoftwareTypes'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {config} from './config'
 
 type AutosaveRepositoryPlatformProps = {
   value: CodePlatform | null

@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -372,10 +372,10 @@ const exampleResponseRightsList = {
   'url': 'https://zenodo.org/record/0000000',
   'rightsList': [
     {
-      'rights': 'Open Access',
-      'rightsUri': 'info:eu-repo/semantics/openAccess',
+      'rights': 'Apache License 2.0',
+      'rightsUri': 'http://www.apache.org/licenses/LICENSE-2.0',
       'schemeUri': 'https://spdx.org/licenses/',
-      'rightsIdentifier': 'cc-by-4.0',
+      'rightsIdentifier': 'apache-2.0',
       'rightsIdentifierScheme': 'SPDX'
     },
     {
@@ -383,12 +383,9 @@ const exampleResponseRightsList = {
       'rightsUri': 'info:eu-repo/semantics/openAccess'
     },
     {
-      'rights': 'Open Access',
-      'rightsUri': 'info:eu-repo/semantics/openAccess',
-      'schemeUri': 'https://spdx.org/licenses/',
-      'rightsIdentifier': 'EUPL-1.2',
-      'rightsIdentifierScheme': 'SPDX'
-    },
+      'rights': 'Custom Licenses Open Access',
+      'rightsUri': 'https://creativecommons.org/about/open-access/'
+    }
   ]
 }
 
@@ -397,18 +394,6 @@ const exampleResponseRightsListEmpty = {
   'doi': '10.0000/ZENODO.0000000',
   'url': 'https://zenodo.org/record/0000000',
   'rightsList': []
-}
-
-const exampleResponseRightsListNoSpdx = {
-  'id': 'https://doi.org/10.0000/zenodo.0000000',
-  'doi': '10.0000/ZENODO.0000000',
-  'url': 'https://zenodo.org/record/0000000',
-  'rightsList': [
-    {
-      'rights': 'Open Access',
-      'rightsUri': 'info:eu-repo/semantics/openAccess'
-    }
-  ]
 }
 
 it('returns expected contributors', async () => {
@@ -512,12 +497,6 @@ it('skips invalid keyword subjects', async () => {
   expect(resp).toEqual([])
 })
 
-it('returns all licenses from rightsList', async () => {
-  mockResolvedValueOnce(exampleResponseRightsList)
-  const resp = await getLicensesFromDoi('0')
-  expect(resp).toEqual(['cc-by-4.0', 'Open Access','EUPL-1.2'])
-})
-
 it('returns no licenses if rightsList is missing', async () => {
   mockResolvedValueOnce(exampleResponseNoInfo)
   const resp = await getLicensesFromDoi('0')
@@ -530,9 +509,17 @@ it('returns no licenses if rightsList is empty', async () => {
   expect(resp).toEqual([])
 })
 
-// we want to return any type of licenses registered in DOI
-// it('returns only SPDX licenses', async () => {
-//   mockResolvedValueOnce(exampleResponseRightsListNoSpdx)
-//   const resp = await getLicensesFromDoi('0')
-//   expect(resp).toEqual([])
-// })
+it('returns ONLY licenses having rightsUri starting with http', async () => {
+  mockResolvedValueOnce(exampleResponseRightsList)
+  const resp = await getLicensesFromDoi('0')
+  expect(resp).toEqual([{
+    'name': 'Apache License 2.0',
+    'reference': 'http://www.apache.org/licenses/LICENSE-2.0',
+    'key': 'apache-2.0',
+  },{
+    'key': null,
+    'name': 'Custom Licenses Open Access',
+    'reference': 'https://creativecommons.org/about/open-access/'
+  }])
+})
+

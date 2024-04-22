@@ -19,8 +19,8 @@ import {getBaseUrl} from '~/utils/fetchHelpers'
 import {CodePlatform, EditSoftwareItem, RepositoryUrl} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/AutosaveControlledTextField'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 import AutosaveRepositoryPlatform from './AutosaveRepositoryPlatform'
+import {config} from './config'
 
 async function suggestPlatform(repositoryUrl: string | null) {
   // console.log('repositoryUrl...',repositoryUrl)

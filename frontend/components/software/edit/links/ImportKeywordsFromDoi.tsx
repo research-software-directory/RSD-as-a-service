@@ -19,7 +19,7 @@ import {getKeywordsFromDoi} from '~/utils/getInfoFromDatacite'
 import {addKeywordsToSoftware, createOrGetKeyword, KeywordItem} from '~/utils/editKeywords'
 import {KeywordForSoftware} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {config} from './config'
 
 type ImportKeywordsFromDoiProps = {
   software_id: string

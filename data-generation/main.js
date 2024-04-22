@@ -4,7 +4,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -202,12 +202,12 @@ function generatePackageManagers(softwareIds) {
 
 function generateLincensesForSoftware(ids) {
 	const licenses = [
-		'Apache-2.0',
-		'MIT',
-		'GPL-2.0-or-later',
-		'LGPL-2.0-or-later',
-		'CC-BY-4.0',
-		'CC-BY-NC-ND-3.0',
+		{license:'Apache-2.0',name:'Apache License 2.0',reference:'https://spdx.org/licenses/Apache-2.0.html'},
+		{license:'MIT',name:'MIT License',reference:'https://spdx.org/licenses/MIT.html'},
+		{license:'GPL-2.0-or-later',name:'GNU General Public License v2.0 or later',reference:'https://spdx.org/licenses/GPL-2.0-or-later.html'},
+		{license:'LGPL-2.0-or-later',name:'GNU Library General Public License v2 or later',reference:'https://spdx.org/licenses/LGPL-2.0-or-later.html'},
+		{license:'CC-BY-4.0',name:'Creative Commons Attribution 4.0 International',reference:'https://spdx.org/licenses/CC-BY-4.0.html'},
+		{license:'CC-BY-NC-ND-3.0',name:'Creative Commons Attribution Non Commercial No Derivatives 3.0 Unported',reference:'https://spdx.org/licenses/CC-BY-NC-ND-3.0.html'}
 	];
 
 	const result = [];
@@ -217,10 +217,12 @@ function generateLincensesForSoftware(ids) {
 		if (nummerOfLicenses === 0) continue;
 
 		const licensesToAdd = faker.helpers.arrayElements(licenses, nummerOfLicenses);
-		for (const license of licensesToAdd) {
+		for (const item of licensesToAdd) {
 			result.push({
 				software: id,
-				license: license,
+				license: item.license,
+				name: item.name,
+				reference: item.reference
 			});
 		}
 	}

@@ -19,8 +19,9 @@ import {getLicensesFromDoi} from '~/utils/getInfoFromDatacite'
 import useSpdxLicenses from '~/utils/useSpdxLicenses'
 import {addLicensesForSoftware} from '~/utils/editSoftware'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
+import {getSlugFromString} from '~/utils/getSlugFromString'
+import {config} from './config'
 
 type ImportLicensesFromDoiProps = {
   concept_doi: string | null
@@ -37,9 +38,15 @@ export default function ImportLicensesFromDoi({
   const [loading, setLoading] = useState(false)
 
   async function addLicense(selected:AutocompleteOption<License>) {
-    const resp = await addLicensesForSoftware({
+    const license={
       software: id ?? '',
       license: selected.key,
+      name: selected.label,
+      reference: selected.data.reference,
+      open_source: selected.data.open_source
+    }
+    const resp = await addLicensesForSoftware({
+      license,
       token
     })
     if (resp.status === 201) {
@@ -55,15 +62,16 @@ export default function ImportLicensesFromDoi({
     }
   }
 
-  async function createLicense(value:string) {
+  async function createLicense({key,name,reference}:{key:string|null,name:string,reference:string|null}) {
     const license = {
-      key: value,
-      label: value,
+      key: key ? key : getSlugFromString(name),
+      label: name ?? key,
       data: {
-        id: undefined,
         software: id ?? '',
-        license: value,
-        name: value
+        license: key ? key : getSlugFromString(name),
+        name,
+        reference,
+        open_source: true
       }
     }
     return addLicense(license)
@@ -78,25 +86,25 @@ export default function ImportLicensesFromDoi({
     // find licenses SPDX keys that match items in the options
     for (const license of licenses) {
       // find license by identifier
-      let spdx = allOptions.find(item => item.key.toLocaleLowerCase() === license.toLowerCase())
+      let spdx = allOptions.find(item => item.key.toLowerCase() === license.key?.toLowerCase())
       if (typeof spdx == 'undefined') {
         // if not found by identifier try to find it by name
-        spdx = allOptions.find(item => item.data.name.toLocaleLowerCase() === license.toLowerCase())
+        spdx = allOptions.find(item => item.data.name.toLowerCase() === license.name?.toLowerCase())
       }
       let find
       if (typeof spdx !== 'undefined') {
-        // exlude if already in fields based on spdx key
+        // exclude if already in fields based on spdx key
         find = items.find(item => item.key.toLowerCase() === spdx?.key.toLowerCase())
       } else {
-        // exlude if already in fields based on key
-        find = items.find(item => item.key.toLowerCase() === license.toLowerCase())
+        // exclude if already in fields based on key
+        find = items.find(item => item.key.toLowerCase() === license.key?.toLowerCase())
         if (typeof find == 'undefined') {
           // try to match on label
-          find = items.find(item => item.label.toLowerCase() === license.toLowerCase())
+          find = items.find(item => item?.label?.toLowerCase() === license.name?.toLowerCase())
         }
       }
       if (find) {
-        // go to next license thisone is already proccessed
+        // go to next license this one is already processed
         continue
       }
       // add to collection
@@ -105,13 +113,17 @@ export default function ImportLicensesFromDoi({
         // add existing spdx license
         resp = await addLicense(spdx)
       } else {
-        resp = await createLicense(license)
+        resp = await createLicense({
+          key: license.key,
+          name: license.name,
+          reference: license.reference
+        })
       }
       if (resp.status === 201) {
         // created item is in the message
         importedLicenses.push(resp.message)
       } else {
-        failedLicenses.push(license)
+        failedLicenses.push(license.name ?? license.key)
       }
     }
     if (importedLicenses.length > 0) {

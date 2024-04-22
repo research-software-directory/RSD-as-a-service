@@ -2,9 +2,9 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -192,10 +192,19 @@ export async function getLicensesFromDoi(doiId: string | null | undefined) {
 
   for (const license of allLicenses) {
     // use identifier if present
-    if (license.rightsIdentifier) {
-      spdxLicenses.push(license.rightsIdentifier)
-    } else if (license.rights) {
-      spdxLicenses.push(license.rights)
+    if (license?.rightsIdentifierScheme?.toLowerCase()==='spdx'){
+      spdxLicenses.push({
+        key: license?.rightsIdentifier ?? null,
+        name: license?.rights ?? null,
+        reference: license?.rightsUri ?? null
+      })
+    // use only if it has http link
+    } else if (license?.rightsUri?.startsWith('http')===true){
+      spdxLicenses.push({
+        key: license?.rightsIdentifier ?? null,
+        name: license?.rights ?? null,
+        reference: license?.rightsUri ?? null
+      })
     }
   }
 

@@ -13,7 +13,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck'
 
 import {getSoftwareVersionInfoForDoi} from '~/utils/getDataCite'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {config} from './config'
 
 type ValidateConceptDoiProps = {
   doi: string,

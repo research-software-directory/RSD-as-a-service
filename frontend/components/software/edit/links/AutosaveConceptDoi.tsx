@@ -11,10 +11,10 @@ import {useController, useFormContext} from 'react-hook-form'
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 import AutosaveSoftwareTextField from '~/components/software/edit/information/AutosaveSoftwareTextField'
 import {patchSoftwareTable} from '~/components/software/edit/information/patchSoftwareTable'
 import ValidateConceptDoi from './ValidateConceptDoi'
+import {config} from './config'
 
 export default function AutosaveConceptDoi() {
   const {token} = useSession()

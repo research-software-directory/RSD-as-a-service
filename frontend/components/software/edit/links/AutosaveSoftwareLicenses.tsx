@@ -8,7 +8,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {HTMLAttributes, useState} from 'react'
+import {HTMLAttributes, useEffect, useState} from 'react'
 import Chip from '@mui/material/Chip'
 import {useFormContext} from 'react-hook-form'
 
@@ -16,20 +16,46 @@ import {useSession} from '~/auth'
 import useSpdxLicenses from '~/utils/useSpdxLicenses'
 import {sortBySearchFor} from '~/utils/sortFn'
 import {addLicensesForSoftware, deleteLicense} from '~/utils/editSoftware'
-import {EditSoftwareItem, License} from '~/types/SoftwareTypes'
+import {getSlugFromString} from '~/utils/getSlugFromString'
+import {EditSoftwareItem, License, LicenseForSoftware} from '~/types/SoftwareTypes'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import AsyncAutocompleteSC, {
   AutocompleteOption
 } from '~/components/form/AsyncAutocompleteSC'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 import ImportLicensesFromDoi from './ImportLicensesFromDoi'
+import EditLicenseModal from './EditLicenseModal'
+import {config} from './config'
 
 export type SoftwareLicensesProps = {
   items: AutocompleteOption<License>[]
   concept_doi?: string
 }
+
+type LicenseModalProps={
+  open: boolean,
+  data?: LicenseForSoftware
+}
+
+// Short list of widely used open source licenses
+const keyList=[
+  'AGPL-3.0',
+  'AGPL-3.0-only',
+  'AGPL-3.0-or-later',
+  'Apache-2.0',
+  'BSD-2-Clause',
+  'BSD-3-Clause',
+  'CC-BY-4.0',
+  'GPL-2.0-only',
+  'GPL-2.0-or-later',
+  'GPL-3.0-only',
+  'GPL-3.0-or-later',
+  'LGPL-2.0-only',
+  'LGPL-2.1-only',
+  'LGPL-3.0-only',
+  'MIT'
+]
 
 export default function AutosaveSoftwareLicenses() {
   const {token} = useSession()
@@ -43,17 +69,39 @@ export default function AutosaveSoftwareLicenses() {
     loading: false,
     foundFor: undefined
   })
-  const [options, setOptions] = useState<AutocompleteOption<License>[]>(allOptions)
+  const [shortList, setShortList] = useState<AutocompleteOption<License>[]>([])
+  const [options, setOptions] = useState<AutocompleteOption<License>[]>([])
+  const [modal, setModal] = useState<LicenseModalProps>({
+    open: false
+  })
   const {watch,setValue,formState:{errors}} = useFormContext<EditSoftwareItem>()
   const [licenses,concept_doi] = watch(['licenses','concept_doi'])
   const validDoi = errors?.concept_doi ? false : true
 
   // console.group('AutosaveSoftwareLicenses')
+  // console.log('options...', options)
+  // console.log('allOptions...', allOptions)
+  // console.log('shortList...', shortList)
   // console.log('licenses...', licenses)
   // console.log('concept_doi...', concept_doi)
   // console.log('errors...', errors)
   // console.log('validDoi...', validDoi)
   // console.groupEnd()
+
+  useEffect(()=>{
+    let abort=false
+    if (allOptions.length>0){
+      // select from the list but only if not deprecated
+      const selection = allOptions.filter(option=>{
+        return (keyList.includes(option.key) && option.data.deprecated===false)
+      })
+      if (selection.length > 0 && abort===false) {
+        setShortList(selection)
+        setOptions(selection)
+      }
+    }
+    return ()=>{abort=true}
+  },[allOptions])
 
   function setLicenses(items:AutocompleteOption<License>[]){
     // save licenses in the form context
@@ -70,23 +118,15 @@ export default function AutosaveSoftwareLicenses() {
     setStatus({loading: true, foundFor: undefined})
     // filter options
     const found = allOptions.filter(item => {
-      // filter what is found
-      return item.label.toLowerCase().includes(searchFor.toLowerCase())
-    }).map(item => {
-      return {
-        key: item.key,
-        label: item.label,
-        data: {
-          id: undefined,
-          software: id ?? '',
-          license: item.label,
-          deprecated: item.data.deprecated,
-          name: item.data.name
-        }
-      }
+      // find license by key or label match
+      return (
+        item.label.toLowerCase().includes(searchFor.trim().toLowerCase()) ||
+        item.key.toLowerCase().includes(searchFor.trim().toLowerCase())
+      )
     })
     const sorted = found.sort((a, b) => sortBySearchFor(a, b, 'label', searchFor))
     // debugger
+    // console.log('searchLicense...sorted...', sorted)
     // set options
     setOptions(sorted)
     // debugger
@@ -99,12 +139,18 @@ export default function AutosaveSoftwareLicenses() {
 
   async function onAddLicense(selected: AutocompleteOption<License>) {
     // check if already added
-    const find = licenses.filter(item => item.label.toLocaleLowerCase() === selected.label.toLocaleLowerCase())
+    const find = licenses.filter(item => item?.label?.toLocaleLowerCase() === selected?.label?.toLocaleLowerCase())
     // otherwise add it
     if (find.length === 0) {
-      const resp = await addLicensesForSoftware({
+      const license:LicenseForSoftware = {
         software: id ?? '',
         license: selected.key,
+        name: selected.label,
+        reference: selected.data.reference,
+        open_source: selected.data.open_source
+      }
+      const resp = await addLicensesForSoftware({
+        license,
         token
       })
       if (resp.status === 201) {
@@ -114,42 +160,40 @@ export default function AutosaveSoftwareLicenses() {
           ...licenses,
           selected
         ]
+        // list of selected licenses
         setLicenses(newList)
+        // reset options list to short list of licenses
+        setOptions(shortList)
       } else {
         showErrorMessage(`Failed to add license. ${resp.message}`)
       }
     }
   }
 
-  function createLicense(newInputValue: string) {
-    const find = licenses.filter(item => item.label.toLowerCase() === newInputValue.toLowerCase())
-    // otherwise add it
+  function onCreateLicense(newInputValue: string) {
+    // trim input
+    const newLicense = newInputValue.trim()
+    // look if license is already added
+    const find = licenses.filter(item => item?.label?.toLowerCase() === newLicense.toLowerCase())
+    // if not found
     if (find.length === 0) {
-      const license = {
-        key: newInputValue,
-        label: newInputValue,
-        data: {
-          id: undefined,
-          software: id ?? '',
-          license: newInputValue,
-          name: newInputValue
-        }
+      const newLicense:LicenseForSoftware = {
+        software: id,
+        license: getSlugFromString(newInputValue,'-',false),
+        name: newInputValue,
+        reference: null,
+        open_source: true
       }
-      onAddLicense(license)
+      // show modal to create new license
+      setModal({
+        open:true,
+        data: newLicense
+      })
     }
   }
 
   function renderAddOption(props: HTMLAttributes<HTMLLIElement>,
     option: AutocompleteOption<License>) {
-    // if more than one option we add border at the bottom
-    // we assume that first option is Add "new item"
-    if (options.length > 1) {
-      if (props?.className) {
-        props.className+=' mb-2 border-b'
-      } else {
-        props.className='mb-2 border-b'
-      }
-    }
     return (
       <li {...props} key={option.key}>
         {/* if new option (has input) show label and count  */}
@@ -165,7 +209,7 @@ export default function AutosaveSoftwareLicenses() {
     // when value is not found option returns input prop
     if (option?.input) {
       // if input is over minLength
-      if (option?.input.length > 3) {
+      if (option?.input.length >= config.licenses.modal.license.validation.minLength.value) {
         // we offer an option to create this entry
         return renderAddOption(props,option)
       } else {
@@ -173,11 +217,11 @@ export default function AutosaveSoftwareLicenses() {
       }
     }
     return (
-      <li {...props} key={option.key}>
-        {/* if new option (has input) show label and count  */}
+      <li {...props} key={option.key} title={option.label}>
+        {/* if option is deprecated include in label  */}
         {option.data?.deprecated ?
-          <span className="text-base-500">{option.label} (DEPRECATED)</span>
-          : <span>{option.label}</span>
+          <span className="text-warning">{option.key} ({option.label}) - DEPRECATED</span>
+          : <span>{option.key} <span className="text-base-content-disabled">({option.label})</span></span>
         }
       </li>
     )
@@ -222,8 +266,9 @@ export default function AutosaveSoftwareLicenses() {
         options={options}
         onSearch={searchLicense}
         onAdd={onAddLicense}
-        onCreate={createLicense}
+        onCreate={onCreateLicense}
         onRenderOption={renderOption}
+        onClear={()=>setOptions(shortList)}
         config={{
           // freeSolo allows create option
           // if onCreate fn is not provided
@@ -246,13 +291,43 @@ export default function AutosaveSoftwareLicenses() {
               <Chip
                 data-testid="license-chip"
                 title={item.label}
-                label={item.label}
+                label={
+                  item.data?.reference ?
+                    <a href={item.data?.reference} target="_blank">
+                      {item.key}
+                    </a>
+                    : <span>{item.key}</span>
+                }
                 onDelete={() => onRemove(pos)}
               />
             </div>
           )
         })}
       </div>
+      {
+        modal.open ?
+          <EditLicenseModal
+            open={modal.open}
+            data={modal.data}
+            onCancel={()=>{
+              setModal({open:false})
+              setOptions(shortList)
+            }}
+            onSubmit={(data)=>{
+              // close modal
+              setModal({
+                open: false
+              })
+              // add license
+              onAddLicense({
+                key: data.license,
+                label: data.name,
+                data
+              })
+            }}
+          />
+          : null
+      }
     </>
   )
 }

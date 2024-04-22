@@ -18,7 +18,7 @@ import {getAccountFromToken} from '~/auth/jwtUtils'
 import PageMeta from '~/components/seo/PageMeta'
 import OgMetaTags from '~/components/seo/OgMetaTags'
 import CitationMeta from '~/components/seo/CitationMeta'
-import CanoncialUrl from '~/components/seo/CanonicalUrl'
+import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import AppHeader from '~/components/AppHeader'
 import AppFooter from '~/components/AppFooter'
 import SoftwareIntroSection from '~/components/software/SoftwareIntroSection'
@@ -33,7 +33,7 @@ import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection
 import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
 import {
   getSoftwareItem,
-  getRepostoryInfoForSoftware,
+  getRepositoryInfoForSoftware,
   getLicenseForSoftware,
   getRemoteMarkdown,
   getKeywordsForSoftware,
@@ -50,8 +50,8 @@ import {getRelatedSoftwareForSoftware} from '~/utils/editRelatedSoftware'
 import {getMentionsBySoftware} from '~/utils/editMentions'
 import {getParticipatingOrganisations} from '~/utils/editOrganisation'
 import {
-  CategoriesForSoftware,
-  KeywordForSoftware, License, RepositoryInfo,
+  CategoriesForSoftware, LicenseForSoftware,
+  KeywordForSoftware, RepositoryInfo,
   SoftwareItem, SoftwareOverviewItemProps
 } from '~/types/SoftwareTypes'
 import {Profile} from '~/types/Contributor'
@@ -71,7 +71,7 @@ interface SoftwareIndexData extends ScriptProps{
   releases: SoftwareVersion[]
   keywords: KeywordForSoftware[]
   categories: CategoriesForSoftware
-  licenseInfo: License[]
+  licenseInfo: LicenseForSoftware[]
   repositoryInfo: RepositoryInfo
   mentions: MentionItemProps[]
   referencePapers: MentionItemProps[]
@@ -126,7 +126,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
         title={software?.brand_name}
         description={software.short_statement ?? ''}
       />
-      <CanoncialUrl />
+      <CanonicalUrl />
       <AppHeader />
       {/* Edit page button only when maintainer */}
       <EditPageButton
@@ -250,13 +250,13 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // software versions info
       getReleasesForSoftware(software.id,token),
       // keywords
-      getKeywordsForSoftware(software.id,false,token),
+      getKeywordsForSoftware(software.id,token),
       // categories
       getCategoriesForSoftware(software.id, token),
       // licenseInfo
-      getLicenseForSoftware(software.id, false, token),
+      getLicenseForSoftware(software.id, token),
       // repositoryInfo: url, languages and commits
-      getRepostoryInfoForSoftware(software.id, token),
+      getRepositoryInfoForSoftware(software.id, token),
       // mentions
       getMentionsBySoftware({software:software.id,token}),
       // testimonials
