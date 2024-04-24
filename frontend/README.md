@@ -3,16 +3,16 @@ SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 SPDX-FileCopyrightText: 2021 - 2023 dv4all
 SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
 # Research Software Directory (RSD) - Frontend
 
-Based on the features in the legacy application and the current requirements we selected [NextJS](https://nextjs.org/docs) and MUI-5 (https://mui.com/getting-started/usage/) frameworks for:
+Based on the features in the legacy application and the current requirements we selected [Next.js](https://nextjs.org/docs) and MUI-5 (https://mui.com/getting-started/usage/) frameworks for:
 
 - Easy integration with generic SSO oAuth services like ORCID, SURFconext, Microsoft etc.
 - SEO support for custom meta tags and dynamic build sitemap.xml file
@@ -22,7 +22,7 @@ Based on the features in the legacy application and the current requirements we 
 
 ### Locally running frontend in dev mode
 
-- intall dependencies `yarn install`
+- install dependencies `yarn install`
 - create `.env.local` file. Use `.env.example` from the project root as template.
 - run all app modules `docker compose up`
 - open another terminal and run `yarn dev` to start frontend in development mode
@@ -39,7 +39,7 @@ services:
 #   .....
   volumes:
     - ./frontend:/app
-    # Replace the follwoing directory with the custom deployment directory
+    # Replace the following directory with the custom deployment directory
     - ./deployment/rsd:/app/public
 
 ```
@@ -76,7 +76,7 @@ POSTGREST_URL=http://localhost/api/v1
 ## Folders
 
 - `__tests__`: unit test for **pages only**. Unit tests for the components are in the same directory as components.
-- `assets`: images and icons. These are imported into the components. In case of svg's the content is used to create an icon coponent.
+- `assets`: images and icons. These are imported into the components. In case of SVG images, the content is used to create an icon component.
 - `components`: all custom components created in this project are stored in this folder.
 - `config`: place for configuration objects. For example, menu items are stored here.
 - `pages`: next specific, pages and api endpoints. For more information [see official documentation](https://nextjs.org/docs/routing/introduction)
@@ -87,8 +87,8 @@ POSTGREST_URL=http://localhost/api/v1
 
 ## Material UI (v5)
 
-The integration between NextJS and MUI-5 is based on [official example](https://github.com/mui-org/material-ui/tree/master/examples/nextjs).
-More explation concerning the official example can be found in [this video](https://www.youtube.com/watch?v=IFaFFmPYyMI&t=597s)
+The integration between Next.js and MUI-5 is based on [official example](https://github.com/mui-org/material-ui/tree/master/examples/nextjs).
+More explanation concerning the official example can be found in [this video](https://www.youtube.com/watch?v=IFaFFmPYyMI&t=597s)
 
 Most important point concerning Next is integration in template files: \_app.tsx, \_document.tsx
 
@@ -100,7 +100,7 @@ In short, add theme provider to \_app.tsx file
 
 ## Tailwind CSS
 
-In addition to MUI-5 team preffers to use Tailwind CSS for global application layout.
+In addition to MUI-5, the team prefers to use Tailwind CSS for global application layout.
 
 ```bash
 # install dev dependencies
@@ -113,15 +113,15 @@ Steps performed:
 - created tailwind.config.js and defined to use shared theme definitions
 - created postcss.config.js and added tailwind to it
 - added @tailwind mixins to styles/global.css
-- created styles/tailwind.css for tailwind specific utilities (eg. @apply)
+- created styles/tailwind.css for tailwind specific utilities (e.g. @apply)
 
-### Intergration between Tailwind and MUI-5 themes
+### Integration between Tailwind and MUI-5 themes
 
 The integration is based on [this article](https://medium.com/@akarX23/a-full-setup-of-next-js-with-redux-tailwind-material-ui-pwa-and-docker-c33bdceadce5).
 
 ## Authentication
 
-For authentication we use custom module which integrates with our auth service. The frontend code is in `frontend/auth` folder and the auth service is in `authentication` folder.
+For authentication, we use a custom module which integrates with our auth service. The frontend code is in `frontend/auth` folder and the auth service is in `authentication` folder.
 
 ## Unit testing
 
@@ -135,7 +135,7 @@ The setup is performed according to [official Next documentation](https://nextjs
 
 ### Unit testing scripts
 
-- `yarn test:watch`: to run test in watch mode. The tests will be runned on each change in the test/component file(s)
+- `yarn test:watch`: to run test in watch mode. The tests will run on each change in the test/component file(s)
 - `yarn test:coverage`: to run tests and show the test coverage report. This script is used in GH action.
 - `yarn test:memlimit`: for minimal memory consumption. When basic test scripts **yarn test** and **yarn test:coverage** causing the memory overflow on your machine use this script to limit the number of concurrent workers and memory usage.
 - `yarn test:memory`: for examining memory usage during the tests. In node version 18 (and 16) some changes are made in V8 engine memory management that cause the memory leaks when running tests with Jest. See [issue](https://github.com/facebook/jest/issues/11956)
@@ -161,7 +161,7 @@ import "whatwg-fetch";
 import "@testing-library/jest-dom/extend-expect";
 ```
 
-## NextJS
+## Next.js
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -176,9 +176,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Updates and upgrades
 
-Upgrading minor version changes can be usally done using `yarn outdated` and `yarn upgrade`. Major updates are more demanding and might require changes in the source code.
+Upgrading minor version changes can be usually done using `yarn outdated` and `yarn upgrade`. Major updates are more demanding and might require changes in the source code.
 
-Since RSD went live in August 2022 we started using exact versions in the package.json to avoid unexpected upgrades. This means that we manually check for outdated packages and perform "controlled" upgrades. At the same time we perfom security audits using `yarn audit`.
+Since RSD went live in August 2022 we started using exact versions in the package.json to avoid unexpected upgrades. This means that we manually check for outdated packages and perform "controlled" upgrades. At the same time we run security audits using `yarn audit`.
 
 ### Next and React
 
