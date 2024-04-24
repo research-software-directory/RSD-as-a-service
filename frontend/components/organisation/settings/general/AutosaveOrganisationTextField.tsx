@@ -17,7 +17,6 @@ import {patchOrganisationTable} from '../updateOrganisationSettings'
 import {OrganisationForOverview} from '~/types/Organisation'
 import useOrganisationContext from '../../context/useOrganisationContext'
 import {useRouter} from 'next/router'
-import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
 
 export type AutosaveOrganisationTextFieldProps = {
   options: ControlledTextFieldOptions<OrganisationForOverview>
