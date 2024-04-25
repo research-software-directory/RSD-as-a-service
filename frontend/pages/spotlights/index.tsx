@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -17,8 +17,7 @@ import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {getBaseUrl} from '~/utils/fetchHelpers'
-import {softwareListUrl} from '~/utils/postgrestUrl'
-import {getSoftwareList} from '~/utils/getSoftware'
+import {highlightsListUrl} from '~/utils/postgrestUrl'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import MainContent from '~/components/layout/MainContent'
@@ -31,26 +30,24 @@ import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
 import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
-import {
-  SoftwareHighlight,
-  getSoftwareHighlights
-} from '~/components/admin/software-highlights/apiSoftwareHighlights'
-import SoftwareHighlights from '~/components/software/overview/SoftwareHighlights'
 import SoftwareSearchSection from '~/components/software/overview/search/SoftwareSearchSection'
 import useSoftwareOverviewParams from '~/components/software/overview/useSoftwareOverviewParams'
 import SoftwareOverviewContent from '~/components/software/overview/SoftwareOverviewContent'
 import SoftwareFilters from '~/components/software/overview/filters/index'
 import {
-  softwareKeywordsFilter, softwareLanguagesFilter,
-  softwareLicensesFilter
+  highlightKeywordsFilter,
+  highlightLanguagesFilter,
+  highlightLicensesFilter,
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
 import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
-import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
+import {highlightOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-import {getRsdSettings} from '~/config/getSettingsServerSide'
+import useRsdSettings from '~/config/useRsdSettings'
+import {getSoftwareList} from '~/utils/getSoftware'
 
-type SoftwareOverviewProps = {
+
+type SpotlightsOverviewProps = {
   search?: string | null
   keywords?: string[] | null,
   keywordsList: KeywordFilterOption[],
@@ -63,31 +60,31 @@ type SoftwareOverviewProps = {
   rows: number,
   count: number,
   layout: LayoutType,
-  software: SoftwareOverviewItemProps[],
-  highlights: SoftwareHighlight[]
+  highlights: SoftwareOverviewItemProps[]
 }
 
 const pageTitle = `Software | ${app.title}`
 const pageDesc = 'The list of research software registered in the Research Software Directory.'
 
-export default function SoftwareOverviewPage({
+export default function SpotlightsOverviewPage({
   search, keywords,
   prog_lang, licenses,
   order, page, rows,
   count, layout,
   keywordsList, languagesList,
-  licensesList, software, highlights
-}: SoftwareOverviewProps) {
+  licensesList, highlights
+}: SpotlightsOverviewProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {createUrl} = useSoftwareOverviewParams()
   const [modal,setModal] = useState(false)
+  const {host} = useRsdSettings()
   // if no layout - default is masonry
   const initView = layout ?? 'masonry'
   const [view, setView] = useState<LayoutType>(initView)
   const numPages = Math.ceil(count / rows)
   const filterCnt = getFilterCount()
 
-  // console.group('SoftwareOverviewPage')
+  // console.group('SpotlightsOverviewPage')
   // console.log('search...', search)
   // console.log('keywords...', keywords)
   // console.log('prog_lang...', prog_lang)
@@ -100,8 +97,7 @@ export default function SoftwareOverviewPage({
   // console.log('keywordsList...', keywordsList)
   // console.log('languagesList...', languagesList)
   // console.log('licensesList...', licensesList)
-  // console.log('software...', software)
-  // console.log('highlights...', highlights)
+  // console.log('software...', highlights)
   // console.groupEnd()
 
   function getFilterCount() {
@@ -132,8 +128,6 @@ export default function SoftwareOverviewPage({
       <PageBackground>
         {/* App header */}
         <AppHeader />
-        {/* Software Highlights Carousel */}
-        <SoftwareHighlights highlights={highlights} />
         {/* Main page body */}
         <MainContent className='pb-12'>
           {/* Page title */}
@@ -142,8 +136,11 @@ export default function SoftwareOverviewPage({
             id="list-top"
             role="heading"
           >
-            All software
+            All {host.software_highlights?.title}
           </h1>
+          {host.software_highlights?.description &&
+            <p>{host.software_highlights?.description}</p>
+          }
           {/* Page grid with 2 sections: left filter panel and main content */}
           <div className="flex-1 grid md:grid-cols-[2fr,3fr] lg:grid-cols-[1fr,3fr] xl:grid-cols-[1fr,4fr] my-4 gap-8">
             {/* Filters panel large screen */}
@@ -158,6 +155,7 @@ export default function SoftwareOverviewPage({
                   licensesList={licensesList}
                   orderBy={order ?? ''}
                   filterCnt={filterCnt}
+                  highlightsOnly={true}
                 />
               </FiltersPanel>
             }
@@ -168,7 +166,7 @@ export default function SoftwareOverviewPage({
                 rows={rows}
                 count={count}
                 search={search}
-                placeholder={keywords?.length ? 'Find within selection' : 'Find software'}
+                placeholder={keywords?.length ? 'Find within selection' : `Find ${host.software_highlights?.title}`}
                 layout={view}
                 setView={setLayout}
                 setModal={setModal}
@@ -176,7 +174,7 @@ export default function SoftwareOverviewPage({
               {/* Software content: masonry, cards or list */}
               <SoftwareOverviewContent
                 layout={view}
-                software={software}
+                software={highlights}
               />
               {/* Pagination */}
               <div className="flex justify-center mt-8">
@@ -242,14 +240,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (order) {
     // extract order direction from definitions
-    const orderInfo = softwareOrderOptions.find(item=>item.key===order)
+    const orderInfo = highlightOrderOptions.find(item=>item.key===order)
     // ordering options require "stable" secondary order
     // to ensure proper pagination. We use slug for this purpose
     if (orderInfo) orderBy=`${order}.${orderInfo.direction},slug.asc`
   }
 
   // construct postgREST api url with query params
-  const url = softwareListUrl({
+  const url = highlightsListUrl({
     baseUrl: getBaseUrl(),
     search,
     keywords,
@@ -260,9 +258,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     offset
   })
 
-  // extract rsd settings
-  const settings = await getRsdSettings()
-
   // console.log('software...url...', url)
   // console.log('order...', order)
   // console.log('orderBy...', orderBy)
@@ -270,21 +265,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // get software items, filter options AND highlights
   const [
-    software,
+    highlights,
     keywordsList,
     languagesList,
-    licensesList,
-    // extract highlights from fn response (we don't need count)
-    {highlights}
+    licensesList
   ] = await Promise.all([
     getSoftwareList({url}),
-    softwareKeywordsFilter({search, keywords, prog_lang, licenses}),
-    softwareLanguagesFilter({search, keywords, prog_lang, licenses}),
-    softwareLicensesFilter({search, keywords, prog_lang, licenses}),
-    getSoftwareHighlights({
-      limit: settings.host?.software_highlights?.limit ?? 3,
-      offset: 0
-    })
+    highlightKeywordsFilter({search, keywords, prog_lang, licenses}),
+    highlightLanguagesFilter({search, keywords, prog_lang, licenses}),
+    highlightLicensesFilter({search, keywords, prog_lang, licenses}),
   ])
 
   // passed as props to the page
@@ -302,9 +291,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       order,
       rows: page_rows,
       layout: rsd_page_layout,
-      count: software.count,
-      software: software.data,
-      highlights
+      count: highlights.count,
+      highlights: highlights.data,
     },
   }
 }

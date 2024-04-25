@@ -3,8 +3,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -56,7 +57,7 @@ export async function getSoftwareList({url,token}:{url:string,token?:string }){
 export async function getSoftwareItem(slug:string|undefined, token?:string){
   try {
     // console.log('token...', token)
-    // this request is always perfomed from backend
+    // this request is always performed from backend
     const url = `${process.env.POSTGREST_URL}/software?select=*,repository_url!left(url)&slug=eq.${slug}`
     let resp
     if (token) {
@@ -319,7 +320,7 @@ export async function getRemoteMarkdown(url: string) {
   }
 }
 
-// RELATED PROJECTS FOR SORFTWARE
+// RELATED PROJECTS FOR SOFTWARE
 export async function getRelatedProjectsForSoftware({software, token, frontend, approved=true}:
   { software: string, token?: string, frontend?: boolean, approved?:boolean }) {
   try {

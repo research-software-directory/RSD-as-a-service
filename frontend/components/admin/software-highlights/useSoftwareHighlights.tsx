@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,12 +22,7 @@ export default function useSoftwareHighlights(token: string) {
 
   const loadHighlight = useCallback(async() => {
     setLoading(true)
-    const {highlights, count} = await getSoftwareHighlights({
-      token,
-      searchFor,
-      page,
-      rows
-    })
+    const {highlights, count} = await getSoftwareHighlights({token, searchFor})
     setHighlights(highlights)
     setCount(count ?? 0)
     setLoading(false)
