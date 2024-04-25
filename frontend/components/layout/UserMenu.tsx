@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import router from 'next/router'
 import {useState} from 'react'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
@@ -17,6 +18,7 @@ import {MenuItemType} from '../../config/menuItems'
 import {getDisplayInitials, splitName} from '../../utils/getDisplayName'
 import CaretIcon from '~/components/icons/caret.svg'
 import useDisableScrollLock from '~/utils/useDisableScrollLock'
+import Link from 'next/link'
 
 type UserMenuType = {
   image?: string
@@ -38,9 +40,6 @@ export default function UserMenu(props: UserMenuType) {
     if (item?.fn) {
       // call function if provided
       item.fn(item)
-    } else if (item?.path) {
-      // push to route if provided
-      router.push(item.path)
     }
     setAnchorEl(null)
   }
@@ -52,17 +51,40 @@ export default function UserMenu(props: UserMenuType) {
           if (item?.type === 'divider') {
             return <Divider key={item.label}/>
           }
-          return (
-            <MenuItem
-              data-testid="user-menu-option"
-              key={item.label}
-              onClick={() => handleClose(item)}>
-              <ListItemIcon>
-                {item.icon}
-              </ListItemIcon>
-              {item.label}
-            </MenuItem>
-          )
+          if (item.path) {
+            return (
+              <MenuItem
+                data-testid="user-menu-option"
+                key={item.label}
+                onClick={() => handleClose(item)}
+                component = {Link}
+                href = {item.path}
+                sx = {{
+                  ':hover': {
+                    color: 'text.primary'
+                  }
+                }}
+              >
+                <ListItemIcon>
+                  {item.icon}
+                </ListItemIcon>
+                {item.label}
+              </MenuItem>
+            )
+          } else {
+            return (
+              <MenuItem
+                data-testid="user-menu-option"
+                key={item.label}
+                onClick={() => handleClose(item)}
+              >
+                <ListItemIcon>
+                  {item.icon}
+                </ListItemIcon>
+                {item.label}
+              </MenuItem>
+            )
+          }
         })
       )
     }
