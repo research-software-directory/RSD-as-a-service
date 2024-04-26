@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -68,8 +70,7 @@ function buildAutocompleteOptions(rorItems: RORItem[]): AutocompleteOption<Searc
 export async function getOrganisationMetadata(ror_id: string|null) {
   try {
     // check availability
-    if (typeof ror_id === 'undefined') return null
-    if (ror_id === null && ror_id === '') return null
+    if (ror_id === undefined || ror_id === null || ror_id.trim().length === 0) return null
     // build url
     const url = `https://api.ror.org/organizations/${ror_id}`
     const resp = await fetch(url)
