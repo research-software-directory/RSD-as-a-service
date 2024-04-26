@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -74,6 +76,14 @@ export const generalSettingsConfig = {
     validation: {
       minLength: {value: 36, message: 'Minimum length is 36'},
       maxLength: {value: 36, message: 'Maximum length is 36'}
+    }
+  },
+  parent: {
+    label: 'Parent organisation ID',
+    help: 'Add the ID of the parent organisation.',
+    validation: {
+      minLength: {value: 36, message: 'Must be 36 characters'},
+      maxLength: {value: 36, message: 'Must be 36 characters'}
     }
   },
   is_tenant: {

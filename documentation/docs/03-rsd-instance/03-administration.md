@@ -111,7 +111,23 @@ You can delete organisation only if there are no software and project items asso
 
 ### Edit organisation
 
-For editing the organisation see [maintaining the organisation section](/users/organisation/).
+Administrators can edit all properties of an organisation that organisation maintainers can edit, for these settings please navigate to [maintaining the organisation section](/users/organisation/).
+
+Additionally to organisation maintainers, administrators can edit the following properties of an organisation:
+
+* Official member: whether the organisation is an official organisation.
+* RSD path: the `<PATH>` under which the organisation is accessible in the RSD (`/organisations/<PATH>`).
+* Primary maintainer: primary maintainer of an organisation.
+* Parent organisation: if the organisation belongs to another organisation, add the ID of the parent organisation here. The organisation ID is displayed in the Admin section of the respective organisation.
+
+:::warning
+**Note** that changing the parent organisation will also affect the path under which the organisation is accessible. The path is determined by the organisation hirarchy, e.g. `/organisations/parent-organisation/child-organisation`.
+:::
+
+The settings are visible in the *Admin section* under the *General settings* tab of the organisation settings:
+
+![Organisation Admin section](img/admin-organisation-admin-section.webp)
+
 
 ## Keywords
 
