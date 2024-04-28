@@ -23,6 +23,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FluorescentIcon from '@mui/icons-material/Fluorescent'
 import CampaignIcon from '@mui/icons-material/Campaign'
 import BugReportIcon from '@mui/icons-material/BugReport'
+import Diversity3Icon from '@mui/icons-material/Diversity3'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -62,6 +63,12 @@ export const adminPages = {
     subtitle: '',
     icon: <DomainAddIcon />,
     path: '/admin/organisations',
+  },
+  communities: {
+    title: 'Communities',
+    subtitle: '',
+    icon: <Diversity3Icon />,
+    path: '/admin/communities',
   },
   keywords:{
     title: 'Keywords',
