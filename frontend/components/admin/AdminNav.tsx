@@ -26,6 +26,7 @@ import FluorescentIcon from '@mui/icons-material/Fluorescent'
 import CampaignIcon from '@mui/icons-material/Campaign'
 import BugReportIcon from '@mui/icons-material/BugReport'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
+import Diversity3Icon from '@mui/icons-material/Diversity3'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -66,6 +67,12 @@ export const adminPages = {
     icon: <DomainAddIcon />,
     path: '/admin/organisations',
   },
+  communities: {
+    title: 'Communities',
+    subtitle: '',
+    icon: <Diversity3Icon />,
+    path: '/admin/communities',
+  },
   keywords:{
     title: 'Keywords',
     subtitle: '',
@@ -94,7 +101,7 @@ export const adminPages = {
 
 // extract page types from the object
 type pageTypes = keyof typeof adminPages
-// extract page properties from forst admin item
+// extract page properties from first admin item
 type pageProps = typeof adminPages.accounts
 
 export default function AdminNav() {
