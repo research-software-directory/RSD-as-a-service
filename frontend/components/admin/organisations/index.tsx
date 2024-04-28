@@ -27,10 +27,10 @@ export default function OrganisationsAdminPage() {
   return (
     <section className="flex-1 md:flex md:flex-col-reverse md:justify-end xl:grid xl:grid-cols-[3fr,2fr] xl:px-0 xl:gap-8">
       <div>
-        <h2 className="flex pr-4 pb-4 justify-between">
+        {/* <h2 className="flex pr-4 pb-4 justify-between">
           <span>RSD organisations</span>
           <span>{count}</span>
-        </h2>
+        </h2> */}
         <div className="flex flex-wrap items-center justify-end">
           <Searchbox />
           <Pagination />
