@@ -281,7 +281,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     softwareKeywordsFilter({search, keywords, prog_lang, licenses}),
     softwareLanguagesFilter({search, keywords, prog_lang, licenses}),
     softwareLicensesFilter({search, keywords, prog_lang, licenses}),
-    getSoftwareHighlights({
+    page !== 1 ? Promise.resolve({highlights: []}) : getSoftwareHighlights({
       limit: settings.host?.software_highlights?.limit ?? 3,
       offset: 0
     })
