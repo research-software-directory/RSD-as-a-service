@@ -5,13 +5,13 @@
 
 CREATE TABLE community (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+	slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	name VARCHAR(200) NOT NULL,
 	short_description VARCHAR(300),
 	description VARCHAR(10000),
-  primary_maintainer UUID REFERENCES account (id),
-  logo_id VARCHAR(40) REFERENCES image(id),
-  created_at TIMESTAMPTZ NOT NULL,
+	primary_maintainer UUID REFERENCES account (id),
+	logo_id VARCHAR(40) REFERENCES image(id),
+	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
 

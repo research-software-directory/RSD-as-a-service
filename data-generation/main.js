@@ -583,6 +583,22 @@ function generateNews() {
 			title: 'The 5 best dependencies you never heard about',
 			slug: '5-best-dependencies'
 		},
+		{
+			title: 'How to make your project a big success 2',
+			slug: 'project-success-2'
+		},
+		{
+			title: 'The 5 best dependencies you never heard about 2',
+			slug: '5-best-dependencies-2'
+		},
+		{
+			title: 'How to make your project a big success 3',
+			slug: 'project-success-3'
+		},
+		{
+			title: 'The 5 best dependencies you never heard about 3',
+			slug: '5-best-dependencies-3'
+		},
 	];
 
 	const result = [];
