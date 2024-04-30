@@ -23,9 +23,9 @@ export type DeleteAccountModal = {
   account?: RsdAccountInfo
 }
 
-export default function RsdUsersList({adminsOnly}) {
+export default function RsdUsersList({adminsOnly, inactiveDays}: {adminsOnly: boolean, inactiveDays: number}) {
   const {token} = useSession()
-  const {loading, accounts, deleteAccount} = useRsdAccounts(token, adminsOnly)
+  const {loading, accounts, deleteAccount} = useRsdAccounts(token, adminsOnly, inactiveDays)
   const [modal, setModal] = useState<DeleteAccountModal>({
     open: false
   })
