@@ -24,7 +24,7 @@ export type RsdAccountInfo = {
   admin_account: string[] | null
 }
 
-export default function useRsdAccounts(token: string) {
+export default function useRsdAccounts(token: string, adminsOnly: boolean) {
   const {showErrorMessage}=useSnackbar()
   const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find user by account id (exact match) or by name, email or affiliation (partial match)')
   const [accounts, setAccounts] = useState<RsdAccountInfo[]>([])
@@ -37,7 +37,8 @@ export default function useRsdAccounts(token: string) {
         token,
         searchFor,
         page,
-        rows
+        rows,
+        adminsOnly
       })
       setAccounts(accounts)
       setCount(count)
@@ -48,7 +49,7 @@ export default function useRsdAccounts(token: string) {
     }
   // we do not include setCount in order to avoid loop
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token,searchFor,page,rows])
+  }, [token,searchFor,page,rows,adminsOnly])
 
 
   async function deleteAccount(id: string) {

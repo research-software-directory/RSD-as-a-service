@@ -17,12 +17,13 @@ type getLoginApiParams = {
   page: number
   rows: number
   searchFor?:string
+  adminsOnly: boolean
 }
 
-export async function getRsdAccounts({page,rows,token,searchFor}:getLoginApiParams) {
+export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly}:getLoginApiParams) {
   try {
     // pagination
-    let query = `select=id,login_for_account!inner(id,provider,name,email,home_organisation,last_login_date),admin_account!left(account_id)${paginationUrlParams({rows, page})}`
+    let query = `select=id,login_for_account!inner(id,provider,name,email,home_organisation,last_login_date),admin_account!${adminsOnly ? 'inner' : 'left'}(account_id)${paginationUrlParams({rows, page})}`
     // search
     if (searchFor) {
       if (searchFor.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i) !== null) {
