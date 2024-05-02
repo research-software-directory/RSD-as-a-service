@@ -1,4 +1,5 @@
 -- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -91,17 +92,17 @@ CREATE TYPE request_status AS ENUM (
 );
 
 CREATE TABLE software_for_community (
-	community UUID REFERENCES community (id),
 	software UUID REFERENCES software (id),
+	community UUID REFERENCES community (id),
 	status request_status NOT NULL DEFAULT 'pending',
-	PRIMARY KEY (community, software)
+	PRIMARY KEY (software, community)
 );
 
 CREATE FUNCTION sanitise_update_software_for_community() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
-	NEW.community = OLD.community;
 	NEW.software = OLD.software;
+	NEW.community = OLD.community;
 	return NEW;
 END
 $$;

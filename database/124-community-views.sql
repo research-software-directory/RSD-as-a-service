@@ -1,4 +1,5 @@
 -- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -10,14 +11,14 @@ CREATE FUNCTION software_count_by_community() RETURNS TABLE (
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
-  community.id,
-  COUNT(software_for_community.software) AS software_cnt
+	community.id,
+	COUNT(software_for_community.software) AS software_cnt
 FROM
-  community
+	community
 LEFT JOIN
-  software_for_community ON community.id = software_for_community.community
+	software_for_community ON community.id = software_for_community.community
 GROUP BY
-  community.id
+	community.id
 ;
 $$;
 
@@ -25,12 +26,12 @@ $$;
 -- incl. software count
 CREATE FUNCTION communities_overview() RETURNS TABLE (
 	id UUID,
-  slug VARCHAR,
-  name VARCHAR,
-  short_description VARCHAR,
-  logo_id VARCHAR,
+	slug VARCHAR,
+	name VARCHAR,
+	short_description VARCHAR,
+	logo_id VARCHAR,
 	software_cnt BIGINT,
-  created_at TIMESTAMPTZ
+	created_at TIMESTAMPTZ
 ) LANGUAGE sql STABLE AS
 $$
 SELECT
@@ -44,6 +45,6 @@ SELECT
 FROM
 	community
 LEFT JOIN
-	software_count_by_community() ON community.id=software_count_by_community.community
+	software_count_by_community() ON community.id = software_count_by_community.community
 ;
 $$;
