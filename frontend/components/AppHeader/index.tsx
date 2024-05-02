@@ -6,15 +6,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState, useEffect, MouseEvent} from 'react'
-import IconButton from '@mui/material/IconButton'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import MenuIcon from '@mui/icons-material/Menu'
+import {useState, useEffect} from 'react'
 import Link from 'next/link'
+
 // local dependencies (project components)
 import {useAuth} from '~/auth'
-import {menuItems} from '~/config/menuItems'
 import useRsdSettings from '~/config/useRsdSettings'
 import AddMenu from './AddMenu'
 import LoginButton from '~/components/login/LoginButton'
@@ -23,17 +19,19 @@ import LogoApp from '~/assets/LogoApp.svg'
 import LogoAppSmall from '~/assets/LogoAppSmall.svg'
 import GlobalSearchAutocomplete from '~/components/GlobalSearchAutocomplete'
 import FeedbackPanelButton from '~/components/feedback/FeedbackPanelButton'
-import useDisableScrollLock from '~/utils/useDisableScrollLock'
-import isActiveMenuItem from './isActiveMenuItem'
+import ResponsiveMenu from './ResponsiveMenu'
+import DesktopMenu from './DesktopMenu'
 
 export default function AppHeader() {
-  const [activePath, setActivePath] = useState('/')
   const {session} = useAuth()
+  const [activePath, setActivePath] = useState('/')
   const status = session?.status || 'loading'
   const {host} = useRsdSettings()
-  const disable = useDisableScrollLock()
-  // Responsive menu
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+  // console.group('AppHeader')
+  // console.log('activePath...',activePath)
+  // console.log('status...',status)
+  // console.groupEnd()
 
   useEffect(() => {
     // set activePath to currently loaded route/page
@@ -42,19 +40,10 @@ export default function AppHeader() {
     }
   }, [])
 
-  // Responsive menu
-  const open = Boolean(anchorEl)
-  const handleClickResponsiveMenu = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleCloseResponsiveMenu = () => {
-    setAnchorEl(null)
-  }
-
   return (
     <header
       data-testid="app-header"
-      className="z-10 py-4 min-h-[88px] bg-secondary text-primary-content flex items-center flex-wrap"
+      className="z-[12] py-4 min-h-[88px] bg-secondary text-primary-content flex items-center flex-wrap"
     >
       {/* keep these styles in sync with main in MainContent.tsx */}
       <div
@@ -77,24 +66,13 @@ export default function AppHeader() {
             />
           </Link>
 
+          {/* Global search for desktop */}
           <GlobalSearchAutocomplete className="hidden xl:block ml-12 mr-6"/>
 
           {/* Large menu*/}
-          <div
-            className="justify-center xl:justify-start hidden md:flex text-lg ml-4 gap-5 text-center opacity-90 font-normal flex-1">
-            {menuItems.map(item => {
-              const isActive = isActiveMenuItem({item, activePath})
-              return (
-                <Link key={item.path} href={item.path ?? ''} className={`${isActive ? 'nav-active' : ''}`}>
-                  {item.label}
-                </Link>
-              )
-            })}
-          </div>
+          <DesktopMenu activePath={activePath}/>
 
           <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
-
-
             {/* FEEDBACK panel */}
             <div className="hidden md:block">
               {host.feedback?.enabled
@@ -102,65 +80,16 @@ export default function AppHeader() {
                 : null
               }
             </div>
-
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
-
-
             {/* Responsive menu */}
-            <div className="flex items-center md:hidden">
-              <IconButton
-                size="large"
-                title="Menu"
-                data-testid="menu-button"
-                aria-label="menu button"
-                onClick={handleClickResponsiveMenu}
-                sx={{
-                  color: 'primary.contrastText',
-                  alignSelf: 'center',
-                  '&:focus-visible': {
-                    outline: 'auto'
-                  }
-                }}
-              >
-                <MenuIcon/>
-              </IconButton>
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleCloseResponsiveMenu}
-                MenuListProps={{
-                  'aria-labelledby': 'menu-button',
-                }}
-                transformOrigin={{horizontal: 'right', vertical: 'top'}}
-                anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-                // disable adding styles to body (overflow:hidden & padding-right)
-                disableScrollLock = {disable}
-              >
-                {menuItems.map(item => {
-                  const isActive = isActiveMenuItem({item, activePath})
-                  return (
-                    <MenuItem onClick={handleCloseResponsiveMenu} key={item.path}>
-                      <Link href={item.path ?? ''} className={`${isActive ? 'nav-active' : ''}`}>
-                        {item.label}
-                      </Link>
-                    </MenuItem>
-                  )
-                })}
-                <li>
-                  {host.feedback?.enabled
-                    ? <FeedbackPanelButton feedback_email={host.feedback.url} issues_page_url={host.feedback.issues_page_url} />
-                    : null
-                  }
-                </li>
-              </Menu>
-            </div>
-
+            <ResponsiveMenu activePath={activePath} />
             {/* LOGIN / USER MENU */}
             <LoginButton/>
           </div>
         </div>
+
+        {/* Global search for tablet & mobile */}
         <GlobalSearchAutocomplete className="xl:hidden mt-4"/>
       </div>
       <JavascriptSupportWarning/>
