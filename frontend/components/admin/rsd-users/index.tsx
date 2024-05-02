@@ -1,17 +1,19 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
 import Pagination from '~/components/pagination/Pagination'
 import Searchbox from '~/components/search/Searchbox'
 import Switch from '@mui/material/Switch'
-import TextField from '@mui/material/TextField'
-import {useState} from 'react'
+import Input from '@mui/material/Input'
 
 import RsdUsersList from './RsdUsersList'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 const digitsOnlyPattern = new RegExp('^\\d+$')
 
@@ -38,13 +40,24 @@ export default function RsdUsersPage() {
 
   return (
     <section className="flex-1">
-      <div className="flex flex-wrap items-center justify-end">
+      <div className="flex flex-wrap items-center justify-end gap-4">
         <Searchbox/>
-        Admins only: <Switch onChange={handleAdminsOnlyChange}/>
+        <Input
+          type="number"
+          error={inactiveDaysError}
+          placeholder="Last login (days)"
+          onChange={handleInactiveDaysChange}
+          className="max-w-[9rem]"
+        />
+        <FormControlLabel
+          label="Admin"
+          control={
+            <Switch
+              onChange={handleAdminsOnlyChange}
+            />
+          }
+        />
         <Pagination/>
-      </div>
-      <div>
-        <TextField variant="standard" error={inactiveDaysError} label="Accounts inactive by days" onChange={handleInactiveDaysChange}/>
       </div>
       <RsdUsersList adminsOnly={adminsOnly} inactiveDays={inactiveDays}/>
     </section>

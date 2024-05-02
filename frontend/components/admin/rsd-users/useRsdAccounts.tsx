@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -26,7 +26,7 @@ export type RsdAccountInfo = {
 
 export default function useRsdAccounts(token: string, adminsOnly: boolean, inactiveDays: number) {
   const {showErrorMessage}=useSnackbar()
-  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find user by account id (exact match) or by name, email or affiliation (partial match)')
+  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find user by account id, name, email or affiliation')
   const [accounts, setAccounts] = useState<RsdAccountInfo[]>([])
   // show loading only on inital load
   const [loading, setLoading] = useState(true)
