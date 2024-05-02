@@ -27,7 +27,8 @@ export type MenuItemType = {
 export const menuItems:MenuItemType[] = [
   {path: '/software?order=mention_cnt', match:'/software', label:'Software'},
   {path: '/projects?order=impact_cnt', match: '/projects', label: 'Projects'},
-  {path: '/organisations', match: '/organisations', label: 'Organisations'}
+  {path: '/organisations', match: '/organisations', label: 'Organisations'},
+  {path: '/communities', match: '/communities', label: 'Communities'}
 ]
 
 // ListItemButton styles for menus used on the edit pages
@@ -37,3 +38,9 @@ export const editMenuItemButtonSx={
     fontWeight:500
   }
 }
+
+
+/**
+ * Breakpoint in px when to show mobile menu (burger)
+ */
+export const mobileMenuBreakpoint='880px'

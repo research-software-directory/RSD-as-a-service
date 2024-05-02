@@ -1,30 +1,30 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {MouseEvent, ChangeEvent} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
+import Link from 'next/link'
 import TablePagination from '@mui/material/TablePagination'
 import Pagination from '@mui/material/Pagination'
-import Link from 'next/link'
 import PaginationItem from '@mui/material/PaginationItem'
 
-import {app} from '../../config/app'
-import PageTitle from '../../components/layout/PageTitle'
-import Searchbox from '../../components/form/Searchbox'
-import {OrganisationList} from '../../types/Organisation'
-import {rowsPerPageOptions} from '../../config/pagination'
-import {ssrOrganisationParams} from '../../utils/extractQueryParam'
-import {getOrganisationsList} from '../../components/organisation/apiOrganisations'
+import {app} from '~/config/app'
+import PageTitle from '~/components/layout/PageTitle'
+import Searchbox from '~/components/form/Searchbox'
+import {OrganisationList} from '~/types/Organisation'
+import {rowsPerPageOptions} from '~/config/pagination'
+import {ssrBasicParams} from '~/utils/extractQueryParam'
+import {getOrganisationsList} from '~/components/organisation/apiOrganisations'
 import PageMeta from '~/components/seo/PageMeta'
 import AppFooter from '~/components/AppFooter'
 import AppHeader from '~/components/AppHeader'
 import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
-import useOrganisationOverviewParams from '~/components/organisation/overview/useOrganisationOverviewParams'
+import useSearchParams from '~/components/search/useSearchParams'
 import OrganisationGrid from '~/components/organisation/overview/OrganisationGrid'
 import PageBackground from '~/components/layout/PageBackground'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
@@ -44,7 +44,7 @@ const pageDesc = 'List of organizations involved in the development of research 
 export default function OrganisationsOverviewPage({
   organisations = [], count, page, rows, search
 }: OrganisationsOverviewPageProps) {
-  const {handleQueryChange, createUrl} = useOrganisationOverviewParams()
+  const {handleQueryChange,createUrl} = useSearchParams('organisations')
   const numPages = Math.ceil(count / rows)
 
   // console.group('OrganisationsOverviewPage')
@@ -158,7 +158,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // extract params from page-query
   // extract rsd_token
   const {req} = context
-  const {search, rows, page} = ssrOrganisationParams(context.query)
+  const {search, rows, page} = ssrBasicParams(context.query)
   const token = req?.cookies['rsd_token']
   // extract user settings from cookie
   const {rsd_page_rows} = getUserSettings(context.req)
