@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,7 +19,7 @@ import OrganisationMetadata from '~/components/organisation/metadata'
 import PageMeta from '~/components/seo/PageMeta'
 import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import OrganisationBreadcrumbs from '~/components/organisation/OrganisationBreadcrumbs'
+import PageBreadcrumbs from '~/components/layout/PageBreadcrumbs'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import OrganisationTabs from '~/components/organisation/tabs/OrganisationTabs'
 import TabContent from '~/components/organisation/tabs/TabContent'
@@ -81,7 +82,13 @@ export default function OrganisationPage({
             isMaintainer={isMaintainer}
           >
             {/* ORGANISATION HEADER */}
-            <OrganisationBreadcrumbs slug={slug} />
+            <PageBreadcrumbs
+              slug={slug}
+              root={{
+                label:'organisations',
+                path:'/organisations'
+              }}
+            />
             <OrganisationMetadata ror_info={ror} />
 
             {/* TABS */}
