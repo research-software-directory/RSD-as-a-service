@@ -1,17 +1,18 @@
 -- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 --
 -- SPDX-License-Identifier: Apache-2.0
 
 CREATE TABLE community (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+	slug VARCHAR(200) UNIQUE NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
 	name VARCHAR(200) NOT NULL,
 	short_description VARCHAR(300),
 	description VARCHAR(10000),
-  primary_maintainer UUID REFERENCES account (id),
-  logo_id VARCHAR(40) REFERENCES image(id),
-  created_at TIMESTAMPTZ NOT NULL,
+	primary_maintainer UUID REFERENCES account (id),
+	logo_id VARCHAR(40) REFERENCES image(id),
+	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL
 );
 
@@ -91,17 +92,17 @@ CREATE TYPE request_status AS ENUM (
 );
 
 CREATE TABLE software_for_community (
-	community UUID REFERENCES community (id),
 	software UUID REFERENCES software (id),
+	community UUID REFERENCES community (id),
 	status request_status NOT NULL DEFAULT 'pending',
-	PRIMARY KEY (community, software)
+	PRIMARY KEY (software, community)
 );
 
 CREATE FUNCTION sanitise_update_software_for_community() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
-	NEW.community = OLD.community;
 	NEW.software = OLD.software;
+	NEW.community = OLD.community;
 	return NEW;
 END
 $$;

@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {ParsedUrlQuery} from 'node:querystring'
 import {
   decodeQueryParam, ssrSoftwareParams,
-  ssrProjectsParams, ssrOrganisationParams
+  ssrProjectsParams, ssrBasicParams
 } from './extractQueryParam'
 
 
@@ -129,7 +129,7 @@ it('extracts ssrProjectsParams from url query', () => {
   expect(params).toEqual(expected)
 })
 
-it('extracts ssrOrganisationParams from url query', () => {
+it('extracts ssrBasicParams from url query', () => {
   const query: ParsedUrlQuery = {
     'search': 'another search',
     'page': '3',
@@ -140,7 +140,7 @@ it('extracts ssrOrganisationParams from url query', () => {
     page: 3,
     rows: 48
   }
-  const params = ssrOrganisationParams(query)
+  const params = ssrBasicParams(query)
 
   expect(params).toEqual(expected)
 })

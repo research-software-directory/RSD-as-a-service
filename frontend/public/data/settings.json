@@ -39,6 +39,16 @@
       "label": "Netherlands eScienceCenter",
       "url": "https://www.esciencecenter.nl/",
       "target": "_blank"
+    },
+    {
+      "label": "Communities",
+      "url": "/communities",
+      "target": "_self"
+    },
+    {
+      "label": "News",
+      "url": "/news",
+      "target": "_self"
     }
   ],
   "theme": {
