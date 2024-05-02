@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -256,7 +256,13 @@ export function ssrProjectsParams(query: ParsedUrlQuery) {
   }
 }
 
-export function ssrOrganisationParams(query: ParsedUrlQuery) {
+/**
+ * Extract basic query parameters search, page and rows.
+ * Used by organisation, news and communities overview pages.
+ * @param query
+ * @returns
+ */
+export function ssrBasicParams(query: ParsedUrlQuery) {
   const rows = decodeQueryParam({
     query,
     param: 'rows',

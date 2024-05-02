@@ -97,7 +97,7 @@ export default function EditOrganisationModal({open, onCancel, onSubmit, organis
         color: 'primary.main',
         fontWeight: 500
       }}>
-        {config.modalTile}
+        {config.modalTitle}
       </DialogTitle>
       <form
         id={formId}

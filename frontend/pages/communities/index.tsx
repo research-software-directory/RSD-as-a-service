@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,8 +9,8 @@ import Pagination from '@mui/material/Pagination'
 import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
-import {ssrBasicParams} from '~/utils/extractQueryParam'
 import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
+import {ssrBasicParams} from '~/utils/extractQueryParam'
 import PageMeta from '~/components/seo/PageMeta'
 import PageBackground from '~/components/layout/PageBackground'
 import AppHeader from '~/components/AppHeader'
@@ -21,36 +21,39 @@ import useSearchParams from '~/components/search/useSearchParams'
 import SelectRows from '~/components/software/overview/search/SelectRows'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import ViewToggleGroup,{ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import NewsGrid from '~/components/news/overview/NewsGrid'
-import {NewsListItem, getNewsList} from '~/components/news/apiNews'
-import NewsList from '~/components/news/overview/list'
 
-const pageTitle = `News | ${app.title}`
-const pageDesc = 'List of RSD news.'
+import {Community} from '~/components/admin/communities/apiCommunities'
+import CommunitiesList from '~/components/communities/overview/CommunitiesList'
+import CommunitiesGrid from '~/components/communities/overview/CommunitiesGrid'
+import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
 
-type NewsOverviewProps={
+const pageTitle = `Communities | ${app.title}`
+const pageDesc = 'List of RSD communities.'
+
+type CommunitiesOverviewProps={
   count: number,
   page: number,
   rows: number,
   layout: LayoutType,
   search?: string,
-  news: NewsListItem[]
+  communities: CommunityListProps[]
 }
 
-export default function NewsOverview({count,page,rows,layout,search,news}:NewsOverviewProps) {
-  const {handleQueryChange,createUrl} = useSearchParams('news')
+
+export default function CommunitiesOverview({count,page,rows,layout,search,communities}:CommunitiesOverviewProps) {
+  const {handleQueryChange,createUrl} = useSearchParams('communities')
   const initView = layout === 'masonry' ? 'grid' : layout
   const [view, setView] = useState<ProjectLayoutType>(initView)
   const numPages = Math.ceil(count / rows)
 
-  // console.group('NewsOverview')
+  // console.group('CommunitiesOverview')
   // console.log('count...', count)
   // console.log('page...', page)
   // console.log('rows...', rows)
   // console.log('layout...', layout)
   // console.log('view...', view)
   // console.log('search...', search)
-  // console.log('news...', news)
+  // console.log('communities...', communities)
   // console.groupEnd()
 
   function setLayout(view: ProjectLayoutType) {
@@ -75,11 +78,11 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
           {/* Page title with search and pagination */}
           <div className="flex flex-wrap py-8 px-4 rounded-lg bg-base-100 lg:sticky top-0 border border-base-200 z-[11]">
             <h1 role="heading" className="mr-4 lg:flex-1">
-              News
+              Communities
             </h1>
             <div className="flex-[2] flex min-w-[20rem]">
               <SearchInput
-                placeholder="Search news items by title, summary or author"
+                placeholder="Search community by name or short description"
                 onSearch={(search: string) => handleQueryChange('search', search)}
                 defaultValue={search ?? ''}
               />
@@ -96,9 +99,9 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
 
           {/* news cards, grid is default */}
           {view === 'list' ?
-            <NewsList news={news} />
+            <CommunitiesList items={communities} />
             :
-            <NewsGrid news={news} />
+            <CommunitiesGrid items={communities} />
           }
 
           {/* Pagination */}
@@ -132,7 +135,6 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
   )
 }
 
-
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
@@ -146,12 +148,12 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     let page_rows = rows ?? rsd_page_rows
 
     // get news items list to all pages server side
-    const {count,news} = await getNewsList({
+    const {count,communities} = await getCommunityList({
       // api uses 0 based index
       page: page>0 ? page-1 : 0,
       rows: page_rows,
-      is_published: token ? false : true,
       searchFor: search,
+      orderBy: 'software_cnt.desc,name.asc',
       token
     })
 
@@ -163,7 +165,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         page,
         rows: page_rows,
         layout: rsd_page_layout,
-        news,
+        communities,
       },
     }
   }catch(e){
