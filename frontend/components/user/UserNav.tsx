@@ -2,15 +2,16 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useRouter} from 'next/router'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
+import Link from 'next/link'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 import {userMenu} from './UserNavItems'
@@ -24,7 +25,6 @@ export type UserCounts = {
 
 export default function UserNav({selected, counts}:
   {selected:string, counts:UserCounts}) {
-  const router = useRouter()
   const menuItems = Object.keys(userMenu)
   return (
     <nav>
@@ -38,11 +38,12 @@ export default function UserNav({selected, counts}:
               data-testid="user-nav-item"
               key={`step-${pos}`}
               selected={item.id === selected}
-              onClick={() => {
-                // debugger
-                router.push(`/user/${key}`)
-              }}
-              sx={editMenuItemButtonSx}
+              href = {`/user/${key}`}
+              component = {Link}
+              sx={{...editMenuItemButtonSx,
+                ':hover': {
+                  color: 'text.primary'
+                }}}
             >
               <ListItemIcon>
                 {item.icon}
