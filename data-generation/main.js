@@ -771,7 +771,8 @@ function generateLoginForAccount(accountIds, orcids) {
 				email: faker.internet.email({firstName: firstName, lastName: givenName}),
 				sub: orcid,
 				provider: 'orcid',
-				home_organisation: faker.helpers.arrayElement(homeOrganisations)
+				home_organisation: faker.helpers.arrayElement(homeOrganisations),
+				last_login_date: faker.helpers.maybe(() => faker.date.past({years: 3}), {probability: 0.8}) ?? null
 			});
 		} else {
 			login_for_accounts.push({
@@ -780,7 +781,8 @@ function generateLoginForAccount(accountIds, orcids) {
 				email: faker.internet.email({firstName: firstName, lastName: givenName}),
 				sub: faker.string.alphanumeric(30),
 				provider: faker.helpers.arrayElement(providers),
-				home_organisation: faker.helpers.arrayElement(homeOrganisations)
+				home_organisation: faker.helpers.arrayElement(homeOrganisations),
+				last_login_date: faker.helpers.maybe(() => faker.date.past({years: 3}), {probability: 0.8}) ?? null
 			});
 		}
 	})
