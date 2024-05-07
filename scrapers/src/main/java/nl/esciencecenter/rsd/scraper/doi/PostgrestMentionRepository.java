@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,6 +15,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 import nl.esciencecenter.rsd.scraper.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.time.Instant;
@@ -23,13 +25,10 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class PostgrestMentionRepository implements MentionRepository {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PostgrestMentionRepository.class);
-	
+
 	private final String backendUrl;
 
 	public PostgrestMentionRepository(String backendUrl) {
@@ -92,15 +91,15 @@ public class PostgrestMentionRepository implements MentionRepository {
 			try {
 				LOGGER.debug("Saving mention: {} / {} / {}", mention.doi, mention.externalId, mention.source);
 				response = Utils.postAsAdmin(uri, scrapedMentionJson, "Prefer", "resolution=merge-duplicates,return=representation");
-				
+
 				JsonArray responseAsArray = JsonParser.parseString(response).getAsJsonArray();
 				// Used in MainCitations, do not remove
 				mention.id = UUID.fromString(responseAsArray.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString());
 
 			} catch (RuntimeException e) {
-				
+
 				LOGGER.warn("Failed to save mention: {} / {} / {}", mention.doi, mention.externalId, mention.source, e);
-				
+
 				if (mention.doi == null) {
 					Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
 				} else {
@@ -109,16 +108,20 @@ public class PostgrestMentionRepository implements MentionRepository {
 					try {
 						String existingMentionResponse = Utils.getAsAdmin("%s/mention?doi=eq.%s&select=id".formatted(backendUrl, mention.doi));
 						JsonArray array = JsonParser.parseString(existingMentionResponse).getAsJsonArray();
-						String id = array.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
-						Utils.saveErrorMessageInDatabase(null,
-								"mention",
-								null,
-								id,
-								"id",
-								ZonedDateTime.now(),
-								"scraped_at");
+						if (array.size() == 1) {
+							String id = array.get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+							Utils.saveErrorMessageInDatabase(null,
+									"mention",
+									null,
+									id,
+									"id",
+									ZonedDateTime.now(),
+									"scraped_at");
 
-						Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), e);
+							Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), e);
+						} else {
+							Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
+						}
 					} catch (Exception e2) {
 						LOGGER.warn("Failed to save exception in database", e2);
 					}
