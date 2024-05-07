@@ -1,7 +1,7 @@
 -- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
--- SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2023 dv4all
 --
 -- SPDX-License-Identifier: Apache-2.0
@@ -808,4 +808,82 @@ LEFT JOIN
 WHERE
 	team_member.project = project_id
 ;
+$$;
+
+-- RELATED PROJECTS for software
+-- NOTE! updated by Dusan 2022-07-27
+-- filter by software_id
+CREATE FUNCTION related_projects_for_software(software_id UUID) RETURNS TABLE (
+	software UUID,
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	current_state VARCHAR,
+	date_start DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_contain BOOLEAN,
+	status relation_status,
+	image_id VARCHAR
+) LANGUAGE sql STABLE AS
+$$
+	SELECT
+		software_for_project.software,
+		project.id,
+		project.slug,
+		project.title,
+		project.subtitle,
+		project_status.status AS current_state,
+		project.date_start,
+		project.updated_at,
+		project.is_published,
+		project.image_contain,
+		software_for_project.status,
+		project.image_id
+	FROM
+		project
+	INNER JOIN
+		software_for_project ON project.id = software_for_project.project
+	LEFT JOIN
+		project_status() ON project.id=project_status.project
+	WHERE
+		software_for_project.software = software_id;
+$$;
+
+-- PROJECTS BY MAINTAINER
+-- NOTE! updated by Dusan on 2022-07-27
+-- we filter this view at least by user account (uuid)
+CREATE FUNCTION projects_by_maintainer(maintainer_id UUID) RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	title VARCHAR,
+	subtitle VARCHAR,
+	current_state VARCHAR,
+	date_start DATE,
+	updated_at TIMESTAMPTZ,
+	is_published BOOLEAN,
+	image_contain BOOLEAN,
+	image_id VARCHAR
+) LANGUAGE sql STABLE AS
+$$
+	SELECT
+		project.id,
+		project.slug,
+		project.title,
+		project.subtitle,
+		project_status.status AS current_state,
+		project.date_start,
+		project.updated_at,
+		project.is_published,
+		project.image_contain,
+		project.image_id
+	FROM
+		project
+	INNER JOIN
+		maintainer_for_project ON project.id = maintainer_for_project.project
+	LEFT JOIN
+		project_status() ON project.id=project_status.project
+	WHERE
+		maintainer_for_project.maintainer = maintainer_id;
 $$;

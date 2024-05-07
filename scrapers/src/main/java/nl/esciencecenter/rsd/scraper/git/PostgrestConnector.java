@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -21,11 +21,12 @@ import java.util.UUID;
 public class PostgrestConnector {
 
 	private final String backendUrl;
-	private final CodePlatformProvider codePlatform;
+	private final String filter;
 
 	public PostgrestConnector(String backendUrl, CodePlatformProvider codePlatform) {
 		this.backendUrl = Objects.requireNonNull(backendUrl);
-		this.codePlatform = Objects.requireNonNull(codePlatform);
+		Objects.requireNonNull(codePlatform);
+		this.filter = "scraping_disabled_reason=is.null&code_platform=eq." + codePlatform.name().toLowerCase();
 	}
 
 	/**
@@ -35,7 +36,6 @@ public class PostgrestConnector {
 	 * @return The data corresponding to the git repositories of which the programming languages data were scraped the longest time ago
 	 */
 	public Collection<BasicRepositoryData> languagesData(int limit) {
-		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=languages_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("languages_scraped_at"));
 		return parseBasicJsonData(data);
 	}
@@ -47,7 +47,6 @@ public class PostgrestConnector {
 	 * @return The data corresponding to the git repositories of which the commit data were scraped the longest time ago
 	 */
 	public Collection<BasicRepositoryData> commitData(int limit) {
-		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=commit_history_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("commit_history_scraped_at"));
 		return parseBasicJsonData(data);
 	}
@@ -59,13 +58,11 @@ public class PostgrestConnector {
 	 * @return The data corresponding to the git repositories of which the basic data were scraped the longest time ago
 	 */
 	public Collection<BasicRepositoryData> statsData(int limit) {
-		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=basic_data_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("basic_data_scraped_at"));
 		return parseBasicJsonData(data);
 	}
 
 	public Collection<BasicRepositoryData> contributorData(int limit) {
-		String filter = "code_platform=eq." + codePlatform.name().toLowerCase();
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=software,url&order=contributor_count_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("contributor_count_scraped_at"));
 		return parseBasicJsonData(data);
 	}

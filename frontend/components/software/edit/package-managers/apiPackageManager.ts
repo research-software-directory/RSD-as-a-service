@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -273,19 +275,38 @@ export async function deletePackageManager({id,token}:{id: string,token:string})
   }
 }
 
-export function getPackageManagerTypeFromUrl(url:string) {
+export async function getPackageManagerTypeFromUrl(url:string) {
   try {
     const urlObject = new URL(url)
-    const keys = Object.keys(packageManagerSettings)
+    const keys = Object.keys(packageManagerSettings) as PackageManagerTypes[]
 
+    // find first key to match the hostname
     const pm_key = keys.find(key => {
-      const manager = packageManagerSettings[key as PackageManagerTypes] as PackageManagerSettings
+      const manager:PackageManagerSettings = packageManagerSettings[key]
       // match hostname
       return manager.hostname.includes(urlObject.hostname)
     })
-
     if (pm_key) {
-      return pm_key as PackageManagerTypes
+      return pm_key
+    }
+
+    // If type not found in the pre-defined list
+    // try to infer from the platforms already in the RSD
+    // This is needed for Gitlab and other on premisses solutions
+    const resp = await fetch(
+      `${getBaseUrl()}/rpc/suggest_platform`,
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({hostname: urlObject.host})
+      }
+    )
+    if (resp.status === 200) {
+      const platform_type:PackageManagerTypes = await resp.json()
+      if (platform_type !== null) {
+        return platform_type
+      }
+      return 'other' as PackageManagerTypes
     }
     return 'other' as PackageManagerTypes
   } catch (e: any) {

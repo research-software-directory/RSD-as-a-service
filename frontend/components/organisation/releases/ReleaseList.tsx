@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,7 +53,7 @@ export default function ReleaseList({release_year}: ReleaseYearProps) {
         </div>
       </div>
 
-      {releases.map((release,pos)=><ReleaseItem key={release.release_doi ?? pos} release={release} />)}
+      {releases.map((release,pos)=><ReleaseItem key={pos} release={release} />)}
 
     </section>
   )

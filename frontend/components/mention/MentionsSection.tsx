@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,7 +29,7 @@ export default function MentionsSection({title, mentions}: MentionsSectionProps)
   // console.log('featuredMentions...', featuredMentions)
   // console.groupEnd()
   return (
-    <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]">
+    <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr] lg:gap-4">
       <h2
         data-testid="software-mentions-section-title"
         className="pb-8 text-[2rem] text-base-100">

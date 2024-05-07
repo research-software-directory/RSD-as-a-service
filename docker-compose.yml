@@ -16,7 +16,7 @@ version: "3.0"
 services:
   database:
     build: ./database
-    image: rsd/database:2.2.0
+    image: rsd/database:2.4.1
     ports:
       # enable connection from outside (development mode)
       - "5432:5432"
@@ -36,7 +36,7 @@ services:
 
   backend:
     build: ./backend-postgrest
-    image: rsd/backend-postgrest:1.12.2
+    image: rsd/backend-postgrest:1.13.0
     expose:
       - 3500
     environment:
@@ -53,7 +53,7 @@ services:
 
   auth:
     build: ./authentication
-    image: rsd/auth:1.4.1
+    image: rsd/auth:1.5.0
     ports:
       - 5005:5005
     expose:
@@ -110,7 +110,7 @@ services:
       # dockerfile to use for build
       dockerfile: Dockerfile
     # update version number to correspond to frontend/package.json
-    image: rsd/frontend:2.8.1
+    image: rsd/frontend:2.8.3
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -157,7 +157,7 @@ services:
 
   scrapers:
     build: ./scrapers
-    image: rsd/scrapers:1.7.0
+    image: rsd/scrapers:1.8.1
     environment:
       # it uses values from .env file
       - POSTGREST_URL
@@ -178,7 +178,7 @@ services:
 
   codemeta:
     build: ./codemeta
-    image: rsd/codemeta:v1.1.0
+    image: rsd/codemeta:v1.2.1
     expose:
       - "8000"
     environment:
@@ -212,7 +212,7 @@ services:
   nginx:
     build:
       context: ./nginx
-    image: rsd/nginx:1.1.3
+    image: rsd/nginx:1.1.4
     ports:
       - "80:80"
       - "443:443"
@@ -235,7 +235,7 @@ services:
   #----------------------------------------------
   data-generation:
     build: ./data-generation
-    image: rsd/generation:1.4.1
+    image: rsd/generation:1.4.2
     environment:
       # it needs to be here to use values from .env file
       - PGRST_JWT_SECRET

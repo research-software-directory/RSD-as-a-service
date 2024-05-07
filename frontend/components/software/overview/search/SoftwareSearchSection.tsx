@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +13,7 @@ import SearchInput from '~/components/search/SearchInput'
 import ViewToggleGroup, {LayoutType} from './ViewToggleGroup'
 import SelectRows from './SelectRows'
 import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
+import {getPageRange} from '~/utils/pagination'
 
 type SearchSectionProps = {
   page: number
@@ -51,7 +53,7 @@ export default function SoftwareSearchSection({
       </div>
       <div className="flex justify-between items-center px-1 py-2">
         <div className="text-sm opacity-70">
-          Page {page ?? 1} of {count} results
+          {getPageRange(rows, page, count)}
         </div>
         {smallScreen === true &&
           <Button

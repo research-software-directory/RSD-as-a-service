@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -8,7 +10,7 @@
 import {Fragment} from 'react'
 import Alert from '@mui/material/Alert'
 import {ReorderedCategories} from '~/utils/categories'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {config} from '~/components/software/edit/links/config'
 
 type SoftwareLinksInfoProps = {
   reorderedCategories: ReorderedCategories

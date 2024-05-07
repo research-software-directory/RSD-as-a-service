@@ -14,14 +14,15 @@ RSD offers following customization options:
   - `.env` file at the same location as your docker-compose.yml
   - `settings.json` that should be (volume) mounted into the frontend service in your docker-compose.yml
 - When configuring your production instance, replace `localhost` and `www.localhost` with the domain of your RSD
+
 :::
 
 ## Authentication providers
 
-RSD supports the following third party OpenID Connect authentication services:
+The RSD supports the following third party OpenID Connect authentication services:
 
 - [Microsoft Entra ID (Azure AD)](#enable-microsoft-entra-id-azure-ad-authentication)
-- [ORCID](#enable-orcid-authentication)
+- [ORCID](#enable-orcid-authentication-and-coupling)
 - [SURFconext](#enable-surfconext-authentication)
 - [Helmholtz AI](#enable-helmholtz-ai-authentication)
 
@@ -89,7 +90,7 @@ AUTH_ORCID_CLIENT_SECRET=
 
 #### ORCID authentication
 
-To enable login via ORCID, provide ythe following information in `.env`:
+To enable login via ORCID, provide the following information in `.env`:
 
 ```bash
 # Ensure ORCID key is included in the list

@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -24,9 +24,9 @@ export type RsdAccountInfo = {
   admin_account: string[] | null
 }
 
-export default function useRsdAccounts(token: string) {
+export default function useRsdAccounts(token: string, adminsOnly: boolean, inactiveDays: number) {
   const {showErrorMessage}=useSnackbar()
-  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find user by account id (exact match) or by name, email or affiliation (partial match)')
+  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find user by account id, name, email or affiliation')
   const [accounts, setAccounts] = useState<RsdAccountInfo[]>([])
   // show loading only on inital load
   const [loading, setLoading] = useState(true)
@@ -37,7 +37,9 @@ export default function useRsdAccounts(token: string) {
         token,
         searchFor,
         page,
-        rows
+        rows,
+        adminsOnly,
+        inactiveDays
       })
       setAccounts(accounts)
       setCount(count)
@@ -48,7 +50,7 @@ export default function useRsdAccounts(token: string) {
     }
   // we do not include setCount in order to avoid loop
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token,searchFor,page,rows])
+  }, [token,searchFor,page,rows,adminsOnly,inactiveDays])
 
 
   async function deleteAccount(id: string) {

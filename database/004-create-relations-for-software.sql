@@ -1,4 +1,4 @@
--- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2024 dv4all
@@ -34,7 +34,8 @@ CREATE TABLE repository_url (
 	commit_history_scraped_at TIMESTAMPTZ,
 	contributor_count INTEGER,
 	contributor_count_last_error VARCHAR(500),
-	contributor_count_scraped_at TIMESTAMPTZ
+	contributor_count_scraped_at TIMESTAMPTZ,
+	scraping_disabled_reason VARCHAR(200)
 );
 
 
@@ -105,6 +106,9 @@ CREATE TABLE license_for_software (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
 	software UUID references software (id) NOT NULL,
 	license VARCHAR(100) NOT NULL,
+	name VARCHAR(200) NULL,
+	reference VARCHAR(200) NULL CHECK (reference ~ '^https?://'),
+	open_source BOOLEAN NOT NULL DEFAULT TRUE,
 	UNIQUE(software, license),
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL

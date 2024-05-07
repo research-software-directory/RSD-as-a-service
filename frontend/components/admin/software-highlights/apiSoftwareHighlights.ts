@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,20 +12,22 @@ import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
+import {localeSort} from '~/utils/sortFn'
 
 export type SoftwareHighlight = SoftwareOverviewItemProps & {
   position: number | null
 }
 
 type getHighlightsApiParams = {
-  page: number
-  rows: number
+  limit?: number
+  offset?: number
   token?: string,
   searchFor?: string
-  orderBy?: string
+  orderBy?: string,
+  keywords?: string[] | null
 }
 
-export async function getSoftwareHighlights({page, rows, token, searchFor,orderBy}:getHighlightsApiParams) {
+export async function getSoftwareHighlights({limit, offset, token, searchFor, orderBy, keywords}:getHighlightsApiParams) {
   try {
     // let query = paginationUrlParams({ rows, page })
     let query = ''
@@ -34,6 +38,24 @@ export async function getSoftwareHighlights({page, rows, token, searchFor,orderB
       query+=`&order=${orderBy}`
     } else {
       query+='&order=position.asc,brand_name.asc'
+    }
+    if (limit) {
+      query+=`&limit=${limit}`
+    }
+    if (offset) {
+      query+=`&offset=${offset}`
+    }
+    if (typeof keywords !== 'undefined' &&
+    keywords !== null &&
+    typeof keywords === 'object') {
+    // sort and convert keywords array to comma separated string
+    // we need to sort because search is on ARRAY field in pgSql
+    // and all keywords should be present (AND).
+    // and it needs to be enclosed in {} uri encoded see
+    // https://postgrest.org/en/v9.0/api.html?highlight=filter#calling-functions-with-array-parameters
+      const keywordsAll = [...keywords].sort(localeSort).map((item: string) => `"${encodeURIComponent(item)}"`).join(',')
+      // use cs. command to find
+      query += `&keywords=cs.%7B${keywordsAll}%7D`
     }
     // complete url
     const url = `${getBaseUrl()}/rpc/software_for_highlight?${query}`

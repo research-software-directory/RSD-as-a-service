@@ -1,14 +1,16 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from './logger'
 import {
   NewSoftwareItem, SoftwareItem, RepositoryUrl,
-  SoftwarePropsToSave, SoftwareItemFromDB
+  SoftwarePropsToSave, SoftwareItemFromDB,
+  LicenseForSoftware
 } from '../types/SoftwareTypes'
 import {getPropsFromObject} from './getPropsFromObject'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from './fetchHelpers'
@@ -53,7 +55,7 @@ export async function getSoftwareToEdit({slug, token}:
   { slug: string, token: string }) {
   try {
     // GET
-    const select = '*,repository_url!left(url,code_platform)'
+    const select = '*,repository_url!left(url,code_platform,scraping_disabled_reason)'
     const url = `${getBaseUrl()}/software?select=${select}&slug=eq.${slug}`
     const resp = await fetch(url, {
       method: 'GET',
@@ -71,6 +73,7 @@ export async function getSoftwareToEdit({slug, token}:
         software.repository_url = null
         software.repository_platform = null
       }
+      software.scraping_disabled_reason = data[0]?.repository_url?.scraping_disabled_reason
       return software
     }
   } catch (e: any) {
@@ -127,20 +130,17 @@ export async function deleteFromRepositoryTable({software, token}:
   }
 }
 
-export async function addLicensesForSoftware({software, license, token}:
-  { software: string, license: string, token: string}) {
+export async function addLicensesForSoftware({license, token}:
+  { license: LicenseForSoftware, token: string}) {
   try {
-    const url = `/api/v1/license_for_software?software=eq.${software}`
+    const url = `/api/v1/license_for_software?software=eq.${license.software}`
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
         ...createJsonHeaders(token),
         'Prefer': 'return=headers-only'
       },
-      body: JSON.stringify({
-        software,
-        license
-      })
+      body: JSON.stringify(license)
     })
     if (resp.status === 201) {
       const id = resp.headers.get('location')?.split('.')[1]
@@ -149,7 +149,7 @@ export async function addLicensesForSoftware({software, license, token}:
         message: id
       }
     } else {
-      return extractReturnMessage(resp, software ?? '')
+      return extractReturnMessage(resp, license.software ?? '')
     }
   } catch (e: any) {
     logger(`addLicensesForSoftware: ${e?.message}`, 'error')

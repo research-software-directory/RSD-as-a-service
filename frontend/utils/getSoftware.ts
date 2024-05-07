@@ -1,15 +1,16 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from './logger'
-import {CategoriesForSoftware, KeywordForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
+import {CategoriesForSoftware, KeywordForSoftware, LicenseForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 import {RelatedProjectForSoftware} from '~/types/Project'
@@ -56,7 +57,7 @@ export async function getSoftwareList({url,token}:{url:string,token?:string }){
 export async function getSoftwareItem(slug:string|undefined, token?:string){
   try {
     // console.log('token...', token)
-    // this request is always perfomed from backend
+    // this request is always performed from backend
     const url = `${process.env.POSTGREST_URL}/software?select=*,repository_url!left(url)&slug=eq.${slug}`
     let resp
     if (token) {
@@ -77,11 +78,11 @@ export async function getSoftwareItem(slug:string|undefined, token?:string){
 }
 
 // query for software item page based on software id
-export async function getRepostoryInfoForSoftware(software: string | undefined, token?: string) {
+export async function getRepositoryInfoForSoftware(software: string | undefined, token?: string) {
   try {
     // console.log('token...', token)
-    // this request is always perfomed from backend
-    const url = `${process.env.POSTGREST_URL}/repository_url?software=eq.${software}`
+    // this request is always performed from backend
+    const url = `${getBaseUrl()}/repository_url?software=eq.${software}`
     let resp
     if (token) {
       resp = await fetch(url, {
@@ -108,7 +109,7 @@ export async function getRepostoryInfoForSoftware(software: string | undefined, 
       return null
     }
   } catch (e: any) {
-    logger(`getRepostoryInfoForSoftware: ${e?.message}`, 'error')
+    logger(`getRepositoryInfoForSoftware: ${e?.message}`, 'error')
     return null
   }
 }
@@ -154,15 +155,12 @@ export async function getReleasesForSoftware(uuid:string,token?:string){
   }
 }
 
-export async function getKeywordsForSoftware(uuid:string,frontend?:boolean,token?:string){
+export async function getKeywordsForSoftware(uuid:string,token?:string){
   try{
-    // this request is always perfomed from backend
+    // this request is always performed from backend
     // the content is order by tag ascending
     const query = `rpc/keywords_by_software?software=eq.${uuid}&order=keyword.asc`
-    let url = `${process.env.POSTGREST_URL}/${query}`
-    if (frontend === true) {
-      url = `/api/v1/${query}`
-    }
+    let url = `${getBaseUrl()}/${query}`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
@@ -264,40 +262,29 @@ export async function deleteCategoryToSoftware(softwareId: string, categoryId: C
   throw new Error(`API returned: ${resp.status} ${resp.statusText}`)
 }
 
-
 /**
- * LICENSE
- */
-
-export type License = {
-  id:string
-  software:string
-  license: string
-}
-
-export async function getLicenseForSoftware(uuid:string,frontend?:boolean,token?:string){
+ * LICENSE FOR SOFTWARE
+*/
+export async function getLicenseForSoftware(uuid:string,token?:string){
   try{
-    // this request is always perfomed from backend
+    // this request is always performed from backend
     // the content is order by license ascending
-    let url = `${process.env.POSTGREST_URL}/license_for_software?&software=eq.${uuid}&order=license.asc`
-    if (frontend === true) {
-      url = `/api/v1/license_for_software?&software=eq.${uuid}&order=license.asc`
-    }
+    let url = `${getBaseUrl()}/license_for_software?&software=eq.${uuid}&order=license.asc`
     const resp = await fetch(url, {
       method: 'GET',
       headers: createJsonHeaders(token)
     })
     if (resp.status===200){
-      const data:License[] = await resp.json()
+      const data:LicenseForSoftware[] = await resp.json()
       return data
     } else if (resp.status===404){
       logger(`getLicenseForSoftware: 404 [${url}]`,'error')
       // query not found
-      return null
+      return []
     }
   }catch(e:any){
     logger(`getLicenseForSoftware: ${e?.message}`,'error')
-    return null
+    return []
   }
 }
 
@@ -333,7 +320,7 @@ export async function getRemoteMarkdown(url: string) {
   }
 }
 
-// RELATED PROJECTS FOR SORFTWARE
+// RELATED PROJECTS FOR SOFTWARE
 export async function getRelatedProjectsForSoftware({software, token, frontend, approved=true}:
   { software: string, token?: string, frontend?: boolean, approved?:boolean }) {
   try {

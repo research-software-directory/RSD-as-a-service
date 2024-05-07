@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,8 +13,9 @@ import AlertTitle from '@mui/material/AlertTitle'
 import ContentLoader from '~/components/layout/ContentLoader'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import SortableList from '~/components/layout/SortableList'
-import SortableHighlightItem from './SortableHightlightItem'
+import SortableHighlightItem from './SortableHighlightItem'
 import {SoftwareHighlight} from './apiSoftwareHighlights'
+import useRsdSettings from '~/config/useRsdSettings'
 
 type DeleteOrganisationModal = {
   open: boolean,
@@ -30,9 +31,12 @@ type SoftwareHighlightsListProps = {
 
 export default function SortableHighlightsList({highlights, loading, onSorted, onDelete}: SoftwareHighlightsListProps) {
   const router = useRouter()
+  const {host} = useRsdSettings()
   const [modal, setModal] = useState<DeleteOrganisationModal>({
     open: false
   })
+  const limit = (host?.software_highlights?.limit ?? 3)
+  let publishedCnt = 0
 
   if (loading) return <ContentLoader />
 
@@ -65,11 +69,16 @@ export default function SortableHighlightsList({highlights, loading, onSorted, o
   }
 
   function onRenderItem(item: SoftwareHighlight, index?: number) {
+    // increase published items count (only published items are included in carousel)
+    if (item.is_published===true) publishedCnt += 1
+    // validate if limit is reached
+    const inCarousel = (limit >= publishedCnt) && item.is_published
     return (
       <SortableHighlightItem
         key={item.id}
         pos={index ?? 0}
         item={item}
+        inCarousel={inCarousel}
         onEdit={onEdit}
         onDelete={confirmDelete}
       />
@@ -90,7 +99,7 @@ export default function SortableHighlightsList({highlights, loading, onSorted, o
         body={
           <>
             <p>
-               Are you sure you want to delete software <strong>{modal?.highlight?.brand_name}</strong> from hightlight?
+               Are you sure you want to delete software <strong>{modal?.highlight?.brand_name}</strong> from highlights?
             </p>
           </>
         }

@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,9 +20,9 @@ export default function AdminSection() {
   const {showErrorMessage} = useSnackbar()
   const {watch, control, resetField} = useFormContext()
   const [
-    id, slug, primary_maintainer, is_tenant
+    id, slug, primary_maintainer, is_tenant, parent
   ] = watch([
-    'id', 'slug', 'primary_maintainer', 'is_tenant'
+    'id', 'slug', 'primary_maintainer', 'is_tenant', 'parent'
   ])
 
   async function saveIsTenant(value:boolean) {
@@ -44,7 +46,16 @@ export default function AdminSection() {
 
   return (
     <>
+      <h3 className='pb-4'>Admin section</h3>
       <section className="grid grid-cols-[1fr,1fr] gap-8">
+        <div className='my-auto'>Organisation ID: {id}</div>
+        <ControlledSwitch
+          name='is_tenant'
+          label={config.is_tenant.label}
+          control={control}
+          defaultValue={is_tenant}
+          onSave={saveIsTenant}
+        />
         <AutosaveOrganisationTextField
           options={{
             name: 'slug',
@@ -67,17 +78,17 @@ export default function AdminSection() {
           }}
           rules={config.primary_maintainer.validation}
         />
+        <AutosaveOrganisationTextField
+          options={{
+            name: 'parent',
+            label: config.parent.label,
+            useNull: true,
+            defaultValue: null,
+            helperTextMessage: config.parent.help,
+            helperTextCnt: `${parent?.length || 0}/${config.parent.validation.maxLength.value}`
+          }}
+        />
       </section>
-      <div className="py-2"></div>
-      <ControlledSwitch
-        name='is_tenant'
-        label={config.is_tenant.label}
-        control={control}
-        defaultValue={is_tenant}
-        onSave={saveIsTenant}
-      />
-      {/* additional spacing for About page */}
-      <div className="py-4"></div>
     </>
   )
 }

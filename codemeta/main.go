@@ -13,13 +13,17 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"slices"
 )
 
 type RsdSoftware struct {
-	BrandName      string  `json:"brand_name"`
-	ConceptDoi     *string `json:"concept_doi"`
-	ShortStatement string  `json:"short_statement"`
-	Contributor    []struct {
+	BrandName       string  `json:"brand_name"`
+	ConceptDoi      *string `json:"concept_doi"`
+	ShortStatement  *string `json:"short_statement"`
+	DescriptionType string  `json:"description_type"`
+	Description     *string `json:"description"`
+	DescriptionUrl  *string `json:"description_url"`
+	Contributor     []struct {
 		FamilyNames  string  `json:"family_names"`
 		GivenNames   string  `json:"given_names"`
 		Affiliation  *string `json:"affiliation"`
@@ -34,8 +38,15 @@ type RsdSoftware struct {
 		License string `json:"license"`
 	} `json:"license_for_software"`
 	RepositoryURL *struct {
-		URL string `json:"url"`
+		URL       string             `json:"url"`
+		Languages map[string]float64 `json:"languages"`
 	} `json:"repository_url"`
+	ReferencePapers []struct {
+		Doi   *string `json:"doi"`
+		Title string  `json:"title"`
+		Page  *string `json:"page"`
+		Url   *string `json:"url"`
+	} `json:"reference_papers"`
 }
 
 type Organization struct {
@@ -58,16 +69,26 @@ type CreativeWork struct {
 	Name string `json:"name"`
 }
 
+type ScholarlyArticle struct {
+	Type       string  `json:"@type"`
+	Id         *string `json:"@id"`
+	Name       string  `json:"name"`
+	Pagination *string `json:"pagination"`
+	Url        *string `json:"url"`
+}
+
 type SoftwareApplication struct {
-	Context        string         `json:"@context"`
-	Type           string         `json:"@type"`
-	Id             *string        `json:"@id"`
-	Name           string         `json:"name"`
-	Description    string         `json:"description"`
-	CodeRepository *string        `json:"codeRepository"`
-	Author         []Person       `json:"author"`
-	Keyword        []string       `json:"keyword"`
-	License        []CreativeWork `json:"license"`
+	Context              string             `json:"@context"`
+	Type                 string             `json:"@type"`
+	Id                   *string            `json:"@id"`
+	Name                 string             `json:"name"`
+	Description          []string           `json:"description"`
+	CodeRepository       *string            `json:"codeRepository"`
+	Author               []Person           `json:"author"`
+	Keywords             []string           `json:"keywords"`
+	ProgrammingLanguage  []string           `json:"programmingLanguage"`
+	License              []CreativeWork     `json:"license"`
+	ReferencePublication []ScholarlyArticle `json:"referencePublication"`
 }
 
 var slugRegex *regexp.Regexp = regexp.MustCompile("^[a-z0-9]+(-[a-z0-9]+)*$")
@@ -146,10 +167,10 @@ func main() {
 			return
 		}
 
-		urlUnformatted := "%v/software?slug=eq.%v&select=brand_name,concept_doi,short_statement,contributor(family_names,given_names,affiliation,role,orcid,email_address),keyword(value),license_for_software(license),repository_url(url)"
+		urlUnformatted := "%v/software?slug=eq.%v&select=brand_name,concept_doi,short_statement,description_type,description,description_url,contributor(family_names,given_names,affiliation,role,orcid,email_address),keyword(value),license_for_software(license),repository_url(url,languages),reference_papers:mention!reference_paper_for_software(doi,title,page,url)"
 		url := fmt.Sprintf(urlUnformatted, postgrestUrl, slug)
 
-		bytes, err := GetAndReadBody(url)
+		bodyBytes, err := GetAndReadBody(url)
 		if err != nil {
 			log.Print("Unknown error when downloading data for slug "+slug+": ", err)
 			writer.WriteHeader(http.StatusInternalServerError)
@@ -160,7 +181,7 @@ func main() {
 			return
 		}
 
-		jsonBytes, err := convertRsdToCodeMeta(bytes)
+		jsonBytes, err := convertRsdToCodeMeta(bodyBytes)
 		if err != nil {
 			log.Print("Unknown error for slug "+slug+": ", err)
 			writer.WriteHeader(http.StatusInternalServerError)
@@ -185,6 +206,9 @@ func main() {
 			log.Print("Couldn't write response: ", err)
 		}
 	})
+
+	fmt.Println("Serving on http://localhost:8000")
+
 	err := http.ListenAndServe(":8000", nil)
 
 	if err != nil {
@@ -206,14 +230,16 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 	rsdResponse := rsdResponseArray[0]
 
 	var codemetaData = SoftwareApplication{
-		Context:     "https://w3id.org/codemeta/v3.0",
-		Id:          rsdResponse.ConceptDoi,
-		Type:        "SoftwareApplication",
-		Name:        rsdResponse.BrandName,
-		Description: rsdResponse.ShortStatement,
-		Author:      extractContributors(rsdResponse),
-		Keyword:     extractKeywords(rsdResponse),
-		License:     extractLicenses(rsdResponse),
+		Context:              "https://w3id.org/codemeta/v3.0",
+		Id:                   rsdResponse.ConceptDoi,
+		Type:                 "SoftwareApplication",
+		Name:                 rsdResponse.BrandName,
+		Description:          extractDescription(rsdResponse),
+		Author:               extractContributors(rsdResponse),
+		Keywords:             extractKeywords(rsdResponse),
+		ProgrammingLanguage:  extractProgrammingLanguages(rsdResponse),
+		License:              extractLicenses(rsdResponse),
+		ReferencePublication: extractReferencePublications(rsdResponse),
 	}
 
 	if rsdResponse.RepositoryURL != nil {
@@ -228,6 +254,24 @@ func convertRsdToCodeMeta(bytes []byte) ([]byte, error) {
 	return jsonBytes, nil
 }
 
+func extractDescription(rsdSoftware RsdSoftware) []string {
+	result := []string{}
+
+	if rsdSoftware.ShortStatement != nil {
+		result = append(result, *rsdSoftware.ShortStatement)
+	}
+
+	if rsdSoftware.DescriptionType == "markdown" && rsdSoftware.Description != nil {
+		result = append(result, *rsdSoftware.Description)
+	}
+
+	if rsdSoftware.DescriptionType == "link" && rsdSoftware.DescriptionUrl != nil {
+		result = append(result, *rsdSoftware.DescriptionUrl)
+	}
+
+	return result
+}
+
 func extractKeywords(rsdSoftware RsdSoftware) []string {
 	result := []string{}
 
@@ -236,6 +280,33 @@ func extractKeywords(rsdSoftware RsdSoftware) []string {
 
 		result = append(result, keyword)
 	}
+
+	return result
+}
+
+func extractProgrammingLanguages(rsdSoftware RsdSoftware) []string {
+	result := []string{}
+
+	if rsdSoftware.RepositoryURL == nil {
+		return result
+	}
+
+	for k := range rsdSoftware.RepositoryURL.Languages {
+		result = append(result, k)
+	}
+
+	slices.SortFunc(result, func(a, b string) int {
+		valA := rsdSoftware.RepositoryURL.Languages[a]
+		valB := rsdSoftware.RepositoryURL.Languages[b]
+
+		if valA > valB {
+			return -1
+		} else if valA < valB {
+			return 1
+		} else {
+			return 0
+		}
+	})
 
 	return result
 }
@@ -250,6 +321,24 @@ func extractLicenses(rsdSoftware RsdSoftware) []CreativeWork {
 		}
 
 		result = append(result, license)
+	}
+
+	return result
+}
+
+func extractReferencePublications(rsdSoftware RsdSoftware) []ScholarlyArticle {
+	result := []ScholarlyArticle{}
+
+	for _, referencePaper := range rsdSoftware.ReferencePapers {
+		referencePublication := ScholarlyArticle{
+			Type:       "ScholarlyArticle",
+			Id:         referencePaper.Doi,
+			Name:       referencePaper.Title,
+			Pagination: referencePaper.Page,
+			Url:        referencePaper.Url,
+		}
+
+		result = append(result, referencePublication)
 	}
 
 	return result

@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -92,7 +92,7 @@ function generateMentions(amountExtra = 100) {
 	return result;
 }
 
-async function generateSofware(amount=500) {
+async function generateSoftware(amount=500) {
 	// real software has a real concept DOI
 	const amountRealSoftware = Math.min(conceptDois.length, amount);
 	const brandNames = [];
@@ -202,12 +202,12 @@ function generatePackageManagers(softwareIds) {
 
 function generateLincensesForSoftware(ids) {
 	const licenses = [
-		'Apache-2.0',
-		'MIT',
-		'GPL-2.0-or-later',
-		'LGPL-2.0-or-later',
-		'CC-BY-4.0',
-		'CC-BY-NC-ND-3.0',
+		{license:'Apache-2.0',name:'Apache License 2.0',reference:'https://spdx.org/licenses/Apache-2.0.html'},
+		{license:'MIT',name:'MIT License',reference:'https://spdx.org/licenses/MIT.html'},
+		{license:'GPL-2.0-or-later',name:'GNU General Public License v2.0 or later',reference:'https://spdx.org/licenses/GPL-2.0-or-later.html'},
+		{license:'LGPL-2.0-or-later',name:'GNU Library General Public License v2 or later',reference:'https://spdx.org/licenses/LGPL-2.0-or-later.html'},
+		{license:'CC-BY-4.0',name:'Creative Commons Attribution 4.0 International',reference:'https://spdx.org/licenses/CC-BY-4.0.html'},
+		{license:'CC-BY-NC-ND-3.0',name:'Creative Commons Attribution Non Commercial No Derivatives 3.0 Unported',reference:'https://spdx.org/licenses/CC-BY-NC-ND-3.0.html'}
 	];
 
 	const result = [];
@@ -217,10 +217,12 @@ function generateLincensesForSoftware(ids) {
 		if (nummerOfLicenses === 0) continue;
 
 		const licensesToAdd = faker.helpers.arrayElements(licenses, nummerOfLicenses);
-		for (const license of licensesToAdd) {
+		for (const item of licensesToAdd) {
 			result.push({
 				software: id,
-				license: license,
+				license: item.license,
+				name: item.name,
+				reference: item.reference
 			});
 		}
 	}
@@ -539,6 +541,83 @@ function generateMetaPages() {
 	return result;
 }
 
+function generateNews() {
+	const entries = [
+		{
+			title: 'RSD released',
+			slug: 'rsd-released'
+		},
+		{
+			title: 'Some Big News',
+			slug: 'some-big-news'
+		},
+		{
+			title: 'You wont believe this!',
+			slug: 'you-wont-believe-this'
+		},
+		{
+			title: 'The perfect software doesn\'t exi-',
+			slug: 'the-prefect-software-doesnt-exi'
+		},
+		{
+			title: '10 clickbait headlines you didn\'t know about!',
+			slug: '10-clickbait-headlines'
+		},
+		{
+			title: 'You will never use a dependency anymore after you know this...',
+			slug: 'never-dependency'
+		},
+		{
+			title: 'Shutting down the RSD',
+			slug: 'shutting-down-the-rsd'
+		},
+		{
+			title: 'The last package you will ever need',
+			slug: 'last-package'
+		},
+		{
+			title: 'How to make your project a big success',
+			slug: 'project-success'
+		},
+		{
+			title: 'The 5 best dependencies you never heard about',
+			slug: '5-best-dependencies'
+		},
+	];
+
+	const result = [];
+	for (const newsItem of entries) {
+		result.push({
+			slug: newsItem.slug,
+			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
+			publication_date: faker.date.anytime(),
+			title: newsItem.title,
+			author: faker.person.fullName(),
+			summary: faker.lorem.paragraph(),
+			description: faker.lorem.paragraphs(faker.number.int({max: 20, min: 3}), '\n\n'),
+		});
+	}
+
+	return result;
+}
+
+function generateImagesForNews(newsIds, imageIds) {
+	const result = [];
+
+	for (const id of newsIds) {
+		if (faker.datatype.boolean(0.2)) {
+			continue;
+		}
+
+		result.push({
+			news: id,
+			image_id: faker.helpers.arrayElement(imageIds),
+		});
+	}
+
+	return result;
+}
+
 function generateRelationsForDifferingEntities(idsOrigin, idsRelation, nameOrigin, nameRelation, maxRelationsPerOrigin=11) {
 	const result = [];
 
@@ -692,7 +771,8 @@ function generateLoginForAccount(accountIds, orcids) {
 				email: faker.internet.email({firstName: firstName, lastName: givenName}),
 				sub: orcid,
 				provider: 'orcid',
-				home_organisation: faker.helpers.arrayElement(homeOrganisations)
+				home_organisation: faker.helpers.arrayElement(homeOrganisations),
+				last_login_date: faker.helpers.maybe(() => faker.date.past({years: 3}), {probability: 0.8}) ?? null
 			});
 		} else {
 			login_for_accounts.push({
@@ -701,7 +781,8 @@ function generateLoginForAccount(accountIds, orcids) {
 				email: faker.internet.email({firstName: firstName, lastName: givenName}),
 				sub: faker.string.alphanumeric(30),
 				provider: faker.helpers.arrayElement(providers),
-				home_organisation: faker.helpers.arrayElement(homeOrganisations)
+				home_organisation: faker.helpers.arrayElement(homeOrganisations),
+				last_login_date: faker.helpers.maybe(() => faker.date.past({years: 3}), {probability: 0.8}) ?? null
 			});
 		}
 	})
@@ -739,7 +820,7 @@ await Promise.all([mentionsPromise, keywordPromise, researchDomainsPromise])
 	.then(() => console.log('mentions, keywords, research domains done'));
 
 let idsSoftware, idsFakeSoftware, idsRealSoftware, idsProjects, idsOrganisations;
-const softwarePromise = postToBackend('/software', await generateSofware())
+const softwarePromise = postToBackend('/software', await generateSoftware())
 	.then(resp => resp.json())
 	.then(async swArray => {
 		idsSoftware = swArray.map(sw => sw['id']);
@@ -773,6 +854,12 @@ const organisationPromise = postToBackend('/organisation', await generateOrganis
 		idsOrganisations = orgArray.map(org => org['id']);
 	});
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
+await postToBackend('/news?select=id', generateNews())
+	.then(() => getFromBackend("/news"))
+	.then(res => res.json())
+	.then(jsonNewsIds => jsonNewsIds.map(news => news.id))
+	.then(newsIds => postToBackend('/image_for_news', generateImagesForNews(newsIds, localImageIds)))
+	.then(() => console.log('news done'));
 
 await Promise.all([softwarePromise, projectPromise, organisationPromise]).then(() => console.log('sw, pj, org done'));
 

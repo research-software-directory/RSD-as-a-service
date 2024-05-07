@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ export default function ListImageWithGradientPlaceholder({imgSrc,alt}:{imgSrc:st
     // return gradient square as placeholder
     return (
       <div
-        className="w-12 self-stretch bg-gradient-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
+        className="w-[6rem] self-stretch bg-gradient-to-br from-base-300 from-0% via-base-100 via-50% to-base-100"
       />
     )
   }
@@ -26,7 +26,7 @@ export default function ListImageWithGradientPlaceholder({imgSrc,alt}:{imgSrc:st
     <img
       src={`${imgSrc ?? ''}`}
       alt={alt ?? 'Image'}
-      className="w-12 max-h-[3.5rem] text-base-content-disabled p-2 object-contain object-center"
+      className="w-[6rem] max-h-[4rem] text-base-content-disabled p-2 object-contain object-center"
       // lighthouse audit requires explicit width and height
       height="2.5rem"
       width="100%"

@@ -1,19 +1,18 @@
-// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {ChangeEventHandler, Fragment, useEffect, useMemo, useState} from 'react'
-
 import {useSession} from '~/auth'
 import {ReorderedCategories, genCategoryTree, leaf, useCategoryTree} from '~/utils/categories'
 import {addCategoryToSoftware, deleteCategoryToSoftware, getAvailableCategories} from '~/utils/getSoftware'
 import {CategoryID, CategoryPath, CategoryTree, CategoryTreeLevel as TCategoryTreeLevel} from '~/types/Category'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
+import {config} from '~/components/software/edit/links/config'
 import {CategoryTreeLevel} from '~/components/category/CategoryTree'
 
 export type SoftwareCategoriesProps = {

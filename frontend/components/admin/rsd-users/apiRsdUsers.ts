@@ -17,12 +17,19 @@ type getLoginApiParams = {
   page: number
   rows: number
   searchFor?:string
+  adminsOnly: boolean,
+  inactiveDays: number
 }
 
-export async function getRsdAccounts({page,rows,token,searchFor}:getLoginApiParams) {
+export async function getRsdAccounts({page,rows,token,searchFor,adminsOnly,inactiveDays}:getLoginApiParams) {
   try {
     // pagination
-    let query = `select=id,login_for_account!inner(id,provider,name,email,home_organisation,last_login_date),admin_account!left(account_id)${paginationUrlParams({rows, page})}`
+    let query = `select=id,login_for_account(id,provider,name,email,home_organisation,last_login_date),login_for_account_text_filter:login_for_account!inner(),login_for_account_inactivity_filter:login_for_account!inner(),admin_account!${adminsOnly ? 'inner' : 'left'}(account_id)${paginationUrlParams({rows, page})}`
+    if (inactiveDays > 0) {
+      const then = new Date()
+      then.setDate(then.getDate() - inactiveDays)
+      query += `&login_for_account_inactivity_filter.or=(last_login_date.is.null,last_login_date.lt.${then.toISOString()})`
+    }
     // search
     if (searchFor) {
       if (searchFor.match(/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i) !== null) {
@@ -30,7 +37,7 @@ export async function getRsdAccounts({page,rows,token,searchFor}:getLoginApiPara
         query += `&id=eq.${searchFor}`
       } else {
         // else we search by name, email or organisation
-        query+=`&login_for_account.or=(name.ilike.*${searchFor}*,email.ilike.*${searchFor}*,home_organisation.ilike.*${searchFor}*)`
+        query+=`&login_for_account_text_filter.or=(name.ilike.*${searchFor}*,email.ilike.*${searchFor}*,home_organisation.ilike.*${searchFor}*)`
       }
     }
     // complete url

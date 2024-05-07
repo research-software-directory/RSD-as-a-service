@@ -24,8 +24,10 @@ Here is an overview of what each of them can do:
 | Add new research units                 |         x          |                    |
 | Remove/change primary maintainer *     |                    |                    |
 | Change organisation URL path *         |                    |                    |
+| Set parent organisation *              |                    |                    |
+| Set as official member *               |                    |                    |
 
-(*) These actions can only be perfomred by administators. If necessary, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
+(*) These actions can only be performed by administators (see [Administration section](/rsd-instance/administration/#edit-organisation)). If necessary, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
 
 ## My organisations
 

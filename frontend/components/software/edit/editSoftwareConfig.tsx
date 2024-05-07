@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -44,38 +44,6 @@ export const softwareInformation = {
       maxLength: {value: 300, message: 'Maximum length is 300'},
     }
   },
-  get_started_url: {
-    label: 'Get Started URL',
-    help: '',
-    validation: {
-      maxLength: {value: 200, message: 'Maximum length is 200'},
-      pattern: {
-        value: /^https?:\/\/.+\..+/,
-        message: 'URL should start with http(s):// and use at least one dot (.)'
-      }
-    }
-  },
-  repository_url: {
-    label: 'Repository URL',
-    help: (repoUrl: string | null) => repoUrl ? verifyGithubUrl(repoUrl) : '',
-    validation: {
-      maxLength: {value: 200, message: 'Maximum length is 200'},
-      pattern: {
-        value: /^https?:\/\/.+\..+/,
-        message: 'URL should start with http(s)://, have at least one dot (.) and at least one slash (/).'
-      }
-    }
-  },
-  repository_platform: {
-    label: 'Platform',
-    help: 'To scrape repository information',
-    options: [
-      {label: 'GitHub', value: 'github'},
-      {label: 'GitLab', value: 'gitlab'},
-      {label: 'Bitbucket', value: 'bitbucket'},
-      {label: 'Other', value: 'other'},
-    ]
-  },
   // field for markdown
   description: {
     label: (brand_name: string) => `What ${brand_name} can do for you`,
@@ -109,63 +77,12 @@ export const softwareInformation = {
       }
     }
   },
-  concept_doi: {
-    title: 'Software DOI',
-    subtitle: 'Provide the DOI of your software. This DOI will be used to import metadata about the software.',
-    label: 'Software DOI',
-    help: '',
-    infoLink: 'https://help.zenodo.org/faq/#versioning',
-    validation: {
-      minLength: {value: 7, message: 'Minimum length is 7'},
-      maxLength: {value: 100, message: 'Maximum length is 100'},
-      pattern: {
-        value: /^10(\.\w+)+\/\S+$/,
-        message: 'Invalid DOI pattern. Maybe you provided a complete URL?'
-      }
-    }
-  },
-  validateConceptDoi: {
-    label: 'Validate'
-  },
   pageStatus: {
     title: 'Status',
     subtitle: 'A published software is visible to others.'
   },
   is_published: {
     label: 'Published',
-  },
-  categories: {
-    title: 'Categories',
-    subtitle: 'Tell us more about your software.',
-    help: 'Assign categories to your software from a predefined catalog of categories.'
-  },
-  keywords: {
-    title: 'Keywords',
-    subtitle: 'Add keywords to your software, or import them using the Software DOI.',
-    label: 'Find or add keyword',
-    help: 'Select from top 30 list or start typing for the suggestions',
-    validation: {
-      //custom validation rule, not in used by react-hook-form
-      minLength: 1,
-    }
-  },
-  importKeywords: {
-    label: 'Import keywords',
-    message: (doi: string) => `Import keywords from datacite.org using DOI ${doi}`
-  },
-  licenses: {
-    title: 'Licenses',
-    subtitle: 'What licenses do apply to your software?',
-    label: 'Find or add a license',
-    help: 'Start typing for the suggestions',
-    validation: {
-      //custom validation rule, not in used by react-hook-form
-      minLength: 1,
-    }
-  },
-  importLicenses: {
-    label: 'Import licenses',
-    message: (doi: string) => `Import licenses from datacite.org using DOI ${doi}`
   }
 }
 
@@ -260,7 +177,7 @@ export const organisationInformation = {
     title: 'Add organisation',
     subtitle: 'We search by name in the RSD and the ROR databases',
     label: 'Find or add organisation',
-    help: 'At least the fist 2 letters of the organisation name',
+    help: 'At least the first 2 letters of the organisation name',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
@@ -401,14 +318,4 @@ export const relatedSoftwareInformation = {
   title: 'Related software',
   subtitle: (brand_name: string) => `Mention software often used together with ${brand_name}`,
   help: 'Select related RSD software'
-}
-
-function verifyGithubUrl(repoUrl: string) {
-  if ((repoUrl.startsWith('https://github.com/') || repoUrl.startsWith('http://github.com/'))
-    && !repoUrl.match('^https?://github\\.com/([^\\s/]+)/([^\\s/]+)/?$')) {
-    return <span className="text-warning">This does not seem to be the root of a single GitHub repository, are you
-      sure?</span>
-  }
-
-  return ''
 }

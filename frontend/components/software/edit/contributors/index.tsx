@@ -5,6 +5,7 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -83,6 +84,7 @@ export default function SoftwareContributors() {
         if (i === pos) return data
         return item
       })
+      updateContactPeople(data, list)
       // pass new list with addition contributor
       setContributors(list)
     } else {
@@ -91,8 +93,23 @@ export default function SoftwareContributors() {
         ...contributors,
         data
       ]
+      updateContactPeople(data, list)
       setContributors(list)
     }
+  }
+
+  async function updateContactPeople(data: Contributor, list: Contributor[]) {
+    if (!data.is_contact_person) return
+
+    list.forEach(person => {
+      if (!person.is_contact_person || person === data) return
+      fetch(`/api/v1/contributor?id=eq.${person.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({is_contact_person: false}),
+        headers: {'content-type': 'application/json', Authorization: 'Bearer ' + token}
+      })
+      person.is_contact_person = false
+    })
   }
 
   function loadContributorIntoModal(contributor: Contributor,pos?:number) {

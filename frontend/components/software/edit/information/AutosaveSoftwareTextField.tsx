@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -15,13 +15,13 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import useSoftwareContext from '../useSoftwareContext'
 import {patchSoftwareTable} from './patchSoftwareTable'
 
-export type AutosaveProjectInfoProps = {
+export type AutosaveSoftwareInfoProps = {
   software_id: string
   options: ControlledTextFieldOptions<EditSoftwareItem>
   rules?: any
 }
 
-export default function AutosaveSoftwareTextField({software_id,options,rules}:AutosaveProjectInfoProps) {
+export default function AutosaveSoftwareTextField({software_id,options,rules}:AutosaveSoftwareInfoProps) {
   const router = useRouter()
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()

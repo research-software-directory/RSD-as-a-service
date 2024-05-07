@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2024 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
@@ -13,8 +13,8 @@ import {EditSoftwareItem} from '~/types/SoftwareTypes'
 
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import {softwareInformation as config} from '~/components/software/edit/editSoftwareConfig'
 import AutosaveSoftwareTextField from '~/components/software/edit/information/AutosaveSoftwareTextField'
+import {config} from './config'
 import AutosaveRepositoryUrl from './AutosaveRepositoryUrl'
 import AutosaveConceptDoi from './AutosaveConceptDoi'
 import AutosaveSoftwareCategories from './AutosaveSoftwareCategories'

@@ -1,7 +1,10 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,6 +12,8 @@ import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Pagination from '@mui/material/Pagination'
+import Link from 'next/link'
+import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
 import {getBaseUrl} from '~/utils/fetchHelpers'
@@ -37,13 +42,13 @@ import SoftwareOverviewContent from '~/components/software/overview/SoftwareOver
 import SoftwareFilters from '~/components/software/overview/filters/index'
 import {
   softwareKeywordsFilter, softwareLanguagesFilter,
-  softwareLicesesFilter
+  softwareLicensesFilter
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
 import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
 import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
-
+import {getRsdSettings} from '~/config/getSettingsServerSide'
 
 type SoftwareOverviewProps = {
   search?: string | null
@@ -63,7 +68,7 @@ type SoftwareOverviewProps = {
 }
 
 const pageTitle = `Software | ${app.title}`
-const pageDesc = 'The list of research software registerd in the Research Software Directory.'
+const pageDesc = 'The list of research software registered in the Research Software Directory.'
 
 export default function SoftwareOverviewPage({
   search, keywords,
@@ -74,7 +79,7 @@ export default function SoftwareOverviewPage({
   licensesList, software, highlights
 }: SoftwareOverviewProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
-  const {handleQueryChange} = useSoftwareOverviewParams()
+  const {createUrl} = useSoftwareOverviewParams()
   const [modal,setModal] = useState(false)
   // if no layout - default is masonry
   const initView = layout ?? 'masonry'
@@ -179,8 +184,18 @@ export default function SoftwareOverviewPage({
                   <Pagination
                     count={numPages}
                     page={page}
-                    onChange={(_, page) => {
-                      handleQueryChange('page',page.toString())
+                    renderItem={item => {
+                      if (item.page !== null) {
+                        return (
+                          <Link href={createUrl('page', item.page.toString())}>
+                            <PaginationItem {...item}/>
+                          </Link>
+                        )
+                      } else {
+                        return (
+                          <PaginationItem {...item}/>
+                        )
+                      }
                     }}
                   />
                 }
@@ -245,6 +260,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     offset
   })
 
+  // extract rsd settings
+  const settings = await getRsdSettings()
+
   // console.log('software...url...', url)
   // console.log('order...', order)
   // console.log('orderBy...', orderBy)
@@ -262,12 +280,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     getSoftwareList({url}),
     softwareKeywordsFilter({search, keywords, prog_lang, licenses}),
     softwareLanguagesFilter({search, keywords, prog_lang, licenses}),
-    softwareLicesesFilter({search, keywords, prog_lang, licenses}),
-    getSoftwareHighlights({
-      page: 0,
-      // get max. 20 items
-      rows: 20,
-      orderBy: 'position'
+    softwareLicensesFilter({search, keywords, prog_lang, licenses}),
+    page !== 1 ? Promise.resolve({highlights: []}) : getSoftwareHighlights({
+      limit: settings.host?.software_highlights?.limit ?? 3,
+      offset: 0
     })
   ])
 

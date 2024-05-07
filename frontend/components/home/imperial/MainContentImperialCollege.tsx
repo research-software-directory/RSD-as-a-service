@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,7 +30,7 @@ function submit_software_href(auth_status: string, login_providers: Provider[]) 
   return (login_providers[0]?.redirectUrl ?? '')
 }
 
-export default function MainContentImperialCollege({counts}: HomeProps) {
+export default function MainContentImperialCollege({counts,news}: HomeProps) {
   const {token} = useSession()
   const {loading, keywords} = useImperialData(token)
   const {session} = useAuth()

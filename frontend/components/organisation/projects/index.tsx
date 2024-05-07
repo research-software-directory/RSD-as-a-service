@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +9,7 @@ import {useState} from 'react'
 import Pagination from '@mui/material/Pagination'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
-import UserAgrementModal from '~/components/user/settings/UserAgreementModal'
+import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
 import FiltersPanel from '~/components/filter/FiltersPanel'
 import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import {setDocumentCookie} from '~/utils/userSettings'
@@ -51,7 +51,7 @@ export default function OrganisationProjects() {
 
   return (
     <>
-      {isMaintainer && <UserAgrementModal />}
+      {isMaintainer && <UserAgreementModal />}
       {/* Page grid with 2 sections: left filter panel and main content */}
       <div className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-4 mb-12">
         {/* Filters panel large screen */}

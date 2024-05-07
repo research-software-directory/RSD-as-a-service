@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +11,7 @@ export const cfgOrganisations = {
     title: 'Add organisation',
     subtitle: 'We search by name in the RSD and the ROR databases',
     label: 'Find or add organisation',
-    help: 'At least the fist 2 letters of the organisation name',
+    help: 'At least the first 2 letters of the organisation name',
     validation: {
       // custom validation rule, not in use by react-hook-form
       minLength: 2,
