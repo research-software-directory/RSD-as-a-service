@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {MentionByType, MentionTypeKeys} from '~/types/Mention'
+import {doiRegexStrict} from '~/components/software/edit/mentions/utils'
 
 export const findMention={
   // title: 'Add publication',
@@ -20,6 +21,21 @@ export const findMention={
 
 export const mentionModal = {
   sectionTitle: 'Mentions',
+  doi: {
+    label: 'DOI',
+    help: undefined,
+    validation: {
+      required: false,
+      maxLength: {
+        value: 255,
+        message: 'Maximum length is 255'
+      },
+      pattern: {
+        value: doiRegexStrict,
+        message: 'The DOI should look like 10.XXX/XXX'
+      }
+    }
+  },
   title: {
     label: 'Title *',
     help: 'Publication title is required',
@@ -103,6 +119,17 @@ export const mentionModal = {
   note: {
     label: 'Note',
     help: 'Add a custom note',
+    validation: {
+      required: false,
+      maxLength: {
+        value: 500,
+        message: 'Maximum length is 500'
+      }
+    }
+  },
+  external_id: {
+    label: 'External ID',
+    help: 'An ID used by e.g. OpenAlex',
     validation: {
       required: false,
       maxLength: {

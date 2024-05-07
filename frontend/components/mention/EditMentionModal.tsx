@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -25,6 +25,7 @@ import {mentionModal as config, mentionType} from './config'
 import {MentionItemProps, MentionTypeKeys} from '../../types/Mention'
 import ControlledSelect from '~/components/form/ControlledSelect'
 import SubmitButtonWithListener from '../form/SubmitButtonWithListener'
+import {useSession} from '~/auth'
 
 export type EditMentionModalProps = {
   open: boolean,
@@ -48,9 +49,12 @@ const mentionTypeOptions = manualOptions.map(key => {
   }
 })
 
-const formId='edit-mention-form'
+const formId = 'edit-mention-form'
 
 export default function EditMentionModal({open, onCancel, onSubmit, item, pos, title}: EditMentionModalProps) {
+  const {user} = useSession()
+  const isAdmin = user?.role === 'rsd_admin'
+
   const smallScreen = useMediaQuery('(max-width:600px)')
   const {handleSubmit, watch, formState, reset, control, register} = useForm<MentionItemProps>({
     mode: 'onChange',
@@ -76,7 +80,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
     }
   }, [item, reset])
 
-  function handleCancel(reason:any) {
+  function handleCancel(reason: any) {
     if (reason === 'backdropClick') {
       // we do not cancel on backdrop click
       // only on escape or using cancel button
@@ -101,7 +105,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
       // use fullScreen modal for small screens (< 600px)
       fullScreen={smallScreen}
       open={open}
-      onClose={(e,reason)=>handleCancel(reason)}
+      onClose={(e, reason) => handleCancel(reason)}
       maxWidth="md"
     >
       <DialogTitle sx={{
@@ -130,6 +134,23 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             width: ['100%'],
             padding: '1rem 1.5rem'
           }}>
+          {isAdmin &&
+        <>
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'doi',
+              label: config.doi.label,
+              useNull: true,
+              defaultValue: formData?.doi,
+              helperTextMessage: config.doi.help,
+              helperTextCnt: `${formData?.doi?.length || 0}/${config.doi.validation.maxLength.value}`,
+            }}
+            rules={config.doi.validation}
+          />
+          <div className="py-2"></div>
+        </>
+          }
           <ControlledTextField
             control={control}
             options={{
@@ -261,9 +282,28 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             }}
             rules={config.note.validation}
           />
-          <Alert severity="warning" sx={{marginTop: '1rem'}}>
-            The information can not be edited after creation.
-          </Alert>
+          {isAdmin &&
+        <>
+          <div className="py-2"></div>
+          <ControlledTextField
+            control={control}
+            options={{
+              name: 'external_id',
+              label: config.external_id.label,
+              useNull: true,
+              defaultValue: formData?.external_id,
+              helperTextMessage: config.external_id.help,
+              helperTextCnt: `${formData?.external_id?.length || 0}/${config.external_id.validation.maxLength.value}`,
+            }}
+            rules={config.external_id.validation}
+          />
+          <div className="py-2"></div>
+        </>
+          }
+          {!isAdmin &&
+        <Alert severity="warning" sx={{marginTop: '1rem'}}>
+          The information can not be edited after creation.
+        </Alert>}
         </DialogContent>
         <DialogActions sx={{
           padding: '1rem 1.5rem',
@@ -274,7 +314,7 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
             tabIndex={1}
             onClick={handleCancel}
             color="secondary"
-            sx={{marginRight:'2rem'}}
+            sx={{marginRight: '2rem'}}
           >
             Cancel
           </Button>
@@ -288,8 +328,6 @@ export default function EditMentionModal({open, onCancel, onSubmit, item, pos, t
   )
 
   function isSaveDisabled() {
-    if (isValid === false) return true
-    if (isDirty === false) return true
-    return false
+    return !isValid || !isDirty
   }
 }
