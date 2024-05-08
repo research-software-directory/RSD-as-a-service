@@ -5,29 +5,19 @@
 
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import Links, {LinksProps} from '~/components/organisation/metadata/Links'
+import { useCommunityContext } from '../context'
 import CommunityLogo from './CommunityLogo'
 
-type CommunityMetadataProps={
-  id: string,
-  name: string,
-  short_description: string | null
-  logo_id: string | null
-  isMaintainer: boolean
-  links: LinksProps[]
-}
-
-export default function CommunityMetadata({
-  id,name,short_description,
-  logo_id,isMaintainer,links
-}:CommunityMetadataProps) {
+export default function CommunityMetadata() {
+  const {id,name,logo_id,isMaintainer,short_description} = useCommunityContext()
 
   return (
     <section className="grid  md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-4">
       <BaseSurfaceRounded className="flex justify-center p-8 overflow-hidden relative">
         <CommunityLogo
-          id={id}
-          name={name}
-          logo_id={logo_id}
+          id={id ?? ""}
+          name={name ?? ""}
+          logo_id={logo_id ?? null}
           isMaintainer={isMaintainer}
         />
       </BaseSurfaceRounded>
@@ -42,9 +32,9 @@ export default function CommunityMetadata({
             {short_description}
           </p>
         </div>
-        <div className="flex flex-col gap-4">
+        {/* <div className="flex flex-col gap-4">
           <Links links={links} />
-        </div>
+        </div> */}
       </BaseSurfaceRounded>
     </section>
   )

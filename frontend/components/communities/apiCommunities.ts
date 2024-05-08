@@ -14,8 +14,10 @@ export type CommunityListProps = {
   slug: string,
   name: string,
   short_description: string | null,
-  logo_id: string | null
-  software_cnt: number | null
+  logo_id: string | null,
+  software_cnt: number | null,
+  primary_maintainer: string | null
+  description?: string
 }
 
 type GetCommunityListParams={
@@ -79,7 +81,7 @@ type GetCommunityBySlug={
   token?:string
 }
 
-export async function getCommunityBySlug({slug,user,token}:GetCommunityBySlug){
+export async function getCommunityBySlug({slug,token}:GetCommunityBySlug){
   try{
     // ignore if no slug
     if (slug===null) return null
@@ -113,17 +115,19 @@ export async function getCommunityBySlug({slug,user,token}:GetCommunityBySlug){
 
 type PatchCommunityProps = {
   id: string,
-  slug?: string,
-  name?: string,
-  short_description?: string | null,
-  logo_id?: string | null
-  description?: string | null
+  data:{
+    slug?: string,
+    name?: string,
+    short_description?: string | null,
+    logo_id?: string | null
+    description?: string | null
+  },
+  token: string
 }
 
-export async function patchCommunity({data, token}:
-  { data: PatchCommunityProps, token: string }) {
+export async function patchCommunityTable({id, data, token}:PatchCommunityProps) {
   try {
-    const url = `/api/v1/community?id=eq.${data.id}`
+    const url = `/api/v1/community?id=eq.${id}`
     const resp = await fetch(url, {
       method: 'PATCH',
       headers: {

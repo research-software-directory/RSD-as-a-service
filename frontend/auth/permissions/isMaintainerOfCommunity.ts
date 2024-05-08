@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {RsdRole} from '~/auth/index'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 
 type isCommunityMaintainerProps = {
@@ -44,15 +45,15 @@ export async function isMaintainerOfCommunity({community, account, token}: isCom
       // if no account, token, role provided
       return false
     }
-    console.error('isMaintainerOfCommunity...NOT IMPLEMENTED')
-    // const organisations = await getMaintainerOrganisations({
-    //   token
-    // })
-    // // debugger
-    // if (organisations.length > 0) {
-    //   const isMaintainer = organisations.includes(organisation)
-    //   return isMaintainer
-    // }
+    const communities = await getCommunitiesOfMaintainer({
+      token
+    })
+    // console.log('isMaintainerOfCommunity...',communities)
+    // debugger
+    if (communities.length > 0) {
+      const isMaintainer = communities.includes(community)
+      return isMaintainer
+    }
     return false
   } catch (e:any) {
     logger(`isMaintainerOfCommunity: ${e?.message}`, 'error')
@@ -60,3 +61,31 @@ export async function isMaintainerOfCommunity({community, account, token}: isCom
     return false
   }
 }
+
+export async function getCommunitiesOfMaintainer({token}:
+  {token: string}) {
+  try {
+    // without token api request is not needed
+    if (!token) return []
+    // build url
+    const query = 'rpc/communities_of_current_maintainer'
+    let url = `${getBaseUrl()}/${query}`
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const json = await resp.json()
+      return json
+    }
+    // ERRORS AS NOT MAINTAINER
+    logger(`getCommunitiesOfMaintainer: ${resp.status}:${resp.statusText}`, 'warn')
+    return []
+  } catch(e:any) {
+    // ERRORS AS NOT MAINTAINER
+    logger(`getCommunitiesOfMaintainer: ${e.message}`, 'error')
+    return []
+  }
+}
+
+export default isMaintainerOfCommunity

@@ -30,7 +30,9 @@ CREATE FUNCTION communities_overview() RETURNS TABLE (
 	name VARCHAR,
 	short_description VARCHAR,
 	logo_id VARCHAR,
+	primary_maintainer UUID,
 	software_cnt BIGINT,
+	description VARCHAR,
 	created_at TIMESTAMPTZ
 ) LANGUAGE sql STABLE AS
 $$
@@ -40,7 +42,9 @@ SELECT
 	community."name",
 	community.short_description,
 	community.logo_id,
+	community.primary_maintainer,
 	software_count_by_community.software_cnt,
+	community.description,
 	community.created_at
 FROM
 	community
@@ -48,3 +52,4 @@ LEFT JOIN
 	software_count_by_community() ON community.id = software_count_by_community.community
 ;
 $$;
+

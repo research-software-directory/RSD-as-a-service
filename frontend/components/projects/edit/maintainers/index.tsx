@@ -1,52 +1,38 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect,useState} from 'react'
+import {useState} from 'react'
 
-import {useSession} from '~/auth'
 import ContentLoader from '~/components/layout/ContentLoader'
 import EditSection from '~/components/layout/EditSection'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
-import useProjectContext from '../useProjectContext'
-import useProjectMaintainers, {deleteMaintainerFromProject, MaintainerOfProject} from './useProjectMaintainer'
-import ProjectMaintainersList from './ProjectMaintainersList'
-import ProjectMaintainerLink from './ProjectMaintainerLink'
-import {maintainers as config} from './config'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
-import useSnackbar from '~/components/snackbar/useSnackbar'
+import MaintainersList from '~/components/maintainers/MaintainersList'
+import useProjectContext from '../useProjectContext'
+import {maintainers as config} from './config'
+import ProjectMaintainerLinks from './ProjectMaintainerLinks'
+import {useProjectMaintainers} from './useProjectMaintainers'
 
 type DeleteModal = {
   open: boolean,
-  pos?: number,
-  displayName?:string
+  // unique account id
+  account?: string,
+  displayName?: string
 }
 
-
 export default function ProjectMaintainers() {
-  const {token,user} = useSession()
-  const {showErrorMessage} = useSnackbar()
   const {project} = useProjectContext()
-  const {loading,maintainers} = useProjectMaintainers({
-    project: project.id,
-    token
+  const {loading,maintainers,deleteMaintainer} = useProjectMaintainers({
+    project: project.id
   })
-  const [projectMaintainers, setProjectMaintaners] = useState<MaintainerOfProject[]>([])
   const [modal, setModal] = useState<DeleteModal>({
     open: false
   })
-
-  useEffect(() => {
-    let abort = false
-    if (loading === false &&
-      abort === false) {
-      setProjectMaintaners(maintainers)
-    }
-    return () => { abort = true }
-  },[maintainers,loading])
 
   if (loading) {
     return (
@@ -56,7 +42,7 @@ export default function ProjectMaintainers() {
 
   function closeModal() {
     setModal({
-      open: false
+      open: false,
     })
   }
 
@@ -65,32 +51,9 @@ export default function ProjectMaintainers() {
     if (maintainer) {
       setModal({
         open: true,
-        pos,
+        account: maintainer.account,
         displayName: maintainer.name
       })
-    }
-  }
-
-  async function deleteMaintainer(pos: number) {
-    // console.log('delete maintainer...pos...', pos)
-    closeModal()
-    const admin = maintainers[pos]
-    if (admin) {
-      const resp = await deleteMaintainerFromProject({
-        maintainer: admin.account,
-        project: project.id,
-        token,
-        frontend: true
-      })
-      if (resp.status === 200) {
-        const newMaintainersList = [
-          ...maintainers.slice(0, pos),
-          ...maintainers.slice(pos+1)
-        ]
-        setProjectMaintaners(newMaintainersList)
-      } else {
-        showErrorMessage(`Failed to remove maintainer. ${resp.message}`)
-      }
     }
   }
 
@@ -101,9 +64,9 @@ export default function ProjectMaintainers() {
           <EditSectionTitle
             title={config.title}
           />
-          <ProjectMaintainersList
+          <MaintainersList
             onDelete={onDeleteMaintainer}
-            maintainers={projectMaintainers}
+            maintainers={maintainers}
           />
         </div>
         <div className="py-4 min-w-[21rem] xl:my-0">
@@ -111,12 +74,7 @@ export default function ProjectMaintainers() {
             title={config.inviteLink.title}
             subtitle={config.inviteLink.subtitle}
           />
-          <ProjectMaintainerLink
-            project={project.id}
-            title={project.title}
-            account={user?.account ?? ''}
-            token={token}
-          />
+          <ProjectMaintainerLinks />
         </div>
       </EditSection>
       <ConfirmDeleteModal
@@ -125,12 +83,11 @@ export default function ProjectMaintainers() {
         body={
           <p>Are you sure you want to remove <strong>{modal.displayName ?? 'No name'}</strong>?</p>
         }
-        onCancel={() => {
-          setModal({
-            open:false
-          })
+        onCancel={closeModal}
+        onDelete={()=>{
+          deleteMaintainer(modal.account)
+          closeModal()
         }}
-        onDelete={()=>deleteMaintainer(modal.pos ?? 0)}
       />
     </>
   )

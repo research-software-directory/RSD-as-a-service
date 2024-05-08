@@ -1,50 +1,36 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState,useEffect} from 'react'
-import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
-import logger from '~/utils/logger'
-import {getMaintainersOfOrganisation} from './getMaintainersOfOrganisation'
 
-export type RawMaintainerOfOrganisation = {
-  // unique maintainer id
-  maintainer: string
-  name: string[]
-  email: string[]
-  affiliation: string[],
-  is_primary?: boolean
-}
+import {useSession} from '~/auth'
+import {MaintainerProps, rawMaintainersToMaintainers} from '~/components/maintainers/apiMaintainers'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {
+  deleteMaintainerFromOrganisation,
+  getMaintainersOfOrganisation
+} from './apiOrganisationMaintainers'
 
-export type MaintainerOfOrganisation = {
-  // unique maintainer id
-  account: string
-  name: string
-  email: string
-  affiliation: string,
-  is_primary?: boolean
-}
 
-export default function useOrganisationMaintainers({organisation, token}:
-  {organisation: string, token: string }) {
-  const [maintainers, setMaintainers] = useState<MaintainerOfOrganisation[]>([])
+export function useOrganisationMaintainers({organisation}:{organisation: string}) {
+  const {token} = useSession()
+  const {showErrorMessage} = useSnackbar()
+  const [maintainers, setMaintainers] = useState<MaintainerProps[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let abort = false
     async function getMaintainers() {
-      // console.log('useOrganisationMaintainers.useEffect.getMaintainers')
       setLoading(true)
       const raw_maintainers = await getMaintainersOfOrganisation({
         organisation,
-        token,
-        frontend:true
+        token
       })
-      // console.log('useOrganisationMaintainers.useEffect...raw_maintainers',raw_maintainers)
       const maintainers = rawMaintainersToMaintainers(raw_maintainers)
       if (abort) return null
       // update maintainers state
@@ -52,7 +38,6 @@ export default function useOrganisationMaintainers({organisation, token}:
       // update loading flag
       setLoading(false)
     }
-    // console.log('useOrganisationMaintainers.useEffect...')
     if (organisation && token) {
       getMaintainers()
     } else if (token==='') {
@@ -61,128 +46,29 @@ export default function useOrganisationMaintainers({organisation, token}:
     return ()=>{abort=true}
   }, [organisation,token])
 
-  if (token === '') {
-    return {
-      loading: false,
-      maintainers,
-      setMaintainers
+
+  async function deleteMaintainer(account?:string) {
+    // console.log('delete maintainer...pos...', pos)
+    if (account && organisation) {
+      const resp = await deleteMaintainerFromOrganisation({
+        maintainer: account,
+        organisation,
+        token
+      })
+      if (resp.status === 200) {
+        // remove account
+        const newMaintainersList = maintainers.filter(item=>item.account!==account)
+        setMaintainers(newMaintainersList)
+        // setMaintainers(newMaintainersList)
+      } else {
+        showErrorMessage(`Failed to remove maintainer. ${resp.message}`)
+      }
     }
   }
 
-  // console.log('useOrganisationMaintainers.loading...', loading)
-  // console.log('useOrganisationMaintainers.organisation...',organisation)
-  // console.log('useOrganisationMaintainers.token...',token)
   return {
     loading,
     maintainers,
-    setMaintainers
-  }
-}
-
-export function rawMaintainersToMaintainers(raw_maintainers: RawMaintainerOfOrganisation[]) {
-  try {
-    const maintainers:MaintainerOfOrganisation[] = []
-    raw_maintainers.forEach(item => {
-      let maintainerWithMostInfo: MaintainerOfOrganisation | null = null
-      let bestScore = -1
-      // use name as second loop indicator
-      item.name.forEach((name, pos) => {
-        let score = 0
-        if (name) {
-          score += 1
-        }
-        if (item.email[pos]) {
-          score += 1
-        }
-        if (item.affiliation[pos]) {
-          score += 1
-        }
-
-        if (score <= bestScore) {
-          return
-        }
-        const maintainer: MaintainerOfOrganisation = {
-          account: item.maintainer,
-          name,
-          email: item.email[pos] ? item.email[pos] : '',
-          affiliation: item.affiliation[pos] ? item.affiliation[pos] : '',
-          is_primary: item?.is_primary ?? false
-        }
-
-        maintainerWithMostInfo = maintainer
-        bestScore = score
-      })
-      maintainers.push(maintainerWithMostInfo as unknown as MaintainerOfOrganisation)
-    })
-    return maintainers
-  } catch (e:any) {
-    logger(`rawMaintainersToMaintainers: ${e?.message}`,'error')
-    return []
-  }
-}
-
-
-export async function deleteMaintainerFromOrganisation({maintainer,organisation,token,frontend=true}:
-  {maintainer:string,organisation:string,token:string,frontend?:boolean}) {
-  try {
-    let query = `maintainer_for_organisation?maintainer=eq.${maintainer}&organisation=eq.${organisation}`
-    let url = `/api/v1/${query}`
-    if (frontend === false) {
-      url = `${process.env.POSTGREST_URL}/${query}`
-    }
-
-    const resp = await fetch(url, {
-      method: 'DELETE',
-      headers: createJsonHeaders(token)
-    })
-
-    return extractReturnMessage(resp)
-
-  } catch (e: any) {
-    logger(`deleteMaintainerFromSoftware: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
-  }
-}
-
-export async function organisationMaintainerLink({organisation, account, token}:
-  { organisation: string, account: string, token: string }) {
-  try {
-    // POST
-    const url = '/api/v1/invite_maintainer_for_organisation'
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: {
-        ...createJsonHeaders(token),
-        'Prefer': 'return=headers-only'
-      },
-      body: JSON.stringify({
-        organisation,
-        created_by:account
-      })
-    })
-    if (resp.status === 201) {
-      const id = resp.headers.get('location')?.split('.')[1]
-      if (id) {
-        const link = `${location.origin}/invite/organisation/${id}`
-        return {
-          status: 201,
-          message: link
-        }
-      }
-      return {
-        status: 400,
-        message: 'Id is missing'
-      }
-    }
-    return extractReturnMessage(resp, organisation ?? '')
-  } catch (e: any) {
-    logger(`organisationMaintainerLink: ${e?.message}`, 'error')
-    return {
-      status: 500,
-      message: e?.message
-    }
+    deleteMaintainer
   }
 }

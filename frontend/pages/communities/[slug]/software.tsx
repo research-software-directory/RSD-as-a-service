@@ -12,13 +12,8 @@ import {CommunityListProps, getCommunityBySlug} from '~/components/communities/a
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import BackgroundAndLayout from '~/components/layout/BackgroundAndLayout'
-import {UserSettingsProvider} from '~/components/organisation/context/UserSettingsContext'
-import PageBreadcrumbs from '~/components/layout/PageBreadcrumbs'
-import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
-import CommunityMetadata from '~/components/communities/metadata'
-import CommunityTabs from '~/components/communities/tabs'
 import {isCommunityMaintainer} from '~/auth/permissions/isMaintainerOfCommunity'
+import CommunityPage from '~/components/communities/CommunityPage'
 
 type CommunitySoftwareProps={
   community: CommunityListProps,
@@ -33,14 +28,13 @@ export default function CommunitySoftwarePage({
   rsd_page_rows, rsd_page_layout
 }:CommunitySoftwareProps) {
 
-  console.group('CommunitySoftwarePage')
-  console.log('community...', community)
-  console.log('slug....', slug)
-  console.log('isMaintainer....', isMaintainer)
-  console.log('rsd_page_rows....', rsd_page_rows)
-  console.log('rsd_page_layout....', rsd_page_layout)
-  console.groupEnd()
-
+  // console.group('CommunitySoftwarePage')
+  // console.log('community...', community)
+  // console.log('slug....', slug)
+  // console.log('isMaintainer....', isMaintainer)
+  // console.log('rsd_page_rows....', rsd_page_rows)
+  // console.log('rsd_page_layout....', rsd_page_layout)
+  // console.groupEnd()
 
   function getMetaDescription() {
     // use organisation (short) description if available
@@ -57,49 +51,16 @@ export default function CommunitySoftwarePage({
         description={getMetaDescription()}
       />
       <CanonicalUrl />
-      <BackgroundAndLayout>
-        <UserSettingsProvider
-          settings={{
-            rsd_page_layout,
-            rsd_page_rows
-          }}
-        >
-          {/* COMMUNITY HEADER */}
-          <PageBreadcrumbs
-            slug={slug}
-            root={{
-              label:'communities',
-              path:'/communities'
-            }}
-          />
-          <CommunityMetadata
-            id={community.id}
-            name={community.name}
-            short_description={community.short_description}
-            logo_id={community.logo_id}
-            isMaintainer={isMaintainer}
-            links={[]}
-          />
-
-          {/* TABS */}
-          <BaseSurfaceRounded
-            className="my-4 p-2"
-            type="section"
-          >
-            <CommunityTabs
-              tab={'software'}
-              software_cnt={community.software_cnt ?? 0}
-              description={null}
-              isMaintainer={false}
-            />
-          </BaseSurfaceRounded>
-          {/* TAB CONTENT */}
-          <section className="flex md:min-h-[60rem]">
-            {/* <TabContent tab_id={tab} /> */}
-            <h1>Community software - TO DO!</h1>
-          </section>
-        </UserSettingsProvider>
-      </BackgroundAndLayout>
+      <CommunityPage
+        community={community}
+        slug={slug}
+        isMaintainer={isMaintainer}
+        rsd_page_rows={rsd_page_rows}
+        rsd_page_layout={rsd_page_layout}
+        selectTab='software'
+      >
+        <h2>Community software - TO DO!</h2>
+      </CommunityPage>
     </>
   )
 }

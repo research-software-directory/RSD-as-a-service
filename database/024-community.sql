@@ -111,7 +111,6 @@ CREATE TRIGGER sanitise_update_software_for_community BEFORE UPDATE ON software_
 
 
 -- MAINTAINER OF COMMUNITY
-
 CREATE TABLE maintainer_for_community (
 	maintainer UUID REFERENCES account (id),
 	community UUID REFERENCES community (id),
@@ -145,7 +144,7 @@ CREATE FUNCTION sanitise_update_invite_maintainer_for_community() RETURNS TRIGGE
 $$
 BEGIN
 	NEW.id = OLD.id;
-	NEW.software = OLD.software;
+	NEW.community = OLD.community;
 	NEW.created_by = OLD.created_by;
 	NEW.created_at = OLD.created_at;
 	return NEW;
@@ -154,7 +153,100 @@ $$;
 
 CREATE TRIGGER sanitise_update_invite_maintainer_for_community BEFORE UPDATE ON invite_maintainer_for_community FOR EACH ROW EXECUTE PROCEDURE sanitise_update_invite_maintainer_for_community();
 
+CREATE FUNCTION communities_of_current_maintainer() RETURNS SETOF UUID STABLE
+LANGUAGE plpgsql SECURITY DEFINER AS
+$$
+BEGIN
+	RETURN QUERY
+	SELECT
+		id
+	FROM
+		community
+	WHERE
+		primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN QUERY
+	SELECT
+		community
+	FROM
+		maintainer_for_community
+	WHERE
+		maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	RETURN;
+END
+$$;
+
+-- COMMUNITY maintainers list with basic personal info
+-- used in the community maintainers page
+CREATE FUNCTION maintainers_of_community(community_id UUID) RETURNS TABLE (
+	maintainer UUID,
+	name VARCHAR[],
+	email VARCHAR[],
+	affiliation VARCHAR[],
+	is_primary BOOLEAN
+) LANGUAGE plpgsql STABLE SECURITY DEFINER AS
+$$
+DECLARE account_authenticated UUID;
+BEGIN
+	account_authenticated = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+	IF account_authenticated IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please login first';
+	END IF;
+
+	IF community_id IS NULL THEN
+		RAISE EXCEPTION USING MESSAGE = 'Please provide a community id';
+	END IF;
+
+	IF NOT community_id IN (SELECT * FROM communities_of_current_maintainer()) AND
+		CURRENT_USER IS DISTINCT FROM 'rsd_admin' AND (
+			SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER
+		) IS DISTINCT FROM TRUE THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not a maintainer of this community';
+	END IF;
+
+	RETURN QUERY
+	-- primary maintainer of community
+	SELECT
+		community.primary_maintainer AS maintainer,
+		ARRAY_AGG(login_for_account."name") AS name,
+		ARRAY_AGG(login_for_account.email) AS email,
+		ARRAY_AGG(login_for_account.home_organisation) AS affiliation,
+		TRUE AS is_primary
+	FROM
+		community
+	INNER JOIN
+		login_for_account ON community.primary_maintainer = login_for_account.account
+	WHERE
+		community.id = community_id
+	GROUP BY
+		community.id,community.primary_maintainer
+	-- append second selection
+	UNION
+	-- other maintainers of community
+	SELECT
+		maintainer_for_community.maintainer,
+		ARRAY_AGG(login_for_account."name") AS name,
+		ARRAY_AGG(login_for_account.email) AS email,
+		ARRAY_AGG(login_for_account.home_organisation) AS affiliation,
+		FALSE AS is_primary
+	FROM
+		maintainer_for_community
+	INNER JOIN
+		login_for_account ON maintainer_for_community.maintainer = login_for_account.account
+	WHERE
+		maintainer_for_community.community = community_id
+	GROUP BY
+		maintainer_for_community.community, maintainer_for_community.maintainer
+	-- primary as first record
+	ORDER BY is_primary DESC;
+	RETURN;
+END
+$$;
+
+-- ACCEPT MAGIC LINK INVITATION
+-- REGISTER user with this link as maintainer of community
+-- RETURN basic info about community on SUCCESS
 CREATE FUNCTION accept_invitation_community(invitation UUID) RETURNS TABLE(
+	id UUID,
 	name VARCHAR,
 	slug VARCHAR
 ) LANGUAGE plpgsql VOLATILE SECURITY DEFINER AS
@@ -171,7 +263,11 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Please provide an invitation id';
 	END IF;
 
-	SELECT * FROM invite_maintainer_for_community WHERE id = invitation INTO invitation_row;
+	SELECT * FROM
+		invite_maintainer_for_community
+	WHERE
+		invite_maintainer_for_community.id = invitation INTO invitation_row;
+
 	IF invitation_row.id IS NULL THEN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' does not exist';
 	END IF;
@@ -181,14 +277,41 @@ BEGIN
 	END IF;
 
 -- Only use the invitation if not already a maintainer
-	IF NOT EXISTS(SELECT 1 FROM maintainer_for_community WHERE maintainer = account AND community = invitation_row.community) THEN
-		UPDATE invite_maintainer_for_community SET claimed_by = account, claimed_at = LOCALTIMESTAMP WHERE id = invitation;
-		INSERT INTO maintainer_for_community VALUES (account, invitation_row.community);
+	IF NOT EXISTS(
+		SELECT
+			maintainer_for_community.maintainer
+		FROM
+			maintainer_for_community
+		WHERE
+			maintainer_for_community.maintainer=account AND maintainer_for_community.community=invitation_row.community
+		UNION
+		SELECT
+			community.primary_maintainer AS maintainer
+		FROM
+			community
+		WHERE
+			community.primary_maintainer=account AND community.id=invitation_row.community
+		LIMIT 1
+	) THEN
+
+		UPDATE invite_maintainer_for_community
+			SET claimed_by = account, claimed_at = LOCALTIMESTAMP
+			WHERE invite_maintainer_for_community.id = invitation;
+
+		INSERT INTO maintainer_for_community
+			VALUES (account, invitation_row.community);
+
 	END IF;
 
 	RETURN QUERY
-		SELECT community.name, community.slug FROM community WHERE community.id = invitation_row.community;
+		SELECT
+			community.id,
+			community.name,
+			community.slug
+		FROM
+			community
+		WHERE
+			community.id = invitation_row.community;
 	RETURN;
 END
 $$;
-

@@ -1,9 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -99,7 +98,7 @@ export default function OrganisationPage({
               <OrganisationTabs tab_id={tab} />
             </BaseSurfaceRounded>
             {/* TAB CONTENT */}
-            <section className="flex md:min-h-[60rem]">
+            <section className="flex md:min-h-[55rem]">
               <TabContent tab_id={tab} />
             </section>
           </OrganisationProvider>
