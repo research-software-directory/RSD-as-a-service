@@ -121,7 +121,7 @@ Additionally to organisation maintainers, administrators can edit the following 
 * Parent organisation: if the organisation belongs to another organisation, add the ID of the parent organisation here. The organisation ID is displayed in the Admin section of the respective organisation.
 
 :::warning
-**Note** that changing the parent organisation will also affect the path under which the organisation is accessible. The path is determined by the organisation hirarchy, e.g. `/organisations/parent-organisation/child-organisation`.
+**Note** that changing the parent organisation will also affect the path under which the organisation is accessible. The path is determined by the organisation hierarchy, e.g. `/organisations/parent-organisation/child-organisation`.
 :::
 
 The settings are visible in the *Admin section* under the *General settings* tab of the organisation settings:
@@ -138,6 +138,14 @@ You can delete the keyword only when it is not used in any software or project.
 :::
 
 ![animation](img/admin-keywords.gif)
+
+## Mentions
+
+In this section, admins can search for mentions and edit them. If you enter a DOI or UUID, we search on that field only. Otherwise, we search on title, authors, journal, URL, note and external ID (like an OpenAlex ID).
+
+:::warning
+Edit mentions with care: they might be referenced to in multiple places. If you want to fully change a mention attached to e.g. a software page, you should delete it there and create a new one instead of editing it.
+:::
 
 ## Error logs
 
