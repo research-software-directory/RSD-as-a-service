@@ -30,17 +30,6 @@ BEGIN
 		RETURN NEW;
 	END IF;
 
-	IF NOT NEW.is_tenant AND NEW.parent IS NULL AND NEW.primary_maintainer IS NULL THEN
-		RETURN NEW;
-	END IF;
-
-	IF (SELECT primary_maintainer FROM community o WHERE o.id = NEW.parent) = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')
-	AND
-	NEW.primary_maintainer = (SELECT primary_maintainer FROM community o WHERE o.id = NEW.parent)
-	THEN
-		RETURN NEW;
-	END IF;
-
 	RAISE EXCEPTION USING MESSAGE = 'You are not allowed to add this community';
 END
 $$;
@@ -59,10 +48,8 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the slug';
 	END IF;
 
-	IF CURRENT_USER <> 'rsd_admin' AND NOT (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) THEN
-		IF NEW.primary_maintainer IS DISTINCT FROM OLD.primary_maintainer THEN
-			RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the primary maintainer for community ' || OLD.name;
-		END IF;
+	IF NEW.primary_maintainer IS DISTINCT FROM OLD.primary_maintainer AND CURRENT_USER IS DISTINCT FROM 'rsd_admin' AND (SELECT rolsuper FROM pg_roles WHERE rolname = CURRENT_USER) IS DISTINCT FROM TRUE THEN
+		RAISE EXCEPTION USING MESSAGE = 'You are not allowed to change the primary maintainer for community ' || OLD.name;
 	END IF;
 
 	RETURN NEW;
@@ -71,44 +58,6 @@ $$;
 
 CREATE TRIGGER sanitise_update_community BEFORE UPDATE ON community FOR EACH ROW EXECUTE PROCEDURE sanitise_update_community();
 
--- RLS community table
-ALTER TABLE community ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY anyone_can_read ON community FOR SELECT TO rsd_web_anon, rsd_user
-	USING (TRUE);
-
-CREATE POLICY admin_all_rights ON community TO rsd_admin
-	USING (TRUE)
-	WITH CHECK (TRUE);
-
-
--- SOFTWARE FOR COMMUNITY
--- request status of software to be added to community
--- default value is pending
-CREATE TYPE request_status AS ENUM (
-	'pending',
-	'approved',
-	'rejected'
-);
-
-CREATE TABLE software_for_community (
-	software UUID REFERENCES software (id),
-	community UUID REFERENCES community (id),
-	status request_status NOT NULL DEFAULT 'pending',
-	PRIMARY KEY (software, community)
-);
-
-CREATE FUNCTION sanitise_update_software_for_community() RETURNS TRIGGER LANGUAGE plpgsql AS
-$$
-BEGIN
-	NEW.software = OLD.software;
-	NEW.community = OLD.community;
-	return NEW;
-END
-$$;
-
-CREATE TRIGGER sanitise_update_software_for_community BEFORE UPDATE ON software_for_community FOR EACH ROW EXECUTE PROCEDURE sanitise_update_software_for_community();
-
 
 -- MAINTAINER OF COMMUNITY
 CREATE TABLE maintainer_for_community (
@@ -116,6 +65,59 @@ CREATE TABLE maintainer_for_community (
 	community UUID REFERENCES community (id),
 	PRIMARY KEY (maintainer, community)
 );
+
+
+-- Needed for RLS on various tables
+CREATE FUNCTION communities_of_current_maintainer() RETURNS SETOF UUID STABLE
+LANGUAGE sql SECURITY DEFINER AS
+$$
+	SELECT
+		id
+	FROM
+		community
+	WHERE
+		primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')
+	UNION
+	SELECT
+		community
+	FROM
+		maintainer_for_community
+	WHERE
+		maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
+$$;
+
+
+-- RLS community table
+ALTER TABLE community ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON community FOR SELECT TO rsd_web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY maintainer_all_rights ON community TO rsd_user
+	USING (id IN (SELECT * FROM communities_of_current_maintainer()))
+	WITH CHECK (TRUE);
+
+CREATE POLICY admin_all_rights ON community TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+-- RLS maintainer_for_community table
+ALTER TABLE maintainer_for_community ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY maintainer_select ON maintainer_for_community FOR SELECT TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON maintainer_for_community FOR DELETE TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_insert ON maintainer_for_community FOR INSERT TO rsd_user
+	WITH CHECK (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON maintainer_for_community TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
 
 -- INVITES FOR COMMUNITY MAINTAINER (magic link)
 CREATE TABLE invite_maintainer_for_community (
@@ -153,27 +155,26 @@ $$;
 
 CREATE TRIGGER sanitise_update_invite_maintainer_for_community BEFORE UPDATE ON invite_maintainer_for_community FOR EACH ROW EXECUTE PROCEDURE sanitise_update_invite_maintainer_for_community();
 
-CREATE FUNCTION communities_of_current_maintainer() RETURNS SETOF UUID STABLE
-LANGUAGE plpgsql SECURITY DEFINER AS
-$$
-BEGIN
-	RETURN QUERY
-	SELECT
-		id
-	FROM
-		community
-	WHERE
-		primary_maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
-	RETURN QUERY
-	SELECT
-		community
-	FROM
-		maintainer_for_community
-	WHERE
-		maintainer = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account');
-	RETURN;
-END
-$$;
+-- RLS invite_maintainer_for_community table
+ALTER TABLE invite_maintainer_for_community ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY maintainer_select ON invite_maintainer_for_community FOR SELECT TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer())
+		OR created_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')
+		OR claimed_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+
+CREATE POLICY maintainer_delete ON invite_maintainer_for_community FOR DELETE TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer())
+		OR created_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account')
+		OR claimed_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+
+CREATE POLICY maintainer_insert ON invite_maintainer_for_community FOR INSERT TO rsd_user
+	WITH CHECK (community IN (SELECT * FROM communities_of_current_maintainer()) AND created_by = uuid(current_setting('request.jwt.claims', FALSE)::json->>'account'));
+
+CREATE POLICY admin_all_rights ON invite_maintainer_for_community TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
 
 -- COMMUNITY maintainers list with basic personal info
 -- used in the community maintainers page
@@ -315,3 +316,60 @@ BEGIN
 	RETURN;
 END
 $$;
+
+
+-- SOFTWARE FOR COMMUNITY
+-- request status of software to be added to community
+-- default value is pending
+CREATE TYPE request_status AS ENUM (
+	'pending',
+	'approved',
+	'rejected'
+);
+
+CREATE TABLE software_for_community (
+	software UUID REFERENCES software (id),
+	community UUID REFERENCES community (id),
+	status request_status NOT NULL DEFAULT 'pending',
+	PRIMARY KEY (software, community)
+);
+
+CREATE FUNCTION sanitise_update_software_for_community() RETURNS TRIGGER LANGUAGE plpgsql AS
+$$
+BEGIN
+	NEW.software = OLD.software;
+	NEW.community = OLD.community;
+	return NEW;
+END
+$$;
+
+CREATE TRIGGER sanitise_update_software_for_community BEFORE UPDATE ON software_for_community FOR EACH ROW EXECUTE PROCEDURE sanitise_update_software_for_community();
+
+
+-- RLS software_for_community table
+ALTER TABLE software_for_community ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON software_for_community FOR SELECT TO rsd_web_anon, rsd_user
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_can_read ON software_for_community FOR SELECT TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()) OR community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_software_insert ON software_for_community FOR INSERT TO rsd_user
+	WITH CHECK (status = 'pending' AND software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_community_insert ON software_for_community FOR INSERT TO rsd_user
+	WITH CHECK (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_community_update ON software_for_community FOR UPDATE TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_software_delete ON software_for_community FOR DELETE TO rsd_user
+	USING ((status = 'pending' OR status = 'approved') AND software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_community_delete ON software_for_community FOR DELETE TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON software_for_community TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
