@@ -4,22 +4,33 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {PropsWithChildren, createContext, useCallback, useContext, useState} from 'react'
-import {Community} from '~/components/admin/communities/apiCommunities'
-import {CommunityListProps} from '~/components/communities/apiCommunities'
+import {EditCommunityProps} from '~/components/communities/apiCommunities'
 
 type UpdateCommunityProps = {
-  key: keyof Community,
+  key: keyof EditCommunityProps,
   value: any
 }
 
 type CommunityContextProps = PropsWithChildren & {
-  community: CommunityListProps | null,
+  community: EditCommunityProps,
   isMaintainer: boolean,
   updateCommunity: ({key,value}:UpdateCommunityProps)=>void
 }
 
+const emptyCommunity:EditCommunityProps = {
+  id:'',
+  name: '',
+  slug: '',
+  short_description: null,
+  description: null,
+  primary_maintainer: null,
+  logo_id: null,
+  software_cnt: null,
+  keywords: [],
+}
+
 const CommunityContext = createContext<CommunityContextProps>({
-  community: null,
+  community: emptyCommunity,
   isMaintainer: false,
   updateCommunity: ({key,value}:UpdateCommunityProps)=> {}
 })
@@ -51,7 +62,7 @@ export function CommunityProvider({community:initCommunity,isMaintainer:initMain
 export function useCommunityContext(){
   const {community,isMaintainer,updateCommunity} = useContext(CommunityContext)
   return {
-    ...community,
+    community,
     isMaintainer,
     updateCommunity
   }

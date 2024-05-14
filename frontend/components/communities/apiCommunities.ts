@@ -8,17 +8,25 @@ import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
+import {KeywordForCommunity} from './settings/general/apiCommunityKeywords'
+import {Community} from '../admin/communities/apiCommunities'
 
-export type CommunityListProps = {
+// New type based on Community but replace
+// id with new type
+export type CommunityListProps = Omit<Community,'id'> & {
+  // id is always present
   id: string,
-  slug: string,
-  name: string,
-  short_description: string | null,
-  logo_id: string | null,
+  // additional props
   software_cnt: number | null,
-  primary_maintainer: string | null
-  description?: string
+  keywords: string[] | null
 }
+
+// New type based on CommunityListProps but replace
+// the keywords type
+export type EditCommunityProps = Omit<CommunityListProps,'keywords'> & {
+  keywords: KeywordForCommunity[]
+}
+
 
 type GetCommunityListParams={
   page: number,

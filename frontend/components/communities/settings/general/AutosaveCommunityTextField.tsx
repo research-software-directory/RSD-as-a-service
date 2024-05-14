@@ -11,8 +11,8 @@ import AutosaveControlledTextField, {OnSaveProps} from '~/components/form/Autosa
 import {ControlledTextFieldOptions} from '~/components/form/ControlledTextField'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {Community} from '~/components/admin/communities/apiCommunities'
-import {patchCommunityTable} from '../../apiCommunities'
-import {useCommunityContext} from '../../context'
+import {patchCommunityTable} from '~/components/communities/apiCommunities'
+import {useCommunityContext} from '~/components/communities/context'
 
 export type AutosaveCommunityTextFieldProps = {
   options: ControlledTextFieldOptions<Community>
@@ -22,7 +22,7 @@ export type AutosaveCommunityTextFieldProps = {
 export default function AutosaveCommunityTextField({options,rules}:AutosaveCommunityTextFieldProps) {
   const router = useRouter()
   const {token} = useSession()
-  const {id,updateCommunity} = useCommunityContext()
+  const {community,updateCommunity} = useCommunityContext()
   const {showErrorMessage} = useSnackbar()
   const {control, resetField} = useFormContext()
 
@@ -34,7 +34,7 @@ export default function AutosaveCommunityTextField({options,rules}:AutosaveCommu
     // console.groupEnd()
     // patch project table
     const resp = await patchCommunityTable({
-      id: id ?? '',
+      id: community?.id ?? '',
       data: {
         [name]:value
       },

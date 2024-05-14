@@ -22,8 +22,8 @@ type DeleteModal = {
 }
 
 export default function CommunityMaintainersPage() {
-  const {id} = useCommunityContext()
-  const {loading,maintainers,deleteMaintainer} = useCommunityMaintainers({community: id})
+  const {community} = useCommunityContext()
+  const {loading,maintainers,deleteMaintainer} = useCommunityMaintainers({community: community?.id})
   const [modal, setModal] = useState<DeleteModal>({
     open: false
   })

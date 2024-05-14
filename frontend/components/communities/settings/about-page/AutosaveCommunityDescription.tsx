@@ -22,7 +22,7 @@ export default function AutosaveCommunityDescription(props: AutosaveControlledMa
   const {showErrorMessage} = useSnackbar()
   const {name,maxLength} = props
   const {register,control,resetField} = useFormContext()
-  const {id,updateCommunity} = useCommunityContext()
+  const {community,updateCommunity} = useCommunityContext()
   const {field:{value},fieldState:{isDirty,error}} = useController({
     control,
     name
@@ -36,7 +36,7 @@ export default function AutosaveCommunityDescription(props: AutosaveControlledMa
     if (value !== '') description = value
     // patch community table
     const resp = await patchCommunityTable({
-      id: id ?? '',
+      id: community?.id ?? '',
       data: {
         [name]: description
       },

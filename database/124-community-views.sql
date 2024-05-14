@@ -23,7 +23,7 @@ GROUP BY
 $$;
 
 -- rpc for community overview page
--- incl. software count
+-- incl. software count and keyword list (for card)
 CREATE FUNCTION communities_overview() RETURNS TABLE (
 	id UUID,
 	slug VARCHAR,
@@ -32,6 +32,7 @@ CREATE FUNCTION communities_overview() RETURNS TABLE (
 	logo_id VARCHAR,
 	primary_maintainer UUID,
 	software_cnt BIGINT,
+	keywords CITEXT[],
 	description VARCHAR,
 	created_at TIMESTAMPTZ
 ) LANGUAGE sql STABLE AS
@@ -44,12 +45,15 @@ SELECT
 	community.logo_id,
 	community.primary_maintainer,
 	software_count_by_community.software_cnt,
+	keyword_filter_for_community.keywords,
 	community.description,
 	community.created_at
 FROM
 	community
 LEFT JOIN
 	software_count_by_community() ON community.id = software_count_by_community.community
+LEFT JOIN
+	keyword_filter_for_community() ON community.id=keyword_filter_for_community.community
 ;
 $$;
 

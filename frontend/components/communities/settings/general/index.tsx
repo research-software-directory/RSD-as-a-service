@@ -8,22 +8,22 @@ import {FormProvider, useForm} from 'react-hook-form'
 import {useSession} from '~/auth'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import {useCommunityContext} from '~/components/communities/context'
-import {Community} from '~/components/admin/communities/apiCommunities'
 import config from './config'
 import CommunityAdminSection from './CommunityAdminSection'
 import AutosaveCommunityTextField from './AutosaveCommunityTextField'
+import AutosaveCommunityKeywords from './AutosaveCommunityKeywords'
+import {EditCommunityProps} from '../../apiCommunities'
+
 
 export default function CommunityGeneralSettings() {
   const {user} = useSession()
-  const {isMaintainer,...community} = useCommunityContext()
-  const methods = useForm<Community>({
+  const {community} = useCommunityContext()
+  const methods = useForm<EditCommunityProps>({
     mode: 'onChange',
     defaultValues: community
   })
   // extract used methods
-  const {
-    watch, register, formState
-  } = methods
+  const {watch, register} = methods
 
   const [name,short_description]=watch(['name','short_description'])
 
@@ -74,7 +74,8 @@ export default function CommunityGeneralSettings() {
             }}
             rules={config.short_description.validation}
           />
-          <div className="py-4"></div>
+
+          <AutosaveCommunityKeywords />
 
           {/* RSD admin section */}
           {user?.role === 'rsd_admin' ?
