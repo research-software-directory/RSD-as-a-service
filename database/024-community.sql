@@ -376,81 +376,25 @@ CREATE POLICY admin_all_rights ON software_for_community TO rsd_admin
 
 
 -- KEYWORDS for community
--- TABLES & FUNCTIONS
-
 CREATE TABLE keyword_for_community (
-	community UUID references community (id),
-	keyword UUID references keyword (id),
+	community UUID REFERENCES community (id),
+	keyword UUID REFERENCES keyword (id),
 	PRIMARY KEY (community, keyword)
 );
 
 
--- Keywords with the count used by
--- by search to show existing keywords with the count
-CREATE FUNCTION keyword_count_for_community() RETURNS TABLE (
-	id UUID,
-	keyword CITEXT,
-	cnt BIGINT
-) LANGUAGE sql STABLE AS
-$$
-	SELECT
-		keyword.id,
-		keyword.value AS keyword,
-		keyword_count.cnt
-	FROM
-		keyword
-	LEFT JOIN
-		(SELECT
-				keyword_for_community.keyword,
-				COUNT(keyword_for_community.keyword) AS cnt
-			FROM
-				keyword_for_community
-			GROUP BY keyword_for_community.keyword
-		) AS keyword_count ON keyword.id = keyword_count.keyword;
-$$;
+-- RLS keyword_for_community table
+ALTER TABLE keyword_for_community ENABLE ROW LEVEL SECURITY;
 
--- Keywords by community
--- for editing keywords of specific community
-CREATE FUNCTION keywords_by_community() RETURNS TABLE (
-	id UUID,
-	keyword CITEXT,
-	community UUID
-) LANGUAGE sql STABLE AS
-$$
-	SELECT
-		keyword.id,
-		keyword.value AS keyword,
-		keyword_for_community.community
-	FROM
-		keyword_for_community
-	INNER JOIN
-		keyword ON keyword.id = keyword_for_community.keyword;
-$$;
--- using filter ?community=eq.UUID
+CREATE POLICY anyone_can_read ON keyword_for_community FOR SELECT TO rsd_web_anon, rsd_user
+	USING (TRUE);
 
--- Keywords grouped by community for filtering
--- We use array for selecting community with specific keywords
--- We use text value for "wild card" search
-CREATE FUNCTION keyword_filter_for_community() RETURNS TABLE (
-	community UUID,
-	keywords CITEXT[],
-	keywords_text TEXT
-) LANGUAGE sql STABLE AS
-$$
-	SELECT
-		keyword_for_community.community AS community,
-		ARRAY_AGG(
-			keyword.value
-			ORDER BY value
-		) AS keywords,
-		STRING_AGG(
-			keyword.value,' '
-			ORDER BY value
-		) AS keywords_text
-	FROM
-		keyword_for_community
-	INNER JOIN
-		keyword ON keyword.id = keyword_for_community.keyword
-	GROUP BY keyword_for_community.community;
-$$;
+CREATE POLICY maintainer_insert ON keyword_for_community FOR INSERT TO rsd_user
+	WITH CHECK (community IN (SELECT * FROM communities_of_current_maintainer()));
 
+CREATE POLICY maintainer_delete ON keyword_for_community FOR DELETE TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON keyword_for_community TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
