@@ -1,10 +1,11 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useState} from 'react'
-import MentionsOverviewList from '~/components/admin/mentions-overview/MentionsOverviewList'
+import MentionsOverviewList from '~/components/admin/mentions/MentionsOverviewList'
 import {extractSearchTerm, SearchTermInfo} from '~/components/software/edit/mentions/utils'
 import Searchbox from '~/components/search/Searchbox'
 import Pagination from '~/components/pagination/Pagination'
@@ -21,6 +22,7 @@ export default function MentionsOverview() {
   const sanitisedSearch = sanitiseSearch(searchFor)
   useEffect(() => {
     fetchAndSetMentionList(sanitisedSearch)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sanitisedSearch, page, rows])
 
   function fetchAndSetMentionList(sanitisedSearch: undefined | string): void {

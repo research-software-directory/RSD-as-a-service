@@ -1,3 +1,4 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -57,10 +58,14 @@ export default function MentionsOverviewList({list, onUpdate}: { list: MentionIt
       <List>
         {list.map((mention, idx) => {
           return (
-            <ListItem key={mention.id} secondaryAction={
-              <IconButton onClick={() => {setModalOpen(true); setMentionToEdit(mention)}} ><EditIcon></EditIcon></IconButton>
-            }>
-              <MentionViewItem item={mention} pos={page * rows + idx + 1}></MentionViewItem>
+            <ListItem
+              key={mention.id}
+              secondaryAction={
+                <IconButton onClick={() => {setModalOpen(true); setMentionToEdit(mention)}} ><EditIcon></EditIcon></IconButton>
+              }
+              className="hover:bg-base-200 flex-1 pr-4"
+            >
+              <MentionViewItem item={mention} pos={page * rows + idx + 1} />
             </ListItem>
           )
         })}
