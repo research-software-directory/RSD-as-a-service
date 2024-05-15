@@ -100,8 +100,10 @@ public class PostgrestMentionRepository implements MentionRepository {
 
 				LOGGER.warn("Failed to save mention: {} / {} / {}", mention.doi, mention.externalId, mention.source, e);
 
+				String metadataMessage = "Failed to save mention: DOI %s, external ID %s, source %s".formatted(mention.doi, mention.externalId, mention.source);
+				RuntimeException exceptionWithMetadata = new RuntimeException(metadataMessage, e);
 				if (mention.doi == null) {
-					Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
+					Utils.saveExceptionInDatabase("Mention scraper", "mention", null, exceptionWithMetadata);
 				} else {
 					// We will try to update the scraped_at field, so that it goes back into the queue for being scraped
 					// Note that this operation in itself may also fail.
@@ -118,9 +120,9 @@ public class PostgrestMentionRepository implements MentionRepository {
 									ZonedDateTime.now(),
 									"scraped_at");
 
-							Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), e);
+							Utils.saveExceptionInDatabase("Mention scraper", "mention", UUID.fromString(id), exceptionWithMetadata);
 						} else {
-							Utils.saveExceptionInDatabase("Mention scraper", "mention", null, e);
+							Utils.saveExceptionInDatabase("Mention scraper", "mention", null, exceptionWithMetadata);
 						}
 					} catch (Exception e2) {
 						LOGGER.warn("Failed to save exception in database", e2);
