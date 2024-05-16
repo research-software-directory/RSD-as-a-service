@@ -1,20 +1,16 @@
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 
 import {useSession} from '~/auth'
 import {deleteImage,getImageUrl,upsertImage} from '~/utils/editImage'
 import LogoAvatar from '~/components/layout/LogoAvatar'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import OrganisationLogoMenu from '~/components/organisation/metadata/OrganisationLogoMenu'
-import {patchCommunity} from '../apiCommunities'
-// import OrganisationLogoMenu from './OrganisationLogoMenu'
-// import useOrganisationContext from '../context/useOrganisationContext'
+import {patchCommunityTable} from '../apiCommunities'
 
 type CommunityLogoProps = {
   id: string,
@@ -42,12 +38,6 @@ export default function CommunityLogo({id,name,logo_id,isMaintainer}:CommunityLo
   // console.log('isMaintainer...', isMaintainer)
   // console.groupEnd()
 
-  // Update logo when new value
-  // received from parent
-  // useEffect(() => {
-  //   if (logo_id) setLogo(logo_id)
-  // },[logo_id])
-
   async function addLogo({data, mime_type}: ImageDataProps) {
     // split base64 to use only encoded content
     const b64data = data.split(',')[1]
@@ -59,9 +49,9 @@ export default function CommunityLogo({id,name,logo_id,isMaintainer}:CommunityLo
     // console.log('addLogo...resp...', resp)
     if (resp.status === 201 && id) {
       // update logo_id reference
-      const patch = await patchCommunity({
+      const patch = await patchCommunityTable({
+        id,
         data: {
-          id,
           logo_id: resp.message
         },
         token
@@ -92,9 +82,9 @@ export default function CommunityLogo({id,name,logo_id,isMaintainer}:CommunityLo
   async function removeLogo() {
     if (logo && token && id) {
       // remove logo_id from organisation
-      const resp = await patchCommunity({
+      const resp = await patchCommunityTable({
+        id,
         data: {
-          id,
           logo_id: null
         },
         token

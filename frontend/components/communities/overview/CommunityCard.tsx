@@ -1,8 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,9 +9,9 @@ import CardTitleSubtitle from '~/components/cards/CardTitleSubtitle'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
 import CardImageFrame from '~/components/cards/CardImageFrame'
 import CardContentFrame from '~/components/cards/CardContentFrame'
-import OrganisationCardMetrics from '~/components/organisation/overview/card/OrganisationCardMetrics'
 import {CommunityListProps} from '../apiCommunities'
-// import CountryLabel from './CountryLabel'
+import KeywordList from '~/components/cards/KeywordList'
+import CommunityMetrics from './CommunityMetrics'
 
 export default function CommunityCard({community}:{community:CommunityListProps}) {
 
@@ -37,23 +34,23 @@ export default function CommunityCard({community}:{community:CommunityListProps}
             />
           </CardImageFrame>
           <CardContentFrame>
-            <div className="flex-1">
-              {/* <CountryLabel country={organisation.country} /> */}
-              <CardTitleSubtitle
-                title={community.name}
-                subtitle={community.short_description ?? ''}
+
+            {/* title & subtitle  */}
+            <CardTitleSubtitle
+              title={community.name}
+              subtitle={community.short_description ?? ''}
+            />
+
+            {/* keywords */}
+            <div className="flex-1 overflow-auto py-2">
+              <KeywordList
+                keywords={community.keywords}
               />
             </div>
-            <div className="flex gap-8 justify-evenly text-center">
-              {/* Software packages count */}
-              <div>
-                <div className='text-5xl font-light'>
-                  {community.software_cnt ?? 0}
-                </div>
-                <div className='text-center text-sm'>
-                  software <br />package{community.software_cnt === 1 ? '' : 's'}
-                </div>
-              </div>
+
+            {/* Metrics */}
+            <div className="flex gap-4 justify-end text-center">
+              <CommunityMetrics software_cnt={community.software_cnt ?? 0} />
             </div>
           </CardContentFrame>
         </div>

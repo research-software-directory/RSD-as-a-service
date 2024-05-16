@@ -5,6 +5,7 @@
 
 import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
+import Link from 'next/link'
 import Pagination from '@mui/material/Pagination'
 import PaginationItem from '@mui/material/PaginationItem'
 
@@ -22,7 +23,6 @@ import SelectRows from '~/components/software/overview/search/SelectRows'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import ViewToggleGroup,{ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 
-import {Community} from '~/components/admin/communities/apiCommunities'
 import CommunitiesList from '~/components/communities/overview/CommunitiesList'
 import CommunitiesGrid from '~/components/communities/overview/CommunitiesGrid'
 import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
@@ -113,9 +113,9 @@ export default function CommunitiesOverview({count,page,rows,layout,search,commu
                 renderItem={item => {
                   if (item.page !== null) {
                     return (
-                      <a href={createUrl('page', item.page.toString())}>
+                      <Link href={createUrl('page', item.page.toString())}>
                         <PaginationItem {...item}/>
-                      </a>
+                      </Link>
                     )
                   } else {
                     return (
