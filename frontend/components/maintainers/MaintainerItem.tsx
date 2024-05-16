@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,20 +11,19 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
 
-import {MaintainerOfProject} from './useProjectMaintainer'
-import ContributorAvatar from '~/components/software/ContributorAvatar'
 import {getDisplayInitials, splitName} from '~/utils/getDisplayName'
+import ContributorAvatar from '~/components/software/ContributorAvatar'
+import {MaintainerProps} from './apiMaintainers'
 
-type ProjectMaintainerProps = {
+type MaintainerItemProps = {
   pos:number
-  maintainer: MaintainerOfProject
-  onEdit: (pos: number) => void
+  maintainer: MaintainerProps
   onDelete: (pos: number) => void
   disableDelete?: boolean
 }
 
 
-export default function ProjectMaintainer({pos, maintainer, onEdit, onDelete, disableDelete}: ProjectMaintainerProps) {
+export default function MaintainerItem({pos, maintainer, onDelete, disableDelete}: MaintainerItemProps) {
   const {name, email, affiliation} = maintainer
   const displayInitials = getDisplayInitials(splitName(name))
   return (
