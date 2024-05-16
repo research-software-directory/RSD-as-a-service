@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -24,7 +24,7 @@ const OrganisationContext = createContext<OrganisationContextProps>({
 })
 
 export function OrganisationProvider(props: any) {
-  // desctucture organisation
+  // destucture organisation
   const {organisation:initOrganisation, isMaintainer:initMaintainer} = props
   // set state - use initOrganisation at start
   const [organisation, setOrganisation] = useState<OrganisationForOverview | null>(initOrganisation)

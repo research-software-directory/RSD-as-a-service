@@ -19,12 +19,10 @@ type CommunityTabsProps={
 }
 
 export default function CommunityTabs({
-  tab,software_cnt,description,
-  isMaintainer}:CommunityTabsProps) {
+  tab,software_cnt,description,isMaintainer
+}:CommunityTabsProps) {
 
   const router = useRouter()
-  // default tab is software
-  // let select_tab:TabKey = 'software'
 
   return (
     <Tabs
@@ -32,16 +30,19 @@ export default function CommunityTabs({
       allowScrollButtonsMobile
       value={tab}
       onChange={(_, value) => {
-        const query:any={
-          slug: router.query['slug'],
-          tab: value,
+        // create url
+        const url:any={
+          pathname:`/communities/[slug]/${value}`,
+          query:{
+            slug: router.query['slug']
+          }
         }
         // add default order for software and project tabs
         if (value === 'software') {
-          query['order'] = 'is_featured'
+          url.query['order'] = 'is_featured'
         }
         // push route change
-        router.push({query},undefined,{scroll:false})
+        router.push(url,undefined,{scroll:false})
       }}
       aria-label="community tabs"
     >
@@ -59,6 +60,9 @@ export default function CommunityTabs({
               software_cnt,
             })}
             value={key}
+            sx={{
+              minWidth:'9rem'
+            }}
           />
         }})}
     </Tabs>

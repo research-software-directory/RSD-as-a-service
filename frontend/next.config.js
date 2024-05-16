@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 Jesús García Gonzalez (Netherlands eScience Center) <j.g.gonzalez@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -18,7 +18,7 @@ module.exports = {
   output: 'standalone',
   // enable source maps in production?
   productionBrowserSourceMaps: true,
-  // disable strict mode if you want react to render compent once
+  // disable strict mode if you want react to render component once
   // see for more info https://nextjs.org/docs/api-reference/next.config.js/react-strict-mode
   reactStrictMode: false,
   eslint: {
@@ -36,6 +36,17 @@ module.exports = {
         source: '/:path*',
         headers: securityHeaders,
       },
+    ]
+  },
+
+  async redirects() {
+    return [
+      // default community redirect to software page
+      {
+        source: '/communities/:slug',
+        destination: '/communities/:slug/software',
+        permanent: true,
+      }
     ]
   },
 

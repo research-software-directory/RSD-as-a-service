@@ -1,5 +1,9 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+//
+// SPDX-License-Identifier: Apache-2.0
 
-import {render, screen} from '@testing-library/react'
+import {fireEvent, render, screen, within} from '@testing-library/react'
 import FeedbackPanelButton from './FeedbackPanelButton'
 
 // todo: add tests for FeedbackPanelButton
@@ -10,6 +14,27 @@ it('it has feedback button', () => {
       issues_page_url="test-issue-url"
     />
   )
-  const btn = screen.getByRole('button',{name:'Send feedback'})
+  const btn = screen.getByTestId('feedback-button')
   expect(btn).toBeInTheDocument()
+  expect(btn).toBeEnabled()
+})
+
+it('shows feedback dialog with cancel and sendfeedback', () => {
+  render(
+    <FeedbackPanelButton
+      feedback_email='test@email.com'
+      issues_page_url="test-issue-url"
+    />
+  )
+  // click feedback button
+  const btn = screen.getByTestId('feedback-button')
+  fireEvent.click(btn)
+
+
+  const dialog = screen.getByRole('dialog')
+  // has cancel button
+  const cancel = within(dialog).getByRole('button',{name:'Cancel'})
+  // has save link
+  const send = within(dialog).getByRole('link',{name:'Send feedback'})
+  // screen.debug()
 })

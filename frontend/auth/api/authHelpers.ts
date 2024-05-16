@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {createJsonHeaders, extractReturnMessage} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 
 export type RedirectToProps = {
   authorization_endpoint: string,
@@ -177,6 +177,48 @@ export async function claimOrganisationMaintainerInvite({id, token, frontend = f
     logger(`claimOrganisationMaintainerInvite failed: ${e?.message}`, 'error')
     return {
       organisationInfo: null,
+      error: {
+        status: 500,
+        message: e?.message
+      }
+    }
+  }
+}
+
+
+export async function claimCommunityMaintainerInvite({id, token}:
+  { id: string, token?: string}) {
+  try {
+    const query = 'rpc/accept_invitation_community'
+    let url = `${getBaseUrl()}/${query}`
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...createJsonHeaders(token),
+        'Accept': 'application/vnd.pgrst.object + json',
+      },
+      body: JSON.stringify({
+        'invitation': id
+      })
+    })
+    if (resp.status === 200) {
+      const json = await resp.json()
+      return {
+        communityInfo: json,
+        error: null
+      }
+    }
+    logger(`claimCommunityMaintainerInvite failed: ${resp?.status} ${resp.statusText}`, 'error')
+    const error = await extractReturnMessage(resp)
+    return {
+      communityInfo: null,
+      error
+    }
+  } catch (e: any) {
+    logger(`claimCommunityMaintainerInvite failed: ${e?.message}`, 'error')
+    return {
+      communityInfo: null,
       error: {
         status: 500,
         message: e?.message

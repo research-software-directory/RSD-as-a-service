@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -132,7 +134,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       organisationInfo:null,
       error: {
         status: 404,
-        message: 'This invite is invalid. It\'s missing invite id. Please ask the organisation mantainer to provide you a new link.'
+        message: 'This invite is invalid. It\'s missing invite id. Please ask the organisation maintainer to provide you a new link.'
       }
     }
   }
