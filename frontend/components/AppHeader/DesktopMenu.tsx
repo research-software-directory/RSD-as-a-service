@@ -14,7 +14,7 @@ export default function DesktopMenu({activePath}:{activePath:string}) {
   // console.groupEnd()
   return (
     <div
-      className="hidden lg:flex-1 lg:flex lg:justify-center text-lg ml-4 gap-5 text-center opacity-90 font-normal ">
+      className="hidden text-center lg:flex-1 lg:flex lg:justify-evenly lg:gap-5 xl:justify-start">
       {menuItems.map(item => {
         const isActive = isActiveMenuItem({item, activePath})
         return (

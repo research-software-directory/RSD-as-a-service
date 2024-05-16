@@ -7,20 +7,23 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import ProtectedOrganisationPage from '../ProtectedOrganisationPage'
+import {useSession} from '~/auth'
 import UserAgreementModal from '~/components/user/settings/UserAgreementModal'
 import useOrganisationContext from '../context/useOrganisationContext'
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
 import SettingsNav from './SettingsNav'
 import SettingsPageContent from './SettingsPageContent'
+import ProtectedContent from '~/components/layout/ProtectedContent'
 
-// const formId='organisation-settings-form'
 
 export default function OrganisationSettings() {
   const {isMaintainer} = useOrganisationContext()
+  const {status,user} = useSession()
 
   return (
-    <ProtectedOrganisationPage
+    <ProtectedContent
+      status={status}
+      role={user?.role}
       isMaintainer={isMaintainer}
     >
       <UserAgreementModal />
@@ -33,6 +36,6 @@ export default function OrganisationSettings() {
         {/* dynamic load of settings page */}
         <SettingsPageContent />
       </div>
-    </ProtectedOrganisationPage>
+    </ProtectedContent>
   )
 }

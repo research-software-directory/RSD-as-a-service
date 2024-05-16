@@ -6,16 +6,17 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Invitation} from '~/types/Invitation'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import CopyIcon from '@mui/icons-material/ContentCopy'
 import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
+import ListItemText from '@mui/material/ListItemText'
+
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import copyToClipboard from '~/utils/copyToClipboard'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import ListItemText from '@mui/material/ListItemText'
+import {Invitation} from '../maintainers/apiMaintainers'
 import EditSectionTitle from './EditSectionTitle'
 
 export default function InvitationList({invitations, token, onDeleteCallback}: {invitations: Invitation[], token: string, onDeleteCallback: Function}) {

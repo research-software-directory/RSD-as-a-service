@@ -4,47 +4,44 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import BaseSurfaceRounded from '~/components/layout/BaseSurfaceRounded'
-import Links, {LinksProps} from '~/components/organisation/metadata/Links'
+import {useCommunityContext} from '../context'
 import CommunityLogo from './CommunityLogo'
+import KeywordList from '~/components/cards/KeywordList'
 
-type CommunityMetadataProps={
-  id: string,
-  name: string,
-  short_description: string | null
-  logo_id: string | null
-  isMaintainer: boolean
-  links: LinksProps[]
-}
+export default function CommunityMetadata() {
+  const {community,isMaintainer} = useCommunityContext()
+  // generate simple list
+  const keywordList = community?.keywords?.map(keyword=>keyword.keyword)
 
-export default function CommunityMetadata({
-  id,name,short_description,
-  logo_id,isMaintainer,links
-}:CommunityMetadataProps) {
+  // console.group('CommunityMetadata')
+  // console.log('isMaintainer...', isMaintainer)
+  // console.log('keywordList...', keywordList)
+  // console.log('community...', community)
+  // console.groupEnd()
 
   return (
     <section className="grid  md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-4">
       <BaseSurfaceRounded className="flex justify-center p-8 overflow-hidden relative">
         <CommunityLogo
-          id={id}
-          name={name}
-          logo_id={logo_id}
+          id={community?.id ?? ''}
+          name={community?.name ?? ''}
+          logo_id={community?.logo_id ?? null}
           isMaintainer={isMaintainer}
         />
       </BaseSurfaceRounded>
-      <BaseSurfaceRounded className="grid lg:grid-cols-[3fr,1fr] lg:gap-8 xl:grid-cols-[4fr,1fr] p-4">
-        <div>
-          <h1
-            title={name}
-            className="text-xl font-medium line-clamp-1">
-            {name}
-          </h1>
-          <p className="text-base-700 line-clamp-3 break-words py-4">
-            {short_description}
-          </p>
-        </div>
-        <div className="flex flex-col gap-4">
-          <Links links={links} />
-        </div>
+      <BaseSurfaceRounded className="flex flex-col justify-start gap-2 p-4">
+        <h1
+          title={community?.name}
+          className="text-xl font-medium line-clamp-1">
+          {community?.name}
+        </h1>
+        <p className="flex-1 text-base-700 line-clamp-3 break-words py-4">
+          {community?.short_description}
+        </p>
+        <KeywordList
+          keywords={keywordList}
+          visibleNumberOfKeywords={7}
+        />
       </BaseSurfaceRounded>
     </section>
   )

@@ -9,8 +9,10 @@ import ListImageWithGradientPlaceholder from '~/components/projects/overview/lis
 import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
 import {getImageUrl} from '~/utils/editImage'
 import {CommunityListProps} from '../apiCommunities'
+import CommunityMetrics from './CommunityMetrics'
 
 export default function CommunityListItem({community}:{community:CommunityListProps}) {
+  const imgSrc = getImageUrl(community.logo_id ?? null)
 
   return (
     <OverviewListItem className="flex-none">
@@ -21,7 +23,7 @@ export default function CommunityListItem({community}:{community:CommunityListPr
         className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-sm'
       >
         <ListImageWithGradientPlaceholder
-          imgSrc={`${getImageUrl(community.logo_id) ?? ''}`}
+          imgSrc={imgSrc}
           alt = {`Cover image for ${community.name}`}
         />
         <div className="flex-1 flex flex-col md:flex-row gap-3 py-2">
@@ -35,8 +37,8 @@ export default function CommunityListItem({community}:{community:CommunityListPr
             </div>
           </div>
           {/* software count */}
-          <div className="md:pr-4 md:text-right text-md font-medium flex items-center">
-            {community.software_cnt} software packages
+          <div className="flex items-center gap-4 mr-4">
+            <CommunityMetrics software_cnt={community.software_cnt ?? 0} />
           </div>
         </div>
       </Link>

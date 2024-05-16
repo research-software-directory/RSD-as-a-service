@@ -74,12 +74,10 @@ export default function AppHeader() {
 
           <div className="text-primary-content flex gap-2 justify-end items-center min-w-[8rem] text-right ml-4">
             {/* FEEDBACK panel */}
-            <div className="hidden md:block">
-              {host.feedback?.enabled
-                ? <FeedbackPanelButton feedback_email={host.feedback.url} issues_page_url={host.feedback.issues_page_url} />
-                : null
-              }
-            </div>
+            {host.feedback?.enabled
+              ? <FeedbackPanelButton feedback_email={host.feedback.url} issues_page_url={host.feedback.issues_page_url} />
+              : null
+            }
             {/* ADD menu button */}
             {status === 'authenticated' ? <AddMenu/> : null}
             {/* Responsive menu */}
