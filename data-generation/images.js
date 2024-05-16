@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,7 +25,7 @@ export const images = [
 	'img/bee-svgrepo-com.svg',
 	'img/hibiscus-svgrepo-com.svg',
 	'img/supportfemale-svgrepo-com.svg',
-	'img/supportmale-svgrepo-com.svg'
+	'img/supportmale-svgrepo-com.svg',
 ];
 
 export const organisationLogos = [
@@ -37,7 +37,7 @@ export const organisationLogos = [
 	'img/logos/NWO_logo_-_RGB.jpg',
 	'img/logos/Radboud_Universiteit.jpg',
 	'img/logos/Sron-Logo_kleur_RGB.jpg',
-	'img/logos/UniversiteitLeidenLogo.svg'
+	'img/logos/UniversiteitLeidenLogo.svg',
 ];
 
 export const softwareLogos = [
@@ -50,5 +50,5 @@ export const softwareLogos = [
 	'img/software/JavaGAT.png',
 	'img/software/manta_flipped.jpg',
 	'img/software/Tux.svg',
-	'img/software/Xenon_logo.svg'
+	'img/software/Xenon_logo.svg',
 ];

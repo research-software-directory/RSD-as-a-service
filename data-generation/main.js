@@ -14,7 +14,6 @@ import {images, organisationLogos, softwareLogos} from './images.js';
 import {conceptDois, dois, packageManagerLinks} from './real-data.js';
 import fs from 'fs/promises';
 
-
 const usedLowerCaseStrings = new Set();
 function generateUniqueCaseInsensitiveString(randomStringGenerator) {
 	for (let attempt = 0; attempt < 10000; attempt++) {
@@ -67,7 +66,7 @@ function generateMentions(amountExtra = 100) {
 			mention_type: faker.helpers.arrayElement(mentionTypes),
 			source: 'faker',
 			version: faker.helpers.maybe(() => faker.system.semver(), 0.8) ?? null,
-			note: faker.helpers.maybe(() => faker.company.catchPhrase(), 0.3) ?? null
+			note: faker.helpers.maybe(() => faker.company.catchPhrase(), 0.3) ?? null,
 		});
 	}
 
@@ -85,27 +84,31 @@ function generateMentions(amountExtra = 100) {
 			mention_type: faker.helpers.arrayElement(mentionTypes),
 			source: 'faker',
 			version: faker.helpers.maybe(() => faker.system.semver(), 0.8) ?? null,
-			note: faker.helpers.maybe(() => faker.company.catchPhrase(), 0.3) ?? null
+			note: faker.helpers.maybe(() => faker.company.catchPhrase(), 0.3) ?? null,
 		});
 	}
 
 	return result;
 }
 
-async function generateSoftware(amount=500) {
+async function generateSoftware(amount = 500) {
 	// real software has a real concept DOI
 	const amountRealSoftware = Math.min(conceptDois.length, amount);
 	const brandNames = [];
 	for (let index = 0; index < amountRealSoftware; index++) {
 		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
-		const brandName = generateUniqueCaseInsensitiveString(() => ('Real software: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200));
+		const brandName = generateUniqueCaseInsensitiveString(() =>
+			('Real software: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200),
+		);
 		brandNames.push(brandName);
 	}
 
 	const amountFakeSoftware = amount - amountRealSoftware;
 	for (let index = 0; index < amountFakeSoftware; index++) {
 		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
-		const brandName = generateUniqueCaseInsensitiveString(() => ('Software: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200));
+		const brandName = generateUniqueCaseInsensitiveString(() =>
+			('Software: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200),
+		);
 		brandNames.push(brandName);
 	}
 
@@ -113,15 +116,24 @@ async function generateSoftware(amount=500) {
 
 	for (let index = 0; index < amount; index++) {
 		result.push({
-			slug: faker.helpers.slugify(brandNames[index]).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''), // removes double dashes and trailing dashes
+			slug: faker.helpers
+				.slugify(brandNames[index])
+				.toLowerCase()
+				.replaceAll(/-{2,}/g, '-')
+				.replaceAll(/-+$/g, ''), // removes double dashes and trailing dashes
 			brand_name: brandNames[index],
 			concept_doi: index < conceptDois.length ? conceptDois[index] : null,
 			description: faker.lorem.paragraphs(4, '\n\n'),
 			get_started_url: faker.internet.url(),
-			image_id: faker.helpers.maybe(() => localSoftwareLogoIds[index % localSoftwareLogoIds.length], {probability: 0.8}) ?? null,
+			image_id:
+				faker.helpers.maybe(() => localSoftwareLogoIds[index % localSoftwareLogoIds.length], {
+					probability: 0.8,
+				}) ?? null,
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 			short_statement: faker.commerce.productDescription(),
-			closed_source: !!faker.helpers.maybe(() => true, {probability: 0.8}),
+			closed_source: !!faker.helpers.maybe(() => true, {
+				probability: 0.8,
+			}),
 		});
 	}
 
@@ -188,7 +200,10 @@ function generatePackageManagers(softwareIds) {
 
 	for (let index = 0; index < softwareIds.length; index++) {
 		// first assign each package manager entry to one software, then randomly assing package manager entries to the remaining ids
-		const packageManagerLink = index < packageManagerLinks.length ? packageManagerLinks[index] : faker.helpers.arrayElement(packageManagerLinks);
+		const packageManagerLink =
+			index < packageManagerLinks.length
+				? packageManagerLinks[index]
+				: faker.helpers.arrayElement(packageManagerLinks);
 
 		result.push({
 			software: softwareIds[index],
@@ -202,12 +217,36 @@ function generatePackageManagers(softwareIds) {
 
 function generateLincensesForSoftware(ids) {
 	const licenses = [
-		{license:'Apache-2.0',name:'Apache License 2.0',reference:'https://spdx.org/licenses/Apache-2.0.html'},
-		{license:'MIT',name:'MIT License',reference:'https://spdx.org/licenses/MIT.html'},
-		{license:'GPL-2.0-or-later',name:'GNU General Public License v2.0 or later',reference:'https://spdx.org/licenses/GPL-2.0-or-later.html'},
-		{license:'LGPL-2.0-or-later',name:'GNU Library General Public License v2 or later',reference:'https://spdx.org/licenses/LGPL-2.0-or-later.html'},
-		{license:'CC-BY-4.0',name:'Creative Commons Attribution 4.0 International',reference:'https://spdx.org/licenses/CC-BY-4.0.html'},
-		{license:'CC-BY-NC-ND-3.0',name:'Creative Commons Attribution Non Commercial No Derivatives 3.0 Unported',reference:'https://spdx.org/licenses/CC-BY-NC-ND-3.0.html'}
+		{
+			license: 'Apache-2.0',
+			name: 'Apache License 2.0',
+			reference: 'https://spdx.org/licenses/Apache-2.0.html',
+		},
+		{
+			license: 'MIT',
+			name: 'MIT License',
+			reference: 'https://spdx.org/licenses/MIT.html',
+		},
+		{
+			license: 'GPL-2.0-or-later',
+			name: 'GNU General Public License v2.0 or later',
+			reference: 'https://spdx.org/licenses/GPL-2.0-or-later.html',
+		},
+		{
+			license: 'LGPL-2.0-or-later',
+			name: 'GNU Library General Public License v2 or later',
+			reference: 'https://spdx.org/licenses/LGPL-2.0-or-later.html',
+		},
+		{
+			license: 'CC-BY-4.0',
+			name: 'Creative Commons Attribution 4.0 International',
+			reference: 'https://spdx.org/licenses/CC-BY-4.0.html',
+		},
+		{
+			license: 'CC-BY-NC-ND-3.0',
+			name: 'Creative Commons Attribution Non Commercial No Derivatives 3.0 Unported',
+			reference: 'https://spdx.org/licenses/CC-BY-NC-ND-3.0.html',
+		},
 	];
 
 	const result = [];
@@ -222,7 +261,7 @@ function generateLincensesForSoftware(ids) {
 				software: id,
 				license: item.license,
 				name: item.name,
-				reference: item.reference
+				reference: item.reference,
 			});
 		}
 	}
@@ -301,7 +340,7 @@ function generateSoftwareForSoftware(ids) {
 			result.push({
 				origin: origin,
 				relation: relation,
-			})
+			});
 		}
 	}
 
@@ -311,20 +350,24 @@ function generateSoftwareForSoftware(ids) {
 function generateSoftwareHighlights(ids) {
 	const result = [];
 	for (let index = 0; index < ids.length; index++) {
-		const isHighlight = !!faker.helpers.maybe(() => true, {probability: 0.3});
-		if (isHighlight === true) result.push({software: ids[index]})
+		const isHighlight = !!faker.helpers.maybe(() => true, {
+			probability: 0.3,
+		});
+		if (isHighlight === true) result.push({software: ids[index]});
 	}
 	return result;
 }
 
-async function generateProjects(amount=500) {
+async function generateProjects(amount = 500) {
 	const result = [];
 
 	const projectStatuses = ['finished', 'running', 'starting'];
 
 	for (let index = 0; index < amount; index++) {
 		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
-		const title = generateUniqueCaseInsensitiveString(() => ('Project: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200));
+		const title = generateUniqueCaseInsensitiveString(() =>
+			('Project: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200),
+		);
 
 		const status = faker.helpers.arrayElement(projectStatuses);
 		let dateEnd, dateStart;
@@ -346,14 +389,20 @@ async function generateProjects(amount=500) {
 		result.push({
 			slug: faker.helpers.slugify(title).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''), // removes double dashes and trailing dashes
 			title: title,
-			subtitle: faker.helpers.maybe(() => faker.commerce.productDescription(), {probability: 0.9}) ?? null,
+			subtitle:
+				faker.helpers.maybe(() => faker.commerce.productDescription(), {
+					probability: 0.9,
+				}) ?? null,
 			date_end: faker.helpers.maybe(() => dateEnd, {probability: 0.9}) ?? null,
 			date_start: faker.helpers.maybe(() => dateStart, {probability: 0.9}) ?? null,
 			description: faker.lorem.paragraphs(5, '\n\n'),
 			grant_id: faker.helpers.maybe(() => faker.helpers.replaceSymbols('******'), {probability: 0.8}) ?? null,
 			image_caption: faker.animal.cat(),
-			image_contain: !!faker.helpers.maybe(() => true, {probability: 0.5}),
-			image_id: faker.helpers.maybe(() => localImageIds[index % localImageIds.length], {probability: 0.8}) ?? null,
+			image_contain: !!faker.helpers.maybe(() => true, {
+				probability: 0.5,
+			}),
+			image_id:
+				faker.helpers.maybe(() => localImageIds[index % localImageIds.length], {probability: 0.8}) ?? null,
 			is_published: !!faker.helpers.maybe(() => true, {probability: 0.8}),
 		});
 	}
@@ -361,7 +410,7 @@ async function generateProjects(amount=500) {
 	return result;
 }
 
-function generateOrcids(amount=50) {
+function generateOrcids(amount = 50) {
 	const orcids = new Set();
 
 	while (orcids.size < amount) {
@@ -380,32 +429,38 @@ function generatePeopleWithOrcids(orcids, imageIds) {
 			family_names: faker.person.lastName(),
 			given_names: faker.person.firstName(),
 			orcid: orcid,
-			avatar_id: faker.helpers.arrayElement(imageIds)
+			avatar_id: faker.helpers.arrayElement(imageIds),
 		});
 	}
 
 	return result;
 }
 
-async function generateContributors(softwareIds, peopleWithOrcids, minPerSoftware=0, maxPerSoftware=15) {
+async function generateContributors(softwareIds, peopleWithOrcids, minPerSoftware = 0, maxPerSoftware = 15) {
 	const result = [];
 
 	for (const softwareId of softwareIds) {
-		const amount = faker.number.int({max: maxPerSoftware, min: minPerSoftware});
+		const amount = faker.number.int({
+			max: maxPerSoftware,
+			min: minPerSoftware,
+		});
 		const amountWithOrcid = faker.number.int({max: amount, min: 0});
 		const amountWithoutOrcid = amount - amountWithOrcid;
 
 		for (let i = 0; i < amountWithoutOrcid; i++) {
 			result.push({
 				software: softwareId,
-				is_contact_person: !!faker.helpers.maybe(() => true, {probability: 0.2}),
+				is_contact_person: !!faker.helpers.maybe(() => true, {
+					probability: 0.2,
+				}),
 				email_address: faker.internet.email(),
 				family_names: faker.person.lastName(),
 				given_names: faker.person.firstName(),
 				affiliation: faker.company.name(),
 				role: faker.person.jobTitle(),
 				orcid: null,
-				avatar_id: faker.helpers.maybe(() => faker.helpers.arrayElement(localImageIds), {probability: 0.8}) ?? null,
+				avatar_id:
+					faker.helpers.maybe(() => faker.helpers.arrayElement(localImageIds), {probability: 0.8}) ?? null,
 			});
 		}
 
@@ -415,7 +470,9 @@ async function generateContributors(softwareIds, peopleWithOrcids, minPerSoftwar
 			result.push({
 				...personWithOrcid,
 				software: softwareId,
-				is_contact_person: !!faker.helpers.maybe(() => true, {probability: 0.2}),
+				is_contact_person: !!faker.helpers.maybe(() => true, {
+					probability: 0.2,
+				}),
 				affiliation: faker.company.name(),
 				role: faker.person.jobTitle(),
 			});
@@ -425,7 +482,7 @@ async function generateContributors(softwareIds, peopleWithOrcids, minPerSoftwar
 	return result;
 }
 
-async function generateTeamMembers(projectIds, peopleWithOrcids, minPerProject=0, maxPerProject=15) {
+async function generateTeamMembers(projectIds, peopleWithOrcids, minPerProject = 0, maxPerProject = 15) {
 	const result = await generateContributors(projectIds, peopleWithOrcids, minPerProject, maxPerProject);
 	result.forEach(contributor => {
 		contributor['project'] = contributor['software'];
@@ -452,7 +509,7 @@ function generateUrlsForProjects(ids) {
 	return result;
 }
 
-async function generateOrganisations(amount=500) {
+async function generateOrganisations(amount = 500) {
 	const rorIds = [
 		'https://ror.org/000k1q888',
 		'https://ror.org/006hf6230',
@@ -499,7 +556,9 @@ async function generateOrganisations(amount=500) {
 	const names = [];
 	for (let index = 0; index < amount; index++) {
 		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
-		const name = generateUniqueCaseInsensitiveString(() => ('Organisation: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200));
+		const name = generateUniqueCaseInsensitiveString(() =>
+			('Organisation: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200),
+		);
 		names.push(name);
 	}
 
@@ -511,12 +570,21 @@ async function generateOrganisations(amount=500) {
 			primary_maintainer: null,
 			slug: faker.helpers.slugify(names[index]).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''), // removes double dashes and trailing dashes
 			name: names[index],
-			short_description: faker.helpers.maybe(() => faker.commerce.productDescription(), {probability: 0.8}) ?? null,
+			short_description:
+				faker.helpers.maybe(() => faker.commerce.productDescription(), {
+					probability: 0.8,
+				}) ?? null,
 			ror_id: index < rorIds.length ? rorIds[index] : null,
 			website: faker.internet.url(),
 			is_tenant: !!faker.helpers.maybe(() => true, {probability: 0.05}),
-			country: faker.helpers.maybe(() => faker.location.country(), {probability: 0.8}) ?? null,
-			logo_id: faker.helpers.maybe(() => localOrganisationLogoIds[index % localOrganisationLogoIds.length], {probability: 0.8}) ?? null,
+			country:
+				faker.helpers.maybe(() => faker.location.country(), {
+					probability: 0.8,
+				}) ?? null,
+			logo_id:
+				faker.helpers.maybe(() => localOrganisationLogoIds[index % localOrganisationLogoIds.length], {
+					probability: 0.8,
+				}) ?? null,
 		});
 	}
 
@@ -545,43 +613,43 @@ function generateNews() {
 	const entries = [
 		{
 			title: 'RSD released',
-			slug: 'rsd-released'
+			slug: 'rsd-released',
 		},
 		{
 			title: 'Some Big News',
-			slug: 'some-big-news'
+			slug: 'some-big-news',
 		},
 		{
 			title: 'You wont believe this!',
-			slug: 'you-wont-believe-this'
+			slug: 'you-wont-believe-this',
 		},
 		{
-			title: 'The perfect software doesn\'t exi-',
-			slug: 'the-prefect-software-doesnt-exi'
+			title: "The perfect software doesn't exi-",
+			slug: 'the-prefect-software-doesnt-exi',
 		},
 		{
-			title: '10 clickbait headlines you didn\'t know about!',
-			slug: '10-clickbait-headlines'
+			title: "10 clickbait headlines you didn't know about!",
+			slug: '10-clickbait-headlines',
 		},
 		{
 			title: 'You will never use a dependency anymore after you know this...',
-			slug: 'never-dependency'
+			slug: 'never-dependency',
 		},
 		{
 			title: 'Shutting down the RSD',
-			slug: 'shutting-down-the-rsd'
+			slug: 'shutting-down-the-rsd',
 		},
 		{
 			title: 'The last package you will ever need',
-			slug: 'last-package'
+			slug: 'last-package',
 		},
 		{
 			title: 'How to make your project a big success',
-			slug: 'project-success'
+			slug: 'project-success',
 		},
 		{
 			title: 'The 5 best dependencies you never heard about',
-			slug: '5-best-dependencies'
+			slug: '5-best-dependencies',
 		},
 	];
 
@@ -618,11 +686,20 @@ function generateImagesForNews(newsIds, imageIds) {
 	return result;
 }
 
-function generateRelationsForDifferingEntities(idsOrigin, idsRelation, nameOrigin, nameRelation, maxRelationsPerOrigin=11) {
+function generateRelationsForDifferingEntities(
+	idsOrigin,
+	idsRelation,
+	nameOrigin,
+	nameRelation,
+	maxRelationsPerOrigin = 11,
+) {
 	const result = [];
 
 	for (const idOrigin of idsOrigin) {
-		const numberOfIdsRelation = faker.number.int({max: maxRelationsPerOrigin, min: 0});
+		const numberOfIdsRelation = faker.number.int({
+			max: maxRelationsPerOrigin,
+			min: 0,
+		});
 		const relationsToAdd = faker.helpers.arrayElements(idsRelation, numberOfIdsRelation);
 		for (const idRelation of relationsToAdd) {
 			result.push({
@@ -648,29 +725,47 @@ function generateProjectForOrganisation(idsProjects, idsOrganisations) {
 
 function createJWT() {
 	const secret = process.env.PGRST_JWT_SECRET;
-	return jwt.sign({ 'role': 'rsd_admin' }, secret, {expiresIn: '2m'});
+	return jwt.sign({role: 'rsd_admin'}, secret, {expiresIn: '2m'});
 }
 
 const token = createJWT();
 const headers = {
-		'Content-Type': 'application/json',
-		'Authorization': 'bearer ' + token,
-		'Prefer': 'return=representation,resolution=ignore-duplicates'
-	}
+	'Content-Type': 'application/json',
+	Authorization: 'bearer ' + token,
+	Prefer: 'return=representation,resolution=ignore-duplicates',
+};
 const backendUrl = process.env.POSTGREST_URL || 'http://localhost/api/v1';
 
 async function postToBackend(endpoint, body) {
-	const response = await fetch(backendUrl + endpoint, {method: 'POST', body: JSON.stringify(body), headers: headers});
-	if(!response.ok) {
-		console.warn('Warning: post request to ' + endpoint + ' had status code ' + response.status + ' and body ' + await response.text());
+	const response = await fetch(backendUrl + endpoint, {
+		method: 'POST',
+		body: JSON.stringify(body),
+		headers: headers,
+	});
+	if (!response.ok) {
+		console.warn(
+			'Warning: post request to ' +
+				endpoint +
+				' had status code ' +
+				response.status +
+				' and body ' +
+				(await response.text()),
+		);
 	}
 	return response;
 }
 
 async function getFromBackend(endpoint) {
 	const response = await fetch(backendUrl + endpoint, {headers: headers});
-	if(!response.ok) {
-		console.warn('Warning: post request to ' + endpoint + ' had status code ' + response.status + ' and body ' + await response.text());
+	if (!response.ok) {
+		console.warn(
+			'Warning: post request to ' +
+				endpoint +
+				' had status code ' +
+				response.status +
+				' and body ' +
+				(await response.text()),
+		);
 	}
 	return response;
 }
@@ -680,15 +775,19 @@ async function getLocalImageIds(fileNames) {
 	const imageAsBase64Promises = [];
 	for (let index = 0; index < fileNames.length; index++) {
 		const fileName = fileNames[index];
-		imageAsBase64Promises[index] = fs.readFile(fileName, {encoding: 'base64'})
-			.then(base64 => {return {data: base64, mime_type: mimeTypeFromFileName(fileName)}});
+		imageAsBase64Promises[index] = fs.readFile(fileName, {encoding: 'base64'}).then(base64 => {
+			return {
+				data: base64,
+				mime_type: mimeTypeFromFileName(fileName),
+			};
+		});
 	}
 	const imagesAsBase64 = await Promise.all(imageAsBase64Promises);
 
 	const resp = await postToBackend('/image?select=id', imagesAsBase64);
 	const idsAsObjects = await resp.json();
 	const ids = idsAsObjects.map(idAsObject => idAsObject.id);
-	return ids
+	return ids;
 }
 
 function mimeTypeFromFileName(fileName) {
@@ -710,33 +809,44 @@ async function downloadAndGetImages(urlGenerator, amount) {
 		imageAsBase64Promises.push(
 			Promise.race([
 				fetch(url)
-					.then(resp => {clearTimeout(timeOuts[index]); return resp.arrayBuffer()})
+					.then(resp => {
+						clearTimeout(timeOuts[index]);
+						return resp.arrayBuffer();
+					})
 					.then(ab => Buffer.from(ab))
 					.then(bf => bf.toString('base64')),
-				new Promise((res, rej) => timeOuts[index] = setTimeout(res, 3000))
-					.then(() => {console.warn('Timeout for ' + url + ', skipping'); return null;})
-			])
+				new Promise((res, rej) => (timeOuts[index] = setTimeout(res, 3000))).then(() => {
+					console.warn('Timeout for ' + url + ', skipping');
+					return null;
+				}),
+			]),
 		);
 	}
 	const imagesAsBase64 = await Promise.all(imageAsBase64Promises);
 
 	const imagesWithoutNulls = imagesAsBase64
 		.filter(img => img !== null)
-		.map(base64 => {return {data: base64, mime_type: 'image/jpeg'}});
+		.map(base64 => {
+			return {data: base64, mime_type: 'image/jpeg'};
+		});
 
 	const resp = await postToBackend('/image?select=id', imagesWithoutNulls);
 	const idsAsObjects = await resp.json();
 	const ids = idsAsObjects.map(idAsObject => idAsObject.id);
-	return ids
+	return ids;
 }
 
-async function postAccountsToBackend(amount=100) {
+async function postAccountsToBackend(amount = 100) {
 	const accounts = [];
 	for (let i = 0; i < amount; i++) {
 		accounts.push({
-			public_orcid_profile: !!faker.helpers.maybe(() => true, {probability: 0.8}),
+			public_orcid_profile: !!faker.helpers.maybe(() => true, {
+				probability: 0.8,
+			}),
 			agree_terms: !!faker.helpers.maybe(() => true, {probability: 0.8}),
-			notice_privacy_statement: !!faker.helpers.maybe(() => true, {probability: 0.8}),
+			notice_privacy_statement: !!faker.helpers.maybe(() => true, {
+				probability: 0.8,
+			}),
 		});
 	}
 
@@ -746,15 +856,10 @@ async function postAccountsToBackend(amount=100) {
 // Generate one login_for_account per given account
 function generateLoginForAccount(accountIds, orcids) {
 	const homeOrganisations = [null];
-	for (let i=0; i < 10; i++) {
-		homeOrganisations.push("Organisation for " + faker.word.noun());
+	for (let i = 0; i < 10; i++) {
+		homeOrganisations.push('Organisation for ' + faker.word.noun());
 	}
-	const providers = [
-		"ipd1",
-		"idp2",
-		"idp3",
-		"ip4"
-	];
+	const providers = ['ipd1', 'idp2', 'idp3', 'ip4'];
 
 	let orcidsAdded = 0;
 	const login_for_accounts = [];
@@ -768,24 +873,36 @@ function generateLoginForAccount(accountIds, orcids) {
 			login_for_accounts.push({
 				account: accountId,
 				name: firstName + ' ' + givenName,
-				email: faker.internet.email({firstName: firstName, lastName: givenName}),
+				email: faker.internet.email({
+					firstName: firstName,
+					lastName: givenName,
+				}),
 				sub: orcid,
 				provider: 'orcid',
 				home_organisation: faker.helpers.arrayElement(homeOrganisations),
-				last_login_date: faker.helpers.maybe(() => faker.date.past({years: 3}), {probability: 0.8}) ?? null
+				last_login_date:
+					faker.helpers.maybe(() => faker.date.past({years: 3}), {
+						probability: 0.8,
+					}) ?? null,
 			});
 		} else {
 			login_for_accounts.push({
 				account: accountId,
 				name: firstName + ' ' + givenName,
-				email: faker.internet.email({firstName: firstName, lastName: givenName}),
+				email: faker.internet.email({
+					firstName: firstName,
+					lastName: givenName,
+				}),
 				sub: faker.string.alphanumeric(30),
 				provider: faker.helpers.arrayElement(providers),
 				home_organisation: faker.helpers.arrayElement(homeOrganisations),
-				last_login_date: faker.helpers.maybe(() => faker.date.past({years: 3}), {probability: 0.8}) ?? null
+				last_login_date:
+					faker.helpers.maybe(() => faker.date.past({years: 3}), {
+						probability: 0.8,
+					}) ?? null,
 			});
 		}
-	})
+	});
 	return login_for_accounts;
 }
 
@@ -808,16 +925,17 @@ let idsMentions, idsKeywords, idsResearchDomains;
 const mentionsPromise = postToBackend('/mention', generateMentions())
 	.then(() => getFromBackend('/mention?select=id'))
 	.then(res => res.json())
-	.then(jsonMentions => idsMentions = jsonMentions.map(element => element.id));
+	.then(jsonMentions => (idsMentions = jsonMentions.map(element => element.id)));
 const keywordPromise = getFromBackend('/keyword?select=id')
 	.then(res => res.json())
-	.then(jsonKeywords => idsKeywords = jsonKeywords.map(element => element.id));
+	.then(jsonKeywords => (idsKeywords = jsonKeywords.map(element => element.id)));
 const researchDomainsPromise = getFromBackend('/research_domain?select=id')
 	.then(res => res.json())
-	.then(jsonResearchDomains => idsResearchDomains = jsonResearchDomains.map(element => element.id));
+	.then(jsonResearchDomains => (idsResearchDomains = jsonResearchDomains.map(element => element.id)));
 
-await Promise.all([mentionsPromise, keywordPromise, researchDomainsPromise])
-	.then(() => console.log('mentions, keywords, research domains done'));
+await Promise.all([mentionsPromise, keywordPromise, researchDomainsPromise]).then(() =>
+	console.log('mentions, keywords, research domains done'),
+);
 
 let idsSoftware, idsFakeSoftware, idsRealSoftware, idsProjects, idsOrganisations;
 const softwarePromise = postToBackend('/software', await generateSoftware())
@@ -834,7 +952,7 @@ const softwarePromise = postToBackend('/software', await generateSoftware())
 		postToBackend('/keyword_for_software', generateKeywordsForEntity(idsSoftware, idsKeywords, 'software'));
 		postToBackend('/mention_for_software', generateMentionsForEntity(idsSoftware, idsMentions, 'software'));
 		postToBackend('/software_for_software', generateSoftwareForSoftware(idsSoftware));
-		postToBackend('/software_highlight', generateSoftwareHighlights(idsSoftware.slice(0,10)));
+		postToBackend('/software_highlight', generateSoftwareHighlights(idsSoftware.slice(0, 10)));
 	});
 const projectPromise = postToBackend('/project', await generateProjects())
 	.then(resp => resp.json())
@@ -845,7 +963,10 @@ const projectPromise = postToBackend('/project', await generateProjects())
 		postToBackend('/keyword_for_project', generateKeywordsForEntity(idsProjects, idsKeywords, 'project'));
 		postToBackend('/output_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));
 		postToBackend('/impact_for_project', generateMentionsForEntity(idsProjects, idsMentions, 'project'));
-		postToBackend('/research_domain_for_project', generateResearchDomainsForProjects(idsProjects, idsResearchDomains));
+		postToBackend(
+			'/research_domain_for_project',
+			generateResearchDomainsForProjects(idsProjects, idsResearchDomains),
+		);
 		postToBackend('/project_for_project', generateSoftwareForSoftware(idsProjects));
 	});
 const organisationPromise = postToBackend('/organisation', await generateOrganisations())
@@ -855,7 +976,7 @@ const organisationPromise = postToBackend('/organisation', await generateOrganis
 	});
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
 await postToBackend('/news?select=id', generateNews())
-	.then(() => getFromBackend("/news"))
+	.then(() => getFromBackend('/news'))
 	.then(res => res.json())
 	.then(jsonNewsIds => jsonNewsIds.map(news => news.id))
 	.then(newsIds => postToBackend('/image_for_news', generateImagesForNews(newsIds, localImageIds)))
@@ -863,11 +984,27 @@ await postToBackend('/news?select=id', generateNews())
 
 await Promise.all([softwarePromise, projectPromise, organisationPromise]).then(() => console.log('sw, pj, org done'));
 
-await postToBackend('/software_for_project', generateRelationsForDifferingEntities(idsSoftware, idsProjects, 'software', 'project')).then(() => console.log('sw-pj done'));
-await postToBackend('/software_for_organisation', generateRelationsForDifferingEntities(idsSoftware, idsOrganisations, 'software', 'organisation')).then(() => console.log('sw-org done'));
-await postToBackend('/project_for_organisation', generateProjectForOrganisation(idsProjects, idsOrganisations)).then(() => console.log('pj-org done'));
-await postToBackend('/release', idsSoftware.map(id => ({software: id})))
-	.then(() => postToBackend('/release_version', generateRelationsForDifferingEntities(idsFakeSoftware, idsMentions, 'release_id', 'mention_id', 100)))
+await postToBackend(
+	'/software_for_project',
+	generateRelationsForDifferingEntities(idsSoftware, idsProjects, 'software', 'project'),
+).then(() => console.log('sw-pj done'));
+await postToBackend(
+	'/software_for_organisation',
+	generateRelationsForDifferingEntities(idsSoftware, idsOrganisations, 'software', 'organisation'),
+).then(() => console.log('sw-org done'));
+await postToBackend('/project_for_organisation', generateProjectForOrganisation(idsProjects, idsOrganisations)).then(
+	() => console.log('pj-org done'),
+);
+await postToBackend(
+	'/release',
+	idsSoftware.map(id => ({software: id})),
+)
+	.then(() =>
+		postToBackend(
+			'/release_version',
+			generateRelationsForDifferingEntities(idsFakeSoftware, idsMentions, 'release_id', 'mention_id', 100),
+		),
+	)
 	.then(() => console.log('releases done'));
 
 console.log('Done');
