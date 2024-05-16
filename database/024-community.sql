@@ -373,3 +373,28 @@ CREATE POLICY maintainer_community_delete ON software_for_community FOR DELETE T
 CREATE POLICY admin_all_rights ON software_for_community TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
+
+
+-- KEYWORDS for community
+CREATE TABLE keyword_for_community (
+	community UUID REFERENCES community (id),
+	keyword UUID REFERENCES keyword (id),
+	PRIMARY KEY (community, keyword)
+);
+
+
+-- RLS keyword_for_community table
+ALTER TABLE keyword_for_community ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON keyword_for_community FOR SELECT TO rsd_web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY maintainer_insert ON keyword_for_community FOR INSERT TO rsd_user
+	WITH CHECK (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON keyword_for_community FOR DELETE TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON keyword_for_community TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);

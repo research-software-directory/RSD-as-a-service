@@ -19,13 +19,13 @@ type AboutPageFormProps = {
 
 
 export default function CommunityAboutPage() {
-  const {id, description} = useCommunityContext()
+  const {community} = useCommunityContext()
 
   const methods = useForm<AboutPageFormProps>({
     mode: 'onChange',
     defaultValues: {
-      id,
-      description
+      id: community?.id,
+      description: community?.description
     }
   })
 

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,7 +27,7 @@ export function AboutPagePlaceholder() {
     <Alert severity="info" sx={{marginTop:'0.5rem'}}>
       <AlertTitle sx={{fontWeight: 500}}>About section not defined</AlertTitle>
       <p>
-        The about section is not visible to vistors because it does not have any content.
+        The about section is not visible to visitors because it does not have any content.
       </p>
       <span>To activate the about section, add content to the about section <strong>
         <button onClick={goToSettings}>in the settings.</button>
@@ -43,8 +43,8 @@ export default function AboutPage() {
   if (description) {
     return (
       <BaseSurfaceRounded
-        className="flex-1 mb-12 p-4"
-        type="section"
+        className="flex-1 flex justify-center mb-12 p-4"
+        type="div"
       >
         <ReactMarkdownWithSettings
           className="pt-4"

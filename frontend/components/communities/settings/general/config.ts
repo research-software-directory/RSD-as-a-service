@@ -41,7 +41,15 @@ const config = {
       minLength: {value: 36, message: 'Minimum length is 36'},
       maxLength: {value: 36, message: 'Maximum length is 36'}
     }
-  }
+  },
+  keywords: {
+    label: 'Find or add keyword',
+    help: 'Select from top 30 list or start typing for more suggestions',
+    validation: {
+      //use in find keyword input box
+      minLength: 1,
+    }
+  },
 }
 
 export default config

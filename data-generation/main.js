@@ -902,6 +902,7 @@ const communityPromise = postToBackend('/community', generateCommunities())
 	.then(resp => resp.json())
 	.then(async commArray => {
 		idsCommunities = commArray.map(comm => comm['id']);
+		postToBackend('/keyword_for_community', generateKeywordsForEntity(idsCommunities, idsKeywords, 'community'))
 	});
 
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));

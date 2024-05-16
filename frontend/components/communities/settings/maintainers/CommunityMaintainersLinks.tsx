@@ -11,8 +11,8 @@ import {useCommunityContext} from '~/components/communities/context'
 import {useCommunityInvitations} from './useCommunityInvitations'
 
 export default function CommunityMaintainerLinks() {
-  const {id,name} = useCommunityContext()
-  const {unusedInvitations,createInvitation,deleteInvitation} = useCommunityInvitations({community:id})
+  const {community} = useCommunityContext()
+  const {unusedInvitations,createInvitation,deleteInvitation} = useCommunityInvitations({community:community?.id ?? ''})
 
   // console.group('CommunityMaintainerLinks')
   // console.log('id...', id)
@@ -37,8 +37,8 @@ export default function CommunityMaintainerLinks() {
       </Button>
       <div className="py-4"></div>
       <InvitationList
-        subject={`Maintainer invite for community ${encodeURIComponent(name ?? '')}`}
-        body={`Please use the following link to become a maintainer of ${encodeURIComponent(name ?? '')} community.`}
+        subject={`Maintainer invite for community ${encodeURIComponent(community?.name ?? '')}`}
+        body={`Please use the following link to become a maintainer of ${encodeURIComponent(community?.name ?? '')} community.`}
         invitations={unusedInvitations}
         onDelete={deleteInvitation}
       />

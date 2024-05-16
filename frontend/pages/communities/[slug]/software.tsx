@@ -8,15 +8,16 @@ import {GetServerSidePropsContext} from 'next'
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth'
 import {getUserSettings} from '~/utils/userSettings'
-import {CommunityListProps, getCommunityBySlug} from '~/components/communities/apiCommunities'
+import {EditCommunityProps, getCommunityBySlug} from '~/components/communities/apiCommunities'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
 import {isCommunityMaintainer} from '~/auth/permissions/isMaintainerOfCommunity'
 import CommunityPage from '~/components/communities/CommunityPage'
+import {getKeywordsByCommunity} from '~/components/communities/settings/general/apiCommunityKeywords'
 
 type CommunitySoftwareProps={
-  community: CommunityListProps,
+  community: EditCommunityProps,
   slug: string[],
   isMaintainer: boolean,
   rsd_page_rows: number,
@@ -90,17 +91,24 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       }
     }
     // get info if the user is maintainer
-    const isMaintainer = await isCommunityMaintainer({
-      community: community.id,
-      role: user?.role,
-      account: user?.account,
-      token
-    })
+    const [isMaintainer,keywords] = await Promise.all([
+      isCommunityMaintainer({
+        community: community.id ?? '',
+        role: user?.role,
+        account: user?.account,
+        token
+      }),
+      getKeywordsByCommunity(community.id,token)
+    ])
 
     return {
       // passed to the page component as props
       props: {
-        community,
+        community:{
+          ...community,
+          // use keywords for editing
+          keywords
+        },
         slug: [params?.slug],
         tab: query?.tab ?? null,
         isMaintainer,

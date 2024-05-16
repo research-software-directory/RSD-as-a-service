@@ -8,15 +8,15 @@ import BaseSurfaceRounded from '../layout/BaseSurfaceRounded'
 import PageBreadcrumbs from '../layout/PageBreadcrumbs'
 import {UserSettingsProvider} from '../organisation/context/UserSettingsContext'
 import {LayoutType} from '../software/overview/search/ViewToggleGroup'
-import {CommunityListProps} from './apiCommunities'
 import CommunityMetadata from './metadata'
 import {TabKey} from './tabs/CommunityTabItems'
 import CommunityTabs from './tabs'
 import {CommunityProvider} from './context'
+import {EditCommunityProps} from './apiCommunities'
 
 type CommunityPageProps={
   selectTab: TabKey
-  community: CommunityListProps
+  community: EditCommunityProps
   slug: string[]
   isMaintainer: boolean
   rsd_page_layout: LayoutType
@@ -64,7 +64,7 @@ export default function CommunityPage({
             />
           </BaseSurfaceRounded>
           {/* TAB CONTENT */}
-          <section className="flex md:min-h-[60rem]">
+          <section className="flex md:min-h-[55rem]">
             {children}
           </section>
         </CommunityProvider>
