@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: "Run Prettier check"
+on:
+  pull_request:
+    paths:
+      - "data-generation/**"
+  workflow_dispatch:
+jobs:
+  run-prettier-check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "data-generation"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "data-generation/package-lock.json"
+      - run: npm clean-install
+      - run: npm run format:check

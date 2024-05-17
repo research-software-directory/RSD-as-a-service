@@ -1,17 +1,22 @@
 {
-  "dependencies": {
-    "@faker-js/faker": "8.3.1",
-    "jsonwebtoken": "9.0.2",
-    "wait-on": "7.2.0"
-  },
-  "name": "data-generator",
-  "version": "1.0.0",
-  "main": "main.js",
-  "scripts": {
-    "start": "node main.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "type": "module"
+	"dependencies": {
+		"@faker-js/faker": "8.3.1",
+		"jsonwebtoken": "9.0.2",
+		"wait-on": "7.2.0"
+	},
+	"name": "data-generator",
+	"version": "1.0.0",
+	"main": "main.js",
+	"scripts": {
+		"start": "node main.js",
+		"format:check": "prettier --check .",
+		"format:fix": "prettier --write ."
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"type": "module",
+	"devDependencies": {
+		"prettier": "3.2.5"
+	}
 }
