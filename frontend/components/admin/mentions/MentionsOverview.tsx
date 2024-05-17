@@ -55,7 +55,8 @@ export default function MentionsOverview() {
       case 'openalex':
         return `openalex_id=eq.${termEscaped}`
       case 'title':
-        return `or=(title.ilike.*${termEscaped}*,authors.ilike.*${termEscaped}*,journal.ilike.*${termEscaped}*,url.ilike.*${termEscaped}*,note.ilike.*${termEscaped}*,openalex_id.ilike.*${termEscaped}*)`
+        // return `or=(title.ilike.*${termEscaped}*,authors.ilike.*${termEscaped}*,journal.ilike.*${termEscaped}*,url.ilike.*${termEscaped}*,note.ilike.*${termEscaped}*,openalex_id.ilike.*${termEscaped}*)`
+        return `mention_fts=plfts.${termEscaped}`
     }
   }
 

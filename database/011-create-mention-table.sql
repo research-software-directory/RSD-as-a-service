@@ -47,8 +47,11 @@ CREATE TABLE mention (
 	scraped_at TIMESTAMPTZ,
 	citations_scraped_at TIMESTAMPTZ,
 	created_at TIMESTAMPTZ NOT NULL,
-	updated_at TIMESTAMPTZ NOT NULL
+	updated_at TIMESTAMPTZ NOT NULL,
+	mention_fts TSVECTOR GENERATED ALWAYS AS (TO_TSVECTOR('english', title || ' ' || COALESCE(authors, '') || ' ' || COALESCE(note, '') || ' ' || COALESCE(openalex_id, '') || ' ' || COALESCE(url, ''))) STORED
 );
+
+CREATE INDEX mention_fts_idx ON mention USING GIN (mention_fts);
 
 CREATE FUNCTION sanitise_insert_mention() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$

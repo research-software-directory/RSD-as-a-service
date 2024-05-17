@@ -19,7 +19,7 @@ import EditMentionModal from '~/components/mention/EditMentionModal'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 
 function leaveOutSomeFieldsReplacer(key: string, value: any) {
-  if (key === 'id' || key === 'doi_registration_date' || key === 'created_at' || key === 'updated_at') {
+  if (key === 'id' || key === 'doi_registration_date' || key === 'created_at' || key === 'updated_at' || key === 'mention_fts') {
     return undefined
   } else {
     return value

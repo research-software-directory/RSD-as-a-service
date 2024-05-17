@@ -26,7 +26,7 @@ function generateUniqueCaseInsensitiveString(randomStringGenerator) {
 	throw 'Tried to generate a unique (ignoring case) string for 10000 times but failed to do so';
 }
 
-function generateMentions(amountExtra = 1000) {
+function generateMentions(amountExtra = 40000) {
 	const mentionTypes = [
 		'blogPost',
 		'book',
