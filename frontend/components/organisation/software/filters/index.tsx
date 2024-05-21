@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,17 +9,18 @@ import FilterHeader from '~/components/filter/FilterHeader'
 
 import {decodeJsonParam} from '~/utils/extractQueryParam'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
+import KeywordsFilter from '~/components/filter/KeywordsFilter'
+import ProgrammingLanguagesFilter from '~/components/filter/ProgrammingLanguagesFilter'
+import LicensesFilter from '~/components/filter/LicensesFilter'
+
 import OrgOrderSoftwareBy from './OrgOrderSoftwareBy'
-import OrgProjectKeywordsFilter from './OrgSoftwareKeywordsFilter'
 import useSoftwareParams from './useSoftwareParams'
 import useOrgSoftwareKeywordsList from './useOrgSoftwareKeywordsList'
-import OrgSoftwareLicensesFilter from './OrgSoftwareLicensesFilter'
 import useOrgSoftwareLicensesList from './useOrgSoftwareLicensesList'
-import OrgSoftwareLanguagesFilter from './OrgSoftwareLanguagesFilter'
 import useOrgSoftwareLanguagesList from './useOrgSoftwareLanguagesList'
 
 export default function OrgSoftwareFilters() {
-  const {resetFilters} = useQueryChange()
+  const {resetFilters,handleQueryChange} = useQueryChange()
   const {filterCnt,keywords_json,prog_lang_json,licenses_json} = useSoftwareParams()
   const {keywordsList} = useOrgSoftwareKeywordsList()
   const {languagesList} = useOrgSoftwareLanguagesList()
@@ -45,20 +46,29 @@ export default function OrgSoftwareFilters() {
       {/* Order by */}
       <OrgOrderSoftwareBy />
       {/* Keywords */}
-      <OrgProjectKeywordsFilter
-        keywords={keywords}
-        keywordsList={keywordsList}
-      />
+      <div>
+        <KeywordsFilter
+          keywords={keywords}
+          keywordsList={keywordsList}
+          handleQueryChange={handleQueryChange}
+        />
+      </div>
       {/* Program languages */}
-      <OrgSoftwareLanguagesFilter
-        prog_lang={prog_lang}
-        languagesList={languagesList}
-      />
+      <div>
+        <ProgrammingLanguagesFilter
+          prog_lang={prog_lang}
+          languagesList={languagesList}
+          handleQueryChange={handleQueryChange}
+        />
+      </div>
       {/* Licenses */}
-      <OrgSoftwareLicensesFilter
-        licenses={licenses}
-        licensesList={licensesList}
-      />
+      <div>
+        <LicensesFilter
+          licenses={licenses}
+          licensesList={licensesList}
+          handleQueryChange={handleQueryChange}
+        />
+      </div>
     </>
   )
 }

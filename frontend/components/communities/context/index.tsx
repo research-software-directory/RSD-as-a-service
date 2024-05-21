@@ -26,6 +26,8 @@ const emptyCommunity:EditCommunityProps = {
   primary_maintainer: null,
   logo_id: null,
   software_cnt: null,
+  pending_cnt: null,
+  rejected_cnt: null,
   keywords: [],
 }
 
