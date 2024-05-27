@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
 //
@@ -69,7 +69,7 @@ public class CrossrefMention implements Mention {
 	}
 
 	@Override
-	public MentionRecord mentionData() throws IOException, InterruptedException, RsdResponseException{
+	public MentionRecord mentionData() throws IOException, InterruptedException, RsdResponseException {
 		StringBuilder url = new StringBuilder("https://api.crossref.org/works/" + Utils.urlEncode(doi));
 		Config.crossrefContactEmail().ifPresent(email -> url.append("?mailto=").append(email));
 		String responseJson = Utils.get(url.toString());
@@ -87,10 +87,16 @@ public class CrossrefMention implements Mention {
 			for (JsonObject authorJson : authorsJson) {
 				String givenName = Utils.stringOrNull(authorJson.get("given"));
 				String familyName = Utils.stringOrNull(authorJson.get("family"));
-				if (givenName == null && familyName == null) continue;
-				if (givenName == null) authors.add(familyName);
-				else if (familyName == null) authors.add(givenName);
-				else authors.add(givenName + " " + familyName);
+				String name = Utils.stringOrNull(authorJson.get("name"));
+				if (givenName != null && familyName != null) {
+					authors.add(givenName + " " + familyName);
+				} else if (name != null) {
+					authors.add(name);
+				} else if (givenName != null) {
+					authors.add(givenName);
+				} else if (familyName != null) {
+					authors.add(familyName);
+				}
 			}
 			result.authors = String.join(", ", authors);
 		}
