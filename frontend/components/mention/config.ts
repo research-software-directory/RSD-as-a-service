@@ -46,8 +46,8 @@ export const mentionModal = {
         message: 'Minimum length is 5'
       },
       maxLength: {
-        value: 500,
-        message: 'Maximum length is 500'
+        value: 3000,
+        message: 'Maximum length is 3000'
       }
     }
   },
@@ -57,8 +57,8 @@ export const mentionModal = {
     validation: {
       required: false,
       maxLength: {
-        value: 1000,
-        message: 'Maximum length is 1000'
+        value: 50000,
+        message: 'Maximum length is 50000'
       }
     }
   },
@@ -66,7 +66,11 @@ export const mentionModal = {
     label: 'Publisher',
     help: 'Name of publisher',
     validation: {
-      required: false
+      required: false,
+      maxLength: {
+        value: 255,
+        message: 'Maximum length is 255'
+      }
     }
   },
   journal: {
@@ -84,7 +88,11 @@ export const mentionModal = {
     label: 'Page',
     help: 'Page or page range',
     validation: {
-      required: false
+      required: false,
+      maxLength: {
+        value: 50,
+        message: 'Maximum length is 50'
+      }
     }
   },
   mentionType: {
