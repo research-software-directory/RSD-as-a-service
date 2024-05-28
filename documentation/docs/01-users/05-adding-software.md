@@ -12,11 +12,11 @@ To create a new software page provide a name and a short description (optional) 
 
 ## Description
 
-In this section, you can provide the basic information about the software, like a **description** of the software, which will be shown on the software page. You can use [custom markdown](#custom-markdown) to write the description or [link to existing markdown](#document-url) page on the web.
+In this section, you can provide the basic information about the software, like a **description** of the software, which will be shown on the software page. You can use [custom Markdown](#custom-markdown) to write the description or [link to existing Markdown](#document-url) page on the web.
 
-### Custom markdown
+### Custom Markdown
 
-The custom markdown supports basic markdown features: titles, bullet points, code area, simple table, task list, links and the images. The example below demonstrates widely used markdown features in RSD.
+The custom Markdown supports basic Markdown features: titles, bullet points, code area, simple table, task list, links and the images. The example below demonstrates widely used Markdown features in RSD.
 
 ```markdown
 <!--This section starts with What {software name} can do for you-->
@@ -59,7 +59,7 @@ This example is code area
 
 ## Images
 
-You need an image that allows CORS reference, otherwise image will not be loaded
+You need to use the full URL of the image and the image needs to send CORS headers, otherwise the image will not be loaded
 
 ![Mozilla](https://cdn.glitch.me/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg)
 
@@ -67,10 +67,10 @@ You need an image that allows CORS reference, otherwise image will not be loaded
 
 ### Document URL
 
-You can link to a remote Markdown file which will be dynamically loaded by the RSD. An often used approach is to link to a readme file on the GitHub repository. In this case you need to link to the `raw` version of the readme file. For example, to link to the readme file of the RSD repository, we used the link https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md. **Note that the url domain is different** `https://raw.githubusercontent.com/` from the default GitHub domain (https://github.com).
+You can link to a remote Markdown file which will be dynamically loaded by the RSD. An often used approach is to link to a readme file on the GitHub repository. In this case you need to link to the `raw` version of the readme file. For example, to link to the readme file of the RSD repository, we used the link https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md. **Note that the URL domain is different** `https://raw.githubusercontent.com/` from the default GitHub domain (https://github.com).
 
 :::warning
-When using a Document URL to point to a remote markdown file on the GitHub, you need to provide a URL to a raw markdown file (see the animation below). In addition, all links used in the Markdown document need to be `absolute` (https://...). This is required, because Markdown content is loaded from the GitHub domain into the RSD website.
+When using a Document URL to point to a remote Markdown file on the GitHub, you need to provide a URL to a raw Markdown file (see the animation below). In addition, all links used in the Markdown document, like **images**, need to use the **full URL** (e.g. use `https://user-images.githubusercontent.com/4195550/136156498-736f915f-7623-43d2-8678-f30b06563a38.png`, not `/4195550/136156498-736f915f-7623-43d2-8678-f30b06563a38.png`). This is required, because the Markdown content is loaded from the GitHub domain into the RSD website.
 :::
 
 ### Logo

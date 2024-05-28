@@ -47,7 +47,7 @@ export const softwareInformation = {
   // field for markdown
   description: {
     label: (brand_name: string) => `What ${brand_name} can do for you`,
-    help: '/documentation/users/adding-software/#basic-information',
+    help: '/documentation/users/adding-software/#description',
     validation: {
       // we do not show error message for this one, we use only maxLength value
       maxLength: {value: 10000, message: 'Maximum length is 10000'},
@@ -58,21 +58,17 @@ export const softwareInformation = {
     label: 'Software Logo',
     help: 'Upload a logo of your software.'
   },
-  // field for markdown URL
+  // field for Markdown URL
   description_url: {
-    label: 'URL location of markdown file',
-    help: <>Point to the location of markdown file including the filename. Make sure to provide the <u><a
-      target='_blank'
-      href='https://raw.githubusercontent.com/research-software-directory/RSD-as-a-service/main/README.md'
-      rel="noreferrer">raw file</a></u> and <strong>not</strong> the <u><a target='_blank'
-      href='https://github.com/research-software-directory/RSD-as-a-service/blob/main/README.md'
-      rel="noreferrer">rendered
-      output</a></u>.</>,
+    label: 'URL of (raw) Markdown file',
+    help: <>
+      Read <u><a href="/documentation/users/adding-software/#document-url" target="_blank">here</a></u> how to properly link to a raw Markdown URL
+    </>,
     validation: {
       required: 'Valid markdown URL must be provided',
       maxLength: {value: 200, message: 'Maximum length is 200'},
       pattern: {
-        value: /^https?:\/\/.+\..+.md$/,
+        value: /^https?:\/\/.+\..+\.md$/,
         message: 'URL should start with http(s):// have at least one dot (.) and end with (.md)'
       }
     }
