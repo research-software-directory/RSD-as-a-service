@@ -19,7 +19,7 @@ export default function CommunityListItem({community}:{community:CommunityListPr
       <Link
         data-testid="project-list-item"
         key={community.id}
-        href={`/communities/${community.slug}/software?order=mentions`}
+        href={`/communities/${community.slug}/software?order=mention_cnt`}
         className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-sm'
       >
         <ListImageWithGradientPlaceholder
@@ -38,7 +38,10 @@ export default function CommunityListItem({community}:{community:CommunityListPr
           </div>
           {/* software count */}
           <div className="flex items-center gap-4 mr-4">
-            <CommunityMetrics software_cnt={community.software_cnt ?? 0} />
+            <CommunityMetrics
+              software_cnt={community.software_cnt ?? 0}
+              pending_cnt={community.pending_cnt ?? 0}
+            />
           </div>
         </div>
       </Link>

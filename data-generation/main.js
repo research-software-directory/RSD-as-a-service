@@ -91,7 +91,7 @@ function generateMentions(amountExtra = 100) {
 	return result;
 }
 
-function generateSoftware(amount=500) {
+function generateSoftware(amount = 500) {
 	// real software has a real concept DOI
 	const amountRealSoftware = Math.min(conceptDois.length, amount);
 	const brandNames = [];
@@ -358,7 +358,7 @@ function generateSoftwareHighlights(ids) {
 	return result;
 }
 
-function generateProjects(amount=500) {
+function generateProjects(amount = 500) {
 	const result = [];
 
 	const projectStatuses = ['finished', 'running', 'starting'];
@@ -509,7 +509,7 @@ function generateUrlsForProjects(ids) {
 	return result;
 }
 
-function generateOrganisations(amount=500) {
+function generateOrganisations(amount = 500) {
 	const rorIds = [
 		'https://ror.org/000k1q888',
 		'https://ror.org/006hf6230',
@@ -596,14 +596,18 @@ function generateCommunities(amount = 50) {
 
 	for (let index = 0; index < amount; index++) {
 		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
-		const name = generateUniqueCaseInsensitiveString(() => ('Community: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200));
+		const name = generateUniqueCaseInsensitiveString(() =>
+			('Community: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200),
+		);
 
 		result.push({
 			slug: faker.helpers.slugify(name).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''), // removes double dashes and trailing dashes
 			name: name,
 			short_description: faker.helpers.maybe(() => faker.lorem.paragraphs(1, '\n\n'), {probability: 0.8}) ?? null,
 			description: faker.helpers.maybe(() => faker.lorem.paragraphs(1, '\n\n'), {probability: 0.8}) ?? null,
-			logo_id: faker.helpers.maybe(() => localOrganisationLogoIds[index % localImageIds.length], {probability: 0.8}) ?? null,
+			logo_id:
+				faker.helpers.maybe(() => localOrganisationLogoIds[index % localImageIds.length], {probability: 0.8}) ??
+				null,
 		});
 	}
 
@@ -656,7 +660,7 @@ function generateNews() {
 		},
 		{
 			title: 'Sunsetting the RSD',
-			slug: 'sunsetting-the-rsd'
+			slug: 'sunsetting-the-rsd',
 		},
 		{
 			title: 'The last package you will ever need',
@@ -672,19 +676,19 @@ function generateNews() {
 		},
 		{
 			title: 'Rewriting the RSD in CrabLang',
-			slug: 'rewrite-rsd-crablang'
+			slug: 'rewrite-rsd-crablang',
 		},
 		{
 			title: 'The RSD joins forces with Big Company (tm)',
-			slug: 'rsd-joins-big-company'
+			slug: 'rsd-joins-big-company',
 		},
 		{
-			title: '3 features you didn\'t know about',
-			slug: '3-features'
+			title: "3 features you didn't know about",
+			slug: '3-features',
 		},
 		{
 			title: 'Interview with RSD founders',
-			slug: 'interview-rsd-founders'
+			slug: 'interview-rsd-founders',
 		},
 	];
 
@@ -761,7 +765,11 @@ function generateProjectForOrganisation(idsProjects, idsOrganisations) {
 function generateSoftwareForCommunity(idsSoftware, idsCommunities) {
 	const result = generateRelationsForDifferingEntities(idsCommunities, idsSoftware, 'community', 'software');
 
-	const statuses = [{weight: 1, value: 'pending'}, {weight: 8, value: 'approved'}, {weight: 1, value: 'rejected'}];
+	const statuses = [
+		{weight: 1, value: 'pending'},
+		{weight: 8, value: 'approved'},
+		{weight: 1, value: 'rejected'},
+	];
 	result.forEach(entry => {
 		entry['status'] = faker.helpers.weightedArrayElement(statuses);
 	});
@@ -1025,7 +1033,7 @@ const communityPromise = postToBackend('/community', generateCommunities())
 	.then(resp => resp.json())
 	.then(async commArray => {
 		idsCommunities = commArray.map(comm => comm['id']);
-		postToBackend('/keyword_for_community', generateKeywordsForEntity(idsCommunities, idsKeywords, 'community'))
+		postToBackend('/keyword_for_community', generateKeywordsForEntity(idsCommunities, idsKeywords, 'community'));
 	});
 
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
@@ -1036,14 +1044,34 @@ await postToBackend('/news?select=id', generateNews())
 	.then(newsIds => postToBackend('/image_for_news', generateImagesForNews(newsIds, localImageIds)))
 	.then(() => console.log('news done'));
 
-await Promise.all([softwarePromise, projectPromise, organisationPromise, communityPromise]).then(() => console.log('sw, pj, org, comm done'));
+await Promise.all([softwarePromise, projectPromise, organisationPromise, communityPromise]).then(() =>
+	console.log('sw, pj, org, comm done'),
+);
 
-await postToBackend('/software_for_project', generateRelationsForDifferingEntities(idsSoftware, idsProjects, 'software', 'project')).then(() => console.log('sw-pj done'));
-await postToBackend('/software_for_organisation', generateRelationsForDifferingEntities(idsSoftware, idsOrganisations, 'software', 'organisation')).then(() => console.log('sw-org done'));
-await postToBackend('/project_for_organisation', generateProjectForOrganisation(idsProjects, idsOrganisations)).then(() => console.log('pj-org done'));
-await postToBackend('/software_for_community', generateSoftwareForCommunity(idsSoftware, idsCommunities)).then(() => console.log('sw-comm done'));
-await postToBackend('/release', idsSoftware.map(id => ({software: id})))
-	.then(() => postToBackend('/release_version', generateRelationsForDifferingEntities(idsFakeSoftware, idsMentions, 'release_id', 'mention_id', 100)))
+await postToBackend(
+	'/software_for_project',
+	generateRelationsForDifferingEntities(idsSoftware, idsProjects, 'software', 'project'),
+).then(() => console.log('sw-pj done'));
+await postToBackend(
+	'/software_for_organisation',
+	generateRelationsForDifferingEntities(idsSoftware, idsOrganisations, 'software', 'organisation'),
+).then(() => console.log('sw-org done'));
+await postToBackend('/project_for_organisation', generateProjectForOrganisation(idsProjects, idsOrganisations)).then(
+	() => console.log('pj-org done'),
+);
+await postToBackend('/software_for_community', generateSoftwareForCommunity(idsSoftware, idsCommunities)).then(() =>
+	console.log('sw-comm done'),
+);
+await postToBackend(
+	'/release',
+	idsSoftware.map(id => ({software: id})),
+)
+	.then(() =>
+		postToBackend(
+			'/release_version',
+			generateRelationsForDifferingEntities(idsFakeSoftware, idsMentions, 'release_id', 'mention_id', 100),
+		),
+	)
 	.then(() => console.log('releases done'));
 
 console.log('Done');

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,12 +8,10 @@ import {getSoftwareParams} from '~/utils/extractQueryParam'
 import {useUserSettings} from '../../context/UserSettingsContext'
 
 export default function useSoftwareParams() {
-  // initalise router
+  // initialise router
   const router = useRouter()
   // get user preferences
   const {rsd_page_rows} = useUserSettings()
-  // extract project specific params
-  // const params = ssrProjectsParams(router.query)
   // use encoded array params as json string to avoid
   // useEffect re-renders in api hooks
   const params = getSoftwareParams(router.query)
@@ -37,9 +35,8 @@ export default function useSoftwareParams() {
   // console.log('params...', params)
   // console.log('rsd_page_rows...', rsd_page_rows)
   // console.groupEnd()
-  // extract user prefference
 
-  // return these
+  // return params & count
   return {
     ...params,
     filterCnt

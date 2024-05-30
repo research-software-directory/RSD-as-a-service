@@ -14,12 +14,15 @@ const tabItems = Object.keys(communityTabItems) as TabKey[]
 type CommunityTabsProps={
   tab:TabKey
   software_cnt: number
+  pending_cnt: number
+  rejected_cnt: number
   description: string | null
   isMaintainer: boolean
 }
 
 export default function CommunityTabs({
-  tab,software_cnt,description,isMaintainer
+  tab,software_cnt,pending_cnt,rejected_cnt,
+  description,isMaintainer
 }:CommunityTabsProps) {
 
   const router = useRouter()
@@ -38,8 +41,11 @@ export default function CommunityTabs({
           }
         }
         // add default order for software and project tabs
-        if (value === 'software') {
-          url.query['order'] = 'is_featured'
+        if (value === 'software' ||
+          value === 'requests' ||
+          value === 'rejected'
+        ) {
+          url.query['order'] = 'mention_cnt'
         }
         // push route change
         router.push(url,undefined,{scroll:false})
@@ -50,7 +56,6 @@ export default function CommunityTabs({
         const item = communityTabItems[key]
         if (item.isVisible({
           isMaintainer,
-          software_cnt,
           description
         }) === true) {
           return <Tab
@@ -58,6 +63,8 @@ export default function CommunityTabs({
             key={key}
             label={item.label({
               software_cnt,
+              pending_cnt,
+              rejected_cnt
             })}
             value={key}
             sx={{
