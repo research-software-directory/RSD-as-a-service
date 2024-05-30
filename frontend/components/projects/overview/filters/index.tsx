@@ -1,19 +1,17 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import FilterHeader from '~/components/filter/FilterHeader'
 
-import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
-import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
+import KeywordsFilter, {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import OrganisationsFilter, {OrganisationOption} from '~/components/filter/OrganisationsFilter'
+import ResearchDomainFilter, {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
 import useProjectOverviewParams from '../useProjectOverviewParams'
-import ProjectKeywordsFilter from './ProjectKeywordsFilter'
-import ProjectResearchDomainFilter from './ProjectResearchDomainFilter'
 import OrderProjectsBy from './OrderProjectsBy'
-import ProjectOrganisationsFilter, {OrganisationOption} from './ProjectOrganisationsFilter'
 import ProjectStatusFilter, {StatusFilterOption} from './ProjectStatusFilter'
 
 type ProjectFiltersProps = {
@@ -68,21 +66,29 @@ export default function ProjectFilters({
         handleQueryChange={handleQueryChange}
       />
       {/* Keywords */}
-      <ProjectKeywordsFilter
-        keywords={keywords}
-        keywordsList={keywordsList}
-      />
+      <div>
+        <KeywordsFilter
+          keywords={keywords}
+          keywordsList={keywordsList}
+          handleQueryChange={handleQueryChange}
+        />
+      </div>
       {/* Research domains */}
-      <ProjectResearchDomainFilter
-        domains={domains}
-        domainsList={domainsList}
-      />
+      <div>
+        <ResearchDomainFilter
+          domains={domains}
+          domainsList={domainsList}
+          handleQueryChange={handleQueryChange}
+        />
+      </div>
       {/* Participating organisations */}
-      <ProjectOrganisationsFilter
-        organisations={organisations}
-        organisationsList={organisationsList}
-      />
-
+      <div>
+        <OrganisationsFilter
+          organisations={organisations}
+          organisationsList={organisationsList}
+          handleQueryChange={handleQueryChange}
+        />
+      </div>
     </>
   )
 }

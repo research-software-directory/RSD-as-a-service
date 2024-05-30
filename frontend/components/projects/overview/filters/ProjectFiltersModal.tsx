@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -13,8 +13,9 @@ import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
 import {ResearchDomainOption} from '~/components/filter/ResearchDomainFilter'
-import {OrganisationOption} from './ProjectOrganisationsFilter'
-import ProjectFilters from './ProjectFilters'
+import {OrganisationOption} from '~/components/filter/OrganisationsFilter'
+
+import ProjectFilters from './index'
 import {StatusFilterOption} from './ProjectStatusFilter'
 
 type ProjectFiltersModalProps = {

@@ -12,7 +12,6 @@ import {EditCommunityProps, getCommunityBySlug} from '~/components/communities/a
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import {isCommunityMaintainer} from '~/auth/permissions/isMaintainerOfCommunity'
 import AboutCommunityPage from '~/components/communities/about'
 import CommunityPage from '~/components/communities/CommunityPage'
 import {getKeywordsByCommunity} from '~/components/communities/settings/general/apiCommunityKeywords'
@@ -80,34 +79,26 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const token = req?.cookies['rsd_token']
     const user = getUserFromToken(token)
     // find community by slug
-    const community = await getCommunityBySlug({
+    const {community:com, isMaintainer} = await getCommunityBySlug({
       slug: params?.slug?.toString() ?? null,
       token: req?.cookies['rsd_token'],
       user
     })
     // console.log('community...', community)
-    if (community === null || community?.description === null){
+    if (com === null || com?.description === null){
       // returning notFound triggers 404 page
       return {
         notFound: true,
       }
     }
     // get info if the user is maintainer
-    const [isMaintainer,keywords] = await Promise.all([
-      isCommunityMaintainer({
-        community: community.id ?? '',
-        role: user?.role,
-        account: user?.account,
-        token
-      }),
-      getKeywordsByCommunity(community.id,token)
-    ])
+    const keywords = await getKeywordsByCommunity(com.id,token)
 
     return {
       // passed to the page component as props
       props: {
         community:{
-          ...community,
+          ...com,
           // use keywords for editing
           keywords
         },

@@ -3,9 +3,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import InfoIcon from '@mui/icons-material/Info'
 import TerminalIcon from '@mui/icons-material/Terminal'
-import SettingsIcon from '@mui/icons-material/Settings'
+import BlockIcon from '@mui/icons-material/Block'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 
 import {OrganisationForOverview} from '~/types/Organisation'
 
@@ -20,7 +22,7 @@ export type CommunityTabItemProps = {
   isVisible: (props: IsVisibleProps) => boolean
 }
 
-export type TabKey = 'about'|'software'|'settings'
+export type TabKey = 'about'|'software'|'requests'|'rejected'|'settings'
 export type CommunityTabProps = {
   [key in TabKey]: CommunityTabItemProps
 }
@@ -37,17 +39,31 @@ export const communityTabItems:CommunityTabProps = {
     icon: <TerminalIcon />,
     isVisible: (props) => true,
   },
+  requests:{
+    id:'requests',
+    label:({pending_cnt})=>`Requests (${pending_cnt ?? 0})`,
+    icon: <FlagOutlinedIcon />,
+    // we do not show this option if not a maintainer
+    isVisible: ({isMaintainer}) => isMaintainer
+  },
+  rejected:{
+    id:'rejected',
+    label:({rejected_cnt})=>`Rejected (${rejected_cnt ?? 0})`,
+    icon: <BlockIcon />,
+    // we do not show this option if not a maintainer
+    isVisible: ({isMaintainer}) => isMaintainer
+  },
   settings:{
     id:'settings',
     label:()=>'Settings',
-    icon: <SettingsIcon />,
+    icon: <SettingsOutlinedIcon />,
     // we do not show this option if not a maintainer
     isVisible: ({isMaintainer}) => isMaintainer
   },
   about: {
     id:'about',
     label:()=>'About',
-    icon: <InfoIcon />,
+    icon: <InfoOutlinedIcon />,
     isVisible: ({description}) => {
       // we always show about section to maintainer
       // if (isMaintainer === true) return true

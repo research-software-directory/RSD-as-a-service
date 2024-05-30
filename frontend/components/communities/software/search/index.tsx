@@ -1,42 +1,44 @@
-// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 dv4all
-// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState} from 'react'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 
 import {getPageRange} from '~/utils/pagination'
 import SearchInput from '~/components/search/SearchInput'
 import SelectRows from '~/components/software/overview/search/SelectRows'
-import FiltersModal from '~/components/filter/FiltersModal'
 import ViewToggleGroup, {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import OrgProjectFilters from '~/components/organisation/projects/filters/index'
-import useQueryChange from '~/components/organisation/projects/useQueryChange'
-import useProjectParams from '~/components/organisation/projects/useProjectParams'
+import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
+import FiltersModal from '~/components/filter/FiltersModal'
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
+import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import useFilterQueryChange from '~/components/filter/useFilterQueryChange'
+import CommunitySoftwareFilters from '../filters/index'
 
-type SearchSectionProps = {
+type SearchSoftwareSectionProps = {
   count: number
+  keywordsList: KeywordFilterOption[],
+  languagesList: LanguagesFilterOption[],
+  licensesList: LicensesFilterOption[],
+  smallScreen: boolean
   layout: ProjectLayoutType
-  setView: (view:ProjectLayoutType)=>void
+  setView: (view:ProjectLayoutType) => void
 }
 
-
-export default function OrganisationSearchProjectSection({
-  count, layout, setView
-}: SearchSectionProps) {
-  const smallScreen = useMediaQuery('(max-width:640px)')
-  const {search,page,rows,filterCnt} = useProjectParams()
-  const {handleQueryChange} = useQueryChange()
+export default function SearchCommunitySoftwareSection({
+  count, layout, keywordsList, smallScreen,
+  languagesList, licensesList, setView
+}: SearchSoftwareSectionProps) {
+  const {search,page,rows,filterCnt} = useSoftwareParams()
+  const {handleQueryChange} = useFilterQueryChange()
   const [modal, setModal] = useState(false)
 
-  const placeholder = filterCnt > 0 ? 'Find within selection' : 'Find project'
+  const placeholder = filterCnt > 0 ? 'Find within selection' : 'Find software'
 
-  // console.group('OrganisationProjectSearchSection')
+  // console.group('SearchCommunitySoftwareSection')
   // console.log('page...', page)
   // console.log('rows...', rows)
   // console.log('search...', search)
@@ -72,17 +74,19 @@ export default function OrganisationSearchProjectSection({
           </Button>
         }
       </div>
-
       {smallScreen ?
         <FiltersModal
           open={modal}
           setModal={setModal}
         >
-          <OrgProjectFilters />
+          <CommunitySoftwareFilters
+            keywordsList={keywordsList}
+            languagesList={languagesList}
+            licensesList={licensesList}
+          />
         </FiltersModal>
         : undefined
       }
-
     </section>
   )
 }

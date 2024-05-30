@@ -19,7 +19,7 @@ export default function CommunityCard({community}:{community:CommunityListProps}
     <div className="relative">
       <Link
         data-testid="community-card-link"
-        href={`/communities/${community.slug}/software?order=mentions`}
+        href={`/communities/${community.slug}/software?order=mention_cnt`}
         className="flex h-full hover:text-inherit"
         passHref
       >
@@ -50,7 +50,10 @@ export default function CommunityCard({community}:{community:CommunityListProps}
 
             {/* Metrics */}
             <div className="flex gap-4 justify-end text-center">
-              <CommunityMetrics software_cnt={community.software_cnt ?? 0} />
+              <CommunityMetrics
+                software_cnt={community.software_cnt ?? 0}
+                pending_cnt={community.pending_cnt ?? 0}
+              />
             </div>
           </CardContentFrame>
         </div>
