@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -8,16 +8,16 @@
 import FilterHeader from '~/components/filter/FilterHeader'
 
 import {decodeJsonParam} from '~/utils/extractQueryParam'
-import useQueryChange from '../useQueryChange'
-import OrgOrderProjectsBy from './OrgOrderProjectsBy'
-import OrgProjectKeywordsFilter from './OrgProjectKeywordsFilter'
-import useProjectParams from '../useProjectParams'
-import useOrgProjectKeywordsList from './useOrgProjectKeywordsList'
-import OrgResearchDomainFilter from './OrgResearchDomainFilter'
-import useOrgProjectDomainsFilter from './useOrgProjectDomainsList'
-import OrgProjectOrganisationsFilter from './OrgProjectOrganisationsFilter'
-import useOrgProjectOrganisationList from './useOrgProjectOrganisationsList'
+import KeywordsFilter from '~/components/filter/KeywordsFilter'
+import ResearchDomainFilter from '~/components/filter/ResearchDomainFilter'
+import OrganisationsFilter from '~/components/filter/OrganisationsFilter'
 import ProjectStatusFilter from '~/components/projects/overview/filters/ProjectStatusFilter'
+import useQueryChange from '../useQueryChange'
+import useProjectParams from '../useProjectParams'
+import OrgOrderProjectsBy from './OrgOrderProjectsBy'
+import useOrgProjectKeywordsList from './useOrgProjectKeywordsList'
+import useOrgProjectDomainsFilter from './useOrgProjectDomainsList'
+import useOrgProjectOrganisationList from './useOrgProjectOrganisationsList'
 import useOrgProjectStatusList from './useOrgProjectStatusList'
 
 export default function OrgProjectFilters() {
@@ -54,20 +54,29 @@ export default function OrgProjectFilters() {
         handleQueryChange={handleQueryChange}
       />
       {/* Keywords */}
-      <OrgProjectKeywordsFilter
-        keywords={keywords}
-        keywordsList={keywordsList}
-      />
+      <div>
+        <KeywordsFilter
+          keywords={keywords}
+          keywordsList={keywordsList}
+          handleQueryChange={handleQueryChange}
+        />
+      </div>
       {/* Research domains */}
-      <OrgResearchDomainFilter
-        domains={domains}
-        domainsList={domainsList}
-      />
+      <div>
+        <ResearchDomainFilter
+          domains={domains}
+          domainsList={domainsList}
+          handleQueryChange={handleQueryChange}
+        />
+      </div>
       {/* Participating organisations */}
-      <OrgProjectOrganisationsFilter
-        organisations={organisations}
-        organisationsList={organisationList}
-      />
+      <div>
+        <OrganisationsFilter
+          organisations={organisations}
+          organisationsList={organisationList}
+          handleQueryChange={handleQueryChange}
+        />
+      </div>
     </>
   )
 }

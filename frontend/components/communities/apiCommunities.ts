@@ -10,6 +10,7 @@ import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {KeywordForCommunity} from './settings/general/apiCommunityKeywords'
 import {Community} from '../admin/communities/apiCommunities'
+import {isCommunityMaintainer} from '~/auth/permissions/isMaintainerOfCommunity'
 
 // New type based on Community but replace
 // id with new type
@@ -18,6 +19,8 @@ export type CommunityListProps = Omit<Community,'id'> & {
   id: string,
   // additional props
   software_cnt: number | null,
+  pending_cnt: number | null,
+  rejected_cnt: number | null,
   keywords: string[] | null
 }
 
@@ -89,14 +92,37 @@ type GetCommunityBySlug={
   token?:string
 }
 
-export async function getCommunityBySlug({slug,token}:GetCommunityBySlug){
+export async function getCommunityBySlug({slug,user,token}:GetCommunityBySlug){
   try{
     // ignore if no slug
-    if (slug===null) return null
-    // filter on slug value
-    const query = `slug=eq.${slug}`
+    if (slug===null) return {
+      community: null,
+      isMaintainer:false
+    }
+    // get id from slug
+    const com = await getCommunityIdFromSlug({slug,token})
+    if (com===null) return {
+      community: null,
+      isMaintainer:false
+    }
+    // console.log('com...',com)
+    // get info if the user is maintainer
+    const isMaintainer = await isCommunityMaintainer({
+      community: com.id,
+      role: user?.role,
+      account: user?.account,
+      token
+    })
+    // console.log('isMaintainer...',isMaintainer)
+    // filter on id value
+    let query = `id=eq.${com.id}`
+    if (isMaintainer===true) {
+      //if user is maintainer of this community
+      //we request the counts of all items
+      query +='&public=false'
+    }
     const url = `${getBaseUrl()}/rpc/communities_overview?${query}`
-
+    // console.log('url...',url)
     // get community
     const resp = await fetch(url, {
       method: 'GET',
@@ -109,17 +135,56 @@ export async function getCommunityBySlug({slug,token}:GetCommunityBySlug){
 
     if (resp.status === 200) {
       const json:CommunityListProps = await resp.json()
-      return json
+      return {
+        community: json,
+        isMaintainer
+      }
     }
     // NOT FOUND
     logger(`getCommunityBySlug: ${resp.status}:${resp.statusText}`, 'warn')
-    return null
+    return {
+      community: null,
+      isMaintainer
+    }
   }catch(e:any){
     logger(`getCommunityBySlug: ${e?.message}`, 'error')
-    return null
+    return {
+      community: null,
+      isMaintainer: false
+    }
   }
 }
 
+export async function getCommunityIdFromSlug({slug,token}:{slug:string,token?:string}){
+  try{
+    // ignore if no slug
+    if (slug===null) return null
+    // filter on slug value
+    const query = `slug=eq.${slug}`
+    const url = `${getBaseUrl()}/community?select=id&${query}`
+
+    // get community
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token),
+        // request single record
+        'Accept': 'application/vnd.pgrst.object+json'
+      }
+    })
+
+    if (resp.status === 200) {
+      const json:{id:string} = await resp.json()
+      return json
+    }
+    // NOT FOUND
+    logger(`getCommunityId: ${resp.status}:${resp.statusText}`, 'warn')
+    return null
+  }catch(e:any){
+    logger(`getCommunityId: ${e?.message}`, 'error')
+    return null
+  }
+}
 
 type PatchCommunityProps = {
   id: string,

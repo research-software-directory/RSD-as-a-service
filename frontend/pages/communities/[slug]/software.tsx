@@ -8,33 +8,47 @@ import {GetServerSidePropsContext} from 'next'
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth'
 import {getUserSettings} from '~/utils/userSettings'
-import {EditCommunityProps, getCommunityBySlug} from '~/components/communities/apiCommunities'
-import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import PageMeta from '~/components/seo/PageMeta'
 import CanonicalUrl from '~/components/seo/CanonicalUrl'
-import {isCommunityMaintainer} from '~/auth/permissions/isMaintainerOfCommunity'
+import {KeywordFilterOption} from '~/components/filter/KeywordsFilter'
+import {LanguagesFilterOption} from '~/components/filter/ProgrammingLanguagesFilter'
+import {LicensesFilterOption} from '~/components/filter/LicensesFilter'
+import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
+import {EditCommunityProps, getCommunityBySlug} from '~/components/communities/apiCommunities'
 import CommunityPage from '~/components/communities/CommunityPage'
-import {getKeywordsByCommunity} from '~/components/communities/settings/general/apiCommunityKeywords'
+import CommunitySoftware from '~/components/communities/software'
+import {SoftwareOfCommunity, ssrCommunitySoftwareProps} from '~/components/communities/software/apiCommunitySoftware'
 
 type CommunitySoftwareProps={
   community: EditCommunityProps,
+  software: SoftwareOfCommunity[],
   slug: string[],
   isMaintainer: boolean,
   rsd_page_rows: number,
-  rsd_page_layout: LayoutType
+  rsd_page_layout: LayoutType,
+  count: number,
+  keywordsList: KeywordFilterOption[],
+  languagesList: LanguagesFilterOption[],
+  licensesList: LicensesFilterOption[],
 }
 
 export default function CommunitySoftwarePage({
   community,slug,isMaintainer,
-  rsd_page_rows, rsd_page_layout
+  rsd_page_rows, rsd_page_layout,
+  software, count, keywordsList,
+  languagesList, licensesList
 }:CommunitySoftwareProps) {
 
   // console.group('CommunitySoftwarePage')
   // console.log('community...', community)
   // console.log('slug....', slug)
+  // console.log('software....', software)
   // console.log('isMaintainer....', isMaintainer)
   // console.log('rsd_page_rows....', rsd_page_rows)
   // console.log('rsd_page_layout....', rsd_page_layout)
+  // console.log('keywordsList....', keywordsList)
+  // console.log('languagesList....', languagesList)
+  // console.log('licensesList....', licensesList)
   // console.groupEnd()
 
   function getMetaDescription() {
@@ -60,7 +74,16 @@ export default function CommunitySoftwarePage({
         rsd_page_layout={rsd_page_layout}
         selectTab='software'
       >
-        <h2>Community software - TO DO!</h2>
+        <CommunitySoftware
+          software={software}
+          page={0}
+          count={count}
+          rows={rsd_page_rows}
+          rsd_page_layout={rsd_page_layout}
+          keywordsList={keywordsList}
+          languagesList={languagesList}
+          licensesList={licensesList}
+        />
       </CommunityPage>
     </>
   )
@@ -74,46 +97,55 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const {params, req, query} = context
     // extract user settings from cookie
     const {rsd_page_layout, rsd_page_rows} = getUserSettings(req)
+
     // extract user id from session
     const token = req?.cookies['rsd_token']
     const user = getUserFromToken(token)
-    // find community by slug
-    const community = await getCommunityBySlug({
+
+    // get community by slug and isMaintainer info
+    const {community:com,isMaintainer} = await getCommunityBySlug({
       slug: params?.slug?.toString() ?? null,
       token: req?.cookies['rsd_token'],
       user
     })
     // console.log('community...', community)
-    if (community === null){
+    if (com === null){
       // returning notFound triggers 404 page
       return {
         notFound: true,
       }
     }
-    // get info if the user is maintainer
-    const [isMaintainer,keywords] = await Promise.all([
-      isCommunityMaintainer({
-        community: community.id ?? '',
-        role: user?.role,
-        account: user?.account,
-        token
-      }),
-      getKeywordsByCommunity(community.id,token)
-    ])
+    // deconstruct data
+    const {
+      software,
+      keywordsList,
+      languagesList,
+      licensesList,
+      // community with updated keywords
+      community
+    } = await ssrCommunitySoftwareProps({
+      community: com,
+      software_status: 'approved',
+      query: query,
+      isMaintainer,
+      token
+    })
 
+    // update community count to actual count
+    // community.software_cnt = software.count
     return {
       // passed to the page component as props
       props: {
-        community:{
-          ...community,
-          // use keywords for editing
-          keywords
-        },
+        community,
         slug: [params?.slug],
-        tab: query?.tab ?? null,
         isMaintainer,
         rsd_page_layout,
-        rsd_page_rows
+        rsd_page_rows,
+        count: software.count,
+        software: software.data,
+        keywordsList,
+        languagesList,
+        licensesList
       },
     }
   }catch(e){

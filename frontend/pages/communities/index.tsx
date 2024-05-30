@@ -153,7 +153,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       page: page>0 ? page-1 : 0,
       rows: page_rows,
       searchFor: search,
-      orderBy: 'software_cnt.desc,name.asc',
+      orderBy: 'software_cnt.desc.nullslast,name.asc',
       token
     })
 

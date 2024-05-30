@@ -59,6 +59,8 @@ export default function CommunityPage({
             <CommunityTabs
               tab={selectTab}
               software_cnt={community.software_cnt ?? 0}
+              pending_cnt={community.pending_cnt ?? 0}
+              rejected_cnt={community.rejected_cnt ?? 0}
               description={community.description ?? null}
               isMaintainer={isMaintainer}
             />
