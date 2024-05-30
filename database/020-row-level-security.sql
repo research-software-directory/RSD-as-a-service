@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 - 2023 dv4all
@@ -416,6 +416,36 @@ CREATE POLICY admin_all_rights ON research_domain TO rsd_admin
 	WITH CHECK (TRUE);
 
 
+-- community
+-- RLS software_for_community table
+ALTER TABLE software_for_community ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON software_for_community FOR SELECT TO rsd_web_anon, rsd_user
+	USING (software IN (SELECT id FROM software));
+
+CREATE POLICY maintainer_can_read ON software_for_community FOR SELECT TO rsd_user
+	USING (software IN (SELECT * FROM software_of_current_maintainer()) OR community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_software_insert ON software_for_community FOR INSERT TO rsd_user
+	WITH CHECK (status = 'pending' AND software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_community_insert ON software_for_community FOR INSERT TO rsd_user
+	WITH CHECK (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_community_update ON software_for_community FOR UPDATE TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_software_delete ON software_for_community FOR DELETE TO rsd_user
+	USING ((status = 'pending' OR status = 'approved') AND software IN (SELECT * FROM software_of_current_maintainer()));
+
+CREATE POLICY maintainer_community_delete ON software_for_community FOR DELETE TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON software_for_community TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
 -- keywords and research domains for projects
 ALTER TABLE keyword_for_project ENABLE ROW LEVEL SECURITY;
 
@@ -441,6 +471,22 @@ CREATE POLICY maintainer_all_rights ON research_domain_for_project TO rsd_user
 	WITH CHECK (project IN (SELECT * FROM projects_of_current_maintainer()));
 
 CREATE POLICY admin_all_rights ON research_domain_for_project TO rsd_admin
+	USING (TRUE)
+	WITH CHECK (TRUE);
+
+
+ALTER TABLE keyword_for_community ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY anyone_can_read ON keyword_for_community FOR SELECT TO rsd_web_anon, rsd_user
+	USING (TRUE);
+
+CREATE POLICY maintainer_insert ON keyword_for_community FOR INSERT TO rsd_user
+	WITH CHECK (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY maintainer_delete ON keyword_for_community FOR DELETE TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
+CREATE POLICY admin_all_rights ON keyword_for_community TO rsd_admin
 	USING (TRUE)
 	WITH CHECK (TRUE);
 
