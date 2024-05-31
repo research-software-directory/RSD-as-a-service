@@ -4,7 +4,7 @@ This section describes administration options available in the RSD.
 
 :::tip
 To be able to log in as RSD administrator you first need to define a list of rsd admin users in the .env file.
-See [Login as rsd administrator in the getting started section](/rsd-instance/getting-started/#login-as-rsd-adminstrator).
+See [Login as rsd administrator in the getting started section](/rsd-instance/getting-started/#log-in-as-rsd-administrator).
 :::
 
 ## Public pages
@@ -56,7 +56,7 @@ You can customise the software highlights section in the `settings.json` by chan
 This section shows the list of ORCIDs that are allowed to log in to the RSD. Because anyone can create an ORCID account, we decided to limit access only to ORCID users that are approved by an RSD administrator.
 
 :::warning
-In order to be able to log in with ORCID credentials, the [ORCID authentication provider needs to be enabled](/rsd-instance/configurations/#enable-orcid-authentication) and the ORCID of that user need to be added to this list.
+In order to be able to log in with ORCID credentials, the [ORCID authentication provider needs to be enabled](/rsd-instance/configurations/#enable-orcid-authentication-and-coupling) and the ORCID of that user need to be added to this list.
 :::
 
 You can add, search and delete ORCIDs from the RSD. Use the bulk import button to add up to 50 ORCID users to the RSD at once.
@@ -115,19 +115,49 @@ Administrators can edit all properties of an organisation that organisation main
 
 Additionally to organisation maintainers, administrators can edit the following properties of an organisation:
 
-* Official member: whether the organisation is an official organisation.
-* RSD path: the `<PATH>` under which the organisation is accessible in the RSD (`/organisations/<PATH>`).
-* Primary maintainer: primary maintainer of an organisation.
-* Parent organisation: if the organisation belongs to another organisation, add the ID of the parent organisation here. The organisation ID is displayed in the Admin section of the respective organisation.
+- Official member: whether the organisation is an official organisation.
+- RSD path: the `<PATH>` under which the organisation is accessible in the RSD (`/organisations/<PATH>`).
+- Primary maintainer: primary maintainer of an organisation.
+- Parent organisation: if the organisation belongs to another organisation, add the ID of the parent organisation here. The organisation ID is displayed in the Admin section of the respective organisation.
 
 :::warning
 **Note** that changing the parent organisation will also affect the path under which the organisation is accessible. The path is determined by the organisation hierarchy, e.g. `/organisations/parent-organisation/child-organisation`.
 :::
 
-The settings are visible in the *Admin section* under the *General settings* tab of the organisation settings:
+The settings are visible in the _Admin section_ under the _General settings_ tab of the organisation settings:
 
 ![Organisation Admin section](img/admin-organisation-admin-section.webp)
 
+## Communities
+
+Administrators can create and edit all properties of the community. The communities enable grouping of software entries by specific functionality or research discipline. One software entry can be part of multiple communities.
+
+:::tip
+Only RSD administrators can create communities.
+:::
+
+![image](img/admin-communities.webp)
+
+### Add community
+
+To create new community use "Add" button. Provide name, short description and logo in the modal.
+
+### Edit community
+
+Use "edit" button to open all community settings. You will be forwarded to community settings page.
+
+### Delete community
+
+Use "delete" button to delete a community. If "delete" button is disabled you will need to remove "related" items first.
+
+:::tip
+
+To enable delete button:
+
+- remove the community from all software (accepted, pending and rejected) requests
+- remove all keywords in community settings
+
+:::
 
 ## Keywords
 

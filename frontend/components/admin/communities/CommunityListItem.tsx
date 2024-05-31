@@ -11,21 +11,33 @@ import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Avatar from '@mui/material/Avatar'
+
 import {getImageUrl} from '~/utils/editImage'
-import {Community} from './apiCommunities'
+import {CommunityListProps} from '~/components/communities/apiCommunities'
 import config from './config'
 
 type OrganisationItemProps = {
-  item: Community,
+  item: CommunityListProps,
   onDelete: () => void
 }
 
 export default function CommunityListItem({item, onDelete}: OrganisationItemProps) {
-  const router = useRouter()
+  const deleteDisabled = item.software_cnt ? item.software_cnt > 0 : false
+
+  function isDeletedDisabled(){
+    // if any of software in community
+    if (item.software_cnt && item?.software_cnt > 0 ) return true
+    if (item.rejected_cnt && item?.rejected_cnt > 0 ) return true
+    if (item.pending_cnt && item?.pending_cnt > 0 ) return true
+    // if keywords are defined
+    if (item.keywords && item.keywords?.length > 0 ) return true
+    // otherwise it can be deleted
+    return false
+  }
+
   return (
     <ListItem
       data-testid="admin-community-item"
@@ -42,7 +54,7 @@ export default function CommunityListItem({item, onDelete}: OrganisationItemProp
             <EditIcon />
           </IconButton>
           <IconButton
-            // disabled={item.software_cnt > 0}
+            disabled={isDeletedDisabled()}
             edge="end"
             aria-label="delete"
             onClick={() => {
@@ -82,7 +94,12 @@ export default function CommunityListItem({item, onDelete}: OrganisationItemProp
           <>
             <span>{item.short_description}</span>
             <br/>
-            <span>Software: 0 (not implemented!)</span>
+            <span className="flex gap-2">
+              <span>Software: {item.software_cnt ?? 0}</span>
+              <span>Pending requests: {item.pending_cnt ?? 0}</span>
+              <span>Rejected requests: {item.rejected_cnt ?? 0}</span>
+              <span>Keywords: {item.keywords?.length ?? 0}</span>
+            </span>
           </>
         }
       />

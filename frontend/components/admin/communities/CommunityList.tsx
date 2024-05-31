@@ -10,17 +10,17 @@ import List from '@mui/material/List'
 
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import ContentLoader from '~/components/layout/ContentLoader'
-import {Community} from './apiCommunities'
+import {CommunityListProps} from '~/components/communities/apiCommunities'
 import CommunityListItem from './CommunityListItem'
 import NoCommunityAlert from './NoCommunityAlert'
 
 type DeleteOrganisationModal = {
   open: boolean,
-  item?: Community
+  item?: CommunityListProps
 }
 
 type OrganisationsAdminListProps = {
-  communities: Community[]
+  communities: CommunityListProps[]
   loading: boolean
   page: number
   onDeleteItem: (id:string,logo_id:string|null)=>void

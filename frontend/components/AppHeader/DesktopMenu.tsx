@@ -3,12 +3,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {menuItems} from '~/config/menuItems'
 import Link from 'next/link'
 
+import useMenuItems from '~/config/useMenuItems'
 import isActiveMenuItem from './isActiveMenuItem'
 
 export default function DesktopMenu({activePath}:{activePath:string}) {
+  const menuItems = useMenuItems()
   // console.group('DesktopMenu')
   // console.log('activePath...',activePath)
   // console.groupEnd()

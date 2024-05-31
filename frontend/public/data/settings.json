@@ -17,7 +17,8 @@
       "title": "Software Highlights",
       "limit": 5,
       "description": null
-    }
+    },
+    "modules":["software","projects","organisations","communities"]
   },
   "links": [
     {
@@ -39,11 +40,6 @@
       "label": "Netherlands eScienceCenter",
       "url": "https://www.esciencecenter.nl/",
       "target": "_blank"
-    },
-    {
-      "label": "Communities",
-      "url": "/communities",
-      "target": "_self"
     },
     {
       "label": "News",
