@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2021 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2023 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
 --
@@ -32,7 +32,7 @@ CREATE TABLE mention (
 	doi CITEXT UNIQUE CHECK (doi ~ '^10(\.\w+)+/\S+$' AND LENGTH(doi) <= 255),
 	doi_registration_date TIMESTAMPTZ,
 	url VARCHAR(500) CHECK (url ~ '^https?://'),
-	title VARCHAR(500) NOT NULL,
+	title VARCHAR(3000) NOT NULL,
 	authors VARCHAR(50000),
 	publisher VARCHAR(255),
 	publication_year SMALLINT,

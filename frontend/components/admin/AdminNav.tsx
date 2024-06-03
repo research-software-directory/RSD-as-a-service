@@ -4,10 +4,12 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useRouter} from 'next/router'
+import Link from 'next/link'
 
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -23,6 +25,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FluorescentIcon from '@mui/icons-material/Fluorescent'
 import CampaignIcon from '@mui/icons-material/Campaign'
 import BugReportIcon from '@mui/icons-material/BugReport'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -69,6 +72,12 @@ export const adminPages = {
     icon: <SpellcheckIcon />,
     path: '/admin/keywords',
   },
+  mentions: {
+    title: 'Mentions',
+    subtitle: '',
+    icon: <ReceiptLongIcon />,
+    path: '/admin/mentions',
+  },
   logs:{
     title: 'Error logs',
     subtitle: '',
@@ -80,7 +89,7 @@ export const adminPages = {
     subtitle: '',
     icon: <CampaignIcon />,
     path: '/admin/announcements',
-  }
+  },
 }
 
 // extract page types from the object
@@ -104,8 +113,13 @@ export default function AdminNav() {
               data-testid="admin-nav-item"
               key={`step-${pos}`}
               selected={item.path === router.route}
-              onClick={() => router.push(item.path)}
-              sx={editMenuItemButtonSx}
+              href = {item.path}
+              component = {Link}
+              sx={{...editMenuItemButtonSx,
+                ':hover': {
+                  color: 'text.primary'
+                }
+              }}
             >
               <ListItemIcon>
                 {item.icon}

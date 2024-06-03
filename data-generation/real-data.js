@@ -94,6 +94,6 @@ const packageManagerLinks = [
 	{url: 'https://crates.io/crates/tokio', type: 'crates'},
 	{url: 'https://pkg.go.dev/github.com/gin-gonic/gin', type: 'golang'},
 	{url: 'https://pkg.go.dev/google.golang.org/grpc', type: 'golang'},
-]
+];
 
 export {conceptDois, dois, packageManagerLinks};

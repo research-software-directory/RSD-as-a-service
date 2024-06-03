@@ -25,10 +25,21 @@ export function addPoliteEmail(url:string) {
 function extractAuthors(item: CrossrefSelectItem) {
   if (item.author) {
     return item.author.map(author => {
-      return `${author.given} ${author.family}`
+      if (author.given && author.family) {
+        return `${author.given} ${author.family}`
+      }
+      if (author.name) {
+        return author.name
+      }
+      if (author.given) {
+        return author.given
+      }
+      if (author.family) {
+        return author.family
+      }
     }).join(', ')
   }
-  return ''
+  return null
 }
 
 function extractYearPublished(item: CrossrefSelectItem) {
