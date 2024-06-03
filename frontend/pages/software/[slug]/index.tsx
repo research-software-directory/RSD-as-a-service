@@ -101,7 +101,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     const highlightedCategories: CategoryPath[] = []
     const otherCategories: CategoryPath[] = []
 
-    for (const path of props.categories) {
+    for (const path of (props.categories || [])) {
       if (path[0].properties.is_highlight) {
         highlightedCategories.push(path)
       } else {

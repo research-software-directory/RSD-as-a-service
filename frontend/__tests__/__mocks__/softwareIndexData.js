@@ -41,6 +41,7 @@ const softwarePageData = {
   software: softwareItem,
   citationInfo: SoftwareCitationItems,
   keywords: apiKeywordsBySoftware,
+  categories: [],
   licenseInfo,
   repositoryInfo: repoInfo,
   mentions: apiMentions,
