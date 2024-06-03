@@ -8,8 +8,8 @@
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 /**
- * Hook to decide if we need to disable scroll lock on popover menus.
- * Currenty our header required minimum size of 23rem to fit all items:
+ * Hook to decide if we need to disable scroll lock on pop-over menus.
+ * Currently our header required minimum size of 23rem to fit all items:
  * logo, add button, mobile menu and the profile menu. The min-width
  * is defined in /styles/global.css
  * NOTE! when changing this value we need to update global.css too

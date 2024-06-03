@@ -25,7 +25,6 @@ type OrganisationItemProps = {
 }
 
 export default function CommunityListItem({item, onDelete}: OrganisationItemProps) {
-  const deleteDisabled = item.software_cnt ? item.software_cnt > 0 : false
 
   function isDeletedDisabled(){
     // if any of software in community
