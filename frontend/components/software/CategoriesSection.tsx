@@ -15,7 +15,7 @@ export default function CategoriesSection({categories}: CategoriesSectionProps) 
   const tree = useCategoryTree(categories)
 
   return tree.map((level, index) => (
-    <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]" key={index}>
+    <PageContainer className="py-12 px-4 lg:grid lg:grid-cols-[1fr,4fr]" key={level.category.id}>
       <h2
         data-testid="software-categories-section-title"
         className="pb-8 text-[2rem] text-primary">

@@ -13,7 +13,7 @@ import {ReorderedCategories} from '~/utils/categories'
 import {config} from '~/components/software/edit/links/config'
 
 type SoftwareLinksInfoProps = {
-  reorderedCategories: ReorderedCategories
+  readonly reorderedCategories: ReorderedCategories
 }
 
 export default function SoftwareLinksInfo({reorderedCategories}: SoftwareLinksInfoProps) {
@@ -42,7 +42,7 @@ export default function SoftwareLinksInfo({reorderedCategories}: SoftwareLinksIn
       <p>Here you can provide keyword that describe your software, by selecting from existing keyword, adding your own, or importing the keywords from the Software DOI.</p>
 
       {helpForCategories.map(([headline, text], index) => (
-        <Fragment key={index}>
+        <Fragment key={headline}>
           <p className="py-2"><strong>{headline}</strong></p>
           <p>{text}</p>
         </Fragment>
