@@ -149,6 +149,8 @@ The `host` section of settings.json defines following settings. **Most of them s
 - `login_info_url`: the link to getting access documentation shown in the "Sign in with" modal. It is relevant only if you use more than one authentication provider. If you use only one authentication provider "Sign in with" modal is not used, instead the user is directly redirected to authentication page.
 - `terms_of_service_url`: the link to your Terms of Service page. Used on the user profile page to let user accept the terms of service
 - `privacy_statement_url`: the link to your privacy statement page. Used on the user profile page to let user accept the privacy statement.
+- `software_highlights`: the definitions for the software highlights section on the top of the software overview page. You can specify title and the number of items loaded in the carousel. The default values are shown below.
+- `modules`: defines RSD "modules" displayed in the main menu in the page header. Possible values are: software, projects, organisations and communities.
 
 ```json
 ...
@@ -165,10 +167,23 @@ The `host` section of settings.json defines following settings. **Most of them s
     },
     "login_info_url":"https://research-software-directory.github.io/documentation/getting-access.html",
     "terms_of_service_url": "/page/terms-of-service/",
-    "privacy_statement_url": "/page/privacy-statement/"
+    "privacy_statement_url": "/page/privacy-statement/",
+    "software_highlights": {
+      "title": "Software Highlights",
+      "limit": 5,
+      "description": null
+    },
+    "modules":["software","projects","organisations"]
   }
 ...
 ```
+
+:::tip host modules
+
+- Note that the communities module is not included in the default settings definitions.
+- Note that disabled module pages still can be accessed when "proper" url is used.
+- You can enable it by adding "communities" into the modules array and the menu option will appear.
+  :::
 
 ## UI theming
 
@@ -181,6 +196,7 @@ The look and feel of RSD can be customised with desired colors and fonts. In the
 - When customizing RSD styles we advice to mount custom fonts in the styles folder close to index.css
 - The footer logo should be mounted into `/app/public/images`. Then you can use relative image path `/images/your-logo.svg` in the settings.json
 - Your [starting point should be our default files](https://github.com/research-software-directory/RSD-as-a-service/tree/main/frontend/public) where you adjust the values you want to be different.
+
 :::
 
 ### Example mounting custom definitions
@@ -223,7 +239,7 @@ RSD uses default settings.json if alternative is not mounted into `/app/public/d
       "url": "rsd@esciencecenter.nl",
       "issues_page_url": "https://github.com/research-software-directory/RSD-as-a-service/issues"
     },
-    "login_info_url":"https://research-software-directory.github.io/documentation/getting-access.html",
+    "login_info_url": "https://research-software-directory.github.io/documentation/getting-access.html",
     "terms_of_service_url": "/page/terms-of-service/",
     "privacy_statement_url": "/page/privacy-statement/"
   },

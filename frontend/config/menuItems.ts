@@ -8,6 +8,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {RsdModule} from './rsdSettingsReducer'
+
 export type MenuItemType = {
   type?: 'link' | 'function' |'divider'
   label: string,
@@ -21,14 +23,16 @@ export type MenuItemType = {
   // optional, but fn is provided it will have higher priority
   // than path
   fn?: Function,
+  // enables filtering of menuItems for the instance (defined in settings.json)
+  module?: RsdModule
 }
 // routes defined for nav/menu
 // used in components/AppHeader
 export const menuItems:MenuItemType[] = [
-  {path: '/software?order=mention_cnt', match:'/software', label:'Software'},
-  {path: '/projects?order=impact_cnt', match: '/projects', label: 'Projects'},
-  {path: '/organisations', match: '/organisations', label: 'Organisations'},
-  {path: '/communities', match: '/communities', label: 'Communities'}
+  {path: '/software?order=mention_cnt', match:'/software', label:'Software', module:'software'},
+  {path: '/projects?order=impact_cnt', match: '/projects', label: 'Projects', module:'projects'},
+  {path: '/organisations', match: '/organisations', label: 'Organisations', module:'organisations'},
+  {path: '/communities', match: '/communities', label: 'Communities', module:'communities'}
 ]
 
 // ListItemButton styles for menus used on the edit pages

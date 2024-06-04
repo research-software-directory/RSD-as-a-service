@@ -10,15 +10,13 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import MenuIcon from '@mui/icons-material/Menu'
 
-import {menuItems} from '~/config/menuItems'
 import useDisableScrollLock from '~/utils/useDisableScrollLock'
-import useRsdSettings from '~/config/useRsdSettings'
-import FeedbackPanelButton from '~/components/feedback/FeedbackPanelButton'
+import useMenuItems from '~/config/useMenuItems'
 import isActiveMenuItem from './isActiveMenuItem'
 
 export default function ResponsiveMenu({activePath}:{activePath:string}) {
+  const menuItems = useMenuItems()
   const disable = useDisableScrollLock()
-  const {host} = useRsdSettings()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
@@ -76,17 +74,6 @@ export default function ResponsiveMenu({activePath}:{activePath:string}) {
             </MenuItem>
           )
         })}
-
-        {/* {host.feedback?.enabled ?
-          <MenuItem key={host.feedback.url}>
-            <FeedbackPanelButton
-              feedback_email={host.feedback.url}
-              issues_page_url={host.feedback.issues_page_url}
-            />
-          </MenuItem>
-          : null
-        } */}
-
       </Menu>
     </div>
   )
