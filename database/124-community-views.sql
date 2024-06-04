@@ -412,3 +412,52 @@ GROUP BY
 	license
 ;
 $$;
+
+-- GET COMMUNITIES OF SPECIFIC SOFTWARE
+-- for software-edit-section
+CREATE FUNCTION communities_of_software(software_id UUID) RETURNS TABLE (
+	id UUID,
+	slug VARCHAR,
+	status request_status,
+	name VARCHAR,
+	short_description VARCHAR,
+	logo_id VARCHAR,
+	primary_maintainer UUID,
+	software_cnt BIGINT,
+	pending_cnt BIGINT,
+	rejected_cnt BIGINT,
+	keywords CITEXT[],
+	description VARCHAR,
+	created_at TIMESTAMPTZ
+) LANGUAGE sql STABLE AS
+$$
+SELECT
+	community.id,
+	community.slug,
+	software_for_community.status,
+	community."name",
+	community.short_description,
+	community.logo_id,
+	community.primary_maintainer,
+	software_count_by_community.software_cnt,
+	pending_count_by_community.pending_cnt,
+	rejected_count_by_community.rejected_cnt,
+	keyword_filter_for_community.keywords,
+	community.description,
+	community.created_at
+FROM
+	community
+LEFT JOIN
+	software_count_by_community() ON community.id = software_count_by_community.community
+LEFT JOIN
+	pending_count_by_community() ON community.id = pending_count_by_community.community
+LEFT JOIN
+	rejected_count_by_community() ON community.id = rejected_count_by_community.community
+LEFT JOIN
+	keyword_filter_for_community() ON community.id = keyword_filter_for_community.community
+INNER JOIN
+	software_for_community ON community.id = software_for_community.community
+WHERE
+	software_for_community.software = software_id
+;
+$$;

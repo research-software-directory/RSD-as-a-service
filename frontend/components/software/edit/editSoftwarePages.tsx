@@ -20,6 +20,8 @@ import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices
 import JoinInnerIcon from '@mui/icons-material/JoinInner'
 import DonutLargeIcon from '@mui/icons-material/DonutLarge'
 import ArticleIcon from '@mui/icons-material/Article'
+import Diversity3Icon from '@mui/icons-material/Diversity3'
+
 
 // use dynamic imports instead
 const SoftwareContributors = dynamic(() => import('./contributors'),{
@@ -37,7 +39,7 @@ const SoftwareMaintainers = dynamic(() => import('./maintainers'),{
 const SoftwareMentions = dynamic(() => import('./mentions'),{
   loading: ()=><ContentLoader />
 })
-const SoftwareOgranisations = dynamic(() => import('./organisations'),{
+const SoftwareOrganisations = dynamic(() => import('./organisations'),{
   loading: ()=><ContentLoader />
 })
 const PackageManagers = dynamic(() => import('./package-managers'),{
@@ -53,6 +55,9 @@ const SoftwareTestimonials = dynamic(() => import('./testimonials'),{
   loading: ()=><ContentLoader />
 })
 const SoftwareServices = dynamic(() => import('./services'),{
+  loading: ()=><ContentLoader />
+})
+const SoftwareCommunities = dynamic(() => import('./communities'),{
   loading: ()=><ContentLoader />
 })
 
@@ -87,7 +92,7 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
   id: 'organisations',
   label: 'Organisations',
   icon: <BusinessIcon />,
-  render: () => <SoftwareOgranisations />,
+  render: () => <SoftwareOrganisations />,
   status: ''
 },{
   id: 'mentions',
@@ -118,6 +123,12 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
   label: 'Related projects',
   icon: <DonutLargeIcon />,
   render: () => <RelatedProjects />,
+  status: ''
+},{
+  id: 'communities',
+  label: 'Communities',
+  icon: <Diversity3Icon />,
+  render: () => <SoftwareCommunities />,
   status: ''
 },{
   id: 'maintainers',

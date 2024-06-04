@@ -26,11 +26,22 @@ export default function useAdminMenuOptions({
     let abort = false
     if (typeof status !='undefined') {
       const options: IconBtnMenuOption<SoftwareMenuAction>[] = []
-      switch(status){
-        case 'approved':
-
-      }
-      if (status === 'approved') {
+      // accept/reject pending requests
+      if (status==='pending'){
+        options.push({
+          type: 'action',
+          key: 'approve',
+          label: 'Allow affiliation',
+          icon: <Check />,
+          action: {type: 'APPROVE'}
+        },{
+          type: 'action',
+          key: 'deny',
+          label: 'Reject affiliation',
+          icon: <RemoveCircleIcon/>,
+          action: {type: 'DENY'}
+        })
+      } else if (status === 'approved') {
         options.push({
           type: 'action',
           key: 'deny',
@@ -39,6 +50,7 @@ export default function useAdminMenuOptions({
           action: {type: 'DENY'}
         })
       } else {
+        // rejected status
         options.push({
           type: 'action',
           key: 'approve',
