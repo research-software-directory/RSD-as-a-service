@@ -17,7 +17,8 @@
       "title": "Software Highlights",
       "limit": 3,
       "description": null
-    }
+    },
+    "modules":["software","projects","organisations"]
   },
   "links": [
     {

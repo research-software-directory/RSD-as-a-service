@@ -24,58 +24,69 @@ export function getUserMenuItems(
 
   const userMenuItems: MenuItemType[] = [
     {
+      module: 'user',
       type: 'link',
       label:'My software',
       active: ['rsd_admin', 'rsd_user'].includes(role),
       path:'/user/software',
-      icon: <TerminalIcon />
+      icon: <TerminalIcon />,
     }, {
+      module: 'user',
       type: 'link',
       label:'My projects',
       active:['rsd_admin','rsd_user'].includes(role),
       path:'/user/projects',
-      icon: <ListAltIcon />
+      icon: <ListAltIcon />,
     }, {
+      module: 'user',
       type: 'link',
       label: 'My organisations',
       active:['rsd_admin','rsd_user'].includes(role),
       path: '/user/organisations',
-      icon: <BusinessIcon />
+      icon: <BusinessIcon />,
     }, {
+      module: 'user',
       type: 'divider',
       label: 'divider1',
       active: ['rsd_admin', 'rsd_user'].includes(role),
     }, {
+      module: 'user',
       type: 'link',
       label: 'My settings',
       active: ['rsd_admin','rsd_user'].includes(role),
       path: '/user/settings',
-      icon: <SettingsIcon />
+      icon: <SettingsIcon />,
     }, {
+      module: 'user',
       type: 'divider',
       label: 'divider2',
-      active: ['rsd_admin'].includes(role)
+      active: ['rsd_admin'].includes(role),
     }, {
+      module: 'user',
       type: 'link',
       label: 'Administration',
       active: ['rsd_admin'].includes(role),
       path: '/admin/public-pages',
-      icon: <ManageAccountsIcon />
+      icon: <ManageAccountsIcon />,
     },{
+      module: 'user',
       type: 'divider',
       label: 'divider3',
-      active: ['rsd_admin'].includes(role)
+      active: ['rsd_admin'].includes(role),
     }, {
+      module: 'user',
       type: 'link',
       label: 'News',
       active: ['rsd_admin'].includes(role),
       path: '/news',
-      icon: <CalendarViewMonthIcon />
+      icon: <CalendarViewMonthIcon />,
     }, {
+      module: 'user',
       type: 'divider',
       label: 'divider4',
       active: ['rsd_admin','rsd_user'].includes(role),
     }, {
+      module: 'user',
       label: 'Logout',
       active: ['rsd_admin', 'rsd_user'].includes(role),
       icon: <Logout/>,

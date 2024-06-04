@@ -3,10 +3,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
-import {paginationUrlParams} from '~/utils/postgrestUrl'
 
 export type Community={
   id?:string,
@@ -16,60 +14,6 @@ export type Community={
   description: string|null,
   primary_maintainer: string|null,
   logo_id: string|null
-}
-
-type GetCommunitiesParams={
-  page: number,
-  rows: number,
-  token: string
-  searchFor?:string,
-  orderBy?:string,
-}
-
-export async function getCommunities({page, rows, token, searchFor, orderBy}:GetCommunitiesParams){
-  try{
-    let query = paginationUrlParams({rows, page})
-    if (searchFor) {
-      query+=`&name=ilike.*${searchFor}*`
-    }
-    if (orderBy) {
-      query+=`&order=${orderBy}`
-    } else {
-      query+='&order=name.asc'
-    }
-    // complete url
-    const url = `${getBaseUrl()}/community?${query}`
-
-    // get community
-    const resp = await fetch(url, {
-      method: 'GET',
-      headers: {
-        ...createJsonHeaders(token),
-        // request record count to be returned
-        // note: it's returned in the header
-        'Prefer': 'count=exact'
-      }
-    })
-
-    if ([200,206].includes(resp.status)) {
-      const communities: Community[] = await resp.json()
-      return {
-        count: extractCountFromHeader(resp.headers) ?? 0,
-        communities
-      }
-    }
-    logger(`getCommunities: ${resp.status}: ${resp.statusText}`,'warn')
-    return {
-      count: 0,
-      communities: []
-    }
-  }catch(e:any){
-    logger(`getCommunities: ${e.message}`,'error')
-    return {
-      count: 0,
-      communities: []
-    }
-  }
 }
 
 export async function validCommunitySlug({slug, token}: { slug: string, token: string }) {

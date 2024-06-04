@@ -6,21 +6,22 @@
 import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
-import {Community, getCommunities, addCommunity as addCommunityToRsd, deleteCommunityById} from './apiCommunities'
+import {addCommunity as addCommunityToRsd, deleteCommunityById} from './apiCommunities'
 import {useCallback, useEffect, useState} from 'react'
 import {EditCommunityProps} from './AddCommunityModal'
 import {deleteImage, upsertImage} from '~/utils/editImage'
+import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
 
 export function useAdminCommunities(){
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
   const {searchFor, page, rows, setCount} = usePaginationWithSearch('Find community by name')
-  const [communities, setCommunities] = useState<Community[]>([])
+  const [communities, setCommunities] = useState<CommunityListProps[]>([])
   const [loading, setLoading] = useState(true)
 
   const loadCommunities = useCallback(async() => {
     setLoading(true)
-    const {communities, count} = await getCommunities({
+    const {communities, count} = await getCommunityList({
       token,
       searchFor,
       page,

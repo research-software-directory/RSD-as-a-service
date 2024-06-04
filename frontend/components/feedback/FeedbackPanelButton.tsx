@@ -13,16 +13,17 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import {useTheme} from '@mui/material/styles'
 import LinkIcon from '@mui/icons-material/Link'
 import WebIcon from '@mui/icons-material/Web'
-import CaretIcon from '~/components/icons/caret.svg'
+
 import getBrowser from '~/utils/getBrowser'
+import useDisableScrollLock from '~/utils/useDisableScrollLock'
+import CaretIcon from '~/components/icons/caret.svg'
 
 export default function FeedbackPanelButton({feedback_email, issues_page_url, closeFeedbackPanel}:
   { feedback_email: string, issues_page_url: string, closeFeedbackPanel?: () => void }
 ) {
-
+  const disable = useDisableScrollLock()
   const [text, setText] = useState('')
   const [open, setOpen] = useState(false)
-
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -76,6 +77,7 @@ User Agent: ${navigator.userAgent}`
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
+        disableScrollLock={disable}
       >
         <div className="h-full w-full bg-base-700 p-5 ">
           <div className="mx-auto max-w-[500px]">

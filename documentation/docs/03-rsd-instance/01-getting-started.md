@@ -3,7 +3,7 @@
 To run your own RSD instance you can use [deployment.zip file provided in the RSD release](https://github.com/research-software-directory/RSD-as-a-service/releases).
 
 :::warning
-To be able to use `deployment.zip` file, you need a machine with Docker and Docker compose. In production, you also need a third party authentication service with one or more of the following providers: [Microsoft Entra ID (Azure AD)](/rsd-instance/configurations/#enable-microsoft-entra-id-azure-ad-authentication), [ORCID](/rsd-instance/configurations/#enable-orcid-authentication), [SURFconext](/rsd-instance/configurations/#enable-surfconext-authentication) or [Helmholtz AI](/rsd-instance/configurations/#enable-helmholtz-ai-authentication).
+To be able to use `deployment.zip` file, you need a machine with Docker and Docker compose. In production, you also need a third party authentication service with one or more of the following providers: [Microsoft Entra ID (Azure AD)](/rsd-instance/configurations/#enable-microsoft-entra-id-azure-ad-authentication), [ORCID](/rsd-instance/configurations/#enable-orcid-authentication-and-coupling), [SURFconext](/rsd-instance/configurations/#enable-surfconext-authentication) or [Helmholtz AI](/rsd-instance/configurations/#enable-helmholtz-ai-authentication).
 :::
 
 - Unzip `deployment.zip` file. It contains:
@@ -82,7 +82,7 @@ For customizing and administrating your RSD instance have a look at [configurati
 
 ## Public RSD instance
 
-If you want to run a RSD on a non-localhost machine you will need SSL certificates. The easiest way is to use Linux with Letsencrypt and a public IP address for that purpose. 
+If you want to run a RSD on a non-localhost machine you will need SSL certificates. The easiest way is to use Linux with Letsencrypt and a public IP address for that purpose.
 Please note that you should take measures to protect a public installation against attackers, in particular as long as the authentication has not been set up properly.
 
 You will need git:
@@ -94,19 +94,26 @@ sudo apt install git
 You will also need Docker with the Compose plugin, see the installation instructions for [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
 You can then clone the RSD:
+
 ```env
 git clone https://github.com/research-software-directory/RSD-as-a-service.git
 ```
+
 You can then set your server name in nginx/nginx.conf, let's assume it is `fqdn.yourdomain.com`
+
 ```env
 server_name fqdn.yourdomain.com;
 ```
+
 Copy the example config to a .env file
+
 ```env
 cp .env.example .env
 ```
+
 and change, as described above, the values for `POSTGRES_PASSWORD`, `PGRST_JWT_SECRET` (with at least 32 characters) and `POSTGRES_AUTHENTICATOR_PASSWORD` to arbitrary values.
-Additionally set 
+Additionally set
+
 ```
 POSTGREST_URL_EXTERNAL=http://fqdn.yourdomain.com/api/v1
 RSD_AUTH_URL=http://fqdn.yourdomain.com:7000
