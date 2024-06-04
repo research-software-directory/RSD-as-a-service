@@ -1,13 +1,24 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {Fragment} from 'react'
 import Alert from '@mui/material/Alert'
+import {ReorderedCategories} from '~/utils/categories'
+import {config} from '~/components/software/edit/links/config'
 
-export default function SoftwareLinksInfo() {
+type SoftwareLinksInfoProps = {
+  readonly reorderedCategories: ReorderedCategories
+}
+
+export default function SoftwareLinksInfo({reorderedCategories}: SoftwareLinksInfoProps) {
+
+  const helpForCategories = generateHelpOnCategories(reorderedCategories)
 
   return (
     <Alert
@@ -30,6 +41,30 @@ export default function SoftwareLinksInfo() {
       <p className="py-2"><strong>Keywords</strong></p>
       <p>Here you can provide keyword that describe your software, by selecting from existing keyword, adding your own, or importing the keywords from the Software DOI.</p>
 
+      {helpForCategories.map(([headline, text], index) => (
+        <Fragment key={headline}>
+          <p className="py-2"><strong>{headline}</strong></p>
+          <p>{text}</p>
+        </Fragment>
+      ))}
+
+
     </Alert>
   )
+}
+
+function generateHelpOnCategories(reorderedCategories: ReorderedCategories) {
+  const items = []
+
+  for (const treeLevel of reorderedCategories.highlighted) {
+    const {category} = treeLevel
+    if (category.properties.is_highlight && category.properties.description) {
+      items.push([category.name, category.properties.description])
+    }
+  }
+  if (reorderedCategories.general.length > 0) {
+    items.push([config.categories.title, config.categories.help])
+  }
+
+  return items
 }

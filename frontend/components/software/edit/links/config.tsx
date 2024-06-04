@@ -1,4 +1,6 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -65,6 +67,7 @@ export const config={
   categories: {
     title: 'Categories',
     subtitle: 'Tell us more about your software.',
+    help: 'Assign categories to your software from a predefined catalog of categories.',
   },
   keywords: {
     title: 'Keywords',

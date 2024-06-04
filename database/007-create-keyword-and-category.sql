@@ -73,10 +73,13 @@ CREATE TABLE category (
 	parent UUID REFERENCES category DEFAULT NULL,
 	short_name VARCHAR NOT NULL,
 	name VARCHAR NOT NULL,
-	icon VARCHAR DEFAULT NULL,
+	properties JSONB NOT NULL DEFAULT '{}'::jsonb,
+	provenance_iri VARCHAR DEFAULT NULL,  -- e.g. https://www.w3.org/TR/skos-reference/#mapping
 
 	CONSTRAINT unique_short_name UNIQUE NULLS NOT DISTINCT (parent, short_name),
-	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name)
+	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name),
+	CONSTRAINT invalid_value_for_properties CHECK (properties - '{icon, is_highlight, description, subtitle}'::text[] = '{}'::jsonb),
+	CONSTRAINT highlight_must_be_top_level_category CHECK (NOT ((properties->>'is_highlight')::boolean AND parent IS NOT NULL))
 );
 
 CREATE TABLE category_for_software (
@@ -167,7 +170,7 @@ $$
 	-- 2. How a table row "type" could be used here Now we have to list all columns of `category` explicitely
 	--    I want to have something like `* without 'r_index'` to be independant from modifications of `category`
 	-- 3. Maybe this could be improved by using SEARCH keyword.
-	SELECT id, parent, short_name, name, icon
+	SELECT id, parent, short_name, name, properties, provenance_iri
 	FROM cat_path
 	ORDER BY r_index DESC;
 $$;

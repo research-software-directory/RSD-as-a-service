@@ -16,8 +16,8 @@ AS $$
 	DECLARE parent2 uuid;
 	DECLARE parent3 uuid;
 BEGIN
-	INSERT INTO category(short_name, name, icon) VALUES
-		('Research fruits', 'Some simple research fruits', 'science') RETURNING id INTO parent1;
+	INSERT INTO category(short_name, name, properties) VALUES
+		('Research fruits', 'Some simple research fruits', "{icon:'science'}"::json) RETURNING id INTO parent1;
 	--
 	INSERT INTO category(parent, short_name, name) VALUES
 		(parent1, 'Apple', 'Apple: An apple a day keeps...'),

@@ -115,19 +115,18 @@ Administrators can edit all properties of an organisation that organisation main
 
 Additionally to organisation maintainers, administrators can edit the following properties of an organisation:
 
-* Official member: whether the organisation is an official organisation.
-* RSD path: the `<PATH>` under which the organisation is accessible in the RSD (`/organisations/<PATH>`).
-* Primary maintainer: primary maintainer of an organisation.
-* Parent organisation: if the organisation belongs to another organisation, add the ID of the parent organisation here. The organisation ID is displayed in the Admin section of the respective organisation.
+- Official member: whether the organisation is an official organisation.
+- RSD path: the `<PATH>` under which the organisation is accessible in the RSD (`/organisations/<PATH>`).
+- Primary maintainer: primary maintainer of an organisation.
+- Parent organisation: if the organisation belongs to another organisation, add the ID of the parent organisation here. The organisation ID is displayed in the Admin section of the respective organisation.
 
 :::warning
 **Note** that changing the parent organisation will also affect the path under which the organisation is accessible. The path is determined by the organisation hierarchy, e.g. `/organisations/parent-organisation/child-organisation`.
 :::
 
-The settings are visible in the *Admin section* under the *General settings* tab of the organisation settings:
+The settings are visible in the _Admin section_ under the _General settings_ tab of the organisation settings:
 
 ![Organisation Admin section](img/admin-organisation-admin-section.webp)
-
 
 ## Keywords
 
@@ -138,6 +137,22 @@ You can delete the keyword only when it is not used in any software or project.
 :::
 
 ![animation](img/admin-keywords.gif)
+
+## Categories
+
+Software could be classified by assigning one or more _categories_. Categories are organised in a hierarchical structure (tree).
+
+The following terms are used: A _category_ is a leaf in the category tree. A _parent category_ is a tree node with sub-categories. A _top-level category_ is a tree node with no parent. A list of categories nodes traversing the category tree from a top-level category down to a category is the _category path_ of this category.
+
+Currently there exists no user interface for creating or managing categories itself. To get an idea how to feed the `categories` table using SQL statements see `database/999-add-hgf-categories.sql.example`.
+
+Categories of different levels could have different properties. The column `properties` holds a JSON object to flexibly define properties of a category:
+
+- `icon`: optional; see also issue #975. Icons are shown to the end user.
+- `is_highlight`: set to `true` to define a highlighted top-level category. Those categories will be displayed in a separate block. For the software maintainer the category headline could have an optional `subtitle` and an optional `description` text will be shown on the right side in the help box.
+
+For supporting category terms from _controlled vocabularies_ (semantic web)
+fill the `provenance_iri` column. Further read [Linked Data](https://en.wikipedia.org/wiki/Linked_data) and [SKOS](http://www.w3.org/TR/skos-reference).
 
 ## Mentions
 
