@@ -149,7 +149,7 @@ Currently there exists no user interface for creating or managing categories its
 Categories of different levels could have different properties. The column `properties` holds a JSON object to flexibly define properties of a category:
 
 - `icon`: optional; see also issue #975. Icons are shown to the end user.
-- `is_highlight`: set to `true` to define a highlighted top-level category. Those categories will be displayed in a separate block. For the software maintainer the category headline could have an optional `subtitle` and an optional `description` text will be shown on the right side in the help box.
+- `is_highlight`: set to `true` to define a highlighted top-level category. These categories are displayed in a separate block on the software page and in a tabular view. With `tree_level_lables: string[]` you could add column headers to this table. For the software maintainer the category headline could have an optional `subtitle` and an optional `description` text will be shown on the right side in the help box.
 
 For supporting category terms from _controlled vocabularies_ (semantic web)
 fill the `provenance_iri` column. Further read [Linked Data](https://en.wikipedia.org/wiki/Linked_data) and [SKOS](http://www.w3.org/TR/skos-reference).

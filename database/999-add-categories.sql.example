@@ -17,13 +17,42 @@ AS $$
 	DECLARE parent3 uuid;
 BEGIN
 	INSERT INTO category(short_name, name, properties) VALUES
-		('Research fruits', 'Some simple research fruits', "{icon:'science'}"::json) RETURNING id INTO parent1;
+	    ('Research fruits', 'Some simple research fruits', '{"icon":"science"}'::json) RETURNING id INTO parent1;
 	--
 	INSERT INTO category(parent, short_name, name) VALUES
 		(parent1, 'Apple', 'Apple: An apple a day keeps...'),
 		(parent1, 'Bananas', 'Bananas, who bent the bananas?'),
 		(parent1, 'Grapes', 'Grapes, I like grapes.'),
 		(parent1, 'Pineapple', 'Pineapple is very sweet and tasty.');
+	--
+	--
+	INSERT INTO category(short_name, name, properties) VALUES
+		('A Highlighted Category', 'A Highlighted Category', '{"is_highlight":true, "description": "A description helps the user to understand the purpose of this category.", "subtitle": "A category could have a subtitle", "tree_level_labels": ["First person", "Number 2", "Other members"]}'::json) RETURNING id INTO parent1;
+	--
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent1, '1 Ada', '1 Ada') RETURNING id INTO parent2;
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent2, '1.1 Ada, Bart', '1.1 Ada and Bart') RETURNING id INTO parent3;
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent3, '1.1.1 Ada, Bart, Chad', '1.1.1 Ada and Bart and Chad');
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent3, '1.1.2 Ada, Bart, Carlos', '1.1.2 Ada and Bart and Carlos');
+	--
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent2, '1.2 Ada, Bob', '1.2 Ada and Bob') RETURNING id INTO parent3;
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent3, '1.2.1 Ada, Bob, Chad', '1.2.1 Ada and Bob and Chad');
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent3, '1.2.2 Ada, Bob, Carlos', '1.2.2 Ada and Bob and Carlos');
+	--
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent1, '2 Alice', '2 Alice') RETURNING id INTO parent2;
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent2, '2.1 Alice, Bob', '2.1 Alice and Bob') RETURNING id INTO parent3;
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent3, '2.1.1 Alice, Bob, Carol', '2.1.1 Alice and Bob and Carol');
+	INSERT INTO category(parent, short_name, name) VALUES
+		(parent3, '2.1.2 Alice, Bob, Charlie', '2.1.2 Alice and Bob and Charlie');
 	--
 	--
 	INSERT INTO category(short_name, name) VALUES

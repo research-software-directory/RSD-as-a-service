@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -96,4 +96,13 @@ export function useReorderedCategories(): ReorderedCategories {
   }, [])
 
   return reorderedCategories
+}
+
+export function calcTreeLevelDepth(tree: CategoryTreeLevel): number {
+
+  function walk (tree: CategoryTreeLevel, depth:number): number {
+    return Math.max(depth, ...tree.children.map(sub => walk(sub, depth+1)))
+  }
+
+  return walk(tree, 0)
 }
