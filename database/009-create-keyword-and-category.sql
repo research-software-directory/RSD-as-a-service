@@ -81,10 +81,10 @@ CREATE TABLE category (
 	id UUID PRIMARY KEY,
 	parent UUID REFERENCES category DEFAULT NULL,
 	community UUID REFERENCES community(id) DEFAULT NULL,
-	short_name VARCHAR NOT NULL,
-	name VARCHAR NOT NULL,
+	short_name VARCHAR(100) NOT NULL,
+	name VARCHAR(250) NOT NULL,
 	properties JSONB NOT NULL DEFAULT '{}'::jsonb,
-	provenance_iri VARCHAR DEFAULT NULL,  -- e.g. https://www.w3.org/TR/skos-reference/#mapping
+	provenance_iri VARCHAR(250) DEFAULT NULL,  -- e.g. https://www.w3.org/TR/skos-reference/#mapping
 
 	CONSTRAINT unique_short_name UNIQUE NULLS NOT DISTINCT (parent, short_name, community),
 	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name, community),
@@ -190,7 +190,7 @@ $$
 		ON category.id = cat_path.parent
 	)
 	-- 1. How can we reverse the output rows without injecting a new column (r_index)?
-	-- 2. How a table row "type" could be used here Now we have to list all columns of `category` explicitely
+	-- 2. How a table row "type" could be used here Now we have to list all columns of `category` explicitly
 	--    I want to have something like `* without 'r_index'` to be independent from modifications of `category`
 	-- 3. Maybe this could be improved by using SEARCH keyword.
 	SELECT id, parent, community, short_name, name, properties, provenance_iri

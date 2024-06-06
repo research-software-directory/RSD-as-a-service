@@ -310,10 +310,11 @@ async function generateAndSaveCategoriesForCommunity(idCommunity, maxDepth) {
 				}
 				for (let i = 0; i < toGenerateCount; i++) {
 					const name = `Parent ${parent}, level ${level}, item ${i + 1}`;
+					const shortName = `Level ${level}, item ${i + 1}`;
 					const body = {
 						community: idCommunity,
 						parent: parent,
-						short_name: name,
+						short_name: shortName,
 						name: name,
 					};
 					await postToBackend('/category', body)

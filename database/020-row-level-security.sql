@@ -288,6 +288,10 @@ CREATE POLICY anyone_can_read ON category
 	TO rsd_web_anon, rsd_user
 	USING (TRUE);
 
+CREATE POLICY maintainer_all_rights ON category
+	TO rsd_user
+	USING (community IN (SELECT * FROM communities_of_current_maintainer()));
+
 -- allow admins to have full read/write access
 CREATE POLICY admin_all_rights ON category
 	TO rsd_admin

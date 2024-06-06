@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -7,7 +8,6 @@ import {GetServerSidePropsContext} from 'next'
 
 import {app} from '~/config/app'
 import {getUserFromToken} from '~/auth'
-import {isCommunityMaintainer} from '~/auth/permissions/isMaintainerOfCommunity'
 import {getUserSettings} from '~/utils/userSettings'
 import {EditCommunityProps, getCommunityBySlug} from '~/components/communities/apiCommunities'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
