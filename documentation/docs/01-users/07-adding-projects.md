@@ -153,7 +153,7 @@ Here, you can see all the people who can maintain this project page. You can als
 :::info
 
 - Each invitation link can be used only once.
-- The link does not have expiration date, but you can remove unused invitation manually.
+- Each invitation expires after 31 day and can be removed before the expiry date as well.
 
 :::
 

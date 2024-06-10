@@ -64,10 +64,17 @@ Under __"Settings - General settings"__ you can edit:
 As a maintainer, you can invite or remove other maintainers from your organisation.
 
 :::warning
-The __primary maintainer__ of an organisation is defined by rsd administrators. If you want to change the primary maintainer, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
+The __primary maintainer__ of an organisation is set by RSD administrators. If you want to change the primary maintainer, contact us via [rsd@esciencecenter.nl](mailto:rsd@esciencecenter.nl).
 :::
 
-To invite new maintainers, click on __"Generate invite link"__. A link will be generated. You can either copy this link or click on "Email this invite" to open your mail program with a preformulated email.
+To invite new maintainers, click on __"Generate invite link"__. A link will be generated. You can either copy this link or click on "Email this invite" to open your mail program with a pre-formulated email.
+
+:::info
+
+- Each invitation link can be used only once.
+- Each invitation expires after 31 day and can be removed before the expiry date as well.
+
+:::
 
 ![animation](img/organisation-maintainer-invite.gif)
 

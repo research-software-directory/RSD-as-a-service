@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
@@ -42,7 +42,18 @@ export default function InvitationList({invitations, token, onDeleteCallback}: {
     }
   }
 
+  function getExpiredText(daysValid: number): string {
+    if (daysValid <= 0) {
+      return 'this invitation is expired'
+    } else if (daysValid === 1) {
+      return 'expires in less than a day'
+    } else {
+      return `expires in ${daysValid} days`
+    }
+  }
+
   if(invitations.length === 0) return null
+  const now = new Date()
 
   return (
     <>
@@ -53,9 +64,13 @@ export default function InvitationList({invitations, token, onDeleteCallback}: {
       <List>
         {invitations.map(inv => {
           const currentLink = `${location.origin}/invite/${inv.type}/${inv.id}`
+          const expiresAt = new Date(inv.expires_at)
+          const daysValid = Math.ceil((expiresAt.valueOf() - now.valueOf()) / (1000 * 60 * 60 * 24))
+          let expiredText: string
+          expiredText = getExpiredText(daysValid);
           return (
             <ListItem key={inv.id} disableGutters>
-              <ListItemText primary={'Created on ' + new Date(inv.created_at).toDateString()} secondary={currentLink}/>
+              <ListItemText primary={'Created on ' + new Date(inv.created_at).toDateString() + ', ' + expiredText} secondary={currentLink}/>
               <IconButton onClick={() => toClipboard(currentLink)}><CopyIcon/></IconButton>
               <IconButton onClick={() => deleteMaintainerLink(inv)}><DeleteIcon/></IconButton>
             </ListItem>

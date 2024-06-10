@@ -197,6 +197,13 @@ The related projects sections can be used to link related project pages in the R
 
 Here, you can see all the people who can maintain this software page. You can also create invitation links to send to people you want to give maintainer access and see and delete all unused invitations.
 
+:::info
+
+- Each invitation link can be used only once.
+- Each invitation expires after 31 day and can be removed before the expiry date as well.
+
+:::
+
 ## Background services
 
 Here you can find the information about the background services that RSD offers and their last status.
