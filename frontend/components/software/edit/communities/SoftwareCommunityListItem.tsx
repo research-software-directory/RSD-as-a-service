@@ -16,7 +16,7 @@ import CommunityStatusBanner from './CommunityStatusBanner'
 
 type SoftwareCommunityItemProps={
   community: CommunitiesOfSoftware
-  onDelete: (id: string) => void
+  onDelete?: (id: string) => void
 }
 
 export default function SoftwareCommunityListItem({community,onDelete}:SoftwareCommunityItemProps) {
@@ -30,9 +30,10 @@ export default function SoftwareCommunityListItem({community,onDelete}:SoftwareC
           edge="end"
           aria-label="delete"
           onClick={() => {
-            onDelete(community.id)
+            if (onDelete) onDelete(community.id)
           }}
           sx={{marginRight: '1rem'}}
+          disabled={typeof onDelete == 'undefined'}
         >
           <DeleteIcon />
         </IconButton>

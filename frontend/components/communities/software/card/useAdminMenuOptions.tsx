@@ -6,6 +6,7 @@
 import {useEffect, useState} from 'react'
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 import Check from '@mui/icons-material/Check'
+import PendingActionsIcon from '@mui/icons-material/PendingActions'
 
 import {IconBtnMenuOption} from '~/components/menu/IconBtnMenuOnAction'
 import {CommunityRequestStatus} from '../apiCommunitySoftware'
@@ -48,6 +49,12 @@ export default function useAdminMenuOptions({
           label: 'Reject affiliation',
           icon: <RemoveCircleIcon/>,
           action: {type: 'DENY'}
+        },{
+          type: 'action',
+          key: 'pending',
+          label: 'Postpone affiliation',
+          icon: <PendingActionsIcon/>,
+          action: {type: 'PENDING'}
         })
       } else {
         // rejected status
@@ -57,6 +64,12 @@ export default function useAdminMenuOptions({
           label: 'Allow affiliation',
           icon: <Check />,
           action: {type: 'APPROVE'}
+        },{
+          type: 'action',
+          key: 'pending',
+          label: 'Postpone affiliation',
+          icon: <PendingActionsIcon/>,
+          action: {type: 'PENDING'}
         })
       }
       if (abort) return

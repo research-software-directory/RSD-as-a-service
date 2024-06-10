@@ -19,7 +19,7 @@ export type SoftwareCardWithMenuProps = {
 }
 
 export type SoftwareMenuAction = {
-  type: 'APPROVE' | 'DENY',
+  type: 'APPROVE' | 'DENY' | 'PENDING',
   payload?: string
 }
 
@@ -62,6 +62,9 @@ export function useSoftwareCardActions({software}: SoftwareCardWithMenuProps) {
         break
       case 'DENY':
         setStatus('rejected')
+        break
+      case 'PENDING':
+        setStatus('pending')
         break
       default:
         logger(`Action type ${action.type} NOT SUPPORTED. Check your spelling.`, 'warn')

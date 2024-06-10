@@ -7,6 +7,7 @@ import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import List from '@mui/material/List'
 
+import {useSession} from '~/auth'
 import {CommunitiesOfSoftware} from './apiSoftwareCommunities'
 import SoftwareCommunityListItem from './SoftwareCommunityListItem'
 
@@ -16,7 +17,7 @@ type OrganisationListProps = {
 }
 
 export default function SoftwareCommunityList({communities,onDelete}:OrganisationListProps) {
-
+  const {user} = useSession()
   if (communities.length === 0) {
     return (
       <Alert severity="warning" sx={{marginTop:'0.5rem'}}>
@@ -28,7 +29,17 @@ export default function SoftwareCommunityList({communities,onDelete}:Organisatio
 
   return (
     <List>
-      {communities.map((item)=><SoftwareCommunityListItem key={item.id} community={item} onDelete={onDelete} />)}
+      {
+        communities.map(item =>{
+          // software maintainer cannot remove rejected community status
+          if (user?.role !== 'rsd_admin' && item.status==='rejected') {
+            return <SoftwareCommunityListItem key={item.id} community={item} />
+          }
+          return (
+            <SoftwareCommunityListItem key={item.id} community={item} onDelete={onDelete} />
+          )
+        })
+      }
     </List>
   )
 }

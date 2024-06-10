@@ -68,7 +68,7 @@ export default function InvitationList({invitations, token, onDeleteCallback}: {
           const expiresAt = new Date(inv.expires_at)
           const daysValid = Math.ceil((expiresAt.valueOf() - now.valueOf()) / (1000 * 60 * 60 * 24))
           let expiredText: string
-          expiredText = getExpiredText(daysValid);
+          expiredText = getExpiredText(daysValid)
           return (
             <ListItem key={inv.id} disableGutters>
               <ListItemText primary={'Created on ' + new Date(inv.created_at).toDateString() + ', ' + expiredText} secondary={currentLink}/>
