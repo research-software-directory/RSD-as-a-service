@@ -27,6 +27,16 @@ type InvitationListProps={
   onDelete: (invitation:Invitation)=>Promise<void>
 }
 
+function getExpiredText(daysValid: number): string {
+  if (daysValid <= 0) {
+    return 'this invitation is expired'
+  } else if (daysValid === 1) {
+    return 'expires in less than a day'
+  } else {
+    return `expires in ${daysValid} days`
+  }
+}
+
 export default function InvitationList({subject,body,invitations,onDelete}:InvitationListProps) {
   const {showErrorMessage, showInfoMessage} = useSnackbar()
 
@@ -53,6 +63,9 @@ export default function InvitationList({subject,body,invitations,onDelete}:Invit
       <List>
         {invitations.map(inv => {
           const currentLink = `${location.origin}/invite/${inv.type}/${inv.id}`
+          const expiresAt = new Date(inv.expires_at)
+          const daysValid = Math.ceil((expiresAt.valueOf() - new Date().valueOf()) / (1000 * 60 * 60 * 24))
+          const expiredText = getExpiredText(daysValid)
           return (
             <ListItem
               data-testid="unused-invitation-item"
@@ -86,7 +99,7 @@ export default function InvitationList({subject,body,invitations,onDelete}:Invit
               }}
             >
               <ListItemText
-                primary={`Created on ${new Date(inv.created_at).toLocaleString()}`}
+                primary={`Created on ${new Date(inv.created_at).toLocaleString()} [${expiredText}]`}
                 secondary={currentLink}
               />
             </ListItem>

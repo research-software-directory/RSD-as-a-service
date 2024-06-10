@@ -7,7 +7,8 @@
 
 import {GetServerSidePropsContext} from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
+import LinkIcon from '@mui/icons-material/Link'
+import Button from '@mui/material/Button'
 
 import {claimCommunityMaintainerInvite} from '~/auth/api/authHelpers'
 import {getAccountFromToken} from '~/auth/jwtUtils'
@@ -39,13 +40,30 @@ export default function InviteCommunityMaintainer({communityInfo, error}: Invite
     if (typeof error == 'undefined' || error === null) {
       return (
         <ContentInTheMiddle>
-          <h2>
-            You are now a maintainer of {communityInfo?.name ?? 'missing'}!
-            &nbsp;
-            <Link href={`/communities/${communityInfo?.slug ?? 'missing'}`}>
+          <div className="flex flex-col gap-4 items-center">
+            <h2>
+              {
+                communityInfo?.name ?
+                  <span>You are now a maintainer of {communityInfo?.name}</span>
+                  : <span>You are now a maintainer</span>
+              }
+
+            </h2>
+            <Button
+              href={`/communities/${communityInfo?.slug ?? 'missing'}`}
+              variant="contained"
+              sx={{
+              // we need to overwrite global link styling from tailwind
+              // because the type of button is a link (we use href param)
+                ':hover':{
+                  color:'primary.contrastText'
+                }
+              }}
+              startIcon={<LinkIcon />}
+            >
               Open community page
-            </Link>
-          </h2>
+            </Button>
+          </div>
         </ContentInTheMiddle>
       )
     }

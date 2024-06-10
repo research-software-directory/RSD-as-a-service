@@ -126,7 +126,8 @@ CREATE TABLE invite_maintainer_for_community (
 	created_by UUID REFERENCES account (id),
 	claimed_by UUID REFERENCES account (id),
 	claimed_at TIMESTAMPTZ,
-	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP
+	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP,
+	expires_at TIMESTAMPTZ NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_community() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -273,7 +274,8 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' does not exist';
 	END IF;
 
-	IF invitation_row.claimed_by IS NOT NULL OR invitation_row.claimed_at IS NOT NULL THEN
+	IF invitation_row.claimed_by IS NOT NULL OR invitation_row.claimed_at IS NOT NULL OR
+		invitation_row.expires_at < CURRENT_TIMESTAMP THEN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' is expired';
 	END IF;
 
