@@ -19,10 +19,11 @@ import {MentionItemProps} from '~/types/Mention'
 import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {getMentionType} from '~/components/mention/config'
-import {addNewOutputToProject, addToOutputForProject, removeOutputForProject} from './outputForProjectApi'
-import NoOutputItems from './NoOutputItems'
+import SanitizedMathMLBox from '~/components/layout/SanitizedMathMLBox'
 import useProjectContext from '../../useProjectContext'
 import {useProjectMentionContext} from '../ProjectMentionContext'
+import {addNewOutputToProject, addToOutputForProject, removeOutputForProject} from './outputForProjectApi'
+import NoOutputItems from './NoOutputItems'
 
 export const initialState: EditMentionState = {
   settings: {
@@ -46,15 +47,30 @@ function createSuccessMessage(item:MentionItemProps) {
   if (item.mention_type) {
     message += ` to ${getMentionType(item.mention_type,'plural')}`
   }
-  return message
+  return (
+    <SanitizedMathMLBox
+      component="span"
+      rawHtml={message}
+    />
+  )
 }
+
+function createErrorMessage(message:string) {
+  return (
+    <SanitizedMathMLBox
+      component="span"
+      rawHtml={message}
+    />
+  )
+}
+
 
 export default function EditOutputProvider(props: any) {
   const {user,token} = useSession()
   const {project:{id:project}} = useProjectContext()
   const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   const {loading,output:mentions,counts:{output},setOutputCnt} = useProjectMentionContext()
-  // initalize state with loading and items received from useProjectMentionContext
+  // initialize state with loading and items received from useProjectMentionContext
   const [state, dispatch] = useReducer(
     editMentionReducer,
     {
@@ -129,7 +145,9 @@ export default function EditOutputProvider(props: any) {
           payload: resp.message
         })
       } else {
-        showErrorMessage(`Failed to save ${item.title}. ${resp.message}`)
+        showErrorMessage(
+          createErrorMessage(`Failed to save ${item.title}. ${resp.message}`)
+        )
       }
     }
   }
@@ -213,10 +231,14 @@ export default function EditOutputProvider(props: any) {
           token
         })
       } else {
-        showErrorMessage(`Failed to delete ${item.title}. ${resp.message}`)
+        showErrorMessage(
+          createErrorMessage(`Failed to delete ${item.title}. ${resp.message}`)
+        )
       }
     } else {
-      showErrorMessage(`Failed to delete ${item.title}. Invalid item id ${item.id}`)
+      showErrorMessage(
+        createErrorMessage(`Failed to delete ${item.title}. Invalid item id ${item.id}`)
+      )
     }
   }
   /**

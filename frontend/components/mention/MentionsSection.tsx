@@ -7,7 +7,7 @@
 
 import {sortOnNumProp} from '~/utils/sortFn'
 import {MentionItemProps} from '~/types/Mention'
-import {clasifyMentionsByType} from '~/utils/editMentions'
+import {classifyMentionsByType} from '~/utils/editMentions'
 import {getMentionType, getMentionTypeOrder} from '~/components/mention/config'
 import PageContainer from '~/components/layout/PageContainer'
 import MentionItemFeatured from '~/components/mention/MentionItemFeatured'
@@ -22,7 +22,7 @@ export default function MentionsSection({title, mentions}: MentionsSectionProps)
   // do not render section if no data
   if (!mentions || mentions.length === 0) return null
   // split to featured and (not featured) mentions by type (different presentation)
-  const {mentionByType, featuredMentions} = clasifyMentionsByType(mentions)
+  const {mentionByType, featuredMentions} = classifyMentionsByType(mentions)
   const mentionTypes = getMentionTypeOrder(mentionByType)
   // console.group('MentionsSection')
   // console.log('mentionByType...', mentionByType)

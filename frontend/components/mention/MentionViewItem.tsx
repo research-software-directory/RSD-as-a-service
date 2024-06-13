@@ -1,8 +1,9 @@
+// SPDX-FileCopyrightText: 2022 - 2024 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,11 +27,11 @@ export default function MentionViewItem({item, pos}: {item: MentionItemProps, po
           <MentionTitle
             title={item?.title ?? ''}
             role="view"
-            className="font-light text-lg"
+            className="font-light text-lg line-clamp-5"
           />
           <MentionAuthors
             authors={item.authors}
-            className="text-sm"
+            className="text-sm max-h-[9rem] overflow-y-auto overflow-x-hidden"
           />
           <MentionPublisherItem
             publisher={item?.publisher ?? ''}

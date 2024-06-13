@@ -27,6 +27,7 @@ import {
   addToMentionForSoftware,
   removeMentionForSoftware
 } from './apiRelatedOutput'
+import SanitizedMathMLBox from '~/components/layout/SanitizedMathMLBox'
 
 const initalState:EditMentionState = {
   settings: {
@@ -50,7 +51,21 @@ function createSuccessMessage(item:MentionItemProps) {
   if (item.mention_type) {
     message += ` to ${getMentionType(item.mention_type,'plural')}`
   }
-  return message
+  return (
+    <SanitizedMathMLBox
+      component="span"
+      rawHtml={message}
+    />
+  )
+}
+
+function createErrorMessage(message:string) {
+  return (
+    <SanitizedMathMLBox
+      component="span"
+      rawHtml={message}
+    />
+  )
 }
 
 export default function EditRelatedOutputProvider(props: any) {
@@ -115,7 +130,9 @@ export default function EditRelatedOutputProvider(props: any) {
           payload: resp.message
         })
         // show success
-        showSuccessMessage(createSuccessMessage(resp.message as MentionItemProps))
+        showSuccessMessage(
+          createSuccessMessage(resp.message as MentionItemProps)
+        )
         // increase count
         setOutputCnt(output+1)
       } else {
@@ -128,7 +145,9 @@ export default function EditRelatedOutputProvider(props: any) {
         token,
       })
       if (resp.status !== 200) {
-        showErrorMessage(`Failed to update ${item.title}. ${resp.message}`)
+        showErrorMessage(
+          createErrorMessage(`Failed to update ${item.title}. ${resp.message}`)
+        )
         return
       }
       dispatch({
@@ -214,10 +233,14 @@ export default function EditRelatedOutputProvider(props: any) {
           token
         })
       } else {
-        showErrorMessage(`Failed to delete ${item.title}. ${resp.message}`)
+        showErrorMessage(
+          createErrorMessage(`Failed to delete ${item.title}. ${resp.message}`)
+        )
       }
     } else {
-      showErrorMessage(`Failed to delete ${item.title}. Invalid item id ${item.id}`)
+      showErrorMessage(
+        createErrorMessage(`Failed to delete ${item.title}. Invalid item id ${item.id}`)
+      )
     }
   }
 
