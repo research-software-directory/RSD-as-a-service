@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -10,22 +10,18 @@ import {useState} from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 
+import {getPageRange} from '~/utils/pagination'
 import SearchInput from '~/components/search/SearchInput'
 import SelectRows from '~/components/software/overview/search/SelectRows'
 import ViewToggleGroup, {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import useQueryChange from '~/components/organisation/projects/useQueryChange'
-import OrgSoftwareFiltersModal from '../filters/OrgSoftwareFiltersModal'
-import useSoftwareParams from '../filters/useSoftwareParams'
-import {getPageRange} from '~/utils/pagination'
+import FiltersModal from '~/components/filter/FiltersModal'
+import useSoftwareParams from '~/components/organisation/software/filters/useSoftwareParams'
+import OrgSoftwareFilters from '~/components/organisation/software/filters/index'
 
 type SearchSectionProps = {
-  // search?: string | null
-  // page: number
-  // rows: number
   count: number
-  // placeholder: string
   layout: ProjectLayoutType
-  // setModal: (modal: boolean) => void
   setView: (view:ProjectLayoutType)=>void
 }
 
@@ -77,12 +73,14 @@ export default function OrgSearchSoftwareSection({
         }
       </div>
 
-      {
-        smallScreen === true &&
-        <OrgSoftwareFiltersModal
+      {smallScreen ?
+        <FiltersModal
           open={modal}
           setModal={setModal}
-        />
+        >
+          <OrgSoftwareFilters />
+        </FiltersModal>
+        : undefined
       }
 
     </section>

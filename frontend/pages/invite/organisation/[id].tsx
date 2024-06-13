@@ -1,11 +1,14 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
+import LinkIcon from '@mui/icons-material/Link'
+import Button from '@mui/material/Button'
 
 import {claimOrganisationMaintainerInvite} from '~/auth/api/authHelpers'
 import {getAccountFromToken} from '~/auth/jwtUtils'
@@ -37,13 +40,29 @@ export default function InviteOrganisationMaintainer({organisationInfo, error}:
     if (typeof error == 'undefined' || error === null) {
       return (
         <ContentInTheMiddle>
-          <h2>
-            You are now a maintainer of {organisationInfo?.name ?? 'missing'}!
-            &nbsp;
-            <Link href={`/organisations/${organisationInfo?.slug ?? 'missing'}`}>
+          <div className="flex flex-col gap-4 items-center">
+            <h2>
+              {
+                organisationInfo?.name ?
+                  <span>You are now a maintainer of {organisationInfo?.name}</span>
+                  : <span>You are now a maintainer</span>
+              }
+            </h2>
+            <Button
+              href={`/organisations/${organisationInfo?.slug ?? 'missing'}`}
+              variant="contained"
+              sx={{
+              // we need to overwrite global link styling from tailwind
+              // because the type of button is a link (we use href param)
+                ':hover':{
+                  color:'primary.contrastText'
+                }
+              }}
+              startIcon={<LinkIcon />}
+            >
               Open organisation page
-            </Link>
-          </h2>
+            </Button>
+          </div>
         </ContentInTheMiddle>
       )
     }
@@ -132,7 +151,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       organisationInfo:null,
       error: {
         status: 404,
-        message: 'This invite is invalid. It\'s missing invite id. Please ask the organisation mantainer to provide you a new link.'
+        message: 'This invite is invalid. It\'s missing invite id. Please ask the organisation maintainer to provide you a new link.'
       }
     }
   }

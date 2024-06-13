@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -41,7 +41,7 @@ import {
   projectStatusFilter
 } from '~/components/projects/overview/filters/projectFiltersApi'
 import {projectOrderOptions} from '~/components/projects/overview/filters/OrderProjectsBy'
-import ProjectFilters from '~/components/projects/overview/filters/ProjectFilters'
+import ProjectFilters from '~/components/projects/overview/filters/index'
 import ProjectSearchSection from '~/components/projects/overview/search/ProjectSearchSection'
 import ProjectOverviewContent from '~/components/projects/overview/ProjectOverviewContent'
 import ProjectFiltersModal from '~/components/projects/overview/filters/ProjectFiltersModal'
@@ -67,7 +67,7 @@ export type ProjectOverviewPageProps = {
 }
 
 const pageTitle = `Projects | ${app.title}`
-const pageDesc = 'The list of research projects registerd in the Research Software Directory.'
+const pageDesc = 'The list of research projects in the Research Software Directory.'
 
 export default function ProjectsOverviewPage({
   search, order,

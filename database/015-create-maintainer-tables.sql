@@ -2,6 +2,7 @@
 -- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
+-- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -32,7 +33,7 @@ CREATE TABLE invite_maintainer_for_project (
 	claimed_by UUID REFERENCES account (id),
 	claimed_at TIMESTAMPTZ,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP,
-	expires_at TIMESTAMP NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
+	expires_at TIMESTAMPTZ NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -107,7 +108,7 @@ CREATE TABLE invite_maintainer_for_software (
 	claimed_by UUID REFERENCES account (id),
 	claimed_at TIMESTAMPTZ,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP,
-	expires_at TIMESTAMP NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
+	expires_at TIMESTAMPTZ NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_software() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -185,7 +186,7 @@ CREATE TABLE invite_maintainer_for_organisation (
 	claimed_by UUID REFERENCES account (id),
 	claimed_at TIMESTAMPTZ,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP,
-	expires_at TIMESTAMP NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
+	expires_at TIMESTAMPTZ NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS

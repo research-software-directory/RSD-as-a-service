@@ -19,6 +19,8 @@ export type RsdSettingsState = {
   announcement?: string | null
 }
 
+export type RsdModule= 'software'| 'projects' | 'organisations' | 'communities' | 'news' | 'user'
+
 export type RsdHost = {
   name: string,
   email: string,
@@ -37,7 +39,8 @@ export type RsdHost = {
     title: string,
     limit: number,
     description?: string | null
-  }
+  },
+  modules?: RsdModule[]
 }
 
 export type CustomLink = {
@@ -67,7 +70,7 @@ export type RsdSettingsAction = {
 
 export type RsdSettingsDispatch = (action: RsdSettingsAction)=>void
 
-export const defaultRsdSettings: RsdSettingsState = defaultSettings
+export const defaultRsdSettings = defaultSettings as RsdSettingsState
 
 export function rsdSettingsReducer(state: RsdSettingsState, action: RsdSettingsAction) {
   // console.group('rsdSettingsReducer')

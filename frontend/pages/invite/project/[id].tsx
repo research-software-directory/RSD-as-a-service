@@ -1,13 +1,15 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
+import LinkIcon from '@mui/icons-material/Link'
+import Button from '@mui/material/Button'
 
 import {claimProjectMaintainerInvite} from '~/auth/api/authHelpers'
 import {getAccountFromToken} from '~/auth/jwtUtils'
@@ -41,13 +43,29 @@ export default function InviteProjectMaintainer({projectInfo, error}:
     }
     return (
       <ContentInTheMiddle>
-        <h2>
-          You are now a maintainer of {projectInfo?.title ?? 'missing'}!
-          &nbsp;
-          <Link href={`/projects/${projectInfo?.slug ?? 'missing'}`}>
-            Open project
-          </Link>
-        </h2>
+        <div className="flex flex-col gap-4 items-center">
+          <h2>
+            {
+              projectInfo?.title ?
+                <span>You are now a maintainer of {projectInfo?.title}</span>
+                : <span>You are now a maintainer</span>
+            }
+          </h2>
+          <Button
+            href={`/projects/${projectInfo?.slug ?? 'missing'}`}
+            variant="contained"
+            sx={{
+              // we need to overwrite global link styling from tailwind
+              // because the type of button is a link (we use href param)
+              ':hover':{
+                color:'primary.contrastText'
+              }
+            }}
+            startIcon={<LinkIcon />}
+          >
+            Open project page
+          </Button>
+        </div>
       </ContentInTheMiddle>
     )
   }
@@ -101,7 +119,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         projectInfo:null,
         error: {
           status: 404,
-          message: 'This invite is invalid. It\'s missing invite id. Please ask the project mantainer to provide you a new link.'
+          message: 'This invite is invalid. It\'s missing invite id. Please ask the project maintainer to provide you a new link.'
         }
       }
     }

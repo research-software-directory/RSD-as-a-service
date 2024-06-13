@@ -1,11 +1,14 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {GetServerSidePropsContext} from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
+import LinkIcon from '@mui/icons-material/Link'
+import Button from '@mui/material/Button'
 
 import {claimSoftwareMaintainerInvite} from '~/auth/api/authHelpers'
 import {getAccountFromToken} from '~/auth/jwtUtils'
@@ -25,8 +28,7 @@ type InviteSoftwareMaintainerProps = {
   }|null
 }
 
-export default function InviteSoftwareMaintainer({softwareInfo, error}:
-  InviteSoftwareMaintainerProps) {
+export default function InviteSoftwareMaintainer({softwareInfo, error}: InviteSoftwareMaintainerProps) {
   // console.group('InviteSoftwareMaintainer')
   // console.log('softwareInfo..', softwareInfo)
   // console.log('error..', error)
@@ -39,13 +41,29 @@ export default function InviteSoftwareMaintainer({softwareInfo, error}:
     }
     return (
       <ContentInTheMiddle>
-        <h2>
-          You are now a maintainer of {softwareInfo?.brand_name ?? 'missing'}!
-          &nbsp;
-          <Link href={`/software/${softwareInfo?.slug ?? 'missing'}`}>
-            Open software
-          </Link>
-        </h2>
+        <div className="flex flex-col gap-4 items-center">
+          <h2>
+            {
+              softwareInfo?.brand_name ?
+                <span>You are now a maintainer of {softwareInfo?.brand_name}</span>
+                : <span>You are now a maintainer</span>
+            }
+          </h2>
+          <Button
+            href={`/software/${softwareInfo?.slug ?? 'missing'}`}
+            variant="contained"
+            sx={{
+              // we need to overwrite global link styling from tailwind
+              // because the type of button is a link (we use href param)
+              ':hover':{
+                color:'primary.contrastText'
+              }
+            }}
+            startIcon={<LinkIcon />}
+          >
+            Open software page
+          </Button>
+        </div>
       </ContentInTheMiddle>
     )
   }
@@ -103,7 +121,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         softwareInfo:null,
         error: {
           status: 404,
-          message: 'This invite is invalid. It\'s missing invite id. Please ask the software mantainer to provide you a new link.'
+          message: 'This invite is invalid. It\'s missing invite id. Please ask the software maintainer to provide you a new link.'
         }
       }
     }

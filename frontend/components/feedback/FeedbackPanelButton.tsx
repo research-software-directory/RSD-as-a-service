@@ -1,29 +1,29 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 // import * as React from 'react'
 import {useState} from 'react'
-import {MailOutlineOutlined} from '@mui/icons-material'
+import MailOutlineOutlined from '@mui/icons-material/MailOutlineOutlined'
 import Dialog from '@mui/material/Dialog'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {useTheme} from '@mui/material/styles'
 import LinkIcon from '@mui/icons-material/Link'
 import WebIcon from '@mui/icons-material/Web'
-import Divider from '@mui/material/Divider'
-import CaretIcon from '~/components/icons/caret.svg'
+
 import getBrowser from '~/utils/getBrowser'
+import useDisableScrollLock from '~/utils/useDisableScrollLock'
+import CaretIcon from '~/components/icons/caret.svg'
 
 export default function FeedbackPanelButton({feedback_email, issues_page_url, closeFeedbackPanel}:
   { feedback_email: string, issues_page_url: string, closeFeedbackPanel?: () => void }
 ) {
-
+  const disable = useDisableScrollLock()
   const [text, setText] = useState('')
   const [open, setOpen] = useState(false)
-
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -63,26 +63,21 @@ User Agent: ${navigator.userAgent}`
 
   return (
     <div>
-      {/* If desktop size */}
-      <button className="hidden md:flex gap-2 items-center no-underline"
+
+      <button
+        data-testid="feedback-button"
+        className="flex gap-2 items-center no-underline"
         onClick={handleClickOpen}
       >
         Feedback <CaretIcon/>
       </button>
-      {/*If  mobile size */}
-      <div className="block md:hidden">
-        <Divider/>
-        <button className="flex md:hidden w-full py-2 px-4"
-          onClick={handleClickOpen}>
-          Send feedback
-        </button>
-      </div>
 
       <Dialog
         fullScreen={fullScreen}
         open={open}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
+        disableScrollLock={disable}
       >
         <div className="h-full w-full bg-base-700 p-5 ">
           <div className="mx-auto max-w-[500px]">
