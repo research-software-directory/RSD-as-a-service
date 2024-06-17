@@ -91,7 +91,7 @@ function generateMentions(amountExtra = 100) {
 	return result;
 }
 
-async function generateSoftware(amount = 500) {
+function generateSoftware(amount = 500) {
 	// real software has a real concept DOI
 	const amountRealSoftware = Math.min(conceptDois.length, amount);
 	const brandNames = [];
@@ -358,7 +358,7 @@ function generateSoftwareHighlights(ids) {
 	return result;
 }
 
-async function generateProjects(amount = 500) {
+function generateProjects(amount = 500) {
 	const result = [];
 
 	const projectStatuses = ['finished', 'running', 'starting'];
@@ -509,7 +509,7 @@ function generateUrlsForProjects(ids) {
 	return result;
 }
 
-async function generateOrganisations(amount = 500) {
+function generateOrganisations(amount = 500) {
 	const rorIds = [
 		'https://ror.org/000k1q888',
 		'https://ror.org/006hf6230',
@@ -591,6 +591,29 @@ async function generateOrganisations(amount = 500) {
 	return result;
 }
 
+function generateCommunities(amount = 50) {
+	const result = [];
+
+	for (let index = 0; index < amount; index++) {
+		const maxWords = faker.helpers.maybe(() => 5, {probability: 0.8}) ?? 31;
+		const name = generateUniqueCaseInsensitiveString(() =>
+			('Community: ' + faker.word.words(faker.number.int({max: maxWords, min: 1}))).substring(0, 200),
+		);
+
+		result.push({
+			slug: faker.helpers.slugify(name).toLowerCase().replaceAll(/-{2,}/g, '-').replaceAll(/-+$/g, ''), // removes double dashes and trailing dashes
+			name: name,
+			short_description: faker.helpers.maybe(() => faker.lorem.paragraphs(1, '\n\n'), {probability: 0.8}) ?? null,
+			description: faker.helpers.maybe(() => faker.lorem.paragraphs(1, '\n\n'), {probability: 0.8}) ?? null,
+			logo_id:
+				faker.helpers.maybe(() => localOrganisationLogoIds[index % localImageIds.length], {probability: 0.8}) ??
+				null,
+		});
+	}
+
+	return result;
+}
+
 function generateMetaPages() {
 	const result = [];
 
@@ -636,8 +659,8 @@ function generateNews() {
 			slug: 'never-dependency',
 		},
 		{
-			title: 'Shutting down the RSD',
-			slug: 'shutting-down-the-rsd',
+			title: 'Sunsetting the RSD',
+			slug: 'sunsetting-the-rsd',
 		},
 		{
 			title: 'The last package you will ever need',
@@ -650,6 +673,22 @@ function generateNews() {
 		{
 			title: 'The 5 best dependencies you never heard about',
 			slug: '5-best-dependencies',
+		},
+		{
+			title: 'Rewriting the RSD in CrabLang',
+			slug: 'rewrite-rsd-crablang',
+		},
+		{
+			title: 'The RSD joins forces with Big Company (tm)',
+			slug: 'rsd-joins-big-company',
+		},
+		{
+			title: "3 features you didn't know about",
+			slug: '3-features',
+		},
+		{
+			title: 'Interview with RSD founders',
+			slug: 'interview-rsd-founders',
 		},
 	];
 
@@ -718,6 +757,21 @@ function generateProjectForOrganisation(idsProjects, idsOrganisations) {
 	const roles = ['funding', 'hosting', 'participating'];
 	result.forEach(entry => {
 		entry['role'] = faker.helpers.arrayElement(roles);
+	});
+
+	return result;
+}
+
+function generateSoftwareForCommunity(idsSoftware, idsCommunities) {
+	const result = generateRelationsForDifferingEntities(idsCommunities, idsSoftware, 'community', 'software');
+
+	const statuses = [
+		{weight: 1, value: 'pending'},
+		{weight: 8, value: 'approved'},
+		{weight: 1, value: 'rejected'},
+	];
+	result.forEach(entry => {
+		entry['status'] = faker.helpers.weightedArrayElement(statuses);
 	});
 
 	return result;
@@ -937,8 +991,8 @@ await Promise.all([mentionsPromise, keywordPromise, researchDomainsPromise]).the
 	console.log('mentions, keywords, research domains done'),
 );
 
-let idsSoftware, idsFakeSoftware, idsRealSoftware, idsProjects, idsOrganisations;
-const softwarePromise = postToBackend('/software', await generateSoftware())
+let idsSoftware, idsFakeSoftware, idsRealSoftware, idsProjects, idsOrganisations, idsCommunities;
+const softwarePromise = postToBackend('/software', generateSoftware())
 	.then(resp => resp.json())
 	.then(async swArray => {
 		idsSoftware = swArray.map(sw => sw['id']);
@@ -954,7 +1008,7 @@ const softwarePromise = postToBackend('/software', await generateSoftware())
 		postToBackend('/software_for_software', generateSoftwareForSoftware(idsSoftware));
 		postToBackend('/software_highlight', generateSoftwareHighlights(idsSoftware.slice(0, 10)));
 	});
-const projectPromise = postToBackend('/project', await generateProjects())
+const projectPromise = postToBackend('/project', generateProjects())
 	.then(resp => resp.json())
 	.then(async pjArray => {
 		idsProjects = pjArray.map(sw => sw['id']);
@@ -969,11 +1023,19 @@ const projectPromise = postToBackend('/project', await generateProjects())
 		);
 		postToBackend('/project_for_project', generateSoftwareForSoftware(idsProjects));
 	});
-const organisationPromise = postToBackend('/organisation', await generateOrganisations())
+const organisationPromise = postToBackend('/organisation', generateOrganisations())
 	.then(resp => resp.json())
 	.then(async orgArray => {
 		idsOrganisations = orgArray.map(org => org['id']);
 	});
+
+const communityPromise = postToBackend('/community', generateCommunities())
+	.then(resp => resp.json())
+	.then(async commArray => {
+		idsCommunities = commArray.map(comm => comm['id']);
+		postToBackend('/keyword_for_community', generateKeywordsForEntity(idsCommunities, idsKeywords, 'community'));
+	});
+
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));
 await postToBackend('/news?select=id', generateNews())
 	.then(() => getFromBackend('/news'))
@@ -982,7 +1044,9 @@ await postToBackend('/news?select=id', generateNews())
 	.then(newsIds => postToBackend('/image_for_news', generateImagesForNews(newsIds, localImageIds)))
 	.then(() => console.log('news done'));
 
-await Promise.all([softwarePromise, projectPromise, organisationPromise]).then(() => console.log('sw, pj, org done'));
+await Promise.all([softwarePromise, projectPromise, organisationPromise, communityPromise]).then(() =>
+	console.log('sw, pj, org, comm done'),
+);
 
 await postToBackend(
 	'/software_for_project',
@@ -994,6 +1058,9 @@ await postToBackend(
 ).then(() => console.log('sw-org done'));
 await postToBackend('/project_for_organisation', generateProjectForOrganisation(idsProjects, idsOrganisations)).then(
 	() => console.log('pj-org done'),
+);
+await postToBackend('/software_for_community', generateSoftwareForCommunity(idsSoftware, idsCommunities)).then(() =>
+	console.log('sw-comm done'),
 );
 await postToBackend(
 	'/release',

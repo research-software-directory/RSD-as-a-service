@@ -15,7 +15,7 @@ import {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggl
 import {setDocumentCookie} from '~/utils/userSettings'
 import useOrganisationContext from '../context/useOrganisationContext'
 import {useUserSettings} from '../context/UserSettingsContext'
-import OrgProjectFilters from './filters/OrgProjectFilters'
+import OrgProjectFilters from './filters'
 import useOrganisationProjects from './useOrganisationProjects'
 import OrgSearchProjectSection from './search/OrgSearchProjectSection'
 import useProjectParams from './useProjectParams'

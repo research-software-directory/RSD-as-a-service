@@ -1,13 +1,18 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
 
-import {WrappedComponentWithProps} from '~/utils/jest/WrappedComponents'
+import {WithAppContext} from '~/utils/jest/WithAppContext'
 import {menuItems} from '~/config/menuItems'
+import defaultSettings from '~/config/defaultSettings.json'
+import {RsdSettingsState} from '~/config/rsdSettingsReducer'
 import AppHeader from './index'
+
 
 // mocks login providers list
 const redirectUrl = 'https://test-login-redirect.com'
@@ -19,7 +24,14 @@ jest.mock('~/auth/api/useLoginProviders', () => {
 })
 
 beforeEach(() => {
-  render(WrappedComponentWithProps(AppHeader,))
+  jest.clearAllMocks()
+  render(
+    <WithAppContext options={{
+      settings: defaultSettings as RsdSettingsState
+    }}>
+      <AppHeader />
+    </WithAppContext>
+  )
 })
 
 it('renders AppHeader with header tag', () => {
@@ -28,18 +40,18 @@ it('renders AppHeader with header tag', () => {
   expect(header).toBeInTheDocument()
 })
 
-it('renders AppHeader with 2 searchboxes', () => {
+it('renders AppHeader with 2 search boxes', () => {
   // has searchbox
   const search = screen.getAllByTestId('global-search')
-  // two searchboxes, one for mobile and one for larger screens?!?
+  // two search boxes, one for mobile and one for larger screens?!?
   expect(search).toHaveLength(2)
 })
 
-it('renders AppHeader with links and logo link', () => {
+it('renders AppHeader with links to defined modules and logo link', () => {
   // has searchbox
   const links = screen.getAllByRole('link')
-  // menu items + logo link + feedback link
-  expect(links).toHaveLength(menuItems.length + 2)
+  // menu items defined in modules + logo link + feedback link
+  expect(links).toHaveLength(defaultSettings.host.modules.length + 2)
   // screen.debug()
 })
 

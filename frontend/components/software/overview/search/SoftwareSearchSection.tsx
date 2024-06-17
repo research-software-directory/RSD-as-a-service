@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -9,11 +9,11 @@
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 
+import {getPageRange} from '~/utils/pagination'
 import SearchInput from '~/components/search/SearchInput'
+import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
 import ViewToggleGroup, {LayoutType} from './ViewToggleGroup'
 import SelectRows from './SelectRows'
-import useSoftwareOverviewParams from '../useSoftwareOverviewParams'
-import {getPageRange} from '~/utils/pagination'
 
 type SearchSectionProps = {
   page: number

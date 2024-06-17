@@ -6,9 +6,10 @@
 import {useState} from 'react'
 import {GetServerSidePropsContext} from 'next/types'
 import Pagination from '@mui/material/Pagination'
+import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
-import {ssrOrganisationParams} from '~/utils/extractQueryParam'
+import {ssrBasicParams} from '~/utils/extractQueryParam'
 import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
 import PageMeta from '~/components/seo/PageMeta'
 import PageBackground from '~/components/layout/PageBackground'
@@ -16,11 +17,11 @@ import AppHeader from '~/components/AppHeader'
 import MainContent from '~/components/layout/MainContent'
 import AppFooter from '~/components/AppFooter'
 import SearchInput from '~/components/search/SearchInput'
+import useSearchParams from '~/components/search/useSearchParams'
 import SelectRows from '~/components/software/overview/search/SelectRows'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import ViewToggleGroup,{ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
 import NewsGrid from '~/components/news/overview/NewsGrid'
-import useNewsOverviewParams from '~/components/news/overview/useNewsOverviewParams'
 import {NewsListItem, getNewsList} from '~/components/news/apiNews'
 import NewsList from '~/components/news/overview/list'
 
@@ -37,7 +38,7 @@ type NewsOverviewProps={
 }
 
 export default function NewsOverview({count,page,rows,layout,search,news}:NewsOverviewProps) {
-  const {handleQueryChange} = useNewsOverviewParams()
+  const {handleQueryChange,createUrl} = useSearchParams('news')
   const initView = layout === 'masonry' ? 'grid' : layout
   const [view, setView] = useState<ProjectLayoutType>(initView)
   const numPages = Math.ceil(count / rows)
@@ -106,8 +107,18 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
               <Pagination
                 count={numPages}
                 page={page}
-                onChange={(_, page) => {
-                  handleQueryChange('page',page.toString())
+                renderItem={item => {
+                  if (item.page !== null) {
+                    return (
+                      <a href={createUrl('page', item.page.toString())}>
+                        <PaginationItem {...item}/>
+                      </a>
+                    )
+                  } else {
+                    return (
+                      <PaginationItem {...item}/>
+                    )
+                  }
                 }}
               />
             </div>
@@ -126,7 +137,7 @@ export default function NewsOverview({count,page,rows,layout,search,news}:NewsOv
 export async function getServerSideProps(context:GetServerSidePropsContext) {
   try{
     const {req} = context
-    const {search, rows, page} = ssrOrganisationParams(context.query)
+    const {search, rows, page} = ssrBasicParams(context.query)
     const token = req?.cookies['rsd_token']
 
     // extract user settings from cookie

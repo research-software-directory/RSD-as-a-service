@@ -1,31 +1,27 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useState} from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 
+import {getPageRange} from '~/utils/pagination'
 import SearchInput from '~/components/search/SearchInput'
 import SelectRows from '~/components/software/overview/search/SelectRows'
+import FiltersModal from '~/components/filter/FiltersModal'
 import ViewToggleGroup, {ProjectLayoutType} from '~/components/projects/overview/search/ViewToggleGroup'
-import useQueryChange from '../useQueryChange'
-import {useState} from 'react'
-import OrgProjectFiltersModal from '../filters/OrgProjectFiltersModal'
-import useProjectParams from '../useProjectParams'
-import {getPageRange} from '~/utils/pagination'
+import OrgProjectFilters from '~/components/organisation/projects/filters/index'
+import useQueryChange from '~/components/organisation/projects/useQueryChange'
+import useProjectParams from '~/components/organisation/projects/useProjectParams'
 
 type SearchSectionProps = {
-  // search?: string | null
-  // page: number
-  // rows: number
   count: number
-  // placeholder: string
   layout: ProjectLayoutType
-  // setModal: (modal: boolean) => void
   setView: (view:ProjectLayoutType)=>void
 }
 
@@ -77,12 +73,14 @@ export default function OrganisationSearchProjectSection({
         }
       </div>
 
-      {
-        smallScreen === true &&
-        <OrgProjectFiltersModal
+      {smallScreen ?
+        <FiltersModal
           open={modal}
           setModal={setModal}
-        />
+        >
+          <OrgProjectFilters />
+        </FiltersModal>
+        : undefined
       }
 
     </section>

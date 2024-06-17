@@ -1,7 +1,8 @@
--- SPDX-FileCopyrightText: 2021 - 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2021 - 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2021 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2021 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2022 dv4all
+-- SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -31,7 +32,8 @@ CREATE TABLE invite_maintainer_for_project (
 	created_by UUID REFERENCES account (id),
 	claimed_by UUID REFERENCES account (id),
 	claimed_at TIMESTAMPTZ,
-	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP
+	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP,
+	expires_at TIMESTAMPTZ NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_project() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -81,7 +83,7 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' does not exist';
 	END IF;
 
-	IF invitation_row.claimed_by IS NOT NULL OR invitation_row.claimed_at IS NOT NULL THEN
+	IF invitation_row.claimed_by IS NOT NULL OR invitation_row.claimed_at IS NOT NULL OR invitation_row.expires_at < CURRENT_TIMESTAMP THEN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' is expired';
 	END IF;
 
@@ -105,7 +107,8 @@ CREATE TABLE invite_maintainer_for_software (
 	created_by UUID REFERENCES account (id),
 	claimed_by UUID REFERENCES account (id),
 	claimed_at TIMESTAMPTZ,
-	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP
+	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP,
+	expires_at TIMESTAMPTZ NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_software() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -158,7 +161,7 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' does not exist';
 	END IF;
 
-	IF invitation_row.claimed_by IS NOT NULL OR invitation_row.claimed_at IS NOT NULL THEN
+	IF invitation_row.claimed_by IS NOT NULL OR invitation_row.claimed_at IS NOT NULL OR invitation_row.expires_at < CURRENT_TIMESTAMP THEN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' is expired';
 	END IF;
 
@@ -182,7 +185,8 @@ CREATE TABLE invite_maintainer_for_organisation (
 	created_by UUID REFERENCES account (id),
 	claimed_by UUID REFERENCES account (id),
 	claimed_at TIMESTAMPTZ,
-	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP
+	created_at TIMESTAMPTZ NOT NULL DEFAULT LOCALTIMESTAMP,
+	expires_at TIMESTAMPTZ NOT NULL GENERATED ALWAYS AS (created_at AT TIME ZONE 'UTC' + INTERVAL '31 days') STORED
 );
 
 CREATE FUNCTION sanitise_insert_invite_maintainer_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
@@ -235,7 +239,7 @@ BEGIN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' does not exist';
 	END IF;
 
-	IF invitation_row.claimed_by IS NOT NULL OR invitation_row.claimed_at IS NOT NULL THEN
+	IF invitation_row.claimed_by IS NOT NULL OR invitation_row.claimed_at IS NOT NULL OR invitation_row.expires_at < CURRENT_TIMESTAMP THEN
 		RAISE EXCEPTION USING MESSAGE = 'Invitation with id ' || invitation || ' is expired';
 	END IF;
 

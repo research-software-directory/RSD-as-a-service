@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -44,7 +44,7 @@ export type EditOrganisationModalProps = ModalProps & {
   organisation?: EditOrganisation
 }
 
-export default function SoftwareOganisations() {
+export default function SoftwareOrganisations() {
   const {token,user} = useSession()
   const {showInfoMessage,showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()
@@ -62,7 +62,7 @@ export default function SoftwareOganisations() {
     }
   })
 
-  // console.group('SoftwareOganisations')
+  // console.group('SoftwareOrganisations')
   // console.log('loading...', loading)
   // console.log('organisations...', organisations)
   // console.groupEnd()

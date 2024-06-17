@@ -169,6 +169,7 @@ export type ContributorInformationConfig = typeof contributorInformation
 
 export const organisationInformation = {
   title: 'Participating organisations',
+  modalTitle: 'Organisation',
   findOrganisation: {
     title: 'Add organisation',
     subtitle: 'We search by name in the RSD and the ROR databases',

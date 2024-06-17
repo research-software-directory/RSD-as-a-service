@@ -14,7 +14,7 @@ import ListItemText from '@mui/material/ListItemText'
 import {editMenuItemButtonSx} from '~/config/menuItems'
 import {settingsMenu} from './SettingsNavItems'
 
-export default function SettingsNav() {
+export default function OrganisationSettingsNav() {
   const router = useRouter()
   const settings = router.query['settings'] ?? 'general'
   // console.group('OrganisationNav')
