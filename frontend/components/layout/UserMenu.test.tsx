@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,9 +9,7 @@ import {render,screen, fireEvent} from '@testing-library/react'
 import {WrappedComponentWithProps} from '../../utils/jest/WrappedComponents'
 
 import UserMenu from './UserMenu'
-import {getUserMenuItems} from '~/config/userMenuItems'
-
-const userMenuItems = getUserMenuItems()
+import {userMenuItems} from '~/config/menuItems'
 
 it('should render userMenu', () => {
   render(WrappedComponentWithProps(UserMenu))

@@ -41,6 +41,7 @@ export default function UserPages({section,counts,orcidAuthLink}:UserPagesProps)
   // console.log('pageSection...', pageSection)
   // console.log('pageTitle...', pageTitle)
   // console.log('orcidAuthLink...', orcidAuthLink)
+  // console.log('counts...', counts)
   // console.groupEnd()
 
   useEffect(() => {
@@ -117,8 +118,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
 
     // load counts for user
     const counts = await getUserCounts({
-      token,
-      frontend: false
+      token
     })
 
     if (section === 'settings') {

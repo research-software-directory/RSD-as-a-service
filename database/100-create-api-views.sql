@@ -4,7 +4,7 @@
 -- SPDX-FileCopyrightText: 2022 - 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 -- SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+-- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 --
 -- SPDX-License-Identifier: Apache-2.0
 
@@ -656,13 +656,14 @@ WHERE
 $$;
 
 -- COUNTS by maintainer
--- software_cnt, project_cnt, organisation_cnt
+-- software_cnt, project_cnt, organisation_cnt, communities_cnt
 -- counts for user profile pages
 -- this rpc returns json object instead of array
 CREATE FUNCTION counts_by_maintainer(
 	OUT software_cnt BIGINT,
 	OUT project_cnt BIGINT,
-	OUT organisation_cnt BIGINT
+	OUT organisation_cnt BIGINT,
+	OUT community_cnt BIGINT
 ) LANGUAGE plpgsql STABLE AS
 $$
 BEGIN
@@ -670,6 +671,8 @@ BEGIN
 	SELECT COUNT(*) FROM projects_of_current_maintainer() INTO project_cnt;
 	SELECT COUNT(DISTINCT organisations_of_current_maintainer)
 		FROM organisations_of_current_maintainer() INTO organisation_cnt;
+	SELECT COUNT(DISTINCT communities_of_current_maintainer)
+		FROM communities_of_current_maintainer() INTO community_cnt;
 END
 $$;
 

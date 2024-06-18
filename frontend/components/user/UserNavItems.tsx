@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
@@ -16,6 +16,8 @@ import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
 import SettingsIcon from '@mui/icons-material/Settings'
 import TableViewIcon from '@mui/icons-material/TableView'
+import Diversity3Icon from '@mui/icons-material/Diversity3'
+
 
 import ContentLoader from '../layout/ContentLoader'
 
@@ -33,6 +35,10 @@ const UserProjects = dynamic(() => import('./project'),{
 })
 
 const Organisations = dynamic(() => import('./organisations'),{
+  loading: ()=><ContentLoader />
+})
+
+const Communities = dynamic(() => import('./communities'),{
   loading: ()=><ContentLoader />
 })
 
@@ -84,6 +90,14 @@ export const userMenu:UserMenuItems = {
     icon: <BusinessIcon />,
     component: (props?) => <Organisations {...props} />,
     status: 'Departments or institutions you maintain',
+    showSearch: true
+  },
+  communities:{
+    id:'communities',
+    label: ({community_cnt})=>`Communities (${community_cnt ?? 0})`,
+    icon: <Diversity3Icon />,
+    component: (props?) => <Communities {...props} />,
+    status: 'Communities you maintain',
     showSearch: true
   },
   settings:{

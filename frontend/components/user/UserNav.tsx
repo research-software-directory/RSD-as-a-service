@@ -15,17 +15,29 @@ import Link from 'next/link'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 import {userMenu} from './UserNavItems'
+import useRsdSettings from '~/config/useRsdSettings'
 
 export type UserCounts = {
   software_cnt: number
   project_cnt: number
   organisation_cnt: number
+  community_cnt: number
 }
 
 
 export default function UserNav({selected, counts}:
   {selected:string, counts:UserCounts}) {
-  const menuItems = Object.keys(userMenu)
+  const {host} = useRsdSettings()
+  // default is true to follow useMenuItems approach
+  const showCommunities = host.modules ? host.modules.includes('communities') : true
+  // filter communities if defined in modules
+  const menuItems = Object.keys(userMenu).filter(key=>{
+    if (key === 'communities'){
+      return showCommunities
+    } else {
+      return true
+    }
+  })
   return (
     <nav>
       <List sx={{
