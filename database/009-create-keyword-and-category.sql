@@ -221,19 +221,3 @@ $$
 		ELSE '[]'::json
 		END AS result
 $$;
-
-
-CREATE FUNCTION available_categories_expanded()
-RETURNS JSON
-LANGUAGE SQL STABLE AS
-$$
-	WITH
-	cat_ids AS
-		(SELECT id AS category_id FROM category AS node WHERE NOT EXISTS (SELECT 1 FROM category AS sub WHERE node.id = sub.parent)),
-	paths AS
-		(SELECT category_path_expanded(category_id) AS path FROM cat_ids)
-	SELECT
-		CASE WHEN EXISTS(SELECT 1 FROM cat_ids) THEN (SELECT json_agg(path) AS result FROM paths)
-		ELSE '[]'::json
-		END
-$$

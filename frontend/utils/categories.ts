@@ -1,12 +1,15 @@
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useMemo, useState} from 'react'
 import {CategoryEntry, CategoryPath, CategoryTree, CategoryTreeLevel} from '~/types/Category'
 import logger from './logger'
-import {getAvailableCategories} from './getSoftware'
+import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {TreeNode} from '~/types/TreeNode'
 
 export const leaf = <T>(list: T[]) => list[list.length - 1]
 
@@ -80,7 +83,34 @@ export function reorderCategories(allCategoryPaths: CategoryPath[]): ReorderedCa
   }
 }
 
-export function useReorderedCategories(): ReorderedCategories {
+function rootsToPaths(roots: TreeNode<CategoryEntry>[]): CategoryPath[] {
+  const result: CategoryPath[] = []
+
+  const treeNodeStack: TreeNode<CategoryEntry>[] = []
+  const resultStack: CategoryPath[] = []
+  for (const root of roots) {
+    treeNodeStack.push(root)
+    resultStack.push([root.getValue()!])
+  }
+
+  while (treeNodeStack.length > 0) {
+    const node = treeNodeStack.pop()!
+    const path = resultStack.pop()!
+    if (node.childrenCount() === 0) {
+      result.push(path)
+      continue
+    }
+
+    for (const child of node.children()) {
+      treeNodeStack.push(child)
+      resultStack.push([...path, child.getValue()!])
+    }
+  }
+
+  return result
+}
+
+export function useReorderedCategories(community: string | null): ReorderedCategories {
   const [reorderedCategories, setReorderedCategories] = useState<ReorderedCategories>({
     all: [],
     paths: [],
@@ -89,11 +119,10 @@ export function useReorderedCategories(): ReorderedCategories {
   })
 
   useEffect(() => {
-    getAvailableCategories()
-      .then((categories) => {
-        setReorderedCategories(reorderCategories(categories))
-      })
-  }, [])
+    loadCategoryRoots(community)
+      .then(roots => rootsToPaths(roots))
+      .then(categories => setReorderedCategories(reorderCategories(categories)))
+  }, [community])
 
   return reorderedCategories
 }
