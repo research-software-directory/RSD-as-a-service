@@ -2,22 +2,27 @@
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
-import {Session} from '~/auth'
+
+import {useSession} from '~/auth'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
 import {ProjectOfOrganisation} from '~/types/Organisation'
+import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
 export type UserProjectsProp = {
   searchFor?: string
   page: number,
   rows: number,
-  session: Session
+  account: string
+  token?: string,
 }
 
 type State = {
@@ -26,15 +31,15 @@ type State = {
 }
 
 export async function getProjectsForMaintainer(
-  {searchFor, page, rows, session}: UserProjectsProp
+  {searchFor, page, rows, token, account}: UserProjectsProp
 ) {
   try {
     // baseUrl
-    let url = `/api/v1/rpc/projects_by_maintainer?maintainer_id=${session?.user?.account}&order=is_published.desc,title`
+    let url = `/api/v1/rpc/projects_by_maintainer?maintainer_id=${account}&order=is_published.desc,title`
 
     // search
     if (searchFor) {
-      url += `&or=(title.ilike.*${searchFor}*, subtitle.ilike.*${searchFor}*)`
+      url += `&or=(title.ilike.*${encodeURIComponent(searchFor)}*, subtitle.ilike.*${encodeURIComponent(searchFor)}*)`
     }
 
     // pagination
@@ -43,7 +48,7 @@ export async function getProjectsForMaintainer(
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
-        ...createJsonHeaders(session.token),
+        ...createJsonHeaders(token),
         // request record count to be returned
         // note: it's returned in the header
         'Prefer': 'count=exact'
@@ -79,9 +84,9 @@ export async function getProjectsForMaintainer(
 }
 
 
-export default function useUserProjects(
-  {searchFor, page, rows, session}: UserProjectsProp
-) {
+export default function useUserProjects() {
+  const {user,token} = useSession()
+  const {searchFor,page,rows, setCount} = usePaginationWithSearch('Search project')
   const [state, setState] = useState<State>({
     count: 0,
     data: []
@@ -92,14 +97,12 @@ export default function useUserProjects(
     let abort = false
 
     async function getProjects() {
-      // set loding done
-      setLoading(true)
-
       const projects: State = await getProjectsForMaintainer({
         searchFor,
         page,
         rows,
-        session
+        token,
+        account: user?.account ?? ''
       })
 
       if (abort) {
@@ -108,21 +111,23 @@ export default function useUserProjects(
 
       // set state
       setState(projects)
-
-      // set loding done
+      // set count
+      setCount(projects.count)
+      // set loading done
       setLoading(false)
     }
 
-    if (session.token && session.user?.account) {
+    if (token && user?.account) {
       getProjects()
     }
 
     return () => {abort = true}
-  }, [searchFor, page, rows, session])
+  // ignore setCount dependency
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchFor, page, rows, token, user?.account])
 
   return {
     projects: state.data,
-    count: state.count,
     loading
   }
 }

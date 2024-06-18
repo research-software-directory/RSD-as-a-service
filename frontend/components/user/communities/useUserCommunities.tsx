@@ -32,7 +32,7 @@ export async function getCommunitiesForMaintainer({searchFor,page,rows,account,t
     let url =`${getBaseUrl()}/rpc/communities_by_maintainer?${query}`
     // search
     if (searchFor) {
-      url += `&name=ilike.*${searchFor}*`
+      url += `&name=ilike.*${encodeURIComponent(searchFor)}*`
     }
     // pagination
     url += paginationUrlParams({rows, page})
@@ -80,7 +80,7 @@ export async function getCommunitiesForMaintainer({searchFor,page,rows,account,t
 
 export default function useUserCommunities(){
   const {user,token} = useSession()
-  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Filter communities')
+  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search community')
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<{
     count: number,
@@ -99,9 +99,9 @@ export default function useUserCommunities(){
       })
         .then(data=>{
           setData(data)
-          setCount(data.count)
         })
         .finally(()=>{
+          setCount(data.count)
           setLoading(false)
         })
     }

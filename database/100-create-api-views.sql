@@ -615,6 +615,7 @@ CREATE FUNCTION organisations_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	parent UUID,
 	primary_maintainer UUID,
 	name VARCHAR,
+	short_description VARCHAR,
 	ror_id VARCHAR,
 	website VARCHAR,
 	is_tenant BOOLEAN,
@@ -631,6 +632,7 @@ SELECT DISTINCT ON (organisation.id)
 	organisation.parent,
 	organisation.primary_maintainer,
 	organisation.name,
+	organisation.short_description,
 	organisation.ror_id,
 	organisation.website,
 	organisation.is_tenant,
@@ -671,8 +673,7 @@ BEGIN
 	SELECT COUNT(*) FROM projects_of_current_maintainer() INTO project_cnt;
 	SELECT COUNT(DISTINCT organisations_of_current_maintainer)
 		FROM organisations_of_current_maintainer() INTO organisation_cnt;
-	SELECT COUNT(DISTINCT communities_of_current_maintainer)
-		FROM communities_of_current_maintainer() INTO community_cnt;
+	SELECT COUNT(*) FROM communities_of_current_maintainer() INTO community_cnt;
 END
 $$;
 

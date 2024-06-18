@@ -10,12 +10,12 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
 
-import useUserProjects from './useUserProjects'
-import projectsByMaintainer from './__mocks__/projectsByMaintainer.json'
+import useUserSoftware from './useUserSoftware'
+import softwareByMaintainer from './__mocks__/softwareByMaintainer.json'
 
 
-function WithUserProjectsHook() {
-  const {loading, projects} = useUserProjects()
+function WithUserSoftwareHook() {
+  const {loading, software} = useUserSoftware()
 
   if (loading) {
     return (
@@ -25,7 +25,7 @@ function WithUserProjectsHook() {
 
   return (
     <div>
-      {JSON.stringify(projects,null,2)}
+      {JSON.stringify(software,null,2)}
     </div>
   )
 }
@@ -38,33 +38,33 @@ beforeEach(() => {
 
 it('shows loader', () => {
   render(
-    <WithUserProjectsHook />
+    <WithUserSoftwareHook />
   )
   screen.getByText('Loading...')
   // screen.debug()
 })
 
-it('resolves no projects', async() => {
+it('resolves no software', async() => {
 
   mockResolvedValueOnce([])
 
   render(
     <WithAppContext options={{session:mockSession}}>
-      <WithUserProjectsHook />
+      <WithUserSoftwareHook />
     </WithAppContext>
   )
   await screen.findByText('[]')
 })
 
-it('resolves projects', async() => {
+it('resolves software', async() => {
 
-  mockResolvedValueOnce(projectsByMaintainer)
+  mockResolvedValueOnce(softwareByMaintainer)
 
   render(
     <WithAppContext options={{session:mockSession}}>
-      <WithUserProjectsHook />
+      <WithUserSoftwareHook />
     </WithAppContext>
   )
-  await screen.findByText(RegExp(projectsByMaintainer[0].id))
+  await screen.findByText(RegExp(softwareByMaintainer[0].id))
 })
 

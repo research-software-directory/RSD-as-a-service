@@ -480,7 +480,7 @@ CREATE FUNCTION communities_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	created_at TIMESTAMPTZ
 ) LANGUAGE sql STABLE AS
 $$
-SELECT
+SELECT DISTINCT ON (community.id)
 	community.id,
 	community.slug,
 	community."name",

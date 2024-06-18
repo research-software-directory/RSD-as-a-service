@@ -9,55 +9,43 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
 import Head from 'next/head'
 import {GetServerSidePropsContext} from 'next/types'
 
-import {useAuth} from '~/auth'
+import {useSession} from '~/auth'
 import ProtectedContent from '~/auth/ProtectedContent'
 import {getRedirectUrl} from '~/auth/api/authHelpers'
 import {app} from '~/config/app'
+import {getUserSettings} from '~/utils/userSettings'
 import DefaultLayout from '~/components/layout/DefaultLayout'
-import {userMenu, UserMenuProps} from '~/components/user/UserNavItems'
+import {userMenu, UserPageId} from '~/components/user/UserNavItems'
 import {PaginationProvider} from '~/components/pagination/PaginationContext'
 import {SearchProvider} from '~/components/search/SearchContext'
 import UserTitle from '~/components/user/UserTitle'
 import UserNav, {UserCounts} from '~/components/user/UserNav'
 import {getUserCounts} from '~/components/user/getUserCounts'
 import {orcidCoupleProps} from '~/components/user/settings/apiLinkOrcidProps'
+import UserSection from '~/components/user/UserSection'
 
-type UserPagesProps = {
-  section: string,
+type UserPagesProps = Readonly<{
+  section: UserPageId,
   counts: UserCounts,
-  orcidAuthLink:string|null
-}
+  orcidAuthLink: string|null,
+  rsd_page_rows: number,
+  showSearch: boolean
+}>
 
-export default function UserPages({section,counts,orcidAuthLink}:UserPagesProps) {
-  const {session} = useAuth()
-  const [pageSection, setPageSection] = useState<UserMenuProps>(userMenu[section])
-  const pageTitle = `${session.user?.name} | ${app.title}`
+export default function UserPages({section,counts,orcidAuthLink,rsd_page_rows,showSearch}:UserPagesProps) {
+  const {user} = useSession()
+  const pageTitle = `${user?.name ?? 'User'} | ${app.title}`
 
   // console.group('UserPages')
   // console.log('pageSection...', pageSection)
   // console.log('pageTitle...', pageTitle)
   // console.log('orcidAuthLink...', orcidAuthLink)
   // console.log('counts...', counts)
+  // console.log('rsd_page_rows...', rsd_page_rows)
   // console.groupEnd()
-
-  useEffect(() => {
-    let abort:boolean=false
-    const newSection = userMenu[section]
-    if (newSection && abort===false) {
-      setPageSection(userMenu[section])
-    }
-    return ()=>{abort=true}
-  },[section])
-
-  function renderStepComponent() {
-    if (pageSection.component) {
-      return pageSection.component({session,orcidAuthLink})
-    }
-  }
 
   return (
     <DefaultLayout>
@@ -66,10 +54,10 @@ export default function UserPages({section,counts,orcidAuthLink}:UserPagesProps)
       </Head>
       <ProtectedContent>
         <SearchProvider>
-          <PaginationProvider>
+          <PaginationProvider pagination={{rows:rsd_page_rows}}>
             <UserTitle
-              title={session.user?.name ?? 'John Doe'}
-              showSearch={pageSection?.showSearch ?? false}
+              title={user?.name ?? 'User'}
+              showSearch={showSearch ?? false}
             />
             <section className="flex-1 grid md:grid-cols-[1fr,2fr] xl:grid-cols-[1fr,4fr] gap-[3rem] pb-12">
               <div>
@@ -78,7 +66,10 @@ export default function UserPages({section,counts,orcidAuthLink}:UserPagesProps)
                   counts={counts}
                 />
               </div>
-              {renderStepComponent()}
+              <UserSection
+                section={section}
+                orcidAuthLink={orcidAuthLink}
+              />
             </section>
           </PaginationProvider>
         </SearchProvider>
@@ -96,7 +87,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
     const token = req?.cookies['rsd_token']
     // placeholder for orcid couple link
     let orcidAuthLink:string|null=null
-
+    // extract user settings from cookie
+    const {rsd_page_rows} = getUserSettings(req)
     // console.log('getServerSideProps...params...', params)
     // console.log('getServerSideProps...token...', token)
     // console.log('getServerSideProps...user...', user)
@@ -108,7 +100,7 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       }
     }
     // try to load menu item
-    const sectionItem = userMenu[section.toString()]
+    const sectionItem = userMenu.find(item=>item.id===section)
     if (typeof sectionItem == 'undefined') {
       // 404 is section key does not exists
       return {
@@ -136,7 +128,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       props: {
         section,
         counts,
-        orcidAuthLink
+        orcidAuthLink,
+        rsd_page_rows,
+        showSearch: sectionItem?.showSearch ?? false
       },
     }
   }catch(e){

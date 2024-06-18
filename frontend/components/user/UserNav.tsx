@@ -31,8 +31,8 @@ export default function UserNav({selected, counts}:
   // default is true to follow useMenuItems approach
   const showCommunities = host.modules ? host.modules.includes('communities') : true
   // filter communities if defined in modules
-  const menuItems = Object.keys(userMenu).filter(key=>{
-    if (key === 'communities'){
+  const menuItems =userMenu.filter(item=>{
+    if (item.id === 'communities'){
       return showCommunities
     } else {
       return true
@@ -43,14 +43,13 @@ export default function UserNav({selected, counts}:
       <List sx={{
         width:'100%'
       }}>
-        {menuItems.map((key, pos) => {
-          const item = userMenu[key]
+        {menuItems.map(item => {
           return (
             <ListItemButton
               data-testid="user-nav-item"
-              key={`step-${pos}`}
+              key={`page-${item.id}`}
               selected={item.id === selected}
-              href = {`/user/${key}`}
+              href = {`/user/${item.id}`}
               component = {Link}
               sx={{...editMenuItemButtonSx,
                 ':hover': {

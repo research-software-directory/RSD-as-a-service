@@ -11,6 +11,11 @@ import CommunityListItem from '~/components/communities/overview/CommunityListIt
 export default function UserCommunities() {
   const {loading,communities} = useUserCommunities()
 
+  // console.group('UserCommunities')
+  // console.log('loading...', loading)
+  // console.log('communities...', communities)
+  // console.groupEnd()
+
   // if loading show loader
   if (loading) return (
     <ContentLoader />

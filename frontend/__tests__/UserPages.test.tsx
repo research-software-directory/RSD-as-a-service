@@ -1,8 +1,8 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,7 +14,8 @@ import UserPages from '../pages/user/[section]'
 
 import mockSoftwareByMaintainer from '~/components/user/software/__mocks__/softwareByMaintainer.json'
 import mockProjectsByMaintainer from '~/components/user/project/__mocks__/projectsByMaintainer.json'
-
+import mockOrganisationsByMaintainer from '~/components/user/organisations/__mocks__/organisationsByMaintainer.json'
+import mockCommunitiesByMaintainer from '~/components/user/communities/__mocks__/communitiesByMaintainer.json'
 // use DEFAULT MOCK for login providers list
 // required when AppHeader component is used
 jest.mock('~/auth/api/useLoginProviders')
@@ -26,6 +27,12 @@ jest.mock('~/components/user/settings/useLoginForAccount')
 jest.mock('~/components/user/project/useUserProjects')
 // MOCK user software list
 jest.mock('~/components/user/software/useUserSoftware')
+// MOCK user software list
+jest.mock('~/components/user/software/useUserSoftware')
+// MOCK user organisation list
+jest.mock('~/components/user/organisations/useUserOrganisations')
+// MOCK user communities list
+jest.mock('~/components/user/communities/useUserCommunities')
 
 // MOCKS
 const mockProps = {
@@ -33,7 +40,8 @@ const mockProps = {
   counts: {
     software_cnt: 0,
     project_cnt: 0,
-    organisation_cnt: 0
+    organisation_cnt: 0,
+    community_cnt: 0
   },
   orcidAuthLink:null
 }
@@ -43,7 +51,7 @@ describe('pages/user/[section].tsx', () => {
     jest.clearAllMocks()
   })
 
-  it('renders 401 when not loged in', () => {
+  it('renders 401 when not logged in', () => {
     render(
       <WithAppContext>
         <UserPages {...mockProps} />
@@ -94,7 +102,7 @@ describe('pages/user/[section].tsx', () => {
     )
 
     // validate software cards are shown
-    const software = screen.getAllByTestId('software-card-link')
+    const software = screen.getAllByTestId('software-list-item')
     expect(software.length).toEqual(mockSoftwareByMaintainer.length)
   })
 
@@ -108,8 +116,36 @@ describe('pages/user/[section].tsx', () => {
     )
 
     // validate project cards are shown
-    const project = screen.getAllByTestId('project-card-link')
+    const project = screen.getAllByTestId('project-list-item')
     expect(project.length).toEqual(mockProjectsByMaintainer.length)
+  })
+
+  it('renders user organisation section', async() => {
+    mockProps.section = 'organisations'
+
+    render(
+      <WithAppContext options={{session:mockSession}}>
+        <UserPages {...mockProps} />
+      </WithAppContext>
+    )
+
+    // validate project cards are shown
+    const project = screen.getAllByTestId('organisation-list-item')
+    expect(project.length).toEqual(mockOrganisationsByMaintainer.length)
+  })
+
+  it('renders user communities section', async() => {
+    mockProps.section = 'communities'
+
+    render(
+      <WithAppContext options={{session:mockSession}}>
+        <UserPages {...mockProps} />
+      </WithAppContext>
+    )
+
+    // validate project cards are shown
+    const project = screen.getAllByTestId('community-list-item')
+    expect(project.length).toEqual(mockCommunitiesByMaintainer.length)
   })
 
 })

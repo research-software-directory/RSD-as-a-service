@@ -1,22 +1,27 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect,useState} from 'react'
-import {Session} from '~/auth'
+
+import {useSession} from '~/auth'
+import logger from '~/utils/logger'
 import {OrganisationForOverview} from '~/types/Organisation'
 import {extractCountFromHeader} from '~/utils/extractCountFromHeader'
-import {createJsonHeaders} from '~/utils/fetchHelpers'
-import logger from '~/utils/logger'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {paginationUrlParams} from '~/utils/postgrestUrl'
+import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
 export type UserOrganisationProp = {
   searchFor?: string
   page: number,
   rows: number,
-  session: Session
+  token?: string,
+  account: string
 }
 
 type State = {
@@ -25,17 +30,17 @@ type State = {
 }
 
 export async function getOrganisationsForMaintainer(
-  {searchFor, page, rows, session}: UserOrganisationProp
+  {searchFor, page, rows, token, account}: UserOrganisationProp
 ) {
   try {
     // all top level organisations of maintainer
-    const query=`maintainer_id=${session?.user?.account}&order=software_cnt.desc.nullslast,name`
+    const query=`maintainer_id=${account}&order=software_cnt.desc.nullslast,name`
     // baseUrl
-    let url =`/api/v1/rpc/organisations_by_maintainer?${query}`
+    let url =`${getBaseUrl()}/rpc/organisations_by_maintainer?${query}`
 
     // search
     if (searchFor) {
-      url += `&name=ilike.*${searchFor}*`
+      url += `&or=(name.ilike.*${encodeURIComponent(searchFor)}*,short_description.ilike.*${encodeURIComponent(searchFor)}*)`
     }
 
     // pagination
@@ -44,7 +49,7 @@ export async function getOrganisationsForMaintainer(
     const resp = await fetch(url, {
       method: 'GET',
       headers: {
-        ...createJsonHeaders(session.token),
+        ...createJsonHeaders(token),
         // request record count to be returned
         // note: it's returned in the header
         'Prefer': 'count=exact'
@@ -82,9 +87,9 @@ export async function getOrganisationsForMaintainer(
 }
 
 
-export default function useUserOrganisations(
-  {searchFor, page, rows, session}: UserOrganisationProp
-) {
+export default function useUserOrganisations() {
+  const {user,token} = useSession()
+  const {searchFor,page,rows,setCount} = usePaginationWithSearch('Search organisation')
   const [state, setState] = useState<State>({
     count: 0,
     data: []
@@ -95,38 +100,33 @@ export default function useUserOrganisations(
     let abort = false
 
     async function getOrganisations() {
-      // set loding done
-      setLoading(true)
-
       const organisations: State = await getOrganisationsForMaintainer({
         searchFor,
         page,
         rows,
-        session
+        token,
+        account: user?.account ?? ''
       })
-
       // abort
-      if (abort) {
-        return
-      }
-
+      if (abort) return
       // set state
       setState(organisations)
-
-      // set loding done
+      setCount(organisations.count)
+      // set loading done
       setLoading(false)
     }
 
-    if (session.token && session.user?.account) {
+    if (token && user?.account) {
       getOrganisations()
     }
 
     return () => {abort = true}
-  }, [searchFor, page, rows, session])
+  // ignore setCount dependency to avoid cycle loop
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchFor, page, rows, token, user?.account])
 
   return {
     organisations: state.data,
-    count: state.count,
     loading
   }
 }
