@@ -61,10 +61,10 @@ export default function CommunityMaintainersPage() {
   return (
     <>
       <BaseSurfaceRounded
-        className="flex-1 p-4 mb-12 xl:grid xl:grid-cols-[1fr,1fr] xl:gap-8"
+        className="flex-1 p-8 mb-12 xl:grid xl:grid-cols-[1fr,1fr] xl:gap-8"
         type="section"
       >
-        <div className="py-4">
+        <div>
           <EditSectionTitle
             title={config.title}
           />

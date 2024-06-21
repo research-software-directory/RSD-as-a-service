@@ -13,6 +13,7 @@ import CommunityAdminSection from './CommunityAdminSection'
 import AutosaveCommunityTextField from './AutosaveCommunityTextField'
 import AutosaveCommunityKeywords from './AutosaveCommunityKeywords'
 import {EditCommunityProps} from '../../apiCommunities'
+import EditSectionTitle from '~/components/layout/EditSectionTitle'
 
 
 export default function CommunityGeneralSettings() {
@@ -35,20 +36,21 @@ export default function CommunityGeneralSettings() {
 
   return (
     <BaseSurfaceRounded
-      className="mb-12 p-4"
+      className="mb-12 p-8"
       type="section"
     >
+      <EditSectionTitle
+        title="General settings"
+      />
       <FormProvider {...methods}>
         <form
           autoComplete="off"
-          className="py-4"
+          className="py-8"
         >
           {/* hidden inputs */}
           <input type="hidden"
             {...register('id')}
           />
-
-          <h2 className="pb-8">General settings</h2>
 
           <AutosaveCommunityTextField
             options={{

@@ -1,13 +1,12 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import {useEffect, useState} from 'react'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
-import {TreeNode} from '~/types/TreeNode'
-import {CategoryEntry} from '~/types/Category'
-import {useEffect, useState} from 'react'
 import ListItemText from '@mui/material/ListItemText'
 import Collapse from '@mui/material/Collapse'
 import ExpandLess from '@mui/icons-material/ExpandLess'
@@ -17,26 +16,27 @@ import IconButton from '@mui/material/IconButton'
 import Add from '@mui/icons-material/Add'
 import Edit from '@mui/icons-material/Edit'
 import Icon from '@mui/material/Icon'
-import CategoryEditForm from '~/components/category/CategoryEditForm'
 import Delete from '@mui/icons-material/Delete'
-import {createJsonHeaders} from '~/utils/fetchHelpers'
+
 import {useSession} from '~/auth'
+import {TreeNode} from '~/types/TreeNode'
+import {CategoryEntry} from '~/types/Category'
+import {createJsonHeaders} from '~/utils/fetchHelpers'
+import CategoryEditForm from '~/components/category/CategoryEditForm'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 
-export default function CategoryEditTreeNode({node, community, onDelete, onMutation}: {
+export default function CategoryEditTreeNode({node, community, onDelete, onMutation}: Readonly<{
   node: TreeNode<CategoryEntry>
   community: string | null
   onDelete: (node: TreeNode<CategoryEntry>) => void
-  onMutation: Function
-}) {
-  const [expandChildren, setExpandChildren] = useState<boolean> (false)
-  const [showEditForm, setShowEditForm] = useState<boolean> (false)
-  const [showAddChildForm, setShowAddChildForm] = useState<boolean> (false)
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean> (false)
-  const [categoryData, setCategoryData] = useState<CategoryEntry | null> (null)
+  onMutation: ()=>void
+}>) {
   const {token} = useSession()
   const {showErrorMessage} = useSnackbar()
+  const [expandChildren, setExpandChildren] = useState<boolean>(false)
+  const [categoryData, setCategoryData] = useState<CategoryEntry | null>(null)
+  const [showItem, setShowItem] = useState<'add'|'edit'|'delete'|'none'>('none')
 
   useEffect(() => {
     setCategoryData(node.getValue())
@@ -47,13 +47,13 @@ export default function CategoryEditTreeNode({node, community, onDelete, onMutat
   }
 
   function onEditSuccess(newCategoryData: CategoryEntry) {
-    setShowEditForm(false)
+    setShowItem('none')
     setCategoryData(newCategoryData)
   }
 
   function onNewChildSuccess(newCategoryData: CategoryEntry) {
     node.addChild(new TreeNode(newCategoryData))
-    setShowAddChildForm(false)
+    setShowItem('none')
     setExpandChildren(true)
     onMutation()
   }
@@ -88,13 +88,19 @@ export default function CategoryEditTreeNode({node, community, onDelete, onMutat
     }
     else if (expandChildren) {
       return (
-        <IconButton onClick={() => setExpandChildren(false)}>
+        <IconButton
+          disabled={showItem!=='none'}
+          onClick={() => setExpandChildren(false)}
+        >
           <ExpandLess />
         </IconButton>
       )
     } else {
       return (
-        <IconButton onClick={() => setExpandChildren(true)}>
+        <IconButton
+          disabled={showItem!=='none'}
+          onClick={() => setExpandChildren(true)}
+        >
           <ExpandMore />
         </IconButton>
       )
@@ -104,56 +110,91 @@ export default function CategoryEditTreeNode({node, community, onDelete, onMutat
   return (
     <>
       <List sx={{paddingLeft: '1rem'}}>
-        <ListItem sx={{pr: '9rem'}} onClick={() => setExpandChildren(!expandChildren)}>
+        <ListItem
+          sx={{
+            paddingRight: '12rem'
+          }}
+          onClick={() => setExpandChildren(!expandChildren)}
+        >
           <ListItemText primary={categoryData.short_name} secondary={categoryData.name} />
-          <ListItemSecondaryAction>
+          <ListItemSecondaryAction sx={{
+            display: 'flex',
+            gap:'0.25rem'
+          }}>
             <IconButton
-              sx={{backgroundColor: showAddChildForm ? 'primary.main' : undefined, color: showAddChildForm ? 'primary.contrastText' : undefined}}
+              title={`Add category to ${categoryData.short_name}`}
+              disabled={showItem!=='none'}
               onClick={() => {
-                setShowAddChildForm(!showAddChildForm)
-                setShowEditForm(false)
+                setShowItem('add')
               }}>
               <Add />
             </IconButton>
             <IconButton
-              sx={{backgroundColor: showEditForm ? 'primary.main' : undefined, color: showEditForm ? 'primary.contrastText' : undefined}}
+              title={`Edit ${categoryData.short_name}`}
+              disabled={showItem!=='none'}
               onClick={() => {
-                setShowEditForm(!showEditForm)
-                setShowAddChildForm(false)
+                setShowItem('edit')
               }}>
               <Edit />
             </IconButton>
             <IconButton
-              disabled={node.childrenCount() !== 0}
+              title={`Delete ${categoryData.short_name}`}
+              disabled={node.childrenCount() !== 0 || showItem!=='none'}
               onClick={() => {
-                setShowDeleteModal(true)
+                setShowItem('delete')
               }}>
               <Delete />
             </IconButton>
             {getExpandIcon()}
           </ListItemSecondaryAction>
         </ListItem>
-        {showEditForm && <CategoryEditForm createNew={false} community={community} data={categoryData} onSuccess={onEditSuccess}></CategoryEditForm>}
-        {showAddChildForm && <CategoryEditForm createNew={true} community={community} data={categoryData} onSuccess={onNewChildSuccess}></CategoryEditForm>}
+        { showItem === 'edit' ?
+          <CategoryEditForm
+            createNew={false}
+            community={community}
+            data={categoryData}
+            onSuccess={onEditSuccess}
+            onCancel={()=>setShowItem('none')}
+          />
+          :null
+        }
+        { showItem === 'add' ?
+          <CategoryEditForm
+            createNew={true}
+            community={community}
+            data={categoryData}
+            onSuccess={onNewChildSuccess}
+            onCancel={()=>setShowItem('none')}
+          />
+          :null
+        }
         {node.childrenCount() > 0 && <Collapse in={expandChildren}>
           {node.children()
             .filter(child => child.getValue() !== null)
             .map(child => {
               return (
-                <CategoryEditTreeNode key={child.getValue()?.id} node={child} community={community} onDelete={onDeleteChild} onMutation={onMutation} />
+                <CategoryEditTreeNode
+                  key={child.getValue()?.id}
+                  node={child}
+                  community={community}
+                  onDelete={onDeleteChild}
+                  onMutation={onMutation}
+                />
               )
             })}
         </Collapse>}
       </List>
-      {showDeleteModal && <ConfirmDeleteModal open={true}
-        title="Delete category"
-        body={<p>Are you sure you want to delete &quot;{categoryData.short_name}&quot;?</p>}
-        onCancel={() => setShowDeleteModal(false)}
-        onDelete={() => {
-          setShowDeleteModal(false)
-          deleteCategory(categoryData.id)
-        }}
-      />
+      { showItem==='delete' ?
+        <ConfirmDeleteModal open={true}
+          title="Delete category"
+          body={<p>Are you sure you want to delete &quot;{categoryData.short_name}&quot;?</p>}
+          onCancel={() => setShowItem('none')}
+          onDelete={() => {
+            setShowItem('none')
+            deleteCategory(categoryData.id)
+          }}
+        />
+        :null
       }
     </>
   )
