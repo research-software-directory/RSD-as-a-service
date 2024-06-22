@@ -195,7 +195,8 @@ export default function GlobalSearchAutocomplete(props: Props) {
             className="shadow-xl absolute top-[50px] w-full left-0 bg-base-100 text-base-900 py-2 rounded-sm"
             style={{
               maxHeight: '50vh',
-              overflow: 'auto'
+              overflow: 'auto',
+              zIndex: 7
             }}
           >
             {!hasResults &&
