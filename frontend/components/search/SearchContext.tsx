@@ -2,10 +2,12 @@
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createContext, useState, useEffect} from 'react'
+import {createContext, useState, useEffect, useContext} from 'react'
 import {useDebounce} from '~/utils/useDebounce'
 
 export type SearchContextProps = {
@@ -71,6 +73,26 @@ export function SearchProvider(props:any) {
   // we pass children etc...
   {...props}
   />
+}
+
+
+export function useSearchContext(newPlaceholder:string){
+  const {setPlaceholder, searchFor, setSearchInput, placeholder} = useContext(SearchContext)
+
+  useEffect(()=>{
+    // update placeholder in the context
+    if (placeholder!=newPlaceholder){
+      setPlaceholder(newPlaceholder)
+    }
+  },[placeholder,newPlaceholder,setPlaceholder])
+
+  return {
+    searchFor,
+    placeholder,
+    setPlaceholder,
+    setSearchInput
+  }
+
 }
 
 

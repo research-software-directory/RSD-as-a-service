@@ -7,7 +7,7 @@
 
 import {createContext, useContext, useState} from 'react'
 import {rowsPerPageOptions} from '~/config/pagination'
-import {getDocumentCookie} from '~/utils/userSettings'
+import {useUserSettings} from '~/config/UserSettingsContext'
 
 type Pagination = {
   count: number,
@@ -36,24 +36,17 @@ const PaginationContext = createContext<PaginationContextProps>({
 })
 
 export function PaginationProvider(props: any) {
-  // get user value out of cookie or use default
-  const rsd_page_rows = parseInt(getDocumentCookie('rsd_page_rows',initState.rows))
-  // use initState and update with pagination if passed in props
-  const state = {
-    // use initial state as base
+  const state={
     ...initState,
-    // overwrite with info from cookie
-    rows: rsd_page_rows,
-    // finally use pagination if provided
     ...props?.pagination
   }
+  // need to use initState if initPagination NOT PROVIDED
   const [pagination, setPagination] = useState<Pagination>(state)
 
   // console.group('PaginationProvider')
   // console.log('props...', props)
   // console.log('state...', state)
   // console.log('pagination...', pagination)
-  // console.log('rsd_page_rows...', rsd_page_rows)
   // console.groupEnd()
 
   return <PaginationContext.Provider
@@ -64,15 +57,54 @@ export function PaginationProvider(props: any) {
 
 
 export function usePaginationContext() {
+  const {setPageRows} = useUserSettings()
   const {pagination, setPagination} = useContext(PaginationContext)
 
   // console.group('usePaginationContext')
   // console.log('pagination...', pagination)
+  // console.log('search...', search)
   // console.groupEnd()
+
+  function setPage(page:number){
+    setPagination({
+      ...pagination,
+      page
+    })
+  }
+
+  function setCount(count:number){
+    if (count === 0){
+      setPagination({
+        ...pagination,
+        // reset page to 0 too
+        page:0,
+        count,
+      })
+    }else{
+      setPagination({
+        ...pagination,
+        count,
+      })
+    }
+  }
+
+  function setRows(rows:number){
+    // save number of rows in user settings (saves to cookie too)
+    setPageRows(rows)
+
+    setPagination({
+      ...pagination,
+      // reset to first page
+      page: 0,
+      rows
+    })
+  }
 
   return {
     ...pagination,
-    setPagination
+    setPage,
+    setRows,
+    setCount
   }
 }
 

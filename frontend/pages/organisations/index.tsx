@@ -14,6 +14,7 @@ import Pagination from '@mui/material/Pagination'
 import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import PageTitle from '~/components/layout/PageTitle'
 import Searchbox from '~/components/form/Searchbox'
 import {OrganisationList} from '~/types/Organisation'
@@ -67,8 +68,6 @@ export default function OrganisationsOverviewPage({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     handleQueryChange('rows', event.target.value)
-    // save to cookie
-    setDocumentCookie(event.target.value,'rsd_page_rows')
   }
 
   function handleSearch(searchFor: string) {

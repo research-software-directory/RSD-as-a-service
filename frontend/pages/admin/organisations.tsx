@@ -9,6 +9,7 @@ import Head from 'next/head'
 
 import {app} from '~/config/app'
 import {rowsPerPageOptions} from '~/config/pagination'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import AdminPageWithNav from '~/components/admin/AdminPageWithNav'
 import {adminPages} from '~/components/admin/AdminNav'
@@ -21,13 +22,15 @@ const pageTitle = `${adminPages['organisations'].title} | Admin page | ${app.tit
 const pagination = {
   count: 0,
   page: 0,
-  rows: rowsPerPageOptions[0],
+  rows: 12,
   rowsOptions: rowsPerPageOptions,
   labelRowsPerPage:'Per page'
 }
 
 export default function AdminOrganisationsPage() {
-
+  // use page rows from user settings
+  const {rsd_page_rows} = useUserSettings()
+  pagination.rows = rsd_page_rows ?? rowsPerPageOptions[0]
   // console.group('AdminOrganisationsPage')
   // console.log('domains...', domains)
   // console.groupEnd()

@@ -45,10 +45,11 @@ import {
   softwareLicensesFilter
 } from '~/components/software/overview/filters/softwareFiltersApi'
 import SoftwareFiltersModal from '~/components/software/overview/filters/SoftwareFiltersModal'
-import {getUserSettings, setDocumentCookie} from '~/utils/userSettings'
+import {getUserSettings} from '~/utils/userSettings'
 import {softwareOrderOptions} from '~/components/software/overview/filters/OrderSoftwareBy'
 import {LayoutType} from '~/components/software/overview/search/ViewToggleGroup'
 import {getRsdSettings} from '~/config/getSettingsServerSide'
+import {useUserSettings} from '~/config/UserSettingsContext'
 
 type SoftwareOverviewProps = {
   search?: string | null
@@ -80,6 +81,7 @@ export default function SoftwareOverviewPage({
 }: SoftwareOverviewProps) {
   const smallScreen = useMediaQuery('(max-width:640px)')
   const {createUrl} = useSoftwareOverviewParams()
+  const {setPageLayout} = useUserSettings()
   const [modal,setModal] = useState(false)
   // if no layout - default is masonry
   const initView = layout ?? 'masonry'
@@ -116,8 +118,9 @@ export default function SoftwareOverviewPage({
   function setLayout(view: LayoutType) {
     // update local view
     setView(view)
-    // save to cookie
-    setDocumentCookie(view,'rsd_page_layout')
+    // save to context and cookie
+    setPageLayout(view)
+    // setDocumentCookie(view,'rsd_page_layout')
   }
 
   return (
