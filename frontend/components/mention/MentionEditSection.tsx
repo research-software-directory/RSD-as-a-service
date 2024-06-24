@@ -8,7 +8,7 @@
 
 import {MentionByType, MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import MentionEditList from './MentionEditList'
-import {clasifyMentionsByType} from '~/utils/editMentions'
+import {classifyMentionsByType} from '~/utils/editMentions'
 import EditMentionModal from './EditMentionModal'
 import {getMentionTypeOrder, mentionType} from './config'
 import ConfirmDeleteModal from '../layout/ConfirmDeleteModal'
@@ -16,6 +16,7 @@ import ContentLoader from '../layout/ContentLoader'
 import useEditMentionReducer from './useEditMentionReducer'
 import MentionEditFeatured from './MentionEditFeatured'
 import {sortOnNumProp} from '~/utils/sortFn'
+import SanitizedMathMLBox from '../layout/SanitizedMathMLBox'
 
 export default function MentionEditSection() {
   const {
@@ -38,13 +39,13 @@ export default function MentionEditSection() {
     setEditModal()
   }
 
-  function renderHighlights(higlightedMentions:MentionItemProps[]) {
-    if (higlightedMentions.length === 0) return null
+  function renderHighlights(highlightedMentions:MentionItemProps[]) {
+    if (highlightedMentions.length === 0) return null
     return (
       <>
         <h3 className="pb-4 text-xl">{mentionType['highlight'].plural}</h3>
         {
-          higlightedMentions
+          highlightedMentions
             .sort((a, b) => sortOnNumProp(a, b, 'publication_year', 'desc'))
             .map((item) => {
               return (
@@ -96,7 +97,12 @@ export default function MentionEditSection() {
           open={confirmModal.open}
           title={settings.confirmDeleteModalTitle}
           body={
-            <p>Are you sure you want to remove <strong>{confirmModal?.item?.title ?? 'this item'}</strong>?</p>
+            <p>Are you sure you want to remove <strong>
+              <SanitizedMathMLBox
+                component="span"
+                rawHtml={confirmModal?.item?.title ?? 'this item'}
+              />
+            </strong>?</p>
           }
           onCancel={() => {
           // cancel confirm by removing item
@@ -122,8 +128,7 @@ export default function MentionEditSection() {
     )
   }
   // extract mention items by types
-  // highl
-  const {mentionByType,featuredMentions} = clasifyMentionsByType(mentions)
+  const {mentionByType,featuredMentions} = classifyMentionsByType(mentions)
 
   return (
     <>

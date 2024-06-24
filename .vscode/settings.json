@@ -27,4 +27,7 @@
     "editor.useTabStops": true,
     "editor.insertSpaces": false,
   },
+  "cSpell.words": [
+    "dompurify"
+  ],
 }

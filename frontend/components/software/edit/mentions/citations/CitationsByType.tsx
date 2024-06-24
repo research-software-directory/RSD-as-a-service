@@ -8,7 +8,7 @@
 
 import {sortOnNumProp} from '~/utils/sortFn'
 import {MentionItemProps} from '~/types/Mention'
-import {clasifyMentionsByType} from '~/utils/editMentions'
+import {classifyMentionsByType} from '~/utils/editMentions'
 import {getMentionType, getMentionTypeOrder} from '~/components/mention/config'
 import NoCitationItems from './NoCitationItems'
 import ViewCitationsList from './CitationsListView'
@@ -18,7 +18,7 @@ export default function CitationsByType({mentions}:{mentions:MentionItemProps[]}
   if (mentions?.length === 0) return <NoCitationItems />
 
   // we do not have featured mentions for citations (scraped mentions)
-  const {mentionByType} = clasifyMentionsByType(mentions)
+  const {mentionByType} = classifyMentionsByType(mentions)
   const mentionTypes = getMentionTypeOrder(mentionByType)
 
   // render

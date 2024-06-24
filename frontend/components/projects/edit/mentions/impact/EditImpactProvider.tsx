@@ -10,21 +10,22 @@ import {useEffect, useReducer} from 'react'
 
 import {useSession} from '~/auth'
 import logger from '~/utils/logger'
+import {MentionItemProps} from '~/types/Mention'
+import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
 import useSnackbar from '~/components/snackbar/useSnackbar'
 import {
   EditMentionAction, EditMentionActionType,
   editMentionReducer, EditMentionState
 } from '~/components/mention/editMentionReducer'
 import EditMentionContext from '~/components/mention/editMentionContext'
-import NoImpactItems from './NoImpactItems'
-import {addToImpactForProject, addNewImpactToProject, removeImpactForProject} from './impactForProjectApi'
-import {MentionItemProps} from '~/types/Mention'
 import {getMentionType} from '~/components/mention/config'
-import {deleteMentionItem, updateMentionItem} from '~/utils/editMentions'
+import SanitizedMathMLBox from '~/components/layout/SanitizedMathMLBox'
 import useProjectContext from '../../useProjectContext'
 import {useProjectMentionContext} from '../ProjectMentionContext'
+import {addToImpactForProject, addNewImpactToProject, removeImpactForProject} from './impactForProjectApi'
+import NoImpactItems from './NoImpactItems'
 
-const initalState:EditMentionState = {
+const initialState:EditMentionState = {
   settings: {
     editModalTitle: 'Impact',
     confirmDeleteModalTitle: 'Delete impact item',
@@ -46,7 +47,21 @@ function createSuccessMessage(item:MentionItemProps) {
   if (item.mention_type) {
     message += ` to ${getMentionType(item.mention_type,'plural')}`
   }
-  return message
+  return (
+    <SanitizedMathMLBox
+      component="span"
+      rawHtml={message}
+    />
+  )
+}
+
+function createErrorMessage(message:string) {
+  return (
+    <SanitizedMathMLBox
+      component="span"
+      rawHtml={message}
+    />
+  )
 }
 
 export default function EditImpactProvider(props:any) {
@@ -54,11 +69,11 @@ export default function EditImpactProvider(props:any) {
   const {project:{id:project}} = useProjectContext()
   const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   const {loading,impact:mentions,counts:{impact},setImpactCnt} = useProjectMentionContext()
-  // initalize state with loading and items received from the parent.
+  // initialize state with loading and items received from the parent.
   const [state, dispatch] = useReducer(
     editMentionReducer,
     {
-      ...initalState,
+      ...initialState,
       // use inital values from useProjectMentionContext hook
       loading,
       mentions
@@ -131,7 +146,9 @@ export default function EditImpactProvider(props:any) {
           payload: resp.message
         })
       } else {
-        showErrorMessage(`Failed to save ${item.title}. ${resp.message}`)
+        showErrorMessage(
+          createErrorMessage(`Failed to save ${item.title}. ${resp.message}`)
+        )
       }
     }
   }
@@ -214,10 +231,14 @@ export default function EditImpactProvider(props:any) {
           token
         })
       } else {
-        showErrorMessage(`Failed to delete ${item.title}. ${resp.message}`)
+        showErrorMessage(
+          createErrorMessage(`Failed to delete ${item.title}. ${resp.message}`)
+        )
       }
     } else {
-      showErrorMessage(`Failed to delete ${item.title}. Invalid item id ${item.id}`)
+      showErrorMessage(
+        createErrorMessage(`Failed to delete ${item.title}. Invalid item id ${item.id}`)
+      )
     }
   }
 
