@@ -1,5 +1,5 @@
--- SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
--- SPDX-FileCopyrightText: 2022 Netherlands eScience Center
+-- SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+-- SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 -- SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 -- SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 --
@@ -64,6 +64,15 @@ VALUES
 	('Visualization'),
 	('Workflow technologies');
 
+
+-- KEYWORDS for community
+CREATE TABLE keyword_for_community (
+	community UUID REFERENCES community (id),
+	keyword UUID REFERENCES keyword (id),
+	PRIMARY KEY (community, keyword)
+);
+
+
 ----------------
 -- Categories --
 ----------------
@@ -71,16 +80,21 @@ VALUES
 CREATE TABLE category (
 	id UUID PRIMARY KEY,
 	parent UUID REFERENCES category DEFAULT NULL,
-	short_name VARCHAR NOT NULL,
-	name VARCHAR NOT NULL,
+	community UUID REFERENCES community(id) DEFAULT NULL,
+	short_name VARCHAR(100) NOT NULL,
+	name VARCHAR(250) NOT NULL,
 	properties JSONB NOT NULL DEFAULT '{}'::jsonb,
-	provenance_iri VARCHAR DEFAULT NULL,  -- e.g. https://www.w3.org/TR/skos-reference/#mapping
+	provenance_iri VARCHAR(250) DEFAULT NULL,  -- e.g. https://www.w3.org/TR/skos-reference/#mapping
 
-	CONSTRAINT unique_short_name UNIQUE NULLS NOT DISTINCT (parent, short_name),
-	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name),
+	CONSTRAINT unique_short_name UNIQUE NULLS NOT DISTINCT (parent, short_name, community),
+	CONSTRAINT unique_name UNIQUE NULLS NOT DISTINCT (parent, name, community),
 	CONSTRAINT invalid_value_for_properties CHECK (properties - '{icon, is_highlight, description, subtitle}'::text[] = '{}'::jsonb),
 	CONSTRAINT highlight_must_be_top_level_category CHECK (NOT ((properties->>'is_highlight')::boolean AND parent IS NOT NULL))
 );
+
+CREATE INDEX category_parent_idx ON category (parent);
+CREATE INDEX category_community_idx ON category (community);
+
 
 CREATE TABLE category_for_software (
 	software_id UUID references software (id),
@@ -100,6 +114,9 @@ BEGIN
 	IF NEW.id IS NOT NULL THEN
 		RAISE EXCEPTION USING MESSAGE = 'The category id is generated automatically and may not be set.';
 	END IF;
+	IF NEW.parent IS NOT NULL AND (SELECT community FROM category WHERE id = NEW.parent) IS DISTINCT FROM NEW.community THEN
+		RAISE EXCEPTION USING MESSAGE = 'The community must be the same as of its parent.';
+	END IF;
 	NEW.id = gen_random_uuid();
 	RETURN NEW;
 END
@@ -118,6 +135,12 @@ $$
 BEGIN
 	IF NEW.id != OLD.id THEN
 		RAISE EXCEPTION USING MESSAGE = 'The category id may not be changed.';
+	END IF;
+	IF NEW.community IS DISTINCT FROM OLD.community THEN
+		RAISE EXCEPTION USING MESSAGE = 'The community this category belongs to may not be changed.';
+	END IF;
+	IF NEW.parent IS NOT NULL AND (SELECT community FROM category WHERE id = NEW.parent) IS DISTINCT FROM NEW.community THEN
+		RAISE EXCEPTION USING MESSAGE = 'The community must be the same as of its parent.';
 	END IF;
 	RETURN NEW;
 END
@@ -154,7 +177,7 @@ CREATE TRIGGER zzz_check_cycle_categories  -- triggers are executed in alphabeti
 -- helper functions
 
 CREATE FUNCTION category_path(category_id UUID)
-RETURNS TABLE (like category)
+RETURNS TABLE (LIKE category)
 LANGUAGE SQL STABLE AS
 $$
 	WITH RECURSIVE cat_path AS (
@@ -167,10 +190,10 @@ $$
 		ON category.id = cat_path.parent
 	)
 	-- 1. How can we reverse the output rows without injecting a new column (r_index)?
-	-- 2. How a table row "type" could be used here Now we have to list all columns of `category` explicitely
-	--    I want to have something like `* without 'r_index'` to be independant from modifications of `category`
+	-- 2. How a table row "type" could be used here Now we have to list all columns of `category` explicitly
+	--    I want to have something like `* without 'r_index'` to be independent from modifications of `category`
 	-- 3. Maybe this could be improved by using SEARCH keyword.
-	SELECT id, parent, short_name, name, properties, provenance_iri
+	SELECT id, parent, community, short_name, name, properties, provenance_iri
 	FROM cat_path
 	ORDER BY r_index DESC;
 $$;
@@ -198,19 +221,3 @@ $$
 		ELSE '[]'::json
 		END AS result
 $$;
-
-
-CREATE FUNCTION available_categories_expanded()
-RETURNS JSON
-LANGUAGE SQL STABLE AS
-$$
-	WITH
-	cat_ids AS
-		(SELECT id AS category_id FROM category AS node WHERE NOT EXISTS (SELECT 1 FROM category AS sub WHERE node.id = sub.parent)),
-	paths AS
-		(SELECT category_path_expanded(category_id) AS path FROM cat_ids)
-	SELECT
-		CASE WHEN EXISTS(SELECT 1 FROM cat_ids) THEN (SELECT json_agg(path) AS result FROM paths)
-		ELSE '[]'::json
-		END
-$$

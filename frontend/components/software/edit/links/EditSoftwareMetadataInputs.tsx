@@ -1,9 +1,10 @@
-// SPDX-FileCopyrightText: 2023 - 2024 dv4all
 // SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2024 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -29,7 +30,7 @@ export default function EditSoftwareMetadataInputs() {
   // watch form data changes
   const [id,get_started_url,categories] = watch(['id','get_started_url','categories'])
 
-  const reorderedCategories = useReorderedCategories()
+  const reorderedCategories = useReorderedCategories(null)
 
   // console.group('EditSoftwareMetadataInputs')
   // console.log('editSoftware...', editSoftware)

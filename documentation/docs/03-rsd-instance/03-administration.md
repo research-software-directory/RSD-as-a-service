@@ -175,7 +175,7 @@ Software could be classified by assigning one or more _categories_. Categories a
 
 The following terms are used: A _category_ is a leaf in the category tree. A _parent category_ is a tree node with sub-categories. A _top-level category_ is a tree node with no parent. A list of categories nodes traversing the category tree from a top-level category down to a category is the _category path_ of this category.
 
-Currently there exists no user interface for creating or managing categories itself. To get an idea how to feed the `categories` table using SQL statements see `database/999-add-hgf-categories.sql.example`.
+Global categories can be managed from the admin page. One can also add categories directly in the database; to get an idea how to populate the `categories` table using SQL statements, see `database/999-add-categories.sql.example`.
 
 Categories of different levels could have different properties. The column `properties` holds a JSON object to flexibly define properties of a category:
 

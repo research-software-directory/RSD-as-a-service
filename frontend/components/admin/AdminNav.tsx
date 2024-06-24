@@ -27,6 +27,7 @@ import CampaignIcon from '@mui/icons-material/Campaign'
 import BugReportIcon from '@mui/icons-material/BugReport'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
+import CategoryIcon from '@mui/icons-material/Category'
 
 import {editMenuItemButtonSx} from '~/config/menuItems'
 
@@ -78,6 +79,12 @@ export const adminPages = {
     subtitle: '',
     icon: <SpellcheckIcon />,
     path: '/admin/keywords',
+  },
+  categories:{
+    title: 'Categories',
+    subtitle: '',
+    icon: <CategoryIcon />,
+    path: '/admin/categories',
   },
   mentions: {
     title: 'Mentions',

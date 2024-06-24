@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -26,7 +27,7 @@ export default function EditSoftwareDescriptionPage() {
     <ContentLoader />
   )
   // Load the form component after editSoftware is present
-  // in order to loaded these values directly in the form (defaultValues)
+  // in order to load these values directly in the form (defaultValues)
   if (editSoftware) {
     return <EditSoftwareMetadataForm data={editSoftware} />
   }
