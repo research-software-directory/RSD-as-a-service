@@ -1,16 +1,18 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {ChangeEvent,useContext,MouseEvent} from 'react'
+import {ChangeEvent,MouseEvent} from 'react'
 import TablePagination from '@mui/material/TablePagination'
 
-import PaginationContext from './PaginationContext'
+import {setDocumentCookie} from '~/utils/userSettings'
+import {usePaginationContext} from './PaginationContext'
 
 export default function Pagination() {
-  const {pagination, setPagination} = useContext(PaginationContext)
-  const {count,page,rows,rowsOptions,labelRowsPerPage} = pagination
+  const {count,page,rows,rowsOptions,labelRowsPerPage, setPagination} = usePaginationContext()
 
   // next/previous page button
   function handlePageChange(
@@ -18,7 +20,10 @@ export default function Pagination() {
     newPage: number,
   ) {
     setPagination({
-      ...pagination,
+      count,
+      rows,
+      rowsOptions,
+      labelRowsPerPage,
       page: newPage
     })
   }
@@ -28,11 +33,15 @@ export default function Pagination() {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     setPagination({
-      ...pagination,
+      count,
+      rowsOptions,
+      labelRowsPerPage,
       // reset to first page
       page: 0,
       rows: parseInt(event.target.value),
     })
+    // save change to cookie
+    setDocumentCookie(event.target.value,'rsd_page_rows')
   }
 
   return (

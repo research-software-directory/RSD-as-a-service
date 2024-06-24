@@ -3,7 +3,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Community} from '~/components/admin/communities/apiCommunities'
 import NoContent from '~/components/layout/NoContent'
 import {CommunityListProps} from '../apiCommunities'
 import CommunityListItem from './CommunityListItem'

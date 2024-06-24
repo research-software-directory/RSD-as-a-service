@@ -10,22 +10,22 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 import UserProjects from './index'
 
-import projectsByMaintainer from './__mocks__/projectsByMaintainer.json'
-const mockUseUserProjects = jest.fn()
-jest.mock('./useUserProjects', () => ({
+import communitiesByMaintainer from './__mocks__/communitiesByMaintainer.json'
+const mockUseUserCommunities = jest.fn()
+jest.mock('./useUserCommunities', () => ({
   __esModule: true,
-  default: jest.fn(props=>mockUseUserProjects(props))
+  default: jest.fn(props=>mockUseUserCommunities(props))
 }))
-describe('components/user/organisations/index.tsx', () => {
+describe('components/user/communities/index.tsx', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
   it('render loader', () => {
     // return loading
-    mockUseUserProjects.mockReturnValue({
+    mockUseUserCommunities.mockReturnValue({
       loading: true,
-      projects: []
+      communities: []
     })
 
     render(
@@ -39,9 +39,9 @@ describe('components/user/organisations/index.tsx', () => {
 
   it('render nothing to show message', () => {
     // return loading
-    mockUseUserProjects.mockReturnValue({
+    mockUseUserCommunities.mockReturnValue({
       loading: false,
-      projects: []
+      communities: []
     })
 
     render(
@@ -53,11 +53,11 @@ describe('components/user/organisations/index.tsx', () => {
     screen.getByText('nothing to show')
   })
 
-  it('render project list', () => {
+  it('render community list', () => {
     // return loading
-    mockUseUserProjects.mockReturnValue({
+    mockUseUserCommunities.mockReturnValue({
       loading: false,
-      projects: projectsByMaintainer
+      communities: communitiesByMaintainer
     })
 
     render(
@@ -66,8 +66,8 @@ describe('components/user/organisations/index.tsx', () => {
       </WithAppContext>
     )
 
-    const projects = screen.getAllByTestId('project-list-item')
-    expect(projects.length).toEqual(projectsByMaintainer.length)
+    const communities = screen.getAllByTestId('community-list-item')
+    expect(communities.length).toEqual(communitiesByMaintainer.length)
   })
 
 })

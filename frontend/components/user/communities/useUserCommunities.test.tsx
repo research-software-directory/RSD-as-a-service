@@ -10,12 +10,12 @@ import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
 
-import useUserProjects from './useUserProjects'
-import projectsByMaintainer from './__mocks__/projectsByMaintainer.json'
+import useUserCommunities from './useUserCommunities'
+import communitiesByMaintainer from './__mocks__/communitiesByMaintainer.json'
 
 
-function WithUserProjectsHook() {
-  const {loading, projects} = useUserProjects()
+function WithUserCommunitiesHook() {
+  const {loading, communities} = useUserCommunities()
 
   if (loading) {
     return (
@@ -25,7 +25,7 @@ function WithUserProjectsHook() {
 
   return (
     <div>
-      {JSON.stringify(projects,null,2)}
+      {JSON.stringify(communities,null,2)}
     </div>
   )
 }
@@ -38,33 +38,33 @@ beforeEach(() => {
 
 it('shows loader', () => {
   render(
-    <WithUserProjectsHook />
+    <WithUserCommunitiesHook />
   )
   screen.getByText('Loading...')
   // screen.debug()
 })
 
-it('resolves no projects', async() => {
+it('resolves no communities', async() => {
 
   mockResolvedValueOnce([])
 
   render(
     <WithAppContext options={{session:mockSession}}>
-      <WithUserProjectsHook />
+      <WithUserCommunitiesHook />
     </WithAppContext>
   )
   await screen.findByText('[]')
 })
 
-it('resolves projects', async() => {
+it('resolves communities', async() => {
 
-  mockResolvedValueOnce(projectsByMaintainer)
+  mockResolvedValueOnce(communitiesByMaintainer)
 
   render(
     <WithAppContext options={{session:mockSession}}>
-      <WithUserProjectsHook />
+      <WithUserCommunitiesHook />
     </WithAppContext>
   )
-  await screen.findByText(RegExp(projectsByMaintainer[0].id))
+  await screen.findByText(RegExp(communitiesByMaintainer[0].id))
 })
 

@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -44,7 +44,7 @@ export function getUserSettings(req: IncomingMessage) {
  */
 export function setDocumentCookie(value: string, name: string, path: string = '/') {
   try {
-    // match matomo cookie exiration time of 400 days
+    // match matomo cookie expiration time of 400 days
     const maxAgeInSeconds = 60 * 60 * 24 * (400)
     document.cookie = `${name}=${value};path=${path};SameSite=Lax;Secure;Max-Age=${maxAgeInSeconds};`
   } catch (e: any) {

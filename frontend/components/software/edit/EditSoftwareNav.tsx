@@ -19,7 +19,6 @@ import useRsdSettings from '~/config/useRsdSettings'
 export default function EditSoftwareNav({slug,pageId}:{slug:string,pageId:string}) {
   const router = useRouter()
   const {host} = useRsdSettings()
-
   // default is true to follow useMenuItems approach
   const showCommunities = host.modules ? host.modules.includes('communities') : true
 

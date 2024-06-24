@@ -2,48 +2,51 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Matthias Rüster (GFZ) <matthias.ruester@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect} from 'react'
-
-import {Session} from '~/auth'
-import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
-import {useAdvicedDimensions} from '~/components/layout/FlexibleGridSection'
+import Link from 'next/link'
 import ContentLoader from '~/components/layout/ContentLoader'
-import ProjectsGrid from './ProjectsGrid'
+import NoContent from '~/components/layout/NoContent'
+import ProjectOverviewList from '~/components/projects/overview/list/ProjectOverviewList'
+import OverviewListItem from '~/components/software/overview/list/OverviewListItem'
+import ProjectListItemContent from '~/components/projects/overview/list/ProjectListItemContent'
 import useUserProjects from './useUserProjects'
 
-export default function UserProjects({session}: { session: Session }) {
-  const {itemHeight, minWidth, maxWidth} = useAdvicedDimensions()
-  const {searchFor, page, rows, setCount} = usePaginationWithSearch('Filter projects')
-  const {loading, projects, count} = useUserProjects({
-    searchFor,
-    page,
-    rows,
-    session
-  })
-  useEffect(() => {
-    if (count && loading === false) {
-      setCount(count)
-    }
-  }, [count, loading, setCount])
+export default function UserProjects() {
+  const {loading, projects} = useUserProjects()
 
   // if loading show loader
   if (loading) return (
     <ContentLoader />
   )
 
+  if (projects.length===0){
+    return <NoContent />
+  }
+
   return (
-    <ProjectsGrid
-      projects={projects}
-      height={itemHeight}
-      minWidth={minWidth}
-      maxWidth={maxWidth}
-      className="gap-[0.125rem] pt-2"
-    />
+    <div>
+      <ProjectOverviewList>
+        {projects.map(item => {
+          return (
+            <OverviewListItem
+              key={item.id}
+            >
+              <Link
+                data-testid="project-list-item"
+                key={item.id}
+                href={`/projects/${item.slug}`}
+                className='flex-1 flex hover:text-inherit'
+              >
+                <ProjectListItemContent {...item} />
+              </Link>
+            </OverviewListItem>
+          )
+        })}
+      </ProjectOverviewList>
+    </div>
   )
 }

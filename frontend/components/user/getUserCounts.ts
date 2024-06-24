@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createJsonHeaders} from '~/utils/fetchHelpers'
+import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import logger from '~/utils/logger'
 import {UserCounts} from './UserNav'
 
@@ -13,17 +15,13 @@ const defaultResponse = {
   organisation_cnt: undefined,
 }
 
-export async function getUserCounts({token,frontend=false}:
-  {token?: string, frontend?:boolean}) {
+export async function getUserCounts({token}:{token?: string}) {
   try {
     // NOTE! the selection is based on the token
     // RLS in postgres returns only counts for the user
     // therefore no additional account filter is required
     let query = 'rpc/counts_by_maintainer'
-    let url = `/api/v1/${query}`
-    if (frontend === false) {
-      url = `${process.env.POSTGREST_URL}/${query}`
-    }
+    let url = `${getBaseUrl()}/${query}`
 
     const resp = await fetch(url, {
       method: 'GET',
