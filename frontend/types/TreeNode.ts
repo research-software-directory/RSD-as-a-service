@@ -4,32 +4,23 @@
 // SPDX-License-Identifier: Apache-2.0
 
 export class TreeNode<Type> {
-  #children: TreeNode<Type>[] = []
+  #children: Set<TreeNode<Type>> = new Set()
   #value: Type | null
 
   constructor(value: Type | null) {
     this.#value = value
   }
 
-  clone() {
-    const clone = new TreeNode(this.#value)
-    clone.#children = [...this.children()]
-    return clone
-  }
-
   addChild(node: TreeNode<Type>) {
-    this.#children.push(node)
+    this.#children.add(node)
   }
 
   deleteChild(node: TreeNode<Type>) {
-    const index = this.#children.indexOf(node)
-    if (index >= 0) {
-      this.#children.splice(index, 1)
-    }
+    this.#children.delete(node)
   }
 
   childrenCount(): number {
-    return this.#children.length
+    return this.#children.size
   }
 
   getValue() {
@@ -41,10 +32,31 @@ export class TreeNode<Type> {
   }
 
   children(): TreeNode<Type>[] {
-    return this.#children
+    return Array.from(this.#children)
   }
 
-  asString(): string {
-    return JSON.stringify(this.#value)
+  subTreeWhereLeavesSatisfy(predicate: (value: Type) => boolean): TreeNode<Type> | null {
+    if (this.#children.size === 0) {
+      return (this.#value === null || !(predicate(this.#value)) ? null : new TreeNode<Type>(this.#value))
+    }
+
+    const newNode = new TreeNode<Type>(this.#value)
+    for (const child of this.#children) {
+      const newSubTree = child.subTreeWhereLeavesSatisfy(predicate)
+      if (newSubTree !== null) {
+        newNode.addChild(newSubTree)
+      }
+    }
+
+    return newNode.#children.size === 0 ? null : newNode
+  }
+
+  sortRecursively(comparator: (val1: Type, val2: Type) => number) {
+    const childrenArray = this.children()
+    childrenArray.sort((n1, n2) => comparator(n1.#value!, n2.#value!))
+    this.#children = new Set(childrenArray)
+    for (const child of this.#children) {
+      child.sortRecursively(comparator)
+    }
   }
 }

@@ -6,78 +6,69 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useEffect, useMemo, useState} from 'react'
-import {CategoryEntry, CategoryPath, CategoryTree, CategoryTreeLevel} from '~/types/Category'
-import logger from './logger'
-import {loadCategoryRoots} from '~/components/category/apiCategories'
+import {CategoryEntry, CategoryPath} from '~/types/Category'
+import {categoryEntriesToRoots, loadCategoryRoots} from '~/components/category/apiCategories'
 import {TreeNode} from '~/types/TreeNode'
 
 export const leaf = <T>(list: T[]) => list[list.length - 1]
 
 const compareCategoryEntry = (p1: CategoryEntry, p2: CategoryEntry) => p1.name.localeCompare(p2.name)
-const compareCategoryTreeLevel = (p1: CategoryTreeLevel, p2: CategoryTreeLevel) => compareCategoryEntry(p1.category, p2.category)
+const compareCategoryTreeNode = (p1: TreeNode<CategoryEntry>, p2: TreeNode<CategoryEntry>) => compareCategoryEntry(p1.getValue()!, p2.getValue()!)
 
-const categoryTreeSort = (tree: CategoryTree) => {
-  tree.sort(compareCategoryTreeLevel)
-  for (const item of tree) {
-    categoryTreeSort(item.children)
+
+export const categoryTreeNodesSort = (trees: TreeNode<CategoryEntry>[]) => {
+  trees.sort(compareCategoryTreeNode)
+  for (const root of trees) {
+    root.sortRecursively(compareCategoryEntry)
   }
 }
 
-export const genCategoryTree = (categories: CategoryPath[]) : CategoryTree => {
-  const tree: CategoryTree = []
-  try {
-    for (const path of categories) {
-      let cursor = tree
-      for (const item of path) {
-        const found = cursor.find(el => el.category.id == item.id)
-        if (found) {
-          cursor = found.children
-        } else {
-          const sub: CategoryTreeLevel = {category: item, children: []}
-          cursor.push(sub)
-          cursor = sub.children
-        }
-      }
+
+export const genCategoryTreeNodes = (categories: CategoryPath[]) : TreeNode<CategoryEntry>[] => {
+  const allEntries: CategoryEntry[] = []
+  for (const path of categories) {
+    for (const entry of path) {
+      allEntries.push(entry)
     }
-
-    categoryTreeSort(tree)
-
-    return tree
-  } catch (e: any) {
-    logger(`genCategoryTree failed to process data: ${e.message}`, 'error')
-    return []
   }
+
+  const result = categoryEntriesToRoots(allEntries)
+
+  categoryTreeNodesSort(result)
+
+  return result
 }
 
-export const useCategoryTree = (categories: CategoryPath[]) : CategoryTree => {
-  return useMemo(() => genCategoryTree(categories), [categories])
+
+export const useCategoryTree = (categories: CategoryPath[]) : TreeNode<CategoryEntry>[] => {
+  return useMemo(() => genCategoryTreeNodes(categories), [categories])
 }
 
 export type ReorderedCategories = {
-  // available categories as paths and tree structure
   paths: CategoryPath[],
-  all: CategoryTree,
-  // sorted categories
-  highlighted: CategoryTree,
-  general: CategoryTree,
+  all: TreeNode<CategoryEntry>[],
+  highlighted: TreeNode<CategoryEntry>[],
+  general: TreeNode<CategoryEntry>[],
 }
 
-export function reorderCategories(allCategoryPaths: CategoryPath[]): ReorderedCategories {
-  const all = genCategoryTree(allCategoryPaths)
-  const highlighted: CategoryTree = []
-  const general: CategoryTree = []
+export function reorderCategories(categoryRoots: TreeNode<CategoryEntry>[]): ReorderedCategories {
+  const all: TreeNode<CategoryEntry>[] = categoryRoots
+  const highlighted: TreeNode<CategoryEntry>[] = []
+  const general: TreeNode<CategoryEntry>[] = []
 
-  for (let treeLevel of all) {
-    if (treeLevel.category.properties.is_highlight) {
-      highlighted.push(treeLevel)
+  for (const root of all) {
+    if (root.getValue()!.properties.is_highlight) {
+      highlighted.push(root)
     } else {
-      general.push(treeLevel)
+      general.push(root)
     }
   }
 
+  const paths = rootsToPaths(all)
+
   return {
+    paths,
     all,
-    paths: allCategoryPaths,
     highlighted,
     general,
   }
@@ -112,16 +103,15 @@ function rootsToPaths(roots: TreeNode<CategoryEntry>[]): CategoryPath[] {
 
 export function useReorderedCategories(community: string | null): ReorderedCategories {
   const [reorderedCategories, setReorderedCategories] = useState<ReorderedCategories>({
-    all: [],
     paths: [],
+    all: [],
     highlighted: [],
     general: [],
   })
 
   useEffect(() => {
     loadCategoryRoots(community)
-      .then(roots => rootsToPaths(roots))
-      .then(categories => setReorderedCategories(reorderCategories(categories)))
+      .then(roots => setReorderedCategories(reorderCategories(roots)))
   }, [community])
 
   return reorderedCategories

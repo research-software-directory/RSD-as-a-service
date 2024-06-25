@@ -28,7 +28,7 @@ export default function EditSoftwareMetadataInputs() {
   // use form context to interact with form data
   const {watch} = useFormContext<EditSoftwareItem>()
   // watch form data changes
-  const [id,get_started_url,categories] = watch(['id','get_started_url','categories'])
+  const [id, get_started_url, categoryForSoftwareIds] = watch(['id', 'get_started_url', 'categoryForSoftwareIds'])
 
   const reorderedCategories = useReorderedCategories(null)
 
@@ -69,8 +69,8 @@ export default function EditSoftwareMetadataInputs() {
         {/* dynamically shown if enabled/used */}
         <AutosaveSoftwareCategories
           softwareId={id}
-          categories={categories}
           reorderedCategories={reorderedCategories}
+          associatedCategoryIds={categoryForSoftwareIds}
         />
       </div>
       <div className="min-w-[21rem]">
