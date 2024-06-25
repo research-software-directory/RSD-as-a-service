@@ -1,45 +1,47 @@
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import Button from '@mui/material/Button'
 import {useState} from 'react'
-import {Controller, useForm} from 'react-hook-form'
-import {CategoryEntry} from '~/types/Category'
-import {useSession} from '~/auth'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import {createJsonHeaders} from '~/utils/fetchHelpers'
-import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Button from '@mui/material/Button'
 import Switch from '@mui/material/Switch'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import {Controller, useForm} from 'react-hook-form'
 
-export default function CategoryEditForm({createNew, community, data, onSuccess}:
-{
+import {useSession} from '~/auth'
+import {CategoryEntry} from '~/types/Category'
+import {createJsonHeaders} from '~/utils/fetchHelpers'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import TextFieldWithCounter from '~/components/form/TextFieldWithCounter'
+
+type CategoryEditFormProps=Readonly<{
   createNew: boolean
-  community: string | null
   data: CategoryEntry | null
-  onSuccess: Function
-}) {
+  community: string | null
+  onSuccess: (category:CategoryEntry)=>void
+  onCancel: ()=>void
+}>
 
-
+export default function CategoryEditForm({createNew, data, community, onSuccess, onCancel}:CategoryEditFormProps) {
+  const {token} = useSession()
+  const {showErrorMessage} = useSnackbar()
   const [disableSave, setDisableSave] = useState<boolean>(false)
   const {register, control, handleSubmit, formState, watch} = useForm<CategoryEntry>({
     mode: 'onChange'
   })
-  const {token} = useSession()
-  const {showErrorMessage} = useSnackbar()
 
-  if (createNew) {
-    register('parent', {value: data === null ? null : data.id})
-  } else {
-    register('id', {value: data === null ? undefined : data.id})
-    register('parent', {value: data === null ? null : data.parent})
-  }
-  register('community', {value: community})
+  // console.group('CategoryEditForm')
+  // console.log('createNew...',createNew)
+  // console.log('data...',data)
+  // console.log('disableSave...',disableSave)
+  // console.log('community...',community)
+  // console.groupEnd()
 
   const onSubmit = (formData: CategoryEntry) => {
     setDisableSave(true)
+    // debugger
     if (createNew) {
       createNewCategory(formData)
     } else {
@@ -97,65 +99,131 @@ export default function CategoryEditForm({createNew, community, data, onSuccess}
     }
   }
 
+  function getFormTitle(){
+    if (createNew===true){
+      if (data?.short_name){
+        return `Add category to ${data?.short_name}`
+      }
+      return 'Add top level category'
+    }else{
+      return `Edit ${data?.short_name}`
+    }
+  }
+
   return (
-    <form className="px-8" onSubmit={handleSubmit(onSubmit)}>
-      <TextFieldWithCounter register={register('short_name', {
-        maxLength: {value: 100, message: 'max length is 100'},
-        required: 'The short name is required'})
+    <form
+      className="px-8 py-4 border rounded-md bg-base-200 my-4 ml-4 mr-6"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+
+      {/* Different hidden values when creating new item.*/}
+      {createNew ?
+        // use id of current item as parent for new (child) item
+        <input type="hidden" {...register('parent', {value: data === null ? null : data.id})} />
+        :
+        <>
+          <input type="hidden" {...register('id', {value: data === null ? undefined : data.id})} />
+          <input type="hidden" {...register('parent', {value: data === null ? null : data.parent})} />
+        </>
       }
-      options={{
-        label: 'Short name *',
-        defaultValue: createNew ? undefined : data?.short_name,
-        helperTextCnt: `${watch('short_name')?.length ?? 0}/100`,
-        helperTextMessage: `${formState.errors?.short_name?.message ?? ''}`,
-        error: formState.errors?.short_name?.message !== undefined
-      }} />
-      <TextFieldWithCounter register={register('name', {
-        maxLength: {value: 250, message: 'max length is 250'},
-        required: 'The name is required'})
-      }
-      options={{
-        label: 'Name *',
-        defaultValue: createNew ? undefined : data?.name,
-        helperTextCnt: `${watch('name')?.length ?? 0}/250`,
-        helperTextMessage: `${formState.errors?.name?.message ?? ''}`,
-        error: formState.errors?.name?.message !== undefined
-      }} />
-      <TextFieldWithCounter register={register('provenance_iri', {
-        maxLength: {value: 250, message: 'max length is 250'}
-      })}
-      options={{
-        label: 'Provenance identifier',
-        defaultValue: createNew ? undefined : (data?.provenance_iri ?? undefined),
-        helperTextCnt: `${watch('provenance_iri')?.length ?? 0}/250`,
-        helperTextMessage: `${formState.errors?.name?.message ?? 'Optional Internationalized Resource Identifier for this category'}`,
-        error: formState.errors?.name?.message !== undefined
-      }} />
-      {((createNew && data === null) || (!createNew && data?.parent === null)) && <Controller
-        name="properties.is_highlight"
-        control={control}
-        defaultValue={data?.properties.is_highlight ?? false}
-        render={({field: {onChange, value}}) => (
-          <FormControlLabel
-            control={<Switch checked={value ?? false} onChange={onChange} />}
-            label="Highlight"
+      <input type="hidden" {...register('community', {value: community})} />
+
+      <h3 className="py-4 text-base-content-secondary">{getFormTitle()}</h3>
+
+      <TextFieldWithCounter
+        register={register('short_name', {
+          maxLength: {value: 100, message: 'max length is 100'},
+          required: 'The short name is required'})
+        }
+        options={{
+          label: 'Short name *',
+          defaultValue: createNew ? undefined : data?.short_name,
+          helperTextCnt: `${watch('short_name')?.length ?? 0}/100`,
+          helperTextMessage: `${formState.errors?.short_name?.message ?? ''}`,
+          error: formState.errors?.short_name?.message !== undefined
+        }}
+      />
+      <TextFieldWithCounter
+        register={register('name', {
+          maxLength: {value: 250, message: 'max length is 250'},
+          required: 'The name is required'})
+        }
+        options={{
+          label: 'Name *',
+          defaultValue: createNew ? undefined : data?.name,
+          helperTextCnt: `${watch('name')?.length ?? 0}/250`,
+          helperTextMessage: `${formState.errors?.name?.message ?? ''}`,
+          error: formState.errors?.name?.message !== undefined
+        }}
+      />
+      <TextFieldWithCounter
+        register={register('provenance_iri', {
+          maxLength: {value: 250, message: 'max length is 250'}
+        })}
+        options={{
+          label: 'Provenance identifier',
+          defaultValue: createNew ? undefined : (data?.provenance_iri ?? undefined),
+          helperTextCnt: `${watch('provenance_iri')?.length ?? 0}/250`,
+          helperTextMessage: `${formState.errors?.name?.message ?? 'Optional Internationalized Resource Identifier for this category'}`,
+          error: formState.errors?.name?.message !== undefined
+        }}
+      />
+
+      {/* Highlight options are only for the top level items and for general categories */}
+      {((createNew && data === null && community===null) ||
+        (!createNew && data?.parent === null && community===null)) ?
+        <>
+          <div className="py-4"/>
+          <Controller
+            name="properties.is_highlight"
+            control={control}
+            defaultValue={data?.properties.is_highlight ?? false}
+            render={({field: {onChange, value}}) => (
+              <FormControlLabel
+                control={<Switch checked={value ?? false} onChange={onChange} />}
+                label="Highlight"
+              />
+            )}
           />
-        )}
-      />}
-      {watch('properties.is_highlight') && <>
-        <TextFieldWithCounter register={register('properties.description')} options={{
-          label: 'Description',
-          defaultValue: createNew ? undefined : data?.properties.description,
-          error: formState.errors?.properties?.description?.message !== undefined
-        }}/>
-        <TextFieldWithCounter register={register('properties.subtitle')} options={{
-          label: 'Subtitle',
-          defaultValue: createNew ? undefined : data?.properties.subtitle,
-          error: formState.errors?.properties?.subtitle?.message !== undefined
-        }}/>
-      </>}
-      <div></div>
-      <Button type="submit" variant="contained" disabled={disableSave || !formState.isValid}>Save</Button>
+          <div className="py-2"/>
+          <TextFieldWithCounter
+            register={register('properties.description')}
+            options={{
+              label: 'Description',
+              disabled: !watch('properties.is_highlight'),
+              defaultValue: createNew ? undefined : data?.properties.description,
+              error: formState.errors?.properties?.description?.message !== undefined
+            }}
+          />
+          <div className="py-2"/>
+          <TextFieldWithCounter
+            register={register('properties.subtitle')}
+            options={{
+              label: 'Subtitle',
+              disabled: !watch('properties.is_highlight'),
+              defaultValue: createNew ? undefined : data?.properties.subtitle,
+              error: formState.errors?.properties?.subtitle?.message !== undefined
+            }}
+          />
+        </>
+        :null
+      }
+
+      <div className="flex gap-4 justify-end pt-8 pb-4">
+        <Button
+          variant="text"
+          color="secondary"
+          onClick={onCancel}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={disableSave || !formState.isValid}>
+            Save
+        </Button>
+      </div>
     </form>
   )
 }

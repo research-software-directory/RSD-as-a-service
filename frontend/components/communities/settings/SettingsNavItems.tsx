@@ -27,18 +27,18 @@ export const settingsMenu: SettingsMenuProps[] = [
     id:'categories',
     label:()=>'Categories',
     icon: <CategoryIcon />,
-    status: 'Categories for this community'
+    status: 'Community categories'
   },
   {
     id:'maintainers',
     label:()=>'Maintainers',
     icon: <PersonIcon />,
-    status: 'Maintainers of community',
+    status: 'Community maintainers',
   },
   {
     id:'about',
     label:()=>'About',
     icon: <InfoIcon />,
-    status: 'Custom about page',
+    status: 'Community about page',
   }
 ]

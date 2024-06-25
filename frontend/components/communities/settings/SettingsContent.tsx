@@ -9,7 +9,7 @@ import {useRouter} from 'next/router'
 import CommunityAboutPage from './about-page'
 import CommunityMaintainers from './maintainers'
 import CommunityGeneralSettings from './general'
-import CommunityCategories from './maintainers/CommunityCategories'
+import CommunityCategories from './categories'
 
 
 export default function CommunitySettingsContent() {

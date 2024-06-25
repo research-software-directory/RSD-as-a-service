@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -33,7 +35,7 @@ type TreeLevelProps = {
 }
 const TreeLevel = ({items, showLongNames, onRemoveHandler}: TreeLevelProps) => {
   return <ul className={'list-disc list-outside pl-6'}>
-    {items.map((item, index) => (
+    {items.map((item) => (
       <li key={item.category.id}>
         <div className='flex flex-row justify-between items-start'>
           <Tooltip title={showLongNames ? item.category.short_name : item.category.name} placement='left'>
