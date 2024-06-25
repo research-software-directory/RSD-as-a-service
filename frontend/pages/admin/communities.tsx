@@ -7,6 +7,7 @@ import Head from 'next/head'
 
 import {app} from '~/config/app'
 import {rowsPerPageOptions} from '~/config/pagination'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import AdminPageWithNav from '~/components/admin/AdminPageWithNav'
 import {adminPages} from '~/components/admin/AdminNav'
@@ -19,13 +20,17 @@ const pageTitle = `${adminPages['pages'].title} | Admin page | ${app.title}`
 const pagination = {
   count: 0,
   page: 0,
-  rows: rowsPerPageOptions[0],
+  rows: 12,
   rowsOptions: rowsPerPageOptions,
   labelRowsPerPage:'Per page'
 }
 
 
 export default function AdminCommunitiesPage() {
+  // use page rows from user settings
+  const {rsd_page_rows} = useUserSettings()
+  pagination.rows = rsd_page_rows ?? rowsPerPageOptions[0]
+
   return (
     <DefaultLayout>
       <Head>

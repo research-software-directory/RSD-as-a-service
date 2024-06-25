@@ -8,40 +8,24 @@
 import {ChangeEvent,MouseEvent} from 'react'
 import TablePagination from '@mui/material/TablePagination'
 
-import {setDocumentCookie} from '~/utils/userSettings'
 import {usePaginationContext} from './PaginationContext'
 
 export default function Pagination() {
-  const {count,page,rows,rowsOptions,labelRowsPerPage, setPagination} = usePaginationContext()
+  const {count,page,rows,rowsOptions,labelRowsPerPage,setPage,setRows} = usePaginationContext()
 
   // next/previous page button
   function handlePageChange(
     event: MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) {
-    setPagination({
-      count,
-      rows,
-      rowsOptions,
-      labelRowsPerPage,
-      page: newPage
-    })
+    setPage(newPage)
   }
 
   // change number of cards per page
   function handleItemsPerPage(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
-    setPagination({
-      count,
-      rowsOptions,
-      labelRowsPerPage,
-      // reset to first page
-      page: 0,
-      rows: parseInt(event.target.value),
-    })
-    // save change to cookie
-    setDocumentCookie(event.target.value,'rsd_page_rows')
+    setRows(parseInt(event.target.value))
   }
 
   return (

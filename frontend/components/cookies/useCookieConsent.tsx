@@ -1,22 +1,12 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useCallback, useEffect, useState} from 'react'
 import logger from '~/utils/logger'
-
-export function getCoookieValue(name:string) {
-  try {
-    const value = document.cookie
-      .split(';')
-      .find((item) => item.trim().startsWith(`${name}=`))
-      ?.split('=')[1]
-    return value
-  } catch (e:any) {
-    logger(`useCookieConsent.getCoookieValue error: ${e.message}`,'error')
-  }
-}
 
 export function hasConsentCookie(name:string){
   try {
@@ -32,7 +22,7 @@ export function hasConsentCookie(name:string){
 
 export function setConsentCookie(value:string,name:string='rsd_consent',path:string='/') {
   try {
-    // match matomo cookie exiration time of 400 days
+    // match matomo cookie expiration time of 400 days
     const maxAgeInSeconds = 60 * 60 * 24 * (400)
     document.cookie = `${name}=${value};path=${path};SameSite=Lax;Secure;Max-Age=${maxAgeInSeconds};`
   } catch (e: any) {

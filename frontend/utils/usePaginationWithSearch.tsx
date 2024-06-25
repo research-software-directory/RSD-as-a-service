@@ -6,13 +6,21 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState, useContext, useEffect} from 'react'
-import SearchContext from '../components/search/SearchContext'
-import PaginationContext from '../components/pagination/PaginationContext'
+import SearchContext from '~/components/search/SearchContext'
+import PaginationContext from '~/components/pagination/PaginationContext'
 
 export default function usePaginationWithSearch(placeholder:string) {
   const {setPlaceholder, searchFor, setSearchInput, placeholder:currentPlaceholder} = useContext(SearchContext)
   const {pagination, setPagination} = useContext(PaginationContext)
   const [search, setSearch] = useState(searchFor)
+
+
+  // console.group('usePaginationWithSearch')
+  // console.log('searchFor...',searchFor)
+  // console.log('search...',search)
+  // console.log('pagination...',pagination)
+  // console.groupEnd()
+
 
   useEffect(() => {
     if (placeholder !== currentPlaceholder) {

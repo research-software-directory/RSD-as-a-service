@@ -5,10 +5,9 @@
 
 import {useRouter} from 'next/router'
 
-import {rowsPerPageOptions} from '~/config/pagination'
 import {ssrBasicParams} from '~/utils/extractQueryParam'
 import {QueryParams,buildFilterUrl} from '~/utils/postgrestUrl'
-import {getDocumentCookie} from '~/utils/userSettings'
+import {useUserSettings} from '~/config/UserSettingsContext'
 
 type RsdViews='organisations'|'communities'|'news'
 
@@ -18,8 +17,9 @@ type RsdViews='organisations'|'communities'|'news'
  * @param view the route of the overview page (organisations | communities | news)
  * @returns handleQueryChange and resetFilters methods.
  */
-export default function useBasicQueryParams(view:RsdViews){
+export default function useSearchParams(view:RsdViews){
   const router = useRouter()
+  const {rsd_page_rows, setPageRows} = useUserSettings()
 
   function createUrl(key: string, value: string | string[]) {
     const params: QueryParams = {
@@ -34,8 +34,8 @@ export default function useBasicQueryParams(view:RsdViews){
       params['page'] = 1
     }
     if (typeof params['rows'] === 'undefined' || params['rows'] === null) {
-      // extract from cookie or use default
-      params['rows'] = getDocumentCookie('rsd_page_rows', rowsPerPageOptions[0])
+      // use value from user settings if none provided
+      params['rows'] = rsd_page_rows
     }
     // construct url with all query params
     const url = buildFilterUrl(params,view)
@@ -44,6 +44,11 @@ export default function useBasicQueryParams(view:RsdViews){
 
   function handleQueryChange(key: string, value: string | string[]) {
     const url = createUrl(key, value)
+
+    if (key === 'rows'){
+      // save number of rows in user settings (saves to cookie too)
+      setPageRows(parseInt(value.toString()))
+    }
     if (key === 'page') {
       // when changing page we scroll to top
       router.push(url, url, {scroll: true})

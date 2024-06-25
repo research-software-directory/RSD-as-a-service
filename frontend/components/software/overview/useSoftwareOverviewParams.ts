@@ -14,11 +14,11 @@ import {useRouter} from 'next/router'
 import logger from '~/utils/logger'
 import {ssrSoftwareParams} from '~/utils/extractQueryParam'
 import {QueryParams, ssrViewUrl} from '~/utils/postgrestUrl'
-import {getDocumentCookie} from '~/utils/userSettings'
-import {rowsPerPageOptions} from '~/config/pagination'
+import {useUserSettings} from '~/config/UserSettingsContext'
 
 export default function useSoftwareOverviewParams() {
   const router = useRouter()
+  const {rsd_page_rows, setPageRows} = useUserSettings()
 
   /**
  * NOTE! This hook is used on software and spotlight pages.
@@ -51,8 +51,8 @@ export default function useSoftwareOverviewParams() {
       params['page'] = 1
     }
     if (typeof params['rows'] === 'undefined' || params['rows'] === null) {
-      // extract from cookie or use default
-      params['rows'] = getDocumentCookie('rsd_page_rows', rowsPerPageOptions[0])
+      // use value from user settings if none provided
+      params['rows'] = rsd_page_rows
     }
     // construct url with all query params
     const url = ssrViewUrl({
@@ -64,6 +64,10 @@ export default function useSoftwareOverviewParams() {
 
   function handleQueryChange(key: string, value: string | string[]) {
     const url = createUrl(key, value)
+    if (key === 'rows'){
+      // save number of rows in user settings (saves to cookie too)
+      setPageRows(parseInt(value.toString()))
+    }
     if (key === 'page') {
       // when changing page we scroll to top
       router.push(url,url,{scroll: true})

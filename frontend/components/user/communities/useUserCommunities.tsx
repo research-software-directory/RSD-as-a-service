@@ -93,15 +93,14 @@ export default function useUserCommunities(){
   useEffect(()=>{
 
     if (user?.account){
-
       getCommunitiesForMaintainer({
         searchFor, page,rows,account:user?.account,token
       })
         .then(data=>{
           setData(data)
+          setCount(data.count)
         })
         .finally(()=>{
-          setCount(data.count)
           setLoading(false)
         })
     }
