@@ -7,10 +7,16 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Link from 'next/link'
-import {ParticipatingOrganisationProps} from '../../types/Organisation'
+
 import LogoAvatar from '~/components/layout/LogoAvatar'
 
-export default function ParticipatingOrganisation({rsd_path, name, website, logo_url}: ParticipatingOrganisationProps) {
+export type CommunityItemProps = Readonly<{
+  slug: string
+  name: string
+  logo_url: string | null
+}>
+
+export default function CommunityItem({slug, name, logo_url}: CommunityItemProps) {
 
   function renderLogo() {
     return (
@@ -23,7 +29,7 @@ export default function ParticipatingOrganisation({rsd_path, name, website, logo
             maxHeight: '100%',
             // width: 'auto',
             maxWidth: '100%',
-            // we need to fit thisone properly
+            // we need to fit this one properly
             objectFit: 'scale-down'
           }
         }}
@@ -31,32 +37,16 @@ export default function ParticipatingOrganisation({rsd_path, name, website, logo
     )
   }
 
-  let url: string=''
-  if (rsd_path) {
-    // internal RSD link to organisation
-    url = `/organisations/${rsd_path}`
+  if (slug) {
+    // internal RSD link to community
     return (
-      <Link href={url}
+      <Link href={`/communities/${slug}/software`}
         title={name}
         className="flex flex-col items-center" rel="noreferrer"
-        passHref>
+        passHref
+      >
         {renderLogo()}
-        {/* show name only for research units */}
-        {rsd_path.includes('/',2)===true ? name : null}
       </Link>
-    )
-  }
-
-  if (website) {
-    // organisation website
-    url = website
-    return (
-      <a href={url}
-        target="_blank"
-        title={name}
-        className="flex items-center" rel="noreferrer">
-        {renderLogo()}
-      </a>
     )
   }
 

@@ -113,6 +113,12 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
   render: () => <PackageManagers />,
   status: ''
 },{
+  id: 'communities',
+  label: 'Communities',
+  icon: <Diversity3Icon />,
+  render: () => <SoftwareCommunities />,
+  status: ''
+},{
   id: 'related-software',
   label: 'Related software',
   icon: <JoinInnerIcon />,
@@ -123,12 +129,6 @@ export const editSoftwarePage:EditSoftwarePageProps[] = [{
   label: 'Related projects',
   icon: <DonutLargeIcon />,
   render: () => <RelatedProjects />,
-  status: ''
-},{
-  id: 'communities',
-  label: 'Communities',
-  icon: <Diversity3Icon />,
-  render: () => <SoftwareCommunities />,
   status: ''
 },{
   id: 'maintainers',

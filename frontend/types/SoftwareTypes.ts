@@ -208,4 +208,3 @@ export type SoftwareForSoftware = {
   origin: string,
   relation: string
 }
-

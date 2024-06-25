@@ -80,7 +80,7 @@ export default function CategoryEditTree({roots, community, title, onMutation}:C
               )})
           :
           !showAddChildForm &&
-          <Alert severity="info">
+          <Alert severity="info" sx={{margin:'2rem 0rem'}}>
               There are no categories, add one using &quot;Add&quot; button above.
           </Alert>
         }

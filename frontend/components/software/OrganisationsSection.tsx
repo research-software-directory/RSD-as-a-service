@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,7 +10,7 @@ import {ParticipatingOrganisationProps} from '../../types/Organisation'
 import PageContainer from '../layout/PageContainer'
 import ParticipatingOrganisation from './ParticipatingOrganisation'
 
-const OrganisationGridSection = styled('section')(({theme}) => ({
+export const OrganisationGridSection = styled('section')(({theme}) => ({
   flex: 1,
   display: 'grid',
   gridGap: '2rem',
@@ -31,7 +33,7 @@ export default function OrganisationsSection({organisations = []}: { organisatio
         {organisations.map((item, pos) => {
           return (
             <ParticipatingOrganisation
-              key={pos}
+              key={item.rsd_path}
               {...item}
             />
           )

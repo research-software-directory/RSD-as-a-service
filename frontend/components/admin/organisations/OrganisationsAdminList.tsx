@@ -13,6 +13,7 @@ import ContentLoader from '~/components/layout/ContentLoader'
 import {OrganisationList} from '~/types/Organisation'
 import {RemoveOrganisationProps} from './apiOrganisation'
 import OrganisationItem from './OrganisationItem'
+import Alert from '@mui/material/Alert'
 
 type DeleteOrganisationModal = {
   open: boolean,
@@ -32,6 +33,14 @@ export default function OrganisationsAdminList({organisations,loading,page,onDel
   })
 
   if (loading && !page) return <ContentLoader />
+
+  if (organisations.length === 0){
+    return (
+      <Alert severity="info" sx={{margin:'1.5rem 0rem'}}>
+        No organisation to show.
+      </Alert>
+    )
+  }
 
   function onDelete(organisation:OrganisationList) {
     if (organisation) {

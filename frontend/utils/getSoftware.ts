@@ -11,10 +11,11 @@
 
 import logger from './logger'
 import {CategoriesForSoftware, KeywordForSoftware, LicenseForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
+import {CategoryID} from '~/types/Category'
+import {RelatedProjectForSoftware} from '~/types/Project'
+import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
-import {RelatedProjectForSoftware} from '~/types/Project'
-import {CategoryID} from '~/types/Category'
 
 /*
  * Software list for the software overview page
@@ -329,6 +330,34 @@ export async function getRelatedProjectsForSoftware({software, token, frontend, 
     return []
   } catch (e: any) {
     logger(`getRelatedProjects: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+type GetCommunitiesOfSoftware={
+  software:string
+  token?:string
+}
+
+export async function getCommunitiesOfSoftware({software,token}:GetCommunitiesOfSoftware){
+  try{
+    const query = `software_id=${software}&status=eq.approved&order=software_cnt.desc.nullslast,name`
+    const url = `${getBaseUrl()}/rpc/communities_of_software?${query}`
+
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    if (resp.ok){
+      const json:CommunitiesOfSoftware[] = await resp.json()
+      return json
+    }
+    logger(`getCommunitiesOfSoftware: ${resp.status}:${resp.statusText}`, 'warn')
+    return []
+  }catch(e:any){
+    logger(`getCommunitiesOfSoftware: ${e?.message}`, 'error')
     return []
   }
 }

@@ -9,13 +9,14 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
+import Alert from '@mui/material/Alert'
+import {useSession} from '~/auth'
+import {createJsonHeaders} from '~/utils/fetchHelpers'
+import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 import {MentionItemProps} from '~/types/Mention'
 import MentionViewItem from '~/components/mention/MentionViewItem'
 import EditMentionModal from '~/components/mention/EditMentionModal'
-import {createJsonHeaders} from '~/utils/fetchHelpers'
-import {useSession} from '~/auth'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import usePaginationWithSearch from '~/utils/usePaginationWithSearch'
 
 function leaveOutSomeFieldsReplacer(key: string, value: any) {
   if (key === 'id' || key === 'doi_registration_date' || key === 'created_at' || key === 'updated_at') {
@@ -49,8 +50,11 @@ export default function MentionsOverviewList({list, onUpdate}: { list: MentionIt
   }
 
   if (list.length === 0) {
-    return 'No mentions to show'
-
+    return (
+      <Alert severity="info" sx={{margin:'1rem 0rem'}}>
+        No mentions to show
+      </Alert>
+    )
   }
 
   return (

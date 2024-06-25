@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2024 dv4all
-// SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -31,6 +31,7 @@ import EditPageButton from '~/components/layout/EditPageButton'
 import OrganisationsSection from '~/components/software/OrganisationsSection'
 import RelatedProjectsSection from '~/components/projects/RelatedProjectsSection'
 import RelatedSoftwareSection from '~/components/software/RelatedSoftwareSection'
+import CommunitiesSection from '~/components/software/CommunitiesSection'
 import {
   getSoftwareItem,
   getRepositoryInfoForSoftware,
@@ -41,6 +42,7 @@ import {
   getRelatedProjectsForSoftware,
   getReleasesForSoftware,
   SoftwareVersion,
+  getCommunitiesOfSoftware,
 } from '~/utils/getSoftware'
 import logger from '~/utils/logger'
 import {getDisplayName} from '~/utils/getDisplayName'
@@ -59,13 +61,14 @@ import {Testimonial} from '~/types/Testimonial'
 import {MentionItemProps} from '~/types/Mention'
 import {ParticipatingOrganisationProps} from '~/types/Organisation'
 import {RelatedProject} from '~/types/Project'
+import {CategoryPath} from '~/types/Category'
 import NoContent from '~/components/layout/NoContent'
 import DarkThemeSection from '~/components/layout/DarkThemeSection'
 import MentionsSection from '~/components/mention/MentionsSection'
 import {getReferencePapersForSoftware} from '~/components/software/edit/mentions/reference-papers/apiReferencePapers'
 import {PackageManager, getPackageManagers} from '~/components/software/edit/package-managers/apiPackageManager'
+import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
 import CategoriesSection from '~/components/software/CategoriesSection'
-import {CategoryPath} from '~/types/Category'
 
 interface SoftwareIndexData extends ScriptProps{
   slug: string
@@ -83,7 +86,8 @@ interface SoftwareIndexData extends ScriptProps{
   relatedProjects: RelatedProject[]
   isMaintainer: boolean,
   organisations: ParticipatingOrganisationProps[],
-  packages: PackageManager[]
+  packages: PackageManager[],
+  communities: CommunitiesOfSoftware[]
 }
 
 export default function SoftwareIndexPage(props:SoftwareIndexData) {
@@ -94,7 +98,8 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
     licenseInfo, repositoryInfo,
     mentions, testimonials, contributors,
     relatedSoftware, relatedProjects, isMaintainer,
-    slug, organisations, referencePapers, packages
+    slug, organisations, referencePapers, packages,
+    communities
   } = props
 
   const [highlightedCategories, otherCategories] = useMemo(() => {
@@ -122,7 +127,7 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
   if (!software?.brand_name){
     return <NoContent />
   }
-  // console.log('SoftwareIndexPage...packages...', packages)
+  // console.log('SoftwareIndexPage...communities...', communities)
   return (
     <>
       {/* Page Head meta tags */}
@@ -209,6 +214,10 @@ export default function SoftwareIndexPage(props:SoftwareIndexData) {
       <CategoriesSection
         categories={highlightedCategories}
       />
+      {/* Communities */}
+      <CommunitiesSection
+        communities={communities}
+      />
       {/* Related projects (uses project components) */}
       <RelatedProjectsSection
         relatedProjects={relatedProjects}
@@ -264,7 +273,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       isMaintainer,
       organisations,
       referencePapers,
-      packages
+      packages,
+      communities
     ] = await Promise.all([
       // software versions info
       getReleasesForSoftware(software.id,token),
@@ -293,7 +303,9 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
       // reference papers
       getReferencePapersForSoftware({software:software.id,token}),
       // package managers
-      getPackageManagers({software:software.id,token})
+      getPackageManagers({software:software.id,token}),
+      // communities of software
+      getCommunitiesOfSoftware({software:software.id,token})
     ])
     // pass data to page component as props
     return {
@@ -313,7 +325,8 @@ export async function getServerSideProps(context:GetServerSidePropsContext) {
         isMaintainer: isMaintainer ? isMaintainer : userInfo?.role==='rsd_admin',
         organisations,
         slug,
-        packages
+        packages,
+        communities
       }
     }
   }catch(e:any){
