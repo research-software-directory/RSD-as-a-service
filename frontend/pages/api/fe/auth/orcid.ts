@@ -16,7 +16,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
 import logger from '~/utils/logger'
-import {RedirectToProps, getAuthorisationEndpoint, getRedirectUrl} from '~/auth/api/authHelpers'
+import {RedirectToProps, getRedirectUrl} from '~/auth/api/authHelpers'
+import {getAuthEndpoint} from '~/auth/api/authEndpoint'
 import {Provider, ApiError} from '.'
 
 type Data = Provider | ApiError
@@ -26,8 +27,8 @@ export async function orcidRedirectProps() {
     // extract well known url from env
     const wellknownUrl = process.env.ORCID_WELL_KNOWN_URL ?? null
     if (wellknownUrl) {
-      // get (cached) authorisation endpoint from well known url
-      const authorization_endpoint = await getAuthorisationEndpoint(wellknownUrl) ?? null
+      // get (cached) authorisation endpoint from wellknown url
+      const authorization_endpoint = await getAuthEndpoint(wellknownUrl,'orcid') ?? null
       if (authorization_endpoint) {
         // construct all props needed for redirectUrl
         const props: RedirectToProps = {
