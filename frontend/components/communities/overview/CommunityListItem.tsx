@@ -17,7 +17,7 @@ export default function CommunityListItem({community}:{community:CommunityListPr
   return (
     <OverviewListItem className="flex-none">
       <Link
-        data-testid="project-list-item"
+        data-testid="community-list-item"
         key={community.id}
         href={`/communities/${community.slug}/software?order=mention_cnt`}
         className='flex-1 flex items-center hover:text-inherit bg-base-100 rounded-sm'

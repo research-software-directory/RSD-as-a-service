@@ -1,5 +1,5 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
@@ -20,6 +20,7 @@ import {SearchResult} from './index'
 import {DoiBulkImportReport} from './apiImportMentions'
 import ImportDialogTitle from './ImportDialogTitle'
 import ImportDialogActions from './ImportDialogActions'
+import SanitizedMathMLBox from '~/components/layout/SanitizedMathMLBox'
 
 type BulkImportReportBodyProps = {
   initialResults: DoiBulkImportReport
@@ -136,7 +137,12 @@ export default function ImportReportBody({initialResults,onCancel,onImport}: Bul
             secondary={
               result?.mention ?
                 <>
-                  <span className="text-secondary">{result?.mention.title}</span><br />
+                  <SanitizedMathMLBox
+                    title={result?.mention.title}
+                    component="span"
+                    className="text-secondary"
+                    rawHtml={result?.mention.title}
+                  /><br />
                   <span>{result.mention.authors}</span><br />
                   <span>Source: {result.source}</span>
                 </>

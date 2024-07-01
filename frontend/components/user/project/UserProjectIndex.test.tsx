@@ -1,5 +1,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,51 +25,48 @@ describe('components/user/organisations/index.tsx', () => {
     // return loading
     mockUseUserProjects.mockReturnValue({
       loading: true,
-      projects: [],
-      count: 0
+      projects: []
     })
 
     render(
-      <WithAppContext>
-        <UserProjects session={mockSession} />
+      <WithAppContext options={{session:mockSession}}>
+        <UserProjects />
       </WithAppContext>
     )
 
-    const loader = screen.getByRole('progressbar')
+    screen.getByRole('progressbar')
   })
 
   it('render nothing to show message', () => {
     // return loading
     mockUseUserProjects.mockReturnValue({
       loading: false,
-      projects: [],
-      count: 0
+      projects: []
     })
 
     render(
-      <WithAppContext>
-        <UserProjects session={mockSession} />
+      <WithAppContext options={{session:mockSession}}>
+        <UserProjects />
       </WithAppContext>
     )
 
-    const noItems = screen.getByText('nothing to show')
+    screen.getByText('nothing to show')
   })
 
-  it('render project cards', () => {
+  it('render project list', () => {
     // return loading
     mockUseUserProjects.mockReturnValue({
       loading: false,
-      projects: projectsByMaintainer,
-      count: projectsByMaintainer.length
+      projects: projectsByMaintainer
     })
 
     render(
-      <WithAppContext>
-        <UserProjects session={mockSession} />
+      <WithAppContext options={{session:mockSession}}>
+        <UserProjects />
       </WithAppContext>
     )
 
-    const projects = screen.getAllByTestId('project-card-link')
+    const projects = screen.getAllByTestId('project-list-item')
     expect(projects.length).toEqual(projectsByMaintainer.length)
   })
 

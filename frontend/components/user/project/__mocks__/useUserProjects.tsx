@@ -1,19 +1,11 @@
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {Session} from '~/auth'
 import mockProjectsByMaintainer from './projectsByMaintainer.json'
 
-export type UserProjectsProp = {
-  searchFor?: string
-  page: number,
-  rows: number,
-  session: Session
-}
-
-export default function useUserProjects({searchFor, page, rows, session}: UserProjectsProp) {
+export default function useUserProjects() {
 
   return {
     projects: mockProjectsByMaintainer,

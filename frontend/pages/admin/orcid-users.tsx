@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -9,6 +9,8 @@
 import Head from 'next/head'
 
 import {app} from '~/config/app'
+import {rowsPerPageOptions} from '~/config/pagination'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import DefaultLayout from '~/components/layout/DefaultLayout'
 import {adminPages} from '~/components/admin/AdminNav'
 import AdminPageWithNav from '~/components/admin/AdminPageWithNav'
@@ -28,6 +30,10 @@ const pagination = {
 
 
 export default function OrcidWitelistPage() {
+  // use page rows from user settings
+  const {rsd_page_rows} = useUserSettings()
+  pagination.rows = rsd_page_rows ?? rowsPerPageOptions[0]
+
   return (
     <DefaultLayout>
       <Head>

@@ -24,14 +24,15 @@ import {
   addNewReferencePaperToSoftware,
   removeReferencePaperForSoftware
 } from './apiReferencePapers'
-import NoRefferencePapers from './NoRefferencePapers'
+import NoReferencePapers from './NoReferencePapers'
 import {useSoftwareMentionContext} from '../SoftwareMentionContext'
+import SanitizedMathMLBox from '~/components/layout/SanitizedMathMLBox'
 
 const initalState:EditMentionState = {
   settings: {
     editModalTitle: 'Reference papers',
     confirmDeleteModalTitle: 'Delete reference paper',
-    noItemsComponent:()=><NoRefferencePapers/>
+    noItemsComponent:()=><NoReferencePapers/>
   },
   loading: true,
   processing: false,
@@ -49,7 +50,7 @@ export default function EditReferencePapersProvider(props:any) {
   const {software:{id:software}} = useSoftwareContext()
   const {showErrorMessage,showSuccessMessage,showInfoMessage} = useSnackbar()
   const {loading,reference_papers:mentions,counts:{reference_papers},setReferencePapersCnt} = useSoftwareMentionContext()
-  // initalize state with loading and items received from the parent.
+  // initialize state with loading and items received from the parent.
   const [state, dispatch] = useReducer(editMentionReducer,{
     ...initalState,
     loading,
@@ -103,7 +104,12 @@ export default function EditReferencePapersProvider(props:any) {
           payload: resp.message
         })
         // show success
-        showSuccessMessage(`Added ${item.title}`)
+        showSuccessMessage(
+          <SanitizedMathMLBox
+            component="span"
+            rawHtml={`Added ${item.title}`}
+          />
+        )
         // increase count
         setReferencePapersCnt(reference_papers+1)
       } else {
@@ -116,7 +122,12 @@ export default function EditReferencePapersProvider(props:any) {
         token,
       })
       if (resp.status !== 200) {
-        showErrorMessage(`Failed to update ${item.title}. ${resp.message}`)
+        showErrorMessage(
+          <SanitizedMathMLBox
+            component="span"
+            rawHtml={`Failed to update ${item.title}. ${resp.message}`}
+          />
+        )
         return
       }
       dispatch({
@@ -146,14 +157,24 @@ export default function EditReferencePapersProvider(props:any) {
       })
       // debugger
       if (resp.status !== 200) {
-        showErrorMessage(`Failed to add ${item.title}. ${resp.message}`)
+        showErrorMessage(
+          <SanitizedMathMLBox
+            component="span"
+            rawHtml={`Failed to add ${item.title}. ${resp.message}`}
+          />
+        )
       } else {
         dispatch({
           type: EditMentionActionType.ADD_ITEM,
           payload: item
         })
         // show success
-        showSuccessMessage(`Added ${item.title}`)
+        showSuccessMessage(
+          <SanitizedMathMLBox
+            component="span"
+            rawHtml={`Added ${item.title}`}
+          />
+        )
         // increase count
         setReferencePapersCnt(reference_papers+1)
       }
@@ -168,7 +189,12 @@ export default function EditReferencePapersProvider(props:any) {
           payload: resp.message
         })
         // show success
-        showSuccessMessage(`Added ${item.title}`)
+        showSuccessMessage(
+          <SanitizedMathMLBox
+            component="span"
+            rawHtml={`Added ${item.title}`}
+          />
+        )
         // increase count
         setReferencePapersCnt(reference_papers+1)
       } else {
@@ -202,10 +228,20 @@ export default function EditReferencePapersProvider(props:any) {
           token
         })
       } else {
-        showErrorMessage(`Failed to delete ${item.title}. ${resp.message}`)
+        showErrorMessage(
+          <SanitizedMathMLBox
+            component="span"
+            rawHtml={`Failed to delete ${item.title}. ${resp.message}`}
+          />
+        )
       }
     } else {
-      showErrorMessage(`Failed to delete ${item.title}. Invalid item id ${item.id}`)
+      showErrorMessage(
+        <SanitizedMathMLBox
+          component="span"
+          rawHtml={`Failed to delete ${item.title}. Invalid item id ${item.id}`}
+        />
+      )
     }
   }
 

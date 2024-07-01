@@ -1,6 +1,6 @@
+-- SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 -- SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
--- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 -- SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 -- SPDX-FileCopyrightText: 2023 dv4all
 -- SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
@@ -767,6 +767,7 @@ CREATE FUNCTION software_by_maintainer(maintainer_id UUID) RETURNS TABLE (
 	brand_name VARCHAR,
 	short_statement VARCHAR,
 	is_published BOOLEAN,
+	image_id VARCHAR,
 	updated_at TIMESTAMPTZ,
 	contributor_cnt BIGINT,
 	mention_cnt BIGINT
@@ -778,6 +779,7 @@ $$
 		software.brand_name,
 		software.short_statement,
 		software.is_published,
+		software.image_id,
 		software.updated_at,
 		count_software_contributors.contributor_cnt,
 		count_software_mentions.mention_cnt

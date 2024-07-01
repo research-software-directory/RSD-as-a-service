@@ -1,12 +1,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {createContext, useContext, useEffect, useState,} from 'react'
-import {rowsPerPageOptions} from '../../config/pagination'
+import {createContext, useContext, useState} from 'react'
+import {rowsPerPageOptions} from '~/config/pagination'
+import {useUserSettings} from '~/config/UserSettingsContext'
 
 type Pagination = {
   count: number,
@@ -35,19 +36,18 @@ const PaginationContext = createContext<PaginationContextProps>({
 })
 
 export function PaginationProvider(props: any) {
-  const {pagination: initPagination} = props
+  const state={
+    ...initState,
+    ...props?.pagination
+  }
   // need to use initState if initPagination NOT PROVIDED
-  const [pagination, setPagination] = useState(initPagination ?? initState)
+  const [pagination, setPagination] = useState<Pagination>(state)
 
   // console.group('PaginationProvider')
+  // console.log('props...', props)
+  // console.log('state...', state)
   // console.log('pagination...', pagination)
   // console.groupEnd()
-
-  useEffect(() => {
-    // update pagination state with new inital value
-    if (initPagination) setPagination(initPagination)
-  },[initPagination])
-
 
   return <PaginationContext.Provider
     value={{pagination,setPagination}}
@@ -57,15 +57,54 @@ export function PaginationProvider(props: any) {
 
 
 export function usePaginationContext() {
+  const {setPageRows} = useUserSettings()
   const {pagination, setPagination} = useContext(PaginationContext)
 
   // console.group('usePaginationContext')
   // console.log('pagination...', pagination)
+  // console.log('search...', search)
   // console.groupEnd()
+
+  function setPage(page:number){
+    setPagination({
+      ...pagination,
+      page
+    })
+  }
+
+  function setCount(count:number){
+    if (count === 0){
+      setPagination({
+        ...pagination,
+        // reset page to 0 too
+        page:0,
+        count,
+      })
+    }else{
+      setPagination({
+        ...pagination,
+        count,
+      })
+    }
+  }
+
+  function setRows(rows:number){
+    // save number of rows in user settings (saves to cookie too)
+    setPageRows(rows)
+
+    setPagination({
+      ...pagination,
+      // reset to first page
+      page: 0,
+      rows
+    })
+  }
 
   return {
     ...pagination,
-    setPagination
+    setPage,
+    setRows,
+    setCount
   }
 }
 

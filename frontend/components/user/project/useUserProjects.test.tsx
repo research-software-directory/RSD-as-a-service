@@ -1,26 +1,21 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
-import {mockSession} from '~/utils/jest/WithAppContext'
+import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
 
 import {mockResolvedValueOnce} from '~/utils/jest/mockFetch'
 
-import useUserProjects, {UserProjectsProp} from './useUserProjects'
+import useUserProjects from './useUserProjects'
 import projectsByMaintainer from './__mocks__/projectsByMaintainer.json'
 
-const mockProps:UserProjectsProp = {
-  searchFor:'',
-  page:0,
-  rows:12,
-  session: mockSession
-}
 
-
-function WithUserProjectsHook(props:UserProjectsProp) {
-  const {loading, projects, count} = useUserProjects(props)
+function WithUserProjectsHook() {
+  const {loading, projects} = useUserProjects()
 
   if (loading) {
     return (
@@ -43,9 +38,9 @@ beforeEach(() => {
 
 it('shows loader', () => {
   render(
-    <WithUserProjectsHook {...mockProps} />
+    <WithUserProjectsHook />
   )
-  const loadingMsg = screen.getByText('Loading...')
+  screen.getByText('Loading...')
   // screen.debug()
 })
 
@@ -54,9 +49,11 @@ it('resolves no projects', async() => {
   mockResolvedValueOnce([])
 
   render(
-    <WithUserProjectsHook {...mockProps} />
+    <WithAppContext options={{session:mockSession}}>
+      <WithUserProjectsHook />
+    </WithAppContext>
   )
-  const emptyArray = await screen.findByText('[]')
+  await screen.findByText('[]')
 })
 
 it('resolves projects', async() => {
@@ -64,8 +61,10 @@ it('resolves projects', async() => {
   mockResolvedValueOnce(projectsByMaintainer)
 
   render(
-    <WithUserProjectsHook {...mockProps} />
+    <WithAppContext options={{session:mockSession}}>
+      <WithUserProjectsHook />
+    </WithAppContext>
   )
-  const id = await screen.findByText(RegExp(projectsByMaintainer[0].id))
+  await screen.findByText(RegExp(projectsByMaintainer[0].id))
 })
 

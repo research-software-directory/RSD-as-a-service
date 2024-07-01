@@ -1,16 +1,26 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {useState, useContext, useEffect} from 'react'
-import SearchContext from '../components/search/SearchContext'
-import PaginationContext from '../components/pagination/PaginationContext'
+import SearchContext from '~/components/search/SearchContext'
+import PaginationContext from '~/components/pagination/PaginationContext'
 
 export default function usePaginationWithSearch(placeholder:string) {
   const {setPlaceholder, searchFor, setSearchInput, placeholder:currentPlaceholder} = useContext(SearchContext)
   const {pagination, setPagination} = useContext(PaginationContext)
   const [search, setSearch] = useState(searchFor)
+
+
+  // console.group('usePaginationWithSearch')
+  // console.log('searchFor...',searchFor)
+  // console.log('search...',search)
+  // console.log('pagination...',pagination)
+  // console.groupEnd()
+
 
   useEffect(() => {
     if (placeholder !== currentPlaceholder) {
@@ -44,20 +54,19 @@ export default function usePaginationWithSearch(placeholder:string) {
 
   function setCount(count: number) {
     // sync count from api and in the component
-    if (pagination.count !== count) {
-      if (count === 0) {
-        setPagination({
-          ...pagination,
-          // reset page value
-          page:0,
-          count
-        })
-      } else {
-        setPagination({
-          ...pagination,
-          count
-        })
-      }
+    // console.log('usePaginationWithSearch.setCount...', count)
+    if (count === 0) {
+      setPagination({
+        ...pagination,
+        // reset page value
+        page:0,
+        count
+      })
+    } else {
+      setPagination({
+        ...pagination,
+        count
+      })
     }
   }
 

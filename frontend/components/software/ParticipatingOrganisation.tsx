@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,7 +10,7 @@ import Link from 'next/link'
 import {ParticipatingOrganisationProps} from '../../types/Organisation'
 import LogoAvatar from '~/components/layout/LogoAvatar'
 
-export default function OrganisationItem({rsd_path, name, website, logo_url}: ParticipatingOrganisationProps) {
+export default function ParticipatingOrganisation({rsd_path, name, website, logo_url}: ParticipatingOrganisationProps) {
 
   function renderLogo() {
     return (

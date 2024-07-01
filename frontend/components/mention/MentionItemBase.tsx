@@ -1,13 +1,16 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 - 2023 dv4all
+// SPDX-FileCopyrightText: 2022 - 2024 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (dv4all) (dv4all)
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {ReactNode} from 'react'
 
 import {MentionItemProps} from '~/types/Mention'
+import SanitizedMathMLBox from '~/components/layout/SanitizedMathMLBox'
 import MentionAuthors from './MentionAuthors'
 import MentionDoi from './MentionDoi'
 import MentionNote from './MentionNote'
@@ -52,7 +55,7 @@ export default function MentionItemBase({item,pos,nav,type,role='find'}:MentionI
           title={item?.title ?? ''}
           url={item?.url}
           role={role}
-          className="flex-1 font-medium"
+          className="flex-1 font-medium line-clamp-5"
         />
         <nav className="pl-4">
           {renderButtons()}
@@ -60,7 +63,7 @@ export default function MentionItemBase({item,pos,nav,type,role='find'}:MentionI
       </div>
       <MentionAuthors
         authors={item.authors}
-        className="text-sm"
+        className="text-sm max-h-[9rem] overflow-y-auto overflow-x-hidden"
       />
       <MentionPublisherItem
         publisher={item?.publisher}
@@ -90,20 +93,28 @@ type MentionTitleProps = {
 }
 
 export function MentionTitle({title, url, role, pos, className}: MentionTitleProps) {
-
+  const rawHtml = pos ? `${pos}. ${title}` : title
   if (url && role === 'list') {
     return (
-      <div className={className}>
-        <a href={url} target="_blank" rel="noreferrer">
-          {/* show pos if provided */}
-          {pos ? `${pos}.` : null}{title}
-        </a>
+      <div
+        title={title}
+        className={className}>
+        <SanitizedMathMLBox
+          component="a"
+          target="_blank"
+          rel="noreferrer"
+          href={url}
+          rawHtml={rawHtml}
+        />
       </div>
     )
   }
   return (
-    <div className={className}>
-      {pos ? `${pos}.` : null}{title}
-    </div>
+    <SanitizedMathMLBox
+      title={title}
+      component="div"
+      className={className}
+      rawHtml={rawHtml}
+    />
   )
 }

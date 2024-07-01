@@ -31,13 +31,13 @@ export default function CommunityAboutPage() {
 
   return (
     <BaseSurfaceRounded
-      className="flex-1 flex flex-col mb-12 p-4"
+      className="flex-1 flex flex-col mb-12 p-8"
       type="section"
     >
       <FormProvider {...methods}>
         <form
           autoComplete="off"
-          className="flex-1 flex flex-col py-4"
+          className="flex-1 flex flex-col"
         >
           {/* hidden inputs */}
           <input type="hidden"

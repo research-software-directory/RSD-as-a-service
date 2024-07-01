@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
@@ -10,11 +10,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from './logger'
-import {CategoriesForSoftware, KeywordForSoftware, LicenseForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '../types/SoftwareTypes'
+import {CategoriesForSoftware, KeywordForSoftware, LicenseForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
+import {CategoryID} from '~/types/Category'
+import {RelatedProjectForSoftware} from '~/types/Project'
+import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
-import {RelatedProjectForSoftware} from '~/types/Project'
-import {CategoryID, CategoryPath} from '~/types/Category'
 
 /*
  * Software list for the software overview page
@@ -210,24 +211,6 @@ export async function getCategoriesForSoftware(software_id: string, token?: stri
   return []
 }
 
-export async function getAvailableCategories(): Promise<CategoryPath[]> {
-  try {
-    const url = prepareQueryURL('/rpc/available_categories_expanded')
-    const resp = await fetch(url, {
-      method: 'GET',
-    })
-    if (resp.status === 200) {
-      const data = await resp.json()
-      return data
-    } else if (resp.status === 404) {
-      logger(`getAvailableCategories: 404 [${url}]`, 'error')
-    }
-  } catch (e: any) {
-    logger(`getAvailableCategories: ${e?.message}`, 'error')
-  }
-  return []
-}
-
 export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
   const url = prepareQueryURL('/category_for_software')
   const data = {software_id: softwareId, category_id: categoryId}
@@ -347,6 +330,34 @@ export async function getRelatedProjectsForSoftware({software, token, frontend, 
     return []
   } catch (e: any) {
     logger(`getRelatedProjects: ${e?.message}`, 'error')
+    return []
+  }
+}
+
+type GetCommunitiesOfSoftware={
+  software:string
+  token?:string
+}
+
+export async function getCommunitiesOfSoftware({software,token}:GetCommunitiesOfSoftware){
+  try{
+    const query = `software_id=${software}&status=eq.approved&order=software_cnt.desc.nullslast,name`
+    const url = `${getBaseUrl()}/rpc/communities_of_software?${query}`
+
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...createJsonHeaders(token)
+      }
+    })
+    if (resp.ok){
+      const json:CommunitiesOfSoftware[] = await resp.json()
+      return json
+    }
+    logger(`getCommunitiesOfSoftware: ${resp.status}:${resp.statusText}`, 'warn')
+    return []
+  }catch(e:any){
+    logger(`getCommunitiesOfSoftware: ${e?.message}`, 'error')
     return []
   }
 }

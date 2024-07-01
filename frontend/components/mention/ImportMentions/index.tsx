@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 //
@@ -101,7 +101,7 @@ export default function ImportMentions({table, entityId, onSuccess}:ImportMentio
     })
 
     if (resp.status === 200) {
-      showSuccessMessage(`Succesfully added ${mentionIdsToSave.length} items`)
+      showSuccessMessage(`Successfully added ${mentionIdsToSave.length} items`)
       onSuccess()
       closeDialog()
     } else {

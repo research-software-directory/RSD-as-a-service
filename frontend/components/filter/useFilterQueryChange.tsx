@@ -6,14 +6,13 @@
 import {useCallback} from 'react'
 import {useRouter} from 'next/router'
 
-import {rowsPerPageOptions} from '~/config/pagination'
+import {useUserSettings} from '~/config/UserSettingsContext'
 import {encodeQueryValue} from '~/utils/extractQueryParam'
 import {QueryParams} from '~/utils/postgrestUrl'
-import {getDocumentCookie} from '~/utils/userSettings'
-
 
 export default function useFilterQueryChange(){
   const router = useRouter()
+  const {rsd_page_rows, setPageRows} = useUserSettings()
 
   const handleQueryChange = useCallback((key: string, value: string | string[]) => {
     const params: QueryParams = {
@@ -25,7 +24,10 @@ export default function useFilterQueryChange(){
     }
     if (typeof params['rows'] === 'undefined' || params['rows'] === null) {
       // extract from cookie or use default
-      params['rows'] = getDocumentCookie('rsd_page_rows', rowsPerPageOptions[0])
+      params['rows'] = rsd_page_rows
+    } else if (key === 'rows'){
+      // save number of rows in user settings (saves to cookie too)
+      setPageRows(parseInt(value.toString()))
     }
 
     // update query parameters
@@ -52,7 +54,7 @@ export default function useFilterQueryChange(){
       // console.groupEnd()
       router.push({query},undefined,{scroll: false})
     }
-  }, [router])
+  }, [router,rsd_page_rows,setPageRows])
 
   return {
     handleQueryChange

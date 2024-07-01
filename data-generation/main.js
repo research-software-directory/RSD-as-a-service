@@ -288,6 +288,47 @@ function generateKeywordsForEntity(idsEntity, idsKeyword, nameEntity) {
 	return result;
 }
 
+async function generateCategories(idsCommunities, maxDepth = 3) {
+	const communityPromises = [];
+	for (const commId of idsCommunities) {
+		communityPromises.push(generateAndSaveCategoriesForCommunity(commId, maxDepth));
+	}
+	communityPromises.push(generateAndSaveCategoriesForCommunity(null, maxDepth));
+
+	return await Promise.all(communityPromises);
+}
+
+async function generateAndSaveCategoriesForCommunity(idCommunity, maxDepth) {
+	return new Promise(async res => {
+		let parentIds = [null];
+		for (let level = 1; level <= maxDepth; level++) {
+			const newParentIds = [];
+			for (const parent of parentIds) {
+				let toGenerateCount = faker.number.int(4);
+				if (idCommunity === null && level === 1) {
+					toGenerateCount += 1;
+				}
+				for (let i = 0; i < toGenerateCount; i++) {
+					const name = `Parent ${parent}, level ${level}, item ${i + 1}`;
+					const shortName = `Level ${level}, item ${i + 1}`;
+					const body = {
+						community: idCommunity,
+						parent: parent,
+						short_name: shortName,
+						name: name,
+					};
+					await postToBackend('/category', body)
+						.then(resp => resp.json())
+						.then(json => json[0].id)
+						.then(id => newParentIds.push(id));
+				}
+			}
+			parentIds = newParentIds;
+		}
+		res();
+	});
+}
+
 function generateMentionsForEntity(idsEntity, idsMention, nameEntity) {
 	const result = [];
 
@@ -1034,6 +1075,7 @@ const communityPromise = postToBackend('/community', generateCommunities())
 	.then(async commArray => {
 		idsCommunities = commArray.map(comm => comm['id']);
 		postToBackend('/keyword_for_community', generateKeywordsForEntity(idsCommunities, idsKeywords, 'community'));
+		generateCategories(idsCommunities);
 	});
 
 await postToBackend('/meta_pages', generateMetaPages()).then(() => console.log('meta pages done'));

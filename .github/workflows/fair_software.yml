@@ -1,19 +1,19 @@
+# SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 # SPDX-FileCopyrightText: 2022 Jurriaan Spaaks (Netherlands eScience Center) <j.maassen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2022 Netherlands eScience Center
 # SPDX-FileCopyrightText: 2022 dv4all
+# SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 #
 # SPDX-License-Identifier: Apache-2.0
 
 name: FAIR software
 
 on:
-  # moved to manual until licenses issue is resolved
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - README.md
+  pull_request:
+    branches:
+      - main
+    paths:
+      - README.m
   workflow_dispatch:
 
 jobs:

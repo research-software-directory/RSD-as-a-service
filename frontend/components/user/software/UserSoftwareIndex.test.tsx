@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
-import {WithAppContext, mockSession} from '~/utils/jest/WithAppContext'
+import {WithAppContext} from '~/utils/jest/WithAppContext'
 
 import UserSoftware from './index'
 
@@ -23,34 +25,32 @@ describe('components/user/software/index.tsx', () => {
     // return loading
     mockUseUserSoftware.mockReturnValue({
       loading: true,
-      software: [],
-      count: 0
+      software: []
     })
 
     render(
       <WithAppContext>
-        <UserSoftware session={mockSession} />
+        <UserSoftware />
       </WithAppContext>
     )
 
-    const loader = screen.getByRole('progressbar')
+    screen.getByRole('progressbar')
   })
 
   it('render nothing to show message', () => {
     // return loading
     mockUseUserSoftware.mockReturnValue({
       loading: false,
-      software: [],
-      count: 0
+      software: []
     })
 
     render(
       <WithAppContext>
-        <UserSoftware session={mockSession} />
+        <UserSoftware />
       </WithAppContext>
     )
 
-    const noItems = screen.getByText('nothing to show')
+    screen.getByText('nothing to show')
   })
 
   it('render software cards', () => {
@@ -63,11 +63,11 @@ describe('components/user/software/index.tsx', () => {
 
     render(
       <WithAppContext>
-        <UserSoftware session={mockSession} />
+        <UserSoftware />
       </WithAppContext>
     )
 
-    const software = screen.getAllByTestId('software-card-link')
+    const software = screen.getAllByTestId('software-list-item')
     expect(software.length).toEqual(softwareByMaintainer.length)
   })
 

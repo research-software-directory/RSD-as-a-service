@@ -5,6 +5,9 @@
 
 import useSearchParams from './useSearchParams'
 
+// mock userSettings hook
+jest.mock('~/config/UserSettingsContext')
+
 // mock next router
 const mockBack = jest.fn()
 const mockReplace = jest.fn()
@@ -22,7 +25,6 @@ jest.mock('next/router', () => ({
     }
   })
 }))
-
 
 beforeEach(() => {
   jest.resetAllMocks()
