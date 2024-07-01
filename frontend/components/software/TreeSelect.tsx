@@ -12,27 +12,27 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import {TreeNode} from '~/types/TreeNode'
 
-export type TreeSelectProps<Type> = {
-  roots: TreeNode<Type>[]
-  textExtractor: (value: Type) => string
-  keyExtractor: (value: Type) => string
-  onSelect: (node: TreeNode<Type>) => void
-  isSelected: (node: TreeNode<Type>) => boolean
+export type TreeSelectProps<T> = {
+  roots: TreeNode<T>[]
+  textExtractor: (value: T) => string
+  keyExtractor: (value: T) => string
+  onSelect: (node: TreeNode<T>) => void
+  isSelected: (node: TreeNode<T>) => boolean
 }
 
-type RecursiveTreeSelectProps<Type> = {
+type RecursiveTreeSelectProps<T> = {
   indent: number
-  nodes: TreeNode<Type>[]
+  nodes: TreeNode<T>[]
 }
 
-export default function TreeSelect<Type>({
+export default function TreeSelect<T>({
   isSelected,
   keyExtractor,
   onSelect,
   roots,
   textExtractor
-}: Readonly<TreeSelectProps<Type>>) {
-  function RecursivelyGenerateItems(propsRecursive: RecursiveTreeSelectProps<Type>) {
+}: Readonly<TreeSelectProps<T>>) {
+  function RecursivelyGenerateItems(propsRecursive: RecursiveTreeSelectProps<T>) {
     return propsRecursive.nodes.map(node => {
       const val = node.getValue()
       if (val === null) {
