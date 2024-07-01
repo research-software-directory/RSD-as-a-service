@@ -2,12 +2,13 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
 import {render, screen} from '@testing-library/react'
 
-import {CategoriesForSoftware} from '~/types/SoftwareTypes'
+import {CategoriesForSoftware, CategoryForSoftwareIds} from '~/types/SoftwareTypes'
 import useSoftwareToEdit from './useSoftwareToEdit'
 
 // MOCS
@@ -21,10 +22,12 @@ jest.mock('~/utils/editSoftware', () => ({
 // MOCK getKeywordsForSoftware, getLicenseForSoftware
 const mockGetKeywordsForSoftware = jest.fn(props => Promise.resolve([] as any))
 const mockGetCategoriesForSoftware = jest.fn(props => Promise.resolve([] as CategoriesForSoftware))
+const mockGetCategoriesForSoftwareIds = jest.fn(props => Promise.resolve(new Set() as CategoryForSoftwareIds))
 const mockGetLicenseForSoftware = jest.fn(props => Promise.resolve([] as any))
 jest.mock('~/utils/getSoftware', () => ({
   getKeywordsForSoftware: jest.fn(props => mockGetKeywordsForSoftware(props)),
   getCategoriesForSoftware: jest.fn(props => mockGetCategoriesForSoftware(props)),
+  getCategoryForSoftwareIds: jest.fn(props => mockGetCategoriesForSoftwareIds),
   getLicenseForSoftware: jest.fn(props => mockGetLicenseForSoftware(props)),
 }))
 

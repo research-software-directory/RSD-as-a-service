@@ -10,10 +10,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from './logger'
-import {CategoriesForSoftware, KeywordForSoftware, LicenseForSoftware, RepositoryInfo, SoftwareItem, SoftwareOverviewItemProps} from '~/types/SoftwareTypes'
 import {CategoryID} from '~/types/Category'
 import {RelatedProjectForSoftware} from '~/types/Project'
 import {CommunitiesOfSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
+import {
+  CategoriesForSoftware,
+  CategoryForSoftwareIds,
+  KeywordForSoftware,
+  LicenseForSoftware,
+  RepositoryInfo,
+  SoftwareItem,
+  SoftwareOverviewItemProps
+} from '~/types/SoftwareTypes'
 import {extractCountFromHeader} from './extractCountFromHeader'
 import {createJsonHeaders, getBaseUrl} from './fetchHelpers'
 
@@ -209,6 +217,26 @@ export async function getCategoriesForSoftware(software_id: string, token?: stri
     logger(`getCategoriesForSoftware: ${e?.message}`, 'error')
   }
   return []
+}
+
+export async function getCategoryForSoftwareIds(software_id: string, token?: string): Promise<CategoryForSoftwareIds> {
+  try {
+    const url = prepareQueryURL('/category_for_software', {software_id: `eq.${software_id}`, select: 'category_id'})
+    const resp = await fetch(url, {
+      method: 'GET',
+      headers: createJsonHeaders(token)
+    })
+    if (resp.status === 200) {
+      const data = await resp.json()
+      logger(`getCategoriesForSoftwareIds response: ${JSON.stringify(data)}`)
+      return new Set(data.map((entry: any) => entry.category_id))
+    } else if (resp.status === 404) {
+      logger(`getCategoriesForSoftwareIds: 404 [${url}]`, 'error')
+    }
+  } catch (e: any) {
+    logger(`getCategoriesForSoftwareIds: ${e?.message}`, 'error')
+  }
+  return new Set()
 }
 
 export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {
