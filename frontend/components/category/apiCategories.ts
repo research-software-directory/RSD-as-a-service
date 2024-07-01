@@ -8,7 +8,7 @@ import {CategoryEntry, CategoryID} from '~/types/Category'
 import {getBaseUrl} from '~/utils/fetchHelpers'
 import {TreeNode} from '~/types/TreeNode'
 
-export async function loadCategoryRoots(community: string | null){
+export async function loadCategoryRoots(community: string | null): Promise<TreeNode<CategoryEntry>[]> {
 
   const communityFilter = community === null ? 'community=is.null' : `community=eq.${community}`
 

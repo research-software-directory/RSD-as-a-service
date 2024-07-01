@@ -148,9 +148,9 @@ services:
       - database
       - backend
       - auth
-    # volumes:
+    volumes:
     #   - ./deployment/hmz/styles:/app/public/styles
-    #   - ./deployment/hmz/data:/app/public/data
+      - ./deployment/rsd/data:/app/public/data
     #   - ./deployment/hmz/images:/app/public/images
     networks:
       - net

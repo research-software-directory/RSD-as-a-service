@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,6 +17,7 @@ import {useSoftwareCommunities} from './useSoftwareCommunities'
 import FindCommunity from './FindCommunity'
 import SoftwareCommunityList from './SoftwareCommunityList'
 import SoftwareCommunitiesInfo from './SoftwareCommunitiesInfo'
+import CommunityAddCategoriesDialog from '~/components/software/edit/communities/CommunityAddCategoriesDialog'
 
 export default function SoftwareCommunities() {
   const {software} = useSoftwareContext()
@@ -29,6 +31,8 @@ export default function SoftwareCommunities() {
     id: null,
     name: null
   })
+  const [openCategoryModal, setOpenCategoryModal] = useState<boolean>(false)
+  const [selectedCommunity, setSelectedCommunity] = useState<CommunityListProps | null>(null)
 
   // if loading show loader
   if (loading) return (
@@ -55,11 +59,17 @@ export default function SoftwareCommunities() {
     })
   }
 
-  function onAddCommunity(community:CommunityListProps){
-    // console.log('onAddCommunity...', community)
+  function onAddCommunity(community: CommunityListProps){
+    setSelectedCommunity(community)
+    setOpenCategoryModal(true)
+  }
+
+  function onConfirmAddCommunity() {
+    setOpenCategoryModal(false)
+    setSelectedCommunity(null)
     joinCommunity({
-      software:software.id,
-      community
+      software: software.id,
+      community: selectedCommunity!
     })
   }
 
@@ -94,7 +104,7 @@ export default function SoftwareCommunities() {
           title="Remove community"
           open={modal.open}
           body={
-            <p>Are you sure you want to remove <strong>{modal.name ?? ''}</strong>?</p>
+            <p>Are you sure you want to remove <strong>{modal.name ?? ''}</strong>? This will also delete all related (if any) categories.</p>
           }
           onCancel={()=>setModal({open:false,id:null,name:null})}
           onDelete={()=>{
@@ -106,6 +116,14 @@ export default function SoftwareCommunities() {
             setModal({open:false,id:null,name:null})
           }}
         />
+      }
+      {openCategoryModal &&
+          <CommunityAddCategoriesDialog
+            softwareId={software.id}
+            community={selectedCommunity!}
+            onClose={() => {setOpenCategoryModal(false); setSelectedCommunity(null)}}
+            onConfirm={onConfirmAddCommunity}
+          />
       }
     </>
   )
