@@ -3,48 +3,60 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-export class TreeNode<Type> {
-  #children: TreeNode<Type>[] = []
-  #value: Type | null
+export class TreeNode<T> {
+  #children: Set<TreeNode<T>> = new Set()
+  #value: T | null
 
-  constructor(value: Type | null) {
+  constructor(value: T | null) {
     this.#value = value
   }
 
-  clone() {
-    const clone = new TreeNode(this.#value)
-    clone.#children = [...this.children()]
-    return clone
+  addChild(node: TreeNode<T>) {
+    this.#children.add(node)
   }
 
-  addChild(node: TreeNode<Type>) {
-    this.#children.push(node)
-  }
-
-  deleteChild(node: TreeNode<Type>) {
-    const index = this.#children.indexOf(node)
-    if (index >= 0) {
-      this.#children.splice(index, 1)
-    }
+  deleteChild(node: TreeNode<T>) {
+    this.#children.delete(node)
   }
 
   childrenCount(): number {
-    return this.#children.length
+    return this.#children.size
   }
 
   getValue() {
     return this.#value
   }
 
-  setValue(value: Type | null) {
+  setValue(value: T | null) {
     this.#value = value
   }
 
-  children(): TreeNode<Type>[] {
-    return this.#children
+  children(): TreeNode<T>[] {
+    return Array.from(this.#children)
   }
 
-  asString(): string {
-    return JSON.stringify(this.#value)
+  subTreeWhereLeavesSatisfy(predicate: (value: T) => boolean): TreeNode<T> | null {
+    if (this.#children.size === 0) {
+      return (this.#value === null || !(predicate(this.#value)) ? null : new TreeNode<T>(this.#value))
+    }
+
+    const newNode = new TreeNode<T>(this.#value)
+    for (const child of this.#children) {
+      const newSubTree = child.subTreeWhereLeavesSatisfy(predicate)
+      if (newSubTree !== null) {
+        newNode.addChild(newSubTree)
+      }
+    }
+
+    return newNode.#children.size === 0 ? null : newNode
+  }
+
+  sortRecursively(comparator: (val1: T, val2: T) => number) {
+    const childrenArray = this.children()
+    childrenArray.sort((n1, n2) => comparator(n1.#value!, n2.#value!))
+    this.#children = new Set(childrenArray)
+    for (const child of this.#children) {
+      child.sortRecursively(comparator)
+    }
   }
 }

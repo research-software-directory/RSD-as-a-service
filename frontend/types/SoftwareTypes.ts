@@ -15,7 +15,7 @@
  */
 
 import {AutocompleteOption} from './AutocompleteOptions'
-import {CategoryPath} from './Category'
+import {CategoryID, CategoryPath} from './Category'
 import {Status} from './Organisation'
 
 export type CodePlatform = 'github' | 'gitlab' | 'bitbucket' | 'other'
@@ -119,6 +119,7 @@ export type EditSoftwareImage = {
 export type EditSoftwareItem = SoftwareItem & EditSoftwareImage & {
   keywords: KeywordForSoftware[]
   categories: CategoriesForSoftware
+  categoryForSoftwareIds: CategoryForSoftwareIds
   licenses: AutocompleteOption<License>[]
 }
 
@@ -138,8 +139,10 @@ export type KeywordForSoftware = {
 
 export type CategoriesForSoftware = CategoryPath[]
 
+export type CategoryForSoftwareIds = Set<CategoryID>
+
 /**
- * LiCENSES
+ * LICENSES
  */
 
 export type LicenseForSoftware = {

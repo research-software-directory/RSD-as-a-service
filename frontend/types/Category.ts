@@ -27,9 +27,3 @@ export type CategoryEntry = {
 
 
 export type CategoryPath = CategoryEntry[]
-
-export type CategoryTreeLevel = {
-  category: CategoryEntry
-  children: CategoryTreeLevel[]
-}
-export type CategoryTree = CategoryTreeLevel[]

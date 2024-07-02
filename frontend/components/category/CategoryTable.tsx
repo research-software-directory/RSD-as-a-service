@@ -3,15 +3,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CategoryTreeLevel} from '~/types/Category'
+import {CategoryEntry} from '~/types/Category'
+import {TreeNode} from '~/types/TreeNode'
 import {calcTreeLevelDepth} from '~/utils/categories'
 
 export type CategoryTableProps = Readonly<{
-   treeLevel: CategoryTreeLevel
+   tree: TreeNode<CategoryEntry>
 }>
-export const CategoryTable = ({treeLevel}: CategoryTableProps) => {
-  const levelLables = treeLevel.category.properties.tree_level_labels
-  const depth = calcTreeLevelDepth(treeLevel)
+export const CategoryTable = ({tree}: CategoryTableProps) => {
+  const category = tree.getValue()
+  if (category === null) {
+    return null
+  }
+
+  const children = tree.children()
+  const levelLables = category.properties.tree_level_labels
+  const depth = calcTreeLevelDepth(tree)
   return (
     <div className={`grid grid-cols-${depth} border-y-2`}>
       {levelLables &&
@@ -21,26 +28,32 @@ export const CategoryTable = ({treeLevel}: CategoryTableProps) => {
           )}
         </div>
       }
-      <Block categories={treeLevel.children} depth={depth} />
+      <Block tree={children} depth={depth} />
     </div>
   )
 }
 
 type BlockProps = Readonly<{
-  categories:CategoryTreeLevel[]
+  tree: TreeNode<CategoryEntry>[]
   depth: number
 }>
-const Block = ({categories, depth}: BlockProps) => {
+const Block = ({tree, depth}: BlockProps) => {
   const depth2 = depth - 1
-  return categories.map((cat, index) => {
-    const border = (index != categories.length-1) ? 'border-b-2' : ''
-    return <div key={cat.category.id} className={`grid grid-cols-subgrid col-span-${depth} ${border}`}>
+  return tree.map((node, index) => {
+    const category = node.getValue()
+    if (category === null) {
+      return null
+    }
+
+    const children = node.children()
+    const border = (index != tree.length-1) ? 'border-b-2' : ''
+    return <div key={category.id} className={`grid grid-cols-subgrid col-span-${depth} ${border}`}>
       <div className="px-3 py-2">
-        {cat.category.name}
+        {category.name}
       </div>
       {depth2 > 0 &&
         <div className={`grid grid-cols-subgrid col-span-${depth2}`}>
-          <Block categories={cat.children} depth={depth2} />
+          <Block tree={children} depth={depth2} />
         </div>
       }
     </div>

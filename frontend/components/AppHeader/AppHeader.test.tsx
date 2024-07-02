@@ -8,7 +8,6 @@
 import {render, screen} from '@testing-library/react'
 
 import {WithAppContext} from '~/utils/jest/WithAppContext'
-import {menuItems} from '~/config/menuItems'
 import defaultSettings from '~/config/defaultSettings.json'
 import {RsdSettingsState} from '~/config/rsdSettingsReducer'
 import AppHeader from './index'

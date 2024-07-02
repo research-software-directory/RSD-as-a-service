@@ -8,6 +8,7 @@ import {FormProvider, useForm} from 'react-hook-form'
 import {CategoriesForSoftware, CodePlatform, EditSoftwareItem, KeywordForSoftware, License} from '~/types/SoftwareTypes'
 import {AutocompleteOption} from '~/types/AutocompleteOptions'
 import EditSoftwareMetadataInputs from './EditSoftwareMetadataInputs'
+import {CategoryID} from '~/types/Category'
 
 type EditSoftwareMetadataFormProps={
   id: string
@@ -19,6 +20,7 @@ type EditSoftwareMetadataFormProps={
   licenses: AutocompleteOption<License>[]
   keywords: KeywordForSoftware[]
   categories: CategoriesForSoftware
+  categoryIds: Set<CategoryID>
 }
 
 /**

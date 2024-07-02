@@ -4,7 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {CategoryEntry} from '~/types/Category'
+import {CategoryEntry, CategoryID} from '~/types/Category'
 import {getBaseUrl} from '~/utils/fetchHelpers'
 import {TreeNode} from '~/types/TreeNode'
 
@@ -16,18 +16,23 @@ export async function loadCategoryRoots(community: string | null){
 
   const categoriesArr: CategoryEntry[] = await resp.json()
 
-  const map: Map<string, TreeNode<CategoryEntry>> = new Map()
+  return categoryEntriesToRoots(categoriesArr)
+
+}
+
+export function categoryEntriesToRoots(categoriesArr: CategoryEntry[]): TreeNode<CategoryEntry>[] {
+  const map: Map<CategoryID, TreeNode<CategoryEntry>> = new Map()
 
   for (const cat of categoriesArr) {
     const id = cat.id
-    let child
+    let node
 
     if (!map.has(id)) {
-      child = new TreeNode<CategoryEntry>(cat)
-      map.set(id, child)
+      node = new TreeNode<CategoryEntry>(cat)
+      map.set(id, node)
     } else {
-      child = map.get(id) as TreeNode<CategoryEntry>
-      child.setValue(cat)
+      node = map.get(id) as TreeNode<CategoryEntry>
+      node.setValue(cat)
     }
 
     if (cat.parent === null) {
@@ -39,10 +44,10 @@ export async function loadCategoryRoots(community: string | null){
       map.set(parentId, new TreeNode<CategoryEntry>(null))
     }
 
-      map.get(parentId)!.addChild(child)
+    map.get(parentId)!.addChild(node)
   }
 
-  const result:TreeNode<CategoryEntry>[] = []
+  const result: TreeNode<CategoryEntry>[] = []
 
   for (const node of map.values()) {
     if (node.getValue()!.parent === null) {
@@ -51,5 +56,4 @@ export async function loadCategoryRoots(community: string | null){
   }
 
   return result
-
 }

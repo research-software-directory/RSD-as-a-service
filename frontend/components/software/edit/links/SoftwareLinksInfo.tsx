@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
@@ -11,6 +12,7 @@ import {Fragment} from 'react'
 import Alert from '@mui/material/Alert'
 import {ReorderedCategories} from '~/utils/categories'
 import {config} from '~/components/software/edit/links/config'
+import {CategoryEntry} from '~/types/Category'
 
 type SoftwareLinksInfoProps = {
   readonly reorderedCategories: ReorderedCategories
@@ -57,7 +59,7 @@ function generateHelpOnCategories(reorderedCategories: ReorderedCategories) {
   const items = []
 
   for (const treeLevel of reorderedCategories.highlighted) {
-    const {category} = treeLevel
+    const category: CategoryEntry = treeLevel.getValue()!
     if (category.properties.is_highlight && category.properties.description) {
       items.push([category.name, category.properties.description])
     }
