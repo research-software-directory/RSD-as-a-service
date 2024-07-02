@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2023 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 - 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2023 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
@@ -115,4 +115,13 @@ export function useReorderedCategories(community: string | null): ReorderedCateg
   }, [community])
 
   return reorderedCategories
+}
+
+export function calcTreeLevelDepth(tree: TreeNode<CategoryEntry>): number {
+
+  function walk (tree: TreeNode<CategoryEntry>, depth:number): number {
+    return Math.max(depth, ...tree.children().map(sub => walk(sub, depth+1)))
+  }
+
+  return walk(tree, 0)
 }

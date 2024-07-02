@@ -8,11 +8,12 @@
 import {CategoryPath} from '~/types/Category'
 import PageContainer from '../layout/PageContainer'
 import {useCategoryTree} from '~/utils/categories'
+import {CategoryTable} from '~/components//category/CategoryTable'
 import {CategoryTreeLevel} from '~/components/category/CategoryTree'
 
-export type CategoriesSectionProps = {
+export type CategoriesSectionProps = Readonly<{
   categories: CategoryPath[]
-}
+}>
 export default function CategoriesSection({categories}: CategoriesSectionProps) {
   const tree = useCategoryTree(categories)
 
@@ -31,7 +32,11 @@ export default function CategoriesSection({categories}: CategoriesSectionProps) 
           className="pb-8 text-[2rem] text-primary">
           {category.name}
         </h2>
-        <section>
+        {/* Display as table and on small screens as bullet point list  */}
+        <section className="max-sm:hidden">
+          <CategoryTable tree={node} />
+        </section>
+        <section className="sm:hidden">
           <CategoryTreeLevel items={children} showLongNames/>
         </section>
       </PageContainer>
