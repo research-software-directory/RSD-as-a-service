@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,6 +13,7 @@ import IconButton from '@mui/material/IconButton'
 
 import {getImageUrl} from '~/utils/editImage'
 import {getDisplayInitials, getDisplayName} from '~/utils/getDisplayName'
+import {allowedImageMimeTypes} from '~/utils/handleFileUpload'
 
 type AvatarOptionsProps = {
   given_names: string
@@ -57,7 +59,7 @@ export default function AvatarOptions(props: AvatarOptionsProps) {
           data-testid="upload-avatar-input"
           id="upload-avatar-image"
           type="file"
-          accept="image/*"
+          accept={allowedImageMimeTypes}
           onChange={onFileUpload}
           style={{display:'none'}}
         />

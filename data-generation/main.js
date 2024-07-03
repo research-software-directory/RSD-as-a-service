@@ -889,46 +889,10 @@ function mimeTypeFromFileName(fileName) {
 	if (fileName.endsWith('.png')) {
 		return 'image/png';
 	} else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
-		return 'image/jpg';
+		return 'image/jpeg';
 	} else if (fileName.endsWith('.svg')) {
 		return 'image/svg+xml';
 	} else return null;
-}
-
-// returns the IDs of the images after they have been posted to the database
-async function downloadAndGetImages(urlGenerator, amount) {
-	const imageAsBase64Promises = [];
-	const timeOuts = [];
-	for (let index = 0; index < amount; index++) {
-		const url = urlGenerator();
-		imageAsBase64Promises.push(
-			Promise.race([
-				fetch(url)
-					.then(resp => {
-						clearTimeout(timeOuts[index]);
-						return resp.arrayBuffer();
-					})
-					.then(ab => Buffer.from(ab))
-					.then(bf => bf.toString('base64')),
-				new Promise((res, rej) => (timeOuts[index] = setTimeout(res, 3000))).then(() => {
-					console.warn('Timeout for ' + url + ', skipping');
-					return null;
-				}),
-			]),
-		);
-	}
-	const imagesAsBase64 = await Promise.all(imageAsBase64Promises);
-
-	const imagesWithoutNulls = imagesAsBase64
-		.filter(img => img !== null)
-		.map(base64 => {
-			return {data: base64, mime_type: 'image/jpeg'};
-		});
-
-	const resp = await postToBackend('/image?select=id', imagesWithoutNulls);
-	const idsAsObjects = await resp.json();
-	const ids = idsAsObjects.map(idAsObject => idAsObject.id);
-	return ids;
 }
 
 async function postAccountsToBackend(amount = 100) {

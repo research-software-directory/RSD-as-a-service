@@ -13,7 +13,17 @@ CREATE TABLE image (
 	id VARCHAR(40) PRIMARY KEY,
 	data VARCHAR(2750000) NOT NULL,
 	mime_type VARCHAR(100) NOT NULL,
-	created_at TIMESTAMPTZ NOT NULL
+	created_at TIMESTAMPTZ NOT NULL,
+
+	CONSTRAINT image_valid_mime_type CHECK (mime_type IN (
+		'image/avif',
+		'image/gif',
+		'image/jpeg',
+		'image/png',
+		'image/svg+xml',
+		'image/webp',
+		'image/x-icon'
+	))
 );
 
 CREATE FUNCTION sanitise_insert_image() RETURNS TRIGGER LANGUAGE plpgsql AS
