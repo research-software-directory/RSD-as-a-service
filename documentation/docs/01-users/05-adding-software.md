@@ -87,6 +87,11 @@ The software logo is shown on the software page and in the software card (see ex
 
 - A **Source code repository URL** of the software. This link will show up as a repository icon on the software page and will be used to harvest information about the software development activity, which will be shown as a graph. At the moment we support [GitHub](https://github.com/), [GitLab](https://about.gitlab.com/) and have limited support for [Bitbucket](https://bitbucket.org/product/). The platform is automatically detected from the http domain, but can be changed manually.
 
+  The RSD supports URLs starting with https that point to the repository website, or to the actual git repository, for example:
+
+  * `https://github.com/research-software-directory/RSD-as-a-service` (website)
+  * `https://github.com/research-software-directory/RSD-as-a-service.git` (git repository)
+
 - A **Getting started URL** which refers to webpage with more information about the software. This is shown as the "Get started" button on the software page.
 
 ### Software DOI
