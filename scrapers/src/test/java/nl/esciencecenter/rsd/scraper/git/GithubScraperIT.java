@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class GithubScaperIT {
+public class GithubScraperIT {
 
 	private final String githubUrlPrefix = "https://github.com/";
 	private final String repo = "research-software-directory/RSD-as-a-service";
