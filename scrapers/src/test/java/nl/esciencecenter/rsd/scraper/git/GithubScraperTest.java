@@ -1,7 +1,7 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,6 +17,7 @@ public class GithubScraperTest {
 
 	private final String githubUrlPrefix = "https://github.com/";
 	private final String repo = "research-software-directory/RSD-as-a-service";
+	private final String repoGit = "research-software-directory/RSD-as-a-service.git";
 	private final String repoEmpty = "cmeessen/empty";
 	private final String repoNonEx = "research-software-directory/does-not-exist";
 
@@ -59,5 +60,11 @@ public class GithubScraperTest {
 
 		Optional<GithubScraper> scraper3 = GithubScraper.create(githubUrlPrefix + "org-only/");
 		Assertions.assertTrue(scraper3.isEmpty());
+	}
+
+	@Test
+	void givenGitRepoUrl_whenCreatingScraper_thenRemoveGitSuffix() {
+		Optional<GithubScraper> scraper = GithubScraper.create(githubUrlPrefix + repoGit);
+		Assertions.assertEquals(repo, scraper.get().organisation + "/" + scraper.get().repo);
 	}
 }
