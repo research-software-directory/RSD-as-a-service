@@ -1,7 +1,7 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
-// SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,13 +28,16 @@ import java.util.regex.Pattern;
 public class GithubScraper implements GitScraper {
 
 	private final String BASE_API_URL = "https://api.github.com";
-	private final String organisation;
-	private final String repo;
+	public final String organisation;
+	public final String repo;
 	private static final Pattern LINK_PATTERN = Pattern.compile("<([^>]+page=(\\d+)[^>]*)>; rel=\"([^\"]+)\"");
 	public static final Pattern GITHUB_URL_PATTERN = Pattern.compile("^https?://github\\.com/([^\\s/]+)/([^\\s/]+)/?$");
 
 	private GithubScraper(String organisation, String repo) {
 		this.organisation = Objects.requireNonNull(organisation);
+		if (repo.endsWith(".git")) {
+			repo = repo.substring(0, repo.length() - 4);
+		}
 		this.repo = Objects.requireNonNull(repo);
 	}
 
