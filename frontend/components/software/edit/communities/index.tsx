@@ -4,7 +4,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useCallback, useEffect, useState} from 'react'
+import {useState} from 'react'
 
 import ConfirmDeleteModal from '~/components/layout/ConfirmDeleteModal'
 import EditSection from '~/components/layout/EditSection'
@@ -18,18 +18,8 @@ import FindCommunity from './FindCommunity'
 import SoftwareCommunityList from './SoftwareCommunityList'
 import SoftwareCommunitiesInfo from './SoftwareCommunitiesInfo'
 import CommunityAddCategoriesDialog from '~/components/software/edit/communities/CommunityAddCategoriesDialog'
-import {TreeNode} from '~/types/TreeNode'
-import {CategoryEntry} from '~/types/Category'
-import {loadCategoryRoots} from '~/components/category/apiCategories'
-import {getCategoryForSoftwareIds} from '~/utils/getSoftware'
-import {useSession} from '~/auth'
-import {CategoryForSoftwareIds} from '~/types/SoftwareTypes'
-import useSnackbar from '~/components/snackbar/useSnackbar'
-import logger from '~/utils/logger'
 
 export default function SoftwareCommunities() {
-  const {token} = useSession()
-  const {showErrorMessage} = useSnackbar()
   const {software} = useSoftwareContext()
   const {loading,communities,joinCommunity,leaveCommunity} = useSoftwareCommunities(software.id)
   const [modal, setModal] = useState<{
@@ -41,52 +31,11 @@ export default function SoftwareCommunities() {
     id: null,
     name: null
   })
-  const [openCategoryModal, setOpenCategoryModal] = useState<boolean>(false)
+  const [openCategoryModalProps, setOpenCategoryModalProps] = useState<{autoConfirm: boolean, onSave: (community: CommunityListProps) => void} | null>(null)
   const [selectedCommunity, setSelectedCommunity] = useState<CommunityListProps | null>(null)
-  const [categoriesPerCommunity, setCategoriesPerCommunity] = useState<Map<string, TreeNode<CategoryEntry>[]> | null>(null)
-  const [associatedCategoryIds, setAssociatedCategoryIds] = useState<CategoryForSoftwareIds | null>(null)
-
-  const loadAssociatedCategoryIds = useCallback(() => {
-    getCategoryForSoftwareIds(software.id, token)
-      .then(res => setAssociatedCategoryIds(res))
-      .catch(reason => {
-        showErrorMessage('Something went wrong while loading the categories belonging to this software')
-        logger(reason, 'error')
-      })
-  },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  [software, token])
-
-  const loadCategoriesPerCommunity = useCallback(() => {
-    const map = new Map<string, TreeNode<CategoryEntry>[]>()
-    const promises = []
-    for (const comm of communities) {
-      const promise = loadCategoryRoots(comm.id)
-        .then(res => map.set(comm.id, res))
-      promises.push(promise)
-    }
-    Promise.all(promises)
-      .then(() => setCategoriesPerCommunity(map))
-      .catch((reason) => {
-        showErrorMessage('Something went wrong while loading the community categories')
-        logger(reason, 'error')
-      })
-
-  },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  [communities])
 
 
-  useEffect(() => {
-    loadAssociatedCategoryIds()
-  }, [loadAssociatedCategoryIds])
-
-  useEffect(() => {
-    loadCategoriesPerCommunity()
-  }, [loadCategoriesPerCommunity])
-
-  // if loading show loader
-  if (loading || categoriesPerCommunity === null || associatedCategoryIds === null) return (
+  if (loading) return (
     <ContentLoader />
   )
 
@@ -108,22 +57,28 @@ export default function SoftwareCommunities() {
       software:software.id,
       community: id
     })
-      .then(loadAssociatedCategoryIds)
   }
 
   function onAddCommunity(community: CommunityListProps){
     setSelectedCommunity(community)
-    setOpenCategoryModal(true)
+    setOpenCategoryModalProps({autoConfirm: true, onSave: onConfirmAddCommunity})
   }
 
-  function onConfirmAddCommunity() {
-    setOpenCategoryModal(false)
-    setSelectedCommunity(null)
+  function onOpenEditCategories(community: CommunityListProps) {
+    setSelectedCommunity(community)
+    setOpenCategoryModalProps({autoConfirm: false, onSave: () => {
+      setOpenCategoryModalProps(null)
+      setSelectedCommunity(null)
+    }})
+  }
+
+  function onConfirmAddCommunity(community: CommunityListProps) {
+    setOpenCategoryModalProps(null)
     joinCommunity({
       software: software.id,
-      community: selectedCommunity!
+      community: community
     })
-      .then(loadAssociatedCategoryIds)
+    setSelectedCommunity(null)
   }
 
   return (
@@ -137,9 +92,7 @@ export default function SoftwareCommunities() {
           <SoftwareCommunityList
             communities={communities}
             onDelete={onDeleteCommunity}
-            categoriesPerCommunity={categoriesPerCommunity}
-            associatedCategoryIds={associatedCategoryIds}
-            onMutation={loadAssociatedCategoryIds}
+            onEdit={onOpenEditCategories}
           />
         </section>
         <section className="py-4">
@@ -173,12 +126,13 @@ export default function SoftwareCommunities() {
           }}
         />
       }
-      {openCategoryModal &&
+      {openCategoryModalProps!== null &&
           <CommunityAddCategoriesDialog
             softwareId={software.id}
             community={selectedCommunity!}
-            onClose={() => {setOpenCategoryModal(false); setSelectedCommunity(null)}}
-            onConfirm={onConfirmAddCommunity}
+            onCancel={() => {setOpenCategoryModalProps(null); setSelectedCommunity(null)}}
+            onConfirm={openCategoryModalProps.onSave}
+            autoConfirm={openCategoryModalProps.autoConfirm ?? false}
           />
       }
     </>

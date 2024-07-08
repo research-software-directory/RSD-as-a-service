@@ -8,36 +8,44 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import {useEffect, useState} from 'react'
 import {TreeNode} from '~/types/TreeNode'
-import {CategoryEntry, CategoryID} from '~/types/Category'
+import {CategoryEntry} from '~/types/Category'
 import ContentLoader from '~/components/layout/ContentLoader'
 import Alert from '@mui/material/Alert'
 import {loadCategoryRoots} from '~/components/category/apiCategories'
-import TreeSelect from '~/components/software/TreeSelect'
+import {RecursivelyGenerateItems} from '~/components/software/TreeSelect'
 import {CategoryForSoftwareIds} from '~/types/SoftwareTypes'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import {useSession} from '~/auth'
 import {createJsonHeaders, getBaseUrl} from '~/utils/fetchHelpers'
 import {CommunityListProps} from '~/components/communities/apiCommunities'
-import {CategoryTreeLevel} from '~/components/category/CategoryTree'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import SaveIcon from '@mui/icons-material/Save'
+import {removeCommunityCategoriesFromSoftware} from '~/components/software/edit/communities/apiSoftwareCommunities'
+import {getCategoryForSoftwareIds} from '~/utils/getSoftware'
+
 
 export type communityAddCategoriesDialogProps = {
   readonly softwareId: string
   readonly community: CommunityListProps
-  readonly onClose: () => void
-  readonly onConfirm: () => void
+  readonly onCancel: () => void
+  readonly onConfirm: (community: CommunityListProps) => void
+  readonly autoConfirm: boolean
 }
 
 export default function CommunityAddCategoriesDialog({
   softwareId,
   community,
-  onClose,
-  onConfirm
+  onCancel,
+  onConfirm,
+  autoConfirm
 }: communityAddCategoriesDialogProps) {
+  const smallScreen = useMediaQuery('(max-width:600px)')
   const [categories, setCategories] = useState<TreeNode<CategoryEntry>[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [state, setState] = useState<'loading' | 'error' | 'ready' | 'saving'>('loading')
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<CategoryForSoftwareIds>(new Set())
+  const [availableCategoryIds, setAvailableCategoryIds] = useState<CategoryForSoftwareIds>(new Set())
 
   const {token} = useSession()
 
@@ -67,38 +75,71 @@ export default function CommunityAddCategoriesDialog({
     setSelectedCategoryIds(new Set(selectedCategoryIds))
   }
 
-  const onRemove = (id: CategoryID) => {
-    selectedCategoryIds.delete(id)
-    setSelectedCategoryIds(new Set(selectedCategoryIds))
-  }
-
   useEffect(() => {
-    loadCategoryRoots(community.id)
+    setState('loading')
+    const promiseLoadRoots = loadCategoryRoots(community.id)
       .then(roots => {
+        // if there are no categories for this community, we don't show the modal
+        if (roots.length === 0 && autoConfirm) {
+          onConfirm(community)
+          return
+        }
+        const leaveIds = new Set<string>()
+        for (const root of roots) {
+          root.forEach(node => {
+            if (node.children().length === 0) {
+              leaveIds.add(node.getValue()!.id)
+            }
+          })
+        }
+        setAvailableCategoryIds(leaveIds)
         setCategories(roots)
+      })
+
+    const promiseLoadAssociatedCategories = getCategoryForSoftwareIds(softwareId, token)
+      .then(setSelectedCategoryIds)
+
+    Promise.all([promiseLoadRoots, promiseLoadAssociatedCategories])
+      .then(() => {
         setState('ready')
       })
       .catch(e => {
         setError(`Couldn't load categories: ${e}`)
         setState('error')
       })
-  }, [community])
+  }, [community, onConfirm, autoConfirm, softwareId, token])
 
-  const communityCategories: TreeNode<CategoryEntry>[] = categories === null ? [] : categories
-    .map(root => root.subTreeWhereLeavesSatisfy(value => selectedCategoryIds.has(value.id)))
-    .filter(arr => arr !== null) as TreeNode<CategoryEntry>[]
+  function isCancelEnabled() {
+    return state === 'saving'
+  }
+
+  function isSaveDisabled(){
+    return categories === null || categories.length === 0 || state !== 'ready'
+  }
 
   async function saveCategoriesAndCommunity() {
     if (selectedCategoryIds.size === 0) {
-      onConfirm()
+      onConfirm(community)
       return
     }
 
     setState('saving')
 
+    const deleteErrorMessage = await removeCommunityCategoriesFromSoftware(softwareId, community.id, token)
+    if (deleteErrorMessage !== null) {
+      setError(`Couldn't delete the existing categories: ${deleteErrorMessage}`)
+      setState('error')
+      return
+    }
+
     const categoryUrl = `${getBaseUrl()}/category_for_software`
     const categoriesArrayToSave: {software_id: string, category_id: string}[] = []
-    selectedCategoryIds.forEach(id => categoriesArrayToSave.push({software_id: softwareId, category_id: id}))
+    selectedCategoryIds
+      .forEach(id => {
+        if (availableCategoryIds.has(id)) {
+          categoriesArrayToSave.push({software_id: softwareId, category_id: id})
+        }
+      })
 
     const resp = await fetch(categoryUrl, {
       method: 'POST',
@@ -112,84 +153,93 @@ export default function CommunityAddCategoriesDialog({
       setError(`Couldn't save categories: ${await resp.text()}`)
       setState('error')
     } else {
-      onConfirm()
+      onConfirm(community)
     }
   }
 
   function renderDialogContent(): JSX.Element {
     switch (state) {
       case 'loading':
+      case 'saving':
         return (
-          <>
-            <DialogContent>
-              <ContentLoader/>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={onClose}>
-                Cancel
-              </Button>
-            </DialogActions>
-          </>
+          <div className="flex-1 flex justify-center items-center">
+            <ContentLoader/>
+          </div>
         )
 
       case 'error':
         return (
-          <>
-            <DialogContent>
-              <Alert severity="error" sx={{marginTop: '0.5rem'}}>
-                {error}
-              </Alert>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={onClose}>
-                Close
-              </Button>
-            </DialogActions>
-          </>
+          <Alert severity="error" sx={{marginTop: '0.5rem'}}>
+            {error}
+          </Alert>
         )
 
       case 'ready':
         return (
           <>
-            <DialogContent>
-              {(categories === null || categories.length === 0) &&
-                'This community doesn\'t have any categories'
-              }
-              {categories !== null && categories.length > 0 &&
-				  <TreeSelect
-					  roots={categories}
-					  isSelected={isSelected}
-					  keyExtractor={keyExtractor}
-					  onSelect={onSelect}
-					  textExtractor={textExtractor}
-				  />
-              }
-              <CategoryTreeLevel showLongNames items={communityCategories} onRemove={onRemove}/>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={saveCategoriesAndCommunity}>
-                Save
-              </Button>
-              <Button onClick={onClose}>
-                Cancel
-              </Button>
-            </DialogActions>
+            {(categories === null || categories.length === 0)
+              ?
+              <Alert severity="info" sx={{'padding': '2rem'}}>
+                  This community doesn&lsquo;t have any categories.
+              </Alert>
+              :
+              <RecursivelyGenerateItems
+                nodes={categories}
+                isSelected={isSelected}
+                keyExtractor={keyExtractor}
+                onSelect={onSelect}
+                textExtractor={textExtractor}
+              />
+            }
           </>
-        )
-
-      case 'saving':
-        return (
-          <DialogContent>
-            <ContentLoader/>
-          </DialogContent>
         )
     }
   }
 
   return (
-    <Dialog open fullWidth>
-      <DialogTitle>Add categories of {community.name}</DialogTitle>
-      {renderDialogContent()}
+    <Dialog open fullScreen={smallScreen}>
+      <DialogTitle sx={{
+        fontSize: '1.5rem',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        color: 'primary.main',
+        fontWeight: 500
+      }}>Add categories of {community.name}</DialogTitle>
+      <DialogContent
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: ['100%', '37rem'],
+          padding: '1rem 1.5rem 2.5rem !important'
+        }}>
+        {renderDialogContent()}
+      </DialogContent>
+      <DialogActions sx={{
+        padding: '1rem 1.5rem',
+        borderTop: '1px solid',
+        borderColor: 'divider'
+      }}>
+        <Button
+          tabIndex={1}
+          onClick={onCancel}
+          color="secondary"
+          sx={{marginRight:'2rem'}}
+          disabled={isCancelEnabled()}
+        >
+          Cancel
+        </Button>
+        <Button
+          id="save-button"
+          variant="contained"
+          tabIndex={0}
+          onClick={saveCategoriesAndCommunity}
+          color="primary"
+          endIcon={<SaveIcon />}
+          disabled={isSaveDisabled()}
+        >
+          Save
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 }

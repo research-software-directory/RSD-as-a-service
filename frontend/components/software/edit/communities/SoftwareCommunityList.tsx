@@ -11,50 +11,16 @@ import List from '@mui/material/List'
 import {useSession} from '~/auth'
 import {CommunitiesOfSoftware} from './apiSoftwareCommunities'
 import SoftwareCommunityListItem from './SoftwareCommunityListItem'
-import {CategoryTreeLevel} from '~/components/category/CategoryTree'
-import {TreeNode} from '~/types/TreeNode'
-import {CategoryEntry, CategoryID} from '~/types/Category'
-import {addCategoryToSoftware, deleteCategoryToSoftware} from '~/utils/getSoftware'
-import useSoftwareContext from '~/components/software/edit/useSoftwareContext'
-import TreeSelect from '~/components/software/TreeSelect'
-import {CategoryForSoftwareIds} from '~/types/SoftwareTypes'
+import {CommunityListProps} from '~/components/communities/apiCommunities'
 
 type OrganisationListProps = {
   readonly communities: CommunitiesOfSoftware[]
+  readonly onEdit?: (community: CommunityListProps) => void
   readonly onDelete: (id: string) => void
-  readonly categoriesPerCommunity: Map<string, TreeNode<CategoryEntry>[]>
-  readonly associatedCategoryIds: CategoryForSoftwareIds
-  readonly onMutation: () => void
 }
 
-export default function SoftwareCommunityList({communities, onDelete, categoriesPerCommunity, associatedCategoryIds, onMutation}: OrganisationListProps) {
-  const {user, token} = useSession()
-  const {software} = useSoftwareContext()
-  const softwareId = software.id
-
-  function textExtractor(value: CategoryEntry) {
-    return value.name
-  }
-
-  function keyExtractor(value: CategoryEntry) {
-    return value.id
-  }
-
-  function addOrDeleteCategory(node: TreeNode<CategoryEntry>): void {
-    const val = node.getValue()
-    if (val === null) {
-      return
-    }
-
-    const categoryId = val.id
-    if (associatedCategoryIds.has(categoryId)) {
-      deleteCategoryToSoftware(softwareId, categoryId, token)
-        .then(onMutation)
-    } else {
-      addCategoryToSoftware(softwareId, categoryId, token)
-        .then(onMutation)
-    }
-  }
+export default function SoftwareCommunityList({communities, onEdit, onDelete}: OrganisationListProps) {
+  const {user} = useSession()
 
   if (communities.length === 0) {
     return (
@@ -65,35 +31,14 @@ export default function SoftwareCommunityList({communities, onDelete, categories
     )
   }
 
-  function deleteCategoryId(categoryId: CategoryID) {
-    deleteCategoryToSoftware(softwareId, categoryId, token)
-      .then(onMutation)
-  }
-
   return (
     <List>
       {
         communities.map(item => {
           // software maintainer cannot remove rejected community status
           const userCanDelete = user?.role === 'rsd_admin' || item.status !=='rejected'
-          const categoriesForCommunity: TreeNode<CategoryEntry>[] = categoriesPerCommunity.get(item.id) ?? []
-          const selectedCommunityCategories = categoriesForCommunity
-            .map(root => root.subTreeWhereLeavesSatisfy(value => associatedCategoryIds.has(value.id)))
-            .filter(arr => arr !== null) as TreeNode<CategoryEntry>[]
           return (
-            <>
-              <SoftwareCommunityListItem key={item.id} community={item} onDelete={userCanDelete ? onDelete : undefined} />
-              {categoriesForCommunity.length > 0 &&
-                <TreeSelect
-                  roots={categoriesForCommunity}
-                  isSelected={(node) => {const val = node.getValue(); return val !== null && associatedCategoryIds.has(val.id)}}
-                  keyExtractor={keyExtractor}
-                  onSelect={addOrDeleteCategory}
-                  textExtractor={textExtractor}
-                />
-              }
-              <CategoryTreeLevel showLongNames items={selectedCommunityCategories} onRemove={deleteCategoryId}/>
-            </>
+            <SoftwareCommunityListItem key={item.id} community={item} onEdit={onEdit} onDelete={userCanDelete ? onDelete : undefined} />
           )
         })
       }

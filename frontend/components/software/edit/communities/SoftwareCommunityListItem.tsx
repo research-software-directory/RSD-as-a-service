@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,42 +10,64 @@ import Avatar from '@mui/material/Avatar'
 import ListItemText from '@mui/material/ListItemText'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
+import CategoryIcon from '@mui/icons-material/Category'
 
 import {getImageUrl} from '~/utils/editImage'
 import {CommunitiesOfSoftware} from './apiSoftwareCommunities'
 import CommunityStatusBanner from './CommunityStatusBanner'
+import {CommunityListProps} from '~/components/communities/apiCommunities'
 
-type SoftwareCommunityItemProps={
-  community: CommunitiesOfSoftware
-  onDelete?: (id: string) => void
+type SoftwareCommunityItemProps= {
+  readonly community: CommunitiesOfSoftware
+  readonly onEdit?: (id: CommunityListProps) => void
+  readonly onDelete?: (id: string) => void
 }
 
-export default function SoftwareCommunityListItem({community,onDelete}:SoftwareCommunityItemProps) {
+export default function SoftwareCommunityListItem({community, onEdit, onDelete}:SoftwareCommunityItemProps) {
   return (
     <ListItem
       data-testid="software-community-item"
       key={community.id}
       secondaryAction={
-        <IconButton
-          title="Delete"
-          edge="end"
-          aria-label="delete"
-          onClick={() => {
-            if (onDelete) onDelete(community.id)
-          }}
-          sx={{marginRight: '1rem'}}
-          disabled={typeof onDelete == 'undefined'}
-        >
-          <DeleteIcon />
-        </IconButton>
+        <>
+          <IconButton
+            title="Edit categories"
+            edge="end"
+            aria-label="edit"
+            sx={{marginRight: '1rem'}}
+            onClick={() => {
+              if (onEdit) {
+                onEdit(community)
+              }
+            }}
+			        disabled={onEdit === undefined}
+          >
+            <CategoryIcon />
+          </IconButton>
+          <IconButton
+            title="Delete"
+            edge="end"
+            aria-label="delete"
+            onClick={() => {
+              if (onDelete) onDelete(community.id)
+            }}
+            sx={{marginRight: '0rem'}}
+            disabled={onDelete === undefined}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
       }
       sx={{
         // position:'relative',
         // this makes space for buttons
-        paddingRight:'7.5rem',
+        paddingRight:'9rem',
         '&:hover': {
           backgroundColor:'grey.100'
         },
+        '.MuiListItemSecondaryAction-root': {
+          right: '8px'
+        }
       }}
     >
       <div className="absolute top-[0.5rem] w-[7rem] right-0 opacity-90 font-medium">
