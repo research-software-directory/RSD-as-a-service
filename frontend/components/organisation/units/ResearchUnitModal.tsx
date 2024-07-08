@@ -2,8 +2,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -29,6 +30,7 @@ import {deleteImage, getImageUrl} from '~/utils/editImage'
 import logger from '../../../utils/logger'
 import {getSlugFromString} from '../../../utils/getSlugFromString'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
+import {allowedImageMimeTypes} from '~/utils/handleFileUpload'
 
 
 type EditOrganisationModalProps = {
@@ -219,7 +221,7 @@ export default function ResearchUnitModal({
               <input
                 id="upload-avatar-image-modal"
                 type="file"
-                accept="image/*"
+                accept={allowedImageMimeTypes}
                 onChange={handleFileUpload}
                 style={{display:'none'}}
               />

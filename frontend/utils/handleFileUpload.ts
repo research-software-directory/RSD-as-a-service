@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -16,6 +17,8 @@ type HandleFileUploadResponse = {
 
 // max file size ~ 2MB
 export const maxFileSize = 2097152
+
+export const allowedImageMimeTypes: string = 'image/avif,image/gif,image/jpeg,image/png,image/svg+xml,image/webp,image/x-icon'
 
 export function handleFileUpload({target}: { target: any }): Promise<HandleFileUploadResponse>{
   return new Promise((res, rej) => {
@@ -77,7 +80,7 @@ export function showDialogAndGetFile(): Promise<HandleFileUploadResponse> {
       input.id = id
       input.type = 'file'
       input.name = 'file-input-element'
-      input.accept = 'image/*'
+      input.accept = allowedImageMimeTypes
       input.onchange = (e) => {
         // call file upload function
         handleFileUpload(e)

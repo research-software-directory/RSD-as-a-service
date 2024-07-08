@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -14,7 +15,7 @@ import {UseFormSetValue} from 'react-hook-form'
 import {useSession} from '~/auth'
 import {deleteImage, getImageUrl} from '~/utils/editImage'
 import useSnackbar from '~/components/snackbar/useSnackbar'
-import {handleFileUpload} from '~/utils/handleFileUpload'
+import {allowedImageMimeTypes, handleFileUpload} from '~/utils/handleFileUpload'
 
 export type FormInputsForImage={
   logo_id: string|null
@@ -108,7 +109,7 @@ export default function ControlledImageInput({name,logo_b64,logo_id,setValue}:Im
         ref={imgInputRef}
         id="upload-avatar-image"
         type="file"
-        accept="image/*"
+        accept={allowedImageMimeTypes}
         onChange={onFileUpload}
         style={{display:'none'}}
       />

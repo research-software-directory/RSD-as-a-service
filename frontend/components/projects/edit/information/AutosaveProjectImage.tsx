@@ -1,6 +1,6 @@
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
@@ -22,7 +22,7 @@ import {projectInformation as config} from './config'
 import {patchProjectTable} from './patchProjectInfo'
 import {upsertImage,deleteImage} from '~/utils/editImage'
 import {ChangeEvent} from 'react'
-import {handleFileUpload} from '~/utils/handleFileUpload'
+import {allowedImageMimeTypes, handleFileUpload} from '~/utils/handleFileUpload'
 
 export default function AutosaveProjectImage() {
   const {token} = useSession()
@@ -214,7 +214,7 @@ export default function AutosaveProjectImage() {
       <input
         id="upload-avatar-image"
         type="file"
-        accept="image/*"
+        accept={allowedImageMimeTypes}
         onChange={onFileUpload}
         style={{display:'none'}}
       />
