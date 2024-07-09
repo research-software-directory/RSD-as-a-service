@@ -60,7 +60,7 @@ function generateHelpOnCategories(reorderedCategories: ReorderedCategories) {
   const items = []
 
   for (const treeLevel of reorderedCategories.highlighted) {
-    const category: CategoryEntry = treeLevel.getValue()!
+    const category: CategoryEntry = treeLevel.getValue()
     if (category.properties.is_highlight && category.properties.description) {
       items.push([category.name, category.properties.description])
     }

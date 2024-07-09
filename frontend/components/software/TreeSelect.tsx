@@ -37,9 +37,6 @@ export function RecursivelyGenerateItems<T>({
 }: RecursiveTreeSelectProps<T>) {
   return nodes.map(node => {
     const val = node.getValue()
-    if (val === null) {
-      return null
-    }
 
     const key = keyExtractor(val)
     const text = textExtractor(val)

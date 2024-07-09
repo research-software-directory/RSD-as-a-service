@@ -67,11 +67,11 @@ export default function CategoryEditTree({roots, community, title, onMutation}:C
         />
         }
         {roots.length > 0 ?
-          roots.filter(node => node.getValue() !== null)
+          roots
             .map(node => {
               return (
                 <CategoryEditTreeNode
-                  key={node.getValue()!.id}
+                  key={node.getValue().id}
                   node={node}
                   community={community}
                   onDelete={onDeleteChild}

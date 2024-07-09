@@ -67,9 +67,6 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
 
   function addOrDeleteCategory(node: TreeNode<CategoryEntry>): void {
     const val = node.getValue()
-    if (val === null) {
-      return
-    }
 
     const categoryId = val.id
     if (associatedCategoryIds.has(categoryId)) {
@@ -86,16 +83,16 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
   function extractSelectedRoots(root: TreeNode<CategoryEntry>): TreeNode<CategoryEntry>[] {
     const result: TreeNode<CategoryEntry>[] = []
 
-    if (root.getValue()!.properties.is_highlight) {
+    if (root.getValue().properties.is_highlight) {
       for (const selectedRoot of selectedNodes) {
-        if (root.getValue()!.id === selectedRoot.getValue()!.id) {
+        if (root.getValue().id === selectedRoot.getValue().id) {
           result.push(selectedRoot)
           break
         }
       }
     } else {
       for (const selectedRoot of selectedNodes) {
-        if (root.children().some(entry => entry.getValue()?.id === selectedRoot.getValue()!.id)) {
+        if (root.children().some(entry => entry.getValue().id === selectedRoot.getValue().id)) {
           result.push(selectedRoot)
         }
       }
@@ -108,9 +105,6 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
     <>
       {availableCategoriesTree.map(root => {
         const rootValue = root.getValue()
-        if (rootValue === null) {
-          return null
-        }
         const children = root.children()
 
         return (
@@ -127,7 +121,7 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
               onSelect={node => addOrDeleteCategory(node)}
               isSelected={node => {
                 const val = node.getValue()
-                return val === null ? false : associatedCategoryIds.has(val.id)
+                return associatedCategoryIds.has(val.id)
               }}
             />
 

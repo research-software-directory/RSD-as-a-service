@@ -5,9 +5,9 @@
 
 export class TreeNode<T> {
   #children: Set<TreeNode<T>> = new Set()
-  #value: T | null
+  #value: T
 
-  constructor(value: T | null) {
+  constructor(value: T) {
     this.#value = value
   }
 
@@ -23,11 +23,11 @@ export class TreeNode<T> {
     return this.#children.size
   }
 
-  getValue() {
+  getValue(): T {
     return this.#value
   }
 
-  setValue(value: T | null) {
+  setValue(value: T) {
     this.#value = value
   }
 
@@ -44,7 +44,7 @@ export class TreeNode<T> {
 
   subTreeWhereLeavesSatisfy(predicate: (value: T) => boolean): TreeNode<T> | null {
     if (this.#children.size === 0) {
-      return (this.#value === null || !(predicate(this.#value)) ? null : new TreeNode<T>(this.#value))
+      return predicate(this.#value) ? new TreeNode<T>(this.#value) : null
     }
 
     const newNode = new TreeNode<T>(this.#value)
@@ -60,7 +60,7 @@ export class TreeNode<T> {
 
   sortRecursively(comparator: (val1: T, val2: T) => number) {
     const childrenArray = this.children()
-    childrenArray.sort((n1, n2) => comparator(n1.#value!, n2.#value!))
+    childrenArray.sort((n1, n2) => comparator(n1.#value, n2.#value))
     this.#children = new Set(childrenArray)
     for (const child of this.#children) {
       child.sortRecursively(comparator)

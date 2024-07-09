@@ -10,10 +10,8 @@ import {CategoryEntry, CategoryPath} from '~/types/Category'
 import {categoryEntriesToRoots, loadCategoryRoots} from '~/components/category/apiCategories'
 import {TreeNode} from '~/types/TreeNode'
 
-export const leaf = <T>(list: T[]) => list[list.length - 1]
-
 const compareCategoryEntry = (p1: CategoryEntry, p2: CategoryEntry) => p1.name.localeCompare(p2.name)
-const compareCategoryTreeNode = (p1: TreeNode<CategoryEntry>, p2: TreeNode<CategoryEntry>) => compareCategoryEntry(p1.getValue()!, p2.getValue()!)
+const compareCategoryTreeNode = (p1: TreeNode<CategoryEntry>, p2: TreeNode<CategoryEntry>) => compareCategoryEntry(p1.getValue(), p2.getValue())
 
 
 export const categoryTreeNodesSort = (trees: TreeNode<CategoryEntry>[]) => {
@@ -57,7 +55,7 @@ export function reorderCategories(categoryRoots: TreeNode<CategoryEntry>[]): Reo
   const general: TreeNode<CategoryEntry>[] = []
 
   for (const root of all) {
-    if (root.getValue()!.properties.is_highlight) {
+    if (root.getValue().properties.is_highlight) {
       highlighted.push(root)
     } else {
       general.push(root)
@@ -81,7 +79,7 @@ function rootsToPaths(roots: TreeNode<CategoryEntry>[]): CategoryPath[] {
   const resultStack: CategoryPath[] = []
   for (const root of roots) {
     treeNodeStack.push(root)
-    resultStack.push([root.getValue()!])
+    resultStack.push([root.getValue()])
   }
 
   while (treeNodeStack.length > 0) {
@@ -94,7 +92,7 @@ function rootsToPaths(roots: TreeNode<CategoryEntry>[]): CategoryPath[] {
 
     for (const child of node.children()) {
       treeNodeStack.push(child)
-      resultStack.push([...path, child.getValue()!])
+      resultStack.push([...path, child.getValue()])
     }
   }
 

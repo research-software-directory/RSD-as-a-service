@@ -38,9 +38,6 @@ const TreeLevel = ({items, showLongNames, onRemoveHandler}: TreeLevelProps) => {
   return <ul className={'list-disc list-outside pl-6'}>
     {items.map((item) => {
       const category = item.getValue()
-      if (category === null) {
-        return null
-      }
 
       const children = item.children()
       return (
