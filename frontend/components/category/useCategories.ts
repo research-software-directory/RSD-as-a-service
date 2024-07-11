@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,22 +17,22 @@ export default function useCategories({community}:{community:string|null}){
   const [loading, setLoading] = useState<boolean> (true)
 
   useEffect(() => {
-    let abort = false
+    let abort: boolean = false
     // only if there is community value
     loadCategoryRoots(community)
       .then(roots => {
-        if (abort===true) return
+        if (abort) return
         setRoots(roots)
         setError(null)
       })
       .catch(e => {
         logger(`useCategories...${e.message}`,'error')
-        if (abort===true) return
+        if (abort) return
         setError('Couldn\'t load the categories, please try again or contact us')
         setRoots(null)
       })
       .finally(() => {
-        if (abort===true) return
+        if (abort) return
         setLoading(false)
       })
 

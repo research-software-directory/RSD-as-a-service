@@ -21,8 +21,50 @@ export type TreeSelectProps<T> = {
 }
 
 type RecursiveTreeSelectProps<T> = {
-  indent: number
+  textExtractor: (value: T) => string
+  keyExtractor: (value: T) => string
+  onSelect: (node: TreeNode<T>) => void
+  isSelected: (node: TreeNode<T>) => boolean
   nodes: TreeNode<T>[]
+}
+
+export function RecursivelyGenerateItems<T>({
+  isSelected,
+  keyExtractor,
+  nodes,
+  onSelect,
+  textExtractor
+}: RecursiveTreeSelectProps<T>) {
+  return nodes.map(node => {
+    const val = node.getValue()
+    if (val === null) {
+      return null
+    }
+
+    const key = keyExtractor(val)
+    const text = textExtractor(val)
+    if (node.childrenCount() === 0) {
+      return (
+        <MenuItem dense disableRipple key={key} onClick={() => onSelect(node)}>
+          <Checkbox disableRipple checked={isSelected(node)} />
+          <ListItemText primary={text} />
+        </MenuItem>
+      )
+    }
+
+    return (
+      <ListSubheader disableSticky key={key}>{text}
+        <ul>
+          <RecursivelyGenerateItems
+            textExtractor={textExtractor}
+            onSelect={onSelect}
+            keyExtractor={keyExtractor}
+            isSelected={isSelected}
+            nodes={node.children()} />
+        </ul>
+      </ListSubheader>
+    )
+  })
 }
 
 export default function TreeSelect<T>({
@@ -32,39 +74,17 @@ export default function TreeSelect<T>({
   roots,
   textExtractor
 }: Readonly<TreeSelectProps<T>>) {
-  function RecursivelyGenerateItems(propsRecursive: RecursiveTreeSelectProps<T>) {
-    return propsRecursive.nodes.map(node => {
-      const val = node.getValue()
-      if (val === null) {
-        return null
-      }
-
-      const key = keyExtractor(val)
-      const text = textExtractor(val)
-      if (node.childrenCount() === 0) {
-        return (
-          <MenuItem dense disableRipple key={key} onClick={() => onSelect(node)}>
-            <Checkbox disableRipple checked={isSelected(node)} />
-            <ListItemText primary={text} />
-          </MenuItem>
-        )
-      }
-
-      return (
-        <ListSubheader disableSticky key={key}>{text}
-          <ul>
-            <RecursivelyGenerateItems indent={propsRecursive.indent + 1} nodes={node.children()} />
-          </ul>
-        </ListSubheader>
-      )
-    })
-  }
 
   return (
     <FormControl fullWidth>
       <InputLabel id="category-general-label">Select a category</InputLabel>
       <Select labelId="category-general-label" label="Select a category">
-        <RecursivelyGenerateItems indent={0} nodes={roots}></RecursivelyGenerateItems>
+        <RecursivelyGenerateItems
+          textExtractor={textExtractor}
+          onSelect={onSelect}
+          keyExtractor={keyExtractor}
+          isSelected={isSelected}
+          nodes={roots} />
       </Select>
     </FormControl>
   )

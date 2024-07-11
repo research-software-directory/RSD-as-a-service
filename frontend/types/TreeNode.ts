@@ -35,6 +35,13 @@ export class TreeNode<T> {
     return Array.from(this.#children)
   }
 
+  forEach(consumer: (node: TreeNode<T>) => void) {
+    consumer(this)
+    for (const child of this.#children) {
+      child.forEach(consumer)
+    }
+  }
+
   subTreeWhereLeavesSatisfy(predicate: (value: T) => boolean): TreeNode<T> | null {
     if (this.#children.size === 0) {
       return (this.#value === null || !(predicate(this.#value)) ? null : new TreeNode<T>(this.#value))

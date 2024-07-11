@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -10,7 +11,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import {CommunityListProps} from '~/components/communities/apiCommunities'
 import {CommunityRequestStatus} from '~/components/communities/software/apiCommunitySoftware'
 import {
-  CommunitiesOfSoftware, getCommunitiesForSoftware,
+  CommunitiesOfSoftware, getCommunitiesForSoftware, removeCommunityCategoriesFromSoftware,
   removeSoftwareFromCommunity, requestToJoinCommunity
 } from './apiSoftwareCommunities'
 
@@ -58,6 +59,12 @@ export function useSoftwareCommunities(software:string){
   },[token])
 
   const leaveCommunity = useCallback(async({software,community}:{software:string,community:string})=>{
+    const removeCategoriesError = await removeCommunityCategoriesFromSoftware(software, community, token)
+    if (removeCategoriesError) {
+      showErrorMessage(`Failed to leave remove community categories: ${removeCategoriesError}`)
+      return
+    }
+
     const resp = await removeSoftwareFromCommunity({
       software,
       community,

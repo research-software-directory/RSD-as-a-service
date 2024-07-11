@@ -232,11 +232,15 @@ export async function getCategoryForSoftwareIds(software_id: string, token?: str
       return new Set(data.map((entry: any) => entry.category_id))
     } else if (resp.status === 404) {
       logger(`getCategoriesForSoftwareIds: 404 [${url}]`, 'error')
+      throw new Error('Couldn\'t find the categories for this software')
+    } else {
+      logger(`getCategoriesForSoftwareIds: ${resp.status} [${url}]`, 'error')
+      throw new Error('Couldn\'t load the categories for this software')
     }
   } catch (e: any) {
     logger(`getCategoriesForSoftwareIds: ${e?.message}`, 'error')
+    throw e
   }
-  return new Set()
 }
 
 export async function addCategoryToSoftware(softwareId: string, categoryId: CategoryID, token: string) {

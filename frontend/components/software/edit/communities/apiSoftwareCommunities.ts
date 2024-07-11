@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -69,6 +70,21 @@ export async function requestToJoinCommunity({software,community,token}:RequestT
       message: e.message
     }
   }
+}
+
+export async function removeCommunityCategoriesFromSoftware(softwareId: string, communityId: string, token: string): Promise<string | null> {
+  const url = `${getBaseUrl()}/rpc/delete_community_categories_from_software`
+  const body = JSON.stringify({software_id: softwareId, community_id: communityId})
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    body: body,
+    headers: {
+      ...createJsonHeaders(token)
+    }
+  })
+
+  return resp.ok ? null : resp.text()
 }
 
 export async function removeSoftwareFromCommunity({software,community,token}:RequestToJoinCommunity){

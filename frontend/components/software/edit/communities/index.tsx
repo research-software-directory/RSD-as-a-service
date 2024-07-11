@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -16,6 +17,7 @@ import {useSoftwareCommunities} from './useSoftwareCommunities'
 import FindCommunity from './FindCommunity'
 import SoftwareCommunityList from './SoftwareCommunityList'
 import SoftwareCommunitiesInfo from './SoftwareCommunitiesInfo'
+import CommunityAddCategoriesDialog from '~/components/software/edit/communities/CommunityAddCategoriesDialog'
 
 export default function SoftwareCommunities() {
   const {software} = useSoftwareContext()
@@ -29,8 +31,10 @@ export default function SoftwareCommunities() {
     id: null,
     name: null
   })
+  const [openCategoryModalProps, setOpenCategoryModalProps] = useState<{autoConfirm: boolean, onSave: (community: CommunityListProps) => void} | null>(null)
+  const [selectedCommunity, setSelectedCommunity] = useState<CommunityListProps | null>(null)
 
-  // if loading show loader
+
   if (loading) return (
     <ContentLoader />
   )
@@ -55,12 +59,26 @@ export default function SoftwareCommunities() {
     })
   }
 
-  function onAddCommunity(community:CommunityListProps){
-    // console.log('onAddCommunity...', community)
+  function onAddCommunity(community: CommunityListProps){
+    setSelectedCommunity(community)
+    setOpenCategoryModalProps({autoConfirm: true, onSave: onConfirmAddCommunity})
+  }
+
+  function onOpenEditCategories(community: CommunityListProps) {
+    setSelectedCommunity(community)
+    setOpenCategoryModalProps({autoConfirm: false, onSave: () => {
+      setOpenCategoryModalProps(null)
+      setSelectedCommunity(null)
+    }})
+  }
+
+  function onConfirmAddCommunity(community: CommunityListProps) {
+    setOpenCategoryModalProps(null)
     joinCommunity({
-      software:software.id,
-      community
+      software: software.id,
+      community: community
     })
+    setSelectedCommunity(null)
   }
 
   return (
@@ -74,6 +92,7 @@ export default function SoftwareCommunities() {
           <SoftwareCommunityList
             communities={communities}
             onDelete={onDeleteCommunity}
+            onEdit={onOpenEditCategories}
           />
         </section>
         <section className="py-4">
@@ -94,7 +113,7 @@ export default function SoftwareCommunities() {
           title="Remove community"
           open={modal.open}
           body={
-            <p>Are you sure you want to remove <strong>{modal.name ?? ''}</strong>?</p>
+            <p>Are you sure you want to remove <strong>{modal.name ?? ''}</strong>? This will also delete all related (if any) categories.</p>
           }
           onCancel={()=>setModal({open:false,id:null,name:null})}
           onDelete={()=>{
@@ -106,6 +125,15 @@ export default function SoftwareCommunities() {
             setModal({open:false,id:null,name:null})
           }}
         />
+      }
+      {openCategoryModalProps!== null &&
+          <CommunityAddCategoriesDialog
+            softwareId={software.id}
+            community={selectedCommunity!}
+            onCancel={() => {setOpenCategoryModalProps(null); setSelectedCommunity(null)}}
+            onConfirm={openCategoryModalProps.onSave}
+            autoConfirm={openCategoryModalProps.autoConfirm ?? false}
+          />
       }
     </>
   )
