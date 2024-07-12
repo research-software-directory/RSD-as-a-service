@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -52,13 +54,14 @@ it('renders component with text input', () => {
   // render component
   const {container} = render(<WithAllContexts {...mockProps} />)
   // get reference to input
-  const textarea = container.querySelector('#markdown-textarea')
+  const textArea = container.querySelector('#markdown-textarea')
+  expect(textArea).not.toBeNull()
   // check exists
-  expect(textarea).toBeInTheDocument()
+  expect(textArea).toBeInTheDocument()
   // fill in text input
-  fireEvent.change(textarea, {target: {value: testInput}})
+  fireEvent.change(textArea!, {target: {value: testInput}})
   // fire on blur action to trigger save
-  fireEvent.blur(textarea)
+  fireEvent.blur(textArea!)
   // assert save action took place
   expect(mockPatchFn).toBeCalledTimes(1)
   expect(mockPatchFn).toBeCalledWith(expectedSave)

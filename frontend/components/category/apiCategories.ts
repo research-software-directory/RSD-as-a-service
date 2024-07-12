@@ -58,8 +58,6 @@ export function categoryEntriesToRoots(categoriesArr: CategoryEntry[]): TreeNode
     } else {
       idToNode.get(parentId)!.addChild(node)
     }
-
-
   }
 
   const result: TreeNode<CategoryEntry>[] = []
