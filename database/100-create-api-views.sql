@@ -870,7 +870,7 @@ $$
 		software.short_statement ILIKE CONCAT('%', query, '%')
 		OR
 		BOOL_OR(keyword.value ILIKE CONCAT('%', query, '%'))
-	UNION
+	UNION ALL
 	-- PROJECT search item
 	SELECT
 		project.slug,
@@ -904,7 +904,7 @@ $$
 		project.subtitle ILIKE CONCAT('%', query, '%')
 		OR
 		BOOL_OR(keyword.value ILIKE CONCAT('%', query, '%'))
-	UNION
+	UNION ALL
 	-- ORGANISATION search item
 	SELECT
 		organisation.slug,
@@ -928,7 +928,27 @@ $$
 		organisation.parent IS NULL
 		AND
 		(organisation.slug ILIKE CONCAT('%', query, '%') OR organisation."name" ILIKE CONCAT('%', query, '%'))
-;
+	UNION ALL
+	-- COMMUNITY search item
+	SELECT
+		community.slug,
+		community."name",
+		'communities' AS "source",
+		TRUE AS is_published,
+		(CASE
+			WHEN community.slug ILIKE query OR community."name" ILIKE query THEN 0
+			WHEN community.slug ILIKE CONCAT(query, '%') OR community."name" ILIKE CONCAT(query, '%') THEN 2
+			ELSE 3
+		END) AS rank,
+		(CASE
+			WHEN community.slug ILIKE query OR community."name" ILIKE query THEN 0
+			WHEN community.slug ILIKE CONCAT(query, '%') OR community."name" ILIKE CONCAT(query, '%') THEN 0
+			ELSE LEAST(POSITION(query IN community.slug), POSITION(query IN community."name"))
+		END) AS index_found
+	FROM
+		community
+	WHERE
+		community.slug ILIKE CONCAT('%', query, '%') OR community."name" ILIKE CONCAT('%', query, '%');
 $$;
 
 
