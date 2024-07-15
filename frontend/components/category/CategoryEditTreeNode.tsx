@@ -170,11 +170,10 @@ export default function CategoryEditTreeNode({node, community, onDelete, onMutat
         }
         {node.childrenCount() > 0 && <Collapse in={expandChildren}>
           {node.children()
-            .filter(child => child.getValue() !== null)
             .map(child => {
               return (
                 <CategoryEditTreeNode
-                  key={child.getValue()?.id}
+                  key={child.getValue().id}
                   node={child}
                   community={community}
                   onDelete={onDeleteChild}

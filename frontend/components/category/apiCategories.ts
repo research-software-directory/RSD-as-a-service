@@ -25,17 +25,23 @@ export async function loadCategoryRoots(community: string | null): Promise<TreeN
 }
 
 export function categoryEntriesToRoots(categoriesArr: CategoryEntry[]): TreeNode<CategoryEntry>[] {
-  const map: Map<CategoryID, TreeNode<CategoryEntry>> = new Map()
+  const idToNode: Map<CategoryID, TreeNode<CategoryEntry>> = new Map()
+  const idToChildren: Map<CategoryID, TreeNode<CategoryEntry>[]> = new Map()
 
   for (const cat of categoriesArr) {
     const id = cat.id
-    let node
+    let node: TreeNode<CategoryEntry>
 
-    if (!map.has(id)) {
+    if (!idToNode.has(id)) {
       node = new TreeNode<CategoryEntry>(cat)
-      map.set(id, node)
+      idToNode.set(id, node)
+      if (idToChildren.has(id)) {
+        for (const child of idToChildren.get(id)!) {
+          node.addChild(child)
+        }
+      }
     } else {
-      node = map.get(id) as TreeNode<CategoryEntry>
+      node = idToNode.get(id) as TreeNode<CategoryEntry>
       node.setValue(cat)
     }
 
@@ -44,17 +50,20 @@ export function categoryEntriesToRoots(categoriesArr: CategoryEntry[]): TreeNode
     }
 
     const parentId = cat.parent
-    if (!map.has(parentId)) {
-      map.set(parentId, new TreeNode<CategoryEntry>(null))
+    if (!idToNode.has(parentId)) {
+      if (!idToChildren.has(parentId)) {
+        idToChildren.set(parentId, [])
+      }
+      idToChildren.get(parentId)!.push(node)
+    } else {
+      idToNode.get(parentId)!.addChild(node)
     }
-
-    map.get(parentId)!.addChild(node)
   }
 
   const result: TreeNode<CategoryEntry>[] = []
 
-  for (const node of map.values()) {
-    if (node.getValue()!.parent === null) {
+  for (const node of idToNode.values()) {
+    if (node.getValue().parent === null) {
       result.push(node)
     }
   }

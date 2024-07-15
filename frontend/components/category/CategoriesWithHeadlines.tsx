@@ -20,9 +20,6 @@ export const CategoriesWithHeadlines = ({categories}: CategoriesWithHeadlinesPro
 
   return tree.map(node => {
     const category = node.getValue()
-    if (category === null) {
-      return null
-    }
     const children = node.children()
 
     return <React.Fragment key={category.short_name}>

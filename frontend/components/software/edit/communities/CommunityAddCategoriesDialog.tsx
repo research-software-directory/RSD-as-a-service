@@ -51,7 +51,7 @@ export default function CommunityAddCategoriesDialog({
 
   function isSelected(node: TreeNode<CategoryEntry>) {
     const val = node.getValue()
-    return val === null ? false : selectedCategoryIds.has(val.id)
+    return selectedCategoryIds.has(val.id)
   }
 
   function textExtractor(value: CategoryEntry) {
@@ -64,9 +64,6 @@ export default function CommunityAddCategoriesDialog({
 
   function onSelect(node: TreeNode<CategoryEntry>) {
     const val = node.getValue()
-    if (val === null) {
-      return
-    }
     if (selectedCategoryIds.has(val.id)) {
       selectedCategoryIds.delete(val.id)
     } else {
@@ -88,7 +85,7 @@ export default function CommunityAddCategoriesDialog({
         for (const root of roots) {
           root.forEach(node => {
             if (node.children().length === 0) {
-              leaveIds.add(node.getValue()!.id)
+              leaveIds.add(node.getValue().id)
             }
           })
         }

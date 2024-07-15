@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Felix Mühlbauer (GFZ) <felix.muehlbauer@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,9 +14,6 @@ export type CategoryTableProps = Readonly<{
 }>
 export const CategoryTable = ({tree}: CategoryTableProps) => {
   const category = tree.getValue()
-  if (category === null) {
-    return null
-  }
 
   const children = tree.children()
   const levelLables = category.properties.tree_level_labels
@@ -41,9 +40,6 @@ const Block = ({tree, depth}: BlockProps) => {
   const depth2 = depth - 1
   return tree.map((node, index) => {
     const category = node.getValue()
-    if (category === null) {
-      return null
-    }
 
     const children = node.children()
     const border = (index != tree.length-1) ? 'border-b-2' : ''

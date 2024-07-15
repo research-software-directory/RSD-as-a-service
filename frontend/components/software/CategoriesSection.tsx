@@ -19,9 +19,6 @@ export default function CategoriesSection({categories}: CategoriesSectionProps) 
 
   return tree.map(node => {
     const category = node.getValue()
-    if (category === null) {
-      return null
-    }
 
     const children = node.children()
 
