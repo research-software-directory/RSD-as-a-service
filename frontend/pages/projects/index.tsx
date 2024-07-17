@@ -230,9 +230,9 @@ export default function ProjectsOverviewPage({
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let orderBy='slug.asc', offset=0
+  let offset=0
   // extract from page-query
-  const {
+  let {
     search, rows, page, keywords, domains,
     organisations, project_status, order
   } = ssrProjectsParams(context.query)
@@ -244,13 +244,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (page_rows && page) {
     offset = page_rows * (page - 1)
   }
-  if (order) {
-    // extract order direction from definitions
-    const orderInfo = projectOrderOptions.find(item=>item.key===order)
-    // ordering options require "stable" secondary order
-    // to ensure proper pagination. We use slug for this purpose
-    if (orderInfo) orderBy=`${order}.${orderInfo.direction},slug.asc`
+
+  const allowedOrderings = projectOrderOptions.map(o => o.key)
+
+  if (!order || !allowedOrderings.includes(order)) {
+    order = 'impact_cnt'
   }
+
+  // extract order direction from definitions
+  const orderInfo = projectOrderOptions.find(item=>item.key===order)!
+  // ordering options require "stable" secondary order
+  // to ensure proper pagination. We use slug for this purpose
+  const orderBy = `${order}.${orderInfo.direction},slug.asc`
 
   const url = projectListUrl({
     baseUrl: getBaseUrl(),

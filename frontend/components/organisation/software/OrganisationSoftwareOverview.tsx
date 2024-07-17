@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,7 +41,7 @@ export default function OrganisationSoftwareOverview({layout,software,loading,ro
   // console.log('layout...', layout)
   // console.groupEnd()
 
-  if (loading===false && (!software || software.length === 0)) {
+  if (!loading && (!software || software.length === 0)) {
     return <NoContent />
   }
 
@@ -70,7 +71,7 @@ export default function OrganisationSoftwareOverview({layout,software,loading,ro
     )
   }
 
-  if (loading === true) {
+  if (loading) {
     return (
       <GridCardSkeleton
         count={itemCnt}

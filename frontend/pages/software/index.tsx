@@ -59,7 +59,7 @@ type SoftwareOverviewProps = {
   languagesList: LanguagesFilterOption[],
   licenses?: string[] | null,
   licensesList: LicensesFilterOption[],
-  order?: string | null,
+  order: string,
   page: number,
   rows: number,
   count: number,
@@ -159,7 +159,7 @@ export default function SoftwareOverviewPage({
                   languagesList={languagesList}
                   licenses={licenses ?? []}
                   licensesList={licensesList}
-                  orderBy={order ?? ''}
+                  orderBy={order}
                   filterCnt={filterCnt}
                 />
               </FiltersPanel>
@@ -231,9 +231,9 @@ export default function SoftwareOverviewPage({
 // fetching data server side
 // see documentation https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let orderBy='slug.asc', offset=0
+  let offset=0
   // extract params from page-query
-  const {search, keywords, prog_lang, licenses, order, rows, page} = ssrSoftwareParams(context.query)
+  let {search, keywords, prog_lang, licenses, order, rows, page} = ssrSoftwareParams(context.query)
   // extract user settings from cookie
   const {rsd_page_layout, rsd_page_rows} = getUserSettings(context.req)
   // use url param if present else user settings
@@ -243,13 +243,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     offset = page_rows * (page - 1)
   }
 
-  if (order) {
-    // extract order direction from definitions
-    const orderInfo = softwareOrderOptions.find(item=>item.key===order)
-    // ordering options require "stable" secondary order
-    // to ensure proper pagination. We use slug for this purpose
-    if (orderInfo) orderBy=`${order}.${orderInfo.direction},slug.asc`
+  const allowedOrderings = softwareOrderOptions.map(o => o.key)
+
+  if (!order || !allowedOrderings.includes(order)) {
+    order = 'mention_cnt'
   }
+
+  // extract order direction from definitions
+  const orderInfo = softwareOrderOptions.find(item=>item.key===order)!
+  // ordering options require "stable" secondary order
+  // to ensure proper pagination. We use slug for this purpose
+  const orderBy = `${order}.${orderInfo.direction},slug.asc`
 
   // construct postgREST api url with query params
   const url = softwareListUrl({

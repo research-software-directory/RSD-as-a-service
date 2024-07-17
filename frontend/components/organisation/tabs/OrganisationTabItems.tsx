@@ -1,7 +1,8 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -62,7 +63,7 @@ export const organistionTabItems:OrganisationTabProps = {
     isVisible: ({children_cnt, isMaintainer}) => {
       // we do not show this options if no children
       // and not a maintainer
-      if (isMaintainer===false && (children_cnt === 0 || children_cnt===null)) return false
+      if (!isMaintainer && (children_cnt === 0 || children_cnt===null)) return false
       return true
     },
   },

@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -20,13 +21,12 @@ export const adminOptions = [
 export function getProjectOrderOptions(isMaintainer:boolean) {
   // if maintainer additional order options are added
   if (isMaintainer) {
-    const order = [
+    return [
       ...projectOrderOptions,
       // organisation specific option
       {key: 'is_featured', label: 'Pinned', direction: 'desc.nullslast'},
       ...adminOptions
     ]
-    return order
   } else {
     return [
       ...projectOrderOptions,
@@ -39,13 +39,18 @@ export function getProjectOrderOptions(isMaintainer:boolean) {
 
 export default function OrgOrderProjectsBy() {
   const {isMaintainer} = useOrganisationContext()
-  const {order} = useProjectParams()
+  let {order} = useProjectParams()
   const orderOptions = getProjectOrderOptions(isMaintainer)
   const {handleQueryChange} = useQueryChange()
 
+  const allowedOrderKeys = orderOptions.map(o => o.key)
+  if (order === null || !allowedOrderKeys.includes(order)) {
+    order = 'is_featured'
+  }
+
   return (
     <OrderBy
-      order={order ?? ''}
+      order={order}
       options={orderOptions}
       handleQueryChange={handleQueryChange}
     />

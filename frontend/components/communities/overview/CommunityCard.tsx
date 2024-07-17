@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -52,7 +53,7 @@ export default function CommunityCard({community}:{community:CommunityListProps}
             <div className="flex gap-4 justify-end text-center">
               <CommunityMetrics
                 software_cnt={community.software_cnt ?? 0}
-                pending_cnt={community.pending_cnt ?? 0}
+                pending_cnt={community.pending_cnt}
               />
             </div>
           </CardContentFrame>
