@@ -854,7 +854,8 @@ $$
 			WHEN software.slug ILIKE query OR software.brand_name ILIKE query THEN 0
 			WHEN BOOL_OR(keyword.value ILIKE query) THEN 0
 			WHEN software.slug ILIKE CONCAT(query, '%') OR software.brand_name ILIKE CONCAT(query, '%') THEN 0
-			WHEN software.slug ILIKE CONCAT('%', query, '%') OR software.brand_name ILIKE CONCAT('%', query, '%') THEN LEAST(POSITION(query IN software.slug), POSITION(query IN software.brand_name))
+			WHEN software.slug ILIKE CONCAT('%', query, '%') OR software.brand_name ILIKE CONCAT('%', query, '%')
+				THEN LEAST(NULLIF(POSITION(query IN software.slug), 0), NULLIF(POSITION(query IN software.brand_name), 0))
 			ELSE 0
 		END) AS index_found
 	FROM
@@ -888,7 +889,8 @@ $$
 			WHEN project.slug ILIKE query OR project.title ILIKE query THEN 0
 			WHEN BOOL_OR(keyword.value ILIKE query) THEN 0
 			WHEN project.slug ILIKE CONCAT(query, '%') OR project.title ILIKE CONCAT(query, '%') THEN 0
-			WHEN project.slug ILIKE CONCAT('%', query, '%') OR project.title ILIKE CONCAT('%', query, '%') THEN LEAST(POSITION(query IN project.slug), POSITION(query IN project.title))
+			WHEN project.slug ILIKE CONCAT('%', query, '%') OR project.title ILIKE CONCAT('%', query, '%')
+				THEN LEAST(NULLIF(POSITION(query IN project.slug), 0), NULLIF(POSITION(query IN project.title), 0))
 			ELSE 0
 		END) AS index_found
 	FROM
@@ -919,7 +921,8 @@ $$
 		(CASE
 			WHEN organisation.slug ILIKE query OR organisation."name" ILIKE query THEN 0
 			WHEN organisation.slug ILIKE CONCAT(query, '%') OR organisation."name" ILIKE CONCAT(query, '%') THEN 0
-			ELSE LEAST(POSITION(query IN organisation.slug), POSITION(query IN organisation."name"))
+			ELSE
+				LEAST(NULLIF(POSITION(query IN organisation.slug), 0), NULLIF(POSITION(query IN organisation."name"), 0))
 		END) AS index_found
 	FROM
 		organisation
@@ -943,7 +946,8 @@ $$
 		(CASE
 			WHEN community.slug ILIKE query OR community."name" ILIKE query THEN 0
 			WHEN community.slug ILIKE CONCAT(query, '%') OR community."name" ILIKE CONCAT(query, '%') THEN 0
-			ELSE LEAST(POSITION(query IN community.slug), POSITION(query IN community."name"))
+			ELSE
+				LEAST(NULLIF(POSITION(query IN community.slug), 0), NULLIF(POSITION(query IN community."name"), 0))
 		END) AS index_found
 	FROM
 		community
