@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -40,9 +41,12 @@ export default function OrganisationLogo({isMaintainer}:OrganisationLogoProps) {
   // console.groupEnd()
 
   // Update logo when new value
-  // received from parent
+  // received from parent,
+  // can be null, indicating no logo exists for the org
   useEffect(() => {
-    if (logo_id) setLogo(logo_id)
+    if (logo_id !== undefined) {
+      setLogo(logo_id)
+    }
   },[logo_id])
 
   async function addLogo({data, mime_type}: ImageDataProps) {
