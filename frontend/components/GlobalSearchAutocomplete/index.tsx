@@ -20,6 +20,10 @@ import {useDebounce} from '~/utils/useDebounce'
 import TerminalIcon from '@mui/icons-material/Terminal'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import BusinessIcon from '@mui/icons-material/Business'
+import Diversity3Icon from '@mui/icons-material/Diversity3'
+import logger from '~/utils/logger'
+import useSnackbar from '~/components/snackbar/useSnackbar'
+import {useModules} from '~/config/useModules'
 
 type Props = {
   className?: string
@@ -34,9 +38,11 @@ export default function GlobalSearchAutocomplete(props: Props) {
   const [hasResults, setHasResults] = useState(true)
   const [searchResults, setSearchResults] = useState<GlobalSearchResults[]>([])
   const [searchCombo, setSearchCombo] = useState('Ctrl K')
+  const {isModuleEnabled} = useModules()
 
   const lastValue = useDebounce(inputValue, 150)
   const inputRef = useRef<HTMLInputElement>(null)
+  const {showErrorMessage} = useSnackbar()
 
   // console.group('GlobalSearchAutocomplete')
   // console.log('inputValue...', inputValue)
@@ -60,15 +66,31 @@ export default function GlobalSearchAutocomplete(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastValue])
 
-  const defaultValues = [
-    {name: 'Go to Software page', slug: '', source: 'software'},
-    {name: 'Go to Projects page', slug: '', source: 'projects'},
-    {name: 'Go to Organisations page', slug: '', source: 'organisations'},
-  ]
+  const defaultValues: GlobalSearchResults[] = []
+
+  if (isModuleEnabled('software')) {
+    defaultValues.push({name: 'Go to Software page', slug: '', source: 'software'})
+  }
+  if (isModuleEnabled('projects')) {
+    defaultValues.push({name: 'Go to Projects page', slug: '', source: 'projects'})
+  }
+  if (isModuleEnabled('organisations')) {
+    defaultValues.push({name: 'Go to Organisations page', slug: '', source: 'organisations'})
+  }
+  if (isModuleEnabled('communities')) {
+    defaultValues.push({name: 'Go to Communities page', slug: '', source: 'communities'})
+  }
 
   async function fetchData(search: string) {
     // Fetch api
-    const data = await getGlobalSearch(search, session.token) || []
+    let data: GlobalSearchResults[]
+    try {
+      data = await getGlobalSearch(search, session.token) || []
+    } catch (e: any) {
+      logger(e?.message, 'error')
+      showErrorMessage('Something went wrong getting the search results')
+      data = []
+    }
 
     if (data?.length === 0) {
       setHasResults(false)
@@ -217,6 +239,7 @@ export default function GlobalSearchAutocomplete(props: Props) {
                     {item?.source === 'software' && <TerminalIcon/>}
                     {item?.source === 'projects' && <ListAltIcon/>}
                     {item?.source === 'organisations' && <BusinessIcon/>}
+                    {item?.source === 'communities' && <Diversity3Icon/>}
                   </div>
 
                   <div className="flex-grow ">

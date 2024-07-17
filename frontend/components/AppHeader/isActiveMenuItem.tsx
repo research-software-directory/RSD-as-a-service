@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,7 +16,7 @@ export default function isActiveMenuItem({item, activePath}:IsActiveMenuItemProp
   if (activePath && item.match) {
     // console.log('activePath...', activePath)
     // console.log('match...', item.match)
-    // using startsWith to be activate root of the tree
+    // using startsWith to activate root of the tree
     return activePath.startsWith(item.match)
   }
 

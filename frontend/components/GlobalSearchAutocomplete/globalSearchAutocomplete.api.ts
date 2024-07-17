@@ -7,12 +7,11 @@
 
 import logger from '~/utils/logger'
 import {createJsonHeaders} from '~/utils/fetchHelpers'
-import {sortBySearchFor} from '~/utils/sortFn'
 
 export type GlobalSearchResults = {
   slug: string,
   name: string,
-  source: string,
+  source: 'software' | 'projects' | 'organisations' | 'communities',
   is_published?: boolean,
   search_text?: string
 } | undefined
@@ -22,7 +21,7 @@ export type GlobalSearchResults = {
  * @param searchText
  * @param token
  */
-export async function getGlobalSearch(searchText: string, token: string,) {
+export async function getGlobalSearch(searchText: string, token: string,): Promise<GlobalSearchResults[]> {
   try {
     // call the function query
     const query = `rpc/global_search?query=${searchText}&limit=30&order=rank.asc,index_found.asc`
@@ -35,13 +34,13 @@ export async function getGlobalSearch(searchText: string, token: string,) {
       }
     })
     if (resp.status === 200) {
-      const rawData: GlobalSearchResults[] = await resp.json()
-      // sort by search value based on name property
-      const sorted = rawData.sort((a, b) => sortBySearchFor(a,b,'name',searchText))
-      return sorted
+      // already sorted by the backend, see the query above
+      return await resp.json()
+    } else {
+      throw new Error(`We received an error message when doing a global search, status code ${resp.status}, body ${await resp.text()}`)
     }
   } catch (e: any) {
     logger(`getGlobalSearch: ${e?.message}`, 'error')
-    return []
+    throw e
   }
 }
