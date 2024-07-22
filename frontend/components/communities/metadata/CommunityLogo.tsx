@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 
 import {useSession} from '~/auth'
 import {deleteImage,getImageUrl,upsertImage} from '~/utils/editImage'
@@ -29,6 +30,10 @@ export default function CommunityLogo({id,name,logo_id,isMaintainer}:CommunityLo
   const {showErrorMessage} = useSnackbar()
   // currently shown image
   const [logo, setLogo] = useState<string|null>(logo_id)
+
+  useEffect(() => {
+    setLogo(logo_id)
+  }, [logo_id])
 
   // console.group('CommunityLogo')
   // console.log('id...', id)
