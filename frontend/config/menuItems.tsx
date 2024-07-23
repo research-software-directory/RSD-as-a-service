@@ -5,6 +5,7 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,8 +39,8 @@ export type MenuItemType = {
 // routes defined for nav/menu
 // used in components/AppHeader
 export const menuItems:MenuItemType[] = [
-  {path: '/software?order=mention_cnt', match:'/software', label:'Software', module:'software'},
-  {path: '/projects?order=impact_cnt', match: '/projects', label: 'Projects', module:'projects'},
+  {path: '/software', match:'/software', label:'Software', module:'software'},
+  {path: '/projects', match: '/projects', label: 'Projects', module:'projects'},
   {path: '/organisations', match: '/organisations', label: 'Organisations', module:'organisations'},
   {path: '/communities', match: '/communities', label: 'Communities', module:'communities'}
 ]

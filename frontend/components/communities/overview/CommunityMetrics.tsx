@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -9,7 +10,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined'
 
 type CommunityMetricsProps = {
   software_cnt: number
-  pending_cnt: number
+  pending_cnt: number | null
 }
 
 export default function CommunityMetrics({software_cnt,pending_cnt}:CommunityMetricsProps) {
@@ -36,12 +37,15 @@ export default function CommunityMetrics({software_cnt,pending_cnt}:CommunityMet
           <span className="text-sm">{software_cnt ?? 0}</span>
         </div>
       </Tooltip>
-      <Tooltip title={pendingMessage()} placement="top">
-        <div className="flex gap-2 items-center text-base-content-secondary">
-          <FlagOutlinedIcon sx={{width:20}} />
-          <span className="text-sm">{pending_cnt ?? 0}</span>
-        </div>
-      </Tooltip>
+      {
+        pending_cnt !== null &&
+        <Tooltip title={pendingMessage()} placement="top">
+          <div className="flex gap-2 items-center text-base-content-secondary">
+            <FlagOutlinedIcon sx={{width:20}} />
+            <span className="text-sm">{pending_cnt}</span>
+          </div>
+        </Tooltip>
+      }
     </>
   )
 }

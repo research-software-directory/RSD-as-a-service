@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2023 dv4all
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -31,13 +32,18 @@ export function getSoftwareOrderOptions(isMaintainer:boolean) {
 
 export default function OrderCommunitySoftwareBy() {
   const {isMaintainer} = useCommunityContext()
-  const {order} = useSoftwareParams()
+  let {order} = useSoftwareParams()
   const {handleQueryChange} = useFilterQueryChange()
   const orderOptions = getSoftwareOrderOptions(isMaintainer)
 
+  const allowedOrderings = orderOptions.map(o => o.key)
+  if (order === null || !allowedOrderings.includes(order)) {
+    order = 'mention_cnt'
+  }
+
   return (
     <OrderBy
-      order={order ?? ''}
+      order={order}
       options={orderOptions}
       handleQueryChange={handleQueryChange}
     />

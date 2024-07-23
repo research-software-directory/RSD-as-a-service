@@ -1,5 +1,6 @@
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -38,10 +39,6 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
           slug: router.query['slug'],
           tab: value,
         }
-        // add default order for software and project tabs
-        if (value === 'projects' || value === 'software') {
-          query['order'] = 'is_featured'
-        }
         // push route change
         router.push({query},undefined,{scroll:false})
       }}
@@ -56,7 +53,7 @@ export default function OrganisationTabs({tab_id}:{tab_id:TabKey|null}) {
           project_cnt,
           children_cnt,
           description
-        }) === true) {
+        })) {
           return <Tab
             icon={item.icon}
             key={key}

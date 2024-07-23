@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: 2022 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all) (dv4all)
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -34,7 +35,7 @@ export default function OrganisationCard({organisation}: { organisation: Organis
     <div className="relative">
       <Link
         data-testid="organisation-card-link"
-        href={`/organisations/${organisation.rsd_path}?tab=software&order=is_featured`}
+        href={`/organisations/${organisation.rsd_path}`}
         className="flex h-full hover:text-inherit"
         passHref
       >
@@ -62,7 +63,7 @@ export default function OrganisationCard({organisation}: { organisation: Organis
                 project_cnt={organisation.project_cnt}
               />
               {/* if is not tenant we render empty placeholder */}
-              {organisation.is_tenant === false ?
+              {!organisation.is_tenant ?
                 <div className="w-[2rem]">&nbsp;</div>
                 :
                 <TenantBadge/>

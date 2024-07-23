@@ -14,7 +14,6 @@ import Pagination from '@mui/material/Pagination'
 import PaginationItem from '@mui/material/PaginationItem'
 
 import {app} from '~/config/app'
-import {useUserSettings} from '~/config/UserSettingsContext'
 import PageTitle from '~/components/layout/PageTitle'
 import Searchbox from '~/components/form/Searchbox'
 import {OrganisationList} from '~/types/Organisation'

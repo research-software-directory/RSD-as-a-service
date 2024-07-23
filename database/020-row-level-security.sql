@@ -425,7 +425,7 @@ CREATE POLICY admin_all_rights ON research_domain TO rsd_admin
 ALTER TABLE software_for_community ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY anyone_can_read ON software_for_community FOR SELECT TO rsd_web_anon, rsd_user
-	USING (software IN (SELECT id FROM software));
+	USING (software IN (SELECT id FROM software) AND status = 'approved');
 
 CREATE POLICY maintainer_can_read ON software_for_community FOR SELECT TO rsd_user
 	USING (software IN (SELECT * FROM software_of_current_maintainer()) OR community IN (SELECT * FROM communities_of_current_maintainer()));

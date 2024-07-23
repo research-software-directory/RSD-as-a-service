@@ -1,4 +1,5 @@
 // SPDX-FileCopyrightText: 2024 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -26,6 +27,7 @@ import ViewToggleGroup,{ProjectLayoutType} from '~/components/projects/overview/
 import CommunitiesList from '~/components/communities/overview/CommunitiesList'
 import CommunitiesGrid from '~/components/communities/overview/CommunitiesGrid'
 import {CommunityListProps, getCommunityList} from '~/components/communities/apiCommunities'
+import {useSession} from '~/auth'
 
 const pageTitle = `Communities | ${app.title}`
 const pageDesc = 'List of RSD communities.'
@@ -41,6 +43,13 @@ type CommunitiesOverviewProps={
 
 
 export default function CommunitiesOverview({count,page,rows,layout,search,communities}:CommunitiesOverviewProps) {
+  const {user} = useSession()
+  const isAdmin = user?.role === 'rsd_admin'
+  if (!isAdmin) {
+    for (const community of communities) {
+      community.pending_cnt = null
+    }
+  }
   const {handleQueryChange,createUrl} = useSearchParams('communities')
   const initView = layout === 'masonry' ? 'grid' : layout
   const [view, setView] = useState<ProjectLayoutType>(initView)
