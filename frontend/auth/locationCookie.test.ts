@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2022 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -50,7 +51,7 @@ it('ignores these paths', () => {
 it('when root write cookie to redirect to software', () => {
   // should ignore this path
   window.location.pathname = '/'
-  const expectedCookie = 'rsd_pathname=http://localhost/software?order=mention_cnt;path=/auth;SameSite=None;Secure'
+  const expectedCookie = 'rsd_pathname=http://localhost/user/software;path=/auth;SameSite=None;Secure'
   document.cookie = ''
   // call function
   saveLocationCookie()
