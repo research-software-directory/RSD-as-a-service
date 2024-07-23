@@ -104,6 +104,14 @@ After providing a DOI, use the "Validate" button to confirm that provided DOI is
 After providing a valid software DOI, you will have the option to import keywords, software license and contributors provided in the DOI metadata.
 :::
 
+### License
+
+The **License** of the software. This will be shown in the sidebar of the software page. If you have provided a software DOI you can import the license info from DOI metadata.
+
+:::tip
+When you start typing the license you will get a list of valid open source licenses pulled from the [SPDX repository](https://github.com/spdx/license-list-data).
+:::
+
 ### Keywords
 
 The keywords describing your software. These will be shown in the sidebar of the software page. Users can filter all software entries by keywords. If you provided a software DOI and have keywords defined in this DOI, you can import them using the "Import keywords" button.
@@ -112,13 +120,9 @@ The keywords describing your software. These will be shown in the sidebar of the
 When you start typing the keyword you will see a list of suggestions based on the keywords already present in RSD.
 :::
 
-### License
+### Categories
 
-The **License** of the software. This will be shown in the sidebar of the software page. If you have provided a software DOI you can import the license info from DOI metadata.
-
-:::tip
-When you start typing the license you will get a list of valid open source licenses pulled from the [SPDX repository](https://github.com/spdx/license-list-data).
-:::
+**Categories** are a set of curated keywords defined by RSD admins. If they exist, you can add them to (and delete them from) your software page here.
 
 ## Contributors
 
@@ -176,7 +180,7 @@ Here you can add all additional related output. Use search to find papers or oth
 
 ## Testimonials
 
-This section allows user testimonials to be added to the software page. A testimonial consist of a quote and a source. The source is a `free text` field. In the source field you can provide name, date, location or anything else in any order and format you wish.
+This section allows user testimonials to be added to the software page. A testimonial consist of a quote and a source. The source is a `free text` field. In the source field you can provide the name, date, location or anything else in any order and format you wish.
 
 ![image](img/software-testimonials.gif)
 
@@ -189,6 +193,26 @@ We currently support the following package managers: [Anaconda](https://anaconda
 If your package manager is not listed above, you can still add it, but we will categorise it as *other* and cannot scrape it yet. You can [open an GitHub issue](https://github.com/research-software-directory/RSD-as-a-service/issues) (please check for existing issues first) or contact us if you want us to support an additional package manager.
 
 ![video](img/software-package-managers.gif)
+
+## Communities
+
+If communities are enabled for this RSD instance, you will be able to see this section.
+
+In this section, you can see the communities this software page is affiliated with and its status (accepted, pending or rejected). Only if the status is accepted, the community will be shown on the software page. The RSD doesn't have an internal messaging system yes, so if you want to know more about e.g. why your software is rejected, you should contact someone from the community directly.
+
+You can also search for new communities to become a part of, just type the name in the search bar to start searching.
+
+When you join a community, this community may ask you to select certain community-specific keywords that describe you software (we call these **categories** in the RSD). You will be prompted to assign categories to your software page before the request to become part of the community is sent (if a community doesn't have categories, the request is sent automatically).
+
+After selecting the relevant categories for your software, click **Save** to complete the join request. You will now see the community listed with your software. The community will be set to **Pending** until a community maintainer accepts or rejects your join request.
+
+You can still edit the categories of a community that assigned to your software page afterwards, just click on the categories icon.
+
+![image](img/community-categories-edit.jpg)
+
+It is currently only possible to select categories on the lowest level (i.e., categories that have no further children). We are aware that there might also be use cases in which it should be possible to select categories higher up in the hierarchy. Please let us know of the use cases you have.
+
+If you leave a community, any associated categories of that community will automatically be deleted from your software page.
 
 ## Related software
 
