@@ -55,18 +55,7 @@ WHERE
 	)
 GROUP BY
 	output_for_project.project,
-	mention.id,
-	mention.doi,
-	mention.url,
-	mention.title,
-	mention.authors,
-	mention.publisher,
-	mention.publication_year,
-	mention.journal,
-	mention.page,
-	mention.image_url,
-	mention.mention_type,
-	mention.source
+	mention.id
 ;
 $$;
 
@@ -90,49 +79,51 @@ CREATE FUNCTION impact_by_project() RETURNS TABLE (
 	note VARCHAR
 ) LANGUAGE sql STABLE AS
 $$
--- impact for project
-SELECT
-	impact_for_project.project,
-	mention.id,
-	mention.doi,
-	mention.url,
-	mention.title,
-	mention.authors,
-	mention.publisher,
-	mention.publication_year,
-	mention.journal,
-	mention.page,
-	mention.image_url,
-	mention.mention_type,
-	mention.source,
-	mention.note
-FROM
-	mention
-INNER JOIN
-	impact_for_project ON impact_for_project.mention = mention.id
--- will deduplicate identical entries
--- from scraped citations
-UNION
--- scraped citations from reference papers
-SELECT
-	project,
-	id,
-	doi,
-	url,
-	title,
-	authors,
-	publisher,
-	publication_year,
-	journal,
-	page,
-	image_url,
-	mention_type,
-	source,
-	-- scraped citations have no note prop
-	-- we need this prop in the edit impact section
-	NULL as note
-FROM
-	citation_by_project()
+WITH impact_and_citations AS (
+	-- impact for project
+	SELECT
+		impact_for_project.project,
+		mention.id,
+		mention.doi,
+		mention.url,
+		mention.title,
+		mention.authors,
+		mention.publisher,
+		mention.publication_year,
+		mention.journal,
+		mention.page,
+		mention.image_url,
+		mention.mention_type,
+		mention.source,
+		mention.note
+	FROM
+		mention
+	INNER JOIN
+		impact_for_project ON impact_for_project.mention = mention.id
+	-- does not deduplicate identical entries, but we will do so below with DISTINCT
+	-- from scraped citations
+	UNION ALL
+	-- scraped citations from reference papers
+	SELECT
+		project,
+		id,
+		doi,
+		url,
+		title,
+		authors,
+		publisher,
+		publication_year,
+		journal,
+		page,
+		image_url,
+		mention_type,
+		source,
+		-- scraped citations have no note prop
+		-- we need this prop in the edit impact section
+		NULL as note
+	FROM
+		citation_by_project()
+) SELECT DISTINCT ON (impact_and_citations.project, impact_and_citations.id) * FROM impact_and_citations;
 ;
 $$;
 

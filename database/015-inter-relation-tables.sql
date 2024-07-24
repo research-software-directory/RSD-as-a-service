@@ -106,6 +106,8 @@ CREATE TABLE software_for_organisation (
 	PRIMARY KEY (software, organisation)
 );
 
+CREATE INDEX software_for_organisation_organisation_idx ON software_for_organisation(organisation);
+
 CREATE FUNCTION sanitise_update_software_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
 BEGIN
@@ -142,6 +144,8 @@ CREATE TABLE project_for_organisation (
 	position INTEGER,
 	PRIMARY KEY (project, organisation, role)
 );
+
+CREATE INDEX project_for_organisation_organisation_idx ON project_for_organisation(organisation);
 
 CREATE FUNCTION sanitise_update_project_for_organisation() RETURNS TRIGGER LANGUAGE plpgsql AS
 $$

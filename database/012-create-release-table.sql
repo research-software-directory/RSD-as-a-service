@@ -17,6 +17,8 @@ CREATE TABLE release_version (
 	PRIMARY KEY (release_id, mention_id)
 );
 
+CREATE INDEX release_version_mention_id_idx ON release_version(mention_id);
+
 
 CREATE FUNCTION z_delete_old_releases() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS
 $$

@@ -42,11 +42,15 @@ CREATE TABLE keyword_for_software (
 	PRIMARY KEY (software, keyword)
 );
 
+CREATE INDEX keyword_for_software_keyword_idx ON keyword_for_software(keyword);
+
 CREATE TABLE keyword_for_project (
 	project UUID references project (id),
 	keyword UUID references keyword (id),
 	PRIMARY KEY (project, keyword)
 );
+
+CREATE INDEX keyword_for_project_keyword_idx ON keyword_for_project(keyword);
 
 -- ADD basic keywords from topics and tags
 INSERT into keyword (value)
@@ -72,6 +76,8 @@ CREATE TABLE keyword_for_community (
 	PRIMARY KEY (community, keyword)
 );
 
+CREATE INDEX keyword_for_community_keyword_idx ON keyword_for_community(keyword);
+
 
 ----------------
 -- Categories --
@@ -92,8 +98,8 @@ CREATE TABLE category (
 	CONSTRAINT highlight_must_be_top_level_category CHECK (NOT ((properties->>'is_highlight')::boolean AND parent IS NOT NULL))
 );
 
-CREATE INDEX category_parent_idx ON category (parent);
-CREATE INDEX category_community_idx ON category (community);
+CREATE INDEX category_parent_idx ON category(parent);
+CREATE INDEX category_community_idx ON category(community);
 
 
 CREATE TABLE category_for_software (
@@ -101,6 +107,8 @@ CREATE TABLE category_for_software (
 	category_id UUID references category (id),
 	PRIMARY KEY (software_id, category_id)
 );
+
+CREATE INDEX category_for_software_category_id_idx ON category_for_software(category_id);
 
 
 -- sanitize categories
