@@ -1,6 +1,6 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2022 Dusan Mijatovic (dv4all)
-// SPDX-FileCopyrightText: 2022 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 dv4all
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 //
@@ -22,7 +22,7 @@ export function saveLocationCookie() {
       break
     case '/':
       // root is send to /software
-      document.cookie = `rsd_pathname=${location.href}software?order=mention_cnt;path=/auth;SameSite=None;Secure`
+      document.cookie = `rsd_pathname=${location.href}user/software;path=/auth;SameSite=None;Secure`
       break
     default:
       // write simple browser cookie
