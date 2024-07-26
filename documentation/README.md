@@ -1,7 +1,7 @@
 <!--
+SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
-SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -12,11 +12,9 @@ This documentation uses [Docusaurus 3](https://docusaurus.io/), a modern static 
 
 ## Installation
 
-Currently, we need to use the `--legacy-peer-deps` flag during the installation in order to force the installation of `docusaurus-lunr-search` which does not have (yet) Docusaurus v3 version defined in its peer dependencies.
-
 ```bash
 # from the documentation folder
-npm install --legacy-peer-deps
+npm install
 ```
 
 ### Local Development
