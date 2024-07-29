@@ -455,7 +455,7 @@ function generateOrcids(amount = 50) {
 	const orcids = new Set();
 
 	while (orcids.size < amount) {
-		orcids.add(faker.helpers.replaceSymbolWithNumber('0000-000#-####-####'));
+		orcids.add(faker.helpers.replaceSymbols('0000-000#-####-####'));
 	}
 
 	return [...orcids];

@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"@faker-js/faker": "8.3.1",
+		"@faker-js/faker": "8.4.1",
 		"jsonwebtoken": "9.0.2",
 		"wait-on": "7.2.0"
 	},
@@ -12,11 +12,9 @@
 		"format:check": "prettier --check .",
 		"format:fix": "prettier --write ."
 	},
-	"author": "",
-	"license": "ISC",
-	"description": "",
+	"description": "This module generates and stores fake data for the RSD for testing purposes",
 	"type": "module",
 	"devDependencies": {
-		"prettier": "3.2.5"
+		"prettier": "3.3.3"
 	}
 }

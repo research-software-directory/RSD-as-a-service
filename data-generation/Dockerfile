@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-# SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+# SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 #
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:21.4.0-bullseye-slim
+FROM node:22.5.1-bullseye-slim
 WORKDIR /usr/app
 COPY ./package.json /usr/app
 RUN npm install
