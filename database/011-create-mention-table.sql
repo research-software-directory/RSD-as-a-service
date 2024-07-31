@@ -83,6 +83,8 @@ CREATE TABLE mention_for_software (
 	PRIMARY KEY (mention, software)
 );
 
+CREATE INDEX mention_for_software_software_idx ON mention_for_software(software);
+
 
 CREATE TABLE reference_paper_for_software (
 	mention UUID REFERENCES mention (id),
@@ -90,12 +92,16 @@ CREATE TABLE reference_paper_for_software (
 	PRIMARY KEY (mention, software)
 );
 
+CREATE INDEX reference_paper_for_software_software_idx ON reference_paper_for_software(software);
+
 
 CREATE TABLE citation_for_mention (
 	mention UUID REFERENCES mention (id),
 	citation UUID REFERENCES mention (id),
 	PRIMARY KEY (mention, citation)
 );
+
+CREATE INDEX citation_for_mention_citation_idx ON citation_for_mention(citation);
 
 
 CREATE FUNCTION search_mentions_for_software(software_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS
@@ -120,6 +126,7 @@ CREATE TABLE output_for_project (
 	PRIMARY KEY (mention, project)
 );
 
+CREATE INDEX output_for_project_project_idx ON output_for_project(project);
 
 
 CREATE TABLE impact_for_project (
@@ -127,6 +134,8 @@ CREATE TABLE impact_for_project (
 	project UUID REFERENCES project (id),
 	PRIMARY KEY (mention, project)
 );
+
+CREATE INDEX impact_for_project_project_idx ON impact_for_project(project);
 
 
 CREATE FUNCTION search_impact_for_project(project_id UUID, search_text VARCHAR) RETURNS SETOF mention STABLE LANGUAGE plpgsql AS

@@ -83,18 +83,7 @@ WHERE
 	)
 GROUP BY
 	reference_paper_for_software.software,
-	mention.id,
-	mention.doi,
-	mention.url,
-	mention.title,
-	mention.authors,
-	mention.publisher,
-	mention.publication_year,
-	mention.journal,
-	mention.page,
-	mention.image_url,
-	mention.mention_type,
-	mention.source
+	mention.id
 ;
 $$;
 
@@ -116,46 +105,48 @@ CREATE FUNCTION mentions_by_software() RETURNS TABLE (
 	source VARCHAR
 ) LANGUAGE sql STABLE AS
 $$
--- mentions for software
-SELECT
-	mention_for_software.software,
-	mention.id,
-	mention.doi,
-	mention.url,
-	mention.title,
-	mention.authors,
-	mention.publisher,
-	mention.publication_year,
-	mention.journal,
-	mention.page,
-	mention.image_url,
-	mention.mention_type,
-	mention.source
-FROM
-	mention
-INNER JOIN
-	mention_for_software ON mention_for_software.mention = mention.id
--- will deduplicate identical entries
--- from scraped citations
-UNION
--- scraped citations from reference papers
-SELECT
-	software,
-	id,
-	doi,
-	url,
-	title,
-	authors,
-	publisher,
-	publication_year,
-	journal,
-	page,
-	image_url,
-	mention_type,
-	source
-FROM
-	citation_by_software()
-;
+WITH mentions_and_citations AS (
+	-- mentions for software
+	SELECT
+		mention_for_software.software,
+		mention.id,
+		mention.doi,
+		mention.url,
+		mention.title,
+		mention.authors,
+		mention.publisher,
+		mention.publication_year,
+		mention.journal,
+		mention.page,
+		mention.image_url,
+		mention.mention_type,
+		mention.source
+	FROM
+		mention
+	INNER JOIN
+		mention_for_software ON mention_for_software.mention = mention.id
+	-- does not deduplicate identical entries, but we will do so below with DISTINCT
+	-- from scraped citations
+	UNION ALL
+	-- scraped citations from reference papers
+	SELECT
+		software,
+		id,
+		doi,
+		url,
+		title,
+		authors,
+		publisher,
+		publication_year,
+		journal,
+		page,
+		image_url,
+		mention_type,
+		source
+	FROM
+		citation_by_software()
+)
+SELECT DISTINCT ON (mentions_and_citations.software, mentions_and_citations.id) * FROM mentions_and_citations;
 $$;
 
 -- COUNT mentions per software

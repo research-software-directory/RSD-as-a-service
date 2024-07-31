@@ -64,6 +64,8 @@ CREATE TABLE research_domain_for_project (
 	PRIMARY KEY (project, research_domain)
 );
 
+CREATE INDEX research_domain_for_project_research_domain_idx ON research_domain_for_project(research_domain);
+
 
 -- insert RSE list of research domains
 

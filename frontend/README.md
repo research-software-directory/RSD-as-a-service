@@ -78,8 +78,8 @@ POSTGREST_URL=http://localhost/api/v1
 It can be useful to intercept HTTP requests made by the Next.js server in order to identify potential bottlenecks and to see if the requests made are correct. In order to do so, add the following snippet to the end of `frontend/pages/_app.tsx`:
 
 ```javascript
-function replaceFetch(originalFetch) {
-	const newFetch = async function(url, conf) {
+function replaceFetch(originalFetch: any) {
+	const newFetch = async function(url: any, conf: any) {
 		const tik = Date.now();
 		const resp = await originalFetch(url, conf);
 		const tok = Date.now();
@@ -90,8 +90,10 @@ function replaceFetch(originalFetch) {
 	global.fetch = newFetch;
 }
 
+// @ts-ignore
 if (!global.originalFetch) {
 	const originalFetch = global.fetch;
+	// @ts-ignore
 	global.originalFetch = originalFetch;
 
 	replaceFetch(originalFetch);
@@ -99,6 +101,7 @@ if (!global.originalFetch) {
 
 // because Next.js overwrites global.fetch again...
 setInterval(() => {
+	// @ts-ignore
 	const originalFetch = global.originalFetch;
 
 	replaceFetch(originalFetch);

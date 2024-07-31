@@ -29,8 +29,9 @@ CREATE TABLE organisation (
 	UNIQUE (slug, parent)
 );
 
-CREATE UNIQUE INDEX unique_slug_for_top_level_org_idx ON organisation (slug, (parent IS NULL)) WHERE parent IS NULL;
-CREATE UNIQUE INDEX unique_name_and_parent_idx ON organisation (name, parent);
+CREATE INDEX organisation_parent_idx ON organisation(parent);
+CREATE UNIQUE INDEX unique_slug_for_top_level_org_idx ON organisation(slug, (parent IS NULL)) WHERE parent IS NULL;
+CREATE UNIQUE INDEX unique_name_and_parent_idx ON organisation(name, parent);
 
 CREATE FUNCTION check_cycle_organisations() RETURNS TRIGGER STABLE LANGUAGE plpgsql SECURITY DEFINER AS
 $$

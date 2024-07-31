@@ -26,7 +26,7 @@ function generateUniqueCaseInsensitiveString(randomStringGenerator) {
 	throw 'Tried to generate a unique (ignoring case) string for 10000 times but failed to do so';
 }
 
-function generateMentions(amountExtra = 100) {
+function generateMentions(amountExtra = 1000) {
 	const mentionTypes = [
 		'blogPost',
 		'book',
@@ -91,7 +91,7 @@ function generateMentions(amountExtra = 100) {
 	return result;
 }
 
-function generateSoftware(amount = 500) {
+function generateSoftware(amount = 1000) {
 	// real software has a real concept DOI
 	const amountRealSoftware = Math.min(conceptDois.length, amount);
 	const brandNames = [];
@@ -399,7 +399,7 @@ function generateSoftwareHighlights(ids) {
 	return result;
 }
 
-function generateProjects(amount = 500) {
+function generateProjects(amount = 1000) {
 	const result = [];
 
 	const projectStatuses = ['finished', 'running', 'starting'];
