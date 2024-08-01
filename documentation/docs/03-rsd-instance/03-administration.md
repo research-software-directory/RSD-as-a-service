@@ -3,8 +3,8 @@
 This section describes administration options available in the RSD.
 
 :::tip
-To be able to log in as RSD administrator you first need to define a list of rsd admin users in the .env file.
-See [Login as rsd administrator in the getting started section](/rsd-instance/getting-started/#log-in-as-rsd-administrator).
+To be able to log in as an RSD administrator, you first need to grant an existing user admin privileges in the database.
+See [Log in as rsd administrator in the getting started section](/rsd-instance/getting-started/#log-in-as-rsd-administrator).
 :::
 
 ## Public pages
@@ -65,7 +65,7 @@ You can add, search and delete ORCIDs from the RSD. Use the bulk import button t
 
 ## RSD users
 
-This section shows all RSD users who logged in to RSD at least once. You can search for users, assign the administrator role (rsd_admin) or delete user accounts.
+This section shows all RSD users who logged in to RSD at least once. You can search for users, assign the administrator role (`rsd_admin`) or delete user accounts.
 
 :::danger
 
@@ -93,7 +93,7 @@ Use the search box to find organisations in the ROR database. This is the prefer
 
 ### Define organisation primary maintainer
 
-The primary maintainer of an organisation is defined by an RSD administrator. You need to provide the user id in the general settings section. The user id is unique, and it is automatically created by RSD after a user is logged in for the first time.
+The primary maintainer of an organisation is defined by an RSD administrator. You need to provide the user ID in the general settings section. The user ID is unique, and it is automatically created by RSD after a user is logged in for the first time.
 
 ![animation](img/organisation-maintainers-primary-invite.gif)
 
@@ -140,7 +140,7 @@ Only RSD administrators can create communities.
 
 ### Add community
 
-To create new community use "Add" button. Provide name, short description and logo in the modal.
+To create new community use "Add" button. Provide a name, short description and logo in the modal.
 
 ### Edit community
 
@@ -205,6 +205,26 @@ This section is used to show public announcements to all users of the RSD. It is
 
 ![animation](img/admin-announcement.gif)
 
+## Software
+
+### Slug
+
+When editing a software page, the **slug** of the page (called **RSD path**) can be changed by admins under the **Description** tab.
+
+### Disable Git harvesting
+
+If you want to disable the harvesting of a Git repo, you can do so by providing a reason under the **Links & metadata** tab. Page maintainers will be able to see if and why the harvesting is disabled under the **Background services** tab.
+
+### Disable package manager harvesting
+
+If you want to disable the harvesting of a package manager, you can do so by providing a reason under the **Package managers** tab. Page maintainers will be able to see if and why the harvesting is disabled under the **Background services** tab.
+
+## Project
+
+### Slug
+
+When editing a project page, the **slug** of the page (called **RSD path**) can be changed by admins under the **Project details** tab.
+
 ## News
 
 RSD administrators are able to create news items. The additional option "Add news" will appear in the "+" menu at the top right of the page header.
@@ -232,7 +252,7 @@ After news item is created you will be redirected to edit news item page. Here y
 - Publication date is shown in the header of the news title. It can be changed at any time. Note that changing the publication title also changes public url of the news item.
 - First uploaded image is used in the news card.
 - Using "Copy link" button you can copy the Markdown syntax to the clipboard and the paste the link at the desired location of the body.
-- Using "Delete" button will delete image and the Markdown link syntax from the news body.
+- Using "Delete" button will delete the image and the Markdown link syntax from the news body.
 
 :::
 

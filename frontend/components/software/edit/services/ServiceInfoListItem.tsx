@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -15,14 +16,15 @@ import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn'
 import {CodePlatform} from '~/types/SoftwareTypes'
 
 type ServiceInfoListItemProps={
-  title:string
-  scraped_at: string|null
-  last_error: string|null
-  url: string|null
-  platform: CodePlatform|null
+  readonly title:string
+  readonly scraped_at: string|null
+  readonly last_error: string|null
+  readonly url: string|null
+  readonly platform: CodePlatform|null
+  readonly scraping_disabled_reason: string|null
 }
 
-export function ServiceInfoListItem({title,scraped_at,last_error,url,platform}:ServiceInfoListItemProps){
+export function ServiceInfoListItem({title,scraped_at,last_error,url,platform,scraping_disabled_reason}:ServiceInfoListItemProps){
   let status:'error'|'success'|'not_active'|'scheduled'|'not_supported' = 'not_active'
 
   // set service status
@@ -38,6 +40,7 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform}:S
   if (status==='not_active') color='warning.main'
 
   function getStatusIcon(){
+    if (scraping_disabled_reason !== null) return <DoDisturbOnIcon sx={{width:'2.5rem',height:'2.5rem'}} />
     if (status === 'error') return <ErrorIcon sx={{width:'2.5rem',height:'2.5rem'}} />
     if (status === 'success') return <CheckCircleIcon sx={{width:'2.5rem',height:'2.5rem'}} />
     if (status === 'scheduled') return <ScheduleIcon sx={{width:'2.5rem',height:'2.5rem'}} />
@@ -46,6 +49,10 @@ export function ServiceInfoListItem({title,scraped_at,last_error,url,platform}:S
   }
 
   function getStatusMsg(){
+    if (scraping_disabled_reason !== null) {
+      return (<span className="text-error">{`This harvester was disabled by the admins for the following reason: ${scraping_disabled_reason}`}</span>)
+    }
+
     if (last_error) return (
       <span className="text-error">{last_error}</span>
     )

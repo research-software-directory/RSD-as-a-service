@@ -33,7 +33,7 @@ export default function SoftwareRepoServices() {
             platform: services ? services['code_platform'] : null
           }
           return (
-            <ServiceInfoListItem key={service.name} {...props} />
+            <ServiceInfoListItem key={service.name} scraping_disabled_reason={null} {...props} />
           )
         })}
       </List>

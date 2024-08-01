@@ -9,10 +9,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import logger from '~/utils/logger'
-import {
-  createJsonHeaders, extractErrorMessages,
-  extractReturnMessage, getBaseUrl
-} from '~/utils/fetchHelpers'
+import {createJsonHeaders, extractErrorMessages, extractReturnMessage, getBaseUrl} from '~/utils/fetchHelpers'
 
 export type PackageManagerSettings={
   name: string,
@@ -126,7 +123,7 @@ export type NewPackageManager = {
   id: string|null
   software: string,
   url: string,
-  package_manager: PackageManagerTypes|null,
+  package_manager: PackageManagerTypes | null,
   position: number
 }
 
@@ -138,11 +135,13 @@ export type PackageManager = NewPackageManager & {
   id: string,
   download_count: number | null,
   download_count_scraped_at: string | null,
+  download_count_scraping_disabled_reason: string | null,
   reverse_dependency_count: number | null,
-  reverse_dependency_count_scraped_at: string | null
+  reverse_dependency_count_scraped_at: string | null,
+  reverse_dependency_count_scraping_disabled_reason: string | null,
 }
 
-export async function getPackageManagers({software, token}: { software: string, token?: string }) {
+export async function getPackageManagers({software, token}: { software: string, token?: string }): Promise<PackageManager[]> {
   try {
     const query = `software=eq.${software}&order=position.asc,package_manager.asc`
     const url = `${getBaseUrl()}/package_manager?${query}`
@@ -156,8 +155,7 @@ export async function getPackageManagers({software, token}: { software: string, 
     })
 
     if (resp.status === 200) {
-      const json:PackageManager[] = await resp.json()
-      return json
+      return await resp.json()
     }
     logger(`getPackageManagers...${resp.status} ${resp.statusText}`,'warn')
     return []
