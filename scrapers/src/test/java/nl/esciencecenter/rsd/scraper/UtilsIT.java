@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-public class UtilsIT {
+class UtilsIT {
 
 	private final String gitHubApiUrl = "https://api.github.com";
 	private final String gitHubRepository = "research-software-directory/RSD-as-a-service";
@@ -28,7 +28,7 @@ public class UtilsIT {
 	void getWrongUri() {
 		final String wrongUri = gitHubApiUrl + "/repos/research-software-directory/wrongRepo";
 		Exception thrown = Assertions.assertThrows(
-				Exception.class, () -> Utils.get(wrongUri)
+			Exception.class, () -> Utils.get(wrongUri)
 		);
 		Assertions.assertTrue(thrown.getMessage().startsWith("Error fetching data"));
 	}

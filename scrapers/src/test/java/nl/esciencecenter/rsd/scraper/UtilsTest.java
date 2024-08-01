@@ -10,7 +10,7 @@ package nl.esciencecenter.rsd.scraper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class UtilsTest {
+class UtilsTest {
 
 	@Test
 	void urlEncode() {

@@ -11,19 +11,19 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class MavenScraperTest {
+class MavenScraperTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle,org.openscience.cdk,cdk-bundle",
-			"https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle/,org.openscience.cdk,cdk-bundle",
-			"https://mvnrepository.com/artifact/io.github.sanctuuary/APE,io.github.sanctuuary,APE",
-			"https://mvnrepository.com/artifact/io.github.sanctuuary/APE/,io.github.sanctuuary,APE",
+		"https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle,org.openscience.cdk,cdk-bundle",
+		"https://central.sonatype.com/artifact/org.openscience.cdk/cdk-bundle/,org.openscience.cdk,cdk-bundle",
+		"https://mvnrepository.com/artifact/io.github.sanctuuary/APE,io.github.sanctuuary,APE",
+		"https://mvnrepository.com/artifact/io.github.sanctuuary/APE/,io.github.sanctuuary,APE",
 	})
 	void givenValidMavenOrSonatypeUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNameCorrect(
-			String url,
-			String expectedGroupId,
-			String expectedArtifactID
+		String url,
+		String expectedGroupId,
+		String expectedArtifactID
 	) {
 		MavenScraper mavenScraper = Assertions.assertDoesNotThrow(() -> new MavenScraper(url));
 		Assertions.assertEquals(expectedGroupId, mavenScraper.groupId);
@@ -32,13 +32,13 @@ public class MavenScraperTest {
 
 	@ParameterizedTest
 	@ValueSource(strings = {
-			"https://central.sonatype.com/artifact",
-			"https://mvnrepository.com/artifact/",
-			"https://central.sonatype.com/artifact/org.openscience.cdk",
-			"https://mvnrepository.com/artifact/io.github.sanctuuary/",
-			"https://www.example.com",
-			"https://www.example.com/artifact/org.openscience.cdk/cdk-bundle",
-			""
+		"https://central.sonatype.com/artifact",
+		"https://mvnrepository.com/artifact/",
+		"https://central.sonatype.com/artifact/org.openscience.cdk",
+		"https://mvnrepository.com/artifact/io.github.sanctuuary/",
+		"https://www.example.com",
+		"https://www.example.com/artifact/org.openscience.cdk/cdk-bundle",
+		""
 	})
 	void givenInvalidUrl_whenCallingConstructor_thenExceptionThrown(String url) {
 		Assertions.assertThrowsExactly(RuntimeException.class, () -> new MavenScraper(url));

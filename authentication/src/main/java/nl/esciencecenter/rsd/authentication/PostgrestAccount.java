@@ -26,6 +26,10 @@ import java.util.UUID;
 public class PostgrestAccount implements Account {
 
 
+	private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
+	private static final String BEARER_HEADER_VALUE_PREFIX = "bearer";
+	private static final String PREFER_HEADER_KEY = "Prefer";
+
 	@Override
 	public AccountInfo account(OpenIdInfo openIdInfo, OpenidProvider provider) throws IOException, InterruptedException {
 		Objects.requireNonNull(openIdInfo);
@@ -57,10 +61,17 @@ public class PostgrestAccount implements Account {
 			String name = openIdInfo.name();
 
 			boolean isAdmin = accountInfo.getAsJsonObject("account").get("admin_account").isJsonObject()
-					&&
-					accountInfo.getAsJsonObject("account").getAsJsonObject("admin_account").get("account_id").isJsonPrimitive()
-					&&
-					accountInfo.getAsJsonObject("account").getAsJsonObject("admin_account").getAsJsonPrimitive("account_id").getAsString().equals(account.toString());
+				&&
+				accountInfo.getAsJsonObject("account")
+					.getAsJsonObject("admin_account")
+					.get("account_id")
+					.isJsonPrimitive()
+				&&
+				accountInfo.getAsJsonObject("account")
+					.getAsJsonObject("admin_account")
+					.getAsJsonPrimitive("account_id")
+					.getAsString()
+					.equals(account.toString());
 
 			if (createAdminIfDevAndNoAdminsExist(backendUri, token, account)) {
 				isAdmin = true;
@@ -73,7 +84,12 @@ public class PostgrestAccount implements Account {
 			// create account
 			URI createAccountEndpoint = URI.create(backendUri + "/account");
 			String newAccountJson = postJsonAsAdmin(createAccountEndpoint, "{}", token);
-			String newAccountId = JsonParser.parseString(newAccountJson).getAsJsonArray().get(0).getAsJsonObject().getAsJsonPrimitive("id").getAsString();
+			String newAccountId = JsonParser.parseString(newAccountJson)
+				.getAsJsonArray()
+				.get(0)
+				.getAsJsonObject()
+				.getAsJsonPrimitive("id")
+				.getAsString();
 
 			UUID accountId = UUID.fromString(newAccountId);
 			createLoginForAccount(accountId, openIdInfo, provider, backendUri, token);
@@ -97,7 +113,7 @@ public class PostgrestAccount implements Account {
 		}
 
 		URI adminAccountUri = URI.create(backendUri + "/admin_account");
-		HttpResponse<Void> countAdminResponse = headAsAdmin(adminAccountUri, token, "Prefer", "count=exact");
+		HttpResponse<Void> countAdminResponse = headAsAdmin(adminAccountUri, token, PREFER_HEADER_KEY, "count=exact");
 
 		String contentRange = countAdminResponse.headers().firstValue("Content-Range").orElseThrow();
 		if (!"0".equals(contentRange.split("/")[1])) {
@@ -118,7 +134,8 @@ public class PostgrestAccount implements Account {
 		loginForAccountData.addProperty("email", openIdInfo.email());
 		loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
 		loginForAccountData.addProperty("provider", provider.toString());
-		loginForAccountData.addProperty("last_login_date", ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		loginForAccountData.addProperty("last_login_date", ZonedDateTime.now()
+			.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		URI createLoginUri = URI.create(backendUri + "/login_for_account");
 
 		HttpResponse<String> response = postJsonAsAdminWithResponse(createLoginUri, loginForAccountData.toString(), adminJwt);
@@ -134,7 +151,8 @@ public class PostgrestAccount implements Account {
 		loginForAccountData.addProperty("name", openIdInfo.name());
 		loginForAccountData.addProperty("email", openIdInfo.email());
 		loginForAccountData.addProperty("home_organisation", openIdInfo.organisation());
-		loginForAccountData.addProperty("last_login_date", ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+		loginForAccountData.addProperty("last_login_date", ZonedDateTime.now()
+			.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		String resultingJson = loginForAccountData.toString();
 
 		String backendUri = Config.backendBaseUrl();
@@ -145,10 +163,10 @@ public class PostgrestAccount implements Account {
 
 	static String getAsAdmin(URI uri, String token) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
-				.GET()
-				.uri(uri)
-				.header("Authorization", "bearer " + token)
-				.build();
+			.GET()
+			.uri(uri)
+			.header(AUTHORIZATION_HEADER_KEY, BEARER_HEADER_VALUE_PREFIX + " " + token)
+			.build();
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() >= 300) {
@@ -168,11 +186,11 @@ public class PostgrestAccount implements Account {
 
 	public static HttpResponse<String> postJsonAsAdminWithResponse(URI uri, String json, String token, String... headers) throws IOException, InterruptedException {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
-				.POST(HttpRequest.BodyPublishers.ofString(json))
-				.uri(uri)
-				.header("Content-Type", "application/json")
-				.header("Prefer", "return=representation")
-				.header("Authorization", "bearer " + token);
+			.POST(HttpRequest.BodyPublishers.ofString(json))
+			.uri(uri)
+			.header("Content-Type", "application/json")
+			.header(PREFER_HEADER_KEY, "return=representation")
+			.header(AUTHORIZATION_HEADER_KEY, BEARER_HEADER_VALUE_PREFIX + " " + token);
 		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
 			httpRequestBuilder.headers(headers);
 		}
@@ -184,12 +202,12 @@ public class PostgrestAccount implements Account {
 
 	private String patchJsonAsAdmin(URI uri, String json, String authToken) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
-				.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
-				.uri(uri)
-				.header("Content-Type", "application/json")
-				.header("Prefer", "return=representation")
-				.header("Authorization", "bearer " + authToken)
-				.build();
+			.method("PATCH", HttpRequest.BodyPublishers.ofString(json))
+			.uri(uri)
+			.header("Content-Type", "application/json")
+			.header(PREFER_HEADER_KEY, "return=representation")
+			.header(AUTHORIZATION_HEADER_KEY, BEARER_HEADER_VALUE_PREFIX + " " + authToken)
+			.build();
 		HttpResponse<String> response;
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -202,9 +220,9 @@ public class PostgrestAccount implements Account {
 
 	private HttpResponse<Void> headAsAdmin(URI uri, String token, String... headers) throws IOException, InterruptedException {
 		HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
-				.HEAD()
-				.uri(uri)
-				.header("Authorization", "bearer " + token);
+			.HEAD()
+			.uri(uri)
+			.header(AUTHORIZATION_HEADER_KEY, BEARER_HEADER_VALUE_PREFIX + " " + token);
 		if (headers != null && headers.length > 0 && headers.length % 2 == 0) {
 			httpRequestBuilder.headers(headers);
 		}

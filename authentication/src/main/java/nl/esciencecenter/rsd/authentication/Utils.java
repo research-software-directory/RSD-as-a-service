@@ -47,9 +47,20 @@ public class Utils {
 		String body = formMapToxWwwFormUrlencoded(form);
 
 		return HttpRequest.newBuilder()
-				.POST(HttpRequest.BodyPublishers.ofString(body))
-				.uri(uri)
-				.header("Content-Type", "application/x-www-form-urlencoded")
-				.build();
+			.POST(HttpRequest.BodyPublishers.ofString(body))
+			.uri(uri)
+			.header("Content-Type", "application/x-www-form-urlencoded")
+			.build();
+	}
+
+	public static String postForm(URI uri, Map<String, String> form) throws IOException, InterruptedException, RsdResponseException {
+		HttpRequest request = formToHttpRequest(uri, form);
+		try (HttpClient client = HttpClient.newHttpClient()) {
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			if (response.statusCode() >= 300) {
+				throw new RsdResponseException(response.statusCode(), response.uri(), response.body(), "Error posting form");
+			}
+			return response.body();
+		}
 	}
 }

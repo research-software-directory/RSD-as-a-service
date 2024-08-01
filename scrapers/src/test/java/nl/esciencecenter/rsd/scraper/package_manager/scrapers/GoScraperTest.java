@@ -10,18 +10,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 
-public class GoScraperTest {
+class GoScraperTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"https://pkg.go.dev/github.com/gin-gonic/gin,github.com/gin-gonic/gin",
-			"https://pkg.go.dev/github.com/gin-gonic/gin/,github.com/gin-gonic/gin",
-			"https://pkg.go.dev/google.golang.org/grpc,google.golang.org/grpc",
-			"https://pkg.go.dev/google.golang.org/grpc/,google.golang.org/grpc",
+		"https://pkg.go.dev/github.com/gin-gonic/gin,github.com/gin-gonic/gin",
+		"https://pkg.go.dev/github.com/gin-gonic/gin/,github.com/gin-gonic/gin",
+		"https://pkg.go.dev/google.golang.org/grpc,google.golang.org/grpc",
+		"https://pkg.go.dev/google.golang.org/grpc/,google.golang.org/grpc",
 	})
 	void givenValidGoUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNameCorrect(
-			String url,
-			String expectedPackageName
+		String url,
+		String expectedPackageName
 	) {
 		GoScraper goScraper = Assertions.assertDoesNotThrow(() -> new GoScraper(url));
 		Assertions.assertEquals(expectedPackageName, goScraper.packageName);

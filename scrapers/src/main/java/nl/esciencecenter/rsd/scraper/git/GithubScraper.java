@@ -27,11 +27,11 @@ import java.util.regex.Pattern;
 
 public class GithubScraper implements GitScraper {
 
-	private final String BASE_API_URL = "https://api.github.com";
+	private static final String BASE_API_URL = "https://api.github.com";
 	public final String organisation;
 	public final String repo;
 	private static final Pattern LINK_PATTERN = Pattern.compile("<([^>]+page=(\\d+)[^>]*)>; rel=\"([^\"]+)\"");
-	public static final Pattern GITHUB_URL_PATTERN = Pattern.compile("^https?://github\\.com/([^\\s/]+)/([^\\s/]+)/?$");
+	private static final Pattern GITHUB_URL_PATTERN = Pattern.compile("^https?://github\\.com/([^\\s/]+)/([^\\s/]+)/?$");
 
 	private GithubScraper(String organisation, String repo) {
 		this.organisation = Objects.requireNonNull(organisation);

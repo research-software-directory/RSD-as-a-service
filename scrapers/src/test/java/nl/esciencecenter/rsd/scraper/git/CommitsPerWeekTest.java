@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2023 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,7 @@ import java.time.Instant;
 import java.time.Period;
 import java.util.Map;
 
-public class CommitsPerWeekTest {
+class CommitsPerWeekTest {
 
 	@Test
 	void givenInstance_whenValidOperations_thenCorrectResults() {
@@ -39,7 +39,8 @@ public class CommitsPerWeekTest {
 		Assertions.assertEquals(30, underlyingMap.get(sundayMidnight1));
 
 
-		Instant smallTimeAfterSundayMidnight1 = sundayMidnight1.plus(Duration.ofDays(3)).plus(Duration.ofSeconds(12345));
+		Instant smallTimeAfterSundayMidnight1 = sundayMidnight1.plus(Duration.ofDays(3))
+			.plus(Duration.ofSeconds(12345));
 		commitsPerWeek.addCommits(smallTimeAfterSundayMidnight1, 10);
 
 		Assertions.assertEquals(1, underlyingMap.size());
@@ -70,9 +71,10 @@ public class CommitsPerWeekTest {
 	@Test
 	void givenInstance_whenValidOperations_thenCorrectJsonProduced() {
 		Gson gson = new GsonBuilder()
-				.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, typeOfT, context) -> Instant.ofEpochSecond(Long.parseLong(json.getAsString())))
-				.create();
-		TypeToken<Map<Instant, Long>> mapTypeToken = new TypeToken<>(){};
+			.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, typeOfT, context) -> Instant.ofEpochSecond(Long.parseLong(json.getAsString())))
+			.create();
+		TypeToken<Map<Instant, Long>> mapTypeToken = new TypeToken<>() {
+		};
 		CommitsPerWeek commitsPerWeek = new CommitsPerWeek();
 
 		Map<Instant, Long> shouldBeEmptyMap = gson.fromJson(commitsPerWeek.toJson(), mapTypeToken.getType());
@@ -82,7 +84,8 @@ public class CommitsPerWeekTest {
 		commitsPerWeek.addCommits(sundayMidnight1, 10);
 		commitsPerWeek.addCommits(sundayMidnight1, 20);
 
-		Instant smallTimeAfterSundayMidnight1 = sundayMidnight1.plus(Duration.ofDays(3)).plus(Duration.ofSeconds(12345));
+		Instant smallTimeAfterSundayMidnight1 = sundayMidnight1.plus(Duration.ofDays(3))
+			.plus(Duration.ofSeconds(12345));
 		commitsPerWeek.addCommits(smallTimeAfterSundayMidnight1, 10);
 
 		Instant sundayMidnight2 = sundayMidnight1.plus(Period.ofWeeks(5));
@@ -95,7 +98,8 @@ public class CommitsPerWeekTest {
 		Assertions.assertEquals(5, dataFromJson.get(sundayMidnight2));
 
 		commitsPerWeek.addMissingZeros();
-		dataFromJson = gson.fromJson(commitsPerWeek.toJson(), new TypeToken<Map<Instant, Long>>(){}.getType());
+		dataFromJson = gson.fromJson(commitsPerWeek.toJson(), new TypeToken<Map<Instant, Long>>() {
+		}.getType());
 		Assertions.assertEquals(6, dataFromJson.size());
 		Assertions.assertEquals(0, dataFromJson.get(sundayMidnight1.plus(Period.ofWeeks(1))));
 		Assertions.assertEquals(0, dataFromJson.get(sundayMidnight1.plus(Period.ofWeeks(2))));

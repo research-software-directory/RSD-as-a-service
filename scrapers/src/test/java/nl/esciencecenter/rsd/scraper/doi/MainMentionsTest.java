@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-public class MainMentionsTest {
+class MainMentionsTest {
 
 
 	@Test

@@ -13,9 +13,6 @@ import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +30,7 @@ public class OrcidLogin implements Login {
 	}
 
 	@Override
-	public OpenIdInfo openidInfo() throws IOException, InterruptedException {
+	public OpenIdInfo openidInfo() throws IOException, InterruptedException, RsdResponseException {
 		Map<String, String> form = createForm();
 		String tokenResponse = getTokensFromOrcidconext(form);
 		String idToken = extractIdToken(tokenResponse);
@@ -63,23 +60,12 @@ public class OrcidLogin implements Login {
 		return form;
 	}
 
-	private String getTokensFromOrcidconext(Map<String, String> form) throws IOException, InterruptedException {
+	private String getTokensFromOrcidconext(Map<String, String> form) throws IOException, InterruptedException, RsdResponseException {
 		URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.orcidWellknown()));
-		return postForm(tokenEndpoint, form);
+		return Utils.postForm(tokenEndpoint, form);
 	}
 
 	private String extractIdToken(String response) {
 		return JsonParser.parseString(response).getAsJsonObject().getAsJsonPrimitive("id_token").getAsString();
-	}
-
-	private String postForm(URI uri, Map<String, String> form) throws IOException, InterruptedException {
-		HttpRequest request = Utils.formToHttpRequest(uri, form);
-		try (HttpClient client = HttpClient.newHttpClient()) {
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			if (response.statusCode() >= 300) {
-				throw new RuntimeException("Error fetching data from " + uri.toString() + ": " + response.body());
-			}
-			return response.body();
-		}
 	}
 }

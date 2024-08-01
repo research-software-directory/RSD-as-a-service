@@ -10,16 +10,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 
-public class CratesScraperTest {
+class CratesScraperTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"https://crates.io/crates/tokio,tokio",
-			"https://crates.io/crates/tokio/,tokio",
+		"https://crates.io/crates/tokio,tokio",
+		"https://crates.io/crates/tokio/,tokio",
 	})
 	void givenValidCratesUrl_whenCallingConstructor_thenNoExceptionThrownAndPackageNamesCorrect(
-			String url,
-			String expectedPackageName
+		String url,
+		String expectedPackageName
 	) {
 		CratesScraper cratesScraper = Assertions.assertDoesNotThrow(() -> new CratesScraper(url));
 		Assertions.assertEquals(expectedPackageName, cratesScraper.packageName);
