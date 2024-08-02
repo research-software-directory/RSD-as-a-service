@@ -28,7 +28,7 @@ SPDX-License-Identifier: Apache-2.0
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.7.1</version>
 			</plugin>
 
 			<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin -->
@@ -50,14 +50,14 @@ SPDX-License-Identifier: Apache-2.0
 			<plugin>
 				<groupId>org.junit.jupiter</groupId>
 				<artifactId>junit-jupiter-engine</artifactId>
-				<version>5.10.1</version>
+				<version>5.10.3</version>
 			</plugin>
 
 			<!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher -->
 			<plugin>
 				<groupId>org.junit.platform</groupId>
 				<artifactId>junit-platform-launcher</artifactId>
-				<version>1.10.1</version>
+				<version>1.10.3</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -68,7 +68,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.10.1</version>
+			<version>2.11.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -83,7 +83,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
-			<version>5.4.0</version>
+			<version>5.5.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -91,7 +91,7 @@ SPDX-License-Identifier: Apache-2.0
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.10.1</version>
+			<version>5.10.3</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

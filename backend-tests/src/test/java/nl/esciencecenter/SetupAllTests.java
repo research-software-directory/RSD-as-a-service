@@ -31,15 +31,21 @@ public class SetupAllTests implements BeforeAllCallback {
 
 	public static void checkBackendAvailable() throws InterruptedException {
 		URI backendUri = URI.create(System.getenv("POSTGREST_URL"));
-		HttpClient client = HttpClient.newHttpClient();
+		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
 		HttpRequest request = HttpRequest.newBuilder(backendUri).build();
 		int maxTries = 30;
 		for (int i = 1; i <= maxTries; i++) {
 			try {
-				client.send(request, HttpResponse.BodyHandlers.discarding());
-				System.out.println("Attempt %d/%d to connect to the backend on %s succeeded, continuing with the tests"
+				HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
+				if (response.statusCode() == 200) {
+					System.out.println("Attempt %d/%d to connect to the backend on %s succeeded, continuing with the tests"
+							.formatted(i, maxTries, backendUri));
+					client.close();
+					return;
+				}
+				System.out.println("Attempt %d/%d to connect to the backend on %s failed, trying again in 1 second"
 						.formatted(i, maxTries, backendUri));
-				return;
+				Thread.sleep(1000);
 			} catch (IOException e) {
 				System.out.println("Attempt %d/%d to connect to the backend on %s failed, trying again in 1 second"
 						.formatted(i, maxTries, backendUri));
