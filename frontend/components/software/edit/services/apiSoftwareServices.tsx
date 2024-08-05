@@ -31,8 +31,10 @@ export type PackageManagerService = {
   package_manager: PackageManagerTypes,
 	download_count_scraped_at: string|null,
 	download_count_last_error: string|null,
+  download_count_scraping_disabled_reason: string|null,
 	reverse_dependency_count_scraped_at: string|null,
-	reverse_dependency_count_last_error: string|null
+	reverse_dependency_count_last_error: string|null,
+  reverse_dependency_count_scraping_disabled_reason: string|null,
 }
 
 async function getSoftwareServices(id:string,token:string){
@@ -61,7 +63,7 @@ async function getSoftwareServices(id:string,token:string){
 
 async function getPackageManagerServices(id:string,token:string){
   try{
-    const select='select=software,url,package_manager,download_count_scraped_at,download_count_last_error,reverse_dependency_count_scraped_at,reverse_dependency_count_last_error'
+    const select='select=software,url,package_manager,download_count_scraped_at,download_count_last_error,download_count_scraping_disabled_reason,reverse_dependency_count_scraped_at,reverse_dependency_count_last_error,reverse_dependency_count_scraping_disabled_reason'
     const query = `${select}&software=eq.${id}&order=position`
     const url = `${getBaseUrl()}/package_manager?${query}`
 

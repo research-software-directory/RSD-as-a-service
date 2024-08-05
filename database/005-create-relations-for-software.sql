@@ -65,9 +65,11 @@ CREATE TABLE package_manager (
 	download_count BIGINT,
 	download_count_last_error VARCHAR(500),
 	download_count_scraped_at TIMESTAMPTZ,
+	download_count_scraping_disabled_reason VARCHAR(200),
 	reverse_dependency_count INTEGER,
 	reverse_dependency_count_last_error VARCHAR(500),
 	reverse_dependency_count_scraped_at TIMESTAMPTZ,
+	reverse_dependency_count_scraping_disabled_reason VARCHAR(200),
 	position INTEGER,
 	created_at TIMESTAMPTZ NOT NULL,
 	updated_at TIMESTAMPTZ NOT NULL

@@ -27,7 +27,7 @@ public class PostgrestConnector {
 	}
 
 	public Collection<BasicPackageManagerData> oldestDownloadCounts(int limit) {
-		String filter = "or=(package_manager.eq.dockerhub)";
+		String filter = "download_count_scraping_disabled_reason=is.null&or=(package_manager.eq.dockerhub)";
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=id,url,package_manager&order=download_count_scraped_at.asc.nullsfirst&limit=" + limit
 				+ "&" + Utils.atLeastOneHourAgoFilter("download_count_scraped_at")
 		);
@@ -35,7 +35,7 @@ public class PostgrestConnector {
 	}
 
 	public Collection<BasicPackageManagerData> oldestReverseDependencyCounts(int limit) {
-		String filter = "or=(package_manager.eq.anaconda,package_manager.eq.cran,package_manager.eq.crates,package_manager.eq.golang,package_manager.eq.maven,package_manager.eq.npm,package_manager.eq.pypi,package_manager.eq.sonatype)";
+		String filter = "reverse_dependency_count_scraping_disabled_reason=is.null&or=(package_manager.eq.anaconda,package_manager.eq.cran,package_manager.eq.crates,package_manager.eq.golang,package_manager.eq.maven,package_manager.eq.npm,package_manager.eq.pypi,package_manager.eq.sonatype)";
 		String data = Utils.getAsAdmin(backendUrl + "?" + filter + "&select=id,url,package_manager&order=reverse_dependency_count_scraped_at.asc.nullsfirst&limit=" + limit + "&" + Utils.atLeastOneHourAgoFilter("reverse_dependency_count_scraped_at"));
 		return parseBasicJsonData(data);
 	}

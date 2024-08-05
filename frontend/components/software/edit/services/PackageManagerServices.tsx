@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -35,6 +36,7 @@ export default function PackageManagerServices() {
                     last_error={service.download_count_last_error}
                     url={service.url}
                     platform={null}
+                    scraping_disabled_reason={service.download_count_scraping_disabled_reason}
                   />
                   : null
                 }
@@ -46,6 +48,7 @@ export default function PackageManagerServices() {
                     last_error={service.reverse_dependency_count_last_error}
                     url={service.url}
                     platform={null}
+                    scraping_disabled_reason={service.reverse_dependency_count_scraping_disabled_reason}
                   />
                   : null
                 }
