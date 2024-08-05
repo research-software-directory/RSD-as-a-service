@@ -49,10 +49,15 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
       generalCategories.addChild(generalRoot)
     }
 
-    const result = [
-      ...reorderedCategories.highlighted,
-      generalCategories
-    ]
+    // prevent the dropdown from being there if there are no global categories
+    const result = generalCategories.childrenCount() > 0
+      ?
+      [
+        ...reorderedCategories.highlighted,
+        generalCategories
+      ]
+      :
+      reorderedCategories.highlighted
 
     categoryTreeNodesSort(result)
 
@@ -112,7 +117,7 @@ export default function AutosaveSoftwareCategories({softwareId, reorderedCategor
             <EditSectionTitle
               title={rootValue.name}
               subtitle={rootValue.properties.subtitle}
-              className="py-4"
+              className="font-medium py-4"
             />
             <TreeSelect
               roots={children}
