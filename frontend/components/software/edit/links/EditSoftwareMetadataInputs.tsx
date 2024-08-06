@@ -22,7 +22,7 @@ import AutosaveSoftwareCategories from './AutosaveSoftwareCategories'
 import AutosaveSoftwareKeywords from './AutosaveSoftwareKeywords'
 import AutosaveSoftwareLicenses from './AutosaveSoftwareLicenses'
 import SoftwareLinksInfo from './SoftwareLinksInfo'
-import {useReorderedCategories} from '~/utils/categories'
+import {ReorderedCategories, useReorderedCategories} from '~/utils/categories'
 
 export default function EditSoftwareMetadataInputs() {
   // use form context to interact with form data
@@ -30,7 +30,7 @@ export default function EditSoftwareMetadataInputs() {
   // watch form data changes
   const [id, get_started_url, categoryForSoftwareIds] = watch(['id', 'get_started_url', 'categoryForSoftwareIds'])
 
-  const reorderedCategories = useReorderedCategories(null)
+  const reorderedCategories: ReorderedCategories = useReorderedCategories(null)
 
   // console.group('EditSoftwareMetadataInputs')
   // console.log('editSoftware...', editSoftware)
