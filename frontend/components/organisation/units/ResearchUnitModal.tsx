@@ -2,13 +2,13 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
 // SPDX-FileCopyrightText: 2022 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {useEffect, useState} from 'react'
+import {ChangeEvent, useEffect, useState} from 'react'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -24,13 +24,13 @@ import {useForm} from 'react-hook-form'
 import {useSession} from '~/auth'
 import useSnackbar from '../../snackbar/useSnackbar'
 import ControlledTextField from '../../form/ControlledTextField'
-import {EditOrganisation} from '../../../types/Organisation'
+import {EditOrganisation} from '~/types/Organisation'
 import config from '../settings/general/generalSettingsConfig'
 import {deleteImage, getImageUrl} from '~/utils/editImage'
-import logger from '../../../utils/logger'
-import {getSlugFromString} from '../../../utils/getSlugFromString'
+import {handleFileUpload} from '~/utils/handleFileUpload'
+import {getSlugFromString} from '~/utils/getSlugFromString'
 import SubmitButtonWithListener from '~/components/form/SubmitButtonWithListener'
-import {allowedImageMimeTypes} from '~/utils/handleFileUpload'
+import ImageInput from '~/components/form/ImageInput'
 
 
 type EditOrganisationModalProps = {
@@ -101,31 +101,16 @@ export default function ResearchUnitModal({
     onCancel()
   }
 
-  function handleFileUpload({target}:{target: any}) {
-    try {
-      let file = target.files[0]
-      if (typeof file == 'undefined') return
-      // check file size
-      if (file.size > 2097152) {
-        // file is to large > 2MB
-        showWarningMessage('The file is too large. Please select image < 2MB.')
-        return
+  async function onFileUpload(e:ChangeEvent<HTMLInputElement>|undefined) {
+    if (typeof e !== 'undefined') {
+      const {status, message, image_b64, image_mime_type} = await handleFileUpload(e)
+      if (status === 200 && image_b64 && image_mime_type) {
+        replaceLogo(image_b64, image_mime_type)
+      } else if (status===413) {
+        showWarningMessage(message)
+      } else {
+        showErrorMessage(message)
       }
-      let reader = new FileReader()
-      reader.onloadend = function () {
-        if (reader.result) {
-          // write to new avatar b64
-          // setValue('logo_b64', reader.result as string)
-          // setValue('logo_mime_type', file.type, { shouldDirty: true })
-          replaceLogo(
-            reader.result as string,
-            file.type
-          )
-        }
-      }
-      reader.readAsDataURL(file)
-    } catch (e:any) {
-      logger(`handleFileUpload: ${e.message}`,'error')
     }
   }
 
@@ -218,12 +203,9 @@ export default function ResearchUnitModal({
                   {formData.name ? formData.name.slice(0,3) : ''}
                 </Avatar>
               </label>
-              <input
+              <ImageInput
                 id="upload-avatar-image-modal"
-                type="file"
-                accept={allowedImageMimeTypes}
-                onChange={handleFileUpload}
-                style={{display:'none'}}
+                onChange={onFileUpload}
               />
               <div className="flex pt-4">
                 <Button
@@ -318,3 +300,7 @@ export default function ResearchUnitModal({
     return false
   }
 }
+function showErrorMessage(message: string) {
+  throw new Error('Function not implemented.')
+}
+

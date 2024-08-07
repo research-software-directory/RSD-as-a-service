@@ -15,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import {useFormContext} from 'react-hook-form'
 
 import {useSession} from '~/auth'
-import {allowedImageMimeTypes, handleFileUpload} from '~/utils/handleFileUpload'
+import {handleFileUpload} from '~/utils/handleFileUpload'
 import {deleteImage,getImageUrl,upsertImage} from '~/utils/editImage'
 import EditSectionTitle from '~/components/layout/EditSectionTitle'
 import ImageWithPlaceholder from '~/components/layout/ImageWithPlaceholder'
@@ -23,6 +23,7 @@ import useSnackbar from '~/components/snackbar/useSnackbar'
 import CopyToClipboard from '~/components/layout/CopyToClipboard'
 import {NewsImageProps,NewsItem,addNewsImage,deleteNewsImage} from '../apiNews'
 import {newsConfig as config} from './config'
+import ImageInput from '~/components/form/ImageInput'
 
 type UploadedImageProps={
   imgUrl: string|null,
@@ -196,12 +197,9 @@ export default function AutosaveNewsImage() {
         />
       </label>
 
-      <input
+      <ImageInput
         id="upload-article-image"
-        type="file"
-        accept={allowedImageMimeTypes}
         onChange={onFileUpload}
-        style={{display:'none'}}
       />
     </>
   )

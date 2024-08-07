@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2022 - 2023 dv4all
 // SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
-// SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
+// SPDX-FileCopyrightText: 2023 - 2024 Dusan Mijatovic (Netherlands eScience Center)
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -173,7 +173,7 @@ export async function getOrganisationById({uuid,token,isMaintainer=false}:
 
 export async function getOrganisationChildren({uuid, token}:
   { uuid: string, token: string}) {
-  const selectList = 'name,primary_maintainer,slug,website,logo_id'
+  const selectList = 'id,name,primary_maintainer,slug,website,logo_id,is_tenant,parent'
   const query = `organisation?parent=eq.${uuid}&order=name.asc&select=${selectList}`
   let url = `${getBaseUrl()}/${query}`
 
