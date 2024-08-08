@@ -707,40 +707,41 @@ BEGIN
 	END IF;
 
 	RETURN QUERY
-	-- primary maintainer of organisation
+	WITH maintainer_ids AS (
+		-- primary maintainer of organisation
+		SELECT
+			organisation.primary_maintainer AS maintainer,
+			TRUE AS is_primary
+		FROM
+			organisation
+		WHERE
+			organisation.id = organisation_id
+		-- append second selection
+		UNION ALL
+		-- other maintainers of organisation
+		SELECT
+			maintainer_for_organisation.maintainer AS maintainer,
+			FALSE AS is_primary
+		FROM
+			maintainer_for_organisation
+		WHERE
+			maintainer_for_organisation.organisation = organisation_id
+	)
 	SELECT
-		organisation.primary_maintainer AS maintainer,
+		maintainer_ids.maintainer AS maintainer,
 		ARRAY_AGG(login_for_account."name") AS name,
 		ARRAY_AGG(login_for_account.email) AS email,
 		ARRAY_AGG(login_for_account.home_organisation) AS affiliation,
-		TRUE AS is_primary
+		BOOL_OR(maintainer_ids.is_primary) AS is_primary
 	FROM
-		organisation
+		maintainer_ids
 	INNER JOIN
-		login_for_account ON organisation.primary_maintainer = login_for_account.account
-	WHERE
-		organisation.id = organisation_id
+		login_for_account ON login_for_account.account = maintainer_ids.maintainer
 	GROUP BY
-		organisation.id,organisation.primary_maintainer
-	-- append second selection
-	UNION
-	-- other maintainers of organisation
-	SELECT
-		maintainer_for_organisation.maintainer,
-		ARRAY_AGG(login_for_account."name") AS name,
-		ARRAY_AGG(login_for_account.email) AS email,
-		ARRAY_AGG(login_for_account.home_organisation) AS affiliation,
-		FALSE AS is_primary
-	FROM
-		maintainer_for_organisation
-	INNER JOIN
-		login_for_account ON maintainer_for_organisation.maintainer = login_for_account.account
-	WHERE
-		maintainer_for_organisation.organisation = organisation_id
-	GROUP BY
-		maintainer_for_organisation.organisation, maintainer_for_organisation.maintainer
+		maintainer_ids.maintainer
 	-- primary as first record
-	ORDER BY is_primary DESC;
+	ORDER BY
+		is_primary DESC;
 	RETURN;
 END
 $$;

@@ -206,40 +206,43 @@ BEGIN
 	END IF;
 
 	RETURN QUERY
-	-- primary maintainer of community
+	WITH maintainer_ids AS (
+		-- primary maintainer of community
+		SELECT
+			community.primary_maintainer AS maintainer,
+			TRUE AS is_primary
+		FROM
+			community
+		WHERE
+			community.id = community_id
+		-- append second selection
+		UNION ALL
+		-- other maintainers of community
+		SELECT
+			maintainer_for_community.maintainer,
+			FALSE AS is_primary
+		FROM
+			maintainer_for_community
+		WHERE
+			maintainer_for_community.community = community_id
+		-- primary as first record
+		ORDER BY is_primary DESC
+	)
 	SELECT
-		community.primary_maintainer AS maintainer,
+		maintainer_ids.maintainer AS maintainer,
 		ARRAY_AGG(login_for_account."name") AS name,
 		ARRAY_AGG(login_for_account.email) AS email,
 		ARRAY_AGG(login_for_account.home_organisation) AS affiliation,
-		TRUE AS is_primary
+		BOOL_OR(maintainer_ids.is_primary) AS is_primary
 	FROM
-		community
+		maintainer_ids
 	INNER JOIN
-		login_for_account ON community.primary_maintainer = login_for_account.account
-	WHERE
-		community.id = community_id
+		login_for_account ON login_for_account.account = maintainer_ids.maintainer
 	GROUP BY
-		community.id,community.primary_maintainer
-	-- append second selection
-	UNION
-	-- other maintainers of community
-	SELECT
-		maintainer_for_community.maintainer,
-		ARRAY_AGG(login_for_account."name") AS name,
-		ARRAY_AGG(login_for_account.email) AS email,
-		ARRAY_AGG(login_for_account.home_organisation) AS affiliation,
-		FALSE AS is_primary
-	FROM
-		maintainer_for_community
-	INNER JOIN
-		login_for_account ON maintainer_for_community.maintainer = login_for_account.account
-	WHERE
-		maintainer_for_community.community = community_id
-	GROUP BY
-		maintainer_for_community.community, maintainer_for_community.maintainer
+		maintainer_ids.maintainer
 	-- primary as first record
-	ORDER BY is_primary DESC;
+	ORDER BY
+		is_primary DESC;
 	RETURN;
 END
 $$;
