@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2021 - 2023 Dusan Mijatovic (dv4all)
 // SPDX-FileCopyrightText: 2021 - 2023 dv4all
+// SPDX-FileCopyrightText: 2023 - 2024 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (Netherlands eScience Center)
 // SPDX-FileCopyrightText: 2023 Dusan Mijatovic (dv4all) (dv4all)
-// SPDX-FileCopyrightText: 2023 Netherlands eScience Center
 // SPDX-FileCopyrightText: 2024 Christian Meeßen (GFZ) <christian.meessen@gfz-potsdam.de>
+// SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
 // SPDX-FileCopyrightText: 2024 Helmholtz Centre Potsdam - GFZ German Research Centre for Geosciences
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -182,7 +183,15 @@ export function paginationUrlParams({rows=12, page=0}:
  * Provides basic url query string for postgrest endpoints
  */
 export function baseQueryString(props: baseQueryStringProps) {
-  const {keywords,domains,prog_lang,licenses,organisations,project_status,order,limit,offset} = props
+  const {keywords,
+    domains,
+    prog_lang,
+    licenses,
+    organisations,
+    project_status,
+    order,
+    limit,
+    offset} = props
   let query
   // console.group('baseQueryString')
   // console.log('keywords...', keywords)
@@ -192,7 +201,7 @@ export function baseQueryString(props: baseQueryStringProps) {
   // console.log('limit...', limit)
   // console.log('offset...', offset)
   // filter on keywords using AND
-  if (typeof keywords !== 'undefined' &&
+  if (keywords !== undefined &&
     keywords !== null &&
     typeof keywords === 'object') {
     // sort and convert keywords array to comma separated string
@@ -204,7 +213,7 @@ export function baseQueryString(props: baseQueryStringProps) {
     // use cs. command to find
     query = `keywords=cs.%7B${keywordsAll}%7D`
   }
-  if (typeof domains !== 'undefined' &&
+  if (domains !== undefined &&
     domains !== null &&
     typeof domains === 'object') {
     // sort and convert research domains array to comma separated string
@@ -217,7 +226,7 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `research_domain=cs.%7B${domainsAll}%7D`
     }
   }
-  if (typeof prog_lang !== 'undefined' &&
+  if (prog_lang !== undefined &&
     prog_lang !== null &&
     typeof prog_lang === 'object') {
     // sort and convert prog_lang array to comma separated string
@@ -233,7 +242,7 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `prog_lang=cs.%7B${languagesAll}%7D`
     }
   }
-  if (typeof licenses !== 'undefined' &&
+  if (licenses !== undefined &&
     licenses !== null &&
     typeof licenses === 'object') {
     // sort and convert array to comma separated string
@@ -245,7 +254,7 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `licenses=cs.%7B${licensesAll}%7D`
     }
   }
-  if (typeof organisations !== 'undefined' &&
+  if (organisations !== undefined &&
     organisations !== null &&
     typeof organisations === 'object') {
     // sort and convert array to comma separated string
@@ -258,7 +267,7 @@ export function baseQueryString(props: baseQueryStringProps) {
       query = `participating_organisations=cs.%7B${organisationsAll}%7D`
     }
   }
-  if (typeof project_status !== 'undefined' &&
+  if (project_status !== undefined &&
     project_status !== null) {
     // show records with any of project_status values from the filter
     const encodedStatus = encodeURIComponent(project_status)
@@ -278,9 +287,9 @@ export function baseQueryString(props: baseQueryStringProps) {
   }
   // add limit and offset
   if (query) {
-    query += `&limit=${limit || rowsPerPageOptions[0]}&offset=${offset || 0}`
+    query += `&limit=${limit ?? rowsPerPageOptions[0]}&offset=${offset ?? 0}`
   } else {
-    query = `limit=${limit || rowsPerPageOptions[0]}&offset=${offset || 0}`
+    query = `limit=${limit ?? rowsPerPageOptions[0]}&offset=${offset ?? 0}`
   }
   // console.log('query...', query)
   // console.groupEnd()
@@ -316,9 +325,9 @@ export function highlightsListUrl(props: PostgrestParams) {
   if (search) {
     // console.log('softwareListUrl...keywords...', props.keywords)
     const encodedSearch = encodeURIComponent(search)
-    // search query is performed in software_search RPC
+    // search query is performed in highlight_search RPC
     // we search in title,subtitle,slug,keywords_text and prog_lang
-    // check rpc in 105-project-views.sql for exact filtering
+    // check rpc in 104-software-views.sql for exact filtering
     query += `&search=${encodedSearch}`
 
     const url = `${baseUrl}/rpc/highlight_search?${query}`

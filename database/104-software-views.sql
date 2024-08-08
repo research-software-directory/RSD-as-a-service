@@ -359,7 +359,7 @@ SELECT
 	software_highlight.position
 FROM
 	software_search(search)
-RIGHT JOIN
+INNER JOIN
 	software_highlight ON software_search.id=software_highlight.software
 ;
 $$;
