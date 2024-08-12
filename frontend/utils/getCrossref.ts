@@ -10,13 +10,16 @@ import {MentionItemProps, MentionTypeKeys} from '~/types/Mention'
 import {extractReturnMessage} from './fetchHelpers'
 import {makeDoiRedirectUrl} from './getDOI'
 import logger from './logger'
+import {PromisePool} from '~/utils/promisePool'
 
+// size 5 got from email communication with Crossref and testing
+const promisePool = new PromisePool(5)
 
 export function addPoliteEmail(url:string) {
   const mailto = process.env.CROSSREF_CONTACT_EMAIL
   // console.log('addPoliteEmail...',mailto)
   if (mailto) {
-    return url += `&mailto=${mailto}`
+    return url + `mailto=${mailto}`
   }
   return url
 }
@@ -80,9 +83,9 @@ export function crossrefItemToMentionItem(item: CrossrefSelectItem) {
 
 export async function getCrossrefItemByDoi(doi: string) {
   try {
-    const url = `https://api.crossref.org/works/${doi}`
+    const url = addPoliteEmail(`https://api.crossref.org/works/${doi}?`)
 
-    const resp = await fetch(url)
+    const resp = await promisePool.submit(() => fetch(url))
 
     if (resp.status === 200) {
       const json: CrossrefResponse = await resp.json()
@@ -99,8 +102,7 @@ export async function getCrossrefItemByDoi(doi: string) {
         }
       }
     }
-    const error = await extractReturnMessage(resp)
-    return error
+    return await extractReturnMessage(resp)
   }catch(e:any){
     logger(`getCrossrefItemByDoi: ${e?.message}`, 'error')
     return {
@@ -117,8 +119,8 @@ export async function getCrossrefItemsByTitle(title: string) {
     const order = 'sort=score&order=desc'
     const rows = 'rows=10'
     // get top 10 items
-    let url = addPoliteEmail(`https://api.crossref.org/works?${filter}&${order}&${rows}`)
-    const resp = await fetch(url)
+    const url = addPoliteEmail(`https://api.crossref.org/works?${filter}&${order}&${rows}&`)
+    const resp = await promisePool.submit(() => fetch(url))
 
     if (resp.status === 200) {
       const json: CrossrefResponse = await resp.json()
@@ -130,26 +132,6 @@ export async function getCrossrefItemsByTitle(title: string) {
   } catch (e: any) {
     logger(`getCrossrefItemsByTitle: ${e?.message}`, 'error')
     return []
-  }
-}
-
-export async function getCrossrefItemsByQuery(query: string) {
-  try {
-    const filter = `query=${query}`
-    const order = 'sort=score&order=desc'
-    const rows = 'rows=10'
-    // get top 10 items
-    const url = addPoliteEmail(`https://api.crossref.org/works?${filter}&${order}&${rows}`)
-
-    const resp = await fetch(url)
-
-    if (resp.status === 200) {
-      const json: CrossrefResponse = await resp.json()
-      // find doi item
-      return json.message.items
-    }
-  } catch (e: any) {
-    logger(`getCrossrefItemsByQuery: ${e?.message}`, 'error')
   }
 }
 

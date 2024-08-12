@@ -75,7 +75,8 @@ export async function getUrlFromDoiOrg(doi: string) {
 
 
 async function getItemFromCrossref(doi: string) {
-  const resp = await getCrossrefItemByDoi(doi)
+  const mentionResponse = await fetch(`/api/fe/mention/crossref?doi=${doi}`)
+  const resp = await mentionResponse.json()
   // debugger
   if (resp.status === 200) {
     const mention = crossrefItemToMentionItem(resp.message)

@@ -52,7 +52,7 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
         // validate if not already included
         const found = mentions.find(mention => mention.doi?.toLowerCase() === doi)
         if (found) {
-          // flag item with DOI alredy processed
+          // flag item with DOI already processed
           mentionResultPerDoi.set(doi, {doi ,status: 'alreadyImported', include: false})
           return false
         }
@@ -87,7 +87,7 @@ export async function validateInputList(doiList: string[], mentions: MentionItem
 
   // DOI NOT IN RSD
   // valid dois not present in mentionResultPerDoi map at this point are not in RSD
-  const doisNotInDatabase: string[] = validDois.filter(entry => mentionResultPerDoi.has(entry)===false)
+  const doisNotInDatabase: string[] = validDois.filter(entry => !mentionResultPerDoi.has(entry))
 
   if (doisNotInDatabase.length > 0) {
     // getDoiRAList method
