@@ -12,6 +12,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # Research Software Directory (RSD) - Frontend
 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rsd-frontend&metric=coverage)](https://sonarcloud.io/summary/overall?id=rsd-frontend)
+
 Based on the features in the legacy application and the current requirements we selected [Next.js](https://nextjs.org/docs) and MUI-5 (https://mui.com/getting-started/usage/) frameworks for:
 
 - Easy integration with generic SSO oAuth services like ORCID, SURFconext, Microsoft etc.

@@ -9,6 +9,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # Authentication module
 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=nl.research-software%3Aauthentication&metric=coverage)](https://sonarcloud.io/summary/overall?id=nl.research-software%3Aauthentication)
+
 This module handles authentication from third parties using oAuth2 and OpenID.
 
 ## Environment variables

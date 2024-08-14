@@ -7,6 +7,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # CodeMeta server
 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rsd-codemeta&metric=coverage)](https://sonarcloud.io/summary/overall?id=rsd-codemeta)
+
 This module implements a [CodeMeta](https://codemeta.github.io/) server, using [V3](https://w3id.org/codemeta/v3.0) of the schema.
 
 If your instance of the RSD is hosted on https://example.com/, you can access the CodeMeta server on https://example.com/codemeta/v3/. To get the CodeMeta data for a software page, just append its slug to this URL. For example, to get the CodeMeta data for software page on https://example.com/software/some-software, visit https://example.com/codemeta/v3/some-software/.
