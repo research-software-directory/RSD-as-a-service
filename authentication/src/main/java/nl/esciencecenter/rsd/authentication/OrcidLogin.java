@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2022 - 2023 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
-// SPDX-FileCopyrightText: 2022 - 2023 Netherlands eScience Center
+// SPDX-FileCopyrightText: 2022 - 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+// SPDX-FileCopyrightText: 2022 - 2024 Netherlands eScience Center
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,6 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.StringJoiner;
 
 public class OrcidLogin implements Login {
 
@@ -60,27 +59,16 @@ public class OrcidLogin implements Login {
 	}
 
 	private String getTokensFromOrcidconext(Map<String, String> form) throws IOException, InterruptedException {
-		String body = formMapToxWwwFormUrlencoded(form);
 		URI tokenEndpoint = Utils.getTokenUrlFromWellKnownUrl(URI.create(Config.orcidWellknown()));
-		return postForm(tokenEndpoint, body);
-	}
-
-	private String formMapToxWwwFormUrlencoded(Map<String, String> form) {
-		StringJoiner x_www_form_urlencoded = new StringJoiner("&");
-		form.keySet().forEach(key -> x_www_form_urlencoded.add(key + "=" + form.get(key)));
-		return x_www_form_urlencoded.toString();
+		return postForm(tokenEndpoint, form);
 	}
 
 	private String extractIdToken(String response) {
 		return JsonParser.parseString(response).getAsJsonObject().getAsJsonPrimitive("id_token").getAsString();
 	}
 
-	private String postForm(URI uri, String json) throws IOException, InterruptedException {
-		HttpRequest request = HttpRequest.newBuilder()
-				.POST(HttpRequest.BodyPublishers.ofString(json))
-				.uri(uri)
-				.header("Content-Type", "application/x-www-form-urlencoded")
-				.build();
+	private String postForm(URI uri, Map<String, String> form) throws IOException, InterruptedException {
+		HttpRequest request = Utils.formToHttpRequest(uri, form);
 		try (HttpClient client = HttpClient.newHttpClient()) {
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			if (response.statusCode() >= 300) {
