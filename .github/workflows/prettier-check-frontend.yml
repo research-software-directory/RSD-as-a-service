@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: 2024 Ewan Cahen (Netherlands eScience Center) <e.cahen@esciencecenter.nl>
+# SPDX-FileCopyrightText: 2024 Netherlands eScience Center
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: "Run Prettier check frontend"
+on:
+  pull_request:
+    paths:
+      - "frontend/**"
+  workflow_dispatch:
+jobs:
+  run-prettier-check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "frontend"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+          cache-dependency-path: "frontend/yarn.lock"
+      - run: yarn install --immutable
+      - run: npm run format:check

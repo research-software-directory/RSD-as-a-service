@@ -22,6 +22,10 @@ Based on the features in the legacy application and the current requirements we 
 
 ## Development
 
+### Code formatting
+
+We use [Prettier](https://prettier.io/) for source code formatting. See the file `.prettierrc` for the applied [configuration options](https://prettier.io/docs/en/options) and see the file `.prettierignore` for files that should be [ignored](https://prettier.io/docs/en/ignore) by Prettier. Please make sure your contributions are compliant with Prettier. You can run `npm run format:check` to see which files are not compliant and `npm run format:fix` to fix them. A GitHub workflow runs on every pull request to check if all files are formatted properly.
+
 ### Locally running frontend in dev mode
 
 - install dependencies `yarn install`
